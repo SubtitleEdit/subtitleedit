@@ -1279,6 +1279,9 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ErrorLoadPng>Este ficheiro parece ser um ficheiro de imagem no formato PNG. O Subtitle Edit não pode abrir ficheiros PNG.</ErrorLoadPng>
     <ErrorLoadSrr>Este ficheiro parece ser um ficheiro ReScene (.srr) - não é um ficheiro de legenda.</ErrorLoadSrr>
     <ErrorLoadTorrent>Este ficheiro parece ser um ficheiro BitTorrent - não é um ficheiro de legenda.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Lamentamos, mas este ficheiro só contém zeros no formato binário!
+
+Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de segurança através do menu Ficheiro -&gt; Restaurar cópia de segurança automática...</ErrorLoadBinaryZeroes>
     <NoSupportEncryptedVobSub>Conteúdo encriptado do VobSub não é suportado.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Ficheiros Blu-ray sup não são suportados aqui.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>Ficheiros DVD sup não são suportados aqui.</NoSupportHereDvdSup>
@@ -1417,17 +1420,19 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <XPluginsUpdated>{0} plugin(s) actualizados</XPluginsUpdated>
   </PluginsGet>
   <RegularExpressionContextMenu>
-    <WordBoundary>Limite de palavra (\b)</WordBoundary>
-    <NonWordBoundary>Sem limite palavra (\B)</NonWordBoundary>
+    <WordBoundary>Delimitação de palavra (\b)</WordBoundary>
+    <NonWordBoundary>Sem delimitação de palavra (\B)</NonWordBoundary>
     <NewLine>Nova linha (\r\n)</NewLine>
     <NewLineShort>Nova linha (\n)</NewLineShort>
     <AnyDigit>Qualquer dígito (\d)</AnyDigit>
+    <NonDigit>Sem ser dígito (\D)</NonDigit>
     <AnyCharacter>Qualquer caractere (.)</AnyCharacter>
     <AnyWhitespace>Qualquer espaço em branco (\s)</AnyWhitespace>
+    <NonSpaceCharacter>Sem ser Carácter de espaço (\S)</NonSpaceCharacter>
     <ZeroOrMore>Zero ou mais (*)</ZeroOrMore>
     <OneOrMore>Um ou mais (+)</OneOrMore>
-    <InCharacterGroup>No grupo de caracteres ([teste])</InCharacterGroup>
-    <NotInCharacterGroup>Não estiver no grupo de caracteres ([^teste])</NotInCharacterGroup>
+    <InCharacterGroup>Dentro do grupo de caracteres ([teste])</InCharacterGroup>
+    <NotInCharacterGroup>Fora do grupo de caracteres ([^teste])</NotInCharacterGroup>
   </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Eliminar texto para surdos</Title>
@@ -2031,6 +2036,8 @@ Manter as alterações?</KeepChangesMessage>
     <InspectCompareMatchesForCurrentImage>Inspeccionar coincidências para a imagem actual...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Editar última imagem comparando com as adicionadas...</EditLastAdditions>
     <SetUnitalicFactor>Definir um factor itálico...</SetUnitalicFactor>
+    <DiscardTitle>Rejeitar as alterações feitas no OCR?</DiscardTitle>
+    <DiscardText>Deseja rejeitar as alterações feitas na sessão corrente de OCR?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Imagem para texto manualmente</Title>
