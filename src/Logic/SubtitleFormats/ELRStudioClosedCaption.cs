@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     i += 5;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode GetTimeCode(byte[] buffer, int idx)

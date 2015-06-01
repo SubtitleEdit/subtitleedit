@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 subtitle.Paragraphs.Add(paragraph);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode TryReadTimeCodesLine(string line)

@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     i++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
 
             if (buffer[0] == 0x43 && // CAPT.1.2
                                 buffer[1] == 0x41 &&
@@ -252,7 +252,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Paragraph last = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
             if (last != null)
                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

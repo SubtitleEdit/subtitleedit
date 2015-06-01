@@ -275,7 +275,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - 1;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
 
             // adjust all times
             if (buffer.Length > 1364)

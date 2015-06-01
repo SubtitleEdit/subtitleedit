@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 if (!added)
                     splittedSubtitle.Paragraphs.Add(new Paragraph(p));
             }
-            splittedSubtitle.Renumber(1);
+            splittedSubtitle.Renumber();
             return splittedSubtitle;
         }
 

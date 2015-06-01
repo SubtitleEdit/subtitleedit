@@ -242,7 +242,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.EndTime.Milliseconds *= 10;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

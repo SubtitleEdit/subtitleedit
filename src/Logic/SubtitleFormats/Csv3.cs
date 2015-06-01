@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static string ReadText(string csv)

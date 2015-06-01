@@ -3303,7 +3303,7 @@ namespace Nikse.SubtitleEdit.Logic
                     subtitle.Paragraphs.Add(new Paragraph(p.Text, p.Start, p.End));
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             return format;
         }
 

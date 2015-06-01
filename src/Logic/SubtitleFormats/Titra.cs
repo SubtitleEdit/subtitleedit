@@ -123,7 +123,7 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
                 }
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private TimeCode DecodeTimeCode(string[] parts)

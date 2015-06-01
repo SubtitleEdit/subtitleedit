@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (p != null)
                     subtitle.Paragraphs.Add(p);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private Paragraph GetParagraph(ref int index, byte[] buffer)

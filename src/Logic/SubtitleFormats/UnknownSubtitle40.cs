@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         return;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string[] parts)

@@ -143,7 +143,7 @@ Sony,Sony DVD/UMD,1:85,16x9
                     p.Text = "{\\an5}" + p.Text.Replace("@+", string.Empty).Replace("@|", string.Empty);
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static string EncodeTimeCode(TimeCode time)

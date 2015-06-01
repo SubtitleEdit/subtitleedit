@@ -348,7 +348,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (last != null && last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

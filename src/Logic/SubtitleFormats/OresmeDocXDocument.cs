@@ -277,7 +277,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (subtitle.Paragraphs[i].EndTime.TotalMilliseconds == subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
                     subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - 1;
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode GetTimeCode(string s)

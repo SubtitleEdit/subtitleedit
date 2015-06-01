@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
                 p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private void ReadLine(Subtitle subtitle, string line, string next)

@@ -121,7 +121,7 @@ NOTE=
                 subtitle.Paragraphs.Add(p);
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

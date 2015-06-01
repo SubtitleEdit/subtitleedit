@@ -639,7 +639,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     lastExtensionBlockNumber = tti.ExtensionBlockNumber;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             Header = header;
         }
 

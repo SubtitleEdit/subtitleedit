@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.EndTime.TotalMilliseconds = nextParagraph.StartTime.TotalMilliseconds - 1;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private bool TryReadTimeCodesLine(string line, Paragraph paragraph)

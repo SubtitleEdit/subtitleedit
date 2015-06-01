@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!string.IsNullOrWhiteSpace(_paragraph.Text))
                 subtitle.Paragraphs.Add(_paragraph);
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private void ReadLine(Subtitle subtitle, string line)

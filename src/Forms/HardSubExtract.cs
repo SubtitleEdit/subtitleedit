@@ -176,7 +176,7 @@ namespace Nikse.SubtitleEdit.Forms
             //        bmp.Dispose();
             //    }
             //}
-            //sub.Renumber(1);
+            //sub.Renumber();
             //if (sub.Paragraphs.Count > 0)
             //{
             //    OcrFileName = fileNameNoExt + ".srt";
