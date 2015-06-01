@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p2.Text = Utilities.AutoBreakLine(p2.Text);
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

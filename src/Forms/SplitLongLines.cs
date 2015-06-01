@@ -303,7 +303,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
-            splittedSubtitle.Renumber(1);
+            splittedSubtitle.Renumber();
             return splittedSubtitle;
         }
 

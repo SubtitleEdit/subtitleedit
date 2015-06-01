@@ -547,7 +547,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 j++;
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             Errors = _errors.ToString();
         }
 

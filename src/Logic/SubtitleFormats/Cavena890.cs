@@ -716,7 +716,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 i += 128;
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static string FixText(byte[] buffer, int start, int textLength, int languageId)

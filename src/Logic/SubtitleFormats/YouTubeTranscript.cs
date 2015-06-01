@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p2.Text = Utilities.AutoBreakLine(p2.Text);
             }
             subtitle.RecalculateDisplayTimes(Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds, null);
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string s)

@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.Text = sb.ToString().Trim();
                 subtitle.Paragraphs.Add(p);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

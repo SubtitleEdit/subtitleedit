@@ -5006,7 +5006,7 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
 
                 _originalSubtitle.Paragraphs.Insert(firstSelectedIndex + 1, newParagraph);
-                _originalSubtitle.Renumber(1);
+                _originalSubtitle.Renumber();
                 subtitleListView1.Fill(_originalSubtitle);
                 textBoxListViewText.Text = currentParagraph.Text;
 

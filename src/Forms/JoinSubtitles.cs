@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
                     JoinedSubtitle.Paragraphs.Add(p);
                 }
             }
-            JoinedSubtitle.Renumber(1);
+            JoinedSubtitle.Renumber();
             labelTotalLines.Text = string.Format(Configuration.Settings.Language.JoinSubtitles.TotalNumberOfLinesX, JoinedSubtitle.Paragraphs.Count);
         }
 

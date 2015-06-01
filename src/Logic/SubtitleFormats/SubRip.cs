@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
 
             if (doRenum)
-                subtitle.Renumber(1);
+                subtitle.Renumber();
 
             Errors = _errors.ToString();
         }

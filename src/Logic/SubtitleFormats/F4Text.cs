@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 3000;
                 subtitle.Paragraphs.Add(p);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private TimeCode DecodeTimeCode(string[] parts)

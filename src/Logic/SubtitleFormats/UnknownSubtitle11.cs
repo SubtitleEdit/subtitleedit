@@ -254,7 +254,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 i++;
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static int GetTextStartIndex(string line)

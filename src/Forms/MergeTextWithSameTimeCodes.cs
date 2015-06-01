@@ -227,7 +227,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!_loading)
                 listViewFixes.ItemChecked += listViewFixes_ItemChecked;
 
-            mergedSubtitle.Renumber(1);
+            mergedSubtitle.Renumber();
             return mergedSubtitle;
         }
 

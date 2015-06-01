@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 index++;
             }
             subtitle.RemoveEmptyLines();
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static string GetTextAfterTimeCodes(string s)

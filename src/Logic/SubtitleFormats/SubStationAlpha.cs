@@ -420,7 +420,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             }
             if (header.Length > 0)
                 subtitle.Header = header.ToString();
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             Errors = errors.ToString();
         }
 

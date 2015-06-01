@@ -841,7 +841,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 subtitle.Header = header.ToString();
             if (footer.Length > 0)
                 subtitle.Footer = footer.ToString().Trim();
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             Errors = errors.ToString();
         }
 

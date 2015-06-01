@@ -129,7 +129,7 @@ SRPSKI
             }
             if (!string.IsNullOrEmpty(paragraph.Text))
                 subtitle.Paragraphs.Add(paragraph);
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
     }
 }
