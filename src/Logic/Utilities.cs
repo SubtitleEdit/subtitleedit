@@ -2166,7 +2166,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             int italicBeginTagCount = CountTagInText(text, beginTag);
             int italicEndTagCount = CountTagInText(text, endTag);
-            int noOfLines = CountTagInText(text, Environment.NewLine) + 1;
+            int noOfLines = GetNumberOfLines(text);
             if (italicBeginTagCount + italicEndTagCount > 0)
             {
                 if (italicBeginTagCount == 1 && italicEndTagCount == 1 && text.IndexOf(beginTag, StringComparison.Ordinal) > text.IndexOf(endTag, StringComparison.Ordinal))

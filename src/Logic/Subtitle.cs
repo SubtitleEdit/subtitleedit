@@ -242,10 +242,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <returns>True if times could be calculated</returns>
         public bool CalculateTimeCodesFromFrameNumbers(double frameRate)
         {
-            if (_format == null)
-                return false;
-
-            if (_format.IsTimeBased)
+            if (_format == null || _format.IsTimeBased)
                 return false;
 
             foreach (Paragraph p in Paragraphs)
@@ -262,10 +259,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <returns></returns>
         public bool CalculateFrameNumbersFromTimeCodes(double frameRate)
         {
-            if (_format == null)
-                return false;
-
-            if (_format.IsFrameBased)
+            if (_format == null || _format.IsFrameBased)
                 return false;
 
             foreach (Paragraph p in Paragraphs)
