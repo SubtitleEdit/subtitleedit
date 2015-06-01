@@ -423,6 +423,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <ShadowWidth>Schattenbreite</ShadowWidth>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Bildformat</ImageFormat>
+    <FullFrameImage>Vollbild Bilder</FullFrameImage>
     <SimpleRendering>Einfaches Rendern</SimpleRendering>
     <AntiAliasingWithTransparency>Antialiasing bei Transparenz</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
@@ -1276,6 +1277,9 @@ Fortfahren?</SubtitleAppendPrompt>
     <ErrorLoadPng>Diese Datei ist ein PNG Bild. Subtitle Edit kann keine PNG Dateien öffnen.</ErrorLoadPng>
     <ErrorLoadSrr>Diese Datei ist eine ReScene .srr Datei - keine Untertiteldatei.</ErrorLoadSrr>
     <ErrorLoadTorrent>Diese Datei ist eine BitTorrent Datei - keine Untertiteldatei.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Diese Datei enthällt nur Nullzeichen.
+
+Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung vorliegen unter Menüpunkt "Datei -&gt; Automatische Sicherung wiederherstellen..."</ErrorLoadBinaryZeroes>
     <NoSupportEncryptedVobSub>Verschlüsselte VobSub-Untertitel können nicht verarbeitet werden.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Blu-ray sup Dateien sind hier nicht erlaubt.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>DVD sup Dateien sind hier nicht erlaubt.</NoSupportHereDvdSup>
@@ -1419,8 +1423,10 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <NewLine>Neue Zeile (\r\n)</NewLine>
     <NewLineShort>Neue Zeile (\n)</NewLineShort>
     <AnyDigit>Jede Ziffer (\d)</AnyDigit>
+    <NonDigit>Keine Ziffer (\D)</NonDigit>
     <AnyCharacter>Jedes Zeichen (.)</AnyCharacter>
     <AnyWhitespace>Jedes Leerzeichen (\s)</AnyWhitespace>
+    <NonWhitespace>Kein Leerzeichen (\S)</NonWhitespace>
     <ZeroOrMore>Null oder mehr (*)</ZeroOrMore>
     <OneOrMore>Eins oder mehr (+)</OneOrMore>
     <InCharacterGroup>In Zeichengruppe ([test])</InCharacterGroup>
@@ -2028,6 +2034,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <InspectCompareMatchesForCurrentImage>Untersuche Vergleichstreffer für aktuelles Bild...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Bearbeite letzte Bildvergleiche...</EditLastAdditions>
     <SetUnitalicFactor>Entkursivierungsfaktor setzen...</SetUnitalicFactor>
+    <DiscardTitle>OCR Änderungen verwerfen?</DiscardTitle>
+    <DiscardText>Möchten Sie die aktuellen OCR Änderungen verwerfen?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manuelles Bild zu Text</Title>
