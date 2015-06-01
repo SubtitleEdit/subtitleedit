@@ -6466,7 +6466,7 @@ namespace Nikse.SubtitleEdit.Forms
                 s = "<i>" + HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagItalic) + "</i>";
             s = s.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
 
-            return Utilities.FixInvalidItalicTags(s);
+            return HtmlUtil.FixInvalidItalicTags(s);
         }
 
         private void LogUnknownWords()

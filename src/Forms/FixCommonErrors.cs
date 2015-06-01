@@ -1066,7 +1066,7 @@ namespace Nikse.SubtitleEdit.Forms
                         text = text.Replace(beginTag.ToUpper(), beginTag).Replace(endTag.ToUpper(), endTag);
                         string oldText = text;
 
-                        text = Utilities.FixInvalidItalicTags(text);
+                        text = HtmlUtil.FixInvalidItalicTags(text);
                         if (text != oldText)
                         {
                             Subtitle.Paragraphs[i].Text = text;
