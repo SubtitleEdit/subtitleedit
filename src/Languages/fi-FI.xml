@@ -1258,7 +1258,7 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
   <MatroskaSubtitleChooser>
     <Title>Valitse alaotsikko Matroska tiedostosta</Title>
     <PleaseChoose>Enemmän kuin yksi tekstitys löytyi - valitse</PleaseChoose>
-    <TrackXLanguageYTypeZ>Raita {0} - {1} - kieli: {2} - tyyppi: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Raita {0} - kieli: {1} - tyyppi: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Yksikkömuunnin</Title>

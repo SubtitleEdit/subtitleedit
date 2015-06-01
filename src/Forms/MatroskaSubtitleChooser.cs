@@ -31,11 +31,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Initialize(List<MatroskaTrackInfo> subtitleInfoList)
         {
+            var format = Configuration.Settings.Language.MatroskaSubtitleChooser.TrackXLanguageYTypeZ;
             foreach (var info in subtitleInfoList)
             {
-                string s = string.Format(Configuration.Settings.Language.MatroskaSubtitleChooser.TrackXLanguageYTypeZ, info.TrackNumber, info.Name, info.Language, info.CodecId);
-                s = s.Replace("-  -", "-"); // hack to handle empty "info.Name"
-                listBox1.Items.Add(s);
+                var track = string.Format((!string.IsNullOrWhiteSpace(info.Name) ? "{0} - {1}" : "{0}"), info.TrackNumber, info.Name);
+                listBox1.Items.Add(string.Format(format, track, info.Language, info.CodecId));
             }
             listBox1.SelectedIndex = 0;
         }

@@ -1290,7 +1290,7 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
     <PleaseChoose>More than one subtitle found - please choose</PleaseChoose>
-    <TrackXLanguageYTypeZ>Track {0} - {1} - language: {2} - type: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Track {0} - language: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Measurement converter</Title>

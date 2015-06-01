@@ -1285,7 +1285,7 @@ Fortfahren?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Untertitel aus Matroska Datei auswählen</Title>
     <PleaseChoose>Mehr als ein Untertitel gefunden - bitte wählen</PleaseChoose>
-    <TrackXLanguageYTypeZ>Spur {0} - {1} - Sprache: {2} - Typ: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Spur {0} - Sprache: {1} - Typ: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Maßeinheiten umwandeln</Title>

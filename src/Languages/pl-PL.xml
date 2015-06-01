@@ -1287,7 +1287,7 @@ Kontynuować?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Wybierz napisy z pliku Matroska</Title>
     <PleaseChoose>Znaleziono klika napisów - proszę wybrać</PleaseChoose>
-    <TrackXLanguageYTypeZ>Ścieżka {0} - {1} - język: {2} - typ: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Ścieżka {0} - język: {1} - typ: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Konwerter miar</Title>

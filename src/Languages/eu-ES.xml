@@ -1261,7 +1261,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Hautatu azpidatzia Matroska agiritik</Title>
     <PleaseChoose>Azpidatzi bat baino gehiago aurkitu da - mesedez hautatu</PleaseChoose>
-    <TrackXLanguageYTypeZ>Bidea {0} - {1} - Hizkuntza: {2} - Mota: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Bidea {0} - Hizkuntza: {1} - Mota: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Neurriketa bihurtzailea</Title>

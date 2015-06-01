@@ -1271,7 +1271,7 @@ Deseja continuar?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Selecionar legenda a partir do arquivo Matroska</Title>
     <PleaseChoose>Foi encontrada mais do que uma legenda - por favor, escolha uma</PleaseChoose>
-    <TrackXLanguageYTypeZ>Faixa {0} - {1} - idioma: {2} - tipo: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Faixa {0} - idioma: {1} - tipo: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Conversor de medidas</Title>
