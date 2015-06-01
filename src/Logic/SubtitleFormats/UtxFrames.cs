@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text = new StringBuilder();
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static string EncodeTimeCode(TimeCode time)

@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             if (p != null)
                 subtitle.Paragraphs.Add(p);
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)

@@ -432,7 +432,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 subtitle.Paragraphs.Add(p);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
 
             if (subtitle.Paragraphs.Count > 0 &&
                 (subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text.ToUpper().Trim() == "</BODY>" ||

@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (p != null && string.IsNullOrEmpty(p.Text))
                     subtitle.Paragraphs.RemoveAt(i);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
     }
 }

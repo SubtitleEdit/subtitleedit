@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 paragraph.Text = DecodeText(sb);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static string EncodeText(string s)

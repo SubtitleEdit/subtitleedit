@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 subtitle.Paragraphs.Add(_paragraph);
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private void ReadLine(Subtitle subtitle, string line)

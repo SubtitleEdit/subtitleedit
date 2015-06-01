@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!string.IsNullOrWhiteSpace(p.Text))
                 subtitle.Paragraphs.Add(p);
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)

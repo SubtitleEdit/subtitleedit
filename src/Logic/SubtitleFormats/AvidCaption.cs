@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!endFound)
                 _errorCount++;
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string[] parts)

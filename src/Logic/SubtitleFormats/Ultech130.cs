@@ -453,7 +453,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         public override List<string> AlternateExtensions

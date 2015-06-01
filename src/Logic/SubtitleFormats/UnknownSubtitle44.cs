@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     current.EndTime.TotalMilliseconds = current.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
             }
             subtitle.RemoveEmptyLines();
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string[] parts)

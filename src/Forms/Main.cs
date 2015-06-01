@@ -4683,7 +4683,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (fixErrors.ShowDialog(this) == DialogResult.OK)
                     {
                         MakeHistoryForUndo(_language.BeforeCommonErrorFixes);
-                        _subtitle.Renumber(1);
+                        _subtitle.Renumber();
                         if (onlySelectedLines)
                         {
                             // we only update selected lines
@@ -4735,7 +4735,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 _subtitle.Paragraphs.Add(p);
                             ShowStatus(_language.CommonErrorsFixed);
                         }
-                        _subtitle.Renumber(1);
+                        _subtitle.Renumber();
                         ShowSource();
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         RestoreSubtitleListviewIndexes();
@@ -4778,7 +4778,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void Renumber()
         {
             if (_subtitle != null && _subtitle.Paragraphs != null && _subtitle.Paragraphs.Count > 0)
-                _subtitle.Renumber(1);
+                _subtitle.Renumber();
         }
 
         private void RemoveTextForHearImparedToolStripMenuItemClick(object sender, EventArgs e)
@@ -4946,7 +4946,7 @@ namespace Nikse.SubtitleEdit.Forms
                                             }
                                         }
 
-                                        _subtitle.Renumber(1);
+                                        _subtitle.Renumber();
 
                                         ShowSource();
                                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -6108,7 +6108,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (i < _subtitleAlternate.Paragraphs.Count)
                         _subtitleAlternate.Paragraphs.RemoveAt(i);
                 }
-                _subtitleAlternate.Renumber(1);
+                _subtitleAlternate.Renumber();
             }
 
             var indexes = new List<int>();
@@ -6130,7 +6130,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_networkSession != null && _networkSession.LastSubtitle != null && i < _networkSession.LastSubtitle.Paragraphs.Count)
                         _networkSession.LastSubtitle.Paragraphs.RemoveAt(i);
                 }
-                _subtitle.Renumber(1);
+                _subtitle.Renumber();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 if (SubtitleListview1.FirstVisibleIndex == 0)
                     SubtitleListview1.FirstVisibleIndex = -1;
@@ -6234,7 +6234,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(newParagraph));
                 }
-                _subtitleAlternate.Renumber(1);
+                _subtitleAlternate.Renumber();
             }
 
             if (_networkSession != null)
@@ -6246,7 +6246,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _subtitle.Paragraphs.Insert(firstSelectedIndex, newParagraph);
                 _subtitleListViewIndex = -1;
-                _subtitle.Renumber(1);
+                _subtitle.Renumber();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             }
             SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
@@ -6339,7 +6339,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(newParagraph));
                 }
-                _subtitleAlternate.Renumber(1);
+                _subtitleAlternate.Renumber();
             }
 
             if (_networkSession != null)
@@ -6350,7 +6350,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 _subtitle.Paragraphs.Insert(firstSelectedIndex, newParagraph);
-                _subtitle.Renumber(1);
+                _subtitle.Renumber();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             }
             SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
@@ -7558,7 +7558,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 originalCurrent.Text = originalCurrent.Text.Remove(3, 1);
                         }
                         _subtitleAlternate.InsertParagraphInCorrectTimeOrder(originalNew);
-                        _subtitleAlternate.Renumber(1);
+                        _subtitleAlternate.Renumber();
                     }
                 }
 
@@ -7582,7 +7582,7 @@ namespace Nikse.SubtitleEdit.Forms
                         newParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                     }
                     _subtitle.Paragraphs.Insert(firstSelectedIndex + 1, newParagraph);
-                    _subtitle.Renumber(1);
+                    _subtitle.Renumber();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 }
                 SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
@@ -7630,7 +7630,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 prevOriginal.EndTime = currentOriginal.EndTime;
                                 _subtitleAlternate.Paragraphs.Remove(currentOriginal);
                             }
-                            _subtitleAlternate.Renumber(1);
+                            _subtitleAlternate.Renumber();
                         }
                     }
 
@@ -7651,7 +7651,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         _subtitle.Paragraphs.Remove(currentParagraph);
-                        _subtitle.Renumber(1);
+                        _subtitle.Renumber();
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         SubtitleListview1.Items[firstSelectedIndex - 1].Selected = true;
                     }
@@ -7740,7 +7740,7 @@ namespace Nikse.SubtitleEdit.Forms
                         original.Text = ChangeAllLinesItalictoSingleItalic(original.Text);
                         original.Text = Utilities.AutoBreakLine(original.Text);
                         original.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
-                        _subtitleAlternate.Renumber(1);
+                        _subtitleAlternate.Renumber();
                     }
                 }
 
@@ -7754,7 +7754,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     for (int i = deleteIndices.Count - 1; i >= 0; i--)
                         _subtitle.Paragraphs.RemoveAt(deleteIndices[i]);
-                    _subtitle.Renumber(1);
+                    _subtitle.Renumber();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 }
                 ShowSource();
@@ -7862,7 +7862,7 @@ namespace Nikse.SubtitleEdit.Forms
                             original.EndTime = originalNext.EndTime;
                             _subtitleAlternate.Paragraphs.Remove(originalNext);
                         }
-                        _subtitleAlternate.Renumber(1);
+                        _subtitleAlternate.Renumber();
                     }
                 }
 
@@ -7920,7 +7920,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     _subtitle.Paragraphs.Remove(nextParagraph);
-                    _subtitle.Renumber(1);
+                    _subtitle.Renumber();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 }
                 ShowSource();
@@ -8593,7 +8593,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.Paragraphs.Insert(index, p);
                         index++;
                     }
-                    _subtitle.Renumber(1);
+                    _subtitle.Renumber();
                     _subtitleListViewIndex = -1;
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -8640,7 +8640,7 @@ namespace Nikse.SubtitleEdit.Forms
                         i--;
                     }
 
-                    _subtitle.Renumber(1);
+                    _subtitle.Renumber();
                     _subtitleListViewIndex = -1;
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -8827,7 +8827,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
             SetEncoding(Encoding.UTF8);
             ShowStatus(_language.SubtitleImportedFromMatroskaFile);
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
             _subtitle.WasLoadedWithFrameNumbers = false;
             if (matroska.Path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || matroska.Path.EndsWith(".mks", StringComparison.OrdinalIgnoreCase))
             {
@@ -9557,7 +9557,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 SetEncoding(Encoding.UTF8);
                 ShowStatus(_language.SubtitleImportedFromMatroskaFile);
-                _subtitle.Renumber(1);
+                _subtitle.Renumber();
                 _subtitle.WasLoadedWithFrameNumbers = false;
                 if (fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".m4v", StringComparison.OrdinalIgnoreCase))
                 {
@@ -10913,7 +10913,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         original.Text = originalText;
                         original.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
-                        _subtitleAlternate.Renumber(1);
+                        _subtitleAlternate.Renumber();
                     }
                 }
 
@@ -10927,7 +10927,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     for (int i = deleteIndices.Count - 1; i >= 0; i--)
                         _subtitle.Paragraphs.RemoveAt(deleteIndices[i]);
-                    _subtitle.Renumber(1);
+                    _subtitle.Renumber();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 }
                 ShowSource();
@@ -11815,7 +11815,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _subtitle.Paragraphs.RemoveAt(deleteIndex);
                     }
-                    _subtitle.Renumber(1);
+                    _subtitle.Renumber();
 
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     RestoreSubtitleListviewIndexes();
@@ -12266,7 +12266,7 @@ namespace Nikse.SubtitleEdit.Forms
                             return;
                     }
 
-                    sub.Renumber(1);
+                    sub.Renumber();
                     if (sub.Paragraphs.Count == 0)
                     {
                         Encoding enc;
@@ -12595,7 +12595,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 index++;
             }
-            insertIntoSubtitle.Renumber(1);
+            insertIntoSubtitle.Renumber();
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -13272,11 +13272,11 @@ namespace Nikse.SubtitleEdit.Forms
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                 {
                     _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(newParagraph));
-                    _subtitleAlternate.Renumber(1);
+                    _subtitleAlternate.Renumber();
                 }
 
                 _subtitleListViewIndex = -1;
-                _subtitle.Renumber(1);
+                _subtitle.Renumber();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             }
             SubtitleListview1.SelectIndexAndEnsureVisible(index);
@@ -14875,11 +14875,11 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                 {
                     _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(newParagraph));
-                    _subtitleAlternate.Renumber(1);
+                    _subtitleAlternate.Renumber();
                 }
 
                 _subtitleListViewIndex = -1;
-                _subtitle.Renumber(1);
+                _subtitle.Renumber();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             }
             SubtitleListview1.SelectIndexAndEnsureVisible(index);
@@ -15975,7 +15975,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (doReFill)
             {
-                _subtitle.Renumber(1);
+                _subtitle.Renumber();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 UpdateListviewWithUserLogEntries();
 
@@ -16410,11 +16410,11 @@ namespace Nikse.SubtitleEdit.Forms
                                     index++;
                                 }
                                 if (subtitle.Paragraphs.Count > 0)
-                                    _subtitleAlternate.Renumber(1);
+                                    _subtitleAlternate.Renumber();
                             }
                         }
                     }
-                    _subtitle.Renumber(1);
+                    _subtitle.Renumber();
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     RestoreSubtitleListviewIndexes();

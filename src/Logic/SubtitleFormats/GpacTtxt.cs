@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         last = p;
                     }
                 }
-                subtitle.Renumber(1);
+                subtitle.Renumber();
             }
             catch
             {

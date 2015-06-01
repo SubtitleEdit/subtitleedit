@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxMergeShortLines.Checked)
                 MergeLinesWithContinuation();
 
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
             if (checkBoxGenerateTimeCodes.Checked)
             {
                 FixDurations();
