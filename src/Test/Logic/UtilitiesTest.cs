@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Forms;
+using Nikse.SubtitleEdit.Core;
 
 namespace Test.Logic
 {
@@ -90,7 +91,7 @@ namespace Test.Logic
         public void FixInvalidItalicTags2()
         {
             const string s1 = "Gledaj prema kameri i rici <i>zdravo!";
-            string s2 = Utilities.FixInvalidItalicTags(s1);
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
             Assert.AreEqual(s2, "Gledaj prema kameri i rici zdravo!");
         }
 
@@ -99,7 +100,7 @@ namespace Test.Logic
         public void FixInvalidItalicTags3()
         {
             string s1 = "<i>Line 1.</i>" + Environment.NewLine + "<i>Line 2.";
-            string s2 = Utilities.FixInvalidItalicTags(s1);
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
             Assert.AreEqual(s2, "<i>Line 1." + Environment.NewLine + "Line 2.</i>");
         }
 
@@ -108,7 +109,7 @@ namespace Test.Logic
         public void FixInvalidItalicTags4()
         {
             string s1 = "It <i>is</i> a telegram," + Environment.NewLine + "it <i>is</i> ordering an advance,";
-            string s2 = Utilities.FixInvalidItalicTags(s1);
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
             Assert.AreEqual(s2, s1);
         }
 
@@ -117,7 +118,7 @@ namespace Test.Logic
         public void FixInvalidItalicTags5()
         {
             string s1 = "- <i>It is a telegram?</i>" + Environment.NewLine + "<i>- It is.</i>";
-            string s2 = Utilities.FixInvalidItalicTags(s1);
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
             Assert.AreEqual(s2, "<i>- It is a telegram?" + Environment.NewLine + "- It is.</i>");
         }
 
@@ -126,7 +127,7 @@ namespace Test.Logic
         public void FixInvalidItalicTags6()
         {
             string s1 = "- <i>Text1!</i>" + Environment.NewLine + "- <i>Text2.</i>";
-            string s2 = Utilities.FixInvalidItalicTags(s1);
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
             Assert.AreEqual(s2, "<i>- Text1!" + Environment.NewLine + "- Text2.</i>");
         }
 
@@ -135,7 +136,7 @@ namespace Test.Logic
         public void FixInvalidItalicTags7()
         {
             string s1 = "<i>- You think they're they gone?<i>" + Environment.NewLine + "<i>- That can't be.</i>";
-            string s2 = Utilities.FixInvalidItalicTags(s1);
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
             Assert.AreEqual(s2, "<i>- You think they're they gone?" + Environment.NewLine + "- That can't be.</i>");
         }
 
@@ -144,7 +145,7 @@ namespace Test.Logic
         public void FixInvalidItalicTags8()
         {
             string s1 = "<i>- You think they're they gone?</i>" + Environment.NewLine + "<i>- That can't be.<i>";
-            string s2 = Utilities.FixInvalidItalicTags(s1);
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
             Assert.AreEqual(s2, "<i>- You think they're they gone?" + Environment.NewLine + "- That can't be.</i>");
         }
 
@@ -153,7 +154,7 @@ namespace Test.Logic
         public void FixInvalidItalicTags9()
         {
             const string s1 = "FALCONE:<i> I didn't think</i>\r\n<i>it was going to be you,</i>";
-            string s2 = Utilities.FixInvalidItalicTags(s1);
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
             Assert.AreEqual(s2, "FALCONE: <i>I didn't think\r\nit was going to be you,</i>");
         }
 

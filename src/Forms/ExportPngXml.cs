@@ -1944,7 +1944,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             text = text.Replace("<I>", "<i>");
             text = text.Replace("</I>", "</i>");
-            text = Utilities.FixInvalidItalicTags(text);
+            text = HtmlUtil.FixInvalidItalicTags(text);
 
             text = text.Replace("<B>", "<b>");
             text = text.Replace("</B>", "</b>");

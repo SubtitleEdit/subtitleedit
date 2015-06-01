@@ -1767,7 +1767,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 res += "</i>";
             //res = res.Replace("aã", "ã");
             //res = res.Replace("oõ", "õ");
-            return Utilities.FixInvalidItalicTags(res);
+            return HtmlUtil.FixInvalidItalicTags(res);
         }
 
         private static string GetLetter(string hexCode)

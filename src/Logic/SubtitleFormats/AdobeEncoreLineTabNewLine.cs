@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                         text = text.Remove(index, "@Italic@".Length).Insert(index, italicTag);
                                         italicOn = !italicOn;
                                     }
-                                    text = Utilities.FixInvalidItalicTags(text);
+                                    text = HtmlUtil.FixInvalidItalicTags(text);
                                 }
                                 p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
                                 subtitle.Paragraphs.Add(p);
