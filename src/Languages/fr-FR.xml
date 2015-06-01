@@ -423,6 +423,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <ShadowWidth>Largeur d'ombre</ShadowWidth>
     <Transparency>Transparence</Transparency>
     <ImageFormat>Format d'image</ImageFormat>
+    <FullFrameImage>Image complète</FullFrameImage>
     <SimpleRendering>Rendu simple</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing avec transparence</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
@@ -1282,6 +1283,8 @@ Continuer ?</ImportTimeCodesDifferentNumberOfLinesWarning>
 - Ce n’est pas un fichier de sous-titres.</ErrorLoadSrr>
     <ErrorLoadTorrent>Ce fichier semble être un fichier BitTorrent :
 - Ce n’est pas un fichier de sous-titres.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Ce fichier ne contient que des zéros binaires :
+Si vous avez modifié ce fichier avec Subtitle Edit vous pourriez trouver une sauvegarde sous le point de menu Fichier -&gt; Restauration à partir d'auto-backup...</ErrorLoadBinaryZeroes>
     <NoSupportEncryptedVobSub>Il n'y a pas de support des sous-titres VobSub chiffrées.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Des fichiers Blu-ray sup ne sont pas supporter ici.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>Des fichiers DVD sup ne sont pas supporter ici.</NoSupportHereDvdSup>
@@ -1425,8 +1428,10 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <NewLine>Nouvelle ligne (\r\n)</NewLine>
     <NewLineShort>Nouvelle ligne (\n)</NewLineShort>
     <AnyDigit>Tous les chiffres (\d)</AnyDigit>
+    <NonDigit>Tous sauf les chiffres (\D)</NonDigit>
     <AnyCharacter>Tous les caractères (.)</AnyCharacter>
     <AnyWhitespace>Tous les espaces (\s)</AnyWhitespace>
+    <NonWhitespace>Tous sauf les espaces (\S)</NonWhitespace>
     <ZeroOrMore>Zéro ou plus (*)</ZeroOrMore>
     <OneOrMore>Un ou plus (+)</OneOrMore>
     <InCharacterGroup>Dans groupe de caractères ([test])</InCharacterGroup>
@@ -2033,6 +2038,8 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <InspectCompareMatchesForCurrentImage>Comparer avec l'image actuelle...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Modifier derniers ajouts d'image...</EditLastAdditions>
     <SetUnitalicFactor>Définir facteur non italique...</SetUnitalicFactor>
+    <DiscardTitle>Annuler les modifications?</DiscardTitle>
+    <DiscardText>Voulez-vous annuler les modifications apportées en session OCR courante?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Conversion manuelle d'images en texte</Title>
