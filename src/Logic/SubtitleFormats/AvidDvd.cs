@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.Text = sb.ToString().Replace("|", Environment.NewLine).Trim();
                 subtitle.Paragraphs.Add(p);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

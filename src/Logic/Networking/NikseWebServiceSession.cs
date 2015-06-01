@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                     Paragraph p = new Paragraph(WebUtility.HtmlDecode(sequence.Text).Replace("<br />", Environment.NewLine), sequence.StartMilliseconds, sequence.EndMilliseconds);
                     Subtitle.Paragraphs.Add(p);
                 }
-                Subtitle.Renumber(1);
+                Subtitle.Renumber();
                 LastSubtitle = new Subtitle(Subtitle);
             }
         }

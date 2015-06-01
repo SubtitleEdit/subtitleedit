@@ -1068,7 +1068,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs.Add(p);
                 }
             }
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
 
             FixShortDisplayTimes(_subtitle);
 
@@ -1107,7 +1107,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs.Add(p);
                 }
             }
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
 
             FixShortDisplayTimes(_subtitle);
 
@@ -1149,7 +1149,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs.Add(p);
                 }
             }
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
 
             FixShortDisplayTimes(_subtitle);
 
@@ -7701,7 +7701,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = new Paragraph(string.Empty, header.StartTime.TotalMilliseconds, header.StartTime.TotalMilliseconds + header.Picture.Delay.TotalMilliseconds);
                 _subtitle.Paragraphs.Add(p);
             }
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
@@ -7802,7 +7802,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = new Paragraph(string.Empty, subItem.Start.TotalMilliseconds, subItem.End.TotalMilliseconds);
                 _subtitle.Paragraphs.Add(p);
             }
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
@@ -8378,7 +8378,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             _tesseractAsyncStrings = null;
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
@@ -8418,7 +8418,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _subtitle.Paragraphs.Add(new Paragraph(string.Empty, sub.StartMilliseconds, sub.EndMilliseconds));
             }
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }

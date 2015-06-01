@@ -652,7 +652,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (subtitle.Paragraphs.Count > 0)
                 subtitle.Header = xml.OuterXml; // save id/language/font for later use
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static string GetColorStringForDCinema(string p)

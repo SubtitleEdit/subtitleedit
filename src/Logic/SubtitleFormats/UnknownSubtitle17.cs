@@ -159,7 +159,7 @@ DIGITAL_CINEMA=YES
                             if (paragraph.Text.Length > 2000)
                             {
                                 _errorCount += 100;
-                                subtitle.Renumber(1);
+                                subtitle.Renumber();
                                 return;
                             }
                         }
@@ -171,7 +171,7 @@ DIGITAL_CINEMA=YES
                 paragraph.Text = paragraph.Text.Replace("[/BODY]", string.Empty).Trim();
                 subtitle.Paragraphs.Add(paragraph);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static string EncodeTimeCode(TimeCode time)

@@ -136,7 +136,7 @@ $ColorIndex4    = 3
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string time)

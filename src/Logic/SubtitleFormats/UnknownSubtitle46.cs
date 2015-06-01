@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             subtitle.RemoveEmptyLines();
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

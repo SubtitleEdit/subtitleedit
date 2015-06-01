@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

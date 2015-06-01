@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 subtitle.Paragraphs.RemoveAt(0);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static Paragraph GetPacParagraph(ref int index, byte[] buffer)

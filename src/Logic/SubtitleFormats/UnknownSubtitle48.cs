@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount += 10;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static bool GetTimeCode(TimeCode timeCode, string timeString)

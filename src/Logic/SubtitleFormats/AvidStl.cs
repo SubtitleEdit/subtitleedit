@@ -189,7 +189,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 subtitle.Paragraphs.Add(p);
                 index += 128;
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

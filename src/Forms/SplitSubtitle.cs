@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SavePart(part1, Configuration.Settings.Language.SplitSubtitle.SavePartOneAs, Configuration.Settings.Language.SplitSubtitle.Part1);
 
                     part2.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-splitTime.TotalMilliseconds));
-                    part2.Renumber(1);
+                    part2.Renumber();
                     SavePart(part2, Configuration.Settings.Language.SplitSubtitle.SavePartTwoAs, Configuration.Settings.Language.SplitSubtitle.Part2);
 
                     DialogResult = DialogResult.OK;

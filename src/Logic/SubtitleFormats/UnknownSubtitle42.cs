@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             if (p != null && italic)
                 p.Text = "<i>" + p.Text.Trim() + "</i>";
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string[] parts)

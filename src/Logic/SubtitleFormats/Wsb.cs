@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (p != null && !string.IsNullOrEmpty(p.Text))
                 subtitle.Paragraphs.Add(p);
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string time)

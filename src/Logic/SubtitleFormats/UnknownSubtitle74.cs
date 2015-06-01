@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)

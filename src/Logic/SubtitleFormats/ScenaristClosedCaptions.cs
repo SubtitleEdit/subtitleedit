@@ -1646,7 +1646,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (p != null && string.IsNullOrEmpty(p.Text))
                 subtitle.Paragraphs.Remove(p);
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         public static string GetSccText(string s, ref int errorCount)

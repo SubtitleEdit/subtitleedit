@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.Text = sb.ToString().TrimEnd();
                 subtitle.Paragraphs.Add(p);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static string EncodeTimeCode(TimeCode time)

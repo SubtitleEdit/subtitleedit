@@ -218,7 +218,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
                 subtitle.Sort(Enums.SubtitleSortCriteria.StartTime); // force order by start time
-                subtitle.Renumber(1);
+                subtitle.Renumber();
             }
             catch (Exception ex)
             {
