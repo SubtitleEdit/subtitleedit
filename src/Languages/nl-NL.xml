@@ -1276,6 +1276,9 @@ Verder gaan?</SubtitleAppendPrompt>
     <ErrorLoadPng>Dit is een png-beeldbestand. Subtitle Edit kan png-bestanden niet openen.</ErrorLoadPng>
     <ErrorLoadSrr>Dit is een ReScene srr-bestand, géén ondertitelbestand.</ErrorLoadSrr>
     <ErrorLoadTorrent>Dit is een BitTorrent bestand, géén ondertitelbestand.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Dit bestand bevat uitsluitend nul-bytes.
+
+Indien u dit bestand met Subtitle Edit bewerkt hebt, kunt u een vorige versie vinden onder menu "Bestand -&gt; Back-up herstellen..."</ErrorLoadBinaryZeroes>
     <NoSupportEncryptedVobSub>Versleutelde VobSub-bestanden worden niet ondersteund.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>U kunt hier geen blu-ray sup-bestand opgeven.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>U kunt hier geen dvd sup-bestand opgeven.</NoSupportHereDvdSup>
@@ -1419,8 +1422,10 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <NewLine>Regeleinde (\r\n)</NewLine>
     <NewLineShort>Regeleinde (\n)</NewLineShort>
     <AnyDigit>Elk cĳfer (\d)</AnyDigit>
+    <NonDigit>Geen cĳfer (\D)</NonDigit>
     <AnyCharacter>Elk teken (.)</AnyCharacter>
     <AnyWhitespace>Elke witruimte (\s)</AnyWhitespace>
+    <NonWhitespace>Geen witruimte (\S)</NonWhitespace>
     <ZeroOrMore>Nul of meer (*)</ZeroOrMore>
     <OneOrMore>Eén of meer (+)</OneOrMore>
     <InCharacterGroup>In tekengroep ([test])</InCharacterGroup>
@@ -2028,6 +2033,8 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <InspectCompareMatchesForCurrentImage>Inspecteer vergelĳkingsovereenkomsten voor huidig beeld...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Bewerk laatste beeldvergelĳkingstoevoegingen...</EditLastAdditions>
     <SetUnitalicFactor>Decursiveringsfactor bepalen</SetUnitalicFactor>
+    <DiscardTitle>OCR wĳzigingen verwerpen?</DiscardTitle>
+    <DiscardText>Wilt u de wĳzigingen in deze OCR sessie verwerpen?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Handmatig beeld naar tekst</Title>
