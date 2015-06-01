@@ -111,11 +111,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generowanie spektrogramu...</GeneratingSpectrogram>
     <ExtractingSeconds>Wyodrębnione audio: {0:0.0} sek.</ExtractingSeconds>
     <ExtractingMinutes>Wyodrębnione audio: {0:0.0} min.</ExtractingMinutes>
-    <WaveFileNotFound>Nie można znaleźć wyodrębnionego pliku wave! 
-Ta funkcja wymaga VLC media player 1.1.x lub nowszego ({0}-bit). Wiersz poleceń: {1} {2}</WaveFileNotFound>
-    <WaveFileMalformed>{0} nie był w stanie wyodrębnić danych audio do pliku wave! 
+    <WaveFileNotFound>Nie można znaleźć wyodrębnionego pliku wave!
+Ta funkcja wymaga VLC media player 1.1.x lub nowszego ({0}-bit).
 
-Wiersz poleceń: {1} {2} 
+Wiersz poleceń: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} nie był w stanie wyodrębnić danych audio do pliku wave!
+
+Wiersz poleceń: {1} {2}
 
 Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <LowDiskSpace>MAŁO MIEJSCA NA DYSKU!</LowDiskSpace>
@@ -340,7 +342,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Title>Wybierz języka</Title>
     <ChooseLanguageStreamId>Wybierz język (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Nieznany język</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Obraz napisów</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -1276,7 +1278,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <ErrorLoadPng>Ten plik wydaje się być plikiem PNG. W Subtitle Edit nie można otworzyć plików PNG.</ErrorLoadPng>
     <ErrorLoadSrr>Ten plik wydaje się być plikiem ReScene .srr - to nie jest plik z napisami.</ErrorLoadSrr>
     <ErrorLoadTorrent>Ten plik wydaje się być plikiem BitTorrent - to nie jest plik z napisami.</ErrorLoadTorrent>
-    <ErrorLoadBinaryZeroes>Przepraszamy, ten plik zawiera tylko zera binarne! 
+    <ErrorLoadBinaryZeroes>Przepraszamy, ten plik zawiera tylko zera binarne!
 
 Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapasową poprzez pozycję menu Plik -&gt; Przywróć automatycznie zapisaną kopię zapasową...</ErrorLoadBinaryZeroes>
     <NoSupportEncryptedVobSub>Zaszyfrowana zawartość VobSub nie jest obsługiwana.</NoSupportEncryptedVobSub>
@@ -1288,7 +1290,7 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
   <MatroskaSubtitleChooser>
     <Title>Wybierz napisy z pliku Matroska</Title>
     <PleaseChoose>Znaleziono klika napisów - proszę wybrać</PleaseChoose>
-    <TrackXLanguageYTypeZ>Ścieżka {0} - {1} - język: {2} - typ: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Ścieżka {0} - język: {1} - typ: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Konwerter miar</Title>
@@ -1373,7 +1375,7 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
   <NetworkJoin>
     <Title>Dołącz do sesji sieciowej</Title>
     <Information>Dołącz do istniejącej sesji, w której wiele osób
- może edytować ten sam plik z napisami (współpracować)</Information>
+może edytować ten sam plik z napisami (współpracować)</Information>
     <Join>Dołącz</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1384,7 +1386,7 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <Title>Uruchom sesję sieciową</Title>
     <ConnectionTo>Łączenie się z {0}...</ConnectionTo>
     <Information>Rozpocznij nową sesję, w której wiele osób
- może edytować ten sam plik z napisami (współpracować)</Information>
+może edytować ten sam plik z napisami (współpracować)</Information>
     <Start>Start</Start>
   </NetworkStart>
   <OpenVideoDvd>
@@ -1638,7 +1640,7 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <MusicSymbolsToReplace>Symbole muzyczne do zastąpienia (oddzielone spacją)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw częste błędy OCR - także z użyciem sztywnych reguł</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania
-	(z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+(z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Skróty klawiszowe</Shortcuts>
     <Shortcut>Skrót</Shortcut>
     <Control>Ctrl</Control>
@@ -1805,8 +1807,8 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <LineMaximumLength>Maksymalna długość linii</LineMaximumLength>
     <LineContinuationBeginEndStrings>Znak kontynuacji na początku/końcu linii</LineContinuationBeginEndStrings>
     <NumberOfSplits>Ilość podzielonych: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków </LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków </LongestLineIsXAtY>
+    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków</LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Podziel napisy</Title>
