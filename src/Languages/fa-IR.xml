@@ -865,7 +865,7 @@ http://soft98.ir
   <MatroskaSubtitleChooser>
     <Title>MKV نام فایل را انتخاب کنید از</Title>
     <PleaseChoose>بیش از یک نام یافت -- لطفا انتخاب کنید</PleaseChoose>
-    <TrackXLanguageYTypeZ>Track {0} - {1} - language: {2} - type: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Track {0} - language: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MergedShortLines>
     <Title>ادغام خطوط کوتاه</Title>

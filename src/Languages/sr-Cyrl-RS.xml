@@ -846,7 +846,7 @@
   <MatroskaSubtitleChooser>
     <Title>Одабир титла из матрошке</Title>
     <PleaseChoose>Пронађено је више од једног титла. Изаберите који желите.</PleaseChoose>
-    <TrackXLanguageYTypeZ>Запис {0} – {1} – језик: {2} – врста: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Запис {0} – језик: {1} – врста: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MergedShortLines>
     <Title>Спајање кратких линија</Title>

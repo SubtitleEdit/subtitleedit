@@ -1232,7 +1232,7 @@ https://github.com/SubtitleEdit/subtitleedit
   <MatroskaSubtitleChooser>
     <Title>Выбор субтитров из файла Matroska</Title>
     <PleaseChoose>Найдено несколько субтитров - пожалуйста, сделайте выбор:</PleaseChoose>
-    <TrackXLanguageYTypeZ>Трек {0} - {1} - язык: {2} - тип: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Трек {0} - язык: {1} - тип: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Конвертер величин</Title>

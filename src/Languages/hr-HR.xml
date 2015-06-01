@@ -1285,7 +1285,7 @@ koji bi trebao biti usklađen s video datotekom.
   <MatroskaSubtitleChooser>
     <Title>Odabir podnaslova iz matroške</Title>
     <PleaseChoose>Pronađeno je više od jednog podnaslova. Izaberite koji želite.</PleaseChoose>
-    <TrackXLanguageYTypeZ>Zapis {0} – {1} – jezik: {2} – vrsta: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Zapis {0} – jezik: {1} – vrsta: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Konverter jedinica</Title>

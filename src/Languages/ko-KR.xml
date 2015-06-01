@@ -1283,7 +1283,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   <MatroskaSubtitleChooser>
     <Title>MATROSKA 파일 안에 있는 자막 선택하기</Title>
     <PleaseChoose>한 개 이상의 자막 발견! - 자막을 선택하십시오!</PleaseChoose>
-    <TrackXLanguageYTypeZ>트랙 {0} - {1} - 언어: {2} - 종류: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>트랙 {0} - 언어: {1} - 종류: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>치수 변환기</Title>

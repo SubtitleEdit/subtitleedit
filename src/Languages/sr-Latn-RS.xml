@@ -1043,7 +1043,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
   <MatroskaSubtitleChooser>
     <Title>Biranje prevoda iz MKV datoteke</Title>
     <PleaseChoose>Pronađeno je više prevoda. Izaberite koji želite.</PleaseChoose>
-    <TrackXLanguageYTypeZ>Zapis {0} – {1} – jezik: {2} – vrsta: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Zapis {0} – jezik: {1} – vrsta: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MergedShortLines>
     <Title>Spajanje kratkih linija</Title>

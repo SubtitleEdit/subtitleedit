@@ -1273,7 +1273,7 @@ Pokračovat?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Vybrat titulky ze souboru Matroska</Title>
     <PleaseChoose>Nalezeny více než jedny titulky - vyberte</PleaseChoose>
-    <TrackXLanguageYTypeZ>Stopa {0} - {1} - jazyk: {2} - typ: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Stopa {0} - jazyk: {1} - typ: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Převodník jednotek</Title>
