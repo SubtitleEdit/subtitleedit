@@ -1231,7 +1231,7 @@ Nadaljujem?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Izberi podanapis iz Matroska datoteke</Title>
     <PleaseChoose>Našel več datotek - prosim izberi</PleaseChoose>
-    <TrackXLanguageYTypeZ>Zapis {0} - {1} - jezik: {2} -vrsta: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Zapis {0} - jezik: {1} -vrsta: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Količinski pretvornik</Title>

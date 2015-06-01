@@ -1046,7 +1046,7 @@ Continue?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>اختيار الترجمة من ملف متروسكا</Title>
     <PleaseChoose>العثور على أكثر من ترجمة - يرجى الاختيار</PleaseChoose>
-    <TrackXLanguageYTypeZ>{المسار {0} - {1} - اللغة : {2} - اكتب : {3</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>{المسار {0} - اللغة : {1} - اكتب : {2</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MergedShortLines>
     <Title>دمج سطور قصيرة</Title>

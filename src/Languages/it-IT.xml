@@ -1281,7 +1281,7 @@ la codifica ANSI andranno perse. Salvare comunque?</UnicodeCharactersAnsiWarning
   <MatroskaSubtitleChooser>
     <Title>Scegli sottotitolo da file Matroska</Title>
     <PleaseChoose>Trovato più di un sottotitolo - scegliere, per favore</PleaseChoose>
-    <TrackXLanguageYTypeZ>Traccia {0} - {1} - lingua: {2} - tipo: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Traccia {0} - lingua: {1} - tipo: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Convertitore di misura</Title>

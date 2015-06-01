@@ -857,7 +857,7 @@ con el archivo de vídeo, al subtítulo actual cargado.
   <MatroskaSubtitleChooser>
     <Title>Seleccionar subtítulos desde archivo Matroska</Title>
     <PleaseChoose>Se ha encontrado más de un subtítulo - Elija uno por favor.</PleaseChoose>
-    <TrackXLanguageYTypeZ>Pista {0} - {1} - idioma: {2} - tipo: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Pista {0} - idioma: {1} - tipo: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MergedShortLines>
     <Title>Combinar líneas cortas</Title>
