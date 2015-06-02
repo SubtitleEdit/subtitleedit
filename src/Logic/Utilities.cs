@@ -446,7 +446,7 @@ namespace Nikse.SubtitleEdit.Logic
             s = RemoveLineBreaks(s);
 
             var htmlTags = new Dictionary<int, string>();
-            var sb = new StringBuilder();
+            var sb = new StringBuilder(s.Length);
             int six = 0;
             while (six < s.Length)
             {
@@ -763,7 +763,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (htmlTags.Count > 0)
             {
-                var sb = new StringBuilder();
+                var sb = new StringBuilder(s.Length);
                 int six = 0;
                 foreach (var letter in s)
                 {
