@@ -7,10 +7,10 @@ using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ExportText : Form
+    public sealed partial class ExportText : Form
     {
-        private Subtitle _subtitle = null;
-        private string _fileName = null;
+        private Subtitle _subtitle;
+        private string _fileName;
 
         public ExportText()
         {
@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.Main.Menu.File.SaveAs;
         }
 
-        internal void Initialize(Logic.Subtitle subtitle, string fileName)
+        internal void Initialize(Subtitle subtitle, string fileName)
         {
             _subtitle = subtitle;
             _fileName = fileName;
@@ -175,5 +175,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             DialogResult = DialogResult.Cancel;
         }
+
+        private void ExportText_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+        }
+
     }
 }
