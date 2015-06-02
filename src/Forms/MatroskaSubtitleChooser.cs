@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4.Boxes;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms

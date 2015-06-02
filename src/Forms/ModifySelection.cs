@@ -2,7 +2,6 @@
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
