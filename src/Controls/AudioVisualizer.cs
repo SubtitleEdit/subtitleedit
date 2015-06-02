@@ -765,7 +765,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (n > 80)
                     {
-                        using (var font = new Font(Font.FontFamily, TextSize, drawingStyle))
+                        using (var font = new Font(Configuration.Settings.General.SubtitleFontName, TextSize, drawingStyle))
                         {
                             using (var blackBrush = new SolidBrush(Color.Black))
                             {
@@ -786,7 +786,7 @@ namespace Nikse.SubtitleEdit.Controls
                                     text = text.TrimEnd() + "…";
                                 }
 
-                                // poor mans outline
+                                // poor mans outline + text
                                 e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, 11 - 7));
                                 e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, 9 - 7));
                                 e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, 10 - 7));
@@ -798,7 +798,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 if (actualWidth >= w)
                                     text = paragraph.Duration.ToShortString();
                                 int top = Height - 14 - (int)e.Graphics.MeasureString("#", font).Height;
-                                // poor mans outline
+                                // poor mans outline + text
                                 e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top + 1));
                                 e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top - 1));
                                 e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, top));
