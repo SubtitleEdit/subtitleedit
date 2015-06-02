@@ -1274,12 +1274,14 @@ Fortfahren?</SubtitleAppendPrompt>
     <ErrorLoadIdx>Subtitle Edit kann keine .idx Dateien lesen. Sie sind Teile von idx/sub Dateipaaren (VobSub). Die .sub Dateien können geöffnet werden.</ErrorLoadIdx>
     <ErrorLoadRar>Diese Datei ist ein .rar Archiv. Subtitle Edit kann keine komprimierten Dateien öffnen.</ErrorLoadRar>
     <ErrorLoadZip>Diese Datei ist ein .zip Archiv. Subtitle Edit kann keine komprimierten Dateien öffnen.</ErrorLoadZip>
-    <ErrorLoadPng>Diese Datei ist ein PNG Bild. Subtitle Edit kann keine PNG Dateien öffnen.</ErrorLoadPng>
+    <ErrorLoadPng>Diese Datei ist ein PNG-Bild. Subtitle Edit kann keine PNG-Dateien öffnen.</ErrorLoadPng>
+    <ErrorLoadJpg>Diese Datei ist ein JPEG-Bild. Subtitle Edit kann keine JPEG-Dateien öffnen.</ErrorLoadJpg>
     <ErrorLoadSrr>Diese Datei ist eine ReScene .srr Datei - keine Untertiteldatei.</ErrorLoadSrr>
     <ErrorLoadTorrent>Diese Datei ist eine BitTorrent Datei - keine Untertiteldatei.</ErrorLoadTorrent>
     <ErrorLoadBinaryZeroes>Diese Datei enthällt nur Nullzeichen.
 
 Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung vorliegen unter Menüpunkt "Datei -&gt; Automatische Sicherung wiederherstellen..."</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>Das Ziehen eines Ordners ist hier nicht erlaubt.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Verschlüsselte VobSub-Untertitel können nicht verarbeitet werden.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Blu-ray sup Dateien sind hier nicht erlaubt.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>DVD sup Dateien sind hier nicht erlaubt.</NoSupportHereDvdSup>
@@ -1426,7 +1428,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <NonDigit>Keine Ziffer (\D)</NonDigit>
     <AnyCharacter>Jedes Zeichen (.)</AnyCharacter>
     <AnyWhitespace>Jedes Leerzeichen (\s)</AnyWhitespace>
-    <NonWhitespace>Kein Leerzeichen (\S)</NonWhitespace>
+    <NonSpaceCharacter>Kein Leerzeichen (\S)</NonSpaceCharacter>
     <ZeroOrMore>Null oder mehr (*)</ZeroOrMore>
     <OneOrMore>Eins oder mehr (+)</OneOrMore>
     <InCharacterGroup>In Zeichengruppe ([test])</InCharacterGroup>
