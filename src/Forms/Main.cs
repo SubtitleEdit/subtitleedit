@@ -7701,7 +7701,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 Paragraph currentParagraph = _subtitle.Paragraphs[firstIndex];
                 string text = sb.ToString();
-                text = Utilities.FixInvalidItalicTags(text);
+                text = HtmlUtil.FixInvalidItalicTags(text);
                 text = ChangeAllLinesItalictoSingleItalic(text);
                 text = Utilities.AutoBreakLine(text, Utilities.AutoDetectGoogleLanguage(_subtitle));
                 currentParagraph.Text = text;
