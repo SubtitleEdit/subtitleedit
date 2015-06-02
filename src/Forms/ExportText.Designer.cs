@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class ExportText
+    sealed partial class ExportText
     {
         /// <summary>
         /// Required designer variable.
@@ -367,6 +367,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Export plain text";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExportText_KeyDown);
             this.groupBoxImportOptions.ResumeLayout(false);
             this.groupBoxImportOptions.PerformLayout();
             this.groupBoxTimeCodeFormat.ResumeLayout(false);

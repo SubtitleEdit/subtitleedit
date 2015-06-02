@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class ImportImages
+    sealed partial class ImportImages
     {
         /// <summary>
         /// Required designer variable.
@@ -161,11 +161,13 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBoxInput);
+            this.KeyPreview = true;
             this.Name = "ImportImages";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ImportImages";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImportImages_KeyDown);
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.ResumeLayout(false);
