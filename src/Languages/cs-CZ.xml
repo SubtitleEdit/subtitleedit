@@ -111,12 +111,24 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Vytváření spektrogramu...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrahování zvuku: {0:0,0} sekund</ExtractingSeconds>
     <ExtractingMinutes>Extrahování zvuku: {0},{1:00} minut</ExtractingMinutes>
+    <WaveFileNotFound>Nelze nalézt extrahovaný soubor křivky!
+Tato funkce vyžaduje VLC media player 1.1.x nebo novější ({0}bitový).
+
+Příkazový řádek: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} nemohl extrahovat zvuková data do souboru křivky!
+
+Příkazový řádek: {1} {2}
+
+Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
+    <LowDiskSpace>NEDOSTATEK MÍSTA NA DISKU!</LowDiskSpace>
+    <FreeDiskSpace>{0} volných</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Dávkově generovat data křivky</Title>
     <ExtractingAudio>Extrahování audia...</ExtractingAudio>
     <Calculating>Výpočet...</Calculating>
     <Done>Hotovo</Done>
+    <Error>Chyba</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Upravit trvání</Title>
@@ -411,6 +423,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShadowWidth>Šířka stínu</ShadowWidth>
     <Transparency>Alfa</Transparency>
     <ImageFormat>Formát obrázku</ImageFormat>
+    <FullFrameImage>Celoobrazovkový obrázek</FullFrameImage>
     <SimpleRendering>Jednoduché vykreslování</SimpleRendering>
     <AntiAliasingWithTransparency>Vyhlazování s průhledností</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
@@ -441,6 +454,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BoxMultiLine>Pole - víceřádkové</BoxMultiLine>
     <Forced>Vynucený</Forced>
     <ChooseBackgroundColor>Zvolte barvu pozadí</ChooseBackgroundColor>
+    <SaveImageAs>Uložit obrázek jako...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Exportovat text</Title>
@@ -1264,6 +1278,9 @@ Pokračovat?</SubtitleAppendPrompt>
     <ErrorLoadPng>Tento soubor se zdá být obrazovým souborem PNG. Subtitle Edit neumí otvírat soubory PNG.</ErrorLoadPng>
     <ErrorLoadSrr>Tento soubor se zdá být souborem ReScene .srr - není to soubor titulků.</ErrorLoadSrr>
     <ErrorLoadTorrent>Tento soubor se zdá být souborem BitTorrentu - není to soubor titulků.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Bohužel, tento soubor obsahuje pouze binární nuly!
+
+Pokud jste upravili tento soubor v Subtitle Edit, možná budete moci najít zálohu pomocí položky nabídky Soubor -&gt; Obnovit automatickou zálohu...</ErrorLoadBinaryZeroes>
     <NoSupportEncryptedVobSub>Šifrovaný obsah VobSub není podporován.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Soubory Blu-ray sup zde nejsou podporovány.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>Soubory DVD sup zde nejsou podporovány.</NoSupportHereDvdSup>
@@ -1407,8 +1424,10 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <NewLine>Nový řádek (\r\n)</NewLine>
     <NewLineShort>Nový řádek (\n)</NewLineShort>
     <AnyDigit>Jakékoliv číslo (\d)</AnyDigit>
+    <NonDigit>Nečíselný znak (\D)</NonDigit>
     <AnyCharacter>Jakýkoliv znak (.)</AnyCharacter>
     <AnyWhitespace>Jakákoliv mezera (\s)</AnyWhitespace>
+    <NonSpaceCharacter>Jakýkoliv znak jiný než mezera (\S)</NonSpaceCharacter>
     <ZeroOrMore>Žádný nebo více (*)</ZeroOrMore>
     <OneOrMore>Jeden nebo více (+)</OneOrMore>
     <InCharacterGroup>Ze skupiny znaků ([test])</InCharacterGroup>
@@ -2016,6 +2035,8 @@ Zachovat změny?</KeepChangesMessage>
     <InspectCompareMatchesForCurrentImage>Prozkoumat porovnání shod pro aktuální snímek...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Upravit poslední přidaná porovnání snímků...</EditLastAdditions>
     <SetUnitalicFactor>Nastavit koeficient nekurzívy...</SetUnitalicFactor>
+    <DiscardTitle>Zahodit změny provedené v OCR?</DiscardTitle>
+    <DiscardText>Chcete zahodit změny provedené v aktuální relaci OCR?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Ručně snímek na text</Title>
