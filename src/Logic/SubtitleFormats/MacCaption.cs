@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -177,7 +178,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             res = res.Replace("♪♪", "♪");
             res = res.Replace("'''", "'");
             res = res.Replace("  ", " ").Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
-            return Utilities.FixInvalidItalicTags(res);
+            return HtmlUtil.FixInvalidItalicTags(res);
         }
 
         private static List<string> ExecuteReplacesAndGetParts(string[] parts)
