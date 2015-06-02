@@ -761,31 +761,26 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static string ReInsertHtmlTags(string s, Dictionary<int, string> htmlTags)
         {
-            if (htmlTags.Count > 0)
+            var len = 0;
+            foreach (KeyValuePair<int, string> keyVal in htmlTags)
             {
-                var sb = new StringBuilder();
-                int six = 0;
-                foreach (var letter in s)
+                if (s.Length > keyVal.Key + 2 && s.Substring(keyVal.Key, 2) == "\r\n" && !keyVal.Value.StartsWith("</", StringComparison.Ordinal))
                 {
-                    if (Environment.NewLine.Contains(letter))
+                    len += 2; // <i>\r\n => \r\n<i>
+                }
+                else if (s.Length > keyVal.Key + 1 && s.Substring(keyVal.Key, 1) == "\n" && s[keyVal.Key - 1] == '\r') // \r<i>\n => \r\n<i> | \r</i>\n => </i>\r\n
+                {
+                    if (!keyVal.Value.StartsWith("</", StringComparison.Ordinal))
                     {
-                        sb.Append(letter);
+                        len += 1; // sent to next line \r\n<i>
                     }
                     else
                     {
-                        if (htmlTags.ContainsKey(six))
-                        {
-                            sb.Append(htmlTags[six]);
-                        }
-                        sb.Append(letter);
-                        six++;
+                        len--; // step back once => </i>\r\n
                     }
                 }
-                if (htmlTags.ContainsKey(six))
-                {
-                    sb.Append(htmlTags[six]);
-                }
-                return sb.ToString();
+                s = s.Insert(keyVal.Key + len, keyVal.Value);
+                len += keyVal.Value.Length;
             }
             return s;
         }
