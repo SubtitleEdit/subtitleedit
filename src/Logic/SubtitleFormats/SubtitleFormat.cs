@@ -371,19 +371,25 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static string ToUtf8XmlString(XmlDocument xml, bool omitXmlDeclaration = false)
         {
+            var encoding = new UTF8Encoding(false, false); // no BOM, no exception
             var settings = new XmlWriterSettings
             {
+                Encoding = encoding,
                 Indent = true,
                 OmitXmlDeclaration = omitXmlDeclaration,
             };
-            var result = new StringBuilder();
+            var stream = new MemoryStream();
 
-            using (var xmlWriter = XmlWriter.Create(result, settings))
+            using (var xmlWriter = XmlWriter.Create(stream, settings))
             {
                 xml.Save(xmlWriter);
             }
+            stream.Position = 0; // rewind
 
-            return result.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"").Trim();
+            using (var textReader = new StreamReader(stream, encoding, false))
+            {
+                return textReader.ReadToEnd().Trim();
+            }
         }
 
         public virtual bool IsTextBased
