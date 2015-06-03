@@ -2625,6 +2625,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/ErrorLoadBinaryZeroes":
                     language.Main.ErrorLoadBinaryZeroes = reader.Value;
                     break;
+                case "Main/ErrorDirectoryDropNotAllowed":
+                    language.Main.ErrorDirectoryDropNotAllowed = reader.Value;
+                    break;
                 case "Main/NoSupportEncryptedVobSub":
                     language.Main.NoSupportEncryptedVobSub = reader.Value;
                     break;
