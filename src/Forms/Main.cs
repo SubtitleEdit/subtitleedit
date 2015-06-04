@@ -9612,7 +9612,15 @@ namespace Nikse.SubtitleEdit.Forms
                 openFileDialog1.InitialDirectory = dirName;
 
                 var fi = new FileInfo(fileName);
-                string ext = Path.GetExtension(fileName).ToLower();
+
+                // Do not allow directory drop
+                bool isDirectory = (File.GetAttributes(fi.FullName) & FileAttributes.Directory) == FileAttributes.Directory;
+                if (isDirectory)
+                {
+                    MessageBox.Show(_language.ErrorDirectoryDropNotAllowed, fi.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                string ext = Path.GetExtension(fileName).ToLowerInvariant();
 
                 if (ext == ".mkv")
                 {
