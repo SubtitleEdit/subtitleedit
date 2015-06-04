@@ -316,5 +316,18 @@ namespace Nikse.SubtitleEdit.Core
             return true;
         }
 
+        public static bool IsFile(string path)
+        {
+            if (!Path.IsPathRooted(path))
+                return false;
+            return ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory);
+        }
+
+        public static bool IsDirectory(string path)
+        {
+            if (!Path.IsPathRooted(path))
+                return false;
+            return ((File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory);
+        }
     }
 }
