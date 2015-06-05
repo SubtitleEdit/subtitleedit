@@ -46,7 +46,6 @@
     <Word from="bandeija" to="bandeja" />
     <Word from="bébé" to="bebé" />
     <Word from="beige" to="bege" />
-    <Word from="belem" to="Belém" />
     <Word from="benção" to="bênção" />
     <Word from="beneficiência" to="beneficência" />
     <Word from="beneficiente" to="beneficente" />
@@ -270,7 +269,6 @@
     <Word from="mortandela" to="mortadela" />
     <Word from="morteIa" to="mortela" />
     <Word from="muinto" to="muito" />
-    <Word from="nao" to="não" />
     <Word from="nasaias" to="nasais" />
     <Word from="nêle" to="nele" />
     <Word from="nest" to="neste" />
@@ -420,8 +418,6 @@
     <Word from="substituido" to="substituído" />
     <Word from="suburbio" to="subúrbio" />
     <!--<Word from="sues" to="seus" /> sues existe "Cuidado, não sues muito." -->
-    <Word from="sufciente" to="suficiente" />
-    <Word from="sufeciente" to="suficiente" />
     <Word from="suI" to="sul" />
     <Word from="Suiça" to="Suíça" />
     <Word from="suiças" to="suíças" />
@@ -438,9 +434,6 @@
     <Word from="supôr" to="supor" />
     <Word from="tabeliões" to="tabeliães" />
     <Word from="taínha" to="tainha" />
-    <Word from="tambem" to="também" />
-    <Word from="tanbem" to="também" />
-    <Word from="tanbém" to="também" />
     <Word from="tava" to="estava" />
     <Word from="têem" to="têm" />
     <Word from="telemovel" to="telemóvel" />
@@ -470,8 +463,6 @@
     <Word from="xilindró" to="chilindró" />
     <Word from="zaíre" to="Zaire" />
     <Word from="zepelin" to="zepelim" />
-    <Word from="zeppelim" to="zepelim" />
-    <Word from="zeppelin" to="zepelim" />
     <Word from="zig-zag" to="ziguezague" />
     <Word from="zoô" to="zoo" />
     <Word from="zôo" to="zoo" />
@@ -513,7 +504,7 @@
   <WholeLines />
   <RegularExpressions>
     <!--    <RegEx find="\bi\b" replaceWith="I" /> just an example - do not use this regex -->
-    <RegEx find="(\\d) +º" replaceWith="$1º" />
+    <RegEx find="(\d) +º" replaceWith="$1º" />
     <RegEx find="\Bcao\b" replaceWith="ção" />
     <RegEx find="\Bcoes\b" replaceWith="ções" />
     <!-- <RegEx find="\Bccao\b" replaceWith="cção" /> não faz sentido ter este e ter a linha de cima-->
@@ -521,5 +512,10 @@
     <RegEx find="\b([mM])ae\b" replaceWith="$1ãe" />
     <RegEx find="\Bdmnis\B" replaceWith="dminis" />
     <RegEx find="\Blcól\B" replaceWith="lcoól" />
+    <RegEx find="\b(t|T)a[nm]b[eé]m\b" replaceWith="$1ambém" />
+    <RegEx find="\bzeppeli[mn]\b" replaceWith="zepelim" />
+    <RegEx find="\b(s|S)ufe?ciente\b" replaceWith="$1uficiente" />
+    <RegEx find="\b(n|N)ao\b" replaceWith="$1ão" />
+    <RegEx find="\b(B|b)elem\b" replaceWith="$elém" />
   </RegularExpressions>
 </OCRFixReplaceList>
