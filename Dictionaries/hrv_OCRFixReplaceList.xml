@@ -313,6 +313,9 @@
     <Word from="ovde" to="ovdje" />
     <Word from="Ovde" to="Ovdje" />
     <Word from="ovdije" to="ovdje" />
+    <Word from="Ovdije" to="Ovdje" />
+    <Word from="ovjde" to="ovdje" />
+    <Word from="Ovjde" to="Ovdje" />
     <Word from="pantalone" to="hlače" />
     <Word from="parčence" to="komadić" />
     <Word from="paramparčad" to="komadići" />
@@ -622,6 +625,7 @@
     <Word from="vređa" to="vrijeđa" />
     <Word from="whiskey" to="viski" />
     <Word from="zamena" to="zamjena" />
+    <Word from="za menom" to="za mnom" />
     <Word from="zamnom" to="za mnom" />
     <Word from="zanm" to="znam" />
     <Word from="zanma" to="zanima" />
