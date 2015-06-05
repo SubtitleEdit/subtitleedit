@@ -9603,8 +9603,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var fi = new FileInfo(fileName);
 
                 // Do not allow directory drop
-                bool isDirectory = (File.GetAttributes(fi.FullName) & FileAttributes.Directory) == FileAttributes.Directory;
-                if (isDirectory)
+                if (FileUtil.IsDirectory(fileName))
                 {
                     MessageBox.Show(_language.ErrorDirectoryDropNotAllowed, fi.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
