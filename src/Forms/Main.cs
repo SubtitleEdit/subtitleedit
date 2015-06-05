@@ -6582,18 +6582,6 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
         }
 
-        private static string RemoveSsaStyle(string text)
-        {
-            int indexOfBegin = text.IndexOf('{');
-            while (indexOfBegin >= 0 && text.IndexOf('}') > indexOfBegin)
-            {
-                int indexOfEnd = text.IndexOf('}');
-                text = text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = text.IndexOf('{');
-            }
-            return text;
-        }
-
         private void NormalToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
@@ -6614,7 +6602,7 @@ namespace Nikse.SubtitleEdit.Forms
                         p.Text = HtmlUtil.RemoveHtmlTags(p.Text);
                         p.Text = RemoveUnicodeCharacters(p.Text);
                         if (isSsa)
-                            p.Text = RemoveSsaStyle(p.Text);
+                            p.Text = Utilities.RemoveSsaTags(p.Text);
                         SubtitleListview1.SetText(item.Index, p.Text);
 
                         if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
@@ -6625,7 +6613,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 original.Text = HtmlUtil.RemoveHtmlTags(original.Text);
                                 original.Text = original.Text.Replace("♪", string.Empty);
                                 if (isSsa)
-                                    original.Text = RemoveSsaStyle(original.Text);
+                                    original.Text = Utilities.RemoveSsaTags(original.Text);
                                 SubtitleListview1.SetAlternateText(item.Index, original.Text);
                             }
                         }
@@ -6651,6 +6639,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             return text;
         }
+
         private void ButtonAutoBreakClick(object sender, EventArgs e)
         {
             string language = Utilities.AutoDetectGoogleLanguage(_subtitle);
