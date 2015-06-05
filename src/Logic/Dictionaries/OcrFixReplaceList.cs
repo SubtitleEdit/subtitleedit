@@ -487,26 +487,23 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             if (word.LastIndexOf('I') > 0 || word.LastIndexOf('1') > 0)
             {
                 var match = RegExIandZero.Match(word);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    if (word[match.Index + 1] == 'I' || word[match.Index + 1] == '1')
                     {
-                        if (word[match.Index + 1] == 'I' || word[match.Index + 1] == '1')
-                        {
-                            bool doFix = word[match.Index + 1] != 'I' && match.Index >= 1 && word.Substring(match.Index - 1).StartsWith("Mc");
-                            if (word[match.Index + 1] == 'I' && match.Index >= 2 && word.Substring(match.Index - 2).StartsWith("Mac"))
-                                doFix = false;
+                        bool doFix = word[match.Index + 1] != 'I' && match.Index >= 1 && word.Substring(match.Index - 1).StartsWith("Mc");
+                        if (word[match.Index + 1] == 'I' && match.Index >= 2 && word.Substring(match.Index - 2).StartsWith("Mac"))
+                            doFix = false;
 
-                            if (doFix)
-                            {
-                                string oldText = word;
-                                word = word.Substring(0, match.Index + 1) + "l";
-                                if (match.Index + 2 < oldText.Length)
-                                    word += oldText.Substring(match.Index + 2);
-                            }
+                        if (doFix)
+                        {
+                            string oldText = word;
+                            word = word.Substring(0, match.Index + 1) + "l";
+                            if (match.Index + 2 < oldText.Length)
+                                word += oldText.Substring(match.Index + 2);
                         }
-                        match = RegExIandZero.Match(word, match.Index + 1);
                     }
+                    match = RegExIandZero.Match(word, match.Index + 1);
                 }
             }
             return word;
@@ -538,38 +535,32 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             if (word.LastIndexOf('0') > 0)
             {
                 Match match = RegExTime1.Match(word);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    if (word[match.Index + 1] == '0')
                     {
-                        if (word[match.Index + 1] == '0')
-                        {
-                            string oldText = word;
-                            word = word.Substring(0, match.Index + 1) + "o";
-                            if (match.Index + 2 < oldText.Length)
-                                word += oldText.Substring(match.Index + 2);
-                        }
-                        match = RegExTime1.Match(word);
+                        string oldText = word;
+                        word = word.Substring(0, match.Index + 1) + "o";
+                        if (match.Index + 2 < oldText.Length)
+                            word += oldText.Substring(match.Index + 2);
                     }
+                    match = RegExTime1.Match(word);
                 }
 
                 match = RegExTime2.Match(word);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    if (word[match.Index] == '0')
                     {
-                        if (word[match.Index] == '0')
+                        if (match.Index == 0 || !@"123456789".Contains(word[match.Index - 1]))
                         {
-                            if (match.Index == 0 || !@"123456789".Contains(word[match.Index - 1]))
-                            {
-                                string oldText = word;
-                                word = word.Substring(0, match.Index) + "o";
-                                if (match.Index + 1 < oldText.Length)
-                                    word += oldText.Substring(match.Index + 1);
-                            }
+                            string oldText = word;
+                            word = word.Substring(0, match.Index) + "o";
+                            if (match.Index + 1 < oldText.Length)
+                                word += oldText.Substring(match.Index + 1);
                         }
-                        match = RegExTime2.Match(word, match.Index + 1);
                     }
+                    match = RegExTime2.Match(word, match.Index + 1);
                 }
             }
             return word;
