@@ -436,7 +436,14 @@ namespace Nikse.SubtitleEdit.Forms
             var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (string fileName in fileNames)
             {
-                AddInputFile(fileName);
+                if (FileUtil.IsDirectory(fileName))
+                {
+                    SearchFolder(fileName);
+                }
+                else
+                {
+                    AddInputFile(fileName);
+                }
             }
         }
 
@@ -1159,7 +1166,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    string ext = Path.GetExtension(fileName).ToLower();
+                    string ext = Path.GetExtension(fileName).ToLowerInvariant();
                     if (ext != ".png" && ext != ".jpg" && ext != ".dll" && ext != ".exe" && ext != ".zip")
                     {
                         var fi = new FileInfo(fileName);
