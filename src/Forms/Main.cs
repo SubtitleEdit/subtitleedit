@@ -6632,12 +6632,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (text.IndexOf(uChar) >= 0)
                     text = text.Replace(uChar, ' ');
             }
-            text = text.Trim();
-            while (text.IndexOf("  ", StringComparison.Ordinal) >= 0)
-            {
-                text = text.Replace("  ", " ");
-            }
-            return text;
+            return text.FixExtraSpaces().Trim();
         }
 
         private void ButtonAutoBreakClick(object sender, EventArgs e)
