@@ -64,6 +64,14 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.FixLargeFonts(this, buttonOK);
         }
 
+        private void SetControlAnchor(AnchorStyles anchorStyle)
+        {
+            buttonSetSyncPoint.Anchor = anchorStyle;
+            buttonRemoveSyncPoint.Anchor = anchorStyle;
+            labelNoOfSyncPoints.Anchor = anchorStyle;
+            listBoxSyncPoints.Anchor = anchorStyle;
+        }
+
         public void Initialize(Subtitle subtitle, string subtitleFileName, string videoFileName, int audioTrackNumber)
         {
             Text = Configuration.Settings.Language.PointSync.Title;
@@ -76,24 +84,15 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Fill(subtitle);
             if (SubtitleListview1.Items.Count > 0)
                 SubtitleListview1.Items[0].Selected = true;
-
-            SubtitleListview1.Anchor = AnchorStyles.Left;
-            buttonSetSyncPoint.Anchor = AnchorStyles.Left;
-            buttonRemoveSyncPoint.Anchor = AnchorStyles.Left;
-            labelNoOfSyncPoints.Anchor = AnchorStyles.Left;
-            listBoxSyncPoints.Anchor = AnchorStyles.Left;
-            groupBoxImportResult.Anchor = AnchorStyles.Left;
             labelOtherSubtitleFileName.Visible = false;
             subtitleListView2.Visible = false;
             buttonFindTextOther.Visible = false;
             groupBoxImportResult.Width = listBoxSyncPoints.Left + listBoxSyncPoints.Width + 20;
             Width = groupBoxImportResult.Left + groupBoxImportResult.Width + 15;
-            SubtitleListview1.Anchor = AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Right;
-            buttonSetSyncPoint.Anchor = AnchorStyles.Right;
-            buttonRemoveSyncPoint.Anchor = AnchorStyles.Right;
-            labelNoOfSyncPoints.Anchor = AnchorStyles.Right;
-            listBoxSyncPoints.Anchor = AnchorStyles.Right;
-            groupBoxImportResult.Anchor = AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Right;
+            var anchorStyle = (AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Right);
+            SubtitleListview1.Anchor = anchorStyle;
+            SetControlAnchor(AnchorStyles.Right);
+            groupBoxImportResult.Anchor = anchorStyle;
             buttonFindText.Left = SubtitleListview1.Left + SubtitleListview1.Width - buttonFindText.Width;
             Width = 800;
             groupBoxImportResult.Width = Width - groupBoxImportResult.Left * 3;
@@ -116,12 +115,11 @@ namespace Nikse.SubtitleEdit.Forms
             labelOtherSubtitleFileName.Text = otherSubtitleFileName;
             subtitleListView2.Fill(otherSubtitle);
 
-            SubtitleListview1.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
-            subtitleListView2.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
-            buttonSetSyncPoint.Anchor = AnchorStyles.Left;
-            buttonRemoveSyncPoint.Anchor = AnchorStyles.Left;
-            labelNoOfSyncPoints.Anchor = AnchorStyles.Left;
-            listBoxSyncPoints.Anchor = AnchorStyles.Left;
+            var anchorStyle = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom);
+            SubtitleListview1.Anchor = anchorStyle;
+            subtitleListView2.Anchor = anchorStyle;
+            SetControlAnchor(AnchorStyles.Left);
+
             labelOtherSubtitleFileName.Visible = true;
             subtitleListView2.Visible = true;
             buttonFindTextOther.Visible = true;
