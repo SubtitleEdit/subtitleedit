@@ -473,7 +473,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
             if (!text.StartsWith('-') && noOfNamesRemoved >= 1 && Utilities.GetNumberOfLines(text) == 2)
             {
-                string[] arr = text.Split(Utilities.NewLineChars);
+                string[] arr = text.SplitToLines();
                 string part0 = arr[0].Trim().Replace("</i>", string.Empty).Trim();
                 if (!part0.EndsWith(',') && (!part0.EndsWith('-') || noOfNamesRemovedNotInLineOne > 0))
                 {
