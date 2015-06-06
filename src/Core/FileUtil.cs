@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool IsJpg(string fileName)
         {
-            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[4];
                 var count = fs.Read(buffer, 0, buffer.Length);
