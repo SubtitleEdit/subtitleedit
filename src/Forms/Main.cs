@@ -2343,6 +2343,13 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                // check for .Jpg file
+                if (format == null && fi.Length > 100 && FileUtil.IsJpg(fileName))
+                {
+                    MessageBox.Show(_language.ErrorLoadJpg);
+                    return;
+                }
+
                 // check for .srr file
                 if (format == null && fi.Length > 100 && ext == ".srr" && FileUtil.IsSrr(fileName))
                 {

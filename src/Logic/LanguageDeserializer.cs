@@ -2616,6 +2616,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/ErrorLoadPng":
                     language.Main.ErrorLoadPng = reader.Value;
                     break;
+                case "Main/ErrorLoadJpg":
+                    language.Main.ErrorLoadJpg = reader.Value;
+                    break;
                 case "Main/ErrorLoadSrr":
                     language.Main.ErrorLoadSrr = reader.Value;
                     break;
