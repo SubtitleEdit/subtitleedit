@@ -130,6 +130,18 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static bool IsJpg(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                var buffer = new byte[4];
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                    return false;
+                return (buffer[0] == 0xFF) && (buffer[1] == 0xD8) && (buffer[2] == 0xFF) && (buffer[3] == 0xE0 || buffer[3] == 0xE1);
+            }
+        }
+
         public static bool IsTorrentFile(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
