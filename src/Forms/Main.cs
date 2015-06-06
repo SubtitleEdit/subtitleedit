@@ -7622,7 +7622,7 @@ namespace Nikse.SubtitleEdit.Forms
                     prevParagraph.Text += Environment.NewLine + currentParagraph.Text.Replace(Environment.NewLine, " ");
                     prevParagraph.Text = Utilities.AutoBreakLine(prevParagraph.Text, language);
 
-                    //                    prevParagraph.EndTime.TotalMilliseconds = prevParagraph.EndTime.TotalMilliseconds + currentParagraph.Duration.TotalMilliseconds;
+                    // prevParagraph.EndTime.TotalMilliseconds = prevParagraph.EndTime.TotalMilliseconds + currentParagraph.Duration.TotalMilliseconds;
                     prevParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
 
                     if (_networkSession != null)
@@ -15089,7 +15089,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            string ext = Path.GetExtension(fileName).ToLower();
+            string ext = Path.GetExtension(fileName).ToLowerInvariant();
             if (ext != ".wav")
             {
                 if (audioVisualizer.WavePeaks == null && (Utilities.GetMovieFileExtensions().Contains(ext) || ext == ".mp3"))
