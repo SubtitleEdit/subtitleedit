@@ -1055,6 +1055,7 @@
             public string ErrorLoadRar { get; set; }
             public string ErrorLoadZip { get; set; }
             public string ErrorLoadPng { get; set; }
+            public string ErrorLoadJpg { get; set; }
             public string ErrorLoadSrr { get; set; }
             public string ErrorLoadTorrent { get; set; }
             public string ErrorLoadBinaryZeroes { get; set; }
