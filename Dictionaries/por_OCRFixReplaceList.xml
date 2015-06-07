@@ -516,6 +516,6 @@
     <RegEx find="\bzeppeli[mn]\b" replaceWith="zepelim" />
     <RegEx find="\b(s|S)ufe?ciente\b" replaceWith="$1uficiente" />
     <RegEx find="\b(n|N)ao\b" replaceWith="$1ão" />
-    <RegEx find="\b(B|b)elem\b" replaceWith="$elém" />
+    <RegEx find="\b(B|b)elem\b" replaceWith="$1elém" />
   </RegularExpressions>
 </OCRFixReplaceList>
