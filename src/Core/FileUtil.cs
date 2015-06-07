@@ -132,13 +132,20 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool IsJpg(string fileName)
         {
-            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            try
             {
-                var buffer = new byte[4];
-                var count = fs.Read(buffer, 0, buffer.Length);
-                if (count != buffer.Length)
-                    return false;
-                return (buffer[0] == 0xFF) && (buffer[1] == 0xD8) && (buffer[2] == 0xFF) && (buffer[3] == 0xE0 || buffer[3] == 0xE1);
+                // 0000000: ffd8 ffe0 0010 4a46 4946 0001 0101 0048  ......JFIF.....H
+                // 0000000: ffd8 ffe1 14f8 4578 6966 0000 4d4d 002a  ......Exif..MM.*    
+                using (BinaryReader br = new BinaryReader(File.Open(fileName, FileMode.Open, FileAccess.ReadWrite, FileShare.Read)))
+                {
+                    UInt16 soi = br.ReadUInt16();  // Start of Image (SOI) marker (FFD8)
+                    UInt16 marker = br.ReadUInt16(); // JFIF marker (FFE0) EXIF marker (FFE1)
+                    return (soi == 0xd8ff) && (marker >= 0xC0FF && marker <= 0xFEFF);
+                }
+            }
+            catch
+            {
+                return false;
             }
         }
 
