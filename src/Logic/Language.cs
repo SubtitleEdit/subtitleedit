@@ -1179,6 +1179,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ErrorLoadRar = "This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.",
                 ErrorLoadZip = "This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.",
                 ErrorLoadPng = "This file seems to be a PNG image file. Subtitle Edit cannot open PNG files.",
+                ErrorLoadJpg = "This file seems to be a JPG image file. Subtitle Edit cannot open JPG files.",
                 ErrorLoadSrr = "This file seems to be a ReScene .srr file - not a subtitle file.",
                 ErrorLoadTorrent = "This file seems to be a BitTorrent file - not a subtitle file.",
                 ErrorLoadBinaryZeroes = "Sorry, this file contains only binary zeroes!\r\n\r\nIf you have edited this file with Subtitle Edit you might be alble to find a backup via the menu item File -> Restore auto-backup...",
