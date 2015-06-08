@@ -1242,6 +1242,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSplitTextAtCursor.Text = _language.Menu.ContextMenu.SplitLineAtCursorPosition;
             selectAllToolStripMenuItem.Text = _language.Menu.ContextMenu.SelectAll;
             normalToolStripMenuItem1.Text = _language.Menu.ContextMenu.Normal;
+            AddWordToNameEtctoolStripMenuItem4.Text = _language.Menu.SpellCheck.AddToNamesEtcList;
             boldToolStripMenuItem1.Text = _languageGeneral.Bold;
             italicToolStripMenuItem1.Text = _languageGeneral.Italic;
             underlineToolStripMenuItem1.Text = _language.Menu.ContextMenu.Underline;
@@ -19360,6 +19361,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 form.ShowDialog(this);
             }
+        }
+
+        private void AddWordToNameEtctoolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            AddWordToNamesetcListToolStripMenuItemClick(null, EventArgs.Empty);
         }
 
     }

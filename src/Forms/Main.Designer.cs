@@ -461,6 +461,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.AddWordToNameEtctoolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -2251,7 +2252,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 804);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 736);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
@@ -4001,6 +4002,7 @@
             this.toolStripSeparator18,
             this.selectAllToolStripMenuItem,
             this.toolStripSeparator17,
+            this.AddWordToNameEtctoolStripMenuItem4,
             this.normalToolStripMenuItem1,
             this.boldToolStripMenuItem1,
             this.italicToolStripMenuItem1,
@@ -4013,7 +4015,7 @@
             this.superscriptToolStripMenuItem,
             this.subscriptToolStripMenuItem});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(243, 424);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(243, 446);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
             // 
             // toolStripMenuItemWebVttVoice
@@ -4460,6 +4462,13 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
+            // 
+            // AddWordToNameEtctoolStripMenuItem4
+            // 
+            this.AddWordToNameEtctoolStripMenuItem4.Name = "AddWordToNameEtctoolStripMenuItem4";
+            this.AddWordToNameEtctoolStripMenuItem4.Size = new System.Drawing.Size(242, 22);
+            this.AddWordToNameEtctoolStripMenuItem4.Text = "Add word to names/etc list";
+            this.AddWordToNameEtctoolStripMenuItem4.Click += new System.EventHandler(this.AddWordToNameEtctoolStripMenuItem4_Click);
             // 
             // Main
             // 
@@ -4966,6 +4975,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEbuProperties;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddWaveformBatch;
+        private System.Windows.Forms.ToolStripMenuItem AddWordToNameEtctoolStripMenuItem4;
     }
 }
 
