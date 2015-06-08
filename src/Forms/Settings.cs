@@ -1941,8 +1941,8 @@ namespace Nikse.SubtitleEdit.Forms
                     result = MessageBox.Show(string.Format(Configuration.Settings.Language.Main.DeleteXLinesPrompt, itemsToRemoveCount), "Subtitle Edit", MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
-                    int removeCount = 0;
                     var words = new List<string>();
+                    int previousCount = words.Count;
                     string userWordFileName = Utilities.LoadUserWordList(words, language);
 
                     for (int idx = listBoxUserWordLists.SelectedIndices.Count - 1; idx >= 0; idx--)
@@ -1953,11 +1953,10 @@ namespace Nikse.SubtitleEdit.Forms
                         if (words.Contains(text))
                         {
                             words.Remove(text);
-                            removeCount++;
                         }
                         listBoxUserWordLists.Items.RemoveAt(index);
                     }
-
+                    var removeCount = (previousCount - words.Count);
                     if (removeCount > 0)
                     {
                         words.Sort();
