@@ -706,6 +706,7 @@ Note: Do check free disk space.</WaveFileMalformed>
   </ImportText>
   <Interjections>
     <Title>Interjections</Title>
+    <InvalidInterJection>Invalid interjection</InvalidInterJection>
   </Interjections>
   <JoinSubtitles>
     <Title>Join subtitles</Title>

@@ -1845,6 +1845,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Interjections/Title":
                     language.Interjections.Title = reader.Value;
                     break;
+                case "Interjections/InvalidInterJection":
+                    language.Interjections.InvalidInterJection = reader.Value;
+                    break;
                 case "JoinSubtitles/Title":
                     language.JoinSubtitles.Title = reader.Value;
                     break;

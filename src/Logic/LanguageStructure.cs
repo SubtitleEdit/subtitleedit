@@ -787,6 +787,7 @@
         public class Interjections
         {
             public string Title { get; set; }
+            public string InvalidInterJection { get; set; }
         }
 
         public class JoinSubtitles

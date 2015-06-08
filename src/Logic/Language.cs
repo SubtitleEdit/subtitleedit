@@ -906,6 +906,7 @@ namespace Nikse.SubtitleEdit.Logic
             Interjections = new LanguageStructure.Interjections
             {
                 Title = "Interjections",
+                InvalidInterJection = "Invalid interjection",
             };
 
             JoinSubtitles = new LanguageStructure.JoinSubtitles
