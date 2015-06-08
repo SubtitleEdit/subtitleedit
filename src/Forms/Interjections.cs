@@ -57,7 +57,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonAdd_Click(object sender, EventArgs e)
         {
             string text = textBoxInterjection.Text.Trim();
-            if (text.Length > 1 && !_interjections.Contains(text))
+            if (text.Length <= 1 || Utilities.IsInteger(text))
+            {
+                MessageBox.Show(Configuration.Settings.Language.Interjections.InvalidInterJection);
+                return;
+            }
+            if (!_interjections.Contains(text))
             {
                 _interjections.Add(text);
                 FillListBox();
