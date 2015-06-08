@@ -64,6 +64,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 pictureBoxPreview.Image.Dispose();
             var bmp = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
 
+            var path = new GraphicsPath();
             using (Graphics g = Graphics.FromImage(bmp))
             {
 
@@ -112,7 +113,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near };
-                var path = new GraphicsPath();
 
                 bool newLine = false;
                 var sb = new StringBuilder();
@@ -159,6 +159,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 g.FillPath(new SolidBrush(panelFontColor.BackColor), path);
             }
             pictureBoxPreview.Image = bmp;
+            path.Dispose();
         }
 
         private void InitializeListView()
