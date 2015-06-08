@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var arr = p.Text.SplitToLines();
                 foreach (string line in arr)
                 {
-                    string s = HtmlUtil.RemoveHtmlTags(line);
+                    string s = HtmlUtil.RemoveHtmlTags(line, true);
                     if (s.Length > numericUpDownMaxCharacters.Value)
                     {
                         sb.AppendLine(string.Format(Configuration.Settings.Language.EbuSaveOptions.MaxLengthError, i, numericUpDownMaxCharacters.Value, s.Length - numericUpDownMaxCharacters.Value, s));
