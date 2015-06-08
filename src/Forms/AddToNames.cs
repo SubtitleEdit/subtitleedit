@@ -31,16 +31,21 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.FixLargeFonts(this, buttonOK);
         }
 
+        private void CapFirstCharIfNotEmpty(string text)
+        {
+            if (!string.IsNullOrEmpty(text))
+            {
+                text = text.Trim().TrimEnd('.', '!', '?');
+                if (text.Length > 1)
+                    textBoxAddName.Text = char.ToUpper(textBoxAddName.Text[0]) + textBoxAddName.Text.Substring(1);
+            }
+        }
+
         public void Initialize(Subtitle subtitle, string text)
         {
             _subtitle = subtitle;
 
-            if (!string.IsNullOrEmpty(text))
-            {
-                textBoxAddName.Text = text.Trim().TrimEnd('.').TrimEnd('!').TrimEnd('?');
-                if (textBoxAddName.Text.Length > 1)
-                    textBoxAddName.Text = char.ToUpper(textBoxAddName.Text[0]) + textBoxAddName.Text.Substring(1);
-            }
+            CapFirstCharIfNotEmpty(text);
 
             comboBoxDictionaries.Items.Clear();
             string languageName = Utilities.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle);
@@ -56,12 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _subtitle = subtitle;
 
-            if (!string.IsNullOrEmpty(text))
-            {
-                textBoxAddName.Text = text.Trim().TrimEnd('.').TrimEnd('!').TrimEnd('?');
-                if (textBoxAddName.Text.Length > 1)
-                    textBoxAddName.Text = char.ToUpper(textBoxAddName.Text[0]) + textBoxAddName.Text.Substring(1);
-            }
+            CapFirstCharIfNotEmpty(text);
 
             comboBoxDictionaries.Items.Clear();
             foreach (string name in Utilities.GetDictionaryLanguages())
