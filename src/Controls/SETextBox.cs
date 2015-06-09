@@ -32,34 +32,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Back)
             {
-                int index = SelectionStart;
-                if (SelectionLength == 0)
-                {
-                    string s = Text;
-                    int deleteFrom = index - 1;
-
-                    if (deleteFrom > 0 && deleteFrom < s.Length)
-                    {
-                        if (s[deleteFrom] == ' ')
-                            deleteFrom--;
-                        while (deleteFrom > 0 && !BreakChars.Contains(s[deleteFrom]))
-                        {
-                            deleteFrom--;
-                        }
-                        if (deleteFrom == index - 1)
-                        {
-                            var breakCharsNoSpace = BreakChars.Substring(1);
-                            while (deleteFrom > 0 && breakCharsNoSpace.Contains(s[deleteFrom - 1]))
-                            {
-                                deleteFrom--;
-                            }
-                        }
-                        if (s[deleteFrom] == ' ')
-                            deleteFrom++;
-                        Text = s.Remove(deleteFrom, index - deleteFrom);
-                        SelectionStart = deleteFrom;
-                    }
-                }
+                Nikse.SubtitleEdit.Logic.Utilities.DoControlBackSpace(this);
                 e.SuppressKeyPress = true;
             }
         }

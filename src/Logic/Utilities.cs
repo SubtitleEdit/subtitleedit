@@ -3201,5 +3201,37 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static void DoControlBackSpace(TextBox textBox)
+        {
+            const string BreakChars = " \".!?,)([]<>:;♪{}-/#*|¿¡\r\n\t";
+            int index = textBox.SelectionStart;
+            if (textBox.SelectionLength == 0)
+            {
+                string s = textBox.Text;
+                int deleteFrom = index - 1;
+
+                if (deleteFrom > 0 && deleteFrom < s.Length)
+                {
+                    if (s[deleteFrom] == ' ')
+                        deleteFrom--;
+                    while (deleteFrom > 0 && !BreakChars.Contains(s[deleteFrom]))
+                    {
+                        deleteFrom--;
+                    }
+                    if (deleteFrom == index - 1)
+                    {
+                        var breakCharsNoSpace = BreakChars.Substring(1);
+                        while (deleteFrom > 0 && breakCharsNoSpace.Contains(s[deleteFrom - 1]))
+                        {
+                            deleteFrom--;
+                        }
+                    }
+                    if (s[deleteFrom] == ' ')
+                        deleteFrom++;
+                    textBox.Text = s.Remove(deleteFrom, index - deleteFrom);
+                    textBox.SelectionStart = deleteFrom;
+                }
+            }
+        }
     }
 }
