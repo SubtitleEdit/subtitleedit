@@ -206,7 +206,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBoxNoBreakAfter_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
                 buttonAddNamesEtc_Click(sender, e);
+            }
+            else if (e.KeyData == (Keys.Control | Keys.Back))
+            {
+                Utilities.DoControlBackSpace(textBoxNoBreakAfter);
+                e.SuppressKeyPress = true;
+            }
         }
 
     }
