@@ -1167,7 +1167,8 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     string ext = Path.GetExtension(fileName).ToLowerInvariant();
-                    if (ext != ".png" && ext != ".jpg" && ext != ".dll" && ext != ".exe" && ext != ".zip")
+                    if (ext != ".mp4" && ext != ".avi" && ext != ".mkv" && ext != ".flv" &&
+                        ext != ".png" && ext != ".jpg" && ext != ".dll" && ext != ".exe" && ext != ".zip")
                     {
                         var fi = new FileInfo(fileName);
                         if (ext == ".sub" && FileUtil.IsVobSub(fileName))
