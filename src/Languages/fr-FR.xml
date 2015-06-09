@@ -232,7 +232,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <CheckingForUpdates>Recherche de mise à jour...</CheckingForUpdates>
     <CheckingForUpdatesFailedX>Recherche de mise à jour a échoué : {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Vous utilisez la dernière version de Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
-    <CheckingForUpdatesNewVersion>Nouvelle version disponible !</CheckingForUpdatesNewVersion>
+    <CheckingForUpdatesNewVersion>Nouvelle version disponible !</CheckingForUpdatesNewVersion>
     <InstallUpdate>Aller à la page de téléchargement</InstallUpdate>
     <NoUpdates>Ne pas mettre à jour</NoUpdates>
   </CheckForUpdates>
@@ -706,6 +706,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
   </ImportText>
   <Interjections>
     <Title>Interjections</Title>
+    <InvalidInterJection>Interjection ne pas valide</InvalidInterJection>
   </Interjections>
   <JoinSubtitles>
     <Title>Fusionner les sous-titres</Title>
