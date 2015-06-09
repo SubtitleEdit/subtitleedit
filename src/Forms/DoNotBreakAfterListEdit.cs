@@ -93,16 +93,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonRemoveNameEtc_Click(object sender, EventArgs e)
         {
-            int first = 0;
-            var list = new List<int>();
-            foreach (int i in listBoxNoBreakAfter.SelectedIndices)
-                list.Add(i);
-            if (list.Count > 0)
-                first = list[0];
-            list.Sort();
-            for (int i = list.Count - 1; i >= 0; i--)
+            // Return if there are no selected items
+            var count = listBoxNoBreakAfter.SelectedIndices.Count;
+            if (count == 0)
+                return;
+
+            int first = listBoxNoBreakAfter.SelectedIndices[0];
+
+            // Remove from the rear
+            for (int i = count - 1; i >= 0; i--)
             {
-                _noBreakAfterList.RemoveAt(list[i]);
+                var removeIdx = listBoxNoBreakAfter.SelectedIndices[i];
+                _noBreakAfterList.RemoveAt(removeIdx);
             }
             ShowBreakAfterList(_noBreakAfterList);
             if (first >= _noBreakAfterList.Count)
