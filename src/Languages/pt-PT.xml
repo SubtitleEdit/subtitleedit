@@ -707,6 +707,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
   </ImportText>
   <Interjections>
     <Title>Interjeições</Title>
+    <InvalidInterJection>Interjeição não é valida</InvalidInterJection>
   </Interjections>
   <JoinSubtitles>
     <Title>Juntar legendas</Title>
