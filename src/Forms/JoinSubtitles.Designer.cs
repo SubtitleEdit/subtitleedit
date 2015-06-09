@@ -130,6 +130,7 @@
             // 
             // labelTotalLines
             // 
+            this.labelTotalLines.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTotalLines.AutoSize = true;
             this.labelTotalLines.Location = new System.Drawing.Point(7, 232);
             this.labelTotalLines.Name = "labelTotalLines";
