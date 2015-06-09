@@ -691,6 +691,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </ImportText>
   <Interjections>
     <Title>Interjeições</Title>
+    <InvalidInterJection>Interjeição não é valida</InvalidInterJection>
   </Interjections>
   <JoinSubtitles>
     <Title>Juntar</Title>
