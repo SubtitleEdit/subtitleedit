@@ -906,13 +906,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!string.IsNullOrEmpty(name))
                     {
-                        if (Directory.GetFiles(dir, name.Replace("-", "_") + "_user.xml").Length == 1)
+                        if (Directory.GetFiles(dir, name.Replace('-', '_') + "_user.xml").Length == 1)
                         {
                             if (!cultures.Contains(culture))
                                 cultures.Add(culture);
                         }
 
-                        if (Directory.GetFiles(dir, name.Replace("-", "_") + "_names_etc.xml").Length == 1)
+                        if (Directory.GetFiles(dir, name.Replace('-', '_') + "_names_etc.xml").Length == 1)
                         {
                             if (!cultures.Contains(culture))
                                 cultures.Add(culture);
@@ -1007,7 +1007,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             gs.ShowFrameRate = checkBoxShowFrameRate.Checked;
             double outFrameRate;
-            if (double.TryParse(comboBoxFrameRate.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out outFrameRate))
+            if (double.TryParse(comboBoxFrameRate.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out outFrameRate))
                 gs.DefaultFrameRate = outFrameRate;
 
             gs.DefaultEncoding = Encoding.UTF8.BodyName;
