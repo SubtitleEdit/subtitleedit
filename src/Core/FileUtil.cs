@@ -135,12 +135,13 @@ namespace Nikse.SubtitleEdit.Core
             try
             {
                 // 0000000: ffd8 ffe0 0010 4a46 4946 0001 0101 0048  ......JFIF.....H
-                // 0000000: ffd8 ffe1 14f8 4578 6966 0000 4d4d 002a  ......Exif..MM.*    
-                using (BinaryReader br = new BinaryReader(File.Open(fileName, FileMode.Open, FileAccess.ReadWrite, FileShare.Read)))
+                // 0000000: ffd8 ffe1 14f8 4578 6966 0000 4d4d 002a  ......Exif..MM.*
+                using (var br = new BinaryReader(File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
                 {
                     UInt16 soi = br.ReadUInt16();  // Start of Image (SOI) marker (FFD8)
                     UInt16 marker = br.ReadUInt16(); // JFIF marker (FFE0) EXIF marker (FFE1)
-                    return (soi == 0xd8ff) && (marker >= 0xC0FF && marker <= 0xFEFF);
+                    marker = (UInt16)((marker << 8) | (marker >> 8));
+                    return (soi == 0xD8FF) && (marker >= 0xFFC0 && marker <= 0xFFEF);
                 }
             }
             catch
