@@ -299,12 +299,13 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void ChangeFrameRate(double oldFrameRate, double newFrameRate)
         {
+            var st = 1000.0 / newFrameRate;
             foreach (Paragraph p in Paragraphs)
             {
                 double startFrame = p.StartTime.TotalMilliseconds / 1000.0 * oldFrameRate;
                 double endFrame = p.EndTime.TotalMilliseconds / 1000.0 * oldFrameRate;
-                p.StartTime.TotalMilliseconds = startFrame * (1000.0 / newFrameRate);
-                p.EndTime.TotalMilliseconds = endFrame * (1000.0 / newFrameRate);
+                p.StartTime.TotalMilliseconds = startFrame * st;
+                p.EndTime.TotalMilliseconds = endFrame * st;
                 p.CalculateFrameNumbersFromTimeCodes(newFrameRate);
             }
         }
