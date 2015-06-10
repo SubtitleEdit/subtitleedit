@@ -113,6 +113,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool BatchConvertMultipleReplace { get; set; }
         public bool BatchConvertSplitLongLines { get; set; }
         public bool BatchConvertAutoBalance { get; set; }
+        public bool BatchConvertRenumber { get; set; }
         public bool BatchConvertSetMinDisplayTimeBetweenSubtitles { get; set; }
         public string BatchConvertLanguage { get; set; }
         public string BatchConvertFormat { get; set; }
