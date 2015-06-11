@@ -157,7 +157,7 @@ Note: Do check free disk space.</WaveFileMalformed>
   <BatchConvert>
     <Title>Batch convert</Title>
     <Input>Input</Input>
-    <InputDescription>Input files (browse or drag'n'drop)</InputDescription>
+    <InputDescription>Input files (browse or drag-n-drop)</InputDescription>
     <Status>Status</Status>
     <Output>Output</Output>
     <ChooseOutputFolder>Choose output folder</ChooseOutputFolder>
