@@ -280,9 +280,6 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-                    catch
-                    {
-                    }
                     finally
                     {
                         if (matroska != null)
