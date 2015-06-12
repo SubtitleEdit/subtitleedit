@@ -7,6 +7,7 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public static TimeCode MaxTime = new TimeCode(99, 59, 59, 999);
 
+        private const double baseUnit = 1000.0; // Base unit of time
         private double _totalMilliseconds;
 
         public bool IsMaxTime
@@ -19,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static TimeCode FromSeconds(double seconds)
         {
-            return new TimeCode(seconds * 1000.0);
+            return new TimeCode(seconds * baseUnit);
         }
 
         public static double ParseToMilliseconds(string text)
@@ -33,7 +34,7 @@ namespace Nikse.SubtitleEdit.Logic
                 int milliseconds;
                 if (int.TryParse(parts[0], out hours) && int.TryParse(parts[1], out minutes) && int.TryParse(parts[2], out seconds) && int.TryParse(parts[3], out milliseconds))
                 {
-                    TimeSpan ts = new TimeSpan(0, hours, minutes, seconds, milliseconds);
+                    var ts = new TimeSpan(0, hours, minutes, seconds, milliseconds);
                     return ts.TotalMilliseconds;
                 }
             }
@@ -69,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public TimeCode(int hour, int minute, int seconds, int milliseconds)
         {
-            _totalMilliseconds = hour * 60 * 60 * 1000 + minute * 60 * 1000 + seconds * 1000 + milliseconds;
+            _totalMilliseconds = hour * 60 * 60 * baseUnit + minute * 60 * baseUnit + seconds * baseUnit + milliseconds;
         }
 
         public int Hours
@@ -133,8 +134,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public double TotalSeconds
         {
-            get { return _totalMilliseconds / 1000.0; }
-            set { _totalMilliseconds = value * 1000.0; }
+            get { return _totalMilliseconds / baseUnit; }
+            set { _totalMilliseconds = value * baseUnit; }
         }
 
         public TimeSpan TimeSpan
