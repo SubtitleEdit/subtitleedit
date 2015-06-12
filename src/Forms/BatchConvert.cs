@@ -961,14 +961,20 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.SourceFormat == null)
                     p.SourceFormat = new SubRip();
                 bool success;
+
+                var outFile = string.Empty;
+                var overWriteFile = true;
                 if (checkBoxOverwriteOriginalFiles.Checked)
                 {
-                    success = CommandLineConvert.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), Path.GetDirectoryName(p.FileName), _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, true, string.Empty, null);
+                    outFile = Path.GetDirectoryName(p.FileName);
                 }
                 else
                 {
-                    success = CommandLineConvert.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), textBoxOutputFolder.Text, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, checkBoxOverwrite.Checked, string.Empty, null);
+                    outFile = textBoxOutputFolder.Text;
+                    overWriteFile = checkBoxOverwrite.Checked;
                 }
+                success = CommandLineConvert.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), outFile, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, overWriteFile, string.Empty, null);
+
                 if (success)
                 {
                     p.Item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Converted;
