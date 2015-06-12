@@ -1621,6 +1621,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("BatchConvertAutoBalance");
             if (subNode != null)
                 settings.Tools.BatchConvertAutoBalance = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("BatchConvertRenumber");
+            if (subNode != null)
+                settings.Tools.BatchConvertRenumber = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("BatchConvertSplitLongLines");
             if (subNode != null)
                 settings.Tools.BatchConvertSplitLongLines = Convert.ToBoolean(subNode.InnerText);
@@ -2813,6 +2816,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("BatchConvertFixCommonErrors", settings.Tools.BatchConvertFixCommonErrors.ToString());
                 textWriter.WriteElementString("BatchConvertMultipleReplace", settings.Tools.BatchConvertMultipleReplace.ToString());
                 textWriter.WriteElementString("BatchConvertAutoBalance", settings.Tools.BatchConvertAutoBalance.ToString());
+                textWriter.WriteElementString("BatchConvertRenumber", settings.Tools.BatchConvertRenumber.ToString());
                 textWriter.WriteElementString("BatchConvertSetMinDisplayTimeBetweenSubtitles", settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles.ToString());
                 textWriter.WriteElementString("BatchConvertLanguage", settings.Tools.BatchConvertLanguage);
                 textWriter.WriteElementString("BatchConvertFormat", settings.Tools.BatchConvertFormat);

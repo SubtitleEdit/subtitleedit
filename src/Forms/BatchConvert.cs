@@ -1120,6 +1120,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertOverwriteExisting = checkBoxOverwrite.Checked;
             Configuration.Settings.Tools.BatchConvertOverwriteOriginal = checkBoxOverwriteOriginalFiles.Checked;
             Configuration.Settings.Tools.BatchConvertFormat = comboBoxSubtitleFormats.SelectedItem.ToString();
+            Configuration.Settings.Tools.BatchConvertRenumber = checkBoxRenumber.Checked;
         }
 
         private void buttonMultipleReplaceSettings_Click(object sender, EventArgs e)
