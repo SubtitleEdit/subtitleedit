@@ -290,7 +290,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ChooseOutputFolder = "Choose output folder",
                 ConvertOptions = "Convert options",
                 RemoveTextForHI = "Remove text for HI",
-                InputDescription = "Input files (browse or drag'n'drop)",
+                InputDescription = "Input files (browse or drag-n-drop)",
                 Convert = "Convert",
                 OverwriteExistingFiles = "Overwrite existing files",
                 RedoCasing = "Redo casing",
