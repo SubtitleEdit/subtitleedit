@@ -1274,11 +1274,13 @@ Verder gaan?</SubtitleAppendPrompt>
     <ErrorLoadRar>Dit is een rar-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadRar>
     <ErrorLoadZip>Dit is een zip-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadZip>
     <ErrorLoadPng>Dit is een png-beeldbestand. Subtitle Edit kan png-bestanden niet openen.</ErrorLoadPng>
+    <ErrorLoadJpg>Dit is een jpeg-beeldbestand. Subtitle Edit kan jpeg-bestanden niet openen.</ErrorLoadJpg>
     <ErrorLoadSrr>Dit is een ReScene srr-bestand, géén ondertitelbestand.</ErrorLoadSrr>
     <ErrorLoadTorrent>Dit is een BitTorrent bestand, géén ondertitelbestand.</ErrorLoadTorrent>
     <ErrorLoadBinaryZeroes>Dit bestand bevat uitsluitend nul-bytes.
 
 Indien u dit bestand met Subtitle Edit bewerkt hebt, kunt u een vorige versie vinden onder menu "Bestand -&gt; Back-up herstellen..."</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>U kunt hier geen map slepen en plaatsen.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Versleutelde VobSub-bestanden worden niet ondersteund.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>U kunt hier geen blu-ray sup-bestand opgeven.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>U kunt hier geen dvd sup-bestand opgeven.</NoSupportHereDvdSup>
@@ -1425,7 +1427,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <NonDigit>Geen cĳfer (\D)</NonDigit>
     <AnyCharacter>Elk teken (.)</AnyCharacter>
     <AnyWhitespace>Elke witruimte (\s)</AnyWhitespace>
-    <NonWhitespace>Geen witruimte (\S)</NonWhitespace>
+    <NonSpaceCharacter>Geen witruimte (\S)</NonSpaceCharacter>
     <ZeroOrMore>Nul of meer (*)</ZeroOrMore>
     <OneOrMore>Eén of meer (+)</OneOrMore>
     <InCharacterGroup>In tekengroep ([test])</InCharacterGroup>
