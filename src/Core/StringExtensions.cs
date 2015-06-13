@@ -78,6 +78,11 @@ namespace Nikse.SubtitleEdit.Core
             return source.IndexOf(value) >= 0;
         }
 
+        public static bool Contains(this string source, char[] value)
+        {
+            return source.IndexOfAny(value) >= 0;
+        }
+
         public static bool Contains(this string source, string value, StringComparison comparisonType)
         {
             return source.IndexOf(value, comparisonType) >= 0;
