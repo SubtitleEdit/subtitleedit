@@ -15,8 +15,11 @@
    * Updated Brazil translation - thx Igor
    * Updated Croatian translation - thx diomed
    * Portuguese (Brazilian) spell check dictionary updated to v2.1.2 - thx ivandrofly
-   * Added drag'n'drop support in waveform batch generate - thx ThiefMaster
+   * Added drag-n-drop support in waveform batch generate - thx ThiefMaster
+   * Added drag-n-drop support for directories in "Batch convert" - thx ivandrofly
    * Persistent find history - thx vmb
+   * Show friendly message if user tries to load JPG file - thx ivandrofly
+   * Show friendly message if user tries to load a file containing only binary zeroes
 * FIXED:
    * Fixed multiple blank lines added after editing SSA/ASS properties
    * Fix in "Change casing" regarding "don't" - thx Chamallow
@@ -30,6 +33,8 @@
    * Export to images: Some fixes for alignment + full frame
    * Don't load video when canceling mkv import - thx Andreas
    * Avoid crash in "Plugins" (due to culture specific decimal separator) - thx marb99
+   * Fixed bug reading YouTube sbv files - thx msl521
+   * Fixed support for Tesseract 3.03RC - thx YamashitaRen 
 
 
 3.4.6 (29th March 2015)
