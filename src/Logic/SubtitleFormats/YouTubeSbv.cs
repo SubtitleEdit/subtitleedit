@@ -5,6 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
+    /// <summary>
+    /// YouTube "SubViewer" format... I think YouTube tried to add "SubViewer 2.0" support but instread they created their own format... nice ;)
+    /// </summary>
     public class YouTubeSbv : SubtitleFormat
     {
         private enum ExpectingLine

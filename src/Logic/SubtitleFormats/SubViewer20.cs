@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -30,6 +31,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            var sbv = new YouTubeSbv();
+            if (sbv.IsMine(lines, fileName) && !String.Join(String.Empty, lines.ToArray()).Contains("[br]"))
+                return false;
+
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
