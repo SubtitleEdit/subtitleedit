@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -132,21 +131,17 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool IsJpg(string fileName)
         {
-            try
+            // jpeg header - always starts with FFD8 (Start Of Image marker) + FF + a uknown byte (most often E0 or E1 though)
+            using (var fs = new BinaryReader(File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
             {
-                // 0000000: ffd8 ffe0 0010 4a46 4946 0001 0101 0048  ......JFIF.....H
-                // 0000000: ffd8 ffe1 14f8 4578 6966 0000 4d4d 002a  ......Exif..MM.*
-                using (var br = new BinaryReader(File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
-                {
-                    UInt16 soi = br.ReadUInt16();  // Start of Image (SOI) marker (FFD8)
-                    UInt16 marker = br.ReadUInt16(); // JFIF marker (FFE0) EXIF marker (FFE1)
-                    marker = (UInt16)((marker << 8) | (marker >> 8));
-                    return (soi == 0xD8FF) && (marker >= 0xFFC0 && marker <= 0xFFEF);
-                }
-            }
-            catch
-            {
-                return false;
+                var buffer = new byte[3];
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                    return false;
+
+                return buffer[0] == 0xFF 
+                    && buffer[1] == 0xD8
+                    && buffer[2] == 0xFF;
             }
         }
 
@@ -173,28 +168,15 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool IsTransportStream(string fileName)
         {
-            FileStream fs = null;
-            try
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 var buffer = new byte[3761];
                 var count = fs.Read(buffer, 0, buffer.Length);
                 if (count != buffer.Length)
                     return false;
-                return buffer[0] == 0x47 && buffer[188] == 0x47 // 47hex (71 dec or 'G') == TS sync byte
-                    || buffer[0] == 0x54 && buffer[1] == 0x46 && buffer[2] == 0x72 && buffer[3760] == 0x47; // Topfield REC TS file
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                return false;
-            }
-            finally
-            {
-                if (fs != null)
-                {
-                    fs.Close();
-                }
+
+                return (buffer[0] == 0x47 && buffer[188] == 0x47) || // 47hex (71 dec or 'G') == TS sync byte
+                       (buffer[0] == 0x54 && buffer[1] == 0x46 && buffer[2] == 0x72 && buffer[3760] == 0x47); // Topfield REC TS file
             }
         }
 
@@ -259,10 +241,8 @@ namespace Nikse.SubtitleEdit.Core
         /// <returns>true if file is an MXF file, otherwise false</returns>
         public static bool IsMaterialExchangeFormat(string fileName)
         {
-            FileStream fs = null;
-            try
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 var buffer = new byte[65536];
                 var count = fs.Read(buffer, 0, buffer.Length);
                 if (count < 100)
@@ -285,18 +265,6 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         return true;
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                return false;
-            }
-            finally
-            {
-                if (fs != null)
-                {
-                    fs.Close();
                 }
             }
             return false;
