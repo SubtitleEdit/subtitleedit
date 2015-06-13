@@ -3084,6 +3084,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if ((format.GetType() == typeof(WebVTT) || format.GetType() == typeof(WebVTTFileWithLineNumber)))
+                {
+                    SetEncoding(Encoding.UTF8);
+                    currentEncoding = Encoding.UTF8;
+                }
+
                 if (Control.ModifierKeys == (Keys.Control | Keys.Shift))
                     allText = allText.Replace("\r\n", "\n");
 
