@@ -560,6 +560,11 @@ namespace Nikse.SubtitleEdit.Logic
                         else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
                             sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
 
+                        if ((sf.GetType() == typeof(WebVTT) || sf.GetType() == typeof(WebVTTFileWithLineNumber)))
+                        {
+                            targetEncoding = Encoding.UTF8;
+                        }
+
                         if (sf.GetType() == typeof(ItunesTimedText) || sf.GetType() == typeof(ScenaristClosedCaptions) || sf.GetType() == typeof(ScenaristClosedCaptionsDropFrame))
                         {
                             Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
