@@ -5694,6 +5694,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             string result = string.Empty;
             string outputFileName = tempTextFileName + ".html";
+            if (!File.Exists(outputFileName))
+                outputFileName = tempTextFileName + ".hocr";
             try
             {
                 if (File.Exists(outputFileName))
