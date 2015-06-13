@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Core
         public static bool IsJpg(string fileName)
         {
             // jpeg header - always starts with FFD8 (Start Of Image marker) + FF + a uknown byte (most often E0 or E1 though)
-            using (var fs = new BinaryReader(File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[3];
                 var count = fs.Read(buffer, 0, buffer.Length);
