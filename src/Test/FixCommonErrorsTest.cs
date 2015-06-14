@@ -742,7 +742,7 @@ namespace Test
             {
                 InitializeFixCommonErrorsLine(target, " To be, or not to be!");
                 target.FixUnneededSpaces();
-                var expected = "To be, or not to be!";
+                const string expected = "To be, or not to be!";
                 Assert.AreEqual(expected, target.Subtitle.Paragraphs[0].Text);
             }
         }
@@ -789,6 +789,30 @@ namespace Test
             {
                 const string expected = "Foo bar.";
                 InitializeFixCommonErrorsLine(target, "Foo \t\tbar.");
+                target.FixUnneededSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
+        [TestMethod]
+        public void FixUneededSpacesItalic1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string expected = "Hi <i>bad</i> man!";
+                InitializeFixCommonErrorsLine(target, "Hi <i> bad</i> man!");
+                target.FixUnneededSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
+        [TestMethod]
+        public void FixUneededSpacesItalic2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string expected = "Hi <i>bad</i> man!";
+                InitializeFixCommonErrorsLine(target, "Hi <i>bad </i> man!");
                 target.FixUnneededSpaces();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, expected);
             }

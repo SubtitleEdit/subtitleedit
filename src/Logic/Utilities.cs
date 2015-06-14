@@ -2958,6 +2958,14 @@ namespace Nikse.SubtitleEdit.Logic
             if (text.Contains(open2, StringComparison.Ordinal))
                 text = text.Replace(open2, Environment.NewLine + openTag);
 
+            // Hi <i> bad</i> man! -> Hi <i>bad</i> man!
+            text = text.Replace(" " + openTag + " ", " " + openTag);
+            text = text.Replace(Environment.NewLine + openTag + " ", Environment.NewLine + openTag);            
+
+            // Hi <i>bad </i> man! -> Hi <i>bad</i> man!
+            text = text.Replace(" " + closeTag + " ", closeTag + " ");
+            text = text.Replace(" " + closeTag + Environment.NewLine, closeTag + Environment.NewLine);
+
             text = text.Trim();
             if (text.StartsWith(open1, StringComparison.Ordinal))
                 text = openTag + text.Substring(open1.Length);
