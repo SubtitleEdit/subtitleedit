@@ -818,6 +818,18 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixUneededSpacesFont1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string expected = "Hi <font color='red'>bad</font> man!";
+                InitializeFixCommonErrorsLine(target, "Hi <font color='red'> bad</font> man!");
+                target.FixUnneededSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
         #endregion Fix unneeded spaces
 
         #region Fix EmptyLines
