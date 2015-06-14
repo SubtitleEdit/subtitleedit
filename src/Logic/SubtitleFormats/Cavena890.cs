@@ -205,17 +205,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
-                    if (p.Text.Contains('的') ||
-                        p.Text.Contains('是') ||
-                        p.Text.Contains('啊') ||
-                        p.Text.Contains('吧') ||
-                        p.Text.Contains('好') ||
-                        p.Text.Contains('吧') ||
-                        p.Text.Contains('亲') ||
-                        p.Text.Contains('爱') ||
-                        p.Text.Contains('的') ||
-                        p.Text.Contains('早') ||
-                        p.Text.Contains('上'))
+                    if (p.Text.Contains(new[] { '的', '是', '啊', '吧', '好', '吧', '亲', '爱', '的', '早', '上' }))
                     {
                         _languageIdLine1 = LanguageIdChineseSimplified;
                         _languageIdLine2 = LanguageIdChineseSimplified;
