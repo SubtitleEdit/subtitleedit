@@ -1679,7 +1679,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (File.Exists(fileName))
             {
                 bool videoFileLoaded = false;
-                string ext = Path.GetExtension(fileName).ToLower();
+                var ext = Path.GetExtension(fileName).ToLowerInvariant();
 
                 // save last first visible index + first selected index from listview
                 if (!string.IsNullOrEmpty(_fileName))
