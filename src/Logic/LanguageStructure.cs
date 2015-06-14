@@ -402,6 +402,8 @@
             public string TranslatorsName { get; set; }
             public string SubtitleListReferenceCode { get; set; }
             public string CountryOfOrigin { get; set; }
+            public string TimeCodeStatus { get; set; }
+            public string TimeCodeStartOfProgramme { get; set; }
             public string RevisionNumber { get; set; }
             public string MaxNoOfDisplayableChars { get; set; }
             public string MaxNumberOfDisplayableRows { get; set; }
