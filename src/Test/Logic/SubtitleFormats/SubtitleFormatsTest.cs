@@ -31,7 +31,7 @@ namespace Test.Logic.SubtitleFormats
             {
                 _testContextInstance = value;
             }
-        }     
+        }
 
         #region Additional test attributes
 
@@ -67,7 +67,8 @@ namespace Test.Logic.SubtitleFormats
 
         #region SubRip (.srt)
 
-        private static List<string> GetSrtLines(string text){
+        private static List<string> GetSrtLines(string text)
+        {
             var lines = new List<string>();
             string[] arr = text.Replace(Environment.NewLine, "\r").Replace("\n", "\r").Split('\r');
             foreach (string line in arr)

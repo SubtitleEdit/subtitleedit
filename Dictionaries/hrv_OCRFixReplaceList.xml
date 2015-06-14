@@ -574,7 +574,7 @@
     <Word from="uvijet" to="uvjet" />
     <Word from="uvo" to="uho" />
     <Word from="vaistinu" to="uistinu" />
-    <Word from="Vaistinu" to="Uistinu" /> 
+    <Word from="Vaistinu" to="Uistinu" />
     <Word from="važi" to="vrijedi" />
     <Word from="večan" to="vječan" />
     <Word from="večna" to="vječna" />
@@ -990,7 +990,7 @@
     <RegEx find="([bB])(ež)(i|imo|e|ao|ala|ali|anje|anjem|anju)" replaceWith="$1jež$3" />
     <RegEx find="([bB])(ijež)(i|imo|e|ao|ala|ali)" replaceWith="$1jež$3" />
     <RegEx find="([bB])(ožiji)(a|i|u|om|ima)*" replaceWith="$1ožji$3" />
-    <RegEx find="(božić)(a|e|i|u|em|ima)*" replaceWith="Božić$2" 
+    <RegEx find="(božić)(a|e|i|u|em|ima)*" replaceWith="Božić$2" />
     <RegEx find="(Božićn)(a|e|i|o|u|om|im)*" replaceWith="božićn$2" />
     <RegEx find="(Božičn)(a|e|i|o|u|om|im)*" replaceWith="božićn$2" />
     <RegEx find="(Hrist)(a|e|u|om)*" replaceWith="Krist$2" />
@@ -1266,7 +1266,7 @@
     <RegEx find="\b([rR])(iješ)(avati|avala|avao|avali|avam|avaš|ava|avamo|avate|avaju|avanje)" replaceWith="$1ješ$3" />
     <RegEx find="(sačeka)(j|te|š|mo|te|ju|li|še|te|jte)*" replaceWith="pričeka$2" />
     <RegEx find="(Sačeka)(j|te|š|mo|te|ju|li|še|te|jte)*" replaceWith="Pričeka$2" />
-    <RegEx find="(s|S)(aglasno)(st|sti|šću|stima)*" replaceWith="$1uglasno$3" 
+    <RegEx find="(s|S)(aglasno)(st|sti|šću|stima)*" replaceWith="$1uglasno$3" />
     <RegEx find="([sS])(amoubistv)(a|o|u|om|ima)" replaceWith="$1amoubojstv$3" />
     <RegEx find="(saobraćaj)(na|nu|ni|nom|nima)*" replaceWith="promet$2" />
     <RegEx find="(Saobraćaj)(na|nu|ni|nom|nima)*" replaceWith="Promet$2" />
@@ -1355,7 +1355,7 @@
     <RegEx find="(ućut)(im|iš|i|imo|ite|e)" replaceWith="ušut$2" />
     <RegEx find="(Ućut)(im|iš|i|imo|ite|e)" replaceWith="Ućut$2" />
     <RegEx find="(univerzum)(a|e|i|u|om|ima)*" replaceWith="svemir$2" />
-    <RegEx find="(uskrs)(a|i|u|om|ima)*" replaceWith="Uskrs$2" 
+    <RegEx find="(uskrs)(a|i|u|om|ima)*" replaceWith="Uskrs$2" />
     <RegEx find="([uU])(ticaj)(a|e|i|u|em|ima|ni|nu|nima|noj|nom)*" replaceWith="$1tjecaj$3" />
     <RegEx find="([uU])(verav)(am|aš|a|amo|ate|aju|ati|ala|ao|ali|aše)" replaceWith="$1vjerav$3" />
     <RegEx find="([uU])(verljiv)(a|e|i|o|u|ima|ima|om|og|oj)*" replaceWith="$1vjerljiv$3" />
