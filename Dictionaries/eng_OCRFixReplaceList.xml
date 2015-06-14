@@ -1701,10 +1701,8 @@
     <Word from="Superrich" to="Super rich" />
     <Word from="Iprefer" to="I prefer" />
     <Word from="Theymust" to="They must" />
-    <Word from="can'tpronounce" to="can't pronounce" />
     <Word from="whatyou" to="what you" />
     <Word from="I'IIjump" to="I'll jump" />
-    <Word from="can'tpronounce" to="can't pronounce" />
     <Word from="nobodyknow" to="nobody know" />
     <Word from="neverknew" to="never knew" />
     <Word from="EIectronica" to="Electronica" />
@@ -1803,13 +1801,10 @@
     <WordPart from="lVI" to="M" />
     <WordPart from="IVl" to="M" />
     <WordPart from="lVl" to="M" />
-    <WordPart from="IVl" to="M" />
-    <WordPart from="I\/I" to="M" />
     <WordPart from="I\/I" to="M" />
     <WordPart from="l\/I" to="M" />
     <WordPart from="I\/l" to="M" />
     <WordPart from="l\/l" to="M" />
-    <WordPart from="I\/l" to="M" />
     <WordPart from="IVIa" to="Ma" />
     <WordPart from="IVIe" to="Me" />
     <WordPart from="IVIi" to="Mi" />
@@ -2104,7 +2099,6 @@
     <Beginning from="Lt'll" to="It'll" />
     <Beginning from="IVIa" to="Ma" />
     <Beginning from="IVIu" to="Mu" />
-    <Beginning from="lt'll" to="It'll" />
     <Beginning from="0ne" to="One" />
     <Beginning from="0nly" to="Only" />
     <Beginning from="0n " to="On " />
@@ -2112,9 +2106,6 @@
     <Beginning from="Lt " to="It " />
     <Beginning from="lt's " to="It's " />
     <Beginning from="Lt's " to="It's " />
-    <Beginning from="lt " to="It " />
-    <Beginning from="lt " to="It " />
-    <Beginning from="lt's " to="It's " />
     <Beginning from="ln " to="In " />
     <Beginning from="Ln " to="In " />
     <Beginning from="l-in " to="I-in " />
@@ -2164,9 +2155,7 @@
     <Beginning from="&lt;i&gt;NARRA TOR" to="&lt;i&gt;NARRATOR" />
     <Beginning from="lt'syour" to="It's your" />
     <Beginning from="It'syour" to="It's your" />
-    <Beginning from="Lt " to="It " />
     <Beginning from="Ls " to="Is " />
-    <Beginning from="Lt's " to="It's " />
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
@@ -2180,7 +2169,6 @@
     <!-- Whole lines - including -" etc -->
     <Line from="H ey." to="Hey." />
     <Line from="He)’-" to="Hey." />
-    <Line from="N0." to="No." />
     <Line from="N0." to="No." />
     <Line from="-N0." to="-No." />
     <Line from="Noll" to="No!!" />
@@ -2197,6 +2185,6 @@
     <Line from="ISIGHS]" to="[SIGHS]" />
   </WholeLines>
   <RegularExpressions>
-    <!--    <RegEx find="\bi\b" replaceWith="I" /> just an example - do not use this regex -->
+    <!-- <RegEx find="\bi\b" replaceWith="I" /> just an example - do not use this regex -->
   </RegularExpressions>
 </OCRFixReplaceList>
