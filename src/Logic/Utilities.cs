@@ -2960,7 +2960,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             // Hi <i> bad</i> man! -> Hi <i>bad</i> man!
             text = text.Replace(" " + openTag + " ", " " + openTag);
-            text = text.Replace(Environment.NewLine + openTag + " ", Environment.NewLine + openTag);            
+            text = text.Replace(Environment.NewLine + openTag + " ", Environment.NewLine + openTag);
 
             // Hi <i>bad </i> man! -> Hi <i>bad</i> man!
             text = text.Replace(" " + closeTag + " ", closeTag + " ");

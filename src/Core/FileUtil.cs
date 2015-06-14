@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Core
                 if (count != buffer.Length)
                     return false;
 
-                return buffer[0] == 0xFF 
+                return buffer[0] == 0xFF
                     && buffer[1] == 0xD8
                     && buffer[2] == 0xFF;
             }
