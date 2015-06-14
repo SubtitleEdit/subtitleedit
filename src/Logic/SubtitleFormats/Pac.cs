@@ -1048,17 +1048,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 index++;
             }
-            bool con = true;
-            while (con)
+            while (true)
             {
                 index++;
                 if (index + 20 >= buffer.Length)
                     return null;
 
                 if (buffer[index] == 0xFE && (buffer[index - 15] == 0x60 || buffer[index - 15] == 0x61))
-                    con = false;
+                    break;
                 if (buffer[index] == 0xFE && (buffer[index - 12] == 0x60 || buffer[index - 12] == 0x61))
-                    con = false;
+                    break;
             }
 
             int feIndex = index;
