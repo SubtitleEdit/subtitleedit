@@ -303,6 +303,7 @@
     <Word from="oprostiće" to="oprostit će" />
     <Word from="Oprostiće" to="Oprostit će" />
     <Word from="organizuju" to="organiziraju" />
+    <Word from="ostrvima" to="otocima" />
     <Word from="ovde" to="ovdje" />
     <Word from="Ovde" to="Ovdje" />
     <Word from="ovdije" to="ovdje" />
@@ -1173,7 +1174,7 @@
     <RegEx find="([oO])(seća)(m|š|mo|te|ju|j|ja|ji|je|jem|ju|jima)*" replaceWith="$1sjeća$3" />
     <RegEx find="([oO])(seča)(m|š|mo|te|ju|j|ja|ji|je|jem|ju|jima)*" replaceWith="$1sjeća$3" />
     <RegEx find="([oO])(sječa)(m|š|mo|te|ju|j|ja|ji|je|jem|ju|jima)*" replaceWith="$1sjeća$3" />
-    <RegEx find="([oO])(strv)(a|u|om|ima)" replaceWith="$1tok$3" />
+    <RegEx find="([oO])(strv)(a|u|om)" replaceWith="$1tok$3" />
     <RegEx find="([oO])(sveženj)(a|e|u|em|ima)" replaceWith="$1svježenj$3" />
     <RegEx find="([oO])(svežava)(m|š|mo|te|ju|ti|li|la|lo|ju|juć|juće|juća)*" replaceWith="$1svježava$3" />
     <RegEx find="\b([oO])(ter)(a|am|amo|ate|aju)" replaceWith="$1tjer$3" />
