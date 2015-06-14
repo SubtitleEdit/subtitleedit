@@ -1212,7 +1212,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             while (index >= 0 && index < text.Length - 1)
             {
                 text = text.Insert(index + 1, "i>");
-                int indexOfNewLine = text.IndexOf(Environment.NewLine, index, StringComparison.Ordinal);
+                int indexOfNewLine = text.IndexOf(Environment.NewLine, index + 3, StringComparison.Ordinal);
                 int indexOfEnd = text.IndexOf('>', index + 3);
                 if (indexOfNewLine < 0 && indexOfEnd < 0)
                 {
@@ -1233,11 +1233,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
             }
-            //            text = text.Replace("<i>", " <i>");
+            // text = text.Replace("<i>", " <i>");
             text = text.Replace("</i>", "</i> ");
             text = text.Replace("  ", " ");
-            text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-            return text.Trim();
+            return text.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
         }
 
         public static Encoding GetEncoding(int codePage)
