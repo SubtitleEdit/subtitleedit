@@ -1,10 +1,11 @@
-﻿using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -37,6 +38,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelTranslatorsName.Text = language.TranslatorsName;
             labelSubtitleListReferenceCode.Text = language.SubtitleListReferenceCode;
             labelCountryOfOrigin.Text = language.CountryOfOrigin;
+            labelTimeCodeStatus.Text = language.TimeCodeStatus;
+            labelTimeCodeStartOfProgramme.Text = language.TimeCodeStartOfProgramme;
 
             labelRevisionNumber.Text = language.RevisionNumber;
             labelMaxNoOfDisplayableChars.Text = language.MaxNoOfDisplayableChars;
@@ -57,6 +60,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
+
+            timeUpDownStartTime.ForceHHMMSSFF();
         }
 
         internal void Initialize(Ebu.EbuGeneralSubtitleInformation header, byte justificationCode, string fileName, Subtitle subtitle)
@@ -83,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxJustificationCode.SelectedIndex = justificationCode;
 
-            this.Text = Configuration.Settings.Language.EbuSaveOptions.Title;
+            Text = Configuration.Settings.Language.EbuSaveOptions.Title;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
@@ -91,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void CheckErrors(Subtitle subtitle)
         {
             textBoxErrors.Text = string.Empty;
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             int errorCount = 0;
             int i = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -139,6 +144,23 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxTranslatorsName.Text = header.TranslatorsName.TrimEnd();
             textBoxSubtitleListReferenceCode.Text = header.SubtitleListReferenceCode.TrimEnd();
             textBoxCountryOfOrigin.Text = header.CountryOfOrigin;
+
+            comboBoxTimeCodeStatus.SelectedIndex = 0;
+            if (header.TimeCodeStatus == "1")
+                comboBoxTimeCodeStatus.SelectedIndex = 1;
+            try
+            {
+                // HHMMSSFF
+                int hh = int.Parse(header.TimeCodeStartOfProgramme.Substring(0, 2));
+                int mm = int.Parse(header.TimeCodeStartOfProgramme.Substring(2, 2));
+                int ss = int.Parse(header.TimeCodeStartOfProgramme.Substring(4, 2));
+                int ff = int.Parse(header.TimeCodeStartOfProgramme.Substring(6, 2));
+                timeUpDownStartTime.TimeCode = new TimeCode(hh, mm, ss, SubtitleFormat.FramesToMillisecondsMax999(ff));
+            }
+            catch (Exception)
+            {
+                timeUpDownStartTime.TimeCode = new TimeCode(0);
+            }
 
             int number;
             if (int.TryParse(header.RevisionNumber, out number))
@@ -198,11 +220,14 @@ namespace Nikse.SubtitleEdit.Forms
             _header.CountryOfOrigin = textBoxCountryOfOrigin.Text;
             if (_header.CountryOfOrigin.Length != 3)
                 _header.CountryOfOrigin = "USA";
+            _header.TimeCodeStatus = comboBoxTimeCodeStatus.SelectedIndex.ToString(CultureInfo.InvariantCulture);
+            _header.TimeCodeStartOfProgramme = timeUpDownStartTime.TimeCode.ToHHMMSSFF().Replace(":", string.Empty);
+
             _header.RevisionNumber = numericUpDownRevisionNumber.Value.ToString("00");
             _header.MaximumNumberOfDisplayableCharactersInAnyTextRow = numericUpDownMaxCharacters.Value.ToString("00");
             _header.MaximumNumberOfDisplayableRows = numericUpDownMaxRows.Value.ToString("00");
-            _header.DiskSequenceNumber = numericUpDownDiskSequenceNumber.Value.ToString();
-            _header.TotalNumberOfDisks = numericUpDownTotalNumberOfDiscs.Value.ToString();
+            _header.DiskSequenceNumber = numericUpDownDiskSequenceNumber.Value.ToString(CultureInfo.InvariantCulture);
+            _header.TotalNumberOfDisks = numericUpDownTotalNumberOfDiscs.Value.ToString(CultureInfo.InvariantCulture);
             JustificationCode = (byte)comboBoxJustificationCode.SelectedIndex;
             DialogResult = DialogResult.OK;
         }
@@ -226,8 +251,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (File.Exists(fileName))
             {
-                Ebu ebu = new Ebu();
-                Subtitle temp = new Subtitle();
+                var ebu = new Ebu();
+                var temp = new Subtitle();
                 ebu.LoadSubtitle(temp, null, fileName);
                 FillFromHeader(ebu.Header);
                 if (ebu.JustificationCodes.Count > 2 && ebu.JustificationCodes[1] == ebu.JustificationCodes[2])

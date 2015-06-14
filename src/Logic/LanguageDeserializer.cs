@@ -918,6 +918,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "EbuSaveOptions/CountryOfOrigin":
                     language.EbuSaveOptions.CountryOfOrigin = reader.Value;
                     break;
+                case "EbuSaveOptions/TimeCodeStatus":
+                    language.EbuSaveOptions.TimeCodeStatus = reader.Value;
+                    break;
+                case "EbuSaveOptions/TimeCodeStartOfProgramme":
+                    language.EbuSaveOptions.TimeCodeStartOfProgramme = reader.Value;
+                    break;
                 case "EbuSaveOptions/RevisionNumber":
                     language.EbuSaveOptions.RevisionNumber = reader.Value;
                     break;

@@ -523,6 +523,8 @@ namespace Nikse.SubtitleEdit.Logic
                 TranslatorsName = "Translators name",
                 SubtitleListReferenceCode = "Subtitle list reference code",
                 CountryOfOrigin = "Country of origin",
+                TimeCodeStatus = "Time code status",
+                TimeCodeStartOfProgramme = "Time code: Start of programme",
                 RevisionNumber = "Revision number",
                 MaxNoOfDisplayableChars = "Max# of chars per row",
                 MaxNumberOfDisplayableRows = "Max# of rows",
