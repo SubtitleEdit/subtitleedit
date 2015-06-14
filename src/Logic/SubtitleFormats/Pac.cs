@@ -850,19 +850,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!p.Text.Contains(Environment.NewLine))
                 verticalAlignment = 0x0b;
             string text = p.Text;
-            if (text.StartsWith("{\\an1}") || text.StartsWith("{\\an4}") || text.StartsWith("{\\an7}"))
+            if (text.StartsWith("{\\an1}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an7}", StringComparison.Ordinal))
             {
                 alignment = 1; // left
             }
-            else if (text.StartsWith("{\\an3}") || text.StartsWith("{\\an6}") || text.StartsWith("{\\an9}"))
+            else if (text.StartsWith("{\\an3}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
             {
                 alignment = 0; // right
             }
-            if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an8}") || text.StartsWith("{\\an9}"))
+            if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
             {
                 verticalAlignment = 0; // top
             }
-            else if (text.StartsWith("{\\an4}") || text.StartsWith("{\\an5}") || text.StartsWith("{\\an6}"))
+            else if (text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal))
             {
                 verticalAlignment = 5; // center
             }
