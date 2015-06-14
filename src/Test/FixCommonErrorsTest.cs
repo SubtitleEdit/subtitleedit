@@ -770,7 +770,7 @@ namespace Test
         }
 
         [TestMethod]
-        public void FixUneededSpaces5()
+        public void FixUnneededSpaces5()
         {
             using (var target = GetFixCommonErrorsLib())
             {
@@ -783,7 +783,7 @@ namespace Test
         }
 
         [TestMethod]
-        public void FixUneededSpaces6()
+        public void FixUnneededSpaces6()
         {
             using (var target = GetFixCommonErrorsLib())
             {
@@ -795,7 +795,7 @@ namespace Test
         }
 
         [TestMethod]
-        public void FixUneededSpacesItalic1()
+        public void FixUnneededSpacesItalic1()
         {
             using (var target = GetFixCommonErrorsLib())
             {
@@ -807,7 +807,7 @@ namespace Test
         }
 
         [TestMethod]
-        public void FixUneededSpacesItalic2()
+        public void FixUnneededSpacesItalic2()
         {
             using (var target = GetFixCommonErrorsLib())
             {
@@ -819,7 +819,7 @@ namespace Test
         }
 
         [TestMethod]
-        public void FixUneededSpacesFont1()
+        public void FixUnneededSpacesFont1()
         {
             using (var target = GetFixCommonErrorsLib())
             {
