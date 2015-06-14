@@ -1219,7 +1219,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var oldText = p.Text;
                     var text = Utilities.RemoveUnneededSpaces(p.Text, Language);
-                    if (text.Length != oldText.Length && (Utilities.CountTagInText(text, ' ') + Utilities.CountTagInText(text, '\t')) < ((Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, '\u00A0') + Utilities.CountTagInText(oldText, '\t'))))
+                    if (text.Length != oldText.Length && (Utilities.CountTagInText(text, ' ') + Utilities.CountTagInText(text, '\t')) < (Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, '\u00A0') + Utilities.CountTagInText(oldText, '\t')))
                     {
                         doubleSpaces++;
                         p.Text = text;
