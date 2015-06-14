@@ -355,6 +355,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             // Okay! Narrator: Hello!
             if (pre.IndexOfAny(new[] { '!', '?' }) > 0)
                 return false;
+
             return true;
         }
 
@@ -889,7 +890,6 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                         text = text.TrimStart('-').TrimStart();
                 }
             }
-
             return text;
         }
 
