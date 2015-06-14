@@ -360,6 +360,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TranslatorsName>Translators name</TranslatorsName>
     <SubtitleListReferenceCode>Subtitle list reference code</SubtitleListReferenceCode>
     <CountryOfOrigin>Country of origin</CountryOfOrigin>
+    <TimeCodeStatus>Time code status</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Time code: Start of programme</TimeCodeStartOfProgramme>
     <RevisionNumber>Revision number</RevisionNumber>
     <MaxNoOfDisplayableChars>Max# of chars per row</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max# of rows</MaxNumberOfDisplayableRows>
