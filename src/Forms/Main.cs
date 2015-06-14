@@ -2385,11 +2385,12 @@ namespace Nikse.SubtitleEdit.Forms
                         string s = File.ReadAllText(fileName, enc);
 
                         // check for RTF file
-                        if (fileName.EndsWith(".rtf", StringComparison.OrdinalIgnoreCase) && !s.TrimStart().StartsWith("{\\rtf", StringComparison.Ordinal))
+                        if (ext == ".rtf" && s.TrimStart().StartsWith("{\\rtf", StringComparison.Ordinal))
                         {
-                            var rtBox = new RichTextBox();
-                            rtBox.Rtf = s;
-                            s = rtBox.Text;
+                            using (var rtb = new RichTextBox { Rtf = s })
+                            {
+                                s = rtb.Text;
+                            }
                         }
                         var uknownFormatImporter = new UknownFormatImporter();
                         uknownFormatImporter.UseFrames = true;
