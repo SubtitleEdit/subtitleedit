@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Logic
                 // start with uppercase after music symbol - but only if next line does not start with music symbol
                 if (!startWithUppercase && (s.EndsWith('♪') || s.EndsWith('♫')))
                 {
-                    if (!Pre.Contains('♪') && !Pre.Contains('♫'))
+                    if (!Pre.Contains(new[] { '♪', '♫' }))
                         startWithUppercase = true;
                 }
 
@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (makeUppercaseAfterBreak && StrippedText.IndexOfAny(new[] { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' }) >= 0)
+            if (makeUppercaseAfterBreak && StrippedText.Contains(new[] { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' }))
             {
                 const string breakAfterChars = @".!?:;)]}([{";
 

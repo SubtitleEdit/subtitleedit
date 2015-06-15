@@ -3040,7 +3040,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var currentEncoding = GetCurrentEncoding();
                 bool isUnicode = currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8;
-                if (!isUnicode && (allText.Contains('♪') || allText.Contains('♫') || allText.Contains('♥') || allText.Contains('—') || allText.Contains('―') || allText.Contains('…'))) // ANSI & music/unicode symbols
+                if (!isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
                 {
                     if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNo) == DialogResult.No)
                         return DialogResult.No;
@@ -3152,7 +3152,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string allText = _subtitleAlternate.ToText(format).Trim();
                 var currentEncoding = GetCurrentEncoding();
                 bool isUnicode = currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8;
-                if (!isUnicode && (allText.Contains('♪') || allText.Contains('♫') || allText.Contains('♥') || allText.Contains('—') || allText.Contains('―') || allText.Contains('…'))) // ANSI & music/unicode symbols
+                if (!isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
                 {
                     if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNo) == DialogResult.No)
                         return DialogResult.No;
@@ -6934,7 +6934,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle ends with a tag and there's only one word in it:
-                        if (next.Text.EndsWith('>') && next.Text.Contains('<') && next.Text.IndexOf(' ') < 0)
+                        if (next.Text.EndsWith('>') && next.Text.Contains('<') && !next.Text.Contains(' '))
                         {
                             // Remove the end tag.
                             next.Text = next.Text.Remove(next.Text.LastIndexOf('<'));

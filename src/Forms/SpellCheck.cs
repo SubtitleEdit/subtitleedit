@@ -556,29 +556,7 @@ namespace Nikse.SubtitleEdit.Forms
                     minLength = 1;
 
                 if (_currentWord.Trim().Length >= minLength &&
-                    !_currentWord.Contains('0') &&
-                    !_currentWord.Contains('1') &&
-                    !_currentWord.Contains('2') &&
-                    !_currentWord.Contains('3') &&
-                    !_currentWord.Contains('4') &&
-                    !_currentWord.Contains('5') &&
-                    !_currentWord.Contains('6') &&
-                    !_currentWord.Contains('7') &&
-                    !_currentWord.Contains('8') &&
-                    !_currentWord.Contains('9') &&
-                    !_currentWord.Contains('%') &&
-                    !_currentWord.Contains('&') &&
-                    !_currentWord.Contains('@') &&
-                    !_currentWord.Contains('$') &&
-                    !_currentWord.Contains('*') &&
-                    !_currentWord.Contains('=') &&
-                    !_currentWord.Contains('£') &&
-                    !_currentWord.Contains('#') &&
-                    !_currentWord.Contains('_') &&
-                    !_currentWord.Contains('½') &&
-                    !_currentWord.Contains('^') &&
-                    !_currentWord.Contains('£')
-                    )
+                    !_currentWord.Contains(new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '%', '&', '@', '$', '*', '=', '£', '#', '_', '½', '^' }))
                 {
                     _prefix = string.Empty;
                     _postfix = string.Empty;
@@ -858,7 +836,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _wordsWithDashesOrPeriods.Add(w);
             }
 
-            if (text.Contains('.') || text.Contains('-'))
+            if (text.Contains(new[] { '.', '-' }))
             {
                 int i = 0;
                 foreach (string wordWithDashesOrPeriods in _wordsWithDashesOrPeriods)
@@ -1052,12 +1030,12 @@ namespace Nikse.SubtitleEdit.Forms
             _wordsWithDashesOrPeriods.AddRange(_namesEtcMultiWordList);
             foreach (string name in _namesEtcList)
             {
-                if (name.Contains('.') || name.Contains('-'))
+                if (name.Contains(new[] { '.', '-' }))
                     _wordsWithDashesOrPeriods.Add(name);
             }
             foreach (string word in _userWordList)
             {
-                if (word.Contains('.') || word.Contains('-'))
+                if (word.Contains(new[] { '.', '-' }))
                     _wordsWithDashesOrPeriods.Add(word);
             }
             _wordsWithDashesOrPeriods.AddRange(_userPhraseList);
