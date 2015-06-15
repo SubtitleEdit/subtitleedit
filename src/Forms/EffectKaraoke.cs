@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void MakeAnimation()
         {
             _animation = new List<Paragraph>();
-            double duration = _paragraph.Duration.TotalMilliseconds - ((double)numericUpDownDelay.Value * 1000.0);
+            double duration = _paragraph.Duration.TotalMilliseconds - ((double)numericUpDownDelay.Value * TimeCode.BaseUnit);
             double stepsLength = CalculateStepLength(_paragraph.Text, duration);
 
             double startMilliseconds;

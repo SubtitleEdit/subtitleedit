@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
                     // If 4 parts were found...
                     if (timeParts.Length == 4)
                     {
-                        SceneChangesInSeconds.Add(Convert.ToDouble(timeParts[0]) * 3600.0 + Convert.ToDouble(timeParts[1]) * 60.0 + Convert.ToDouble(timeParts[2]) + Convert.ToDouble(timeParts[3]) / 1000.0);
+                        SceneChangesInSeconds.Add(Convert.ToDouble(timeParts[0]) * 3600.0 + Convert.ToDouble(timeParts[1]) * 60.0 + Convert.ToDouble(timeParts[2]) + Convert.ToDouble(timeParts[3]) / TimeCode.BaseUnit);
                     }
                 }
                 else
@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (radioButtonMilliseconds.Checked)
                         {
-                            SceneChangesInSeconds.Add(d / 1000.0);
+                            SceneChangesInSeconds.Add(d / TimeCode.BaseUnit);
                         }
                     }
                 }

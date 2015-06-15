@@ -335,12 +335,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static int MillisecondsToFrames(double milliseconds)
         {
-            return (int)Math.Round(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            return (int)Math.Round(milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
         }
 
         public static int MillisecondsToFramesMaxFrameRate(double milliseconds)
         {
-            int frames = (int)Math.Round(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            int frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
             if (frames >= Configuration.Settings.General.CurrentFrameRate)
                 frames = (int)(Configuration.Settings.General.CurrentFrameRate - 0.01);
             return frames;
@@ -348,12 +348,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static int FramesToMilliseconds(double frames)
         {
-            return (int)Math.Round(frames * (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            return (int)Math.Round(frames * (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
         }
 
         public static int FramesToMillisecondsMax999(double frames)
         {
-            int ms = (int)Math.Round(frames * (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            int ms = (int)Math.Round(frames * (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
             if (ms > 999)
                 ms = 999;
             return ms;

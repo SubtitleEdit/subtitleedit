@@ -1023,7 +1023,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         const string paragraphWriteFormat = "{0} , {1} , {2}\r\n";
                         const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
 
-                        double factor = (1000.0 / Configuration.Settings.General.CurrentFrameRate);
+                        double factor = (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate);
                         string startTime = string.Format(timeFormat, param.P.StartTime.Hours, param.P.StartTime.Minutes, param.P.StartTime.Seconds, (int)Math.Round(param.P.StartTime.Milliseconds / factor));
                         string endTime = string.Format(timeFormat, param.P.EndTime.Hours, param.P.EndTime.Minutes, param.P.EndTime.Seconds, (int)Math.Round(param.P.EndTime.Milliseconds / factor));
                         sb.AppendFormat(paragraphWriteFormat, startTime, endTime, fileName);
@@ -1058,7 +1058,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         const string paragraphWriteFormat = "\t\t<spu start=\"{0}\" end=\"{1}\" image=\"{2}\"  />";
                         const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
 
-                        double factor = (1000.0 / Configuration.Settings.General.CurrentFrameRate);
+                        double factor = (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate);
                         string startTime = string.Format(timeFormat, param.P.StartTime.Hours, param.P.StartTime.Minutes, param.P.StartTime.Seconds, (int)Math.Round(param.P.StartTime.Milliseconds / factor));
                         string endTime = string.Format(timeFormat, param.P.EndTime.Hours, param.P.EndTime.Minutes, param.P.EndTime.Seconds, (int)Math.Round(param.P.EndTime.Milliseconds / factor));
                         sb.AppendLine(string.Format(paragraphWriteFormat, startTime, endTime, fileName));
@@ -1215,7 +1215,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         var imageFormat = ImageFormat;
 
                         int lastFrame = imagesSavedCount;
-                        int startFrame = (int)Math.Round(param.P.StartTime.TotalMilliseconds / (1000.0 / param.FramesPerSeconds));
+                        int startFrame = (int)Math.Round(param.P.StartTime.TotalMilliseconds / (TimeCode.BaseUnit / param.FramesPerSeconds));
                         var empty = new Bitmap(param.ScreenWidth, param.ScreenHeight);
 
                         if (imagesSavedCount == 0 && checkBoxSkipEmptyFrameAtStart.Checked)
@@ -1233,7 +1233,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             }
                         }
 
-                        int endFrame = (int)Math.Round(param.P.EndTime.TotalMilliseconds / (1000.0 / param.FramesPerSeconds));
+                        int endFrame = (int)Math.Round(param.P.EndTime.TotalMilliseconds / (TimeCode.BaseUnit / param.FramesPerSeconds));
                         var fullSize = new Bitmap(param.ScreenWidth, param.ScreenHeight);
                         Graphics g = Graphics.FromImage(fullSize);
                         g.DrawImage(param.Bitmap, (param.ScreenWidth - param.Bitmap.Width) / 2, param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin));

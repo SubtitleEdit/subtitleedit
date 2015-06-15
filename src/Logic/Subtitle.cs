@@ -301,10 +301,10 @@ namespace Nikse.SubtitleEdit.Logic
         {
             foreach (Paragraph p in Paragraphs)
             {
-                double startFrame = p.StartTime.TotalMilliseconds / 1000.0 * oldFrameRate;
-                double endFrame = p.EndTime.TotalMilliseconds / 1000.0 * oldFrameRate;
-                p.StartTime.TotalMilliseconds = startFrame * (1000.0 / newFrameRate);
-                p.EndTime.TotalMilliseconds = endFrame * (1000.0 / newFrameRate);
+                double startFrame = p.StartTime.TotalMilliseconds / TimeCode.BaseUnit * oldFrameRate;
+                double endFrame = p.EndTime.TotalMilliseconds / TimeCode.BaseUnit * oldFrameRate;
+                p.StartTime.TotalMilliseconds = startFrame * (TimeCode.BaseUnit / newFrameRate);
+                p.EndTime.TotalMilliseconds = endFrame * (TimeCode.BaseUnit / newFrameRate);
                 p.CalculateFrameNumbersFromTimeCodes(newFrameRate);
             }
         }
@@ -327,7 +327,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (selectedIndexes == null || selectedIndexes.Contains(i))
                 {
-                    double nextStartMilliseconds = _paragraphs[_paragraphs.Count - 1].EndTime.TotalMilliseconds + 100000;
+                    double nextStartMilliseconds = _paragraphs[_paragraphs.Count - 1].EndTime.TotalMilliseconds + TimeCode.BaseUnit;
                     if (i + 1 < _paragraphs.Count)
                         nextStartMilliseconds = _paragraphs[i + 1].StartTime.TotalMilliseconds;
 
@@ -346,11 +346,11 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (selectedIndexes == null || selectedIndexes.Contains(i))
                 {
-                    double nextStartMilliseconds = _paragraphs[_paragraphs.Count - 1].EndTime.TotalMilliseconds + 100000;
+                    double nextStartMilliseconds = _paragraphs[_paragraphs.Count - 1].EndTime.TotalMilliseconds + TimeCode.BaseUnit;
                     if (i + 1 < _paragraphs.Count)
                         nextStartMilliseconds = _paragraphs[i + 1].StartTime.TotalMilliseconds;
 
-                    double newEndMilliseconds = _paragraphs[i].EndTime.TotalMilliseconds + (seconds * 1000.0);
+                    double newEndMilliseconds = _paragraphs[i].EndTime.TotalMilliseconds + (seconds * TimeCode.BaseUnit);
                     if (newEndMilliseconds > nextStartMilliseconds)
                         newEndMilliseconds = nextStartMilliseconds - 1;
 

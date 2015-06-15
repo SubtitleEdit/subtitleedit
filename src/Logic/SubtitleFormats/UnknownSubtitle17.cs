@@ -186,7 +186,7 @@ DIGITAL_CINEMA=YES
             string seconds = parts[2];
             string frames = parts[3];
 
-            var milliseconds = (int)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames));
+            var milliseconds = (int)((TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames));
             if (milliseconds > 999)
                 milliseconds = 999;
 

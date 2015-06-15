@@ -264,8 +264,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (endPos > startPos)
             {
-                double subStart = _originalSubtitle.Paragraphs[startIndex].StartTime.TotalMilliseconds / 1000.0;
-                double subEnd = _originalSubtitle.Paragraphs[endIndex].StartTime.TotalMilliseconds / 1000.0;
+                double subStart = _originalSubtitle.Paragraphs[startIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+                double subEnd = _originalSubtitle.Paragraphs[endIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
 
                 double subDiff = subEnd - subStart;
                 double realDiff = endPos - startPos;
@@ -323,7 +323,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         maxIndex = syncIndices[i]; // maxIndex = syncIndices[i + 1];
 
-                    Sync(startIndex, endIndex, minIndex, maxIndex, _synchronizationPoints[startIndex].TotalMilliseconds / 1000.0, _synchronizationPoints[endIndex].TotalMilliseconds / 1000.0);
+                    Sync(startIndex, endIndex, minIndex, maxIndex, _synchronizationPoints[startIndex].TotalMilliseconds / TimeCode.BaseUnit, _synchronizationPoints[endIndex].TotalMilliseconds / TimeCode.BaseUnit);
 
                     minIndex = endIndex;
                 }
