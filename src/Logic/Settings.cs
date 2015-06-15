@@ -1072,7 +1072,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void Save()
         {
-            //this is too slow: Serialize(Configuration.BaseDirectory + "Settings.xml", this);
+            //this is too slow: Serialize(Configuration.SettingsFileName, this);
 
             CustomSerialize(Configuration.SettingsFileName, this);
         }
@@ -1088,16 +1088,16 @@ namespace Nikse.SubtitleEdit.Logic
         public static Settings GetSettings()
         {
             var settings = new Settings();
-            string settingsFileName = Configuration.SettingsFileName;
+            var settingsFileName = Configuration.SettingsFileName;
             if (File.Exists(settingsFileName))
             {
                 try
                 {
+                    //too slow... :(  - settings = Deserialize(settingsFileName); // 688 msecs
                     settings = CustomDeserialize(settingsFileName); //  15 msecs
 
                     if (settings.General.AutoConvertToUtf8)
                         settings.General.DefaultEncoding = Encoding.UTF8.EncodingName;
-                    //too slow... :(  - settings = Deserialize(Configuration.BaseDirectory + "Settings.xml"); // 688 msecs
                 }
                 catch
                 {
@@ -2641,8 +2641,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void CustomSerialize(string fileName, Settings settings)
         {
-            var sw = new StringWriter();
-            using (var textWriter = new XmlTextWriter(sw) { Formatting = Formatting.Indented })
+            var xws = new XmlWriterSettings { Indent = true };
+            var sb = new StringBuilder();
+            using (var textWriter = XmlWriter.Create(sb, xws))
             {
                 textWriter.WriteStartDocument();
 
@@ -3187,7 +3188,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 try
                 {
-                    File.WriteAllText(fileName, sw.ToString().Replace("encoding=\"utf-16\"", "encoding=\"utf-8\""), Encoding.UTF8);
+                    File.WriteAllText(fileName, sb.ToString().Replace("encoding=\"utf-16\"", "encoding=\"utf-8\""), Encoding.UTF8);
                 }
                 catch
                 {
