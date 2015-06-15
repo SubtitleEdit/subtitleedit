@@ -850,19 +850,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!p.Text.Contains(Environment.NewLine))
                 verticalAlignment = 0x0b;
             string text = p.Text;
-            if (text.StartsWith("{\\an1}") || text.StartsWith("{\\an4}") || text.StartsWith("{\\an7}"))
+            if (text.StartsWith("{\\an1}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an7}", StringComparison.Ordinal))
             {
                 alignment = 1; // left
             }
-            else if (text.StartsWith("{\\an3}") || text.StartsWith("{\\an6}") || text.StartsWith("{\\an9}"))
+            else if (text.StartsWith("{\\an3}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
             {
                 alignment = 0; // right
             }
-            if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an8}") || text.StartsWith("{\\an9}"))
+            if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
             {
                 verticalAlignment = 0; // top
             }
-            else if (text.StartsWith("{\\an4}") || text.StartsWith("{\\an5}") || text.StartsWith("{\\an6}"))
+            else if (text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal))
             {
                 verticalAlignment = 5; // center
             }
@@ -1048,17 +1048,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 index++;
             }
-            bool con = true;
-            while (con)
+            while (true)
             {
                 index++;
                 if (index + 20 >= buffer.Length)
                     return null;
 
                 if (buffer[index] == 0xFE && (buffer[index - 15] == 0x60 || buffer[index - 15] == 0x61))
-                    con = false;
+                    break;
                 if (buffer[index] == 0xFE && (buffer[index - 12] == 0x60 || buffer[index - 12] == 0x61))
-                    con = false;
+                    break;
             }
 
             int feIndex = index;
@@ -1213,7 +1212,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             while (index >= 0 && index < text.Length - 1)
             {
                 text = text.Insert(index + 1, "i>");
-                int indexOfNewLine = text.IndexOf(Environment.NewLine, index, StringComparison.Ordinal);
+                int indexOfNewLine = text.IndexOf(Environment.NewLine, index + 3, StringComparison.Ordinal);
                 int indexOfEnd = text.IndexOf('>', index + 3);
                 if (indexOfNewLine < 0 && indexOfEnd < 0)
                 {
@@ -1234,11 +1233,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
             }
-            //            text = text.Replace("<i>", " <i>");
+            // text = text.Replace("<i>", " <i>");
             text = text.Replace("</i>", "</i> ");
             text = text.Replace("  ", " ");
-            text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-            return text.Trim();
+            return text.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
         }
 
         public static Encoding GetEncoding(int codePage)
