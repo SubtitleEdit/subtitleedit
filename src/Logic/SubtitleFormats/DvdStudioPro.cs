@@ -55,7 +55,7 @@ $HorzAlign          =   Center
             sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                double factor = (1000.0 / Configuration.Settings.General.CurrentFrameRate);
+                double factor = (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate);
                 string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds / factor));
                 string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, (int)Math.Round(p.EndTime.Milliseconds / factor));
                 sb.AppendFormat(paragraphWriteFormat, startTime, endTime, EncodeStyles(p.Text));
@@ -65,7 +65,7 @@ $HorzAlign          =   Center
 
         public static byte GetFrameFromMilliseconds(int milliseconds, double frameRate)
         {
-            return (byte)Math.Round(milliseconds / (1000.0 / frameRate));
+            return (byte)Math.Round(milliseconds / (TimeCode.BaseUnit / frameRate));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

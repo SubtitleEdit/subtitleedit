@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                return NativeMethods.libvlc_media_player_get_length(_mediaPlayer) / 1000.0;
+                return NativeMethods.libvlc_media_player_get_length(_mediaPlayer) / TimeCode.BaseUnit;
             }
         }
 
@@ -43,11 +43,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                return NativeMethods.libvlc_media_player_get_time(_mediaPlayer) / 1000.0;
+                return NativeMethods.libvlc_media_player_get_time(_mediaPlayer) / TimeCode.BaseUnit;
             }
             set
             {
-                NativeMethods.libvlc_media_player_set_time(_mediaPlayer, (long)(value * 1000.0));
+                NativeMethods.libvlc_media_player_set_time(_mediaPlayer, (long)(value * TimeCode.BaseUnit));
             }
         }
 

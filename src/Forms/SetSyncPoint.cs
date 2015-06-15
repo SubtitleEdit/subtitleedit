@@ -152,9 +152,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             videoPlayerContainer1.Pause();
 
-            if (_guess.TotalMilliseconds > 0 && _guess.TotalMilliseconds / 1000.0 < videoPlayerContainer1.VideoPlayer.Duration)
+            if (_guess.TotalMilliseconds > 0 && _guess.TotalMilliseconds / TimeCode.BaseUnit < videoPlayerContainer1.VideoPlayer.Duration)
             {
-                videoPlayerContainer1.VideoPlayer.CurrentPosition = _guess.TotalMilliseconds / 1000.0;
+                videoPlayerContainer1.VideoPlayer.CurrentPosition = _guess.TotalMilliseconds / TimeCode.BaseUnit;
                 videoPlayerContainer1.RefreshProgressBar();
             }
 
@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = subtitleListView1.SelectedItems[0].Index;
 
                 videoPlayerContainer1.Pause();
-                videoPlayerContainer1.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds / 1000.0;
+                videoPlayerContainer1.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
             }
         }
 

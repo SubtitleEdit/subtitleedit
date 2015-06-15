@@ -115,14 +115,14 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void CalculateFrameNumbersFromTimeCodes(double frameRate)
         {
-            StartFrame = (int)Math.Round((StartTime.TotalMilliseconds / 1000.0 * frameRate));
-            EndFrame = (int)Math.Round((EndTime.TotalMilliseconds / 1000.0 * frameRate));
+            StartFrame = (int)Math.Round((StartTime.TotalMilliseconds / TimeCode.BaseUnit * frameRate));
+            EndFrame = (int)Math.Round((EndTime.TotalMilliseconds / TimeCode.BaseUnit * frameRate));
         }
 
         public void CalculateTimeCodesFromFrameNumbers(double frameRate)
         {
-            StartTime.TotalMilliseconds = StartFrame * (1000.0 / frameRate);
-            EndTime.TotalMilliseconds = EndFrame * (1000.0 / frameRate);
+            StartTime.TotalMilliseconds = StartFrame * (TimeCode.BaseUnit / frameRate);
+            EndTime.TotalMilliseconds = EndFrame * (TimeCode.BaseUnit / frameRate);
         }
 
         public override string ToString()

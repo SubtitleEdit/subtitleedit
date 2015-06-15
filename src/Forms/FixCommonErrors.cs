@@ -4523,7 +4523,7 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
 
             numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
-            numericUpDownDuration.Value = (decimal)(p.Duration.TotalMilliseconds / 1000.0);
+            numericUpDownDuration.Value = (decimal)(p.Duration.TotalMilliseconds / TimeCode.BaseUnit);
             numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
         }
 
@@ -4539,7 +4539,7 @@ namespace Nikse.SubtitleEdit.Forms
                     UpdateOverlapErrors();
 
                     // update _subtitle + listview
-                    currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + ((double)numericUpDownDuration.Value * 1000.0);
+                    currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + ((double)numericUpDownDuration.Value * TimeCode.BaseUnit);
                     subtitleListView1.SetDuration(firstSelectedIndex, currentParagraph);
                 }
             }
@@ -4557,21 +4557,21 @@ namespace Nikse.SubtitleEdit.Forms
 
                 Paragraph prevParagraph = GetParagraphOrDefault(firstSelectedIndex - 1);
                 if (prevParagraph != null && prevParagraph.EndTime.TotalMilliseconds > startTime.TotalMilliseconds)
-                    labelStartTimeWarning.Text = string.Format(_languageGeneral.OverlapPreviousLineX, (prevParagraph.EndTime.TotalMilliseconds - startTime.TotalMilliseconds) / 1000.0);
+                    labelStartTimeWarning.Text = string.Format(_languageGeneral.OverlapPreviousLineX, (prevParagraph.EndTime.TotalMilliseconds - startTime.TotalMilliseconds) / TimeCode.BaseUnit);
 
                 Paragraph nextParagraph = GetParagraphOrDefault(firstSelectedIndex + 1);
                 if (nextParagraph != null)
                 {
-                    double durationMilliSeconds = (double)numericUpDownDuration.Value * 1000.0;
+                    double durationMilliSeconds = (double)numericUpDownDuration.Value * TimeCode.BaseUnit;
                     if (startTime.TotalMilliseconds + durationMilliSeconds > nextParagraph.StartTime.TotalMilliseconds)
                     {
-                        labelDurationWarning.Text = string.Format(_languageGeneral.OverlapNextX, ((startTime.TotalMilliseconds + durationMilliSeconds) - nextParagraph.StartTime.TotalMilliseconds) / 1000.0);
+                        labelDurationWarning.Text = string.Format(_languageGeneral.OverlapNextX, ((startTime.TotalMilliseconds + durationMilliSeconds) - nextParagraph.StartTime.TotalMilliseconds) / TimeCode.BaseUnit);
                     }
 
                     if (labelStartTimeWarning.Text.Length == 0 &&
                         startTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds)
                     {
-                        double di = (startTime.TotalMilliseconds - nextParagraph.StartTime.TotalMilliseconds) / 1000.0;
+                        double di = (startTime.TotalMilliseconds - nextParagraph.StartTime.TotalMilliseconds) / TimeCode.BaseUnit;
                         labelStartTimeWarning.Text = string.Format(_languageGeneral.OverlapNextX, di);
                     }
                     else if (numericUpDownDuration.Value < 0)
@@ -5001,7 +5001,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
                 if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
-                    middle = splitSeconds.Value * 1000.0;
+                    middle = splitSeconds.Value * TimeCode.BaseUnit;
                 newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
                 currentParagraph.EndTime.TotalMilliseconds = middle;
                 newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;

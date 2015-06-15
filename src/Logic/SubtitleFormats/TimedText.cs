@@ -241,7 +241,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             !end.Contains(':') && Utilities.CountTagInText(end, '.') == 1 &&
                             double.TryParse(start, out dBegin) && double.TryParse(end, out dEnd))
                         {
-                            subtitle.Paragraphs.Add(new Paragraph(text, dBegin * 1000.0, dEnd * 1000.0));
+                            subtitle.Paragraphs.Add(new Paragraph(text, dBegin * TimeCode.BaseUnit, dEnd * TimeCode.BaseUnit));
                         }
                         else
                         {

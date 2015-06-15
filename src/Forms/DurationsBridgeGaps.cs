@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private Subtitle _fixedSubtitle;
         private Dictionary<Paragraph, string> _dic;
-        private const double baseUnit = 1000.0;
+        private const double baseUnit = TimeCode.BaseUnit;
 
         public Subtitle FixedSubtitle { get { return _fixedSubtitle; } }
 

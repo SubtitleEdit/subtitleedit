@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static int RoundSeconds(TimeCode tc)
         {
-            int rounded = (int)Math.Round(tc.Seconds + tc.Milliseconds / 1000.0);
+            int rounded = (int)Math.Round(tc.Seconds + tc.Milliseconds / TimeCode.BaseUnit);
             return rounded;
         }
 

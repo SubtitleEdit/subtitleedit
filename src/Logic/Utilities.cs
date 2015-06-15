@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Logic
                     info.FramesPerSecond = frameRate;
                     info.Success = true;
                     info.TotalMilliseconds = milliseconds;
-                    info.TotalSeconds = milliseconds / 1000.0;
+                    info.TotalSeconds = milliseconds / TimeCode.BaseUnit;
                     info.TotalFrames = info.TotalSeconds * frameRate;
                     info.VideoCodec = videoCodec;
                 }
@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Logic
                     info.FramesPerSecond = dh.FrameRate;
                     info.TotalFrames = dh.TotalFrames;
                     info.TotalMilliseconds = dh.TotalMilliseconds;
-                    info.TotalSeconds = info.TotalMilliseconds / 1000.0;
+                    info.TotalSeconds = info.TotalMilliseconds / TimeCode.BaseUnit;
                     info.VideoCodec = dh.VideoHandler;
                     info.Success = true;
                 }
@@ -211,7 +211,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (videoPlayerContainer.VideoPlayer != null)
             {
-                double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * 1000.0) + 5;
+                double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * TimeCode.BaseUnit) + 5;
                 for (int i = 0; i < paragraphs.Count; i++)
                 {
                     var p = paragraphs[i];
@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (videoPlayerContainer.VideoPlayer != null)
             {
-                double positionInMilliseconds = (videoPlayerContainer.CurrentPosition * 1000.0) + 5;
+                double positionInMilliseconds = (videoPlayerContainer.CurrentPosition * TimeCode.BaseUnit) + 5;
                 for (int i = 0; i < paragraphs.Count; i++)
                 {
                     var p = paragraphs[i];
@@ -261,7 +261,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (videoPlayerContainer.VideoPlayer != null)
             {
-                double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * 1000.0) + 15;
+                double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * TimeCode.BaseUnit) + 15;
                 for (int i = 0; i < paragraphs.Count; i++)
                 {
                     var p = paragraphs[i];
@@ -1089,7 +1089,7 @@ namespace Nikse.SubtitleEdit.Logic
             double optimalCharactersPerSecond = charactersPerSecond;
             if (optimalCharactersPerSecond < 2 || optimalCharactersPerSecond > 100)
                 optimalCharactersPerSecond = 14.7;
-            double duration = (HtmlUtil.RemoveHtmlTags(text, true).Length / optimalCharactersPerSecond) * 1000.0;
+            double duration = (HtmlUtil.RemoveHtmlTags(text, true).Length / optimalCharactersPerSecond) * TimeCode.BaseUnit;
 
             if (duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 duration = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
