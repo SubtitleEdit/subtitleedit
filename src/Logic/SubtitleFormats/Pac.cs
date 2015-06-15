@@ -1054,9 +1054,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (index + 20 >= buffer.Length)
                     return null;
 
-                if (buffer[index] == 0xFE && (buffer[index - 15] == 0x60 || buffer[index - 15] == 0x61))
-                    break;
-                if (buffer[index] == 0xFE && (buffer[index - 12] == 0x60 || buffer[index - 12] == 0x61))
+                if (buffer[index] == 0xFE && (buffer[index - 15] == 0x60 || buffer[index - 15] == 0x61 ||
+                    buffer[index - 12] == 0x60 || buffer[index - 12] == 0x61))
                     break;
             }
 
