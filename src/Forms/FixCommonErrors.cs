@@ -1463,7 +1463,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 //fix missing spaces before/after music quotes - #He's so happy# -> #He's so happy#
-                if ((p.Text.Contains('#') || p.Text.Contains('♪') || p.Text.Contains('♫')) && p.Text.Length > 5)
+                if (p.Text.Length > 5 && p.Text.Contains(new[] { '#', '♪', '♫' }))
                 {
                     string newText = p.Text;
                     if (@"#♪♫".Contains(newText[0]) && !@" <".Contains(newText[1]) && !newText.Substring(1).StartsWith(Environment.NewLine) &&
@@ -1945,7 +1945,7 @@ namespace Nikse.SubtitleEdit.Forms
                     nextText = HtmlUtil.RemoveHtmlTags(next.Text).TrimStart('-', '"', '„').TrimStart();
                 string tempNoHtml = HtmlUtil.RemoveHtmlTags(p.Text).TrimEnd();
 
-                if (IsOneLineUrl(p.Text) || p.Text.Contains('♪') || p.Text.Contains('♫') || p.Text.EndsWith('\''))
+                if (IsOneLineUrl(p.Text) || p.Text.Contains(new[] { '♪', '♫' }) || p.Text.EndsWith('\''))
                 {
                     // ignore urls
                 }
@@ -2495,7 +2495,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (oldText.Contains(':') || oldText.Contains(';'))
+                if (oldText.Contains(new[] { ':', ';' }))
                 {
                     bool lastWasColon = false;
                     for (int j = 0; j < p.Text.Length; j++)
