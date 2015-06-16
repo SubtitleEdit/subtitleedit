@@ -72,10 +72,10 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSpellCheck.Checked = gs.ShowToolbarSpellCheck;
             checkBoxHelp.Checked = gs.ShowToolbarHelp;
 
-            comboBoxFrameRate.Items.Add((23.976).ToString());
-            comboBoxFrameRate.Items.Add((24.0).ToString());
-            comboBoxFrameRate.Items.Add((25.0).ToString());
-            comboBoxFrameRate.Items.Add((29.97).ToString());
+            comboBoxFrameRate.Items.Add(23.976.ToString(CultureInfo.InvariantCulture));
+            comboBoxFrameRate.Items.Add(24.0.ToString(CultureInfo.InvariantCulture));
+            comboBoxFrameRate.Items.Add(25.0.ToString(CultureInfo.InvariantCulture));
+            comboBoxFrameRate.Items.Add(29.97.ToString(CultureInfo.InvariantCulture));
 
             checkBoxShowFrameRate.Checked = gs.ShowFrameRate;
             comboBoxFrameRate.Text = gs.DefaultFrameRate.ToString();
