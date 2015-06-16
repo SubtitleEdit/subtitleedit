@@ -904,7 +904,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void CopyTextToClipboard(RichTextBox sender)
         {
-            if (sender.Text.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(sender.Text))
                 return;
             if (sender.SelectedText.Length > 0)
             {
