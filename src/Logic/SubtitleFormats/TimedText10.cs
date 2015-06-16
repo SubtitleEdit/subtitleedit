@@ -475,7 +475,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         if (frameRateMultiplier.InnerText == "999 1000")
                         {
-                            Configuration.Settings.General.CurrentFrameRate = fr * (999.0 / 1000.0);
+                            Configuration.Settings.General.CurrentFrameRate = fr * (999.0 / TimeCode.BaseUnit);
                         }
                     }
                 }

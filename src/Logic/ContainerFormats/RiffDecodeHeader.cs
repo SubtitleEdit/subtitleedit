@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats
                 double totalTime = 0.0;
                 if (m_frameRate > 0.0)
                 {
-                    totalTime = m_totalFrames * m_frameRate / 1000.0;
+                    totalTime = m_totalFrames * m_frameRate / TimeCode.BaseUnit;
                 }
                 return totalTime;
             }
@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats
         {
             get
             {
-                return String.Format("Audio rate {0:N2} Kb/Sec", m_audDataRate / 1000.0);
+                return String.Format("Audio rate {0:N2} Kb/Sec", m_audDataRate / TimeCode.BaseUnit);
             }
         }
 

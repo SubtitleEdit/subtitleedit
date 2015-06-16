@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
         //private Bitmap GetSnapShot(long milliseconds)
         //{
         //    string fileName = Path.Combine(_folderName, Guid.NewGuid().ToString() + ".png");
-        //    _libVlc.CurrentPosition = milliseconds / 1000.0;
+        //    _libVlc.CurrentPosition = milliseconds / TimeCode.BaseUnit;
         //    _libVlc.TakeSnapshot(fileName, (uint)_videoInfo.Width, (uint)_videoInfo.Height);
         //    int i=0;
         //    while (i < 100 && !File.Exists(fileName))

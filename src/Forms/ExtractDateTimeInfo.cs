@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var fi = new FileInfo(VideoFileName);
                     start = fi.CreationTime;
                     VideoInfo vi = Utilities.GetVideoInfo(VideoFileName);
-                    durationInSeconds = vi.TotalMilliseconds / 1000.0;
+                    durationInSeconds = vi.TotalMilliseconds / TimeCode.BaseUnit;
                     if (durationInSeconds < 1)
                     {
                         MessageBox.Show("Unable to get duration");

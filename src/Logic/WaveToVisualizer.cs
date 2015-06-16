@@ -430,7 +430,7 @@ namespace Nikse.SubtitleEdit.Logic
             long totalSamples = 0;
 
             // write delay (if any)
-            int delaySampleCount = (int)(Header.SampleRate * (delayInMilliseconds / 1000.0));
+            int delaySampleCount = (int)(Header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
             for (int i = 0; i < delaySampleCount; i++)
             {
                 samples.Add(0);
