@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int hours = int.Parse(parts[0]);
             int minutes = int.Parse(parts[1]);
             int seconds = int.Parse(parts[2]);
-            int milliseconds = (int)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(parts[3]));
+            int milliseconds = (int)((TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * int.Parse(parts[3]));
             return new TimeCode(hours, minutes, seconds, milliseconds);
         }
 

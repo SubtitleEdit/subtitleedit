@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.Pause();
             if (index != -1)
             {
-                double indexPositionInSeconds = _paragraphs[index].StartTime.TotalMilliseconds / 1000.0;
+                double indexPositionInSeconds = _paragraphs[index].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
 
                 if (indexPositionInSeconds > mediaPlayer.Duration)
                     indexPositionInSeconds = mediaPlayer.Duration - (2 * 60);
@@ -391,8 +391,8 @@ namespace Nikse.SubtitleEdit.Forms
             double endPos = MediaPlayerEnd.CurrentPosition;
             if (endPos > startPos)
             {
-                double subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds / 1000.0;
-                double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds / 1000.0;
+                double subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+                double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
 
                 double subDiff = subEnd - subStart;
                 double realDiff = endPos - startPos;

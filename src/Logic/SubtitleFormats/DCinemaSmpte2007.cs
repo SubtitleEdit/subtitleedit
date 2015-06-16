@@ -764,7 +764,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             string[] parts = s.Split(new char[] { ':', '.', ',' });
 
-            int milliseconds = (int)Math.Round(int.Parse(parts[3]) * (1000.0 / frameRate));
+            int milliseconds = (int)Math.Round(int.Parse(parts[3]) * (TimeCode.BaseUnit / frameRate));
             if (milliseconds > 999)
                 milliseconds = 999;
 

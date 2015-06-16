@@ -127,7 +127,7 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine(string.Format(_l.NumberOfLinesX, _subtitle.Paragraphs.Count));
             sb.AppendLine(string.Format(_l.LengthInFormatXinCharactersY, _format.FriendlyName, sourceLength));
             sb.AppendLine(string.Format(_l.NumberOfCharactersInTextOnly, allText.Length));
-            sb.AppendLine(string.Format(_l.TotalCharsPerSecond, HtmlUtil.RemoveHtmlTags(allText.ToString()).Length / (totalDuration / 1000.0)));
+            sb.AppendLine(string.Format(_l.TotalCharsPerSecond, HtmlUtil.RemoveHtmlTags(allText.ToString()).Length / (totalDuration / TimeCode.BaseUnit)));
             sb.AppendLine(string.Format(_l.NumberOfItalicTags, Utilities.CountTagInText(allText.ToString().ToLower(), "<i>")));
             sb.AppendLine(string.Format(_l.NumberOfBoldTags, Utilities.CountTagInText(allText.ToString().ToLower(), "<b>")));
             sb.AppendLine(string.Format(_l.NumberOfUnderlineTags, Utilities.CountTagInText(allText.ToString().ToLower(), "<u>")));
@@ -143,9 +143,9 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine(string.Format(_l.SingleLineLengthMaximum, maximumSingleLineLength));
             sb.AppendLine(string.Format(_l.SingleLineLengthAverage, totalSingleLineLength / totalSingleLines));
             sb.AppendLine();
-            sb.AppendLine(string.Format(_l.DurationMinimum, minimumDuration / 1000.0));
-            sb.AppendLine(string.Format(_l.DurationMaximum, maximumDuration / 1000.0));
-            sb.AppendLine(string.Format(_l.DurationAverage, totalDuration / _subtitle.Paragraphs.Count / 1000.0));
+            sb.AppendLine(string.Format(_l.DurationMinimum, minimumDuration / TimeCode.BaseUnit));
+            sb.AppendLine(string.Format(_l.DurationMaximum, maximumDuration / TimeCode.BaseUnit));
+            sb.AppendLine(string.Format(_l.DurationAverage, totalDuration / _subtitle.Paragraphs.Count / TimeCode.BaseUnit));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.CharactersPerSecondMinimum, minimumCharsSec));
             sb.AppendLine(string.Format(_l.CharactersPerSecondMaximum, maximumCharsSec));

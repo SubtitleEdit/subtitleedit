@@ -294,7 +294,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                return _libvlc_media_player_get_length(_mediaPlayer) / 1000.0;
+                return _libvlc_media_player_get_length(_mediaPlayer) / TimeCode.BaseUnit;
             }
         }
 
@@ -308,13 +308,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         return 0;
                     return _pausePosition.Value;
                 }
-                return _libvlc_media_player_get_time(_mediaPlayer) / 1000.0;
+                return _libvlc_media_player_get_time(_mediaPlayer) / TimeCode.BaseUnit;
             }
             set
             {
                 if (IsPaused && value <= Duration)
                     _pausePosition = value;
-                _libvlc_media_player_set_time(_mediaPlayer, (long)(value * 1000.0 + 0.5));
+                _libvlc_media_player_set_time(_mediaPlayer, (long)(value * TimeCode.BaseUnit + 0.5));
             }
         }
 

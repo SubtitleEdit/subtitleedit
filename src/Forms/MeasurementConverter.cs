@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (textTo == l.Meters)
                 {
-                    ShowResult(Convert.ToDouble(d) * 1000.0);
+                    ShowResult(Convert.ToDouble(d) * TimeCode.BaseUnit);
                 }
                 else if (textTo == l.Feet)
                 {
@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (textTo == l.Kilometers)
                 {
-                    ShowResult(Convert.ToDouble(d) / 1000.0);
+                    ShowResult(Convert.ToDouble(d) / TimeCode.BaseUnit);
                 }
                 else if (textTo == l.Yards)
                 {
