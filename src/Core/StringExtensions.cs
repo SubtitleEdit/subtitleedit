@@ -145,13 +145,14 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string FixExtraSpaces(this string s)
         {
-            if (string.IsNullOrWhiteSpace(s))
-                return string.Empty;
+            if (string.IsNullOrEmpty(s))
+                return s;
 
             while (s.Contains("  "))
                 s = s.Replace("  ", " ");
             s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
-            return s.Replace(Environment.NewLine + " ", Environment.NewLine);
+            s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+            return s.Trim(' ');
         }
 
         public static bool ContainsLetter(this string s)
