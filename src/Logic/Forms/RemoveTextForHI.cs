@@ -857,12 +857,12 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     return lines[0];
                 }
             }
-            if (lines.Length == 2 && lines[1].Replace(".", string.Empty).Replace("?", string.Empty).Replace("!", string.Empty).Replace("-", string.Empty).Replace("—", string.Empty).Trim().Length == 0)
+            if (lines.Length == 2 && string.IsNullOrWhiteSpace(lines[1].Replace(".", string.Empty).Replace("?", string.Empty).Replace("!", string.Empty).Replace("-", string.Empty).Replace("—", string.Empty)))
             {
                 text = lines[0];
                 lines = text.SplitToLines();
             }
-            else if (lines.Length == 2 && lines[0].Replace(".", string.Empty).Replace("?", string.Empty).Replace("!", string.Empty).Replace("-", string.Empty).Replace("—", string.Empty).Trim().Length == 0)
+            else if (lines.Length == 2 && string.IsNullOrWhiteSpace(lines[0].Replace(".", string.Empty).Replace("?", string.Empty).Replace("!", string.Empty).Replace("-", string.Empty).Replace("—", string.Empty)))
             {
                 text = lines[1];
                 lines = text.SplitToLines();
