@@ -7667,7 +7667,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 1)
             {
                 var sb = new StringBuilder();
-                var deleteIndices = new List<int>();
+                var deleteIndices = new List<int>(SubtitleListview1.SelectedIndices.Count);
                 bool first = true;
                 int firstIndex = 0;
                 double durationMilliseconds = 0;
