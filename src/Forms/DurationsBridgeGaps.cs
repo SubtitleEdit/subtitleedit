@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
             int count = 0;
             _fixedSubtitle = new Subtitle(_subtitle);
             _dic = new Dictionary<Paragraph, string>();
-            var fixedIndexes = new List<int>();
+            var fixedIndexes = new List<int>(_fixedSubtitle.Paragraphs.Count);
 
             int minMsBetweenLines = (int)numericUpDownMinMsBetweenLines.Value;
             for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
