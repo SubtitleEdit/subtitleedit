@@ -11,7 +11,6 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private Subtitle _fixedSubtitle;
         private Dictionary<Paragraph, string> _dic;
-        private const double baseUnit = TimeCode.BaseUnit;
 
         public Subtitle FixedSubtitle { get { return _fixedSubtitle; } }
 
@@ -85,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var difMs = Math.Abs(cur.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds);
                 if (difMs < (double)numericUpDownMaxMs.Value && difMs > minMsBetweenLines && numericUpDownMaxMs.Value > minMsBetweenLines)
                 {
-                    before = string.Format("{0:0.000}", (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / baseUnit);
+                    before = string.Format("{0:0.000}", (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / TimeCode.BaseUnit);
                     if (radioButtonDivideEven.Checked && next.StartTime.TotalMilliseconds > cur.EndTime.TotalMilliseconds)
                     {
                         double half = (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / 2.0;
@@ -101,9 +100,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string info = string.Empty;
                     if (!string.IsNullOrEmpty(before))
-                        info = string.Format("{0} => {1:0.000}", before, msToNext / baseUnit);
+                        info = string.Format("{0} => {1:0.000}", before, msToNext / TimeCode.BaseUnit);
                     else
-                        info = string.Format("{0:0.000}", msToNext / baseUnit);
+                        info = string.Format("{0:0.000}", msToNext / TimeCode.BaseUnit);
                     _dic.Add(cur, info);
                 }
             }
