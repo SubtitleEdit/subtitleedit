@@ -145,8 +145,8 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string FixExtraSpaces(this string s)
         {
-            if (string.IsNullOrWhiteSpace(s))
-                return string.Empty;
+            if (string.IsNullOrEmpty(s))
+                return s;
 
             while (s.Contains("  "))
                 s = s.Replace("  ", " ");
