@@ -27,23 +27,29 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public string RemoveHearImpairedtagsInsideLine(string newText)
         {
-            int i = 5;
-            while (i < newText.Length)
+            for (int i = 6; i < newText.Length; i++)
             {
-                string s = newText.Substring(i);
-                if (i > 5 && s.Length > 2 && (s.StartsWith('.') || s.StartsWith('!') || s.StartsWith('?')))
+                var s = newText.Substring(i);
+                if (s.Length > 2 && (s.StartsWith('.') || s.StartsWith('!') || s.StartsWith('?')))
                 {
-                    if (s[1] == ' ' || s.Substring(1).StartsWith("<i>") || s.Substring(1).StartsWith("</i>"))
-                    {
-                        string pre = " ";
-                        if (s.Substring(1).StartsWith("<i>"))
-                            pre = "<i>";
-                        else if (s.Substring(1).StartsWith(" <i>"))
-                            pre = " <i>";
-                        else if (s.Substring(1).StartsWith("</i>"))
-                            pre = "</i>";
+                    var pre = string.Empty;
 
-                        s = s.Remove(0, 1 + pre.Length);
+                    s = s.Remove(0, 1);
+                    if (s.StartsWith(' '))
+                    {
+                        if (s.StartsWith(" <i>"))
+                            pre = " <i>";
+                        else
+                            pre = " ";
+                    }
+                    else if (s.StartsWith("<i>"))
+                        pre = "<i>";
+                    else if (s.StartsWith("</i>"))
+                        pre = "</i>";
+
+                    if (pre.Length > 0)
+                    {
+                        s = s.Remove(0, pre.Length);
                         if (s.StartsWith(' ') && s.Length > 1)
                         {
                             pre += " ";
@@ -59,7 +65,6 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                         }
                     }
                 }
-                i++;
             }
             return newText;
         }
