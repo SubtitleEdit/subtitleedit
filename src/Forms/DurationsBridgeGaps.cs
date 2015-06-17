@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private Subtitle _subtitle;
         private Subtitle _fixedSubtitle;
-        private Dictionary<Paragraph, string> _dic;
+        private Dictionary<string, string> _dic;
 
         public Subtitle FixedSubtitle { get { return _fixedSubtitle; } }
 
@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.BeginUpdate();
             int count = 0;
             _fixedSubtitle = new Subtitle(_subtitle);
-            _dic = new Dictionary<Paragraph, string>();
+            _dic = new Dictionary<string, string>();
             var fixedIndexes = new List<int>(_fixedSubtitle.Paragraphs.Count);
 
             int minMsBetweenLines = (int)numericUpDownMinMsBetweenLines.Value;
@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
                         info = string.Format("{0} => {1:0.000}", before, msToNext / TimeCode.BaseUnit);
                     else
                         info = string.Format("{0:0.000}", msToNext / TimeCode.BaseUnit);
-                    _dic.Add(cur, info);
+                    _dic.Add(cur.ID, info);
                 }
             }
 
@@ -111,8 +111,8 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
             {
                 Paragraph cur = _fixedSubtitle.Paragraphs[i];
-                if (_dic != null && _dic.ContainsKey(cur))
-                    SubtitleListview1.SetExtraText(i, _dic[cur], SubtitleListview1.ForeColor);
+                if (_dic != null && _dic.ContainsKey(cur.ID))
+                    SubtitleListview1.SetExtraText(i, _dic[cur.ID], SubtitleListview1.ForeColor);
                 SubtitleListview1.SetBackgroundColor(i, SubtitleListview1.BackColor);
             }
 
