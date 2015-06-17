@@ -9650,7 +9650,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (fi.Length < 1024 * 1024 * 2) // max 2 mb
+                if (fi.Length < 0x200000) // max 2 mb
                 {
                     OpenSubtitle(fileName, null);
                 }
