@@ -275,27 +275,29 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult result = saveFileDialog1.ShowDialog(this);
             if (result == DialogResult.OK)
             {
-                Bitmap bmp = pictureBox2.Image as Bitmap;
-                if (bmp == null)
+                using (var bmp = pictureBox2.Image as Bitmap)
                 {
-                    MessageBox.Show("No image!");
-                    return;
-                }
+                    if (bmp == null)
+                    {
+                        MessageBox.Show("No image!");
+                        return;
+                    }
 
-                try
-                {
-                    if (saveFileDialog1.FilterIndex == 0)
-                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                    else if (saveFileDialog1.FilterIndex == 1)
-                        bmp.Save(saveFileDialog1.FileName);
-                    else if (saveFileDialog1.FilterIndex == 2)
-                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Gif);
-                    else
-                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(exception.Message);
+                    try
+                    {
+                        if (saveFileDialog1.FilterIndex == 0)
+                            bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                        else if (saveFileDialog1.FilterIndex == 1)
+                            bmp.Save(saveFileDialog1.FileName);
+                        else if (saveFileDialog1.FilterIndex == 2)
+                            bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                        else
+                            bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show(exception.Message);
+                    }
                 }
             }
         }
