@@ -929,7 +929,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (_exportType == "BLURAYSUP")
                 {
                     if (!param.Saved)
+                    {
                         binarySubtitleFile.Write(param.Buffer, 0, param.Buffer.Length);
+                    }
                     param.Saved = true;
                 }
                 else if (_exportType == "VOBSUB")
@@ -1295,13 +1297,36 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         param.Saved = true;
                     }
                 }
-                else
+                else // BDNXML
                 {
                     if (!param.Saved)
                     {
                         string numberString = string.Format("{0:0000}", i);
                         string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + ".png");
-                        param.Bitmap.Save(fileName, ImageFormat.Png);
+
+                        if (comboBoxImageFormat.Text == "Png 8-bit")
+                        {
+                            foreach (var encoder in ImageCodecInfo.GetImageEncoders())
+                            {
+                                if (encoder.FormatID == ImageFormat.Png.Guid)
+                                {
+                                    var parameters = new EncoderParameters();
+                                    parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
+
+                                    var nbmp = new NikseBitmap(param.Bitmap);
+                                    var b = nbmp.ConverTo8BitsPerPixel();
+                                    b.Save(fileName, encoder, parameters);
+                                    b.Dispose();
+
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            param.Bitmap.Save(fileName, ImageFormat.Png);
+                        }
+                        
                         imagesSavedCount++;
 
                         //<Event InTC="00:00:24:07" OutTC="00:00:31:13" Forced="False">
@@ -2570,6 +2595,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Text = "DOST";
             else if (exportType == "EDL")
                 Text = "EDL";
+            else if (exportType == "DCINEMA_INTEROP")
+                Text = "DCinema interop/png";
             else
                 Text = Configuration.Settings.Language.ExportPngXml.Title;
 
@@ -2743,8 +2770,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     comboBoxLanguage.SelectedIndex = 25;
             }
 
-            bool showImageFormat = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP";
-            checkBoxFullFrameImage.Visible = exportType == "FAB";
+            bool showImageFormat = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP" || exportType == "BDNXML";
+            checkBoxFullFrameImage.Visible = exportType == "FAB" || exportType == "BLURAYSUP";
             comboBoxImageFormat.Visible = showImageFormat;
             labelImageFormat.Visible = showImageFormat;
             labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
@@ -2762,6 +2789,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFrameRate.Items.Add("50");
                 comboBoxFrameRate.Items.Add("59.94");
                 comboBoxFrameRate.SelectedIndex = 2;
+
+                comboBoxImageFormat.Items.Clear();
+                comboBoxImageFormat.Items.Add("Png 32-bit");
+                comboBoxImageFormat.Items.Add("Png 8-bit");
+                comboBoxImageFormat.SelectedIndex = 0;
             }
             else if (exportType == "DOST")
             {
@@ -2801,6 +2833,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFrameRate.Items.Add("59.94");
                 comboBoxFrameRate.SelectedIndex = 1;
                 comboBoxFrameRate.DropDownStyle = ComboBoxStyle.DropDownList;
+
+//                checkBoxFullFrameImage.Top = comboBoxImageFormat.Top + 2;
+//                panelFullFrameBackground.Top = checkBoxFullFrameImage.Top;
             }
             else if (exportType == "FAB")
             {
