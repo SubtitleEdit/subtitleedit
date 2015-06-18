@@ -91,24 +91,24 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                             newParagraph1.Text = newParagraph1.Text.Remove(0, 1).Trim();
                                             newParagraph2.Text = newParagraph2.Text.Remove(0, 1).Trim();
                                         }
-                                        else if (newParagraph1.Text.StartsWith("<i>-") && newParagraph2.Text.StartsWith('-'))
+                                        else if (newParagraph1.Text.StartsWith("<i>-", StringComparison.Ordinal) && newParagraph2.Text.StartsWith('-'))
                                         {
                                             newParagraph1.Text = newParagraph1.Text.Remove(3, 1).Trim();
-                                            if (newParagraph1.Text.StartsWith("<i> "))
+                                            if (newParagraph1.Text.StartsWith("<i> ", StringComparison.Ordinal))
                                                 newParagraph1.Text = newParagraph1.Text.Remove(3, 1).Trim();
                                             newParagraph2.Text = newParagraph2.Text.Remove(0, 1).Trim();
                                         }
                                     }
                                     else
                                     {
-                                        if (newParagraph1.Text.EndsWith("</i>"))
+                                        if (newParagraph1.Text.EndsWith("</i>", StringComparison.Ordinal))
                                         {
                                             const string post = "</i>";
                                             newParagraph1.Text = newParagraph1.Text.Remove(newParagraph1.Text.Length - post.Length);
                                         }
                                         //newParagraph1.Text += comboBoxLineContinuationEnd.Text.TrimEnd() + post;
 
-                                        if (newParagraph2.Text.StartsWith("<i>"))
+                                        if (newParagraph2.Text.StartsWith("<i>", StringComparison.Ordinal))
                                         {
                                             const string pre = "<i>";
                                             newParagraph2.Text = newParagraph2.Text.Remove(0, pre.Length);
