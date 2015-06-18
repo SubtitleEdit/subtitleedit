@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     return true;
             }
 
-            var tempText = text.Replace(Environment.NewLine, " ").Replace("  ", " ");
+            var tempText = Utilities.UnbreakLine(text);
             if (Utilities.CountTagInText(tempText, '-') == 2 && (text.StartsWith('-') || text.StartsWith("<i>-")))
             {
                 var idx = tempText.IndexOfAny(new[] { ". -", "! -", "? -" }, StringComparison.Ordinal);
