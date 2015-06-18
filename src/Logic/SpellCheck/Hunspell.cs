@@ -22,9 +22,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         public abstract bool Spell(string word);
         public abstract List<string> Suggest(string word);
 
-        public virtual void Dispose()
-        {
-        }
+        public virtual void Dispose() { }
 
     }
 }

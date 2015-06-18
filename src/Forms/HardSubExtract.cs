@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class HardSubExtract : Form
     {
-        //        HardExtractCapture cam = null;
+        // HardExtractCapture cam = null;
         private string _videoFileName;
         private LibVlcDynamic _libVlc;
         private VideoInfo _videoInfo;
@@ -45,7 +45,6 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.InitializeVideoPlayerAndContainer(_videoFileName, _videoInfo, mediaPlayer, VideoLoaded, null);
                 Configuration.Settings.General.VideoPlayer = oldPlayer;
                 _libVlc = mediaPlayer.VideoPlayer as LibVlcDynamic;
-
             }
             else
             {

@@ -6,7 +6,6 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 {
     public static class SplitLongLinesHelper
     {
-
         public static bool QualifiesForSplit(string text, int singleLineMaxCharacters, int totalLineMaxCharacters)
         {
             string s = HtmlUtil.RemoveHtmlTags(text.Trim(), true);
@@ -35,7 +34,6 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     }
                 }
             }
-
             return false;
         }
 
