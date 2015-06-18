@@ -151,7 +151,7 @@ namespace Test.Logic.Forms
         /// </summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void RemoveHiInsideLine()
+        public void RemoveHIInsideLine()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
@@ -171,7 +171,7 @@ namespace Test.Logic.Forms
         /// </summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void RemoveHi1()
+        public void RemoveHI1()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
@@ -190,7 +190,7 @@ namespace Test.Logic.Forms
         /// </summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void RemoveHi2()
+        public void RemoveHI2()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
@@ -209,7 +209,7 @@ namespace Test.Logic.Forms
         /// </summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void RemoveHiNot()
+        public void RemoveHINot()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
@@ -227,7 +227,7 @@ namespace Test.Logic.Forms
         /// </summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void RemoveHiMultilineItalic()
+        public void RemoveHIMultilineItalic()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
@@ -247,7 +247,7 @@ namespace Test.Logic.Forms
         /// </summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void RemoveHiMultilineBold()
+        public void RemoveHIMultilineBold()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
@@ -267,7 +267,7 @@ namespace Test.Logic.Forms
         /// </summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void RemoveHiSecondLineDelay()
+        public void RemoveHISecondLineDelay()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
@@ -284,7 +284,7 @@ namespace Test.Logic.Forms
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void RemoveHiQuotes()
+        public void RemoveHIQuotes()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
@@ -299,7 +299,7 @@ namespace Test.Logic.Forms
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void RemoveHiDouble()
+        public void RemoveHIDouble()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
@@ -994,7 +994,7 @@ namespace Test.Logic.Forms
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void RemoveTextKeepMusicSymbolsButRemoveHi()
+        public void RemoveTextKeepMusicSymbolsButRemoveHI()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenCustomTags = false;
