@@ -1204,6 +1204,28 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void RemoveTextForHiInDialogue1()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = true;
+            string text = "-[gurgling]" + Environment.NewLine + "-Mom?";
+            const string expected = "Mom?";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiInDialogue2()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = true;
+            string text = "-[Ronnie laughs]" + Environment.NewLine + "-[sighs] Wow, Ronnie.";
+            const string expected = "Wow, Ronnie.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
         #region Additional test attributes
 
         //
