@@ -18,6 +18,7 @@ namespace Test.Logic.Forms
         /// </summary>
         public TestContext TestContext { get; set; }
 
+        private readonly RemoveTextForHI Target = GetRemoveTextForHiLib();
         private static RemoveTextForHI GetRemoveTextForHiLib()
         {
             var hiSettings = new RemoveTextForHISettings();
