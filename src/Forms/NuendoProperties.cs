@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class NuendoProperties : PositionAndSizeForm
     {
-
         public string CharacterListFile { get; set; }
 
         public NuendoProperties()
@@ -78,9 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-                    catch
-                    {
-                    }
+                    catch { }
                 }
                 lineNumber++;
             }
