@@ -5,16 +5,15 @@ using Nikse.SubtitleEdit.Logic.Forms;
 namespace Test.Logic.Forms
 {
     /// <summary>
-    ///     This is a test class for FormRemoveTextForHearImpairedTest and is intended
-    ///     to contain all FormRemoveTextForHearImpairedTest Unit Tests
+    /// This is a test class for FormRemoveTextForHearImpairedTest and is intended
+    /// to contain all FormRemoveTextForHearImpairedTest Unit Tests
     /// </summary>
     [TestClass]
     public class RemoveTextForHearImpairedTest
     {
-
         /// <summary>
-        ///     Gets or sets the test context which provides
-        ///     information about and functionality for the current test run.
+        /// Gets or sets the test context which provides
+        /// information about and functionality for the current test run.
         /// </summary>
         public TestContext TestContext { get; set; }
 
@@ -25,7 +24,7 @@ namespace Test.Logic.Forms
         }
 
         /// <summary>
-        ///     A test for RemoveColon
+        /// A test for RemoveColon
         /// </summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -147,7 +146,7 @@ namespace Test.Logic.Forms
         }
 
         /// <summary>
-        ///     A test for RemoveHIInsideLine
+        /// A test for RemoveHIInsideLine
         /// </summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -167,7 +166,7 @@ namespace Test.Logic.Forms
         }
 
         /// <summary>
-        ///     A test for RemoveHI
+        /// A test for RemoveHI
         /// </summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -186,7 +185,7 @@ namespace Test.Logic.Forms
         }
 
         /// <summary>
-        ///     A test for RemoveHI
+        /// A test for RemoveHI
         /// </summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -205,7 +204,7 @@ namespace Test.Logic.Forms
         }
 
         /// <summary>
-        ///     A test for no removal
+        /// A test for no removal
         /// </summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -223,7 +222,7 @@ namespace Test.Logic.Forms
         }
 
         /// <summary>
-        ///     A test for RemoveHI
+        /// A test for RemoveHI
         /// </summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -243,7 +242,7 @@ namespace Test.Logic.Forms
         }
 
         /// <summary>
-        ///     A test for RemoveHI
+        /// A test for RemoveHI
         /// </summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -263,7 +262,7 @@ namespace Test.Logic.Forms
         }
 
         /// <summary>
-        ///     A test for RemoveHI
+        /// A test for RemoveHI
         /// </summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -275,8 +274,7 @@ namespace Test.Logic.Forms
             target.Settings.OnlyIfInSeparateLine = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.ColonSeparateLine = false;
-            string text = "- JOHN: Hey." + Environment.NewLine +
-                          "- ...hey.";
+            string text = "- JOHN: Hey." + Environment.NewLine + "- ...hey.";
             string expected = "- Hey." + Environment.NewLine + "- ...hey.";
             string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
