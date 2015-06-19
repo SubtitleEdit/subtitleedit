@@ -172,11 +172,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormFindSubtitleLine_Load(object sender, EventArgs e)
         {
-            if (textBoxFindText.CanFocus)
-                textBoxFindText.Focus();
+            SetFocus();
         }
 
         private void FormFindSubtitleLine_Shown(object sender, EventArgs e)
+        {
+            SetFocus();
+        }
+
+        private void SetFocus()
         {
             if (textBoxFindText.CanFocus)
                 textBoxFindText.Focus();
