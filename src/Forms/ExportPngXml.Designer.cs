@@ -894,7 +894,7 @@
             // 
             // panelVlcTemp
             // 
-            this.panelVlcTemp.Location = new System.Drawing.Point(644, 19);
+            this.panelVlcTemp.Location = new System.Drawing.Point(642, 52);
             this.panelVlcTemp.Name = "panelVlcTemp";
             this.panelVlcTemp.Size = new System.Drawing.Size(200, 100);
             this.panelVlcTemp.TabIndex = 10;
@@ -903,13 +903,13 @@
             // linkLabelPreview
             // 
             this.linkLabelPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabelPreview.AutoSize = true;
-            this.linkLabelPreview.Location = new System.Drawing.Point(880, 16);
+            this.linkLabelPreview.Location = new System.Drawing.Point(599, 16);
             this.linkLabelPreview.Name = "linkLabelPreview";
-            this.linkLabelPreview.Size = new System.Drawing.Size(45, 13);
+            this.linkLabelPreview.Size = new System.Drawing.Size(326, 60);
             this.linkLabelPreview.TabIndex = 9;
             this.linkLabelPreview.TabStop = true;
             this.linkLabelPreview.Text = "Preview";
+            this.linkLabelPreview.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.linkLabelPreview.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelPreview_LinkClicked);
             // 
             // timerPreview
@@ -1010,7 +1010,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).EndInit();
             this.groupBoxExportImage.ResumeLayout(false);
-            this.groupBoxExportImage.PerformLayout();
             this.contextMenuStripListView.ResumeLayout(false);
             this.ResumeLayout(false);
 
