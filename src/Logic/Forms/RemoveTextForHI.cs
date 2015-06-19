@@ -37,14 +37,14 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     s = s.Remove(0, 1);
                     if (s.StartsWith(' '))
                     {
-                        if (s.StartsWith(" <i>"))
+                        if (s.StartsWith(" <i>", StringComparison.Ordinal))
                             pre = " <i>";
                         else
                             pre = " ";
                     }
-                    else if (s.StartsWith("<i>"))
+                    else if (s.StartsWith("<i>", StringComparison.Ordinal))
                         pre = "<i>";
-                    else if (s.StartsWith("</i>"))
+                    else if (s.StartsWith("</i>", StringComparison.Ordinal))
                         pre = "</i>";
 
                     if (pre.Length > 0)
@@ -509,10 +509,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             {
                 text = text.TrimStart().TrimStart('-').TrimStart();
             }
-            if (oldText.TrimStart().StartsWith("-", StringComparison.Ordinal) && 
-                !oldText.TrimStart().StartsWith("--", StringComparison.Ordinal) && 
+            if (oldText.TrimStart().StartsWith("-", StringComparison.Ordinal) &&
+                !oldText.TrimStart().StartsWith("--", StringComparison.Ordinal) &&
                 text != null && !text.Contains(Environment.NewLine) &&
-                (oldText.Contains(Environment.NewLine + "-", StringComparison.Ordinal) && !(oldText.Contains(Environment.NewLine + "--", StringComparison.Ordinal)) || 
+                (oldText.Contains(Environment.NewLine + "-", StringComparison.Ordinal) && !(oldText.Contains(Environment.NewLine + "--", StringComparison.Ordinal)) ||
                  oldText.Contains(Environment.NewLine + " - ", StringComparison.Ordinal) || oldText.Contains(Environment.NewLine + "<i>- ", StringComparison.Ordinal) || oldText.Contains(Environment.NewLine + "<i> - ", StringComparison.Ordinal)))
             {
                 text = text.TrimStart().TrimStart('-').TrimStart();
