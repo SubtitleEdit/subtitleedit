@@ -76,7 +76,6 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
                     numericUpDownTopBottomMargin.Value = ss.DCinemaBottomMargin;
                 else
                     numericUpDownTopBottomMargin.Value = 8;
-
             }
             Utilities.FixLargeFonts(this, buttonCancel);
         }
