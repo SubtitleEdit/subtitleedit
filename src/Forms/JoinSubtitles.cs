@@ -134,6 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            listViewParts.BeginUpdate();
             listViewParts.Items.Clear();
             int i = 0;
             foreach (string fileName in _fileNamesToJoin)
@@ -154,6 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewParts.Items.Add(lvi);
                 i++;
             }
+            listViewParts.EndUpdate();
 
             JoinedSubtitle = new Subtitle();
             if (JoinedFormat.FriendlyName != SubRip.NameOfFormat)
