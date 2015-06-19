@@ -634,7 +634,6 @@ namespace Nikse.SubtitleEdit.Controls
                         stringFormat.FormatFlags = StringFormatFlags.DirectionVertical;
                         e.Graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(1, 10), stringFormat);
                     }
-
                 }
                 textBrush.Dispose();
                 textFont.Dispose();
@@ -806,7 +805,6 @@ namespace Nikse.SubtitleEdit.Controls
                                 e.Graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, top));
                             }
                         }
-
                     }
                     else if (n > 51)
                         e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortString(), Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
@@ -1165,7 +1163,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void WaveformMouseMove(object sender, MouseEventArgs e)
         {
-
             if (_wavePeaks == null)
                 return;
 
@@ -1393,7 +1390,6 @@ namespace Nikse.SubtitleEdit.Controls
                             }
                             NewSelectionParagraph.StartTime.TotalSeconds = startTotalSeconds;
                             NewSelectionParagraph.EndTime.TotalSeconds = endTotalSeconds;
-
                         }
                     }
                     Invalidate();
@@ -1482,7 +1478,6 @@ namespace Nikse.SubtitleEdit.Controls
                 _mouseMoveStartX = SecondsToXPosition(NewSelectionParagraph.StartTime.TotalSeconds - StartPositionSeconds);
                 _mouseMoveEndX = SecondsToXPosition(NewSelectionParagraph.EndTime.TotalSeconds - StartPositionSeconds);
             }
-
         }
 
         private void WaveformMouseDoubleClick(object sender, MouseEventArgs e)
@@ -1556,7 +1551,6 @@ namespace Nikse.SubtitleEdit.Controls
                 int diff = Math.Abs(_mouseMoveStartX - e.X);
                 if (_mouseMoveStartX == -1 || _mouseMoveEndX == -1 || diff < 10 && TimeSpan.FromTicks(DateTime.Now.Ticks - _buttonDownTimeTicks).TotalSeconds < 0.25)
                 {
-
                     if (ModifierKeys == Keys.Shift && _selectedParagraph != null)
                     {
                         double seconds = XPositionToSeconds(e.X);
@@ -1689,7 +1683,6 @@ namespace Nikse.SubtitleEdit.Controls
                     double seconds = ((i - (length / 2)) / (double)_wavePeaks.Header.SampleRate) / _zoomFactor;
                     if (seconds >= 0)
                     {
-
                         StartPositionSeconds = seconds;
                         if (StartPositionSeconds > 1)
                             StartPositionSeconds -= 1;
@@ -1719,7 +1712,6 @@ namespace Nikse.SubtitleEdit.Controls
                     double seconds = (i + (length / 2)) / (double)_wavePeaks.Header.SampleRate / _zoomFactor;
                     if (seconds >= 0)
                     {
-
                         StartPositionSeconds = seconds;
                         if (StartPositionSeconds > 1)
                             StartPositionSeconds -= 1;

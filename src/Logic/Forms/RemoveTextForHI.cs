@@ -275,7 +275,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     }
 
                     string tempArr0QuoteTrimmed = arr[0].TrimEnd('"');
-                    if (arr0.Length > 0 && arr1.Length > 1 && !(tempArr0QuoteTrimmed.EndsWith('.') || tempArr0QuoteTrimmed.EndsWith('!') || tempArr0QuoteTrimmed.EndsWith('?') || tempArr0QuoteTrimmed.EndsWith("</i>", StringComparison.Ordinal)) &&
+                    if (arr0.Length > 0 && arr1.Length > 1 &&
+                        !(tempArr0QuoteTrimmed.EndsWith('.') || tempArr0QuoteTrimmed.EndsWith('!') || tempArr0QuoteTrimmed.EndsWith('?') || tempArr0QuoteTrimmed.EndsWith("</i>", StringComparison.Ordinal)) &&
                         !(new StripableText(arr[1]).Pre.Contains('-')))
                     {
                         insertDash = false;
@@ -505,28 +506,43 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 text = st.Pre + text + st.Post;
 
             if (oldText.TrimStart().StartsWith("- ", StringComparison.Ordinal) && text != null && !text.Contains(Environment.NewLine) &&
-                (oldText.Contains(Environment.NewLine + "- ", StringComparison.Ordinal) || oldText.Contains(Environment.NewLine + " - ", StringComparison.Ordinal) || oldText.Contains(Environment.NewLine + "<i>- ", StringComparison.Ordinal) || oldText.Contains(Environment.NewLine + "<i> - ", StringComparison.Ordinal)))
+                (oldText.Contains(Environment.NewLine + "- ", StringComparison.Ordinal) ||
+                 oldText.Contains(Environment.NewLine + " - ", StringComparison.Ordinal) ||
+                 oldText.Contains(Environment.NewLine + "<i>- ", StringComparison.Ordinal) ||
+                 oldText.Contains(Environment.NewLine + "<i> - ", StringComparison.Ordinal)))
             {
                 text = text.TrimStart().TrimStart('-').TrimStart();
             }
             if (oldText.TrimStart().StartsWith("-", StringComparison.Ordinal) &&
                 !oldText.TrimStart().StartsWith("--", StringComparison.Ordinal) &&
                 text != null && !text.Contains(Environment.NewLine) &&
-                (oldText.Contains(Environment.NewLine + "-", StringComparison.Ordinal) && !(oldText.Contains(Environment.NewLine + "--", StringComparison.Ordinal)) ||
-                 oldText.Contains(Environment.NewLine + " - ", StringComparison.Ordinal) || oldText.Contains(Environment.NewLine + "<i>- ", StringComparison.Ordinal) || oldText.Contains(Environment.NewLine + "<i> - ", StringComparison.Ordinal)))
+                (oldText.Contains(Environment.NewLine + "-", StringComparison.Ordinal) && !oldText.Contains(Environment.NewLine + "--", StringComparison.Ordinal) ||
+                 oldText.Contains(Environment.NewLine + " - ", StringComparison.Ordinal) ||
+                 oldText.Contains(Environment.NewLine + "<i>- ", StringComparison.Ordinal) ||
+                 oldText.Contains(Environment.NewLine + "<i> - ", StringComparison.Ordinal)))
             {
                 text = text.TrimStart().TrimStart('-').TrimStart();
             }
 
-            if (oldText.TrimStart().StartsWith("<i>- ", StringComparison.Ordinal) && text != null && text.StartsWith("<i>- ", StringComparison.Ordinal) && !text.Contains(Environment.NewLine, StringComparison.Ordinal) &&
-                (oldText.Contains(Environment.NewLine + "- ", StringComparison.Ordinal) || oldText.Contains(Environment.NewLine + " - ", StringComparison.Ordinal) || oldText.Contains(Environment.NewLine + "<i>- ", StringComparison.Ordinal) || oldText.Contains(Environment.NewLine + "<i> - ", StringComparison.Ordinal)))
+            if (oldText.TrimStart().StartsWith("<i>- ", StringComparison.Ordinal) &&
+                text != null && text.StartsWith("<i>- ", StringComparison.Ordinal) && !text.Contains(Environment.NewLine, StringComparison.Ordinal) &&
+                (oldText.Contains(Environment.NewLine + "- ", StringComparison.Ordinal) ||
+                 oldText.Contains(Environment.NewLine + " - ", StringComparison.Ordinal) ||
+                 oldText.Contains(Environment.NewLine + "<i>- ", StringComparison.Ordinal) ||
+                 oldText.Contains(Environment.NewLine + "<i> - ", StringComparison.Ordinal)))
             {
                 text = text.Remove(3, 2);
             }
 
             if (text != null && !text.Contains(Environment.NewLine, StringComparison.Ordinal) &&
-                (oldText.Contains(':') && !text.Contains(':') || oldText.Contains('[') && !text.Contains('[') || oldText.Contains('(') && !text.Contains('(') || oldText.Contains('{') && !text.Contains('{')) &&
-                (oldText.Contains(Environment.NewLine + "- ", StringComparison.Ordinal) || oldText.Contains(Environment.NewLine + " - ", StringComparison.Ordinal) || oldText.Contains(Environment.NewLine + "<i>- ", StringComparison.Ordinal) || oldText.Contains(Environment.NewLine + "<i> - ", StringComparison.Ordinal)))
+                (oldText.Contains(':') && !text.Contains(':') ||
+                 oldText.Contains('[') && !text.Contains('[') ||
+                 oldText.Contains('(') && !text.Contains('(') ||
+                 oldText.Contains('{') && !text.Contains('{')) &&
+                (oldText.Contains(Environment.NewLine + "- ", StringComparison.Ordinal) ||
+                 oldText.Contains(Environment.NewLine + " - ", StringComparison.Ordinal) ||
+                 oldText.Contains(Environment.NewLine + "<i>- ", StringComparison.Ordinal) ||
+                 oldText.Contains(Environment.NewLine + "<i> - ", StringComparison.Ordinal)))
             {
                 text = text.TrimStart().TrimStart('-').TrimStart();
             }
