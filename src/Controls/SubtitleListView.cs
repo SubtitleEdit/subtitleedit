@@ -864,7 +864,6 @@ namespace Nikse.SubtitleEdit.Controls
                 Items[index].UseItemStyleForSubItems = false;
                 Items[index].SubItems[ColumnIndexExtra].BackColor = Color.AntiqueWhite;
                 Items[index].SubItems[ColumnIndexExtra].ForeColor = color;
-
             }
         }
 

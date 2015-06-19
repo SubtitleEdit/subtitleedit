@@ -19,13 +19,11 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-
     public sealed partial class ExportPngXml : PositionAndSizeForm
     {
 
         private class MakeBitmapParameter
         {
-
             public Bitmap Bitmap { get; set; }
             public Paragraph P { get; set; }
             public string Type { get; set; }
@@ -64,7 +62,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 BackgroundColor = Color.Transparent;
             }
-
         }
 
         private Subtitle _subtitle;
@@ -1072,7 +1069,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     if (!param.Saved)
                     {
-
                         string numberString = string.Format(Path.GetFileNameWithoutExtension(Path.GetFileName(param.SavDialogFileName)) + "{0:0000}", i);
                         string fileName = numberString + "." + comboBoxImageFormat.Text.ToLower();
                         string fileNameNoPath = Path.GetFileName(fileName);
@@ -1326,7 +1322,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         {
                             param.Bitmap.Save(fileName, ImageFormat.Png);
                         }
-                        
+
                         imagesSavedCount++;
 
                         //<Event InTC="00:00:24:07" OutTC="00:00:31:13" Forced="False">
@@ -2166,7 +2162,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             surface.DrawString(text, font, brush, new PointF { X = x - 1, Y = y - 1 - j }, sf);
                             surface.DrawString(text, font, brush, new PointF { X = x - 1, Y = y - 0 - j }, sf);
                             surface.DrawString(text, font, brush, new PointF { X = x - 1, Y = y + 1 - j }, sf);
-
                         }
                         brush.Dispose();
                         brush = new SolidBrush(parameter.SubtitleColor);
@@ -3819,7 +3814,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     return;
                 }
-
             }
             catch
             {
@@ -3839,7 +3833,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 br.RotateTransform(0);
                 g.FillRectangle(br, rect);
             }
-
         }
 
         private void linkLabelPreview_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

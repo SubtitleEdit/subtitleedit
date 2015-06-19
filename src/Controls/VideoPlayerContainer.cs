@@ -915,7 +915,6 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 HideAllPauseImages();
                 _pictureBoxPauseDown.Visible = true;
-
             }
             if (OnButtonClicked != null)
                 OnButtonClicked.Invoke(sender, e);
