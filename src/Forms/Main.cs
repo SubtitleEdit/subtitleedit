@@ -4774,14 +4774,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ReloadFromSourceView();
-            using (var startNumberingFrom = new StartNumberingFrom())
+            using (var numberingFrom = new NumberingFrom())
             {
-                if (startNumberingFrom.ShowDialog(this) == DialogResult.OK)
+                if (numberingFrom.ShowDialog(this) == DialogResult.OK)
                 {
                     SaveSubtitleListviewIndexes();
                     MakeHistoryForUndo(_language.BeforeRenumbering);
-                    ShowStatus(string.Format(_language.RenumberedStartingFromX, startNumberingFrom.StartFromNumber));
-                    _subtitle.Renumber(startNumberingFrom.StartFromNumber);
+                    ShowStatus(string.Format(_language.RenumberedStartingFromX, numberingFrom.StartFromNumber));
+                    _subtitle.Renumber(numberingFrom.StartFromNumber);
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     RestoreSubtitleListviewIndexes();
