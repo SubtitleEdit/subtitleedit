@@ -57,6 +57,8 @@ namespace Nikse.SubtitleEdit.Forms
             public int ShadowAlpha { get; set; }
             public int LineHeight { get; set; }
             public bool Forced { get; set; }
+            public bool FullFrame { get; set; }
+            public Color FullFrameBackgroundcolor { get; set; }
 
             public MakeBitmapParameter()
             {
@@ -79,8 +81,8 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly System.Windows.Forms.Timer _previewTimer = new System.Windows.Forms.Timer();
         private string _videoFileName;
 
-        private const string BoxMultiLine = "BoxMultiLine";
-        private const string BoxSingleLine = "BoxSingleLine";
+        private const string BoxMultiLineText = "BoxMultiLine";
+        private const string BoxSingleLineText = "BoxSingleLine";
 
         public ExportPngXml()
         {
@@ -240,15 +242,56 @@ namespace Nikse.SubtitleEdit.Forms
             parameter.Bitmap = GenerateImageFromTextWithStyle(parameter);
             if (parameter.Type == "BLURAYSUP")
             {
-                var brSub = new Logic.BluRaySup.BluRaySupPicture
+                MakeBluRaySupImage(parameter);
+            }
+        }
+
+        private static void MakeBluRaySupImage(MakeBitmapParameter param)
+        {
+            var brSub = new Logic.BluRaySup.BluRaySupPicture
+            {
+                StartTime = (long)param.P.StartTime.TotalMilliseconds,
+                EndTime = (long)param.P.EndTime.TotalMilliseconds,
+                Width = param.ScreenWidth,
+                Height = param.ScreenHeight,
+                IsForced = param.Forced
+            };
+            if (param.FullFrame)
+            {
+                var nbmp = new NikseBitmap(param.Bitmap);
+                nbmp.ReplaceTransparentWith(param.FullFrameBackgroundcolor);
+                using (var bmp = nbmp.GetBitmap())
                 {
-                    StartTime = (long)parameter.P.StartTime.TotalMilliseconds,
-                    EndTime = (long)parameter.P.EndTime.TotalMilliseconds,
-                    Width = parameter.ScreenWidth,
-                    Height = parameter.ScreenHeight,
-                    IsForced = parameter.Forced
-                };
-                parameter.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, parameter.Bitmap, parameter.FramesPerSeconds, parameter.BottomMargin, parameter.LeftRightMargin, parameter.Alignment);
+                    int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
+                    int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
+
+                    var b = new NikseBitmap(param.ScreenWidth, param.ScreenHeight);
+                    {
+                        b.Fill(param.FullFrameBackgroundcolor);
+                        using (var fullSize = b.GetBitmap())
+                        {
+                            if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
+                                left = param.LeftRightMargin;
+                            else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
+                                left = param.ScreenWidth - param.Bitmap.Width - param.LeftRightMargin;
+                            if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
+                                top = param.BottomMargin;
+                            if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
+                                top = param.ScreenHeight - (param.Bitmap.Height / 2);
+
+                            using (var g = Graphics.FromImage(fullSize))
+                            {
+                                g.DrawImage(bmp, left, top);
+                                g.Dispose();
+                            }
+                            param.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, fullSize, param.FramesPerSeconds, 0, 0, ContentAlignment.BottomCenter);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                param.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, param.Bitmap, param.FramesPerSeconds, param.BottomMargin, param.LeftRightMargin, param.Alignment);
             }
         }
 
@@ -283,6 +326,8 @@ namespace Nikse.SubtitleEdit.Forms
                 ShadowWidth = comboBoxShadowWidth.SelectedIndex,
                 ShadowAlpha = (int)numericUpDownShadowTransparency.Value,
                 LineHeight = (int)numericUpDownLineSpacing.Value,
+                FullFrame = checkBoxFullFrameImage.Checked,
+                FullFrameBackgroundcolor = panelFullFrameBackground.BackColor,
             };
             if (index < _subtitle.Paragraphs.Count)
             {
@@ -456,14 +501,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (_exportType == "BLURAYSUP")
                         {
-                            var brSub = new Logic.BluRaySup.BluRaySupPicture
-                            {
-                                StartTime = (long)mp.P.StartTime.TotalMilliseconds,
-                                EndTime = (long)mp.P.EndTime.TotalMilliseconds,
-                                Width = mp.ScreenWidth,
-                                Height = mp.ScreenHeight
-                            };
-                            mp.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, mp.Bitmap, mp.FramesPerSeconds, mp.BottomMargin, mp.LeftRightMargin, mp.Alignment);
+                            MakeBluRaySupImage(mp);
                         }
 
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, mp, i);
@@ -1557,6 +1595,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.SubtitleFontSize = _subtitleFontSize;
             mbp.SubtitleFontBold = _subtitleFontBold;
             mbp.LineHeight = (int)numericUpDownLineSpacing.Value;
+            mbp.FullFrame = checkBoxFullFrameImage.Checked;
+            mbp.FullFrameBackgroundcolor = panelFullFrameBackground.BackColor;
 
             if (_format.HasStyleSupport && !string.IsNullOrEmpty(p.Extra))
             {
@@ -1843,7 +1883,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
         {
             Bitmap bmp = null;
-            if (!parameter.SimpleRendering && parameter.P.Text.Contains(Environment.NewLine) && (parameter.BoxSingleLine || parameter.P.Text.Contains(BoxSingleLine)))
+            if (!parameter.SimpleRendering && parameter.P.Text.Contains(Environment.NewLine) && (parameter.BoxSingleLine || parameter.P.Text.Contains(BoxSingleLineText)))
             {
                 string old = parameter.P.Text;
                 int oldType3D = parameter.Type3D;
@@ -1852,9 +1892,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     parameter.Type3D = 0; // fix later
                 }
                 Color oldBackgroundColor = parameter.BackgroundColor;
-                if (parameter.P.Text.Contains(BoxSingleLine))
+                if (parameter.P.Text.Contains(BoxSingleLineText))
                 {
-                    parameter.P.Text = parameter.P.Text.Replace("<" + BoxSingleLine + ">", string.Empty).Replace("</" + BoxSingleLine + ">", string.Empty);
+                    parameter.P.Text = parameter.P.Text.Replace("<" + BoxSingleLineText + ">", string.Empty).Replace("</" + BoxSingleLineText + ">", string.Empty);
                     parameter.BackgroundColor = parameter.BorderColor;
                 }
 
@@ -1944,10 +1984,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 Color oldBackgroundColor = parameter.BackgroundColor;
                 string oldText = parameter.P.Text;
-                if (parameter.P.Text.Contains(BoxMultiLine) || parameter.P.Text.Contains(BoxSingleLine))
+                if (parameter.P.Text.Contains(BoxMultiLineText) || parameter.P.Text.Contains(BoxSingleLineText))
                 {
-                    parameter.P.Text = parameter.P.Text.Replace("<" + BoxMultiLine + ">", string.Empty).Replace("</" + BoxMultiLine + ">", string.Empty);
-                    parameter.P.Text = parameter.P.Text.Replace("<" + BoxSingleLine + ">", string.Empty).Replace("</" + BoxSingleLine + ">", string.Empty);
+                    parameter.P.Text = parameter.P.Text.Replace("<" + BoxMultiLineText + ">", string.Empty).Replace("</" + BoxMultiLineText + ">", string.Empty);
+                    parameter.P.Text = parameter.P.Text.Replace("<" + BoxSingleLineText + ">", string.Empty).Replace("</" + BoxSingleLineText + ">", string.Empty);
                     parameter.BackgroundColor = parameter.BorderColor;
                 }
                 bmp = GenerateImageFromTextWithStyleInner(parameter);
@@ -3454,10 +3494,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var bmp = new Bitmap(100, 100);
             using (var g = Graphics.FromImage(bmp))
             {
-                var mbp = new MakeBitmapParameter();
-                mbp.SubtitleFontName = _subtitleFontName;
-                mbp.SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
-                mbp.SubtitleFontBold = _subtitleFontBold;
+                var mbp = new MakeBitmapParameter
+                {
+                    SubtitleFontName = _subtitleFontName, 
+                    SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString()), 
+                    SubtitleFontBold = _subtitleFontBold
+                };
                 var fontSize = g.DpiY * mbp.SubtitleFontSize / 72;
                 Font font = SetFont(mbp, fontSize);
 
@@ -3486,13 +3528,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 subtitleListView1.BeginUpdate();
                 foreach (int i in indexes)
                 {
-                    if (tag == BoxMultiLine)
+                    if (tag == BoxMultiLineText)
                     {
-                        _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.Replace("<" + BoxSingleLine + ">", string.Empty).Replace("</" + BoxSingleLine + ">", string.Empty);
+                        _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.Replace("<" + BoxSingleLineText + ">", string.Empty).Replace("</" + BoxSingleLineText + ">", string.Empty);
                     }
-                    else if (tag == BoxSingleLine)
+                    else if (tag == BoxSingleLineText)
                     {
-                        _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.Replace("<" + BoxMultiLine + ">", string.Empty).Replace("</" + BoxMultiLine + ">", string.Empty);
+                        _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.Replace("<" + BoxMultiLineText + ">", string.Empty).Replace("</" + BoxMultiLineText + ">", string.Empty);
                     }
 
                     if (_subtitle.Paragraphs[i].Text.Contains("<" + tag + ">"))
@@ -3516,13 +3558,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void boxMultiLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ListViewToggleTag(BoxMultiLine);
+            ListViewToggleTag(BoxMultiLineText);
             subtitleListView1_SelectedIndexChanged(null, null);
         }
 
         private void boxSingleLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ListViewToggleTag(BoxSingleLine);
+            ListViewToggleTag(BoxSingleLineText);
             subtitleListView1_SelectedIndexChanged(null, null);
         }
 
@@ -3548,8 +3590,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (p.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                             p.Text = p.Text.Remove(0, indexOfEndBracket + 1);
                         p.Text = HtmlUtil.RemoveHtmlTags(p.Text);
-                        p.Text = p.Text.Replace("<" + BoxSingleLine + ">", string.Empty).Replace("</" + BoxSingleLine + ">", string.Empty);
-                        p.Text = p.Text.Replace("<" + BoxMultiLine + ">", string.Empty).Replace("</" + BoxMultiLine + ">", string.Empty);
+                        p.Text = p.Text.Replace("<" + BoxSingleLineText + ">", string.Empty).Replace("</" + BoxSingleLineText + ">", string.Empty);
+                        p.Text = p.Text.Replace("<" + BoxMultiLineText + ">", string.Empty).Replace("</" + BoxMultiLineText + ">", string.Empty);
 
                         if (isSsa)
                             p.Text = RemoveSsaStyle(p.Text);

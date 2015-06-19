@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /** Frames per seconds for wrong 24P (23.975) */
         public const double Fps23975 = 23.975;
         /** Frames per seconds for 24Hz (24.0) */
-        public const double Fps24HZ = 24.0;
+        public const double Fps24Hz = 24.0;
         /** Frames per seconds for PAL progressive (25.0) */
         public const double FpsPal = 25.0;
         /** Frames per seconds for NTSC progressive (29.97) */
@@ -85,6 +85,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
         public static int CropOfsY { get; set; }
 
-        public const double fpsTrg = FpsPal;
+        public const double FpsTrg = FpsPal;
     }
 }
