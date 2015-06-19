@@ -210,7 +210,6 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonClear_Click(null, null);
             else
                 SortAndLoad();
-
         }
 
         private void buttonClear_Click(object sender, EventArgs e)

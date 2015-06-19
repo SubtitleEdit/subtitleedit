@@ -121,9 +121,7 @@ namespace Nikse.SubtitleEdit.Logic
                     info.Success = true;
                 }
             }
-            catch
-            {
-            }
+            catch { }
             return info;
         }
 
@@ -144,9 +142,7 @@ namespace Nikse.SubtitleEdit.Logic
                     info.Success = true;
                 }
             }
-            catch
-            {
-            }
+            catch { }
             return info;
         }
 
