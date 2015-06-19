@@ -2793,7 +2793,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxImageFormat.Items.Clear();
                 comboBoxImageFormat.Items.Add("Png 32-bit");
                 comboBoxImageFormat.Items.Add("Png 8-bit");
-                comboBoxImageFormat.SelectedIndex = 0;
+                if (comboBoxImageFormat.Items[1].ToString() == Configuration.Settings.Tools.ExportBdnXmlImageType)
+                    comboBoxImageFormat.SelectedIndex = 1;
+                else
+                    comboBoxImageFormat.SelectedIndex = 0;
             }
             else if (exportType == "DOST")
             {
@@ -2834,8 +2837,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFrameRate.SelectedIndex = 1;
                 comboBoxFrameRate.DropDownStyle = ComboBoxStyle.DropDownList;
 
-//                checkBoxFullFrameImage.Top = comboBoxImageFormat.Top + 2;
-//                panelFullFrameBackground.Top = checkBoxFullFrameImage.Top;
+                checkBoxFullFrameImage.Top = comboBoxImageFormat.Top + 2;
+                panelFullFrameBackground.Top = checkBoxFullFrameImage.Top;
             }
             else if (exportType == "FAB")
             {
@@ -3319,6 +3322,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportBluRayFontName = _subtitleFontName;
                 Configuration.Settings.Tools.ExportBluRayFontSize = (int)_subtitleFontSize;
                 Configuration.Settings.Tools.ExportBluRayVideoResolution = res;
+            }
+            else if (_exportType == "BDNXML")
+            {
+                Configuration.Settings.Tools.ExportBdnXmlImageType = comboBoxImageFormat.SelectedItem.ToString();
             }
             else if (_exportType == "FCP")
             {

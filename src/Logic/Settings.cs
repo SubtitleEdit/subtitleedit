@@ -131,6 +131,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string ExportFontNameOther { get; set; }
         public int ExportFcpFontSize { get; set; }
         public string ExportFcpImageType { get; set; }
+        public string ExportBdnXmlImageType { get; set; }
         public int ExportLastFontSize { get; set; }
         public int ExportLastLineHeight { get; set; }
         public int ExportLastBorderWidth { get; set; }
@@ -1677,6 +1678,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportFcpImageType");
             if (subNode != null)
                 settings.Tools.ExportFcpImageType = subNode.InnerText;
+            subNode = node.SelectSingleNode("ExportBdnXmlImageType");
+            if (subNode != null)
+                settings.Tools.ExportBdnXmlImageType = subNode.InnerText;
             subNode = node.SelectSingleNode("ExportLastFontSize");
             if (subNode != null)
                 settings.Tools.ExportLastFontSize = Convert.ToInt32(subNode.InnerText);
@@ -2830,6 +2834,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("ExportFontNameOther", settings.Tools.ExportFontNameOther);
                 textWriter.WriteElementString("ExportFcpFontSize", settings.Tools.ExportFcpFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportFcpImageType", settings.Tools.ExportFcpImageType);
+                textWriter.WriteElementString("ExportBdnXmlImageType", settings.Tools.ExportBdnXmlImageType);
                 textWriter.WriteElementString("ExportLastFontSize", settings.Tools.ExportLastFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastLineHeight", settings.Tools.ExportLastLineHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastBorderWidth", settings.Tools.ExportLastBorderWidth.ToString(CultureInfo.InvariantCulture));
