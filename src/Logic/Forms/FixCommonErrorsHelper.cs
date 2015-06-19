@@ -6,7 +6,6 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 {
     public static class FixCommonErrorsHelper
     {
-
         public static string FixEllipsesStartHelper(string text)
         {
             if (string.IsNullOrEmpty(text) || text.Trim().Length < 4 || !(text.Contains("..", StringComparison.Ordinal) || text.Contains(". .", StringComparison.Ordinal)))
