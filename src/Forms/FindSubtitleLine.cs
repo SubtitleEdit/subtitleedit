@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         public int SelectedIndex
         {
             get;
-            set;
+            private set;
         }
 
         public FindSubtitleLine()
