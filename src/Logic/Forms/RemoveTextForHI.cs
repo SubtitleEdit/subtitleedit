@@ -684,15 +684,15 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                 if (temp.TrimEnd().EndsWith(Environment.NewLine + "-"))
                                     temp = temp.TrimEnd().TrimEnd('-').TrimEnd();
                             }
-                            else if (index == 2 && temp.StartsWith("-  —"))
+                            else if (index == 2 && temp.StartsWith("-  —", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(2, 2);
                             }
-                            else if (index == 2 && temp.StartsWith("- —"))
+                            else if (index == 2 && temp.StartsWith("- —", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(2, 1);
                             }
-                            else if (index == 0 && temp.StartsWith(" —"))
+                            else if (index == 0 && temp.StartsWith(" —", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(0, 2);
                             }
@@ -771,12 +771,12 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                 }
                             }
 
-                            if (index > 3 && index - 2 < temp.Length && temp.Substring(index - 2).StartsWith(",  —"))
+                            if (index > 3 && index - 2 < temp.Length && temp.Substring(index - 2).StartsWith(",  —", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(index - 2, 1);
                                 index--;
                             }
-                            else if (index > 3 && index - 2 < temp.Length && temp.Substring(index - 2).StartsWith(", —"))
+                            else if (index > 3 && index - 2 < temp.Length && temp.Substring(index - 2).StartsWith(", —", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(index - 2, 1);
                                 index--;
@@ -789,7 +789,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                     if (!string.IsNullOrEmpty(temp) && temp.StartsWith('-'))
                                         temp = temp.Remove(0, 1).Trim();
                                 }
-                                else if (index == 3 && !string.IsNullOrEmpty(temp) && temp.StartsWith("<i>-"))
+                                else if (index == 3 && !string.IsNullOrEmpty(temp) && temp.StartsWith("<i>-", StringComparison.Ordinal))
                                 {
                                     temp = temp.Remove(3, 1);
                                 }
