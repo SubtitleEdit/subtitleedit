@@ -185,7 +185,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 }
             }
             int size = bytes.Count;
-            byte[] retval = new byte[size];
+            var retval = new byte[size];
             for (int i = 0; i < size; i++)
                 retval[i] = bytes[i];
             return retval;
@@ -246,13 +246,13 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// <returns>byte ID for the given frame rate</returns>
         private static int GetFpsId(double fps)
         {
-            if (fps == Core.Fps24HZ)
+            if (Math.Abs(fps - Core.Fps24Hz) < 0.05)
                 return 0x20;
-            if (fps == Core.FpsPal)
+            if (Math.Abs(fps - Core.FpsPal) < 0.05)
                 return 0x30;
             if (Math.Abs(fps - Core.FpsNtsc) < 0.05)
                 return 0x40;
-            if (fps == Core.FpsPalI)
+            if (Math.Abs(fps - Core.FpsPalI) < 0.05)
                 return 0x60;
             if (Math.Abs(fps - Core.FpsNtscI) < 0.05)
                 return 0x70;
@@ -416,7 +416,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
             int h = pic.Height - 2 * Core.CropOfsY;
 
-            byte[] buf = new byte[size];
+            var buf = new byte[size];
             int index = 0;
 
             int fpsId = GetFpsId(fps);
