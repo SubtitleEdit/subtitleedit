@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string s = HtmlUtil.RemoveHtmlTags(p.Text);
+                string s = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 if (s.Length > maxLength)
                 {
                     maxLength = s.Length;
