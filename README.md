@@ -7,3 +7,5 @@
 [![Coverity Scan Build Status](https://img.shields.io/coverity/scan/2562.svg)](https://scan.coverity.com/projects/2562)
 
 <http://www.nikse.dk/SubtitleEdit/>
+
+[ ![SE](https://img.shields.io/badge/SUBTITLE%20EDIT-join%20chat-blue.svg) ](https://gitter.im/SubtitleEdit/subtitleedit "Subtitle Edit Gitter Chatroom")
