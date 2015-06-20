@@ -277,9 +277,6 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                 word = word.Replace("ﬁ", "fi");
                 word = word.Replace("ν", "v"); // NOTE: first 'v' is a special unicode character!!!!
 
-                while (word.Contains("--"))
-                    word = word.Replace("--", "-");
-
                 if (word.Contains('’'))
                     word = word.Replace('’', '\'');
 
@@ -291,6 +288,9 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
 
                 if (word.Contains('—'))
                     word = word.Replace('—', '-');
+
+                while (word.Contains("--"))
+                    word = word.Replace("--", "-");
 
                 if (word.Contains('|'))
                     word = word.Replace('|', 'l');
