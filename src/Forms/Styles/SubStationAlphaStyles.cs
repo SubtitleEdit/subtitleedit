@@ -12,7 +12,6 @@ using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
-
     public partial class SubStationAlphaStyles : StylesForm
     {
         private string _header;
@@ -236,7 +235,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         g.DrawPath(new Pen(panelOutlineColor.BackColor, outline), path);
                 }
                 g.FillPath(new SolidBrush(panelPrimaryColor.BackColor), path);
-
             }
             pictureBoxPreview.Image = bmp;
         }
