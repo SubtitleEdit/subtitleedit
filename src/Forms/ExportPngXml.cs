@@ -3497,8 +3497,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 var mbp = new MakeBitmapParameter
                 {
-                    SubtitleFontName = _subtitleFontName, 
-                    SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString()), 
+                    SubtitleFontName = _subtitleFontName,
+                    SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString()),
                     SubtitleFontBold = _subtitleFontBold
                 };
                 var fontSize = g.DpiY * mbp.SubtitleFontSize / 72;

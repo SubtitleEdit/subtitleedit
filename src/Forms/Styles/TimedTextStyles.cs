@@ -11,7 +11,6 @@ using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
-
     public sealed partial class TimedTextStyles : StylesForm
     {
         private readonly XmlDocument _xml;
@@ -66,7 +65,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             using (Graphics g = Graphics.FromImage(bmp))
             {
-
                 // Draw background
                 const int rectangleSize = 9;
                 for (int y = 0; y < bmp.Height; y += rectangleSize)
