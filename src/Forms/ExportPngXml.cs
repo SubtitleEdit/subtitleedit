@@ -2757,6 +2757,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             labelLineHeight.Text = Configuration.Settings.Language.ExportPngXml.LineHeight;
 
             linkLabelPreview.Text = Configuration.Settings.Language.General.Preview;
+            linkLabelPreview.Left = groupBoxExportImage.Width - linkLabelPreview.Width - 3;
 
             saveImageAsToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.SaveImageAs;
 
