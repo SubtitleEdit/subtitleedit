@@ -32,6 +32,8 @@
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
+            this.checkBoxRenumber = new System.Windows.Forms.CheckBox();
+            this.buttonRenumberSettings = new System.Windows.Forms.Button();
             this.checkBoxSplitLongLines = new System.Windows.Forms.CheckBox();
             this.buttonRemoveTextForHiSettings = new System.Windows.Forms.Button();
             this.checkBoxSetMinimumDisplayTimeBetweenSubs = new System.Windows.Forms.CheckBox();
@@ -97,7 +99,7 @@
             // 
             this.buttonConvert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonConvert.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonConvert.Location = new System.Drawing.Point(857, 564);
+            this.buttonConvert.Location = new System.Drawing.Point(857, 575);
             this.buttonConvert.Name = "buttonConvert";
             this.buttonConvert.Size = new System.Drawing.Size(98, 21);
             this.buttonConvert.TabIndex = 2;
@@ -109,7 +111,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(961, 564);
+            this.buttonCancel.Location = new System.Drawing.Point(961, 575);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 3;
@@ -121,6 +123,8 @@
             // 
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.checkBoxRenumber);
+            this.groupBoxConvertOptions.Controls.Add(this.buttonRenumberSettings);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxSplitLongLines);
             this.groupBoxConvertOptions.Controls.Add(this.buttonRemoveTextForHiSettings);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxSetMinimumDisplayTimeBetweenSubs);
@@ -134,17 +138,37 @@
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxFixCasing);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxRemoveTextForHI);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxRemoveFormatting);
-            this.groupBoxConvertOptions.Location = new System.Drawing.Point(498, 19);
+            this.groupBoxConvertOptions.Location = new System.Drawing.Point(498, 14);
             this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
-            this.groupBoxConvertOptions.Size = new System.Drawing.Size(520, 210);
+            this.groupBoxConvertOptions.Size = new System.Drawing.Size(520, 229);
             this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
             // 
+            // checkBoxRenumber
+            // 
+            this.checkBoxRenumber.AutoSize = true;
+            this.checkBoxRenumber.Location = new System.Drawing.Point(15, 142);
+            this.checkBoxRenumber.Name = "checkBoxRenumber";
+            this.checkBoxRenumber.Size = new System.Drawing.Size(75, 17);
+            this.checkBoxRenumber.TabIndex = 13;
+            this.checkBoxRenumber.Text = "Renumber";
+            this.checkBoxRenumber.UseVisualStyleBackColor = true;
+            // 
+            // buttonRenumberSettings
+            // 
+            this.buttonRenumberSettings.Location = new System.Drawing.Point(170, 142);
+            this.buttonRenumberSettings.Name = "buttonRenumberSettings";
+            this.buttonRenumberSettings.Size = new System.Drawing.Size(104, 21);
+            this.buttonRenumberSettings.TabIndex = 12;
+            this.buttonRenumberSettings.Text = "Settings...";
+            this.buttonRenumberSettings.UseVisualStyleBackColor = true;
+            this.buttonRenumberSettings.Click += new System.EventHandler(this.buttonRenumberSettings_Click);
+            // 
             // checkBoxSplitLongLines
             // 
             this.checkBoxSplitLongLines.AutoSize = true;
-            this.checkBoxSplitLongLines.Location = new System.Drawing.Point(15, 145);
+            this.checkBoxSplitLongLines.Location = new System.Drawing.Point(15, 165);
             this.checkBoxSplitLongLines.Name = "checkBoxSplitLongLines";
             this.checkBoxSplitLongLines.Size = new System.Drawing.Size(93, 17);
             this.checkBoxSplitLongLines.TabIndex = 8;
@@ -165,7 +189,7 @@
             // checkBoxSetMinimumDisplayTimeBetweenSubs
             // 
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.AutoSize = true;
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Location = new System.Drawing.Point(15, 191);
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Location = new System.Drawing.Point(15, 207);
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Name = "checkBoxSetMinimumDisplayTimeBetweenSubs";
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Size = new System.Drawing.Size(208, 17);
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.TabIndex = 9;
@@ -175,7 +199,7 @@
             // checkBoxAutoBalance
             // 
             this.checkBoxAutoBalance.AutoSize = true;
-            this.checkBoxAutoBalance.Location = new System.Drawing.Point(15, 168);
+            this.checkBoxAutoBalance.Location = new System.Drawing.Point(15, 186);
             this.checkBoxAutoBalance.Name = "checkBoxAutoBalance";
             this.checkBoxAutoBalance.Size = new System.Drawing.Size(113, 17);
             this.checkBoxAutoBalance.TabIndex = 8;
@@ -196,7 +220,7 @@
             // checkBoxMultipleReplace
             // 
             this.checkBoxMultipleReplace.AutoSize = true;
-            this.checkBoxMultipleReplace.Location = new System.Drawing.Point(15, 122);
+            this.checkBoxMultipleReplace.Location = new System.Drawing.Point(15, 119);
             this.checkBoxMultipleReplace.Name = "checkBoxMultipleReplace";
             this.checkBoxMultipleReplace.Size = new System.Drawing.Size(100, 17);
             this.checkBoxMultipleReplace.TabIndex = 6;
@@ -206,7 +230,7 @@
             // checkBoxFixCommonErrors
             // 
             this.checkBoxFixCommonErrors.AutoSize = true;
-            this.checkBoxFixCommonErrors.Location = new System.Drawing.Point(15, 97);
+            this.checkBoxFixCommonErrors.Location = new System.Drawing.Point(15, 96);
             this.checkBoxFixCommonErrors.Name = "checkBoxFixCommonErrors";
             this.checkBoxFixCommonErrors.Size = new System.Drawing.Size(111, 17);
             this.checkBoxFixCommonErrors.TabIndex = 4;
@@ -348,7 +372,7 @@
             // checkBoxRemoveFormatting
             // 
             this.checkBoxRemoveFormatting.AutoSize = true;
-            this.checkBoxRemoveFormatting.Location = new System.Drawing.Point(15, 22);
+            this.checkBoxRemoveFormatting.Location = new System.Drawing.Point(15, 23);
             this.checkBoxRemoveFormatting.Name = "checkBoxRemoveFormatting";
             this.checkBoxRemoveFormatting.Size = new System.Drawing.Size(115, 17);
             this.checkBoxRemoveFormatting.TabIndex = 0;
@@ -373,7 +397,7 @@
             this.groupBoxOutput.Controls.Add(this.textBoxOutputFolder);
             this.groupBoxOutput.Location = new System.Drawing.Point(12, 316);
             this.groupBoxOutput.Name = "groupBoxOutput";
-            this.groupBoxOutput.Size = new System.Drawing.Size(1027, 235);
+            this.groupBoxOutput.Size = new System.Drawing.Size(1027, 249);
             this.groupBoxOutput.TabIndex = 1;
             this.groupBoxOutput.TabStop = false;
             this.groupBoxOutput.Text = "Output";
@@ -657,7 +681,7 @@
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(15, 573);
+            this.progressBar1.Location = new System.Drawing.Point(15, 584);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(833, 10);
             this.progressBar1.TabIndex = 8;
@@ -666,7 +690,7 @@
             // 
             this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(12, 557);
+            this.labelStatus.Location = new System.Drawing.Point(12, 568);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 9;
@@ -677,7 +701,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1048, 597);
+            this.ClientSize = new System.Drawing.Size(1048, 608);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.groupBoxOutput);
@@ -765,6 +789,8 @@
         private System.Windows.Forms.Label labelFilter;
         private System.Windows.Forms.ComboBox comboBoxFilter;
         private System.Windows.Forms.TextBox textBoxFilter;
+        private System.Windows.Forms.CheckBox checkBoxRenumber;
+        private System.Windows.Forms.Button buttonRenumberSettings;
 
     }
 }

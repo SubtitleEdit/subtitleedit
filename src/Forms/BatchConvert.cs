@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public class ThreadDoWorkParameter
         {
+            public bool Renumber { get; set; }
             public bool FixCommonErrors { get; set; }
             public bool MultipleReplaceActive { get; set; }
             public bool SplitLongLinesActive { get; set; }
@@ -34,13 +35,14 @@ namespace Nikse.SubtitleEdit.Forms
             public string FileName { get; set; }
             public string ToFormat { get; set; }
             public SubtitleFormat SourceFormat { get; set; }
-            public ThreadDoWorkParameter(bool fixCommonErrors, bool multipleReplace, bool splitLongLinesActive, bool autoBalance, bool setMinDisplayTimeBetweenSubtitles, ListViewItem item, Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language, string fileName, string toFormat, SubtitleFormat sourceFormat)
+            public ThreadDoWorkParameter(bool fixCommonErrors, bool multipleReplace, bool splitLongLinesActive, bool autoBalance, bool setMinDisplayTimeBetweenSubtitles, bool renumber, ListViewItem item, Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language, string fileName, string toFormat, SubtitleFormat sourceFormat)
             {
                 FixCommonErrors = fixCommonErrors;
                 MultipleReplaceActive = multipleReplace;
                 SplitLongLinesActive = splitLongLinesActive;
                 AutoBalanceActive = autoBalance;
                 SetMinDisplayTimeBetweenSubtitles = setMinDisplayTimeBetweenSubtitles;
+                Renumber = renumber;
                 Item = item;
                 Subtitle = subtitle;
                 Format = format;
@@ -63,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _errors;
         private readonly IList<SubtitleFormat> _allFormats;
         private bool _abort;
-
+        private static int _startRenumFrom = 1;
         public BatchConvert(Icon icon)
         {
             InitializeComponent();
@@ -182,11 +184,14 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveFormatting.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormatting;
             checkBoxRemoveTextForHI.Checked = Configuration.Settings.Tools.BatchConvertRemoveTextForHI;
             checkBoxSetMinimumDisplayTimeBetweenSubs.Checked = Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles;
+            checkBoxRenumber.Checked = Configuration.Settings.Tools.BatchConvertRenumber;
             buttonRemoveTextForHiSettings.Text = l.Settings;
             buttonFixCommonErrorSettings.Text = l.Settings;
             buttonMultipleReplaceSettings.Text = l.Settings;
+            buttonRenumberSettings.Text = l.Settings;
             checkBoxFixCommonErrors.Text = Configuration.Settings.Language.FixCommonErrors.Title;
             checkBoxMultipleReplace.Text = Configuration.Settings.Language.MultipleReplace.Title;
+            checkBoxRenumber.Text = Configuration.Settings.Language.StartNumberingFrom.Title;
             checkBoxAutoBalance.Text = l.AutoBalance;
             checkBoxSplitLongLines.Text = l.SplitLongLines;
             radioButtonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
@@ -363,7 +368,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         item.SubItems.Add("VobSub");
                     }
-                    else if (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".mks", StringComparison.OrdinalIgnoreCase))
+                    else if (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".mks", StringComparison.OrdinalIgnoreCase)) // Todo:
                     {
                         int mkvCount = 0;
                         using (var matroska = new MatroskaFile(fileName))
@@ -761,6 +766,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 _changeCasingNames.Initialize(sub);
                                 _changeCasingNames.FixCasing();
                             }
+
                             double fromFrameRate;
                             double toFrameRate;
                             if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out fromFrameRate) &&
@@ -780,7 +786,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 Application.DoEvents();
                                 System.Threading.Thread.Sleep(100);
                             }
-                            var parameter = new ThreadDoWorkParameter(checkBoxFixCommonErrors.Checked, checkBoxMultipleReplace.Checked, checkBoxSplitLongLines.Checked, checkBoxAutoBalance.Checked, checkBoxSetMinimumDisplayTimeBetweenSubs.Checked, item, sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage, fileName, toFormat, format);
+                            var parameter = new ThreadDoWorkParameter(checkBoxFixCommonErrors.Checked, checkBoxMultipleReplace.Checked, checkBoxSplitLongLines.Checked, checkBoxAutoBalance.Checked, checkBoxSetMinimumDisplayTimeBetweenSubs.Checked, checkBoxRenumber.Checked, item, sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage, fileName, toFormat, format);
                             if (!worker1.IsBusy)
                                 worker1.RunWorkerAsync(parameter);
                             else if (!worker2.IsBusy)
@@ -897,7 +903,8 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             p.Subtitle.Paragraphs.RemoveAt(deleteIndex);
                         }
-                        p.Subtitle.Renumber();
+                        if (!p.Renumber)
+                            p.Subtitle.Renumber();
                     }
                 }
                 catch (Exception exception)
@@ -941,6 +948,10 @@ namespace Nikse.SubtitleEdit.Forms
                         current.EndTime.TotalMilliseconds -= (minumumMillisecondsBetweenLines - gapsBetween);
                     }
                 }
+            }
+            if (p.Renumber)
+            {
+                p.Subtitle.Renumber(_startRenumFrom);
             }
             e.Result = p;
         }
@@ -1109,6 +1120,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertOverwriteExisting = checkBoxOverwrite.Checked;
             Configuration.Settings.Tools.BatchConvertOverwriteOriginal = checkBoxOverwriteOriginalFiles.Checked;
             Configuration.Settings.Tools.BatchConvertFormat = comboBoxSubtitleFormats.SelectedItem.ToString();
+            Configuration.Settings.Tools.BatchConvertRenumber = checkBoxRenumber.Checked;
         }
 
         private void buttonMultipleReplaceSettings_Click(object sender, EventArgs e)
@@ -1315,6 +1327,18 @@ namespace Nikse.SubtitleEdit.Forms
         private void comboBoxFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             textBoxFilter.Visible = comboBoxFilter.SelectedIndex == 3;
+        }
+
+        private void buttonRenumberSettings_Click(object sender, EventArgs e)
+        {
+            using (var form = new StartNumberingFrom())
+            {
+                if (form.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+                {
+                    if (form.StartFromNumber >= 0)
+                        _startRenumFrom = form.StartFromNumber;
+                }
+            }
         }
 
     }

@@ -113,6 +113,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool BatchConvertMultipleReplace { get; set; }
         public bool BatchConvertSplitLongLines { get; set; }
         public bool BatchConvertAutoBalance { get; set; }
+        public bool BatchConvertRenumber { get; set; }
         public bool BatchConvertSetMinDisplayTimeBetweenSubtitles { get; set; }
         public string BatchConvertLanguage { get; set; }
         public string BatchConvertFormat { get; set; }
@@ -1621,6 +1622,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("BatchConvertAutoBalance");
             if (subNode != null)
                 settings.Tools.BatchConvertAutoBalance = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("BatchConvertRenumber");
+            if (subNode != null)
+                settings.Tools.BatchConvertRenumber = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("BatchConvertSplitLongLines");
             if (subNode != null)
                 settings.Tools.BatchConvertSplitLongLines = Convert.ToBoolean(subNode.InnerText);
@@ -2816,6 +2820,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("BatchConvertFixCommonErrors", settings.Tools.BatchConvertFixCommonErrors.ToString());
                 textWriter.WriteElementString("BatchConvertMultipleReplace", settings.Tools.BatchConvertMultipleReplace.ToString());
                 textWriter.WriteElementString("BatchConvertAutoBalance", settings.Tools.BatchConvertAutoBalance.ToString());
+                textWriter.WriteElementString("BatchConvertRenumber", settings.Tools.BatchConvertRenumber.ToString());
                 textWriter.WriteElementString("BatchConvertSetMinDisplayTimeBetweenSubtitles", settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles.ToString());
                 textWriter.WriteElementString("BatchConvertLanguage", settings.Tools.BatchConvertLanguage);
                 textWriter.WriteElementString("BatchConvertFormat", settings.Tools.BatchConvertFormat);
