@@ -546,7 +546,7 @@ namespace Nikse.SubtitleEdit.Logic
             // do not autobreak dialogs
             if (text.Contains('-') && text.Contains(Environment.NewLine, StringComparison.Ordinal))
             {
-                var noTagLines = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
+                var noTagLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
                 if (noTagLines.Length == 2)
                 {
                     var arr0 = noTagLines[0].Trim().TrimEnd('"').TrimEnd('\'').TrimEnd();
