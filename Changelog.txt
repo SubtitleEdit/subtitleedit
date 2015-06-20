@@ -20,6 +20,9 @@
    * Persistent find history - thx vmb
    * Show friendly message if user tries to load JPG file - thx ivandrofly
    * Show friendly message if user tries to load a file containing only binary zeroes
+   * Export to BDN XML/PNG now also supports 8-bit png files - thx franontanaya
+   * Export to Blu-ray sup now also supports full frame - thx oallouch
+   * Added two new fields for EBU regarding programme start time
 * FIXED:
    * Fixed multiple blank lines added after editing SSA/ASS properties
    * Fix in "Change casing" regarding "don't" - thx Chamallow
@@ -35,6 +38,12 @@
    * Avoid crash in "Plugins" (due to culture specific decimal separator) - thx marb99
    * Fixed bug reading YouTube sbv files - thx msl521
    * Fixed support for Tesseract 3.03RC - thx YamashitaRen 
+   * Fixed dead networking service (for networking sessions)
+   * Fix for italic support in span in TTML 1.0 - thx Mampfi
+   * Fix for (possible) "culture is not supported" crash when changing language - thx XuTpuK
+   * Fixed bug in writing "Subtitle Editor Project" format - thx Christina
+   * Always re-number in batch convert - thx Ede123
+   * + Many minor fixes from Ivandrofly and xylographe
 
 
 3.4.6 (29th March 2015)
