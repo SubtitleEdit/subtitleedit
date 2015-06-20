@@ -595,7 +595,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 }
             }
             return text;
-        }    
+        }
 
         private void AddWarning()
         {
