@@ -942,6 +942,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            
+            // always re-number
+            p.Subtitle.Renumber();
+
             e.Result = p;
         }
 
