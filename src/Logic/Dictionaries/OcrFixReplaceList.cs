@@ -293,7 +293,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                     word = word.Replace('—', '-');
 
                 if (word.Contains('|'))
-                    word = word.Replace("|", "l");
+                    word = word.Replace('|', 'l');
 
                 if (word.Contains("vx/"))
                     word = word.Replace("vx/", "w");
@@ -302,7 +302,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                 {
                     var regex = new Regex("[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]¤");
                     if (regex.IsMatch(word))
-                        word = word.Replace("¤", "o");
+                        word = word.Replace('¤', 'o');
                 }
             }
 
@@ -460,7 +460,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             {
                 if (!word.Contains('<') && !word.Contains('>') && !word.Contains('\''))
                 {
-                    word = word.Replace("l", "I");
+                    word = word.Replace('l', 'I');
                 }
             }
             return word;
