@@ -447,7 +447,13 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
 
             text = st.Pre + sb.ToString().Trim() + st.Post;
-            text = text.Replace("<i></i>", string.Empty).Trim();
+            text = text.Replace("  ", " ").Trim();
+            text = text.Replace("<i></i>", string.Empty);
+            text = text.Replace("<i> </i>", " ");
+            text = text.Replace("<b></b>", string.Empty);
+            text = text.Replace("<b> </b>", " ");
+            text = RemoveEmptyFontTag(text);
+            text = text.Replace("  ", " ").Trim();
             text = RemoveColon(text);
             text = RemoveLineIfAllUppercase(text);
             text = RemoveHearImpairedtagsInsideLine(text);
@@ -571,6 +577,25 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
             return text.Trim();
         }
+
+        private string RemoveEmptyFontTag(string text)
+        {
+            int indexOfStartFont = text.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+            int indexOfEndFont = text.IndexOf("</font>", StringComparison.OrdinalIgnoreCase);
+            if (indexOfEndFont > 0 &&  indexOfStartFont >= 0 && indexOfStartFont < indexOfEndFont)
+            {
+                int startTagBefore = text.Substring(0, indexOfEndFont).LastIndexOf('<');
+                string lastTwo = text.Substring(indexOfEndFont - 2, 2);
+                if (startTagBefore == indexOfStartFont && lastTwo.Trim().EndsWith(">"))
+                {
+                    text = text.Remove(indexOfStartFont, indexOfEndFont + "</font>".Length - indexOfStartFont);
+                    if (lastTwo.EndsWith(" "))
+                        text = text.Insert(indexOfStartFont, " ");
+                    text = text.Replace("  ", " ");
+                }
+            }
+            return text;
+        }    
 
         private void AddWarning()
         {

@@ -1226,6 +1226,39 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void RemoveTextForHiRemoveFontTag()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = true;
+            const string text = "<font color=\"#808080\">[Whistling]</font> Hallo everybody!";
+            const string expected = "Hallo everybody!";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiRemoveFontTag2()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = true;
+            const string text = "♪ <font color=\"#000000\">[LIGHT SWITCH CLICKS]</font>";
+            const string expected = "♪";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+        
+        [TestMethod]
+        public void RemoveTextForHiRemoveFontTag3()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = true;
+            const string text = "Foobar <font color=\"#808080\">[CHAINS RATTLING]</font> Foobar";
+            const string expected = "Foobar Foobar";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
         #region Additional test attributes
 
         //
