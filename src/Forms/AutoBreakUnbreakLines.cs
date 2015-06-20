@@ -141,10 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (p.Text != null && p.Text.Contains(Environment.NewLine) && HtmlUtil.RemoveHtmlTags(p.Text).Length > minLength)
                 {
-                    string text = p.Text.Replace(Environment.NewLine, " ");
-                    while (text.Contains("  "))
-                        text = text.Replace("  ", " ");
-
+                    var text = Utilities.UnbreakLine(p.Text);
                     if (text != p.Text)
                     {
                         AddToListView(p, text);
