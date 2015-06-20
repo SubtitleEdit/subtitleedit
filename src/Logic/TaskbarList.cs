@@ -33,8 +33,11 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         [ClassInterface(ClassInterfaceType.None),
-        ComImport, Guid("56FDF344-FD6D-11d0-958A-006097C9A090")]
-        private class CLSID_TaskbarList { }
+         ComImport, Guid("56FDF344-FD6D-11d0-958A-006097C9A090")]
+        private class CLSID_TaskbarList
+        {
+        }
+
     }
 
     /// <summary>Extends ITaskbarList2 by exposing methods that support the unified launching and switching
@@ -42,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic
     /// and switch targets based on individual tabs in a tabbed application, thumbnail toolbars, notification
     /// and status overlays, and progress indicators.</summary>
     [ComImport, Guid("ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf"),
-    InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface ITaskbarList3
     {
         // ITaskbarList

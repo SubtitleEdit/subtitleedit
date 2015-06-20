@@ -183,7 +183,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                     }
                 }
-
             }
             buttonCancel.Visible = false;
             progressBar1.Visible = false;
