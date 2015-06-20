@@ -171,7 +171,7 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add(subItem);
             subItem = new ListViewItem.ListViewSubItem(item, p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            subItem = new ListViewItem.ListViewSubItem(item, newText);
             item.SubItems.Add(subItem);
 
             listViewFixes.Items.Add(item);
