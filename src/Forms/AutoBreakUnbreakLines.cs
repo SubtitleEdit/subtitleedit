@@ -213,5 +213,11 @@ namespace Nikse.SubtitleEdit.Forms
                 _notAllowedFixes.Add(p.ID);
         }
 
+        private void listViewFixes_Resize(object sender, EventArgs e)
+        {
+            var newWidth = (listViewFixes.Width - (listViewFixes.Columns[0].Width + listViewFixes.Columns[1].Width)) / 2;
+            listViewFixes.Columns[3].Width = listViewFixes.Columns[2].Width = newWidth;
+        }
+
     }
 }
