@@ -865,7 +865,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonWaveformsFolderEmpty.Enabled = true;
                 labelWaveformsFolderInfo.Text = string.Format(language.WaveformAndSpectrogramsFolderInfo, count, bytes / 1024.0 / 1024.0);
-
             }
             else
             {
@@ -941,7 +940,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 cultures.Add(culture);
                         }
                     }
-
                 }
 
                 foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
@@ -981,7 +979,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (comboBoxWordListLanguage.Items.Count > 0 && comboBoxWordListLanguage.SelectedIndex == -1)
                     comboBoxWordListLanguage.SelectedIndex = 0;
-
             }
             else
             {
@@ -1533,7 +1530,6 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.WaveformFocusListView.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformFocusListView = GetShortcut(node.Text);
-
                 }
             }
 
@@ -1578,7 +1574,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (Graphics g = Graphics.FromImage(bmp))
             {
-
                 // Draw background
                 const int rectangleSize = 9;
                 for (int y = 0; y < bmp.Height; y += rectangleSize)
@@ -1657,7 +1652,6 @@ namespace Nikse.SubtitleEdit.Forms
                     g.DrawPath(new Pen(Color.Black, outline), path);
                 }
                 g.FillPath(new SolidBrush(Color.FromArgb(_ssaFontColor)), path);
-
             }
             pictureBoxPreview.Image = bmp;
         }
@@ -2028,7 +2022,6 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 }
             }
-
         }
 
         private void ListBoxOcrFixListSelectedIndexChanged(object sender, EventArgs e)
@@ -2555,7 +2548,9 @@ namespace Nikse.SubtitleEdit.Forms
                     EnableVlc(path);
                 }
             }
-            catch { }
+            catch
+            {
+            }
         }
 
     }
