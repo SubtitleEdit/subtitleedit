@@ -585,7 +585,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 return text;
 
             int indexOfEndFont = text.IndexOf("</font>", StringComparison.OrdinalIgnoreCase);
-            if (indexOfEndFont > 0 && indexOfStartFont >= 0 && indexOfStartFont < indexOfEndFont)
+            if (indexOfEndFont > 0 && indexOfStartFont < indexOfEndFont)
             {
                 int startTagBefore = text.Substring(0, indexOfEndFont).LastIndexOf('<');
                 string lastTwo = text.Substring(indexOfEndFont - 2, 2);
