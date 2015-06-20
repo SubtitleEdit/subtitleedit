@@ -18894,17 +18894,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemImportOcrHardSub_Click(object sender, EventArgs e)
         {
-            using (var form = new HardSubExtract(_videoFileName))
+            var form = new HardSubExtract(_videoFileName);
+            if (form.ShowDialog(this) == DialogResult.OK)
             {
-                if (form.ShowDialog(this) == DialogResult.OK)
+                if (!string.IsNullOrEmpty(form.OcrFileName))
                 {
-                    if (!string.IsNullOrEmpty(form.OcrFileName))
-                    {
-                        MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines);
-                        OpenSubtitle(form.OcrFileName, null);
-                    }
+                    MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines);
+                    OpenSubtitle(form.OcrFileName, null);
                 }
             }
+            form.Dispose();
         }
 
         private void toolStripMenuItemExportFcpIImage_Click(object sender, EventArgs e)
