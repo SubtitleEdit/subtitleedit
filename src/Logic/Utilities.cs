@@ -792,14 +792,25 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string UnbreakLine(string text)
         {
-            if (text.Contains(Environment.NewLine))
+            if (!text.Contains(Environment.NewLine))
+                return text;
+
+            var singleLine = text.Replace(Environment.NewLine, " ");
+            while (singleLine.Contains("  "))
+                singleLine = singleLine.Replace("  ", " ");
+
+            if (singleLine.Contains("</")) // Fix tag
             {
-                string newText = text.Replace(Environment.NewLine, " ");
-                while (newText.Contains("  "))
-                    newText = newText.Replace("  ", " ");
-                return newText;
+                singleLine = singleLine.Replace("</i> <i>", " ");
+                singleLine = singleLine.Replace("</i><i>", " ");
+
+                singleLine = singleLine.Replace("</b> <b>", " ");
+                singleLine = singleLine.Replace("</b><b>", " ");
+
+                singleLine = singleLine.Replace("</u> <u>", " ");
+                singleLine = singleLine.Replace("</u><u>", " ");
             }
-            return text;
+            return singleLine;
         }
 
         public static void InitializeSubtitleFont(Control control)
