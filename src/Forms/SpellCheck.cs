@@ -29,6 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
             public int NoOfNamesEtc { get; set; }
             public int NoOfAddedWords { get; set; }
         }
+
         private List<UndoObject> _undoList = new List<UndoObject>();
 
         private SpellCheckAction _action = SpellCheckAction.Skip;
@@ -77,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string _currentDictionary;
 
-        public class SuggestionParameter
+        public class SuggestionParameter : IDisposable
         {
             public string InputWord { get; set; }
             public List<string> Suggestions { get; set; }
@@ -90,6 +91,15 @@ namespace Nikse.SubtitleEdit.Forms
                 Suggestions = new List<string>();
                 Hunspell = hunspell;
                 Success = false;
+            }
+            
+            public void Dispose()
+            {
+                if (Hunspell != null)
+                {
+                    Hunspell.Dispose();
+                    Hunspell = null;
+                }
             }
         }
 
