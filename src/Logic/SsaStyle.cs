@@ -49,6 +49,35 @@ namespace Nikse.SubtitleEdit.Logic
             LoadedFromHeader = false;
         }
 
+        public SsaStyle(SsaStyle ssaStyle)
+        {
+            Name = ssaStyle.Name;
+            FontName = ssaStyle.FontName;
+            FontSize = ssaStyle.FontSize;
+
+            Italic = ssaStyle.Italic;
+            Bold = ssaStyle.Bold;
+            Underline = ssaStyle.Underline;
+
+            Primary = ssaStyle.Primary;
+            Secondary = ssaStyle.Secondary;
+            Tertiary = ssaStyle.Tertiary;
+            Outline = ssaStyle.Outline;
+            Background = ssaStyle.Background;
+
+            ShadowWidth = ssaStyle.ShadowWidth;
+            OutlineWidth = ssaStyle.OutlineWidth;
+
+            Alignment = ssaStyle.Alignment;
+            MarginLeft = ssaStyle.MarginLeft;
+            MarginRight = ssaStyle.MarginRight;
+            MarginVertical = ssaStyle.MarginVertical;
+
+            BorderStyle = ssaStyle.BorderStyle;
+            RawLine = ssaStyle.RawLine;
+            LoadedFromHeader = ssaStyle.LoadedFromHeader;
+        }
+
         internal string ToRawSsa(string styleFormat)
         {
             var sb = new StringBuilder();
