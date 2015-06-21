@@ -37,14 +37,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             comboBoxSubtitleFontSize.SelectedIndex = 10;
-
         }
 
         internal void Initialize(NOcrDb _nOcrDb)
         {
             if (_nOcrDb != null)
             {
-
             }
         }
 
@@ -89,7 +87,6 @@ namespace Nikse.SubtitleEdit.Forms
             var charactersLearned = new List<string>();
             foreach (ListViewItem item in listViewFonts.Items)
             {
-
                 if (item.Checked)
                 {
                     _subtitleFontName = item.Text;
@@ -128,7 +125,6 @@ namespace Nikse.SubtitleEdit.Forms
                 NOcrChar match = nOcrD.GetMatch(list[0].NikseBitmap);
                 if (match == null)
                 {
-
                     pictureBox1.Image = list[0].NikseBitmap.GetBitmap();
                     this.Refresh();
                     Application.DoEvents();

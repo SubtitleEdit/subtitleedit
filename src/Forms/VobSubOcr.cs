@@ -2080,7 +2080,6 @@ namespace Nikse.SubtitleEdit.Forms
                             return oc;
                     }
                 }
-
             }
 
             if (tryItalicScaling)
@@ -2630,7 +2629,6 @@ namespace Nikse.SubtitleEdit.Forms
                             return oc;
                     }
                 }
-
             }
 
             if (tryItalicScaling)
@@ -2686,7 +2684,6 @@ namespace Nikse.SubtitleEdit.Forms
                 //          return c;
                 //      }
                 //  }
-
             }
 
             return null;
@@ -3826,7 +3823,6 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (index + 1 < list.Count && list[index + 1].NikseBitmap != null) // only allow expand to EndOfLine or space
                         {
-
                             index++;
                             expandSelectionList.Add(list[index]);
                         }
@@ -3864,7 +3860,6 @@ namespace Nikse.SubtitleEdit.Forms
                             matches.Add(new CompareMatch("*", false, 0, null));
                         }
                         _italicCheckedLast = _vobSubOcrCharacter.IsItalic;
-
                     }
                     else if (item.NikseBitmap == null)
                     {
@@ -4199,7 +4194,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SaveNOcr()
         {
-
             try
             {
                 _nOcrDb.Save();
@@ -4328,7 +4322,6 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (index + 1 < list.Count && list[index + 1].NikseBitmap != null) // only allow expand to EndOfLine or space
                         {
-
                             index++;
                             expandSelectionList.Add(list[index]);
                         }
@@ -4375,7 +4368,6 @@ namespace Nikse.SubtitleEdit.Forms
                             matches.Add(new CompareMatch("*", false, 0, null));
                         }
                         _italicCheckedLast = _vobSubOcrNOcrCharacter.IsItalic;
-
                     }
                     else if (item.NikseBitmap == null)
                     {
@@ -5118,7 +5110,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             bitmap.Dispose();
             p.Result = GetStringWithItalicTags(matches);
-
         }
 
         private void ImageCompareThreadRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -5597,7 +5588,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _mainOcrIndex++;
                 _mainOcrTimer.Start();
             }
-
         }
 
         private void LoadNOcrWithCurrentLanguage()
@@ -6214,7 +6204,6 @@ namespace Nikse.SubtitleEdit.Forms
                                         {
                                             unItalicText += "!";
                                         }
-
                                     }
                                 }
                                 if (line.EndsWith('?') && !unItalicText.EndsWith('?') && !unItalicText.EndsWith("?</i>"))
@@ -6818,7 +6807,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var formVobSubEditCharacters = new VobSubEditCharacters(comboBoxCharacterDatabase.SelectedItem.ToString(), null, _binaryOcrDb))
             {
-
                 formVobSubEditCharacters.Initialize(name, text);
                 DialogResult result = formVobSubEditCharacters.ShowDialog();
                 if (result == DialogResult.OK)
@@ -7281,7 +7269,6 @@ namespace Nikse.SubtitleEdit.Forms
                         current.Text = old.Text;
                         break;
                     }
-
                 }
             }
             subtitleListView1.Fill(_subtitle);
@@ -7490,7 +7477,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     index++;
                 }
-
             }
         }
 

@@ -183,7 +183,6 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     size++;
                 }
-
             }
             if (size > 2)
             {
@@ -198,7 +197,6 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     parts.Add(new ImageSplitterItem(0, startY, bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1))));
                 }
-
             }
             return parts;
         }
@@ -243,7 +241,6 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     size++;
                 }
-
             }
             if (size > 2)
             {
@@ -295,7 +292,6 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     size++;
                 }
-
             }
             if (size > 2)
             {
@@ -355,7 +351,6 @@ namespace Nikse.SubtitleEdit.Logic
                     x < bmp.Width - 2 &&
                     !IsVerticalLineTransparent(bmp, ref tempY, x + 1))
                 {
-
                     //Add space?
                     if (lastEndX > 0 && lastEndX + xOrMorePixelsMakesSpace < startX)
                     {
@@ -751,7 +746,6 @@ namespace Nikse.SubtitleEdit.Logic
                         {
                             return null;
                         }
-
                     }
                     else if (x < bmp.Width - 1 && y == bmp.Height - 1 && bmp.GetAlpha(x + 1, y) == 0 && bmp.GetAlpha(x + 1, y - 1) == 0)
                     {

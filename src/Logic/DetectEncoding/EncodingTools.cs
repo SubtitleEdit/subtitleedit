@@ -22,7 +22,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
         /// </summary>
         static EncodingTools()
         {
-
             List<int> streamEcodings = new List<int>();
             List<int> allEncodings = new List<int>();
             List<int> mimeEcodings = new List<int>();
@@ -65,7 +64,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
             // all singlebyte encodings
             foreach (EncodingInfo enc in Encoding.GetEncodings())
             {
-
                 if (!enc.GetEncoding().IsSingleByte)
                     continue;
 
@@ -155,7 +153,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
             }
             else
             {
-
             }
             return enc;
         }
@@ -182,7 +179,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
 
         private static Encoding DetectOutgoingEncoding(string input, int[] preferredEncodings, bool preserveOrder)
         {
-
             if (input == null)
                 throw new ArgumentNullException("input");
 
@@ -234,7 +230,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
                         Marshal.Copy(pDetectedEncs, theResult, 0, theResult.Length);
                         result = Encoding.GetEncoding(theResult[0]);
                     }
-
                 }
                 finally
                 {
@@ -252,7 +247,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
 
         public static Encoding[] DetectOutgoingEncodings(string input, int[] preferredEncodings, bool preserveOrder)
         {
-
             if (input == null)
                 throw new ArgumentNullException("input");
 
@@ -304,9 +298,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
                         // get the encodings for the codepages
                         for (int i = 0; i < detectedCodepages; i++)
                             result.Add(Encoding.GetEncoding(theResult[i]));
-
                     }
-
                 }
                 finally
                 {
@@ -353,7 +345,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
         /// <returns>an array of Encoding with assumed encodings</returns>
         public static Encoding[] DetectInputCodepages(byte[] input, int maxEncodings)
         {
-
             if (maxEncodings < 1)
                 throw new ArgumentOutOfRangeException("maxEncodings", "at least one encoding must be returned");
 
@@ -477,9 +468,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
             stream.Seek(0, SeekOrigin.Begin);
 
             return new StreamReader(stream, detectedEncoding);
-
         }
 
     }
-
 }
