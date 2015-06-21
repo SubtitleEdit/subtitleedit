@@ -242,13 +242,13 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                 }
 
-                var fi = new FileInfo(fileName);
+                var file = new FileInfo(fileName);
                 var item = new ListViewItem(fileName);
-                item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+                item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(file.Length));
 
                 SubtitleFormat format = null;
                 var sub = new Subtitle();
-                if (fi.Length < 1024 * 1024) // max 1 mb
+                if (file.Length < 1024 * 1024) // max 1 mb
                 {
                     Encoding encoding;
                     format = sub.LoadSubtitle(fileName, out encoding, null);
@@ -362,7 +362,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         item.SubItems.Add("VobSub");
                     }
-                    else if (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".mks", StringComparison.OrdinalIgnoreCase))
+                    else if (file.Extension.Equals(".mkv", StringComparison.OrdinalIgnoreCase) || file.Extension.Equals(".mks", StringComparison.OrdinalIgnoreCase))
                     {
                         int mkvCount = 0;
                         using (var matroska = new MatroskaFile(fileName))
@@ -408,9 +408,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 listViewInputFiles.Items.Add(item);
             }
-            catch
-            {
-            }
+            catch { }
         }
 
         private void listViewInputFiles_DragEnter(object sender, DragEventArgs e)
@@ -541,8 +539,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     SubtitleFormat format = null;
                     var sub = new Subtitle();
-                    var fi = new FileInfo(fileName);
-                    if (fi.Length < 1024 * 1024) // max 1 mb
+                    var file = new FileInfo(fileName);
+                    if (file.Length < 1024 * 1024) // max 1 mb
                     {
                         Encoding encoding;
                         format = sub.LoadSubtitle(fileName, out encoding, null);
@@ -680,7 +678,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        if (isMatroska && (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".mks", StringComparison.OrdinalIgnoreCase)))
+                        if (isMatroska && (file.Extension.Equals(".mkv", StringComparison.OrdinalIgnoreCase) || file.Extension.Equals(".mks", StringComparison.OrdinalIgnoreCase)))
                         {
                             using (var matroska = new MatroskaFile(fileName))
                             {
@@ -761,8 +759,8 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             double fromFrameRate;
                             double toFrameRate;
-                            if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out fromFrameRate) &&
-                            double.TryParse(comboBoxFrameRateTo.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out toFrameRate))
+                            if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out fromFrameRate) &&
+                            double.TryParse(comboBoxFrameRateTo.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out toFrameRate))
                             {
                                 sub.ChangeFrameRate(fromFrameRate, toFrameRate);
                             }
@@ -800,9 +798,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Application.DoEvents();
                 }
-                catch
-                {
-                }
+                catch { }
                 System.Threading.Thread.Sleep(100);
             }
             _converting = false;
@@ -821,7 +817,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool CheckSkipFilter(string fileName, SubtitleFormat format, Subtitle sub)
         {
-            bool skip = false;
+            var skip = false;
             if (comboBoxFilter.SelectedIndex == 1)
             {
                 if (format != null && format.GetType() == typeof(SubRip) && FileUtil.HasUtf8Bom(fileName))
@@ -829,7 +825,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (comboBoxFilter.SelectedIndex == 2)
             {
-                foreach (Paragraph p in sub.Paragraphs)
+                foreach (var p in sub.Paragraphs)
                 {
                     if (p.Text != null && Utilities.GetNumberOfLines(p.Text) > 2)
                     {
@@ -931,8 +927,8 @@ namespace Nikse.SubtitleEdit.Forms
                 double minumumMillisecondsBetweenLines = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 for (int i = 0; i < p.Subtitle.Paragraphs.Count - 1; i++)
                 {
-                    Paragraph current = p.Subtitle.GetParagraphOrDefault(i);
-                    Paragraph next = p.Subtitle.GetParagraphOrDefault(i + 1);
+                    var current = p.Subtitle.GetParagraphOrDefault(i);
+                    var next = p.Subtitle.GetParagraphOrDefault(i + 1);
                     var gapsBetween = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
                     if (gapsBetween < minumumMillisecondsBetweenLines && current.Duration.TotalMilliseconds > minumumMillisecondsBetweenLines)
                     {
@@ -1168,7 +1164,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    string ext = Path.GetExtension(fileName).ToLowerInvariant();
+                    var ext = Path.GetExtension(fileName).ToLowerInvariant();
                     if (ext != ".png" && ext != ".jpg" && ext != ".dll" && ext != ".exe" && ext != ".zip")
                     {
                         var fi = new FileInfo(fileName);
@@ -1260,9 +1256,7 @@ namespace Nikse.SubtitleEdit.Forms
                             return;
                     }
                 }
-                catch
-                {
-                }
+                catch { }
             }
             if (checkBoxScanFolderRecursive.Checked)
             {
