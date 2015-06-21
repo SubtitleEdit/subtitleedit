@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
     /// </summary>
     public class Packet
     {
-
         /// <summary>
         /// ID byte of TS Packet
         /// </summary>

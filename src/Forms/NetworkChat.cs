@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void AddChatMessage(SeNetworkService.SeUser user, string message)
         {
-            ListViewItem item = new ListViewItem(user.UserName);
+            var item = new ListViewItem(user.UserName);
             item.Tag = _networkSession.CurrentUser;
             item.ForeColor = Utilities.GetColorFromUserName(user.UserName);
             item.ImageIndex = Utilities.GetNumber0To7FromUserName(user.UserName);
@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void AddUser(SeNetworkService.SeUser user)
         {
-            ListViewItem item = new ListViewItem(user.UserName);
+            var item = new ListViewItem(user.UserName);
             item.Tag = user;
             item.ForeColor = Utilities.GetColorFromUserName(user.UserName);
             if (DateTime.Now.Month == 12 && DateTime.Now.Day >= 23 && DateTime.Now.Day <= 25)

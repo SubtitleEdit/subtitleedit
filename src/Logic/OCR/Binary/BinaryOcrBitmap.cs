@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
 {
     public class BinaryOcrBitmap
     {
-
         //File format:
         //-------------
         //2bytes=width
