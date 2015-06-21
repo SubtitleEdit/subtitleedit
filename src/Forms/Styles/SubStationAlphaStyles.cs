@@ -625,7 +625,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string styleName = listViewStyles.SelectedItems[0].Text;
                 SsaStyle oldStyle = GetSsaStyle(styleName);
-                SsaStyle style = GetSsaStyle(styleName);
+                SsaStyle style = new SsaStyle(oldStyle); // Copy contructor
                 style.Name = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.CopyOfY, styleName);
 
                 if (GetSsaStyle(style.Name).LoadedFromHeader)
