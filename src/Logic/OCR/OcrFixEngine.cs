@@ -23,6 +23,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             Aggressive
         }
 
+        private const StringComparison Ordinal = StringComparison.Ordinal;
         private string _userWordListXmlFileName;
         private string _fiveLetterWordListLanguageName;
 
@@ -121,7 +122,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
                     {
                         string name = Path.GetFileNameWithoutExtension(dic);
-                        if (!name.StartsWith("hyph"))
+                        if (!name.StartsWith("hyph", Ordinal))
                         {
                             try
                             {
@@ -159,7 +160,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
                     {
                         string name = Path.GetFileNameWithoutExtension(dic);
-                        if (!name.StartsWith("hyph"))
+                        if (!name.StartsWith("hyph", Ordinal))
                         {
                             try
                             {
@@ -415,7 +416,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
                 text = FixLowercaseIToUppercaseI(text, lastLine);
-                if (SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) || _threeLetterIsoLanguageName == "eng")
+                if (SpellCheckDictionaryName.StartsWith("en_", Ordinal) || _threeLetterIsoLanguageName == "eng")
                 {
                     string oldText = text;
                     text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(RegexAloneI, oldText, text, 'i');
@@ -439,9 +440,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private static string FixFrenchLApostrophe(string text, string tag, string lastLine)
         {
             bool endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') ||
-                                    lastLine.EndsWith(".</i>") || lastLine.EndsWith("!</i>") || lastLine.EndsWith("?</i>") ||
-                                    lastLine.EndsWith(".</font>") || lastLine.EndsWith("!</font>") || lastLine.EndsWith("?</font>");
-            if (text.StartsWith(tag.TrimStart(), StringComparison.Ordinal) && text.Length > 3)
+                                    lastLine.EndsWith(".</i>", Ordinal) || lastLine.EndsWith("!</i>", Ordinal) || lastLine.EndsWith("?</i>", Ordinal) ||
+                                    lastLine.EndsWith(".</font>", Ordinal) || lastLine.EndsWith("!</font>", Ordinal) || lastLine.EndsWith("?</font>", Ordinal);
+            if (text.StartsWith(tag.TrimStart(), Ordinal) && text.Length > 3)
             {
                 if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text[2]))
                 {
@@ -452,7 +453,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     text = @"l" + text.Substring(1);
                 }
             }
-            else if (text.StartsWith("<i>" + tag.TrimStart(), StringComparison.Ordinal) && text.Length > 6)
+            else if (text.StartsWith("<i>" + tag.TrimStart(), Ordinal) && text.Length > 6)
             {
                 if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text[5]))
                 {
@@ -464,7 +465,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
 
-            int start = text.IndexOf(tag, StringComparison.Ordinal);
+            int start = text.IndexOf(tag, Ordinal);
             while (start > 0)
             {
                 lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
@@ -483,15 +484,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         text = text.Remove(start + 1, 1).Insert(start + 1, "l");
                     }
                 }
-                start = text.IndexOf(tag, start + 1, StringComparison.Ordinal);
+                start = text.IndexOf(tag, start + 1, Ordinal);
             }
 
             tag = Environment.NewLine + tag.Trim();
-            start = text.IndexOf(tag, StringComparison.Ordinal);
+            start = text.IndexOf(tag, Ordinal);
             while (start > 0)
             {
                 lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
-                endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>");
+                endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>", Ordinal);
                 if (start < text.Length - 5)
                 {
                     if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text[start + 2 + Environment.NewLine.Length]))
@@ -503,15 +504,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         text = text.Remove(start + Environment.NewLine.Length, 1).Insert(start + Environment.NewLine.Length, "l");
                     }
                 }
-                start = text.IndexOf(tag, start + 1, StringComparison.Ordinal);
+                start = text.IndexOf(tag, start + 1, Ordinal);
             }
 
             tag = Environment.NewLine + "<i>" + tag.Trim();
-            start = text.IndexOf(tag, StringComparison.Ordinal);
+            start = text.IndexOf(tag, Ordinal);
             while (start > 0)
             {
                 lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
-                endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>");
+                endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>", Ordinal);
                 if (start < text.Length - 8)
                 {
                     if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text[start + 5 + Environment.NewLine.Length]))
@@ -523,7 +524,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         text = text.Remove(start + Environment.NewLine.Length + 3, 1).Insert(start + Environment.NewLine.Length + 3, "l");
                     }
                 }
-                start = text.IndexOf(tag, start + 1, StringComparison.Ordinal);
+                start = text.IndexOf(tag, start + 1, Ordinal);
             }
             return text;
         }
@@ -617,7 +618,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
 
                 // e.g. "selectionsu." -> "selections..."
-                if (input.EndsWith("u.", StringComparison.Ordinal) && _hunspell != null)
+                if (input.EndsWith("u.", Ordinal) && _hunspell != null)
                 {
                     string[] words = input.Split(new[] { ' ', '.' }, StringSplitOptions.RemoveEmptyEntries);
                     if (words.Length > 0)
@@ -632,7 +633,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
 
                 // music notes
-                if (input.StartsWith(".'", StringComparison.Ordinal) && input.EndsWith(".'", StringComparison.Ordinal))
+                if (input.StartsWith(".'", Ordinal) && input.EndsWith(".'", Ordinal))
                 {
                     input = input.Replace(".'", Configuration.Settings.Tools.MusicSymbol);
                 }
@@ -660,9 +661,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     lastLine.EndsWith('?'))
                 {
                     var st = new StripableText(l);
-                    if (st.StrippedText.StartsWith('i') && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("...", StringComparison.Ordinal))
+                    if (st.StrippedText.StartsWith('i') && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("...", Ordinal))
                     {
-                        if (string.IsNullOrEmpty(lastLine) || (!lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, _abbreviationList)))
+                        if (string.IsNullOrEmpty(lastLine) || (!lastLine.EndsWith("...", Ordinal) && !EndsWithAbbreviation(lastLine, _abbreviationList)))
                             l = st.Pre + "I" + st.StrippedText.Remove(0, 1) + st.Post;
                     }
                 }
@@ -700,7 +701,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 input = "." + input;
 
             string pre = string.Empty;
-            if (input.StartsWith("- ", StringComparison.Ordinal))
+            if (input.StartsWith("- ", Ordinal))
             {
                 pre = "- ";
                 input = input.Remove(0, 2);
@@ -754,7 +755,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (input.StartsWith(". . <i>."))
                     input = "<i>..." + input.Remove(0, 8);
 
-                if (input.StartsWith("...<i>") && (input.IndexOf("</i>", StringComparison.Ordinal) > input.IndexOf(' ')))
+                if (input.StartsWith("...<i>") && (input.IndexOf("</i>", Ordinal) > input.IndexOf(' ')))
                     input = "<i>..." + input.Remove(0, 6);
 
                 if (input.EndsWith(". .."))
@@ -811,13 +812,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 input = input.Insert(4, " ");
             }
 
-            int idx = input.IndexOf(Environment.NewLine + "-", StringComparison.Ordinal);
+            int idx = input.IndexOf(Environment.NewLine + "-", Ordinal);
             if (idx > 0 && idx + Environment.NewLine.Length + 1 < input.Length && Utilities.UppercaseLetters.Contains(input[idx + Environment.NewLine.Length + 1]))
             {
                 input = input.Insert(idx + Environment.NewLine.Length + 1, " ");
             }
 
-            idx = input.IndexOf(Environment.NewLine + "<i>-", StringComparison.Ordinal);
+            idx = input.IndexOf(Environment.NewLine + "<i>-", Ordinal);
             if (idx > 0 && Utilities.UppercaseLetters.Contains(input[idx + Environment.NewLine.Length + 4]))
             {
                 input = input.Insert(idx + Environment.NewLine.Length + 4, " ");
