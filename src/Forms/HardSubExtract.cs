@@ -302,5 +302,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        new public void Dispose()
+        {
+            if (_libVlc != null)
+            {
+                _libVlc.Dispose();
+                _libVlc = null;
+            }
+            base.Dispose();
+        }
+
     }
 }
