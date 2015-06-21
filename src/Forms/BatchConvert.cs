@@ -350,7 +350,6 @@ namespace Nikse.SubtitleEdit.Forms
                             format = avidStl;
                         }
                     }
-
                 }
 
                 if (format == null)
@@ -742,7 +741,6 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-
                             foreach (Paragraph p in sub.Paragraphs)
                             {
                                 if (checkBoxRemoveTextForHI.Checked)
@@ -942,7 +940,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            
+
             // always re-number
             p.Subtitle.Renumber();
 

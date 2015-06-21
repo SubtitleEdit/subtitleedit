@@ -1247,7 +1247,7 @@ namespace Test.Logic.Forms
             string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
-        
+
         [TestMethod]
         public void RemoveTextForHiRemoveFontTag3()
         {

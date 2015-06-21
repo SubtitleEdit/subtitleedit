@@ -257,7 +257,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                 {
-
                     float addLeft = 0;
                     int oldPathPointIndex = path.PointCount;
                     if (oldPathPointIndex < 0)
