@@ -581,15 +581,18 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         private string RemoveEmptyFontTag(string text)
         {
             int indexOfStartFont = text.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+            if (indexOfStartFont < 0)
+                return text;
+
             int indexOfEndFont = text.IndexOf("</font>", StringComparison.OrdinalIgnoreCase);
-            if (indexOfEndFont > 0 &&  indexOfStartFont >= 0 && indexOfStartFont < indexOfEndFont)
+            if (indexOfEndFont > 0 && indexOfStartFont < indexOfEndFont)
             {
                 int startTagBefore = text.Substring(0, indexOfEndFont).LastIndexOf('<');
                 string lastTwo = text.Substring(indexOfEndFont - 2, 2);
-                if (startTagBefore == indexOfStartFont && lastTwo.Trim().EndsWith(">"))
+                if (startTagBefore == indexOfStartFont && lastTwo.TrimEnd().EndsWith('>'))
                 {
                     text = text.Remove(indexOfStartFont, indexOfEndFont + "</font>".Length - indexOfStartFont);
-                    if (lastTwo.EndsWith(" "))
+                    if (lastTwo.EndsWith(' '))
                         text = text.Insert(indexOfStartFont, " ");
                     text = text.Replace("  ", " ");
                 }
