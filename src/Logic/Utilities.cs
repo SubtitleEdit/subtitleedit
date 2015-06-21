@@ -544,9 +544,9 @@ namespace Nikse.SubtitleEdit.Logic
                 return text;
 
             // do not autobreak dialogs
-            if (text.Contains('-') && text.Contains(Environment.NewLine, StringComparison.Ordinal))
+            if (text.Contains('-') && text.Contains(Environment.NewLine))
             {
-                var noTagLines = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
+                var noTagLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
                 if (noTagLines.Length == 2)
                 {
                     var arr0 = noTagLines[0].Trim().TrimEnd('"').TrimEnd('\'').TrimEnd();
@@ -560,13 +560,13 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (noTagText.Length < mergeLinesShorterThan)
             {
-                var lines = text.SplitToLines();
-                if (lines.Length > 1)
+                var noTagLines = noTagText.SplitToLines();
+                if (noTagLines.Length > 1)
                 {
                     bool isDialog = true;
-                    foreach (string line in lines)
+                    foreach (string line in noTagLines)
                     {
-                        string noTagLine = HtmlUtil.RemoveHtmlTags(line).Trim();
+                        var noTagLine = line.TrimStart();
                         isDialog = isDialog && (noTagLine.StartsWith('-') || noTagLine.StartsWith('—'));
                     }
                     if (isDialog)
