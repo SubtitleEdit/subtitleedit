@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -138,12 +139,9 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Items.Clear();
             foreach (Paragraph p in _paragraphs)
             {
-                if (p.Text != null && p.Text.Contains(Environment.NewLine) && p.Text.Length > minLength)
+                if (p.Text != null && p.Text.Contains(Environment.NewLine) && HtmlUtil.RemoveHtmlTags(p.Text).Length > minLength)
                 {
-                    string text = p.Text.Replace(Environment.NewLine, " ");
-                    while (text.Contains("  "))
-                        text = text.Replace("  ", " ");
-
+                    var text = Utilities.UnbreakLine(p.Text);
                     if (text != p.Text)
                     {
                         AddToListView(p, text);
