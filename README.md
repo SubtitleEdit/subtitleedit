@@ -8,4 +8,6 @@
 
 <http://www.nikse.dk/SubtitleEdit/>
 
+![SE number of downloads](https://img.shields.io/github/downloads/subtitleedit/subtitleedit/latest/total.svg)
+
 [ ![SE](https://img.shields.io/badge/SUBTITLE%20EDIT-join%20chat-blue.svg) ](https://gitter.im/SubtitleEdit/subtitleedit "Subtitle Edit Gitter Chatroom")
