@@ -501,7 +501,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 lv.SelectIndexAndEnsureVisible(selectedIndex);
             }
-
         }
 
         private void SubtitleListView1SelectedIndexChanged(object sender, EventArgs e)
