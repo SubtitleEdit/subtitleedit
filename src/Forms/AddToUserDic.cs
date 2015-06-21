@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class AddToUserDic : Form
     {
-
         public AddToUserDic()
         {
             InitializeComponent();

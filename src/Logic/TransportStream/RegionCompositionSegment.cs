@@ -2,7 +2,6 @@
 
 namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
-
     public class RegionCompositionSegment
     {
         public int RegionId { get; set; }
@@ -16,6 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public int Region8BitPixelCode { get; set; }
         public int Region4BitPixelCode { get; set; }
         public int Region2BitPixelCode { get; set; }
+
         public List<RegionCompositionSegmentObject> Objects = new List<RegionCompositionSegmentObject>();
 
         public RegionCompositionSegment(byte[] buffer, int index, int regionLength)
@@ -49,5 +49,4 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             }
         }
     }
-
 }
