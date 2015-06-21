@@ -106,15 +106,15 @@ namespace Nikse.SubtitleEdit.Forms
             var sub = new Subtitle();
             foreach (Paragraph p in _paragraphs)
                 sub.Paragraphs.Add(p);
-            string language = Utilities.AutoDetectGoogleLanguage(sub);
+            var language = Utilities.AutoDetectGoogleLanguage(sub);
 
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             foreach (Paragraph p in _paragraphs)
             {
-                if (p.Text.Length > minLength || p.Text.Contains(Environment.NewLine))
+                if (HtmlUtil.RemoveHtmlTags(p.Text, true).Length > minLength || p.Text.Contains(Environment.NewLine))
                 {
-                    string text = Utilities.AutoBreakLine(p.Text, 5, MergeLinesShorterThan, language);
+                    var text = Utilities.AutoBreakLine(p.Text, 5, MergeLinesShorterThan, language);
                     if (text != p.Text)
                     {
                         AddToListView(p, text);
@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             for (int i = _paragraphs.Count - 1; i >= 0; i--)
             {
-                Paragraph p = _paragraphs[i];
+                var p = _paragraphs[i];
                 if (_notAllowedFixes.Contains(p.ID))
                 {
                     _fixedText.Remove(p.ID);
