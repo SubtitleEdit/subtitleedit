@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         public int SelectedIndex
         {
             get;
-            set;
+            private set;
         }
 
         public FindSubtitleLine()
@@ -172,11 +172,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormFindSubtitleLine_Load(object sender, EventArgs e)
         {
-            if (textBoxFindText.CanFocus)
-                textBoxFindText.Focus();
+            SetFocus();
         }
 
         private void FormFindSubtitleLine_Shown(object sender, EventArgs e)
+        {
+            SetFocus();
+        }
+
+        private void SetFocus()
         {
             if (textBoxFindText.CanFocus)
                 textBoxFindText.Focus();
