@@ -302,14 +302,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        new public void Dispose()
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
         {
-            if (_libVlc != null)
+            if (disposing && (components != null))
             {
-                _libVlc.Dispose();
-                _libVlc = null;
+                components.Dispose();
+                if (_libVlc != null)
+                {
+                    _libVlc.Dispose();
+                    _libVlc = null;
+                }
             }
-            base.Dispose();
+            base.Dispose(disposing);
         }
 
     }
