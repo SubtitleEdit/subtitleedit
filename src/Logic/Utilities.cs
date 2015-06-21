@@ -560,13 +560,13 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (noTagText.Length < mergeLinesShorterThan)
             {
-                var lines = text.SplitToLines();
-                if (lines.Length > 1)
+                var noTagLines = noTagText.SplitToLines();
+                if (noTagLines.Length > 1)
                 {
                     bool isDialog = true;
-                    foreach (string line in lines)
+                    foreach (string line in noTagLines)
                     {
-                        string noTagLine = HtmlUtil.RemoveHtmlTags(line).Trim();
+                        var noTagLine = line.TrimStart();
                         isDialog = isDialog && (noTagLine.StartsWith('-') || noTagLine.StartsWith('—'));
                     }
                     if (isDialog)
