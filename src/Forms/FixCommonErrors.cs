@@ -741,7 +741,6 @@ namespace Nikse.SubtitleEdit.Forms
                 double diff = prev.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds;
                 if (!prev.StartTime.IsMaxTime && !p.StartTime.IsMaxTime && diff >= 0 && !(canBeEqual && diff == 0))
                 {
-
                     int diffHalf = (int)(diff / 2);
                     if (!Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart && p.StartTime.TotalMilliseconds == prev.EndTime.TotalMilliseconds &&
                         prev.Duration.TotalMilliseconds > 100)
@@ -1578,7 +1577,6 @@ namespace Nikse.SubtitleEdit.Forms
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
-
             }
             if (missingSpaces > 0)
             {
@@ -1771,7 +1769,6 @@ namespace Nikse.SubtitleEdit.Forms
                             p.Text = oldText;
                         }
                     }
-
                 }
             }
             UpdateFixStatus(noOfFixes, fixAction, _language.XMissingQuotesAdded);
@@ -1899,7 +1896,6 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                 }
                             }
-
                         }
                     }
                     match = match.NextMatch();
@@ -1985,7 +1981,6 @@ namespace Nikse.SubtitleEdit.Forms
                                     missigPeriodsAtEndOfLine++;
                                     AddFixToListView(p, fixAction, oldText, p.Text);
                                 }
-
                             }
                         }
                     }
@@ -3830,7 +3825,6 @@ namespace Nikse.SubtitleEdit.Forms
                     fixCount++;
                     AddFixToListView(p, fixAction, oldText, p.Text);
                 }
-
             }
             UpdateFixStatus(fixCount, _language.FixSpanishInvertedQuestionAndExclamationMarks, fixCount.ToString(CultureInfo.InvariantCulture));
         }
@@ -3938,7 +3932,6 @@ namespace Nikse.SubtitleEdit.Forms
                                         p.Text = p.Text.Remove(j, markIndex - j + 1).Insert(j, speaker + st.Pre + temp + st.StrippedText + st.Post);
                                         markIndex += addToIndex;
                                     }
-
                                 }
                             }
                         }
@@ -4052,7 +4045,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Next()
         {
-
             RunSelectedActions();
 
             buttonBack.Enabled = true;
@@ -4139,7 +4131,6 @@ namespace Nikse.SubtitleEdit.Forms
                 GoToNextSynaxError();
                 e.SuppressKeyPress = true;
             }
-
         }
 
         private void GoToNextSynaxError()
@@ -4203,7 +4194,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string[] MakeDiffHtml(string before, string after)
         {
-
             before = before.Replace("<br />", "↲");
             after = after.Replace("<br />", "↲");
             before = before.Replace(Environment.NewLine, "↲");
@@ -4829,7 +4819,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
                         item.Checked = false;
                 }
-
             }
         }
 
@@ -4898,7 +4887,6 @@ namespace Nikse.SubtitleEdit.Forms
             else if (subtitleListView1.SelectedItems.Count == 2 &&
                      subtitleListView1.SelectedItems[0].Index == subtitleListView1.SelectedItems[1].Index - 1)
             {
-
                 mergeSelectedLinesToolStripMenuItem.Visible = true;
                 toolStripSeparator1.Visible = true;
             }
