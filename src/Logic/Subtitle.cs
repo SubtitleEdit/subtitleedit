@@ -62,6 +62,8 @@ namespace Nikse.SubtitleEdit.Logic
                 _paragraphs.Add(new Paragraph(p));
             }
             _wasLoadedWithFrameNumbers = subtitle.WasLoadedWithFrameNumbers;
+            Header = subtitle.Header;
+            Footer = subtitle.Footer;
         }
 
         public List<Paragraph> Paragraphs
