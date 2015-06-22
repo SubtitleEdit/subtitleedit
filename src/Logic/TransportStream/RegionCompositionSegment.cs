@@ -2,7 +2,6 @@
 
 namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
-
     public class RegionCompositionSegment
     {
         public int RegionId { get; set; }
@@ -49,5 +48,4 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             }
         }
     }
-
 }
