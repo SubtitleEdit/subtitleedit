@@ -457,7 +457,7 @@ namespace Nikse.SubtitleEdit.Core
 
             int italicBeginTagCount = Utilities.CountTagInText(text, beginTag);
             int italicEndTagCount = Utilities.CountTagInText(text, endTag);
-            int noOfLines = Utilities.CountTagInText(text, Environment.NewLine) + 1;
+            int noOfLines = Utilities.GetNumberOfLines(text);
             if (italicBeginTagCount + italicEndTagCount > 0)
             {
                 if (italicBeginTagCount == 1 && italicEndTagCount == 1 && text.IndexOf(beginTag, StringComparison.Ordinal) > text.IndexOf(endTag, StringComparison.Ordinal))
@@ -546,7 +546,7 @@ namespace Nikse.SubtitleEdit.Core
 
                     // - Foo</i> | - Foo.
                     // - Bar.    | - Foo.</i>
-                    if (!isFixed && Utilities.CountTagInText(cleanText, Environment.NewLine) == 1)
+                    if (!isFixed && Utilities.GetNumberOfLines(cleanText) == 2)
                     {
                         int newLineIndex = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                         if (newLineIndex > 0)
@@ -586,7 +586,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 // <i>Foo</i>
                 // <i>Bar</i>
-                if (italicBeginTagCount == 2 && italicEndTagCount == 2 && Utilities.CountTagInText(text, Environment.NewLine) == 1)
+                if (italicBeginTagCount == 2 && italicEndTagCount == 2 && Utilities.GetNumberOfLines(text) == 2)
                 {
                     int index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                     if (index > 0 && text.Length > index + (beginTag.Length + endTag.Length))
@@ -644,7 +644,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 //<i>- You think they're they gone?<i>
                 //<i>- That can't be.</i>
-                if ((italicBeginTagCount == 3 && italicEndTagCount == 1) && Utilities.CountTagInText(text, Environment.NewLine) == 1)
+                if ((italicBeginTagCount == 3 && italicEndTagCount == 1) && Utilities.GetNumberOfLines(text) == 2)
                 {
                     var newLineIdx = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                     var firstLine = text.Substring(0, newLineIdx).Trim();
