@@ -1,6 +1,5 @@
 ﻿namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
-
     public class RegionCompositionSegmentObject
     {
         public int ObjectId { get; set; }
@@ -11,5 +10,4 @@
         public int? ObjectForegroundPixelCode { get; set; }
         public int? ObjectBackgroundPixelCode { get; set; }
     }
-
 }

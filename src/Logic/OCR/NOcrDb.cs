@@ -8,7 +8,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 {
     public class NOcrDb
     {
-
         public string FileName { get; private set; }
         public List<NOcrChar> OcrCharacters = new List<NOcrChar>();
         public List<NOcrChar> OcrCharactersExpanded = new List<NOcrChar>();
@@ -150,7 +149,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         return oc;
                 }
             }
-
             return null;
         }
 
