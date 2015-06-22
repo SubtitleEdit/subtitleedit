@@ -3678,18 +3678,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void TextBoxSourceKeyDown(object sender, KeyEventArgs e)
         {
             ShowSourceLineNumber();
-            e.Handled = false;
-
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
             {
                 textBoxSource.SelectAll();
-                e.Handled = true;
                 e.SuppressKeyPress = true;
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
             {
                 textBoxSource.SelectionLength = 0;
-                e.Handled = true;
                 e.SuppressKeyPress = true;
             }
         }
