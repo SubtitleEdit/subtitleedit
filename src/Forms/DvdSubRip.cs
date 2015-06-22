@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
                     RipSubtitles(vobFileName, ms, i - 1); // Rip/demux subtitle vob packs
             }
             progressBarRip.Visible = false;
-            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
+            TaskbarList.SetProgressState(_taskbarFormHandle, TaskbarButtonProgressFlags.NoProgress);
             buttonStartRipping.Enabled = false;
             if (_abort)
             {
