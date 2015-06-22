@@ -104,21 +104,23 @@ namespace Nikse.SubtitleEdit.Logic
 
             try
             {
-                var rp = new RiffParser();
-                var dh = new RiffDecodeHeader(rp);
-                rp.OpenFile(fileName);
-                info.FileType = RiffParser.FromFourCC(rp.FileType);
-                if (RiffParser.ckidAVI == rp.FileType)
+                using (var rp = new RiffParser())
                 {
-                    dh.ProcessMainAVI();
-                    info.Width = dh.Width;
-                    info.Height = dh.Height;
-                    info.FramesPerSecond = dh.FrameRate;
-                    info.TotalFrames = dh.TotalFrames;
-                    info.TotalMilliseconds = dh.TotalMilliseconds;
-                    info.TotalSeconds = info.TotalMilliseconds / TimeCode.BaseUnit;
-                    info.VideoCodec = dh.VideoHandler;
-                    info.Success = true;
+                    var dh = new RiffDecodeHeader(rp);
+                    rp.OpenFile(fileName);
+                    info.FileType = RiffParser.FromFourCC(rp.FileType);
+                    if (RiffParser.ckidAVI == rp.FileType)
+                    {
+                        dh.ProcessMainAVI();
+                        info.Width = dh.Width;
+                        info.Height = dh.Height;
+                        info.FramesPerSecond = dh.FrameRate;
+                        info.TotalFrames = dh.TotalFrames;
+                        info.TotalMilliseconds = dh.TotalMilliseconds;
+                        info.TotalSeconds = info.TotalMilliseconds / TimeCode.BaseUnit;
+                        info.VideoCodec = dh.VideoHandler;
+                        info.Success = true;
+                    }
                 }
             }
             catch { }
