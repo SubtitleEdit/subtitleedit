@@ -650,8 +650,8 @@ namespace Nikse.SubtitleEdit.Core
                     var firstLine = text.Substring(0, newLineIdx).Trim();
                     var secondLine = text.Substring(newLineIdx).Trim();
 
-                    if (Utilities.StartsAndEndsWithTag(firstLine, beginTag, beginTag) && Utilities.StartsAndEndsWithTag(secondLine, beginTag, endTag) ||
-                        Utilities.StartsAndEndsWithTag(secondLine, beginTag, beginTag) && Utilities.StartsAndEndsWithTag(firstLine, beginTag, endTag))
+                    if ((Utilities.StartsAndEndsWithTag(firstLine, beginTag, beginTag) && Utilities.StartsAndEndsWithTag(secondLine, beginTag, endTag)) ||
+                        (Utilities.StartsAndEndsWithTag(secondLine, beginTag, beginTag) && Utilities.StartsAndEndsWithTag(firstLine, beginTag, endTag)))
                     {
                         text = text.Replace("<i>", string.Empty);
                         text = text.Replace("</i>", string.Empty);
