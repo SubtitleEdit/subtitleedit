@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Forms;
+using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -48,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             try
             {
-                System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo(languageId);
+                var ci = new System.Globalization.CultureInfo(languageId);
                 _languageId = ci.LCID;
             }
             catch
@@ -87,8 +88,8 @@ namespace Nikse.SubtitleEdit.Logic
             _wordApplicationType.InvokeMember("Quit", BindingFlags.InvokeMethod, null, _wordApplication, new object[] { saveChanges, originalFormat, routeDocument });
             try
             {
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(_wordDocument);
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(_wordApplication);
+                Marshal.ReleaseComObject(_wordDocument);
+                Marshal.ReleaseComObject(_wordApplication);
             }
             finally
             {
@@ -111,7 +112,7 @@ namespace Nikse.SubtitleEdit.Logic
             object spellingErrors = _wordDocumentType.InvokeMember("SpellingErrors", BindingFlags.GetProperty, null, _wordDocument, null);
             object spellingErrorsCount = spellingErrors.GetType().InvokeMember("Count", BindingFlags.GetProperty, null, spellingErrors, null);
             errorsBefore = int.Parse(spellingErrorsCount.ToString());
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(spellingErrors);
+            Marshal.ReleaseComObject(spellingErrors);
 
             // perform spell check
             object p = Missing.Value;
@@ -129,14 +130,14 @@ namespace Nikse.SubtitleEdit.Logic
             spellingErrors = _wordDocumentType.InvokeMember("SpellingErrors", BindingFlags.GetProperty, null, _wordDocument, null);
             spellingErrorsCount = spellingErrors.GetType().InvokeMember("Count", BindingFlags.GetProperty, null, spellingErrors, null);
             errorsAfter = int.Parse(spellingErrorsCount.ToString());
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(spellingErrors);
+            Marshal.ReleaseComObject(spellingErrors);
 
             // Get spell check text
             object resultText = range.GetType().InvokeMember("Text", BindingFlags.GetProperty, null, range, null);
             range.GetType().InvokeMember("Delete", BindingFlags.InvokeMethod, null, range, null);
 
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(words);
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(range);
+            Marshal.ReleaseComObject(words);
+            Marshal.ReleaseComObject(range);
 
             return resultText.ToString().TrimEnd(); // result needs a trimming at the end
         }
