@@ -1,6 +1,12 @@
 ﻿<OCRFixReplaceList>
 <!----- credit goes to: MilanRS [http://www.prijevodi-online.org] --------->
-  <WholeWords />
+  <WholeWords 
+    <Word from="neču" to="neću" />
+    <Word from="nečeš" to="nećeš" />
+    <Word from="neče" to="neće" />
+    <Word from="nečemo" to="nećemo" />
+    <Word from="nečete" to="nećete" />
+  </WholeWords>
   <PartialWords>
     <WordPart from="¤" to="o" />
     <WordPart from="vv" to="w" />
@@ -18,8 +24,6 @@
 <LinePart from="Jel' si ti" to="Da li si ti"/ >
 <LinePart from="jel si ti" to="da li si ti"/ >
 <LinePart from="jel' si ti" to="da li si ti"/ >
-<LinePart from="jel' si sigur" to="Jesi li sigur"/ >
-<LinePart from="jel si sigur" to="Jesi li sigur"/ >
 <LinePart from="jel ste " to="jeste li "/ >
 <LinePart from="Jel ste " to="Jeste li "/ >
 <LinePart from="jel' ste " to="jeste li "/ >
@@ -30,8 +34,8 @@
   <EndLines />
   <WholeLines />
   <RegularExpressions>
-    <RegEx find="([a-zžšðš])Ij([a-zžšðš])" replaceWith="$1lj$2" />
-    <RegEx find="([^a-zšðčšžA-ZŠÐčšŽ])Ij(ubav|ud|ut)" replaceWith="$1lj$2" />
+    <RegEx find="([a-zžšđš])Ij([a-zžšđš])" replaceWith="$1lj$2" />
+    <RegEx find="([^a-zšđčšžA-ZŠÐčšŽ])Ij(ubav|ud|ut)" replaceWith="$1lj$2" />
  
     <!-- kad ima razmak izmedju tagova </i> <i> -->
     <RegEx find="(&gt;) +(&lt;)" replaceWith="$1$2" />
@@ -65,7 +69,7 @@
     <RegEx find="\b0([A-Za-z])" replaceWith="O$1" />
  
     <!-- Brisanje crte - na početku 1. reda (i kada ima dva reda) -->
-    <RegEx find="\A- ?([A-ZŠšŽčÐa-zššžčð0-9&#132;&quot;']|\.{3})" replaceWith="$1" />
+    <RegEx find="\A- ?([A-ZŠšŽčÐa-zššžčđ0-9&#132;&quot;']|\.{3})" replaceWith="$1" />
     <RegEx find="\A(&lt;[i|b|u]&gt;)- ?" replaceWith="$1" />
     <RegEx find="  - " replaceWith=" -" />
     <!-- Brisanje razmaka iza crte - na početku 2. reda -->
@@ -90,23 +94,23 @@
     <RegEx find="([A-Z][a-z])eyj([a-z])" replaceWith="$1ey$2" />
  
     <!-- Sređuje zarez sa razmakom -->
-    <RegEx find="([A-ZŽščŠÐa-zžčššðá-úñä-ü&quot;]),([^(\s\n&lt;“,?!)])" replaceWith="$1, $2" />
+    <RegEx find="([A-ZŽščŠÐa-zžčššđá-úñä-ü&quot;]),([^(\s\n&lt;“,?!)])" replaceWith="$1, $2" />
     <RegEx find=" , " replaceWith=", " />
-    <RegEx find=" ,([a-zžšðčšA-ZŠšŽčÐ])" replaceWith=", $1" />
+    <RegEx find=" ,([a-zžšđčšA-ZŠšŽčÐ])" replaceWith=", $1" />
     <RegEx find=" ,$" replaceWith="," />
     <RegEx find="([?!])-" replaceWith="$1 -" />
     <!-- Space after last of some consecutive dots (eg. "...") -->
-    <RegEx find="([a-zšðčšž])(\.{3}|!)([a-zšðčšž])" replaceWith="$1$2 $3" />
+    <RegEx find="([a-zšđčšž])(\.{3}|!)([a-zšđčšž])" replaceWith="$1$2 $3" />
     <!-- Delete space after "..." that is at the beginning of the line. You may delete this line if you don't like it -->
     <!--  <RegEx find="^\.{3} " replaceWith="..." /> -->
-    <RegEx find="([a-zžšðčšA-ZŠšŽčÐ]) \.{3} " replaceWith="$1... " />  <!-- tekst ... tekst mijenja u tekst... tekst -->
+    <RegEx find="([a-zžšđčšA-ZŠšŽčÐ]) \.{3} " replaceWith="$1... " />  <!-- tekst ... tekst mijenja u tekst... tekst -->
     <RegEx find="(\S)\. &quot;" replaceWith="$1.&quot;" />
     <RegEx find="&quot; \." replaceWith="&quot;." />
     <RegEx find="(\S\.{3}) &quot;(\s|$)" replaceWith="$1&quot;$2" />
     <RegEx find=" \.{3}$" replaceWith="..." />
-    <RegEx find="([a-zžščðš])( \.{3}|\.{2}$)" replaceWith="$1..." />
+    <RegEx find="([a-zžščđš])( \.{3}|\.{2}$)" replaceWith="$1..." />
  
-    <RegEx find="([a-zžšðšA-ZŽŠÐš])\(" replaceWith="$1 (" /> <!-- Razmak ispred zagrade -->
+    <RegEx find="([a-zžšđšA-ZŽŠÐš])\(" replaceWith="$1 (" /> <!-- Razmak ispred zagrade -->
     <RegEx find="\?([A-ZŽŠÐš])" replaceWith="? $1" /> <!-- Razmak iza upitnika -->
     <RegEx find="(^|&gt;)\.{3} ([A-ZŽščŠÐ])" replaceWith="$1...$2" />
     <RegEx find="^&quot;\.{3} " replaceWith="&quot;" /> <!-- Brise ... kad je na poc. reda "... -->
@@ -135,7 +139,7 @@
     <RegEx find="d\. o\.o\." replaceWith="d.o.o." />
  
     <!-- Kad red počinje sa ...pa malo slovo -->
-    <!-- <RegEx find="^\.{3}([a-zšðčšž&quot;&lt;])" replaceWith="$1" /> -->
+    <!-- <RegEx find="^\.{3}([a-zšđčšž&quot;&lt;])" replaceWith="$1" /> -->
  
     <!-- <RegEx find=" ([?!.])" replaceWith="$1" /> -->
   </RegularExpressions>
