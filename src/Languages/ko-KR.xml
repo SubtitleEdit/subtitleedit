@@ -356,6 +356,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <TranslatorsName>번역자 이름</TranslatorsName>
     <SubtitleListReferenceCode>자막 목록 참조 코드</SubtitleListReferenceCode>
     <CountryOfOrigin>제작 국가</CountryOfOrigin>
+    <TimeCodeStatus>타임코드 상태</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>타임코드: 프로그램의 시작</TimeCodeStartOfProgramme>
     <RevisionNumber>버전 번호</RevisionNumber>
     <MaxNoOfDisplayableChars>줄 당 최대 문자수</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>최대 줄 수</MaxNumberOfDisplayableRows>
@@ -419,6 +421,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ShadowWidth>그림자 폭</ShadowWidth>
     <Transparency>투명도</Transparency>
     <ImageFormat>이미지 형식</ImageFormat>
+    <FullFrameImage>전체 이미지</FullFrameImage>
     <SimpleRendering>간단한 렌더링</SimpleRendering>
     <AntiAliasingWithTransparency>투명하게 앤티 앨리어싱</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
@@ -1272,8 +1275,13 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ErrorLoadRar>이 파일은 압축된 .rar 파일 같습니다. Subtitle Edit는 압축된 파일을 열 수 없습니다.</ErrorLoadRar>
     <ErrorLoadZip>이 파일은 압축된 .zip 파일 같습니다. Subtitle Edit는 압축된 파일을 열 수 없습니다.</ErrorLoadZip>
     <ErrorLoadPng>이 파일은 PNG 이미지 파일 같습니다. Subtitle Edit는 PNG 파일을 열 수 없습니다.</ErrorLoadPng>
+    <ErrorLoadJpg>이 파일은 JPG 이미지 파일 같습니다. Subtitle Edit는 JPG 파일을 열 수 없습니다.</ErrorLoadJpg>
     <ErrorLoadSrr>이 파일은 ReScene.srr 파일인 것 같습니다 - 자막 파일이 아닙니다.</ErrorLoadSrr>
     <ErrorLoadTorrent>이 파일은 비트토렌트 파일인 것 같습니다 - 자막 파일은 아닙니다.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>죄송합니다. 이 파일은 바이너리 0만 포함되어 있습니다!
+
+만약 귀하께서 Subtitle Edit로 이 파일을 편집했으면, 메뉴 항목의 "파일" -&gt; "자동 백업된 자막 불러오기" 옵션을 통해 백업된 파일을 찾을 수 있을 것입니다.</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>디렉토리 드롭은 여기서 지원되지 않습니다.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>암호화된 VobSub 콘텐츠는 지원되지 않습니다.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Blu-ray sup 파일은 여기서 지원되지 않습니다.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>DVD sup 파일은 여기서 지원되지 않습니다.</NoSupportHereDvdSup>
@@ -1413,12 +1421,14 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   </PluginsGet>
   <RegularExpressionContextMenu>
     <WordBoundary>단어 경계 (\b)</WordBoundary>
-    <NonWordBoundary>비 단어 경계 (\B)</NonWordBoundary>
+    <NonWordBoundary>단어 경계 없이 (\B)</NonWordBoundary>
     <NewLine>새로운 줄 (\r\n)</NewLine>
     <NewLineShort>새로운 줄 (\n)</NewLineShort>
     <AnyDigit>모든 숫자 (\d)</AnyDigit>
+    <NonDigit>숫자 없이 (\D)</NonDigit>
     <AnyCharacter>모든 문자 (.)</AnyCharacter>
     <AnyWhitespace>모든 공백 (\s)</AnyWhitespace>
+    <NonSpaceCharacter>공백 문자 없이 (\S)</NonSpaceCharacter>
     <ZeroOrMore>0개 이상 (*)</ZeroOrMore>
     <OneOrMore>하나 이상 (+)</OneOrMore>
     <InCharacterGroup>문자 그룹 ([test])</InCharacterGroup>
@@ -2025,6 +2035,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <InspectCompareMatchesForCurrentImage>현재 이미지에 대한 일치 항목 비교 검사...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>마지막 이미지 추가 비교 편집...</EditLastAdditions>
     <SetUnitalicFactor>기울임꼴 인자 설정...</SetUnitalicFactor>
+    <DiscardTitle>OCR의 변경 사항을 폐기하시겠습니까?</DiscardTitle>
+    <DiscardText>현재 OCR 세션의 변경 사항을 폐기하시겠습니까?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub의 이미지 자막을 텍스트로...</Title>
