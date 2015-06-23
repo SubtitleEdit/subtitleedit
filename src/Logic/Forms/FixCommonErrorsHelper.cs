@@ -203,11 +203,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         public static string FixHyphensRemove(Subtitle subtitle, int i)
         {
             Paragraph p = subtitle.Paragraphs[i];
-            string text = p.Text;
+            var text = p.Text.TrimStart();
 
-            if (text.TrimStart().StartsWith('-') ||
-                text.TrimStart().StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) ||
-                text.TrimStart().StartsWith("<i> -", StringComparison.OrdinalIgnoreCase) ||
+            if (text.StartsWith('-') || text.StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) ||
+                text.StartsWith("<i> -", StringComparison.OrdinalIgnoreCase) ||
                 text.Contains(Environment.NewLine + '-') ||
                 text.Contains(Environment.NewLine + " -") ||
                 text.Contains(Environment.NewLine + "<i>-") ||
