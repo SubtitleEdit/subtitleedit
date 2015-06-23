@@ -1466,7 +1466,6 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     }
                 }
             }
-
             return new SsaStyle { Name = styleName };
         }
 
