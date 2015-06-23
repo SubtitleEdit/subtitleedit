@@ -852,7 +852,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = string.Format("{1}{0}|", p.Text, SplitterString);
                     if (!overQuota)
                     {
-                        if ((Utilities.UrlEncode(sb + text)).Length >= textMaxSize)
+                        if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
                         {
                             try
                             {
