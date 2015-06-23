@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
             return splitTimeUpDownAdjust.TimeCode.TimeSpan;
         }
 
-        private void ButtonFixClick(object sender, EventArgs e)
+        private void ButtonSplitClick(object sender, EventArgs e)
         {
             var splitTime = GetSplitTime();
             if (splitTime.TotalSeconds > 0)
