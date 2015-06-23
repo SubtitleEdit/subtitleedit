@@ -102,13 +102,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(string time)
         {
             //00:00:07:12
-            string hour = time.Substring(0, 2);
-            string minutes = time.Substring(2, 2);
-            string seconds = time.Substring(4, 2);
-            string frames = time.Substring(6, 2);
+            var hour = time.Substring(0, 2);
+            var minutes = time.Substring(2, 2);
+            var seconds = time.Substring(4, 2);
+            var frames = time.Substring(6, 2);
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
+            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
         }
 
     }
