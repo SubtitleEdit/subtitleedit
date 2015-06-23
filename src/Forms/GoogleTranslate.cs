@@ -214,12 +214,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph p = _subtitle.Paragraphs[i];
                     string text = p.Text.Trim();
-                    if (text.StartsWith("<i>") && text.EndsWith("</i>") && text.Contains("</i>" + Environment.NewLine + "<i>") && Utilities.GetNumberOfLines(text) == 2 && Utilities.CountTagInText(text, "<i>") == 1)
+                    if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && text.Contains("</i>" + Environment.NewLine + "<i>") && Utilities.GetNumberOfLines(text) == 2 && Utilities.CountTagInText(text, "<i>") == 1)
                     {
                         _formattingTypes[i] = FormattingType.ItalicTwoLines;
                         text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic);
                     }
-                    else if (text.StartsWith("<i>") && text.EndsWith("</i>") && Utilities.CountTagInText(text, "<i>") == 1)
+                    else if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1)
                     {
                         _formattingTypes[i] = FormattingType.Italic;
                         text = text.Substring(3, text.Length - 7);
@@ -292,9 +292,9 @@ namespace Nikse.SubtitleEdit.Forms
                     cleanText = cleanText.Replace("</ I>", "</i>");
                     cleanText = cleanText.Replace("</I>", "</i>");
                     cleanText = cleanText.Replace("< i >", "<i>");
-                    if (cleanText.StartsWith("<i> "))
+                    if (cleanText.StartsWith("<i> ", StringComparison.Ordinal))
                         cleanText = cleanText.Remove(3, 1);
-                    if (cleanText.EndsWith(" </i>"))
+                    if (cleanText.EndsWith(" </i>", StringComparison.Ordinal))
                         cleanText = cleanText.Remove(cleanText.Length - 5, 1);
                     cleanText = cleanText.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
                     cleanText = cleanText.Replace(" </i>" + Environment.NewLine, "</i>" + Environment.NewLine);
@@ -531,27 +531,27 @@ namespace Nikse.SubtitleEdit.Forms
         {
             comboBox.Items.Add(new ComboBoxItem("AFRIKAANS", "af"));
             comboBox.Items.Add(new ComboBoxItem("ALBANIAN", "sq"));
-            //            comboBox.Items.Add(new ComboBoxItem("AMHARIC" , "am"));
+            // comboBox.Items.Add(new ComboBoxItem("AMHARIC" , "am"));
             comboBox.Items.Add(new ComboBoxItem("ARABIC", "ar"));
             comboBox.Items.Add(new ComboBoxItem("ARMENIAN", "hy"));
             comboBox.Items.Add(new ComboBoxItem("AZERBAIJANI", "az"));
             comboBox.Items.Add(new ComboBoxItem("BASQUE", "eu"));
             comboBox.Items.Add(new ComboBoxItem("BELARUSIAN", "be"));
             comboBox.Items.Add(new ComboBoxItem("BENGALI", "bn"));
-            //            comboBox.Items.Add(new ComboBoxItem("BIHARI" , "bh"));
+            // comboBox.Items.Add(new ComboBoxItem("BIHARI" , "bh"));
             comboBox.Items.Add(new ComboBoxItem("BOSNIAN", "bs"));
             comboBox.Items.Add(new ComboBoxItem("BULGARIAN", "bg"));
-            //            comboBox.Items.Add(new ComboBoxItem("BURMESE" , "my"));
+            // comboBox.Items.Add(new ComboBoxItem("BURMESE" , "my"));
             comboBox.Items.Add(new ComboBoxItem("CATALAN", "ca"));
             comboBox.Items.Add(new ComboBoxItem("CEBUANO", "ceb"));
-            //            comboBox.Items.Add(new ComboBoxItem("CHEROKEE" , "chr"));
+            // comboBox.Items.Add(new ComboBoxItem("CHEROKEE" , "chr"));
             comboBox.Items.Add(new ComboBoxItem("CHINESE", "zh"));
             comboBox.Items.Add(new ComboBoxItem("CHINESE_SIMPLIFIED", "zh-CN"));
             comboBox.Items.Add(new ComboBoxItem("CHINESE_TRADITIONAL", "zh-TW"));
             comboBox.Items.Add(new ComboBoxItem("CROATIAN", "hr"));
             comboBox.Items.Add(new ComboBoxItem("CZECH", "cs"));
             comboBox.Items.Add(new ComboBoxItem("DANISH", "da"));
-            //            comboBox.Items.Add(new ComboBoxItem("DHIVEHI" , "dv"));
+            // comboBox.Items.Add(new ComboBoxItem("DHIVEHI" , "dv"));
             comboBox.Items.Add(new ComboBoxItem("DUTCH", "nl"));
             comboBox.Items.Add(new ComboBoxItem("ENGLISH", "en"));
             comboBox.Items.Add(new ComboBoxItem("ESPERANTO", "eo"));
@@ -563,7 +563,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("GEORGIAN", "ka"));
             comboBox.Items.Add(new ComboBoxItem("GERMAN", "de"));
             comboBox.Items.Add(new ComboBoxItem("GREEK", "el"));
-            //            comboBox.Items.Add(new ComboBoxItem("GUARANI" , "gn"));
+            // comboBox.Items.Add(new ComboBoxItem("GUARANI" , "gn"));
             comboBox.Items.Add(new ComboBoxItem("GUJARATI", "gu"));
             comboBox.Items.Add(new ComboBoxItem("HAITIAN CREOLE", "ht"));
             comboBox.Items.Add(new ComboBoxItem("HAUSA", "ha"));
@@ -575,16 +575,16 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("IGBO", "ig"));
             comboBox.Items.Add(new ComboBoxItem("INDONESIAN", "id"));
             comboBox.Items.Add(new ComboBoxItem("IRISH", "ga"));
-            //            comboBox.Items.Add(new ComboBoxItem("INUKTITUT" , "iu"));
+            // comboBox.Items.Add(new ComboBoxItem("INUKTITUT" , "iu"));
             comboBox.Items.Add(new ComboBoxItem("ITALIAN", "it"));
             comboBox.Items.Add(new ComboBoxItem("JAPANESE", "ja"));
             comboBox.Items.Add(new ComboBoxItem("JAVANESE", "jw"));
             comboBox.Items.Add(new ComboBoxItem("KANNADA", "kn"));
-            //            comboBox.Items.Add(new ComboBoxItem("KAZAKH" , "kk"));
+            // comboBox.Items.Add(new ComboBoxItem("KAZAKH" , "kk"));
             comboBox.Items.Add(new ComboBoxItem("KHMER", "km"));
             comboBox.Items.Add(new ComboBoxItem("KOREAN", "ko"));
-            //            comboBox.Items.Add(new ComboBoxItem("KURDISH", "ku"));
-            //            comboBox.Items.Add(new ComboBoxItem("KYRGYZ", "ky"));
+            // comboBox.Items.Add(new ComboBoxItem("KURDISH", "ku"));
+            // comboBox.Items.Add(new ComboBoxItem("KYRGYZ", "ky"));
             comboBox.Items.Add(new ComboBoxItem("LAO", "lo"));
             comboBox.Items.Add(new ComboBoxItem("LATIN", "la"));
             comboBox.Items.Add(new ComboBoxItem("LATVIAN", "lv"));
@@ -598,17 +598,17 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("MONGOLIAN", "mn"));
             comboBox.Items.Add(new ComboBoxItem("NEPALI", "ne"));
             comboBox.Items.Add(new ComboBoxItem("NORWEGIAN", "no"));
-            //            comboBox.Items.Add(new ComboBoxItem("ORIYA" , "or"));
-            //            comboBox.Items.Add(new ComboBoxItem("PASHTO" , "ps"));
+            // comboBox.Items.Add(new ComboBoxItem("ORIYA" , "or"));
+            // comboBox.Items.Add(new ComboBoxItem("PASHTO" , "ps"));
             comboBox.Items.Add(new ComboBoxItem("PERSIAN", "fa"));
             comboBox.Items.Add(new ComboBoxItem("POLISH", "pl"));
             comboBox.Items.Add(new ComboBoxItem("PORTUGUESE", "pt"));
             comboBox.Items.Add(new ComboBoxItem("PUNJABI", "pa"));
             comboBox.Items.Add(new ComboBoxItem("ROMANIAN", "ro"));
             comboBox.Items.Add(new ComboBoxItem("RUSSIAN", "ru"));
-            //            comboBox.Items.Add(new ComboBoxItem("SANSKRIT" , "sa"));
+            // comboBox.Items.Add(new ComboBoxItem("SANSKRIT" , "sa"));
             comboBox.Items.Add(new ComboBoxItem("SERBIAN", "sr"));
-            //            comboBox.Items.Add(new ComboBoxItem("SINDHI" , "sd"));
+            // comboBox.Items.Add(new ComboBoxItem("SINDHI" , "sd"));
             comboBox.Items.Add(new ComboBoxItem("SESOTHO", "st"));
             comboBox.Items.Add(new ComboBoxItem("SINHALA", "si"));
             comboBox.Items.Add(new ComboBoxItem("SLOVAK", "sk"));
@@ -617,17 +617,17 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("SPANISH", "es"));
             comboBox.Items.Add(new ComboBoxItem("SWAHILI", "sw"));
             comboBox.Items.Add(new ComboBoxItem("SWEDISH", "sv"));
-            //            comboBox.Items.Add(new ComboBoxItem("TAJIK" , "tg"));
+            // comboBox.Items.Add(new ComboBoxItem("TAJIK" , "tg"));
             comboBox.Items.Add(new ComboBoxItem("TAMIL", "ta"));
-            //            comboBox.Items.Add(new ComboBoxItem("TAGALOG" , "tl"));
+            // comboBox.Items.Add(new ComboBoxItem("TAGALOG" , "tl"));
             comboBox.Items.Add(new ComboBoxItem("TELUGU", "te"));
             comboBox.Items.Add(new ComboBoxItem("THAI", "th"));
-            //            comboBox.Items.Add(new ComboBoxItem("TIBETAN" , "bo"));
+            // comboBox.Items.Add(new ComboBoxItem("TIBETAN" , "bo"));
             comboBox.Items.Add(new ComboBoxItem("TURKISH", "tr"));
             comboBox.Items.Add(new ComboBoxItem("UKRAINIAN", "uk"));
             comboBox.Items.Add(new ComboBoxItem("URDU", "ur"));
             comboBox.Items.Add(new ComboBoxItem("UZBEK", "uz"));
-            //            comboBox.Items.Add(new ComboBoxItem("UIGHUR" , "ug"));
+            // comboBox.Items.Add(new ComboBoxItem("UIGHUR" , "ug"));
             comboBox.Items.Add(new ComboBoxItem("VIETNAMESE", "vi"));
             comboBox.Items.Add(new ComboBoxItem("WELSH", "cy"));
             comboBox.Items.Add(new ComboBoxItem("YIDDISH", "yi"));
@@ -659,65 +659,28 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if ((comboBoxFrom.SelectedItem as ComboBoxItem).Value == "en")
             {
-                var reg = new Regex("\\bI'm ");
-                s = reg.Replace(s, "I am ");
-
-                reg = new Regex("\\bI've ");
-                s = reg.Replace(s, "I have ");
-
-                reg = new Regex("\\bI'll ");
-                s = reg.Replace(s, "I will ");
-
-                reg = new Regex("\\bI'd "); // had or would???
-                s = reg.Replace(s, "I would ");
-
-                reg = new Regex("\\b(I|i)t's ");
-                s = reg.Replace(s, "$1t is ");
-
-                reg = new Regex("\\b(Y|y)ou're ");
-                s = reg.Replace(s, "$1ou are ");
-
-                reg = new Regex("\\b(Y|y)ou've ");
-                s = reg.Replace(s, "$1ou have ");
-
-                reg = new Regex("\\b(Y|y)ou'll ");
-                s = reg.Replace(s, "$1ou will ");
-
-                reg = new Regex("\\b(Y|y)ou'd "); // had or would???
-                s = reg.Replace(s, "$1ou would ");
-
-                reg = new Regex("\\b(H|h)e's ");
-                s = reg.Replace(s, "$1e is ");
-
-                reg = new Regex("\\b(S|s)he's ");
-                s = reg.Replace(s, "$1he is ");
-
-                reg = new Regex("\\b(W|w)e're ");
-                s = reg.Replace(s, "$1e are ");
-
-                reg = new Regex("\\bwon't ");
-                s = reg.Replace(s, "will not ");
-
-                reg = new Regex("\\b(T|t)hey're ");
-                s = reg.Replace(s, "$1hey are ");
-
-                reg = new Regex("\\b(W|w)ho's ");
-                s = reg.Replace(s, "$1ho is ");
-
-                reg = new Regex("\\b(T|t)hat's ");
-                s = reg.Replace(s, "$1hat is ");
-
-                reg = new Regex("\\b(W|w)hat's ");
-                s = reg.Replace(s, "$1hat is ");
-
-                reg = new Regex("\\b(W|w)here's ");
-                s = reg.Replace(s, "$1here is ");
-
-                reg = new Regex("\\b(W|w)ho's ");
-                s = reg.Replace(s, "$1ho is ");
-
-                reg = new Regex("\\B'(C|c)ause "); // \b (word boundry) does not workig with '
-                s = reg.Replace(s, "$1ecause ");
+                s = Regex.Replace(s, @"\bI'm ", "I am ");
+                s = Regex.Replace(s, @"\bI've ", "I have ");
+                s = Regex.Replace(s, @"\bI'll ", "I will ");
+                s = Regex.Replace(s, @"\bI'd ", "I would ");  // had or would???
+                s = Regex.Replace(s, @"\b(I|i)t's ", "$1t is ");
+                s = Regex.Replace(s, @"\b(Y|y)ou're ", "$1ou are ");
+                s = Regex.Replace(s, @"\b(Y|y)ou've ", "$1ou have ");
+                s = Regex.Replace(s, @"\b(Y|y)ou'll ", "$1ou will ");
+                s = Regex.Replace(s, @"\b(Y|y)ou'd ", "$1ou would "); // had or would???
+                s = Regex.Replace(s, @"\b(H|h)e's ", "$1e is ");
+                s = Regex.Replace(s, @"\b(S|s)he's ", "$1he is ");
+                s = Regex.Replace(s, @"\b(W|w)e're ", "$1e are ");
+                s = Regex.Replace(s, @"\bwon't ", "will not ");
+                s = Regex.Replace(s, @"\b(W|w)e're ", "$1e are ");
+                s = Regex.Replace(s, @"\bwon't ", "will not ");
+                s = Regex.Replace(s, @"\b(T|t)hey're ", "$1hey are ");
+                s = Regex.Replace(s, @"\b(W|w)ho's ", "$1ho is ");
+                s = Regex.Replace(s, @"\b(T|t)hat's ", "$1hat is ");
+                s = Regex.Replace(s, @"\b(W|w)hat's ", "$1hat is ");
+                s = Regex.Replace(s, @"\b(W|w)here's ", "$1here is ");
+                s = Regex.Replace(s, @"\b(W|w)ho's ", "$1ho is ");
+                s = Regex.Replace(s, @"\B'(C|c)ause ", "$1ecause "); // \b (word boundry) does not workig with '
             }
             return s;
         }
@@ -889,7 +852,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = string.Format("{1}{0}|", p.Text, SplitterString);
                     if (!overQuota)
                     {
-                        if ((Utilities.UrlEncode(sb + text)).Length >= textMaxSize)
+                        if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
                         {
                             try
                             {
