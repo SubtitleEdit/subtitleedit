@@ -88,8 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (start >= 0 && end > start)
                 {
                     start++;
-                    name = name.Substring(start, end - start);
-                    return name;
+                    return name.Substring(start, end - start);
                 }
                 return null;
             }

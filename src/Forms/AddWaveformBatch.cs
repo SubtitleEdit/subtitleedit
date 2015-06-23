@@ -94,11 +94,11 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                 }
 
-                var fi = new FileInfo(fileName);
+                var file = new FileInfo(fileName);
                 var item = new ListViewItem(fileName);
-                item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+                item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(file.Length));
 
-                item.SubItems.Add(Path.GetExtension(fileName));
+                item.SubItems.Add(file.Extension);
                 item.SubItems.Add("-");
 
                 listViewInputFiles.Items.Add(item);

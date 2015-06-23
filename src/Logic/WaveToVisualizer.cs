@@ -384,8 +384,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void Close()
         {
-            if (_stream != null)
-                _stream.Close();
+            Dispose();
         }
 
         //////////////////////////////////////// SPECTRUM ///////////////////////////////////////////////////////////
