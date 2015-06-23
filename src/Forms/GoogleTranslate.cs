@@ -659,65 +659,28 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if ((comboBoxFrom.SelectedItem as ComboBoxItem).Value == "en")
             {
-                var reg = new Regex("\\bI'm ");
-                s = reg.Replace(s, "I am ");
-
-                reg = new Regex("\\bI've ");
-                s = reg.Replace(s, "I have ");
-
-                reg = new Regex("\\bI'll ");
-                s = reg.Replace(s, "I will ");
-
-                reg = new Regex("\\bI'd "); // had or would???
-                s = reg.Replace(s, "I would ");
-
-                reg = new Regex("\\b(I|i)t's ");
-                s = reg.Replace(s, "$1t is ");
-
-                reg = new Regex("\\b(Y|y)ou're ");
-                s = reg.Replace(s, "$1ou are ");
-
-                reg = new Regex("\\b(Y|y)ou've ");
-                s = reg.Replace(s, "$1ou have ");
-
-                reg = new Regex("\\b(Y|y)ou'll ");
-                s = reg.Replace(s, "$1ou will ");
-
-                reg = new Regex("\\b(Y|y)ou'd "); // had or would???
-                s = reg.Replace(s, "$1ou would ");
-
-                reg = new Regex("\\b(H|h)e's ");
-                s = reg.Replace(s, "$1e is ");
-
-                reg = new Regex("\\b(S|s)he's ");
-                s = reg.Replace(s, "$1he is ");
-
-                reg = new Regex("\\b(W|w)e're ");
-                s = reg.Replace(s, "$1e are ");
-
-                reg = new Regex("\\bwon't ");
-                s = reg.Replace(s, "will not ");
-
-                reg = new Regex("\\b(T|t)hey're ");
-                s = reg.Replace(s, "$1hey are ");
-
-                reg = new Regex("\\b(W|w)ho's ");
-                s = reg.Replace(s, "$1ho is ");
-
-                reg = new Regex("\\b(T|t)hat's ");
-                s = reg.Replace(s, "$1hat is ");
-
-                reg = new Regex("\\b(W|w)hat's ");
-                s = reg.Replace(s, "$1hat is ");
-
-                reg = new Regex("\\b(W|w)here's ");
-                s = reg.Replace(s, "$1here is ");
-
-                reg = new Regex("\\b(W|w)ho's ");
-                s = reg.Replace(s, "$1ho is ");
-
-                reg = new Regex("\\B'(C|c)ause "); // \b (word boundry) does not workig with '
-                s = reg.Replace(s, "$1ecause ");
+                s = Regex.Replace(s, @"\bI'm ", "I am ");
+                s = Regex.Replace(s, @"\bI've ", "I have ");
+                s = Regex.Replace(s, @"\bI'll ", "I will ");
+                s = Regex.Replace(s, @"\bI'd ", "I would ");  // had or would???
+                s = Regex.Replace(s, @"\b(I|i)t's ", "$1t is ");
+                s = Regex.Replace(s, @"\b(Y|y)ou're ", "$1ou are ");
+                s = Regex.Replace(s, @"\b(Y|y)ou've ", "$1ou have ");
+                s = Regex.Replace(s, @"\b(Y|y)ou'll ", "$1ou will ");
+                s = Regex.Replace(s, @"\b(Y|y)ou'd ", "$1ou would "); // had or would???
+                s = Regex.Replace(s, @"\b(H|h)e's ", "$1e is ");
+                s = Regex.Replace(s, @"\b(S|s)he's ", "$1he is ");
+                s = Regex.Replace(s, @"\b(W|w)e're ", "$1e are ");
+                s = Regex.Replace(s, @"\bwon't ", "will not ");
+                s = Regex.Replace(s, @"\b(W|w)e're ", "$1e are ");
+                s = Regex.Replace(s, @"\bwon't ", "will not ");
+                s = Regex.Replace(s, @"\b(T|t)hey're ", "$1hey are ");
+                s = Regex.Replace(s, @"\b(W|w)ho's ", "$1ho is ");
+                s = Regex.Replace(s, @"\b(T|t)hat's ", "$1hat is ");
+                s = Regex.Replace(s, @"\b(W|w)hat's ", "$1hat is ");
+                s = Regex.Replace(s, @"\b(W|w)here's ", "$1here is ");
+                s = Regex.Replace(s, @"\b(W|w)ho's ", "$1ho is ");
+                s = Regex.Replace(s, @"\B'(C|c)ause ", "$1ecause "); // \b (word boundry) does not workig with '
             }
             return s;
         }
