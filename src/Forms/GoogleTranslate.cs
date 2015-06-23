@@ -214,12 +214,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph p = _subtitle.Paragraphs[i];
                     string text = p.Text.Trim();
-                    if (text.StartsWith("<i>") && text.EndsWith("</i>") && text.Contains("</i>" + Environment.NewLine + "<i>") && Utilities.GetNumberOfLines(text) == 2 && Utilities.CountTagInText(text, "<i>") == 1)
+                    if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && text.Contains("</i>" + Environment.NewLine + "<i>") && Utilities.GetNumberOfLines(text) == 2 && Utilities.CountTagInText(text, "<i>") == 1)
                     {
                         _formattingTypes[i] = FormattingType.ItalicTwoLines;
                         text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic);
                     }
-                    else if (text.StartsWith("<i>") && text.EndsWith("</i>") && Utilities.CountTagInText(text, "<i>") == 1)
+                    else if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1)
                     {
                         _formattingTypes[i] = FormattingType.Italic;
                         text = text.Substring(3, text.Length - 7);
@@ -292,9 +292,9 @@ namespace Nikse.SubtitleEdit.Forms
                     cleanText = cleanText.Replace("</ I>", "</i>");
                     cleanText = cleanText.Replace("</I>", "</i>");
                     cleanText = cleanText.Replace("< i >", "<i>");
-                    if (cleanText.StartsWith("<i> "))
+                    if (cleanText.StartsWith("<i> ", StringComparison.Ordinal))
                         cleanText = cleanText.Remove(3, 1);
-                    if (cleanText.EndsWith(" </i>"))
+                    if (cleanText.EndsWith(" </i>", StringComparison.Ordinal))
                         cleanText = cleanText.Remove(cleanText.Length - 5, 1);
                     cleanText = cleanText.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
                     cleanText = cleanText.Replace(" </i>" + Environment.NewLine, "</i>" + Environment.NewLine);
