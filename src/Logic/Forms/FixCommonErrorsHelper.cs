@@ -279,7 +279,12 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             else if (text.StartsWith("<font ", StringComparison.Ordinal))
             {
                 var prev = subtitle.GetParagraphOrDefault(i - 1);
-                if (prev == null || !HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
+                var prevText = string.Empty;
+
+                if (prev != null)
+                    prevText = HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd();
+
+                if (prev == null || !prevText.EndsWith('-') || prevText.EndsWith("--", StringComparison.Ordinal))
                 {
                     var st = new StripableText(text);
                     if (st.Pre.EndsWith('-') || st.Pre.EndsWith("- ", StringComparison.Ordinal))
