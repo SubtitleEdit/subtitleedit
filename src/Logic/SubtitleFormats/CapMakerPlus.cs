@@ -74,31 +74,31 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     };
 
                     string text = p.Text;
-                    if (text.StartsWith("{\\a6}"))
+                    if (text.StartsWith("{\\a6}", StringComparison.Ordinal))
                     {
                         text = p.Text.Remove(0, 5);
                         buffer[7] = 0; // align top
                     }
-                    else if (text.StartsWith("{\\a1}"))
+                    else if (text.StartsWith("{\\a1}", StringComparison.Ordinal))
                     {
                         text = p.Text.Remove(0, 5);
                         buffer[2] = 0; // align left
                         buffer[3] = 0; // align left
                     }
-                    else if (text.StartsWith("{\\a3}"))
+                    else if (text.StartsWith("{\\a3}", StringComparison.Ordinal))
                     {
                         text = p.Text.Remove(0, 5);
                         buffer[2] = 0; // align right
                         buffer[3] = 0xc0; // align right
                     }
-                    else if (text.StartsWith("{\\a5}"))
+                    else if (text.StartsWith("{\\a5}", StringComparison.Ordinal))
                     {
                         text = p.Text.Remove(0, 5);
                         buffer[7] = 0; // align top
                         buffer[2] = 0; // align left
                         buffer[3] = 0; // align left
                     }
-                    else if (text.StartsWith("{\\a7}"))
+                    else if (text.StartsWith("{\\a7}", StringComparison.Ordinal))
                     {
                         text = p.Text.Remove(0, 5);
                         buffer[7] = 0; // align top
@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         buffer[3] = 0xc0; // align right
                     }
 
-                    if (text.StartsWith("<i>") && text.EndsWith("</i>"))
+                    if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal))
                         buffer[10] = 3;
                     fs.Write(buffer, 0, buffer.Length);
 
