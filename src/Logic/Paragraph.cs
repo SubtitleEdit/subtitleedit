@@ -45,12 +45,17 @@ namespace Nikse.SubtitleEdit.Logic
 
         public bool NewSection { get; set; }
 
+        private string GenerateId()
+        {
+            return Guid.NewGuid().ToString();
+        }
+
         public Paragraph()
         {
             StartTime = TimeCode.FromSeconds(0);
             EndTime = TimeCode.FromSeconds(0);
             Text = string.Empty;
-            ID = Guid.NewGuid().ToString();
+            ID = GenerateId();
         }
 
         public Paragraph(TimeCode startTime, TimeCode endTime, string text)
@@ -58,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic
             StartTime = startTime;
             EndTime = endTime;
             Text = text;
-            ID = Guid.NewGuid().ToString();
+            ID = GenerateId();
         }
 
         public Paragraph(Paragraph paragraph)
@@ -88,7 +93,7 @@ namespace Nikse.SubtitleEdit.Logic
             StartFrame = startFrame;
             EndFrame = endFrame;
             Text = text;
-            ID = Guid.NewGuid().ToString();
+            ID = GenerateId();
         }
 
         public Paragraph(string text, double startTotalMilliseconds, double endTotalMilliseconds)
@@ -96,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic
             StartTime = new TimeCode(startTotalMilliseconds);
             EndTime = new TimeCode(endTotalMilliseconds);
             Text = text;
-            ID = Guid.NewGuid().ToString();
+            ID = GenerateId();
         }
 
         internal void Adjust(double factor, double adjust)
