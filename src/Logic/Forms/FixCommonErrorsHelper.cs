@@ -344,9 +344,9 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         public static string FixHyphensAdd(Subtitle subtitle, int i, string language)
         {
             Paragraph p = subtitle.Paragraphs[i];
-            string text = p.Text;
-            var textCache = HtmlUtil.RemoveHtmlTags(text.TrimStart());
-            if (textCache.StartsWith('-') || textCache.Contains(Environment.NewLine + "-"))
+            var text = p.Text;
+            var noTagText = HtmlUtil.RemoveHtmlTags(text, true).TrimStart();
+            if (noTagText.StartsWith('-') || noTagText.Contains(Environment.NewLine + "-"))
             {
                 Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
 
