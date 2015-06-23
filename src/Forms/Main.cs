@@ -4381,7 +4381,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(message))
             {
                 _timerClearStatus.Stop();
-                _statusLog.AppendLine(string.Format("{0:0000}-{1:00}-{2:00} {3}: {4}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.ToLongTimeString(), message));
+                _statusLog.AppendFormat("{0:0000}-{1:00}-{2:00} {3}: {4}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.ToLongTimeString(), message);
                 _timerClearStatus.Start();
             }
             ShowSourceLineNumber();
