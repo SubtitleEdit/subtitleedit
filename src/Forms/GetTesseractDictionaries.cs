@@ -18,12 +18,13 @@ namespace Nikse.SubtitleEdit.Forms
         public GetTesseractDictionaries()
         {
             InitializeComponent();
+            var lang = Configuration.Settings.Language.GetTesseractDictionaries;
 
-            Text = Configuration.Settings.Language.GetTesseractDictionaries.Title;
-            labelDescription1.Text = Configuration.Settings.Language.GetTesseractDictionaries.DescriptionLine1;
-            linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetTesseractDictionaries.OpenDictionariesFolder;
-            labelChooseLanguageAndClickDownload.Text = Configuration.Settings.Language.GetTesseractDictionaries.ChooseLanguageAndClickDownload;
-            buttonDownload.Text = Configuration.Settings.Language.GetTesseractDictionaries.Download;
+            Text = lang.Title;
+            labelDescription1.Text = lang.DescriptionLine1;
+            linkLabelOpenDictionaryFolder.Text = lang.OpenDictionariesFolder;
+            labelChooseLanguageAndClickDownload.Text = lang.ChooseLanguageAndClickDownload;
+            buttonDownload.Text = lang.Download;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             LoadDictionaryList("Nikse.SubtitleEdit.Resources.TesseractDictionaries.xml.gz");
@@ -35,7 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
             _dictionaryDownloadLinks = new List<string>();
             _descriptions = new List<string>();
             _xmlName = xmlRessourceName;
-            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
+            var asm = System.Reflection.Assembly.GetExecutingAssembly();
             Stream strm = asm.GetManifestResourceStream(_xmlName);
             if (strm != null)
             {
