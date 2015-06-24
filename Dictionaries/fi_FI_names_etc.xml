@@ -1,4 +1,5 @@
-﻿<ignore_list>
+﻿<!-- This list contains names/words with specific casing - and specific to Finnish only -->
+<ignore_list>
   <name>AA</name>
   <name>Abbie</name>
   <name>Abbylla</name>
