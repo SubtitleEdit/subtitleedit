@@ -37,7 +37,7 @@
   <WholeLines />
   <RegularExpressions>
     <RegEx find="([a-zčđšž])Ij([a-zčđšž])" replaceWith="$1lj$2" />
-    <RegEx find="([^A-ZÐČŠŽa-zčđšž])Ij(ubav|ud|ut)" replaceWith="$1lj$2" />
+    <RegEx find="([^A-ZČĐŠŽa-zčđšž])Ij(ubav|ud|ut)" replaceWith="$1lj$2" />
     <!-- kad ima razmak izmedju tagova </i> <i> -->
     <RegEx find="(&gt;) +(&lt;)" replaceWith="$1$2" />
     <!-- ',"' to '",' -->
@@ -65,19 +65,19 @@
     <RegEx find="([0-9])\.O" replaceWith="$1.0" />
     <RegEx find="\b0([A-Za-z])" replaceWith="O$1" />
     <!-- Brisanje crte - na početku 1. reda (i kada ima dva reda) -->
-    <RegEx find="\A- ?([A-ZÐČŠŽa-zčđšž0-9„'&quot;]|\.{3})" replaceWith="$1" />
+    <RegEx find="\A- ?([A-ZČĐŠŽa-zčđšž0-9„'&quot;]|\.{3})" replaceWith="$1" />
     <RegEx find="\A(&lt;[i|b|u]&gt;)- ?" replaceWith="$1" />
     <RegEx find="  - " replaceWith=" -" />
     <!-- Brisanje razmaka iza crte - na početku 2. reda -->
-    <RegEx find="([\n](&lt;[i|b|u]&gt;)?)- ([0-9A-ZÐČčŠšŽ„'&quot;&lt;])" replaceWith="$1-$3" />
+    <RegEx find="([\n](&lt;[i|b|u]&gt;)?)- ([0-9A-ZČĐŠŽčš„'&quot;&lt;])" replaceWith="$1-$3" />
     <!-- Korigovanje crte - kad je u sredini prvog reda -->
-    <RegEx find="([.!?&quot;&gt;]) - ([A-ZÐČčŠšŽ'&quot;&lt;])" replaceWith="$1 -$2" />
+    <RegEx find="([.!?&quot;&gt;]) - ([A-ZČĐŠŽčš'&quot;&lt;])" replaceWith="$1 -$2" />
     <!-- Zatvoren tag pa razmak poslije crtice -->
-    <RegEx find="(&gt;) - ([A-ZÐČčŠšŽ„'&quot;])" replaceWith="$1 -$2" />
+    <RegEx find="(&gt;) - ([A-ZČĐŠŽčš„'&quot;])" replaceWith="$1 -$2" />
     <!-- Zatvoren tag pa crtica razmak -->
-    <RegEx find="(&gt;)- ([A-ZÐČčŠšŽ„'&quot;])" replaceWith="$1-$2" />
+    <RegEx find="(&gt;)- ([A-ZČĐŠŽčš„'&quot;])" replaceWith="$1-$2" />
     <!-- Zagrada pa crtica razmak -->
-    <RegEx find="\(- ([A-ZÐČčŠšŽ„'&quot;])" replaceWith="(-$1" />
+    <RegEx find="\(- ([A-ZČĐŠŽčš„'&quot;])" replaceWith="(-$1" />
     <!-- Smart space after dot -->
     <!-- osim kad je zadnje t (rijec kolt) -->
     <RegEx find="([a-su-zá-úñä-ü])\.([^\s\n().:?!*^“”'&quot;&lt;])" replaceWith="$1. $2" />
@@ -87,9 +87,9 @@
     <!-- Joey(j)a -->
     <RegEx find="([A-Z][a-z])eyj([a-z])" replaceWith="$1ey$2" />
     <!-- Sređuje zarez sa razmakom -->
-    <RegEx find="([A-ZÐČŠŽa-zčđšžá-úñä-ü&quot;]),([^\s\n(),?!“&lt;])" replaceWith="$1, $2" />
+    <RegEx find="([A-ZČĐŠŽa-zčđšžá-úñä-ü&quot;]),([^\s\n(),?!“&lt;])" replaceWith="$1, $2" />
     <RegEx find=" , " replaceWith=", " />
-    <RegEx find=" ,([A-ZÐČŠŽa-zčđšž])" replaceWith=", $1" />
+    <RegEx find=" ,([A-ZČĐŠŽa-zčđšž])" replaceWith=", $1" />
     <RegEx find=" ,$" replaceWith="," />
     <RegEx find="([?!])-" replaceWith="$1 -" />
     <!-- Space after last of some consecutive dots (eg. "...") -->
@@ -97,17 +97,17 @@
     <!-- Delete space after "..." that is at the beginning of the line. You may delete this line if you don't like it -->
     <!-- <RegEx find="^\.{3} +" replaceWith="..." /> -->
     <!-- "tekst ... tekst" mijenja u "tekst... tekst" -->
-    <RegEx find="([A-ZÐČŠŽa-zčđšž]) \.{3} " replaceWith="$1... " />
+    <RegEx find="([A-ZČĐŠŽa-zčđšž]) \.{3} " replaceWith="$1... " />
     <RegEx find="(\S)\. &quot;" replaceWith="$1.&quot;" />
     <RegEx find="&quot; \." replaceWith="&quot;." />
     <RegEx find="(\S\.{3}) &quot;(\s|$)" replaceWith="$1&quot;$2" />
     <RegEx find=" \.{3}$" replaceWith="..." />
     <RegEx find="([a-zčđšž])( \.{3}|\.{2}$)" replaceWith="$1..." />
     <!-- Razmak ispred zagrade -->
-    <RegEx find="([A-ZÐČŠŽa-zčđšž])\(" replaceWith="$1 (" />
+    <RegEx find="([A-ZČĐŠŽa-zčđšž])\(" replaceWith="$1 (" />
     <!-- Razmak iza upitnika -->
-    <RegEx find="\?([A-ZÐČčŠšŽ])" replaceWith="? $1" />
-    <RegEx find="(^|&gt;)\.{3} ([A-ZÐČčŠšŽ])" replaceWith="$1...$2" />
+    <RegEx find="\?([A-ZČĐŠŽčš])" replaceWith="? $1" />
+    <RegEx find="(^|&gt;)\.{3} ([A-ZČĐŠŽčš])" replaceWith="$1...$2" />
     <!-- Brise ... kad je na poc. reda "... -->
     <RegEx find="^&quot;\.{3} " replaceWith="&quot;" />
     <RegEx find="([0-9])\$" replaceWith="$1 $" />
