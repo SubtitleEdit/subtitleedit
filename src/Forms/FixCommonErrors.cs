@@ -903,7 +903,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph next = Subtitle.GetParagraphOrDefault(i + 1);
                     Paragraph prev = Subtitle.GetParagraphOrDefault(i - 1);
-                    if (next == null || (p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds) < next.StartTime.TotalMilliseconds)
+                    if (next == null || (p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines) < next.StartTime.TotalMilliseconds)
                     {
                         var temp = new Paragraph(p) { EndTime = { TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds } };
                         if (Utilities.GetCharactersPerSecond(temp) <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
@@ -918,7 +918,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                     else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
-                             (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds))
+                             (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines))
                     {
                         if (AllowFix(p, fixAction))
                         {
@@ -952,7 +952,7 @@ namespace Nikse.SubtitleEdit.Forms
                     double diffMs = temp.Duration.TotalMilliseconds - p.Duration.TotalMilliseconds;
 
                     // Normal - just make current subtitle duration longer
-                    if (next == null || (temp.EndTime.TotalMilliseconds) < next.StartTime.TotalMilliseconds)
+                    if (next == null || temp.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
                     {
                         if (AllowFix(p, fixAction))
                         {
