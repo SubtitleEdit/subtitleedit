@@ -14257,7 +14257,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Type t = null;
                 foreach (Type t2 in tt)
                 {
-                    if (t2.Name == "IPlugin")
+                    if (t2.Name.Equals("IPlugin", StringComparison.Ordinal))
                     {
                         t = t2;
                         break;
@@ -14309,31 +14309,31 @@ namespace Nikse.SubtitleEdit.Forms
             for (int k = fileToolStripMenuItem.DropDownItems.Count - 1; k > 0; k--)
             {
                 ToolStripItem x = fileToolStripMenuItem.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin"))
+                if (x.Name.StartsWith("Plugin", StringComparison.Ordinal))
                     fileToolStripMenuItem.DropDownItems.Remove(x);
             }
             for (int k = toolsToolStripMenuItem.DropDownItems.Count - 1; k > 0; k--)
             {
                 ToolStripItem x = toolsToolStripMenuItem.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin"))
+                if (x.Name.StartsWith("Plugin", StringComparison.Ordinal))
                     toolsToolStripMenuItem.DropDownItems.Remove(x);
             }
             for (int k = toolStripMenuItemSpellCheckMain.DropDownItems.Count - 1; k > 0; k--)
             {
                 ToolStripItem x = toolStripMenuItemSpellCheckMain.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin"))
+                if (x.Name.StartsWith("Plugin", StringComparison.Ordinal))
                     toolStripMenuItemSpellCheckMain.DropDownItems.Remove(x);
             }
             for (int k = toolStripMenuItemSynchronization.DropDownItems.Count - 1; k > 0; k--)
             {
                 ToolStripItem x = toolStripMenuItemSynchronization.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin"))
+                if (x.Name.StartsWith("Plugin", StringComparison.Ordinal))
                     toolStripMenuItemSynchronization.DropDownItems.Remove(x);
             }
             for (int k = toolStripMenuItemAutoTranslate.DropDownItems.Count - 1; k > 0; k--)
             {
                 ToolStripItem x = toolStripMenuItemAutoTranslate.DropDownItems[k];
-                if (x.Name.StartsWith("Plugin"))
+                if (x.Name.StartsWith("Plugin", StringComparison.Ordinal))
                     toolStripMenuItemAutoTranslate.DropDownItems.Remove(x);
             }
 
