@@ -331,8 +331,8 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25fps)</Pal>
     <Ntsc>NTSC (29,97 fps)</Ntsc>
-    <StartRipping>Rippen</StartRipping>
-    <Abort>Afbreken</Abort>
+    <StartRipping>&amp;Rippen</StartRipping>
+    <Abort>&amp;Afbreken</Abort>
     <AbortedByUser>Afgebroken door gebruiker</AbortedByUser>
     <ReadingSubtitleData>Ondertiteldata lezen...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Bezig met vob-bestand {1} van {2}: {0}</RippingVobFileXofYZ>
@@ -360,6 +360,8 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <TranslatorsName>Vertaler (TN)</TranslatorsName>
     <SubtitleListReferenceCode>Referentiecode (SLR)</SubtitleListReferenceCode>
     <CountryOfOrigin>Land van herkomst (CO)</CountryOfOrigin>
+    <TimeCodeStatus>Tĳdcode status (TCS)</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Tĳdcode uitzendingsbegin (TCP)</TimeCodeStartOfProgramme>
     <RevisionNumber>Revisienummer (RN)</RevisionNumber>
     <MaxNoOfDisplayableChars>Max. aantal tekens per rĳ (MNC)</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max. aantal rĳen (MNR)</MaxNumberOfDisplayableRows>
@@ -509,10 +511,10 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <Fixes>Correcties</Fixes>
     <Log>Logboek</Log>
     <Function>Functie</Function>
-    <RemovedEmptyLine>Lege regel verwĳderd</RemovedEmptyLine>
-    <RemovedEmptyLineAtTop>Lege regel bovenaan verwĳderd</RemovedEmptyLineAtTop>
-    <RemovedEmptyLineAtBottom>Lege regel onderaan verwĳderd</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Lege regels/ongebruikte regeleinden verwĳderd</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLine>Lege regel verwĳderen</RemovedEmptyLine>
+    <RemovedEmptyLineAtTop>Lege regel bovenaan verwĳderen</RemovedEmptyLineAtTop>
+    <RemovedEmptyLineAtBottom>Lege regel onderaan verwĳderen</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLinesUnsedLineBreaks>Lege regels/ongebruikte regeleinden verwĳderen</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Lege regels verwĳderd: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Overlappende tĳden corrigeren</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Te korte weergave corrigeren</FixShortDisplayTimes>
@@ -1337,7 +1339,7 @@ Indien u dit bestand met Subtitle Edit bewerkt hebt, kunt u een vorige versie vi
     <AddToCurrentSelection>Met huidige selectie verenigen</AddToCurrentSelection>
     <SubtractFromCurrentSelection>Van huidige selectie aftrekken</SubtractFromCurrentSelection>
     <IntersectWithCurrentSelection>Met huidige selectie doorsnĳden</IntersectWithCurrentSelection>
-    <MatchingLinesX>Overeenkomende regels: {0}</MatchingLinesX>
+    <MatchingLinesX>Overeenkomende teksten: {0}</MatchingLinesX>
     <Contains>Bevat</Contains>
     <StartsWith>Begint met</StartsWith>
     <EndsWith>Eindigt met</EndsWith>
@@ -1769,7 +1771,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <AddToUserDictionary>Toevoegen aan gebruikerswoordenboek</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Toevoegen aan naam/ruis-lĳst (hoofdlettergevoelig)</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>Toevoegen aan OCR-correctielĳst</AddToOcrReplaceList>
-    <Abort>Afbreken</Abort>
+    <Abort>&amp;Afbreken</Abort>
     <Use>Hier gebruiken</Use>
     <UseAlways>Altĳd &amp;gebruiken</UseAlways>
     <Suggestions>Tips</Suggestions>
