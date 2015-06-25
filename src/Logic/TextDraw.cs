@@ -71,70 +71,77 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static float MeasureTextWidth(Font font, string text, bool bold)
         {
-            var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near };
-            var path = new GraphicsPath();
-
-            var sb = new StringBuilder(text);
-            bool newLine = false;
-            const int leftMargin = 0;
-            int pathPointsStart = -1;
-            DrawText(font, sf, path, sb, false, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
-            if (path.PathData.Points.Length == 0)
+            using (var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near })
             {
-                return 0;
-            }
+                using (var path = new GraphicsPath())
+                {
+                    var sb = new StringBuilder(text);
+                    bool newLine = false;
+                    const int leftMargin = 0;
+                    int pathPointsStart = -1;
+                    DrawText(font, sf, path, sb, false, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
+                    if (path.PathData.Points.Length == 0)
+                    {
+                        return 0;
+                    }
 
-            float width = 0;
-            var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-            int index = list.Length - 42;
-            if (index < 0)
-                index = 0;
-            for (int i = index; i < list.Length; i += 2)
-            {
-                if (list[i].X > width)
-                    width = list[i].X;
-            }
-            int max = 52;
-            if (max > list.Length)
-                max = list.Length;
-            for (int i = 0; i < max; i += 2)
-            {
-                if (list[i].X > width)
-                    width = list[i].X;
-            }
+                    float width = 0;
+                    var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
+                    int index = list.Length - 42;
+                    if (index < 0)
+                        index = 0;
+                    for (int i = index; i < list.Length; i += 2)
+                    {
+                        if (list[i].X > width)
+                            width = list[i].X;
+                    }
+                    int max = 52;
+                    if (max > list.Length)
+                        max = list.Length;
+                    for (int i = 0; i < max; i += 2)
+                    {
+                        if (list[i].X > width)
+                            width = list[i].X;
+                    }
 
-            return width;
+                    return width;
+                }
+            }
         }
 
         public static float MeasureTextHeight(Font font, string text, bool bold)
         {
-            var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near };
-            var path = new GraphicsPath();
-
-            var sb = new StringBuilder(text);
-            bool newLine = false;
-            const int leftMargin = 0;
-            int pathPointsStart = -1;
-            DrawText(font, sf, path, sb, false, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
-
-            float height = 0;
-            var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-            int index = list.Length - 80;
-            if (index < 0)
-                index = 0;
-            for (int i = index; i < list.Length; i += 2)
+            using (var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near })
             {
-                if (list[i].Y > height)
-                    height = list[i].Y;
-            }
+                using (var path = new GraphicsPath())
+                {
 
-            for (int i = 0; i < list.Length; i += 2)
-            {
-                if (list[i].Y > height)
-                    height = list[i].Y;
-            }
+                    var sb = new StringBuilder(text);
+                    bool newLine = false;
+                    const int leftMargin = 0;
+                    int pathPointsStart = -1;
+                    DrawText(font, sf, path, sb, false, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
 
-            return height;
+                    float height = 0;
+                    var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
+                    int index = list.Length - 80;
+                    if (index < 0)
+                        index = 0;
+                    for (int i = index; i < list.Length; i += 2)
+                    {
+                        if (list[i].Y > height)
+                            height = list[i].Y;
+                    }
+
+                    for (int i = 0; i < list.Length; i += 2)
+                    {
+                        if (list[i].Y > height)
+                            height = list[i].Y;
+                    }
+
+                    return height;
+                }
+            }
         }
 
     }
