@@ -1,4 +1,5 @@
-﻿<ignore_list>
+﻿<!-- This list contains names/words with specific casing - and specific to Danish only -->
+<ignore_list>
   <name>Aquarium</name>
   <name>Armfeldt</name>
   <name>Asgård</name>
@@ -18,9 +19,9 @@
   <name>Cobain</name>
   <name>Corolla</name>
   <name>Danmark</name>
-  <name>DiLaurentis</name>
   <name>Diagonalstræde</name>
   <name>Dickens</name>
+  <name>DiLaurentis</name>
   <name>Egerman</name>
   <name>England</name>
   <name>Erlandson</name>
@@ -45,14 +46,14 @@
   <name>Leningrad</name>
   <name>Lyman</name>
   <name>Lymans</name>
-  <name>MBA</name>
-  <name>MTV</name>
   <name>Magnoliavej</name>
   <name>Mandelbaum</name>
   <name>Mandelbaums</name>
+  <name>MBA</name>
   <name>McClellan</name>
   <name>Mellisas</name>
   <name>Monterey</name>
+  <name>MTV</name>
   <name>Nadjim</name>
   <name>Neumann</name>
   <name>Petterson</name>
