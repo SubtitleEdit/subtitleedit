@@ -34,8 +34,7 @@ namespace Nikse.SubtitleEdit.Logic
                 int milliseconds;
                 if (int.TryParse(parts[0], out hours) && int.TryParse(parts[1], out minutes) && int.TryParse(parts[2], out seconds) && int.TryParse(parts[3], out milliseconds))
                 {
-                    var ts = new TimeSpan(0, hours, minutes, seconds, milliseconds);
-                    return ts.TotalMilliseconds;
+                    return new TimeSpan(0, hours, minutes, seconds, milliseconds).TotalMilliseconds;
                 }
             }
             return 0;
@@ -82,8 +81,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             set
             {
-                var ts = TimeSpan;
-                _totalMilliseconds = new TimeSpan(0, value, ts.Minutes, ts.Seconds, ts.Milliseconds).TotalMilliseconds;
+                _totalMilliseconds = TimeSpan.FromHours(value).TotalMilliseconds;
             }
         }
 
@@ -95,8 +93,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             set
             {
-                var ts = TimeSpan;
-                TimeSpan = new TimeSpan(0, ts.Hours, value, ts.Seconds, ts.Milliseconds);
+                _totalMilliseconds = TimeSpan.FromMinutes(value).TotalMilliseconds;
             }
         }
 
@@ -108,8 +105,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             set
             {
-                var ts = TimeSpan;
-                TimeSpan = new TimeSpan(0, ts.Hours, ts.Minutes, value, ts.Milliseconds);
+                _totalMilliseconds = TimeSpan.FromSeconds(value).TotalMilliseconds;
             }
         }
 
@@ -121,8 +117,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             set
             {
-                var ts = TimeSpan;
-                _totalMilliseconds = new TimeSpan(0, ts.Hours, ts.Minutes, ts.Seconds, value).TotalMilliseconds;
+                _totalMilliseconds = value;
             }
         }
 
