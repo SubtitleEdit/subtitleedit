@@ -1,4 +1,4 @@
-<ReplaceList>
+﻿<OCRFixReplaceList>
   <WholeWords>
     <Word from="ls" to="Is" />
     <Word from="ln" to="In" />
@@ -19,13 +19,12 @@
     <Word from="eIkaar" to="elkaar" />
     <Word from="eIke" to="elke" />
   </WholeWords>
+  <PartialWordsAlways />
+  <PartialWords />
   <PartialLines />
+  <PartialLinesAlways />
   <BeginLines />
   <EndLines />
   <WholeLines />
-  <RemovedWholeWords />
-  <RemovedPartialLines />
-  <RemovedBeginLines />
-  <RemovedEndLines />
-  <RemovedWholeLines />
-</ReplaceList>
+  <RegularExpressions />
+</OCRFixReplaceList>
