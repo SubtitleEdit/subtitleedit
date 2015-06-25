@@ -51,7 +51,6 @@
     <Word from="Dali si" to="Da li si" />
     <Word from="deda" to="djed" />
     <Word from="dedom" to="djedom" />
-    <Word from="dejstvo" to="djelovanje" />
     <Word from="deli" to="dijeli" />
     <Word from="deluju" to="djeluju" />
     <Word from="dete" to="dijete" />
@@ -1267,7 +1266,7 @@
     <RegEx find="(prevazi)(đen|đeno|đena|ći|laženje|laženja|laženju|laženjem)" replaceWith="nadi$2" />
     <RegEx find="([rR])(azmen)(a|e|u|i|ama)?" replaceWith="$1azmjen$3" />
     <RegEx find="([rR])(azume)(m|š|mo|te|va)" replaceWith="$1azumije$3" />
-    <RegEx find="(redhodn)" replaceWith="rethodn" /> 
+    <RegEx find="(redhodn)" replaceWith="rethodn" />
     <RegEx find="([rR])(eligijozn)(a|e|i|o|u|om|im|ima)" replaceWith="$1eligiozn$3" />
     <RegEx find="([rR])(ešava)(m|š|mo|te|ju|nje|li)?" replaceWith="$1ješava$3" />
     <RegEx find="([rR])(ešenj)(e|em|u|a|ima)?" replaceWith="$1ješenj$3" />
@@ -1425,9 +1424,8 @@
     <RegEx find="([žŽ])(lezd)(a|e|i|o|u|ama)" replaceWith="$1lijezd$3" />
     <RegEx find="([žŽ])(ljezd)(a|e|i|o|u|ama)" replaceWith="$1lijezd$3" />
     <RegEx find="(žurk)(a|e|i|u|om|ama)" replaceWith="zabav$2" />
-    
     <RegEx find="(z|Z)(amnom)" replaceWith="$1a mnom" />
-	  <RegEx find="(s|S)(amnom)" replaceWith="$1a mnom" />
+    <RegEx find="(s|S)(amnom)" replaceWith="$1a mnom" />
     <!-- experimental -->
     <RegEx find="(vređ)(a)*" replaceWith="vrijeđ$2" />
     <RegEx find="(oćeju)" replaceWith="oće" />

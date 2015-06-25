@@ -1,6 +1,5 @@
-﻿<ignore_list>
-  <name>ADN</name>
-  <name>ASN</name>
+﻿<!-- This list contains names/words with specific casing - and specific to Spanish only -->
+<ignore_list>
   <name>Aang</name>
   <name>Aarón</name>
   <name>Abdulabri</name>
@@ -12,12 +11,14 @@
   <name>Acapulco</name>
   <name>Ace</name>
   <name>Adelyne</name>
+  <name>ADN</name>
   <name>Aggy</name>
   <name>Agni</name>
   <name>Ahmadi</name>
   <name>Aimé</name>
   <name>Akbar</name>
   <name>Alaikum</name>
+  <name>Álava</name>
   <name>Albeniz</name>
   <name>Alberta</name>
   <name>Albertus</name>
@@ -25,12 +26,13 @@
   <name>Alcalá</name>
   <name>Aldust</name>
   <name>Alejandría</name>
+  <name>Alí</name>
   <name>Alicie</name>
   <name>Allahh</name>
   <name>Allahu</name>
   <name>Allez</name>
+  <name>Ålsgårde</name>
   <name>Alving</name>
-  <name>Alí</name>
   <name>Amager</name>
   <name>Amharic</name>
   <name>Amon</name>
@@ -38,12 +40,14 @@
   <name>Andrei</name>
   <name>Andrej</name>
   <name>Angaza</name>
+  <name>Ángelo</name>
   <name>Angra</name>
   <name>Antabuse</name>
   <name>Apocalipsis</name>
   <name>Aqim</name>
   <name>Aquim</name>
   <name>Aragón</name>
+  <name>Århus</name>
   <name>Ariella</name>
   <name>Arquimedeano</name>
   <name>Arrigo</name>
@@ -51,6 +55,7 @@
   <name>Asami</name>
   <name>Asbjørn</name>
   <name>Asclepio</name>
+  <name>ASN</name>
   <name>Assim</name>
   <name>Aurelio</name>
   <name>Avner</name>
@@ -121,6 +126,7 @@
   <name>Bora</name>
   <name>Borch</name>
   <name>Bornholm</name>
+  <name>Bósforo</name>
   <name>Bosse</name>
   <name>Botticelli</name>
   <name>Boucher</name>
@@ -149,9 +155,7 @@
   <name>Buren</name>
   <name>Bush</name>
   <name>Butakha</name>
-  <name>Bósforo</name>
   <name>Büttner</name>
-  <name>CEO</name>
   <name>Cage</name>
   <name>Camila</name>
   <name>Cancún</name>
@@ -169,6 +173,7 @@
   <name>Caterina</name>
   <name>Celso</name>
   <name>Cemre</name>
+  <name>CEO</name>
   <name>Champagne</name>
   <name>Charger</name>
   <name>Chateau</name>
@@ -181,6 +186,7 @@
   <name>Christiania</name>
   <name>Chubb</name>
   <name>Chung</name>
+  <name>Cícera</name>
   <name>Cindie</name>
   <name>Clacy</name>
   <name>Claridon</name>
@@ -203,12 +209,11 @@
   <name>Culbert</name>
   <name>Cupertino</name>
   <name>Curt</name>
-  <name>Cícera</name>
-  <name>DARPA</name>
   <name>Dahl</name>
   <name>Dalai</name>
   <name>Dancairo</name>
   <name>Daphnis</name>
+  <name>DARPA</name>
   <name>Decamerón</name>
   <name>Deer</name>
   <name>Devers</name>
@@ -232,7 +237,6 @@
   <name>Dugas</name>
   <name>Dursun</name>
   <name>Duus</name>
-  <name>EUA</name>
   <name>Ebro</name>
   <name>Edimburgo</name>
   <name>Edipo</name>
@@ -244,10 +248,10 @@
   <name>Eladio</name>
   <name>Elgabhri</name>
   <name>Elgahbri</name>
+  <name>Elías</name>
   <name>Elise</name>
   <name>Ellebjerg</name>
   <name>Eller</name>
-  <name>Elías</name>
   <name>Emibidlana</name>
   <name>Emiratos</name>
   <name>Enzo</name>
@@ -260,13 +264,14 @@
   <name>Estambul</name>
   <name>Estocolmo</name>
   <name>Eton</name>
-  <name>Eurostar</name>
+  <name>EUA</name>
   <name>Eurípides</name>
+  <name>Eurostar</name>
   <name>Extremadura</name>
-  <name>FARC</name>
   <name>Fadl</name>
   <name>Falmouth</name>
   <name>Falstaff</name>
+  <name>FARC</name>
   <name>Faris</name>
   <name>Farouk</name>
   <name>Farshad</name>
@@ -299,12 +304,15 @@
   <name>Gaddafi</name>
   <name>Galicia</name>
   <name>Gammelgård</name>
+  <name>Gårdmand</name>
   <name>Gare</name>
   <name>Gareth</name>
+  <name>Gårmand</name>
   <name>Gassam</name>
   <name>Gaudí</name>
   <name>Gauss</name>
   <name>Geertsen</name>
+  <name>Gémenos</name>
   <name>Gendarmenmarkt</name>
   <name>Gene</name>
   <name>Genevaldo</name>
@@ -340,20 +348,16 @@
   <name>Guan</name>
   <name>Guang</name>
   <name>Guariba</name>
-  <name>Gustavsson</name>
-  <name>Gårdmand</name>
-  <name>Gårmand</name>
-  <name>Gémenos</name>
   <name>Gülten</name>
   <name>Güney</name>
   <name>Gür</name>
-  <name>HAMME</name>
-  <name>HDC</name>
+  <name>Gustavsson</name>
   <name>Halifax</name>
   <name>Halland</name>
   <name>Halliwey</name>
   <name>Hamaq</name>
   <name>Hamburgo</name>
+  <name>HAMME</name>
   <name>Handan</name>
   <name>Hans</name>
   <name>Hanson</name>
@@ -369,6 +373,7 @@
   <name>Haylie</name>
   <name>Hayward</name>
   <name>Hazan</name>
+  <name>HDC</name>
   <name>Hearper</name>
   <name>Heaton</name>
   <name>Heel</name>
@@ -397,6 +402,7 @@
   <name>Hodge</name>
   <name>Hogan</name>
   <name>Hoggar</name>
+  <name>Høje</name>
   <name>Holbaek</name>
   <name>Holbæk</name>
   <name>Hornbæk</name>
@@ -407,9 +413,7 @@
   <name>Humboldt</name>
   <name>Hundested</name>
   <name>Huseyin</name>
-  <name>Høje</name>
   <name>IAEA</name>
-  <name>IP</name>
   <name>Ibsen</name>
   <name>Icarus</name>
   <name>Ifigenia</name>
@@ -421,6 +425,7 @@
   <name>Immanuel</name>
   <name>Ingram</name>
   <name>Interpol</name>
+  <name>IP</name>
   <name>Ipanema</name>
   <name>Iroh</name>
   <name>Jacopo</name>
@@ -429,16 +434,16 @@
   <name>Jardim</name>
   <name>Jens</name>
   <name>Jinora</name>
+  <name>João</name>
   <name>Johan</name>
   <name>Johanna</name>
   <name>Johannesburgo</name>
   <name>Jolie</name>
-  <name>João</name>
+  <name>Jørgensen</name>
   <name>Julebæk</name>
   <name>Juncker</name>
   <name>Jurgen</name>
   <name>Jutland</name>
-  <name>Jørgensen</name>
   <name>Kagan</name>
   <name>Kai</name>
   <name>Kalay</name>
@@ -472,6 +477,7 @@
   <name>Kluge</name>
   <name>Knox</name>
   <name>Kohl</name>
+  <name>Königsberg</name>
   <name>Kornerup</name>
   <name>Korra</name>
   <name>Kristian</name>
@@ -482,17 +488,16 @@
   <name>Kung</name>
   <name>Kuzey</name>
   <name>Kuznetsova</name>
-  <name>Königsberg</name>
-  <name>LaCour</name>
   <name>Labratta</name>
   <name>Lacour</name>
+  <name>LaCour</name>
   <name>Laden</name>
   <name>Lamborghini</name>
   <name>Lanario</name>
   <name>Latimer</name>
-  <name>LeFevre</name>
   <name>Leafs</name>
   <name>Lebech</name>
+  <name>LeFevre</name>
   <name>Leif</name>
   <name>Leonie</name>
   <name>Leonore</name>
@@ -521,12 +526,11 @@
   <name>Lund</name>
   <name>Lung</name>
   <name>Lutulu</name>
+  <name>Lützchen</name>
   <name>Lybge</name>
   <name>Lycosidae</name>
   <name>Lyngby</name>
   <name>Lynge</name>
-  <name>Lützchen</name>
-  <name>MIT</name>
   <name>Maalin</name>
   <name>Madaki</name>
   <name>Madame</name>
@@ -544,6 +548,7 @@
   <name>Manila</name>
   <name>Manu</name>
   <name>Manuelita</name>
+  <name>Mañez</name>
   <name>Maple</name>
   <name>Marcel</name>
   <name>Marcgravia</name>
@@ -561,19 +566,19 @@
   <name>Matevski</name>
   <name>Mathias</name>
   <name>Mathías</name>
+  <name>Matías</name>
   <name>Matlock</name>
   <name>Matos</name>
-  <name>Matías</name>
   <name>Mauga</name>
   <name>Maurizio</name>
   <name>Maxamed</name>
-  <name>Mañez</name>
   <name>McLaren</name>
   <name>Medea</name>
   <name>Medici</name>
   <name>Medicis</name>
   <name>Meelo</name>
   <name>Mehmed</name>
+  <name>Méjico</name>
   <name>Menchu</name>
   <name>Menéndez</name>
   <name>Merci</name>
@@ -594,11 +599,13 @@
   <name>Mischa</name>
   <name>Misent</name>
   <name>Missan</name>
+  <name>MIT</name>
   <name>Mithras</name>
   <name>Mitterrand</name>
   <name>Mogadiscio</name>
   <name>Mogadishu</name>
   <name>Mogoto</name>
+  <name>Møller</name>
   <name>Mombasa</name>
   <name>Monsieur</name>
   <name>Monster</name>
@@ -612,18 +619,17 @@
   <name>Moz</name>
   <name>Mugabe</name>
   <name>Muhammad</name>
+  <name>Müller</name>
   <name>Mullor</name>
   <name>Munk</name>
   <name>Muppets</name>
   <name>Murnau</name>
   <name>Musina</name>
   <name>Mustang</name>
-  <name>Méjico</name>
-  <name>Møller</name>
-  <name>Müller</name>
   <name>Naciye</name>
   <name>Naga</name>
   <name>Namik</name>
+  <name>Nápoles</name>
   <name>Narook</name>
   <name>Navona</name>
   <name>Nazar</name>
@@ -643,24 +649,23 @@
   <name>Noli</name>
   <name>Nord</name>
   <name>Nordvang</name>
+  <name>Nørreport</name>
   <name>Nostromo</name>
   <name>Nurrebro</name>
   <name>Nyborg</name>
   <name>Nyendeni</name>
-  <name>Nápoles</name>
-  <name>Nørreport</name>
-  <name>O'Bannon</name>
-  <name>ONU</name>
-  <name>OTAN</name>
   <name>Oakes</name>
   <name>Oakley</name>
+  <name>O'Bannon</name>
   <name>Odense</name>
   <name>Ogbai</name>
   <name>Ohms</name>
   <name>Ohno</name>
   <name>Oktoberfest</name>
   <name>Olusu</name>
+  <name>ONU</name>
   <name>Oogi</name>
+  <name>Øresund</name>
   <name>Ori</name>
   <name>Oriana</name>
   <name>Orlande</name>
@@ -668,14 +673,14 @@
   <name>Oslo</name>
   <name>Osman</name>
   <name>Oswald</name>
+  <name>OTAN</name>
   <name>Othmani</name>
   <name>Ottavia</name>
   <name>Ozzy</name>
-  <name>PM</name>
   <name>Pabu</name>
   <name>Pama</name>
-  <name>Park</name>
   <name>París</name>
+  <name>Park</name>
   <name>Pastia</name>
   <name>Pathfinder</name>
   <name>Patsy</name>
@@ -700,6 +705,7 @@
   <name>Pitch</name>
   <name>Playboy</name>
   <name>Pleasance</name>
+  <name>PM</name>
   <name>Poenari</name>
   <name>Poivre</name>
   <name>Ponce</name>
@@ -752,6 +758,7 @@
   <name>Rohypnol</name>
   <name>Romalis</name>
   <name>Romford</name>
+  <name>Rómulo</name>
   <name>Rosetta</name>
   <name>Roshan</name>
   <name>Rotenone</name>
@@ -762,13 +769,6 @@
   <name>Ruddi</name>
   <name>Rudi</name>
   <name>Rytterparken</name>
-  <name>Rómulo</name>
-  <name>SAS</name>
-  <name>SEAL</name>
-  <name>SEALS</name>
-  <name>SOS</name>
-  <name>SPA</name>
-  <name>SSD</name>
   <name>Sadaavi</name>
   <name>Saikhan</name>
   <name>Salaam</name>
@@ -783,16 +783,20 @@
   <name>Sandhills</name>
   <name>Sandro</name>
   <name>Sangora</name>
+  <name>São</name>
   <name>Sarcós</name>
   <name>Sariyer</name>
   <name>Sark</name>
   <name>Sartre</name>
+  <name>SAS</name>
   <name>Satán</name>
   <name>Schandorff</name>
   <name>Scheisse</name>
   <name>Schnell</name>
   <name>Scout</name>
   <name>Scozzi</name>
+  <name>SEAL</name>
+  <name>SEALS</name>
   <name>Sebastien</name>
   <name>Sedona</name>
   <name>Sejer</name>
@@ -828,11 +832,16 @@
   <name>Sodoma</name>
   <name>Sokka</name>
   <name>Soloviov</name>
+  <name>Søren</name>
+  <name>Sørensen</name>
+  <name>SOS</name>
   <name>Southampton</name>
   <name>Souto</name>
+  <name>SPA</name>
   <name>Sr</name>
   <name>Sra</name>
   <name>Srta</name>
+  <name>SSD</name>
   <name>Staffan</name>
   <name>Stalingrado</name>
   <name>Stallwood</name>
@@ -860,14 +869,13 @@
   <name>Svendborg</name>
   <name>Swiller</name>
   <name>Synequanon</name>
-  <name>São</name>
-  <name>Søren</name>
-  <name>Sørensen</name>
   <name>Tadeo</name>
   <name>Tafiq</name>
   <name>Taft</name>
   <name>Tahno</name>
+  <name>Támesis</name>
   <name>Tang</name>
+  <name>Tánger</name>
   <name>Tanztheater</name>
   <name>Tarconi</name>
   <name>Tariq</name>
@@ -875,6 +883,7 @@
   <name>Tarrlok</name>
   <name>Tasers</name>
   <name>Tassini</name>
+  <name>Tåstrup</name>
   <name>Teeth</name>
   <name>Teglstrup</name>
   <name>Tehuantepec</name>
@@ -896,8 +905,8 @@
   <name>Tolkien</name>
   <name>Tolya</name>
   <name>Tom</name>
-  <name>Tomeu</name>
   <name>Tomás</name>
+  <name>Tomeu</name>
   <name>Toph</name>
   <name>Torquemada</name>
   <name>Traian</name>
@@ -905,12 +914,12 @@
   <name>Traymore</name>
   <name>Trek</name>
   <name>Trekkies</name>
+  <name>Tríada</name>
   <name>Troels</name>
   <name>Troense</name>
   <name>Trotwood</name>
   <name>Troya</name>
   <name>Trumpf</name>
-  <name>Tríada</name>
   <name>Tsegga</name>
   <name>Tuareg</name>
   <name>Tuaregs</name>
@@ -918,21 +927,18 @@
   <name>Tungsten</name>
   <name>Tunguska</name>
   <name>Turlock</name>
-  <name>Támesis</name>
-  <name>Tánger</name>
-  <name>Tåstrup</name>
-  <name>URSS</name>
   <name>Ud</name>
   <name>Ulf</name>
   <name>Ulrik</name>
   <name>Umal</name>
   <name>Urbino</name>
-  <name>VANCE</name>
+  <name>URSS</name>
   <name>Vagn</name>
   <name>Valdano</name>
   <name>Valero</name>
   <name>Vallachia</name>
   <name>Valley</name>
+  <name>VANCE</name>
   <name>Vasbygade</name>
   <name>Vejle</name>
   <name>Venez</name>
@@ -972,9 +978,8 @@
   <name>Wong</name>
   <name>Wuppertal</name>
   <name>XIII</name>
-  <name>XXI</name>
   <name>Xu</name>
-  <name>YUNNAN</name>
+  <name>XXI</name>
   <name>Yakon</name>
   <name>Yakone</name>
   <name>Yasemin</name>
@@ -984,10 +989,12 @@
   <name>Yoruba</name>
   <name>Yu</name>
   <name>Yuans</name>
+  <name>YUNNAN</name>
   <name>Zabalda</name>
   <name>Zanu</name>
   <name>Zarrategui</name>
   <name>Zavrov</name>
+  <name>Zé</name>
   <name>Zeeland</name>
   <name>Zero</name>
   <name>Zeuthen</name>
@@ -1001,10 +1008,4 @@
   <name>Zoroastro</name>
   <name>Zuko</name>
   <name>Zulú</name>
-  <name>Zé</name>
-  <name>Álava</name>
-  <name>Ángelo</name>
-  <name>Ålsgårde</name>
-  <name>Århus</name>
-  <name>Øresund</name>
 </ignore_list>

@@ -1,4 +1,5 @@
-﻿<ignore_list>
+﻿<!-- This list contains names/words with specific casing - and specific to Russian only -->
+<ignore_list>
   <name>Абакум</name>
   <name>Абакумович</name>
   <name>Абакумовна</name>
