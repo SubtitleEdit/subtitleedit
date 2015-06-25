@@ -617,11 +617,8 @@
     <Word from="definišem" to="definiram" />
     <Word from="definiši" to="definiraj" />
     <Word from="definišu" to="definiraju" />
-    <Word from="dejstva" to="djelovanja" />
     <Word from="dejstvo" to="djelovanje" />
-    <Word from="dejstvu" to="djelovanju" />
     <Word from="dejstvom" to="djelovanjem" />
-    <Word from="dejstvima" to="djelovanjima" />
     <Word from="diskutujem" to="raspravljam" />
     <Word from="diskutuješ" to="raspravljaš" />
     <Word from="diskutuje" to="raspravlja" />
@@ -1000,6 +997,7 @@
     <RegEx find="([čČ])(ovije)(k|ka|ku|kom|kov|kovog|kovoj|kovom|če|čanstva|čanstvu|čanstvom|čni|čna|čno)" replaceWith="$1ovje$3" />
     <RegEx find="(ćut)(im|iš|i|imo|ite|e)" replaceWith="šut$2" />
     <RegEx find="(Ćut)(im|iš|i|imo|ite|e)" replaceWith="Šut$2" />
+    <RegEx find="([dD])(ejstv)(a|u|ima)" replaceWith="$1jelovanj$3" />
     <RegEx find="(del)(a|o|u|ić|ića|iće|ićem|ići|ićima)" replaceWith="djel$2" />
     <RegEx find="\b([dD])(j?eli)(m|š|mo|te|li|le|la|ti)\b" replaceWith="$1ijel$3" />
     <RegEx find="(delikvent)(a|e|i|u|ima|om|na|no|ni|nim|nom|noj|ica|ici|icu|ice|cija|ciji|ciju|cije|cijama)?" replaceWith="delinkvent$2" />
@@ -1114,6 +1112,7 @@
     <RegEx find="(mješa)(m|n|ni|na|no|nom|noj|nima|š|mo|te|ju|njem|nju|li|ti)" replaceWith="miješa$2" />
     <RegEx find="([mM])(edve)(d|da|de|di|du|dom|dima|đa|đu|đom|đoj|đi|đeg)" replaceWith="$1edvje$3" />
     <RegEx find="(m|M)(ilij?on)(a|e|i|u|om|ima)?" replaceWith="$1ilijun$3" /> 
+    <RegEx find="([mM])(er)(a|e|i|u|om|ama)" replaceWith="$1jer$3" />
     <RegEx find="([mM])(j?enja)(m|š|mo|te|ju|li|ti)?" replaceWith="$1ijenja$3" />
     <RegEx find="([mM])(est)(a|o|u|om|ima)" replaceWith="$1jest$3" />
     <RegEx find="([mM])(lj?ek)(a|o|u|om)" replaceWith="$1lijek$3" />
