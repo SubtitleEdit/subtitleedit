@@ -55,6 +55,7 @@
     <Compile Include="Logic\TransportStream\TransportStreamTest.cs" />
     <Compile Include="Logic\ParagraphTest.cs" />
     <Compile Include="Logic\StripableTextTest.cs" />
+    <Compile Include="Logic\TimeCodeTest.cs" />
     <Compile Include="Logic\VideoFormats\MatroskaTest.cs" />
     <Compile Include="Logic\VobSub\VobSubTest.cs" />
     <Compile Include="Logic\Ocr\NOcrTest.cs" />
