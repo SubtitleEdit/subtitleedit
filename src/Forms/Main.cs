@@ -16644,54 +16644,52 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemPlayRateSlowClick(object sender, EventArgs e)
         {
-            if (mediaPlayer.VideoPlayer != null)
-            {
-                toolStripMenuItemPlayRateSlow.Checked = true;
-                toolStripMenuItemPlayRateNormal.Checked = false;
-                toolStripMenuItemPlayRateFast.Checked = false;
-                toolStripMenuItemPlayRateVeryFast.Checked = false;
-                mediaPlayer.VideoPlayer.PlayRate = 0.8;
-                toolStripSplitButtonPlayRate.Image = imageListPlayRate.Images[1];
-            }
+            SetPlayRateSpeed(0.8); // Play slow
         }
 
         private void ToolStripMenuItemPlayRateNormalClick(object sender, EventArgs e)
         {
-            if (mediaPlayer.VideoPlayer != null)
-            {
-                toolStripMenuItemPlayRateSlow.Checked = false;
-                toolStripMenuItemPlayRateNormal.Checked = true;
-                toolStripMenuItemPlayRateFast.Checked = false;
-                toolStripMenuItemPlayRateVeryFast.Checked = false;
-                mediaPlayer.VideoPlayer.PlayRate = 1.0;
-                toolStripSplitButtonPlayRate.Image = imageListPlayRate.Images[0];
-            }
+            SetPlayRateSpeed(1.0); // Play Normal
         }
 
         private void ToolStripMenuItemPlayRateFastClick(object sender, EventArgs e)
         {
-            if (mediaPlayer.VideoPlayer != null)
-            {
-                toolStripMenuItemPlayRateSlow.Checked = false;
-                toolStripMenuItemPlayRateNormal.Checked = false;
-                toolStripMenuItemPlayRateFast.Checked = true;
-                toolStripMenuItemPlayRateVeryFast.Checked = false;
-                mediaPlayer.VideoPlayer.PlayRate = 1.2;
-                toolStripSplitButtonPlayRate.Image = imageListPlayRate.Images[1];
-            }
+            SetPlayRateSpeed(1.2); // Play fast
         }
 
         private void VeryFastToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (mediaPlayer.VideoPlayer != null)
-            {
-                toolStripMenuItemPlayRateSlow.Checked = false;
-                toolStripMenuItemPlayRateNormal.Checked = false;
-                toolStripMenuItemPlayRateFast.Checked = false;
-                toolStripMenuItemPlayRateVeryFast.Checked = true;
-                mediaPlayer.VideoPlayer.PlayRate = 1.6;
-                toolStripSplitButtonPlayRate.Image = imageListPlayRate.Images[1];
-            }
+            SetPlayRateSpeed(1.6); // Play very fast
+        }
+
+        private void SetPlayRateSpeed(double rateSpeed)
+        {
+            // Return if video player is not available
+            if (mediaPlayer.VideoPlayer == null)
+                return;
+
+            // Uncheck all 
+            toolStripMenuItemPlayRateSlow.Checked = false;
+            toolStripMenuItemPlayRateNormal.Checked = false;
+            toolStripMenuItemPlayRateFast.Checked = false;
+            toolStripMenuItemPlayRateVeryFast.Checked = false;
+
+            // Set image index to be used in button
+            var imageIdx = (rateSpeed != 1.0) ? 1 : 0;
+
+            // Enable according with rate speed 
+            if (rateSpeed == 0.0)
+                toolStripMenuItemPlayRateNormal.Checked = true; // Normal speed
+            else if (rateSpeed == 1.2)
+                toolStripMenuItemPlayRateFast.Checked = true; // Fast speed
+            else if (rateSpeed == 1.6)
+                toolStripMenuItemPlayRateVeryFast.Checked = true; // Very fast speed
+            else if (rateSpeed == 0.8)
+                toolStripMenuItemPlayRateSlow.Checked = true; // Slow speed / Slow motion
+
+            // Set speed and image
+            mediaPlayer.VideoPlayer.PlayRate = rateSpeed;
+            toolStripSplitButtonPlayRate.Image = imageListPlayRate.Images[imageIdx]; //
         }
 
         private void SplitContainer1SplitterMoved(object sender, SplitterEventArgs e)
