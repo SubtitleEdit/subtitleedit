@@ -333,8 +333,6 @@
     <Word from="prsença" to="presença" />
     <Word from="prustituta" to="prostituta" />
     <Word from="pudérmos" to="pudermos" />
-    <Word from="pude-se" to="pudesse" />
-    <Word from="pudésse" to="pudesse" />
     <Word from="púlico" to="público" />
     <Word from="pús" to="pus" />
     <Word from="pusémos" to="pusemos" />
@@ -510,5 +508,6 @@
     <RegEx find="\b([sS])u[íi]sso(s)?\b" replaceWith="$1uíço$2" />
     <RegEx find="\b([sS])u[íi]ssa(s)?\b" replaceWith="$1uíça$2" />
     <RegEx find="\b([pP])rivelig[ie]\p{Ll}\B" replaceWith="$1rivelegiad" />
+    <RegEx find="\bpud(?:és|e-)se\b" replaceWith="pudesse" />
   </RegularExpressions>
 </OCRFixReplaceList>
