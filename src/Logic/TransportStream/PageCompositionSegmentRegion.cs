@@ -1,6 +1,5 @@
 ﻿namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
-
     public class PageCompositionSegmentRegion
     {
         public int RegionId { get; set; }

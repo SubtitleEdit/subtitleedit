@@ -2,10 +2,8 @@
 
 namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
-
     public class ClutDefinitionSegment
     {
-
         public int ClutId { get; set; }
         public int ClutVersionNumber { get; set; }
         public List<RegionClutSegmentEntry> Entries = new List<RegionClutSegmentEntry>();
@@ -48,5 +46,4 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             }
         }
     }
-
 }

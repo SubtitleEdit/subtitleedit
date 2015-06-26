@@ -2,7 +2,6 @@
 
 namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
-
     public class PageCompositionSegment
     {
         public int PageTimeOut { get; set; }

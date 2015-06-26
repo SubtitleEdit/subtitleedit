@@ -12,7 +12,6 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
     /// </summary>
     public class TransportStreamParser
     {
-
         public delegate void LoadTransportStreamCallback(long position, long total);
 
         public int NumberOfNullPackets { get; private set; }
