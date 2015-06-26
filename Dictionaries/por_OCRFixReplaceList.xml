@@ -423,10 +423,6 @@
     <Word from="suiças" to="suíças" />
     <Word from="suiço" to="suíço" />
     <Word from="suiços" to="suíços" />
-    <Word from="Suissa" to="Suíça" />
-    <Word from="Suíssa" to="Suíça" />
-    <Word from="suissas" to="suíças" />
-    <Word from="suíssas" to="suíças" />
     <Word from="supôr" to="supor" />
     <Word from="tabeliões" to="tabeliães" />
     <Word from="taínha" to="tainha" />
@@ -516,5 +512,6 @@
     <RegEx find="\b(n|N)ao\b" replaceWith="$1ão" />
     <RegEx find="\b(B|b)elem\b" replaceWith="$1elém" />
     <RegEx find="\b([sS])u[íi]sso(s)?\b" replaceWith="$1uíço$2" />
+    <RegEx find="\b([sS])u[íi]ssa(s)?\b" replaceWith="$1uíça$2" />
   </RegularExpressions>
 </OCRFixReplaceList>
