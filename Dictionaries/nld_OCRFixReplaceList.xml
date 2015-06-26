@@ -3,14 +3,10 @@
     <Word from="ls" to="Is" />
     <Word from="ln" to="In" />
     <Word from="lk" to="Ik" />
-    <Word from="lndien" to="Indien" />
     <Word from="ledereen" to="Iedereen" />
     <Word from="ledere" to="Iedere" />
     <Word from="lemand" to="Iemand" />
-    <Word from="lnderdaad" to="Inderdaad" />
-    <Word from="lnformatie" to="Informatie" />
     <Word from="lsolement" to="Isolement" />
-    <Word from="lnstructie" to="Instructie" />
     <Word from="ler" to="Ier" />
     <Word from="lerland" to="Ierland" />
     <Word from="lers" to="Iers" />
@@ -26,5 +22,7 @@
   <BeginLines />
   <EndLines />
   <WholeLines />
-  <RegularExpressions />
+  <RegularExpressions>
+    <RegEx find="\bln(?=\p{Ll}{2})" replaceWith="In" />
+  </RegularExpressions>
 </OCRFixReplaceList>
