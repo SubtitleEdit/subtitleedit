@@ -508,5 +508,6 @@
     <RegEx find="\b([pP])rivelig[ie]\p{Ll}\B" replaceWith="$1rivelegiad" />
     <RegEx find="\bpud(?:és|e-)se\b" replaceWith="pudesse" />
     <RegEx find="\biquilíbr(?:e|i)o\b" replaceWith="equilíbrio" />
+    <RegEx find="\b([cC])orregi\B" replaceWith="$1orrigid" />
   </RegularExpressions>
 </OCRFixReplaceList>
