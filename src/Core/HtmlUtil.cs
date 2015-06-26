@@ -362,7 +362,7 @@ namespace Nikse.SubtitleEdit.Core
             if (alsoSsaTags)
                 s = Utilities.RemoveSsaTags(s);
 
-            if (s.IndexOf('<') < 0)
+            if (!s.Contains('<'))
                 return s;
 
             return RemoveOpenCloseTags(s, TagItalic, TagBold, TagUnderline, TagParagraph, TagFont, TagCyrillicI);
