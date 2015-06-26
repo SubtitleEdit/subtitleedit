@@ -321,10 +321,6 @@
     <Word from="previlégio" to="privilégio" />
     <Word from="primária-que" to="primária que" />
     <Word from="priúdo" to="período" />
-    <Word from="priveligeada" to="privilegiada" />
-    <Word from="priveligeado" to="privilegiado" />
-    <Word from="priveligiada" to="privilegiada" />
-    <Word from="priveligiado" to="privilegiado" />
     <Word from="probalidade" to="probabilidade" />
     <Word from="progreso" to="progresso" />
     <Word from="proibído" to="proibido" />
@@ -513,5 +509,6 @@
     <RegEx find="\b(B|b)elem\b" replaceWith="$1elém" />
     <RegEx find="\b([sS])u[íi]sso(s)?\b" replaceWith="$1uíço$2" />
     <RegEx find="\b([sS])u[íi]ssa(s)?\b" replaceWith="$1uíça$2" />
+    <RegEx find="\b([pP])rivelig[ie]\p{Ll}\B" replaceWith="$1rivelegiad" />
   </RegularExpressions>
 </OCRFixReplaceList>
