@@ -218,8 +218,6 @@
     <Word from="ipopótamo" to="hipopótamo" />
     <Word from="ipsilon" to="ípsilon" />
     <Word from="ipslon" to="ípsilon" />
-    <Word from="iquilíbreo" to="equilíbrio" />
-    <Word from="iquilíbrio" to="equilíbrio" />
     <Word from="isquesito" to="esquisito" />
     <Word from="juíz" to="juiz" />
     <Word from="juiza" to="juíza" />
@@ -509,5 +507,6 @@
     <RegEx find="\b([sS])u[íi]ssa(s)?\b" replaceWith="$1uíça$2" />
     <RegEx find="\b([pP])rivelig[ie]\p{Ll}\B" replaceWith="$1rivelegiad" />
     <RegEx find="\bpud(?:és|e-)se\b" replaceWith="pudesse" />
+    <RegEx find="\biquilíbr(?:e|i)o\b" replaceWith="equilíbrio" />
   </RegularExpressions>
 </OCRFixReplaceList>
