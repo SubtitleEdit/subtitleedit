@@ -2734,24 +2734,23 @@ namespace Nikse.SubtitleEdit.Logic
             text = text.Replace(operatingSystemCommand, string.Empty);
             text = text.Replace('\t', ' ');
 
-            while (text.Contains("  "))
-                text = text.Replace("  ", " ");
-
-            text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+            text = text.FixExtraSpaces();
 
             if (text.EndsWith(' '))
-                text = text.TrimEnd(' ');
+                text = text.Substring(0, text.Length - 1);
 
-            text = text.Replace(". . ..", "...");
-            text = text.Replace(". ...", "...");
-            text = text.Replace(". .. .", "...");
-            text = text.Replace(". . .", "...");
-            text = text.Replace(". ..", "...");
-            text = text.Replace(".. .", "...");
-            text = text.Replace("....", "...");
-            text = text.Replace("....", "...");
-            text = text.Replace("....", "...");
+            const string ellipses = "...";
+            text = text.Replace(". . ..", ellipses);
+            text = text.Replace(". ...", ellipses);
+            text = text.Replace(". .. .", ellipses);
+            text = text.Replace(". . .", ellipses);
+            text = text.Replace(". ..", ellipses);
+            text = text.Replace(".. .", ellipses);
+
+            // Fix recursive: ...
+            while (text.Contains("...."))
+                text = text.Replace("....", ellipses);
+
             text = text.Replace(" ..." + Environment.NewLine, "..." + Environment.NewLine);
             text = text.Replace(Environment.NewLine + "... ", Environment.NewLine + "...");
             text = text.Replace(Environment.NewLine + "<i>... ", Environment.NewLine + "<i>...");
