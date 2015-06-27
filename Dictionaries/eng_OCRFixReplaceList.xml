@@ -1168,10 +1168,6 @@
     <Word from="sHATTERING" to="SHATTERING" />
     <Word from="shcws" to="shows" />
     <Word from="She`s" to="She's" />
-    <Word from="She‘II" to="She'll" />
-    <Word from="she'II" to="she'll" />
-    <Word from="She'II" to="She'll" />
-    <Word from="she'Il" to="she'll" />
     <Word from="Shejust" to="She just" />
     <Word from="she'lI" to="she'll" />
     <Word from="Shoofing" to="Shooting" />
@@ -1281,9 +1277,6 @@
     <Word from="thejury" to="the jury" />
     <Word from="Thelook" to="The look" />
     <Word from="Therds" to="There's" />
-    <Word from="There'II" to="There'll" />
-    <Word from="There'Il" to="There'll" />
-    <Word from="There'lI" to="There'll" />
     <Word from="They'/'e" to="They're" />
     <Word from="they/'II" to="they'll" />
     <Word from="They/re" to="They're" />
@@ -1515,10 +1508,6 @@
     <Word from="you'II" to="you'll" />
     <Word from="You'II" to="You'll" />
     <Word from="You'Il" to="You'll" />
-    <Word from="youjack" to="you jack" />
-    <Word from="youjoin" to="you join" />
-    <Word from="Youjoin" to="You join" />
-    <Word from="youjust" to="you just" />
     <Word from="You'lI" to="You'll" />
     <Word from="youngsterlike" to="youngster like" />
     <Word from="youpick" to="you pick" />
@@ -2187,5 +2176,8 @@
   </WholeLines>
   <RegularExpressions>
     <!-- <RegEx find="\bi\b" replaceWith="I" /> just an example - do not use this regex -->
+  <RegEx find="\b(y|Y)ou(?=(?:jack|join|just|you)\b)" replaceWith="$1ou " />
+  <RegEx find="(?&lt;=There')(?:II|Il|lI)\b" replaceWith="ll" />
+  <RegEx find="\b(S|s)he['‘]I[lI]\b" replaceWith="$1he'll" />
   </RegularExpressions>
 </OCRFixReplaceList>
