@@ -1331,7 +1331,7 @@
     <RegEx find="([uU])(ticaj)(a|e|i|u|em|ima|ni|nu|nima|noj|nom)?" replaceWith="$1tjecaj$3" />
     <RegEx find="([uU])(verav)(am|aš|a|amo|ate|aju|ati|ala|ao|ali|aše)" replaceWith="$1vjerav$3" />
     <RegEx find="([uU])(verljiv)(a|e|i|o|u|ima|ima|om|og|oj)?" replaceWith="$1vjerljiv$3" />
-    <RegEx find="(u|U)(v?jek)" replaceWith="$1vijek" />
+    <RegEx find="(u|U)(vj?ek)" replaceWith="$1vijek" />
     <RegEx find="([uU])(vet)(a|e|i|u|om|ima|nu|nima|noj|nom)?" replaceWith="$1vjet$3" />
     <RegEx find="(uzok)(ujem|uješ|uje|ujemo|ujete|uju|ovan|ovani|ovali|ovale|ovalo)?" replaceWith="uzrok$2" />
     <RegEx find="\b(varvar)(a|e|i|u|ima|skom|skim|skoj|skima|ski)" replaceWith="barbar$2" />
