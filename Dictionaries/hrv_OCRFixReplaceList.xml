@@ -1368,7 +1368,7 @@
     <RegEx find="([zZ])(amenjiv)(a|u|i|e|o|ima|og|ov)?" replaceWith="$1amjenjiv$3" />
     <RegEx find="([nN])(ezamenjiv)(a|u|i|e|o|ima|og|ov)?" replaceWith="$1ezamjenjiv$3" />
     <RegEx find="([zZ])(amj?eni)(m|š|mo|o|te|ti|o|la|le|li|še)?" replaceWith="$1amijeni$3" />
-    <RegEx find="(zZ)(auv?jek)" replaceWith="$1auvijek" />
+    <RegEx find="(zZ)(auvj?ek)" replaceWith="$1auvijek" />
     <RegEx find="(zavis)(im|iš|i|imo|ite|ni|ne|nima|nim|nom|nik|nica|nošću)" replaceWith="ovis$2" />
     <RegEx find="(Zavis)(im|iš|i|imo|ite|ni|ne|nima|nim|nom|nik|nica|nošću)" replaceWith="Ovis$2" />
     <RegEx find="(zvaničn)(a|e|i|o|u|ima)" replaceWith="služben$2" />
