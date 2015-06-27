@@ -14253,16 +14253,9 @@ namespace Nikse.SubtitleEdit.Forms
                 object pluginObject = Activator.CreateInstance(pluginType);
 
                 // IPlugin
-                Type[] tt = pluginType.GetInterfaces();
-                Type t = null;
-                foreach (Type t2 in tt)
-                {
-                    if (t2.Name == "IPlugin")
-                    {
-                        t = t2;
-                        break;
-                    }
-                }
+                var t = pluginType.GetInterface("IPlugin");
+                if (t == null)
+                    return null;
 
                 System.Reflection.PropertyInfo pi = t.GetProperty("Name");
                 if (pi != null)
