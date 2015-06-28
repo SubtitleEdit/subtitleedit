@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int subtitleCount = 0;
             foreach (string line in lines)
             {
-                if (line.StartsWith("timestamp: "))
+                if (line.StartsWith("timestamp: ", StringComparison.Ordinal))
                     subtitleCount++;
             }
             return subtitleCount > 10;
