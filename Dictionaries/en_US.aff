@@ -2850,10 +2850,10 @@ OCONV ' ’
 #   PHONEtic_english.h - #PHONEtic transformation rules for use with #PHONEtic.c
 #   Copyright (C) 2000 Björn Jacke
 #
-#   This rule set is based on Lawrence Phillips original metaPHONE 
+#   This rule set is based on Lawrence Phillips original metaPHONE
 #   algorithm with modifications made by Michael Kuhn in his
 #   C implantation, more modifications by Björn Jacke when
-#   converting the algorithm to a rule set and minor 
+#   converting the algorithm to a rule set and minor
 #   touch ups by Kevin Atkinson
 #
 #   This library is free software; you can redistribute it and/or
@@ -3040,7 +3040,7 @@ PHONE Z                    S
 #
 #  E --> A      at beginnig
 #          _      SILENT otherwise
-#  
+#
 #  F --> F
 #
 #  G -->        SILENT if in "-gh-" and not at end or before a vowel
@@ -3066,7 +3066,7 @@ PHONE Z                    S
 #  L --> L
 #
 #  M --> M
-#  
+#
 #  N --> N
 #
 #  O --> A      at beginning
@@ -3102,6 +3102,5 @@ PHONE Z                    S
 #
 #  Y -->        SILENT if not followed by a vowel
 #          Y      if followed by a vowel
-# 
+#
 #  Z --> S
-
