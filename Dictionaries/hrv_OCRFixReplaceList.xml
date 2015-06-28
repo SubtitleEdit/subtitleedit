@@ -1326,7 +1326,7 @@
     <RegEx find="\b([vV])(išlj)(a|e|i|u|eg|em|oj|om)" replaceWith="$1iš$3" />
     <RegEx find="\b([vV])(odk)(a|e|i|u|ama)" replaceWith="$1otk$3" />
     <RegEx find="([vV])(ole)(n|na|no|ti|nu|nog|la|le|li)" replaceWith="$1olje$3" />
-    <RegEx find="\b([vV])oz(a|u|om)?\b" replaceWith="$1lak$3" />
+    <RegEx find="\b([vV])oz(a|u|om)?\b" replaceWith="$1lak$2" />
     <RegEx find="([vV])rj?edi(m|š|mo|te|li)?" replaceWith="$1rijedi$3" />
     <RegEx find="([vV])rj?ed(e|an|na|no|nost|nosti|nošću)?" replaceWith="$1rijed$2" />
     <RegEx find="([zZ])(ainteresova)(n|ni|ne|la|le|li|lo|ti|na|no|noj)" replaceWith="$1ainteresira$3" />
