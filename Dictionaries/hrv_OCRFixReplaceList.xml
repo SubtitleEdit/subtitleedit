@@ -747,16 +747,6 @@
     <Word from="razumeju" to="razumiju" />
     <Word from="razumeti" to="razumjeti" />
     <Word from="razumeću" to="razumjet ću" />
-    <Word from="sistem" to="sustav" />
-    <Word from="sistemi" to="sustavi" />
-    <Word from="sistemu" to="sustavu" />
-    <Word from="sistemima" to="sustavima" />
-    <Word from="sisteme" to="sustave" />
-    <Word from="Sistem" to="Sustav" />
-    <Word from="Sistemi" to="Sustavi" />
-    <Word from="Sistemu" to="Sustavu" />
-    <Word from="Sistemima" to="Sustavima" />
-    <Word from="Sisteme" to="Sustave" />
     <Word from="stepena" to="stupnjeva" />
     <Word from="stepen" to="stupanj" />
     <Word from="stepeni" to="stupnjeva" />
@@ -1241,6 +1231,7 @@
     <RegEx find="\b([sS])(avet)(a|u|om|ima|nik|nica|nica|nicu|nici|nicima|nicama|nice|ovanje|ovanju)?" replaceWith="$1avjet$3" />
     <RegEx find="([sS])(ažalj?eva)(m|š|mo|te|ju|ti|li|le|la|lo|jući|juća|juće|nje)" replaceWith="$1ažalijeva$3" />
     <RegEx find="\b([sS])(edi)(m|š|i|imo|ite|e|eći|ili|ile|ilo|iše)\b" replaceWith="$1jedi$3" />
+    <RegEx find="\b(s|S)istem(a|e|i|u|om|ima)?\b" replaceWith="$1ustav$3" />
     <RegEx find="(s|S)(mećar)(a|e|i|ski|ska|sko|skom|skoj|skih)?" replaceWith="$1metlar$3" />
     <RegEx find="\b(s|S)(me)(m|š|mo|te|šna|šne|šni|šno|šnom|šnoj|šnu)\b" replaceWith="Smije$2" />
     <RegEx find="\b([sS])(mej)(u|e|em|eš|emo|ete|anje|anju|ati|ali|ale|ao|ala|alo)" replaceWith="$1mij$3" />
