@@ -113,7 +113,6 @@
     <Word from="hoče" to="hoće" />
     <Word from="hočemo" to="hoćemo" />
     <Word from="hočete" to="hoćete" />
-    <Word from="holesterol" to="kolesterol" />
     <Word from="Hteo" to="Htio" />
     <Word from="hteo" to="htio" />
     <Word from="htjeo" to="htio" />
@@ -250,9 +249,6 @@
     <Word from="njem" to="nijem" />
     <Word from="nesvijest" to="nesvjest" />
     <Word from="obe" to="obje" />
-    <Word from="obeležava" to="obilježava" />
-    <Word from="obeležavanje" to="obilježavanje" />
-    <Word from="obeležavanjem" to="obilježavanjem" />
     <Word from="obelodanjen" to="objelodanjen" />
     <Word from="obelodanjeno" to="objelodanjeno" />
     <Word from="obožavalac" to="obožavatelj" />
@@ -1002,11 +998,12 @@
     <RegEx find="(Frojd)(a|e|u|om|ovom|ovoj|ovim)?" replaceWith="Freud$2" />
     <RegEx find="(g|G)(luv)(a|e|o|u|oj|om)?" replaceWith="$1luh$3" />
     <RegEx find="\b(g|G)(rj?eh)(a|e|u|om)?" replaceWith="$1rijeh$3" />
-    <RegEx find="\b(g|G)res(i|ima)" replaceWith="$1rijes$2" />
+    <RegEx find="\b(g|G)rj?es(i|ima)" replaceWith="$1rijes$2" />
     <RegEx find="(g|G)rejanj(e|u|a|em|ima)" replaceWith="$1rijanj$2" />
     <RegEx find="(g|G)rj?eši(o|m|š|mo|te|la|li|ti)" replaceWith="$1riješi$2" />
     <RegEx find="(haos)(a|i|e|u|ima|na|no|ni|om)?" replaceWith="kaos$2" />
     <RegEx find="(h|H)(emij)(a|e|i|ski|ska|sko|skom|skoj|skih)" replaceWith="$1emij$3" />
+    <RegEx find="holesterol(a|e|i|u|om|ski|ska|sko|skom|skoj|skih)" replaceWith="kolesterol$1" />
     <RegEx find="(Hrist)(a|e|u|om)?" replaceWith="Krist$2" />
     <RegEx find="(hrišćan)(a|e|i|u|in|ina|ine|inu|inom|ka|ku|ki|kama|ima|ska|ske|ski|sko|sku|skoj|skom)" replaceWith="kršćan$2" />
     <RegEx find="(Holand)(ska|sku|skom|skoj)" replaceWith="Nizozems$3" />
@@ -1114,6 +1111,7 @@
     <RegEx find="([nN])(oč)(i|u|ni|na|noj|nim)?" replaceWith="$1oć$3" />
     <RegEx find="(naučn)(i|a|o|og|u|oj|om|ik|im|ici)?" replaceWith="znanstven$2" />
     <RegEx find="([oO])(bavj?est)(io|ila|ile|ili|iti|iše|ima|i)?" replaceWith="$1bavijest$3" />
+    <RegEx find="([oO])beležava(nje|njem|nju|nja)?" replaceWith="$1bilježava$2" />
     <RegEx find="(obezbeđenj)(a|e|u|ima)" replaceWith="osiguranj$2" />
     <RegEx find="([oO])(brača)(m|o|š|mo|te|ju|jući|la|le|li|lo|ti|vši)?" replaceWith="$1braća$3" />
     <RegEx find="\b(odeć)(a|e|u|i|om)" replaceWith="odjeć$2" />
