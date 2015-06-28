@@ -164,7 +164,6 @@
     <Word from="križom" to="križem" />
     <Word from="kupatilo" to="kupaona" />
     <Word from="kupatilu" to="kupaoni" />
-    <Word from="kučka" to="kuja" />
     <Word from="lažeju" to="lažu" />
     <Word from="lažov" to="lažljivac" />
     <Word from="lek" to="lijek" />
@@ -1054,7 +1053,7 @@
     <RegEx find="(n|N)(ekontrolisan)(o|i|a|oj|om|ima)?" replaceWith="$1ekontroliran$2" />
     <RegEx find="(k|K)(ontroliše)(m|š|mo|te)" replaceWith="$1ontrolir$3" />
     <RegEx find="(k|K)(oriš)(ć|č)(enj)(a|e|u|em|ima)" replaceWith="$1orištenj$5" />
-    <RegEx find="(k|K)(učk)(a|e|i|o|u|om)?" replaceWith="$1uj$3" />
+    <RegEx find="(k|K)(učk)(a|e|i|o|u|in|om)?" replaceWith="$1uj$3" />
     <RegEx find="(k|K)(uvan)(a|e|i|o|u|ima|og|om|oj|im)?" replaceWith="$1uhan$3" />
     <RegEx find="(k|K)(uva)(r|re|ri|ru|rima|rica|ricu|rice|m|š|mo|te|ju|še|li|ti)" replaceWith="$1uha$3" />
     <RegEx find="\b(krst)(a|u|em)?" replaceWith="križ$2" />
