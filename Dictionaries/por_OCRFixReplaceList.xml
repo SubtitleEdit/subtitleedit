@@ -218,8 +218,6 @@
     <Word from="ipopótamo" to="hipopótamo" />
     <Word from="ipsilon" to="ípsilon" />
     <Word from="ipslon" to="ípsilon" />
-    <Word from="iquilíbreo" to="equilíbrio" />
-    <Word from="iquilíbrio" to="equilíbrio" />
     <Word from="isquesito" to="esquisito" />
     <Word from="juíz" to="juiz" />
     <Word from="juiza" to="juíza" />
@@ -321,10 +319,6 @@
     <Word from="previlégio" to="privilégio" />
     <Word from="primária-que" to="primária que" />
     <Word from="priúdo" to="período" />
-    <Word from="priveligeada" to="privilegiada" />
-    <Word from="priveligeado" to="privilegiado" />
-    <Word from="priveligiada" to="privilegiada" />
-    <Word from="priveligiado" to="privilegiado" />
     <Word from="probalidade" to="probabilidade" />
     <Word from="progreso" to="progresso" />
     <Word from="proibído" to="proibido" />
@@ -337,8 +331,6 @@
     <Word from="prsença" to="presença" />
     <Word from="prustituta" to="prostituta" />
     <Word from="pudérmos" to="pudermos" />
-    <Word from="pude-se" to="pudesse" />
-    <Word from="pudésse" to="pudesse" />
     <Word from="púlico" to="público" />
     <Word from="pús" to="pus" />
     <Word from="pusémos" to="pusemos" />
@@ -423,14 +415,6 @@
     <Word from="suiças" to="suíças" />
     <Word from="suiço" to="suíço" />
     <Word from="suiços" to="suíços" />
-    <Word from="Suissa" to="Suíça" />
-    <Word from="Suíssa" to="Suíça" />
-    <Word from="suissas" to="suíças" />
-    <Word from="suíssas" to="suíças" />
-    <Word from="suisso" to="suíço" />
-    <Word from="suísso" to="suíço" />
-    <Word from="suissos" to="suíços" />
-    <Word from="suíssos" to="suíços" />
     <Word from="supôr" to="supor" />
     <Word from="tabeliões" to="tabeliães" />
     <Word from="taínha" to="tainha" />
@@ -519,5 +503,11 @@
     <RegEx find="\b(s|S)ufe?ciente\b" replaceWith="$1uficiente" />
     <RegEx find="\b(n|N)ao\b" replaceWith="$1ão" />
     <RegEx find="\b(B|b)elem\b" replaceWith="$1elém" />
+    <RegEx find="\b([sS])u[íi]sso(s)?\b" replaceWith="$1uíço$2" />
+    <RegEx find="\b([sS])u[íi]ssa(s)?\b" replaceWith="$1uíça$2" />
+    <RegEx find="\b([pP])rivelig[ie]\p{Ll}\B" replaceWith="$1rivelegiad" />
+    <RegEx find="\bpud(?:és|e-)se\b" replaceWith="pudesse" />
+    <RegEx find="\biquilíbr(?:e|i)o\b" replaceWith="equilíbrio" />
+    <RegEx find="\b([cC])orregi\B" replaceWith="$1orrigid" />
   </RegularExpressions>
 </OCRFixReplaceList>
