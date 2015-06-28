@@ -1,8 +1,9 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
-    public class OcrImage
+    public class OcrImage : IDisposable
     {
         public bool Italic { get; set; }
         public Bitmap Bmp { get; set; }
@@ -32,6 +33,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
             }
             return data;
+        }
+
+        public void Dispose()
+        {
+            if (Bmp != null)
+            {
+                Bmp.Dispose();
+                Bmp = null;
+            }
         }
     }
 }

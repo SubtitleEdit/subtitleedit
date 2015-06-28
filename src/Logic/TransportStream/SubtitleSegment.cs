@@ -1,7 +1,7 @@
-﻿namespace Nikse.SubtitleEdit.Logic.TransportStream
+﻿using System;
+namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
-
-    public class SubtitleSegment
+    public class SubtitleSegment : IDisposable
     {
         public const int PageCompositionSegment = 0x10;
         public const int RegionCompositionSegment = 0x11;
@@ -78,6 +78,14 @@
                 }
             }
         }
-    }
 
+        public void Dispose()
+        {
+            if (ObjectData != null)
+            {
+                ObjectData.Dispose();
+                ObjectData = null;
+            }
+        }
+    }
 }

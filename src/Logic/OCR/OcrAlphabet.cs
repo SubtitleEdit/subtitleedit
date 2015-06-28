@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
-    public class OcrAlphabet
+    public class OcrAlphabet : IDisposable
     {
         public OcrAlphabet()
         {
@@ -43,5 +44,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return null;
         }
 
+
+        public void Dispose()
+        {
+            if (OcrCharacters != null && OcrCharacters.Count > 0)
+            {
+                foreach (OcrCharacter ocrChar in OcrCharacters)
+                {
+                    ocrChar.Dispose();
+                }
+                OcrCharacters = null;
+            }
+        }
     }
 }

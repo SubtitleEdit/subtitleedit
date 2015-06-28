@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
-    public class ObjectDataSegment
+    public class ObjectDataSegment : IDisposable
     {
         public int ObjectId { get; set; }
         public int ObjectVersionNumber { get; set; }
@@ -462,6 +463,15 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 }
             }
             return true;
+        }
+
+        public void Dispose()
+        {
+            if (Image != null)
+            {
+                Image.Dispose();
+                Image = null;
+            }
         }
 
     }
