@@ -8,7 +8,6 @@ namespace Nikse.SubtitleEdit.Controls
 {
     public partial class TimeUpDown : UserControl
     {
-
         public enum TimeMode
         {
             HHMMSSMS,
