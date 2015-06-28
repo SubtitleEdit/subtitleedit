@@ -100,7 +100,7 @@
     <Word from="foka" to="tuljan" />
     <Word from="foku" to="tuljana" />
     <Word from="foke" to="tuljani" />
-    <Word from="fokama" to="tuljanina" />
+    <Word from="fokama" to="tuljanima" />
     <Word from="funkcioniše" to="funkcionira" />
     <Word from="gde" to="gdje" />
     <Word from="Gde" to="Gdje" />
@@ -1002,8 +1002,10 @@
     <RegEx find="(evr)(a|e|i|o|u|om|ima)?" replaceWith="eur$2" />
     <RegEx find="(evrop)(ski|ska|sko|sku|skom)" replaceWith="europ$2" />
     <RegEx find="(Evrop)(a|e|i|o|u|om)" replaceWith="Europ$2" />
+    <RegEx find="(f|F)alsifikuje?(m|š|mo|te|ju)?" replaceWith="$1alsificira$2" />
     <RegEx find="(farba)(m|š|mo|te|ju|li|še|nje)?" replaceWith="boja$2" />
-    <RegEx find="[fF]udbal(a|u|om)?" replaceWith="Nogomet$1" />
+    <RegEx find="fudbal(a|u|om)?" replaceWith="nogomet$1" />
+    <RegEx find="Fudbal(a|u|om)?" replaceWith="Nogomet$1" />
     <RegEx find="(Frojd)(a|e|u|om|ovom|ovoj|ovim)?" replaceWith="Freud$2" />
     <RegEx find="(g|G)(luv)(a|e|o|u|oj|om)?" replaceWith="$1luh$3" />
     <RegEx find="\b(g|G)(rj?eh)(a|e|u|om)?" replaceWith="$1rijeh$3" />
@@ -1207,7 +1209,7 @@
     <RegEx find="(pP)rjedlo(g|ga|ge|gu|gom|zi|zima)" replaceWith="$1rijedlo$2" />
     <RegEx find="(pP)reti(o|š|mo|te|la|li|lo|le)" replaceWith="$1rijeti$2" />
     <RegEx find="(pP)reter(ao|am|aš|amo|ate|aju|ala|ali|alo|ale|ivanje|ivanja|ivali|ivale|ujem|uješ|uje|ujemo|ujete|uju)" replaceWith="$1retjer$2" />
-    <RegEx find="prevazi(đen|đeno|đena|ći|laženje|laženja|laženju|laženjem)" replaceWith="nadi$1" />
+    <RegEx find="prevazi(đen|đeno|đena|ći|laženje|laženja|laženju|laženjem|šao|šla|šlo|šli)" replaceWith="nadi$1" />
     <RegEx find="([rR])(azmen)(a|e|u|i|ama)?" replaceWith="$1azmjen$3" />
     <RegEx find="([rR])(azume)(m|š|mo|te|va)" replaceWith="$1azumije$3" />
     <RegEx find="(redhodn)" replaceWith="rethodn" />
