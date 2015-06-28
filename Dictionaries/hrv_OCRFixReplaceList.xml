@@ -546,14 +546,6 @@
     <Word from="veštine" to="vještine" />
     <Word from="vežba" to="vježba" />
     <Word from="vizuelne" to="vizualne" />
-    <Word from="vrede" to="vrijede" />
-    <Word from="vrjede" to="vrijede" />
-    <Word from="vredan" to="vrijedan" />
-    <Word from="vredna" to="vrijedna" />
-    <Word from="vredno" to="vrijedno" />
-    <Word from="vrednost" to="vrijednost" />
-    <Word from="vrednosti" to="vrijednosti" />
-    <Word from="vrednošću" to="vrijednošću" />
     <Word from="vreme" to="vrijeme" />
     <Word from="Vreme" to="Vrijeme" />
     <Word from="voliti" to="voljeti" />
@@ -1335,7 +1327,8 @@
     <RegEx find="\b([vV])(odk)(a|e|i|u|ama)" replaceWith="$1otk$3" />
     <RegEx find="([vV])(ole)(n|na|no|ti|nu|nog|la|le|li)" replaceWith="$1olje$3" />
     <RegEx find="\b([vV])(oz)(a|u|om)?\b" replaceWith="$1lak$3" />
-    <RegEx find="([vV])(redi)(m|š|mo|te|li)?" replaceWith="$1rijedi$3" />
+    <RegEx find="([vV])rj?edi(m|š|mo|te|li)?" replaceWith="$1rijedi$3" />
+    <RegEx find="([vV])rj?ed(e|an|na|no|nost|nosti|nošću)?" replaceWith="$1rijed$2" />
     <RegEx find="([zZ])(ainteresova)(n|ni|ne|la|le|li|lo|ti|na|no|noj)" replaceWith="$1ainteresira$3" />
     <RegEx find="([zZ])(ahtj?ev)(am|aš|amo|ate|aju|ali|ati|ajmo|ajte|aju)" replaceWith="$1ahtijev$3" />
     <RegEx find="(zahtev)(a|u|i|e|om|ima)?" replaceWith="zahtjev$2" />
