@@ -33,7 +33,6 @@
     <Word from="artifice" to="artífice" />
     <Word from="artifícial" to="artificial" />
     <Word from="ascenção" to="ascensão" />
-    <Word from="Associacao" to="Associação" />
     <!-- <Word from="assucar" to="açúcar" /> assucar é uma palavra existente no dicionário -->
     <Word from="assúcar" to="açúcar" />
     <Word from="aste" to="haste" />
@@ -102,8 +101,6 @@
     <Word from="degladiar" to="digladiar" />
     <Word from="deiche" to="deixe" />
     <Word from="desinteria" to="disenteria" />
-    <Word from="desiquilíbreo" to="desequilíbrio" />
-    <Word from="desiquilíbrio" to="desequilíbrio" />
     <Word from="despendio" to="dispêndio" />
     <Word from="despêndio" to="dispêndio" />
     <Word from="desplicência" to="displicência" />
@@ -176,8 +173,6 @@
     <Word from="glicémia" to="glicemia" />
     <Word from="gorgeta" to="gorjeta" />
     <Word from="grangear" to="granjear" />
-    <Word from="gratuíto" to="gratuito" />
-    <Word from="gratúito" to="gratuito" />
     <Word from="guizar" to="guisar" />
     <Word from="hectar" to="hectare" />
     <Word from="herméticamente" to="hermeticamente" />
@@ -225,10 +220,6 @@
     <Word from="justanzente" to="justamente" />
     <Word from="juz" to="jus" />
     <Word from="kilo" to="quilo" />
-    <Word from="kilograma" to="quilograma" />
-    <Word from="kilogramas" to="quilogramas" />
-    <Word from="kilómetro" to="quilómetro" />
-    <Word from="kilómetros" to="quilómetros" />
     <Word from="laboratório-porque" to="laboratório porque" />
     <Word from="ladravaz" to="ladrava" />
     <Word from="lamentàvelmente" to="lamentavelmente" />
@@ -270,7 +261,6 @@
     <Word from="nasaias" to="nasais" />
     <Word from="nêle" to="nele" />
     <Word from="nest" to="neste" />
-    <Word from="Ninguem" to="Ninguém" />
     <Word from="Nivea" to="Nívea" />
     <Word from="nonagessimo" to="nonagésimo" />
     <Word from="nonagéssimo" to="nonagésimo" />
@@ -495,7 +485,7 @@
     <RegEx find="\Bcoes\b" replaceWith="ções" />
     <!-- <RegEx find="\Bccao\b" replaceWith="cção" /> não faz sentido ter este e ter a linha de cima -->
     <!-- <RegEx find="\Bccoes\b" replaceWith="cções" /> não faz sentido ter este e ter a linha de cima -->
-    <RegEx find="\b([mM])ae\b" replaceWith="$1ãe" />
+    <RegEx find="\b(m|M)ae\b" replaceWith="$1ãe" />
     <RegEx find="\Bdmnis\B" replaceWith="dminis" />
     <RegEx find="\Blcól\B" replaceWith="lcoól" />
     <RegEx find="\b(t|T)a[nm]b[eé]m\b" replaceWith="$1ambém" />
@@ -503,11 +493,16 @@
     <RegEx find="\b(s|S)ufe?ciente\b" replaceWith="$1uficiente" />
     <RegEx find="\b(n|N)ao\b" replaceWith="$1ão" />
     <RegEx find="\b(B|b)elem\b" replaceWith="$1elém" />
-    <RegEx find="\b([sS])u[íi]sso(s)?\b" replaceWith="$1uíço$2" />
-    <RegEx find="\b([sS])u[íi]ssa(s)?\b" replaceWith="$1uíça$2" />
-    <RegEx find="\b([pP])rivelig[ie]\p{Ll}\B" replaceWith="$1rivelegiad" />
+    <RegEx find="\b(s|S)u[íi]sso(s)?\b" replaceWith="$1uíço$2" />
+    <RegEx find="\b(s|S)u[íi]ssa(s)?\b" replaceWith="$1uíça$2" />
+    <RegEx find="\b(p|P)rivelig[ie]\p{Ll}\B" replaceWith="$1rivelegiad" />
     <RegEx find="\bpud(?:és|e-)se\b" replaceWith="pudesse" />
     <RegEx find="\biquilíbr(?:e|i)o\b" replaceWith="equilíbrio" />
-    <RegEx find="\b([cC])orregi\B" replaceWith="$1orrigid" />
+    <RegEx find="\b(c|C)orregi\B" replaceWith="$1orrigid" />
+    <RegEx find="\b(?&lt;=A|a)ssociacao" replaceWith="ssociação" />
+    <RegEx find="\b(?&lt;=N|n)inguem" replaceWith="inguém" />
+    <RegEx find="\b(?&lt;=g|G)rat(?:uí|úi)to" replaceWith="$1ratuito" />
+    <RegEx find="\b(?&lt;=d|D)esiquilíbr[ei]o" replaceWith="esequilíbrio" />
+    <RegEx find="\b[k|K]il(ogramas?|ómetros?)\b" replaceWith="qui$1" />
   </RegularExpressions>
 </OCRFixReplaceList>
