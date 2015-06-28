@@ -326,7 +326,6 @@ namespace Nikse.SubtitleEdit.Forms
             var sb = new StringBuilder();
             foreach (string line in lines)
             {
-
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     if (sb.Length > 0)
@@ -750,7 +749,6 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxText.Visible = true;
                 buttonOpenText.Text = Configuration.Settings.Language.ImportText.OpenTextFile;
                 groupBoxSplitting.Enabled = true;
-
             }
             GeneratePreview();
         }

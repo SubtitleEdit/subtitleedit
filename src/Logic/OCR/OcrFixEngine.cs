@@ -116,7 +116,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 if (culture.ThreeLetterISOLanguageName == threeLetterIsoLanguageName)
                 {
-
                     string dictionaryFileName = null;
                     foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
                     {
@@ -154,7 +153,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 if (culture.ThreeLetterISOLanguageName == threeLetterIsoLanguageName)
                 {
-
                     string dictionaryFileName = null;
                     foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
                     {
@@ -636,7 +634,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 {
                     input = input.Replace(".'", Configuration.Settings.Tools.MusicSymbol);
                 }
-
             }
 
             return input;
@@ -1240,7 +1237,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 else
                                     _namesEtcListWithApostrophe.Add(s + "'");
                             }
-
                         }
                         if (_namesList != null)
                             _namesList.Add(s);

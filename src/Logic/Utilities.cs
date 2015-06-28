@@ -123,7 +123,9 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
             }
-            catch { }
+            catch
+            {
+            }
             return info;
         }
 
@@ -144,7 +146,9 @@ namespace Nikse.SubtitleEdit.Logic
                     info.Success = true;
                 }
             }
-            catch { }
+            catch
+            {
+            }
             return info;
         }
 
@@ -427,7 +431,6 @@ namespace Nikse.SubtitleEdit.Logic
             _lastNoBreakAfterListLanguage = languageName;
 
             return _lastNoBreakAfterList;
-
         }
 
         public static string AutoBreakLineMoreThanTwoLines(string text, int maximumLineLength, string language)
@@ -955,7 +958,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
             catch
             {
-
             }
             return encoding;
         }
@@ -3061,7 +3063,6 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         subtitle.Header += Environment.NewLine + Environment.NewLine + "[Events]" + Environment.NewLine;
                     }
-
                 }
             }
             else

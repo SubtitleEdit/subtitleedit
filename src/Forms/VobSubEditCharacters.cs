@@ -132,7 +132,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 listBoxFileNames.Items.Add("[" + text + "] " + node.InnerText);
                                 _italics.Add(node.Attributes["Italic"] != null);
                             }
-
                         }
                     }
                 }
@@ -567,7 +566,6 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                     }
                 }
-
             }
         }
 
