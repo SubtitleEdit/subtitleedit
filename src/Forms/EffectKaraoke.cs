@@ -231,20 +231,21 @@ namespace Nikse.SubtitleEdit.Forms
             const string endFontTag = "</font>";
             while (i < _paragraph.Text.Length)
             {
+                var c = _paragraph.Text[i];
                 if (tagOn)
                 {
                     if (_paragraph.Text[i] == '>')
                         tagOn = false;
-                    tag += _paragraph.Text[i];
+                    tag += c;
                 }
                 else if (_paragraph.Text[i] == '<')
                 {
                     tagOn = true;
-                    tag += _paragraph.Text[i];
+                    tag += c;
                 }
                 else
                 {
-                    text += tag + _paragraph.Text[i];
+                    text += tag + c;
                     tag = string.Empty;
 
                     //end tag
@@ -252,12 +253,12 @@ namespace Nikse.SubtitleEdit.Forms
                         _paragraph.Text[i + 1] == '<' &&
                         _paragraph.Text[i + 2] == '/')
                     {
-                        while (i < _paragraph.Text.Length && _paragraph.Text[i] != '>')
+                        while (++i < _paragraph.Text.Length && _paragraph.Text[i] != '>')
                         {
                             tag += _paragraph.Text[i];
-                            i++;
                         }
-                        text += tag;
+                        text += tag + '>';
+                        tag = string.Empty;
                     }
 
                     string tempText = startFontTag + text + endFontTag;
