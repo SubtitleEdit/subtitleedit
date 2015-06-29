@@ -1244,17 +1244,10 @@
     <Word from="Thal's" to="That's" />
     <Word from="thankyou" to="thank you" />
     <Word from="Thankyou" to="Thank you" />
-    <Word from="thatconverts" to="that converts" />
-    <Word from="thatgoes" to="that goes" />
     <Word from="that'II" to="that'll" />
     <Word from="That'II" to="That'll" />
-    <Word from="thatjob" to="that job" />
-    <Word from="thatjunk" to="that junk" />
-    <Word from="thatjust" to="that just" />
-    <Word from="thatleads" to="that leads" />
     <Word from="Thatl'm" to="That I'm" />
     <Word from="that's just" to="that's just" />
-    <Word from="Thatsand" to="That sand" />
     <Word from="that'sjust" to="that's just" />
     <Word from="That'sjust" to="That's just" />
     <Word from="Thc" to="The" />
@@ -2143,7 +2136,8 @@
     <RegEx find="\b(y|Y)ou(?=(?:jack|join|just|you)\b)" replaceWith="$1ou " />
     <RegEx find="(?&lt;=There')(?:II|Il|lI)\b" replaceWith="ll" />
     <RegEx find="\b(S|s)he['‘]I[lI]\b" replaceWith="$1he'll" />
-    <RegEx find="(?&lt;=\b[yY])our(?!self|selves|n\b)" replaceWith="our " />
+    <RegEx find="(?&lt;=\b[yY])our(?!self|selves|n\b|\s)" replaceWith="our " />
+    <RegEx find="(?&lt;=\b[tT])hat(?=\p{Ll}\B)" replaceWith="hat " />
     <RegEx find="\\\/\\\/(?=e'[drv]|h[eaoy])" replaceWith="w" />
   </RegularExpressions>
 </OCRFixReplaceList>
