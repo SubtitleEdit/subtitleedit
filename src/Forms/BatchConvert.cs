@@ -243,6 +243,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 var fi = new FileInfo(fileName);
+                var ext = fi.Extension;
                 var item = new ListViewItem(fileName);
                 item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
 
@@ -362,7 +363,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         item.SubItems.Add("VobSub");
                     }
-                    else if (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".mks", StringComparison.OrdinalIgnoreCase))
+                    else if (ext.Equals(".mkv", StringComparison.OrdinalIgnoreCase) || ext.Equals(".mks", StringComparison.OrdinalIgnoreCase))
                     {
                         int mkvCount = 0;
                         using (var matroska = new MatroskaFile(fileName))

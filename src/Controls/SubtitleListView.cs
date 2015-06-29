@@ -290,6 +290,7 @@ namespace Nikse.SubtitleEdit.Controls
                 e.DrawDefault = true;
             }
         }
+
         private void SubtitleListViewColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
         {
             if (_settings != null && _saveColumnWidthChanges)
