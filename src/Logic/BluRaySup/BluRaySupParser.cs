@@ -230,7 +230,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                         bmp.SetPixel(x, y, color);
                 }
             }
-
         }
 
         public class PcsData
@@ -290,7 +289,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 }
                 return mergedBmp;
             }
-
         }
 
         public class PdsData

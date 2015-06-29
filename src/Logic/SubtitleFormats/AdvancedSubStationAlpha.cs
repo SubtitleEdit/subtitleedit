@@ -42,7 +42,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     lines.Add(line);
                 format.LoadSubtitle(sub, lines, string.Empty);
                 return sub.Header;
-
             }
         }
 
@@ -356,8 +355,6 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         p.Extra = p.Extra.Split('/')[0].Trim();
                     }
                 }
-
-
             }
             catch
             {
@@ -566,7 +563,6 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         text += "</font>";
                     }
                 }
-
             }
 
             text = text.Replace(@"{\i1}", "<i>");
@@ -890,7 +886,6 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         s = s.Replace("{}", string.Empty);
 
                         p.Text = s;
-
                     }
                 }
             }

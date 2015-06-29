@@ -497,7 +497,6 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-
                 }
             }
             return true;
@@ -553,7 +552,6 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-
                 }
             }
             return true;
@@ -674,9 +672,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (count > giveUpCount - 100 && !tempVeryPrecise)
                     tempVeryPrecise = true;
-
             }
-
         }
 
         private void removeForegroundToolStripMenuItem_Click(object sender, EventArgs e)
