@@ -18,14 +18,6 @@
     <Word from="/ook" to="look" />
     <Word from="/t's" to="It's" />
     <Word from="/'ve" to="I've" />
-    <Word from="\/\/e'd" to="We'd" />
-    <Word from="\/\/e're" to="We're" />
-    <Word from="\/\/e've" to="We've" />
-    <Word from="\/\/hat" to="What" />
-    <Word from="\/\/here'd" to="Where'd" />
-    <Word from="\/\/hoo" to="Whoo" />
-    <Word from="\/\/hy" to="Why" />
-    <Word from="\/\/hy'd" to="Why'd" />
     <Word from="\/\le're" to="We're" />
     <Word from="\/Ve" to="We" />
     <Word from="\Ne're" to="We're" />
@@ -2152,5 +2144,6 @@
     <RegEx find="(?&lt;=There')(?:II|Il|lI)\b" replaceWith="ll" />
     <RegEx find="\b(S|s)he['‘]I[lI]\b" replaceWith="$1he'll" />
     <RegEx find="(?&lt;=\b[yY])our(?!self|selves|n\b)" replaceWith="our " />
+    <RegEx find="\\\/\\\/(?=e'[drv]|h[eaoy])" replaceWith="w" />
   </RegularExpressions>
 </OCRFixReplaceList>
