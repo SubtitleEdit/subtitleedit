@@ -5,7 +5,7 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public class TimeCode
     {
-        public static TimeCode MaxTime = new TimeCode(99, 59, 59, 999);
+        public static readonly TimeCode MaxTime = new TimeCode(99, 59, 59, 999);
 
         public const double BaseUnit = 1000.0; // Base unit of time
         private double _totalMilliseconds;
