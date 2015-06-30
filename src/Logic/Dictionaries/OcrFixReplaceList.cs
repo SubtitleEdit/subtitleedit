@@ -925,6 +925,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             var sb = new StringBuilder();
             if (word != null && text != null && text.Contains(word))
             {
+                const string startChars = @" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/";
                 int appendFrom = 0;
                 for (int i = 0; i < text.Length; i++)
                 {
@@ -932,14 +933,14 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                     {
                         bool startOk = i == 0;
                         if (!startOk)
-                            startOk = (@" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text[i - 1]);
+                            startOk = (startChars + Environment.NewLine).Contains(text[i - 1]);
                         if (!startOk && word.StartsWith(' '))
                             startOk = true;
                         if (startOk)
                         {
                             bool endOk = (i + word.Length == text.Length);
                             if (!endOk)
-                                endOk = (@" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text[i + word.Length]);
+                                endOk = (startChars + Environment.NewLine).Contains(text[i + word.Length]);
                             if (!endOk)
                                 endOk = newWord.EndsWith(' ');
                             if (endOk)
