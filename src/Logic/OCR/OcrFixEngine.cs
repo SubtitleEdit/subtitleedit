@@ -231,11 +231,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
             if (threeLetterIsoLanguageName.Equals("eng", StringComparison.OrdinalIgnoreCase))
             {
-                if (_abbreviationList.Contains("a.m."))
+                if (!_abbreviationList.Contains("a.m."))
                     _abbreviationList.Add("a.m.");
-                if (_abbreviationList.Contains("p.m."))
+                if (!_abbreviationList.Contains("p.m."))
                     _abbreviationList.Add("p.m.");
-                if (_abbreviationList.Contains("o.r."))
+                if (!_abbreviationList.Contains("o.r."))
                     _abbreviationList.Add("o.r.");
             }
 
