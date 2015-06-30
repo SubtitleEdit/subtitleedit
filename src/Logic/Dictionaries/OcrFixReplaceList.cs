@@ -300,8 +300,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
 
                 if (word.Contains('¤'))
                 {
-                    var regex = new Regex("[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]¤");
-                    if (regex.IsMatch(word))
+                    if (Regex.IsMatch(word, "[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]¤"))
                         word = word.Replace('¤', 'o');
                 }
             }
