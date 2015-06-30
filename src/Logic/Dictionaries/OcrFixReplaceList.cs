@@ -775,6 +775,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
 
         private XmlDocument LoadXmlReplaceListDocument()
         {
+            const string xmlText = "<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>";
             var doc = new XmlDocument();
             if (File.Exists(_replaceListXmlFileName))
             {
@@ -784,12 +785,12 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                 }
                 catch
                 {
-                    doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");
+                    doc.LoadXml(xmlText);
                 }
             }
             else
             {
-                doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");
+                doc.LoadXml(xmlText);
             }
             return doc;
         }
@@ -801,6 +802,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
 
         private XmlDocument LoadXmlReplaceListUserDocument()
         {
+            const string xmlText = "<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><RemovedWholeWords/><RemovedPartialLines/><RemovedBeginLines/><RemovedEndLines/><RemovedWholeLines/></ReplaceList>";
             var doc = new XmlDocument();
             if (File.Exists(ReplaceListXmlFileNameUser))
             {
@@ -810,12 +812,12 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                 }
                 catch
                 {
-                    doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><RemovedWholeWords/><RemovedPartialLines/><RemovedBeginLines/><RemovedEndLines/><RemovedWholeLines/></ReplaceList>");
+                    doc.LoadXml(xmlText);
                 }
             }
             else
             {
-                doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><RemovedWholeWords/><RemovedPartialLines/><RemovedBeginLines/><RemovedEndLines/><RemovedWholeLines/></ReplaceList>");
+                doc.LoadXml(xmlText);
             }
             return doc;
         }
