@@ -13,6 +13,8 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
         private readonly HashSet<string> _namesMultiList;
         private readonly string _languageName;
 
+        private string _userFile;
+
         public NamesList(string dictionaryFolder, string languageName, bool useOnlineNamesEtc, string namesEtcUrl)
         {
             _dictionaryFolder = dictionaryFolder;
@@ -43,9 +45,10 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
 
             LoadNamesList(GetLocalNamesFileName(), _namesList, _namesMultiList);
 
-            var userFile = GetLocalNamesUserFileName();
-            LoadNamesList(userFile, _namesList, _namesMultiList);
-            UnloadRemovedNames(userFile);
+            // Cache path in variable for fast access
+            _userFile = GetLocalNamesUserFileName();
+            LoadNamesList(_userFile, _namesList, _namesMultiList);
+            UnloadRemovedNames(_userFile);
         }
 
         public List<string> GetAllNames()
@@ -159,13 +162,13 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                     _namesMultiList.Remove(name);
 
                 var userList = new HashSet<string>();
-                var fileName = GetLocalNamesUserFileName();
-                LoadNamesList(fileName, userList, userList);
+                _userFile = _userFile ?? GetLocalNamesUserFileName(); // Try get file name if _userFile is null
+                LoadNamesList(_userFile, userList, userList);
 
                 var namesDoc = new XmlDocument();
-                if (File.Exists(fileName))
+                if (File.Exists(_userFile))
                 {
-                    namesDoc.Load(fileName);
+                    namesDoc.Load(_userFile);
                 }
                 else
                 {
@@ -193,7 +196,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                     node.InnerText = name;
                     namesDoc.DocumentElement.AppendChild(node);
                 }
-                namesDoc.Save(fileName);
+                namesDoc.Save(_userFile);
                 return true;
             }
             return false;
@@ -214,10 +217,10 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                     _namesList.Add(name);
                 }
 
-                var fileName = GetLocalNamesUserFileName();
+                _userFile = _userFile ?? GetLocalNamesUserFileName();
                 var namesEtcDoc = new XmlDocument();
-                if (File.Exists(fileName))
-                    namesEtcDoc.Load(fileName);
+                if (File.Exists(_userFile))
+                    namesEtcDoc.Load(_userFile);
                 else
                     namesEtcDoc.LoadXml("<ignore_words />");
 
@@ -227,7 +230,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                     XmlNode node = namesEtcDoc.CreateElement("name");
                     node.InnerText = name;
                     de.AppendChild(node);
-                    namesEtcDoc.Save(fileName);
+                    namesEtcDoc.Save(_userFile);
                 }
                 return true;
             }
