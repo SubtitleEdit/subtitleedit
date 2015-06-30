@@ -384,7 +384,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         }
                         sb.Append(fixedWord);
                         lastWord = fixedWord;
-                        word = new StringBuilder();
+                        word.Clear();
                     }
                     sb.Append(text[i]);
                 }
