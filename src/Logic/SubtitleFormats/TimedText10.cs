@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using System.Windows.Forms;
 using System.Xml;
 
 //http://www.w3.org/TR/ttaf1-dfxp/
@@ -54,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     try
                     {
-                        xml.LoadXml(xmlAsString.Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A");
+                        xml.LoadXml(xmlAsString.Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A"));
                         var nsmgr = new XmlNamespaceManager(xml.NameTable);
                         nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
                         var nds = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
