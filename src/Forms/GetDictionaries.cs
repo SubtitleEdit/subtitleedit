@@ -126,7 +126,6 @@ namespace Nikse.SubtitleEdit.Forms
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                 wc.DownloadDataAsync(new Uri(url));
-                Cursor = Cursors.Default;
             }
             catch (Exception exception)
             {
