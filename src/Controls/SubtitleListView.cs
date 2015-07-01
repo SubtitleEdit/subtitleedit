@@ -436,7 +436,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void RestoreFirstVisibleIndex()
         {
-            if (FirstVisibleIndex >= 0 && FirstVisibleIndex < Items.Count)
+            if (IsValidIndex(FirstVisibleIndex))
             {
                 if (FirstVisibleIndex + 1 < Items.Count)
                     FirstVisibleIndex++;
@@ -658,7 +658,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SelectIndexAndEnsureVisible(int index, bool focus)
         {
-            if (index < 0 || index >= Items.Count || Items.Count == 0)
+            if (!IsValidIndex(index))
                 return;
             if (TopItem == null)
                 return;
@@ -738,20 +738,20 @@ namespace Nikse.SubtitleEdit.Controls
 
         public string GetTextAlternate(int index)
         {
-            if (index >= 0 && index < Items.Count && IsAlternateTextColumnVisible)
+            if (IsValidIndex(index) && IsAlternateTextColumnVisible)
                 return Items[index].SubItems[ColumnIndexTextAlternate].Text.Replace(_lineSeparatorString, Environment.NewLine);
             return null;
         }
 
         public void SetText(int index, string text)
         {
-            if (index >= 0 && index < Items.Count)
+            if (IsValidIndex(index))
                 Items[index].SubItems[ColumnIndexText].Text = text.Replace(Environment.NewLine, _lineSeparatorString);
         }
 
         public void SetTimeAndText(int index, Paragraph paragraph)
         {
-            if (index >= 0 && index < Items.Count)
+            if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
 
@@ -845,7 +845,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetExtraText(int index, string text, Color color)
         {
-            if (index >= 0 && index < Items.Count)
+            if (IsValidIndex(index))
             {
                 if (IsAlternateTextColumnVisible)
                     ColumnIndexExtra = ColumnIndexTextAlternate + 1;
@@ -869,7 +869,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetAlternateText(int index, string text)
         {
-            if (index >= 0 && index < Items.Count && Columns.Count >= ColumnIndexTextAlternate + 1)
+            if (IsValidIndex(index) && Columns.Count >= ColumnIndexTextAlternate + 1)
             {
                 if (Items[index].SubItems.Count <= ColumnIndexTextAlternate)
                 {
@@ -885,7 +885,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetDuration(int index, Paragraph paragraph)
         {
-            if (index >= 0 && index < Items.Count)
+            if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
                 if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
@@ -909,7 +909,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetNumber(int index, string number)
         {
-            if (index >= 0 && index < Items.Count)
+            if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
                 item.SubItems[ColumnIndexNumber].Text = number;
@@ -923,7 +923,7 @@ namespace Nikse.SubtitleEdit.Controls
                 BeginUpdate();
                 for (int i = 0; i < subtitle.Paragraphs.Count; i++)
                 {
-                    if (i >= 0 && i < Items.Count)
+                    if (IsValidIndex(i))
                     {
                         ListViewItem item = Items[i];
                         Paragraph p = subtitle.Paragraphs[i];
@@ -938,7 +938,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetStartTime(int index, Paragraph paragraph)
         {
-            if (index >= 0 && index < Items.Count)
+            if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
                 if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
@@ -974,7 +974,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetStartTimeAndDuration(int index, Paragraph paragraph)
         {
-            if (index >= 0 && index < Items.Count)
+            if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
                 if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
@@ -1010,7 +1010,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetBackgroundColor(int index, Color color, int columnNumber)
         {
-            if (index >= 0 && index < Items.Count)
+            if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
                 if (item.UseItemStyleForSubItems)
@@ -1022,7 +1022,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetBackgroundColor(int index, Color color)
         {
-            if (index >= 0 && index < Items.Count)
+            if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
                 item.BackColor = color;
@@ -1035,7 +1035,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public Color GetBackgroundColor(int index)
         {
-            if (index >= 0 && index < Items.Count)
+            if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
                 return item.BackColor;
@@ -1050,7 +1050,7 @@ namespace Nikse.SubtitleEdit.Controls
         /// <param name="color"></param>
         public void ColorOut(int index, Color color)
         {
-            if (index >= 0 && index < Items.Count)
+            if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
                 item.Text = string.Empty;
@@ -1113,6 +1113,11 @@ namespace Nikse.SubtitleEdit.Controls
                 return;
             Resize -= SubtitleListViewResize;
             Resize += handler;
+        }
+
+        private bool IsValidIndex(int index)
+        {
+            return (index >= 0 && index < Items.Count);
         }
     }
 }
