@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownDelay.Left = labelEndDelay.Left + labelEndDelay.Width + 5;
         }
 
-        private class ColorEntry
+        internal class ColorEntry
         {
 
             public int Start { get; set; }
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
             public Color Color { get; set; }
         }
 
-        private class FontEntry
+        internal class FontEntry
         {
             public int Start { get; set; }
             public int Length { get; set; }
