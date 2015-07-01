@@ -931,6 +931,7 @@
     <Compile Include="Logic\SubtitleFormats\JsonType5.cs" />
     <Compile Include="Logic\SubtitleFormats\SamiYouTube.cs" />
     <Compile Include="Logic\SubtitleFormats\SatBoxPng.cs" />
+    <Compile Include="Logic\SubtitleFormats\TimedText200604CData.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle73.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreLineTabNewLine.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreLineTabs.cs" />
