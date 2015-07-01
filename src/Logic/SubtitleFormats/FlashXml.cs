@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("p");
-                string text = HtmlUtil.RemoveHtmlTags(p.Text);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text, true);
 
                 paragraph.InnerText = text;
                 paragraph.InnerXml = "<![CDATA[<sub>" + paragraph.InnerXml.Replace(Environment.NewLine, "<br />") + "</sub>]]>";
