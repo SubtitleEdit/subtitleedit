@@ -104,11 +104,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(sb.ToString().Trim());
 
+            var pText = new StringBuilder();
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("div/p"))
             {
                 try
                 {
-                    var pText = new StringBuilder();
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
                         switch (innerNode.Name)
@@ -122,19 +122,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
 
-                    string start = string.Empty;
+                    var start = string.Empty;
                     if (node.Attributes["begin"] != null)
                     {
                         start = node.Attributes["begin"].InnerText;
                     }
 
-                    string end = string.Empty;
+                    var end = string.Empty;
                     if (node.Attributes["end"] != null)
                     {
                         end = node.Attributes["end"].InnerText;
                     }
 
-                    string dur = string.Empty;
+                    var dur = string.Empty;
                     if (node.Attributes["dur"] != null)
                     {
                         dur = node.Attributes["dur"].InnerText;
@@ -168,6 +168,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     System.Diagnostics.Debug.WriteLine(ex.Message);
                     _errorCount++;
                 }
+                pText.Clear();
             }
             subtitle.Renumber();
         }
