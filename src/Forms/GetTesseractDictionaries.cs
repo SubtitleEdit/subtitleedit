@@ -41,14 +41,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxDictionaries.Items.Clear();
                 XmlDocument doc = new XmlDocument();
-                var rdr = new StreamReader(strm);
+                using (var rdr = new StreamReader(strm))
                 using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
                 {
                     byte[] data = new byte[175000];
                     zip.Read(data, 0, 175000);
                     doc.LoadXml(System.Text.Encoding.UTF8.GetString(data));
                 }
-                rdr.Close();
 
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
                 {
@@ -124,9 +123,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             int index = comboBoxDictionaries.SelectedIndex;
 
-            var ms = new MemoryStream(e.Result);
             var tempFileName = Path.GetTempFileName() + ".tar";
-            var fs = new FileStream(tempFileName, FileMode.Create);
+            using (var ms = new MemoryStream(e.Result))
+            using (var fs = new FileStream(tempFileName, FileMode.Create))
             using (var zip = new GZipStream(ms, CompressionMode.Decompress))
             {
                 byte[] buffer = new byte[1024];
@@ -136,7 +135,6 @@ namespace Nikse.SubtitleEdit.Forms
                     fs.Write(buffer, 0, nRead);
                 }
             }
-            fs.Close();
 
             using (var tr = new TarReader(tempFileName))
             {
