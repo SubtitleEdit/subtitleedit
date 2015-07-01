@@ -126,6 +126,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new TimeXml2(),
                     new TimedText10(),
                     new TimedText200604(),
+                    new TimedText200604CData(),
                     new TimedText(),
                     new TitleExchangePro(),
                     new Titra(),
