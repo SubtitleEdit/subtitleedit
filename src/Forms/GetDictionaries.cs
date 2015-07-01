@@ -157,12 +157,22 @@ namespace Nikse.SubtitleEdit.Forms
                                 Environment.NewLine +
                                 e.Error.Message);
                 DialogResult = DialogResult.Cancel;
+                Cursor = Cursors.Default;
                 return;
             }
 
             string dictionaryFolder = Utilities.DictionaryFolder;
-            if (!Directory.Exists(dictionaryFolder))
-                Directory.CreateDirectory(dictionaryFolder);
+            try
+            {
+                if (!Directory.Exists(dictionaryFolder))
+                    Directory.CreateDirectory(dictionaryFolder);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                Cursor = Cursors.Default;
+                return;
+            }
 
             int index = comboBoxDictionaries.SelectedIndex;
 

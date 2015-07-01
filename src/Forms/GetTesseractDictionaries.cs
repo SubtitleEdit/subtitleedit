@@ -114,12 +114,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(Configuration.Settings.Language.GetTesseractDictionaries.DownloadFailed);
                 DialogResult = DialogResult.Cancel;
+                Cursor = Cursors.Default;
                 return;
             }
 
             string dictionaryFolder = Configuration.TesseractDataFolder;
-            if (!Directory.Exists(dictionaryFolder))
-                Directory.CreateDirectory(dictionaryFolder);
+            try
+            {
+                if (!Directory.Exists(dictionaryFolder))
+                    Directory.CreateDirectory(dictionaryFolder);
+            }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                MessageBox.Show(ex.Message);
+                return;
+            }
 
             int index = comboBoxDictionaries.SelectedIndex;
 
