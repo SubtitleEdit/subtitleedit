@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxDictionaries.Items.Clear();
                 XmlDocument doc = new XmlDocument();
-                var rdr = new StreamReader(strm);
+                using (var rdr = new StreamReader(strm))
                 using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
                 {
                     byte[] data = new byte[275000];
@@ -53,7 +53,6 @@ namespace Nikse.SubtitleEdit.Forms
                     string s = System.Text.Encoding.UTF8.GetString(data2).Trim();
                     doc.LoadXml(s);
                 }
-                rdr.Close();
 
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
                 {
@@ -167,32 +166,32 @@ namespace Nikse.SubtitleEdit.Forms
 
             int index = comboBoxDictionaries.SelectedIndex;
 
-            var ms = new MemoryStream(e.Result);
-
-            ZipExtractor zip = ZipExtractor.Open(ms);
-            List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
-
-            // Extract dic/aff files in dictionary folder
-            bool found = false;
-            ExtractDic(dictionaryFolder, zip, dir, ref found);
-
-            if (!found) // check zip inside zip
+            using (var ms = new MemoryStream(e.Result))
+            using (ZipExtractor zip = ZipExtractor.Open(ms))
             {
-                foreach (ZipExtractor.ZipFileEntry entry in dir)
+                List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
+                // Extract dic/aff files in dictionary folder
+                bool found = false;
+                ExtractDic(dictionaryFolder, zip, dir, ref found);
+
+                if (!found) // check zip inside zip
                 {
-                    if (entry.FilenameInZip.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                    foreach (ZipExtractor.ZipFileEntry entry in dir)
                     {
-                        var innerMs = new MemoryStream();
-                        zip.ExtractFile(entry, innerMs);
-                        ZipExtractor innerZip = ZipExtractor.Open(innerMs);
-                        List<ZipExtractor.ZipFileEntry> innerDir = innerZip.ReadCentralDir();
-                        ExtractDic(dictionaryFolder, innerZip, innerDir, ref found);
-                        innerZip.Close();
+                        if (entry.FilenameInZip.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                        {
+                            using (var innerMs = new MemoryStream())
+                            {
+                                zip.ExtractFile(entry, innerMs);
+                                ZipExtractor innerZip = ZipExtractor.Open(innerMs);
+                                List<ZipExtractor.ZipFileEntry> innerDir = innerZip.ReadCentralDir();
+                                ExtractDic(dictionaryFolder, innerZip, innerDir, ref found);
+                            }
+                        }
                     }
                 }
             }
 
-            zip.Close();
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;
