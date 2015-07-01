@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.labelPreview = new System.Windows.Forms.Label();
             this.buttonPreview = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -38,22 +37,9 @@
             this.numericUpDownDelay = new System.Windows.Forms.NumericUpDown();
             this.labelTM = new System.Windows.Forms.Label();
             this.labelTotalMilliseconds = new System.Windows.Forms.Label();
+            this.richTextBoxPreview = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDelay)).BeginInit();
             this.SuspendLayout();
-            // 
-            // labelPreview
-            // 
-            this.labelPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelPreview.BackColor = System.Drawing.Color.Black;
-            this.labelPreview.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPreview.ForeColor = System.Drawing.Color.White;
-            this.labelPreview.Location = new System.Drawing.Point(12, 72);
-            this.labelPreview.Name = "labelPreview";
-            this.labelPreview.Size = new System.Drawing.Size(409, 40);
-            this.labelPreview.TabIndex = 25;
-            this.labelPreview.Text = "labelPreview";
-            this.labelPreview.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // buttonPreview
             // 
@@ -139,11 +125,25 @@
             this.labelTotalMilliseconds.TabIndex = 37;
             this.labelTotalMilliseconds.Text = "labelTotalMilliseconds";
             // 
+            // richTextBoxPreview
+            // 
+            this.richTextBoxPreview.BackColor = System.Drawing.Color.Black;
+            this.richTextBoxPreview.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBoxPreview.DetectUrls = false;
+            this.richTextBoxPreview.Location = new System.Drawing.Point(12, 69);
+            this.richTextBoxPreview.Name = "richTextBoxPreview";
+            this.richTextBoxPreview.ReadOnly = true;
+            this.richTextBoxPreview.Size = new System.Drawing.Size(409, 44);
+            this.richTextBoxPreview.TabIndex = 51;
+            this.richTextBoxPreview.TabStop = false;
+            this.richTextBoxPreview.Text = "";
+            // 
             // EffectTypewriter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(433, 179);
+            this.Controls.Add(this.richTextBoxPreview);
             this.Controls.Add(this.labelTotalMilliseconds);
             this.Controls.Add(this.labelTM);
             this.Controls.Add(this.numericUpDownDelay);
@@ -151,7 +151,6 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonPreview);
-            this.Controls.Add(this.labelPreview);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
@@ -170,7 +169,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Label labelPreview;
         private System.Windows.Forms.Button buttonPreview;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
@@ -179,5 +177,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownDelay;
         private System.Windows.Forms.Label labelTM;
         private System.Windows.Forms.Label labelTotalMilliseconds;
+        private System.Windows.Forms.RichTextBox richTextBoxPreview;
     }
 }

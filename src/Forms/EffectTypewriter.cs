@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Core;
@@ -43,12 +45,150 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _paragraph = paragraph;
 
-            labelPreview.Text = paragraph.Text;
+            AddToPreview(richTextBoxPreview, paragraph.Text);
+            RefreshPreview();
+
             labelTotalMilliseconds.Text = string.Format("{0:#,##0.000}", paragraph.Duration.TotalMilliseconds / 1000);
             numericUpDownDelay.Maximum = (decimal)((paragraph.Duration.TotalMilliseconds - 500) / 1000);
             numericUpDownDelay.Minimum = 0;
 
             numericUpDownDelay.Left = labelEndDelay.Left + labelEndDelay.Width + 5;
+        }
+       
+        private List<EffectKaraoke.ColorEntry> _colorList;
+        private List<EffectKaraoke.FontEntry> _fontList;
+
+        private void AddToPreview(RichTextBox rtb, string text)
+        {
+            richTextBoxPreview.ForeColor = Color.White;
+            _colorList = new List<EffectKaraoke.ColorEntry>();
+            _fontList = new List<EffectKaraoke.FontEntry>();
+
+            int bold = 0;
+            int underline = 0;
+            int italic = 0;
+            var fontColors = new Stack<string>();
+            string currentColor = string.Empty;
+
+            var sb = new StringBuilder();
+            int i = 0;
+            while (i < text.Length)
+            {
+                if (text[i] == '<')
+                {
+                    AddTextToRichTextBox(rtb, bold > 0, italic > 0, underline > 0, currentColor, sb.ToString());
+                    sb.Clear();
+                    string tag = GetTag(text.Substring(i).ToLower());
+                    if (i + 1 < text.Length && text[i + 1] == '/')
+                    {
+                        if (tag == "</i>" && italic > 0)
+                            italic--;
+                        else if (tag == "</b>" && bold > 0)
+                            bold--;
+                        else if (tag == "<u>" && underline > 0)
+                            underline--;
+                        else if (tag == "</font>")
+                            currentColor = fontColors.Count > 0 ? fontColors.Pop() : string.Empty;
+                    }
+                    else
+                    {
+                        if (tag == "<i>")
+                            italic++;
+                        else if (tag == "<b>")
+                            bold++;
+                        else if (tag == "<u>")
+                            underline++;
+                        else if (tag.StartsWith("<font "))
+                        {
+                            const string colorTag = " color=";
+                            if (tag.Contains(colorTag))
+                            {
+                                string tempColor = string.Empty;
+                                var start = tag.IndexOf(colorTag, StringComparison.Ordinal);
+                                int j = start + colorTag.Length;
+                                if (@"""'".Contains(tag[j]))
+                                    j++;
+                                while (j < tag.Length && (@"#" + Utilities.LowercaseLettersWithNumbers).Contains(tag[j]))
+                                {
+                                    tempColor += tag[j];
+                                    j++;
+                                }
+                                if (!string.IsNullOrEmpty(currentColor))
+                                    fontColors.Push(currentColor);
+                                currentColor = tempColor;
+                            }
+                        }
+                    }
+                    i += tag.Length;
+                }
+                else
+                {
+                    sb.Append(text[i]);
+                    i++;
+                }
+            }
+            if (sb.Length > 0)
+                AddTextToRichTextBox(rtb, bold > 0, italic > 0, underline > 0, currentColor, sb.ToString());
+
+            foreach (var fontEntry in _fontList)
+            {
+                rtb.SelectionStart = fontEntry.Start;
+                rtb.SelectionLength = fontEntry.Length;
+                rtb.SelectionFont = fontEntry.Font;
+                rtb.DeselectAll();
+            }
+
+            foreach (var colorEntry in _colorList)
+            {
+                rtb.SelectionStart = colorEntry.Start;
+                rtb.SelectionLength = colorEntry.Length;
+                rtb.SelectionColor = colorEntry.Color;
+                rtb.DeselectAll();
+            }
+        }
+
+        private void AddTextToRichTextBox(RichTextBox rtb, bool bold, bool italic, bool underline, string color, string text)
+        {
+            if (text.Length > 0)
+            {
+                int length = rtb.Text.Length;
+                richTextBoxPreview.Text += text;
+
+                _colorList.Add(new EffectKaraoke.ColorEntry { Start = length, Length = text.Length, Color = string.IsNullOrWhiteSpace(color) ? Color.White : ColorTranslator.FromHtml(color) });
+
+                var fontStyle = new FontStyle();
+                if (underline)
+                    fontStyle = fontStyle | FontStyle.Underline;
+                if (italic)
+                    fontStyle = fontStyle | FontStyle.Italic;
+                if (bold)
+                    fontStyle = fontStyle | FontStyle.Bold;
+                _fontList.Add(new EffectKaraoke.FontEntry { Start = length, Length = text.Length, Font = new Font(rtb.Font.FontFamily, rtb.Font.Size, fontStyle) });
+            }
+        }
+
+        private static string GetTag(string text)
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < text.Length; i++)
+            {
+                sb.Append(text[i]);
+                if (text[i] == '>')
+                    return sb.ToString();
+            }
+            return sb.ToString();
+        }
+
+        private void ClearPreview()
+        {
+            richTextBoxPreview.Text = string.Empty;
+        }
+
+        private void RefreshPreview()
+        {
+            richTextBoxPreview.SelectAll();
+            richTextBoxPreview.SelectionAlignment = HorizontalAlignment.Center;
+            richTextBoxPreview.Refresh();
         }
 
         private void ButtonPreviewClick(object sender, EventArgs e)
@@ -154,14 +294,16 @@ namespace Nikse.SubtitleEdit.Forms
             _timerCount += timer1.Interval;
 
             string s = GetText(_timerCount, _animation);
-            labelPreview.Text = s;
-            labelPreview.Refresh();
+            ClearPreview();
+            AddToPreview(richTextBoxPreview, s);
+            RefreshPreview();
 
             if (_timerCount > _paragraph.EndTime.TotalMilliseconds)
             {
                 timer1.Stop();
                 System.Threading.Thread.Sleep(200);
-                labelPreview.Text = _paragraph.Text;
+                ClearPreview();
+                AddToPreview(richTextBoxPreview, _paragraph.Text);
             }
         }
 
