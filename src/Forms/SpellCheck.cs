@@ -806,20 +806,15 @@ namespace Nikse.SubtitleEdit.Forms
             int start = s.IndexOf('<');
             while (start >= 0)
             {
-                int end = s.IndexOf('>', start);
-                if (end > 0)
-                {
-                    int l = end - start + 1;
-                    s = s.Remove(start, l).Insert(start, string.Empty.PadLeft(l));
-                    if (start + 1 < s.Length)
-                        start = s.IndexOf('<', start + 1);
-                    else
-                        start = -1;
-                }
-                else
-                {
-                    return s;
-                }
+                int end = s.IndexOf('>', start + 1);
+                if (end < start)
+                    break;
+                int l = end - start + 1;
+                s = s.Remove(start, l).Insert(start, string.Empty.PadLeft(l));
+                end++;
+                if (end >= s.Length)
+                    break;
+                start = s.IndexOf('<', end);
             }
             return s;
         }
