@@ -1065,10 +1065,9 @@ namespace Nikse.SubtitleEdit.Logic
         public static List<string> GetDictionaryLanguages()
         {
             var list = new List<string>();
-            string dictionaryFolder = DictionaryFolder;
-            if (Directory.Exists(dictionaryFolder))
+            if (Directory.Exists(DictionaryFolder))
             {
-                foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
+                foreach (string dic in Directory.GetFiles(DictionaryFolder, "*.dic"))
                 {
                     string name = Path.GetFileNameWithoutExtension(dic);
                     if (!name.StartsWith("hyph", StringComparison.Ordinal))
