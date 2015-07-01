@@ -84,36 +84,43 @@ namespace Nikse.SubtitleEdit.Forms
             bool tagOn = false;
             string tag = string.Empty;
             int i = 0;
+            string beforeEndTag = string.Empty;
             while (i < _paragraph.Text.Length)
             {
                 if (tagOn)
                 {
-                    if (_paragraph.Text[i] == '>')
-                        tagOn = false;
                     tag += _paragraph.Text[i];
+                    if (_paragraph.Text[i] == '>')
+                    {
+                        tagOn = false;
+                        if (tag.StartsWith("<font ", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            beforeEndTag = "</font>";
+                        }
+                        else if (tag == "<i>")
+                        {
+                            beforeEndTag = "</i>";
+                        }
+                        else if (tag == "<b>")
+                        {
+                            beforeEndTag = "</b>";
+                        }
+                        else if (tag == "<u>")
+                        {
+                            beforeEndTag = "</u>";
+                        }
+                    }
                 }
                 else if (_paragraph.Text[i] == '<')
                 {
                     tagOn = true;
                     tag += _paragraph.Text[i];
+                    beforeEndTag = string.Empty;
                 }
                 else
                 {
                     text += tag + _paragraph.Text[i];
-                    tag = string.Empty;
-
-                    //end tag
-                    if (i + 2 < _paragraph.Text.Length &&
-                        _paragraph.Text[i + 1] == '<' &&
-                        _paragraph.Text[i + 2] == '/')
-                    {
-                        while (i < _paragraph.Text.Length && _paragraph.Text[i] != '>')
-                        {
-                            tag += _paragraph.Text[i];
-                            i++;
-                        }
-                        text += tag;
-                    }
+                    tag = string.Empty;                  
 
                     startMilliseconds = index * stepsLength;
                     startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
@@ -121,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
                     endMilliseconds += _paragraph.StartTime.TotalMilliseconds;
                     start = new TimeCode(startMilliseconds);
                     end = new TimeCode(endMilliseconds);
-                    _animation.Add(new Paragraph(start, end, text));
+                    _animation.Add(new Paragraph(start, end, text + beforeEndTag));
                     index++;
                 }
                 i++;
