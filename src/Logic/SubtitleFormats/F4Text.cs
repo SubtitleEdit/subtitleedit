@@ -139,16 +139,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var tc = new TimeCode(0, 0, 0, 0);
             try
             {
-                string hour = parts[0];
-                string minutes = parts[1];
-                string seconds = parts[2];
-                string millisecond = parts[3];
+                int hour = int.Parse(parts[0]);
+                int minutes = int.Parse(parts[1]);
+                int seconds = int.Parse(parts[2]);
+                int millisecond = int.Parse(parts[3]);
 
-                int milliseconds = (int)(int.Parse(millisecond) * 100.0);
+                int milliseconds = (int)(millisecond * 100.0);
                 if (milliseconds > 999)
                     milliseconds = 999;
 
-                tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
+                tc = new TimeCode(hour, minutes, seconds, milliseconds);
             }
             catch (Exception exception)
             {
