@@ -111,12 +111,22 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Gerando espectrograma...</GeneratingSpectrogram>
     <ExtractingSeconds>Extraindo áudio: {0:0.0} segundos</ExtractingSeconds>
     <ExtractingMinutes>Extraindo áudio: {0}.{1:00} minutos</ExtractingMinutes>
+    <WaveFileNotFound>Não foi possível localizar arquivo WAVE extraído!
+Este recurso necessita do VLC Media Player 1.1.x ou superior ({0}-bit).
+
+Linha de comando: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>O {0} não pôde extrair os dados de áudio do arquivo WAVE!
+Linha de comando: {1} {2}
+Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
+    <LowDiskSpace>POUCO ESPAÇO EM DISCO!</LowDiskSpace>
+    <FreeDiskSpace>{0} livres</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Gerar dados em forma de onda em lote</Title>
     <ExtractingAudio>Extraindo áudio...</ExtractingAudio>
     <Calculating>Calculando...</Calculating>
     <Done>Concluído</Done>
+    <Error>Erro</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Ajustar duração</Title>
@@ -348,6 +358,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <TranslatorsName>Nome dos tradutores</TranslatorsName>
     <SubtitleListReferenceCode>Código de referência da lista da legenda</SubtitleListReferenceCode>
     <CountryOfOrigin>País de origem</CountryOfOrigin>
+    <TimeCodeStatus>Status do código de tempo</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Código de tempo: Início do programa</TimeCodeStartOfProgramme>
     <RevisionNumber>Número da revisão</RevisionNumber>
     <MaxNoOfDisplayableChars>Nº máx. caracteres por linha</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Nº máx. linhas</MaxNumberOfDisplayableRows>
@@ -411,6 +423,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ShadowWidth>Largura da sombra</ShadowWidth>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Formato de imagem</ImageFormat>
+    <FullFrameImage>Imagem de quadro completo</FullFrameImage>
     <SimpleRendering>Renderização simples</SimpleRendering>
     <AntiAliasingWithTransparency>Suavização com transparência</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
@@ -440,6 +453,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BoxMultiLine>Caixa - multilinha</BoxMultiLine>
     <Forced>Forçada</Forced>
     <ChooseBackgroundColor>Escolher cor de fundo</ChooseBackgroundColor>
+    <SaveImageAs>Salvar imagem como</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Exportar texto</Title>
@@ -1260,8 +1274,12 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ErrorLoadRar>Este arquivo parece ser um arquivo RAR compactado. O Subtitle Edit não consegue abrir arquivos compactados.</ErrorLoadRar>
     <ErrorLoadZip>Este arquivo parece ser um arquivo ZIP compactado. O Subtitle Edit não consegue abrir arquivos compactados</ErrorLoadZip>
     <ErrorLoadPng>Este arquivo parece ser uma imagem PNG. O Subtitle Edit não pode abrir arquivos PNG.</ErrorLoadPng>
+    <ErrorLoadJpg>Este arquivo parece ser uma imagem JPG. O Subtitle Edit não pode abrir arquivos JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Este arquivo parece ser um arquivo .srr ReScene - não é uma legenda.</ErrorLoadSrr>
     <ErrorLoadTorrent>Este arquivo parece ser um arquivo BitTorrent - não é uma legenda.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Desculpe, este zrquivo contém somente zeros binários!
+Se você editou este arquivo com o Subtitle Edit você poderá encontrar um backup pelo menu -&gt; Restaurar auto-backup...</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>Soltar uma pasta não é suportado aqui.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Conteúdo VobSub criptografado não é suportado.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Arquivos sup Blu-ray não são suportados aqui.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>Arquivos sup DVD não são suportados aqui.</NoSupportHereDvdSup>
@@ -1405,8 +1423,10 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <NewLine>Nova linha (\r\n)</NewLine>
     <NewLineShort>Nova linha (\n)</NewLineShort>
     <AnyDigit>Qualquer dígito (\d)</AnyDigit>
+    <NonDigit>Nenhum digito (\D)</NonDigit>
     <AnyCharacter>Qualquer caractere (.)</AnyCharacter>
     <AnyWhitespace>Qualquer espaço em branco (\s)</AnyWhitespace>
+    <NonSpaceCharacter>Caractere sem espaço (\S)</NonSpaceCharacter>
     <ZeroOrMore>Zero ou mais (*)</ZeroOrMore>
     <OneOrMore>Um ou mais (+)</OneOrMore>
     <InCharacterGroup>No grupo de caracteres ([teste])</InCharacterGroup>
@@ -2014,6 +2034,8 @@ Manter as alterações?</KeepChangesMessage>
     <InspectCompareMatchesForCurrentImage>Inspecionar coincidências para a imagem atual...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Editar última imagem comparando com as adicionadas...</EditLastAdditions>
     <SetUnitalicFactor>Definir fator não-itálico...</SetUnitalicFactor>
+    <DiscardTitle>Descartar alterações feitas no OCR?</DiscardTitle>
+    <DiscardText>Deseja descartar as alterações feitas na sessão OCR atual?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Imagem para texto manualmente</Title>
