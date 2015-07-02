@@ -14238,7 +14238,7 @@ namespace Nikse.SubtitleEdit.Forms
             System.Reflection.Assembly assembly;
             try
             {
-                assembly = System.Reflection.Assembly.LoadFile(pluginFileName);
+                assembly = System.Reflection.Assembly.Load(File.ReadAllBytes(pluginFileName));
             }
             catch
             {
