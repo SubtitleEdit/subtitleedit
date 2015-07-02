@@ -1,11 +1,28 @@
 ﻿<!-- Credit goes to: MilanRS [http://www.prijevodi-online.org] -->
 <OCRFixReplaceList>
   <WholeWords>
+    <Word from="ču" to="ću" />
+    <Word from="češ" to="ćeš" />
+    <Word from="če" to="će" />
+    <Word from="čemo" to="ćemo" />
+    <Word from="čete" to="čete" />
+    <Word from="hey" to="hej" />
+    <Word from="htjeo" to="htio" />
+    <Word from="Hočeš" to="Hoćeš" />
+    <Word from="hočeš" to="hoćeš" />
+    <Word from="iči" to="ići" />
+    <Word from="moguče" to="moguće" />
+    <Word from="nedaj" to="ne daj" />
     <Word from="neču" to="neću" />
     <Word from="nečeš" to="nećeš" />
     <Word from="neče" to="neće" />
     <Word from="nečemo" to="nećemo" />
     <Word from="nečete" to="nećete" />
+    <Word from="odkad" to="otkad" />
+    <Word from="Rješit" to="Riješit" />
+    <Word from="smjeo" to="smio" />
+    <Word from="uopče" to="uopće" />
+    <Word from="želila" to="željela" />
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords>
@@ -17,6 +34,10 @@
     <WordPart from="lVl" to="M" />
   </PartialWords>
   <PartialLines>
+    <LinePart from="bi smo" to="bismo" />
+    <LinePart from="dali je" to="da li je" />
+    <LinePart from="dali si" to="da li si" />
+    <LinePart from="Dali si" to="Da li si" />
     <LinePart from="Jel si to" to="Jesi li to" />
     <LinePart from="Jel' si to" to="Da li si to" />
     <LinePart from="jel si to" to="da li si to" />
@@ -29,13 +50,39 @@
     <LinePart from="Jel ste " to="Jeste li " />
     <LinePart from="jel' ste " to="jeste li " />
     <LinePart from="Jel' ste " to="Jeste li " />
+    <LinePart from="Nebrini" to="Ne brini" />
+    <LinePart from="Nebih" to="Ne bih" />
+    <LinePart from="nebih" to="ne bih" />
+    <LinePart from="nebi" to="ne bi" />
+    <LinePart from="ne ću" to="neću" />
+    <LinePart from="Nemoraš" to="Ne moraš" />
     <LinePart from="od kako" to="otkako" />
+    <LinePart from="Svo vreme" to="Sve vrijeme" />
+    <LinePart from="Svo vrijeme" to="Sve vrijeme" />
+    <LinePart from="Cijelo vrijeme" to="Sve vrijeme" />
   </PartialLines>
   <PartialLinesAlways />
   <BeginLines />
   <EndLines />
   <WholeLines />
   <RegularExpressions>
+    <RegEx find="ajsmiješnij" replaceWith="ajsmješnij" />
+    <RegEx find="(M|m)jenjati" replaceWith="$1ijenjati" />
+    <RegEx find="najcijenjen" replaceWith="najcjenjen" />
+    <RegEx find="Nju Jork" replaceWith="Njujork" />
+    <RegEx find="NJu Jork" replaceWith="Njujork" />
+    <RegEx find="(p|P)redamnom" replaceWith="$1reda mnom" />
+    <RegEx find="(p|P)romjenim" replaceWith="$1romijenim" />
+    <RegEx find="rascjepljen" replaceWith="rascijepljen" />
+    <RegEx find="redhodn" replaceWith="rethodn" />
+    <RegEx find="([sSzZ])amnom" replaceWith="$1a mnom" />
+    <RegEx find="sledeče" replaceWith="sledeće" />
+    <RegEx find="(s|S)mješno" replaceWith="$1miješno" />
+    <RegEx find="(u|U)mijesto" replaceWith="$1mjesto" />
+    <RegEx find="uspijeh" replaceWith="uspjeh" />
+    <RegEx find="(u|U)spiješan" replaceWith="$1spješan" />
+    <RegEx find="(u|U)vjek" replaceWith="$1vijek" />
+    
     <RegEx find="(?&lt;=[a-zčđšž])Ij(?=[a-zčđšž])" replaceWith="lj" />
     <RegEx find="(?&lt;=[^A-ZČĐŠŽa-zčđšž])Iju(?=bav|d|t)" replaceWith="lju" />
     <!-- kad ima razmak izmedju tagova </i> <i> -->
