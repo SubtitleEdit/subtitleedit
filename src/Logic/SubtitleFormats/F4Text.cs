@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class F4Text : SubtitleFormat
     {
-        private static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d-\d$", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d-\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
