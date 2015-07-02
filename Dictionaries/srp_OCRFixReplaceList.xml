@@ -91,7 +91,7 @@
     <RegEx find="(?&lt;=\w),&quot;(?=\s|$)" replaceWith="&quot;," />
     <RegEx find=",\.{3}|\.{3},|\.{2} \." replaceWith="..." />
     <!-- "1 :", "2 :"... "n :" to "n:" -->
-    <RegEx find="(\d) +: +(\D)" replaceWith="$1: $2" />
+    <RegEx find="([0-9]) +: +(\D)" replaceWith="$1: $2" />
     <!-- Two or more consecutive "," to "..." -->
     <RegEx find=",{2,}" replaceWith="..." />
     <!-- Two or more consecutive "-" to "..." -->
@@ -112,10 +112,10 @@
     <RegEx find="\b0(?=[A-ZČĐŠŽa-zčđšž])" replaceWith="O" />
     <!-- Brisanje crte - na početku 1. reda (i kada ima dva reda) -->
     <RegEx find="\A- ?([A-ZČĐŠŽa-zčđšž0-9„'&quot;]|\.{3})" replaceWith="$1" />
-    <RegEx find="\A(&lt;[i|b|u]&gt;)- ?" replaceWith="$1" />
+    <RegEx find="\A(&lt;[ibu]&gt;)- ?" replaceWith="$1" />
     <RegEx find="  - " replaceWith=" -" />
     <!-- Brisanje razmaka iza crte - na početku 2. reda -->
-    <RegEx find="(?&lt;=\n(&lt;[i|b|u]&gt;)?)- (?=[A-ZČĐŠŽčš0-9„'&quot;&lt;])" replaceWith="-" />
+    <RegEx find="(?&lt;=\n(&lt;[ibu]&gt;)?)- (?=[A-ZČĐŠŽčš0-9„'&quot;&lt;])" replaceWith="-" />
     <!-- Korigovanje crte - kad je u sredini prvog reda -->
     <RegEx find="([.!?&quot;&gt;]) - ([A-ZČĐŠŽčš'&quot;&lt;])" replaceWith="$1 -$2" />
     <!-- Zatvoren tag pa razmak poslije crtice -->
@@ -163,7 +163,7 @@
     <!-- <RegEx find="([A-Za-z])ti( |\r?\n)(š[eu])" replaceWith="$1t$2$3" /> -->
     <!-- <RegEx find="(?i)\b(ni)t (š[eu])" replaceWith="$1ti $2" /> -->
     <!-- Razmak poslije <i> i poslije .. -->
-    <RegEx find="^(&lt;[i|b|u]&gt;) +" replaceWith="$1" />
+    <RegEx find="^(&lt;[ibu]&gt;) +" replaceWith="$1" />
     <RegEx find="^\.{2} +" replaceWith="..." />
     <!-- Razmak ? "</i> -->
     <RegEx find="([.?!]) +(&quot;&lt;)" replaceWith="$1$2" />
