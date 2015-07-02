@@ -119,10 +119,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             ss.CurrentDCinemaSubtitleId = textBoxSubtitleID.Text;
             ss.CurrentDCinemaMovieTitle = textBoxMovieTitle.Text;
             ss.CurrentDCinemaReelNumber = numericUpDownReelNumber.Value.ToString();
-            if (comboBoxLanguage.SelectedItem != null)
-                ss.CurrentDCinemaLanguage = comboBoxLanguage.SelectedItem.ToString();
-            else
-                ss.CurrentDCinemaLanguage = string.Empty;
+            ss.CurrentDCinemaLanguage = comboBoxLanguage.Text;
             ss.CurrentDCinemaFontId = textBoxFontID.Text;
             ss.CurrentDCinemaFontUri = textBoxFontUri.Text;
             ss.CurrentDCinemaFontColor = panelFontColor.BackColor;
