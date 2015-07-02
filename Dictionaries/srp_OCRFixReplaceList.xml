@@ -82,7 +82,6 @@
     <RegEx find="uspijeh" replaceWith="uspjeh" />
     <RegEx find="(u|U)spiješan" replaceWith="$1spješan" />
     <RegEx find="(u|U)vjek" replaceWith="$1vijek" />
-    
     <RegEx find="(?&lt;=[a-zčđšž])Ij(?=[a-zčđšž])" replaceWith="lj" />
     <RegEx find="(?&lt;=[^A-ZČĐŠŽa-zčđšž])Iju(?=bav|d|t)" replaceWith="lju" />
     <!-- kad ima razmak izmedju tagova </i> <i> -->
@@ -156,7 +155,7 @@
     <RegEx find="(?&lt;=^|&gt;)\.{3} +(?=[A-ZČĐŠŽčš])" replaceWith="..." />
     <!-- Brise ... kad je na poc. reda "... -->
     <RegEx find="^&quot;\.{3} +" replaceWith="&quot;" />
-    <RegEx find="(?&lt;=[0-9])\$" replaceWith=" $" />
+    <RegEx find="(?&lt;=[0-9])\$" replaceWith=" $$" />
     <!-- ti š -> t š by Strider -->
     <!-- Zamijeni sva "**ti šu*" s "**t šu*" i "**ti še*" s "**t še*" -->
     <!-- <RegEx find="([a-z])ti (š+[eu])" replaceWith="$1t $2" /> -->
