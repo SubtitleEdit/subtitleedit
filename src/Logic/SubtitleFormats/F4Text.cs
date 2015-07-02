@@ -42,14 +42,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public static string ToF4Text(Subtitle subtitle)
         {
             var sb = new StringBuilder();
-            double lastEndTimeMilliseconds = -1;
+            //double lastEndTimeMilliseconds = -1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 // if (p.StartTime.TotalMilliseconds == lastEndTimeMilliseconds)
-                sb.AppendFormat("{0}{1}", HtmlUtil.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime));
+                sb.AppendFormat("{0}{1}", HtmlUtil.RemoveHtmlTags(p.Text, true), EncodeTimeCode(p.EndTime));
                 //else
                 //    sb.Append(string.Format("{0}{1}{2}", EncodeTimeCode(p.StartTime), HtmlUtil.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime)));
-                lastEndTimeMilliseconds = p.EndTime.TotalMilliseconds;
+                //lastEndTimeMilliseconds = p.EndTime.TotalMilliseconds;
             }
             return sb.ToString().Trim();
         }
