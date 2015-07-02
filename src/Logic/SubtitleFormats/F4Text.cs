@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         p.Text = p.Text.Trim('\n', '\r').Trim();
                         subtitle.Paragraphs.Add(p);
                         p = null;
-                        currentText = new StringBuilder();
+                        currentText.Clear();
                     }
                 }
                 else
