@@ -92,8 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (currentText.Length > 0)
                         {
                             p.Text = currentText.ToString().Trim().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                            p.Text = p.Text.Trim('\n');
-                            p.Text = p.Text.Trim('\r');
+                            p.Text = p.Text.Trim('\n', '\r');
                             subtitle.Paragraphs.Add(p);
                             p = new Paragraph();
                         }
@@ -106,9 +105,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         p.EndTime = DecodeTimeCode(line.Split(new[] { ':', '-' }, StringSplitOptions.RemoveEmptyEntries));
                         p.Text = currentText.ToString().Trim().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                        p.Text = p.Text.Trim('\n');
-                        p.Text = p.Text.Trim('\r');
-                        p.Text = p.Text.Trim();
+                        p.Text = p.Text.Trim('\n', '\r').Trim();
                         subtitle.Paragraphs.Add(p);
                         p = null;
                         currentText = new StringBuilder();
@@ -130,9 +127,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p = new Paragraph();
 
                 p.Text = currentText.ToString().Trim().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                p.Text = p.Text.Trim('\n');
-                p.Text = p.Text.Trim('\r');
-                p.Text = p.Text.Trim();
+                p.Text = p.Text.Trim('\n', '\r').Trim();
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 3000;
                 subtitle.Paragraphs.Add(p);
             }
