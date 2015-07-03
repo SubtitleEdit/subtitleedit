@@ -1791,7 +1791,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixUppercaseIInsideLowercaseWord;
             int uppercaseIsInsideLowercaseWords = 0;
-            //            bool isLineContinuation = false;
+            // bool isLineContinuation = false;
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
@@ -1814,7 +1814,7 @@ namespace Nikse.SubtitleEdit.Forms
                     match = match.NextMatch();
                 }
 
-                StripableText st = new StripableText(p.Text);
+                var st = new StripableText(p.Text);
                 match = ReBeforeLowercaseLetter.Match(st.StrippedText);
                 while (match.Success)
                 {
@@ -3120,7 +3120,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixDanishLetterI()
         {
-            const string fixAction = "Fix danish letter 'i'";
+            const string fixAction = "Fix Danish letter 'i'";
             int fixCount = 0;
 
             var littleIRegex = new Regex(@"\bi\b", RegexOptions.Compiled);
@@ -4780,7 +4780,7 @@ namespace Nikse.SubtitleEdit.Forms
                     startNumber = 1;
 
                 // save de-seleced fixes
-                List<string> deSelectedFixes = new List<string>();
+                var deSelectedFixes = new List<string>();
                 foreach (ListViewItem item in listViewFixes.Items)
                 {
                     if (!item.Checked)
