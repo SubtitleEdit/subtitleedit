@@ -3722,14 +3722,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                              };
 
-            var regExIDag = new Regex(@"\bidag\b", RegexOptions.Compiled);
-            var regExIGaar = new Regex(@"\bigår\b", RegexOptions.Compiled);
-            var regExIMorgen = new Regex(@"\bimorgen\b", RegexOptions.Compiled);
-            var regExIAlt = new Regex(@"\bialt\b", RegexOptions.Compiled);
-            var regExIGang = new Regex(@"\bigang\b", RegexOptions.Compiled);
-            var regExIStand = new Regex(@"\bistand\b", RegexOptions.Compiled);
-            var regExIOevrigt = new Regex(@"\biøvrigt\b", RegexOptions.Compiled);
-
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 string text = Subtitle.Paragraphs[i].Text;
@@ -3758,26 +3750,13 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (regExIDag.IsMatch(text))
-                    text = regExIDag.Replace(text, "i dag");
-
-                if (regExIGaar.IsMatch(text))
-                    text = regExIGaar.Replace(text, "i går");
-
-                if (regExIMorgen.IsMatch(text))
-                    text = regExIMorgen.Replace(text, "i morgen");
-
-                if (regExIAlt.IsMatch(text))
-                    text = regExIAlt.Replace(text, "i alt");
-
-                if (regExIGang.IsMatch(text))
-                    text = regExIGang.Replace(text, "i gang");
-
-                if (regExIStand.IsMatch(text))
-                    text = regExIStand.Replace(text, "i stand");
-
-                if (regExIOevrigt.IsMatch(text))
-                    text = regExIOevrigt.Replace(text, "i øvrigt");
+                text = Regex.Replace(text, @"\bidag\b", "i dag", RegexOptions.Compiled);
+                text = Regex.Replace(text, @"\bigår\b", "i går", RegexOptions.Compiled);
+                text = Regex.Replace(text, @"\bimorgen\b", "i morgen", RegexOptions.Compiled);
+                text = Regex.Replace(text, @"\bialt\b", "i alt", RegexOptions.Compiled);
+                text = Regex.Replace(text, @"\bigang\b", "i gang", RegexOptions.Compiled);
+                text = Regex.Replace(text, @"\bistand\b", "i stand", RegexOptions.Compiled);
+                text = Regex.Replace(text, @"\biøvrigt\b", "i øvrigt", RegexOptions.Compiled);
 
                 if (text != oldText)
                 {
