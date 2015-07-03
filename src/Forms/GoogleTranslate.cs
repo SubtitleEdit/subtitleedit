@@ -474,9 +474,9 @@ namespace Nikse.SubtitleEdit.Forms
             res = res.Replace("<br/>", Environment.NewLine);
             res = res.Replace("<br />", Environment.NewLine);
             res = res.Replace("  ", " ").Trim();
-            res = res.Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
-            res = res.Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
-            res = res.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+            res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
+            res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
+            res = res.Replace(" " + Environment.NewLine, Environment.NewLine);
             res = res.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
             int end = res.LastIndexOf("<p>", StringComparison.Ordinal);
             if (end > 0)

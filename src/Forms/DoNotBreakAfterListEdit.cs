@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (idx >= 0)
             {
                 var doc = new XmlDocument();
-                doc.LoadXml("<NoBreakAfterList></NoBreakAfterList>");
+                doc.LoadXml("<NoBreakAfterList />");
                 foreach (NoBreakAfterItem item in _noBreakAfterList)
                 {
                     XmlNode node = doc.CreateElement("Item");
