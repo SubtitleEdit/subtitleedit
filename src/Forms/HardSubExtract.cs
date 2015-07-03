@@ -110,12 +110,13 @@ namespace Nikse.SubtitleEdit.Forms
             Bitmap bmp = pictureBox2.Image as Bitmap;
             if (bmp != null)
             {
-                Pen p = new Pen(Brushes.Red);
-                int value = Convert.ToInt32(numericUpDownPixelsBottom.Value);
-                if (value > bmp.Height)
-                    value = bmp.Height - 2;
-                e.Graphics.DrawRectangle(p, 0, bmp.Height - value, bmp.Width - 1, bmp.Height - (bmp.Height - value) - 1);
-                p.Dispose();
+                using (Pen p = new Pen(Brushes.Red))
+                {
+                    int value = Convert.ToInt32(numericUpDownPixelsBottom.Value);
+                    if (value > bmp.Height)
+                        value = bmp.Height - 2;
+                    e.Graphics.DrawRectangle(p, 0, bmp.Height - value, bmp.Width - 1, bmp.Height - (bmp.Height - value) - 1);
+                }
             }
         }
 
