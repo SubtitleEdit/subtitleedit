@@ -131,80 +131,81 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void StartStop_Click(object sender, EventArgs e)
         {
-            //Cursor.Current = Cursors.WaitCursor;
-            //buttonStop.Visible = true;
-            //StartStop.Enabled = false;
-            //cam = new HardExtractCapture(tbFileName.Text, (int)numericUpDownPixelsBottom.Value, checkBoxCustomColor.Checked, checkBoxYellow.Checked, pictureBoxCustomColor.BackColor, (int)numericUpDownCustomMaxDiff.Value);
+            /*Cursor.Current = Cursors.WaitCursor;
+            buttonStop.Visible = true;
+            StartStop.Enabled = false;
+            cam = new HardExtractCapture(tbFileName.Text, (int)numericUpDownPixelsBottom.Value, checkBoxCustomColor.Checked, checkBoxYellow.Checked, pictureBoxCustomColor.BackColor, (int)numericUpDownCustomMaxDiff.Value);
 
-            //// Start displaying statistics
-            //this.timer1 = new System.Windows.Forms.Timer(this.components);
-            //this.timer1.Interval = 1000;
-            //this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            //timer1.Enabled = true;
-            //cam.Start();
-            //cam.WaitUntilDone();
-            //timer1.Enabled = false;
+            // Start displaying statistics
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            timer1.Enabled = true;
+            cam.Start();
+            cam.WaitUntilDone();
+            timer1.Enabled = false;
 
-            //// Final update
-            //tbFrameNum.Text = cam.count.ToString();
-            //tbBlacks.Text = cam.blacks.ToString();
+            // Final update
+            tbFrameNum.Text = cam.count.ToString();
+            tbBlacks.Text = cam.blacks.ToString();
 
-            //string fileNameNoExt = Path.GetTempFileName();
+            string fileNameNoExt = Path.GetTempFileName();
 
-            //Cursor.Current = Cursors.Default;
+            Cursor.Current = Cursors.Default;
 
-            //var sub = new Subtitle();
-            //for (int i = 0; i < cam.Images.Count; i++)
-            //{
-            //    if (cam.StartTimes.Count > i)
-            //    {
-            //        Paragraph p = new Paragraph();
-            //        p.StartTime.TotalSeconds = cam.StartTimes[i];
-            //        if (cam.EndTimes.Count > i)
-            //        {
-            //            p.EndTime.TotalSeconds = cam.EndTimes[i];
-            //        }
-            //        else
-            //        {
-            //            p.EndTime.TotalSeconds = p.StartTime.TotalSeconds + 2.5;
-            //        }
-            //        p.Text = fileNameNoExt + string.Format("{0:0000}", i) + ".bmp";
-            //        sub.Paragraphs.Add(p);
-            //        var bmp = cam.Images[i].GetBitmap();
-            //        bmp.Save(p.Text);
-            //        bmp.Dispose();
-            //    }
-            //}
-            //sub.Renumber();
-            //if (sub.Paragraphs.Count > 0)
-            //{
-            //    OcrFileName = fileNameNoExt + ".srt";
-            //    File.WriteAllText(OcrFileName, sub.ToText(new SubRip()));
-            //}
-            //lock (this)
-            //{
-            //    cam.Dispose();
-            //    cam = null;
-            //}
-            //buttonStop.Visible = false;
-            //StartStop.Enabled = true;
+            var sub = new Subtitle();
+            for (int i = 0; i < cam.Images.Count; i++)
+            {
+                if (cam.StartTimes.Count > i)
+                {
+                    Paragraph p = new Paragraph();
+                    p.StartTime.TotalSeconds = cam.StartTimes[i];
+                    if (cam.EndTimes.Count > i)
+                    {
+                        p.EndTime.TotalSeconds = cam.EndTimes[i];
+                    }
+                    else
+                    {
+                        p.EndTime.TotalSeconds = p.StartTime.TotalSeconds + 2.5;
+                    }
+                    p.Text = fileNameNoExt + string.Format("{0:0000}", i) + ".bmp";
+                    sub.Paragraphs.Add(p);
+                    var bmp = cam.Images[i].GetBitmap();
+                    bmp.Save(p.Text);
+                    bmp.Dispose();
+                }
+            }
+            sub.Renumber();
+            if (sub.Paragraphs.Count > 0)
+            {
+                OcrFileName = fileNameNoExt + ".srt";
+                File.WriteAllText(OcrFileName, sub.ToText(new SubRip()));
+            }
+            lock (this)
+            {
+                cam.Dispose();
+                cam = null;
+            }
+            buttonStop.Visible = false;
+            StartStop.Enabled = true;*/
         }
 
-        //private void timer1_Tick(object sender, System.EventArgs e)
-        //{
-        //if (cam != null)
-        //{
-        //    tbFrameNum.Text = cam.count.ToString();
-        //    tbBlacks.Text = cam.blacks.ToString();
-        //    if (cam.Images.Count > 0)
-        //    {
-        //        var old = pictureBox2.Image as Bitmap;
-        //        pictureBox2.Image = cam.Images[cam.Images.Count - 1].GetBitmap();
-        //        if (old != null)
-        //            old.Dispose();
-        //    }
-        //}
-        //}
+        /*
+        private void timer1_Tick(object sender, System.EventArgs e)
+        {
+            if (cam != null)
+            {
+                tbFrameNum.Text = cam.count.ToString();
+                tbBlacks.Text = cam.blacks.ToString();
+                if (cam.Images.Count > 0)
+                {
+                    var old = pictureBox2.Image as Bitmap;
+                    pictureBox2.Image = cam.Images[cam.Images.Count - 1].GetBitmap();
+                    if (old != null)
+                        old.Dispose();
+                }
+            }
+        }*/
 
         private void pictureBoxCustomColor_Click(object sender, EventArgs e)
         {
@@ -228,10 +229,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonStop_Click(object sender, EventArgs e)
         {
-            //if (cam != null)
-            //    cam.Cancel = true;
-            //buttonStop.Visible = false;
-            //StartStop.Enabled = true;
+            /*if (cam != null)
+                cam.Cancel = true;
+            buttonStop.Visible = false;
+            StartStop.Enabled = true;*/
         }
 
         private void button1_Click(object sender, EventArgs e)
