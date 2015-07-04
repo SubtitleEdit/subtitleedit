@@ -258,10 +258,17 @@ namespace Nikse.SubtitleEdit.Forms
             const string endFontTag = "</font>";
             string afterCurrentTag = string.Empty;
             string beforeEndTag = string.Empty;
+            string alignment = string.Empty;
             while (i < _paragraph.Text.Length)
             {
                 var c = _paragraph.Text[i];
-                if (tagOn)
+                if (i == 0 && _paragraph.Text.StartsWith("{\\", StringComparison.Ordinal) && _paragraph.Text.IndexOf('}') > 2)
+                {
+                    int idx = _paragraph.Text.IndexOf('}');
+                    alignment = _paragraph.Text.Substring(0, idx + 1);
+                    i = idx;
+                }
+                else if (tagOn)
                 {
                     tag += c;
                     if (_paragraph.Text[i] == '>')
@@ -308,8 +315,10 @@ namespace Nikse.SubtitleEdit.Forms
                         afterText = string.Empty;
                         afterCurrentTag = string.Empty;
                     }
-                    string tempText = startFontTag + text + beforeEndTag + endFontTag + afterCurrentTag + afterText;
+                    string tempText = alignment + startFontTag + text + beforeEndTag + endFontTag + afterCurrentTag + afterText;
                     tempText = tempText.Replace("<i></i>", string.Empty);
+                    tempText = tempText.Replace("<u></u>", string.Empty);
+                    tempText = tempText.Replace("<b></b>", string.Empty);
 
                     startMilliseconds = index * stepsLength;
                     startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
