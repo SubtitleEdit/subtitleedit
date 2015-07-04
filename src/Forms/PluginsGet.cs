@@ -116,8 +116,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                     foreach (ListViewItem installed in listViewInstalledPlugins.Items)
                     {
-                        var installedVer = Convert.ToDouble(installed.SubItems[2].Text.Replace(",", "."), CultureInfo.InvariantCulture);
-                        var currentVer = Convert.ToDouble(node.SelectSingleNode("Version").InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
+                        var installedVer = Convert.ToDouble(installed.SubItems[2].Text.Replace(',', '.'), CultureInfo.InvariantCulture);
+                        var currentVer = Convert.ToDouble(node.SelectSingleNode("Version").InnerText.Replace(',', '.'), CultureInfo.InvariantCulture);
 
                         if (string.Compare(installed.Text, node.SelectSingleNode("Name").InnerText.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0 && installedVer < currentVer)
                         {
