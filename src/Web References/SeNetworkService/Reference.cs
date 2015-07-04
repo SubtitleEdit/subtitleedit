@@ -734,7 +734,6 @@ namespace Nikse.SubtitleEdit.SeNetworkService
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://tempuri.org/")]
     public partial class SeUser
     {
-
         private string userNameField;
 
         private string ipField;
@@ -791,7 +790,6 @@ namespace Nikse.SubtitleEdit.SeNetworkService
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class StartCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
     {
-
         private object[] results;
 
         internal StartCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
@@ -831,7 +829,6 @@ namespace Nikse.SubtitleEdit.SeNetworkService
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class JoinCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
     {
-
         private object[] results;
 
         internal JoinCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
@@ -875,7 +872,6 @@ namespace Nikse.SubtitleEdit.SeNetworkService
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class DeleteLinesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
     {
-
         private object[] results;
 
         internal DeleteLinesCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
@@ -905,7 +901,6 @@ namespace Nikse.SubtitleEdit.SeNetworkService
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class InsertLineCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
     {
-
         private object[] results;
 
         internal InsertLineCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
@@ -935,7 +930,6 @@ namespace Nikse.SubtitleEdit.SeNetworkService
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class UpdateLineCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
     {
-
         private object[] results;
 
         internal UpdateLineCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
@@ -965,7 +959,6 @@ namespace Nikse.SubtitleEdit.SeNetworkService
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class SendMessageCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
     {
-
         private object[] results;
 
         internal SendMessageCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
@@ -995,7 +988,6 @@ namespace Nikse.SubtitleEdit.SeNetworkService
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class GetUpdatesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
     {
-
         private object[] results;
 
         internal GetUpdatesCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
@@ -1105,7 +1097,6 @@ namespace Nikse.SubtitleEdit.SeNetworkService
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class GetOriginalSubtitleCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
     {
-
         private object[] results;
 
         internal GetOriginalSubtitleCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
