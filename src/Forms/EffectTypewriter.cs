@@ -225,9 +225,16 @@ namespace Nikse.SubtitleEdit.Forms
             string tag = string.Empty;
             int i = 0;
             string beforeEndTag = string.Empty;
+            string alignment = string.Empty;
             while (i < _paragraph.Text.Length)
             {
-                if (tagOn)
+                if (i == 0 && _paragraph.Text.StartsWith("{\\", StringComparison.Ordinal) && _paragraph.Text.IndexOf('}') > 2)
+                {
+                    int idx = _paragraph.Text.IndexOf('}');
+                    alignment = _paragraph.Text.Substring(0, idx + 1);
+                    i = idx;
+                } 
+                else if (tagOn)
                 {
                     tag += _paragraph.Text[i];
                     if (_paragraph.Text[i] == '>')
@@ -268,7 +275,7 @@ namespace Nikse.SubtitleEdit.Forms
                     endMilliseconds += _paragraph.StartTime.TotalMilliseconds;
                     start = new TimeCode(startMilliseconds);
                     end = new TimeCode(endMilliseconds);
-                    _animation.Add(new Paragraph(start, end, text + beforeEndTag));
+                    _animation.Add(new Paragraph(start, end, alignment + text + beforeEndTag));
                     index++;
                 }
                 i++;
