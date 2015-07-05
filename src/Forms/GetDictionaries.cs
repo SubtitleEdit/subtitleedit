@@ -209,15 +209,15 @@ namespace Nikse.SubtitleEdit.Forms
                     string fileName = Path.GetFileName(entry.FilenameInZip);
 
                     // French fix
-                    if (fileName.StartsWith("fr-moderne"))
+                    if (fileName.StartsWith("fr-moderne", StringComparison.Ordinal))
                         fileName = fileName.Replace("fr-moderne", "fr_FR");
 
                     // German fix
-                    if (fileName.StartsWith("de_DE_frami"))
+                    if (fileName.StartsWith("de_DE_frami", StringComparison.Ordinal))
                         fileName = fileName.Replace("de_DE_frami", "de_DE");
 
                     // Russian fix
-                    if (fileName.StartsWith("russian-aot"))
+                    if (fileName.StartsWith("russian-aot", StringComparison.Ordinal))
                         fileName = fileName.Replace("russian-aot", "ru_RU");
 
                     string path = Path.Combine(dictionaryFolder, fileName);
