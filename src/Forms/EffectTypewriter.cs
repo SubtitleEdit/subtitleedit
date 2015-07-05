@@ -48,13 +48,13 @@ namespace Nikse.SubtitleEdit.Forms
             AddToPreview(richTextBoxPreview, paragraph.Text);
             RefreshPreview();
 
-            labelTotalMilliseconds.Text = string.Format("{0:#,##0.000}", paragraph.Duration.TotalMilliseconds / 1000);
-            numericUpDownDelay.Maximum = (decimal)((paragraph.Duration.TotalMilliseconds - 500) / 1000);
+            labelTotalMilliseconds.Text = string.Format("{0:#,##0.000}", paragraph.Duration.TotalMilliseconds / TimeCode.BaseUnit);
+            numericUpDownDelay.Maximum = (decimal)((paragraph.Duration.TotalMilliseconds - 500) / TimeCode.BaseUnit);
             numericUpDownDelay.Minimum = 0;
 
             numericUpDownDelay.Left = labelEndDelay.Left + labelEndDelay.Width + 5;
         }
-       
+
         private List<EffectKaraoke.ColorEntry> _colorList;
         private List<EffectKaraoke.FontEntry> _fontList;
 
@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Forms
                             bold++;
                         else if (tag == "<u>")
                             underline++;
-                        else if (tag.StartsWith("<font "))
+                        else if (tag.StartsWith("<font ", StringComparison.Ordinal))
                         {
                             const string colorTag = " color=";
                             if (tag.Contains(colorTag))
@@ -158,11 +158,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var fontStyle = new FontStyle();
                 if (underline)
-                    fontStyle = fontStyle | FontStyle.Underline;
+                    fontStyle |= FontStyle.Underline;
                 if (italic)
-                    fontStyle = fontStyle | FontStyle.Italic;
+                    fontStyle |= FontStyle.Italic;
                 if (bold)
-                    fontStyle = fontStyle | FontStyle.Bold;
+                    fontStyle |= FontStyle.Bold;
                 _fontList.Add(new EffectKaraoke.FontEntry { Start = length, Length = text.Length, Font = new Font(rtb.Font.FontFamily, rtb.Font.Size, fontStyle) });
             }
         }
@@ -233,7 +233,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int idx = _paragraph.Text.IndexOf('}');
                     alignment = _paragraph.Text.Substring(0, idx + 1);
                     i = idx;
-                } 
+                }
                 else if (tagOn)
                 {
                     tag += _paragraph.Text[i];
@@ -267,7 +267,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     text += tag + _paragraph.Text[i];
-                    tag = string.Empty;                  
+                    tag = string.Empty;
 
                     startMilliseconds = index * stepsLength;
                     startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
