@@ -54,7 +54,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal class ColorEntry
         {
-
             public int Start { get; set; }
             public int Length { get; set; }
             public Color Color { get; set; }
