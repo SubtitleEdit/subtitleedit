@@ -3120,13 +3120,13 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
             }
-
+            const string headerFormat = "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
             if (!subtitle.Header.Contains("[Events]"))
             {
                 subtitle.Header = subtitle.Header.Trim() + Environment.NewLine +
                                    Environment.NewLine +
                                    "[Events]" + Environment.NewLine +
-                                   "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine;
+                                   headerFormat + Environment.NewLine;
             }
             else
             {
@@ -3134,7 +3134,7 @@ namespace Nikse.SubtitleEdit.Logic
                 subtitle.Header = subtitle.Header.Trim() + Environment.NewLine +
                                    Environment.NewLine +
                                    "[Events]" + Environment.NewLine +
-                                   "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine;
+                                   headerFormat + Environment.NewLine;
             }
             lines = new List<string>();
             foreach (string l in subtitle.Header.Trim().SplitToLines())
