@@ -5,7 +5,6 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-
     public class StripableText
     {
         public string Pre { get; set; }
@@ -28,7 +27,7 @@ namespace Nikse.SubtitleEdit.Logic
             OriginalText = text;
 
             Pre = string.Empty;
-            if (text.Length > 0 && ("<{" + stripStartCharacters).Contains(text[0]))//!Utilities.AllLettersAndNumbers.Contains(text[0]))
+            if (text.Length > 0 && ("<{" + stripStartCharacters).Contains(text[0]))
             {
                 int beginLength;
                 do
