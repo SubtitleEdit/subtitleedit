@@ -15,10 +15,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
     public partial class SubStationAlphaStyles : StylesForm
     {
         private string _header;
-        private bool _doUpdate = false;
-        private string _oldSsaName = null;
-        private SubtitleFormat _format = null;
-        private bool _isSubStationAlpha = false;
+        private bool _doUpdate;
+        private string _oldSsaName;
+        private readonly SubtitleFormat _format;
+        private readonly bool _isSubStationAlpha;
 
         public SubStationAlphaStyles(Subtitle subtitle, SubtitleFormat format)
             : base(subtitle)
@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             labelStatus.Text = string.Empty;
             _header = subtitle.Header;
             _format = format;
-            _isSubStationAlpha = _format.FriendlyName == SubStationAlpha.NameOfFormat;
+            _isSubStationAlpha = _format.Name == SubStationAlpha.NameOfFormat;
             if (_header == null || !_header.Contains("style:", StringComparison.OrdinalIgnoreCase))
                 ResetHeader();
 
