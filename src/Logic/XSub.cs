@@ -95,9 +95,10 @@ namespace Nikse.SubtitleEdit.Logic
             var bmp = new Bitmap(Width, Height);
             if (fourColors[0] != Color.Transparent)
             {
-                var gr = Graphics.FromImage(bmp);
-                gr.FillRectangle(new SolidBrush(fourColors[0]), new Rectangle(0, 0, bmp.Width, bmp.Height));
-                gr.Dispose();
+                using (var gr = Graphics.FromImage(bmp))
+                {
+                    gr.FillRectangle(new SolidBrush(fourColors[0]), new Rectangle(0, 0, bmp.Width, bmp.Height));
+                }
             }
             var fastBmp = new FastBitmap(bmp);
             fastBmp.LockImage();
