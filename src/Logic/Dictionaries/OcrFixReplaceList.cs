@@ -775,6 +775,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
 
         private XmlDocument LoadXmlReplaceListDocument()
         {
+            const string xmlText = "<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>";
             var doc = new XmlDocument();
             if (File.Exists(_replaceListXmlFileName))
             {
@@ -784,12 +785,12 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                 }
                 catch
                 {
-                    doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");
+                    doc.LoadXml(xmlText);
                 }
             }
             else
             {
-                doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");
+                doc.LoadXml(xmlText);
             }
             return doc;
         }
@@ -801,6 +802,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
 
         private XmlDocument LoadXmlReplaceListUserDocument()
         {
+            const string xmlText = "<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><RemovedWholeWords/><RemovedPartialLines/><RemovedBeginLines/><RemovedEndLines/><RemovedWholeLines/></ReplaceList>";
             var doc = new XmlDocument();
             if (File.Exists(ReplaceListXmlFileNameUser))
             {
@@ -810,12 +812,12 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                 }
                 catch
                 {
-                    doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><RemovedWholeWords/><RemovedPartialLines/><RemovedBeginLines/><RemovedEndLines/><RemovedWholeLines/></ReplaceList>");
+                    doc.LoadXml(xmlText);
                 }
             }
             else
             {
-                doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><RemovedWholeWords/><RemovedPartialLines/><RemovedBeginLines/><RemovedEndLines/><RemovedWholeLines/></ReplaceList>");
+                doc.LoadXml(xmlText);
             }
             return doc;
         }
@@ -925,6 +927,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             var sb = new StringBuilder();
             if (word != null && text != null && text.Contains(word))
             {
+                const string startChars = @" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/";
                 int appendFrom = 0;
                 for (int i = 0; i < text.Length; i++)
                 {
@@ -932,14 +935,14 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                     {
                         bool startOk = i == 0;
                         if (!startOk)
-                            startOk = (@" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text[i - 1]);
+                            startOk = (startChars + Environment.NewLine).Contains(text[i - 1]);
                         if (!startOk && word.StartsWith(' '))
                             startOk = true;
                         if (startOk)
                         {
                             bool endOk = (i + word.Length == text.Length);
                             if (!endOk)
-                                endOk = (@" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text[i + word.Length]);
+                                endOk = (startChars + Environment.NewLine).Contains(text[i + word.Length]);
                             if (!endOk)
                                 endOk = newWord.EndsWith(' ');
                             if (endOk)
