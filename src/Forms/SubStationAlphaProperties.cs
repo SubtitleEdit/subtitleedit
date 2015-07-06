@@ -11,15 +11,15 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class SubStationAlphaProperties : PositionAndSizeForm
     {
-        private Subtitle _subtitle;
-        private bool _isSubStationAlpha;
-        private string _videoFileName;
+        private readonly Subtitle _subtitle;
+        private readonly bool _isSubStationAlpha;
+        private readonly string _videoFileName;
 
         public SubStationAlphaProperties(Subtitle subtitle, SubtitleFormat format, string videoFileName, string subtitleFileName)
         {
             InitializeComponent();
             _subtitle = subtitle;
-            _isSubStationAlpha = format.FriendlyName == SubStationAlpha.NameOfFormat;
+            _isSubStationAlpha = format.Name == SubStationAlpha.NameOfFormat;
             _videoFileName = videoFileName;
 
             var l = Configuration.Settings.Language.SubStationAlphaProperties;
@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
             string header = subtitle.Header;
             if (subtitle.Header == null)
             {
-                SubStationAlpha ssa = new SubStationAlpha();
+                var ssa = new SubStationAlpha();
                 var sub = new Subtitle();
                 var lines = new List<string>();
                 foreach (string line in subtitle.ToText(ssa).SplitToLines())

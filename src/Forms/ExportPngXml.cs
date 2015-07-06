@@ -3579,8 +3579,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             if (_subtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
             {
-                bool isSsa = _format.FriendlyName == SubStationAlpha.NameOfFormat ||
-                             _format.FriendlyName == AdvancedSubStationAlpha.NameOfFormat;
+                bool isSsa = _format.Name == SubStationAlpha.NameOfFormat ||
+                             _format.Name == AdvancedSubStationAlpha.NameOfFormat;
 
                 foreach (ListViewItem item in subtitleListView1.SelectedItems)
                 {

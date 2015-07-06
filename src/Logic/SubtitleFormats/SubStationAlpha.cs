@@ -112,11 +112,13 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 string actor = "NTP";
                 if (!string.IsNullOrEmpty(p.Actor))
                     actor = p.Actor;
-                string effect = "!Effect";
+                string effect = "";
                 if (!string.IsNullOrEmpty(p.Effect))
                     effect = p.Effect;
                 if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
                     style = p.Extra;
+                if (style == "Default")
+                    style = "*Default";
                 if (p.IsComment)
                     sb.AppendLine(string.Format(commentWriteFormat, start, end, AdvancedSubStationAlpha.FormatText(p), style, p.Layer, actor, effect));
                 else
