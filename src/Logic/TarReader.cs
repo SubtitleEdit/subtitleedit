@@ -6,7 +6,6 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public class TarReader : IDisposable
     {
-
         public List<TarHeader> Files { get; private set; }
         private Stream _stream;
 
