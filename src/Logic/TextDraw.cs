@@ -6,7 +6,6 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public static class TextDraw
     {
-
         public static void DrawText(Font font, StringFormat sf, GraphicsPath path, StringBuilder sb, bool isItalic, bool isBold, bool isUnderline, float left, float top, ref bool newLine, float leftMargin, ref int pathPointsStart)
         {
             var next = new PointF(left, top);
@@ -36,20 +35,13 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             var fontStyle = FontStyle.Regular;
-            if (isItalic && isBold && isUnderline)
-                fontStyle = FontStyle.Italic | FontStyle.Bold | FontStyle.Underline;
-            else if (isItalic && isBold)
-                fontStyle = FontStyle.Italic | FontStyle.Bold;
-            else if (isItalic && isUnderline)
-                fontStyle = FontStyle.Italic | FontStyle.Underline;
-            else if (isUnderline && isBold)
-                fontStyle = FontStyle.Underline | FontStyle.Bold;
-            else if (isItalic)
-                fontStyle = FontStyle.Italic;
-            else if (isBold)
-                fontStyle = FontStyle.Bold;
-            else if (isUnderline)
-                fontStyle = FontStyle.Underline;
+            if (isItalic)
+                fontStyle |= FontStyle.Italic;
+            if (isBold)
+                fontStyle |= FontStyle.Bold;
+            if (isUnderline)
+                fontStyle |= FontStyle.Underline;
+
             try
             {
                 path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, font.Size, next, sf);
