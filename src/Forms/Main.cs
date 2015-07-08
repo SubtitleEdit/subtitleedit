@@ -2117,6 +2117,21 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (format == null)
+                {
+                    var mtv = new TimeLineMvt();
+                    if (mtv.IsMine(null, fileName))
+                    {
+                        mtv.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = mtv;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
                 if (ext == ".dost")
                 {
                     try
