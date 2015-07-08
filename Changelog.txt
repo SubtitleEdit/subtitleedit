@@ -14,7 +14,7 @@
    * Updated Romanian translation - thx Mircea
    * Updated Brazil translation - thx Igor
    * Updated Croatian translation - thx diomed
-   * Portuguese (Brazilian) spell check dictionary updated to v2.1.2 - thx ivandrofly
+   * Updated many spell check dictionaries - thx ivandrofly
    * Added drag-n-drop support in waveform batch generate - thx ThiefMaster
    * Added drag-n-drop support for directories in "Batch convert" - thx ivandrofly
    * Persistent find history - thx vmb
@@ -24,6 +24,7 @@
    * Export to Blu-ray sup now also supports full frame - thx oallouch
    * Added two new fields for EBU regarding programme start time
 * FIXED:
+   * Fixed wrong styles in SSA - thx alundpeggybundy
    * Fixed multiple blank lines added after editing SSA/ASS properties
    * Fix in "Change casing" regarding "don't" - thx Chamallow
    * Fixed missing last blank "Sami" end tag - thx domddol 
@@ -43,6 +44,8 @@
    * Fix for (possible) "culture is not supported" crash when changing language - thx XuTpuK
    * Fixed bug in writing "Subtitle Editor Project" format - thx Christina
    * Always re-number in batch convert - thx Ede123
+   * Fixed DCinema interop custom language setting - thx F-5
+   * Fixed some bugs in Karaoke/typewriter effect regarding tags - thx domddol
    * + Many minor fixes from Ivandrofly and xylographe
 
 
