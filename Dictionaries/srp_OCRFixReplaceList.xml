@@ -6,22 +6,27 @@
     <Word from="če" to="će" />
     <Word from="čemo" to="ćemo" />
     <Word from="čete" to="čete" />
+    <Word from="djete" to="dijete" />
+    <Word from="Hey" to="Hej" />
     <Word from="hey" to="hej" />
     <Word from="htjeo" to="htio" />
     <Word from="Hočeš" to="Hoćeš" />
     <Word from="hočeš" to="hoćeš" />
     <Word from="iči" to="ići" />
+    <Word from="jel" to="je l'" />
+    <Word from="Jel" to="Je l'" />
     <Word from="moguče" to="moguće" />
     <Word from="nedaj" to="ne daj" />
-    <Word from="neču" to="neću" />
-    <Word from="nečeš" to="nećeš" />
-    <Word from="neče" to="neće" />
     <Word from="nečemo" to="nećemo" />
     <Word from="nečete" to="nećete" />
     <Word from="odkad" to="otkad" />
+    <Word from="Odkad" to="Otkad" />
+    <Word from="odkako" to="otkako" />
+    <Word from="Odkako" to="Otkako" />
     <Word from="Rješit" to="Riješit" />
     <Word from="smjeo" to="smio" />
     <Word from="uopče" to="uopće" />
+    <Word from="valda" to="valjda" />
     <Word from="želila" to="željela" />
   </WholeWords>
   <PartialWordsAlways />
@@ -38,6 +43,10 @@
     <LinePart from="dali je" to="da li je" />
     <LinePart from="dali si" to="da li si" />
     <LinePart from="Dali si" to="Da li si" />
+    <LinePart from="Jel sam ti" to="Jesam li ti" />
+    <LinePart from="Jel si" to="Jesi li" />
+    <LinePart from="Jel' si" to="Jesi li" />
+    <LinePart from="Je I'" to="Jesi li" />
     <LinePart from="Jel si to" to="Jesi li to" />
     <LinePart from="Jel' si to" to="Da li si to" />
     <LinePart from="jel si to" to="da li si to" />
@@ -47,16 +56,26 @@
     <LinePart from="jel si ti" to="da li si ti" />
     <LinePart from="jel' si ti" to="da li si ti" />
     <LinePart from="jel ste " to="jeste li " />
-    <LinePart from="Jel ste " to="Jeste li " />
+    <LinePart from="Jel ste" to="Jeste li" />
     <LinePart from="jel' ste " to="jeste li " />
     <LinePart from="Jel' ste " to="Jeste li " />
+    <LinePart from="Jel su " to="Jesu li " />
+    <LinePart from="Jel da " to="Zar ne" />
+    <LinePart from="jel da " to="zar ne" />
+    <LinePart from="jel'da " to="zar ne" />
+    <LinePart from="Jeli sve " to="Je li sve" />
+    <LinePart from="Jeli on " to="Je li on" />
+    <LinePart from="Jeli ti " to="Je li ti" />
+    <LinePart from="jeli ti " to="je li ti" />
+    <LinePart from="Jeli to " to="Je li to" />
     <LinePart from="Nebrini" to="Ne brini" />
-    <LinePart from="Nebih" to="Ne bih" />
-    <LinePart from="nebih" to="ne bih" />
-    <LinePart from="nebi" to="ne bi" />
+    <LinePart from="nedaj" to="ne daj" />
     <LinePart from="ne ću" to="neću" />
+    <LinePart from="Nemogu" to="Ne mogu" />
+    <LinePart from="ne mogu" to="ne mogu" />
     <LinePart from="Nemoraš" to="Ne moraš" />
     <LinePart from="od kako" to="otkako" />
+    <LinePart from="Si dobro" to="Jesi li dobro" />
     <LinePart from="Svo vreme" to="Sve vrijeme" />
     <LinePart from="Svo vrijeme" to="Sve vrijeme" />
     <LinePart from="Cijelo vrijeme" to="Sve vrijeme" />
@@ -67,21 +86,40 @@
   <WholeLines />
   <RegularExpressions>
     <RegEx find="ajsmiješnij" replaceWith="ajsmješnij" />
+    <RegEx find="Jel si sigur" replaceWith="Jesi li sigur" />
+    <RegEx find="Jel' si sigur" replaceWith="Jesi li sigur" />
     <RegEx find="(M|m)jenjati" replaceWith="$1ijenjati" />
+    <RegEx find="\b(N|n)ebih?" replaceWith="$1e bi" />
+    <RegEx find="\b(N|n)eč[ueš]\b" replaceWith="$1eć" />
+    <RegEx find="\b(N|n)emože(mo|š)?\b" replaceWith="$1e može$2" />
+    <RegEx find="\b(N|n)ezna(m|š|mo|te|ju)?\b" replaceWith="$1e zna$2" />
     <RegEx find="najcijenjen" replaceWith="najcjenjen" />
     <RegEx find="Nju Jork" replaceWith="Njujork" />
     <RegEx find="NJu Jork" replaceWith="Njujork" />
+    <RegEx find="(o|OP)ružij[aeu]" replaceWith="$1ružj" />
+     <RegEx find="([oO])sječa" replaceWith="$1sjeća" />
+    <RegEx find="([pPdD])onje[lt]" replaceWith="$1onije" />
+    <RegEx find="(p|P)objedi[mšto]" replaceWith="$1obijedi" />
     <RegEx find="(p|P)redamnom" replaceWith="$1reda mnom" />
-    <RegEx find="(p|P)romjenim" replaceWith="$1romijenim" />
+    <RegEx find="(p|P)redpostav" replaceWith="$1retpostav" />
+    <RegEx find="(p|P)rimjeti" replaceWith="$1rimijeti" />
+    <RegEx find="(p|P)romjeni[mštol]" replaceWith="$1romijeni" />
+    <RegEx find="(r|R)azumijeć" replaceWith="$1azumjeć" />
     <RegEx find="rascjepljen" replaceWith="rascijepljen" />
     <RegEx find="redhodn" replaceWith="rethodn" />
+    <RegEx find="rimjenjen" replaceWith="rimijenjen" />
     <RegEx find="([sSzZ])amnom" replaceWith="$1a mnom" />
     <RegEx find="sledeče" replaceWith="sledeće" />
+    <RegEx find="(s|S)lijedeć[aeu]" replaceWith="$1ljedeć" />
     <RegEx find="(s|S)mješno" replaceWith="$1miješno" />
     <RegEx find="(u|U)mijesto" replaceWith="$1mjesto" />
-    <RegEx find="uspijeh" replaceWith="uspjeh" />
+    <RegEx find="(u|U)spijeh" replaceWith="$1spjeh" />
     <RegEx find="(u|U)spiješan" replaceWith="$1spješan" />
+    <RegEx find="(u|U)spiješn[ao]" replaceWith="$1spješan" />
     <RegEx find="(u|U)vjek" replaceWith="$1vijek" />
+    <RegEx find="\b(v|V)eč[aeiou]" replaceWith="$1eć" />
+    <RegEx find="(z|Z)ahtijeva" replaceWith="$1ahtjeva" />
+    <RegEx find="(z|Z)ahtjeva[ojlmšt]" replaceWith="$1ahtijeva" />
     <RegEx find="(?&lt;=[a-zčđšž])Ij(?=[a-zčđšž])" replaceWith="lj" />
     <RegEx find="(?&lt;=[^A-ZČĐŠŽa-zčđšž])Iju(?=bav|d|t)" replaceWith="lju" />
     <!-- kad ima razmak izmedju tagova </i> <i> -->
