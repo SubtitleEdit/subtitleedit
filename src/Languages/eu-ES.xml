@@ -290,7 +290,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <FadeDownTime>Hutsalbeheratu denbora</FadeDownTime>
     <ZPosition>Z-kokapena</ZPosition>
     <ZPositionHelp>Zenbaki positiboek idazkia hurrundu egiten dute, zenbaki negatiboek idazkia hurbildu egiten dute, z-kokapena huts bada orduan 2D da.</ZPositionHelp>
-    <ChooseColor>Hatutatu margoa</ChooseColor>
+    <ChooseColor>Hautatu margoa</ChooseColor>
     <Generate>Sortu</Generate>
   </DCinemaProperties>
   <DurationsBridgeGaps>
@@ -333,7 +333,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImage>Azpidatzi irudia</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
-    <Title>EBU gorde aurkerak</Title>
+    <Title>EBU gorde aukerak</Title>
     <GeneralSubtitleInformation>Azpidatzi argibide orokorra</GeneralSubtitleInformation>
     <CodePageNumber>Kode orrialde zenbakia:</CodePageNumber>
     <DiskFormatCode>Diska heuskarri kodea:</DiskFormatCode>
@@ -353,7 +353,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <DiskSequenceNumber>Diska sekuentzia zenbakia:</DiskSequenceNumber>
     <TotalNumberOfDisks>Diska zenbatekoa guztira:</TotalNumberOfDisks>
     <Import>&amp;Inportatu...</Import>
-    <TextAndTimingInformation>Idaztzi eta denbora argibideak</TextAndTimingInformation>
+    <TextAndTimingInformation>Idatzi eta denbora argibideak</TextAndTimingInformation>
     <JustificationCode>Berdintze kodea</JustificationCode>
     <Errors>Akatsak</Errors>
     <ErrorsX>Akatsak: {0}</ErrorsX>
@@ -381,8 +381,8 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Edit>Editatu</Edit>
     <Delete>Ezabatu</Delete>
     <SaveAs>&amp;Gorde honela...</SaveAs>
-    <SaveSubtitleAs>Gorde azpdiatzia honela...</SaveSubtitleAs>
-    <SubtitleExportedInCustomFormatToX>Azpidatzia norbere heuskarrian esporatatuta hona:</SubtitleExportedInCustomFormatToX>
+    <SaveSubtitleAs>Gorde azpidatzia honela...</SaveSubtitleAs>
+    <SubtitleExportedInCustomFormatToX>Azpidatzia norbere heuskarrian esportatuta hona:</SubtitleExportedInCustomFormatToX>
   </ExportCustomText>
   <ExportCustomTextFormat>
     <Title>Norbere idazki heuskarri eredua</Title>
@@ -445,7 +445,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <UnbreakLines>Deshautsi lerroak</UnbreakLines>
     <RemoveStyling>Kendu estiloa</RemoveStyling>
     <ShowLineNumbers>Erakutsi lerro zenbakiak</ShowLineNumbers>
-    <AddNewLineAfterLineNumber>Gehitu lerro berri bat lerro zenbakiaren ondoroen</AddNewLineAfterLineNumber>
+    <AddNewLineAfterLineNumber>Gehitu lerro berri bat lerro zenbakiaren ondoren</AddNewLineAfterLineNumber>
     <ShowTimeCode>Erakutsi denbora kodea</ShowTimeCode>
     <AddNewLineAfterTimeCode>Gehitu lerro berri bat denbora kodearen ondoren</AddNewLineAfterTimeCode>
     <AddNewLineAfterTexts>Gehitu lerro berri bat idatziaren ondoren</AddNewLineAfterTexts>
@@ -502,7 +502,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededPeriods>Kendu beharrezkoak ez diren puntuak</RemoveUnneededPeriods>
     <FixMissingSpaces>Zuzendu galdutako tarteak</FixMissingSpaces>
     <BreakLongLines>Hautsi lerro luzeak</BreakLongLines>
-    <RemoveLineBreaks>Kendu lerro hautsiak esaldi bakerrako idatzi laburretan</RemoveLineBreaks>
+    <RemoveLineBreaks>Kendu lerro hautsiak esaldi bakarreko idatzi laburretan</RemoveLineBreaks>
     <RemoveLineBreaksAll>Kendu lerro hautsiak idatzi laburretan (elkarrizketak izan ezik)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Zuzendu hitz xeheen barneko hizki larriak (idaz akatsa)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Zuzendu adartxo bikoitzak ('') aipamen bakarrera (")</FixDoubleApostrophes>
@@ -522,7 +522,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <AddMissingQuote>Gehitu galdutako adartxoak (")</AddMissingQuote>
     <AddMissingQuotes>Gehitu galdutako adartxoak (")</AddMissingQuotes>
     <FixHyphens>Zuzendu marratxoz hasten diren lerroak (-)</FixHyphens>
-    <FixHyphensAdd>Zuzendu marratxo bakarreko (gehitu rmarratxoa) lerro pareak (-)</FixHyphensAdd>
+    <FixHyphensAdd>Zuzendu marratxo bakarreko (gehitu marratxoa) lerro bikoteak (-)</FixHyphensAdd>
     <FixHyphen>Zuzendu marratxoz hasten diren lerroak (-)</FixHyphen>
     <XHyphensFixed>Marratxoak zuzenduta: {0}</XHyphensFixed>
     <AddMissingQuotesExample>"Nola zaude? -&gt; "Nola zaude?"</AddMissingQuotesExample>
@@ -539,7 +539,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Continue>Jarraitu</Continue>
     <ContinueAnyway>Jarraitu edonola?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Egiaztatu gabe "Zuzendu 'i' hizki xehea 'I' -ra (Ingelera)"</UncheckedFixLowercaseIToUppercaseI>
-    <XIsChangedToUppercase>{0} aldatuta hizki larrira</XIsChangedToUppercase>
+    <XIsChangedToUppercase>Aldatuta {0} hizki larrira</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Zuzendu lehen hizkia hizki larrira esaldi baten ondoren</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Batu lerro laburra (esaldi bakarrekoa)</MergeShortLine>
     <MergeShortLineAll>Batu lerro laburra (denak elkarrizketak izan ezik)</MergeShortLineAll>
@@ -687,7 +687,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Hasperen-hitzak</Title>
   </Interjections>
   <JoinSubtitles>
-    <Title>Batu azpdidatziak</Title>
+    <Title>Batu azpidatziak</Title>
     <Information>Gehitu batzeko azpidatziak (askatzea ere sostengatuta)</Information>
     <NumberOfLines>Lerro zenbatekoa</NumberOfLines>
     <StartTime>Hasiera denbora</StartTime>
@@ -965,8 +965,8 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
       <PlayCurrent>Ira&amp;kurri oraingoa</PlayCurrent>
       <Next>Hurren&amp;goa &gt;</Next>
       <Playing>Irakurtzen...</Playing>
-      <RepeatingLastTime>Birregiten... azken denbora</RepeatingLastTime>
-      <RepeatingXTimesLeft>Birregiten... {0} egitekeko denborak</RepeatingXTimesLeft>
+      <RepeatingLastTime>Berregiten... azken denbora</RepeatingLastTime>
+      <RepeatingXTimesLeft>Berregiten... {0} egitekeko denborak</RepeatingXTimesLeft>
       <AutoContinueInOneSecond>Berez jarraitu segundu batean</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>Berez jarraitu {0} segundutan</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Baita idazten... berez jarraitu geldituta</StillTypingAutoContinueStopped>
@@ -1008,7 +1008,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <VisualSyncSelectedLines>Ikus aldiberetzea - hautaturiko lerroak</VisualSyncSelectedLines>
     <VisualSyncTitle>Ikus aldiberetzea</VisualSyncTitle>
     <BeforeVisualSync>Ikus aldiberetzearen aurretik</BeforeVisualSync>
-    <VisualSyncPerformedOnSelectedLines>Ikus aldeberetzea eginda hautaturiko lerroetan</VisualSyncPerformedOnSelectedLines>
+    <VisualSyncPerformedOnSelectedLines>Ikus aldiberetzea eginda hautaturiko lerroetan</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Ikus aldiberetzea eginda</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Inportatu VobSub azpidatzi hau?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Agiria 10 MB baino handiagoa da: {0}</FileXIsLargerThan10MB>
@@ -1104,7 +1104,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <NumberOfNameHits>Lortutako izen zenbatekoa: {0}</NumberOfNameHits>
     <SpellCheck>Idaz-egiaztapena</SpellCheck>
     <BeforeSpellCheck>Idaz-egiaztapenaren aurretik</BeforeSpellCheck>
-    <SpellCheckChangedXToY>Idaz-egiaztapena: Aldatuta '{0}' '{1}'-tik</SpellCheckChangedXToY>
+    <SpellCheckChangedXToY>Idaz-egiaztapena: Aldatuta '{0}' -> '{1}'-ra</SpellCheckChangedXToY>
     <BeforeAddingTagX>Gehitu aurretik &lt;{0}&gt; etiketa</BeforeAddingTagX>
     <TagXAdded>&lt;{0}&gt; etiketa gehituta</TagXAdded>
     <LineXOfY>{0} lerro {1}-tik</LineXOfY>
@@ -1245,7 +1245,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <NotAValidXSubFile>Ez da XSub agiri baliozko bat!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Idatzi bera duten lerroak batu aurretik</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Denbora-kodea duen azpidatziak lerro zenbateko ezberdina du ({0}) oraingo azpidatziarekin alderatuta ({1}) - jarraitu horrela ere?</ImportTimeCodesDifferentNumberOfLinesWarning>
-    <ParsingTransportStream>Garraio jarioa aztartzen - mesedez itxaron...</ParsingTransportStream>
+    <ParsingTransportStream>Garraio jarioa aztertzen - mesedez itxaron...</ParsingTransportStream>
     <ErrorLoadIdx>Ezinezkoa da .idx agiriak irakurtzea/editatzea. Idx agiriak idx/sub agiri bikote baten atal dira (VobSub deitua ere), eta Subtitle Edit-ek ireki dezake .sub agiria.</ErrorLoadIdx>
     <ErrorLoadRar>Agiri honek .rar agiri konprimitu bat dela dirudi. Subtitle Edit-ek ezin du agiri konprimiturik ireki.</ErrorLoadRar>
     <ErrorLoadZip>Agiri honek .zip agiri konprimitu bat dela dirudi. Subtitle Edit-ek ezin du agiri konprimiturik ireki.</ErrorLoadZip>
@@ -1261,7 +1261,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Hautatu azpidatzia Matroska agiritik</Title>
     <PleaseChoose>Azpidatzi bat baino gehiago aurkitu da - mesedez hautatu</PleaseChoose>
-    <TrackXLanguageYTypeZ>Bidea {0} - Hizkuntza: {1} - Mota: {2}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Bidea {0} - {1} - Hizkuntza: {2} - Mota: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Neurriketa bihurtzailea</Title>
@@ -1286,7 +1286,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
   </MergeDoubleLines>
   <MergedShortLines>
     <Title>Batu lerro laburrak</Title>
-    <MaximumCharacters>Gehinezko hizkirri esaldi bakarrean</MaximumCharacters>
+    <MaximumCharacters>Gehienezko hizkirri esaldi bakarrean</MaximumCharacters>
     <MaximumMillisecondsBetween>Gehienezko segundumilaen lerroen artean</MaximumMillisecondsBetween>
     <NumberOfMergesX>Batuketa zenbatekoa: {0}</NumberOfMergesX>
     <MergedText>Batutako idatzia</MergedText>
@@ -1556,7 +1556,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <WaveformSelectedColor>Hautaturikoa</WaveformSelectedColor>
     <WaveformBackgroundColor>Atzeko margoa</WaveformBackgroundColor>
     <WaveformTextColor>Idatzi margoa</WaveformTextColor>
-    <WaveformTextFontSize>Idazkiaren hizki neurrai</WaveformTextFontSize>
+    <WaveformTextFontSize>Idazkiaren hizki neurria</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Hustu 'Argilitzaerak' eta 'Uhinerak' agiritegiak</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'Uhinerak' eta 'Argilitzaerak' agiritegiek {0} agiri dituzte ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Argilitzaera</Spectrogram>
@@ -1740,7 +1740,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <Use>E&amp;rabili</Use>
     <UseAlways>&amp;Erabili betik</UseAlways>
     <Suggestions>Iradokizunak</Suggestions>
-    <SpellCheckProgress>Idaz egiztapena [{0}] - {1}</SpellCheckProgress>
+    <SpellCheckProgress>Idaz egiaztapena [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Editatu idatzi &amp;osoa</EditWholeText>
     <EditWordOnly>Editatu hitza ba&amp;karrik</EditWordOnly>
     <AddXToNamesEtc>Gehitu '{0}' izen/etab. zerrendara</AddXToNamesEtc>
@@ -1750,7 +1750,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <ImageText>Irudi idatzia</ImageText>
     <SpellCheckCompleted>Idaz-egiaztapena osatuta.</SpellCheckCompleted>
     <SpellCheckAborted>Idaz-egiaztapena utzita</SpellCheckAborted>
-    <UndoX>Deseginda: {0}</UndoX>
+    <UndoX>De&amp;segin: {0}</UndoX>
   </SpellCheck>
   <Split>
     <Title>Banandu</Title>
@@ -1802,7 +1802,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <TitleWithFileName>Estatistikak - {0}</TitleWithFileName>
     <GeneralStatistics>Estatistika orokorrak</GeneralStatistics>
     <MostUsed>Gehien erabilitakoa...</MostUsed>
-    <MostUsedLines>Gehien erabiltako lerroak</MostUsedLines>
+    <MostUsedLines>Gehien erabilitako lerroak</MostUsedLines>
     <MostUsedWords>Gehien erabilitako hitzak</MostUsedWords>
     <NothingFound>Ez da ezer aurkitu</NothingFound>
     <NumberOfLinesX>Azpidatzi lerro zenbatekoa: {0:#,###}</NumberOfLinesX>
@@ -1928,7 +1928,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <GoToSubPosition>Joan azp.</GoToSubPosition>
     <KeepChangesTitle>Aldaketak gorde?</KeepChangesTitle>
     <KeepChangesMessage>Azpidatzian aldaketak 'Ikus aldiberetzearekin' egin dira.
-Gorde aldaketak?</KeepChangesMessage>
+    Gorde aldaketak?</KeepChangesMessage>
     <SynchronizationDone>Aldiberetzea eginda!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Hasierako agerraldia amaierako agerraldia baino lehenago etorri behar da!</StartSceneMustComeBeforeEndScene>
     <Tip>Oharra: Erabili &lt;ktrl+ezk/esk geziak&gt; teklak 100 sm mugitzeko atzera/aurrera</Tip>
@@ -1955,7 +1955,7 @@ Gorde aldaketak?</KeepChangesMessage>
     <OcrViaNOCR>OCR nOCR bidez</OcrViaNOCR>
     <Language>Hizkuntza</Language>
     <OcrViaImageCompare>OCR irudi alderaketa bidez</OcrViaImageCompare>
-    <ImageDatabase>Irudi databasea</ImageDatabase>
+    <ImageDatabase>Irudi datubasea</ImageDatabase>
     <NoOfPixelsIsSpace>Pixel zenbatekoa tartean</NoOfPixelsIsSpace>
     <MaxErrorPercent>Geh. akats%</MaxErrorPercent>
     <New>Berria</New>
@@ -1985,7 +1985,7 @@ Gorde aldaketak?</KeepChangesMessage>
     <UnknownWords>Hitz ezezagunak</UnknownWords>
     <OcrAutoCorrectionSpellChecking>OCR berez zuzenketa / idaz-egiaztapena</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Zuzendu OCR akatsak</FixOcrErrors>
-    <ImportTextWithMatchingTimeCodes>Inportatu idaztzia bat datozen denbora kodeekin...</ImportTextWithMatchingTimeCodes>
+    <ImportTextWithMatchingTimeCodes>Inportatu idatzia bat datozen denbora kodeekin...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Inportatu denbora kode berriak</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Gorde azpidatzi irudia honela...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Gorde irudi guztiak (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
@@ -2029,7 +2029,7 @@ Gorde aldaketak?</KeepChangesMessage>
   </VobSubOcrNewFolder>
   <VobSubOcrSetItalicFactor>
     <Title>Ezarri ez-etzana ezaugarria</Title>
-    <Description>Zehaztu balioa baita idazki estiloa arrunta eta ez etzana bada ere. Ohartu jatorrizko irudia etzana izan behar dela.</Description>
+    <Description>Zehaztu balioa baita idazki estiloa arrunta eta ez etzana bada ere. Ohartu jatorrizko irudia etzana izan behar dela. </Description>
   </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Klikatu uhinera gehitzeko</ClickToAddWaveform>
@@ -2064,7 +2064,7 @@ Gorde aldaketak?</KeepChangesMessage>
     <BlockAverageVolMin1>Bloke bataz-besteko bolumena gainetik egon behar da:</BlockAverageVolMin1>
     <BlockAverageVolMin2>Bataz-besteko bolumen guztiaren %-koa</BlockAverageVolMin2>
     <BlockAverageVolMax1>Bloke bataz-besteko bolumena azpitik egon behar da:</BlockAverageVolMax1>
-    <BlockAverageVolMax2>Gehinezko bolumen guztiaren %-koa</BlockAverageVolMax2>
+    <BlockAverageVolMax2>Gehienezko bolumen guztiaren %-koa</BlockAverageVolMax2>
     <SplitLongLinesAt1>Banandu azpidatzi luzeak:</SplitLongLinesAt1>
     <SplitLongLinesAt2>segundumilaen</SplitLongLinesAt2>
     <Other>Bestelakoa</Other>
