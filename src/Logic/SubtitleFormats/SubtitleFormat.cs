@@ -9,7 +9,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public abstract class SubtitleFormat
     {
-
         private static IList<SubtitleFormat> _allSubtitleFormats = null;
 
         /// <summary>
@@ -238,7 +237,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         try
                         {
-                            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(FileUtil.ReadAllBytesShared(pluginFileName));
+                            var assembly = System.Reflection.Assembly.Load(FileUtil.ReadAllBytesShared(pluginFileName));
                             string objectName = Path.GetFileNameWithoutExtension(pluginFileName);
                             if (assembly != null)
                             {

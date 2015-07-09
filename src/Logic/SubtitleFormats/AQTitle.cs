@@ -6,7 +6,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class AQTitle : SubtitleFormat
     {
-
         private enum ExpectingLine
         {
             TimeStart,
