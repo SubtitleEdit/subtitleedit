@@ -10,7 +10,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class AdvancedSubStationAlpha : SubtitleFormat
     {
-
         public string Errors { get; private set; }
 
         public static string DefaultStyle
@@ -769,12 +768,12 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     }
                     else if (!string.IsNullOrEmpty(s))
                     {
-                        string text = string.Empty;
-                        string start = string.Empty;
-                        string end = string.Empty;
-                        string style = string.Empty;
-                        string actor = string.Empty;
-                        string effect = string.Empty;
+                        var text = string.Empty;
+                        var start = string.Empty;
+                        var end = string.Empty;
+                        var style = string.Empty;
+                        var actor = string.Empty;
+                        var effect = string.Empty;
                         var layer = 0;
 
                         string[] splittedLine;

@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Logic
             set
             {
                 var ts = TimeSpan;
-                TimeSpan = new TimeSpan(0, ts.Hours, value, ts.Seconds, ts.Milliseconds);
+                _totalMilliseconds = new TimeSpan(0, ts.Hours, value, ts.Seconds, ts.Milliseconds).TotalMilliseconds;
             }
         }
 
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic
             set
             {
                 var ts = TimeSpan;
-                TimeSpan = new TimeSpan(0, ts.Hours, ts.Minutes, value, ts.Milliseconds);
+                _totalMilliseconds = new TimeSpan(0, ts.Hours, ts.Minutes, value, ts.Milliseconds).TotalMilliseconds;
             }
         }
 
