@@ -6,7 +6,7 @@ using System.Text;
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     /// <summary>
-    /// Timeline - THE MOVIE TITLE EDITOR - http://www.pld.ttu.ee/~priidu/timeline/
+    /// Timeline - THE MOVIE TITRE EDITOR - http://www.pld.ttu.ee/~priidu/timeline/ by priidu@pld.ttu.ee
     /// </summary>
     public class TimeLineMvt : SubtitleFormat
     {
@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Timeline mtv"; }
+            get { return "Timeline mvt"; }
         }
 
         public override bool IsTimeBased
@@ -91,19 +91,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Encoding encoding2 = GetEncodingFromLanguage(language2);
 
             _errorCount = 0;
-            while (index < bytes.Length - 10)
+            while (index < bytes.Length - 20)
             {
                 if (bytes[index] == 5 && bytes[index + 1] == 0 && bytes[index + 2] == 0) // find subtitle
                 {
-                    // codes...
-                    int frames = bytes[index + 8] * 256; // + bytes[index + 9] * 256;
-                    index += 20;
+                    // time codes
+                    int timeCodeIndexStart = index + 4;
+                    int timeCodeIndexEnd = index + 15;
+                    index += 22;
                     while (index < bytes.Length && bytes[index] != 0x6)
                     {
                         index++;
                     }
                     index += 2;
-                    if (index < bytes.Length && bytes[index] == 0x6)
+                    while (index < bytes.Length && bytes[index] == 0x6)
                     {
                         index+=2;
                     }                    
@@ -130,9 +131,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             if (index + 1 < bytes.Length)
                             {
                                 string text2 = encoding2.GetString(bytes, start, index - start);
-                                var p = new Paragraph { Text = text1 + Environment.NewLine + text2 };
-                                p.StartTime.TotalMilliseconds = FramesToMilliseconds(frames);
-                                p.EndTime.TotalMilliseconds = frames;
+                                var p = new Paragraph
+                                {
+                                    Text = text1 + Environment.NewLine + text2, 
+                                    StartTime = { TotalMilliseconds = GetTimeCode(bytes, timeCodeIndexStart) }, 
+                                    EndTime = { TotalMilliseconds = GetTimeCode(bytes, timeCodeIndexEnd) }
+                                };
                                 subtitle.Paragraphs.Add(p);
                                 index--;
                             }
@@ -142,6 +146,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 index++;
             }
             subtitle.Renumber();
+        }
+
+        private double GetTimeCode(byte[] bytes, int timeCodeIndex)
+        {
+            if (bytes == null || bytes.Length < timeCodeIndex + 8)
+                return 0;
+            Console.WriteLine(bytes[timeCodeIndex + 0].ToString("X2") + " " +
+                              bytes[timeCodeIndex + 1].ToString("X2") + " " +
+                              bytes[timeCodeIndex + 2].ToString("X2") + " " +
+                              bytes[timeCodeIndex + 3].ToString("X2") + " " +
+                              bytes[timeCodeIndex + 4].ToString("X2") + " " +
+                              bytes[timeCodeIndex + 5].ToString("X2") + " " +
+                              bytes[timeCodeIndex + 6].ToString("X2"));
+            return ((bytes[timeCodeIndex + 5] << 24) + (bytes[timeCodeIndex + 4] << 16) + (bytes[timeCodeIndex + 3] << 8) + (bytes[timeCodeIndex + 2])) / 1800.0;
+//            return (bytes[timeCodeIndex + 5] << 16) + (bytes[timeCodeIndex + 4] << 8) + (bytes[timeCodeIndex + 3]);
         }
 
         private Encoding GetEncodingFromLanguage(string language)
