@@ -6443,7 +6443,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds + 7)
                     charsPerSecond.ForeColor = Color.Red;
                 else if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
-                    charsPerSecond.ForeColor = Color.Orange;
+                    charsPerSecond.ForeColor = Utilities.ColorDarkOrange;
                 else
                     charsPerSecond.ForeColor = Color.Black;
                 charsPerSecond.Text = string.Format(_language.CharactersPerSecond, charactersPerSecond);

@@ -1822,6 +1822,8 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static Color ColorDarkOrange = Color.FromArgb(220, 90, 10);
+
         public static void GetLineLengths(Label label, string text)
         {
             label.ForeColor = Color.Black;
@@ -1850,7 +1852,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                     label.ForeColor = Color.Red;
                 else if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength - 5)
-                    label.ForeColor = Color.Orange;
+                    label.ForeColor = ColorDarkOrange;
             }
             label.Text = sb.ToString();
         }
