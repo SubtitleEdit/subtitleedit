@@ -34,8 +34,7 @@ namespace Nikse.SubtitleEdit.Logic
                 int milliseconds;
                 if (int.TryParse(parts[0], out hours) && int.TryParse(parts[1], out minutes) && int.TryParse(parts[2], out seconds) && int.TryParse(parts[3], out milliseconds))
                 {
-                    var ts = new TimeSpan(0, hours, minutes, seconds, milliseconds);
-                    return ts.TotalMilliseconds;
+                    return new TimeSpan(0, hours, minutes, seconds, milliseconds).TotalMilliseconds;
                 }
             }
             return 0;

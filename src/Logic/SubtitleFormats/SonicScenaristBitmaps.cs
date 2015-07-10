@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (System.IO.Path.GetExtension(fileName).ToLower() != ".sst")
+            if (System.IO.Path.GetExtension(fileName).ToLowerInvariant() != ".sst")
                 return false;
 
             var subtitle = new Subtitle();
@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:03:15:22 (last is frame)
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return time.ToHHMMSSFF();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -108,8 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (milliseconds > 999)
                 milliseconds = 999;
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
-            return tc;
+            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
         }
 
     }
