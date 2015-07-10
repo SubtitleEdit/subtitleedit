@@ -1104,7 +1104,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <NumberOfNameHits>Lortutako izen zenbatekoa: {0}</NumberOfNameHits>
     <SpellCheck>Idaz-egiaztapena</SpellCheck>
     <BeforeSpellCheck>Idaz-egiaztapenaren aurretik</BeforeSpellCheck>
-    <SpellCheckChangedXToY>Idaz-egiaztapena: Aldatuta '{0}' -> '{1}'-ra</SpellCheckChangedXToY>
+    <SpellCheckChangedXToY>Idaz-egiaztapena: Aldatuta '{0}' -&gt; '{1}'-ra</SpellCheckChangedXToY>
     <BeforeAddingTagX>Gehitu aurretik &lt;{0}&gt; etiketa</BeforeAddingTagX>
     <TagXAdded>&lt;{0}&gt; etiketa gehituta</TagXAdded>
     <LineXOfY>{0} lerro {1}-tik</LineXOfY>
@@ -1261,7 +1261,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Hautatu azpidatzia Matroska agiritik</Title>
     <PleaseChoose>Azpidatzi bat baino gehiago aurkitu da - mesedez hautatu</PleaseChoose>
-    <TrackXLanguageYTypeZ>Bidea {0} - {1} - Hizkuntza: {2} - Mota: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Bidea {0} - Hizkuntza: {1} - Mota: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Neurriketa bihurtzailea</Title>
@@ -1928,7 +1928,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <GoToSubPosition>Joan azp.</GoToSubPosition>
     <KeepChangesTitle>Aldaketak gorde?</KeepChangesTitle>
     <KeepChangesMessage>Azpidatzian aldaketak 'Ikus aldiberetzearekin' egin dira.
-    Gorde aldaketak?</KeepChangesMessage>
+Gorde aldaketak?</KeepChangesMessage>
     <SynchronizationDone>Aldiberetzea eginda!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Hasierako agerraldia amaierako agerraldia baino lehenago etorri behar da!</StartSceneMustComeBeforeEndScene>
     <Tip>Oharra: Erabili &lt;ktrl+ezk/esk geziak&gt; teklak 100 sm mugitzeko atzera/aurrera</Tip>
@@ -2029,7 +2029,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
   </VobSubOcrNewFolder>
   <VobSubOcrSetItalicFactor>
     <Title>Ezarri ez-etzana ezaugarria</Title>
-    <Description>Zehaztu balioa baita idazki estiloa arrunta eta ez etzana bada ere. Ohartu jatorrizko irudia etzana izan behar dela. </Description>
+    <Description>Zehaztu balioa baita idazki estiloa arrunta eta ez etzana bada ere. Ohartu jatorrizko irudia etzana izan behar dela.</Description>
   </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Klikatu uhinera gehitzeko</ClickToAddWaveform>
