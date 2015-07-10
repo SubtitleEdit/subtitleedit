@@ -86,40 +86,50 @@
   <WholeLines />
   <RegularExpressions>
     <RegEx find="ajsmiješnij" replaceWith="ajsmješnij" />
+    <RegEx find=" g-dine\.$" replaceWith=" gospodine." />
+    <RegEx find=" g-dine +(?=[A-ZČĐŠŽ])" replaceWith=" g. " />
+    <RegEx find="([gG])dine? +(?=[A-ZČĐŠŽ])" replaceWith="$1. " />
+    <RegEx find="([gG])-đo +(?=[A-ZČĐŠŽ])" replaceWith="$1gđo " />
+    <RegEx find="gdina +(?=[A-ZČĐŠŽ])" replaceWith="g. " />
+    <RegEx find=" gosp +" replaceWith=" g. " />
     <RegEx find="Jel si sigur" replaceWith="Jesi li sigur" />
     <RegEx find="Jel' si sigur" replaceWith="Jesi li sigur" />
-    <RegEx find="(M|m)jenjati" replaceWith="$1ijenjati" />
-    <RegEx find="\b(N|n)ebih?" replaceWith="$1e bi" />
-    <RegEx find="\b(N|n)eč[ueš]\b" replaceWith="$1eć" />
-    <RegEx find="\b(N|n)emože(mo|š)?\b" replaceWith="$1e može$2" />
-    <RegEx find="\b(N|n)ezna(m|š|mo|te|ju)?\b" replaceWith="$1e zna$2" />
+    <RegEx find="\b([jJ])jel\?" replaceWith="$1e l'?" />
+    <RegEx find="\bJel'" replaceWith="Je l'" />
+    <RegEx find="([kK]alib(ar|r[aeui]))\. *([0-9])" replaceWith="$1 .$2" />
+    <RegEx find="([mM])jenjati" replaceWith="$1ijenjati" />
+    <RegEx find="\b([nN])ebih?" replaceWith="$1e bi" />
+    <RegEx find="\b([nN])eč[ueš]\b" replaceWith="$1eć" />
+    <RegEx find="\b([nN])emože(mo|š)?\b" replaceWith="$1e može$2" />
+    <RegEx find="\b([nN])ezna(m|š|mo|te|ju)?\b" replaceWith="$1e zna$2" />
     <RegEx find="najcijenjen" replaceWith="najcjenjen" />
-    <RegEx find="Nju Jork" replaceWith="Njujork" />
-    <RegEx find="NJu Jork" replaceWith="Njujork" />
+    <RegEx find="N[jJ]u Jork" replaceWith="Njujork" />
     <RegEx find="(o|OP)ružij[aeu]" replaceWith="$1ružj" />
-     <RegEx find="([oO])sječa" replaceWith="$1sjeća" />
+    <RegEx find="([oO])sječa" replaceWith="$1sjeća" />
     <RegEx find="([pPdD])onje[lt]" replaceWith="$1onije" />
-    <RegEx find="(p|P)objedi[mšto]" replaceWith="$1obijedi" />
-    <RegEx find="(p|P)redamnom" replaceWith="$1reda mnom" />
-    <RegEx find="(p|P)redpostav" replaceWith="$1retpostav" />
-    <RegEx find="(p|P)rimjeti" replaceWith="$1rimijeti" />
-    <RegEx find="(p|P)romjeni[mštol]" replaceWith="$1romijeni" />
-    <RegEx find="(r|R)azumijeć" replaceWith="$1azumjeć" />
+    <RegEx find="([pP])objedi[mšto]" replaceWith="$1obijedi" />
+    <RegEx find="([pP])redamnom" replaceWith="$1reda mnom" />
+    <RegEx find="([pP])redpostav" replaceWith="$1retpostav" />
+    <RegEx find="([pP])rimjeti" replaceWith="$1rimijeti" />
+    <RegEx find="([pP])romjeni[mštol]" replaceWith="$1romijeni" />
+    <RegEx find="([rR])azumijeć" replaceWith="$1azumjeć" />
     <RegEx find="rascjepljen" replaceWith="rascijepljen" />
     <RegEx find="redhodn" replaceWith="rethodn" />
     <RegEx find="rimjenjen" replaceWith="rimijenjen" />
+    <RegEx find="([^d])rješit" replaceWith="$1riješit" />
     <RegEx find="([sSzZ])amnom" replaceWith="$1a mnom" />
     <RegEx find="sledeče" replaceWith="sledeće" />
-    <RegEx find="(s|S)lijedeć[aeu]" replaceWith="$1ljedeć" />
-    <RegEx find="(s|S)mješno" replaceWith="$1miješno" />
-    <RegEx find="(u|U)mijesto" replaceWith="$1mjesto" />
-    <RegEx find="(u|U)spijeh" replaceWith="$1spjeh" />
-    <RegEx find="(u|U)spiješan" replaceWith="$1spješan" />
-    <RegEx find="(u|U)spiješn[ao]" replaceWith="$1spješan" />
-    <RegEx find="(u|U)vjek" replaceWith="$1vijek" />
-    <RegEx find="\b(v|V)eč[aeiou]" replaceWith="$1eć" />
-    <RegEx find="(z|Z)ahtijeva" replaceWith="$1ahtjeva" />
-    <RegEx find="(z|Z)ahtjeva[ojlmšt]" replaceWith="$1ahtijeva" />
+    <RegEx find="([sS])lijedeć[aeu]" replaceWith="$1ljedeć" />
+    <RegEx find="([sS])mješno" replaceWith="$1miješno" />
+    <RegEx find="([uU])mijesto" replaceWith="$1mjesto" />
+    <RegEx find="([uU])spijeh" replaceWith="$1spjeh" />
+    <RegEx find="([uU])spiješan" replaceWith="$1spješan" />
+    <RegEx find="([uU])spiješn[ao]" replaceWith="$1spješan" />
+    <RegEx find="([uU])vjek" replaceWith="$1vijek" />
+    <RegEx find="\b([vV])eč[aeiou]" replaceWith="$1eć" />
+    <RegEx find="([zZ])ahtijeva" replaceWith="$1ahtjeva" />
+    <RegEx find="([zZ])ahtjeva[ojlmšt]" replaceWith="$1ahtijeva" />
+    <RegEx find="([ks]ao)\.:" replaceWith="$1:" />
     <RegEx find="(?&lt;=[a-zčđšž])Ij(?=[a-zčđšž])" replaceWith="lj" />
     <RegEx find="(?&lt;=[^A-ZČĐŠŽa-zčđšž])Iju(?=bav|d|t)" replaceWith="lju" />
     <!-- kad ima razmak izmedju tagova </i> <i> -->
@@ -199,6 +209,11 @@
     <!-- <RegEx find="([a-z])ti (š+[eu])" replaceWith="$1t $2" /> -->
     <!-- <RegEx find="([A-Za-z])ti( |\r?\n)(š[eu])" replaceWith="$1t$2$3" /> -->
     <!-- <RegEx find="(?i)\b(ni)t (š[eu])" replaceWith="$1ti $2" /> -->
+    <!-- <RegEx find="\. +Mr. " replaceWith=". G. " /> -->
+    <!-- <RegEx find="\. +Mrs. " replaceWith=". Gđa " /> -->
+    <!-- <RegEx find="\. +Miss " replaceWith=". Gđica " /> -->
+    <!-- <RegEx find=", +Mrs. " replaceWith=", gđo " /> -->
+    <!-- <RegEx find=", +Miss " replaceWith=", gđice " /> -->
     <!-- Razmak poslije <i> i poslije .. -->
     <RegEx find="^(&lt;[ibu]&gt;) +" replaceWith="$1" />
     <RegEx find="^\.{2} +" replaceWith="..." />
