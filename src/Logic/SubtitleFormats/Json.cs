@@ -148,12 +148,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static string ReadTag(string s, string tag)
         {
-            int startIndex = s.IndexOf("\"" + tag + "\"", StringComparison.Ordinal);
-            if (startIndex < 0)
-                startIndex = s.IndexOf("'" + tag + "'", StringComparison.Ordinal);
+            var startIndex = s.IndexOfAny(new[] { "\"" + tag + "\"", "'" + tag + "'" }, StringComparison.Ordinal);
             if (startIndex < 0)
                 return null;
-            string res = s.Substring(startIndex + 3 + tag.Length).Trim().TrimStart(':').TrimStart();
+            var res = s.Substring(startIndex + 3 + tag.Length).Trim().TrimStart(':').TrimStart();
             if (res.StartsWith('"'))
             { // text
                 res = Json.ConvertJsonSpecialCharacters(res);
@@ -172,9 +170,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             else
             { // number
-                int endIndex = res.IndexOf(',');
-                if (endIndex < 0)
-                    endIndex = res.IndexOf('}');
+                var endIndex = res.IndexOfAny(new[] { ',', '}' });
                 if (endIndex < 0)
                     return null;
                 return res.Substring(0, endIndex);
@@ -185,9 +181,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var list = new List<string>();
 
-            int startIndex = s.IndexOf("\"" + tag + "\"", StringComparison.Ordinal);
-            if (startIndex < 0)
-                startIndex = s.IndexOf("'" + tag + "'", StringComparison.Ordinal);
+            var startIndex = s.IndexOfAny(new[] { "\"" + tag + "\"", "'" + tag + "'" }, StringComparison.Ordinal);
             if (startIndex < 0)
                 return list;
 
@@ -263,8 +257,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             text = text.Trim();
             if (text.StartsWith('[') && text.EndsWith(']'))
             {
-                text = text.Trim('[');
-                text = text.Trim(']');
+                text = text.Trim('[', ']');
                 text = text.Trim();
 
                 text = text.Replace("<br />", Environment.NewLine);
