@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Controls;
+﻿using System.Runtime.InteropServices;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Logic;
@@ -12061,11 +12062,9 @@ namespace Nikse.SubtitleEdit.Forms
                     if (ContinueNewOrExit())
                     {
                         MakeHistoryForUndo(_language.BeforeImportText);
-                        ResetSubtitle();
                         if (!string.IsNullOrEmpty(importText.VideoFileName))
                             OpenVideo(importText.VideoFileName);
 
-                        ResetSubtitle();
                         _subtitleListViewIndex = -1;
                         _subtitle = importText.FixedSubtitle;
                         _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
