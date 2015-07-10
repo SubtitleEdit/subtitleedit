@@ -72,15 +72,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
 
-            string xmlString = sb.ToString();
+            var xmlString = sb.ToString();
             if (!xmlString.Contains("<Subtitles>") || !xmlString.Contains("<Text>") || !xmlString.Contains("<Duration>"))
                 return;
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.XmlResolver = null;
             try
             {
