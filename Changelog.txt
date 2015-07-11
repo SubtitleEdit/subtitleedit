@@ -3,6 +3,7 @@
 3.4.7 BETA (xth July 2015)
 * NEW:
    * Added (some) read support for PNS files
+   * Added (some) read support for Timeline files
 * IMPROVED:
    * PAC now supports write of Chinese
    * Updated Czech translation - thx Trottel
