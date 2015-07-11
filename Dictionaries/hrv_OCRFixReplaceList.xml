@@ -1204,7 +1204,7 @@
     <RegEx find="\b([rR])i?j?ešava(m|o|š|mo|te|ju|nje|nja|li|la||ti)?" replaceWith="$1ješava$2" />
     <RegEx find="([rR])i?j?ešenj(e|em|u|a|ima)?" replaceWith="$1ješenj$2" />
     <RegEx find="\b([rR])j?eč(i|ima)?" replaceWith="$1iječ$2" />
-    <RegEx find="\b([rR])j?ek(a|u|om|ama)\b" replaceWith="$1ijek$2" />
+    <RegEx find="\b([rR])j?ek(a|e|u|om|ama)\b" replaceWith="$1ijek$2" />
     <RegEx find="\b([rR])j?eš(io|ila|ili|ile|iti|im|iš|i|imo|ite|e|en|eno|ena|ene|eni)" replaceWith="$1iješ$2" />
     <RegEx find="sačeka(j|te|š|mo|te|ju|li|še|te|jte)?" replaceWith="pričeka$1" />
     <RegEx find="Sačeka(j|te|š|mo|te|ju|li|še|te|jte)?" replaceWith="Pričeka$1" />
