@@ -63,36 +63,31 @@ namespace Nikse.SubtitleEdit.Logic
             MatroskaFile matroska = null;
             try
             {
-                matroska = new MatroskaFile(fileName);
-                if (matroska.IsValid)
+                using (matroska = new MatroskaFile(fileName))
                 {
-                    double frameRate;
-                    int width;
-                    int height;
-                    double milliseconds;
-                    string videoCodec;
-                    matroska.GetInfo(out frameRate, out width, out height, out milliseconds, out videoCodec);
+                    if (matroska.IsValid)
+                    {
+                        double frameRate;
+                        int width;
+                        int height;
+                        double milliseconds;
+                        string videoCodec;
+                        matroska.GetInfo(out frameRate, out width, out height, out milliseconds, out videoCodec);
 
-                    info.Width = width;
-                    info.Height = height;
-                    info.FramesPerSecond = frameRate;
-                    info.Success = true;
-                    info.TotalMilliseconds = milliseconds;
-                    info.TotalSeconds = milliseconds / TimeCode.BaseUnit;
-                    info.TotalFrames = info.TotalSeconds * frameRate;
-                    info.VideoCodec = videoCodec;
+                        info.Width = width;
+                        info.Height = height;
+                        info.FramesPerSecond = frameRate;
+                        info.Success = true;
+                        info.TotalMilliseconds = milliseconds;
+                        info.TotalSeconds = milliseconds / TimeCode.BaseUnit;
+                        info.TotalFrames = info.TotalSeconds * frameRate;
+                        info.VideoCodec = videoCodec;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                if (matroska != null)
-                {
-                    matroska.Dispose();
-                }
             }
 
             return info;
