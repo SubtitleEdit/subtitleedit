@@ -118,8 +118,9 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
             return info;
         }
