@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 for (int i = 33; i < 200; i++)
                 {
-                    string tag = "\\u" + i.ToString("X4").ToLower();
+                    var tag = "\\u" + i.ToString("x4");
                     if (s.Contains(tag))
                         s = s.Replace(tag, Convert.ToChar(i).ToString());
                 }
