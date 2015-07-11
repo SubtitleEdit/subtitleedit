@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class MicroDvd : SubtitleFormat
     {
-        private static Regex _regexMicroDvdLine = new Regex(@"^\{-?\d+}\{-?\d+}.*$", RegexOptions.Compiled);
+        private static readonly Regex _regexMicroDvdLine = new Regex(@"^\{-?\d+}\{-?\d+}.*$", RegexOptions.Compiled);
         public string Errors { get; private set; }
         private StringBuilder _errors;
         private int _lineNumber;
@@ -82,6 +82,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
+            var lineSb = new StringBuilder();
+            var pre = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.Append('{');
@@ -98,7 +100,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 bool italicOn = false;
                 bool boldOn = false;
                 bool underlineOn = false;
-                var lineSb = new StringBuilder();
                 foreach (string line in parts)
                 {
                     if (count > 0)
@@ -108,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     bool alreadyBold = boldOn;
                     bool alreadyUnderline = underlineOn;
 
-                    var pre = new StringBuilder();
+                    pre.Clear();
                     string s = line;
                     for (int i = 0; i < 5; i++)
                     {
@@ -120,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             pre.Append("{y:i}"); // italic single line
                             alreadyItalic = false;
                         }
-                        else if (s.StartsWith("<i>"))
+                        else if (s.StartsWith("<i>", StringComparison.Ordinal))
                         {
                             italicOn = true;
                             boldOn = false;
@@ -136,7 +137,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             underlineOn = false;
                             pre.Append("{y:b}"); // bold single line
                         }
-                        else if (s.StartsWith("<b>"))
+                        else if (s.StartsWith("<b>", StringComparison.Ordinal))
                         {
                             italicOn = false;
                             boldOn = true;
@@ -152,7 +153,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             underlineOn = true;
                             pre.Append("{y:u}"); // underline single line
                         }
-                        else if (s.StartsWith("<u>"))
+                        else if (s.StartsWith("<u>", StringComparison.Ordinal))
                         {
                             italicOn = false;
                             boldOn = false;
@@ -162,7 +163,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             s = s.Remove(0, 3);
                         }
 
-                        if (s.StartsWith("<font "))
+                        if (s.StartsWith("<font ", StringComparison.Ordinal))
                         {
                             var end = s.IndexOf('>');
                             if (end > 0)
@@ -279,10 +280,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            _errors = new StringBuilder();
+            _errors = _errors ?? new StringBuilder();
+            _errors.Clear();
+
             Errors = null;
             _lineNumber = 0;
-
+            var lineSb = new StringBuilder();
+            var pre = new StringBuilder();
             foreach (string line in lines)
             {
                 _lineNumber++;
@@ -304,7 +308,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             string post = string.Empty;
                             string[] parts = text.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                             int count = 0;
-                            var lineSb = new StringBuilder();
+                            lineSb.Clear();
 
                             foreach (string s2 in parts)
                             {
@@ -313,7 +317,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     lineSb.AppendLine();
 
                                 s = s2.Trim();
-                                var pre = new StringBuilder();
+                                pre.Clear();
                                 string singlePost = string.Empty;
                                 for (int i = 0; i < 5; i++)
                                 {
