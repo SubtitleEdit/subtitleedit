@@ -1067,7 +1067,7 @@
     <RegEx find="([mM])igracion(a|i|u|e|om|og)?" replaceWith="$1igracijsk$2" />
     <RegEx find="mj?eša(lic[aeiu]|licama)\b" replaceWith="miješa$1" />
     <RegEx find="mj?eša(m|n|ni|na|no|nom|noj|nima|š|mo|te|ju|njem|nju|li|ti)\b" replaceWith="miješa$1" />
-    <RegEx find="(m|M)edve(d|da|de|di|du|dom|dima|đa|đu|đom|đoj|đi|đeg)" replaceWith="$1edvje$2" />
+    <RegEx find="(m|M)edve[dđ]" replaceWith="$1edvje" />
     <RegEx find="([mM])ilij?on" replaceWith="$1ilijun" />
     <RegEx find="\b([mM])er(a|e|i|u|om|ama)" replaceWith="$1jer$2" />
     <RegEx find="([mM])j?enja(m|š|mo|te|ju|li|ti)?" replaceWith="$1ijenja$2" />
