@@ -96,7 +96,7 @@
     <RegEx find="Jel' si sigur" replaceWith="Jesi li sigur" />
     <RegEx find="\b([jJ])jel\?" replaceWith="$1e l'?" />
     <RegEx find="\bJel'" replaceWith="Je l'" />
-    <RegEx find="([kK]alib(ar|r[aeui]))\. *([0-9])" replaceWith="$1 .$2" />
+    <RegEx find="([kK]alib(?:ar|r[aeui]))\. *([0-9])" replaceWith="$1 .$2" />
     <RegEx find="([mM])jenjati" replaceWith="$1ijenjati" />
     <RegEx find="\b([nN])ebih?" replaceWith="$1e bi" />
     <RegEx find="\b([nN])eč[ueš]\b" replaceWith="$1eć" />
