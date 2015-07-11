@@ -1113,8 +1113,7 @@ namespace Nikse.SubtitleEdit.Logic
             int count = 0;
             for (int i = 0; i < words.Length; i++)
             {
-                var regEx = new Regex(words[i]);
-                count += regEx.Matches(text).Count;
+                count += CountTagInText(text, words[i]);
             }
             return count;
         }
