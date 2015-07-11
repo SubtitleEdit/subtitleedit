@@ -16,9 +16,11 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle1;
         private Subtitle _subtitle2;
         private List<int> _differences;
-        private Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        private Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private readonly Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private readonly Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
         private string _language1;
+        private readonly Color _backDifferenceColor = Color.FromArgb(255, 90, 90);
+        private readonly Color _foregroundDifferenceColor = Color.FromArgb(225, 0, 0);
 
         public Compare()
         {
@@ -38,22 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView2.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(subtitleListView1);
             Utilities.InitializeSubtitleFont(subtitleListView2);
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            using (var graphics = CreateGraphics())
-            {
-                var textSize = graphics.MeasureString(buttonOK.Text, Font);
-                if (textSize.Height > buttonOK.Height - 4)
-                {
-                    subtitleListView1.InitializeTimestampColumnWidths(this);
-                    subtitleListView2.InitializeTimestampColumnWidths(this);
-                    int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                    Utilities.SetButtonHeight(this, newButtonHeight, 1);
-                }
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         public void Initialize(Subtitle subtitle1, string subtitleFileName1, string title)
@@ -136,6 +123,38 @@ namespace Nikse.SubtitleEdit.Forms
                     if (cavena890.IsMine(null, openFileDialog1.FileName))
                     {
                         cavena890.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
+                    }
+                }
+                if (format == null)
+                {
+                    var spt = new Spt();
+                    if (spt.IsMine(null, openFileDialog1.FileName))
+                    {
+                        spt.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
+                    }
+                }
+                if (format == null)
+                {
+                    var cheetahCaption = new CheetahCaption();
+                    if (cheetahCaption.IsMine(null, openFileDialog1.FileName))
+                    {
+                        cheetahCaption.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
+                    }
+                }
+                if (format == null)
+                {
+                    var chk = new Chk();
+                    if (chk.IsMine(null, openFileDialog1.FileName))
+                    {
+                        chk.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
+                    }
+                }
+                if (format == null)
+                {
+                    var asc = new TimeLineAscii();
+                    if (asc.IsMine(null, openFileDialog1.FileName))
+                    {
+                        asc.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
                     }
                 }
                 subtitleListView1.Fill(_subtitle1);
@@ -554,15 +573,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                         richTextBox1.SelectionStart = i;
                         richTextBox1.SelectionLength = 1;
-                        richTextBox1.SelectionColor = Color.Red;
+                        richTextBox1.SelectionColor = _foregroundDifferenceColor;
                         if (string.IsNullOrWhiteSpace(richTextBox1.SelectedText))
-                            richTextBox1.SelectionBackColor = Color.Red;
+                            richTextBox1.SelectionBackColor = _backDifferenceColor;
 
                         richTextBox2.SelectionStart = i;
                         richTextBox2.SelectionLength = 1;
-                        richTextBox2.SelectionColor = Color.Red;
+                        richTextBox2.SelectionColor = _foregroundDifferenceColor;
                         if (string.IsNullOrWhiteSpace(richTextBox2.SelectedText))
-                            richTextBox2.SelectionBackColor = Color.Red;
+                            richTextBox2.SelectionBackColor = _backDifferenceColor;
                     }
                     else
                     {
@@ -578,17 +597,17 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     richTextBox1.SelectionStart = i;
                     richTextBox1.SelectionLength = 1;
-                    richTextBox1.SelectionBackColor = Color.Red;
+                    richTextBox1.SelectionBackColor = _backDifferenceColor;
                     if (string.IsNullOrWhiteSpace(richTextBox1.SelectedText))
-                        richTextBox1.SelectionBackColor = Color.Red;
+                        richTextBox1.SelectionBackColor = _backDifferenceColor;
                 }
                 if (i < richTextBox2.Text.Length)
                 {
                     richTextBox2.SelectionStart = i;
                     richTextBox2.SelectionLength = 1;
-                    richTextBox2.SelectionColor = Color.Red;
+                    richTextBox2.SelectionColor = _foregroundDifferenceColor;
                     if (string.IsNullOrWhiteSpace(richTextBox2.SelectedText))
-                        richTextBox2.SelectionBackColor = Color.Red;
+                        richTextBox2.SelectionBackColor = _backDifferenceColor;
                 }
             }
 
@@ -620,7 +639,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     richTextBox1.SelectionStart = richTextBox2.Text.Length;
                     richTextBox1.SelectionLength = richTextBox1.Text.Length - richTextBox2.Text.Length;
-                    richTextBox1.SelectionBackColor = Color.Red;
+                    richTextBox1.SelectionBackColor = _backDifferenceColor;
                 }
             }
             else if (richTextBox2.Text.Length > richTextBox1.Text.Length)
@@ -629,7 +648,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     richTextBox2.SelectionStart = richTextBox1.Text.Length;
                     richTextBox2.SelectionLength = richTextBox2.Text.Length - richTextBox1.Text.Length;
-                    richTextBox2.SelectionColor = Color.Red;
+                    richTextBox2.SelectionColor = _foregroundDifferenceColor;
                 }
             }
         }
