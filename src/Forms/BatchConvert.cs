@@ -342,13 +342,20 @@ namespace Nikse.SubtitleEdit.Forms
                             format = nciCaption;
                         }
                     }
-
                     if (format == null)
                     {
                         var avidStl = new AvidStl();
                         if (avidStl.IsMine(null, fileName))
                         {
                             format = avidStl;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var asc = new TimeLineAscii();
+                        if (asc.IsMine(null, fileName))
+                        {
+                            format = asc;
                         }
                     }
                 }
