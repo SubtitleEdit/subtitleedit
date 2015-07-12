@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (Mode == TimeMode.HHMMSSMS)
             {
-                if (Mode == TimeMode.HHMMSSMS && milliseconds < 0)
+                if (milliseconds < 0)
                     maskedTextBox1.Mask = "-00:00:00.000";
                 else
                     maskedTextBox1.Mask = "00:00:00.000";
