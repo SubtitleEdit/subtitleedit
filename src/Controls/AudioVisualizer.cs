@@ -485,13 +485,13 @@ namespace Nikse.SubtitleEdit.Controls
                         imageHeight -= _nfft / 2;
                 }
 
-                //                using (var penOther = new Pen(ParagraphColor))
+                // using (var penOther = new Pen(ParagraphColor))
                 using (var penNormal = new Pen(Color))
                 using (var penSelected = new Pen(SelectedColor)) // selected paragraph
                 {
                     var pen = penNormal;
                     int lastCurrentEnd = -1;
-                    //                    int lastOtherCurrentEnd = -1;
+                    // int lastOtherCurrentEnd = -1;
 
                     if (ShowWaveform)
                     {
@@ -526,7 +526,7 @@ namespace Nikse.SubtitleEdit.Controls
                             // calculate lines with zoom factor
                             float x2 = 0;
                             float x3 = 0;
-                            for (int i = 0; i < _wavePeaks.AllSamples.Count && ((int)Math.Round(x3)) < Width; i++)
+                            for (int i = 0; i < _wavePeaks.AllSamples.Count && (int)Math.Round(x3) < Width; i++)
                             {
                                 if (beginNoZoomFactor + i < _wavePeaks.AllSamples.Count)
                                 {
@@ -1728,14 +1728,14 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void ZoomIn()
         {
-            ZoomFactor = ZoomFactor + 0.1;
+            ZoomFactor += 0.1;
             if (OnZoomedChanged != null)
                 OnZoomedChanged.Invoke(this, null);
         }
 
         public void ZoomOut()
         {
-            ZoomFactor = ZoomFactor - 0.1;
+            ZoomFactor -= -0.1;
             if (OnZoomedChanged != null)
                 OnZoomedChanged.Invoke(this, null);
         }
