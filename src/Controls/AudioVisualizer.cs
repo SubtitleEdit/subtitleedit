@@ -1837,25 +1837,25 @@ namespace Nikse.SubtitleEdit.Controls
             var width = (int)(duration / _sampleDuration);
 
             var bmpDestination = new Bitmap(width, 128); //calculate width
-            var gfx = Graphics.FromImage(bmpDestination);
-
-            double startRow = seconds / _secondsPerImage;
-            var bitmapIndex = (int)startRow;
-            var subtractValue = (int)Math.Round((startRow - bitmapIndex) * _imageWidth);
-
-            int i = 0;
-            while (i * _imageWidth < width && i + bitmapIndex < _spectrogramBitmaps.Count)
+            using (var gfx = Graphics.FromImage(bmpDestination))
             {
-                var bmp = _spectrogramBitmaps[i + bitmapIndex];
-                gfx.DrawImageUnscaled(bmp, new Point(bmp.Width * i - subtractValue, 0));
-                i++;
+                double startRow = seconds / _secondsPerImage;
+                var bitmapIndex = (int)startRow;
+                var subtractValue = (int)Math.Round((startRow - bitmapIndex) * _imageWidth);
+
+                int i = 0;
+                while (i * _imageWidth < width && i + bitmapIndex < _spectrogramBitmaps.Count)
+                {
+                    var bmp = _spectrogramBitmaps[i + bitmapIndex];
+                    gfx.DrawImageUnscaled(bmp, new Point(bmp.Width * i - subtractValue, 0));
+                    i++;
+                }
+                if (i + bitmapIndex < _spectrogramBitmaps.Count && subtractValue > 0)
+                {
+                    var bmp = _spectrogramBitmaps[i + bitmapIndex];
+                    gfx.DrawImageUnscaled(bmp, new Point(bmp.Width * i - subtractValue, 0));
+                }
             }
-            if (i + bitmapIndex < _spectrogramBitmaps.Count && subtractValue > 0)
-            {
-                var bmp = _spectrogramBitmaps[i + bitmapIndex];
-                gfx.DrawImageUnscaled(bmp, new Point(bmp.Width * i - subtractValue, 0));
-            }
-            gfx.Dispose();
 
             if (ShowWaveform)
                 graphics.DrawImage(bmpDestination, new Rectangle(0, Height - bmpDestination.Height, Width, bmpDestination.Height));
