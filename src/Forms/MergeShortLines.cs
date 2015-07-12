@@ -78,8 +78,8 @@ namespace Nikse.SubtitleEdit.Forms
             var mergedIndexes = new List<int>();
 
             NumberOfMerges = 0;
-            SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
+            SubtitleListview1.Items.Clear();
             int count;
             _mergedSubtitle = MergeShortLinesInSubtitle(_subtitle, mergedIndexes, out count, (double)numericUpDownMaxMillisecondsBetweenLines.Value, (int)numericUpDownMaxCharacters.Value, true);
             NumberOfMerges = count;
@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!lastMerged && lineNumbers.Length > 0 && clearFixes)
                 {
                     AddToListView(p, lineNumbers.ToString(), p.Text);
-                    lineNumbers = new StringBuilder();
+                    lineNumbers.Clear();
                 }
             }
             if (!lastMerged)
@@ -227,7 +227,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (p != null && p.Text != null && next != null && next.Text != null)
             {
-                string s = HtmlUtil.RemoveHtmlTags(p.Text.Trim());
+                string s = HtmlUtil.RemoveHtmlTags(p.Text.Trim(), true);
 
                 if (p.Text.Length + next.Text.Length < maximumTotalLength && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < maximumMillisecondsBetweenLines)
                 {
@@ -295,8 +295,8 @@ namespace Nikse.SubtitleEdit.Forms
             var mergedIndexes = new List<int>();
 
             NumberOfMerges = 0;
-            SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
+            SubtitleListview1.Items.Clear();
             int count;
             _mergedSubtitle = MergeShortLinesInSubtitle(_subtitle, mergedIndexes, out count, (double)numericUpDownMaxMillisecondsBetweenLines.Value, (int)numericUpDownMaxCharacters.Value, false);
             NumberOfMerges = count;
