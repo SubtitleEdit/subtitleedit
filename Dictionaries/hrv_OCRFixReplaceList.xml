@@ -1236,7 +1236,7 @@
     <RegEx find="\b([sS])eti(t|o|m|š|la|li|le|ti)?\b" replaceWith="$1jeti$2" />
     <RegEx find="([sS])ever(a|u|om|ni|nom|ac)?" replaceWith="$1jever$2" />
     <RegEx find="([sS])e[ćč]a(m|š|mo|te|ju|li|nje)?" replaceWith="$1jeća$2" />
-    <RegEx find="([sS])hvata(m|š|mo|te|ju|jući|la|li|le|lo|ti|nje)?" replaceWith="$1hvaća$2" />
+    <RegEx find="([sS])h?vata" replaceWith="$1hvaća" />
     <RegEx find="\b([sS])istem(a|e|i|u|om|ima)?\b" replaceWith="$1ustav$2" />
     <RegEx find="([sS])lijedeć[aeu]" replaceWith="$1ljedeć" />
     <RegEx find="\b([sS])lj?ed(a|e|i|u|om|im|iš|imo|ite|e|ili)?\b" replaceWith="$1lijed$2" />
@@ -1266,7 +1266,6 @@
     <RegEx find="([sS])used(a|e|i|o|u|ama|ima|ski|skim|ima)?" replaceWith="$1usjed$2" />
     <RegEx find="suštin(e|i|om)" replaceWith="biti" />
     <RegEx find="Suštin(e|i|om)" replaceWith="Biti" />
-    <RegEx find="([sS])vata" replaceWith="$1hvaća" />
     <RegEx find="([sS])vedo([čkc])" replaceWith="$1vjedo$2" />
     <RegEx find="([sS])vesn" replaceWith="$1vjesn" />
     <!-- razlikuju se svjetlo i svijetlo no tu automatske pomoći nema, već je na korisnicima da dodaju i gdje je potrebno! -->
