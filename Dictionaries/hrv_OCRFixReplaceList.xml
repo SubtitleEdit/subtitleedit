@@ -754,85 +754,6 @@
     <Word from="sreda" to="srijeda" />
     <Word from="sredu" to="srijedu" />
     <Word from="sredom" to="srijedom" />
-    <!-- osobna imena i imena gradova/država itd. -->
-    <Word from="Afghanistan" to="Afganistan" />
-    <Word from="Bil" to="Bill" />
-    <Word from="Bilu" to="Billu" />
-    <Word from="Bruklin" to="Brooklyn" />
-    <Word from="Bruklinu" to="Brooklynu" />
-    <Word from="Brajan" to="Brian" />
-    <Word from="Braun" to="Brown" />
-    <Word from="Brussels" to="Bruxelles" />
-    <Word from="Čarls" to="Charles" />
-    <Word from="Dejv" to="Dave" />
-    <Word from="Den" to="Dan" />
-    <Word from="Dru" to="Drew" />
-    <Word from="Đin" to="Jin" />
-    <Word from="Đošua" to="Joshua" />
-    <Word from="Džakobi" to="Jacobi" />
-    <Word from="Džejn" to="Jane" />
-    <Word from="Džej" to="Jay" />
-    <Word from="Džejms" to="James" />
-    <Word from="Džek" to="Jack" />
-    <Word from="Džeka" to="Jacka" />
-    <Word from="Džekson" to="Jackson" />
-    <Word from="Džeku" to="Jacku" />
-    <Word from="Džen" to="Jen" />
-    <Word from="Džes" to="Jess" />
-    <Word from="Džesika" to="Jessica" />
-    <Word from="Džim" to="Jim" />
-    <Word from="Džime" to="Jime" />
-    <Word from="Džon" to="John" />
-    <Word from="Džodi" to="Jodi" />
-    <Word from="Džoni" to="Johnny" />
-    <Word from="Džonson" to="Johnson" />
-    <Word from="Ejmi" to="Amy" />
-    <Word from="Endi" to="Andy" />
-    <Word from="Ešli" to="Ashley" />
-    <Word from="Filadelfija" to="Philadelphia" />
-    <Word from="Filadelfiju" to="Philadelphiju" />
-    <Word from="Filadelfiji" to="Philadelphiji" />
-    <Word from="Holivud" to="Hollywood" />
-    <Word from="Holivuda" to="Hollywooda" />
-    <Word from="Holivudu" to="Hollywoodu" />
-    <Word from="Hitrou" to="Heathrow" />
-    <Word from="Iraq" to="Irak" />
-    <Word from="in Iraq" to="u Iraku" />
-    <Word from="Kavendiš" to="Cavendish" />
-    <Word from="Lusi" to="Lucy" />
-    <Word from="Majk" to="Mike" />
-    <Word from="Mexico" to="Meksiko" />
-    <Word from="in Mexico" to="u Meksiku" />
-    <Word from="Mocart" to="Mozart" />
-    <Word from="Nensi" to="Nancy" />
-    <Word from="Pol" to="Paul" />
-    <Word from="Rajan" to="Ryan" />
-    <Word from="Ričard" to="Richard" />
-    <Word from="Ričmond" to="Richmond" />
-    <Word from="Sajmon" to="Simon" />
-    <Word from="Sten" to="Stan" />
-    <Word from="Stiv" to="Steve" />
-    <Word from="Stiven" to="Stephen" />
-    <Word from="Stjuart" to="Stuart" />
-    <Word from="Sančez" to="Sanchez" />
-    <Word from="Španiji" to="Španjolskoj" />
-    <Word from="Švetska" to="Švedska" />
-    <Word from="Švajcarska" to="Švicarska" />
-    <Word from="Švajcarskoj" to="Švicarskoj" />
-    <Word from="Holandija" to="Nizozemska" />
-    <Word from="Holandijom" to="Nizozemskom" />
-    <Word from="Holandiju" to="Nizozemsku" />
-    <Word from="Holandiji" to="Nizozemskoj" />
-    <Word from="Losanđeles" to="Los Angeles" />
-    <Word from="Losanđelesu" to="Los Angelesu" />
-    <Word from="Los Anđeles" to="Los Angeles" />
-    <Word from="Los Anđelesu" to="Los Angelesu" />
-    <Word from="Los Anđelesom" to="Los Angelesom" />
-    <Word from="Majami" to="Miami" />
-    <Word from="Njujork" to="New York" />
-    <Word from="Njujorka" to="New Yorka" />
-    <Word from="Njujorku" to="New Yorku" />
-    <Word from="Vinsent" to="Vincent" />
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords>
@@ -1181,7 +1102,7 @@
     <RegEx find="promj?en(im|iš|imo|ite|ili|ile)" replaceWith="promijen$1" />
     <RegEx find="([pP])esnik(a|u|ov|ovu|om)?\b" replaceWith="$1jesnik$2" />
     <RegEx find="\b([pP])obed(a|i|e|u|o|om|ama)" replaceWith="$1objed$2" />
-    <RegEx find="\b([pP])obed(im|iš|i|imo|ite|e|iti|ili|ivši)" replaceWith="$1obijed$2" />
+    <RegEx find="\b([pP])obed(im|iš|imo|ite|e|iti|ili|ivši)" replaceWith="$1obijed$2" />
     <RegEx find="([pP])obeg(ao|la|li|le|lo|avši)" replaceWith="$1objeg$2" />
     <RegEx find="([pP])o[dt]cj?enjen(a|e|i|o|u|om|oj|om|ima)?\b" replaceWith="$1odcijenjen$2" />
     <RegEx find="([pP])oent(a|e|u|i|o|om|ama)" replaceWith="$1oant$2" />
@@ -1365,7 +1286,79 @@
     <RegEx find="([žŽ])ive(li|la|le|lu|lima|ti)" replaceWith="$1ivje$2" />
     <RegEx find="([žŽ])lj?ezd(a|e|i|o|u|ama)" replaceWith="$1lijezd$2" />
     <RegEx find="([sSzZ])amnom" replaceWith="$1a mnom" />
-    <!-- Credit goes to: MilanRS [http://www.prijevodi-online.org] -->
+    <!-- experimental -->
+    <!-- je/ju : "Razumije je." ==> "Razumije ju." -->
+    <RegEx find="(?&lt;=je\s+)je\b" replaceWith="ju" />
+    <RegEx find="mjenim" replaceWith="mijenim" />
+    <RegEx find="vređa" replaceWith="vrijeđa" />
+    <RegEx find="žur[ck]" replaceWith="zabav" />
+    <RegEx find="skuv" replaceWith="skuh" />
+    <RegEx find="oćeju" replaceWith="oće" />
+    <RegEx find="tćeš" replaceWith="t ćeš" />
+    <!-- mijenja i obrazovati - no ide u korist mnogo više riječi -->
+    <RegEx find="zovati" replaceWith="zirati" />
+    <!-- osobna imena i imena gradova/država itd. -->
+    <RegEx find="Afghanistan" replaceWith="Afganistan" />
+    <RegEx find="Bil" replaceWith="Bill" />
+    <RegEx find="Bruklin" replaceWith="Brooklyn" />
+    <RegEx find="Brajan" replaceWith="Brian" />
+    <RegEx find="Braun" replaceWith="Brown" />
+    <RegEx find="Brussels" replaceWith="Bruxelles" />
+    <RegEx find="Čarls" replaceWith="Charles" />
+    <RegEx find="Dejv" replaceWith="Dave" />
+    <RegEx find="Den" replaceWith="Dan" />
+    <RegEx find="Dru" replaceWith="Drew" />
+    <RegEx find="Đin" replaceWith="Jin" />
+    <RegEx find="Đošua" replaceWith="Joshua" />
+    <RegEx find="Džakobi" replaceWith="Jacobi" />
+    <RegEx find="Džejn" replaceWith="Jane" />
+    <RegEx find="Džej" replaceWith="Jay" />
+    <RegEx find="Džejms" replaceWith="James" />
+    <RegEx find="Džek" replaceWith="Jack" />
+    <RegEx find="Džekson" replaceWith="Jackson" />
+    <RegEx find="Džen" replaceWith="Jen" />
+    <RegEx find="Džes" replaceWith="Jess" />
+    <RegEx find="Džesika" replaceWith="Jessica" />
+    <RegEx find="Džim" replaceWith="Jim" />
+    <RegEx find="Džon" replaceWith="John" />
+    <RegEx find="Džodi" replaceWith="Jodi" />
+    <RegEx find="Džoni" replaceWith="Johnny" />
+    <RegEx find="Džonson" replaceWith="Johnson" />
+    <RegEx find="Ejmi" replaceWith="Amy" />
+    <RegEx find="Endi" replaceWith="Andy" />
+    <RegEx find="Ešli" replaceWith="Ashley" />
+    <RegEx find="Filadelfij" replaceWith="Philadelphi" />
+    <RegEx find="Holivud" replaceWith="Hollywood" />
+    <RegEx find="Hitrou" replaceWith="Heathrow" />
+    <RegEx find="Iraq" replaceWith="Irak" />
+    <RegEx find="in Iraq" replaceWith="u Iraku" />
+    <RegEx find="Kavendiš" replaceWith="Cavendish" />
+    <RegEx find="Lusi" replaceWith="Lucy" />
+    <RegEx find="Majk" replaceWith="Mike" />
+    <RegEx find="Mexico" replaceWith="Meksiko" />
+    <RegEx find="in Mexico" replaceWith="u Meksiku" />
+    <RegEx find="Mocart" replaceWith="Mozart" />
+    <RegEx find="Nensi" replaceWith="Nancy" />
+    <RegEx find="Pol" replaceWith="Paul" />
+    <RegEx find="Rajan" replaceWith="Ryan" />
+    <RegEx find="Ričard" replaceWith="Richard" />
+    <RegEx find="Ričmond" replaceWith="Richmond" />
+    <RegEx find="Sajmon" replaceWith="Simon" />
+    <RegEx find="Sten" replaceWith="Stan" />
+    <RegEx find="Stiv" replaceWith="Steve" />
+    <RegEx find="Stiven" replaceWith="Stephen" />
+    <RegEx find="Stjuart" replaceWith="Stuart" />
+    <RegEx find="Sančez" replaceWith="Sanchez" />
+    <RegEx find="Španiji" replaceWith="Španjolskoj" />
+    <RegEx find="Švetsk" replaceWith="Švedsk" />
+    <RegEx find="Švajcarsk" replaceWith="Švicarsk" />
+    <RegEx find="Holandij" replaceWith="Nizozemsk" />
+    <RegEx find="Losanđeles" replaceWith="Los Angeles" />
+    <RegEx find="Los Anđeles" replaceWith="Los Angeles" />
+    <RegEx find="Majami" replaceWith="Miami" />
+    <RegEx find="Njujork" replaceWith="New York" />
+    <RegEx find="Vinsent" replaceWith="Vincent" />
+    <!-- From here credit goes to: MilanRS [http://www.prijevodi-online.org] -->
     <RegEx find="([ks]ao)\.:" replaceWith="$1:" />
     <RegEx find="([a-zčđšž])Ij([a-zčđšž])" replaceWith="$1lj$2" />
     <RegEx find="([^A-ZČĐŠŽa-zčđšž])Iju(bav|d|t)" replaceWith="$1lju$2" />
@@ -1457,16 +1450,5 @@
     <RegEx find="\.{2} ::" replaceWith="..::" />
     <!-- Skraćenice bez razmaka -->
     <RegEx find="d\. o\.o\." replaceWith="d.o.o." />
-    <!-- experimental -->
-    <!-- je/ju : "Razumije je." ==> "Razumije ju." -->
-    <RegEx find="(?&lt;=je\s+)je\b" replaceWith="ju" />
-    <RegEx find="mjenim" replaceWith="mijenim" />
-    <RegEx find="vređa" replaceWith="vrijeđa" />
-    <RegEx find="žur[ck]" replaceWith="zabav" />
-    <RegEx find="skuv" replaceWith="skuh" />
-    <RegEx find="oćeju" replaceWith="oće" />
-    <RegEx find="tćeš" replaceWith="t ćeš" />
-    <!-- mijenja i obrazovati - no ide u korist mnogo više riječi -->
-    <RegEx find="zovati" replaceWith="zirati" />
   </RegularExpressions>
 </OCRFixReplaceList>
