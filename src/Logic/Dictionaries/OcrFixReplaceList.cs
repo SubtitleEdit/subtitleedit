@@ -322,26 +322,11 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                 pre += Environment.NewLine;
                 word = word.Substring(2);
             }
-
-            while (word.Length > 1 && word[0] == '-')
+            // Pre
+            while (word.Length > 1 && (word[0] == '-' || word[0] == '.' || word[0] == '"' || word[0] == '('))
             {
-                pre += "-";
-                word = word.Substring(1);
-            }
-            while (word.Length > 1 && word[0] == '.')
-            {
-                pre += ".";
-                word = word.Substring(1);
-            }
-            while (word.Length > 1 && word[0] == '"')
-            {
-                pre += "\"";
-                word = word.Substring(1);
-            }
-            if (word.Length > 1 && word[0] == '(')
-            {
-                pre += "(";
-                word = word.Substring(1);
+                pre += word[0];
+                word.Substring(1);
             }
             if (word.StartsWith("<i>", StringComparison.Ordinal))
             {
@@ -353,35 +338,11 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                 post += Environment.NewLine;
                 word = word.Substring(0, word.Length - 2);
             }
-            while (word.Length > 1 && word.EndsWith('"'))
+            // Post
+            while (word.Length > 1 && (word.EndsWith('"') || word.EndsWith('.') || word.EndsWith(',') || word.EndsWith('?') || word.EndsWith('!') || word.EndsWith(')')))
             {
-                post = post + "\"";
-                word = word.Substring(0, word.Length - 1);
-            }
-            while (word.Length > 1 && word.EndsWith('.'))
-            {
-                post = post + ".";
-                word = word.Substring(0, word.Length - 1);
-            }
-            while (word.EndsWith(',') && word.Length > 1)
-            {
-                post = post + ",";
-                word = word.Substring(0, word.Length - 1);
-            }
-            while (word.EndsWith('?') && word.Length > 1)
-            {
-                post = post + "?";
-                word = word.Substring(0, word.Length - 1);
-            }
-            while (word.EndsWith('!') && word.Length > 1)
-            {
-                post = post + "!";
-                word = word.Substring(0, word.Length - 1);
-            }
-            while (word.EndsWith(')') && word.Length > 1)
-            {
-                post = post + ")";
-                word = word.Substring(0, word.Length - 1);
+                post = post + word[word.Length - 1];
+                word.Substring(0, word.Length - 1);
             }
             if (word.EndsWith("</i>", StringComparison.Ordinal))
             {
