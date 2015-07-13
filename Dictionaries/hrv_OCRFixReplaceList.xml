@@ -1287,7 +1287,6 @@
     <RegEx find="zovati" replaceWith="zirati" />
     <!-- osobna imena i imena gradova/država itd. -->
     <RegEx find="Afghanistan" replaceWith="Afganistan" />
-    <RegEx find="Bil" replaceWith="Bill" />
     <RegEx find="Bruklin" replaceWith="Brooklyn" />
     <RegEx find="Brajan" replaceWith="Brian" />
     <RegEx find="Braun" replaceWith="Brown" />
@@ -1327,7 +1326,6 @@
     <RegEx find="in Mexico" replaceWith="u Meksiku" />
     <RegEx find="Mocart" replaceWith="Mozart" />
     <RegEx find="Nensi" replaceWith="Nancy" />
-    <RegEx find="Pol" replaceWith="Paul" />
     <RegEx find="Rajan" replaceWith="Ryan" />
     <RegEx find="Ričard" replaceWith="Richard" />
     <RegEx find="Ričmond" replaceWith="Richmond" />
