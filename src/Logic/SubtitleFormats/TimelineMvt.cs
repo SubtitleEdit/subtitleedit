@@ -10,7 +10,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class TimeLineMvt : SubtitleFormat
     {
-
         public override string Extension
         {
             get { return ".mvt"; }
@@ -36,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             return string.Empty;
-        }       
+        }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
@@ -60,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Console.WriteLine(title);
 
             // language1
-            index+=2;
+            index += 2;
             int start = index;
             while (index < bytes.Length && bytes[index] != 0x6)
             {
@@ -106,9 +105,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     index += 2;
                     while (index < bytes.Length && bytes[index] == 0x6)
                     {
-                        index+=2;
-                    }                    
-                    
+                        index += 2;
+                    }
+
                     if (index < bytes.Length - 3)
                     {
                         // first line
@@ -133,15 +132,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 string text2 = encoding2.GetString(bytes, start, index - start);
                                 var p = new Paragraph
                                 {
-                                    Text = text1 + Environment.NewLine + text2, 
-                                    StartTime = { TotalMilliseconds = GetTimeCode(bytes, timeCodeIndexStart) }, 
+                                    Text = text1 + Environment.NewLine + text2,
+                                    StartTime = { TotalMilliseconds = GetTimeCode(bytes, timeCodeIndexStart) },
                                     EndTime = { TotalMilliseconds = GetTimeCode(bytes, timeCodeIndexEnd) }
                                 };
                                 subtitle.Paragraphs.Add(p);
                                 index--;
                             }
                         }
-                    }                    
+                    }
                 }
                 index++;
             }
@@ -167,7 +166,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             if (language == "Russian")
                 return Encoding.GetEncoding(1251);
-            if (language == "Estonian" || language == "Latvian"  || language == "Lithuanian")
+            if (language == "Estonian" || language == "Latvian" || language == "Lithuanian")
                 return Encoding.GetEncoding(1257);
             return Encoding.GetEncoding(1252);
         }
