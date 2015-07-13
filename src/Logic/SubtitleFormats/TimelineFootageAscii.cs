@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             return string.Empty;
-        }       
+        }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
