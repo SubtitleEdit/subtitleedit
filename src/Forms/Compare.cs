@@ -157,6 +157,14 @@ namespace Nikse.SubtitleEdit.Forms
                         asc.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
                     }
                 }
+                if (format == null)
+                {
+                    var asc = new TimeLineFootageAscii();
+                    if (asc.IsMine(null, openFileDialog1.FileName))
+                    {
+                        asc.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
+                    }
+                }
                 subtitleListView1.Fill(_subtitle1);
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);

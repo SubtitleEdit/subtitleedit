@@ -358,6 +358,14 @@ namespace Nikse.SubtitleEdit.Forms
                             format = asc;
                         }
                     }
+                    if (format == null)
+                    {
+                        var asc = new TimeLineFootageAscii();
+                        if (asc.IsMine(null, fileName))
+                        {
+                            format = asc;
+                        }
+                    }
                 }
 
                 if (format == null)

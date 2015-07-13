@@ -2135,6 +2135,21 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
+                    var asc = new TimeLineFootageAscii();
+                    if (asc.IsMine(null, fileName))
+                    {
+                        asc.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = asc;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+                if (format == null)
+                {
                     var mtv = new TimeLineMvt();
                     if (mtv.IsMine(null, fileName))
                     {

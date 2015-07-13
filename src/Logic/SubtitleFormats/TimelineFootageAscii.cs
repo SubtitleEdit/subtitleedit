@@ -12,21 +12,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// 
     /// Sample:
     /// 1.
-    /// 00:00:43.02
-    /// 00:00:47.03
+    ///    41,10
+    ///    46,10
     /// ±NE/SEVÎ
     /// ³ÂÍÅ/ÑÅÁß
     /// 
     /// 2.
-    /// 00:01:36.00
-    /// 00:01:37.00
+    ///    49,05
+    ///    51,09
     /// ±Viòð ir klât.
     /// ³Îí ïðèøåë.
     /// </summary>
-    public class TimeLineAscii : SubtitleFormat
+    public class TimeLineFootageAscii : SubtitleFormat
     {
 
-        private static readonly Regex RegexTimeCode = new Regex(@"^\d\d:\d\d:\d\d\.\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode = new Regex(@"^\s*\d+,\d\d$", RegexOptions.Compiled);
 
         private enum ExpectingLine
         {
@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Timeline ascii"; }
+            get { return "Timeline footage ascii"; }
         }
 
         public override bool IsTimeBased
@@ -88,8 +88,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (paragraph != null && expecting == ExpectingLine.TimeStart && RegexTimeCode.IsMatch(line))
                 {
-                    string[] parts = line.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 4)
+                    string[] parts = line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length == 2)
                     {
                         try
                         {
@@ -106,8 +106,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (paragraph != null && expecting == ExpectingLine.TimeEnd && RegexTimeCode.IsMatch(line))
                 {
-                    string[] parts = line.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 4)
+                    string[] parts = line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length == 2)
                     {
                         try
                         {
@@ -193,11 +193,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string[] parts)
         {
-            int hours = int.Parse(parts[0]);
-            int minutes = int.Parse(parts[1]);
-            int seconds = int.Parse(parts[2]);
-            int frames = int.Parse(parts[3]);
-            return new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
+            int frames16 = int.Parse(parts[0]);
+            int frames = int.Parse(parts[1]);
+            return new TimeCode(0, 0, 0, FramesToMilliseconds(16 * frames16 + frames));
         }
 
         private Encoding GetEncodingFromLanguage(byte language)
