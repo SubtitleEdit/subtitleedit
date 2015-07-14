@@ -32,22 +32,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string ToTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return time.ToHHMMSSFF();
         }
 
         private static TimeCode DecodeTimeCode(string s)
         {
             var parts = s.Split(new[] { ':', ';' }, StringSplitOptions.RemoveEmptyEntries);
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = int.Parse(parts[3]);
 
-            int milliseconds = (int)Math.Round(((TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames)));
+            int milliseconds = (int)Math.Round(((TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * frames));
             if (milliseconds > 999)
                 milliseconds = 999;
 
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
+            return new TimeCode(hour, minutes, seconds, milliseconds);
         }
 
         public override string ToText(Subtitle subtitle, string title)

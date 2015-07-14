@@ -9,7 +9,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class Cavena890 : SubtitleFormat
     {
-
         private const int LanguageIdEnglish = 0x01;
         private const int LanguageIdDanish = 0x07;
         private const int LanguageIdAlbanian = 0x09;
@@ -20,7 +19,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private const int LanguageIdChineseTraditional = 0x90;
         private const int LanguageIdChineseSimplified = 0x91;
 
-        private static List<int> _hebrewCodes = new List<int> {
+        private static readonly List<int> _hebrewCodes = new List<int> {
             0x40, // א
             0x41, // ב
             0x42, // ג
@@ -50,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x55, // ץ
         };
 
-        private static List<string> _hebrewLetters = new List<string> {
+        private static readonly List<string> _hebrewLetters = new List<string> {
             "א",
             "ב",
             "ג",
@@ -80,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "ץ",
         };
 
-        private static List<int> _russianCodes = new List<int> {
+        private static readonly List<int> _russianCodes = new List<int> {
             0x42, // Б
             0x45, // Е
             0x5A, // З
