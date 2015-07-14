@@ -170,12 +170,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(string[] parts)
         {
             //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = int.Parse(parts[3]);
 
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
+            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -193,7 +193,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string timeCode = Encoding.ASCII.GetString(buffer, i + 1, 11);
                     if (timeCode != "00:00:00:00" && regexTimeCodes.IsMatch(timeCode))
                     {
-                        Paragraph p = new Paragraph();
+                        var p = new Paragraph();
                         p.StartTime = DecodeTimeCode(timeCode.Split(':'));
                         bool italic = buffer[i + 22] == 3; // 3=italic, 1=normal
                         int textStart = i + 25; // text starts 25 chars after time code
