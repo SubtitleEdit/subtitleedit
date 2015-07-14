@@ -238,7 +238,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             var end = DecodeTimeCode(parts);
                             paragraph = new Paragraph { StartTime = start, EndTime = end };
                             subtitle.Paragraphs.Add(paragraph);
-                            sb = new StringBuilder();
+                            sb.Clear();
                         }
                         catch
                         {
@@ -333,12 +333,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string[] parts)
         {
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = int.Parse(parts[3]);
 
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
+            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
     }
