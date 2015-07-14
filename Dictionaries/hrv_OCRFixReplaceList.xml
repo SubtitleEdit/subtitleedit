@@ -310,6 +310,8 @@
     <Word from="promijena" to="promjena" />
     <Word from="protivrečne" to="proturječne" />
     <Word from="psihićki" to="psihički" />
+    <Word from="računari" to="računala" />
+    <Word from="računare" to="računala" />
     <Word from="radijo" to="radio" />
     <Word from="rađe" to="radije" />
     <Word from="raspust" to="odmor" />
@@ -788,8 +790,8 @@
     <RegEx find="Bezbed(an|na|no|ni|nima|nu|ne|nog|nom|noj)" replaceWith="Sigur$1" />
     <RegEx find="([bB])akcil" replaceWith="$1acil" />
     <RegEx find="\b[bB]iblij(a|i|u|om|ama)\b" replaceWith="Biblij$1" />
-    <RegEx find="biro(a|i|u|om|ima)?" replaceWith="ured$1" />
-    <RegEx find="Biro(a|i|u|om|ima)?" replaceWith="Ured$1" />
+    <RegEx find="biro(a|i|u|om|ima)?\b" replaceWith="ured$1" />
+    <RegEx find="Biro(a|i|u|om|ima)?\b" replaceWith="Ured$1" />
     <RegEx find="([bB])j?edn(a|e|i|o|u|ici|icom|ica|k|ka|ku|kom|om|og|ima)?" replaceWith="$1ijedn$2" />
     <RegEx find="([bB])elešk(a|e|u|om|ama)?" replaceWith="$1ilješk$2" />
     <RegEx find="([bB])j?esn(i|o|u|om|og|om|oj)" replaceWith="$1ijesn$2" />
