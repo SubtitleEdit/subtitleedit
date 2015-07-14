@@ -427,11 +427,13 @@ namespace Nikse.SubtitleEdit.Forms
         private static string RemoveSubStationAlphaFormatting(string s)
         {
             int indexOfBegin = s.IndexOf('{');
-            while (indexOfBegin >= 0 && s.IndexOf('}') > indexOfBegin)
+            while (indexOfBegin >= 0)
             {
-                int indexOfEnd = s.IndexOf('}');
-                s = s.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = s.IndexOf('{');
+                int indexOfEnd = s.IndexOf('}', indexOfBegin + 1);
+                if (indexOfEnd < indexOfBegin)
+                    break;
+                s = s.Remove(indexOfBegin, indexOfEnd - indexOfBegin + 1);
+                indexOfBegin = s.IndexOf('{', indexOfBegin);
             }
             return s;
         }
