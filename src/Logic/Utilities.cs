@@ -1099,6 +1099,9 @@ namespace Nikse.SubtitleEdit.Logic
             double optimalCharactersPerSecond = charactersPerSecond;
             if (optimalCharactersPerSecond < 2 || optimalCharactersPerSecond > 100)
                 optimalCharactersPerSecond = 14.7;
+
+            // Newline characters (\r\n) shouldn't be counted
+            text = text.Replace(Environment.NewLine, string.Empty);
             double duration = (HtmlUtil.RemoveHtmlTags(text, true).Length / optimalCharactersPerSecond) * TimeCode.BaseUnit;
 
             if (duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
