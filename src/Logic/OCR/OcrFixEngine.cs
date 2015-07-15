@@ -665,7 +665,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
                 sb.AppendLine(l);
             }
-            return sb.ToString().TrimEnd('\r').TrimEnd('\n').TrimEnd('\r').TrimEnd('\n');
+            return sb.ToString().TrimEnd('\r', '\n');
         }
 
         private static bool EndsWithAbbreviation(string line, HashSet<string> abbreviationList)
