@@ -316,8 +316,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string DoTranslate(string input)
         {
-            string languagePair = (comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|" +
-                                  (comboBoxTo.SelectedItem as ComboBoxItem).Value;
+            string languagePair = (comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|" + (comboBoxTo.SelectedItem as ComboBoxItem).Value;
+            bool romanji = languagePair.EndsWith("|romanji", StringComparison.InvariantCulture);
+            if (romanji) 
+                languagePair = (comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|ja" ;
 
             input = PreTranslate(input.TrimEnd('|').Trim());
 
@@ -340,7 +342,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_screenScrapingEncoding == null)
                     _screenScrapingEncoding = GetScreenScrapingEncoding(languagePair);
-                result = TranslateTextViaScreenScraping(input, languagePair, _screenScrapingEncoding);
+                result = TranslateTextViaScreenScraping(input, languagePair, _screenScrapingEncoding, romanji);
                 _googleApiNotWorking = true;
             }
 
@@ -433,8 +435,9 @@ namespace Nikse.SubtitleEdit.Forms
         /// <param name="languagePair">2 letter Language Pair, delimited by "|".
         /// E.g. "ar|en" language pair means to translate from Arabic to English</param>
         /// <param name="encoding">Encoding to use when downloading text</param>
+        /// <param name="romanji">Get Romanjii text (made during Japanese) but in a separate div tag</param>
         /// <returns>Translated to String</returns>
-        public static string TranslateTextViaScreenScraping(string input, string languagePair, Encoding encoding)
+        public static string TranslateTextViaScreenScraping(string input, string languagePair, Encoding encoding, bool romanji)
         {
             input = input.Replace(Environment.NewLine, NewlineString);
             //input = input.Replace("'", "&apos;");
@@ -442,24 +445,47 @@ namespace Nikse.SubtitleEdit.Forms
             //string url = String.Format("http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}", HttpUtility.UrlEncode(input), languagePair);
             string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
             var result = Utilities.DownloadString(url, encoding);
-            int startIndex = result.IndexOf("<span id=result_box", StringComparison.Ordinal);
+
             var sb = new StringBuilder();
-            if (startIndex > 0)
+            if (romanji)
             {
-                startIndex = result.IndexOf("<span title=", startIndex, StringComparison.Ordinal);
-                while (startIndex > 0)
+                int startIndex = result.IndexOf("<div id=res-translit", StringComparison.Ordinal);
+                if (startIndex > 0)
                 {
                     startIndex = result.IndexOf('>', startIndex);
                     if (startIndex > 0)
                     {
                         startIndex++;
-                        int endIndex = result.IndexOf("</span>", startIndex, StringComparison.Ordinal);
+                        int endIndex = result.IndexOf("</div>", startIndex, StringComparison.Ordinal);
                         string translatedText = result.Substring(startIndex, endIndex - startIndex);
                         string test = WebUtility.HtmlDecode(translatedText);
+                        test = test.Replace("= =", SplitterString).Replace("  ", " ");
+                        test = test.Replace("_ _", NewlineString).Replace("  ", " ");
                         sb.Append(test);
-                        startIndex = result.IndexOf("<span title=", startIndex, StringComparison.Ordinal);
                     }
                 }
+            }
+            else
+            {
+                int startIndex = result.IndexOf("<span id=result_box", StringComparison.Ordinal);
+                if (startIndex > 0)
+                {
+                    startIndex = result.IndexOf("<span title=", startIndex, StringComparison.Ordinal);
+                    while (startIndex > 0)
+                    {
+                        startIndex = result.IndexOf('>', startIndex);
+                        if (startIndex > 0)
+                        {
+                            startIndex++;
+                            int endIndex = result.IndexOf("</span>", startIndex, StringComparison.Ordinal);
+                            string translatedText = result.Substring(startIndex, endIndex - startIndex);
+                            string test = WebUtility.HtmlDecode(translatedText);
+                            sb.Append(test);
+                            startIndex = result.IndexOf("<span title=", startIndex, StringComparison.Ordinal);
+                        }
+                    }
+                }
+                
             }
             string res = sb.ToString();
             res = res.Replace(NewlineString, Environment.NewLine);
@@ -527,7 +553,7 @@ namespace Nikse.SubtitleEdit.Forms
             return new[] { "Arabic", "Bulgarian", "Chinese Simplified", "Chinese Traditional", "Czech", "Danish", "Dutch", "English", "Estonian", "Finnish", "French", "German", "Greek", "Haitian Creole", "Hebrew", "Hungarian", "Indonesian", "Italian", "Japanese", "Korean", "Latvian", "Lithuanian", "Norwegian", "Polish", "Portuguese", "Romanian", "Russian", "Slovak", "Slovenian", "Spanish", "Swedish", "Thai", "Turkish", "Ukrainian", "Vietnamese" };
         }
 
-        public static void FillComboWithGoogleLanguages(ComboBox comboBox)
+        public void FillComboWithGoogleLanguages(ComboBox comboBox)
         {
             comboBox.Items.Add(new ComboBoxItem("AFRIKAANS", "af"));
             comboBox.Items.Add(new ComboBoxItem("ALBANIAN", "sq"));
@@ -605,6 +631,10 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("PORTUGUESE", "pt"));
             comboBox.Items.Add(new ComboBoxItem("PUNJABI", "pa"));
             comboBox.Items.Add(new ComboBoxItem("ROMANIAN", "ro"));
+
+            if (comboBox == comboBoxTo && !_googleApiNotWorking)
+                comboBox.Items.Add(new ComboBoxItem("ROMANJI", "romanji"));
+
             comboBox.Items.Add(new ComboBoxItem("RUSSIAN", "ru"));
             // comboBox.Items.Add(new ComboBoxItem("SANSKRIT" , "sa"));
             comboBox.Items.Add(new ComboBoxItem("SERBIAN", "sr"));
