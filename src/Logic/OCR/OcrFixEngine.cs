@@ -966,15 +966,16 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             //    }
             //}
 
+            const string p = @" ¡¿,.!?:;()[]{}+-$£""”“#&%…—♪";
             foreach (string name in _namesEtcMultiWordList)
             {
                 int start = tempLine.FastIndexOf(name);
                 if (start >= 0)
                 {
-                    if (start == 0 || (Environment.NewLine + @" ¡¿,.!?:;()[]{}+-$£""”“#&%…—♪").Contains(tempLine[start - 1]))
+                    if (start == 0 || (Environment.NewLine + p).Contains(tempLine[start - 1]))
                     {
                         int end = start + name.Length;
-                        if (end >= tempLine.Length || (Environment.NewLine + @" ¡¿,.!?:;()[]{}+-$£""”“#&%…—♪").Contains(tempLine[end]))
+                        if (end >= tempLine.Length || (Environment.NewLine + p).Contains(tempLine[end]))
                             tempLine = tempLine.Remove(start, name.Length);
                     }
                 }
