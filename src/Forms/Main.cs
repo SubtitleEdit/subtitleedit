@@ -18289,7 +18289,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripMenuItemSaveSelectedLinesClick(object sender, EventArgs e)
         {
             var newSub = new Subtitle(_subtitle);
-            newSub.Header = _subtitle.Header;
             newSub.Paragraphs.Clear();
             foreach (int index in SubtitleListview1.SelectedIndices)
                 newSub.Paragraphs.Add(_subtitle.Paragraphs[index]);
