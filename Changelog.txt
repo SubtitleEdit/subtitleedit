@@ -4,6 +4,8 @@
 * NEW:
    * Added (some) read support for PNS files
    * Added (some) read support for Timeline files
+   * Added Croatian OCRFixReplaceList list [by diomed & xylographe]
+   * Added Serbian OCRFixReplaceList
 * IMPROVED:
    * PAC now supports write of Chinese
    * Updated Czech translation - thx Trottel
