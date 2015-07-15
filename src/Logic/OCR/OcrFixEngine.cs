@@ -590,7 +590,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 if (!word.Contains(new[] { '<', '>', '\'' }))
                 {
-                    word = word.Replace("l", "I");
+                    word = word.Replace('l', 'I');
                 }
             }
             return word;
