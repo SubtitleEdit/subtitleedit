@@ -11,8 +11,11 @@ namespace Nikse.SubtitleEdit.Forms
         public GoogleOrMicrosoftTranslate()
         {
             InitializeComponent();
-            Forms.GoogleTranslate.FillComboWithGoogleLanguages(comboBoxFrom);
-            Forms.GoogleTranslate.FillComboWithGoogleLanguages(comboBoxTo);
+            using (var gt = new GoogleTranslate())
+            {
+                gt.FillComboWithGoogleLanguages(comboBoxFrom);
+                gt.FillComboWithGoogleLanguages(comboBoxTo);
+            }
             RemovedLanguagesNotInMicrosoftTranslate(comboBoxFrom);
             RemovedLanguagesNotInMicrosoftTranslate(comboBoxTo);
 
@@ -33,7 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             for (int i = comboBox.Items.Count - 1; i > 0; i--)
             {
-                Nikse.SubtitleEdit.Forms.GoogleTranslate.ComboBoxItem item = (Nikse.SubtitleEdit.Forms.GoogleTranslate.ComboBoxItem)comboBox.Items[i];
+                var item = (GoogleTranslate.ComboBoxItem)comboBox.Items[i];
                 if (item.Value != FixMsLocale(item.Value))
                     comboBox.Items.RemoveAt(i);
             }
