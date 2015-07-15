@@ -18242,23 +18242,24 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.DefaultExt = "*.txt";
                 saveFileDialog1.AddExtension = true;
 
-                string fname = saveFileDialog1.FileName;
+                var fname = saveFileDialog1.FileName;
                 if (string.IsNullOrEmpty(fname))
                     fname = "ATS";
                 if (!fname.EndsWith(".txt", StringComparison.Ordinal))
                     fname += ".txt";
-                string fileNameTimeCode = fname.Insert(fname.Length - 4, "_timecode");
-                string fileNameText = fname.Insert(fname.Length - 4, "_text");
+                var fileNameTimeCode = fname.Insert(fname.Length - 4, "_timecode");
+                var fileNameText = fname.Insert(fname.Length - 4, "_text");
 
                 var timeCodeLines = new StringBuilder();
                 var textLines = new StringBuilder();
-
+                const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
                 foreach (var p in _subtitle.Paragraphs)
                 {
-                    timeCodeLines.AppendLine(string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds)));
-                    timeCodeLines.AppendLine(string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds)));
-
-                    textLines.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "|"));
+                    timeCodeLines.AppendLine(string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds)));
+                    timeCodeLines.AppendLine(string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds)));
+                    // | is a special char to indicate CRLF
+                    textLines.Replace('|', '/');
+                    textLines.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, "|"));
                     textLines.AppendLine();
                 }
 
