@@ -87,17 +87,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_onlyListFixes)
             {
-                var item = new ListViewItem(string.Empty) { Checked = true };
-
-                var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString());
-                item.SubItems.Add(subItem);
-                subItem = new ListViewItem.ListViewSubItem(item, before.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-                item.SubItems.Add(subItem);
-                subItem = new ListViewItem.ListViewSubItem(item, after.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-                item.SubItems.Add(subItem);
-
-                item.Tag = p; // save paragraph in Tag
-
+                var item = new ListViewItem(string.Empty) { Checked = true, Tag = p };
+                item.SubItems.Add(p.Number.ToString());
+                item.SubItems.Add(before.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+                item.SubItems.Add(after.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
                 listViewFixes.Items.Add(item);
             }
         }
