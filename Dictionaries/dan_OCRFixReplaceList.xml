@@ -1,4 +1,4 @@
-<OCRFixReplaceList>
+﻿<OCRFixReplaceList>
   <WholeWords>
     <Word from="Haner" to="Han er" />
     <Word from="JaveL" to="Javel" />
@@ -61,7 +61,6 @@
     <Word from="gørden" to="gør den" />
     <Word from="forhelvede" to="for helvede" />
     <Word from="hjpe" to="hjælpe" />
-    <Word from="hjpe" to="hjælpe" />
     <Word from="togeti" to="toget i" />
     <Word from="Måjeg" to="Må jeg" />
     <Word from="savnerjer" to="savner jer" />
@@ -119,11 +118,9 @@
     <Word from="ﬁnder" to="finder" />
     <Word from="ﬁndes" to="findes" />
     <Word from="irettesaeﬁelse" to="irettesættelse" />
-    <Word from="sy’g" to="syg" />
     <Word from="ermed" to="er med" />
     <Word from="èn" to="én" />
     <Word from="gikjoi" to="gik jo i" />
-    <Word from="ﬁnder" to="finder" />
     <Word from="Hvisjeg" to="Hvis jeg" />
     <Word from="ovemaﬁer" to="overnatter" />
     <Word from="hoident" to="holdent" />
@@ -613,7 +610,6 @@
     <WordPart from="f" to="f " />
     <WordPart from="c" to="e" />
     <WordPart from="o" to="e" />
-    <WordPart from="o" to="e" />
     <WordPart from="I" to="t" />
     <WordPart from="n" to="o" />
     <WordPart from="s" to="e" />
@@ -623,9 +619,9 @@
     <WordPart from="í" to="i" />
   </PartialWords>
   <PartialLines />
-  <BeginLines>
-  </BeginLines>
-  <EndLines>
-  </EndLines>
+  <PartialLinesAlways />
+  <BeginLines />
+  <EndLines />
   <WholeLines />
+  <RegularExpressions />
 </OCRFixReplaceList>

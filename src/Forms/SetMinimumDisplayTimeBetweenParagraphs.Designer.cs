@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
+            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.numericUpDownMinMillisecondsBetweenLines = new System.Windows.Forms.NumericUpDown();
             this.labelMaxMillisecondsBetweenLines = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
@@ -37,7 +38,6 @@
             this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
             this.labelOneFrameIsXMS = new System.Windows.Forms.Label();
             this.groupBoxFrameInfo = new System.Windows.Forms.GroupBox();
-            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxLinesFound.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinMillisecondsBetweenLines)).BeginInit();
             this.groupBoxFrameInfo.SuspendLayout();
@@ -55,6 +55,30 @@
             this.groupBoxLinesFound.TabIndex = 3;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Preview";
+            // 
+            // SubtitleListview1
+            // 
+            this.SubtitleListview1.AllowDrop = true;
+            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SubtitleListview1.DisplayExtraFromExtra = false;
+            this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SubtitleListview1.FullRowSelect = true;
+            this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HideSelection = false;
+            this.SubtitleListview1.Location = new System.Drawing.Point(6, 19);
+            this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.OwnerDraw = true;
+            this.SubtitleListview1.Size = new System.Drawing.Size(714, 322);
+            this.SubtitleListview1.SubtitleFontBold = false;
+            this.SubtitleListview1.SubtitleFontName = "Tahoma";
+            this.SubtitleListview1.SubtitleFontSize = 8;
+            this.SubtitleListview1.TabIndex = 0;
+            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
+            this.SubtitleListview1.UseSyntaxColoring = true;
+            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             // 
             // numericUpDownMinMillisecondsBetweenLines
             // 
@@ -85,7 +109,7 @@
             this.labelMaxMillisecondsBetweenLines.AutoSize = true;
             this.labelMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(15, 18);
             this.labelMaxMillisecondsBetweenLines.Name = "labelMaxMillisecondsBetweenLines";
-            this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(172, 13);
+            this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(174, 13);
             this.labelMaxMillisecondsBetweenLines.TabIndex = 0;
             this.labelMaxMillisecondsBetweenLines.Text = "Minimum milliseconds between lines";
             // 
@@ -158,27 +182,6 @@
             this.groupBoxFrameInfo.TabStop = false;
             this.groupBoxFrameInfo.Text = "Frame rate info";
             // 
-            // SubtitleListview1
-            // 
-            this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SubtitleListview1.DisplayExtraFromExtra = false;
-            this.SubtitleListview1.FirstVisibleIndex = -1;
-            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SubtitleListview1.FullRowSelect = true;
-            this.SubtitleListview1.GridLines = true;
-            this.SubtitleListview1.HideSelection = false;
-            this.SubtitleListview1.Location = new System.Drawing.Point(6, 19);
-            this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(714, 322);
-            this.SubtitleListview1.TabIndex = 0;
-            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
-            this.SubtitleListview1.UseSyntaxColoring = true;
-            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
-            // 
             // SetMinimumDisplayTimeBetweenParagraphs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -192,6 +195,7 @@
             this.Controls.Add(this.labelMaxMillisecondsBetweenLines);
             this.Controls.Add(this.groupBoxLinesFound);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(750, 500);
             this.Name = "SetMinimumDisplayTimeBetweenParagraphs";
             this.ShowIcon = false;

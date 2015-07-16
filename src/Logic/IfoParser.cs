@@ -549,7 +549,7 @@ namespace Nikse.SubtitleEdit.Logic
                 fps = 30;
             else
                 fps = 25;
-            result += (int)Math.Round((1000.0 / fps) * StrToFloat(IntToHex(BinToInt(MidStr(temp, 26, 6)), 3)));
+            result += (int)Math.Round((TimeCode.BaseUnit / fps) * StrToFloat(IntToHex(BinToInt(MidStr(temp, 26, 6)), 3)));
             return result;
         }
 
@@ -586,7 +586,7 @@ namespace Nikse.SubtitleEdit.Logic
             int fps = 25;
             if (timeBytes.Substring(24, 2) == "11")
                 fps = 30;
-            int milliseconds = (int)Math.Round((1000.0 / fps) * StrToFloat(IntToHex(BinToInt(timeBytes.Substring(26, 6)), 3)));
+            int milliseconds = (int)Math.Round((TimeCode.BaseUnit / fps) * StrToFloat(IntToHex(BinToInt(timeBytes.Substring(26, 6)), 3)));
             var ts = new TimeSpan(0, h, m, s, milliseconds);
             return MsToTime(ts.TotalMilliseconds);
         }

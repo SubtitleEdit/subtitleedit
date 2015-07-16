@@ -131,6 +131,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string ExportFontNameOther { get; set; }
         public int ExportFcpFontSize { get; set; }
         public string ExportFcpImageType { get; set; }
+        public string ExportBdnXmlImageType { get; set; }
         public int ExportLastFontSize { get; set; }
         public int ExportLastLineHeight { get; set; }
         public int ExportLastBorderWidth { get; set; }
@@ -159,6 +160,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string ChangeCasingChoice { get; set; }
         public bool UseNoLineBreakAfter { get; set; }
         public string NoLineBreakAfterEnglish { get; set; }
+        public List<string> FindHistory { get; set; }
 
         public ToolsSettings()
         {
@@ -217,6 +219,7 @@ namespace Nikse.SubtitleEdit.Logic
             ExportCustomTemplates = "SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]ÆæMicroDVDÆÆ{{start}}{{end}}{text}\r\nÆffÆ||Æ";
             UseNoLineBreakAfter = false;
             NoLineBreakAfterEnglish = " Mrs.; Ms.; Mr.; Dr.; a; an; the; my; my own; your; his; our; their; it's; is; are;'s; 're; would;'ll;'ve;'d; will; that; which; who; whom; whose; whichever; whoever; wherever; each; either; every; all; both; few; many; sevaral; all; any; most; been; been doing; none; some; my own; your own; his own; her own; our own; their own; I; she; he; as per; as regards; into; onto; than; where as; abaft; aboard; about; above; across; afore; after; against; along; alongside; amid; amidst; among; amongst; anenst; apropos; apud; around; as; aside; astride; at; athwart; atop; barring; before; behind; below; beneath; beside; besides; between; betwixt; beyond; but; by; circa; ca; concerning; despite; down; during; except; excluding; following; for; forenenst; from; given; in; including; inside; into; lest; like; minus; modulo; near; next; of; off; on; onto; opposite; out; outside; over; pace; past; per; plus; pro; qua; regarding; round; sans; save; since; than; through; thru; throughout; thruout; till; to; toward; towards; under; underneath; unlike; until; unto; up; upon; versus; vs; via; vice; with; within; without; considering; respecting; one; two; another; three; our; five; six; seven; eight; nine; ten; eleven; twelve; thirteen; fourteen; fifteen; sixteen; seventeen; eighteen; nineteen; twenty; thirty; forty; fifty; sixty; seventy; eighty; ninety; hundred; thousand; million; billion; trillion; while; however; what; zero; little; enough; after; although; and; as; if; though; although; because; before; both; but; even; how; than; nor; or; only; unless; until; yet; was; were";
+            FindHistory = new List<string>();
             ImportTextLineBreak = "|";
         }
 
@@ -745,7 +748,7 @@ namespace Nikse.SubtitleEdit.Logic
         public NetworkSettings()
         {
             UserName = string.Empty;
-            SessionKey = "DemoSession"; // TODO - leave blank or use guid
+            SessionKey = "DemoSession"; // TODO: Leave blank or use guid
             WebServiceUrl = "http://www.nikse.dk/se/SeService.asmx";
             PollIntervalSeconds = 5;
         }
@@ -1070,7 +1073,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void Save()
         {
-            //this is too slow: Serialize(Configuration.BaseDirectory + "Settings.xml", this);
+            //this is too slow: Serialize(Configuration.SettingsFileName, this);
 
             CustomSerialize(Configuration.SettingsFileName, this);
         }
@@ -1086,16 +1089,16 @@ namespace Nikse.SubtitleEdit.Logic
         public static Settings GetSettings()
         {
             var settings = new Settings();
-            string settingsFileName = Configuration.SettingsFileName;
+            var settingsFileName = Configuration.SettingsFileName;
             if (File.Exists(settingsFileName))
             {
                 try
                 {
+                    //too slow... :(  - settings = Deserialize(settingsFileName); // 688 msecs
                     settings = CustomDeserialize(settingsFileName); //  15 msecs
 
                     if (settings.General.AutoConvertToUtf8)
                         settings.General.DefaultEncoding = Encoding.UTF8.EncodingName;
-                    //too slow... :(  - settings = Deserialize(Configuration.BaseDirectory + "Settings.xml"); // 688 msecs
                 }
                 catch
                 {
@@ -1675,6 +1678,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportFcpImageType");
             if (subNode != null)
                 settings.Tools.ExportFcpImageType = subNode.InnerText;
+            subNode = node.SelectSingleNode("ExportBdnXmlImageType");
+            if (subNode != null)
+                settings.Tools.ExportBdnXmlImageType = subNode.InnerText;
             subNode = node.SelectSingleNode("ExportLastFontSize");
             if (subNode != null)
                 settings.Tools.ExportLastFontSize = Convert.ToInt32(subNode.InnerText);
@@ -1759,6 +1765,17 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("NoLineBreakAfterEnglish");
             if (subNode != null)
                 settings.Tools.NoLineBreakAfterEnglish = subNode.InnerText.Replace("  ", " ");
+            subNode = node.SelectSingleNode("FindHistory");
+            if (subNode != null)
+            {
+                foreach (XmlNode findItem in subNode.ChildNodes)
+                {
+                    if (findItem.Name == "Text")
+                    {
+                        settings.Tools.FindHistory.Add(findItem.InnerText);
+                    }
+                }
+            }
 
             settings.SubtitleSettings = new SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -2628,8 +2645,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void CustomSerialize(string fileName, Settings settings)
         {
-            var sw = new StringWriter();
-            using (var textWriter = new XmlTextWriter(sw) { Formatting = Formatting.Indented })
+            var xws = new XmlWriterSettings { Indent = true };
+            var sb = new StringBuilder();
+            using (var textWriter = XmlWriter.Create(sb, xws))
             {
                 textWriter.WriteStartDocument();
 
@@ -2816,6 +2834,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("ExportFontNameOther", settings.Tools.ExportFontNameOther);
                 textWriter.WriteElementString("ExportFcpFontSize", settings.Tools.ExportFcpFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportFcpImageType", settings.Tools.ExportFcpImageType);
+                textWriter.WriteElementString("ExportBdnXmlImageType", settings.Tools.ExportBdnXmlImageType);
                 textWriter.WriteElementString("ExportLastFontSize", settings.Tools.ExportLastFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastLineHeight", settings.Tools.ExportLastLineHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastBorderWidth", settings.Tools.ExportLastBorderWidth.ToString(CultureInfo.InvariantCulture));
@@ -2844,7 +2863,20 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("ChangeCasingChoice", settings.Tools.ChangeCasingChoice);
                 textWriter.WriteElementString("UseNoLineBreakAfter", settings.Tools.UseNoLineBreakAfter.ToString());
                 textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.NoLineBreakAfterEnglish);
-
+                if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
+                {
+                    const int maximumFindHistoryItems = 10;
+                    textWriter.WriteStartElement("FindHistory", "");
+                    int maxIndex = settings.Tools.FindHistory.Count;
+                    if (maxIndex > maximumFindHistoryItems)
+                        maxIndex = maximumFindHistoryItems;
+                    for (int index = 0; index < maxIndex; index++)
+                    {
+                        var text = settings.Tools.FindHistory[index];
+                        textWriter.WriteElementString("Text", text);
+                    }
+                    textWriter.WriteEndElement();
+                }
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("SubtitleSettings", "");
@@ -3161,7 +3193,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 try
                 {
-                    File.WriteAllText(fileName, sw.ToString().Replace("encoding=\"utf-16\"", "encoding=\"utf-8\""), Encoding.UTF8);
+                    File.WriteAllText(fileName, sb.ToString().Replace("encoding=\"utf-16\"", "encoding=\"utf-8\""), Encoding.UTF8);
                 }
                 catch
                 {

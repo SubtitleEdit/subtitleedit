@@ -434,7 +434,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             public static byte GetFrameFromMilliseconds(int milliseconds, double frameRate)
             {
-                int frame = (int)(milliseconds / (1000.0 / frameRate));
+                int frame = (int)(milliseconds / (TimeCode.BaseUnit / frameRate));
                 return (byte)(frame);
             }
         }
@@ -639,7 +639,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     lastExtensionBlockNumber = tti.ExtensionBlockNumber;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             Header = header;
         }
 
@@ -980,7 +980,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 tti.TimeCodeInHours = buffer[index + 5 + 0];
                 tti.TimeCodeInMinutes = buffer[index + 5 + 1];
                 tti.TimeCodeInSeconds = buffer[index + 5 + 2];
-                tti.TimeCodeInMilliseconds = (int)(1000.0 / (header.FrameRate / buffer[index + 5 + 3]));
+                tti.TimeCodeInMilliseconds = (int)(TimeCode.BaseUnit / (header.FrameRate / buffer[index + 5 + 3]));
 
                 tti.TimeCodeOutHours = buffer[index + 9 + 0];
                 tti.TimeCodeOutMinutes = buffer[index + 9 + 1];

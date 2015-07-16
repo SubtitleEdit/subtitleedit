@@ -2,7 +2,7 @@
 <Language Name="Greek">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Μετάφραση από: CrazyRabbit - Κλεάνθης Μανωλόπουλος
 Σχόλια για τη μετάφραση στο: mailto:akis_manolopoulos@hotmail.com</TranslatedBy>
     <CultureName>el-GR</CultureName>
@@ -1217,7 +1217,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <MatroskaSubtitleChooser>
     <Title>Επιλογή υπότιτλου από αρχείο Matroska</Title>
     <PleaseChoose>Περισσότεροι από ένας υπότιτλοι βρέθηκαν - παρακαλώ επιλέξτε</PleaseChoose>
-    <TrackXLanguageYTypeZ>Κομμάτι {0} - {1} - γλώσσα: {2} - τύπος: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Κομμάτι {0} - γλώσσα: {1} - τύπος: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Μετατροπέας μονάδων μέτρησης</Title>

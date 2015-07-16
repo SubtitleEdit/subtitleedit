@@ -5,11 +5,11 @@ using System.IO;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class AddWaveformBatch : Form
+    public sealed partial class AddWaveformBatch : PositionAndSizeForm
     {
 
         private int _delayInMilliseconds;
@@ -81,6 +81,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
+                var ext = Path.GetExtension(fileName).ToLowerInvariant();
+                var excludedExtensions = new List<string> { ".srt", ".txt", ".exe", ".ass", ".sub", ".jpg", ".png", ".zip", ".rar" };
+                if (string.IsNullOrEmpty(ext) || excludedExtensions.Contains(ext))
+                {
+                    return;
+                }
+
                 foreach (ListViewItem lvi in listViewInputFiles.Items)
                 {
                     if (lvi.Text.Equals(fileName, StringComparison.OrdinalIgnoreCase))
@@ -220,9 +227,9 @@ namespace Nikse.SubtitleEdit.Forms
                     catch (DllNotFoundException)
                     {
                         if (MessageBox.Show(Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFound + Environment.NewLine +
-                                                                   Environment.NewLine +
-                                                                   Configuration.Settings.Language.AddWaveform.GoToVlcMediaPlayerHomePage,
-                                                                  Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFoundTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                            Environment.NewLine + Configuration.Settings.Language.AddWaveform.GoToVlcMediaPlayerHomePage,
+                                            Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFoundTitle,
+                                            MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             Process.Start("http://www.videolan.org/");
                         }
@@ -299,7 +306,8 @@ namespace Nikse.SubtitleEdit.Forms
                 catch
                 {
                     IncrementAndShowProgress();
-                    item.SubItems[3].Text = "ERROR";
+
+                    item.SubItems[3].Text = Configuration.Settings.Language.AddWaveformBatch.Error;
                 }
                 index++;
             }
@@ -344,6 +352,39 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
                 _abort = true;
+        }
+
+        private void contextMenuStripFiles_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (listViewInputFiles.Items.Count == 0)
+                e.Cancel = true;
+            removeToolStripMenuItem.Visible = listViewInputFiles.SelectedItems.Count > 0;
+        }
+
+        private void listViewInputFiles_DragEnter(object sender, DragEventArgs e)
+        {
+            if (_converting)
+            {
+                e.Effect = DragDropEffects.None;
+                return;
+            }
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
+                e.Effect = DragDropEffects.All;
+        }
+
+        private void listViewInputFiles_DragDrop(object sender, DragEventArgs e)
+        {
+            if (_converting)
+            {
+                return;
+            }
+
+            var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (string fileName in fileNames)
+            {
+                AddInputFile(fileName);
+            }
         }
 
     }

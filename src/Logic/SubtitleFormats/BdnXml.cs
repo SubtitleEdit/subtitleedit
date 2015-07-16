@@ -115,19 +115,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static double GetMillisecondsFromTimeCode(string time)
         {
             string[] parts = time.Split(new[] { ':', ';' }, StringSplitOptions.RemoveEmptyEntries);
 
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = int.Parse(parts[3]);
 
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames))).TotalMilliseconds;
+            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames)).TotalMilliseconds;
         }
 
     }

@@ -1,7 +1,7 @@
 ﻿;* Subtitle Edit - Installer script
 ;*
 ;* Copyright (C) 2010-2014 XhmikosR
-;* Copyright (C) 2010-2014 all the respective translators
+;* Copyright (C) 2010-2015 all the respective translators
 ;*
 ;* This file is part of Subtitle Edit.
 ;*
@@ -331,7 +331,7 @@ ko.types_default=기본 설치
 
 
 ; Dutch
-nl.comp_translations=Translations
+nl.comp_translations=Vertalingen
 nl.msg_AskToDownNET=Subtitle Edit vereist .NET Framework 4.0. Download en instaleer deze software alstublieft en doe de setup opnieuw.%n%nWilt u nu .NET Framework 4.0 instaleren?
 nl.msg_DeleteSettings=Wilt u de instellingen en persoonlijke aanpassingen in de woordenboeken van Subtitle Edit verwijderen?%n%nAls u Subtitle Edit opnieuw installeert hoeft u deze niet te verwijderen.
 nl.msg_OptimizingPerformance=Prestatie optimaliseren...

@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                         text = text.Remove(index, "@Italic@".Length).Insert(index, italicTag);
                                         italicOn = !italicOn;
                                     }
-                                    text = Utilities.FixInvalidItalicTags(text);
+                                    text = HtmlUtil.FixInvalidItalicTags(text);
                                 }
                                 p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
                                 subtitle.Paragraphs.Add(p);
@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string[] parts)

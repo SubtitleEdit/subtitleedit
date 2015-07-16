@@ -23,6 +23,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return true; }
         }
 
+        public bool UseCDataForParagraphText { get; set; }
+
         public override bool IsMine(List<string> lines, string fileName)
         {
             var sb = new StringBuilder();
@@ -32,11 +34,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (xmlAsString.Contains("http://www.w3.org/2006/10"))
                 return false;
 
+            if (!UseCDataForParagraphText && xmlAsString.Contains("<![CDATA["))
+                return false;
+
             if (xmlAsString.Contains("http://www.w3.org/") &&
                 xmlAsString.Contains("/ttaf1"))
             {
-                var xml = new XmlDocument();
-                xml.XmlResolver = null;
+                var xml = new XmlDocument { XmlResolver = null };
                 try
                 {
                     xml.LoadXml(xmlAsString);
@@ -100,19 +104,27 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/2006/04/ttaf1");
-                string text = HtmlUtil.RemoveHtmlTags(p.Text);
 
-                bool first = true;
-                foreach (string line in text.SplitToLines())
+                if (UseCDataForParagraphText)
                 {
-                    if (!first)
+                    XmlCDataSection cData = xml.CreateCDataSection(p.Text);
+                    paragraph.AppendChild(cData);
+                }
+                else
+                {
+                    string text = HtmlUtil.RemoveHtmlTags(p.Text);
+                    bool first = true;
+                    foreach (string line in text.SplitToLines())
                     {
-                        XmlNode br = xml.CreateElement("br", "http://www.w3.org/2006/04/ttaf1");
-                        paragraph.AppendChild(br);
+                        if (!first)
+                        {
+                            XmlNode br = xml.CreateElement("br", "http://www.w3.org/2006/04/ttaf1");
+                            paragraph.AppendChild(br);
+                        }
+                        XmlNode textNode = xml.CreateTextNode(line);
+                        paragraph.AppendChild(textNode);
+                        first = false;
                     }
-                    XmlNode textNode = xml.CreateTextNode(line);
-                    paragraph.AppendChild(textNode);
-                    first = false;
                 }
 
                 XmlAttribute start = xml.CreateAttribute("begin");
@@ -140,8 +152,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            var xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(sb.ToString().Trim().Replace("http://www.w3.org/2006/04/ttaf1#styling\"xml:lang", "http://www.w3.org/2006/04/ttaf1#styling\" xml:lang"));
 
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
@@ -218,7 +229,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         TimeCode duration = TimedText10.GetTimeCode(node.Attributes["dur"].InnerText, false);
                         TimeCode startTime = TimedText10.GetTimeCode(start, false);
-                        TimeCode endTime = new TimeCode(startTime.TotalMilliseconds + duration.TotalMilliseconds);
+                        var endTime = new TimeCode(startTime.TotalMilliseconds + duration.TotalMilliseconds);
                         subtitle.Paragraphs.Add(new Paragraph(startTime, endTime, text));
                     }
                 }
@@ -242,7 +253,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.EndTime.Milliseconds *= 10;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

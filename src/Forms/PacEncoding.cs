@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -8,11 +7,11 @@ using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 namespace Nikse.SubtitleEdit.Forms
 {
 
-    public partial class PacEncoding : Form
+    public sealed partial class PacEncoding : Form
     {
         public int CodePageIndex { get; set; }
 
-        private byte[] _previewBuffer;
+        private readonly byte[] _previewBuffer;
 
         public PacEncoding(byte[] previewBuffer, string fileName)
         {
@@ -29,19 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxPreview.Visible = false;
                 Height -= textBoxPreview.Height;
             }
-
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         private void PacEncoding_KeyDown(object sender, KeyEventArgs e)
@@ -58,10 +45,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_previewBuffer != null)
                 {
                     Encoding encoding = Pac.GetEncoding(CodePageIndex);
-                    const int FEIndex = 0;
+                    const int feIndex = 0;
                     const int endDelimiter = 0x00;
-                    StringBuilder sb = new StringBuilder();
-                    int index = FEIndex + 3;
+                    var sb = new StringBuilder();
+                    int index = feIndex + 3;
                     while (index < _previewBuffer.Length && _previewBuffer[index] != endDelimiter)
                     {
                         if (_previewBuffer[index] == 0xFE)
@@ -71,26 +58,25 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (_previewBuffer[index] == 0xFF)
                             sb.Append(' ');
-                        else if (CodePageIndex == 0)
+                        else if (CodePageIndex == Pac.CodePageLatin)
                             sb.Append(Pac.GetLatinString(encoding, _previewBuffer, ref index));
-                        else if (CodePageIndex == 3)
+                        else if (CodePageIndex == Pac.CodePageArabic)
                             sb.Append(Pac.GetArabicString(_previewBuffer, ref index));
-                        else if (CodePageIndex == 4)
+                        else if (CodePageIndex == Pac.CodePageHebrew)
                             sb.Append(Pac.GetHebrewString(_previewBuffer, ref index));
-                        else if (CodePageIndex == 6)
+                        else if (CodePageIndex == Pac.CodePageCyrillic)
                             sb.Append(Pac.GetCyrillicString(_previewBuffer, ref index));
                         else
                             sb.Append(encoding.GetString(_previewBuffer, index, 1));
 
                         index++;
                     }
-                    if (CodePageIndex == 3)
+                    if (CodePageIndex == Pac.CodePageArabic)
                         textBoxPreview.Text = Utilities.FixEnglishTextInRightToLeftLanguage(sb.ToString(), "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
                     else
                         textBoxPreview.Text = sb.ToString();
                 }
             }
-
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

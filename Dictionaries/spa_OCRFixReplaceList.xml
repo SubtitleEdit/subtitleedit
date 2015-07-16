@@ -1,6 +1,6 @@
-<ReplaceList>
+﻿<OCRFixReplaceList>
   <WholeWords>
-    <!--  Abreviaturas simples -->
+    <!-- Abreviaturas simples -->
     <Word from="KBs" to="kB" />
     <Word from="Vd" to="Ud" />
     <Word from="N°" to="N.°" />
@@ -8,8 +8,6 @@
     <Word from="nro." to="n.°" />
     <Word from="Nro." to="N.°" />
     <!-- Ortografía básica -->
-    <Word from="victima" to="víctima" />
-    <Word from="tambien" to="también" />
     <Word from="aca" to="acá" />
     <Word from="actuas" to="actúas" />
     <Word from="actues" to="actúes" />
@@ -197,6 +195,7 @@
     <Word from="unico" to="único" />
     <Word from="vamonos" to="vámonos" />
     <Word from="vayanse" to="váyanse" />
+    <Word from="victima" to="víctima" />
     <Word from="vivira" to="vivirá" />
     <Word from="volvio" to="volvió" />
     <Word from="volvia" to="volvía" />
@@ -213,7 +212,6 @@
     <Word from="oirme" to="oírme" />
     <Word from="oirle" to="oírle" />
     <Word from="oirla" to="oírla" />
-    <Word from="oirse" to="oírse" />
     <Word from="oirles" to="oírles" />
     <Word from="oirnos" to="oírnos" />
     <Word from="oirlas" to="oírlas" />
@@ -234,7 +232,6 @@
     <Word from="dió" to="dio" />
     <Word from="guión" to="guion" />
     <Word from="dón" to="don" />
-    <Word from="vé" to="ve" />
     <Word from="fé" to="fe" />
     <Word from="áquel" to="aquel" />
     <!-- Palabras donde se puede prescindir de la tilde diacrítica -->
@@ -296,7 +293,7 @@
     <Word from="mejicanos" to="mexicanos" />
     <Word from="mejicana" to="mexicana" />
     <Word from="mejicanas" to="mexicanas" />
-    <!--  Creados por SE  -->
+    <!-- Creados por SE -->
     <Word from="io" to="lo" />
     <Word from="ia" to="la" />
     <Word from="ie" to="le" />
@@ -369,16 +366,16 @@
   <PartialWordsAlways />
   <PartialWords />
   <PartialLines>
-    <!--  Varios  -->
+    <!-- Varios -->
     <LinePart from="de gratis" to="gratis" />
     <LinePart from="si quiera" to="siquiera" />
     <LinePart from="Cada una de los" to="Cada uno de los" />
     <LinePart from="Cada uno de las" to="Cada una de las" />
-    <!--  Uso incorrecto de haber / a ver -->
+    <!-- Uso incorrecto de haber / a ver -->
     <LinePart from="haber que" to="a ver qué" />
     <LinePart from="haber qué" to="a ver qué" />
     <LinePart from="Haber si" to="A ver si" />
-    <!--  Ponombres exclamativos o interrogativos Parte 1 -->
+    <!-- Ponombres exclamativos o interrogativos Parte 1 -->
     <LinePart from=" que hora" to=" qué hora" />
     <LinePart from="yo que se" to="yo qué sé" />
     <LinePart from="Yo que se" to="Yo qué sé" />
@@ -463,7 +460,6 @@
     <LinePart from="¿de cuantos" to="¿de cuántos" />
     <LinePart from="¿de cuantas" to="¿de cuántas" />
     <LinePart from="¿de cuando" to="¿de cuándo" />
-    <LinePart from="¿a que" to="¿a qué" />
     <LinePart from="¿sobre que" to="¿sobre qué" />
     <LinePart from="¿como " to="¿cómo " />
     <LinePart from="¿cual " to="¿cuál " />
@@ -474,7 +470,6 @@
     <LinePart from="¿hasta cuanto" to="¿hasta cuánto" />
     <LinePart from="¿hasta cuantas" to="¿hasta cuántas" />
     <LinePart from="¿hasta cuantos" to="¿hasta cuántos" />
-    <LinePart from="¿hasta cuando" to="¿hasta cuándo" />
     <LinePart from="¿hasta cuando" to="¿hasta cuándo" />
     <LinePart from="¿hasta donde" to="¿hasta dónde" />
     <LinePart from="¿hasta que" to="¿hasta qué" />
@@ -599,7 +594,6 @@
     <LinePart from="¿Hasta cuantas" to="¿Hasta cuántas" />
     <LinePart from="¿Hasta cuantos" to="¿Hasta cuántos" />
     <LinePart from="¿Hasta cuando" to="¿Hasta cuándo" />
-    <LinePart from="¿Hasta cuando" to="¿Hasta cuándo" />
     <LinePart from="¿Hasta donde" to="¿Hasta dónde" />
     <LinePart from="¿Hasta que" to="¿Hasta qué" />
     <LinePart from="¿Hasta adonde" to="¿Hasta adónde" />
@@ -713,6 +707,7 @@
     <LinePart from="misterl" to="misteri" />
     <LinePart from="vivencl" to="vivenci" />
   </PartialLines>
+  <PartialLinesAlways />
   <BeginLines />
   <EndLines>
     <Ending from=".»." to="»." />
@@ -722,7 +717,7 @@
     <Line from="No" to="No." />
   </WholeLines>
   <RegularExpressions>
-    <!--  Abreviaturas compuestas -->
+    <!-- Abreviaturas compuestas -->
     <RegEx find="\b[Ss](r|ra|rta)\b\.?" replaceWith="S$1." />
     <RegEx find="\b[Dd](r|ra)\b\.?" replaceWith="D$1." />
     <RegEx find="\b[Uu](d|ds)\b\.?" replaceWith="U$1." />
@@ -736,15 +731,15 @@
     <RegEx find="(\d)KBs(\W){0,1}" replaceWith="$1 kB$2" />
     <RegEx find="([Nn])°(\s){0,1}(\d)" replaceWith="$1.° $3" />
     <RegEx find="([Nn])ro(\.){0,1}(\s){0,1}(\d)" replaceWith="$1.° $4" />
-    <!--  Signos invertidos -->
+    <!-- Signos invertidos -->
     <RegEx find="\?¿(\W|\w)" replaceWith="? ¿$1" />
     <RegEx find="\!¡(\W|\w)" replaceWith="! ¡$1" />
     <RegEx find="\?¿¿(\W|\w)" replaceWith="? ¿$1" />
     <RegEx find="\!¡¡(\W|\w)" replaceWith="! ¡$1" />
-    <!--  Inicio de línea  -->
+    <!-- Inicio de línea -->
     <RegEx find="^_(\s)" replaceWith="-$1" />
     <RegEx find="^_(\w)" replaceWith="- $1" />
-    <!--  Uso de comillas según la recomendación de la RAE y la Wikipedia -->
+    <!-- Uso de comillas según la recomendación de la RAE y la Wikipedia -->
     <RegEx find="(«[^“«»]+)«" replaceWith="$1“" />
     <RegEx find="(“[^«»”]+)»" replaceWith="$1”" />
     <RegEx find="`" replaceWith="‘" />
@@ -759,11 +754,9 @@
     <RegEx find="«(,)" replaceWith="»," />
     <RegEx find="«(;)" replaceWith="»;" />
     <RegEx find="«(:)" replaceWith="»:" />
-    <RegEx find="«(\?)" replaceWith="»?" />
-    <RegEx find="«(\!)" replaceWith="»!" />
     <RegEx find="(¿)»" replaceWith="¿«" />
     <RegEx find="(¡)»" replaceWith="¡«" />
-    <!--  Uso de comillas (ANSI) según la recomendación de la RAE («\x22» es el carácter «"»)  -->
+    <!-- Uso de comillas (ANSI) según la recomendación de la RAE («\x22» es el carácter «"») -->
     <RegEx find="([\wá-ú])([\.,]) ?[\x22»]" replaceWith="$1»$2" />
     <RegEx find="([\wá-ú])\?[\x22»](\s|$)" replaceWith="$1?».$2" />
     <RegEx find="^(\.\.\.)(\s){0,1}\x22" replaceWith="$1«" />
@@ -792,7 +785,7 @@
     <RegEx find="\x22(\))" replaceWith="»)" />
     <RegEx find="(\))\x22" replaceWith=")»" />
     <RegEx find="(\()\x22" replaceWith="(«" />
-    <!--  Uso de comillas (Unicode) según la recomendación de la RAE («\u0022» es el carácter «"»)  -->
+    <!-- Uso de comillas (Unicode) según la recomendación de la RAE («\u0022» es el carácter «"») -->
     <RegEx find="^(\.\.\.)(\s){0,1}\u0022" replaceWith="$1«" />
     <RegEx find="^\u0022{2,}" replaceWith="«" />
     <RegEx find="\u0022{2,}$" replaceWith="»" />
@@ -817,43 +810,43 @@
     <RegEx find="\u0022(\))" replaceWith="»)" />
     <RegEx find="(\))\u0022" replaceWith=")»" />
     <RegEx find="(\()\u0022" replaceWith="(«" />
-    <!--  Numeración  -->
+    <!-- Numeración -->
     <RegEx find="([0-9])\.([0-9])\b" replaceWith="$1,$2" />
     <RegEx find="(^|\s|[¡¿«])([0-9])(,|\.)?([0-9]{3})\b" replaceWith="$1$2$4" />
     <RegEx find="(\d)\s(?=\d{2}\b)" replaceWith="$1-" />
     <!-- "1 :", "2 :"... "n :" a "n:" -->
     <RegEx find="(\d) ([:;])" replaceWith="$1$2" />
-    <!--  Corregir las comas y puntos por ej. «, ,» por «,» & «,,,» o similar por «...» -->
+    <!-- Corregir las comas y puntos por ej. «, ,» por «,» & «,,,» o similar por «...» -->
     <RegEx find="(\.\.\.+)$" replaceWith="..." />
     <RegEx find="(, ,+)$" replaceWith="," />
     <RegEx find="(,\s),+\s" replaceWith="$1" />
     <RegEx find="(\.\.\.),$" replaceWith="$1" />
     <RegEx find="([\wá-ú])(\.\.)$" replaceWith="$1." />
-    <!--  Puntos innecesarios (complemento)  -->
+    <!-- Puntos innecesarios (complemento) -->
     <RegEx find="([\w\W]\.{3})([¡¿])" replaceWith="$1 $2" />
     <RegEx find="(\w)\.\.(\s)" replaceWith="$1.$2" />
     <RegEx find="[\wá-ú\x22»]\.([\?\!])" replaceWith="$1$2" />
     <RegEx find="([\:\;])\." replaceWith="$1" />
     <RegEx find="\.([\:\;])" replaceWith="$1" />
     <RegEx find="\:+" replaceWith=":" />
-    <!--  Terminaciones ción/sión  -->
+    <!-- Terminaciones ción/sión -->
     <RegEx find="([sc]i)o(n)\b" replaceWith="$1ó$2" />
     <RegEx find="([SC]I)O(N)\b" replaceWith="$1Ó$2" />
-    <!--  "i" en vez de "l" en terminaciones «clón»  -->
+    <!-- "i" en vez de "l" en terminaciones «clón» -->
     <RegEx find="clón\b" replaceWith="ción" />
     <!-- "si" en vez de "sl" -->
     <RegEx find="\b([Ss])(l)\b" replaceWith="$1i" />
-    <!-- Para corregir por ej. raclones, perforaclones, opclones, etc  -->
+    <!-- Para corregir por ej. raclones, perforaclones, opclones, etc -->
     <RegEx find="([Rr]ac)l(o)" replaceWith="$1i$2" />
     <RegEx find="([Oo]pc)l(o)" replaceWith="$1i$2" />
-    <!--  Para corregir por ej. tenldo, víctlmas, olvldarlo, legítlmo, etc  -->
+    <!-- Para corregir por ej. tenldo, víctlmas, olvldarlo, legítlmo, etc -->
     <RegEx find="([BbCcDdFfHhMmNnRrSsTtVv])l([bcdhmnrstv])" replaceWith="$1i$2" />
-    <!--  Corrige los errores en el ripeo de la «o» mayúscula por el cero «0» y viceversa -->
+    <!-- Corrige los errores en el ripeo de la «o» mayúscula por el cero «0» y viceversa -->
     <RegEx find="(\d)O" replaceWith="$1 0" />
     <RegEx find="(\d)[,\.]O" replaceWith="$1.0" />
     <RegEx find="([A-Z])0" replaceWith="$1O" />
     <RegEx find="\b0([A-Za-z])" replaceWith="O$1" />
-    <!--  Signos musicales  -->
+    <!-- Signos musicales -->
     <RegEx find="[♪♫☺☹♥©☮☯Σ∞≡⇒π#](\r\n)[♪♫☺☹♥©☮☯Σ∞≡⇒π#]" replaceWith="$1" />
     <!-- Tilde diacrítica antes del punto -->
     <RegEx find="(\s)([dst])e\.(\s|\$)" replaceWith="$1$2é.$3" />
@@ -871,11 +864,11 @@
     <RegEx find="(\s)cuando\.(\s|\$)" replaceWith="$1cuándo.$2" />
     <!-- Prefijos; palabras compuestas (simple) -->
     <RegEx find="(\b[Ee]x|\b[Ss]uper|\b[Aa]nti|\b[Pp]os|\b[Pp]re|\b[Pp]ro|\b[Vv]ice)[\s\x2D]([a-zá-ú]{3,20})(\b)" replaceWith="$1$2" />
-    <!-- Prefijos; palabras compuestas (números)  -->
+    <!-- Prefijos; palabras compuestas (números) -->
     <RegEx find="(\b[Ss]ub|\b[Ss]uper)[\s\x2D](\d{2})(\b)" replaceWith="$1-$2$3" />
-    <!-- Prefijos; palabras compuestas (mayúsculas)  -->
+    <!-- Prefijos; palabras compuestas (mayúsculas) -->
     <RegEx find="(\b[Aa]nti|\b[Mm]ini|\b[Pp]os|\b[Pp]ro)\s([A-Z]{1,10})([A-Z][a-zá-ú]){0,10}(\b)" replaceWith="$1-$2$3" />
-    <!--  Casos de mayúsculas con dos puntos  -->
+    <!-- Casos de mayúsculas con dos puntos -->
     <RegEx find="([\wá-ú]:\s[«\x22]?)(a)" replaceWith="$1A" />
     <RegEx find="([\wá-ú]:\s[«\x22]?)(b)" replaceWith="$1B" />
     <RegEx find="([\wá-ú]:\s[«\x22]?)(c)" replaceWith="$1C" />
@@ -908,51 +901,51 @@
     <RegEx find="([\wá-ú]:\s[«\x22]?)(í)" replaceWith="$1Í" />
     <RegEx find="([\wá-ú]:\s[«\x22]?)(ó)" replaceWith="$1Ó" />
     <RegEx find="([\wá-ú]:\s[«\x22]?)(ú)" replaceWith="$1Ú" />
-    <!--  Usos correctos de la coma  -->
+    <!-- Usos correctos de la coma -->
     <RegEx find="(\b[Pp]ero),(\s)([¡¿])" replaceWith="$1$2$3" />
     <RegEx find="(\b[Aa]unque),(\s|$)" replaceWith="$1$2" />
-    <!--  Vocativos  -->
+    <!-- Vocativos -->
     <RegEx find="(\bHola|\bBueno|\bBien|\bVen|\bVen acá|\besto|\bBuenos días|\bFeliz cumpleaños|\bsiento)\s([A-Z][a-zá-ú]{3,12}\b|seño(r|ra|rita)\b|hij(o|a) mío\b|amig(o|a)\b)" replaceWith="$1, $2" />
-    <!--  «aún» cuando son sinónimos de «incluso» o «hasta»  -->
+    <!-- «aún» cuando son sinónimos de «incluso» o «hasta» -->
     <RegEx find="(\W|^)(\b[Aa])ú(n)(\s)(así\b|cuando\b|los\b|las\b|negar(te|se)\b)" replaceWith="$1$2u$3$4$5" />
     <RegEx find="(\b[Nn]i)(\s)(a)ú(n)(\W|$)" replaceWith="$1$2$3u$4$5" />
-    <!--  «sí»  -->
+    <!-- «sí» -->
     <RegEx find="\b([Ss])i(:|;|\.)" replaceWith="$1í$2" />
-    <!--  «sé»  -->
+    <!-- «sé» -->
     <RegEx find="(\b[Ll]o|\b[Ll]a|\b[Ll]e)(\s)se(\W|$)" replaceWith="$1$2sé$3" />
     <RegEx find="[Ss]e\s(dónde\b|cuándo\b|adónde\b|cómo\b|cuál\b|quién\b|cuánto\b|cuánta\b|cuántos\b|cuántas\b|cuán\b)" replaceWith="sé $1" />
-    <!--  «té»  -->
+    <!-- «té» -->
     <RegEx find="\b([Tt])e\s(verde\b|negro\b|perla\b|de manzanilla\b|de lim[óo]n\b|de jazm[íi]n\b)" replaceWith="$1é $2" />
-    <!--  Apóstrofo  -->
+    <!-- Apóstrofo -->
     <RegEx find="(\b[A-Z][a-zá-ú]{3,12})\s(’|')(\d\d(\s|$))" replaceWith="$1 $3" />
     <RegEx find="(\b[A-Z]{2,5})(’|')(s)" replaceWith="(Ej. Devedés)$1$3" />
     <RegEx find="(\b\d{1,2})(’|')(\d{2})\s(s|m)(\W|$)" replaceWith="$1,$3 $4$5" />
     <RegEx find="(\b\d{1,2})(’|')(\d{2})\s(h)(\W|$)" replaceWith="$1:$3 $4$5" />
-    <!--  Porcentaje (debe llevar espacio)  -->
+    <!-- Porcentaje (debe llevar espacio) -->
     <RegEx find="(\b\d{1,3})%(\W)" replaceWith="$1 %$2" />
-    <!--  Haz/has  -->
+    <!-- Haz/has -->
     <RegEx find="(\b)([Hh])as\s(la\b|lo\b|clic\b)(\W)" replaceWith="$1$2az $3$4" />
     <RegEx find="(\b)([Hh])az\s(de\b)(\W)" replaceWith="$1$2as $3$4" />
     <RegEx find="(\b)([Hh])as(le\b|nos\b|me\b)(\W)" replaceWith="$1$2az$3$4" />
-    <!--  Quitar itálicas en 3 o menos letras  -->
+    <!-- Quitar itálicas en 3 o menos letras -->
     <RegEx find="\x3ci\x3e(.{1,3})\x3c\/i\x3e" replaceWith="$1" />
-    <!--  Miscelánea  -->
+    <!-- Miscelánea -->
     <RegEx find="(\b[Cc]erca|\b[Ee]ncima|\b[Dd]ebajo|\b[Dd]etrás|\b[Dd]elante)(\s)mío" replaceWith="$1 de mí" />
     <RegEx find="(\b[Cc]erca|\b[Ee]ncima|\b[Dd]ebajo|\b[Dd]etrás|\b[Dd]elante)(\s)tuyo" replaceWith="$1 de ti" />
-    <!--  Punto antes de «¿» y «¡»  -->
+    <!-- Punto antes de «¿» y «¡» -->
     <RegEx find="([\wá-ú»])\s(?=(¿|¡)[A-ZÁ-Ú])" replaceWith="$1. " />
-    <!--  Repeticiones de palabras o frases  -->
-    <!--  Ej. «No, no, no, no, no.» por «No, no, no.»  -->
+    <!-- Repeticiones de palabras o frases -->
+    <!-- Ej. «No, no, no, no, no.» por «No, no, no.» -->
     <RegEx find="([,.]\s.{2})\1(?=[., ?!])" replaceWith="$1" />
-    <!--  Ej. «¡está aquí, está aquí, está aquí!» por «¡está aquí!»  -->
+    <!-- Ej. «¡está aquí, está aquí, está aquí!» por «¡está aquí!» -->
     <RegEx find="([,.]\s(.{3,}))\1(?=[., ?!])" replaceWith="" />
-    <!--  Espacios después del guión  -->
+    <!-- Espacios después del guión -->
     <RegEx find="(^|\n)(-)([^\s])" replaceWith="$1$2 $3" />
-    <!--  Punto antes del guión  -->
+    <!-- Punto antes del guión -->
     <RegEx find="([^\.\?\!]) - " replaceWith="$1. - " />
-    <!-- Terminaciones en «ólogo», «ílogo» y «álogo»  -->
+    <!-- Terminaciones en «ólogo», «ílogo» y «álogo» -->
     <RegEx find="\Bo(log[ao]s?\b)" replaceWith="ó$1" />
     <RegEx find="\Ba(log[ao]s?\b)" replaceWith="á$1" />
     <RegEx find="\Bi(log[ao]s?\b)" replaceWith="í$1" />
   </RegularExpressions>
-</ReplaceList>
+</OCRFixReplaceList>

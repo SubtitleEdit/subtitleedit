@@ -142,7 +142,7 @@ LICENSE=
 
             subtitle.RemoveEmptyLines();
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
     }
 }

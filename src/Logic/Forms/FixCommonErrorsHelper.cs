@@ -6,7 +6,6 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 {
     public static class FixCommonErrorsHelper
     {
-
         public static string FixEllipsesStartHelper(string text)
         {
             if (string.IsNullOrEmpty(text) || text.Trim().Length < 4 || !(text.Contains("..", StringComparison.Ordinal) || text.Contains(". .", StringComparison.Ordinal)))
@@ -451,14 +450,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             {
                 s = s.TrimEnd().TrimEnd('.', '?', '!', ':', ';');
                 s = s.TrimStart('-');
-                if (!s.Contains('.') &&
-                    !s.Contains('?') &&
-                    !s.Contains('!') &&
-                    !s.Contains(':') &&
-                    !s.Contains(';') &&
-                    !s.Contains('-') &&
-                    !s.Contains('♪') &&
-                    !s.Contains('♫') &&
+                if (!s.Contains(new[] { '.', '?', '!', ':', ';', '-', '♪', '♫' }) &&
                     !(s.StartsWith('[') && s.Contains("]" + Environment.NewLine, StringComparison.Ordinal)) &&
                     !(s.StartsWith('(') && s.Contains(")" + Environment.NewLine, StringComparison.Ordinal)) &&
                     s != s.ToUpper())

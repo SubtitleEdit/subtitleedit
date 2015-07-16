@@ -49,7 +49,7 @@ NOTE=
             Paragraph last = null;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{0} {1}\r\n{2}\r\n", MakeTimeCode(p.StartTime, last), string.Format("{0:0.0#}", (p.Duration.Seconds + p.Duration.Milliseconds / 1000.0)), p.Text));
+                sb.AppendLine(string.Format("{0} {1}\r\n{2}\r\n", MakeTimeCode(p.StartTime, last), string.Format("{0:0.0#}", (p.Duration.Seconds + p.Duration.Milliseconds / TimeCode.BaseUnit)), p.Text));
                 last = p;
             }
             return sb.ToString().Trim().Replace(Environment.NewLine, "\n");
@@ -90,7 +90,7 @@ NOTE=
                             {
                                 secondsSinceLast += subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds;
                             }
-                            p = new Paragraph(string.Empty, (int)(Math.Round(secondsSinceLast * 1000.0)), (int)(Math.Round((secondsSinceLast + secondsDuration) * 1000.0)));
+                            p = new Paragraph(string.Empty, (int)(Math.Round(secondsSinceLast * TimeCode.BaseUnit)), (int)(Math.Round((secondsSinceLast + secondsDuration) * TimeCode.BaseUnit)));
                         }
                     }
                     catch
@@ -121,7 +121,7 @@ NOTE=
                 subtitle.Paragraphs.Add(p);
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

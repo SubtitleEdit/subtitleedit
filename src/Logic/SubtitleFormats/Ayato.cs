@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 index += textPosition + textLength;
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static string GetText(int index, int length, byte[] buffer)

@@ -40,8 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string xmlAsString = sb.ToString().Trim();
             if ((xmlAsString.Contains("<tt>") || xmlAsString.Contains("<tt ")) && (xmlAsString.Contains("<sub>")))
             {
-                XmlDocument xml = new XmlDocument();
-                xml.XmlResolver = null;
+                var xml = new XmlDocument { XmlResolver = null };
                 try
                 {
                     xml.LoadXml(xmlAsString);
@@ -70,14 +69,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "   </div>" + Environment.NewLine +
                 "</tt>";
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
             XmlNode div = xml.DocumentElement.SelectSingleNode("div");
-            int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("p");
-                string text = HtmlUtil.RemoveHtmlTags(p.Text);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text, true);
 
                 paragraph.InnerText = text;
                 paragraph.InnerXml = "<![CDATA[<sub>" + paragraph.InnerXml.Replace(Environment.NewLine, "<br />") + "</sub>]]>";
@@ -91,7 +89,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.Attributes.Append(end);
 
                 div.AppendChild(paragraph);
-                no++;
             }
 
             return ToUtf8XmlString(xml);
@@ -102,17 +99,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             _errorCount = 0;
             double startSeconds = 0;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            XmlDocument xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(sb.ToString().Trim());
 
+            var pText = new StringBuilder();
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("div/p"))
             {
                 try
                 {
-                    StringBuilder pText = new StringBuilder();
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
                         switch (innerNode.Name)
@@ -126,19 +122,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
 
-                    string start = string.Empty;
+                    var start = string.Empty;
                     if (node.Attributes["begin"] != null)
                     {
                         start = node.Attributes["begin"].InnerText;
                     }
 
-                    string end = string.Empty;
+                    var end = string.Empty;
                     if (node.Attributes["end"] != null)
                     {
                         end = node.Attributes["end"].InnerText;
                     }
 
-                    string dur = string.Empty;
+                    var dur = string.Empty;
                     if (node.Attributes["dur"] != null)
                     {
                         dur = node.Attributes["dur"].InnerText;
@@ -172,8 +168,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     System.Diagnostics.Debug.WriteLine(ex.Message);
                     _errorCount++;
                 }
+                pText.Clear();
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode GetTimeCode(string s)
@@ -183,11 +180,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 s = s.TrimEnd('s');
                 return TimeCode.FromSeconds(double.Parse(s));
             }
-            else
-            {
-                string[] parts = s.Split(new char[] { ':', '.', ',' });
-                return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
-            }
+            string[] parts = s.Split(new char[] { ':', '.', ',' });
+            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
         }
+
     }
 }

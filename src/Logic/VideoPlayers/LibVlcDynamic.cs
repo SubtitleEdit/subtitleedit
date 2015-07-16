@@ -149,6 +149,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private delegate int libvlc_media_player_next_frame(IntPtr mediaPlayer);
         private libvlc_media_player_next_frame _libvlc_media_player_next_frame;
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int libvlc_video_set_spu(IntPtr mediaPlayer, int trackNumber);
+        private libvlc_video_set_spu _libvlc_video_set_spu;
+
+
         //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         //public unsafe delegate void* LockEventHandler(void* opaque, void** plane);
 
@@ -224,6 +229,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _libvlc_media_player_get_rate = (libvlc_media_player_get_rate)GetDllType(typeof(libvlc_media_player_get_rate), "libvlc_media_player_get_rate");
             _libvlc_media_player_set_rate = (libvlc_media_player_set_rate)GetDllType(typeof(libvlc_media_player_set_rate), "libvlc_media_player_set_rate");
             _libvlc_media_player_next_frame = (libvlc_media_player_next_frame)GetDllType(typeof(libvlc_media_player_next_frame), "libvlc_media_player_next_frame");
+            _libvlc_video_set_spu = (libvlc_video_set_spu)GetDllType(typeof(libvlc_video_set_spu), "libvlc_video_set_spu");
             _libvlc_video_set_callbacks = (libvlc_video_set_callbacks)GetDllType(typeof(libvlc_video_set_callbacks), "libvlc_video_set_callbacks");
             _libvlc_video_set_format = (libvlc_video_set_format)GetDllType(typeof(libvlc_video_set_format), "libvlc_video_set_format");
             _libvlc_audio_get_delay = (libvlc_audio_get_delay)GetDllType(typeof(libvlc_audio_get_delay), "libvlc_audio_get_delay");
@@ -288,7 +294,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                return _libvlc_media_player_get_length(_mediaPlayer) / 1000.0;
+                return _libvlc_media_player_get_length(_mediaPlayer) / TimeCode.BaseUnit;
             }
         }
 
@@ -302,13 +308,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         return 0;
                     return _pausePosition.Value;
                 }
-                return _libvlc_media_player_get_time(_mediaPlayer) / 1000.0;
+                return _libvlc_media_player_get_time(_mediaPlayer) / TimeCode.BaseUnit;
             }
             set
             {
                 if (IsPaused && value <= Duration)
                     _pausePosition = value;
-                _libvlc_media_player_set_time(_mediaPlayer, (long)(value * 1000.0 + 0.5));
+                _libvlc_media_player_set_time(_mediaPlayer, (long)(value * TimeCode.BaseUnit + 0.5));
             }
         }
 
@@ -425,10 +431,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public LibVlcDynamic MakeSecondMediaPlayer(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
-            LibVlcDynamic newVlc = new LibVlcDynamic();
-            newVlc._libVlc = this._libVlc;
-            newVlc._libVlcDLL = this._libVlcDLL;
-            newVlc._ownerControl = ownerControl;
+            var newVlc = new LibVlcDynamic { _libVlc = _libVlc, _libVlcDLL = _libVlcDLL, _ownerControl = ownerControl };
             if (ownerControl != null)
                 newVlc._parentForm = ownerControl.FindForm();
 
@@ -470,14 +473,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             _videoLoadedTimer.Stop();
             int i = 0;
-            int state = VlcState;
             while (!IsPlaying && i < 50)
             {
                 System.Threading.Thread.Sleep(100);
                 i++;
-                state = VlcState;
             }
             Pause();
+            if (_libvlc_video_set_spu != null)
+                _libvlc_video_set_spu(_mediaPlayer, -1); // turn of embedded subtitles
 
             if (OnVideoLoaded != null)
                 OnVideoLoaded.Invoke(_mediaPlayer, new EventArgs());
@@ -623,7 +626,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             if (!string.IsNullOrEmpty(videoFileName))
             {
-                string[] initParameters = { "--no-sub-autodetect-file" }; //, "--no-video-title-show" }; //TODO: Put in options/config file
+                string[] initParameters = { "--no-sub-autodetect-file" }; // , "--ffmpeg-hw" }; //, "--no-video-title-show" }; // TODO: Put in options/config file
                 _libVlc = _libvlc_new(initParameters.Length, initParameters);
                 IntPtr media = _libvlc_media_new_path(_libVlc, Encoding.UTF8.GetBytes(videoFileName + "\0"));
                 _mediaPlayer = _libvlc_media_player_new_from_media(media);
@@ -673,7 +676,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private void MouseTimerTick(object sender, EventArgs e)
         {
             _mouseTimer.Stop();
-            if (_parentForm != null && _parentForm.ContainsFocus && IsLeftMouseButtonDown())
+            if (_parentForm != null && _ownerControl != null && _ownerControl.Visible && _parentForm.ContainsFocus && IsLeftMouseButtonDown())
             {
                 var p = _ownerControl.PointToClient(Control.MousePosition);
                 if (p.X > 0 && p.X < _ownerControl.Width && p.Y > 0 && p.Y < _ownerControl.Height)

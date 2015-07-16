@@ -10,14 +10,14 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private Subtitle _subtitle;
         private Subtitle _fixedSubtitle;
-        private Dictionary<Paragraph, string> _dic;
+        private Dictionary<string, string> _dic;
 
         public Subtitle FixedSubtitle { get { return _fixedSubtitle; } }
 
         public DurationsBridgeGaps(Subtitle subtitle)
         {
             InitializeComponent();
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
 
             Text = Configuration.Settings.Language.DurationsBridgeGaps.Title;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
@@ -52,17 +52,6 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreview();
         }
 
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
-        }
-
         private void buttonOK_Click(object sender, EventArgs e)
         {
             Configuration.Settings.Tools.BridgeGapMilliseconds = (int)numericUpDownMaxMs.Value;
@@ -83,8 +72,8 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.BeginUpdate();
             int count = 0;
             _fixedSubtitle = new Subtitle(_subtitle);
-            _dic = new Dictionary<Paragraph, string>();
-            var fixedIndexes = new List<int>();
+            _dic = new Dictionary<string, string>();
+            var fixedIndexes = new List<int>(_fixedSubtitle.Paragraphs.Count);
 
             int minMsBetweenLines = (int)numericUpDownMinMsBetweenLines.Value;
             for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
@@ -95,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var difMs = Math.Abs(cur.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds);
                 if (difMs < (double)numericUpDownMaxMs.Value && difMs > minMsBetweenLines && numericUpDownMaxMs.Value > minMsBetweenLines)
                 {
-                    before = string.Format("{0:0.000}", (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / 1000.0);
+                    before = string.Format("{0:0.000}", (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / TimeCode.BaseUnit);
                     if (radioButtonDivideEven.Checked && next.StartTime.TotalMilliseconds > cur.EndTime.TotalMilliseconds)
                     {
                         double half = (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / 2.0;
@@ -111,10 +100,10 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string info = string.Empty;
                     if (!string.IsNullOrEmpty(before))
-                        info = string.Format("{0} => {1:0.000}", before, msToNext / 1000.0);
+                        info = string.Format("{0} => {1:0.000}", before, msToNext / TimeCode.BaseUnit);
                     else
-                        info = string.Format("{0:0.000}", msToNext / 1000.0);
-                    _dic.Add(cur, info);
+                        info = string.Format("{0:0.000}", msToNext / TimeCode.BaseUnit);
+                    _dic.Add(cur.ID, info);
                 }
             }
 
@@ -122,8 +111,8 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
             {
                 Paragraph cur = _fixedSubtitle.Paragraphs[i];
-                if (_dic != null && _dic.ContainsKey(cur))
-                    SubtitleListview1.SetExtraText(i, _dic[cur], SubtitleListview1.ForeColor);
+                if (_dic != null && _dic.ContainsKey(cur.ID))
+                    SubtitleListview1.SetExtraText(i, _dic[cur.ID], SubtitleListview1.ForeColor);
                 SubtitleListview1.SetBackgroundColor(i, SubtitleListview1.BackColor);
             }
 

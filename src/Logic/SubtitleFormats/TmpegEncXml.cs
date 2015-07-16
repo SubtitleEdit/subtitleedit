@@ -6,7 +6,6 @@ using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-
     //<TMPGEncVMESubtitleTextFormat>
     //  ...
     //  <Subtitle>
@@ -225,7 +224,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string xmlStructure = Layout.Replace("'", "\"");
+            var xmlStructure = Layout.Replace('\'', '"');
 
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
@@ -236,12 +235,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 XmlNode paragraph = xml.CreateElement("SubtitleItem");
 
-                string text = HtmlUtil.RemoveHtmlTags(p.Text);
+                var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 paragraph.InnerText = text;
                 paragraph.InnerXml = "<Text><![CDATA[" + paragraph.InnerXml.Replace(Environment.NewLine, "\\n") + "]]></Text>";
 
                 XmlAttribute layoutIndex = xml.CreateAttribute("layoutindex");
-                if (p.Text.TrimStart().StartsWith("<i>") && p.Text.TrimEnd().EndsWith("</i>"))
+                if (p.Text.TrimStart().StartsWith("<i>", StringComparison.OrdinalIgnoreCase) && p.Text.TrimEnd().EndsWith("</i>", StringComparison.OrdinalIgnoreCase))
                     layoutIndex.InnerText = "4";
                 else
                     layoutIndex.InnerText = "0";
@@ -314,13 +313,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
 
-                    string start = string.Empty;
+                    var start = string.Empty;
                     if (node.Attributes["starttime"] != null)
                     {
                         start = node.Attributes["starttime"].InnerText;
                     }
 
-                    string end = string.Empty;
+                    var end = string.Empty;
                     if (node.Attributes["endtime"] != null)
                     {
                         end = node.Attributes["endtime"].InnerText;
@@ -371,7 +370,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode GetTimeCode(string s)

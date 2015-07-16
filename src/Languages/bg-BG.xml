@@ -2,7 +2,7 @@
 <Language Name="Bulgarian">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Превод на български: Ivo Ivanov и JJD</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
@@ -1210,7 +1210,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <MatroskaSubtitleChooser>
     <Title>Изберете субтитри от Matroska файла</Title>
     <PleaseChoose>Намерени са повече от едни субтитри – моля, изберете</PleaseChoose>
-    <TrackXLanguageYTypeZ>Запис {0} - {1} - език: {2} - тип: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Запис {0} - език: {1} - тип: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Конвертор на мерни единици</Title>

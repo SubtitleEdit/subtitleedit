@@ -22,18 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             previewTimer.Tick += previewTimer_Tick;
             previewTimer.Interval = 250;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         public Subtitle MergedSubtitle
@@ -213,7 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!loading)
                 listViewFixes.ItemChecked += listViewFixes_ItemChecked;
 
-            mergedSubtitle.Renumber(1);
+            mergedSubtitle.Renumber();
             return mergedSubtitle;
         }
 

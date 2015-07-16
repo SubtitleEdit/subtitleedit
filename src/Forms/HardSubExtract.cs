@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class HardSubExtract : Form
     {
-        //        HardExtractCapture cam = null;
+        // HardExtractCapture cam = null;
         private string _videoFileName;
         private LibVlcDynamic _libVlc;
         private VideoInfo _videoInfo;
@@ -45,7 +45,6 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.InitializeVideoPlayerAndContainer(_videoFileName, _videoInfo, mediaPlayer, VideoLoaded, null);
                 Configuration.Settings.General.VideoPlayer = oldPlayer;
                 _libVlc = mediaPlayer.VideoPlayer as LibVlcDynamic;
-
             }
             else
             {
@@ -66,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
         //private Bitmap GetSnapShot(long milliseconds)
         //{
         //    string fileName = Path.Combine(_folderName, Guid.NewGuid().ToString() + ".png");
-        //    _libVlc.CurrentPosition = milliseconds / 1000.0;
+        //    _libVlc.CurrentPosition = milliseconds / TimeCode.BaseUnit;
         //    _libVlc.TakeSnapshot(fileName, (uint)_videoInfo.Width, (uint)_videoInfo.Height);
         //    int i=0;
         //    while (i < 100 && !File.Exists(fileName))
@@ -111,12 +110,13 @@ namespace Nikse.SubtitleEdit.Forms
             Bitmap bmp = pictureBox2.Image as Bitmap;
             if (bmp != null)
             {
-                Pen p = new Pen(Brushes.Red);
-                int value = Convert.ToInt32(numericUpDownPixelsBottom.Value);
-                if (value > bmp.Height)
-                    value = bmp.Height - 2;
-                e.Graphics.DrawRectangle(p, 0, bmp.Height - value, bmp.Width - 1, bmp.Height - (bmp.Height - value) - 1);
-                p.Dispose();
+                using (Pen p = new Pen(Brushes.Red))
+                {
+                    int value = Convert.ToInt32(numericUpDownPixelsBottom.Value);
+                    if (value > bmp.Height)
+                        value = bmp.Height - 2;
+                    e.Graphics.DrawRectangle(p, 0, bmp.Height - value, bmp.Width - 1, bmp.Height - (bmp.Height - value) - 1);
+                }
             }
         }
 
@@ -176,7 +176,7 @@ namespace Nikse.SubtitleEdit.Forms
             //        bmp.Dispose();
             //    }
             //}
-            //sub.Renumber(1);
+            //sub.Renumber();
             //if (sub.Paragraphs.Count > 0)
             //{
             //    OcrFileName = fileNameNoExt + ".srt";
@@ -251,7 +251,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch
             {
-                // TODO: Avoid catching all exceptions.
+                // TODO: Avoid catching all exceptions
             }
             finally
             {
@@ -276,29 +276,49 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult result = saveFileDialog1.ShowDialog(this);
             if (result == DialogResult.OK)
             {
-                Bitmap bmp = pictureBox2.Image as Bitmap;
-                if (bmp == null)
+                using (var bmp = pictureBox2.Image as Bitmap)
                 {
-                    MessageBox.Show("No image!");
-                    return;
-                }
+                    if (bmp == null)
+                    {
+                        MessageBox.Show("No image!");
+                        return;
+                    }
 
-                try
-                {
-                    if (saveFileDialog1.FilterIndex == 0)
-                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                    else if (saveFileDialog1.FilterIndex == 1)
-                        bmp.Save(saveFileDialog1.FileName);
-                    else if (saveFileDialog1.FilterIndex == 2)
-                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Gif);
-                    else
-                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(exception.Message);
+                    try
+                    {
+                        if (saveFileDialog1.FilterIndex == 0)
+                            bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                        else if (saveFileDialog1.FilterIndex == 1)
+                            bmp.Save(saveFileDialog1.FileName);
+                        else if (saveFileDialog1.FilterIndex == 2)
+                            bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                        else
+                            bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show(exception.Message);
+                    }
                 }
             }
+        }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+                if (_libVlc != null)
+                {
+                    _libVlc.Dispose();
+                    _libVlc = null;
+                }
+            }
+            base.Dispose(disposing);
         }
 
     }

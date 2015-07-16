@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out startSeconds) &&
                         double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out endSeconds))
                     {
-                        subtitle.Paragraphs.Add(new Paragraph(DecodeJsonText(text), startSeconds * 1000.0, endSeconds * 1000.0));
+                        subtitle.Paragraphs.Add(new Paragraph(DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, endSeconds * TimeCode.BaseUnit));
                     }
                     else
                     {
@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         public static string ConvertJsonSpecialCharacters(string s)
@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 for (int i = 33; i < 200; i++)
                 {
-                    string tag = "\\u" + i.ToString("X4").ToLower();
+                    var tag = "\\u" + i.ToString("x4");
                     if (s.Contains(tag))
                         s = s.Replace(tag, Convert.ToChar(i).ToString());
                 }
@@ -148,12 +148,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static string ReadTag(string s, string tag)
         {
-            int startIndex = s.IndexOf("\"" + tag + "\"", StringComparison.Ordinal);
-            if (startIndex < 0)
-                startIndex = s.IndexOf("'" + tag + "'", StringComparison.Ordinal);
+            var startIndex = s.IndexOfAny(new[] { "\"" + tag + "\"", "'" + tag + "'" }, StringComparison.Ordinal);
             if (startIndex < 0)
                 return null;
-            string res = s.Substring(startIndex + 3 + tag.Length).Trim().TrimStart(':').TrimStart();
+            var res = s.Substring(startIndex + 3 + tag.Length).Trim().TrimStart(':').TrimStart();
             if (res.StartsWith('"'))
             { // text
                 res = Json.ConvertJsonSpecialCharacters(res);
@@ -172,9 +170,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             else
             { // number
-                int endIndex = res.IndexOf(',');
-                if (endIndex < 0)
-                    endIndex = res.IndexOf('}');
+                var endIndex = res.IndexOfAny(new[] { ',', '}' });
                 if (endIndex < 0)
                     return null;
                 return res.Substring(0, endIndex);
@@ -185,9 +181,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var list = new List<string>();
 
-            int startIndex = s.IndexOf("\"" + tag + "\"", StringComparison.Ordinal);
-            if (startIndex < 0)
-                startIndex = s.IndexOf("'" + tag + "'", StringComparison.Ordinal);
+            var startIndex = s.IndexOfAny(new[] { "\"" + tag + "\"", "'" + tag + "'" }, StringComparison.Ordinal);
             if (startIndex < 0)
                 return list;
 
@@ -263,8 +257,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             text = text.Trim();
             if (text.StartsWith('[') && text.EndsWith(']'))
             {
-                text = text.Trim('[');
-                text = text.Trim(']');
+                text = text.Trim('[', ']');
                 text = text.Trim();
 
                 text = text.Replace("<br />", Environment.NewLine);

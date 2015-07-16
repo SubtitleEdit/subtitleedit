@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class JoinSubtitles
+    sealed partial class JoinSubtitles
     {
         /// <summary>
         /// Required designer variable.
@@ -41,6 +41,7 @@
             this.ButtonRemoveVob = new System.Windows.Forms.Button();
             this.buttonAddVobFile = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.labelNote = new System.Windows.Forms.Label();
             this.groupBoxPreview.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -129,6 +130,7 @@
             // 
             // labelTotalLines
             // 
+            this.labelTotalLines.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTotalLines.AutoSize = true;
             this.labelTotalLines.Location = new System.Drawing.Point(7, 232);
             this.labelTotalLines.Name = "labelTotalLines";
@@ -173,11 +175,23 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // labelNote
+            // 
+            this.labelNote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelNote.AutoSize = true;
+            this.labelNote.ForeColor = System.Drawing.Color.Gray;
+            this.labelNote.Location = new System.Drawing.Point(12, 273);
+            this.labelNote.Name = "labelNote";
+            this.labelNote.Size = new System.Drawing.Size(236, 13);
+            this.labelNote.TabIndex = 30;
+            this.labelNote.Text = "Note: Files must already have correct time codes";
+            // 
             // JoinSubtitles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(755, 302);
+            this.Controls.Add(this.labelNote);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonJoin);
             this.Controls.Add(this.groupBoxPreview);
@@ -196,6 +210,7 @@
             this.groupBoxPreview.ResumeLayout(false);
             this.groupBoxPreview.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -214,5 +229,6 @@
         private System.Windows.Forms.ColumnHeader columnHeaderEndTime;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label labelTotalLines;
+        private System.Windows.Forms.Label labelNote;
     }
 }

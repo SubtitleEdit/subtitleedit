@@ -58,7 +58,6 @@ IF DEFINED SEVENZIP IF EXIST "%SEVENZIP%" (
 )
 
 CALL :SubDetectInnoSetup
-
 IF DEFINED InnoSetupPath (
   TITLE Compiling installer...
   "%InnoSetupPath%" /O"." /Q "installer\Subtitle_Edit_installer.iss"
@@ -99,7 +98,7 @@ COPY /Y /V "..\..\..\Tesseract\msvcp90.dll"              "temp_zip\Tesseract\"
 COPY /Y /V "..\..\..\Tesseract\msvcr90.dll"              "temp_zip\Tesseract\"
 COPY /Y /V "..\..\..\Tesseract\tesseract.exe"            "temp_zip\Tesseract\"
 COPY /Y /V "..\..\..\Tesseract\tessdata\configs\hocr"    "temp_zip\Tesseract\tessdata\configs\"
-COPY /Y /V "..\..\..\Tesseract\tessdata\eng.traineddata" "temp_zip\Tesseract\tessdata\"
+COPY /Y /V "..\..\..\Tesseract\tessdata\*.traineddata"   "temp_zip\Tesseract\tessdata\"
 
 PUSHD "temp_zip"
 START "" /B /WAIT "%SEVENZIP%" a -tzip -mx=9 "SE%VERSION%.zip" * >NUL

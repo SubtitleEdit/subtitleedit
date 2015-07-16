@@ -1,4 +1,4 @@
-<ReplaceList>
+﻿<OCRFixReplaceList>
   <WholeWords>
     <Word from="НЄЙ" to="НЕЙ" />
     <Word from="ОРГЗНИЗМОБ" to="ОРГАНИЗМА" />
@@ -176,7 +176,6 @@
     <Word from="НЄОЄХОДИМЬІЄ" to="НЕОБХОДИМЫЕ" />
     <Word from="ОРГВНИЧЄСКИЄ" to="ОРГАНИЧЕСКИЕ" />
     <Word from="МЗРСИЗНСКИЄ" to="МАРСИАНСКИЕ" />
-    <Word from="ПОЛЯРНЬІЄ" to="ПОЛЯРНЫЕ" />
     <Word from="МЄСТЄ" to="МЕСТЕ" />
     <Word from="І\/ІАККЕЙШ" to="МАККЕЙН" />
     <Word from="НЗХОДЯЩИЄСЯ" to="НАХОДЯЩИЕСЯ" />
@@ -239,6 +238,7 @@
     <Word from="НЗЗЬІВЭЄМЫЄ" to="НАЗЫВАЕМЫЕ" />
     <Word from="Чї06Ы" to="ЧТОБЫ" />
   </WholeWords>
+  <PartialWordsAlways />
   <PartialWords>
     <WordPart from="Є" to="Е" />
     <WordPart from="ЬІ" to="Ы" />
@@ -248,7 +248,10 @@
     <WordPart from="ШЗ" to="ША" />
     <WordPart from="І\/І" to="М" />
   </PartialWords>
+  <PartialLines />
+  <PartialLinesAlways />
   <BeginLines />
   <EndLines />
   <WholeLines />
-</ReplaceList>
+  <RegularExpressions />
+</OCRFixReplaceList>

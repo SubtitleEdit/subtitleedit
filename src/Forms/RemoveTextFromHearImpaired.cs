@@ -1,9 +1,9 @@
-﻿using System.Globalization;
-using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Forms;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private readonly LanguageStructure.RemoveTextFromHearImpaired _language;
         private RemoveTextForHI _removeTextForHILib;
+        private Dictionary<Paragraph, string> _fixes;
 
         public FormRemoveTextForHearImpaired()
         {
@@ -60,18 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         public void Initialize(Subtitle subtitle)
@@ -109,16 +99,17 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             int count = 0;
-            int prevIndex = -1;
-            foreach (Paragraph p in _subtitle.Paragraphs)
+            _fixes = new Dictionary<Paragraph, string>();
+            for (int index = 0; index < _subtitle.Paragraphs.Count; index++)
             {
-                prevIndex++;
-                _removeTextForHILib.WarningIndex = prevIndex;
+                Paragraph p = _subtitle.Paragraphs[index];
+                _removeTextForHILib.WarningIndex = index - 1;
                 string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text);
                 if (p.Text.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty))
                 {
                     count++;
                     AddToListView(p, newText);
+                    _fixes.Add(p, newText);
                 }
             }
             listViewFixes.EndUpdate();
@@ -133,13 +124,9 @@ namespace Nikse.SubtitleEdit.Forms
                 item.UseItemStyleForSubItems = true;
                 item.BackColor = Color.PeachPuff;
             }
-            var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString(CultureInfo.InvariantCulture));
-            item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(subItem);
-
+            item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
+            item.SubItems.Add(p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             listViewFixes.Items.Add(item);
         }
 
@@ -159,16 +146,16 @@ namespace Nikse.SubtitleEdit.Forms
         public int RemoveTextFromHearImpaired()
         {
             int count = 0;
-            for (int i = _subtitle.Paragraphs.Count - 1; i >= 0; i--)
+            for (int i = listViewFixes.Items.Count - 1; i >= 0; i--)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
-                if (IsFixAllowed(p))
+                var item = listViewFixes.Items[i];
+                if (item.Checked)
                 {
-                    _removeTextForHILib.Settings = GetSettings();
-                    string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text);
-                    if (string.IsNullOrEmpty(newText))
+                    var p = (Paragraph)item.Tag;
+                    string newText = _fixes[p];
+                    if (string.IsNullOrWhiteSpace(newText))
                     {
-                        _subtitle.Paragraphs.RemoveAt(i);
+                        _subtitle.Paragraphs.Remove(p);
                     }
                     else
                     {
@@ -178,16 +165,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return count;
-        }
-
-        private bool IsFixAllowed(Paragraph p)
-        {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                if (item.Tag.ToString() == p.ToString())
-                    return item.Checked;
-            }
-            return false;
         }
 
         private void CheckBoxRemoveTextBetweenCheckedChanged(object sender, EventArgs e)
@@ -244,9 +221,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormRemoveTextForHearImpaired_Resize(object sender, EventArgs e)
         {
-            int availableWidth = listViewFixes.Width - (listViewFixes.Columns[0].Width + listViewFixes.Columns[1].Width + 20);
-            listViewFixes.Columns[2].Width = availableWidth / 2;
-            listViewFixes.Columns[3].Width = availableWidth / 2;
+            int availableWidth = (listViewFixes.Width - (columnHeaderApply.Width + columnHeaderLine.Width + 20)) / 2;
+
+            columnHeaderBefore.Width = availableWidth;
+            columnHeaderAfter.Width = availableWidth;
         }
 
         private void checkBoxRemoveTextBeforeColon_CheckedChanged(object sender, EventArgs e)
@@ -282,7 +260,8 @@ namespace Nikse.SubtitleEdit.Forms
                 RemoveTextBetweenBrackets = checkBoxRemoveTextBetweenBrackets.Checked,
                 RemoveTextBetweenQuestionMarks = checkBoxRemoveTextBetweenQuestionMarks.Checked,
                 RemoveTextBetweenParentheses = checkBoxRemoveTextBetweenParentheses.Checked,
-                CustomStart = comboBoxCustomStart.Text, CustomEnd = comboBoxCustomEnd.Text
+                CustomStart = comboBoxCustomStart.Text,
+                CustomEnd = comboBoxCustomEnd.Text
             };
             return settings;
         }

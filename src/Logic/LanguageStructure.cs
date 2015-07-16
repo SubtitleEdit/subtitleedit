@@ -116,6 +116,10 @@
             public string GeneratingSpectrogram { get; set; }
             public string ExtractingSeconds { get; set; }
             public string ExtractingMinutes { get; set; }
+            public string WaveFileNotFound { get; set; }
+            public string WaveFileMalformed { get; set; }
+            public string LowDiskSpace { get; set; }
+            public string FreeDiskSpace { get; set; }
         }
 
         public class AddWaveformBatch
@@ -124,6 +128,7 @@
             public string ExtractingAudio { get; set; }
             public string Calculating { get; set; }
             public string Done { get; set; }
+            public string Error { get; set; }
         }
 
         public class AdjustDisplayDuration
@@ -186,11 +191,11 @@
             public string SetMinMsBetweenSubtitles { get; set; }
             public string PlainText { get; set; }
             public string Ocr { get; set; }
-            public string Filter  { get; set; }
-            public string FilterSkipped  { get; set; }
+            public string Filter { get; set; }
+            public string FilterSkipped { get; set; }
             public string FilterSrtNoUtf8BOM { get; set; }
-            public string FilterMoreThanTwoLines  { get; set; }
-            public string FilterContains  { get; set; }
+            public string FilterMoreThanTwoLines { get; set; }
+            public string FilterContains { get; set; }
             public string FixCommonErrorsErrorX { get; set; }
             public string MultipleReplaceErrorX { get; set; }
             public string AutoBalanceErrorX { get; set; }
@@ -397,6 +402,8 @@
             public string TranslatorsName { get; set; }
             public string SubtitleListReferenceCode { get; set; }
             public string CountryOfOrigin { get; set; }
+            public string TimeCodeStatus { get; set; }
+            public string TimeCodeStartOfProgramme { get; set; }
             public string RevisionNumber { get; set; }
             public string MaxNoOfDisplayableChars { get; set; }
             public string MaxNumberOfDisplayableRows { get; set; }
@@ -470,6 +477,7 @@
             public string ShadowWidth { get; set; }
             public string Transparency { get; set; }
             public string ImageFormat { get; set; }
+            public string FullFrameImage { get; set; }
             public string SimpleRendering { get; set; }
             public string AntiAliasingWithTransparency { get; set; }
             public string Text3D { get; set; }
@@ -489,11 +497,17 @@
             public string SaveVobSubAs { get; set; }
             public string SaveFabImageScriptAs { get; set; }
             public string SaveDvdStudioProStlAs { get; set; }
+            public string SaveDigitalCinemaInteropAs { get; set; }
+            public string SavePremiereEdlAs { get; set; }
+            public string SaveFcpAs { get; set; }
+            public string SaveDostAs { get; set; }
             public string SomeLinesWereTooLongX { get; set; }
             public string LineHeight { get; set; }
             public string BoxSingleLine { get; set; }
             public string BoxMultiLine { get; set; }
             public string Forced { get; set; }
+            public string ChooseBackgroundColor { get; set; }
+            public string SaveImageAs { get; set; }
         }
 
         public class ExportText
@@ -787,6 +801,7 @@
             public string FileName { get; set; }
             public string Join { get; set; }
             public string TotalNumberOfLinesX { get; set; }
+            public string Note { get; set; }
         }
 
         public class Main
@@ -924,6 +939,7 @@
             public string MatroskaFiles { get; set; }
             public string NoSubtitlesFound { get; set; }
             public string NotAValidMatroskaFileX { get; set; }
+            public string BlurayNotSubtitlesFound { get; set; }
             public string ParsingMatroskaFile { get; set; }
             public string ParsingTransportStreamFile { get; set; }
             public string BeforeImportFromMatroskaFile { get; set; }
@@ -1041,8 +1057,11 @@
             public string ErrorLoadRar { get; set; }
             public string ErrorLoadZip { get; set; }
             public string ErrorLoadPng { get; set; }
+            public string ErrorLoadJpg { get; set; }
             public string ErrorLoadSrr { get; set; }
             public string ErrorLoadTorrent { get; set; }
+            public string ErrorLoadBinaryZeroes { get; set; }
+            public string ErrorDirectoryDropNotAllowed { get; set; }
             public string NoSupportEncryptedVobSub { get; set; }
             public string NoSupportHereBluRaySup { get; set; }
             public string NoSupportHereDvdSup { get; set; }
@@ -1556,8 +1575,10 @@
             public string NewLine { get; set; }
             public string NewLineShort { get; set; }
             public string AnyDigit { get; set; }
+            public string NonDigit { get; set; }
             public string AnyCharacter { get; set; }
             public string AnyWhitespace { get; set; }
+            public string NonSpaceCharacter { get; set; }
             public string ZeroOrMore { get; set; }
             public string OneOrMore { get; set; }
             public string InCharacterGroup { get; set; }
@@ -2022,6 +2043,7 @@
             public string CharactersPerSecondMinimum { get; set; }
             public string CharactersPerSecondMaximum { get; set; }
             public string CharactersPerSecondAverage { get; set; }
+            public string Export { get; set; }
         }
 
         public class SubStationAlphaProperties
@@ -2210,6 +2232,8 @@
             public string InspectCompareMatchesForCurrentImage { get; set; }
             public string EditLastAdditions { get; set; }
             public string SetUnitalicFactor { get; set; }
+            public string DiscardTitle { get; set; }
+            public string DiscardText { get; set; }
         }
 
         public class VobSubOcrCharacter

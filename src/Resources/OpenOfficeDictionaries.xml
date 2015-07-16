@@ -14,8 +14,8 @@
   <Dictionary>
     <EnglishName>Basque</EnglishName>
     <NativeName>Euskara</NativeName>
-    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1383/2/xuxen_4_ooo3.oxt?r=http%3A%2F%2Fextensions.services.openoffice.org%2Fen%2Fproject%2Fxuxen-basque-spell-checking-dictionary&amp;ts=1373918067&amp;use_mirror=freefr</DownloadLink>
-    <Description>Xuxen: Basque spell checking dictionary</Description>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1383/2/xuxen_4_ooo3.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fxuxen-basque-spell-checking-dictionary-40&amp;ts=1435689769&amp;use_mirror=garr</DownloadLink>
+    <Description>Xuxen: Basque spell checking dictionary - v4.0</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Belarusian</EnglishName>
@@ -32,8 +32,8 @@
   <Dictionary>
     <EnglishName>Bulgarian</EnglishName>
     <NativeName>Български</NativeName>
-    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/744/8/dictionaries-bg.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fbulgarian-dictionaries-%25D0%25B1%25D1%258A%25D0%25BB%25D0%25B3%25D0%25B0%25D1%2580%25D1%2581%25D0%25BA%25D0%25B8-%25D1%2580%25D0%25B5%25D1%2587%25D0%25BD%25D0%25B8%25D1%2586%25D0%25B8&amp;ts=1373918714&amp;use_mirror=switch</DownloadLink>
-    <Description>Bulgarian Dictionaries</Description>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/744/8/dictionaries-bg.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fbulgarian-dictionaries-blgarski-rechnici&amp;ts=1435654358&amp;use_mirror=freefr</DownloadLink>
+    <Description>Bulgarian Dictionaries (български речници) v4.3.2 (22/09/2010)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Catalan</EnglishName>
@@ -62,8 +62,8 @@
   <Dictionary>
     <EnglishName>Danish</EnglishName>
     <NativeName>Dansk</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/stavekontrolden-danish-dictionary/pscreleasefolder.2011-09-30.0280139318/2.1/dict-da-2.1.oxt</DownloadLink>
-    <Description>Danish spellcheck and hyphenation dictionaries</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/stavekontrolden-danish-dictionary/pscreleasefolder.2011-09-30.0280139318/2.2/dict-da-2-2.oxt</DownloadLink>
+    <Description>Stavekontrolden version 2.2 - 2014-12-22</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Dutch</EnglishName>
@@ -74,32 +74,32 @@
   <Dictionary>
     <EnglishName>English</EnglishName>
     <NativeName></NativeName>
-    <DownloadLink>http://numbertext.org/tmp/dict-en.oxt</DownloadLink>
-    <Description>All English dictionaries (AU, CA, GB, US, ZA)</Description>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/17102/3/dict-en.oxt?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Faoo-extensions%2Ffiles%2F17102%2F3%2F&amp;ts=1435653533&amp;use_mirror=heanet</DownloadLink>
+    <Description>All English dictionaries (AU, CA, GB, US, ZA) (2014-02-10)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Estonian</EnglishName>
     <NativeName></NativeName>
-    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1328/0/dict-et.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Ffr%2Fproject%2Festonian-spellchecking-and-hyphenation&amp;ts=1410604180&amp;use_mirror=cznic</DownloadLink>
-    <Description>2008.07.01</Description>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1328/0/dict-et.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Festonian-spellchecking-and-hyphenation&amp;ts=1435689988&amp;use_mirror=freefr</DownloadLink>
+    <Description>Estonian spellchecking and hyphenation (13 October, 2008)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Farsi (Persian)</EnglishName>
     <NativeName>Persian/Farsi</NativeName>
-    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/2359/1/dict-fa.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fpersian-spellchecker-dictionary&amp;ts=1374091518&amp;use_mirror=garr</DownloadLink>
-    <Description>Farsi</Description>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/2359/1/dict-fa.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fpersian-spellchecker-dictionary-20090707&amp;ts=1435690384&amp;use_mirror=freefr</DownloadLink>
+    <Description>Persian Spellchecker Dictionary - 2009.07.07</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>French</EnglishName>
     <NativeName>Français</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/dictionnaires-francais/releases/5.2/lo-oo-ressources-linguistiques-fr-v5-2.oxt</DownloadLink>
-    <Description>Dictionnaires français - Orthographe «Moderne» 5.2</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/dictionnaires-francais/releases/5.3/lo-oo-ressources-linguistiques-fr-v5-3.oxt</DownloadLink>
+    <Description>Dictionnaires francais 5.3 (28/02/2015)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>German (Austria)</EnglishName>
     <NativeName>Deutsch (Österreich)</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/german-de-at-frami-dictionaries/pscreleasefolder.2011-11-05.7614737245/2012.06.17/dict-de_at-frami_2012-06-17.oxt</DownloadLink>
-    <Description>German (de-AT frami) dictionaries 2012.06.17</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/german-de-at-frami-dictionaries/pscreleasefolder.2011-11-05.7614737245/2013.12.06/dict-de_at-frami_2013-12-06.oxt</DownloadLink>
+    <Description>German (de-AT frami) dictionaries 2013.12.06 (08/12/2013)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>German (Germany)</EnglishName>
@@ -116,26 +116,26 @@
   <Dictionary>
     <EnglishName>Greek</EnglishName>
     <NativeName>Ελληνικά</NativeName>
-    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1060/0/dictionaries-gr.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fgreek-dictionary-thesaurus-hyphenation&amp;ts=1373919085&amp;use_mirror=switch</DownloadLink>
-    <Description>Hellenic (Greek) Dictionary (Spell Check and Hyphenation)</Description>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1411/2/el_gr_v110.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fhellenic-greek-dictionary-spell-check-and-hyphenation-110&amp;ts=1435654652&amp;use_mirror=freefr</DownloadLink>
+    <Description>Hellenic (Greek) Dictionary (Spell Check and Hyphenation) - v1.1.0</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Hebrew</EnglishName>
     <NativeName>Hebrew (he) spell check dictionary 2012-08-15</NativeName>
     <DownloadLink>http://extensions.libreoffice.org/extension-center/hebrew-he-spell-check-dictionary/releases/2012-08-15/dict-he-2012-08-15.oxt</DownloadLink>
-    <Description>HebSpellOO</Description>
+    <Description>Hebrew (he) spell check dictionary (Aug 15, 2012)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Hindi</EnglishName>
     <NativeName>हिंदी</NativeName>
-    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/2367/1/dict-hi.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fhindi-spellchecker-dictionary&amp;ts=1373919139&amp;use_mirror=kent</DownloadLink>
-    <Description>Hindi Spell Checker Dictionary</Description>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/2367/1/dict-hi.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fhindi-spellchecker-dictionary&amp;ts=1435678775&amp;use_mirror=garr</DownloadLink>
+    <Description>Hindi Spellchecker Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Hungarian</EnglishName>
     <NativeName>Magyar</NativeName>
-    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1283/9/dict-hu.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fhungarian-dictionary-pack&amp;ts=1373919203&amp;use_mirror=kent</DownloadLink>
-    <Description>Hungarian Dictionary Pack</Description>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1283/9/dict-hu.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fhungarian-dictionary-pack-20101019&amp;ts=1435690641&amp;use_mirror=freefr</DownloadLink>
+    <Description>Hungarian Dictionary Pack - (2010.10.19)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Icelandic</EnglishName>
@@ -164,8 +164,8 @@
   <Dictionary>
     <EnglishName>Italian</EnglishName>
     <NativeName>Italiano</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/italian-dictionary-thesaurus-hyphenation-patterns/releases/3.3.3/dict-it.oxt</DownloadLink>
-    <Description>Italian dictionary, thesaurus, hyphenation patterns 3.3.3</Description>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1204/13/dict-it.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fitalian-dictionary-thesaurus-hyphenation-patterns-20130905&amp;ts=1435690929&amp;use_mirror=freefr</DownloadLink>
+    <Description>Italian dictionary, thesaurus, hyphenation patterns - (2013.09.05)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Khmer</EnglishName>
@@ -242,20 +242,20 @@
   <Dictionary>
     <EnglishName>Portuguese (Brazilian)</EnglishName>
     <NativeName>Português (do Brasil)</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/vero-verificador-ortografico-e-hifenizador-em-portugues-do-brasil/pscreleasefolder.2012-01-04.1563120832/2.1/vero_pt_br_v210aoc.oxt</DownloadLink>
-    <Description>VERO - VERificador Ortográfico e hifenizador em Português do Brasil 2.1</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/vero-verificador-ortografico-e-hifenizador-em-portugues-do-brasil/pscreleasefolder.2012-01-04.1563120832/2.1.2/vero_pt_br_v212aoc.oxt</DownloadLink>
+    <Description>VERO - VERificador Ortográfico e hifenizador em Português do Brasil 2.1.2</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Portuguese (Portugal)</EnglishName>
     <NativeName>Português</NativeName>
-    <DownloadLink>http://ftp.sunet.se/pub/Office/OpenOffice.org/contrib/dictionaries/pt_PT.zip</DownloadLink>
-    <Description>Versão 20.5.2002</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/corretor-ortografico-para-portugues-de-portugal-1/releases/15.4.4.1/oo3x-pt-pt-preao-15-4-4-1.oxt</DownloadLink>
+    <Description>Corretores Ortográficos para Português de Portugal</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Romanian</EnglishName>
     <NativeName>română</NativeName>
-    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1392/10/dict-ro.1.7.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fromanian-dictionary-pack-spell-checker-hyphenation-thesaurus&amp;ts=1412622467&amp;use_mirror=cznic</DownloadLink>
-    <Description>Romanian Dictionaries</Description>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1392/10/dict-ro.1.7.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fromanian-dictionary-pack-spell-checker-hyphenation-thesaurus-17&amp;ts=1435689394&amp;use_mirror=freefr</DownloadLink>
+    <Description>Romanian Dictionary Pack (spell checker, hyphenation, thesaurus) - v1.7</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Russian</EnglishName>
@@ -284,32 +284,32 @@
   <Dictionary>
     <EnglishName>Spanish</EnglishName>
     <NativeName>España</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.7/espana</DownloadLink>
-    <Description>Spanish dictionary 0.7 (07/03/2013)</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.8/es_es.oxt</DownloadLink>
+    <Description>Spanish dictionary v0.8 (17/04/2015)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish</EnglishName>
     <NativeName>Español Genérico</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.7/generico-america-latina-y-espana</DownloadLink>
-    <Description>Genérico (América latina y España)  0.7</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.8/es_any.oxt</DownloadLink>
+    <Description>Genérico (América latina y España) v0.8 (17/04/2015)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish (Argentina)</EnglishName>
     <NativeName>Español (Argentina)</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.7/argentina</DownloadLink>
-    <Description>Diccionario Español - Argentina (Sinónimos y Separación Silábica) 0.7</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.8/es_ar.oxt</DownloadLink>
+    <Description>Diccionario Español - Argentina (Sinónimos y Separación Silábica) v0.8 (17/04/2015)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish (Mexico)</EnglishName>
     <NativeName>Español (México)</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.7/mexico</DownloadLink>
-    <Description>Diccionario de corrección ortográfica en español (México) 0.7</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.8/es_mx.oxt</DownloadLink>
+    <Description>Diccionario de corrección ortográfica en español (México) v0.8 (17/04/2015)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish (Venezuela)</EnglishName>
     <NativeName>Español (Venezuela)</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.7/venezuela</DownloadLink>
-    <Description>Diccionarios en Español para Venezuela 0.7</Description>
+    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.8/es_ve.oxt</DownloadLink>
+    <Description>Diccionarios en Español para Venezuela v0.8 (17/04/2015)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Swahili</EnglishName>
@@ -332,14 +332,14 @@
   <Dictionary>
     <EnglishName>Ukrainian</EnglishName>
     <NativeName>Українська</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/ukrainian-spelling-dictionary-and-thesaurus/releases/1.6.7/dict-uk_ua-1-6-7.oxt</DownloadLink>
-    <Description>Ukrainian spelling dictionary and thesaurus 1.6.7</Description>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/975/6/dict-uk_ua-1.7.1.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fukrainian-dictionary-171&amp;ts=1435691238&amp;use_mirror=freefr</DownloadLink>
+    <Description>Ukrainian Dictionary - v1.7.1 (27/03/2014)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Valencian</EnglishName>
     <NativeName>valencià</NativeName>
-    <DownloadLink>http://www.softcatala.org/diccionaris/actualitzacions/OOo/avl.oxt</DownloadLink>
-    <Description>Valencian Catalan Spell Check Dictionary 2.5.0</Description>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1475/1/ca-valencia.3.0.0.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fprojectrelease%2Fspelling-dictionary-catalan-valencian-version-300&amp;ts=1435691121&amp;use_mirror=freefr</DownloadLink>
+    <Description>Spelling dictionary for Catalan (Valencian version) - v3.0.0 (25/05/2015)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Vietnamese</EnglishName>

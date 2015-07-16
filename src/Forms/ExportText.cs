@@ -7,10 +7,10 @@ using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ExportText : Form
+    public sealed partial class ExportText : Form
     {
-        private Subtitle _subtitle = null;
-        private string _fileName = null;
+        private Subtitle _subtitle;
+        private string _fileName;
 
         public ExportText()
         {
@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.Main.Menu.File.SaveAs;
         }
 
-        internal void Initialize(Logic.Subtitle subtitle, string fileName)
+        internal void Initialize(Subtitle subtitle, string fileName)
         {
             _subtitle = subtitle;
             _fileName = fileName;
@@ -53,14 +53,11 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxEncoding.Items.Add(Encoding.UTF8.EncodingName);
             foreach (EncodingInfo ei in Encoding.GetEncodings())
             {
-                if (ei.Name != Encoding.UTF8.BodyName)
+                if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= 949 && !ei.DisplayName.Contains("EBCDIC") && ei.CodePage != 1047)
                 {
-                    if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= 949 && !ei.DisplayName.Contains("EBCDIC") && ei.CodePage != 1047)
-                    {
-                        comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
-                        if (ei.Name == Configuration.Settings.General.DefaultEncoding)
-                            encodingSelectedIndex = comboBoxEncoding.Items.Count - 1;
-                    }
+                    comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
+                    if (ei.Name == Configuration.Settings.General.DefaultEncoding)
+                        encodingSelectedIndex = comboBoxEncoding.Items.Count - 1;
                 }
             }
             comboBoxEncoding.SelectedIndex = encodingSelectedIndex;
@@ -109,14 +106,12 @@ namespace Nikse.SubtitleEdit.Forms
                         sb.AppendLine();
                     else
                         sb.Append(' ');
-
                 }
                 string s = p.Text;
                 if (removeStyling)
                 {
                     s = HtmlUtil.RemoveHtmlTags(s, true);
                 }
-
                 if (formatUnbreak)
                 {
                     sb.Append(s.Replace(Environment.NewLine, " ").Replace("  ", " "));
@@ -180,5 +175,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             DialogResult = DialogResult.Cancel;
         }
+
+        private void ExportText_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+        }
+
     }
 }

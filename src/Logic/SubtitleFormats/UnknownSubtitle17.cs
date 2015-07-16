@@ -159,7 +159,7 @@ DIGITAL_CINEMA=YES
                             if (paragraph.Text.Length > 2000)
                             {
                                 _errorCount += 100;
-                                subtitle.Renumber(1);
+                                subtitle.Renumber();
                                 return;
                             }
                         }
@@ -171,7 +171,7 @@ DIGITAL_CINEMA=YES
                 paragraph.Text = paragraph.Text.Replace("[/BODY]", string.Empty).Trim();
                 subtitle.Paragraphs.Add(paragraph);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static string EncodeTimeCode(TimeCode time)
@@ -186,7 +186,7 @@ DIGITAL_CINEMA=YES
             string seconds = parts[2];
             string frames = parts[3];
 
-            var milliseconds = (int)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames));
+            var milliseconds = (int)((TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames));
             if (milliseconds > 999)
                 milliseconds = 999;
 

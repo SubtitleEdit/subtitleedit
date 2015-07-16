@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -24,14 +25,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string xmlAsString = sb.ToString().Trim();
             if (xmlAsString.Contains("OpenDVT"))
             {
                 try
                 {
-                    XmlDocument xml = new XmlDocument();
+                    var xml = new XmlDocument();
                     xml.XmlResolver = null;
                     xml.LoadXml(xmlAsString);
                     int numberOfParagraphs = xml.DocumentElement.SelectSingleNode("Lines").ChildNodes.Count;
@@ -40,7 +41,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine(ex.Message);
-                    return false;
                 }
             }
             return false;
@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string guid = new Guid().ToString();
+            var guid = new Guid().ToString();
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<OpenDVT UUID=\"{" + guid + "\" ShortID=\"" + title + "\" Type=\"Deposition\" Version=\"1.3\">" + Environment.NewLine +
@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "</Streams>" + Environment.NewLine +
                 "</OpenDVT>";
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
             XmlNode lines = xml.DocumentElement.SelectSingleNode("Lines");
             int no = 0;
@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 line.AppendChild(qa);
 
                 XmlNode text = xml.CreateElement("Text");
-                text.InnerText = p.Text;
+                text.InnerText = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 line.AppendChild(text);
 
                 lines.AppendChild(line);
@@ -140,9 +140,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.XmlResolver = null;
             xml.LoadXml(sb.ToString().Trim());
 
@@ -151,25 +151,25 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 try
                 {
-                    Paragraph p = new Paragraph();
+                    var p = new Paragraph();
 
                     XmlNode text = node.SelectSingleNode("Text");
                     if (text != null)
                     {
-                        StringBuilder pText = new StringBuilder();
+                        sb.Clear();
                         foreach (XmlNode innerNode in text.ChildNodes)
                         {
                             switch (innerNode.Name)
                             {
                                 case "br":
-                                    pText.AppendLine();
+                                    sb.AppendLine();
                                     break;
                                 default:
-                                    pText.Append(innerNode.InnerText);
+                                    sb.Append(innerNode.InnerText);
                                     break;
                             }
                         }
-                        p.Text = pText.ToString();
+                        p.Text = sb.ToString();
                     }
 
                     XmlNode timeMS = node.SelectSingleNode("TimeMs");
@@ -190,7 +190,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

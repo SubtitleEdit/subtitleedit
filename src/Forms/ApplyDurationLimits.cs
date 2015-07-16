@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 
@@ -45,14 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (labelNote.Left + labelNote.Width + 5 > Width)
                 Width = labelNote.Left + labelNote.Width + 5;
-
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         public void Initialize(Subtitle subtitle)
@@ -95,17 +87,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_onlyListFixes)
             {
-                var item = new ListViewItem(string.Empty) { Checked = true };
-
-                var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString());
-                item.SubItems.Add(subItem);
-                subItem = new ListViewItem.ListViewSubItem(item, before.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-                item.SubItems.Add(subItem);
-                subItem = new ListViewItem.ListViewSubItem(item, after.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-                item.SubItems.Add(subItem);
-
-                item.Tag = p; // save paragraph in Tag
-
+                var item = new ListViewItem(string.Empty) { Checked = true, Tag = p };
+                item.SubItems.Add(p.Number.ToString());
+                item.SubItems.Add(before.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+                item.SubItems.Add(after.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
                 listViewFixes.Items.Add(item);
             }
         }
@@ -128,7 +113,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Subtitle unfixables = new Subtitle();
             string fixAction = Configuration.Settings.Language.FixCommonErrors.FixShortDisplayTime;
-            int noOfShortDisplayTimes = 0;
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
                 Paragraph p = _working.Paragraphs[i];
@@ -142,14 +126,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (displayTime < minDisplayTime)
                 {
                     Paragraph next = _working.GetParagraphOrDefault(i + 1);
-                    if (next == null || (p.StartTime.TotalMilliseconds + minDisplayTime < next.StartTime.TotalMilliseconds))
+                    if (next == null || (p.StartTime.TotalMilliseconds + minDisplayTime < next.StartTime.TotalMilliseconds) && AllowFix(p))
                     {
                         string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + minDisplayTime;
 
                         string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
                         _totalFixes++;
-                        noOfShortDisplayTimes++;
                         AddFixToListView(p, before, after);
                     }
                     else
@@ -165,23 +148,18 @@ namespace Nikse.SubtitleEdit.Forms
         public void FixLongDisplayTimes()
         {
             string fixAction = Configuration.Settings.Language.FixCommonErrors.FixLongDisplayTime;
-            int noOfLongDisplayTimes = 0;
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
                 Paragraph p = _working.Paragraphs[i];
                 double displayTime = p.Duration.TotalMilliseconds;
                 double maxDisplayTime = (double)numericUpDownDurationMax.Value;
-                if (displayTime > maxDisplayTime)
+                if (displayTime > maxDisplayTime && AllowFix(p))
                 {
-                    if (AllowFix(p))
-                    {
-                        string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
-                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDisplayTime;
-                        string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
-                        _totalFixes++;
-                        noOfLongDisplayTimes++;
-                        AddFixToListView(p, before, after);
-                    }
+                    string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDisplayTime;
+                    string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
+                    _totalFixes++;
+                    AddFixToListView(p, before, after);
                 }
             }
         }

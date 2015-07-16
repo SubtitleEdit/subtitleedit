@@ -1,6 +1,5 @@
 ﻿namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
-
     public class DisplayDefinitionSegment
     {
         public int DisplayDefinitionVersionNumber { get; set; }
@@ -28,5 +27,4 @@
         }
 
     }
-
 }

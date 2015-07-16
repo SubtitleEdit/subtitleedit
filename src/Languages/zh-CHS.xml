@@ -2,7 +2,7 @@
 <Language Name="简体中文">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis</TranslatedBy>
     <CultureName>zh-CHS</CultureName>
     <HelpFile />
@@ -1226,7 +1226,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件选择字幕</Title>
     <PleaseChoose>找到多个字幕 - 请选择</PleaseChoose>
-    <TrackXLanguageYTypeZ>曲目 {0}-{1} - 语言: {2} - 类型: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>曲目 {0} - 语言: {1} - 类型: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>度量转换器</Title>

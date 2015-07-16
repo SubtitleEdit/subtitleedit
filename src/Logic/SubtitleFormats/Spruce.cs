@@ -8,6 +8,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class Spruce : SubtitleFormat
     {
+        private const string Italic = "^I";
+        private const string Bold = "^B";
+        private const string Underline = "^U";
+
         public override string Extension
         {
             get { return ".stl"; }
@@ -80,14 +84,14 @@ $ColorIndex4    = 3
 
         private static string EncodeText(string text)
         {
-            text = text.Replace("<I>", "<i>").Replace("</I>", "</i>");
+            text = HtmlUtil.FixUpperTags(text);
             bool allItalic = text.StartsWith("<i>") && text.EndsWith("</i>") && Utilities.CountTagInText(text, "<i>") == 1;
-            text = text.Replace("<b>", "^B");
-            text = text.Replace("</b>", string.Empty);
-            text = text.Replace("<i>", "^I");
-            text = text.Replace("</i>", string.Empty);
-            text = text.Replace("<u>", "^U");
-            text = text.Replace("</u>", string.Empty);
+            text = text.Replace("<b>", Bold);
+            text = text.Replace("</b>", Bold);
+            text = text.Replace("<i>", Italic);
+            text = text.Replace("</i>", Italic);
+            text = text.Replace("<u>", Underline);
+            text = text.Replace("</u>", Underline);
             if (allItalic)
                 return text.Replace(Environment.NewLine, "|^I");
             return text.Replace(Environment.NewLine, "|");
@@ -132,7 +136,7 @@ $ColorIndex4    = 3
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string time)
@@ -153,14 +157,55 @@ $ColorIndex4    = 3
         }
 
         private static string DecodeText(string text)
-        { //TODO: improve end tags
+        {
             text = text.Replace("|", Environment.NewLine);
-            if (text.Contains("^B"))
-                text = text.Replace("^B", "<b>") + "</b>";
-            if (text.Contains("^I"))
-                text = text.Replace("^I", "<i>") + "</i>";
-            if (text.Contains("^U"))
-                text = text.Replace("^U", "<u>") + "</u>";
+
+            //^IBrillstein^I
+            if (text.Contains(Bold))
+            {
+                text = DecoderTextExtension(text, Bold, "<b>");
+            }
+            if (text.Contains(Italic))
+            {
+                text = DecoderTextExtension(text, Italic, "<i>");
+            }
+            if (text.Contains(Underline))
+            {
+                text = DecoderTextExtension(text, Underline, "<u>");
+            }
+
+            return text;
+        }
+
+        private static string DecoderTextExtension(string text, string SpruceTag, string htmlOpenTag)
+        {
+            var htmlCloseTag = htmlOpenTag.Insert(1, "/");
+
+            var idx = text.IndexOf(SpruceTag, StringComparison.Ordinal);
+            var c = Utilities.CountTagInText(text, SpruceTag);
+            if (c == 1)
+            {
+                var l = idx + SpruceTag.Length;
+                if (l < text.Length)
+                {
+                    text = text.Replace(SpruceTag, htmlOpenTag) + htmlCloseTag;
+                }
+                else if (l == text.Length) // Brillstein^I
+                {
+                    text = text.Remove(text.Length - Italic.Length);
+                }
+            }
+            else if (c > 1)
+            {
+                var isOpen = true;
+                while (idx >= 0)
+                {
+                    var htmlTag = isOpen ? htmlOpenTag : htmlCloseTag;
+                    text = text.Remove(idx, SpruceTag.Length).Insert(idx, htmlTag);
+                    isOpen = !isOpen;
+                    idx = text.IndexOf(SpruceTag, idx + htmlTag.Length);
+                }
+            }
             return text;
         }
     }

@@ -202,7 +202,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
         public bool Add(string name)
         {
             name = name.Trim();
-            if (name.Length > 1)
+            if (name.Length > 1 && name.ContainsLetter())
             {
                 if (name.Contains(' '))
                 {
@@ -234,10 +234,13 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             return false;
         }
 
-        public bool IsInNamesEtcMultiWordList(string line, string word)
+        public bool IsInNamesEtcMultiWordList(string text, string word)
         {
-            string text = line.Replace(Environment.NewLine, " ");
-            text = text.Replace("  ", " ");
+            if (string.IsNullOrEmpty(text))
+                return false;
+
+            text = text.Replace(Environment.NewLine, " ");
+            text = text.FixExtraSpaces();
 
             foreach (string s in _namesMultiList)
             {

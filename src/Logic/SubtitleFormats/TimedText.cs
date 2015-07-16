@@ -237,10 +237,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         //string end = node.Attributes["end"].InnerText;
                         double dBegin, dEnd;
-                        if (!start.Contains(':') && Utilities.CountTagInText(start, '.') == 1 && !start.Contains(':') && Utilities.CountTagInText(start, '.') == 1 &&
+                        if (!start.Contains(':') && Utilities.CountTagInText(start, '.') == 1 &&
+                            !end.Contains(':') && Utilities.CountTagInText(end, '.') == 1 &&
                             double.TryParse(start, out dBegin) && double.TryParse(end, out dEnd))
                         {
-                            subtitle.Paragraphs.Add(new Paragraph(text, dBegin * 1000.0, dEnd * 1000.0));
+                            subtitle.Paragraphs.Add(new Paragraph(text, dBegin * TimeCode.BaseUnit, dEnd * TimeCode.BaseUnit));
                         }
                         else
                         {
@@ -248,7 +249,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 end.Length == 8 && end[2] == ':' && end[5] == ':')
                             {
                                 var p = new Paragraph();
-                                string[] parts = start.Split(new[] { ':' });
+                                var parts = start.Split(new[] { ':' });
                                 p.StartTime = new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), 0);
                                 parts = end.Split(new[] { ':' });
                                 p.EndTime = new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), 0);
@@ -276,7 +277,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
             subtitle.RemoveEmptyLines();
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         public override List<string> AlternateExtensions

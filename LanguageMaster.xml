@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -111,12 +111,24 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generating spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Extracting audio: {0:0.0} seconds</ExtractingSeconds>
     <ExtractingMinutes>Extracting audio: {0}.{1:00} minutes</ExtractingMinutes>
+    <WaveFileNotFound>Could not find extracted wave file!
+This feature requires VLC media player 1.1.x or newer ({0}-bit).
+
+Command line: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} was unable to extract audio data to wave file!
+
+Command line: {1} {2}
+
+Note: Do check free disk space.</WaveFileMalformed>
+    <LowDiskSpace>LOW DISK SPACE!</LowDiskSpace>
+    <FreeDiskSpace>{0} free</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Batch generate waveform data</Title>
     <ExtractingAudio>Extracting audio...</ExtractingAudio>
     <Calculating>Calculating...</Calculating>
     <Done>Done</Done>
+    <Error>Error</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Adjust durations</Title>
@@ -145,7 +157,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <BatchConvert>
     <Title>Batch convert</Title>
     <Input>Input</Input>
-    <InputDescription>Input files (browse or drag'n'drop)</InputDescription>
+    <InputDescription>Input files (browse or drag-n-drop)</InputDescription>
     <Status>Status</Status>
     <Output>Output</Output>
     <ChooseOutputFolder>Choose output folder</ChooseOutputFolder>
@@ -348,6 +360,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TranslatorsName>Translators name</TranslatorsName>
     <SubtitleListReferenceCode>Subtitle list reference code</SubtitleListReferenceCode>
     <CountryOfOrigin>Country of origin</CountryOfOrigin>
+    <TimeCodeStatus>Time code status</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Time code: Start of programme</TimeCodeStartOfProgramme>
     <RevisionNumber>Revision number</RevisionNumber>
     <MaxNoOfDisplayableChars>Max# of chars per row</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max# of rows</MaxNumberOfDisplayableRows>
@@ -411,6 +425,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShadowWidth>Shadow width</ShadowWidth>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Image format</ImageFormat>
+    <FullFrameImage>Full frame image</FullFrameImage>
     <SimpleRendering>Simple rendering</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing with transparency</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
@@ -428,14 +443,20 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LeftRightMargin>Left/right margin</LeftRightMargin>
     <SaveBluRraySupAs>Choose Blu-ray sup file name</SaveBluRraySupAs>
     <SaveVobSubAs>Choose VobSub file name</SaveVobSubAs>
-    <SaveFabImageScriptAs>Choose Blu-ray sup file name</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>Choose FAB image script file name</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Choose DVD Studio Pro STL file name</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Choose Digital Cinema Interop file name</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Choose Premiere EDL file name</SavePremiereEdlAs>
+    <SaveFcpAs>Choose Final Cut Pro xml file name</SaveFcpAs>
+    <SaveDostAs>Choose DoStudio dost file name</SaveDostAs>
     <SomeLinesWereTooLongX>Some lines were too long:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Line height</LineHeight>
     <BoxSingleLine>Box - single line</BoxSingleLine>
     <BoxMultiLine>Box - multi line</BoxMultiLine>
     <Forced>Forced</Forced>
+    <ChooseBackgroundColor>Choose background color</ChooseBackgroundColor>
+    <SaveImageAs>Save image as...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Export text</Title>
@@ -697,6 +718,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>File name</FileName>
     <Join>Join</Join>
     <TotalNumberOfLinesX>Total number of lines: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Note: Files must already have correct time codes</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -1138,6 +1160,7 @@ Continue?</SubtitleAppendPrompt>
     <MatroskaFiles>Matroska files</MatroskaFiles>
     <NoSubtitlesFound>No subtitles found</NoSubtitlesFound>
     <NotAValidMatroskaFileX>This is not a valid Matroska file: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Blu-ray sup file does not contain any subtitles or contains errors - try demuxing again.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Parsing Matroska file. Please wait...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Parsing Transport Stream file. Please wait...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Before import subtitle from Matroska file</BeforeImportFromMatroskaFile>
@@ -1255,8 +1278,13 @@ Continue?</SubtitleAppendPrompt>
     <ErrorLoadRar>This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.</ErrorLoadRar>
     <ErrorLoadZip>This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.</ErrorLoadZip>
     <ErrorLoadPng>This file seems to be a PNG image file. Subtitle Edit cannot open PNG files.</ErrorLoadPng>
+    <ErrorLoadJpg>This file seems to be a JPG image file. Subtitle Edit cannot open JPG files.</ErrorLoadJpg>
     <ErrorLoadSrr>This file seems to be a ReScene .srr file - not a subtitle file.</ErrorLoadSrr>
     <ErrorLoadTorrent>This file seems to be a BitTorrent file - not a subtitle file.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Sorry, this file contains only binary zeroes!
+
+If you have edited this file with Subtitle Edit you might be alble to find a backup via the menu item File -&gt; Restore auto-backup...</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>Directory drop are not supported here.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Encrypted VobSub content is not supported.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Blu-ray sup files are not supported here.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>DVD sup files are not supported here.</NoSupportHereDvdSup>
@@ -1266,7 +1294,7 @@ Continue?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
     <PleaseChoose>More than one subtitle found - please choose</PleaseChoose>
-    <TrackXLanguageYTypeZ>Track {0} - {1} - language: {2} - type: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Track {0} - language: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Measurement converter</Title>
@@ -1331,7 +1359,7 @@ Continue?</SubtitleAppendPrompt>
     <RegularExpression>Regular expression</RegularExpression>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
     <Delete>Delete</Delete>
-    <Add>Add</Add>
+    <Add>&amp;Add</Add>
     <Update>&amp;Update</Update>
     <Enabled>Enabled</Enabled>
     <SearchType>Search type</SearchType>
@@ -1340,7 +1368,7 @@ Continue?</SubtitleAppendPrompt>
     <Export>Export...</Export>
     <ImportRulesTitle>Import replace rule(s) from...</ImportRulesTitle>
     <ExportRulesTitle>Export replace rule(s) to...</ExportRulesTitle>
-    <Rules>Export rules</Rules>
+    <Rules>Find and replace rules</Rules>
     <MoveToTop>Move to top</MoveToTop>
     <MoveToBottom>Move to bottom</MoveToBottom>
   </MultipleReplace>
@@ -1400,8 +1428,10 @@ can edit in same subtitle file (collaboration)</Information>
     <NewLine>New line (\r\n)</NewLine>
     <NewLineShort>New line (\n)</NewLineShort>
     <AnyDigit>Any digit (\d)</AnyDigit>
+    <NonDigit>Non digit (\D)</NonDigit>
     <AnyCharacter>Any character (.)</AnyCharacter>
     <AnyWhitespace>Any whitespace (\s)</AnyWhitespace>
+    <NonSpaceCharacter>Non space character (\S)</NonSpaceCharacter>
     <ZeroOrMore>Zero or more (*)</ZeroOrMore>
     <OneOrMore>One or more (+)</OneOrMore>
     <InCharacterGroup>In character group ([test])</InCharacterGroup>
@@ -1834,6 +1864,7 @@ can edit in same subtitle file (collaboration)</Information>
     <CharactersPerSecondMinimum>Characters/sec - minimum: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Characters/sec - maximum: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Characters/sec - average: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Export...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha properties</Title>
@@ -2008,6 +2039,8 @@ Keep changes?</KeepChangesMessage>
     <InspectCompareMatchesForCurrentImage>Inspect compare matches for current image...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Edit last image compare additions...</EditLastAdditions>
     <SetUnitalicFactor>Set un-italic factor...</SetUnitalicFactor>
+    <DiscardTitle>Discard changes made in OCR?</DiscardTitle>
+    <DiscardText>Do you want to discard changes made in current OCR session?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual image to text</Title>

@@ -2,7 +2,7 @@
 <Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Tłumaczenie Adam Malich (mailto: adam_malich@gizycko.mm.pl)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <HelpFile>http://potplayer.pl/ccount/click.php?id=10</HelpFile>
@@ -111,12 +111,22 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generowanie spektrogramu...</GeneratingSpectrogram>
     <ExtractingSeconds>Wyodrębnione audio: {0:0.0} sek.</ExtractingSeconds>
     <ExtractingMinutes>Wyodrębnione audio: {0:0.0} min.</ExtractingMinutes>
+    <WaveFileNotFound>Nie można znaleźć wyodrębnionego pliku wave!
+Ta funkcja wymaga VLC media player 1.1.x lub nowszego ({0}-bit). Wiersz poleceń: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} nie był w stanie wyodrębnić danych audio do pliku wave!
+
+Wiersz poleceń: {1} {2}
+
+Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
+    <LowDiskSpace>MAŁO MIEJSCA NA DYSKU!</LowDiskSpace>
+    <FreeDiskSpace>{0} wolne</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Zbiorcze generowanie danych wykresu falowego</Title>
     <ExtractingAudio>Wydobywanie dźwięku...</ExtractingAudio>
     <Calculating>Obliczanie...</Calculating>
     <Done>Wykonano</Done>
+    <Error>Błąd</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Dostosuj czasy trwania</Title>
@@ -348,6 +358,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TranslatorsName>Nazwisko tłumacza</TranslatorsName>
     <SubtitleListReferenceCode>Lista kodów referencyjnych</SubtitleListReferenceCode>
     <CountryOfOrigin>Kraj pochodzenia</CountryOfOrigin>
+    <TimeCodeStatus>Stan kodów czasowych</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Kod czasowy: Start programu</TimeCodeStartOfProgramme>
     <RevisionNumber>Numer wersji</RevisionNumber>
     <MaxNoOfDisplayableChars>Maks. ilość znaków w linii</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Maksymalna ilość linii</MaxNumberOfDisplayableRows>
@@ -411,6 +423,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShadowWidth>Szerokość cienia</ShadowWidth>
     <Transparency>Alfa</Transparency>
     <ImageFormat>Format obrazu</ImageFormat>
+    <FullFrameImage>Pełna klatka obrazu</FullFrameImage>
     <SimpleRendering>Proste renderowanie</SimpleRendering>
     <AntiAliasingWithTransparency>Wygładzanie z przezroczystością</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
@@ -428,14 +441,20 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LeftRightMargin>Lewy/prawy margines</LeftRightMargin>
     <SaveBluRraySupAs>Wybierz nazwę pliku Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Wybierz nazwę pliku VobSub</SaveVobSubAs>
-    <SaveFabImageScriptAs>Wybierz nazwę pliku Blu-ray sup</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>Wybierz nazwę pliku FAB image script</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Wybierz nazwę pliku DVD Studio Pro STL</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Wybierz nazwę pliku Digital Cinema Interop file name</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Wybierz nazwę pliku Premiere EDL</SavePremiereEdlAs>
+    <SaveFcpAs>Wybierz nazwę pliku Final Cut Pro xml</SaveFcpAs>
+    <SaveDostAs>Wybierz nazwę pliku DoStudio dost</SaveDostAs>
     <SomeLinesWereTooLongX>Niektóre linie były zbyt długie:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Wysokość linii</LineHeight>
     <BoxSingleLine>Box - pojedyncza linia</BoxSingleLine>
     <BoxMultiLine>Box - wiele linii</BoxMultiLine>
     <Forced>Wymuszone</Forced>
+    <ChooseBackgroundColor>Wybierz kolor tła</ChooseBackgroundColor>
+    <SaveImageAs>Zapisz obraz jako...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Eksport tekstu</Title>
@@ -697,6 +716,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Nazwa pliku</FileName>
     <Join>Połącz</Join>
     <TotalNumberOfLinesX>Całkowita ilość linii: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Uwaga: Pliki muszą zawierać poprawne kody czasowe</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -1138,6 +1158,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <MatroskaFiles>Pliki Matroska</MatroskaFiles>
     <NoSubtitlesFound>Nie znaleziono napisów</NoSubtitlesFound>
     <NotAValidMatroskaFileX>To nie jest poprawny plik Matroska: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Plik Blu-ray sup nie zawiera żadnych napisów lub zawiera błędy - spróbuj ponownie użyć demuksera.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Proszę czekać, analizuję składnię pliku Matroska...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Parsowanie pliku Transport Stream. Proszę czekać...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Przed importem napisów z pliku Matroska</BeforeImportFromMatroskaFile>
@@ -1255,7 +1276,13 @@ Kontynuować?</SubtitleAppendPrompt>
     <ErrorLoadRar>Ten plik wydaje się być skompresowanym plikiem .rar. Subtitle Edit nie otwiera plików skompresowanych.</ErrorLoadRar>
     <ErrorLoadZip>Ten plik wydaje się być skompresowanym plikiem .zip. Subtitle Edit nie otwiera plików skompresowanych.</ErrorLoadZip>
     <ErrorLoadPng>Ten plik wydaje się być plikiem PNG. W Subtitle Edit nie można otworzyć plików PNG.</ErrorLoadPng>
+    <ErrorLoadJpg>Ten plik wydaje się być plikiem JPG. W Subtitle Edit nie można otworzyć plików JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Ten plik wydaje się być plikiem ReScene .srr - to nie jest plik z napisami.</ErrorLoadSrr>
+    <ErrorLoadTorrent>Ten plik wydaje się być plikiem BitTorrent - to nie jest plik z napisami.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Przepraszamy, ten plik zawiera tylko zera binarne!
+
+Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapasową poprzez pozycję menu Plik -&gt; Przywróć automatycznie zapisaną kopię zapasową...</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>Upuszczanie katalogu nie jest tutaj obsługiwane.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Zaszyfrowana zawartość VobSub nie jest obsługiwana.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Pliki Blu-ray sup nie są tutaj obsługiwane.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>Pliki DVD sup nie są tutaj obsługiwane.</NoSupportHereDvdSup>
@@ -1265,7 +1292,7 @@ Kontynuować?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Wybierz napisy z pliku Matroska</Title>
     <PleaseChoose>Znaleziono klika napisów - proszę wybrać</PleaseChoose>
-    <TrackXLanguageYTypeZ>Ścieżka {0} - {1} - język: {2} - typ: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Ścieżka {0} - język: {1} - typ: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Konwerter miar</Title>
@@ -1330,7 +1357,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <RegularExpression>Wyrażenia regularne</RegularExpression>
     <LinesFoundX>Znaleziono linii: {0}</LinesFoundX>
     <Delete>Usuń</Delete>
-    <Add>Dodaj</Add>
+    <Add>&amp;Dodaj</Add>
     <Update>Aktualizuj</Update>
     <Enabled>Dostępne</Enabled>
     <SearchType>Typ wyszukiwania</SearchType>
@@ -1339,7 +1366,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <Export>Eksportuj...</Export>
     <ImportRulesTitle>Importuj zasady zastępowania z...</ImportRulesTitle>
     <ExportRulesTitle>Eksportuj zasady zastępowania do...</ExportRulesTitle>
-    <Rules>Eksport zasad</Rules>
+    <Rules>Zasady znajdowania i zastępowania</Rules>
     <MoveToTop>Przenieś na początek</MoveToTop>
     <MoveToBottom>Przenieś na koniec</MoveToBottom>
   </MultipleReplace>
@@ -1399,8 +1426,10 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <NewLine>Nowa linia (\r\n)</NewLine>
     <NewLineShort>Nowa linia (\n)</NewLineShort>
     <AnyDigit>Dowolna cyfra (\d)</AnyDigit>
+    <NonDigit>Bez cyfr (\D)</NonDigit>
     <AnyCharacter>Dowolny znak (.)</AnyCharacter>
     <AnyWhitespace>Dowolny biały znak (\s)</AnyWhitespace>
+    <NonSpaceCharacter>Bez znaku spacji (\S)</NonSpaceCharacter>
     <ZeroOrMore>Zero lub więcej (*)</ZeroOrMore>
     <OneOrMore>Jeden lub więcej (+)</OneOrMore>
     <InCharacterGroup>Z grupy znaków ([test])</InCharacterGroup>
@@ -1834,6 +1863,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <CharactersPerSecondMinimum>Znaków/sekundę - minimalnie: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Znaków/sekundę - maksymalnie: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Znaków/sekundę - średnio: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Eksport...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Właściwości Advanced Sub Station Alpha</Title>
@@ -2008,6 +2038,8 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <InspectCompareMatchesForCurrentImage>Sprawdź porównane zgodności dla bieżącego obrazu...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Edytuj ostatnio dodane porównania obrazów...</EditLastAdditions>
     <SetUnitalicFactor>Ustaw faktor nie kursywy...</SetUnitalicFactor>
+    <DiscardTitle>Odrzucić zmiany wprowadzone w OCR?</DiscardTitle>
+    <DiscardText>Chcesz odrzucić zmiany wprowadzone w bieżącej sesji OCR?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Ręcznie obrazy do tekstu</Title>

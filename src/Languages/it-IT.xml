@@ -2,7 +2,7 @@
 <Language Name="Italiano">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Traduzione Italiana SilverDrake (giurdi@katamail.com)</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
@@ -65,6 +65,8 @@
     <ControlsWindowTitle>Controlli - {0}</ControlsWindowTitle>
     <Advanced>Avanzato</Advanced>
     <Style>Stile</Style>
+    <StyleLanguage>Stile / Lingua</StyleLanguage>
+    <Character>Carattere</Character>
     <Class>Classe</Class>
     <GeneralText>Generale</GeneralText>
     <LineNumber>Linea #</LineNumber>
@@ -109,7 +111,25 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generazione spettrogramma...</GeneratingSpectrogram>
     <ExtractingSeconds>Estrazione audio: {0:0.0} secondi</ExtractingSeconds>
     <ExtractingMinutes>Estrazione audio: {0}.{1:00} minuti</ExtractingMinutes>
+    <WaveFileNotFound>Impossibile trovare il file wave estratto!
+Questa caratteristica richiede VLC media player 1.1.x o successivo ({0}-bit).
+
+Linea di comando: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} non ha potuto estrarre i dati audio nel file wave!
+
+Linea di comando: {1} {2}
+
+Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
+    <LowDiskSpace>SPAZIO SU DISCO INSUFFICIENTE!</LowDiskSpace>
+    <FreeDiskSpace>{0} liberi</FreeDiskSpace>
   </AddWaveform>
+  <AddWaveformBatch>
+    <Title>Generazione dati audio in batch</Title>
+    <ExtractingAudio>Estrazione audio...</ExtractingAudio>
+    <Calculating>Calcolo...</Calculating>
+    <Done>Fatto</Done>
+    <Error>Errore</Error>
+  </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Regola tempi di durata</Title>
     <AdjustVia>Regola tramite</AdjustVia>
@@ -151,6 +171,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Convert>Converti</Convert>
     <NothingToConvert>Niente da convertire!</NothingToConvert>
     <PleaseChooseOutputFolder>Scegli cartella di destinazione</PleaseChooseOutputFolder>
+    <NotConverted>Fallito</NotConverted>
     <Converted>Convertito</Converted>
     <ConvertedX>Convertito ({0})</ConvertedX>
     <Settings>Impostazioni</Settings>
@@ -161,6 +182,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Includi sottocartelle</Recursive>
     <SetMinMsBetweenSubtitles>Imposta millisec. minimi tra i sottotitoli</SetMinMsBetweenSubtitles>
     <PlainText>Testo normale</PlainText>
+    <Ocr>OCR...</Ocr>
+    <Filter>Filtro</Filter>
+    <FilterSkipped>Saltato dal filtro</FilterSkipped>
+    <FilterSrtNoUtf8BOM>File SubRip (.srt) senza intestazione UTF-8 BOM</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>Più di due linee in un sottotitolo</FilterMoreThanTwoLines>
+    <FilterContains>Testo contenente...</FilterContains>
+    <FixCommonErrorsErrorX>Correggi errori comuni: {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>Sostituzione multipla: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Auto-bilancia: {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -407,16 +437,23 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Destra</Right>
     <Center>Centro</Center>
     <BottomMargin>Margine inferiore</BottomMargin>
+    <LeftRightMargin>Margine sinistro/destro</LeftRightMargin>
     <SaveBluRraySupAs>Scegli un nome per il file sup Blu-ray</SaveBluRraySupAs>
     <SaveVobSubAs>Scegli un nome per il file VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Scegli un nome per il file sup Blu-ray</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Scegli un nome per il file DVD Studio Pro STL</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Scegli un nome per il file Digital Cinema Interop</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Scegli un nome per il file EDL Premiere</SavePremiereEdlAs>
+    <SaveFcpAs>Scegli un nome per il file xml Final Cut Pro</SaveFcpAs>
+    <SaveDostAs>Scegli un nome per il file dost DoStudio</SaveDostAs>
     <SomeLinesWereTooLongX>Alcune linee sono troppo lunghe:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Altezza linea</LineHeight>
     <BoxSingleLine>Riquadro, singola linea</BoxSingleLine>
     <BoxMultiLine>Riquardo, miltilinea</BoxMultiLine>
     <Forced>Forzato</Forced>
+    <ChooseBackgroundColor>Scegli colore di sfondo</ChooseBackgroundColor>
+    <SaveImageAs>Salva immagine come...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Esporta testo</Title>
@@ -678,6 +715,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Nome file</FileName>
     <Join>Unisci</Join>
     <TotalNumberOfLinesX>Numero di linee totale: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Nota: I file devono già avere i time code corretti</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -734,7 +772,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Undo>Annulla l'ultima azione</Undo>
         <Redo>Ripristina l'ultima azione</Redo>
         <ShowUndoHistory>Mostra lo storico (per annullamenti)</ShowUndoHistory>
-        <InsertUnicodeSymbol>Inserisci simbolo unicode</InsertUnicodeSymbol>
+        <InsertUnicodeSymbol>Inserisci simbolo Unicode</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>Inserisci carattere di controllo Unicode</InsertUnicodeControlCharacters>
         <Find>&amp;Trova</Find>
         <FindNext>Trova s&amp;uccessivo</FindNext>
         <Replace>&amp;Sostituisci</Replace>
@@ -793,6 +832,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Chiudi file video</CloseVideo>
         <ImportSceneChanges>Importa cambi scena...</ImportSceneChanges>
         <RemoveSceneChanges>Rimuovi cambi scena...</RemoveSceneChanges>
+        <WaveformBatchGenerate>Generazione forma d'onda in batch...</WaveformBatchGenerate>
         <ShowHideVideo>Mostra/nascondi video</ShowHideVideo>
         <ShowHideWaveform>Mostra/nascondi forma d'onda</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Mostra/nascondi forma d'onda e spettrogramma</ShowHideWaveformAndSpectrogram>
@@ -864,6 +904,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TimedTextStyles>Stili testo calcolato...</TimedTextStyles>
         <TimedTextSetLanguage>Testo calcolato - imposta lingua</TimedTextSetLanguage>
         <SamiSetStyle>Sami - imposta classi</SamiSetStyle>
+        <NuendoSetStyle>Nuendo - imposta carattere</NuendoSetStyle>
         <Cut>Taglia</Cut>
         <Copy>Copia</Copy>
         <Paste>Incolla</Paste>
@@ -1109,7 +1150,9 @@ Continuare?</SubtitleAppendPrompt>
     <MatroskaFiles>File Matroska</MatroskaFiles>
     <NoSubtitlesFound>Sottotitoli non trovati</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Questo non è un file Matroska valido: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Il file Blu-ray sup non contiene sottotitoli o contiene errori - prova a demuxarlo di nuovo.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Analisi file Matroska. Attendere...</ParsingMatroskaFile>
+    <ParsingTransportStreamFile>Analisi file Transport Stream. Attendere...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Prima di importare sottotitolo da file Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Sottotitolo importato da file Matroska</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>File trascinato '{0}' non accettato - Il file è troppo grande</DropFileXNotAccepted>
@@ -1166,6 +1209,7 @@ la codifica ANSI andranno perse. Salvare comunque?</UnicodeCharactersAnsiWarning
     <BeforeMergeShortLines>Prima di unisci linee corte</BeforeMergeShortLines>
     <BeforeSplitLongLines>Prima di dividi linee lunghe</BeforeSplitLongLines>
     <MergedShortLinesX>Numero di linee unite: {0}</MergedShortLinesX>
+    <BeforeDurationsBridgeGap>Prima di riempire i piccoli spazi vuoti</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Prima di scegli tempo di visualizzazione minimo fra paragrafi</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Numero di linee con tempo di visualizzazione minimo fra paragrafi cambiate: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Prima di importa testo semplice</BeforeImportText>
@@ -1226,11 +1270,18 @@ la codifica ANSI andranno perse. Salvare comunque?</UnicodeCharactersAnsiWarning
     <ErrorLoadRar>I file sembra essere un file .rar compresso. Subtitle Edit non può aprire file compressi.</ErrorLoadRar>
     <ErrorLoadZip>I file sembra essere un file .zip compresso. Subtitle Edit non può aprire file compressi.</ErrorLoadZip>
     <ErrorLoadPng>I file sembra essere un'immagine PNG. Subtitle Edit non può aprire file PNG.</ErrorLoadPng>
+    <ErrorLoadSrr>Il file sembra essere un file ReScene .srr - non un file di sottotitoli</ErrorLoadSrr>
+    <ErrorLoadTorrent>Il file sembra essere un file BitTorrent - non un file di sottotitoli</ErrorLoadTorrent>
+    <NoSupportEncryptedVobSub>I contenuti VobSub criptati non sono supportati.</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>I file Blu-ray sup non sono supportati qui.</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>I file DVD sup non sono supportati qui.</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>I file VobSub non sono supportati qui.</NoSupportHereVobSub>
+    <NoSupportHereDivx>I file DivX non sono supportati qui.</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Scegli sottotitolo da file Matroska</Title>
     <PleaseChoose>Trovato più di un sottotitolo - scegliere, per favore</PleaseChoose>
-    <TrackXLanguageYTypeZ>Traccia {0} - {1} - lingua: {2} - tipo: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Traccia {0} - lingua: {1} - tipo: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Convertitore di misura</Title>
@@ -1527,6 +1578,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <WaveformSelectedColor>Colore selezionato</WaveformSelectedColor>
     <WaveformBackgroundColor>Colore sfondo</WaveformBackgroundColor>
     <WaveformTextColor>Colore testo</WaveformTextColor>
+    <WaveformTextFontSize>Dimensione font testo</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Svuota le cartelle 'Spettrogramma' e 'Waveforms'</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Le cartelle 'Waveforms' e 'Spettrogramma' contengono {0} file ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spettrogramma</Spectrogram>
@@ -1589,6 +1641,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <ToggleDockUndockOfVideoControls>Alterna blocca/sblocca controlli video</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Imposta fine, aggiungi nuovo e vai a nuovo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Regola via posizione finale e vai al successivo</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Imposta fine e vai al prossimo</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Imposta inizio, durata auto e vai a successivo</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Iimposta fine, poi inizia e vai a successivo</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Tasto premuto=imposta inizio, tasto rilasciato=imposta fine e vai a successivo</AdjustStartDownEndUpAndGoToNext>
@@ -1607,6 +1660,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <ToggleDialogDashes>Alterna trattini di dialogo</ToggleDialogDashes>
     <Alignment>Allineamento (linee selezionate)</Alignment>
     <CopyTextOnly>Copia il testo negli appunti (linee selezionate)</CopyTextOnly>
+    <CopyTextOnlyFromOriginalToCurrent>Copia il testo dall'originale al corrente</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Durata automatica (linee selezionate)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Inverti DTS inizio/fine</ReverseStartAndEndingForRTL>
     <VerticalZoom>Zoom verticale in</VerticalZoom>
@@ -1661,6 +1715,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Sposta la prima parola dalla prossima linea di sottotitolo</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Selezione in minuscolo</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selezione in maiuscolo</MainTextBoxSelectionToUpper>
+    <MainTextBoxToggleAutoDuration>Alterna auto-durata</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Divisione automatica testo</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Riunisci testo</MainTextBoxUnbreak>
     <MainFileSaveAll>Salva tutto</MainFileSaveAll>
@@ -1794,6 +1849,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <CharactersPerSecondMinimum>Caratteri/sec - minimuo: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caratteri/sec - massimo: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caratteri/sec - media: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Esporta...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Proprietà Advanced Sub Station Alpha</Title>
@@ -1968,6 +2024,7 @@ Mantenere le modifiche?</KeepChangesMessage>
     <AutoTransparentBackground>Sfondo trasparente automatico</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Ispeziona i confronti aggiunti per l'immagine corrente...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Modifica i confronti aggiunti nell'ultima immagine...</EditLastAdditions>
+    <SetUnitalicFactor>Imposta fattore non-corsivo...</SetUnitalicFactor>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Conversione manuale immagine in testo</Title>
@@ -1994,6 +2051,10 @@ Mantenere le modifiche?</KeepChangesMessage>
     <Title>Nuova cartella</Title>
     <Message>Nome della cartella database dei nuovi caratteri</Message>
   </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicFactor>
+    <Title>Imposta fattore non-corsivo</Title>
+    <Description>Regola il valore finché lo stile del testo risulta normale e non corsivo. Nota che l'immagine originale dovrebbe essere corsiva.</Description>
+  </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Fare click per aggiungere la forma d'onda</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Fare click per aggiungere la forma d'onda/spettrogramma</ClickToAddWaveformAndSpectrogram>

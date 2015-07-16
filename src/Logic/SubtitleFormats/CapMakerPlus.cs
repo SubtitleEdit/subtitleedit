@@ -10,16 +10,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class CapMakerPlus : SubtitleFormat
     {
 
-        private static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
             get { return ".cap"; }
         }
 
+        public const string NameOfFormat = "CapMaker Plus";
+
         public override string Name
         {
-            get { return "CapMaker Plus"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -72,31 +74,31 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     };
 
                     string text = p.Text;
-                    if (text.StartsWith("{\\a6}"))
+                    if (text.StartsWith("{\\a6}", StringComparison.Ordinal))
                     {
                         text = p.Text.Remove(0, 5);
                         buffer[7] = 0; // align top
                     }
-                    else if (text.StartsWith("{\\a1}"))
+                    else if (text.StartsWith("{\\a1}", StringComparison.Ordinal))
                     {
                         text = p.Text.Remove(0, 5);
                         buffer[2] = 0; // align left
                         buffer[3] = 0; // align left
                     }
-                    else if (text.StartsWith("{\\a3}"))
+                    else if (text.StartsWith("{\\a3}", StringComparison.Ordinal))
                     {
                         text = p.Text.Remove(0, 5);
                         buffer[2] = 0; // align right
                         buffer[3] = 0xc0; // align right
                     }
-                    else if (text.StartsWith("{\\a5}"))
+                    else if (text.StartsWith("{\\a5}", StringComparison.Ordinal))
                     {
                         text = p.Text.Remove(0, 5);
                         buffer[7] = 0; // align top
                         buffer[2] = 0; // align left
                         buffer[3] = 0; // align left
                     }
-                    else if (text.StartsWith("{\\a7}"))
+                    else if (text.StartsWith("{\\a7}", StringComparison.Ordinal))
                     {
                         text = p.Text.Remove(0, 5);
                         buffer[7] = 0; // align top
@@ -104,7 +106,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         buffer[3] = 0xc0; // align right
                     }
 
-                    if (text.StartsWith("<i>") && text.EndsWith("</i>"))
+                    if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal))
                         buffer[10] = 3;
                     fs.Write(buffer, 0, buffer.Length);
 
@@ -168,13 +170,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(string[] parts)
         {
             //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = int.Parse(parts[3]);
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
+            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -192,7 +193,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string timeCode = Encoding.ASCII.GetString(buffer, i + 1, 11);
                     if (timeCode != "00:00:00:00" && regexTimeCodes.IsMatch(timeCode))
                     {
-                        Paragraph p = new Paragraph();
+                        var p = new Paragraph();
                         p.StartTime = DecodeTimeCode(timeCode.Split(':'));
                         bool italic = buffer[i + 22] == 3; // 3=italic, 1=normal
                         int textStart = i + 25; // text starts 25 chars after time code
@@ -273,7 +274,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - 1;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
 
             // adjust all times
             if (buffer.Length > 1364)

@@ -2,7 +2,7 @@
 <Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Překlad do češtiny: Trottel</TranslatedBy>
     <CultureName>cs-CZ</CultureName>
     <HelpFile />
@@ -65,6 +65,8 @@
     <ControlsWindowTitle>Ovládání - {0}</ControlsWindowTitle>
     <Advanced>Pokročilé</Advanced>
     <Style>Styl</Style>
+    <StyleLanguage>Styl / Jazyk</StyleLanguage>
+    <Character>Znak</Character>
     <Class>Třída</Class>
     <GeneralText>Všeobecné</GeneralText>
     <LineNumber>Č. řádku</LineNumber>
@@ -109,12 +111,24 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Vytváření spektrogramu...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrahování zvuku: {0:0,0} sekund</ExtractingSeconds>
     <ExtractingMinutes>Extrahování zvuku: {0},{1:00} minut</ExtractingMinutes>
+    <WaveFileNotFound>Nelze nalézt extrahovaný soubor křivky!
+Tato funkce vyžaduje VLC media player 1.1.x nebo novější ({0}bitový).
+
+Příkazový řádek: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} nemohl extrahovat zvuková data do souboru křivky!
+
+Příkazový řádek: {1} {2}
+
+Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
+    <LowDiskSpace>NEDOSTATEK MÍSTA NA DISKU!</LowDiskSpace>
+    <FreeDiskSpace>{0} volných</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Dávkově generovat data křivky</Title>
     <ExtractingAudio>Extrahování audia...</ExtractingAudio>
     <Calculating>Výpočet...</Calculating>
     <Done>Hotovo</Done>
+    <Error>Chyba</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Upravit trvání</Title>
@@ -157,6 +171,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Convert>Převést</Convert>
     <NothingToConvert>Není co převést!</NothingToConvert>
     <PleaseChooseOutputFolder>Vyberte výstupní složku</PleaseChooseOutputFolder>
+    <NotConverted>Nezdařilo se</NotConverted>
     <Converted>Převedeno</Converted>
     <ConvertedX>Převedeno ({0})</ConvertedX>
     <Settings>Nastavení</Settings>
@@ -167,11 +182,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Včetně podsložek</Recursive>
     <SetMinMsBetweenSubtitles>Nastavit min. milisekund mezi titulky</SetMinMsBetweenSubtitles>
     <PlainText>Prostý text</PlainText>
+    <Ocr>OCR...</Ocr>
     <Filter>Filtr</Filter>
     <FilterSkipped>Přeskočeno filtrem</FilterSkipped>
     <FilterSrtNoUtf8BOM>Soubory SubRip (.srt) bez hlavičky UTF-8 BOM</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>Více než dva řádky v jednom titulku</FilterMoreThanTwoLines>
     <FilterContains>Text obsahuje...</FilterContains>
+    <FixCommonErrorsErrorX>Opravit běžné chyby: {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>Hromadné nahrazení: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Automatické vyvážení: {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -251,7 +270,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Porovnat titulky</Title>
     <PreviousDifference>&amp;Předchozí rozdíl</PreviousDifference>
     <NextDifference>&amp;Další rozdíl</NextDifference>
-    <SubtitlesNotAlike>itulky nemajpodobnost</SubtitlesNotAlike>
+    <SubtitlesNotAlike>Titulky nemají žádné podobnosti</SubtitlesNotAlike>
     <XNumberOfDifference>Počet rozdílů: {0}</XNumberOfDifference>
     <XNumberOfDifferenceAndPercentChanged>Počet rozdílů: {0} ({1} % slov změněno)</XNumberOfDifferenceAndPercentChanged>
     <XNumberOfDifferenceAndPercentLettersChanged>Počet rozdílů: {0} ({1} % písmen změněno)</XNumberOfDifferenceAndPercentLettersChanged>
@@ -404,6 +423,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShadowWidth>Šířka stínu</ShadowWidth>
     <Transparency>Alfa</Transparency>
     <ImageFormat>Formát obrázku</ImageFormat>
+    <FullFrameImage>Celoobrazovkový obrázek</FullFrameImage>
     <SimpleRendering>Jednoduché vykreslování</SimpleRendering>
     <AntiAliasingWithTransparency>Vyhlazování s průhledností</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
@@ -418,16 +438,23 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Vpravo</Right>
     <Center>Na střed</Center>
     <BottomMargin>Dolní okraj</BottomMargin>
+    <LeftRightMargin>Levý nebo pravý okraj</LeftRightMargin>
     <SaveBluRraySupAs>Vyberte název souboru Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Vyberte název souboru VobSub</SaveVobSubAs>
-    <SaveFabImageScriptAs>Vyberte název souboru Blu-ray sup</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>Vyberte název souboru FAB image script</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Vyberte název souboru DVD Studio Pro STL</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Vyberte název souboru Digital Cinema Interop</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Vyberte název souboru Premiere EDL</SavePremiereEdlAs>
+    <SaveFcpAs>Vyberte název souboru Final Cut Pro xml</SaveFcpAs>
+    <SaveDostAs>Vyberte název souboru DoStudio dost</SaveDostAs>
     <SomeLinesWereTooLongX>Některé řádky byly příliš dlouhé:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Výška řádku</LineHeight>
     <BoxSingleLine>Pole - jednořádkové</BoxSingleLine>
     <BoxMultiLine>Pole - víceřádkové</BoxMultiLine>
     <Forced>Vynucený</Forced>
+    <ChooseBackgroundColor>Zvolte barvu pozadí</ChooseBackgroundColor>
+    <SaveImageAs>Uložit obrázek jako...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Exportovat text</Title>
@@ -689,6 +716,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Název souboru</FileName>
     <Join>Spojit</Join>
     <TotalNumberOfLinesX>Celkový počet řádků: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Poznámka: Soubory musí již mít správné časové kódy</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -883,6 +911,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TimedTextStyles>Styly časovaného textu...</TimedTextStyles>
         <TimedTextSetLanguage>Časovaný text - nastavit jazyk</TimedTextSetLanguage>
         <SamiSetStyle>Sami - nastavit třídu</SamiSetStyle>
+        <NuendoSetStyle>Nuendo - nastavit znak</NuendoSetStyle>
         <Cut>Vyjmout</Cut>
         <Copy>Kopírovat</Copy>
         <Paste>Vložit</Paste>
@@ -1129,6 +1158,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <MatroskaFiles>Soubory Matroska</MatroskaFiles>
     <NoSubtitlesFound>Nenalezeny žádné titulky</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Toto není platný soubor Matroska: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Soubor Blu-ray sup neobsahuje žádné titulky nebo obsahuje chyby - zkuste znovu demuxovat.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Analýza souboru Matroska. Čekejte...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Analýza souboru datového proudu přenosu. Čekejte...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Před importováním titulků ze souboru Matroska</BeforeImportFromMatroskaFile>
@@ -1185,6 +1215,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <BeforeMergeShortLines>Před sloučením krátkých řádků</BeforeMergeShortLines>
     <BeforeSplitLongLines>Před rozdělením dlouhých řádků</BeforeSplitLongLines>
     <MergedShortLinesX>Počet sloučených řádků: {0}</MergedShortLinesX>
+    <BeforeDurationsBridgeGap>Před překlenutím malých mezer</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Před nastavením minimálního času zobrazení mezi titulky</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Počet změněných řádků s minimálním časem zobrazení mezi titulky: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Před importováním prostého textu</BeforeImportText>
@@ -1221,7 +1252,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <SubtitleExported>Titulky byly exportovány</SubtitleExported>
     <LineNumberXErrorReadingFromSourceLineY>Řádek {0} - chyba čtení: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Řádek {0} - chyba čtení časového kódu: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
-    <LineNumberXExpectedNumberFromSourceLineY>Řádek {0} - očekáván titulek číslo: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>Řádek {0} - očekáváno čílo titulku: {1}</LineNumberXExpectedNumberFromSourceLineY>
     <BeforeGuessingTimeCodes>Před odhadem časových kódů</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Před automatickým trváním pro vybrané řádky</BeforeAutoDuration>
     <BeforeColumnPaste>Před vložením v sloupci</BeforeColumnPaste>
@@ -1242,15 +1273,24 @@ Pokračovat?</SubtitleAppendPrompt>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Titulek se stejnými časovými kódy má jiné číslo řádku ({0}) než aktuální titulek ({1}) - přesto pokračovat?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analýza datového proudu přenosu - čekejte...</ParsingTransportStream>
     <ErrorLoadIdx>Nelze přečíst nebo upravit soubory .idx. Soubory .idx jsou součástí páru souborů idx/sub (tzv. VobSub) a Subtitle Edit může otevřít soubor .sub.</ErrorLoadIdx>
-    <ErrorLoadRar>Soubor se zdá být komprimovaným souborem .rar. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadRar>
-    <ErrorLoadZip>Soubor se zdá být komprimovaným souborem .zip. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadZip>
-    <ErrorLoadPng>Soubor se zdá být obrazovým souborem PNG. Subtitle Edit neumí otvírat soubory PNG.</ErrorLoadPng>
-    <ErrorLoadSrr>Soubor se zdá být souborem ReScene .srr - není to soubor titulků.</ErrorLoadSrr>
+    <ErrorLoadRar>Tento soubor se zdá být komprimovaným souborem .rar. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadRar>
+    <ErrorLoadZip>Tento soubor se zdá být komprimovaným souborem .zip. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadZip>
+    <ErrorLoadPng>Tento soubor se zdá být obrazovým souborem PNG. Subtitle Edit neumí otvírat soubory PNG.</ErrorLoadPng>
+    <ErrorLoadSrr>Tento soubor se zdá být souborem ReScene .srr - není to soubor titulků.</ErrorLoadSrr>
+    <ErrorLoadTorrent>Tento soubor se zdá být souborem BitTorrentu - není to soubor titulků.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Bohužel, tento soubor obsahuje pouze binární nuly!
+
+Pokud jste upravili tento soubor v Subtitle Edit, možná budete moci najít zálohu pomocí položky nabídky Soubor -&gt; Obnovit automatickou zálohu...</ErrorLoadBinaryZeroes>
+    <NoSupportEncryptedVobSub>Šifrovaný obsah VobSub není podporován.</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>Soubory Blu-ray sup zde nejsou podporovány.</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>Soubory DVD sup zde nejsou podporovány.</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>Soubory VobSub zde nejsou podporovány.</NoSupportHereVobSub>
+    <NoSupportHereDivx>Soubory DivX zde nejsou podporovány.</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vybrat titulky ze souboru Matroska</Title>
     <PleaseChoose>Nalezeny více než jedny titulky - vyberte</PleaseChoose>
-    <TrackXLanguageYTypeZ>Stopa {0} - {1} - jazyk: {2} - typ: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Stopa {0} - jazyk: {1} - typ: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Převodník jednotek</Title>
@@ -1310,12 +1350,12 @@ Pokračovat?</SubtitleAppendPrompt>
     <Title>Hromadné nahrazení</Title>
     <FindWhat>Najít</FindWhat>
     <ReplaceWith>Nahradit</ReplaceWith>
-    <Normal>&amp;Normálně</Normal>
+    <Normal>Normálně</Normal>
     <CaseSensitive>Rozlišovat &amp;velikost písmen</CaseSensitive>
     <RegularExpression>&amp;Regulární výraz</RegularExpression>
     <LinesFoundX>Nalezeno řádků: {0}</LinesFoundX>
     <Delete>Odstranit</Delete>
-    <Add>Přidat</Add>
+    <Add>&amp;Přidat</Add>
     <Update>&amp;Aktualizovat</Update>
     <Enabled>Povoleno</Enabled>
     <SearchType>Typ hledání</SearchType>
@@ -1324,7 +1364,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <Export>Exportovat...</Export>
     <ImportRulesTitle>Importovat pravidla nahrazení z...</ImportRulesTitle>
     <ExportRulesTitle>Exportovat pravidla nahrazení do...</ExportRulesTitle>
-    <Rules>Exportovat pravidla</Rules>
+    <Rules>Najít a nahradit pravidla</Rules>
     <MoveToTop>Posunout nahoru</MoveToTop>
     <MoveToBottom>Posunout dolů</MoveToBottom>
   </MultipleReplace>
@@ -1384,8 +1424,10 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <NewLine>Nový řádek (\r\n)</NewLine>
     <NewLineShort>Nový řádek (\n)</NewLineShort>
     <AnyDigit>Jakékoliv číslo (\d)</AnyDigit>
+    <NonDigit>Nečíselný znak (\D)</NonDigit>
     <AnyCharacter>Jakýkoliv znak (.)</AnyCharacter>
     <AnyWhitespace>Jakákoliv mezera (\s)</AnyWhitespace>
+    <NonSpaceCharacter>Jakýkoliv znak jiný než mezera (\S)</NonSpaceCharacter>
     <ZeroOrMore>Žádný nebo více (*)</ZeroOrMore>
     <OneOrMore>Jeden nebo více (+)</OneOrMore>
     <InCharacterGroup>Ze skupiny znaků ([test])</InCharacterGroup>
@@ -1818,6 +1860,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <CharactersPerSecondMinimum>Znaků za sekundu - minimálně: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Znaků za sekundu - maximálně: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Znaků za sekundu - průměrně: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Exportovat...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Vlastnosti Advanced Sub Station Alpha</Title>
@@ -1992,6 +2035,8 @@ Zachovat změny?</KeepChangesMessage>
     <InspectCompareMatchesForCurrentImage>Prozkoumat porovnání shod pro aktuální snímek...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Upravit poslední přidaná porovnání snímků...</EditLastAdditions>
     <SetUnitalicFactor>Nastavit koeficient nekurzívy...</SetUnitalicFactor>
+    <DiscardTitle>Zahodit změny provedené v OCR?</DiscardTitle>
+    <DiscardText>Chcete zahodit změny provedené v aktuální relaci OCR?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Ručně snímek na text</Title>

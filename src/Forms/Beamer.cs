@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
             _index = index;
 
-            LanguageStructure.ChangeCasing language = Configuration.Settings.Language.ChangeCasing;
+            LanguageStructure.Beamer language = Configuration.Settings.Language.Beamer;
             Text = language.Title;
             groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
             labelSubtitleFont.Text = Configuration.Settings.Language.ExportPngXml.FontFamily;
@@ -257,7 +257,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                 {
-
                     float addLeft = 0;
                     int oldPathPointIndex = path.PointCount;
                     if (oldPathPointIndex < 0)
@@ -428,11 +427,13 @@ namespace Nikse.SubtitleEdit.Forms
         private static string RemoveSubStationAlphaFormatting(string s)
         {
             int indexOfBegin = s.IndexOf('{');
-            while (indexOfBegin >= 0 && s.IndexOf('}') > indexOfBegin)
+            while (indexOfBegin >= 0)
             {
-                int indexOfEnd = s.IndexOf('}');
-                s = s.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = s.IndexOf('{');
+                int indexOfEnd = s.IndexOf('}', indexOfBegin + 1);
+                if (indexOfEnd < indexOfBegin)
+                    break;
+                s = s.Remove(indexOfBegin, indexOfEnd - indexOfBegin + 1);
+                indexOfBegin = s.IndexOf('{', indexOfBegin);
             }
             return s;
         }
@@ -557,7 +558,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timer1.Stop();
                 Cursor.Show();
                 FormBorderStyle = FormBorderStyle.FixedDialog;
-                BackColor = Control.DefaultBackColor;
+                BackColor = DefaultBackColor;
                 WindowState = FormWindowState.Normal;
                 _showIndex = -2;
                 _fullscreen = false;

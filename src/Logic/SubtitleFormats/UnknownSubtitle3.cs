@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 ReadLine(subtitle, line);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private void ReadLine(Subtitle subtitle, string line)

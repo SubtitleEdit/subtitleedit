@@ -10,7 +10,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class AdvancedSubStationAlpha : SubtitleFormat
     {
-
         public string Errors { get; private set; }
 
         public static string DefaultStyle
@@ -42,7 +41,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     lines.Add(line);
                 format.LoadSubtitle(sub, lines, string.Empty);
                 return sub.Header;
-
             }
         }
 
@@ -51,9 +49,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".ass"; }
         }
 
+        public const string NameOfFormat = "Advanced Sub Station Alpha";
+
         public override string Name
         {
-            get { return "Advanced Sub Station Alpha"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase) && !all.Contains("[V4 Styles]"))
             {
             }
-            else if (!all.Contains("dialog:", StringComparison.OrdinalIgnoreCase))
+            else if (!all.Contains("dialog:", StringComparison.OrdinalIgnoreCase) && !all.Contains("dialogue:", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -354,8 +354,6 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         p.Extra = p.Extra.Split('/')[0].Trim();
                     }
                 }
-
-
             }
             catch
             {
@@ -564,7 +562,6 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         text += "</font>";
                     }
                 }
-
             }
 
             text = text.Replace(@"{\i1}", "<i>");
@@ -771,12 +768,12 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     }
                     else if (!string.IsNullOrEmpty(s))
                     {
-                        string text = string.Empty;
-                        string start = string.Empty;
-                        string end = string.Empty;
-                        string style = string.Empty;
-                        string actor = string.Empty;
-                        string effect = string.Empty;
+                        var text = string.Empty;
+                        var start = string.Empty;
+                        var end = string.Empty;
+                        var style = string.Empty;
+                        var actor = string.Empty;
+                        var effect = string.Empty;
                         var layer = 0;
 
                         string[] splittedLine;
@@ -839,7 +836,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 subtitle.Header = header.ToString();
             if (footer.Length > 0)
                 subtitle.Footer = footer.ToString().Trim();
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             Errors = errors.ToString();
         }
 
@@ -855,7 +852,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            if (newFormat != null && newFormat.Name == new SubStationAlpha().Name)
+            if (newFormat != null && newFormat.Name == SubStationAlpha.NameOfFormat)
             {
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
@@ -883,12 +880,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         s = RemoveTag(s, "clip(");
                         s = RemoveTag(s, "pbo(");
 
-                        //TODO: Alignment tags
+                        // TODO: Alignment tags
 
                         s = s.Replace("{}", string.Empty);
 
                         p.Text = s;
-
                     }
                 }
             }
@@ -1464,7 +1460,6 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     }
                 }
             }
-
             return new SsaStyle { Name = styleName };
         }
 

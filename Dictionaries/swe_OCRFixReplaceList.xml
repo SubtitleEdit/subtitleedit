@@ -1,4 +1,4 @@
-<ReplaceList>
+﻿<OCRFixReplaceList>
   <WholeWords>
     <Word from="lârt" to="lärt" />
     <Word from="hedervårda" to="hedervärda" />
@@ -76,7 +76,6 @@
     <Word from="därja" to="där ja" />
     <Word from="lngenüng" to="lngenting" />
     <Word from="iluften" to="i luften" />
-    <Word from="ösen" to="öser" />
     <Word from="ösen" to="öser" />
     <Word from="tvâ" to="två" />
     <Word from="Uejerna" to="Tjejerna" />
@@ -358,6 +357,7 @@
     <Word from="l'm" to="I'm" />
     <Word from="lt's" to="It's" />
   </WholeWords>
+  <PartialWordsAlways />
   <PartialWords>
     <!-- Will be used to check words not in dictionary -->
     <!-- If new word(s) exists in spelling dictionary, it(they) is accepted -->
@@ -384,7 +384,6 @@
     <WordPart from="f" to="f " />
     <WordPart from="c" to="e" />
     <WordPart from="o" to="e" />
-    <WordPart from="o" to="e" />
     <WordPart from="I" to="t" />
     <WordPart from="n" to="o" />
     <WordPart from="s" to="e" />
@@ -392,10 +391,13 @@
     <WordPart from="à" to="å" />
     <WordPart from="n/" to="rv" />
   </PartialWords>
+  <PartialLines />
+  <PartialLinesAlways />
   <BeginLines>
     <Beginning from="Ln " to="In " />
     <Beginning from="U ppfattat" to="Uppfattat" />
   </BeginLines>
   <EndLines />
   <WholeLines />
-</ReplaceList>
+  <RegularExpressions />
+</OCRFixReplaceList>

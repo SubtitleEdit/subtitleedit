@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.Globalization;
+using Nikse.SubtitleEdit.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,14 +26,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string xmlAsString = sb.ToString().Trim();
             if (xmlAsString.Contains("<SubtitleEditorProject") &&
                 xmlAsString.Contains("<subtitle "))
             {
-                XmlDocument xml = new XmlDocument();
-                xml.XmlResolver = null;
+                var xml = new XmlDocument { XmlResolver = null };
                 try
                 {
                     xml.LoadXml(xmlAsString);
@@ -47,10 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     return false;
                 }
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -66,18 +63,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "  <subtitles-selection />" + Environment.NewLine +
                 "</SubtitleEditorProject>";
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
 
             //          <subtitle duration="2256" effect="" end="124581" layer="0" margin-l="0" margin-r="0" margin-v="0" name="" note="" path="0" start="122325" style="Default" text="The fever hath weakened thee." translation="" />
             XmlNode div = xml.DocumentElement.SelectSingleNode("subtitles");
-            int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("subtitle");
 
                 XmlAttribute duration = xml.CreateAttribute("duration");
-                duration.InnerText = p.Duration.TotalMilliseconds.ToString();
+                duration.InnerText = ((int)Math.Round(p.Duration.TotalMilliseconds)).ToString(CultureInfo.InvariantCulture);
                 paragraph.Attributes.Append(duration);
 
                 XmlAttribute effect = xml.CreateAttribute("effect");
@@ -85,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.Attributes.Append(effect);
 
                 XmlAttribute end = xml.CreateAttribute("end");
-                end.InnerText = p.EndTime.TotalMilliseconds.ToString();
+                end.InnerText = ((int)Math.Round(p.EndTime.TotalMilliseconds)).ToString(CultureInfo.InvariantCulture);
                 paragraph.Attributes.Append(end);
 
                 XmlAttribute layer = xml.CreateAttribute("layer");
@@ -117,7 +113,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.Attributes.Append(path);
 
                 XmlAttribute start = xml.CreateAttribute("start");
-                start.InnerText = p.StartTime.TotalMilliseconds.ToString();
+                start.InnerText = ((int)Math.Round(p.StartTime.TotalMilliseconds)).ToString(CultureInfo.InvariantCulture);
                 paragraph.Attributes.Append(start);
 
                 XmlAttribute style = xml.CreateAttribute("style");
@@ -134,7 +130,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.Attributes.Append(translation);
 
                 div.AppendChild(paragraph);
-                no++;
             }
 
             return ToUtf8XmlString(xml);
@@ -144,10 +139,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            XmlDocument xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(sb.ToString().Trim());
 
             XmlNode div = xml.DocumentElement.SelectSingleNode("subtitles");
@@ -156,8 +150,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 try
                 {
                     //<subtitle duration="2256" effect="" end="124581" layer="0" margin-l="0" margin-r="0" margin-v="0" name="" note="" path="0" start="122325" style="Default" text="The fever hath weakened thee." translation="" />
-                    Paragraph p = new Paragraph();
-                    p.StartTime.TotalMilliseconds = int.Parse(node.Attributes["start"].Value);
+                    var p = new Paragraph { StartTime = { TotalMilliseconds = int.Parse(node.Attributes["start"].Value) } };
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + int.Parse(node.Attributes["duration"].Value);
                     p.Text = node.Attributes["text"].Value;
 
@@ -169,7 +162,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

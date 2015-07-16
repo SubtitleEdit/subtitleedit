@@ -1,0 +1,1435 @@
+﻿<OCRFixReplaceList>
+  <WholeWords>
+    <Word from="advokatski" to="odvjetnički" />
+    <Word from="aluminijum" to="aluminij" />
+    <Word from="Američki" to="američki" />
+    <Word from="bedni" to="bijedni" />
+    <Word from="bednog" to="bijednog" />
+    <Word from="bejah" to="bijah" />
+    <Word from="beleg" to="biljeg" />
+    <Word from="belešci" to="bilješci" />
+    <Word from="bezbjedna" to="sigurna" />
+    <Word from="bežati" to="bježati" />
+    <Word from="bioskopi" to="kina" />
+    <Word from="bitci" to="bitki" />
+    <Word from="blijeđi" to="bljeđi" />
+    <Word from="beg" to="bijeg" />
+    <Word from="begu" to="bijegu" />
+    <Word from="bekstvo" to="bijeg" />
+    <Word from="besan" to="bijesan" />
+    <Word from="beše" to="bješe" />
+    <Word from="bi smo" to="bismo" />
+    <Word from="bolesan" to="bolestan" />
+    <Word from="boleti" to="boljeti" />
+    <Word from="braon" to="smeđa" />
+    <Word from="ceo" to="cijeli" />
+    <Word from="cjeli" to="cijeli" />
+    <Word from="cena" to="cijena" />
+    <Word from="ceni" to="cijeni" />
+    <Word from="cjelog" to="cijelog" />
+    <Word from="čas " to="sat " />
+    <Word from="ču" to="ću" />
+    <Word from="češ" to="ćeš" />
+    <Word from="če" to="će" />
+    <Word from="čemo" to="ćemo" />
+    <Word from="čete" to="ćete" />
+    <Word from="ćale" to="tata" />
+    <Word from="ćorsokak" to="slijepa ulica" />
+    <Word from="ćorsokaku" to="slijepoj ulici" />
+    <Word from="ćošku" to="uglu" />
+    <Word from="ćerka" to="kći" />
+    <Word from="ćerku" to="kćer" />
+    <Word from="kćerka" to="kći" />
+    <Word from="ćutao" to="šutio" />
+    <Word from="ćutala" to="šutjela" />
+    <Word from="ćuteći" to="šuteći" />
+    <Word from="daćeš" to="dat ćeš" />
+    <Word from="daće" to="dat će" />
+    <Word from="daću" to="dat ću" />
+    <Word from="daga" to="da ga" />
+    <Word from="dali si" to="da li si" />
+    <Word from="Dali si" to="Da li si" />
+    <Word from="deda" to="djed" />
+    <Word from="dedom" to="djedom" />
+    <Word from="deli" to="dijeli" />
+    <Word from="deluju" to="djeluju" />
+    <Word from="delovala" to="djelovala" />
+    <Word from="delovanje" to="djelovanje" />
+    <Word from="deo" to="dio" />
+    <Word from="desiti" to="dogoditi" />
+    <Word from="desiće se" to="dogodit će se" />
+    <Word from="dešava" to="događa" />
+    <Word from="detektuje" to="detektira" />
+    <Word from="detetu" to="djetetu" />
+    <Word from="deteta" to="djeteta" />
+    <Word from="dječiji" to="dječji" />
+    <Word from="dijetetom" to="djetetom" />
+    <Word from="dobo" to="dobro" />
+    <Word from="dobićeš" to="dobit ćeš" />
+    <Word from="doćiću" to="doći ću" />
+    <Word from="dole" to="dolje" />
+    <Word from="dolnji" to="donji" />
+    <Word from="doljnji" to="donji" />
+    <Word from="doneo" to="donio" />
+    <Word from="Doneo" to="Donio" />
+    <!-- nije za regex -->
+    <Word from="dospeo" to="dospio" />
+    <Word from="dospeju" to="dospiju" />
+    <Word from="do đavola" to="do vraga" />
+    <Word from="dođavola" to="dovraga" />
+    <Word from="drug" to="prijatelj" />
+    <Word from="drugarica" to="prijateljica" />
+    <Word from="dve" to="dvije" />
+    <Word from="đavo" to="vrag" />
+    <Word from="đavola" to="vraga" />
+    <Word from="đemper" to="džemper" />
+    <Word from="džanki" to="ovisnik" />
+    <Word from="džin" to="div" />
+    <Word from="džinovski" to="divovski" />
+    <Word from="fabriku" to="tvornicu" />
+    <Word from="foka" to="tuljan" />
+    <Word from="foku" to="tuljana" />
+    <Word from="foke" to="tuljani" />
+    <Word from="fokama" to="tuljanima" />
+    <Word from="funkcioniše" to="funkcionira" />
+    <Word from="gde" to="gdje" />
+    <Word from="Gde" to="Gdje" />
+    <Word from="greški" to="grešci" />
+    <Word from="gidošnja" to="godišnja" />
+    <Word from="hiljade" to="tisuće" />
+    <Word from="iči" to="ići" />
+    <Word from="iko" to="itko" />
+    <Word from="izleteo" to="izletio" />
+    <Word from="ivica" to="rub" />
+    <Word from="ivice" to="ruba" />
+    <Word from="ivici" to="rubu" />
+    <Word from="ivicu" to="rub" />
+    <Word from="hoču" to="hoću" />
+    <Word from="hočeš" to="hoćeš" />
+    <Word from="hoče" to="hoće" />
+    <Word from="hočemo" to="hoćemo" />
+    <Word from="hočete" to="hoćete" />
+    <Word from="Hteo" to="Htio" />
+    <Word from="hteo" to="htio" />
+    <Word from="htjeo" to="htio" />
+    <Word from="htela" to="htjela" />
+    <Word from="hteli" to="htjeli" />
+    <Word from="hrvatki" to="hrvatski" />
+    <Word from="hrvatkog" to="hrvatskog" />
+    <Word from="ignoriši" to="ignoriraj" />
+    <Word from="ignorišem" to="ignoriram" />
+    <Word from="ignoriše" to="ignorira" />
+    <Word from="ignorišeš" to="ignoriraš" />
+    <Word from="informacioni" to="informacijski" />
+    <Word from="ispričaći" to="ispričati ću" />
+    <Word from="isuviše" to="previše" />
+    <Word from="i te kako" to="itekako" />
+    <Word from="jedamput" to="jedanput" />
+    <Word from="jelda" to="jel' da" />
+    <Word from="juče" to="jučer" />
+    <Word from="Juče" to="Jučer" />
+    <Word from="kancelariji" to="uredu" />
+    <Word from="kancera" to="raka" />
+    <Word from="kćerkama" to="kćerima" />
+    <Word from="ker" to="pas" />
+    <Word from="kera" to="psa" />
+    <Word from="keru" to="psu" />
+    <Word from="ko" to="tko" />
+    <Word from="Ko" to="Tko" />
+    <Word from="kolena" to="koljena" />
+    <Word from="komandni" to="zapovjedni" />
+    <Word from="kompanija" to="tvrtka" />
+    <Word from="komplikovan" to="kompliciran" />
+    <Word from="komplikovano" to="komplicirano" />
+    <Word from="komplikuješ" to="kompliciraš" />
+    <Word from="komplikuju" to="kompliciraju" />
+    <Word from="konfor" to="komfor" />
+    <Word from="konkurišem" to="konkuriram" />
+    <Word from="konkuriše" to="konkurira" />
+    <Word from="kolevka" to="kolijevka" />
+    <Word from="kolevki" to="kolijevci" />
+    <Word from="koa" to="kao" />
+    <Word from="komitet" to="odbor" />
+    <Word from="komitetu" to="odboru" />
+    <Word from="komitetom" to="odborom" />
+    <Word from="komitetima" to="odborima" />
+    <Word from="korjenu" to="korijenu" />
+    <Word from="krstovima" to="križevima" />
+    <Word from="križom" to="križem" />
+    <Word from="kupatilo" to="kupaona" />
+    <Word from="kupatilu" to="kupaoni" />
+    <Word from="lažeju" to="lažu" />
+    <Word from="lažov" to="lažljivac" />
+    <Word from="lek" to="lijek" />
+    <Word from="lenji" to="lijeni" />
+    <Word from="letela" to="letjela" />
+    <Word from="leva" to="lijeva" />
+    <Word from="levi" to="lijevi" />
+    <Word from="Levo" to="Lijevo" />
+    <Word from="lepota" to="lepota" />
+    <Word from="leto" to="ljeto" />
+    <Word from="leta" to="ljeta" />
+    <Word from="loži" to="pali" />
+    <Word from="malopre" to="malo prije" />
+    <Word from="maloprije" to="malo prije" />
+    <Word from="manifestuje" to="manifestira" />
+    <Word from="mator" to="star" />
+    <Word from="matori" to="stari" />
+    <!-- nije za regex! -->
+    <Word from="merač" to="mjerač" />
+    <Word from="mere" to="mjere" />
+    <Word from="mesečnik" to="mjesečnik" />
+    <Word from="mesečno" to="mjesečno" />
+    <Word from="meša" to="miješa" />
+    <Word from="misliće" to="mislit će" />
+    <Word from="mlečna" to="mliječna" />
+    <Word from="mlečni" to="mliječni" />
+    <Word from="mleveno" to="mljeveno" />
+    <Word from="moč" to="moć" />
+    <Word from="moraću" to="morat ću" />
+    <Word from="moraćeš" to="morat ćeš" />
+    <Word from="muzejem" to="muzejom" />
+    <Word from="muzici" to="glazbi" />
+    <Word from="naduvan" to="napušen" />
+    <Word from="nagoveštaj" to="nagovještaj" />
+    <Word from="najzad" to="napokon" />
+    <Word from="nameštaj" to="namještaj" />
+    <Word from="nameste" to="namjeste" />
+    <Word from="namešteno" to="namješteno" />
+    <Word from="namena" to="namjena" />
+    <Word from="napolje" to="van" />
+    <Word from="napolju" to="vani" />
+    <Word from="natera" to="natjera" />
+    <Word from="nauka" to="znanost" />
+    <Word from="nazad" to="natrag" />
+    <Word from="Nazad" to="Natrag" />
+    <Word from="napraviću" to="napravit ću" />
+    <Word from="napred" to="naprijed" />
+    <Word from="Napred" to="Naprijed" />
+    <Word from="naprimjer" to="na primjer" />
+    <Word from="nasreću" to="na sreću" />
+    <Word from="nebi" to="ne bi" />
+    <Word from="nebih" to="ne bih" />
+    <Word from="nedaj" to="ne daj" />
+    <Word from="negde" to="negdje" />
+    <Word from="nemrem" to="ne mogu" />
+    <Word from="nemogu" to="ne mogu" />
+    <Word from="nene" to="njene" />
+    <Word from="nigde" to="nigdje" />
+    <Word from="niko" to="nitko" />
+    <Word from="Niko" to="Nitko" />
+    <Word from="nejde" to="ne ide" />
+    <Word from="nesrećnica" to="nesretnica" />
+    <Word from="nervi" to="živci" />
+    <Word from="nervira" to="živcira" />
+    <Word from="nervni" to="živčani" />
+    <Word from="neču" to="neću" />
+    <Word from="nečeš" to="nećeš" />
+    <Word from="neče" to="neće" />
+    <Word from="nečemo" to="nećemo" />
+    <Word from="nečete" to="nećete" />
+    <Word from="neda" to="ne da" />
+    <Word from="nedam" to="ne dam" />
+    <Word from="neznam" to="ne znam" />
+    <Word from="nezna" to="ne zna" />
+    <Word from="Neznam" to="Ne znam" />
+    <Word from="Nezna" to="Ne zna" />
+    <Word from="neznajući" to="ne znajući" />
+    <Word from="new yorški" to="njujorški" />
+    <Word from="nju jorški" to="njujorški" />
+    <Word from="nežan" to="nježan" />
+    <Word from="neželi" to="ne želi" />
+    <Word from="niej" to="nije" />
+    <Word from="niije" to="nije" />
+    <Word from="njem" to="nijem" />
+    <Word from="nesvijest" to="nesvjest" />
+    <Word from="obe" to="obje" />
+    <Word from="obelodanjen" to="objelodanjen" />
+    <Word from="obelodanjeno" to="objelodanjeno" />
+    <Word from="obožavalac" to="obožavatelj" />
+    <Word from="obuhvata" to="obuhvaća" />
+    <Word from="oceni" to="ocijeni" />
+    <Word from="odandje" to="odande" />
+    <Word from="odavdje" to="odavde" />
+    <Word from="odbrana" to="obrana" />
+    <Word from="odbranim" to="obranim" />
+    <Word from="odkad" to="otkad" />
+    <Word from="odkako" to="otkako" />
+    <Word from="odma" to="odmah" />
+    <Word from="odneti" to="odnijeti" />
+    <Word from="odnjeti" to="odnijeti" />
+    <Word from="odupreti" to="oduprijeti" />
+    <Word from="odprilike" to="otprilike" />
+    <Word from="oprostiće" to="oprostit će" />
+    <Word from="Oprostiće" to="Oprostit će" />
+    <Word from="organizuju" to="organiziraju" />
+    <Word from="ostrvima" to="otocima" />
+    <Word from="ovde" to="ovdje" />
+    <Word from="Ovde" to="Ovdje" />
+    <Word from="ovdije" to="ovdje" />
+    <Word from="Ovdije" to="Ovdje" />
+    <Word from="ovjde" to="ovdje" />
+    <Word from="Ovjde" to="Ovdje" />
+    <Word from="pantalone" to="hlače" />
+    <Word from="parčence" to="komadić" />
+    <Word from="paramparčad" to="komadići" />
+    <Word from="pemzija" to="penzija" />
+    <Word from="pemziju" to="penziju" />
+    <Word from="pertle" to="žnirance" />
+    <Word from="pesama" to="pjesama" />
+    <Word from="peškirima" to="ručnicima" />
+    <Word from="pitaću" to="pitat ću" />
+    <Word from="plata" to="plaća" />
+    <Word from="plača" to="plaća" />
+    <Word from="platu" to="plaću" />
+    <Word from="plačanje" to="plaćanje" />
+    <Word from="plačanjem" to="plaćanjem" />
+    <Word from="plaćeš" to="plačeš" />
+    <Word from="podpisati" to="potpisati" />
+    <Word from="podretlo" to="porijeklo" />
+    <Word from="pogrješiti" to="pogriješiti" />
+    <Word from="pomen" to="spomen" />
+    <Word from="poreklo" to="porijeklo" />
+    <Word from="poreklu" to="porijeklu" />
+    <Word from="prenos" to="prijenos" />
+    <Word from="prenosa" to="prijenosa" />
+    <Word from="prenosu" to="prijenosu" />
+    <Word from="preterao" to="pretjerao" />
+    <Word from="preteruj" to="pretjeruj" />
+    <Word from="preteruje" to="pretjeruje" />
+    <Word from="pridonjeti" to="pridonijeti" />
+    <Word from="prijatan" to="ugodan" />
+    <Word from="prijatni" to="ugodni" />
+    <Word from="proleteo" to="proletio" />
+    <Word from="podneo" to="podnio" />
+    <Word from="podnesti" to="podnijeti" />
+    <Word from="podnjeti" to="podnijeti" />
+    <Word from="podstrekač" to="poticatelj" />
+    <Word from="pomaći" to="pomaknuti" />
+    <Word from="poen" to="bod" />
+    <Word from="poena" to="boda" />
+    <Word from="poludeo" to="poludio" />
+    <Word from="poludela" to="poludjela" />
+    <Word from="ponaosob" to="osobno" />
+    <!-- nije za regex! -->
+    <Word from="poneo" to="ponio" />
+    <Word from="ponesla" to="ponijela" />
+    <Word from="pomoč" to="pomoć" />
+    <Word from="poređenje" to="usporedba" />
+    <Word from="poređenju" to="usporedbi" />
+    <Word from="poseta" to="posjet" />
+    <Word from="posle" to="poslije" />
+    <Word from="Posle" to="Poslije" />
+    <Word from="posledično" to="posljedično" />
+    <Word from="poslje" to="poslije" />
+    <Word from="pozadi" to="iza" />
+    <Word from="poželeo" to="poželio" />
+    <Word from="praktikuju" to="prakticiraju" />
+    <Word from="pre" to="prije" />
+    <Word from="Pre" to="Prije" />
+    <Word from="predame" to="preda me" />
+    <Word from="preporuča" to="preporučuje" />
+    <!-- nije za regex -->
+    <Word from="preti" to="prijeti" />
+    <Word from="predsednik" to="predsjednik" />
+    <Word from="Predsednik" to="Predsjednik" />
+    <Word from="precednik" to="predsjednik" />
+    <Word from="precijednik" to="predsjednik" />
+    <Word from="precjednik" to="predsjednik" />
+    <Word from="Precjednik" to="Predsjednik" />
+    <Word from="preduzeli" to="poduzeli" />
+    <Word from="prevod" to="prijevod" />
+    <Word from="priije" to="prije" />
+    <Word from="prijtelj" to="prijatelj" />
+    <Word from="prijtelji" to="prijatelji" />
+    <Word from="primjete" to="primijete" />
+    <Word from="primjetila" to="primijetila" />
+    <Word from="primjetio" to="primijetio" />
+    <Word from="prodato" to="prodano" />
+    <Word from="promeniti" to="promijeniti" />
+    <Word from="promenilo" to="promijenilo" />
+    <Word from="promjenilo" to="promijenilo" />
+    <Word from="promijena" to="promjena" />
+    <Word from="protivrečne" to="proturječne" />
+    <Word from="psihićki" to="psihički" />
+    <Word from="radijo" to="radio" />
+    <Word from="rađe" to="radije" />
+    <Word from="raspust" to="odmor" />
+    <Word from="razgovrati" to="razgovarati" />
+    <Word from="reč" to="riječ" />
+    <Word from="rećiću" to="reći ću" />
+    <Word from="redosljed" to="redoslijed" />
+    <Word from="reko" to="rekao" />
+    <Word from="reka" to="rijeka" />
+    <Word from="rjeka" to="rijeka" />
+    <Word from="reke" to="rijeke" />
+    <Word from="rjeke" to="rijeke" />
+    <Word from="riješenje" to="rješenje" />
+    <Word from="Riješenje" to="Rješenje" />
+    <Word from="rješe" to="riješe" />
+    <Word from="Rješe" to="Riješe" />
+    <Word from="reku" to="rijeku" />
+    <Word from="rekom" to="rijekom" />
+    <Word from="rengen" to="rendgen" />
+    <Word from="reagovati" to="reagirati" />
+    <Word from="reaguje" to="reagira" />
+    <Word from="retka" to="rijetka" />
+    <Word from="retko" to="rijetko" />
+    <Word from="Retka" to="Rijetka" />
+    <Word from="Retko" to="Rijetko" />
+    <Word from="retkost" to="rijetkost" />
+    <Word from="rjetkost" to="rijetkost" />
+    <Word from="rijeđi" to="rjeđi" />
+    <Word from="ronioc" to="ronilac" />
+    <Word from="samoubistava" to="samoubojstava" />
+    <Word from="sedela" to="sjedila" />
+    <Word from="sedišta" to="sjedala" />
+    <Word from="sedište" to="sjedalo" />
+    <Word from="sedni" to="sjedni" />
+    <Word from="Sedni" to="Sjedni" />
+    <Word from="sedi" to="sjedi" />
+    <Word from="Sedi" to="Sjedi" />
+    <Word from="sednem" to="sjednem" />
+    <Word from="sedite" to="sjedite" />
+    <Word from="sertan" to="sretan" />
+    <Word from="siguan" to="siguran" />
+    <Word from="sirće" to="ocat" />
+    <Word from="sirćetu" to="octu" />
+    <Word from="slijedbenik" to="sljedbenik" />
+    <Word from="sma" to="sam" />
+    <Word from="smao" to="samo" />
+    <Word from="sme" to="smije" />
+    <Word from="Sme" to="Smije" />
+    <Word from="smešak" to="smješak" />
+    <Word from="smjeo" to="smio" />
+    <Word from="sem" to="osim" />
+    <Word from="sam sam" to="sam sâm" />
+    <Word from="s menom" to="sa mnom" />
+    <Word from="savest" to="savjest" />
+    <Word from="savesti" to="savjesti" />
+    <Word from="savijest" to="savjest" />
+    <Word from="saviješću" to="savješću" />
+    <Word from="savešću" to="savješću" />
+    <Word from="seti" to="sjeti" />
+    <Word from="setim" to="sjetim" />
+    <Word from="sintersajzer" to="synthesizer" />
+    <Word from="sitnisajzer" to="synthesizer" />
+    <Word from="skelet" to="kostur" />
+    <Word from="skuvati" to="skuhati" />
+    <Word from="smestila" to="smjestila" />
+    <Word from="smestio" to="smjestio" />
+    <Word from="smešten" to="smješten" />
+    <Word from="srečom" to="srećom" />
+    <Word from="svešteniče" to="svećeniče" />
+    <Word from="svjet" to="svijet" />
+    <Word from="sneg" to="snijeg" />
+    <Word from="sočiva" to="leće" />
+    <Word from="sočivo" to="leća" />
+    <Word from="spasao" to="spasio" />
+    <Word from="Spasao" to="Spasio" />
+    <Word from="spolja" to="izvana" />
+    <Word from="spoljašnji" to="vanjski" />
+    <Word from="sprat" to="kat" />
+    <Word from="sprata" to="kata" />
+    <Word from="sta" to="što" />
+    <Word from="sticati" to="stjecati" />
+    <Word from="sudija" to="sudac" />
+    <Word from="sudijo" to="suče" />
+    <Word from="sudijskog" to="sudskog" />
+    <Word from="suština" to="bit" />
+    <Word from="suštinski" to="bitni" />
+    <Word from="svideo" to="svidio" />
+    <Word from="svest" to="svijest" />
+    <Word from="Svest" to="Svijest" />
+    <!-- u korist svijeta koji se češće pojavljuje ostat će ovako -->
+    <Word from="svet" to="svijet" />
+    <Word from="Svet" to="Svijet" />
+    <Word from="svetom" to="svijetom" />
+    <Word from="sveta" to="svijeta" />
+    <Word from="svetu" to="svijetu" />
+    <Word from="svjest" to="svijest" />
+    <Word from="nesvest" to="nesvijest" />
+    <Word from="nesvjest" to="nesvijest" />
+    <Word from="nesvesti" to="nesvijesti" />
+    <Word from="nesvjesti" to="nesvijesti" />
+    <Word from="svestan" to="svjestan" />
+    <Word from="šagarepa" to="mrkva" />
+    <Word from="šečer" to="šećer" />
+    <Word from="šolja" to="šalica" />
+    <Word from="šolju" to="šalicu" />
+    <Word from="španski" to="španjolski" />
+    <Word from="Šta" to="Što" />
+    <Word from="štab" to="stožer" />
+    <Word from="štabu" to="stožeru" />
+    <Word from="šta" to="što" />
+    <Word from="štp" to="što" />
+    <Word from="tačno" to="točno" />
+    <Word from="tačnije" to="točnije" />
+    <Word from="tačna" to="točna" />
+    <Word from="tačnija" to="točnija" />
+    <Word from="talas" to="val" />
+    <Word from="talasi" to="valovi" />
+    <Word from="talasni" to="valni" />
+    <Word from="tačka" to="točka" />
+    <Word from="tačkama" to="točkama" />
+    <Word from="tačke" to="točke" />
+    <Word from="takođe" to="također" />
+    <Word from="teraj" to="tjeraj" />
+    <Word from="točak" to="kotač" />
+    <Word from="tržni" to="trgovački" />
+    <Word from="testera" to="pila" />
+    <Word from="tržnom" to="trgovačkom" />
+    <Word from="tugi" to="tuzi" />
+    <Word from="tvrtci" to="tvrtki" />
+    <Word from="ubeđuju" to="uvjeravaju" />
+    <Word from="ubjediti" to="uvjeriti" />
+    <Word from="ubiću" to="ubit ću" />
+    <Word from="ubiće" to="ubit će" />
+    <Word from="ubistava" to="ubojstava" />
+    <Word from="učestvuju" to="sudjeluju" />
+    <Word from="udavit" to="utopit" />
+    <Word from="udaviti" to="utopiti" />
+    <Word from="uglom" to="kutom" />
+    <Word from="uljeva" to="ulijeva" />
+    <Word from="u jutro" to="ujutro" />
+    <Word from="ujutru" to="ujutro" />
+    <Word from="umem" to="umijem" />
+    <Word from="umeš" to="umiješ" />
+    <Word from="umesto" to="umjesto" />
+    <Word from="umetnost" to="umjetnost" />
+    <Word from="umetnosti" to="umjetnosti" />
+    <Word from="umetnošću" to="umjetnošću" />
+    <Word from="umreti" to="umrijeti" />
+    <Word from="univerzitet" to="sveučilište" />
+    <Word from="unapred" to="unaprijed" />
+    <Word from="uopšte" to="uopće" />
+    <Word from="uopče" to="uopće" />
+    <Word from="upašću" to="upast ću" />
+    <Word from="uprkos" to="usprkos" />
+    <Word from="Uprkos" to="Usprkos" />
+    <Word from="uradio" to="učinio" />
+    <Word from="uradiću" to="učinit ću" />
+    <Word from="uspeo" to="uspio" />
+    <Word from="Uspeo" to="Uspio" />
+    <Word from="uspela" to="uspjela" />
+    <Word from="uspelo" to="uspjelo" />
+    <Word from="uspe" to="uspije" />
+    <Word from="uspeju" to="uspiju" />
+    <Word from="uspem" to="uspijem" />
+    <Word from="usredsrede" to="usredotoče" />
+    <Word from="utičem" to="utječem" />
+    <Word from="uvijet" to="uvjet" />
+    <Word from="uvo" to="uho" />
+    <Word from="vaistinu" to="uistinu" />
+    <Word from="Vaistinu" to="Uistinu" />
+    <Word from="važi" to="vrijedi" />
+    <Word from="večan" to="vječan" />
+    <Word from="večna" to="vječna" />
+    <Word from="večno" to="vječno" />
+    <Word from="vek" to="stoljeće" />
+    <Word from="veka" to="stoljeća" />
+    <Word from="venca" to="vijenca" />
+    <Word from="veoma" to="vrlo" />
+    <!-- nije za regex -->
+    <Word from="verovati" to="vjerovati" />
+    <Word from="verovanje" to="vjerovanje" />
+    <Word from="vetar" to="vjetar" />
+    <Word from="vetra" to="vjetra" />
+    <Word from="veče" to="večer" />
+    <Word from="večnost" to="vječnost" />
+    <Word from="vešt" to="vješt" />
+    <Word from="veštine" to="vještine" />
+    <Word from="vežba" to="vježba" />
+    <Word from="vizuelne" to="vizualne" />
+    <Word from="vreme" to="vrijeme" />
+    <Word from="Vreme" to="Vrijeme" />
+    <Word from="voliti" to="voljeti" />
+    <Word from="voleo" to="volio" />
+    <Word from="Voleo" to="Volio" />
+    <Word from="voleću" to="voljet ću" />
+    <Word from="voleće" to="voljet će" />
+    <Word from="volećemo" to="voljet ćemo" />
+    <Word from="vjetru" to="vetru" />
+    <Word from="vređanje" to="vrijeđanje" />
+    <Word from="vređa" to="vrijeđa" />
+    <Word from="whiskey" to="viski" />
+    <Word from="zamena" to="zamjena" />
+    <Word from="za menom" to="za mnom" />
+    <Word from="zanm" to="znam" />
+    <Word from="zanma" to="zanima" />
+    <Word from="zaspem" to="zaspim" />
+    <Word from="za uvijek" to="zauvijek" />
+    <Word from="zavredili" to="zavrijedili" />
+    <Word from="zdrvo" to="zdravo" />
+    <Word from="Zdrvo" to="Zdravo" />
+    <Word from="zvaničan" to="služben" />
+    <Word from="zver" to="zvijer" />
+    <Word from="zvjer" to="zvijer" />
+    <Word from="zveri" to="zvijeri" />
+    <Word from="zvjeri" to="zvijeri" />
+    <Word from="želela" to="željela" />
+    <Word from="želeo" to="želio" />
+    <Word from="Želeo" to="Želio" />
+    <Word from="želila" to="željela" />
+    <Word from="Želila" to="Željela" />
+    <Word from="željeo" to="želio" />
+    <Word from="želeli" to="željeli" />
+    <Word from="živeo" to="živio" />
+    <!-- NISU ZA REGEX!!! osim ako netko zna bolje, naravno :) -->
+    <Word from="bićemo" to="bit ćemo" />
+    <Word from="Bićemo" to="Bit ćemo" />
+    <Word from="bićete" to="bit ćete" />
+    <Word from="Bićete" to="Bit ćete" />
+    <Word from="bićeš" to="bit ćeš" />
+    <Word from="Bićeš" to="Bit ćeš" />
+    <Word from="definiše" to="definira" />
+    <Word from="definišem" to="definiram" />
+    <Word from="definiši" to="definiraj" />
+    <Word from="definišu" to="definiraju" />
+    <Word from="dejstvo" to="djelovanje" />
+    <Word from="dejstvom" to="djelovanjem" />
+    <Word from="diskutujem" to="raspravljam" />
+    <Word from="diskutuješ" to="raspravljaš" />
+    <Word from="diskutuje" to="raspravlja" />
+    <Word from="diskutujemo" to="raspravljamo" />
+    <Word from="diskutuju" to="raspravljaju" />
+    <Word from="eksperimentišem" to="eksperimentiram" />
+    <Word from="eksperimentišu" to="eksperimentiraju" />
+    <Word from="eksperimentišeš" to="eksperimentiraš" />
+    <Word from="eksperimentišete" to="eksperimentirate" />
+    <Word from="eksperimentiše" to="eksperimentira" />
+    <Word from="eksperimentišemo" to="eksperimentiramo" />
+    <Word from="familija" to="obitelj" />
+    <Word from="familijama" to="obiteljima" />
+    <Word from="familiji" to="obitelji" />
+    <Word from="familiju" to="obitelj" />
+    <Word from="historija" to="povijest" />
+    <Word from="historije" to="povijesti" />
+    <Word from="historiji" to="povijesti" />
+    <Word from="istoriji" to="povijesti" />
+    <Word from="historiju" to="povijest" />
+    <Word from="istorija" to="povijest" />
+    <Word from="Istorija" to="Povijest" />
+    <Word from="istorije" to="povijesti" />
+    <Word from="istoriju" to="povijest" />
+    <Word from="imaću" to="imat ću" />
+    <Word from="imaćeš" to="imat ćeš" />
+    <Word from="imaće" to="imat će" />
+    <Word from="Imaću" to="Imat ću" />
+    <Word from="Imaćeš" to="Imat ćeš" />
+    <Word from="Imaće" to="Imat će" />
+    <Word from="interesujem" to="zanimam" />
+    <Word from="interesuješ" to="zanimaš" />
+    <Word from="interesuje" to="zanima" />
+    <Word from="Interesuje" to="Zanima" />
+    <Word from="interesuju" to="zanimaju" />
+    <Word from="interesovanje" to="zanimanje" />
+    <Word from="izvini" to="oprosti" />
+    <Word from="Izvini" to="Oprosti" />
+    <Word from="izvinite" to="oprostite" />
+    <Word from="Izvinite" to="Oprostite" />
+    <Word from="izvinjavam" to="ispričavam" />
+    <Word from="Izvinjavam" to="Ispričavam" />
+    <Word from="kola" to="auto" />
+    <Word from="kolima" to="autom" />
+    <Word from="komšija" to="susjed" />
+    <Word from="komšiji" to="susjedu" />
+    <Word from="komšiluk" to="susjedstvo" />
+    <Word from="komšiluku" to="susjedstvu" />
+    <Word from="komšije" to="susjedi" />
+    <Word from="komšijama" to="susjedima" />
+    <Word from="komšijski" to="susjedni" />
+    <Word from="komšijskog" to="susjednog" />
+    <Word from="kontrolišem" to="kontroliram" />
+    <Word from="kontrolišeš" to="kontroliraš" />
+    <Word from="kontrolišemo" to="kontroliramo" />
+    <Word from="kontrolišete" to="kontrolirate" />
+    <Word from="kontrolišu" to="kontroliraju" />
+    <Word from="kontrolisati" to="kontrolirati" />
+    <Word from="izgladneo" to="izgladnio" />
+    <Word from="odeljenje" to="odjel" />
+    <Word from="odeljenjem" to="odjelom" />
+    <Word from="odneo" to="odnio" />
+    <Word from="ogladneo" to="ogladnio" />
+    <Word from="obezbeđujem" to="osiguravam" />
+    <Word from="obezbeđuješ" to="osiguravaš" />
+    <Word from="obezbeđuje" to="osigurava" />
+    <Word from="obezbeđujemo" to="osiguravamo" />
+    <Word from="obezbeđuju" to="osiguravaju" />
+    <Word from="obezbediti" to="osigurati" />
+    <Word from="obezbedili" to="osigurali" />
+    <Word from="obezbeđivanje" to="osiguravanje" />
+    <Word from="obezbeđivanja" to="osiguranja" />
+    <Word from="obezbeđivanju" to="osiguravanju" />
+    <Word from="oblast" to="područje" />
+    <Word from="oblastima" to="područjima" />
+    <!-- ostaje ovako jer je prijevod u raznim padežima različit -->
+    <Word from="oblasti" to="područj " />
+    <Word from="operišem" to="operiram" />
+    <Word from="operiše" to="operira" />
+    <Word from="operišeš" to="operiraš" />
+    <Word from="operišemo" to="operiramo" />
+    <Word from="operišete" to="operirate" />
+    <Word from="operišu" to="operiraju" />
+    <Word from="prićaću" to="pričat ću" />
+    <Word from="Prićaću" to="Pričat ću" />
+    <Word from="prićaćeš" to="pričat ćeš" />
+    <Word from="Prićaćeš" to="Pričat ćeš" />
+    <Word from="prićaćemo" to="pričat ćemo" />
+    <Word from="Prićaćemo" to="Pričat ćemo" />
+    <Word from="pomera" to="miče" />
+    <Word from="pomeraj" to="miči" />
+    <Word from="pomjeraj" to="miči" />
+    <Word from="pomeraju" to="miču" />
+    <Word from="pomeri" to="pomakni" />
+    <Word from="Pomeri" to="Pomakni" />
+    <Word from="pomeriš" to="pomakneš" />
+    <Word from="pomerati" to="micati" />
+    <Word from="porodica" to="obitelj" />
+    <Word from="porodice" to="obitelji" />
+    <Word from="porodici" to="obitelji" />
+    <Word from="porodicu" to="obitelj" />
+    <Word from="postaćeš" to="postat ćeš" />
+    <Word from="Postaćeš" to="Postat ćeš" />
+    <Word from="postačeš" to="postat ćeš" />
+    <Word from="Postačeš" to="Postat ćeš" />
+    <Word from="postaramo" to="pobrinemo" />
+    <Word from="postaraj" to="pobrini" />
+    <Word from="postaraju" to="pobrinu" />
+    <Word from="postarajmo" to="pobrinimo" />
+    <Word from="postara" to="pobrine" />
+    <Word from="postaraš" to="pobrineš" />
+    <Word from="povinujem" to="pokoravam" />
+    <Word from="povinuje" to="pokorava" />
+    <Word from="povinujete" to="pokoravate" />
+    <Word from="povinuju" to="pokoravaju" />
+    <Word from="procenat" to="postotak" />
+    <Word from="procenata" to="postotaka" />
+    <Word from="procentu" to="postotku" />
+    <Word from="procenti" to="postoci" />
+    <Word from="procentima" to="postocima" />
+    <Word from="razumela" to="razumjela" />
+    <Word from="razumeli" to="razumjeli" />
+    <Word from="razumeo" to="razumio" />
+    <Word from="razumijeo" to="razumio" />
+    <Word from="Razumijeo" to="Razumio" />
+    <Word from="razumjeo" to="razumio" />
+    <Word from="Razumjeo" to="Razumio" />
+    <Word from="Razumeo" to="Razumio" />
+    <Word from="razume" to="razumije" />
+    <Word from="razumeju" to="razumiju" />
+    <Word from="razumeti" to="razumjeti" />
+    <Word from="razumeću" to="razumjet ću" />
+    <Word from="stepena" to="stupnjeva" />
+    <Word from="stepen" to="stupanj" />
+    <Word from="stepeni" to="stupnjeva" />
+    <Word from="štampa" to="tisak" />
+    <Word from="štampu" to="tisak" />
+    <Word from="štampom" to="tiskom" />
+    <Word from="štampi" to="tisku" />
+    <Word from="štamparska" to="tiskovna" />
+    <Word from="štamparski" to="tiskovni" />
+    <Word from="štampati" to="tiskati" />
+    <Word from="tolerišem" to="toleriram" />
+    <Word from="toleriše" to="tolerira" />
+    <Word from="tolerišeš" to="toleriraš" />
+    <Word from="tolerišu" to="toleriraju" />
+    <Word from="udeo" to="udio" />
+    <Word from="video" to="vidio" />
+    <Word from="Video" to="Vidio" />
+    <Word from="videćemo" to="vidjet ćemo" />
+    <Word from="videćeš" to="vidjet ćeš" />
+    <Word from="vratiću" to="vratit ću" />
+    <Word from="vratiće" to="vratit će" />
+    <Word from="vratit ćeš" to="vratit ćeš" />
+    <!-- pridjevi optimalan, minimalan i maksimalan nemaju komparativ i superlativ. -->
+    <Word from="najoptimalnije" to="optimalno" />
+    <Word from="najoptimalnija" to="optimalna" />
+    <Word from="najminimalniji" to="minimalni" />
+    <Word from="najminimalnija" to="minimalna" />
+    <Word from="najmaksimalniji" to="maksimalan" />
+    <Word from="najmaksimalnija" to="maksimalna" />
+    <!-- sasvim rijetko se pojavljuje biće kao imenica, tako da  je ovo u korist češće riječi -->
+    <Word from="biće" to="bit će" />
+    <Word from="Biće" to="Bit će" />
+    <Word from="biću" to="bit ću" />
+    <Word from="Biću" to="Bit ću" />
+    <!-- imena mjeseci -->
+    <Word from="januar" to="siječanj" />
+    <Word from="januara" to="siječnja" />
+    <Word from="januaru" to="siječnju" />
+    <Word from="februar" to="veljača" />
+    <Word from="februara" to="veljače" />
+    <Word from="februaru" to="veljači" />
+    <Word from="mart" to="ožujak" />
+    <Word from="marta" to="ožujka" />
+    <Word from="martu" to="ožujku" />
+    <Word from="april" to="travanj" />
+    <Word from="aprila" to="travnja" />
+    <Word from="aprilu" to="travnju" />
+    <Word from="maj" to="svibanj" />
+    <Word from="maja" to="svibnja" />
+    <Word from="maju" to="svibnju" />
+    <Word from="majem" to="svibnjem" />
+    <Word from="svibnjom" to="svibnjem" />
+    <Word from="jun" to="lipanj" />
+    <Word from="junu" to="lipnju" />
+    <Word from="juna" to="lipnja" />
+    <Word from="juli" to="srpanj" />
+    <Word from="jula" to="srpnja" />
+    <Word from="julu" to="srpnju" />
+    <Word from="august" to="kolovoz" />
+    <Word from="augusta" to="kolovoza" />
+    <Word from="augustu" to="kolovozu" />
+    <Word from="septembar" to="rujan" />
+    <Word from="septembra" to="rujna" />
+    <Word from="septembru" to="rujnu" />
+    <Word from="oktobar" to="listopad" />
+    <Word from="oktobru" to="listopadu" />
+    <Word from="novembar" to="studeni" />
+    <Word from="novembra" to="studenog" />
+    <Word from="novembru" to="studenom" />
+    <Word from="decembar" to="prosinac" />
+    <Word from="decembra" to="prosinca" />
+    <Word from="decembru" to="prosincu" />
+    <Word from="sreda" to="srijeda" />
+    <Word from="sredu" to="srijedu" />
+    <Word from="sredom" to="srijedom" />
+    <!-- osobna imena i imena gradova/država itd. -->
+    <Word from="Afghanistan" to="Afganistan" />
+    <Word from="Bil" to="Bill" />
+    <Word from="Bilu" to="Billu" />
+    <Word from="Bruklin" to="Brooklyn" />
+    <Word from="Bruklinu" to="Brooklynu" />
+    <Word from="Brajan" to="Brian" />
+    <Word from="Braun" to="Brown" />
+    <Word from="Brussels" to="Bruxelles" />
+    <Word from="Čarls" to="Charles" />
+    <Word from="Den" to="Dan" />
+    <Word from="Đin" to="Jin" />
+    <Word from="Đošua" to="Joshua" />
+    <Word from="Džakobi" to="Jacobi" />
+    <Word from="Džejn" to="Jane" />
+    <Word from="Džej" to="Jay" />
+    <Word from="Džejms" to="James" />
+    <Word from="Džek" to="Jack" />
+    <Word from="Džeka" to="Jacka" />
+    <Word from="Džeku" to="Jacku" />
+    <Word from="Džes" to="Jess" />
+    <Word from="Džesika" to="Jessica" />
+    <Word from="Džim" to="Jim" />
+    <Word from="Džime" to="Jime" />
+    <Word from="Džon" to="John" />
+    <Word from="Džoni" to="Johnny" />
+    <Word from="Džonson" to="Johnson" />
+    <Word from="Ejmi" to="Amy" />
+    <Word from="Endi" to="Andy" />
+    <Word from="Filadelfija" to="Philadelphia" />
+    <Word from="Filadelfiju" to="Philadelphiju" />
+    <Word from="Filadelfiji" to="Philadelphiji" />
+    <Word from="Holivud" to="Hollywood" />
+    <Word from="Holivuda" to="Hollywooda" />
+    <Word from="Holivudu" to="Hollywoodu" />
+    <Word from="Hitrou" to="Heathrow" />
+    <Word from="Iraq" to="Irak" />
+    <Word from="in Iraq" to="u Iraku" />
+    <Word from="Kavendiš" to="Cavendish" />
+    <Word from="Lusi" to="Lucy" />
+    <Word from="Mexico" to="Meksiko" />
+    <Word from="in Mexico" to="u Meksiku" />
+    <Word from="Mocart" to="Mozart" />
+    <Word from="Nensi" to="Nancy" />
+    <Word from="Pol" to="Paul" />
+    <Word from="Rajan" to="Ryan" />
+    <Word from="Ričard" to="Richard" />
+    <Word from="Ričmond" to="Richmond" />
+    <Word from="Sajmon" to="Simon" />
+    <Word from="Stiv" to="Steve" />
+    <Word from="Stiven" to="Stephen" />
+    <Word from="Sančez" to="Sanchez" />
+    <Word from="Španiji" to="Španjolskoj" />
+    <Word from="Švetska" to="Švedska" />
+    <Word from="Švajcarska" to="Švicarska" />
+    <Word from="Švajcarskoj" to="Švicarskoj" />
+    <Word from="Holandija" to="Nizozemska" />
+    <Word from="Holandijom" to="Nizozemskom" />
+    <Word from="Holandiju" to="Nizozemsku" />
+    <Word from="Holandiji" to="Nizozemskoj" />
+    <Word from="Losanđeles" to="Los Angeles" />
+    <Word from="Losanđelesu" to="Los Angelesu" />
+    <Word from="Los Anđeles" to="Los Angeles" />
+    <Word from="Los Anđelesu" to="Los Angelesu" />
+    <Word from="Los Anđelesom" to="Los Angelesom" />
+    <Word from="Majami" to="Miami" />
+    <Word from="Njujork" to="New York" />
+    <Word from="Njujorka" to="New Yorka" />
+    <Word from="Njujorku" to="New Yorku" />
+    <Word from="Vinsent" to="Vincent" />
+  </WholeWords>
+  <PartialWordsAlways />
+  <PartialWords>
+    <WordPart from="¤" to="o" />
+    <WordPart from="vv" to="w" />
+    <WordPart from="IVI" to="M" />
+    <WordPart from="lVI" to="M" />
+    <WordPart from="IVl" to="M" />
+    <WordPart from="lVl" to="M" />
+  </PartialWords>
+  <PartialLines>
+    <LinePart from="Dobro veče" to="Dobra večer" />
+    <LinePart from="Dobro večer" to="Dobra večer" />
+    <LinePart from="Dobar večer" to="Dobra večer" />
+    <LinePart from="gdje ideš" to="kamo ideš" />
+    <LinePart from="Gdje ideš" to="Kamo ideš" />
+    <LinePart from="ja bi" to="ja bih" />
+    <LinePart from="Ja bi" to="Ja bih" />
+    <LinePart from="Jel sam ti" to="Jesam li ti" />
+    <LinePart from="bi ja" to="bih ja" />
+    <LinePart from="moje saučešće" to="moja sućut" />
+    <LinePart from="Moram da idem" to="Moram ići" />
+    <LinePart from="moraš da ideš" to="moraš ići" />
+    <LinePart from="na večer" to="navečer" />
+    <LinePart from="Na večer" to="Navečer" />
+    <LinePart from="Ne mogu da verujem" to="Ne mogu vjerovati" />
+    <LinePart from="od kako" to="otkako" />
+    <LinePart from="pravo u oči" to="ravno u oči" />
+    <LinePart from="Svo vreme" to="Sve vrijeme" />
+    <LinePart from="Svo vrijeme" to="Sve vrijeme" />
+    <LinePart from="tamo natrag" to="tamo iza" />
+    <LinePart from="tamo je natrag" to="tamo je iza" />
+    <LinePart from="Tamo je natrag" to="Tamo je iza" />
+  </PartialLines>
+  <PartialLinesAlways />
+  <BeginLines />
+  <EndLines />
+  <WholeLines />
+  <RegularExpressions>
+    <!-- deklinacije imenica i konjugacije glagola -->
+    <RegEx find="([0-9])-ogodišnj(i|a|e|u)\b" replaceWith="$1-godišnj$2" />
+    <RegEx find="(jeda|dva|tri|četr|pet|šes|sedam|osam|devet)najst(a|e|i|o|u|im|om|og|oj|ima)\b" replaceWith="$1naest$2" />
+    <RegEx find="\b([aA])bsorbira(m|š|mo|te|ju|li|le|la|lo|ti|jući)?" replaceWith="$1psorbira$2" />
+    <RegEx find="\b([aA])bstraktn(a|e|i|o|u|oj|om|og|im|ima)?" replaceWith="$1pstraktn$2" />
+    <RegEx find="\badvokat(a|e|u)?\b" replaceWith="odvjetnik$1" />
+    <RegEx find="\badvokat(i|ima)\b" replaceWith="odvjetnic$1" />
+    <RegEx find="([aA])kcion" replaceWith="$1kcijsk" />
+    <RegEx find="([aA])ktuel" replaceWith="$1ktual" />
+    <RegEx find="[aA]las(ka|ku|ki|ci)" replaceWith="Aljas$1" />
+    <RegEx find="([aA])svalt" replaceWith="$1sfalt" />
+    <RegEx find="\bavgust(a|e|i|u|om|ima)?\b" replaceWith="kolovoz$1" />
+    <RegEx find="\bavijon(i|a|e|u|ima)\b" replaceWith="avion$1" />
+    <RegEx find="\b([bB])ekstv(a|u|om)\b" replaceWith="$1ijeg$2" />
+    <RegEx find="bezbed(an|na|no|ni|nima|nu|ne|nog|nom|noj)" replaceWith="sigur$1" />
+    <RegEx find="bezbedno(st|stima|šću|snu|snog|snom|sni)?" replaceWith="sigurno$1" />
+    <RegEx find="bakcil(i|a|e|u|ima)?" replaceWith="bacil$1" />
+    <RegEx find="\b[bB]iblij(a|i|u|om|ama)\b" replaceWith="Biblij$1" />
+    <RegEx find="[bB]iro(a|i|u|om|ima)?" replaceWith="Ured$1" />
+    <RegEx find="([bB])j?edn(a|e|i|o|u|om|og|ima)?" replaceWith="$1ijedn$2" />
+    <RegEx find="([bB])elešk(a|e|u|om|ama)?" replaceWith="$1ilješk$2" />
+    <RegEx find="([bB])j?esn(i|o|u|om|og|om|oj)" replaceWith="$1ijesn$2" />
+    <RegEx find="([bB])eznadež(an|na|no|nom|noj|nim|nima)" replaceWith="$1eznad$2" />
+    <RegEx find="([bB])ež(anje|anjem|anju)" replaceWith="$1jež$2" />
+    <RegEx find="([bB])i?j?ež(i|imo|e|ao|ala|ali)" replaceWith="$1jež$2" />
+    <RegEx find="bioskop(a|u|om)" replaceWith="kin$1" />
+    <RegEx find="([bB])lj?ed(a|e|i|o|u|im|om|ima)" replaceWith="$1lijed$2" />
+    <RegEx find="([bB])ožiji(a|i|u|om|ima)?\b" replaceWith="$1ožji$2" />
+    <RegEx find="boži[čć](a|e|i|u|em|ima)?\b" replaceWith="Božić$1" />
+    <RegEx find="Boži[čć]n(a|e|i|o|u|om|im)?\b" replaceWith="božićn$1" />
+    <RegEx find="bukvaln" replaceWith="doslovn" />
+    <RegEx find="Bukvaln" replaceWith="Doslovn" />
+    <RegEx find="\bCaliforni(a|ja|i|ji|u|ju)?" replaceWith="Kaliforni$1" />
+    <RegEx find="\b([cC])j?el(a|e|i|o|u|og|om|oj|ima|og|osti)\b" replaceWith="$1ijel$2" />
+    <RegEx find="\b([cC])j?en(a|e|i|o|u|om|ama|iti|ila|ilo|io|im|iš|imo|ite|iše)" replaceWith="$1ijen$2" />
+    <RegEx find="([cC])j?enjen(a|e|i|im|ima|o|u|om|oj)?" replaceWith="$1ijenjen$2" />
+    <RegEx find="čas(a|u|om|ovi|ovima|ove|ova)" replaceWith="sat$1" />
+    <RegEx find="([čČ])ovi?j?e(k|k[au]|ko[mv]|kovo[gjm]|če|čn[aio]|čanstv[aou]|čanstvom)\b" replaceWith="$1ovje$2" />
+    <RegEx find="ćut(im|iš|i|imo|ite|e)" replaceWith="šut$1" />
+    <RegEx find="Ćut(im|iš|i|imo|ite|e)" replaceWith="Šut$1" />
+    <RegEx find="([dD])ejstv(a|u|ima)" replaceWith="$1jelovanj$2" />
+    <RegEx find="del(a|o|u|ić|ića|iće|ićem|ići|ićima)" replaceWith="djel$1" />
+    <RegEx find="\b([dD])j?eli(m|š|mo|te|li|le|la|ti)\b" replaceWith="$1ijel$2" />
+    <RegEx find="([dD])elikvent" replaceWith="$1elinkvent" />
+    <RegEx find="\b([dD])eluje(m|š|mo|te|mo)?\b" replaceWith="$1jeluje$2" />
+    <RegEx find="\b([dD])j?ete\b" replaceWith="$1ijete" />
+    <RegEx find="\b([dD])ete(tom|tov|tovog|tovu|tove)\b" replaceWith="$1jete$2" />
+    <RegEx find="\b([dD])ec(a|i|o|u|e|om)?\b" replaceWith="$1jec$2" />
+    <RegEx find="\b([dD])efinisan(a|i|o|u|e|om|og)?\b" replaceWith="$1efiniran$2" />
+    <RegEx find="\b([dD])j?elov(a|e|i|ima)" replaceWith="$1ijelov$2" />
+    <RegEx find="([dD])evoj(ka|ke|ki|ko|ku|kom|kama|ci|čica|čice|čici|činu|čine)" replaceWith="$1jevoj$2" />
+    <RegEx find="([dD])eča(k|ka|ku|ke|kom|ci|cima|če)\b" replaceWith="$1ječa$2" />
+    <RegEx find="dečj(a|e|i|u|em|im|ima|oj)" replaceWith="dječj$1" />
+    <RegEx find="([dD])etinjstv(a|o|u|om|ima)" replaceWith="$1jetinjstv$2" />
+    <RegEx find="\b([dD])j?eljenj(a|e|u|em|ima)\b" replaceWith="$1ijeljenj$2" />
+    <RegEx find="\b([dD])ijec(a|i|o|u|e|om)\b" replaceWith="$1jec$2" />
+    <RegEx find="\b([dD])ragocen(a|i|o|u|e|om|og|oj|ima)\b" replaceWith="$1ragocjen$2" />
+    <RegEx find="\b([dD])obija(m|š|mo|te|ju|la|le|li|ti)?\b" replaceWith="$1obiva$2" />
+    <RegEx find="\b([dD])oktork(a|e|i|u|om|ama)\b" replaceWith="$1oktoric$2" />
+    <RegEx find="\b([dDpP])onj?e(la|le|li|lo|ti)\b" replaceWith="$1onije$2" />
+    <RegEx find="\bdopada(m|š|mo|te|ju|la|le|li|ti)?" replaceWith="sviđa$1" />
+    <RegEx find="doprinj?e(te|la|le|li|lo|t|ti|to|vši)" replaceWith="doprinije$1" />
+    <RegEx find="doprin(eo|eso|jeo)?" replaceWith="doprinio" />
+    <RegEx find="dosije(a|e|i|u|ima)" replaceWith="dosje$1" />
+    <RegEx find="dospe(li|la|lo|lom|log|lima|ti)\b" replaceWith="dospje$1" />
+    <RegEx find="dospe(m|š|e|mo|te)" replaceWith="dospije$1" />
+    <RegEx find="dušek" replaceWith="madrac" />
+    <RegEx find="džigeric" replaceWith="jetr" />
+    <RegEx find="Džigeric" replaceWith="Jetr" />
+    <RegEx find="\bđep(a|u|ovi|ove|ova|ima|na|ne|ni|no|noj|nom|nima)?" replaceWith="džep$1" />
+    <RegEx find="\bĐovani(a|u|em|ovom|ovoj|ovim)?" replaceWith="Giovanni$1" />
+    <RegEx find="evr(a|e|i|o|u|om|ima)?" replaceWith="eur$1" />
+    <RegEx find="evrop(ski|ska|sko|sku|skom)" replaceWith="europ$1" />
+    <RegEx find="Evrop(a|e|i|o|u|om)" replaceWith="Europ$1" />
+    <RegEx find="([fF])alsifikuje?(m|š|mo|te|ju)?" replaceWith="$1alsificira$2" />
+    <RegEx find="farba" replaceWith="boja" />
+    <RegEx find="\bfu[dt]bal(a|u|om)?" replaceWith="nogomet$1" />
+    <RegEx find="\bFu[dt]bal(a|u|om)?" replaceWith="Nogomet$1" />
+    <RegEx find="\bFrojd(a|e|u|om|ovom|ovoj|ovim)?" replaceWith="Freud$1" />
+    <RegEx find="([gG])luv(a|e|o|u|oj|om)?" replaceWith="$1luh$2" />
+    <RegEx find="\b([gG])rj?eh(a|e|u|om)?" replaceWith="$1rijeh$2" />
+    <RegEx find="\b([gG])rj?es(i|ima)" replaceWith="$1rijes$2" />
+    <RegEx find="([gG])rejanj(e|u|a|em|ima)" replaceWith="$1rijanj$2" />
+    <RegEx find="([gG])rj?eši(o|m|š|mo|te|la|li|ti)" replaceWith="$1riješi$2" />
+    <RegEx find="haos" replaceWith="kaos" />
+    <RegEx find="hemij" replaceWith="kemij" />
+    <RegEx find="Hemij" replaceWith="Kemij" />
+    <RegEx find="holesterol" replaceWith="kolesterol" />
+    <RegEx find="Holesterol" replaceWith="Kolesterol" />
+    <RegEx find="\bHrist(a|e|u|om)?\b" replaceWith="Krist$1" />
+    <RegEx find="hrišćan" replaceWith="kršćan" />
+    <RegEx find="Hrišćan" replaceWith="Kršćan" />
+    <RegEx find="\bHoland(ska|sku|skom|skoj)\b" replaceWith="Nizozems$1" />
+    <RegEx find="\bNizuzem(ska|sku|skom|skoj)\b" replaceWith="Nizozems$1" />
+    <RegEx find="\bhistorijsk(e|i|a|o|u|om|oj)\b" replaceWith="povijesn$1" />
+    <RegEx find="\bHistorijsk(e|i|a|o|u|om|oj)\b" replaceWith="Povijesn$1" />
+    <RegEx find="\bistorijsk(e|i|a|o|u|om|oj)?\b" replaceWith="povijesn$1" />
+    <RegEx find="\bIstorijsk(e|i|a|o|u|om|oj)?\b" replaceWith="Povijesn$1" />
+    <RegEx find="\bhiljad(a|e|i|u|om|ama)\b" replaceWith="tisuć$1" />
+    <RegEx find="hleb" replaceWith="kruh" />
+    <RegEx find="hroničn" replaceWith="kroničn" />
+    <RegEx find="Hroničn" replaceWith="Kroničn" />
+    <RegEx find="([iI])dentifikuje(m|š|mo|te|ju|še)" replaceWith="$1dentificira$2" />
+    <RegEx find="([iI])migracion(a|i|u|e|om|og)?" replaceWith="$1migracijsk$2" />
+    <RegEx find="migracion(a|i|u|e|om|og)?" replaceWith="migracijsk$1" />
+    <RegEx find="([iI])nostranstv(a|u|o|om|ima)" replaceWith="$1nozemstv$2" />
+    <RegEx find="interesantn" replaceWith="zanimljiv" />
+    <RegEx find="Interesantn" replaceWith="Zanimljiv" />
+    <RegEx find="([iI])spoljava" replaceWith="$1zražava" />
+    <RegEx find="([iI])zbe(ći|gava|gavaš|gavamo|gavate|gavaju|gavanje|gavali|gao|gla|gli|glo)" replaceWith="$1zbje$2" />
+    <RegEx find="([iIz])blj?ed(ela|elo|ele|eli|io|elom|elima|jele)" replaceWith="$1blijedj$2" />
+    <RegEx find="([iI])sčeznu(o|la|le|li|lu|lom|lima|lima|ti|uše|uvši)" replaceWith="$1ščeznu$2" />
+    <RegEx find="([iI])sčezn(em|eš|e|emo|ete|u)" replaceWith="$1ščezn$2" />
+    <RegEx find="([iI])skorišć" replaceWith="$1skorišt" />
+    <RegEx find="([iI])zmen(a|e|i|u|om|ama)" replaceWith="$1zmjen$2" />
+    <RegEx find="ispresecan(a|e|i|u|om)?" replaceWith="ispresijecan$1" />
+    <RegEx find="([iI])zgladne(la|le|li|lo|lu|lima|lom|vši)" replaceWith="$1zgladnje$2" />
+    <RegEx find="([iI])zvešta(j|ji|ja|je|ju|vam|vaš|va|vamo|vate|vaju|vanje)?" replaceWith="$1zvješta$2" />
+    <RegEx find="\b([jJ])agnje" replaceWith="$1anje" />
+    <RegEx find="\bJovan(a|e|u|om)?" replaceWith="Ivan$1" />
+    <RegEx find="\b([kK])af(a|e|i|u|om|ama|ana|ane|ani|anu|anom|anama|anska|anski|ansku|anskom)\b" replaceWith="$1av$2" />
+    <RegEx find="kancelarij(a|u|om)" replaceWith="ured$1" />
+    <RegEx find="kašik(a|e|i|o|u|om|ama)" replaceWith="žlic$1" />
+    <RegEx find="(k[ćč]|[ćč])erk(e|i|o|om)" replaceWith="kćeri" />
+    <RegEx find="(K[ćč]|[ĆČ])erk(e|i|o|om)" replaceWith="Kćeri" />
+    <RegEx find="kirij(a|e|i|o|u|om)" replaceWith="stanarin$1" />
+    <RegEx find="([kK])elner" replaceWith="$1onobar" />
+    <RegEx find="([kK])lovn(a|e|i|u|ovi|ovima)?" replaceWith="$1laun$2" />
+    <RegEx find="\b([kK])olen(a|o|u|ima)" replaceWith="$1oljen$2" />
+    <RegEx find="([kK])ombinovanj(e|a|u|em|ima)" replaceWith="$1ombiniranj$2" />
+    <RegEx find="([kK])ompjuter" replaceWith="$1ompjutor" />
+    <RegEx find="([kK])omplikova" replaceWith="$1omplicira" />
+    <RegEx find="([kK])omplikuje" replaceWith="$1omplicira" />
+    <RegEx find="konkurs" replaceWith="natječaj" />
+    <RegEx find="Konkurs" replaceWith="Natječaj" />
+    <RegEx find="([kK])onkuris" replaceWith="$1onkurir" />
+    <RegEx find="([kK])ontrolisan" replaceWith="$1ontroliran" />
+    <RegEx find="([kK])ontroliše(m|š|mo|te)" replaceWith="$1ontrolir$2" />
+    <RegEx find="([kK])oriš[ćč](enj?)(a|e|u|em|ima)" replaceWith="$1orišt$2$3" />
+    <RegEx find="([kK])učk" replaceWith="$1uj" />
+    <RegEx find="([kK])uvan(a|e|i|o|u|ima|og|om|oj|im)?" replaceWith="$1uhan$2" />
+    <RegEx find="([kK])uva(r|re|ri|ru|rima|rica|ricu|rice|m|š|mo|te|ju|še|li|ti)" replaceWith="$1uha$2" />
+    <RegEx find="\bkrst(a|u|em)?\b" replaceWith="križ$1" />
+    <RegEx find="([lL])j?eči(o|la|le|li|ti|še)?" replaceWith="$1iječi$2" />
+    <RegEx find="([lL])j?ečni(k|ka|ku|ca|cu|ci|ce|cima|cama)" replaceWith="$1iječni$2" />
+    <RegEx find="([lL])ekar(a|e|u|om)?" replaceWith="$1iječnik$2" />
+    <RegEx find="([lL])j?ekov(a|e|i|ima)" replaceWith="$1ijekov$2" />
+    <RegEx find="([lL])j?ečenj(a|e|u|em|ima)" replaceWith="$1iječenj$2" />
+    <RegEx find="([lL])j?ečen(a|e|o|u|om|og|ima)?" replaceWith="$1iječen$2" />
+    <RegEx find="\b([lL])en(a|e|i|o|u|om|ima|čina|čino|čine)?" replaceWith="$1ijen$2" />
+    <RegEx find="\b([lL])j?ep(a|e|i|o|u|om|oj|ima)?\b" replaceWith="$1ijep$2" />
+    <RegEx find="([lL])epš(a|i|o|u|e|im|om|ima|og|om)?\b" replaceWith="$1jepš$2" />
+    <RegEx find="\blev(a|i|o|u|om|oj|ima)" replaceWith="lijev$1" />
+    <RegEx find="\bličn(a|e|i|o|u|im|om|oj)?" replaceWith="osobn$1" />
+    <RegEx find="\bLičn(a|e|i|o|u|im|om|oj)?" replaceWith="Osobn$1" />
+    <RegEx find="([lL])obanj(a|e|i|u|om|ama)?" replaceWith="$1ubanj$2" />
+    <RegEx find="\b([lL])jep(a|e|i|o|u|om|oj|ima)\b" replaceWith="$1ijep$2" />
+    <RegEx find="([lL])uda(k|ka|ku|kom|ci|čka|čki|čko|čkom|čku|kinja|kinju|kinje)?\b" replaceWith="$1uđa$2" />
+    <RegEx find="([mM])esec(a|e|i|u|om|ima)?" replaceWith="$1jesec$2" />
+    <RegEx find="mj?eša(lic[aeiu]|licama)\b" replaceWith="miješa$1" />
+    <RegEx find="mj?eša(m|n|ni|na|no|nom|noj|nima|š|mo|te|ju|njem|nju|li|ti)\b" replaceWith="miješa$1" />
+    <RegEx find="(m|M)edve(d|da|de|di|du|dom|dima|đa|đu|đom|đoj|đi|đeg)" replaceWith="$1edvje$2" />
+    <RegEx find="([mM])ilij?on" replaceWith="$1ilijun" />
+    <RegEx find="\b([mM])er(a|e|i|u|om|ama)" replaceWith="$1jer$2" />
+    <RegEx find="([mM])j?enja(m|š|mo|te|ju|li|ti)?" replaceWith="$1ijenja$2" />
+    <RegEx find="([mM])est(a|o|u|om|ima)" replaceWith="$1jest$2" />
+    <RegEx find="([mM])lj?ek(a|o|u|om)" replaceWith="$1lijek$2" />
+    <RegEx find="([mM])oč(i|u|ni|nim|noj)" replaceWith="$1oć$2" />
+    <RegEx find="([mM])ogučnost(i|ima)?" replaceWith="$1ogućnost$2" />
+    <RegEx find="([mM])uva(o|j|š|mo|te|ju|vši|li|ti|lo|la|le)" replaceWith="$1ota$2" />
+    <RegEx find="muzik(a|u|om)\b" replaceWith="glazb$1" />
+    <RegEx find="([nN])amer(a|e|i|u|om|na|no|noj|nom|nim)\b" replaceWith="$1amjer$2" />
+    <RegEx find="([nN])amj?eni(m|š|mo|o|te|ti|o|la|le|li|še)?" replaceWith="$1amijeni$2" />
+    <RegEx find="([nN])amesti(m|š|mo|te|ti|o|la|le|li|še)?" replaceWith="$1amjesti$2" />
+    <RegEx find="([nN])aočar(a|e|ama|ima)" replaceWith="$1aočal$2" />
+    <RegEx find="([nN])arandž(a|e|i|u|om|ama)" replaceWith="$1aranč$2" />
+    <RegEx find="([nN])aranđ(a|e|i|u|om|ama)" replaceWith="$1aranč$2" />
+    <RegEx find="([nN])aslj?eđ(a|e|i|u|em|ima)" replaceWith="$1aslijeđ$2" />
+    <RegEx find="([nN])asmej(em|eš|e|emo|ete|u|ani|ane|anima|anoj|anom|ano|ava|avaš|an|ana|anu|anog|alo|ala|ao)" replaceWith="$1asmij$2" />
+    <RegEx find="([nN])ater(a|ale|ali|ala|alo|an|ana|anoj|anom|anim|ati|alo|ao)" replaceWith="$1atjer$2" />
+    <!-- vrijedi i za ponedjeljak* -->
+    <RegEx find="nedelj" replaceWith="nedjelj" />
+    <RegEx find="([nN])emačk(a|e|i|o|u|om|im)" replaceWith="$1jemačk$2" />
+    <RegEx find="([nN])eprijatn(a|e|i|u|om|no|noj|nom|nim)?" replaceWith="$1eugodn$2" />
+    <RegEx find="([nN])epobediv(a|o|om|oj|e|i|u|ost|ošću|osti)" replaceWith="$1epobjediv$2" />
+    <RegEx find="([nN])erj?eš(en|eno|ena|ene|eni)" replaceWith="$1eriješ$2" />
+    <!-- vrijedi i za vjerojatno -->
+    <RegEx find="([nN])evero[vj]at" replaceWith="$1evjerojat" />
+    <RegEx find="nesmij(em|eš|e|emo|ete|u)?" replaceWith="ne smij$1" />
+    <RegEx find="([nN])ežn(a|e|i|u|om|og|oj|ima|iji|ije|ija)" replaceWith="$1ježn$2" />
+    <RegEx find="\b([nN])oč(i|u|ni|na|noj|nim)?" replaceWith="$1oć$2" />
+    <RegEx find="naučn(i|a|o|og|u|oj|om|ik|im|ici)?" replaceWith="znanstven$1" />
+    <RegEx find="([oO])bavj?est(io|ila|ile|ili|iti|iše|ima|i)?" replaceWith="$1bavijest$2" />
+    <RegEx find="([oO])beležava" replaceWith="$1bilježava" />
+    <RegEx find="obezbeđenj(a|e|u|ima)" replaceWith="osiguranj$1" />
+    <RegEx find="([oO])brača" replaceWith="$1braća" />
+    <RegEx find="\bodeć(a|e|u|i|om)" replaceWith="odjeć$1" />
+    <RegEx find="([oO])deljenj(a|u)" replaceWith="$1djel$2" />
+    <RegEx find="([oO])dgaji(la|le|li|še)?" replaceWith="$1dgoji$2" />
+    <RegEx find="([oO])duvj?ek" replaceWith="$1duvijek" />
+    <RegEx find="([oO])gladne(la|le|li|lo|lu|lima|lom|vši)" replaceWith="$1gladnje$2" />
+    <RegEx find="([oO])kean(a|e|i|u|ima)?" replaceWith="$1cean$2" />
+    <RegEx find="([oO])pklad" replaceWith="$1klad" />
+    <RegEx find="([oO])psednut(a|e|i|u|om|im|ima)?" replaceWith="$1psjednut$2" />
+    <RegEx find="([oO])pšt(a|e|i|u|em|om|im)" replaceWith="$1pć$2" />
+    <RegEx find="([oO])rganizuje(m|mo|š|te)?" replaceWith="$1rganizira$2" />
+    <RegEx find="([oO])rganizov" replaceWith="$1rganizir" />
+    <RegEx find="([oO])seti(o|m|š|la|li|le|ti)" replaceWith="$1sjeti$2" />
+    <RegEx find="([oO])setljiv(a|i|e|o|om|im|ima|oj)?" replaceWith="$1sjetljiv$2" />
+    <RegEx find="([oO])sj?e[ćč]a" replaceWith="$1sjeća" />
+    <RegEx find="([oO])strv(a|u|om)" replaceWith="$1tok$2" />
+    <RegEx find="([oO])sveženj(a|e|u|em|ima)" replaceWith="$1svježenj$2" />
+    <RegEx find="([oO])svežava(m|š|mo|te|ju|ti|li|la|lo|ju|juć|juće|juća)?" replaceWith="$1svježava$2" />
+    <RegEx find="\b([oO])ter(a|am|amo|ate|aju)" replaceWith="$1tjer$2" />
+    <RegEx find="ovaploćenj(a|e|em|u|ima)" replaceWith="utjelovljenj$1" />
+    <RegEx find="\b([oO])zli?j?ed(a|e|i|u|om|ama)\b" replaceWith="$1zljed$2" />
+    <RegEx find="\b([oO])zlj?edi(m|š|mo|te|ti|o|la|lo|še)\b" replaceWith="$1zlijedi$2" />
+    <RegEx find="([oO])zlj?eđen(a|am|amo|ate|aju|om|oj|ima)" replaceWith="$1zlijeđen$2" />
+    <RegEx find="pacov" replaceWith="štakor" />
+    <RegEx find="Pacov" replaceWith="Štakor" />
+    <RegEx find="([pP])eva(č|m|š|mo|te|ju|li|čica|či|čice)?" replaceWith="$1jeva$2" />
+    <RegEx find="([pP])esm(a|e|i|o|u|om)" replaceWith="$1jesm$2" />
+    <RegEx find="([pP])eša(k|ka|ku|kom|kinja|kinjom|cima|čim|čiš|čimo|čite|če|čili)" replaceWith="$1ješa$2" />
+    <RegEx find="peškir(a|e|i|u|om)?" replaceWith="ručnik$1" />
+    <RegEx find="([pP])obed(a|e|i|o|u|om|ama|nik|nika|niku|nica|nici|nicu)" replaceWith="$1objed$2" />
+    <RegEx find="([pP])odstica(j|ja|ju|ti|jima|je|li|še)" replaceWith="$1otic$2" />
+    <RegEx find="([pP])o[dt]stič" replaceWith="$1otič" />
+    <RegEx find="porodičn(a|e|i|u|im|om|og)" replaceWith="obiteljsk$1" />
+    <RegEx find="Porodičn(a|e|i|u|im|om|og)" replaceWith="Obiteljsk$1" />
+    <RegEx find="([pP])redamnom" replaceWith="$1reda mnom" />
+    <RegEx find="([pP])ridik" replaceWith="$1rodik" />
+    <RegEx find="([pP])rihvat(a|ao|alo|ala|ale|ali|anje|anju|anjem)" replaceWith="$1rihvać$2" />
+    <RegEx find="([pP])roleć(a|e|u|em|ima)?" replaceWith="$1roljeć$2" />
+    <RegEx find="([pP])oseduj(e|em|eš|emo|ete|u|ući)" replaceWith="$1osjeduj$2" />
+    <RegEx find="\b([pP])oseti(o|m|š|la|li|le|lo|ti)?\b" replaceWith="$1osjeti$2" />
+    <RegEx find="\b([pP])o[dt]sj?eti(o|m|š|la|li|le|lo|ti)?\b" replaceWith="$1odsjeti$2" />
+    <RegEx find="([pP])osledic(a|e|i|o|u|om)" replaceWith="$1osljedic$2" />
+    <RegEx find="([pP])oslednj(a|e|i|u|em|oj|om|ima)" replaceWith="$1osljednj$2" />
+    <RegEx find="([pP])osed(a|e|i|o|u|om)" replaceWith="$1osjed$2" />
+    <RegEx find="([pP])osmatra(č|j|m|š|mo|te|ju|či|ču|ča|če|čice|jući)?\b" replaceWith="$1romatra$2" />
+    <RegEx find="([pP])oter(a|e|i|u|om|ama|aš|amo|ate|aju|nica|nicama|nicu|nice)?\b" replaceWith="$1otjer$2" />
+    <RegEx find="([pP])ovrj?ed(io|ila|ili|ile|iti|iše|ilo)" replaceWith="$1ovrijed$2" />
+    <RegEx find="pozorišt(a|e|u|ima)?\b" replaceWith="kazališt$1" />
+    <RegEx find="([pP])redpostav" replaceWith="$1retpostav" />
+    <RegEx find="([pP])rj?edlog(a|u|om)?\b" replaceWith="$1rijedlog$2" />
+    <RegEx find="([pP])rj?edloz(i|ima)" replaceWith="$1rijedloz$2" />
+    <RegEx find="([pP])restupnik(a|u|om)\b" replaceWith="$1rijestupnik$2" />
+    <RegEx find="([pP])rijtelj?" replaceWith="$1rijatelj" />
+    <RegEx find="([pP])rj?estupnik(a|u|om)?\b" replaceWith="$1rijestupnik$2" />
+    <RegEx find="([pP])reteriva(o|la|lo|nje|nja|u|em|njima)?\b" replaceWith="$1retjeriva$2" />
+    <RegEx find="([pP])rolet(ele|ela|elim|elima|no|nom|na|noj|nim)?\b" replaceWith="$1ljet$2" />
+    <RegEx find="([pP])romen(a|e|i|u|om|ama)" replaceWith="$1romjen$2" />
+    <RegEx find="promj?en(im|iš|imo|ite|ili|ile)" replaceWith="promijen$1" />
+    <RegEx find="([pP])esnik(a|u|ov|ovu|om)?\b" replaceWith="$1jesnik$2" />
+    <RegEx find="\b([pP])obed(a|i|e|u|o|om|ama)" replaceWith="$1objed$2" />
+    <RegEx find="\b([pP])obed(im|iš|i|imo|ite|e|iti|ili|ivši)" replaceWith="$1obijed$2" />
+    <RegEx find="([pP])obeg(ao|la|li|le|lo|avši)" replaceWith="$1objeg$2" />
+    <RegEx find="([pP])o[dt]cj?enjen(a|e|i|o|u|om|oj|om|ima)?\b" replaceWith="$1odcijenjen$2" />
+    <RegEx find="([pP])oent(a|e|u|i|o|om|ama)" replaceWith="$1oant$2" />
+    <RegEx find="([pP])ogrj?eš(io|ila|ili)" replaceWith="$1ogriješ$2" />
+    <RegEx find="([pP])oslednj(i|im|e|em|eg|ima)" replaceWith="$1osljed$2" />
+    <RegEx find="pomera(m|š|mo|te)" replaceWith="miče$1" />
+    <RegEx find="([pP])overenj(e|a|u|em)" replaceWith="$1ovjerenj$2" />
+    <RegEx find="([pP])overljiv(a|e|i|o|u|ima|ima|om|og|oj)?\b" replaceWith="$1ovjerljiv$2" />
+    <RegEx find="\b([pP])rj?evoz(a|u|om|ovi|ovima)?\b" replaceWith="$1rijevoz$2" />
+    <RegEx find="([pP])rj?etnj(a|e|i|o|u|om|ama)?\b" replaceWith="$1rijetnj$2" />
+    <RegEx find="([pP])rimi?j?ećuj(em|eš|e|emo|ete|u)" replaceWith="$1rimjećuj$2" />
+    <RegEx find="([pP])rimer(ak|en|ena|eno|enog|enu|enim|ku|kom|ci|cima)?\b" replaceWith="$1rimjer$2" />
+    <RegEx find="\b([pP])rimet(an|na|no|ljiv|ljiva|ljivo|ljivost|ljivošću|ljivosti|nost)" replaceWith="$1rimjet$2" />
+    <RegEx find="\b([pP])rimen(a|e|i|o|u|om|jena|jene|jenoj|jenim|jiv|jiva|jivo|jivog|jivom|jivu)?\b" replaceWith="$1rimjen$2" />
+    <RegEx find="\b([pP])rimj?eni(m|š|imo|ite|ti|li|la|le|lo)" replaceWith="$1rimijeni$2" />
+    <RegEx find="\b([pP])rimj?eti(o|la|le|lo|li)?\b" replaceWith="$1rimijeti$2" />
+    <RegEx find="([pP])rosečn(a|e|i|o|u|om|oj|im|ima)?\b" replaceWith="$1rosječn$2" />
+    <RegEx find="poen(i|e|ima)" replaceWith="bodov$1" />
+    <RegEx find="([pP])over" replaceWith="$1ovjer" />
+    <RegEx find="([pP])rover" replaceWith="$1rovjer" />
+    <RegEx find="([pP])rj?edlo([gz])(a|e|u|om|i|ima)" replaceWith="$1rijedlo$2$3" />
+    <RegEx find="([pP])rj?eti(o|š|mo|te|la|li|lo|le)" replaceWith="$1rijeti$2" />
+    <RegEx find="([pP])reter" replaceWith="$1retjer" />
+    <RegEx find="prevazi" replaceWith="nadi" />
+    <RegEx find="Prevazi" replaceWith="Nadi" />
+    <RegEx find="([rR])azmen(a|e|u|i|ama)?" replaceWith="$1azmjen$2" />
+    <RegEx find="([rR])azume(m|š|mo|te|va)" replaceWith="$1azumije$2" />
+    <RegEx find="redhodn" replaceWith="rethodn" />
+    <RegEx find="([rR])eligijozn(a|e|i|o|u|om|im|ima)" replaceWith="$1eligiozn$2" />
+    <RegEx find="\b([rR])i?ješava(m|o|š|mo|te|ju|nje|nja|li|la||ti)?" replaceWith="$1ješava$2" />
+    <RegEx find="([rR])ešenj(e|em|u|a|ima)?" replaceWith="$1ješenj$2" />
+    <RegEx find="\b([rR])j?eč(i|ima)" replaceWith="$1iječ$2" />
+    <RegEx find="\b([rR])j?eš(io|ila|ili|ile|iti|im|iš|i|imo|ite|e|en|eno|ena|ene|eni)" replaceWith="$1iješ$2" />
+    <RegEx find="sačeka(j|te|š|mo|te|ju|li|še|te|jte)?" replaceWith="pričeka$1" />
+    <RegEx find="Sačeka(j|te|š|mo|te|ju|li|še|te|jte)?" replaceWith="Pričeka$1" />
+    <RegEx find="([sS])aglasno(st|sti|šću|stima)?" replaceWith="$1uglasno$2" />
+    <RegEx find="([sS])amoubistv(a|o|u|om|ima)" replaceWith="$1amoubojstv$2" />
+    <RegEx find="saobraćaj(na|nu|ni|nom|nima)?" replaceWith="promet$1" />
+    <RegEx find="Saobraćaj(na|nu|ni|nom|nima)?" replaceWith="Promet$1" />
+    <RegEx find="([sS])aradni" replaceWith="$1uradni" />
+    <RegEx find="([sS])arađ" replaceWith="$1urađ" />
+    <RegEx find="([sS])atan(a|e|i|istički)?" replaceWith="$1oton$2" />
+    <RegEx find="\b([sS])avet" replaceWith="$1avjet" />
+    <RegEx find="([sS])ažalj?eva(m|š|mo|te|ju|ti|li|le|la|lo|jući|juća|juće|nje)" replaceWith="$1ažalijeva$2" />
+    <RegEx find="\b([sS])edi(m|š|i|imo|ite|e|eći|ili|ile|ilo|iše)\b" replaceWith="$1jedi$2" />
+    <RegEx find="\b([sS])istem(a|e|i|u|om|ima)?\b" replaceWith="$1ustav$2" />
+    <RegEx find="([sS])mećar(a|e|i|ski|ska|sko|skom|skoj|skih)?" replaceWith="$1metlar$2" />
+    <RegEx find="\b([sS])mj?e(m|š|mo|te|šna|šne|šni|šno|šnom|šnoj|šnu|im|ima)\b" replaceWith="$1mije$2" />
+    <RegEx find="\b([sS])mej(u|e|em|eš|emo|ete|anje|anju|ati|ali|ale|ao|ala|alo)" replaceWith="$1mij$2" />
+    <RegEx find="([sS])mest(i|ili|ile|io|ila|ilo|iti|ivši)" replaceWith="$1mjest$2" />
+    <RegEx find="([sS])pasava(m|š|mo|te|ju|li|nje|nju|nja)?" replaceWith="$1pašava$2" />
+    <RegEx find="([sS])pri?j?ečava(m|š|mo|te|ju|li|še|nje)?" replaceWith="$1prječava$2" />
+    <RegEx find="([sS])prj?eči(m|š|mo|te|li|še|o|la|li|le|lo|ti)?" replaceWith="$1priječi$2" />
+    <RegEx find="([sS])prj?eče" replaceWith="$1priječe" />
+    <RegEx find="([sS])umlja" replaceWith="$1umnja" />
+    <RegEx find="\b([sS])eti(t|o|m|š|la|li|le|ti)?\b" replaceWith="$1jeti$2" />
+    <RegEx find="([sS])ever(a|u|om|ni|nom|ac)?" replaceWith="$1jever$2" />
+    <RegEx find="([sS])eća(m|š|mo|te|ju|li|nje)?" replaceWith="$1jeća$2" />
+    <RegEx find="([sS])hvata(m|š|mo|te|ju|jući|la|li|le|lo|ti|nje)?" replaceWith="$1hvaća$2" />
+    <RegEx find="([sS])led(eće|ećeg|eća|eću|ećom|ećoj|ećem|eći|ećom|ećima|ećim|ećih)?" replaceWith="$1ljed$2" />
+    <RegEx find="\b([sS])ljed(a|e|i|u|om|im|iš|imo|ite|e|ili)?\b" replaceWith="$1lijed$2" />
+    <RegEx find="([rR])edosljed(a|e|u|om)?" replaceWith="$1edoslijed$2" />
+    <RegEx find="([sS])mj?eh(a|u|om)?\b" replaceWith="$1mijeh$2" />
+    <RegEx find="sopstven" replaceWith="vlastit" />
+    <RegEx find="Sopstven" replaceWith="Vlastit" />
+    <RegEx find="spakuje(m|eš|mo|te)?" replaceWith="spakira$1" />
+    <RegEx find="([sS])reč(a|e|i|u|om|ama)" replaceWith="$1reć$2" />
+    <RegEx find="([sS])re[čć](an|na|ni|nu|nik|nika|nikom|nica|nicu|nicom|no|nom|noj|niji|nijeg|nijem|nija|niju|nijom|nijoj)" replaceWith="$1ret$2" />
+    <RegEx find="stomak(u|om)?" replaceWith="trbuh$1" />
+    <RegEx find="stomač(na|ne|ni|no|nu|noj|nom|nima)" replaceWith="trbuš$1" />
+    <RegEx find="\b([sS])trj?el(a|e|i|u|o|om|ac|cu|ci|cima|ama)" replaceWith="$1trijel$2" />
+    <RegEx find="sujeverj(a|e|u|ima|em)" replaceWith="praznovjerj$1" />
+    <RegEx find="([sS])used(a|e|i|o|u|ama|ima|ski|skim|ima)?" replaceWith="$1usjed$2" />
+    <RegEx find="suštin(e|i|om)" replaceWith="biti" />
+    <RegEx find="Suštin(e|i|om)" replaceWith="Biti" />
+    <RegEx find="([sS])vat(am|aš|a|amo|ate|aju|ajući|ali|ale|alo|aše)" replaceWith="$1hvać$2" />
+    <RegEx find="([sS])vedo([čkc])" replaceWith="$1vjedo$2" />
+    <RegEx find="([sS])vesn(a|e|i|o|u|om|oj|ima|ost|ošću)" replaceWith="$1vjesn$2" />
+    <!-- razlikuju se svjetlo i svijetlo no tu automatske pomoći nema, već je na korisnicima da dodaju i gdje je potrebno! -->
+    <RegEx find="([sS])vetl(a|e|i|o|u|om|ost|osti|ošću)" replaceWith="$1vjetl$2" />
+    <RegEx find="([sS])veštenik(a|e|u|om)?" replaceWith="$1većenik$2" />
+    <RegEx find="([sS])veštenic(a|e|u|om|i|ima)" replaceWith="$1većenic$2" />
+    <RegEx find="([sS])vež(a|e|u|om|oj|ina|ini|inom|ine|ino|inu)?\b" replaceWith="$1vjež$2" />
+    <RegEx find="([sS])vide(la|li|lo)" replaceWith="$1vidje$2" />
+    <RegEx find="\b([sS])vj?et(a|u|om)?\b(?!\s+vod)" replaceWith="$1vijet$2" />
+    <RegEx find="([sS])vi?j?etsk(a|e|i|o|u|im|om|og|oj)" replaceWith="$1vjetsk$2" />
+    <RegEx find="\bŠpanij(a|e|u|om)" replaceWith="Španjolsk$1" />
+    <RegEx find="\bŠpansk(a|e|i|o|u|oj|om|im)" replaceWith="Španjolsk$1" />
+    <RegEx find="takmičenj(a|e|u|ima|em)" replaceWith="natjecanj$1" />
+    <RegEx find="\b([tT])ač(an|na|no|nom|noj|nog|nima|niji|nijim|nije|nijem|niju|nijoj)" replaceWith="$1oč$2" />
+    <RegEx find="([tT])alentov" replaceWith="$1alentir" />
+    <RegEx find="\b([tT])j?el(o|a|u|om|ima)" replaceWith="$1ijel$2" />
+    <RegEx find="\b([tT])era(m|š|a|mo|te|ju|ti|la|o|li|še)?\b" replaceWith="$1jera$2" />
+    <RegEx find="\b([tT])j?esn(a|e|i|o|u|om|oj|og|ima)" replaceWith="$1ijesn$2" />
+    <RegEx find="([tT])okom(?!\s+rijeke)" replaceWith="$1ijekom" />
+    <RegEx find="\b([tT])oleris" replaceWith="$1olerir" />
+    <RegEx find="([uU])bj?edi(o|m|š|mo|te|ti|la|le|li|lo|vši)?" replaceWith="$1vjeri$2" />
+    <RegEx find="([uU])bj?edljiv" replaceWith="$1vjerljiv" />
+    <RegEx find="([uU])bi?j?eđen" replaceWith="$1vjeren" />
+    <RegEx find="\b([uU])bic(a|e|i|o|u|om|ima)" replaceWith="$1bojic$2" />
+    <RegEx find="\b([uU])bistv(a|o|u|om|ima)" replaceWith="$1bojstv$2" />
+    <RegEx find="učestvuje" replaceWith="sudjeluje" />
+    <RegEx find="Učestvuje" replaceWith="Sudjeluje" />
+    <RegEx find="([uU])cen(a|e|i|u|om|ama|nu|om)" replaceWith="$1cjen$2" />
+    <RegEx find="učestvo" replaceWith="sudjelo" />
+    <RegEx find="Učestvo" replaceWith="Sudjelo" />
+    <RegEx find="\bulepša(m|š|mo|te|ti|ju|la|le|li|lo|vam|vaš|vamo|vate|vaju|vati|vaše|nom|nim|noj|nima)?\b" replaceWith="uljepša$1" />
+    <!-- umetni ne smije/nije poželjan jer pretvara glagol imperativ od umetnuti u umjetni -->
+    <RegEx find="([uU])metni(k|ka|ku|kom|ca|cu|ce|ci|ma|čka|čke|čki|čkim|čko|čkom)" replaceWith="$1mjetni$2" />
+    <RegEx find="([uU])propaš[čć]ava" replaceWith="$1propaštava" />
+    <RegEx find="([uU])slov(a|e|i|u|om|ima)?" replaceWith="$1vjet$2" />
+    <RegEx find="([uU])speh(a|e|u|om)?" replaceWith="$1spjeh$2" />
+    <RegEx find="([uU])spijeh(a|e|u|om)?" replaceWith="$1spjeh$2" />
+    <RegEx find="([uU])spesi(ma)?" replaceWith="$1spjesi$2" />
+    <RegEx find="([uU])speš(an|na|ne|ni|no|nu|nom|noj|nim|nima)?" replaceWith="$1spješ$2" />
+    <RegEx find="([uU])sredsred" replaceWith="$1sredotoč" />
+    <RegEx find="([uU])sredsređen" replaceWith="$1sredotočen" />
+    <RegEx find="\b([uU])spj?ev(am|aš|a|amo|ate|aju|ale|alo|ali|aše)" replaceWith="$1spijev$2" />
+    <RegEx find="([uU])ćut(im|iš|i|imo|ite|e)" replaceWith="$1šut$2" />
+    <RegEx find="univerzum(a|e|i|u|om|ima)?" replaceWith="svemir$1" />
+    <RegEx find="uskrs(a|i|u|om|ima)?" replaceWith="Uskrs$1" />
+    <RegEx find="([uU])ticaj(a|e|i|u|em|ima|ni|nu|nima|noj|nom)?\b" replaceWith="$1tjecaj$2" />
+    <RegEx find="([uU])verav(am|aš|a|amo|ate|aju|ati|ala|ao|ali|aše)" replaceWith="$1vjerav$2" />
+    <RegEx find="([uU])verljiv(a|e|i|o|u|ima|ima|om|og|oj)?" replaceWith="$1vjerljiv$2" />
+    <RegEx find="([uU])vj?ek" replaceWith="$1vijek" />
+    <RegEx find="([uU])vet(a|e|i|u|om|ima|nu|nima|noj|nom)?\b" replaceWith="$1vjet$2" />
+    <RegEx find="([uU])zok" replaceWith="$1zrok" />
+    <RegEx find="\bvarvar(a|e|i|u|ima|skom|skim|skoj|skima|ski)" replaceWith="barbar$1" />
+    <RegEx find="\bVarvar(a|e|i|u|ima)" replaceWith="Barbar$1" />
+    <RegEx find="vazduh(a|u|om)?" replaceWith="zrak$1" />
+    <RegEx find="Vazduh(a|u|om)?" replaceWith="Zrak$1" />
+    <RegEx find="vazduš(ni|na|nu|no|nom|nog)" replaceWith="zrač$1" />
+    <RegEx find="vaspitan" replaceWith="obrazovan" />
+    <RegEx find="Vaspitan" replaceWith="Obrazovan" />
+    <RegEx find="vaspitn" replaceWith="obrazovn" />
+    <RegEx find="Vaspitn" replaceWith="Obrazovn" />
+    <RegEx find="([vV])eoma" replaceWith="$1rlo" />
+    <RegEx find="\b([vV])er(a|e|i|u|om|ama|nik|nika|niku|nikom|nica|nice|nici|nicu|nicom|nicama|nicima|ski|ska|sko|sku|skog|skom|skim)\b" replaceWith="$1jer$2" />
+    <RegEx find="([vV])erova(o|la|li|le|lo|še|ti)" replaceWith="$1jerova$2" />
+    <RegEx find="([vV])erovat(an|na|ne|ni|no|nom|nog|nu|noj|nim)" replaceWith="$1jerojat$2" />
+    <RegEx find="([vV])eruj(e|u|em|eš|ete|emo|te)?" replaceWith="$1jeruj$2" />
+    <RegEx find="verenic(a|e|i|o|u|ima|ama)" replaceWith="zaručnic$1" />
+    <RegEx find="verenik(a|e|u)" replaceWith="zaručnik$1" />
+    <RegEx find="\b([vV])j?est(i|ima)?\b" replaceWith="$1ijest$2" />
+    <RegEx find="več(a|e|i|u|em|im|ima|oj)?\b" replaceWith="već$1" />
+    <RegEx find="\b([vV])eštic(a|e|i|u|om|ama)\b" replaceWith="$1ještic$2" />
+    <RegEx find="\b([vV])enčan(a|i|ica|icu|icom|icama|je|ja|ju|jem|jima)?\b" replaceWith="$1jenčan$2" />
+    <RegEx find="veštačk(a|e|i|o|u|og|om|oj|im|ima)" replaceWith="umjetn$1" />
+    <RegEx find="Veštačk(a|e|i|o|u|og|om|oj|im|ima)" replaceWith="Umjetn$1" />
+    <RegEx find="([vV])et(ar|ra|ru|rom|rovi|rovito|rovima)" replaceWith="$1jet$2" />
+    <RegEx find="([vV])ide(la|le|li|ti)" replaceWith="$1idje$2" />
+    <RegEx find="\b([vV])išlj" replaceWith="$1iš" />
+    <RegEx find="\b([vV])odk(a|e|i|u|ama)" replaceWith="$1otk$2" />
+    <RegEx find="([vV])ole(n|na|no|ti|nu|nog|la|le|li)" replaceWith="$1olje$2" />
+    <RegEx find="\b([vV])oz(a|u|om)?\b" replaceWith="$1lak$2" />
+    <RegEx find="\b([vV])rj?edi(m|š|mo|te|li)?\b" replaceWith="$1rijedi$2" />
+    <RegEx find="\b([vV])rj?ed(e|an|na|no|nost|nosti|nošću)?\b" replaceWith="$1rijed$2" />
+    <RegEx find="([zZ])ainteresova" replaceWith="$1ainteresira" />
+    <RegEx find="([zZ])ahtj?ev(am|aš|amo|ate|aju|ali|ati|ajmo|ajte|aju)" replaceWith="$1ahtijev$2" />
+    <RegEx find="zahtev(a|u|i|e|om|ima)?" replaceWith="zahtjev$1" />
+    <RegEx find="([zZ])amenjiv" replaceWith="$1amjenjiv" />
+    <RegEx find="([zZ])amj?eni(m|š|mo|o|te|ti|o|la|le|li|še)?\b" replaceWith="$1amijeni$2" />
+    <RegEx find="([zZ])auvj?ek" replaceWith="$1auvijek" />
+    <RegEx find="[Zz]avis(im|iš|i|imo|ite|ni|ne|nima|nim|nom|nik|nica|nošću)" replaceWith="Ovis$1" />
+    <RegEx find="zvaničn(a|e|i|o|u|ima)" replaceWith="služben$1" />
+    <RegEx find="\b([zZ])vj?ezd(a|e|i|o|u|ama)\b" replaceWith="$1vijezd$2" />
+    <RegEx find="([zZ])vezd(ana|ano|anom|anoj|ice|icama)" replaceWith="$1vjezd$2" />
+    <RegEx find="([žŽ])ive(li|la|le|lu|lima|ti)" replaceWith="$1ivje$2" />
+    <RegEx find="([žŽ])lj?ezd(a|e|i|o|u|ama)" replaceWith="$1lijezd$2" />
+    <RegEx find="([sSzZ])amnom" replaceWith="$1a mnom" />
+    <!-- Credit goes to: MilanRS [http://www.prijevodi-online.org] -->
+    <RegEx find="([a-zčđšž])Ij([a-zčđšž])" replaceWith="$1lj$2" />
+    <RegEx find="([^A-ZČĐŠŽa-zčđšž])Iju(bav|d|t)" replaceWith="$1lju$2" />
+    <!-- kad postoji razmak između tagova </i> <i> -->
+    <!-- <RegEx find="(&gt;) +(&lt;)" replaceWith="$1$2" /> -->
+    <!-- ',"' to '",' -->
+    <RegEx find="(\w),&quot;(\s|$)" replaceWith="$1&quot;,$2" />
+    <RegEx find=",\.{3}|\.{3},|\.{2} \." replaceWith="..." />
+    <!-- "1 :", "2 :"... "n :" to "n:" -->
+    <RegEx find="([0-9]) +: +(\D)" replaceWith="$1: $2" />
+    <!-- Two or more consecutive "," to "..." -->
+    <RegEx find=",{2,}" replaceWith="..." />
+    <!-- Two or more consecutive "-" to "..." -->
+    <RegEx find="-{2,}" replaceWith="..." />
+    <RegEx find="([^().])\.{2}([^().:])" replaceWith="$1...$2" />
+    <!-- separator stotica i decimalnog ostatka 1,499,000.00 -> 1.499.000,00 -->
+    <RegEx find="([0-9]{3})\.([0-9]{2}[^0-9])" replaceWith="$1,$2" />
+    <RegEx find="([0-9]),([0-9]{3}\D)" replaceWith="$1.$2" />
+    <!-- Apostrophes -->
+    <RegEx find="´´" replaceWith="&quot;" />
+    <!-- <RegEx find="[´`]" replaceWith="'" /> -->
+    <!-- <RegEx find="[“”]" replaceWith="&quot;" /> -->
+    <RegEx find="''" replaceWith="&quot;" />
+    <!-- Two or more consecutive '"' to one '"' -->
+    <RegEx find="&quot;{2,}" replaceWith="&quot;" />
+    <!-- Fix zero and capital 'o' ripping mistakes -->
+    <RegEx find="(?&lt;=[0-9]\.?)O" replaceWith="0" />
+    <RegEx find="\b0(?=[A-ZČĐŠŽa-zčđšž])" replaceWith="O" />
+    <!-- Brisanje crte - na početku 1. reda (i kada ima dva reda) -->
+    <RegEx find="\A- ?([A-ZČĐŠŽa-zčđšž0-9„'&quot;]|\.{3})" replaceWith="$1" />
+    <RegEx find="\A(&lt;[ibu]&gt;)- ?" replaceWith="$1" />
+    <RegEx find="  - " replaceWith=" -" />
+    <!-- Brisanje razmaka iza crte - na početku 2. reda -->
+    <RegEx find="(?&lt;=\n(&lt;[ibu]&gt;)?)- (?=[A-ZČĐŠŽčš0-9„'&quot;&lt;])" replaceWith="-" />
+    <!-- Korigiranje crte - kad je u sredini prvog reda -->
+    <RegEx find="([.!?&quot;&gt;]) - ([A-ZČĐŠŽčš'&quot;&lt;])" replaceWith="$1 -$2" />
+    <!-- Zatvoren tag pa razmak poslije crtice -->
+    <RegEx find="(&gt;) - ([A-ZČĐŠŽčš„'&quot;])" replaceWith="$1 -$2" />
+    <!-- Zatvoren tag pa crtica razmak -->
+    <RegEx find="(&gt;)- ([A-ZČĐŠŽčš„'&quot;])" replaceWith="$1-$2" />
+    <!-- Zagrada pa crtica razmak -->
+    <RegEx find="\(- ([A-ZČĐŠŽčš„'&quot;])" replaceWith="(-$1" />
+    <!-- Smart space after dot -->
+    <!-- osim kad je zadnje t (riječ kolt) -->
+    <RegEx find="([a-su-zá-úñä-ü])\.([^\s\n().:?!*^“”'&quot;&lt;])" replaceWith="$1. $2" />
+    <!-- Oznaka za kalibar. Npr. "Colt .45" -->
+    <!-- Da bi radilo, da bi ovaj razmak bio dozvoljen, u odčekirajte "Razmaci ispred točke" -->
+    <RegEx find="t\.(?=[0-9]{2}})" replaceWith="t ." />
+    <!-- Joey(j)a -->
+    <RegEx find="([A-Z][a-z])eyj([a-z])" replaceWith="$1ey$2" />
+    <!-- Sređuje zarez sa razmakom -->
+    <RegEx find="([A-ZČĐŠŽa-zčđšžá-úñä-ü&quot;]),([^\s\n(),?!“&lt;])" replaceWith="$1, $2" />
+    <RegEx find="([?!])-" replaceWith="$1 -" />
+    <!-- Space after last of some consecutive dots (eg. "...") -->
+    <RegEx find="(?&lt;=[a-zčđšž])(\.{3}|!)(?=[a-zčđšž])" replaceWith="$1 " />
+    <!-- Delete space after "..." that is at the beginning of the line. You may delete this line if you don't like it -->
+    <!-- <RegEx find="^\.{3} +" replaceWith="..." /> -->
+    <!-- "tekst ... tekst" mijenja u "tekst... tekst" -->
+    <RegEx find="([A-ZČĐŠŽa-zčđšž]) \.{3} " replaceWith="$1... " />
+    <RegEx find="(\S)\. &quot;" replaceWith="$1.&quot;" />
+    <RegEx find="&quot; \." replaceWith="&quot;." />
+    <RegEx find="(\S\.{3}) &quot;(\s|$)" replaceWith="$1&quot;$2" />
+    <RegEx find=" \.{3}$" replaceWith="..." />
+    <RegEx find="([a-zčđšž])( \.{3}|\.{2}$)" replaceWith="$1..." />
+    <!-- Razmak ispred zagrade -->
+    <RegEx find="([A-ZČĐŠŽa-zčđšž])\(" replaceWith="$1 (" />
+    <!-- Razmak iza upitnika -->
+    <RegEx find="\?([A-ZČĐŠŽčš])" replaceWith="? $1" />
+    <RegEx find="(^|&gt;)\.{3} ([A-ZČĐŠŽčš])" replaceWith="$1...$2" />
+    <!-- Brise ... kad je na poc. reda "... -->
+    <RegEx find="^&quot;\.{3} " replaceWith="&quot;" />
+    <RegEx find="([0-9])\$" replaceWith="$1 $$" />
+    <!-- ti š -> t š by Strider -->
+    <!-- Zamijeni sva "**ti šu*" s "**t šu*" i "**ti še*" s "**t še*" -->
+    <!-- <RegEx find="([a-z])ti (š+[eu])" replaceWith="$1t $2" /> -->
+    <!-- <RegEx find="([A-Za-z])ti( |\r?\n)(š[eu])" replaceWith="$1t$2$3" /> -->
+    <!-- <RegEx find="(?i)\b(ni)t (š[eu])" replaceWith="$1ti $2" /> -->
+    <!-- Razmak poslije <i> i poslije .. -->
+    <RegEx find="^(&lt;[ibu]&gt;) +" replaceWith="$1" />
+    <!-- Razmak ? "</i> -->
+    <RegEx find="([.?!]) +(&quot;&lt;)" replaceWith="$1$2" />
+    <!-- Bez razmaka kod Npr.: -->
+    <RegEx find="([Nn])pr\. +:" replaceWith="$1pr.:" />
+    <RegEx find="\. ," replaceWith=".," />
+    <RegEx find="([?!])\." replaceWith="$1" />
+    <!-- Da ne kvari potpise sa ..:: -->
+    <RegEx find="\.{3}::" replaceWith="..::" />
+    <RegEx find="::\.{3}" replaceWith="::.." />
+    <RegEx find="\.{2} ::" replaceWith="..::" />
+    <!-- Skraćenice bez razmaka -->
+    <RegEx find="d\. o\.o\." replaceWith="d.o.o." />
+    <!-- experimental -->
+    <!-- je/ju : "Razumije je." ==> "Razumije ju." -->
+    <RegEx find="(?&lt;=je\s+)je\b" replaceWith="ju" />
+    <RegEx find="vređa" replaceWith="vrijeđa" />
+    <RegEx find="žur[ck]" replaceWith="zabav" />
+    <RegEx find="skuv" replaceWith="skuh" />
+    <RegEx find="oćeju" replaceWith="oće" />
+    <RegEx find="tćeš" replaceWith="t ćeš" />
+    <!-- mijenja i obrazovati - no ide u korist mnogo više riječi -->
+    <RegEx find="zovati" replaceWith="zirati" />
+  </RegularExpressions>
+</OCRFixReplaceList>

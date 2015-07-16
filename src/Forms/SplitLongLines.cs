@@ -25,18 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
         public SplitLongLines()
         {
             InitializeComponent();
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         private void SplitLongLines_KeyDown(object sender, KeyEventArgs e)
@@ -123,7 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string s = HtmlUtil.RemoveHtmlTags(p.Text);
+                string s = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 if (s.Length > maxLength)
                 {
                     maxLength = s.Length;
@@ -292,7 +281,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
 
                                     var italicStart1 = newParagraph1.Text.IndexOf("<i>", StringComparison.Ordinal);
-                                    if (italicStart1 >= 0 && italicStart1 < 10 & newParagraph1.Text.IndexOf("</i>", StringComparison.Ordinal) < 0 &&
+                                    if (italicStart1 >= 0 && italicStart1 < 10 && newParagraph1.Text.IndexOf("</i>", StringComparison.Ordinal) < 0 &&
                                         newParagraph2.Text.Contains("</i>") && newParagraph2.Text.IndexOf("<i>", StringComparison.Ordinal) < 0)
                                     {
                                         newParagraph1.Text += "</i>";
@@ -314,7 +303,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
-            splittedSubtitle.Renumber(1);
+            splittedSubtitle.Renumber();
             return splittedSubtitle;
         }
 

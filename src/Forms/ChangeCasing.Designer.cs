@@ -92,6 +92,7 @@
             this.radioButtonFixOnlyNames.TabIndex = 6;
             this.radioButtonFixOnlyNames.Text = "Fix only names casing (via Dictionaries\\NamesEtc.xml)";
             this.radioButtonFixOnlyNames.UseVisualStyleBackColor = true;
+            this.radioButtonFixOnlyNames.CheckedChanged += new System.EventHandler(this.RadioButton_CheckedChanged);
             // 
             // checkBoxFixNames
             // 
@@ -124,6 +125,7 @@
             this.radioButtonLowercase.TabIndex = 10;
             this.radioButtonLowercase.Text = "all lowercase";
             this.radioButtonLowercase.UseVisualStyleBackColor = true;
+            this.radioButtonLowercase.CheckedChanged += new System.EventHandler(this.RadioButton_CheckedChanged);
             // 
             // radioButtonUppercase
             // 
@@ -134,6 +136,7 @@
             this.radioButtonUppercase.TabIndex = 8;
             this.radioButtonUppercase.Text = "ALL UPPERCASE";
             this.radioButtonUppercase.UseVisualStyleBackColor = true;
+            this.radioButtonUppercase.CheckedChanged += new System.EventHandler(this.RadioButton_CheckedChanged);
             // 
             // radioButtonNormal
             // 
@@ -146,6 +149,7 @@
             this.radioButtonNormal.TabStop = true;
             this.radioButtonNormal.Text = "Normal casing. Sentences begin with uppercase letter.";
             this.radioButtonNormal.UseVisualStyleBackColor = true;
+            this.radioButtonNormal.CheckedChanged += new System.EventHandler(this.RadioButton_CheckedChanged);
             // 
             // ChangeCasing
             // 

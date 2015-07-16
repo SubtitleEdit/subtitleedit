@@ -15,8 +15,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             //listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = string.Empty; // style //TODO: Add better text + help text
-            FixLargeFonts();
+            listViewFixes.Columns[1].Text = string.Empty; // style // TODO: Add better text + help text
+            Utilities.FixLargeFonts(this, buttonOK);
 
             foreach (KeyValuePair<string, int> kvp in stylesWithCount)
             {
@@ -25,17 +25,6 @@ namespace Nikse.SubtitleEdit.Forms
                 item.SubItems.Add(kvp.Value.ToString());
                 item.Checked = kvp.Key.Trim() == "speech";
                 listViewFixes.Items.Add(item);
-            }
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
         }
 

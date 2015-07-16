@@ -17,9 +17,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                var timeCode = new TimeCode(EndTime.TotalMilliseconds);
-                timeCode.AddTime(-StartTime.TotalMilliseconds);
-                return timeCode;
+                return new TimeCode(EndTime.TotalMilliseconds - StartTime.TotalMilliseconds);
             }
         }
 
@@ -39,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public int Layer { get; set; }
 
-        public string ID { get; set; }
+        public string ID { get; private set; }
 
         public string Language { get; set; }
 
@@ -47,12 +45,17 @@ namespace Nikse.SubtitleEdit.Logic
 
         public bool NewSection { get; set; }
 
+        private string GenerateId()
+        {
+            return Guid.NewGuid().ToString();
+        }
+
         public Paragraph()
         {
             StartTime = TimeCode.FromSeconds(0);
             EndTime = TimeCode.FromSeconds(0);
             Text = string.Empty;
-            ID = Guid.NewGuid().ToString();
+            ID = GenerateId();
         }
 
         public Paragraph(TimeCode startTime, TimeCode endTime, string text)
@@ -60,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic
             StartTime = startTime;
             EndTime = endTime;
             Text = text;
-            ID = Guid.NewGuid().ToString();
+            ID = GenerateId();
         }
 
         public Paragraph(Paragraph paragraph)
@@ -90,7 +93,7 @@ namespace Nikse.SubtitleEdit.Logic
             StartFrame = startFrame;
             EndFrame = endFrame;
             Text = text;
-            ID = Guid.NewGuid().ToString();
+            ID = GenerateId();
         }
 
         public Paragraph(string text, double startTotalMilliseconds, double endTotalMilliseconds)
@@ -98,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic
             StartTime = new TimeCode(startTotalMilliseconds);
             EndTime = new TimeCode(endTotalMilliseconds);
             Text = text;
-            ID = Guid.NewGuid().ToString();
+            ID = GenerateId();
         }
 
         internal void Adjust(double factor, double adjust)
@@ -115,14 +118,14 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void CalculateFrameNumbersFromTimeCodes(double frameRate)
         {
-            StartFrame = (int)Math.Round((StartTime.TotalMilliseconds / 1000.0 * frameRate));
-            EndFrame = (int)Math.Round((EndTime.TotalMilliseconds / 1000.0 * frameRate));
+            StartFrame = (int)Math.Round((StartTime.TotalMilliseconds / TimeCode.BaseUnit * frameRate));
+            EndFrame = (int)Math.Round((EndTime.TotalMilliseconds / TimeCode.BaseUnit * frameRate));
         }
 
         public void CalculateTimeCodesFromFrameNumbers(double frameRate)
         {
-            StartTime.TotalMilliseconds = StartFrame * (1000.0 / frameRate);
-            EndTime.TotalMilliseconds = EndFrame * (1000.0 / frameRate);
+            StartTime.TotalMilliseconds = StartFrame * (TimeCode.BaseUnit / frameRate);
+            EndTime.TotalMilliseconds = EndFrame * (TimeCode.BaseUnit / frameRate);
         }
 
         public override string ToString()
@@ -144,7 +147,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (string.IsNullOrEmpty(Text))
                     return 0;
-                int wordCount = HtmlUtil.RemoveHtmlTags(Text).Split((" ,.!?;:()[]" + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
+                int wordCount = HtmlUtil.RemoveHtmlTags(Text, true).Split(new[] { ' ', ',', '.', '!', '?', ';', ':', '(', ')', '[', ']', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Length;
                 return (60.0 / Duration.TotalSeconds) * wordCount;
             }
         }

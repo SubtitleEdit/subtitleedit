@@ -23,17 +23,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private Paragraph _paragraph;
         private Paragraph _lastParagraph;
         private ExpectingLine _expecting = ExpectingLine.Number;
-        private static Regex _regexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$", RegexOptions.Compiled);
-        private static Regex _regexTimeCodes2 = new Regex(@"^\d+:\d+:\d+,\d+\s*-->\s*\d+:\d+:\d+,\d+$", RegexOptions.Compiled);
+        private static readonly Regex _regexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$", RegexOptions.Compiled);
+        private static readonly Regex _regexTimeCodes2 = new Regex(@"^\d+:\d+:\d+,\d+\s*-->\s*\d+:\d+:\d+,\d+$", RegexOptions.Compiled);
 
         public override string Extension
         {
             get { return ".srt"; }
         }
 
+        public const string NameOfFormat = "SubRip";
+
         public override string Name
         {
-            get { return "SubRip"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -112,7 +114,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
 
             if (doRenum)
-                subtitle.Renumber(1);
+                subtitle.Renumber();
 
             Errors = _errors.ToString();
         }
@@ -200,14 +202,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string RemoveBadChars(string line)
         {
-            return line.Replace("\0", " ");
+            return line.Replace('\0', ' ');
         }
 
         private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
-            line = line.Replace("،", ",");
-            line = line.Replace("", ",");
-            line = line.Replace("¡", ",");
+            line = line.Replace('،', ',');
+            line = line.Replace('', ',');
+            line = line.Replace('¡', ',');
 
             const string defaultSeparator = " --> ";
             // Fix some badly formatted separator sequences - anything can happen if you manually edit ;)

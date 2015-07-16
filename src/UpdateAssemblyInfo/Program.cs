@@ -60,8 +60,8 @@ namespace UpdateAssemblyInfo
             var clrTags = new CommandLineRunner();
             var gitPath = GetGitPath();
             string exceptionMessage;
-            if (clrHash.RunCommandAndGetOutput(gitPath, "rev-parse --verify HEAD", workingFolder)
-                && clrTags.RunCommandAndGetOutput(gitPath, "describe --tags", workingFolder))
+            if (clrHash.RunCommandAndGetOutput(gitPath, "rev-parse --verify HEAD", workingFolder) &&
+                clrTags.RunCommandAndGetOutput(gitPath, "describe --tags", workingFolder))
             {
                 try
                 {
@@ -165,7 +165,7 @@ namespace UpdateAssemblyInfo
                         return path;
                 }
             }
-            catch {}
+            catch { }
 
             Console.WriteLine("WARNING: Might not be able to run Git command line tool!");
             return "git";

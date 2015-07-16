@@ -54,10 +54,9 @@
       <HintPath>DLLs\Interop.QuartzTypeLib.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="NHunspell, Version=1.2.5359.26126, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
-      <HintPath>packages\NHunspell.1.2.5359.26126\lib\net\NHunspell.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="NHunspell, Version=1.2.5554.16953, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -874,16 +873,16 @@
     <Compile Include="Logic\IfoParser.cs" />
     <Compile Include="Logic\Language.cs" />
     <Compile Include="Logic\ManagedBitmap.cs" />
-    <Compile Include="Logic\Mp4\Boxes\Box.cs" />
-    <Compile Include="Logic\Mp4\Boxes\Mdhd.cs" />
-    <Compile Include="Logic\Mp4\Boxes\Mdia.cs" />
-    <Compile Include="Logic\Mp4\Boxes\Minf.cs" />
-    <Compile Include="Logic\Mp4\Boxes\Moov.cs" />
-    <Compile Include="Logic\Mp4\Boxes\Mvhd.cs" />
-    <Compile Include="Logic\Mp4\Boxes\Stbl.cs" />
-    <Compile Include="Logic\Mp4\Boxes\Tkhd.cs" />
-    <Compile Include="Logic\Mp4\Boxes\Trak.cs" />
-    <Compile Include="Logic\Mp4\Mp4Parser.cs" />
+    <Compile Include="Logic\ContainerFormats\Mp4\Boxes\Box.cs" />
+    <Compile Include="Logic\ContainerFormats\Mp4\Boxes\Mdhd.cs" />
+    <Compile Include="Logic\ContainerFormats\Mp4\Boxes\Mdia.cs" />
+    <Compile Include="Logic\ContainerFormats\Mp4\Boxes\Minf.cs" />
+    <Compile Include="Logic\ContainerFormats\Mp4\Boxes\Moov.cs" />
+    <Compile Include="Logic\ContainerFormats\Mp4\Boxes\Mvhd.cs" />
+    <Compile Include="Logic\ContainerFormats\Mp4\Boxes\Stbl.cs" />
+    <Compile Include="Logic\ContainerFormats\Mp4\Boxes\Tkhd.cs" />
+    <Compile Include="Logic\ContainerFormats\Mp4\Boxes\Trak.cs" />
+    <Compile Include="Logic\ContainerFormats\Mp4\Mp4Parser.cs" />
     <Compile Include="Logic\Networking\NikseWebServiceSession.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -892,17 +891,21 @@
     </Compile>
     <Compile Include="Logic\NikseBitmap.cs" />
     <Compile Include="Logic\NoBreakAfterItem.cs" />
-    <Compile Include="Logic\OCR\Binary\BinaryOcrBitmap.cs" />
-    <Compile Include="Logic\OCR\Binary\BinaryOcrDb.cs" />
-    <Compile Include="Logic\OCR\ModiLanguage.cs" />
-    <Compile Include="Logic\OCR\NOcrDb.cs" />
-    <Compile Include="Logic\OCR\OcrAlphabet.cs" />
-    <Compile Include="Logic\OCR\NOcrChar.cs" />
-    <Compile Include="Logic\OCR\OcrCharacter.cs" />
-    <Compile Include="Logic\OCR\OcrFixEngine.cs" />
-    <Compile Include="Logic\OCR\OcrImage.cs" />
-    <Compile Include="Logic\OCR\NOcrPoint.cs" />
-    <Compile Include="Logic\OCR\SpellCheckOcrTextResult.cs" />
+    <Compile Include="Logic\Ocr\Binary\BinaryOcrBitmap.cs" />
+    <Compile Include="Logic\Ocr\Binary\BinaryOcrDb.cs" />
+    <Compile Include="Logic\Ocr\ModiLanguage.cs" />
+    <Compile Include="Logic\Ocr\NOcrDb.cs" />
+    <Compile Include="Logic\Ocr\OcrAlphabet.cs" />
+    <Compile Include="Logic\Ocr\NOcrChar.cs" />
+    <Compile Include="Logic\Ocr\OcrCharacter.cs" />
+    <Compile Include="Logic\Ocr\OcrFixEngine.cs" />
+    <Compile Include="Logic\Ocr\OcrImage.cs" />
+    <Compile Include="Logic\Ocr\NOcrPoint.cs" />
+    <Compile Include="Logic\Ocr\SpellCheckOcrTextResult.cs" />
+    <Compile Include="Logic\SubtitleFormats\TimelineFootageAscii.cs" />
+    <Compile Include="Logic\SubtitleFormats\TimelineAscii.cs" />
+    <Compile Include="Logic\SubtitleFormats\TimelineMvt.cs" />
+    <Compile Include="Logic\SubtitleFormats\Pns.cs" />
     <Compile Include="Logic\SubtitleFormats\PacUnicode.cs" />
     <Compile Include="Logic\Settings.cs" />
     <Compile Include="Logic\Enums\SubtitleSortCriteria.cs" />
@@ -931,6 +934,7 @@
     <Compile Include="Logic\SubtitleFormats\JsonType5.cs" />
     <Compile Include="Logic\SubtitleFormats\SamiYouTube.cs" />
     <Compile Include="Logic\SubtitleFormats\SatBoxPng.cs" />
+    <Compile Include="Logic\SubtitleFormats\TimedText200604CData.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle73.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreLineTabNewLine.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreLineTabs.cs" />
@@ -973,6 +977,7 @@
     <Compile Include="Logic\SubtitleFormats\Titra.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle69.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle72.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle76.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle75.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle74.cs" />
     <Compile Include="Logic\SubtitleFormats\WebVTTFileWithLineNumber.cs" />
@@ -1174,15 +1179,15 @@
     <Compile Include="Logic\TransportStream\TransportStreamParser.cs" />
     <Compile Include="Logic\UknownFormatImporter.cs" />
     <Compile Include="Logic\Utilities.cs" />
-    <Compile Include="Logic\VideoFormats\AviRiffData.cs" />
-    <Compile Include="Logic\VideoFormats\Ebml\Element.cs" />
-    <Compile Include="Logic\VideoFormats\Ebml\ElementId.cs" />
-    <Compile Include="Logic\VideoFormats\Matroska\MatroskaFile.cs" />
-    <Compile Include="Logic\VideoFormats\Matroska\MatroskaTrackInfo.cs" />
-    <Compile Include="Logic\VideoFormats\Matroska\MatroskaSubtitle.cs" />
-    <Compile Include="Logic\VideoFormats\RiffDecodeHeader.cs" />
-    <Compile Include="Logic\VideoFormats\RiffParser.cs" />
-    <Compile Include="Logic\VideoFormats\VideoInfo.cs" />
+    <Compile Include="Logic\ContainerFormats\AviRiffData.cs" />
+    <Compile Include="Logic\ContainerFormats\Ebml\Element.cs" />
+    <Compile Include="Logic\ContainerFormats\Ebml\ElementId.cs" />
+    <Compile Include="Logic\ContainerFormats\Matroska\MatroskaFile.cs" />
+    <Compile Include="Logic\ContainerFormats\Matroska\MatroskaTrackInfo.cs" />
+    <Compile Include="Logic\ContainerFormats\Matroska\MatroskaSubtitle.cs" />
+    <Compile Include="Logic\ContainerFormats\RiffDecodeHeader.cs" />
+    <Compile Include="Logic\ContainerFormats\RiffParser.cs" />
+    <Compile Include="Logic\VideoInfo.cs" />
     <Compile Include="Logic\VideoPlayers\LibVlcDynamic.cs" />
     <Compile Include="Logic\VideoPlayers\LibVlcMono.cs" />
     <Compile Include="Logic\VideoPlayers\ManagedDirectXPlayer.cs" />
@@ -1672,6 +1677,12 @@
     <None Include="Icons\Donate.png" />
     <Content Include="DLLs\Voikkox64.dll" />
     <Content Include="DLLs\Voikkox86.dll" />
+    <None Include="Hunspellx64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Hunspellx86.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Languages\ar-EG.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1957,8 +1968,8 @@
     <PreBuildEvent>"$(ProjectDir)..\build_helpers.bat" rev &amp;&amp; "$(ProjectDir)..\build_helpers.bat" lang</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5359.26126\content\*.dll" "$(TargetDir)"
-"$(ProjectDir)packages\ILRepack.1.25.0\tools\ILRepack.exe" /out:"$(TargetDir)$(TargetName).exe" "$(TargetDir)$(TargetName).exe" "$(ProjectDir)packages\NHunspell.1.2.5359.26126\lib\net\NHunspell.dll" "$(ProjectDir)packages\zlib.net.1.0.4.0\lib\zlib.net.dll" "$(ProjectDir)DLLs\Interop.QuartzTypeLib.dll" /targetplatform:v4 /internalize /parallel</PostBuildEvent>
+    <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5554.16953\content\*.dll" "$(TargetDir)"
+"$(ProjectDir)packages\ILRepack.2.0.1\tools\ILRepack.exe" /out:"$(TargetDir)$(TargetName).exe" "$(TargetDir)$(TargetName).exe" "$(ProjectDir)packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll" "$(ProjectDir)packages\zlib.net.1.0.4.0\lib\zlib.net.dll" "$(ProjectDir)DLLs\Interop.QuartzTypeLib.dll" /targetplatform:v4 /internalize /parallel</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

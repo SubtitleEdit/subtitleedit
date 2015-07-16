@@ -1,4 +1,4 @@
-<ReplaceList>
+﻿<OCRFixReplaceList>
   <WholeWords>
     <Word from="@immatriculation" to="d'immatriculation" />
     <Word from="acquer" to="acquér" />
@@ -244,10 +244,13 @@
     <Word from="Ÿespère" to="J'espère" />
     <Word from="ÿétrangle" to="s'étrangle" />
   </WholeWords>
+  <PartialWordsAlways />
+  <PartialWords />
   <PartialLines>
     <LinePart from=" I'" to=" l'" />
     <LinePart from=" |'" to=" l'" />
   </PartialLines>
+  <PartialLinesAlways />
   <BeginLines />
   <EndLines />
   <WholeLines>
@@ -263,4 +266,5 @@
     <Line from="Peter H u nt." to="Peter Hunt." />
     <Line from="&quot;C'est bien mieux dans Peau. &#xD;&#xA; &#xD;&#xA; On peut sﬂéclabousser, faire du bruit.&quot;" to="&quot;C'est bien mieux dans l'eau. &#xD;&#xA; &#xD;&#xA; On peut s'éclabousser, faire du bruit.&quot;" />
   </WholeLines>
-</ReplaceList>
+  <RegularExpressions />
+</OCRFixReplaceList>

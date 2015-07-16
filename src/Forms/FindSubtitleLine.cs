@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -17,12 +16,13 @@ namespace Nikse.SubtitleEdit.Forms
         public int SelectedIndex
         {
             get;
-            set;
+            private set;
         }
 
         public FindSubtitleLine()
         {
             InitializeComponent();
+            Icon = Nikse.SubtitleEdit.Properties.Resources.SubtitleEditFormIcon;
 
             Text = Configuration.Settings.Language.FindSubtitleLine.Title;
             buttonFind.Text = Configuration.Settings.Language.FindSubtitleLine.Find;
@@ -35,13 +35,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            var graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
+            using (var graphics = CreateGraphics())
             {
-                subtitleListView1.InitializeTimestampColumnWidths(this);
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+                var textSize = graphics.MeasureString(buttonOK.Text, Font);
+                if (textSize.Height > buttonOK.Height - 4)
+                {
+                    subtitleListView1.InitializeTimestampColumnWidths(this);
+                    int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                    Utilities.SetButtonHeight(this, newButtonHeight, 1);
+                }
             }
         }
 
@@ -170,11 +172,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormFindSubtitleLine_Load(object sender, EventArgs e)
         {
-            if (textBoxFindText.CanFocus)
-                textBoxFindText.Focus();
+            SetFocus();
         }
 
         private void FormFindSubtitleLine_Shown(object sender, EventArgs e)
+        {
+            SetFocus();
+        }
+
+        private void SetFocus()
         {
             if (textBoxFindText.CanFocus)
                 textBoxFindText.Focus();

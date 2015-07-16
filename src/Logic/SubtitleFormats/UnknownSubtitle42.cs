@@ -10,8 +10,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     {
         //SUB[0 I 01:00:09:10>01:00:12:10]
         //SUB[0 N 01:00:09:10>01:00:12:10]
-        private static readonly Regex RegexTimeCodesI = new Regex(@"^SUB\[\d I \d\d:\d\d:\d\d:\d\d\>\d\d:\d\d:\d\d:\d\d\]$", RegexOptions.Compiled);
-        private static readonly Regex RegexTimeCodesN = new Regex(@"^SUB\[\d N \d\d:\d\d:\d\d:\d\d\>\d\d:\d\d:\d\d:\d\d\]$", RegexOptions.Compiled);
+
+        // Time code line can optionally contain "speaker"
+        //SUB[0 N 01:02:02:03>01:02:03:06] VAL
+        //e eu tenho maiô pra nadar?
+
+        // or multiple "speakers" seperated with a "+"
+        //SUB[0 N 01:02:12:26>01:02:14:19] FABINHO CRIANÇA + VAL
+        //-Olha.
+        //-Tô olhando!
+        private static readonly Regex RegexTimeCodesI = new Regex(@"^SUB\[\d I \d\d:\d\d:\d\d:\d\d\>\d\d:\d\d:\d\d:\d\d\]", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodesN = new Regex(@"^SUB\[\d N \d\d:\d\d:\d\d:\d\d\>\d\d:\d\d:\d\d:\d\d\]", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -98,7 +107,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             if (p != null && italic)
                 p.Text = "<i>" + p.Text.Trim() + "</i>";
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string[] parts)

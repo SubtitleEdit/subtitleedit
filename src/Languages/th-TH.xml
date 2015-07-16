@@ -2,7 +2,7 @@
 <Language Name="ไทย">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>ภาษาไทยโดย Bonfelder</TranslatedBy>
     <CultureName>th-TH</CultureName>
     <HelpFile />
@@ -1216,7 +1216,7 @@
   <MatroskaSubtitleChooser>
     <Title>เลือกซับไตเติ้ลจากไฟล์มาทรอสกา</Title>
     <PleaseChoose>เจอซับไตเติ้ลมากกว่าหนึ่ง - โปรดเลือก</PleaseChoose>
-    <TrackXLanguageYTypeZ>แทร็ก {0} - {1} - ภาษา: {2} - ชนิด: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>แทร็ก {0}  - ภาษา: {1} - ชนิด: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>ตัวแปรงค่าการวัดผล</Title>

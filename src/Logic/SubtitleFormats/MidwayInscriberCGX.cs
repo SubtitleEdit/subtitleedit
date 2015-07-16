@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class MidwayInscriberCGX : SubtitleFormat
     {
-        private static Regex regexTimeCodes = new Regex(@"<\d\d:\d\d:\d\d:\d\d> <\d\d:\d\d:\d\d:\d\d>$", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodes = new Regex(@"<\d\d:\d\d:\d\d:\d\d> <\d\d:\d\d:\d\d:\d\d>$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -34,10 +34,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            StringBuilder sb = new StringBuilder();
+            const string writeFormat = "{3} <{0}> <{1}>{2}";
+            var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{3} <{0}> <{1}>{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text)));
+                sb.AppendLine(string.Format(writeFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text, true)));
                 //Var vi bedre end japanerne
                 //eller bare mere heldige? <12:03:29:03> <12:03:35:06>
             }
@@ -47,8 +48,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:50:39:13 (last is frame)
-            int frames = MillisecondsToFramesMaxFrameRate(time.Milliseconds);
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
+            return time.ToHHMMSSFF();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -65,7 +65,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //eller bare mere heldige? <12:03:29:03> <12:03:35:06>
 
             subtitle.Paragraphs.Clear();
-            sb = new StringBuilder();
+            sb.Clear();
+            char[] splitChar = { ':' };
             foreach (string line in lines)
             {
                 if (!string.IsNullOrWhiteSpace(line))
@@ -73,20 +74,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (regexTimeCodes.IsMatch(line))
                     {
                         int idx = regexTimeCodes.Match(line).Index;
-                        string temp = line.Substring(0, idx);
-                        sb.AppendLine(temp.Trim());
+                        string temp = line.Substring(0, idx).Trim();
+                        sb.AppendLine(temp);
 
                         string start = line.Substring(idx + 1, 11);
                         string end = line.Substring(idx + 15, 11);
 
-                        string[] startParts = start.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                        string[] endParts = end.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] startParts = start.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
                         if (startParts.Length == 4 && endParts.Length == 4)
                         {
                             var p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), sb.ToString().Trim());
                             subtitle.Paragraphs.Add(p);
                         }
-                        sb = new StringBuilder();
+                        sb.Clear();
                     }
                     else
                     {
@@ -96,23 +97,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (sb.Length > 1000)
                     return;
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string[] parts)
         {
             //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = int.Parse(parts[3]);
 
-            int milliseconds = (int)((1000 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames));
+            int milliseconds = (int)((1000 / Configuration.Settings.General.CurrentFrameRate) * frames);
             if (milliseconds > 999)
                 milliseconds = 999;
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
-            return tc;
+            return new TimeCode(hour, minutes, seconds, milliseconds);
         }
 
     }

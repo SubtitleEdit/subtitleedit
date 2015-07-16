@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 
@@ -29,13 +28,16 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (labelDescription.Left + labelDescription.Width + 5 > Width)
                 Width = labelDescription.Left + labelDescription.Width + 5;
+            Utilities.FixLargeFonts(this, buttonOK);
+        }
 
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
+        private void CapFirstCharIfNotEmpty(string text)
+        {
+            if (!string.IsNullOrEmpty(text))
             {
-                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+                text = text.Trim().TrimEnd('.', '!', '?');
+                if (text.Length > 1)
+                    textBoxAddName.Text = char.ToUpper(textBoxAddName.Text[0]) + textBoxAddName.Text.Substring(1);
             }
         }
 
@@ -43,12 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _subtitle = subtitle;
 
-            if (!string.IsNullOrEmpty(text))
-            {
-                textBoxAddName.Text = text.Trim().TrimEnd('.').TrimEnd('!').TrimEnd('?');
-                if (textBoxAddName.Text.Length > 1)
-                    textBoxAddName.Text = char.ToUpper(textBoxAddName.Text[0]) + textBoxAddName.Text.Substring(1);
-            }
+            CapFirstCharIfNotEmpty(text);
 
             comboBoxDictionaries.Items.Clear();
             string languageName = Utilities.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle);
@@ -64,12 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _subtitle = subtitle;
 
-            if (!string.IsNullOrEmpty(text))
-            {
-                textBoxAddName.Text = text.Trim().TrimEnd('.').TrimEnd('!').TrimEnd('?');
-                if (textBoxAddName.Text.Length > 1)
-                    textBoxAddName.Text = char.ToUpper(textBoxAddName.Text[0]) + textBoxAddName.Text.Substring(1);
-            }
+            CapFirstCharIfNotEmpty(text);
 
             comboBoxDictionaries.Items.Clear();
             foreach (string name in Utilities.GetDictionaryLanguages())

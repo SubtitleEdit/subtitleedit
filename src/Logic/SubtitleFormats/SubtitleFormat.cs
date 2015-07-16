@@ -9,7 +9,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public abstract class SubtitleFormat
     {
-
         private static IList<SubtitleFormat> _allSubtitleFormats = null;
 
         /// <summary>
@@ -126,6 +125,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new TimeXml2(),
                     new TimedText10(),
                     new TimedText200604(),
+                    new TimedText200604CData(),
                     new TimedText(),
                     new TitleExchangePro(),
                     new Titra(),
@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new YouTubeTranscriptOneLine(),
                     new ZeroG(),
 
-                    //    new Idx(),
+                    // new Idx(),
                     new UnknownSubtitle1(),
                     new UnknownSubtitle2(),
                     new UnknownSubtitle3(),
@@ -226,6 +226,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new UnknownSubtitle73(),
                     new UnknownSubtitle74(),
                     new UnknownSubtitle75(),
+                    new UnknownSubtitle76(),
                 };
 
                 string path = Configuration.PluginsDirectory;
@@ -236,7 +237,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         try
                         {
-                            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(FileUtil.ReadAllBytesShared(pluginFileName));
+                            var assembly = System.Reflection.Assembly.Load(FileUtil.ReadAllBytesShared(pluginFileName));
                             string objectName = Path.GetFileNameWithoutExtension(pluginFileName);
                             if (assembly != null)
                             {
@@ -300,7 +301,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public int ErrorCount
         {
-            get { return _errorCount; }
+            get
+            {
+                return _errorCount;
+            }
         }
 
         abstract public bool IsMine(List<string> lines, string fileName);
@@ -311,7 +315,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public bool IsVobSubIndexFile
         {
-            get { return string.CompareOrdinal(Extension, ".idx") == 0; }
+            get
+            {
+                return string.CompareOrdinal(Extension, ".idx") == 0;
+            }
         }
 
         public virtual void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
@@ -328,12 +335,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static int MillisecondsToFrames(double milliseconds)
         {
-            return (int)Math.Round(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            return (int)Math.Round(milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
         }
 
         public static int MillisecondsToFramesMaxFrameRate(double milliseconds)
         {
-            int frames = (int)Math.Round(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            int frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
             if (frames >= Configuration.Settings.General.CurrentFrameRate)
                 frames = (int)(Configuration.Settings.General.CurrentFrameRate - 0.01);
             return frames;
@@ -341,12 +348,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static int FramesToMilliseconds(double frames)
         {
-            return (int)Math.Round(frames * (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            return (int)Math.Round(frames * (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
         }
 
         public static int FramesToMillisecondsMax999(double frames)
         {
-            int ms = (int)Math.Round(frames * (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            int ms = (int)Math.Round(frames * (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
             if (ms > 999)
                 ms = 999;
             return ms;
@@ -362,35 +369,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public bool BatchMode { get; set; }
 
-        public static string ToUtf8XmlString(XmlDocument xml, bool omitXmlDeclaration)
+        public static string ToUtf8XmlString(XmlDocument xml, bool omitXmlDeclaration = false)
         {
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Encoding = new UnicodeEncoding(false, false); // no BOM in a .NET string
-            settings.Indent = true;
-            settings.OmitXmlDeclaration = omitXmlDeclaration;
-
-            StringWriter textWriter = null;
-            try
+            var settings = new XmlWriterSettings
             {
-                textWriter = new StringWriter();
-                var xmlWriter = XmlWriter.Create(textWriter, settings);
+                Indent = true,
+                OmitXmlDeclaration = omitXmlDeclaration,
+            };
+            var result = new StringBuilder();
+
+            using (var xmlWriter = XmlWriter.Create(result, settings))
+            {
                 xml.Save(xmlWriter);
-                xmlWriter.Flush();
-                return textWriter.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"").Trim();
             }
-            finally
-            {
-                if (textWriter != null)
-                {
-                    textWriter.Dispose();
-                    textWriter = null;
-                }
-            }
-        }
 
-        public static string ToUtf8XmlString(XmlDocument xml)
-        {
-            return ToUtf8XmlString(xml, false);
+            return result.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"").Trim();
         }
 
         public virtual bool IsTextBased

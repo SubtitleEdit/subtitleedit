@@ -2,7 +2,7 @@
 <Language Name="Srpski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Prevod: Misa Forger</TranslatedBy>
     <CultureName>sr-Latn-RS</CultureName>
     <HelpFile />
@@ -722,8 +722,8 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <Split>Razdvoji</Split>
         <MergeSelectedLines>Spoji izabrane linije</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>Spoji odabrane linije kao dijalog</MergeSelectedLinesAsDialog>
-        <MergeWithLineBefore>Spoji s linijom iza</MergeWithLineBefore>
-        <MergeWithLineAfter>Spoji s linijom ispred</MergeWithLineAfter>
+        <MergeWithLineBefore>Spoji s linijom ispred</MergeWithLineBefore>
+        <MergeWithLineAfter>Spoji s linijom iza</MergeWithLineAfter>
         <Normal>Ukloni oznake</Normal>
         <Underline>Podvuci</Underline>
         <Color>Promeni boju...</Color>
@@ -1043,7 +1043,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
   <MatroskaSubtitleChooser>
     <Title>Biranje prevoda iz MKV datoteke</Title>
     <PleaseChoose>Pronađeno je više prevoda. Izaberite koji želite.</PleaseChoose>
-    <TrackXLanguageYTypeZ>Zapis {0} – {1} – jezik: {2} – vrsta: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Zapis {0} – jezik: {1} – vrsta: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MergedShortLines>
     <Title>Spajanje kratkih linija</Title>

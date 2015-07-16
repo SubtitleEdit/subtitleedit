@@ -27,23 +27,12 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAdvanced.Text = Configuration.Settings.Language.General.Advanced;
             labelHourMinSecMilliSecond.Text = Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
             buttonGetFrameRate.Left = splitTimeUpDownAdjust.Left + splitTimeUpDownAdjust.Width;
-            FixLargeFonts();
-        }
 
-        private void FixLargeFonts()
-        {
-            label2.Top = label1.Top + label1.Height;
+            label2.Top = label1.Bottom;
+            if (Width < label1.Right + 5)
+                Width = label1.Right + 5;
 
-            if (label1.Left + label1.Width + 5 > Width)
-                Width = label1.Left + label1.Width + 5;
-
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonSplit.Text, Font);
-            if (textSize.Height > buttonSplit.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonSplit);
         }
 
         public void Initialize(Subtitle subtitle, string fileName, SubtitleFormat format, Encoding encoding, double lengthInSeconds)
@@ -67,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
             return splitTimeUpDownAdjust.TimeCode.TimeSpan;
         }
 
-        private void ButtonFixClick(object sender, EventArgs e)
+        private void ButtonSplitClick(object sender, EventArgs e)
         {
             var splitTime = GetSplitTime();
             if (splitTime.TotalSeconds > 0)
@@ -99,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SavePart(part1, Configuration.Settings.Language.SplitSubtitle.SavePartOneAs, Configuration.Settings.Language.SplitSubtitle.Part1);
 
                     part2.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-splitTime.TotalMilliseconds));
-                    part2.Renumber(1);
+                    part2.Renumber();
                     SavePart(part2, Configuration.Settings.Language.SplitSubtitle.SavePartTwoAs, Configuration.Settings.Language.SplitSubtitle.Part2);
 
                     DialogResult = DialogResult.OK;

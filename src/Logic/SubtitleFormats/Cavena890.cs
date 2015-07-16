@@ -9,7 +9,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class Cavena890 : SubtitleFormat
     {
-
         private const int LanguageIdEnglish = 0x01;
         private const int LanguageIdDanish = 0x07;
         private const int LanguageIdAlbanian = 0x09;
@@ -20,7 +19,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private const int LanguageIdChineseTraditional = 0x90;
         private const int LanguageIdChineseSimplified = 0x91;
 
-        private static List<int> _hebrewCodes = new List<int> {
+        private static readonly List<int> _hebrewCodes = new List<int> {
             0x40, // א
             0x41, // ב
             0x42, // ג
@@ -50,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x55, // ץ
         };
 
-        private static List<string> _hebrewLetters = new List<string> {
+        private static readonly List<string> _hebrewLetters = new List<string> {
             "א",
             "ב",
             "ג",
@@ -80,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "ץ",
         };
 
-        private static List<int> _russianCodes = new List<int> {
+        private static readonly List<int> _russianCodes = new List<int> {
             0x42, // Б
             0x45, // Е
             0x5A, // З
@@ -179,9 +178,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".890"; }
         }
 
+        public const string NameOfFormat = "Cavena 890";
+
         public override string Name
         {
-            get { return "Cavena 890"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -201,21 +202,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
-
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
-                    if (p.Text.Contains('的') ||
-                        p.Text.Contains('是') ||
-                        p.Text.Contains('啊') ||
-                        p.Text.Contains('吧') ||
-                        p.Text.Contains('好') ||
-                        p.Text.Contains('吧') ||
-                        p.Text.Contains('亲') ||
-                        p.Text.Contains('爱') ||
-                        p.Text.Contains('的') ||
-                        p.Text.Contains('早') ||
-                        p.Text.Contains('上') ||
-                        p.Text.Contains(""))
+                    if (p.Text.Contains(new[] { '的', '是', '啊', '吧', '好', '吧', '亲', '爱', '的', '早', '上' }))
                     {
                         _languageIdLine1 = LanguageIdChineseSimplified;
                         _languageIdLine2 = LanguageIdChineseSimplified;
@@ -587,7 +576,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static void WriteTime(FileStream fs, TimeCode timeCode)
         {
             double totalMilliseconds = timeCode.TotalMilliseconds;
-            int frames = (int)Math.Round(totalMilliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            int frames = (int)Math.Round(totalMilliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
             fs.WriteByte((byte)(frames / 256 / 256));
             fs.WriteByte((byte)(frames / 256));
             fs.WriteByte((byte)(frames % 256));
@@ -704,8 +693,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else
                 {
                     subtitle.Paragraphs.Add(p);
-                    p.StartTime.TotalMilliseconds = (1000.0 / Configuration.Settings.General.CurrentFrameRate) * startFrame;
-                    p.EndTime.TotalMilliseconds = (1000.0 / Configuration.Settings.General.CurrentFrameRate) * endFrame;
+                    p.StartTime.TotalMilliseconds = (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * startFrame;
+                    p.EndTime.TotalMilliseconds = (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * endFrame;
                     p.Text = (line1 + Environment.NewLine + line2).Trim();
                 }
 
@@ -714,7 +703,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 i += 128;
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static string FixText(byte[] buffer, int start, int textLength, int languageId)

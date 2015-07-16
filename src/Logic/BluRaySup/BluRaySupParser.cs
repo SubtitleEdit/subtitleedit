@@ -230,7 +230,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                         bmp.SetPixel(x, y, color);
                 }
             }
-
         }
 
         public class PcsData
@@ -290,7 +289,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 }
                 return mergedBmp;
             }
-
         }
 
         public class PdsData
@@ -441,6 +439,9 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
         private static bool CompletePcs(PcsData pcs, Dictionary<int, List<OdsData>> bitmapObjects, Dictionary<int, List<PaletteInfo>> palettes)
         {
+            if (pcs == null || pcs.PcsObjects == null || palettes == null)
+                return false;
+
             if (pcs.PcsObjects.Count == 0)
                 return true;
 

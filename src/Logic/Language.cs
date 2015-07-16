@@ -230,6 +230,17 @@ namespace Nikse.SubtitleEdit.Logic
                 GeneratingSpectrogram = "Generating spectrogram...",
                 ExtractingSeconds = "Extracting audio: {0:0.0} seconds",
                 ExtractingMinutes = "Extracting audio: {0}.{1:00} minutes",
+                WaveFileNotFound = "Could not find extracted wave file!" + Environment.NewLine +
+                                   "This feature requires VLC media player 1.1.x or newer ({0}-bit)." + Environment.NewLine +
+                                   Environment.NewLine +
+                                   "Command line: {1} {2}",
+                WaveFileMalformed = "{0} was unable to extract audio data to wave file!" + Environment.NewLine +
+                                    Environment.NewLine +
+                                    "Command line: {1} {2}" + Environment.NewLine +
+                                    Environment.NewLine +
+                                    "Note: Do check free disk space.",
+                LowDiskSpace = "LOW DISK SPACE!",
+                FreeDiskSpace = "{0} free",
             };
 
             AddWaveformBatch = new LanguageStructure.AddWaveformBatch
@@ -238,6 +249,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Calculating = "Calculating...",
                 ExtractingAudio = "Extracting audio...",
                 Done = "Done",
+                Error = "Error",
             };
 
             AdjustDisplayDuration = new LanguageStructure.AdjustDisplayDuration
@@ -278,7 +290,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ChooseOutputFolder = "Choose output folder",
                 ConvertOptions = "Convert options",
                 RemoveTextForHI = "Remove text for HI",
-                InputDescription = "Input files (browse or drag'n'drop)",
+                InputDescription = "Input files (browse or drag-n-drop)",
                 Convert = "Convert",
                 OverwriteExistingFiles = "Overwrite existing files",
                 RedoCasing = "Redo casing",
@@ -511,6 +523,8 @@ namespace Nikse.SubtitleEdit.Logic
                 TranslatorsName = "Translators name",
                 SubtitleListReferenceCode = "Subtitle list reference code",
                 CountryOfOrigin = "Country of origin",
+                TimeCodeStatus = "Time code status",
+                TimeCodeStartOfProgramme = "Time code: Start of programme",
                 RevisionNumber = "Revision number",
                 MaxNoOfDisplayableChars = "Max# of chars per row",
                 MaxNumberOfDisplayableRows = "Max# of rows",
@@ -587,6 +601,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ShadowWidth = "Shadow width",
                 Transparency = "Alpha",
                 ImageFormat = "Image format",
+                FullFrameImage = "Full frame image",
                 ExportAllLines = "Export all lines...",
                 FontColor = "Font color",
                 FontFamily = "Font family",
@@ -601,13 +616,19 @@ namespace Nikse.SubtitleEdit.Logic
                 LeftRightMargin = "Left/right margin",
                 SaveBluRraySupAs = "Choose Blu-ray sup file name",
                 SaveVobSubAs = "Choose VobSub file name",
-                SaveFabImageScriptAs = "Choose Blu-ray sup file name",
+                SaveFabImageScriptAs = "Choose FAB image script file name",
                 SaveDvdStudioProStlAs = "Choose DVD Studio Pro STL file name",
-                SomeLinesWereTooLongX = "Some lines were too long:\r\n{0}",
+                SaveDigitalCinemaInteropAs = "Choose Digital Cinema Interop file name",
+                SavePremiereEdlAs = "Choose Premiere EDL file name",
+                SaveFcpAs = "Choose Final Cut Pro xml file name",
+                SaveDostAs = "Choose DoStudio dost file name",
+                SomeLinesWereTooLongX = "Some lines were too long:" + Environment.NewLine + "{0}",
                 LineHeight = "Line height",
                 BoxSingleLine = "Box - single line",
                 BoxMultiLine = "Box - multi line",
                 Forced = "Forced",
+                ChooseBackgroundColor = "Choose background color",
+                SaveImageAs = "Save image as...",
             };
 
             ExportText = new LanguageStructure.ExportText
@@ -899,6 +920,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FileName = "File name",
                 Join = "Join",
                 TotalNumberOfLinesX = "Total number of lines: {0:#,###,###}",
+                Note = "Note: Files must already have correct time codes",
             };
 
             Main = new LanguageStructure.Main
@@ -927,7 +949,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SavedOriginalSubtitleX = "Saved original subtitle {0}",
                 FileOnDiskModified = "File on disk modified",
                 OverwriteModifiedFile = "Overwrite the file {0} modified at {1} {2}{3} with current file loaded from disk at {4} {5}?",
-                FileXIsReadOnly = "Cannot save {0}\r\n\r\nFile is read-only!",
+                FileXIsReadOnly = "Cannot save {0}" + Environment.NewLine + Environment.NewLine + "File is read-only!",
                 UnableToSaveSubtitleX = "Unable to save subtitle file {0}" + Environment.NewLine + "Subtitle seems to be empty - try to re-save if you're working on a valid subtitle!",
                 BeforeNew = "Before new",
                 New = "New",
@@ -1041,6 +1063,7 @@ namespace Nikse.SubtitleEdit.Logic
                 MatroskaFiles = "Matroska files",
                 NoSubtitlesFound = "No subtitles found",
                 NotAValidMatroskaFileX = "This is not a valid Matroska file: {0}",
+                BlurayNotSubtitlesFound = "Blu-ray sup file does not contain any subtitles or contains errors - try demuxing again.",
                 ParsingMatroskaFile = "Parsing Matroska file. Please wait...",
                 ParsingTransportStreamFile = "Parsing Transport Stream file. Please wait...",
                 BeforeImportFromMatroskaFile = "Before import subtitle from Matroska file",
@@ -1158,8 +1181,11 @@ namespace Nikse.SubtitleEdit.Logic
                 ErrorLoadRar = "This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.",
                 ErrorLoadZip = "This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.",
                 ErrorLoadPng = "This file seems to be a PNG image file. Subtitle Edit cannot open PNG files.",
+                ErrorLoadJpg = "This file seems to be a JPG image file. Subtitle Edit cannot open JPG files.",
                 ErrorLoadSrr = "This file seems to be a ReScene .srr file - not a subtitle file.",
                 ErrorLoadTorrent = "This file seems to be a BitTorrent file - not a subtitle file.",
+                ErrorLoadBinaryZeroes = "Sorry, this file contains only binary zeroes!\r\n\r\nIf you have edited this file with Subtitle Edit you might be alble to find a backup via the menu item File -> Restore auto-backup...",
+                ErrorDirectoryDropNotAllowed = "Directory drop are not supported here.",
                 NoSupportEncryptedVobSub = "Encrypted VobSub content is not supported.",
                 NoSupportHereBluRaySup = "Blu-ray sup files are not supported here.",
                 NoSupportHereDvdSup = "DVD sup files are not supported here.",
@@ -1505,7 +1531,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Choose subtitle from Matroska file",
                 PleaseChoose = "More than one subtitle found - please choose",
-                TrackXLanguageYTypeZ = "Track {0} - {1} - language: {2} - type: {3}",
+                TrackXLanguageYTypeZ = "Track {0} - language: {1} - type: {2}",
             };
 
             MeasurementConverter = new LanguageStructure.MeasurementConverter
@@ -1582,7 +1608,7 @@ namespace Nikse.SubtitleEdit.Logic
                 RegularExpression = "Regular expression",
                 LinesFoundX = "Lines found: {0}",
                 Delete = "Delete",
-                Add = "Add",
+                Add = "&Add",
                 Update = "&Update",
                 Enabled = "Enabled",
                 SearchType = "Search type",
@@ -1591,7 +1617,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Export = "Export...",
                 ImportRulesTitle = "Import replace rule(s) from...",
                 ExportRulesTitle = "Export replace rule(s) to...",
-                Rules = "Export rules",
+                Rules = "Find and replace rules",
                 MoveToBottom = "Move to bottom",
                 MoveToTop = "Move to top"
             };
@@ -1665,7 +1691,9 @@ can edit in same subtitle file (collaboration)",
                 NewLine = "New line (\\r\\n)",
                 NewLineShort = "New line (\\n)",
                 AnyDigit = "Any digit (\\d)",
+                NonDigit = "Non digit (\\D)",
                 AnyCharacter = "Any character (.)",
+                NonSpaceCharacter = "Non space character (\\S)",
                 AnyWhitespace = "Any whitespace (\\s)",
                 ZeroOrMore = "Zero or more (*)",
                 OneOrMore = "One or more (+)",
@@ -2131,6 +2159,7 @@ can edit in same subtitle file (collaboration)",
                 CharactersPerSecondMinimum = "Characters/sec - minimum: {0:0.000}",
                 CharactersPerSecondMaximum = "Characters/sec - maximum: {0:0.000}",
                 CharactersPerSecondAverage = "Characters/sec - average: {0:0.000}",
+                Export = "Export...",
             };
 
             SubStationAlphaProperties = new LanguageStructure.SubStationAlphaProperties
@@ -2321,6 +2350,8 @@ Keep changes?",
                 InspectCompareMatchesForCurrentImage = "Inspect compare matches for current image...",
                 EditLastAdditions = "Edit last image compare additions...",
                 SetUnitalicFactor = "Set un-italic factor...",
+                DiscardTitle = "Discard changes made in OCR?",
+                DiscardText = "Do you want to discard changes made in current OCR session?",
             };
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter

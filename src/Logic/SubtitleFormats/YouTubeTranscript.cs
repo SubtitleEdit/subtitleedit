@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class YouTubeTranscript : SubtitleFormat
     {
-        private static Regex regexTimeCodes = new Regex(@"^\d{1,3}:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodes = new Regex(@"^\d{1,3}:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p2.Text = Utilities.AutoBreakLine(p2.Text);
             }
             subtitle.RecalculateDisplayTimes(Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds, null);
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string s)

@@ -5,7 +5,6 @@ using Nikse.SubtitleEdit.Logic.VobSub;
 
 namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
 {
-
     /// <summary>
     /// Key-Length-Value MXF package - http://en.wikipedia.org/wiki/KLV + http://en.wikipedia.org/wiki/Material_Exchange_Format
     /// </summary>

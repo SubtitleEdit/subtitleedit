@@ -39,7 +39,6 @@ namespace Nikse.SubtitleEdit.Core
             return false;
         }
 
-
         private static bool EndsWithHtmlTag(string text, bool threeLengthTag, bool includeFont)
         {
             var len = text.Length;
@@ -53,6 +52,7 @@ namespace Nikse.SubtitleEdit.Core
                 return true;
             return false;
         }
+
         public static bool StartsWith(this string s, char c)
         {
             return s.Length > 0 && s[0] == c;
@@ -78,6 +78,11 @@ namespace Nikse.SubtitleEdit.Core
             return source.IndexOf(value) >= 0;
         }
 
+        public static bool Contains(this string source, char[] value)
+        {
+            return source.IndexOfAny(value) >= 0;
+        }
+
         public static bool Contains(this string source, string value, StringComparison comparisonType)
         {
             return source.IndexOf(value, comparisonType) >= 0;
@@ -85,7 +90,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string[] SplitToLines(this string source)
         {
-            return source.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
+            return source.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
         }
 
         // http://www.codeproject.com/Articles/43726/Optimizing-string-operations-in-C
@@ -136,6 +141,30 @@ namespace Nikse.SubtitleEdit.Core
                     return idx;
             }
             return -1;
+        }
+
+        public static string FixExtraSpaces(this string s)
+        {
+            if (string.IsNullOrEmpty(s))
+                return s;
+
+            while (s.Contains("  "))
+                s = s.Replace("  ", " ");
+            s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
+            return s.Replace(Environment.NewLine + " ", Environment.NewLine);
+        }
+
+        public static bool ContainsLetter(this string s)
+        {
+            if (string.IsNullOrWhiteSpace(s))
+                return false;
+
+            foreach (var c in s)
+            {
+                if (char.IsLetter(c))
+                    return true;
+            }
+            return false;
         }
     }
 }

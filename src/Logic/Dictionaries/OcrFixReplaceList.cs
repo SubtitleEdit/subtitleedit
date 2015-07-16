@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
     {
         private static readonly Regex RegExQuestion = new Regex(@"\S\?[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]", RegexOptions.Compiled);
         private static readonly Regex RegExIandZero = new Regex(@"[a-zæøåöääöéèàùâêîôûëï][I1]", RegexOptions.Compiled);
-        private static readonly Regex RegExTime1 = new Regex(@"[a-zæøåöääöéèàùâêîôûëï][0]", RegexOptions.Compiled);
+        private static readonly Regex RegExTime1 = new Regex(@"[a-zæøåöääöéèàùâêîôûëï]0", RegexOptions.Compiled);
         private static readonly Regex RegExTime2 = new Regex(@"0[a-zæøåöääöéèàùâêîôûëï]", RegexOptions.Compiled);
         private static readonly Regex HexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
         private static readonly Regex StartEndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
@@ -277,9 +277,6 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                 word = word.Replace("ﬁ", "fi");
                 word = word.Replace("ν", "v"); // NOTE: first 'v' is a special unicode character!!!!
 
-                while (word.Contains("--"))
-                    word = word.Replace("--", "-");
-
                 if (word.Contains('’'))
                     word = word.Replace('’', '\'');
 
@@ -292,17 +289,19 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                 if (word.Contains('—'))
                     word = word.Replace('—', '-');
 
+                while (word.Contains("--"))
+                    word = word.Replace("--", "-");
+
                 if (word.Contains('|'))
-                    word = word.Replace("|", "l");
+                    word = word.Replace('|', 'l');
 
                 if (word.Contains("vx/"))
                     word = word.Replace("vx/", "w");
 
                 if (word.Contains('¤'))
                 {
-                    var regex = new Regex("[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]¤");
-                    if (regex.IsMatch(word))
-                        word = word.Replace("¤", "o");
+                    if (Regex.IsMatch(word, "[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]¤"))
+                        word = word.Replace('¤', 'o');
                 }
             }
 
@@ -460,7 +459,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             {
                 if (!word.Contains('<') && !word.Contains('>') && !word.Contains('\''))
                 {
-                    word = word.Replace("l", "I");
+                    word = word.Replace('l', 'I');
                 }
             }
             return word;
@@ -487,26 +486,23 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             if (word.LastIndexOf('I') > 0 || word.LastIndexOf('1') > 0)
             {
                 var match = RegExIandZero.Match(word);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    if (word[match.Index + 1] == 'I' || word[match.Index + 1] == '1')
                     {
-                        if (word[match.Index + 1] == 'I' || word[match.Index + 1] == '1')
-                        {
-                            bool doFix = word[match.Index + 1] != 'I' && match.Index >= 1 && word.Substring(match.Index - 1).StartsWith("Mc");
-                            if (word[match.Index + 1] == 'I' && match.Index >= 2 && word.Substring(match.Index - 2).StartsWith("Mac"))
-                                doFix = false;
+                        bool doFix = word[match.Index + 1] != 'I' && match.Index >= 1 && word.Substring(match.Index - 1).StartsWith("Mc");
+                        if (word[match.Index + 1] == 'I' && match.Index >= 2 && word.Substring(match.Index - 2).StartsWith("Mac"))
+                            doFix = false;
 
-                            if (doFix)
-                            {
-                                string oldText = word;
-                                word = word.Substring(0, match.Index + 1) + "l";
-                                if (match.Index + 2 < oldText.Length)
-                                    word += oldText.Substring(match.Index + 2);
-                            }
+                        if (doFix)
+                        {
+                            string oldText = word;
+                            word = word.Substring(0, match.Index + 1) + "l";
+                            if (match.Index + 2 < oldText.Length)
+                                word += oldText.Substring(match.Index + 2);
                         }
-                        match = RegExIandZero.Match(word, match.Index + 1);
                     }
+                    match = RegExIandZero.Match(word, match.Index + 1);
                 }
             }
             return word;
@@ -538,38 +534,32 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             if (word.LastIndexOf('0') > 0)
             {
                 Match match = RegExTime1.Match(word);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    if (word[match.Index + 1] == '0')
                     {
-                        if (word[match.Index + 1] == '0')
-                        {
-                            string oldText = word;
-                            word = word.Substring(0, match.Index + 1) + "o";
-                            if (match.Index + 2 < oldText.Length)
-                                word += oldText.Substring(match.Index + 2);
-                        }
-                        match = RegExTime1.Match(word);
+                        string oldText = word;
+                        word = word.Substring(0, match.Index + 1) + "o";
+                        if (match.Index + 2 < oldText.Length)
+                            word += oldText.Substring(match.Index + 2);
                     }
+                    match = RegExTime1.Match(word);
                 }
 
                 match = RegExTime2.Match(word);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    if (word[match.Index] == '0')
                     {
-                        if (word[match.Index] == '0')
+                        if (match.Index == 0 || !@"123456789".Contains(word[match.Index - 1]))
                         {
-                            if (match.Index == 0 || !@"123456789".Contains(word[match.Index - 1]))
-                            {
-                                string oldText = word;
-                                word = word.Substring(0, match.Index) + "o";
-                                if (match.Index + 1 < oldText.Length)
-                                    word += oldText.Substring(match.Index + 1);
-                            }
+                            string oldText = word;
+                            word = word.Substring(0, match.Index) + "o";
+                            if (match.Index + 1 < oldText.Length)
+                                word += oldText.Substring(match.Index + 1);
                         }
-                        match = RegExTime2.Match(word, match.Index + 1);
                     }
+                    match = RegExTime2.Match(word, match.Index + 1);
                 }
             }
             return word;
@@ -785,6 +775,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
 
         private XmlDocument LoadXmlReplaceListDocument()
         {
+            const string xmlText = "<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>";
             var doc = new XmlDocument();
             if (File.Exists(_replaceListXmlFileName))
             {
@@ -794,12 +785,12 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                 }
                 catch
                 {
-                    doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");
+                    doc.LoadXml(xmlText);
                 }
             }
             else
             {
-                doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");
+                doc.LoadXml(xmlText);
             }
             return doc;
         }
@@ -811,6 +802,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
 
         private XmlDocument LoadXmlReplaceListUserDocument()
         {
+            const string xmlText = "<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><RemovedWholeWords/><RemovedPartialLines/><RemovedBeginLines/><RemovedEndLines/><RemovedWholeLines/></ReplaceList>";
             var doc = new XmlDocument();
             if (File.Exists(ReplaceListXmlFileNameUser))
             {
@@ -820,12 +812,12 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                 }
                 catch
                 {
-                    doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><RemovedWholeWords/><RemovedPartialLines/><RemovedBeginLines/><RemovedEndLines/><RemovedWholeLines/></ReplaceList>");
+                    doc.LoadXml(xmlText);
                 }
             }
             else
             {
-                doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><RemovedWholeWords/><RemovedPartialLines/><RemovedBeginLines/><RemovedEndLines/><RemovedWholeLines/></ReplaceList>");
+                doc.LoadXml(xmlText);
             }
             return doc;
         }
@@ -935,6 +927,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             var sb = new StringBuilder();
             if (word != null && text != null && text.Contains(word))
             {
+                const string startChars = @" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/";
                 int appendFrom = 0;
                 for (int i = 0; i < text.Length; i++)
                 {
@@ -942,14 +935,14 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                     {
                         bool startOk = i == 0;
                         if (!startOk)
-                            startOk = (@" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text[i - 1]);
+                            startOk = (startChars + Environment.NewLine).Contains(text[i - 1]);
                         if (!startOk && word.StartsWith(' '))
                             startOk = true;
                         if (startOk)
                         {
                             bool endOk = (i + word.Length == text.Length);
                             if (!endOk)
-                                endOk = (@" ¡¿<>-""”“()[]'‘`´¶♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text[i + word.Length]);
+                                endOk = (startChars + Environment.NewLine).Contains(text[i + word.Length]);
                             if (!endOk)
                                 endOk = newWord.EndsWith(' ');
                             if (endOk)

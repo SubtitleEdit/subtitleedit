@@ -806,7 +806,6 @@
     <Word from="Burgerrechtlerin" to="Bürgerrechtlerin" />
     <Word from="Buro" to="Büro" />
     <Word from="BURO" to="BÜRO" />
-    <Word from="Buro" to="Büro" />
     <Word from="Burol" to="Büro!" />
     <Word from="Burottlr" to="Bürotür" />
     <Word from="Busche" to="Büsche" />
@@ -895,8 +894,6 @@
     <Word from="Darilber" to="Darüber" />
     <Word from="dart/'ber" to="darüber" />
     <Word from="dartlber" to="darüber" />
-    <Word from="DARUBER" to="DARÜBER" />
-    <Word from="DarUber" to="Darüber" />
     <Word from="DARUBER" to="DARÜBER" />
     <Word from="DarUber" to="Darüber" />
     <Word from="dasjetzt" to="das jetzt" />
@@ -2140,8 +2137,6 @@
     <Word from="Gesiiff" to="Gesöff" />
     <Word from="gesiindigt" to="gesündigt" />
     <Word from="gespiirt" to="gespürt" />
-    <Word from="Gesprach" to="Gespräch" />
-    <Word from="GESPRACH" to="GESPRÄCH" />
     <Word from="Gesprach" to="Gespräch" />
     <Word from="GESPRACH" to="GESPRÄCH" />
     <Word from="GESPRACHE" to="GESPRÄCHE" />
@@ -3421,8 +3416,6 @@
     <Word from="kusste" to="küsste" />
     <Word from="KUSTE" to="KÜSTE" />
     <Word from="Kuste" to="Küste" />
-    <Word from="KUSTE" to="KÜSTE" />
-    <Word from="Kuste" to="Küste" />
     <Word from="Kéfer" to="Käfer" />
     <Word from="Kéfig" to="Käfig" />
     <Word from="kéime" to="käme" />
@@ -4061,8 +4054,6 @@
     <Word from="Muskatnijsse" to="Muskatnüsse" />
     <Word from="Muskelkumpelsl" to="Muskelkumpels!" />
     <Word from="muskuléren" to="muskulären" />
-    <Word from="mussen" to="müssen" />
-    <Word from="MUSSEN" to="MÜSSEN" />
     <Word from="mussen" to="müssen" />
     <Word from="MUSSEN" to="MÜSSEN" />
     <Word from="mUssen's" to="müssen's" />
@@ -5449,7 +5440,6 @@
     <Word from="Tupperschiissel" to="Tupperschüssel" />
     <Word from="TUR" to="TÜR" />
     <Word from="TUr" to="Tür" />
-    <Word from="TUR" to="TÜR" />
     <Word from="Turen" to="Türen" />
     <Word from="TURKEI" to="TÜRKEI" />
     <Word from="Turmwiichter" to="Turmwächter" />
@@ -5500,8 +5490,6 @@
     <Word from="Uben/vachungen" to="Überwachungen" />
     <Word from="Uben/vachungsgesetz" to="Überwachungsgesetz" />
     <Word from="Uben/vinden" to="überwinden" />
-    <Word from="Uber" to="über" />
-    <Word from="UBER" to="ÜBER" />
     <Word from="Uber" to="über" />
     <Word from="UBER" to="ÜBER" />
     <Word from="Uberall" to="überall" />
@@ -5600,7 +5588,6 @@
     <Word from="Ubertraf" to="übertraf" />
     <Word from="UBERTRAGEN" to="ÜBERTRAGEN" />
     <Word from="Ubertragen" to="übertragen" />
-    <Word from="UBERTRAGEN" to="ÜBERTRAGEN" />
     <Word from="UBERTRAGUNG" to="ÜBERTRAGUNG" />
     <Word from="ubertreibe" to="übertreibe" />
     <Word from="Ubertreiben" to="übertreiben" />
@@ -6439,8 +6426,6 @@
     <Word from="wunscht" to="wünscht" />
     <Word from="wunschte" to="wünschte" />
     <Word from="WUNSCHTE" to="WÜNSCHTE" />
-    <Word from="wunschte" to="wünschte" />
-    <Word from="WUNSCHTE" to="WÜNSCHTE" />
     <Word from="wurcle" to="wurde" />
     <Word from="wUrde" to="würde" />
     <Word from="Wurdige" to="Würdige" />
@@ -6858,10 +6843,9 @@
   <PartialLines>
     <!-- Partial lines - but whole words only -->
   </PartialLines>
-  <BeginLines>
-  </BeginLines>
-  <EndLines>
-  </EndLines>
-  <WholeLines>
-  </WholeLines>
+  <PartialLinesAlways />
+  <BeginLines />
+  <EndLines />
+  <WholeLines />
+  <RegularExpressions />
 </OCRFixReplaceList>

@@ -1,8 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4.Boxes;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -17,18 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelChoose.Text = Configuration.Settings.Language.MatroskaSubtitleChooser.PleaseChoose;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         public int SelectedIndex
@@ -41,15 +30,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Initialize(List<MatroskaTrackInfo> subtitleInfoList)
         {
+            var format = Configuration.Settings.Language.MatroskaSubtitleChooser.TrackXLanguageYTypeZ;
             foreach (var info in subtitleInfoList)
             {
-                string s = string.Format(Configuration.Settings.Language.MatroskaSubtitleChooser.TrackXLanguageYTypeZ, info.TrackNumber, info.Name, info.Language, info.CodecId);
-                listBox1.Items.Add(s);
+                var track = string.Format((!string.IsNullOrWhiteSpace(info.Name) ? "{0} - {1}" : "{0}"), info.TrackNumber, info.Name);
+                listBox1.Items.Add(string.Format(format, track, info.Language, info.CodecId));
             }
             listBox1.SelectedIndex = 0;
         }
 
-        internal void Initialize(List<Logic.Mp4.Boxes.Trak> mp4SubtitleTracks)
+        internal void Initialize(List<Trak> mp4SubtitleTracks)
         {
             int i = 0;
             foreach (var track in mp4SubtitleTracks)

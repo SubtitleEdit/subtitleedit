@@ -42,10 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BinaryOcrTest.cs" />
+    <Compile Include="Logic\Ocr\BinaryOcrTest.cs" />
     <Compile Include="Core\HtmlUtilTest.cs" />
     <Compile Include="FixCommonErrorsTest.cs" />
-    <Compile Include="LanguageTest.cs" />
+    <Compile Include="Logic\LanguageTest.cs" />
     <Compile Include="Logic\BluRaySup\BluRaySupParserTest.cs" />
     <Compile Include="Logic\BluRaySup\ToolBoxTest.cs" />
     <Compile Include="Logic\Dictionaries\NamesListTest.cs" />
@@ -55,13 +55,14 @@
     <Compile Include="Logic\TransportStream\TransportStreamTest.cs" />
     <Compile Include="Logic\ParagraphTest.cs" />
     <Compile Include="Logic\StripableTextTest.cs" />
+    <Compile Include="Logic\TimeCodeTest.cs" />
     <Compile Include="Logic\VideoFormats\MatroskaTest.cs" />
     <Compile Include="Logic\VobSub\VobSubTest.cs" />
-    <Compile Include="NOcrTest.cs" />
+    <Compile Include="Logic\Ocr\NOcrTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RemoveTextForHearImpairedTest.cs" />
-    <Compile Include="SubtitleFormatsTest.cs" />
-    <Compile Include="UtilitiesTest.cs" />
+    <Compile Include="Logic\Forms\RemoveTextForHearImpairedTest.cs" />
+    <Compile Include="Logic\SubtitleFormats\SubtitleFormatsTest.cs" />
+    <Compile Include="Logic\UtilitiesTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SubtitleEdit.csproj">

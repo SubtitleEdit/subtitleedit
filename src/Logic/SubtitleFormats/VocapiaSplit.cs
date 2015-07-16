@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string ToTimeCode(double totalMilliseconds)
         {
-            return string.Format("{0:0##}", totalMilliseconds / 1000.0);
+            return string.Format("{0:0##}", totalMilliseconds / TimeCode.BaseUnit);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -138,14 +138,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             if (subtitle.Paragraphs.Count > 0)
                 subtitle.Header = xmlString;
         }
 
         private static double ParseTimeCode(string s)
         {
-            return Convert.ToDouble(s) * 1000.0;
+            return Convert.ToDouble(s) * TimeCode.BaseUnit;
         }
 
         public override bool HasStyleSupport

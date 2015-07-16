@@ -409,6 +409,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAddOcrFix.Text = language.AddPair;
             groupBoxWordListLocation.Text = language.Location;
             checkBoxNamesEtcOnline.Text = language.UseOnlineNamesEtc;
+            linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetDictionaries.OpenDictionariesFolder;
 
             groupBoxProxySettings.Text = language.ProxyServerSettings;
             labelProxyAddress.Text = language.ProxyAddress;
@@ -789,7 +790,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxOverlap.Text = language.SyntaxColorOverlap;
             buttonListViewSyntaxColorError.Text = language.SyntaxErrorColor;
 
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
 
             checkBoxShortcutsControl.Left = labelShortcut.Left + labelShortcut.Width + 9;
             checkBoxShortcutsAlt.Left = checkBoxShortcutsControl.Left + checkBoxShortcutsControl.Width + 9;
@@ -809,19 +810,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(shortcut))
                 shortcut = Configuration.Settings.Language.General.None;
             return string.Format(" [{0}]", shortcut);
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-                Utilities.SetButtonHeight(groupBoxSsaStyle, newButtonHeight, 2);
-                Utilities.SetButtonHeight(groupBoxWaveformAppearence, newButtonHeight, 1);
-            }
         }
 
         private void InitializeWaveformsAndSpectrogramsFolderEmpty(LanguageStructure.Settings language)
@@ -877,7 +865,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonWaveformsFolderEmpty.Enabled = true;
                 labelWaveformsFolderInfo.Text = string.Format(language.WaveformAndSpectrogramsFolderInfo, count, bytes / 1024.0 / 1024.0);
-
             }
             else
             {
@@ -918,13 +905,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!string.IsNullOrEmpty(name))
                     {
-                        if (Directory.GetFiles(dir, name.Replace("-", "_") + "_user.xml").Length == 1)
+                        if (Directory.GetFiles(dir, name.Replace('-', '_') + "_user.xml").Length == 1)
                         {
                             if (!cultures.Contains(culture))
                                 cultures.Add(culture);
                         }
 
-                        if (Directory.GetFiles(dir, name.Replace("-", "_") + "_names_etc.xml").Length == 1)
+                        if (Directory.GetFiles(dir, name.Replace('-', '_') + "_names_etc.xml").Length == 1)
                         {
                             if (!cultures.Contains(culture))
                                 cultures.Add(culture);
@@ -953,7 +940,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 cultures.Add(culture);
                         }
                     }
-
                 }
 
                 foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
@@ -993,7 +979,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (comboBoxWordListLanguage.Items.Count > 0 && comboBoxWordListLanguage.SelectedIndex == -1)
                     comboBoxWordListLanguage.SelectedIndex = 0;
-
             }
             else
             {
@@ -1019,7 +1004,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             gs.ShowFrameRate = checkBoxShowFrameRate.Checked;
             double outFrameRate;
-            if (double.TryParse(comboBoxFrameRate.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out outFrameRate))
+            if (double.TryParse(comboBoxFrameRate.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out outFrameRate))
                 gs.DefaultFrameRate = outFrameRate;
 
             gs.DefaultEncoding = Encoding.UTF8.BodyName;
@@ -1545,7 +1530,6 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.WaveformFocusListView.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformFocusListView = GetShortcut(node.Text);
-
                 }
             }
 
@@ -1590,7 +1574,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (Graphics g = Graphics.FromImage(bmp))
             {
-
                 // Draw background
                 const int rectangleSize = 9;
                 for (int y = 0; y < bmp.Height; y += rectangleSize)
@@ -1669,7 +1652,6 @@ namespace Nikse.SubtitleEdit.Forms
                     g.DrawPath(new Pen(Color.Black, outline), path);
                 }
                 g.FillPath(new SolidBrush(Color.FromArgb(_ssaFontColor)), path);
-
             }
             pictureBoxPreview.Image = bmp;
         }
@@ -1788,7 +1770,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var cb = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
             if (cb != null)
-                return cb.CultureInfo.Name.Replace("-", "_");
+                return cb.CultureInfo.Name.Replace('-', '_');
 
             return null;
         }
@@ -2040,7 +2022,6 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 }
             }
-
         }
 
         private void ListBoxOcrFixListSelectedIndexChanged(object sender, EventArgs e)
@@ -2520,11 +2501,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (openFileDialogFFmpeg.ShowDialog(this) == DialogResult.OK)
             {
-                textBoxVlcPath.Text = Path.GetDirectoryName(openFileDialogFFmpeg.FileName);
-                Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
-                Configuration.Settings.General.VlcLocationRelative = GetRelativePath(textBoxVlcPath.Text);
-                radioButtonVideoPlayerVLC.Enabled = LibVlcDynamic.IsInstalled;
+                EnableVlc(openFileDialogFFmpeg.FileName);
             }
+        }
+
+        private void EnableVlc(string fileName)
+        {
+            textBoxVlcPath.Text = Path.GetDirectoryName(fileName);
+            Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
+            Configuration.Settings.General.VlcLocationRelative = GetRelativePath(textBoxVlcPath.Text);
+            radioButtonVideoPlayerVLC.Enabled = LibVlcDynamic.IsInstalled;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -2540,6 +2526,30 @@ namespace Nikse.SubtitleEdit.Forms
             using (var form = new DoNotBreakAfterListEdit())
             {
                 form.ShowDialog(this);
+            }
+        }
+
+        private void linkLabelOpenDictionaryFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string dictionaryFolder = Utilities.DictionaryFolder;
+            if (!Directory.Exists(dictionaryFolder))
+                Directory.CreateDirectory(dictionaryFolder);
+
+            System.Diagnostics.Process.Start(dictionaryFolder);
+        }
+
+        private void textBoxVlcPath_MouseLeave(object sender, EventArgs e)
+        {
+            try
+            {
+                var path = textBoxVlcPath.Text.Trim('\"');
+                if (path.Length > 3 && Path.IsPathRooted(path) && Path.GetFileName(path).Equals("vlc.exe", StringComparison.OrdinalIgnoreCase) && File.Exists(path))
+                {
+                    EnableVlc(path);
+                }
+            }
+            catch
+            {
             }
         }
 

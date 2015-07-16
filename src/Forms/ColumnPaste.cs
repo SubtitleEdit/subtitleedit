@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 
@@ -17,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         public ColumnPaste(bool isOriginalAvailable, bool onlyText)
         {
             InitializeComponent();
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
 
             radioButtonAll.Enabled = !onlyText;
             radioButtonTimeCodes.Enabled = !onlyText;
@@ -34,17 +33,6 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonOriginalText.Text = Configuration.Settings.Language.ColumnPaste.OriginalTextOnly;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void PasteSpecial_KeyDown(object sender, KeyEventArgs e)

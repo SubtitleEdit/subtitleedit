@@ -2,7 +2,6 @@
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
-using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -45,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderLine.Text = Configuration.Settings.Language.General.LineNumber;
             columnHeaderText.Text = Configuration.Settings.Language.General.Text;
 
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
 
             comboBoxRule.Items.Clear();
             comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.Contains);
@@ -70,17 +69,6 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxRule.SelectedIndex = 0;
             _loading = false;
             Preview();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void ModifySelection_KeyDown(object sender, KeyEventArgs e)

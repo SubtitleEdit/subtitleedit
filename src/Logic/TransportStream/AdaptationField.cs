@@ -4,7 +4,6 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
     public class AdaptationField
     {
-
         /// <summary>
         /// Number of bytes in the adaptation field immediately following the Length
         /// </summary>

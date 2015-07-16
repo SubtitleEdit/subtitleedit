@@ -10,7 +10,6 @@ namespace Nikse.SubtitleEdit.Controls
 {
     public sealed class VideoPlayerContainer : Panel
     {
-
         public class RichTextBoxViewOnly : RichTextBox
         {
             public RichTextBoxViewOnly()
@@ -39,7 +38,9 @@ namespace Nikse.SubtitleEdit.Controls
         private RichTextBoxViewOnly _subtitleTextBox;
         private string _subtitleText = string.Empty;
         private VideoPlayer _videoPlayer;
+
         public float FontSizeFactor { get; set; }
+
         public VideoPlayer VideoPlayer
         {
             get { return _videoPlayer; }
@@ -62,7 +63,7 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _isMuted;
         private double? _muteOldVolume;
         private readonly System.ComponentModel.ComponentResourceManager _resources;
-        private const int ControlsHeight = 47;
+        private int _controlsHeight = 47;
         private const int SubtitlesHeight = 57;
         private readonly Color _backgroundColor = Color.FromArgb(18, 18, 18);
         private Panel _panelcontrols;
@@ -360,7 +361,7 @@ namespace Nikse.SubtitleEdit.Controls
                                     s = s.Trim('\'');
                                     try
                                     {
-                                        fontColor = System.Drawing.ColorTranslator.FromHtml(s);
+                                        fontColor = ColorTranslator.FromHtml(s);
                                         fontFound = true;
                                     }
                                     catch
@@ -370,7 +371,7 @@ namespace Nikse.SubtitleEdit.Controls
                                         {
                                             try
                                             {
-                                                fontColor = System.Drawing.ColorTranslator.FromHtml("#" + s);
+                                                fontColor = ColorTranslator.FromHtml("#" + s);
                                                 fontFound = true;
                                             }
                                             catch
@@ -464,7 +465,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_panelcontrols.Visible)
             {
-                _panelSubtitle.Height = _panelSubtitle.Height + ControlsHeight;
+                _panelSubtitle.Height = _panelSubtitle.Height + _controlsHeight;
                 _panelcontrols.Visible = false;
             }
         }
@@ -474,13 +475,13 @@ namespace Nikse.SubtitleEdit.Controls
             if (!_panelcontrols.Visible)
             {
                 _panelcontrols.Visible = true;
-                _panelSubtitle.Height = _panelSubtitle.Height - ControlsHeight;
+                _panelSubtitle.Height = _panelSubtitle.Height - _controlsHeight;
             }
         }
 
         private Control MakeControlsPanel()
         {
-            _panelcontrols = new Panel { Left = 0, Height = ControlsHeight };
+            _panelcontrols = new Panel { Left = 0, Height = _controlsHeight };
 
             _pictureBoxBackground = new PictureBox
                                         {
@@ -789,15 +790,16 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void VideoPlayerContainerResize(object sender, EventArgs e)
         {
-            PanelPlayer.Height = Height - (ControlsHeight + SubtitlesHeight);
+            _controlsHeight = _pictureBoxBackground.Height;
+            PanelPlayer.Height = Height - (_controlsHeight + SubtitlesHeight);
             PanelPlayer.Width = Width;
             if (_videoPlayer != null)
                 _videoPlayer.Resize(PanelPlayer.Width, PanelPlayer.Height);
 
-            _panelSubtitle.Top = Height - (ControlsHeight + SubtitlesHeight);
+            _panelSubtitle.Top = Height - (_controlsHeight + SubtitlesHeight);
             _panelSubtitle.Width = Width;
 
-            _panelcontrols.Top = Height - ControlsHeight + 2;
+            _panelcontrols.Top = Height - _controlsHeight + 2;
             _panelcontrols.Width = Width;
             _pictureBoxBackground.Width = Width;
             _pictureBoxProgressbarBackground.Width = Width - (_pictureBoxProgressbarBackground.Left * 2);
@@ -914,7 +916,6 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 HideAllPauseImages();
                 _pictureBoxPauseDown.Visible = true;
-
             }
             if (OnButtonClicked != null)
                 OnButtonClicked.Invoke(sender, e);

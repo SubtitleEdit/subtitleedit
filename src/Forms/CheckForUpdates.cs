@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonOK.Visible = true;
                 }
             }
-            _seconds += timerCheckForUpdates.Interval / 1000.0;
+            _seconds += timerCheckForUpdates.Interval / TimeCode.BaseUnit;
 
             if (buttonDownloadAndInstall.Visible)
                 buttonDownloadAndInstall.Focus();

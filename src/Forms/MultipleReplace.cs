@@ -1,25 +1,47 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 using System.Xml;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class MultipleReplace : PositionAndSizeForm
     {
+
+        internal class ReplaceExpression
+        {
+            internal const int SearchNormal = 0;
+            internal const int SearchRegEx = 1;
+            internal const int SearchCaseSensitive = 2;
+
+            internal string FindWhat { get; set; }
+            internal string ReplaceWith { get; set; }
+            internal int SearchType { get; set; }
+
+            internal ReplaceExpression(string findWhat, string replaceWith, string searchType)
+            {
+                FindWhat = findWhat;
+                ReplaceWith = replaceWith;
+                if (string.CompareOrdinal(searchType, Configuration.Settings.Language.MultipleReplace.RegularExpression) == 0)
+                    SearchType = SearchRegEx;
+                else if (string.CompareOrdinal(searchType, Configuration.Settings.Language.MultipleReplace.CaseSensitive) == 0)
+                    SearchType = SearchCaseSensitive;
+            }
+        }
+
         public const string SearchTypeNormal = "Normal";
         public const string SearchTypeCaseSensitive = "CaseSensitive";
         public const string SearchTypeRegularExpression = "RegularExpression";
+        private readonly List<MultipleSearchAndReplaceSetting> _oldMultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
         private readonly Dictionary<string, Regex> _compiledRegExList = new Dictionary<string, Regex>();
         private Subtitle _subtitle;
+        public List<int> DeleteIndices { get; private set; }
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
-        private readonly List<MultipleSearchAndReplaceSetting> _oldMultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
-        public List<int> DeleteIndices = new List<int>();
 
         public MultipleReplace()
         {
@@ -56,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonReplacesSelectAll.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
             buttonReplacesInverseSelection.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
             splitContainer1.Panel1MinSize = 200;
             splitContainer1.Panel2MinSize = 200;
 
@@ -67,17 +89,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         public void Initialize(Subtitle subtitle)
@@ -92,7 +103,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _oldMultipleSearchAndReplaceList.Add(item);
             }
 
-            GeneratePreview();
             if (subtitle.Paragraphs == null || subtitle.Paragraphs.Count == 0)
                 groupBoxLinesFound.Enabled = false;
         }
@@ -100,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void MultipleReplace_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
-                DialogResult = DialogResult.Cancel;
+                buttonCancel_Click(null, null);
             else if (e.KeyCode == Keys.F1)
                 Utilities.ShowHelp("#multiple_replace");
         }
@@ -132,85 +142,93 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 AddToReplaceListView(true, textBoxFind.Text, textBoxReplace.Text, EnglishSearchTypeToLocal(searchType));
-                GeneratePreview();
                 textBoxFind.Text = string.Empty;
                 textBoxReplace.Text = string.Empty;
+                GeneratePreview();
                 textBoxFind.Select();
                 SaveReplaceList(false);
             }
+        }
+
+        internal void RunFromBatch(Subtitle subtitle)
+        {
+            Initialize(subtitle);
+            GeneratePreview();
         }
 
         private void GeneratePreview()
         {
             Cursor = Cursors.WaitCursor;
             FixedSubtitle = new Subtitle(_subtitle);
+            DeleteIndices = new List<int>();
+            FixCount = 0;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
-            FixCount = 0;
-            DeleteIndices = new List<int>();
+            var replaceExpressions = new HashSet<ReplaceExpression>();
+            foreach (ListViewItem item in listViewReplaceList.Items)
+            {
+                if (item.Checked)
+                {
+                    string findWhat = item.SubItems[1].Text;
+                    if (!string.IsNullOrWhiteSpace(findWhat))
+                    {
+                        string replaceWith = item.SubItems[2].Text.Replace(@"\n", Environment.NewLine);
+                        string searchType = item.SubItems[3].Text;
+                        var mpi = new ReplaceExpression(findWhat, replaceWith, searchType);
+                        replaceExpressions.Add(mpi);
+                        if (mpi.SearchType == ReplaceExpression.SearchRegEx && !_compiledRegExList.ContainsKey(findWhat))
+                        {
+                            _compiledRegExList.Add(findWhat, new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline));
+                        }
+                    }
+                }
+            }
+
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
                 bool hit = false;
                 string newText = p.Text;
-
-                foreach (ListViewItem item in listViewReplaceList.Items)
+                foreach (ReplaceExpression item in replaceExpressions)
                 {
-                    if (item.Checked && item.SubItems[1].Text.Length > 0)
+                    if (item.SearchType == ReplaceExpression.SearchCaseSensitive)
                     {
-                        string findWhat = item.SubItems[1].Text;
-                        string replaceWith = item.SubItems[2].Text.Replace(@"\n", Environment.NewLine);
-                        string searchType = item.SubItems[3].Text;
-                        if (searchType == Configuration.Settings.Language.MultipleReplace.CaseSensitive)
+                        if (newText.Contains(item.FindWhat))
                         {
-                            if (newText.Contains(findWhat))
-                            {
-                                hit = true;
-                                newText = newText.Replace(findWhat, replaceWith);
-                            }
+                            hit = true;
+                            newText = newText.Replace(item.FindWhat, item.ReplaceWith);
                         }
-                        else if (searchType == Configuration.Settings.Language.MultipleReplace.RegularExpression)
+                    }
+                    else if (item.SearchType == ReplaceExpression.SearchRegEx)
+                    {
+                        Regex r = _compiledRegExList[item.FindWhat];
+                        if (r.IsMatch(newText))
                         {
-                            Regex r;
-                            if (_compiledRegExList.ContainsKey(findWhat))
-                            {
-                                r = _compiledRegExList[findWhat];
-                            }
-                            else
-                            {
-                                r = new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline);
-                                _compiledRegExList.Add(findWhat, r);
-                            }
-
-                            string result = r.Replace(newText, replaceWith);
-                            if (result != newText)
-                            {
-                                hit = true;
-                                newText = result;
-                            }
+                            hit = true;
+                            newText = r.Replace(newText, item.ReplaceWith);
                         }
-                        else
+                    }
+                    else
+                    {
+                        int index = newText.IndexOf(item.FindWhat, StringComparison.OrdinalIgnoreCase);
+                        if (index >= 0)
                         {
-                            int index = newText.IndexOf(findWhat, StringComparison.OrdinalIgnoreCase);
-                            while (index >= 0)
+                            hit = true;
+                            do
                             {
-                                if (index < newText.Length)
-                                    newText = newText.Substring(0, index) + replaceWith + newText.Substring(index + findWhat.Length);
-                                else
-                                    newText = newText.Substring(0, index) + replaceWith;
-
-                                hit = true;
-                                index = newText.IndexOf(findWhat, index + replaceWith.Length, StringComparison.OrdinalIgnoreCase);
+                                newText = newText.Remove(index, item.FindWhat.Length).Insert(index, item.ReplaceWith);
+                                index = newText.IndexOf(item.FindWhat, index + item.ReplaceWith.Length, StringComparison.OrdinalIgnoreCase);
                             }
+                            while (index >= 0);
                         }
                     }
                 }
-                if (hit)
+                if (hit && newText != p.Text)
                 {
                     FixCount++;
                     AddToPreviewListView(p, newText);
                     int index = _subtitle.GetIndex(p);
                     FixedSubtitle.Paragraphs[index].Text = newText;
-                    if (!string.IsNullOrWhiteSpace(p.Text) && (string.IsNullOrWhiteSpace(newText) || HtmlUtil.RemoveHtmlTags(newText, true).Trim().Length == 0))
+                    if (!string.IsNullOrWhiteSpace(p.Text) && (string.IsNullOrWhiteSpace(newText) || string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(newText, true))))
                     {
                         DeleteIndices.Add(index);
                     }
@@ -268,7 +286,7 @@ namespace Nikse.SubtitleEdit.Forms
             return Configuration.Settings.Language.MultipleReplace.Normal;
         }
 
-        private void ButtonOkClick(object sender, EventArgs e)
+        private void buttonOK_Click(object sender, EventArgs e)
         {
             ResetUncheckLines();
             SaveReplaceList(true);
@@ -307,6 +325,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ListViewReplaceListItemChecked(object sender, ItemCheckedEventArgs e)
         {
             GeneratePreview();
+            SaveReplaceList(false);
         }
 
         private void DeleteToolStripMenuItemClick(object sender, EventArgs e)
@@ -348,39 +367,30 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (textBoxFind.Text.Length > 0)
             {
-
-                if (radioButtonRegEx.Checked && !Utilities.IsValidRegex(textBoxFind.Text))
+                string searchType = SearchTypeNormal;
+                if (radioButtonCaseSensitive.Checked)
                 {
-                    MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
-                    textBoxFind.Select();
-                    return;
+                    searchType = SearchTypeCaseSensitive;
                 }
-
-                if (textBoxFind.Text.Length > 0)
+                else if (radioButtonRegEx.Checked)
                 {
-                    string searchType = SearchTypeNormal;
-                    if (radioButtonCaseSensitive.Checked)
-                        searchType = SearchTypeCaseSensitive;
-                    else if (radioButtonRegEx.Checked)
+                    searchType = SearchTypeRegularExpression;
+                    if (!Utilities.IsValidRegex(textBoxFind.Text))
                     {
-                        searchType = SearchTypeRegularExpression;
-                        if (!Utilities.IsValidRegex(textBoxFind.Text))
-                        {
-                            MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
-                            textBoxFind.Select();
-                            return;
-                        }
+                        MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
+                        textBoxFind.Select();
+                        return;
                     }
-
-                    var item = listViewReplaceList.SelectedItems[0];
-                    item.SubItems[1].Text = textBoxFind.Text;
-                    item.SubItems[2].Text = textBoxReplace.Text;
-                    item.SubItems[3].Text = EnglishSearchTypeToLocal(searchType);
-
-                    GeneratePreview();
-                    textBoxFind.Select();
-                    SaveReplaceList(false);
                 }
+
+                var item = listViewReplaceList.SelectedItems[0];
+                item.SubItems[1].Text = textBoxFind.Text;
+                item.SubItems[2].Text = textBoxReplace.Text;
+                item.SubItems[3].Text = EnglishSearchTypeToLocal(searchType);
+
+                GeneratePreview();
+                textBoxFind.Select();
+                SaveReplaceList(false);
             }
         }
 
@@ -407,7 +417,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxReplaceKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && textBoxFind.Text.Length > 0 && textBoxReplace.Text.Length > 0)
+            if (e.KeyCode == Keys.Enter)
                 ButtonAddClick(null, null);
         }
 
@@ -429,11 +439,6 @@ namespace Nikse.SubtitleEdit.Forms
             moveDownToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
             moveTopToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
             moveBottomToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
-
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.MultipleReplace.MoveToBottom))
-                moveBottomToolStripMenuItem.Visible = false;
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.MultipleReplace.MoveToTop))
-                moveTopToolStripMenuItem.Visible = false;
         }
 
         private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
@@ -482,7 +487,12 @@ namespace Nikse.SubtitleEdit.Forms
             int index = listViewReplaceList.SelectedIndices[0];
             if (index == 0)
                 return;
-            SwapReplaceList(index, 0);
+
+            var item = listViewReplaceList.Items[index];
+            listViewReplaceList.Items.RemoveAt(index);
+            listViewReplaceList.Items.Insert(0, item);
+            GeneratePreview();
+            SaveReplaceList(false);
         }
 
         private void moveBottomToolStripMenuItem_Click(object sender, EventArgs e)
@@ -491,7 +501,12 @@ namespace Nikse.SubtitleEdit.Forms
             int bottomIndex = listViewReplaceList.Items.Count - 1;
             if (index == bottomIndex)
                 return;
-            SwapReplaceList(index, bottomIndex);
+
+            var item = listViewReplaceList.Items[index];
+            listViewReplaceList.Items.RemoveAt(index);
+            listViewReplaceList.Items.Add(item);
+            GeneratePreview();
+            SaveReplaceList(false);
         }
 
         private void ExportClick(object sender, EventArgs e)
@@ -499,7 +514,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewReplaceList.Items.Count == 0)
                 return;
 
-            saveFileDialog1.Title = Configuration.Settings.Language.MultipleReplace.ImportRulesTitle;
+            saveFileDialog1.Title = Configuration.Settings.Language.MultipleReplace.ExportRulesTitle;
             saveFileDialog1.Filter = Configuration.Settings.Language.MultipleReplace.Rules + "|*.template";
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
@@ -592,5 +607,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             DialogResult = DialogResult.Cancel;
         }
+
     }
 }

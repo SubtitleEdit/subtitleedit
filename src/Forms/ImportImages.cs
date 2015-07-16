@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ImportImages : PositionAndSizeForm
+    public sealed partial class ImportImages : PositionAndSizeForm
     {
 
         public Subtitle Subtitle { get; private set; }
@@ -29,7 +29,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonInputBrowse_Click(object sender, EventArgs e)
         {
             buttonInputBrowse.Enabled = false;
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = Configuration.Settings.Language.ImportImages.ImageFiles + "|*.png;*.jpg;*.bmp;*.gif;*.tif;*.tiff";
             openFileDialog1.Multiselect = true;
@@ -45,13 +44,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddInputFile(string fileName)
         {
-
             try
             {
-                FileInfo fi = new FileInfo(fileName);
+                var fi = new FileInfo(fileName);
                 var item = new ListViewItem(fileName);
                 item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                string ext = Path.GetExtension(fileName).ToLower();
+                string ext = Path.GetExtension(fileName).ToLowerInvariant();
                 if (ext == ".png" || ext == ".jpg" || ext == ".bmp" || ext == ".gif" || ext == ".tif" || ext == ".tiff")
                 {
                     SetTimeCodes(fileName, item);
@@ -116,12 +114,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewInputFiles_DragDrop(object sender, DragEventArgs e)
         {
-            string[] fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
+            var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (string fileName in fileNames)
             {
                 AddInputFile(fileName);
             }
         }
-    }
 
+        private void ImportImages_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+            else if (e.KeyData == (Keys.Control | Keys.O))
+            {
+                buttonInputBrowse_Click(null, EventArgs.Empty);
+            }
+        }
+
+    }
 }

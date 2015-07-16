@@ -2,7 +2,7 @@
 <Language Name="Viet Nam">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Dịch qua Tiếng Việt bởi by everytime
 Mọi góp ý về bản dịch vui lòng gửi thư tới hộp thư: handes1990@gmail.com
 Cảm ơn rất nhiều</TranslatedBy>
@@ -1055,7 +1055,7 @@ Bạn có muốn bắt đầu từ phía trên cùng của tài liệu và tiế
   <MatroskaSubtitleChooser>
     <Title>Chon tập tin phụ dề từ Matroskae</Title>
     <PleaseChoose>Có nhiều hơn một phụ đề được tìm thấy-Vui lòng lựa chọn</PleaseChoose>
-    <TrackXLanguageYTypeZ>Đường{0} - {1} - Ngôn ngữ: {2} - Loại: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Đường{0} - Ngôn ngữ: {1} - Loại: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MergeDoubleLines>
     <Title>Gộp các dòng với cùng một văn bản</Title>

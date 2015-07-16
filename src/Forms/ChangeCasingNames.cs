@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
@@ -35,23 +34,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            FixLargeFonts();
+            listViewFixes.Resize += delegate
+            {
+                var width = (listViewFixes.Width - (listViewFixes.Columns[0].Width + listViewFixes.Columns[1].Width)) / 2;
+                listViewFixes.Columns[2].Width = width;
+                listViewFixes.Columns[3].Width = width;
+            };
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         public int LinesChanged
         {
             get { return _noOfLinesChanged; }
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void ChangeCasingNames_KeyDown(object sender, KeyEventArgs e)
@@ -63,10 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddToListViewNames(string name)
         {
             var item = new ListViewItem(string.Empty) { Checked = true };
-
-            var subItem = new ListViewItem.ListViewSubItem(item, name);
-            item.SubItems.Add(subItem);
-
+            item.SubItems.Add(name);
             listViewNames.Items.Add(item);
         }
 
@@ -112,14 +103,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddToPreviewListView(Paragraph p, string newText)
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
-
-            var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString(CultureInfo.InvariantCulture));
-            item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(subItem);
-
+            item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
+            item.SubItems.Add(p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             listViewFixes.Items.Add(item);
         }
 
@@ -134,16 +120,12 @@ namespace Nikse.SubtitleEdit.Forms
             // Will contains both one word names and multi names
             var namesEtcList = namesList.GetAllNames();
 
-            if (language.StartsWith("en"))
+            if (language.StartsWith("en", StringComparison.Ordinal))
             {
-                if (namesEtcList.Contains("Black"))
-                    namesEtcList.Remove("Black");
-                if (namesEtcList.Contains("Bill"))
-                    namesEtcList.Remove("Bill");
-                if (namesEtcList.Contains("Long"))
-                    namesEtcList.Remove("Long");
-                if (namesEtcList.Contains("Don"))
-                    namesEtcList.Remove("Don");
+                namesEtcList.Remove("Black");
+                namesEtcList.Remove("Bill");
+                namesEtcList.Remove("Long");
+                namesEtcList.Remove("Don");
             }
 
             var sb = new StringBuilder();

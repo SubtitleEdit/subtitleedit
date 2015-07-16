@@ -32,22 +32,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string ToTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return time.ToHHMMSSFF();
         }
 
         private static TimeCode DecodeTimeCode(string s)
         {
             var parts = s.Split(new[] { ':', ';' }, StringSplitOptions.RemoveEmptyEntries);
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = int.Parse(parts[3]);
 
-            int milliseconds = (int)Math.Round(((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames)));
+            int milliseconds = (int)Math.Round(((TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * frames));
             if (milliseconds > 999)
                 milliseconds = 999;
 
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
+            return new TimeCode(hour, minutes, seconds, milliseconds);
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -77,9 +77,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.Attributes.Append(text);
 
                 XmlAttribute align = xml.CreateAttribute("Align");
-                if (p.Text.StartsWith("{\\an1}") || p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an7}"))
+                if (p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an7}", StringComparison.Ordinal))
                     align.InnerText = "Left";
-                else if (p.Text.StartsWith("{\\an3}") || p.Text.StartsWith("{\\an6}") || p.Text.StartsWith("{\\an9}"))
+                else if (p.Text.StartsWith("{\\an3}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal))
                     align.InnerText = "Right";
                 else
                     align.InnerText = "Center";
@@ -154,7 +154,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

@@ -11,7 +11,6 @@ using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
-
     public sealed partial class TimedTextStyles : StylesForm
     {
         private readonly XmlDocument _xml;
@@ -66,7 +65,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             using (Graphics g = Graphics.FromImage(bmp))
             {
-
                 // Draw background
                 const int rectangleSize = 9;
                 for (int y = 0; y < bmp.Height; y += rectangleSize)
@@ -214,7 +212,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             Color c = Color.White;
             try
             {
-                if (color.StartsWith("rgb("))
+                if (color.StartsWith("rgb(", StringComparison.Ordinal))
                 {
                     string[] arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                     c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
@@ -314,7 +312,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     Color color = Color.White;
                     try
                     {
-                        if (fontColor.StartsWith("rgb("))
+                        if (fontColor.StartsWith("rgb(", StringComparison.Ordinal))
                         {
                             string[] arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                             color = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));

@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
             subtitle.Header = header.ToString();
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static Paragraph MakeTextParagraph(StringBuilder text, Paragraph p, TimeCode start, TimeCode end)

@@ -2,7 +2,7 @@
 <Language Name="Russian">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Перевод на русский: Leserg (mailto:leserg@ua.fm)</TranslatedBy>
     <CultureName>ru-RU</CultureName>
     <HelpFile>http://www.nikse.dk/Content/SubtitleEdit/Help/RU/</HelpFile>
@@ -1232,7 +1232,7 @@ https://github.com/SubtitleEdit/subtitleedit
   <MatroskaSubtitleChooser>
     <Title>Выбор субтитров из файла Matroska</Title>
     <PleaseChoose>Найдено несколько субтитров - пожалуйста, сделайте выбор:</PleaseChoose>
-    <TrackXLanguageYTypeZ>Трек {0} - {1} - язык: {2} - тип: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Трек {0} - язык: {1} - тип: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Конвертер величин</Title>

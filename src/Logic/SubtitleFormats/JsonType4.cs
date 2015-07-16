@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out startSeconds) &&
                         double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out endSeconds))
                     {
-                        subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(content), startSeconds * 1000.0, endSeconds * 1000.0));
+                        subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(content), startSeconds * TimeCode.BaseUnit, endSeconds * TimeCode.BaseUnit));
                     }
                     else
                     {
@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

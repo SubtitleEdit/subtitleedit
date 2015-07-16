@@ -37,6 +37,7 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.panelFullFrameBackground = new System.Windows.Forms.Panel();
             this.comboBoxLeftRightMargin = new System.Windows.Forms.ComboBox();
             this.labelLeftRightMargin = new System.Windows.Forms.Label();
             this.checkBoxFullFrameImage = new System.Windows.Forms.CheckBox();
@@ -166,6 +167,7 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.panelFullFrameBackground);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxLeftRightMargin);
             this.groupBoxImageSettings.Controls.Add(this.labelLeftRightMargin);
             this.groupBoxImageSettings.Controls.Add(this.checkBoxFullFrameImage);
@@ -214,6 +216,17 @@
             this.groupBoxImageSettings.TabIndex = 3;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // panelFullFrameBackground
+            // 
+            this.panelFullFrameBackground.BackColor = System.Drawing.Color.Transparent;
+            this.panelFullFrameBackground.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelFullFrameBackground.Location = new System.Drawing.Point(659, 104);
+            this.panelFullFrameBackground.Name = "panelFullFrameBackground";
+            this.panelFullFrameBackground.Size = new System.Drawing.Size(21, 20);
+            this.panelFullFrameBackground.TabIndex = 58;
+            this.panelFullFrameBackground.Visible = false;
+            this.panelFullFrameBackground.Click += new System.EventHandler(this.panelFullFrameBackground_Click);
             // 
             // comboBoxLeftRightMargin
             // 
@@ -295,6 +308,7 @@
             this.checkBoxFullFrameImage.TabIndex = 23;
             this.checkBoxFullFrameImage.Text = "Full frame image";
             this.checkBoxFullFrameImage.UseVisualStyleBackColor = true;
+            this.checkBoxFullFrameImage.CheckedChanged += new System.EventHandler(this.checkBoxFullFrameImage_CheckedChanged);
             // 
             // checkBoxTransAntiAliase
             // 
@@ -869,8 +883,8 @@
             this.groupBoxExportImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxExportImage.Controls.Add(this.panelVlcTemp);
             this.groupBoxExportImage.Controls.Add(this.linkLabelPreview);
+            this.groupBoxExportImage.Controls.Add(this.panelVlcTemp);
             this.groupBoxExportImage.Controls.Add(this.pictureBox1);
             this.groupBoxExportImage.Location = new System.Drawing.Point(13, 415);
             this.groupBoxExportImage.Name = "groupBoxExportImage";
@@ -880,7 +894,7 @@
             // 
             // panelVlcTemp
             // 
-            this.panelVlcTemp.Location = new System.Drawing.Point(644, 19);
+            this.panelVlcTemp.Location = new System.Drawing.Point(642, 52);
             this.panelVlcTemp.Name = "panelVlcTemp";
             this.panelVlcTemp.Size = new System.Drawing.Size(200, 100);
             this.panelVlcTemp.TabIndex = 10;
@@ -896,6 +910,7 @@
             this.linkLabelPreview.TabIndex = 9;
             this.linkLabelPreview.TabStop = true;
             this.linkLabelPreview.Text = "Preview";
+            this.linkLabelPreview.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.linkLabelPreview.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelPreview_LinkClicked);
             // 
             // timerPreview
@@ -1070,5 +1085,6 @@
         private System.Windows.Forms.CheckBox checkBoxFullFrameImage;
         private System.Windows.Forms.ComboBox comboBoxLeftRightMargin;
         private System.Windows.Forms.Label labelLeftRightMargin;
+        private System.Windows.Forms.Panel panelFullFrameBackground;
     }
 }

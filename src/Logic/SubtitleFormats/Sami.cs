@@ -51,29 +51,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             string header =
 @"<SAMI>
-
 <HEAD>
 <TITLE>_TITLE_</TITLE>
-
 <SAMIParam>
   Metrics {time:ms;}
   Spec {MSFT:1.0;}
 </SAMIParam>
-
 <STYLE TYPE=""text/css"">
 <!--
   P { font-family: Arial; font-weight: normal; color: white; background-color: black; text-align: center; }
   _LANGUAGE-STYLE_
 -->
 </STYLE>
-
 </HEAD>
-
 <BODY>
-
 <-- Open play menu, choose Captions and Subtiles, On if available -->
-<-- Open tools menu, Security, Show local captions when present -->
-";
+<-- Open tools menu, Security, Show local captions when present -->";
 
             bool useExtra = false;
             if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.StartsWith("<style", StringComparison.OrdinalIgnoreCase))
@@ -81,24 +74,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 useExtra = true;
                 header =
 @"<SAMI>
-
 <HEAD>
 <TITLE>_TITLE_</TITLE>
-
 <SAMIParam>
   Metrics {time:ms;}
   Spec {MSFT:1.0;}
 </SAMIParam>
-
 " + subtitle.Header.Trim() + @"
-
 </HEAD>
-
 <BODY>
-
 <-- Open play menu, choose Captions and Subtiles, On if available -->
-<-- Open tools menu, Security, Show local captions when present -->
-";
+<-- Open tools menu, Security, Show local captions when present -->";
             }
 
             // Example text (start numbers are milliseconds)
@@ -179,7 +165,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string currentClass = languageTag;
                 if (useExtra && !string.IsNullOrEmpty(p.Extra))
                     currentClass = p.Extra;
-                if (next == null || Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) < 1)
+                if (next != null && Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) < 1)
                     sb.AppendLine(string.Format(paragraphWriteFormatOpen, p.StartTime.TotalMilliseconds, text, currentClass));
                 else
                     sb.AppendLine(string.Format(paragraphWriteFormat, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, text, currentClass));
@@ -432,7 +418,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 subtitle.Paragraphs.Add(p);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
 
             if (subtitle.Paragraphs.Count > 0 &&
                 (subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text.ToUpper().Trim() == "</BODY>" ||

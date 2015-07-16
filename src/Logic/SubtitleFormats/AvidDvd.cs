@@ -8,7 +8,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class AvidDvd : SubtitleFormat
     {
-
         //25    10:03:20:23 10:03:23:05 some text
         //I see, on my way.|New line also.
         //
@@ -45,7 +44,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string MakeTimeCode(TimeCode tc)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", tc.Hours, tc.Minutes, tc.Seconds, MillisecondsToFramesMaxFrameRate(tc.Milliseconds));
+            return tc.ToHHMMSSFF();
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -59,7 +58,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string text = p.Text;
                 if (text.StartsWith('{') && text.Length > 6 && text[6] == '}')
                     text = text.Remove(0, 6);
-                if (text.StartsWith("<i>") && text.EndsWith("</i>"))
+                if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal))
                 {
                     if (!italic)
                     {
@@ -106,7 +105,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             p.Text = sb.ToString().Replace("|", Environment.NewLine).Trim();
                             subtitle.Paragraphs.Add(p);
                         }
-                        sb = new StringBuilder();
+                        sb.Clear();
                         string[] arr = s.Split('\t');
                         if (arr.Length >= 3)
                         {
@@ -149,7 +148,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.Text = sb.ToString().Replace("|", Environment.NewLine).Trim();
                 subtitle.Paragraphs.Add(p);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

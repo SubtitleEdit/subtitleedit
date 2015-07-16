@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 
@@ -31,23 +30,12 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonToDropFrame.Visible = false;
             }
 
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
 
             if (numberOfSelectedLines > 1)
                 radioButtonSelectedLinesOnly.Checked = true;
             else
                 radioButtonAllLines.Checked = true;
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void ChangeSpeedInPercent_KeyDown(object sender, KeyEventArgs e)

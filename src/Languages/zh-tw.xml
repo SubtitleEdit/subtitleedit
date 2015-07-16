@@ -2,7 +2,7 @@
 <Language Name="繁體中文">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>翻譯: BAWAN【增補：風逸蘭】</TranslatedBy>
     <CultureName>zh-TW</CultureName>
     <HelpFile />
@@ -1214,7 +1214,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
   <MatroskaSubtitleChooser>
     <Title>從 Matroska 檔案選擇字幕</Title>
     <PleaseChoose>找到多個字幕 - 請選擇</PleaseChoose>
-    <TrackXLanguageYTypeZ>軌道 {0}-{1} - 語言: {2} - 類型: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>軌道 {0} - 語言: {1} - 類型: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>度量轉換器</Title>

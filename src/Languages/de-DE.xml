@@ -2,7 +2,7 @@
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Nobody.</TranslatedBy>
     <CultureName>de-DE</CultureName>
     <HelpFile />
@@ -77,7 +77,7 @@
   <About>
     <Title>Über Subtitle Edit</Title>
     <AboutText1>Subtitle Edit ist Freie Software unter der GNU Public License.
-Sie dürfen Sie frei verbreiten, verändern und verwenden.
+Sie dürfen sie frei verbreiten, verändern und verwenden.
 
 Der C# Quelltext ist erhältlich unter https://github.com/SubtitleEdit/subtitleedit
 
@@ -111,12 +111,24 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Erzeuge Spektogramm...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrahiere Audio: {0:0.0} Sekunden</ExtractingSeconds>
     <ExtractingMinutes>Extrahiere Audio: {0}.{1:00} Minuten</ExtractingMinutes>
+    <WaveFileNotFound>Wellenformdatei nicht gefunden!
+Diese Funktion erfordert VLC media player 1.1.x oder höher ({0}-bit).
+
+Befehlszeile: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} konnte die Wellenformdatei nicht erzeugen!
+
+Befehlszeile: {1} {2}
+
+Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
+    <LowDiskSpace>GERINGER PLATTENSPEICHERPLATZ</LowDiskSpace>
+    <FreeDiskSpace>{0} freier Plattenspeicherplatz</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Stapelgenerierung von Wellenformdaten</Title>
     <ExtractingAudio>Audio extrahieren...</ExtractingAudio>
     <Calculating>Berechnen...</Calculating>
     <Done>Fertig</Done>
+    <Error>Fehlgeschlagen</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Längen anpassen</Title>
@@ -324,7 +336,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <AbortedByUser>Abgebrochen durch Benutzer</AbortedByUser>
     <ReadingSubtitleData>Lese Untertiteldaten...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Verarbeite VOB Datei {1} von {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>IFO Typ ist '{0}' und nicht 'DVD VIDEO VTS'. {1}Eine andere Datei versuchen als {2}</WrongIfoType>
+    <WrongIfoType>IFO Typ ist '{0}' und nicht 'DVDVIDEO-VTS'.{1}Eine andere Datei versuchen als {2}</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Sprache auswählen</Title>
@@ -411,6 +423,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ShadowWidth>Schattenbreite</ShadowWidth>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Bildformat</ImageFormat>
+    <FullFrameImage>Vollbild Bilder</FullFrameImage>
     <SimpleRendering>Einfaches Rendern</SimpleRendering>
     <AntiAliasingWithTransparency>Antialiasing bei Transparenz</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
@@ -428,13 +441,19 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <LeftRightMargin>Rand links/rechts</LeftRightMargin>
     <SaveBluRraySupAs>Blu-ray sup Dateiname wählen</SaveBluRraySupAs>
     <SaveVobSubAs>VobSub Dateiname wählen</SaveVobSubAs>
-    <SaveFabImageScriptAs>Blu-ray sup Dateiname wählen</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>FAB image script Dateiname wählen</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL Dateiname wählen</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Digital Cinema Interop Dateiname wählen</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Premiere EDL Dateiname wählen</SavePremiereEdlAs>
+    <SaveFcpAs>Final Cut Pro xml Dateiname wählen</SaveFcpAs>
+    <SaveDostAs>DoStudio dost Dateiname wählen</SaveDostAs>
     <SomeLinesWereTooLongX>Einige Zeilen sind zu lang: {0}</SomeLinesWereTooLongX>
     <LineHeight>Zeilenhöhe</LineHeight>
     <BoxSingleLine>Box - Einzeilig</BoxSingleLine>
     <BoxMultiLine>Box - Mehrzeilig</BoxMultiLine>
     <Forced>Erzwungen</Forced>
+    <ChooseBackgroundColor>Hintergrundfarbe wählen</ChooseBackgroundColor>
+    <SaveImageAs>Bild speichern als...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Text exportieren</Title>
@@ -696,6 +715,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Dateiname</FileName>
     <Join>Verbinden</Join>
     <TotalNumberOfLinesX>Gesamte Zeilen: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Hinweis: Dateien sollten passenden Zeitstempel enthalten</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -1137,12 +1157,13 @@ Fortfahren?</SubtitleAppendPrompt>
     <MatroskaFiles>Matroska Dateien</MatroskaFiles>
     <NoSubtitlesFound>Keine Untertitel gefunden</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Ungültige Matroska Datei: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Keine Untertitel gefunden in diese Blu-ray sup Datei - erneutes Demultiplexen versuchen.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Untersuche Matroska Datei. Bitte warten...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Untersuche Transport Stream Datei. Bitte warten...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Vor Import der Untertitel aus Matroska Datei</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Untertitel importiert aus Matroska Datei</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Ablegen der Datei '{0}' nicht möglich - Datei ist zu groß</DropFileXNotAccepted>
-    <DropOnlyOneFile>Du kannst nur eine Datei ablegen</DropOnlyOneFile>
+    <DropOnlyOneFile>Sie können nur eine Datei ablegen</DropOnlyOneFile>
     <BeforeCreateAdjustLines>Vor Texterstellung/Anpassung</BeforeCreateAdjustLines>
     <OpenAnsiSubtitle>Untertitel öffnen...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Vor Ändern der Groß-/Kleinschreibung</BeforeChangeCasing>
@@ -1253,9 +1274,14 @@ Fortfahren?</SubtitleAppendPrompt>
     <ErrorLoadIdx>Subtitle Edit kann keine .idx Dateien lesen. Sie sind Teile von idx/sub Dateipaaren (VobSub). Die .sub Dateien können geöffnet werden.</ErrorLoadIdx>
     <ErrorLoadRar>Diese Datei ist ein .rar Archiv. Subtitle Edit kann keine komprimierten Dateien öffnen.</ErrorLoadRar>
     <ErrorLoadZip>Diese Datei ist ein .zip Archiv. Subtitle Edit kann keine komprimierten Dateien öffnen.</ErrorLoadZip>
-    <ErrorLoadPng>Diese Datei ist ein PNG Bild. Subtitle Edit kann keine PNG Dateien öffnen.</ErrorLoadPng>
+    <ErrorLoadPng>Diese Datei ist ein PNG-Bild. Subtitle Edit kann keine PNG-Dateien öffnen.</ErrorLoadPng>
+    <ErrorLoadJpg>Diese Datei ist ein JPEG-Bild. Subtitle Edit kann keine JPEG-Dateien öffnen.</ErrorLoadJpg>
     <ErrorLoadSrr>Diese Datei ist eine ReScene .srr Datei - keine Untertiteldatei.</ErrorLoadSrr>
     <ErrorLoadTorrent>Diese Datei ist eine BitTorrent Datei - keine Untertiteldatei.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Diese Datei enthällt nur Nullzeichen.
+
+Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung vorliegen unter Menüpunkt "Datei -&gt; Automatische Sicherung wiederherstellen..."</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>Das Ziehen eines Ordners ist hier nicht erlaubt.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Verschlüsselte VobSub-Untertitel können nicht verarbeitet werden.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Blu-ray sup Dateien sind hier nicht erlaubt.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>DVD sup Dateien sind hier nicht erlaubt.</NoSupportHereDvdSup>
@@ -1265,7 +1291,7 @@ Fortfahren?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Untertitel aus Matroska Datei auswählen</Title>
     <PleaseChoose>Mehr als ein Untertitel gefunden - bitte wählen</PleaseChoose>
-    <TrackXLanguageYTypeZ>Spur {0} - {1} - Sprache: {2} - Typ: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Spur {0} - Sprache: {1} - Typ: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Maßeinheiten umwandeln</Title>
@@ -1339,7 +1365,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <Export>Exportiere...</Export>
     <ImportRulesTitle>Importiere Korrekturregeln aus...</ImportRulesTitle>
     <ExportRulesTitle>Exportiere Korrekturregeln nach...</ExportRulesTitle>
-    <Rules>Exportregeln</Rules>
+    <Rules>Textersetzungsregeln</Rules>
     <MoveToTop>Zum Anfang</MoveToTop>
     <MoveToBottom>Zum Ende</MoveToBottom>
   </MultipleReplace>
@@ -1399,8 +1425,10 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <NewLine>Neue Zeile (\r\n)</NewLine>
     <NewLineShort>Neue Zeile (\n)</NewLineShort>
     <AnyDigit>Jede Ziffer (\d)</AnyDigit>
+    <NonDigit>Keine Ziffer (\D)</NonDigit>
     <AnyCharacter>Jedes Zeichen (.)</AnyCharacter>
     <AnyWhitespace>Jedes Leerzeichen (\s)</AnyWhitespace>
+    <NonSpaceCharacter>Kein Leerzeichen (\S)</NonSpaceCharacter>
     <ZeroOrMore>Null oder mehr (*)</ZeroOrMore>
     <OneOrMore>Eins oder mehr (+)</OneOrMore>
     <InCharacterGroup>In Zeichengruppe ([test])</InCharacterGroup>
@@ -1699,7 +1727,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Erstes Wort der nächsten Zeile nach oben</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Auswahl in Kleinbuchstaben</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Auswahl in Großbuchstaben</MainTextBoxSelectionToUpper>
-    <MainTextBoxToggleAutoDuration>Auto Dauer umlegen</MainTextBoxToggleAutoDuration>
+    <MainTextBoxToggleAutoDuration>Auto Dauer umschalten</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Auto Umbruch</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Umbruch entfernen</MainTextBoxUnbreak>
     <MainFileSaveAll>Alles Speichern</MainFileSaveAll>
@@ -1833,6 +1861,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <CharactersPerSecondMinimum>Zeichen/Sek - Minimum:          {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Zeichen/Sek - Maximum:          {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Zeichen/Sek - Durchschnitt:     {0:0.000}</CharactersPerSecondAverage>
+    <Export>Exportiere...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Erweiterte SSA Eigenschaften</Title>
@@ -2007,6 +2036,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <InspectCompareMatchesForCurrentImage>Untersuche Vergleichstreffer für aktuelles Bild...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Bearbeite letzte Bildvergleiche...</EditLastAdditions>
     <SetUnitalicFactor>Entkursivierungsfaktor setzen...</SetUnitalicFactor>
+    <DiscardTitle>OCR Änderungen verwerfen?</DiscardTitle>
+    <DiscardText>Möchten Sie die aktuellen OCR Änderungen verwerfen?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manuelles Bild zu Text</Title>

@@ -25,18 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonPreview.Text = Configuration.Settings.Language.General.Preview;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         private void FormEffectkaraoke_KeyDown(object sender, KeyEventArgs e)
@@ -63,27 +52,46 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownDelay.Left = labelEndDelay.Left + labelEndDelay.Width + 5;
         }
 
+        internal class ColorEntry
+        {
+            public int Start { get; set; }
+            public int Length { get; set; }
+            public Color Color { get; set; }
+        }
+
+        internal class FontEntry
+        {
+            public int Start { get; set; }
+            public int Length { get; set; }
+            public Font Font { get; set; }
+        }
+
+        private List<ColorEntry> _colorList;
+        private List<FontEntry> _fontList;
+
         private void AddToPreview(RichTextBox rtb, string text)
         {
             richTextBoxPreview.ForeColor = Color.White;
+            _colorList = new List<ColorEntry>();
+            _fontList = new List<FontEntry>();
 
             int bold = 0;
             int underline = 0;
             int italic = 0;
-            Stack<string> fontColors = new Stack<string>();
+            var fontColors = new Stack<string>();
             string currentColor = string.Empty;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             int i = 0;
             while (i < text.Length)
             {
                 if (text[i] == '<')
                 {
                     AddTextToRichTextBox(rtb, bold > 0, italic > 0, underline > 0, currentColor, sb.ToString());
-                    sb = new StringBuilder();
+                    sb.Clear();
                     string tag = GetTag(text.Substring(i).ToLower());
                     if (i + 1 < text.Length && text[i + 1] == '/')
-                    { //
+                    {
                         if (tag == "</i>" && italic > 0)
                             italic--;
                         else if (tag == "</b>" && bold > 0)
@@ -91,12 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (tag == "<u>" && underline > 0)
                             underline--;
                         else if (tag == "</font>")
-                        {
-                            if (fontColors.Count > 0)
-                                currentColor = fontColors.Pop();
-                            else
-                                currentColor = string.Empty;
-                        }
+                            currentColor = fontColors.Count > 0 ? fontColors.Pop() : string.Empty;
                     }
                     else
                     {
@@ -138,6 +141,21 @@ namespace Nikse.SubtitleEdit.Forms
             if (sb.Length > 0)
                 AddTextToRichTextBox(rtb, bold > 0, italic > 0, underline > 0, currentColor, sb.ToString());
 
+            foreach (var fontEntry in _fontList)
+            {
+                rtb.SelectionStart = fontEntry.Start;
+                rtb.SelectionLength = fontEntry.Length;
+                rtb.SelectionFont = fontEntry.Font;
+                rtb.DeselectAll();
+            }
+
+            foreach (var colorEntry in _colorList)
+            {
+                rtb.SelectionStart = colorEntry.Start;
+                rtb.SelectionLength = colorEntry.Length;
+                rtb.SelectionColor = colorEntry.Color;
+                rtb.DeselectAll();
+            }
         }
 
         private void AddTextToRichTextBox(RichTextBox rtb, bool bold, bool italic, bool underline, string color, string text)
@@ -147,27 +165,22 @@ namespace Nikse.SubtitleEdit.Forms
                 int length = rtb.Text.Length;
                 richTextBoxPreview.Text += text;
 
-                rtb.SelectionStart = length;
-                rtb.SelectionLength = text.Length;
-                if (!string.IsNullOrEmpty(color))
-                    rtb.SelectionColor = ColorTranslator.FromHtml(color);
-                else
-                    rtb.SelectionColor = Color.White;
-
-                FontStyle fontStyle = new FontStyle();
+                _colorList.Add(new ColorEntry { Start = length, Length = text.Length, Color = string.IsNullOrWhiteSpace(color) ? Color.White : ColorTranslator.FromHtml(color) });
+ 
+                var fontStyle = new FontStyle();
                 if (underline)
                     fontStyle = fontStyle | FontStyle.Underline;
                 if (italic)
                     fontStyle = fontStyle | FontStyle.Italic;
                 if (bold)
                     fontStyle = fontStyle | FontStyle.Bold;
-                rtb.SelectionFont = new Font(rtb.Font.FontFamily, rtb.Font.Size, fontStyle);
+                _fontList.Add(new FontEntry { Start = length, Length = text.Length, Font = new Font(rtb.Font.FontFamily, rtb.Font.Size, fontStyle) });
             }
         }
 
         private static string GetTag(string text)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
             {
                 sb.Append(text[i]);
@@ -206,6 +219,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PlayAnimation()
         {
+            _colorList = new List<ColorEntry>();
+            _fontList = new List<FontEntry>();
             _timerCount = (int)_paragraph.StartTime.TotalMilliseconds;
             timer1.Start();
         }
@@ -226,7 +241,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void MakeAnimation()
         {
             _animation = new List<Paragraph>();
-            double duration = _paragraph.Duration.TotalMilliseconds - ((double)numericUpDownDelay.Value * 1000.0);
+            double duration = _paragraph.Duration.TotalMilliseconds - ((double)numericUpDownDelay.Value * TimeCode.BaseUnit);
             double stepsLength = CalculateStepLength(_paragraph.Text, duration);
 
             double startMilliseconds;
@@ -240,40 +255,69 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 0;
             string startFontTag = string.Format("<font color=\"{0}\">", Utilities.ColorToHex(panelColor.BackColor));
             const string endFontTag = "</font>";
+            string afterCurrentTag = string.Empty;
+            string beforeEndTag = string.Empty;
+            string alignment = string.Empty;
             while (i < _paragraph.Text.Length)
             {
-                if (tagOn)
+                var c = _paragraph.Text[i];
+                if (i == 0 && _paragraph.Text.StartsWith("{\\", StringComparison.Ordinal) && _paragraph.Text.IndexOf('}') > 2)
                 {
+                    int idx = _paragraph.Text.IndexOf('}');
+                    alignment = _paragraph.Text.Substring(0, idx + 1);
+                    i = idx;
+                }
+                else if (tagOn)
+                {
+                    tag += c;
                     if (_paragraph.Text[i] == '>')
+                    {
                         tagOn = false;
-                    tag += _paragraph.Text[i];
+                        if (tag.StartsWith("<font ", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            afterCurrentTag = tag;
+                            tag = string.Empty;
+                        }
+                        else if (tag == "<i>")
+                        {
+                            afterCurrentTag = "<i>";
+                            beforeEndTag = "</i>";
+                        }
+                        else if (tag == "<b>")
+                        {
+                            afterCurrentTag = "<b>";
+                            beforeEndTag = "</b>";
+                        }
+                        else if (tag == "<u>")
+                        {
+                            afterCurrentTag = "<u>";
+                            beforeEndTag = "</u>";
+                        }
+                    }
                 }
                 else if (_paragraph.Text[i] == '<')
                 {
+                    afterCurrentTag = string.Empty;
                     tagOn = true;
-                    tag += _paragraph.Text[i];
+                    tag += c;
+                    beforeEndTag = string.Empty;
                 }
                 else
                 {
-                    text += tag + _paragraph.Text[i];
+                    text += tag + c;
                     tag = string.Empty;
-
-                    //end tag
-                    if (i + 2 < _paragraph.Text.Length &&
-                        _paragraph.Text[i + 1] == '<' &&
-                        _paragraph.Text[i + 2] == '/')
-                    {
-                        while (i < _paragraph.Text.Length && _paragraph.Text[i] != '>')
-                        {
-                            tag += _paragraph.Text[i];
-                            i++;
-                        }
-                        text += tag;
-                    }
-
-                    string tempText = startFontTag + text + endFontTag;
+                    string afterText = string.Empty;
                     if (i + 1 < _paragraph.Text.Length)
-                        tempText += _paragraph.Text.Substring(i + 1);
+                        afterText = _paragraph.Text.Substring(i + 1);
+                    if (string.Compare(afterText, endFontTag, StringComparison.InvariantCultureIgnoreCase) == 0 && afterCurrentTag.StartsWith("<font", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        afterText = string.Empty;
+                        afterCurrentTag = string.Empty;
+                    }
+                    string tempText = alignment + startFontTag + text + beforeEndTag + endFontTag + afterCurrentTag + afterText;
+                    tempText = tempText.Replace("<i></i>", string.Empty);
+                    tempText = tempText.Replace("<u></u>", string.Empty);
+                    tempText = tempText.Replace("<b></b>", string.Empty);
 
                     startMilliseconds = index * stepsLength;
                     startMilliseconds += _paragraph.StartTime.TotalMilliseconds;

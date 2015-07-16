@@ -2,7 +2,7 @@
 <Language Name="Dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <HelpFile />
@@ -65,6 +65,8 @@
     <ControlsWindowTitle>Kommandoer - {0}</ControlsWindowTitle>
     <Advanced>Avanceret</Advanced>
     <Style>Style</Style>
+    <StyleLanguage>Style / sprog</StyleLanguage>
+    <Character>Person</Character>
     <Class>Class</Class>
     <GeneralText>General</GeneralText>
     <LineNumber>Linje#</LineNumber>
@@ -157,6 +159,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Convert>Konverter</Convert>
     <NothingToConvert>Intet at konvertere!</NothingToConvert>
     <PleaseChooseOutputFolder>Vælg output mappe</PleaseChooseOutputFolder>
+    <NotConverted>Fejl</NotConverted>
     <Converted>Konverteret</Converted>
     <ConvertedX>Konverteret ({0})</ConvertedX>
     <Settings>Indstillinger</Settings>
@@ -167,6 +170,15 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Medtag undermapper</Recursive>
     <SetMinMsBetweenSubtitles>Indstil min. msek mellem undertekster</SetMinMsBetweenSubtitles>
     <PlainText>Almindelig tekst</PlainText>
+    <Ocr>OCR...</Ocr>
+    <Filter>Filter</Filter>
+    <FilterSkipped>Sprunget over pga. filter</FilterSkipped>
+    <FilterSrtNoUtf8BOM>SubRip (.srt) filer uden UTF-8 BOM header</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>Mere end to linjer i en undertekst</FilterMoreThanTwoLines>
+    <FilterContains>Tekst indeholder...</FilterContains>
+    <FixCommonErrorsErrorX>Fix almindelige fejl: {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>Multiple erstatte: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>Undertekst fremviser</Title>
@@ -312,7 +324,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <AbortedByUser>Afbrudt af bruger</AbortedByUser>
     <ReadingSubtitleData>Læser undertekst data...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Ripper vob fil {1} af {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>IFO type er '{0}' og ikke 'DVD video-VTS'. {1} Prøv en anden fil end {2}</WrongIfoType>
+    <WrongIfoType>IFO type er '{0}' og ikke 'DVDVIDEO-VTS'. {1} Prøv en anden fil end {2}</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Vælg sprog</Title>
@@ -413,16 +425,23 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Højre</Right>
     <Center>Centrer</Center>
     <BottomMargin>Bundmargen</BottomMargin>
+    <LeftRightMargin>Venstre/højre margen</LeftRightMargin>
     <SaveBluRraySupAs>Vælg Blu-ray sup filnavn</SaveBluRraySupAs>
     <SaveVobSubAs>Vælg VobSub filnavn</SaveVobSubAs>
-    <SaveFabImageScriptAs>Vælg Blu-ray sup filnavn</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>Vælg FAB image script filnavn</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Vælg DVD Studio Pro STL filnavn</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Vælg Digital Cinema Interop filnavn</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Vælg Premiere EDL filnavn</SavePremiereEdlAs>
+    <SaveFcpAs>Vælg Final Cut Pro xml filnavn</SaveFcpAs>
+    <SaveDostAs>Vælg DoStudio dost filnavn</SaveDostAs>
     <SomeLinesWereTooLongX>Nogle linjer var for lange:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Linje højde</LineHeight>
     <BoxSingleLine>Boks - enkelt linje</BoxSingleLine>
     <BoxMultiLine>Boks - multi linie</BoxMultiLine>
     <Forced>Forced</Forced>
+    <ChooseBackgroundColor>Vælg baggrundsfarve</ChooseBackgroundColor>
+    <SaveImageAs>Gem billede som...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Eksport tekst</Title>
@@ -684,6 +703,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Filnavn</FileName>
     <Join>Sammensæt</Join>
     <TotalNumberOfLinesX>Total antal linjer: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Bemærk: Filer skal allerede have korrekte tidskoder</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -878,6 +898,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <TimedTextStyles>Timed Text styles...</TimedTextStyles>
         <TimedTextSetLanguage>Timed Text - vælg sprog</TimedTextSetLanguage>
         <SamiSetStyle>Sami - sæt class</SamiSetStyle>
+        <NuendoSetStyle>Nuendo - vælg person</NuendoSetStyle>
         <Cut>Klip</Cut>
         <Copy>Kopier</Copy>
         <Paste>Indsæt</Paste>
@@ -1123,6 +1144,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <MatroskaFiles>Matroska-filer</MatroskaFiles>
     <NoSubtitlesFound>Ingen undertekster fundet</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Dette er ikke en gyldig Matroska fil: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Blu-ray sup fil indeholder ingen undertekster eller indeholder fejl - prøv at demuxe igen.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Parsing Matroska filen. Vent venligst...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Parsing Transport Stream-fil. Vent venligst...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Før import af undertekst fra Matroska fil</BeforeImportFromMatroskaFile>
@@ -1179,6 +1201,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeMergeShortLines>Før fusionere korte linjer</BeforeMergeShortLines>
     <BeforeSplitLongLines>Før split lange linjer</BeforeSplitLongLines>
     <MergedShortLinesX>Antal linjer fusionerede: {0}</MergedShortLinesX>
+    <BeforeDurationsBridgeGap>Før 'Fjern små gaps'</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Før ret minimum visningstid mellem tekster</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Antallet af linjer med minimum visningstid mellem tekster ændret: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Før import tekst</BeforeImportText>
@@ -1240,11 +1263,17 @@ Fortsæt?</SubtitleAppendPrompt>
     <ErrorLoadZip>Denne fil er sandsynligvis en komprimeret .zip fil. Subtitle Edit kan ikke åbne komprimerede filer.</ErrorLoadZip>
     <ErrorLoadPng>Denne fil synes at være en PNG billedfil. Subtitle Edit kan ikke åbne PNG-filer.</ErrorLoadPng>
     <ErrorLoadSrr>Denne fil synes at være en ReScene .srr fil - ikke en undertekst fil.</ErrorLoadSrr>
+    <ErrorLoadTorrent>Denne fil ser ud til at være en BitTorrent-fil - ikke en undertekst fil.</ErrorLoadTorrent>
+    <NoSupportEncryptedVobSub>Krypteret VobSub indhold er ikke understøttet.</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>Blu-ray sup filer understøttes ikke her.</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>DVD sup-filer understøttes ikke her.</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>VobSub filer understøttes ikke her.</NoSupportHereVobSub>
+    <NoSupportHereDivx>DivX-filer understøttes ikke her.</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
     <PleaseChoose>Mere end en undertekst fundet - så vælg</PleaseChoose>
-    <TrackXLanguageYTypeZ>Spor {0} - {1} - sprog: {2} - type: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Spor {0} - sprog: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Enhedskonverter</Title>
@@ -1679,6 +1708,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Flyt første ord fra næste linje op</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Markering til små bogstaver</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Markering til store bogstaver</MainTextBoxSelectionToUpper>
+    <MainTextBoxToggleAutoDuration>Toggle auto varighed</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Auto-ombryd tekst</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Fjern linjeskift</MainTextBoxUnbreak>
     <MainFileSaveAll>Gem alle</MainFileSaveAll>
@@ -1812,6 +1842,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <CharactersPerSecondMinimum>Karakterer/sek - min: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Karakterer/sek - maks: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Karakterer/sek - gennemsnit: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Eksporter...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha egenskaber</Title>

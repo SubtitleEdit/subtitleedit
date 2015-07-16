@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic
                 p.Text = sb.ToString().Trim();
                 subtitle.Paragraphs.Add(p);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             return subtitle;
         }
 
@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Logic
                 subtitle.Paragraphs.Add(p);
             }
             subtitle.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             return subtitle;
         }
 
@@ -286,7 +286,7 @@ namespace Nikse.SubtitleEdit.Logic
                 p.Text = sb.ToString().Trim();
                 subtitle.Paragraphs.Add(p);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             return subtitle;
         }
 
@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             return subtitle;
         }
 
@@ -458,7 +458,7 @@ namespace Nikse.SubtitleEdit.Logic
                 p.Text = sb.ToString().Trim();
                 subtitle.Paragraphs.Add(p);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             return subtitle;
         }
 
@@ -562,7 +562,7 @@ namespace Nikse.SubtitleEdit.Logic
                 return subtitle;
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             return subtitle;
         }
 
@@ -653,7 +653,7 @@ namespace Nikse.SubtitleEdit.Logic
                 subtitle.Paragraphs.Add(p);
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             return subtitle;
         }
 

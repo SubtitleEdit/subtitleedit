@@ -23,18 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCompareHistory.Text = Configuration.Settings.Language.ShowHistory.CompareHistoryItems;
             buttonRollback.Text = Configuration.Settings.Language.ShowHistory.Rollback;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonRollback.Text, this.Font);
-            if (textSize.Height > buttonRollback.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonRollback);
         }
 
         public int SelectedIndex
@@ -113,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var compareForm = new Compare())
                 {
                     compareForm.Initialize(_subtitle, Configuration.Settings.Language.General.CurrentSubtitle, h2.Subtitle, descr2);
-                    compareForm.Show();
+                    compareForm.ShowDialog(this);
                 }
             }
         }
@@ -143,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var compareForm = new Compare())
                 {
                     compareForm.Initialize(h1.Subtitle, descr1, h2.Subtitle, descr2);
-                    compareForm.Show();
+                    compareForm.ShowDialog(this);
                 }
             }
         }

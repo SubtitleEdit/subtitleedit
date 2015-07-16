@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -15,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (radioButtonPercent.Checked)
                     return comboBoxPercent.Text;
                 if (radioButtonAutoRecalculate.Checked)
-                    return radioButtonAutoRecalculate.Text + ", " + labelMaxCharsPerSecond.Text + ": " + numericUpDownMaxCharsSec.Value; //TODO: Make language string with string.Format
+                    return radioButtonAutoRecalculate.Text + ", " + labelMaxCharsPerSecond.Text + ": " + numericUpDownMaxCharsSec.Value; // TODO: Make language string with string.Format
                 return comboBoxSeconds.Text;
             }
         }
@@ -47,6 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
         public AdjustDisplayDuration()
         {
             InitializeComponent();
+            Icon = Nikse.SubtitleEdit.Properties.Resources.SubtitleEditFormIcon;
 
             comboBoxPercent.SelectedIndex = 0;
             comboBoxSeconds.SelectedIndex = 0;
@@ -80,14 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (labelNote.Left + labelNote.Width + 5 > Width)
                 Width = labelNote.Left + labelNote.Width + 5;
-
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         private void FormAdjustDisplayTime_KeyDown(object sender, KeyEventArgs e)
@@ -150,31 +143,5 @@ namespace Nikse.SubtitleEdit.Forms
         {
             FixEnabled();
         }
-
-        private void radioButtonradioButtonAutoRecalculate_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void labelMaxCharsPerSecond_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void labelNote_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void numericUpDownMaxCharsSec_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void AdjustDisplayDuration_Load(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

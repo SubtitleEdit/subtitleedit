@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
-using System.Drawing;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -12,18 +12,17 @@ namespace Nikse.SubtitleEdit.Forms
         private List<Paragraph> _paragraphs;
         private int _changes;
         private bool _modeAutoBalance;
+        private HashSet<string> _notAllowedFixes = new HashSet<string>();
+
+        private Dictionary<string, string> _fixedText = new Dictionary<string, string>();
+        public Dictionary<string, string> FixedText
+        {
+            get { return _fixedText; }
+        }
 
         public int Changes
         {
             get { return _changes; }
-        }
-
-        public List<Paragraph> FixedParagraphs
-        {
-            get
-            {
-                return _paragraphs;
-            }
         }
 
         public AutoBreakUnbreakLines()
@@ -39,18 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         public void Initialize(Subtitle subtitle, bool autoBalance)
@@ -86,6 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 Unbreak();
             }
+            comboBoxConditions.SelectedIndexChanged += ComboBoxConditionsSelectedIndexChanged;
         }
 
         public int MinimumLength
@@ -108,55 +97,62 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AutoBalance()
         {
+            listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
+            _notAllowedFixes = new HashSet<string>();
+            _fixedText = new Dictionary<string, string>();
             int minLength = MinimumLength;
             Text = Configuration.Settings.Language.AutoBreakUnbreakLines.TitleAutoBreak;
 
-            Subtitle sub = new Subtitle();
+            var sub = new Subtitle();
             foreach (Paragraph p in _paragraphs)
                 sub.Paragraphs.Add(p);
-            string language = Utilities.AutoDetectGoogleLanguage(sub);
+            var language = Utilities.AutoDetectGoogleLanguage(sub);
 
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             foreach (Paragraph p in _paragraphs)
             {
-                if (p.Text.Length > minLength || p.Text.Contains(Environment.NewLine))
+                if (HtmlUtil.RemoveHtmlTags(p.Text, true).Length > minLength || p.Text.Contains(Environment.NewLine))
                 {
-                    string text = Utilities.AutoBreakLine(p.Text, 5, MergeLinesShorterThan, language);
+                    var text = Utilities.AutoBreakLine(p.Text, 5, MergeLinesShorterThan, language);
                     if (text != p.Text)
                     {
                         AddToListView(p, text);
+                        _fixedText.Add(p.ID, text);
                         _changes++;
                     }
                 }
             }
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.AutoBreakUnbreakLines.LinesFoundX, listViewFixes.Items.Count);
+            listViewFixes.ItemChecked += listViewFixes_ItemChecked;
         }
 
         private void Unbreak()
         {
+            listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
+            _notAllowedFixes = new HashSet<string>();
+            _fixedText = new Dictionary<string, string>();
             int minLength = int.Parse(comboBoxConditions.Items[comboBoxConditions.SelectedIndex].ToString());
             Text = Configuration.Settings.Language.AutoBreakUnbreakLines.TitleUnbreak;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             foreach (Paragraph p in _paragraphs)
             {
-                if (p.Text != null && p.Text.Contains(Environment.NewLine) && p.Text.Length > minLength)
+                if (p.Text != null && p.Text.Contains(Environment.NewLine) && HtmlUtil.RemoveHtmlTags(p.Text).Length > minLength)
                 {
-                    string text = p.Text.Replace(Environment.NewLine, " ");
-                    while (text.Contains("  "))
-                        text = text.Replace("  ", " ");
-
+                    var text = Utilities.UnbreakLine(p.Text);
                     if (text != p.Text)
                     {
                         AddToListView(p, text);
+                        _fixedText.Add(p.ID, text);
                         _changes++;
                     }
                 }
             }
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.AutoBreakUnbreakLines.LinesFoundX, listViewFixes.Items.Count);
+            listViewFixes.ItemChecked += listViewFixes_ItemChecked;
         }
 
         private void AutoBreakUnbreakLinesKeyDown(object sender, KeyEventArgs e)
@@ -168,34 +164,21 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddToListView(Paragraph p, string newText)
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
-
-            var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString(CultureInfo.InvariantCulture));
-            item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(subItem);
-
+            item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
+            item.SubItems.Add(p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             listViewFixes.Items.Add(item);
-        }
-
-        private bool IsFixAllowed(Paragraph p)
-        {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                if (item.Tag.ToString() == p.ToString())
-                    return item.Checked;
-            }
-            return false;
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            for (int i = _paragraphs.Count - 1; i > 0; i--)
+            for (int i = _paragraphs.Count - 1; i >= 0; i--)
             {
-                Paragraph p = _paragraphs[i];
-                if (!IsFixAllowed(p))
-                    _paragraphs.Remove(p);
+                var p = _paragraphs[i];
+                if (_notAllowedFixes.Contains(p.ID))
+                {
+                    _fixedText.Remove(p.ID);
+                }
             }
             DialogResult = DialogResult.OK;
         }
@@ -207,5 +190,27 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 Unbreak();
         }
+
+        private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            if (e.Item == null)
+                return;
+
+            var p = e.Item.Tag as Paragraph;
+            if (p == null)
+                return;
+
+            if (e.Item.Checked)
+                _notAllowedFixes.Remove(p.ID);
+            else
+                _notAllowedFixes.Add(p.ID);
+        }
+
+        private void listViewFixes_Resize(object sender, EventArgs e)
+        {
+            var newWidth = (listViewFixes.Width - (listViewFixes.Columns[0].Width + listViewFixes.Columns[1].Width)) / 2;
+            listViewFixes.Columns[3].Width = listViewFixes.Columns[2].Width = newWidth;
+        }
+
     }
 }

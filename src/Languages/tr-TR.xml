@@ -2,7 +2,7 @@
 <Language Name="Turkish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Çevirmen: mailto:kipekcioglu@gmail.com</TranslatedBy>
     <CultureName>tr-TR</CultureName>
     <HelpFile />
@@ -1223,7 +1223,7 @@ Continue?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Matroska dosyasından altyazı seç</Title>
     <PleaseChoose>Birden fazla altyazı bulundu - lütfen seçin</PleaseChoose>
-    <TrackXLanguageYTypeZ>Parça {0} - {1} - dil: {2} - tür: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Parça {0} - dil: {1} - tür: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Birim dönüştürücü</Title>

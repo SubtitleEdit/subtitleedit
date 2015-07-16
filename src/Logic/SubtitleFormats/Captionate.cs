@@ -14,9 +14,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".xml"; }
         }
 
+        public const string NameOfFormat = "Captionate";
+
         public override string Name
         {
-            get { return "Captionate"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -26,7 +28,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
+            var subtitle = new Subtitle();
             this.LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > 0;
         }
@@ -61,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (last.EndTime.TotalMilliseconds + 500 < p.StartTime.TotalMilliseconds)
                     {
-                        Paragraph blank = new Paragraph();
+                        var blank = new Paragraph();
                         blank.StartTime.TotalMilliseconds = last.EndTime.TotalMilliseconds;
                         AddParagraph(xml, blank);
                     }
@@ -106,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             else if (lines != null)
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 lines.ForEach(line => sb.AppendLine(line));
                 xmlString = sb.ToString();
             }
@@ -118,7 +120,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!xmlString.Contains("<captionate>") || !xmlString.Contains("</caption>"))
                 return;
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.XmlResolver = null;
             try
             {
@@ -158,14 +160,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static double DecodeTimeToMilliseconds(string time)
         {
             string[] parts = time.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-            TimeSpan ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), (int)(int.Parse(parts[3]) * 10.0));
-            return ts.TotalMilliseconds;
+            return new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), (int)(int.Parse(parts[3]) * 10.0)).TotalMilliseconds;
         }
 
         private static string EncodeTime(TimeCode time)

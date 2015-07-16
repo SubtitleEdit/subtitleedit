@@ -82,9 +82,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".stl"; }
         }
 
+        public const string NameOfFormat = "Avid STL";
+
         public override string Name
         {
-            get { return "Avid STL"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -187,7 +189,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 subtitle.Paragraphs.Add(p);
                 index += 128;
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

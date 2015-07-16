@@ -26,19 +26,8 @@ namespace Nikse.SubtitleEdit.Forms
         public VobSubOcrNOcrCharacter()
         {
             InitializeComponent();
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonCancel);
             labelItalicOn.Visible = false;
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonCancel.Text, this.Font);
-            if (textSize.Height > buttonCancel.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         public NOcrChar NOcrChar
@@ -508,7 +497,6 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-
                 }
             }
             return true;
@@ -564,7 +552,6 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-
                 }
             }
             return true;
@@ -685,9 +672,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (count > giveUpCount - 100 && !tempVeryPrecise)
                     tempVeryPrecise = true;
-
             }
-
         }
 
         private void removeForegroundToolStripMenuItem_Click(object sender, EventArgs e)

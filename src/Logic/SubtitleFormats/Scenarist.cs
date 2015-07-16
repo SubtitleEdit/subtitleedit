@@ -15,9 +15,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".txt"; }
         }
 
+        public const string NameOfFormat = "Scenarist";
+
         public override string Name
         {
-            get { return "Scenarist"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -91,7 +93,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string[] parts)

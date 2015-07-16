@@ -112,12 +112,14 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                Graphics graphics = parentForm.CreateGraphics();
-                SizeF timestampSizeF = graphics.MeasureString("00:00:33,527", Font);
-                int timestampWidth = (int)(timestampSizeF.Width + 0.5) + 11;
-                Columns[ColumnIndexStart].Width = timestampWidth;
-                Columns[ColumnIndexEnd].Width = timestampWidth;
-                Columns[ColumnIndexDuration].Width = (int)(timestampWidth * 0.8);
+                using (var graphics = parentForm.CreateGraphics())
+                {
+                    var timestampSizeF = graphics.MeasureString("00:00:33,527", Font);
+                    var timestampWidth = (int)(timestampSizeF.Width + 0.5) + 11;
+                    Columns[ColumnIndexStart].Width = timestampWidth;
+                    Columns[ColumnIndexEnd].Width = timestampWidth;
+                    Columns[ColumnIndexDuration].Width = (int)(timestampWidth * 0.8);
+                }
             }
 
             SubtitleListViewResize(this, null);
@@ -288,6 +290,7 @@ namespace Nikse.SubtitleEdit.Controls
                 e.DrawDefault = true;
             }
         }
+
         private void SubtitleListViewColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
         {
             if (_settings != null && _saveColumnWidthChanges)
@@ -862,7 +865,6 @@ namespace Nikse.SubtitleEdit.Controls
                 Items[index].UseItemStyleForSubItems = false;
                 Items[index].SubItems[ColumnIndexExtra].BackColor = Color.AntiqueWhite;
                 Items[index].SubItems[ColumnIndexExtra].ForeColor = color;
-
             }
         }
 

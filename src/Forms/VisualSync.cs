@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = _languageGeneral.Ok;
             buttonCancel.Text = _languageGeneral.Cancel;
             labelTip.Text = _language.Tip;
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonCancel);
             _timerHideSyncLabel.Tick += timerHideSyncLabel_Tick;
             _timerHideSyncLabel.Interval = 1000;
         }
@@ -92,17 +92,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void timerHideSyncLabel_Tick(object sender, EventArgs e)
         {
             labelSyncDone.Text = string.Empty;
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonCancel.Text, Font);
-            if (textSize.Height > buttonCancel.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void GotoSubtitlePosition(VideoPlayerContainer mediaPlayer)
@@ -116,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.Pause();
             if (index != -1)
             {
-                double indexPositionInSeconds = _paragraphs[index].StartTime.TotalMilliseconds / 1000.0;
+                double indexPositionInSeconds = _paragraphs[index].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
 
                 if (indexPositionInSeconds > mediaPlayer.Duration)
                     indexPositionInSeconds = mediaPlayer.Duration - (2 * 60);
@@ -402,8 +391,8 @@ namespace Nikse.SubtitleEdit.Forms
             double endPos = MediaPlayerEnd.CurrentPosition;
             if (endPos > startPos)
             {
-                double subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds / 1000.0;
-                double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds / 1000.0;
+                double subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+                double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
 
                 double subDiff = subEnd - subStart;
                 double realDiff = endPos - startPos;

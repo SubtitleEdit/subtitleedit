@@ -2,7 +2,7 @@
 <Language Name="日本語">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Nardog</TranslatedBy>
     <CultureName>ja-JP</CultureName>
     <HelpFile />
@@ -1043,7 +1043,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
   <MatroskaSubtitleChooser>
     <Title>Matroska ファイルから字幕を選択</Title>
     <PleaseChoose>2 個以上の字幕が見つかりました - 選択してください</PleaseChoose>
-    <TrackXLanguageYTypeZ>トラック {0} - {1} - 言語: {2} - 種類: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>トラック {0} - 言語: {1} - 種類: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MergedShortLines>
     <Title>短い行の結合</Title>

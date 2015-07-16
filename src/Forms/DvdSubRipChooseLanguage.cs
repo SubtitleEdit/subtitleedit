@@ -40,19 +40,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonSaveAs.Text = Configuration.Settings.Language.Main.Menu.File.SaveAs;
-            FixLargeFonts();
             groupBoxImage.Text = Configuration.Settings.Language.DvdSubRipChooseLanguage.SubtitleImage;
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         internal void Initialize(List<VobSubMergedPack> mergedVobSubPacks, List<Color> palette, List<string> languages, string selectedLanguage)
@@ -183,15 +172,17 @@ namespace Nikse.SubtitleEdit.Forms
                 subs.Add((x as SubListBoxItem).SubPack);
             }
 
-            var formSubOcr = new VobSubOcr();
-            formSubOcr.InitializeQuick(subs, _palette, Configuration.Settings.VobSubOcr, SelectedLanguageString);
-            var subtitle = formSubOcr.ReadyVobSubRip();
-            formSubOcr.Dispose();
+            using (var formSubOcr = new VobSubOcr())
+            {
+                formSubOcr.InitializeQuick(subs, _palette, Configuration.Settings.VobSubOcr, SelectedLanguageString);
+                var subtitle = formSubOcr.ReadyVobSubRip();
 
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Logic.SubtitleFormats.SubRip(), "VOBSUB", "DVD", formSubOcr, SelectedLanguageString);
-            exportBdnXmlPng.ShowDialog(this);
-            exportBdnXmlPng.Dispose();
+                using (var exportBdnXmlPng = new ExportPngXml())
+                {
+                    exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Logic.SubtitleFormats.SubRip(), "VOBSUB", "DVD", formSubOcr, SelectedLanguageString);
+                    exportBdnXmlPng.ShowDialog(this);
+                }
+            }
         }
 
     }

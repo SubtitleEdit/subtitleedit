@@ -6,7 +6,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class AQTitle : SubtitleFormat
     {
-
         private enum ExpectingLine
         {
             TimeStart,
@@ -135,7 +134,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
 
         }
 
@@ -147,7 +146,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string timePart)
         {
-            int milliseconds = (int)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(timePart));
+            int milliseconds = (int)((TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * int.Parse(timePart));
             return new TimeCode(milliseconds);
         }
 

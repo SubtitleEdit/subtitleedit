@@ -725,7 +725,6 @@ namespace Test
         #region Fix unneeded spaces
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpaces1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -736,16 +735,19 @@ namespace Test
             }
         }
 
+        [TestMethod]
         public void FixUnneededSpaces2()
         {
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, " To be, or not to be!");
                 target.FixUnneededSpaces();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, " To be, or not to be!");
+                const string expected = "To be, or not to be!";
+                Assert.AreEqual(expected, target.Subtitle.Paragraphs[0].Text);
             }
         }
 
+        [TestMethod]
         public void FixUnneededSpaces3()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -756,6 +758,7 @@ namespace Test
             }
         }
 
+        [TestMethod]
         public void FixUnneededSpaces4()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -767,7 +770,7 @@ namespace Test
         }
 
         [TestMethod]
-        public void FixUneededSpaces5()
+        public void FixUnneededSpaces5()
         {
             using (var target = GetFixCommonErrorsLib())
             {
@@ -776,6 +779,54 @@ namespace Test
                 target.FixUnneededSpaces();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, expected);
                 Assert.AreEqual(target.Subtitle.Paragraphs[1].Text, expected);
+            }
+        }
+
+        [TestMethod]
+        public void FixUnneededSpaces6()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string expected = "Foo bar.";
+                InitializeFixCommonErrorsLine(target, "Foo \t\tbar.");
+                target.FixUnneededSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
+        [TestMethod]
+        public void FixUnneededSpacesItalic1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string expected = "Hi <i>bad</i> man!";
+                InitializeFixCommonErrorsLine(target, "Hi <i> bad</i> man!");
+                target.FixUnneededSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
+        [TestMethod]
+        public void FixUnneededSpacesItalic2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string expected = "Hi <i>bad</i> man!";
+                InitializeFixCommonErrorsLine(target, "Hi <i>bad </i> man!");
+                target.FixUnneededSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
+        [TestMethod]
+        public void FixUnneededSpacesFont1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string expected = "Hi <font color='red'>bad</font> man!";
+                InitializeFixCommonErrorsLine(target, "Hi <font color='red'> bad</font> man!");
+                target.FixUnneededSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, expected);
             }
         }
 
@@ -1043,7 +1094,7 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "<i>- Mm-hmm.</i>");
-                target.FixHyphens();
+                target.FixHyphensRemove();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<i>Mm-hmm.</i>");
             }
         }
@@ -1055,7 +1106,7 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "<font color='red'>- Mm-hmm.</font>");
-                target.FixHyphens();
+                target.FixHyphensRemove();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<font color='red'>Mm-hmm.</font>");
             }
         }
@@ -1067,7 +1118,7 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- Mm-hmm.");
-                target.FixHyphens();
+                target.FixHyphensRemove();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "Mm-hmm.");
             }
         }
@@ -1079,7 +1130,7 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- I-I never thought of that.");
-                target.FixHyphens();
+                target.FixHyphensRemove();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "I-I never thought of that.");
             }
         }
@@ -1091,7 +1142,7 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- Uh-huh.");
-                target.FixHyphens();
+                target.FixHyphensRemove();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "Uh-huh.");
             }
         }

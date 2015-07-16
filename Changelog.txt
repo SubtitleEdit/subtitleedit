@@ -1,31 +1,87 @@
 ﻿Subtitle Edit Changelog
 
-3.4.6 (xth March 2015) BETA
+3.4.7 BETA (xth July 2015)
 * NEW:
-   * Added new subtitle formats (Sami Youtube and more)
+   * Added (some) read support for PNS files
+   * Added (some) read support for Timeline files
+   * Added Croatian OCRFixReplaceList list [by diomed & xylographe]
+   * Added Serbian OCRFixReplaceList
+* IMPROVED:
+   * PAC now supports write of Chinese
+   * Updated Czech translation - thx Trottel
+   * Updated Portuguese translation - thx moob
+   * Updated Hungarian translation - thx Jozo
+   * Updated Korean translation - thx domddol
+   * Updated Finnish translation - thx Teijo S.
+   * Updated Basque translation - thx Xabier
+   * Updated Romanian translation - thx Mircea
+   * Updated Brazil translation - thx Igor
+   * Updated Croatian translation - thx diomed
+   * Updated many spell check dictionaries - thx ivandrofly
+   * Added drag-n-drop support in waveform batch generate - thx ThiefMaster
+   * Added drag-n-drop support for directories in "Batch convert" - thx ivandrofly
+   * Persistent find history - thx vmb
+   * Show friendly message if user tries to load JPG file - thx ivandrofly
+   * Show friendly message if user tries to load a file containing only binary zeroes
+   * Export to BDN XML/PNG now also supports 8-bit png files - thx franontanaya
+   * Export to Blu-ray sup now also supports full frame - thx oallouch
+   * Added two new fields for EBU regarding programme start time
+* FIXED:
+   * Fixed wrong styles in SSA - thx alundpeggybundy
+   * Fixed multiple blank lines added after editing SSA/ASS properties
+   * Fix in "Change casing" regarding "don't" - thx Chamallow
+   * Fixed missing last blank "Sami" end tag - thx domddol 
+   * Fixed possible crash when importing vobsub in mkv files
+   * Fixed extra space after remove text for HI - thx ivandrofly/sbraz 
+   * Minor fix for "Unknown subtitle format 42" - thx Carles
+   * Minor fix for italic in auto-translate - thx Shahrukh
+   * Fixed bug in "Remove text for HI" regarding italic/interjections - thx Thunderbolt8
+   * Fixed bug in "Remove text for HI" regarding quotes - thx Thunderbolt8
+   * Export to images: Some fixes for alignment + full frame
+   * Don't load video when canceling mkv import - thx Andreas
+   * Avoid crash in "Plugins" (due to culture specific decimal separator) - thx marb99
+   * Fixed bug reading YouTube sbv files - thx msl521
+   * Fixed support for Tesseract 3.03RC - thx YamashitaRen 
+   * Fixed dead networking service (for networking sessions)
+   * Fix for italic support in span in TTML 1.0 - thx Mampfi
+   * Fix for (possible) "culture is not supported" crash when changing language - thx XuTpuK
+   * Fixed bug in writing "Subtitle Editor Project" format - thx Christina
+   * Always re-number in batch convert - thx Ede123
+   * Fixed DCinema interop custom language setting - thx F-5
+   * Fixed some bugs in Karaoke/typewriter effect regarding tags - thx domddol
+   * + Many minor fixes from Ivandrofly and xylographe
+
+
+3.4.6 (29th March 2015)
+* NEW:
+   * Added new subtitle formats (Sami YouTube and more)
    * Added waveform text size/bold to UI
    * Added filter to "Batch convert"
    * Added new shortcut: Copy text from original to current - thx megasmile
-   * Added export functionality form "Statics" window - thx Ivandrofly
+   * Added export functionality to "Statistics" window - thx Ivandrofly
    * Added custom shortcut for toggle textbox auto-duration - thx Tony
    * Added full frame option for export of FAB image script
    * Added TGA output to export of images - thx Øjvind
    * Added left/right margin to export of images - thx Øjvind
-   * Support for VobSub/Bluray-sup input in command line convert - thx lafe
+   * Support for VobSub/Blu-ray sup input in command line convert - thx lafe
 * IMPROVED:
    * Updated French translation - thx JM GBT
    * Updated Czech translation - thx Trottel
    * Updated Korean translation - thx domddol
    * Updated Brazilian Portuguese translation - thx Igor
    * Updated German/French translations - thx xylographe
+   * Updated Polish translation - thx admas
+   * Updated Portuguese translation - thx moob
    * Taskbar icon progress info for batch-convert/dvd-rip/matroska+TS-import  
+   * Improved speed for "Auto-balance/unbreak lines" - thx Ivandrofly
+   * Improved speed for "Multiple replace"   
 * FIXED:
    * Fixed bugs in ASS/SSA loading - thx kotuwa
    * Fixed bug in spell check with auto change casing of http -  thx Ivandrofly
    * Change language in "Spell check" dialog now loads correct language lists - thx Sami 
    * Fixed missing rule for "Fix invalid italic tags" - thx Ivandrofly
    * Fixed possible freeze in video player text - thx Mafu
-   * Fixed crash in 'Merge lines with same time code' - thx Miguel
+   * Fixed crash in "Merge lines with same time code" - thx Miguel
    * Frame rate reading fix for format "Timed Text" - thx SwK
    * Keep line style when converting from "Timed Text" to ASS - thx SwK
    * Fixed Alt+Drag issue in waveform - thx Leon
@@ -33,11 +89,17 @@
    * Disabled native video player subtitles in MPlayer - thx larvanitis
    * Handle possible crash in "Batch convert" - thx Ivandrofly
    * "Multiple replace" remove line if only tag remains - thx Ivandrofly
-   * Some fixes for unknown subtitle 17 - thx Pedro
-   * Timed Text now keeps separate text element div tags separate - thx Krystian
+   * Some fixes for "unknown subtitle 17" - thx Pedro
+   * "Timed Text" now keeps separate text element div tags separate - thx Krystian
    * Some fixes for .chk files - thx Mark
    * Fixed bug in reading ASS/SSA from Matroska files
    * Can now read EBU STL files with only one line - thx Stefan
+   * Fixed handling of bad Blu-ray sup files - thx The Snyper
+   * Fixed typo in Brazilian translation - thx Rubens
+   * Fixed bug in mplayer2 subtitle format - thx Maciek
+   * Fixed bug preventing compare from working in "History" window - thx xylographe
+   * Fix for Advanced Substation Alpha loading - thx Vic
+   * Fix for unwanted play/pause by click in list view after hiding VLC - thx Ivandrofly
    * + Many minor fixes from Ivandrofly and xylographe
 
 

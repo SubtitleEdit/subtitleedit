@@ -2,7 +2,6 @@
 using System.Net;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -23,18 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelWebServiceUrl.Text = Configuration.Settings.Language.General.WebServiceUrl;
             buttonJoin.Text = Configuration.Settings.Language.NetworkJoin.Join;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonCancel.Text, this.Font);
-            if (textSize.Height > buttonCancel.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonCancel);
         }
 
         internal void Initialize(Logic.Networking.NikseWebServiceSession networkSession)

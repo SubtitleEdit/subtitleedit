@@ -1,4 +1,4 @@
-<OCRFixReplaceList>
+﻿<OCRFixReplaceList>
   <WholeWords>
     <Word from="abitual" to="habitual" />
     <Word from="àcerca" to="acerca" />
@@ -33,7 +33,6 @@
     <Word from="artifice" to="artífice" />
     <Word from="artifícial" to="artificial" />
     <Word from="ascenção" to="ascensão" />
-    <Word from="Associacao" to="Associação" />
     <!-- <Word from="assucar" to="açúcar" /> assucar é uma palavra existente no dicionário -->
     <Word from="assúcar" to="açúcar" />
     <Word from="aste" to="haste" />
@@ -46,7 +45,6 @@
     <Word from="bandeija" to="bandeja" />
     <Word from="bébé" to="bebé" />
     <Word from="beige" to="bege" />
-    <Word from="belem" to="Belém" />
     <Word from="benção" to="bênção" />
     <Word from="beneficiência" to="beneficência" />
     <Word from="beneficiente" to="beneficente" />
@@ -103,8 +101,6 @@
     <Word from="degladiar" to="digladiar" />
     <Word from="deiche" to="deixe" />
     <Word from="desinteria" to="disenteria" />
-    <Word from="desiquilíbreo" to="desequilíbrio" />
-    <Word from="desiquilíbrio" to="desequilíbrio" />
     <Word from="despendio" to="dispêndio" />
     <Word from="despêndio" to="dispêndio" />
     <Word from="desplicência" to="displicência" />
@@ -177,8 +173,6 @@
     <Word from="glicémia" to="glicemia" />
     <Word from="gorgeta" to="gorjeta" />
     <Word from="grangear" to="granjear" />
-    <Word from="gratuíto" to="gratuito" />
-    <Word from="gratúito" to="gratuito" />
     <Word from="guizar" to="guisar" />
     <Word from="hectar" to="hectare" />
     <Word from="herméticamente" to="hermeticamente" />
@@ -219,8 +213,6 @@
     <Word from="ipopótamo" to="hipopótamo" />
     <Word from="ipsilon" to="ípsilon" />
     <Word from="ipslon" to="ípsilon" />
-    <Word from="iquilíbreo" to="equilíbrio" />
-    <Word from="iquilíbrio" to="equilíbrio" />
     <Word from="isquesito" to="esquisito" />
     <Word from="juíz" to="juiz" />
     <Word from="juiza" to="juíza" />
@@ -228,10 +220,6 @@
     <Word from="justanzente" to="justamente" />
     <Word from="juz" to="jus" />
     <Word from="kilo" to="quilo" />
-    <Word from="kilograma" to="quilograma" />
-    <Word from="kilogramas" to="quilogramas" />
-    <Word from="kilómetro" to="quilómetro" />
-    <Word from="kilómetros" to="quilómetros" />
     <Word from="laboratório-porque" to="laboratório porque" />
     <Word from="ladravaz" to="ladrava" />
     <Word from="lamentàvelmente" to="lamentavelmente" />
@@ -270,11 +258,9 @@
     <Word from="mortandela" to="mortadela" />
     <Word from="morteIa" to="mortela" />
     <Word from="muinto" to="muito" />
-    <Word from="nao" to="não" />
     <Word from="nasaias" to="nasais" />
     <Word from="nêle" to="nele" />
     <Word from="nest" to="neste" />
-    <Word from="Ninguem" to="Ninguém" />
     <Word from="Nivea" to="Nívea" />
     <Word from="nonagessimo" to="nonagésimo" />
     <Word from="nonagéssimo" to="nonagésimo" />
@@ -323,10 +309,6 @@
     <Word from="previlégio" to="privilégio" />
     <Word from="primária-que" to="primária que" />
     <Word from="priúdo" to="período" />
-    <Word from="priveligeada" to="privilegiada" />
-    <Word from="priveligeado" to="privilegiado" />
-    <Word from="priveligiada" to="privilegiada" />
-    <Word from="priveligiado" to="privilegiado" />
     <Word from="probalidade" to="probabilidade" />
     <Word from="progreso" to="progresso" />
     <Word from="proibído" to="proibido" />
@@ -339,8 +321,6 @@
     <Word from="prsença" to="presença" />
     <Word from="prustituta" to="prostituta" />
     <Word from="pudérmos" to="pudermos" />
-    <Word from="pude-se" to="pudesse" />
-    <Word from="pudésse" to="pudesse" />
     <Word from="púlico" to="público" />
     <Word from="pús" to="pus" />
     <Word from="pusémos" to="pusemos" />
@@ -419,28 +399,15 @@
     <Word from="suavisar" to="suavizar" />
     <Word from="substituido" to="substituído" />
     <Word from="suburbio" to="subúrbio" />
-    <!--<Word from="sues" to="seus" /> sues existe "Cuidado, não sues muito." -->
-    <Word from="sufciente" to="suficiente" />
-    <Word from="sufeciente" to="suficiente" />
+    <!-- <Word from="sues" to="seus" /> sues existe "Cuidado, não sues muito." -->
     <Word from="suI" to="sul" />
     <Word from="Suiça" to="Suíça" />
     <Word from="suiças" to="suíças" />
     <Word from="suiço" to="suíço" />
     <Word from="suiços" to="suíços" />
-    <Word from="Suissa" to="Suíça" />
-    <Word from="Suíssa" to="Suíça" />
-    <Word from="suissas" to="suíças" />
-    <Word from="suíssas" to="suíças" />
-    <Word from="suisso" to="suíço" />
-    <Word from="suísso" to="suíço" />
-    <Word from="suissos" to="suíços" />
-    <Word from="suíssos" to="suíços" />
     <Word from="supôr" to="supor" />
     <Word from="tabeliões" to="tabeliães" />
     <Word from="taínha" to="tainha" />
-    <Word from="tambem" to="também" />
-    <Word from="tanbem" to="também" />
-    <Word from="tanbém" to="também" />
     <Word from="tava" to="estava" />
     <Word from="têem" to="têm" />
     <Word from="telemovel" to="telemóvel" />
@@ -470,14 +437,13 @@
     <Word from="xilindró" to="chilindró" />
     <Word from="zaíre" to="Zaire" />
     <Word from="zepelin" to="zepelim" />
-    <Word from="zeppelim" to="zepelim" />
-    <Word from="zeppelin" to="zepelim" />
     <Word from="zig-zag" to="ziguezague" />
     <Word from="zoô" to="zoo" />
     <Word from="zôo" to="zoo" />
     <Word from="zuar" to="zoar" />
     <Word from="zum-zum" to="zunzum" />
   </WholeWords>
+  <PartialWordsAlways />
   <PartialWords />
   <PartialLines>
     <LinePart from="IN 6-E" to="N 6 E" />
@@ -508,18 +474,35 @@
     <LinePart from="R egião" to="Região" />
     <LinePart from="unsuficien temente" to="insuficientemente" />
   </PartialLines>
+  <PartialLinesAlways />
   <BeginLines />
   <EndLines />
   <WholeLines />
   <RegularExpressions>
-    <!--    <RegEx find="\bi\b" replaceWith="I" /> just an example - do not use this regex -->
-    <RegEx find="(\\d) +º" replaceWith="$1º" />
+    <!-- <RegEx find="\bi\b" replaceWith="I" /> just an example - do not use this regex -->
+    <RegEx find="([0-9]) +º" replaceWith="$1º" />
     <RegEx find="\Bcao\b" replaceWith="ção" />
     <RegEx find="\Bcoes\b" replaceWith="ções" />
-    <!-- <RegEx find="\Bccao\b" replaceWith="cção" /> não faz sentido ter este e ter a linha de cima-->
-    <!-- <RegEx find="\Bccoes\b" replaceWith="cções" /> não faz sentido ter este e ter a linha de cima-->
-    <RegEx find="\b([mM])ae\b" replaceWith="$1ãe" />
+    <!-- <RegEx find="\Bccao\b" replaceWith="cção" /> não faz sentido ter este e ter a linha de cima -->
+    <!-- <RegEx find="\Bccoes\b" replaceWith="cções" /> não faz sentido ter este e ter a linha de cima -->
+    <RegEx find="\b(m|M)ae\b" replaceWith="$1ãe" />
     <RegEx find="\Bdmnis\B" replaceWith="dminis" />
     <RegEx find="\Blcól\B" replaceWith="lcoól" />
+    <RegEx find="\b(t|T)a[nm]b[eé]m\b" replaceWith="$1ambém" />
+    <RegEx find="\bzeppeli[mn]\b" replaceWith="zepelim" />
+    <RegEx find="\b(s|S)ufe?ciente\b" replaceWith="$1uficiente" />
+    <RegEx find="\b(n|N)ao\b" replaceWith="$1ão" />
+    <RegEx find="\b(B|b)elem\b" replaceWith="$1elém" />
+    <RegEx find="\b(s|S)u[íi]sso(s)?\b" replaceWith="$1uíço$2" />
+    <RegEx find="\b(s|S)u[íi]ssa(s)?\b" replaceWith="$1uíça$2" />
+    <RegEx find="\b(p|P)rivelig[ie]\p{Ll}d" replaceWith="$1rivelegiad" />
+    <RegEx find="\bpud(?:és|e-)se\b" replaceWith="pudesse" />
+    <RegEx find="\biquilíbr(?:e|i)o\b" replaceWith="equilíbrio" />
+    <RegEx find="\b(c|C)orregi\B" replaceWith="$1orrigid" />
+    <RegEx find="(?&lt;=A|a)ssociacao" replaceWith="ssociação" />
+    <RegEx find="(?&lt;=N|n)inguem" replaceWith="inguém" />
+    <RegEx find="(?&lt;=g|G)rat(?:uí|úi)to" replaceWith="ratuito" />
+    <RegEx find="(?&lt;=d|D)esiquilíbr[ei]o" replaceWith="esequilíbrio" />
+    <RegEx find="\b[k|K]il(ogramas?|ómetros?)" replaceWith="qui$1" />
   </RegularExpressions>
 </OCRFixReplaceList>

@@ -1,5 +1,7 @@
-<!-- This list contains names/words with specific casing - and specific to English only -->
+﻿<!-- This list contains names/words with specific casing - and specific to English only -->
 <ignore_list>
+  <name>Aaden</name>
+  <name>Aarav</name>
   <name>Abbey</name>
   <name>Abbie</name>
   <name>Abbigail</name>
@@ -132,6 +134,7 @@
   <name>Averie</name>
   <name>Aviana</name>
   <name>Avianna</name>
+  <name>Ayaan</name>
   <name>Ayana</name>
   <name>Ayanna</name>
   <name>Aydan</name>
@@ -139,7 +142,6 @@
   <name>Ayla</name>
   <name>Ayleen</name>
   <name>Aylin</name>
-  <name>Ayaan</name>
   <name>Azaria</name>
   <name>Azog</name>
   <name>Bacharach</name>
@@ -1043,6 +1045,7 @@
   <name>Ryleigh</name>
   <name>Rylen</name>
   <name>Rylie</name>
+  <name>Saanvi</name>
   <name>Sadie</name>
   <name>Sage</name>
   <name>Saige</name>
@@ -1054,11 +1057,11 @@
   <name>Samiyah</name>
   <name>Samson</name>
   <name>San Francisco</name>
+  <name>Sanaa</name>
   <name>Sandberg</name>
   <name>Saniya</name>
   <name>Saniyah</name>
   <name>Santino</name>
-  <name>Sanaa</name>
   <name>Sao Paulo</name>
   <name>Sarahi</name>
   <name>Sarai</name>
@@ -1108,7 +1111,6 @@
   <name>Sturridge</name>
   <name>Suez</name>
   <name>Sylas</name>
-  <name>Saanvi</name>
   <name>Taipei</name>
   <name>Talia</name>
   <name>Taliyah</name>
@@ -1229,6 +1231,4 @@
   <name>Zion</name>
   <name>Zoie</name>
   <name>Zuri</name>
-  <name>Aaden</name>
-  <name>Aarav</name>
 </ignore_list>

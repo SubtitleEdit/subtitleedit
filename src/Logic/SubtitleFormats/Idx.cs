@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    //TODO: Working on added edit cababilities for idx files....
+    // TODO: Working on added edit capabilities for idx files...
     public class Idx : SubtitleFormat
     {
         // timestamp: 00:00:01:401, filepos: 000000000
@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int subtitleCount = 0;
             foreach (string line in lines)
             {
-                if (line.StartsWith("timestamp: "))
+                if (line.StartsWith("timestamp: ", StringComparison.Ordinal))
                     subtitleCount++;
             }
             return subtitleCount > 10;

@@ -1,4 +1,4 @@
-<ReplaceList>
+﻿<OCRFixReplaceList>
   <WholeWords>
     <Word from="kellojo" to="kello jo" />
     <Word from="onjo" to="on jo" />
@@ -375,7 +375,6 @@
     <Word from="kuluttuu" to="kuluttaa" />
     <Word from="Iuvulta" to="luvulta" />
     <Word from="Ieipomiskilpailuun" to="leipomiskilpailuun" />
-    <Word from="Maclntire" to="MacIntire" />
     <Word from="Maclntire" to="MacIntire" />
     <Word from="Iehteemme" to="lehteemme" />
     <Word from="Alä" to="Älä" />
@@ -986,7 +985,10 @@
     <Word from="ákápussi" to="äkäpussi" />
     <Word from="karkoituksen" to="karkotuksen" />
   </WholeWords>
+  <PartialWordsAlways />
+  <PartialWords />
   <PartialLines />
+  <PartialLinesAlways />
   <BeginLines />
   <EndLines />
   <WholeLines>
@@ -1026,4 +1028,5 @@
     <Line from="Haluan kertoa jotai n" to="Haluan kertoa jotain" />
     <Line from="I-Ialuatte" to="Haluatte" />
   </WholeLines>
-</ReplaceList>
+  <RegularExpressions />
+</OCRFixReplaceList>

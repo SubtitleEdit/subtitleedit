@@ -3,7 +3,6 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -56,14 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (radioButtonNormal.Left + radioButtonNormal.Width + 40 > Width)
                 Width = radioButtonNormal.Left + radioButtonNormal.Width + 40;
-
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         internal void FixCasing(Subtitle subtitle, string language)
@@ -130,14 +122,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var st = new StripableText(text);
                 text = st.Pre + st.StrippedText.ToUpper() + st.Post;
-                text = text.Replace("<I>", "<i>");
-                text = text.Replace("</I>", "</i>");
-                text = text.Replace("<B>", "<b>");
-                text = text.Replace("</B>", "</b>");
-                text = text.Replace("<U>", "<u>");
-                text = text.Replace("<U>", "</u>");
-                text = text.Replace("<FONT COLOR>", "<font color>");
-                text = text.Replace("</FONT>", "</font>");
+                text = HtmlUtil.FixUpperTags(text); // tags inside text
             }
             else if (radioButtonLowercase.Checked)
             {
@@ -165,6 +150,13 @@ namespace Nikse.SubtitleEdit.Forms
             else if (radioButtonLowercase.Checked)
                 Configuration.Settings.Tools.ChangeCasingChoice = "Lowercase";
             DialogResult = DialogResult.OK;
+        }
+
+        private void RadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            var isNormalCasing = sender == radioButtonNormal;
+            checkBoxFixNames.Enabled = isNormalCasing;
+            checkBoxOnlyAllUpper.Enabled = isNormalCasing;
         }
 
     }

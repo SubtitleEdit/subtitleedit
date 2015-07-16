@@ -134,18 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSkipText.Text = Configuration.Settings.Language.SpellCheck.SkipOnce;
             groupBoxSuggestions.Text = Configuration.Settings.Language.SpellCheck.Suggestions;
             buttonAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonAbort.Text, Font);
-            if (textSize.Height > buttonAbort.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonAbort);
         }
 
         public void Initialize(string languageName, SpellCheckWord word, List<string> suggestions, string paragraph, string progress)
@@ -567,29 +556,7 @@ namespace Nikse.SubtitleEdit.Forms
                     minLength = 1;
 
                 if (_currentWord.Trim().Length >= minLength &&
-                    !_currentWord.Contains('0') &&
-                    !_currentWord.Contains('1') &&
-                    !_currentWord.Contains('2') &&
-                    !_currentWord.Contains('3') &&
-                    !_currentWord.Contains('4') &&
-                    !_currentWord.Contains('5') &&
-                    !_currentWord.Contains('6') &&
-                    !_currentWord.Contains('7') &&
-                    !_currentWord.Contains('8') &&
-                    !_currentWord.Contains('9') &&
-                    !_currentWord.Contains('%') &&
-                    !_currentWord.Contains('&') &&
-                    !_currentWord.Contains('@') &&
-                    !_currentWord.Contains('$') &&
-                    !_currentWord.Contains('*') &&
-                    !_currentWord.Contains('=') &&
-                    !_currentWord.Contains('£') &&
-                    !_currentWord.Contains('#') &&
-                    !_currentWord.Contains('_') &&
-                    !_currentWord.Contains('½') &&
-                    !_currentWord.Contains('^') &&
-                    !_currentWord.Contains('£')
-                    )
+                    !_currentWord.Contains(new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '%', '&', '@', '$', '*', '=', '£', '#', '_', '½', '^' }))
                 {
                     _prefix = string.Empty;
                     _postfix = string.Empty;
@@ -633,7 +600,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (_namesEtcListUppercase.Contains(_currentWord)
                         || _namesEtcListWithApostrophe.Contains(_currentWord)
-                        || _namesList.IsInNamesEtcMultiWordList(_currentParagraph.Text, _currentWord)) //TODO: verify this!
+                        || _namesList.IsInNamesEtcMultiWordList(_currentParagraph.Text, _currentWord)) // TODO: Verify this!
                     {
                         _noOfNamesEtc++;
                     }
@@ -695,8 +662,8 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                if (_currentWord.ToUpper() != "LT'S" && _currentWord.ToUpper() != "SOX'S" && !_currentWord.ToUpper().StartsWith("HTTP", StringComparison.Ordinal)) //TODO: get fixed nhunspell
-                                    suggestions = DoSuggest(_currentWord); //TODO: 0.9.6 fails on "Lt'S"
+                                if (_currentWord.ToUpper() != "LT'S" && _currentWord.ToUpper() != "SOX'S" && !_currentWord.ToUpper().StartsWith("HTTP", StringComparison.Ordinal)) // TODO: Get fixed nhunspell
+                                    suggestions = DoSuggest(_currentWord); // TODO: 0.9.6 fails on "Lt'S"
                                 if (_languageName.StartsWith("fr_", StringComparison.Ordinal) && (_currentWord.StartsWith("I'", StringComparison.Ordinal) || _currentWord.StartsWith("I’", StringComparison.Ordinal)))
                                 {
                                     if (_currentWord.Length > 3 && Utilities.LowercaseLetters.Contains(_currentWord[2]) && _currentSpellCheckWord.Index > 3)
@@ -839,20 +806,15 @@ namespace Nikse.SubtitleEdit.Forms
             int start = s.IndexOf('<');
             while (start >= 0)
             {
-                int end = s.IndexOf('>', start);
-                if (end > 0)
-                {
-                    int l = end - start + 1;
-                    s = s.Remove(start, l).Insert(start, string.Empty.PadLeft(l));
-                    if (start + 1 < s.Length)
-                        start = s.IndexOf('<', start + 1);
-                    else
-                        start = -1;
-                }
-                else
-                {
-                    return s;
-                }
+                int end = s.IndexOf('>', start + 1);
+                if (end < start)
+                    break;
+                int l = end - start + 1;
+                s = s.Remove(start, l).Insert(start, string.Empty.PadLeft(l));
+                end++;
+                if (end >= s.Length)
+                    break;
+                start = s.IndexOf('<', end);
             }
             return s;
         }
@@ -869,7 +831,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _wordsWithDashesOrPeriods.Add(w);
             }
 
-            if (text.Contains('.') || text.Contains('-'))
+            if (text.Contains(new[] { '.', '-' }))
             {
                 int i = 0;
                 foreach (string wordWithDashesOrPeriods in _wordsWithDashesOrPeriods)
@@ -1063,12 +1025,12 @@ namespace Nikse.SubtitleEdit.Forms
             _wordsWithDashesOrPeriods.AddRange(_namesEtcMultiWordList);
             foreach (string name in _namesEtcList)
             {
-                if (name.Contains('.') || name.Contains('-'))
+                if (name.Contains(new[] { '.', '-' }))
                     _wordsWithDashesOrPeriods.Add(name);
             }
             foreach (string word in _userWordList)
             {
-                if (word.Contains('.') || word.Contains('-'))
+                if (word.Contains(new[] { '.', '-' }))
                     _wordsWithDashesOrPeriods.Add(word);
             }
             _wordsWithDashesOrPeriods.AddRange(_userPhraseList);

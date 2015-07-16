@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     double start = Convert.ToDouble(node.SelectSingleNode("time").Attributes["value"].InnerText, CultureInfo.InvariantCulture);
                     double end = start + Convert.ToDouble(node.SelectSingleNode("duration").Attributes["value"].InnerText, CultureInfo.InvariantCulture);
                     string text = node.SelectSingleNode("comment").Attributes["value"].InnerText.Replace("||", Environment.NewLine);
-                    subtitle.Paragraphs.Add(new Paragraph(text, start * 1000.0, end * 1000.0));
+                    subtitle.Paragraphs.Add(new Paragraph(text, start * TimeCode.BaseUnit, end * TimeCode.BaseUnit));
                 }
                 catch (Exception ex)
                 {
@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

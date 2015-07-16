@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -69,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string ext = Path.GetExtension(VideoFileName).ToLower();
                 if (ext == ".mp4" || ext == ".m4v" || ext == ".3gp")
                 {
-                    Logic.Mp4.MP4Parser mp4Parser = new Logic.Mp4.MP4Parser(VideoFileName);
+                    MP4Parser mp4Parser = new MP4Parser(VideoFileName);
                     start = mp4Parser.CreationDate;
                     durationInSeconds = mp4Parser.Duration.TotalSeconds;
                 }
@@ -78,7 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var fi = new FileInfo(VideoFileName);
                     start = fi.CreationTime;
                     VideoInfo vi = Utilities.GetVideoInfo(VideoFileName);
-                    durationInSeconds = vi.TotalMilliseconds / 1000.0;
+                    durationInSeconds = vi.TotalMilliseconds / TimeCode.BaseUnit;
                     if (durationInSeconds < 1)
                     {
                         MessageBox.Show("Unable to get duration");

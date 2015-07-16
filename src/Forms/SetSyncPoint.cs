@@ -37,18 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.InitializeSubtitleFont(subtitleListView1);
             subtitleListView1.AutoSizeAllColumns(this);
             buttonFindTextEnd.Text = Configuration.Settings.Language.VisualSync.FindText;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonSetSyncPoint.Text, Font);
-            if (textSize.Height > buttonSetSyncPoint.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonSetSyncPoint);
         }
 
         public TimeSpan SynchronizationPoint
@@ -163,9 +152,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             videoPlayerContainer1.Pause();
 
-            if (_guess.TotalMilliseconds > 0 && _guess.TotalMilliseconds / 1000.0 < videoPlayerContainer1.VideoPlayer.Duration)
+            if (_guess.TotalMilliseconds > 0 && _guess.TotalMilliseconds / TimeCode.BaseUnit < videoPlayerContainer1.VideoPlayer.Duration)
             {
-                videoPlayerContainer1.VideoPlayer.CurrentPosition = _guess.TotalMilliseconds / 1000.0;
+                videoPlayerContainer1.VideoPlayer.CurrentPosition = _guess.TotalMilliseconds / TimeCode.BaseUnit;
                 videoPlayerContainer1.RefreshProgressBar();
             }
 
@@ -356,7 +345,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = subtitleListView1.SelectedItems[0].Index;
 
                 videoPlayerContainer1.Pause();
-                videoPlayerContainer1.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds / 1000.0;
+                videoPlayerContainer1.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
             }
         }
 

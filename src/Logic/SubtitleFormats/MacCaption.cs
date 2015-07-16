@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -81,13 +82,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                sb.AppendLine(string.Format("{0}\t{1}", ToTimeCode(p.StartTime.TotalMilliseconds), p.Text)); //TODO: Encode text - how???
+                sb.AppendLine(string.Format("{0}\t{1}", ToTimeCode(p.StartTime.TotalMilliseconds), p.Text)); // TODO: Encode text - how???
                 sb.AppendLine();
 
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
                 if (next == null || Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) > 100)
                 {
-                    sb.AppendLine(string.Format("{0}\t???", ToTimeCode(p.EndTime.TotalMilliseconds))); //TODO: Some end text???
+                    sb.AppendLine(string.Format("{0}\t???", ToTimeCode(p.EndTime.TotalMilliseconds))); // TODO: Some end text???
                     sb.AppendLine();
                 }
             }
@@ -148,7 +149,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (p != null && string.IsNullOrEmpty(p.Text))
                 subtitle.Paragraphs.Remove(p);
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         public static string GetSccText(string s)
@@ -159,7 +160,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 try
                 {
-                    //TODO: How to decode????
+                    // TODO: How to decode???
                     int num = int.Parse(part, System.Globalization.NumberStyles.HexNumber);
                     if (num >= 32 && num <= 255)
                     {
@@ -177,7 +178,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             res = res.Replace("♪♪", "♪");
             res = res.Replace("'''", "'");
             res = res.Replace("  ", " ").Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
-            return Utilities.FixInvalidItalicTags(res);
+            return HtmlUtil.FixInvalidItalicTags(res);
         }
 
         private static List<string> ExecuteReplacesAndGetParts(string[] parts)

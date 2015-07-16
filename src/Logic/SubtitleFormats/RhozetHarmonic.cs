@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string seconds = parts[2];
             string frames = parts[3];
 
-            int milliseconds = (int)Math.Round(((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames)));
+            int milliseconds = (int)Math.Round(((TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames)));
             if (milliseconds > 999)
                 milliseconds = 999;
 
@@ -184,7 +184,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

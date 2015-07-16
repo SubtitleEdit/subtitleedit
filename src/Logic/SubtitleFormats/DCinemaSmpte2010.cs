@@ -697,7 +697,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (subtitle.Paragraphs.Count > 0)
                 subtitle.Header = xml.OuterXml; // save id/language/font for later use
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static string GetColorStringForDCinema(string p)
@@ -765,7 +765,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             string[] parts = s.Split(new char[] { ':', '.', ',' });
 
-            int milliseconds = (int)Math.Round(int.Parse(parts[3]) * (1000.0 / frameRate));
+            int milliseconds = (int)Math.Round(int.Parse(parts[3]) * (TimeCode.BaseUnit / frameRate));
             if (milliseconds > 999)
                 milliseconds = 999;
 
@@ -774,7 +774,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static int MsToFramesMaxFrameRate(double milliseconds, double frameRate)
         {
-            int frames = (int)Math.Round(milliseconds / (1000.0 / frameRate));
+            int frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / frameRate));
             if (frames >= Configuration.Settings.General.CurrentFrameRate)
                 frames = (int)(frameRate - 0.01);
             return frames;

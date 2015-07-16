@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -12,15 +11,15 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class SubStationAlphaProperties : PositionAndSizeForm
     {
-        private Subtitle _subtitle;
-        private bool _isSubStationAlpha;
-        private string _videoFileName;
+        private readonly Subtitle _subtitle;
+        private readonly bool _isSubStationAlpha;
+        private readonly string _videoFileName;
 
         public SubStationAlphaProperties(Subtitle subtitle, SubtitleFormat format, string videoFileName, string subtitleFileName)
         {
             InitializeComponent();
             _subtitle = subtitle;
-            _isSubStationAlpha = format.FriendlyName == new SubStationAlpha().FriendlyName;
+            _isSubStationAlpha = format.Name == SubStationAlpha.NameOfFormat;
             _videoFileName = videoFileName;
 
             var l = Configuration.Settings.Language.SubStationAlphaProperties;
@@ -43,10 +42,10 @@ namespace Nikse.SubtitleEdit.Forms
             string header = subtitle.Header;
             if (subtitle.Header == null)
             {
-                SubStationAlpha ssa = new SubStationAlpha();
+                var ssa = new SubStationAlpha();
                 var sub = new Subtitle();
                 var lines = new List<string>();
-                foreach (string line in subtitle.ToText(ssa).Replace(Environment.NewLine, "\n").Split('\n'))
+                foreach (string line in subtitle.ToText(ssa).SplitToLines())
                     lines.Add(line);
                 string title = "Untitled";
                 if (!string.IsNullOrEmpty(subtitleFileName))
@@ -61,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (string line in header.SplitToLines())
                 {
-                    string s = line.ToLower().Trim();
+                    string s = line.ToLowerInvariant().Trim();
                     if (s.StartsWith("title:"))
                     {
                         textBoxTitle.Text = s.Remove(0, 6).Trim();
@@ -113,7 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (s.StartsWith("scaledborderandshadow:"))
                     {
-                        checkBoxScaleBorderAndShadow.Checked = s.Remove(0, 22).Trim().Equals("yes", StringComparison.OrdinalIgnoreCase);
+                        checkBoxScaleBorderAndShadow.Checked = s.Remove(0, 22).Trim().Equals("yes");
                     }
                 }
             }
@@ -137,18 +136,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonCancel.Text, Font);
-            if (textSize.Height > buttonCancel.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonCancel);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -165,9 +153,8 @@ namespace Nikse.SubtitleEdit.Forms
                 format = new AdvancedSubStationAlpha();
             var sub = new Subtitle();
             string text = format.ToText(sub, string.Empty);
-            string[] lineArray = text.Split(Utilities.NewLineChars);
             var lines = new List<string>();
-            foreach (string line in lineArray)
+            foreach (string line in text.SplitToLines())
                 lines.Add(line);
             format.LoadSubtitle(sub, lines, string.Empty);
             return sub.Header.Trim();
@@ -223,6 +210,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!found && scriptInfoOn && !remove)
                         sb.AppendLine(tag + ": " + text);
+                    sb = new StringBuilder(sb.ToString().TrimEnd());
+                    sb.AppendLine();
                     sb.AppendLine();
                     scriptInfoOn = false;
                 }

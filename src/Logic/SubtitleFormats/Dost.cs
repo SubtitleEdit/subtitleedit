@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int frameRate;
                     if (int.TryParse(s, out frameRate))
                     {
-                        double f = frameRate / 1000.0;
+                        double f = frameRate / TimeCode.BaseUnit;
                         if (f > 10 && f < 500)
                             Configuration.Settings.General.CurrentFrameRate = f;
                     }
@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string[] parts)

@@ -2,7 +2,7 @@
 <Language Name="Nederlands">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Vertaald door Quetsbeek en minouhse 11082014</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile />
@@ -42,7 +42,7 @@
     <VideoEncodingX>Videocodering: {0}</VideoEncodingX>
     <SingleLineLengths>Regellengten:</SingleLineLengths>
     <TotalLengthX>Totale lengte: {0}</TotalLengthX>
-    <TotalLengthXSplitLine>Totale lengte: {0} (Regel opdelen!)</TotalLengthXSplitLine>
+    <TotalLengthXSplitLine>Totale lengte: {0} (regel opdelen!)</TotalLengthXSplitLine>
     <SplitLine>Regel opdelen!</SplitLine>
     <NotAvailable>Niet beschikbaar</NotAvailable>
     <OverlapPreviousLineX>Overlap vorige ({0:#,##0.###})</OverlapPreviousLineX>
@@ -93,7 +93,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </AddToNames>
   <AddToOcrReplaceList>
     <Title>Aan OCR-correctielĳst toevoegen</Title>
-    <Description>Paar aan OCR-correctielĳst toevoegen (hoofdlettergevoelig)</Description>
+    <Description>Woordpaar aan OCR-correctielĳst toevoegen (hoofdlettergevoelig)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Aan gebruikerswoordenboek toevoegen</Title>
@@ -111,12 +111,24 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Spectrogram genereren...</GeneratingSpectrogram>
     <ExtractingSeconds>Audio uitpakken: {0:0.0} seconden</ExtractingSeconds>
     <ExtractingMinutes>Audio uitpakken: {0} {1:00} minuten</ExtractingMinutes>
+    <WaveFileNotFound>De extractie van audiodata is mislukt!
+Deze functie vereist VLC media player 1.1.x of nieuwer ({0}-bit).
+
+Opdrachtregel: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>De extractie van audiodata met {0} is mislukt!
+
+Opdrachtregel: {1} {2}
+
+Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
+    <LowDiskSpace>ONVOLDOENDE VRĲE SCHĲFRUIMTE</LowDiskSpace>
+    <FreeDiskSpace>{0} beschikbaar</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Golfvormdata in batch genereren</Title>
     <ExtractingAudio>Audio uitpakken...</ExtractingAudio>
     <Calculating>Berekenen...</Calculating>
     <Done>Klaar</Done>
+    <Error>Mislukt</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Tĳdsduur aanpassen</Title>
@@ -258,13 +270,13 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Ondertitels vergelĳken</Title>
     <PreviousDifference>&amp;Vorig verschil</PreviousDifference>
     <NextDifference>Volge&amp;nd verschil</NextDifference>
-    <SubtitlesNotAlike>Ondertitels hebben geen overeenkomsten</SubtitlesNotAlike>
+    <SubtitlesNotAlike>Volledig verschillende ondertitels</SubtitlesNotAlike>
     <XNumberOfDifference>Aantal verschillen: {0}</XNumberOfDifference>
     <XNumberOfDifferenceAndPercentChanged>Aantal verschillen: {0} ({1}% woorden gewĳzigd)</XNumberOfDifferenceAndPercentChanged>
     <XNumberOfDifferenceAndPercentLettersChanged>Aantal verschillen: {0} ({1}% letters gewĳzigd)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Alleen verschillen tonen</ShowOnlyDifferences>
-    <IgnoreLineBreaks>Regeleinden negeren</IgnoreLineBreaks>
-    <OnlyLookForDifferencesInText>Alleen naar tekstverschillen zoeken</OnlyLookForDifferencesInText>
+    <IgnoreLineBreaks>Regelafbrekingen negeren</IgnoreLineBreaks>
+    <OnlyLookForDifferencesInText>Alleen tekstverschillen</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Vergelĳken met op beeld gebaseerde ondertitels is niet mogelĳk</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
   <DCinemaProperties>
@@ -319,8 +331,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25fps)</Pal>
     <Ntsc>NTSC (29,97 fps)</Ntsc>
-    <StartRipping>Rippen</StartRipping>
-    <Abort>Afbreken</Abort>
+    <StartRipping>&amp;Rippen</StartRipping>
+    <Abort>&amp;Afbreken</Abort>
     <AbortedByUser>Afgebroken door gebruiker</AbortedByUser>
     <ReadingSubtitleData>Ondertiteldata lezen...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Bezig met vob-bestand {1} van {2}: {0}</RippingVobFileXofYZ>
@@ -348,6 +360,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <TranslatorsName>Vertaler (TN)</TranslatorsName>
     <SubtitleListReferenceCode>Referentiecode (SLR)</SubtitleListReferenceCode>
     <CountryOfOrigin>Land van herkomst (CO)</CountryOfOrigin>
+    <TimeCodeStatus>Tĳdcode status (TCS)</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Tĳdcode uitzendingsbegin (TCP)</TimeCodeStartOfProgramme>
     <RevisionNumber>Revisienummer (RN)</RevisionNumber>
     <MaxNoOfDisplayableChars>Max. aantal tekens per rĳ (MNC)</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max. aantal rĳen (MNR)</MaxNumberOfDisplayableRows>
@@ -411,6 +425,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ShadowWidth>Schaduwbreedte</ShadowWidth>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Beeldformaat</ImageFormat>
+    <FullFrameImage>Volledig beeld</FullFrameImage>
     <SimpleRendering>Eenvoudige weergave</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing met transparantie</AntiAliasingWithTransparency>
     <Text3D>3D teksten</Text3D>
@@ -425,16 +440,22 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Rechts</Right>
     <Center>Midden</Center>
     <BottomMargin>Ondermarge</BottomMargin>
-    <LeftRightMargin>Linker- en rechtermarge</LeftRightMargin>
+    <LeftRightMargin>Zĳmarge</LeftRightMargin>
     <SaveBluRraySupAs>Blu-ray sup-bestand kiezen</SaveBluRraySupAs>
     <SaveVobSubAs>VobSub-bestand kiezen</SaveVobSubAs>
-    <SaveFabImageScriptAs>Blu-ray sup-bestand kiezen</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>FAB image script-bestand kiezen</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL bestand kiezen</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Digital Cinema Interop-bestand kiezen</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Premiere EDL bestand kiezen</SavePremiereEdlAs>
+    <SaveFcpAs>Final Cut Pro xml-bestand kiezen</SaveFcpAs>
+    <SaveDostAs>DoStudio dost-bestand kiezen</SaveDostAs>
     <SomeLinesWereTooLongX>Enkele regels zĳn te lang: {0}</SomeLinesWereTooLongX>
     <LineHeight>Regelhoogte</LineHeight>
     <BoxSingleLine>Enkellĳnig kader</BoxSingleLine>
     <BoxMultiLine>Meerlĳnig kader</BoxMultiLine>
     <Forced>Ingebakken</Forced>
+    <ChooseBackgroundColor>Achtergrondkleur kiezen</ChooseBackgroundColor>
+    <SaveImageAs>Afbeelding opslaan als...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Tekst exporteren</Title>
@@ -490,10 +511,10 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Fixes>Correcties</Fixes>
     <Log>Logboek</Log>
     <Function>Functie</Function>
-    <RemovedEmptyLine>Lege regel verwĳderd</RemovedEmptyLine>
-    <RemovedEmptyLineAtTop>Lege regel bovenaan verwĳderd</RemovedEmptyLineAtTop>
-    <RemovedEmptyLineAtBottom>Lege regel onderaan verwĳderd</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Lege regels/ongebruikte regeleinden verwĳderd</RemovedEmptyLinesUnsedLineBreaks>
+    <RemovedEmptyLine>Lege regel verwĳderen</RemovedEmptyLine>
+    <RemovedEmptyLineAtTop>Lege regel bovenaan verwĳderen</RemovedEmptyLineAtTop>
+    <RemovedEmptyLineAtBottom>Lege regel onderaan verwĳderen</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLinesUnsedLineBreaks>Lege regels/ongebruikte regeleinden verwĳderen</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Lege regels verwĳderd: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Overlappende tĳden corrigeren</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Te korte weergave corrigeren</FixShortDisplayTimes>
@@ -503,8 +524,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededPeriods>Onnodige punten verwĳderen</RemoveUnneededPeriods>
     <FixMissingSpaces>Ontbrekende spaties invoegen</FixMissingSpaces>
     <BreakLongLines>Lange regels afbreken</BreakLongLines>
-    <RemoveLineBreaks>Regeleinden in korte teksten met slechts één zin verwĳderen</RemoveLineBreaks>
-    <RemoveLineBreaksAll>Regeleinden in korte teksten (behalve dialogen ) verwĳderen</RemoveLineBreaksAll>
+    <RemoveLineBreaks>Regelafbreking in korte tekst met slechts één zin verwĳderen</RemoveLineBreaks>
+    <RemoveLineBreaksAll>Regelafbreking in korte tekst (behalve dialogen) verwĳderen</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Hoofdletter i in klein geschreven woorden (OCR-fout) corrigeren</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Dubbele apostrof ('') door aanhalingsteken (") vervangen</FixDoubleApostrophes>
     <AddPeriods>Punt invoegen indien de volgende regel met een hoofdletter begint</AddPeriods>
@@ -544,7 +565,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixFirstLetterToUppercaseAfterParagraph>Eerste letter na alinea wordt hoofdletter</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Korte regels samenvoegen (enkele zin)</MergeShortLine>
     <MergeShortLineAll>Korte regels samenvoegen (behalve dialogen)</MergeShortLineAll>
-    <XLineBreaksAdded>{0} regeleinden toegevoegd</XLineBreaksAdded>
+    <XLineBreaksAdded>{0} regelafbrekingen toegevoegd</XLineBreaksAdded>
     <BreakLongLine>Lange regel afbreken</BreakLongLine>
     <FixLongDisplayTime>Lange weergavetĳd corrigeren</FixLongDisplayTime>
     <FixInvalidItalicTag>Ongeldige cursief-tag corrigeren</FixInvalidItalicTag>
@@ -618,7 +639,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <DescriptionLine1>Download Tesseract OCR-woordenboeken</DescriptionLine1>
     <DownloadFailed>Download mislukt!</DownloadFailed>
     <GetDictionariesHere>Haal woordenboeken hier:</GetDictionariesHere>
-    <ChooseLanguageAndClickDownload>Kies uw taal en klik Download</ChooseLanguageAndClickDownload>
+    <ChooseLanguageAndClickDownload>Kies uw taal en klik op Download</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Open woordenboekenmap</OpenDictionariesFolder>
     <Download>Download</Download>
     <XDownloaded>{0} is gedownload en geïnstalleerd</XDownloaded>
@@ -649,7 +670,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Afbeeldingen importeren</Title>
     <ImageFiles>Beeldbestanden</ImageFiles>
     <Input>Invoer</Input>
-    <InputDescription>Kies invoer bestanden (blader of sleep-en-plaats)</InputDescription>
+    <InputDescription>Kies invoerbestanden (blader of sleep-en-plaats)</InputDescription>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Scènewisselingen importeren</Title>
@@ -670,7 +691,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Splitting>Opdelen</Splitting>
     <AutoSplitText>Tekst automatisch opdelen</AutoSplitText>
     <OneLineIsOneSubtitle>Eén ondertitel per regel</OneLineIsOneSubtitle>
-    <LineBreak>Regeleinde</LineBreak>
+    <LineBreak>Regelafbreking</LineBreak>
     <SplitAtBlankLines>Op lege regels afbreken</SplitAtBlankLines>
     <MergeShortLines>Voortgezette korte regels samenvoegen</MergeShortLines>
     <RemoveEmptyLines>Lege regels verwĳderen</RemoveEmptyLines>
@@ -696,6 +717,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Bestandsnaam</FileName>
     <Join>Samenvoegen</Join>
     <TotalNumberOfLinesX>Totaal aantal regels: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Opmerking: de tĳdcodes in de bestanden moeten al juist zĳn</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -1005,7 +1027,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveSubtitleAs>Ondertitel opslaan als...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Originele ondertitel opslaan als...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>Geen ondertitel geladen</NoSubtitleLoaded>
-    <VisualSyncSelectedLines>Visuele sync – tekstselectie</VisualSyncSelectedLines>
+    <VisualSyncSelectedLines>Visuele sync - tekstselectie</VisualSyncSelectedLines>
     <VisualSyncTitle>Visuele synchronisatie</VisualSyncTitle>
     <BeforeVisualSync>Vóór visuele sync</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visuele sync uitgevoerd op tekstselectie</VisualSyncPerformedOnSelectedLines>
@@ -1136,6 +1158,7 @@ Verder gaan?</SubtitleAppendPrompt>
     <MatroskaFiles>Matroska-bestanden</MatroskaFiles>
     <NoSubtitlesFound>Geen ondertitels gevonden</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Dit is geen geldig Matroska-bestand: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Geen ondertitels gevonden in dit blu-ray sup-bestand. U kunt proberen opnieuw te demultiplexen.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Matroska-bestand analyseren. Even geduld a.u.b.</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Transportstroom analyseren. Even geduld a.u.b.</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Vóór ondertitelimport uit Matroska-bestand</BeforeImportFromMatroskaFile>
@@ -1183,8 +1206,8 @@ Verder gaan?</SubtitleAppendPrompt>
     <NameXNotAddedToNamesEtcList>De naam '{0}' is NIET toegevoegd aan de naamlĳst</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>Het woord '{0}' is toegevoegd aan het woordenboek</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Het woord '{0}' is NIET toegevoegd aan het woordenboek</WordXNotAddedToUserDic>
-    <OcrReplacePairXAdded>Paar '{0} -&gt; {1}' is toegevoegd aan de OCR-correctielĳst</OcrReplacePairXAdded>
-    <OcrReplacePairXNotAdded>Paar '{0} -&gt; {1}' is NIET toegevoegd aan de OCR-correctielĳst</OcrReplacePairXNotAdded>
+    <OcrReplacePairXAdded>Woordpaar '{0} -&gt; {1}' is toegevoegd aan de OCR-correctielĳst</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>Woordpaar '{0} -&gt; {1}' is NIET toegevoegd aan de OCR-correctielĳst</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} teksten geselecteerd</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Ondertitel bevat Unicode muzieknootsymbolen. Bĳ opslaan in ANSI-codering gaan deze verloren. Toch opslaan?</UnicodeMusicSymbolsAnsiWarning>
     <UnicodeCharactersAnsiWarning>Ondertitel bevat Unicode tekens. Bĳ opslaan in ANSI-codering gaan deze verloren. Toch opslaan?</UnicodeCharactersAnsiWarning>
@@ -1227,9 +1250,9 @@ Verder gaan?</SubtitleAppendPrompt>
     <ExportPlainTextAs>Platte tekst exporteren als</ExportPlainTextAs>
     <TextFiles>Tekstbestanden</TextFiles>
     <SubtitleExported>Ondertitel geëxporteerd</SubtitleExported>
-    <LineNumberXErrorReadingFromSourceLineY>Regel {0} - Fout bĳ het lezen: {1}</LineNumberXErrorReadingFromSourceLineY>
+    <LineNumberXErrorReadingFromSourceLineY>Regel {0} - fout bĳ het lezen: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Regel {0} - fout bĳ lezen tĳdcode: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
-    <LineNumberXExpectedNumberFromSourceLineY>Regel {0} - verwachte ondertitel nummer: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>Regel {0} - verwachtte ondertitel nummer: {1}</LineNumberXExpectedNumberFromSourceLineY>
     <BeforeGuessingTimeCodes>Vóór schatten van tĳdcodes</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Vóór auto-weergavetĳd voor selectie</BeforeAutoDuration>
     <BeforeColumnPaste>Vóór invoegen kolom</BeforeColumnPaste>
@@ -1252,9 +1275,14 @@ Verder gaan?</SubtitleAppendPrompt>
     <ErrorLoadIdx>Subtitle Edit kan idx-bestanden niet lezen. Die maken deel uit van een sub/idx bestandspaar (ook wel VobSub genoemd). Subtitle Edit kan het sub-bestand openen.</ErrorLoadIdx>
     <ErrorLoadRar>Dit is een rar-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadRar>
     <ErrorLoadZip>Dit is een zip-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadZip>
-    <ErrorLoadPng>Dit is een png-afbeeldingsbestand. Subtitle Edit kan png-bestanden niet openen.</ErrorLoadPng>
+    <ErrorLoadPng>Dit is een png-beeldbestand. Subtitle Edit kan png-bestanden niet openen.</ErrorLoadPng>
+    <ErrorLoadJpg>Dit is een jpeg-beeldbestand. Subtitle Edit kan jpeg-bestanden niet openen.</ErrorLoadJpg>
     <ErrorLoadSrr>Dit is een ReScene srr-bestand, géén ondertitelbestand.</ErrorLoadSrr>
     <ErrorLoadTorrent>Dit is een BitTorrent bestand, géén ondertitelbestand.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Dit bestand bevat uitsluitend nul-bytes.
+
+Indien u dit bestand met Subtitle Edit bewerkt hebt, kunt u een vorige versie vinden onder menu "Bestand -&gt; Back-up herstellen..."</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>U kunt hier geen map slepen en plaatsen.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Versleutelde VobSub-bestanden worden niet ondersteund.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>U kunt hier geen blu-ray sup-bestand opgeven.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>U kunt hier geen dvd sup-bestand opgeven.</NoSupportHereDvdSup>
@@ -1264,7 +1292,7 @@ Verder gaan?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Ondertitel uit Matroska-bestand kiezen</Title>
     <PleaseChoose>Meer dan één ondertitel gevonden - kies a.u.b.</PleaseChoose>
-    <TrackXLanguageYTypeZ>Spoor {0} - {1} - taal: {2} - type: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Spoor {0} - taal: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Maateenheden omrekenen</Title>
@@ -1311,7 +1339,7 @@ Verder gaan?</SubtitleAppendPrompt>
     <AddToCurrentSelection>Met huidige selectie verenigen</AddToCurrentSelection>
     <SubtractFromCurrentSelection>Van huidige selectie aftrekken</SubtractFromCurrentSelection>
     <IntersectWithCurrentSelection>Met huidige selectie doorsnĳden</IntersectWithCurrentSelection>
-    <MatchingLinesX>Overeenkomende regels: {0}</MatchingLinesX>
+    <MatchingLinesX>Overeenkomende teksten: {0}</MatchingLinesX>
     <Contains>Bevat</Contains>
     <StartsWith>Begint met</StartsWith>
     <EndsWith>Eindigt met</EndsWith>
@@ -1338,7 +1366,7 @@ Verder gaan?</SubtitleAppendPrompt>
     <Export>Exporteren...</Export>
     <ImportRulesTitle>Importeer vervangingsregel(s) van...</ImportRulesTitle>
     <ExportRulesTitle>Exporteer vervangingsregel(s) naar...</ExportRulesTitle>
-    <Rules>Exportregels</Rules>
+    <Rules>Tekstvervangingsregels</Rules>
     <MoveToTop>Naar begin</MoveToTop>
     <MoveToBottom>Naar einde</MoveToBottom>
   </MultipleReplace>
@@ -1398,8 +1426,10 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <NewLine>Regeleinde (\r\n)</NewLine>
     <NewLineShort>Regeleinde (\n)</NewLineShort>
     <AnyDigit>Elk cĳfer (\d)</AnyDigit>
+    <NonDigit>Geen cĳfer (\D)</NonDigit>
     <AnyCharacter>Elk teken (.)</AnyCharacter>
     <AnyWhitespace>Elke witruimte (\s)</AnyWhitespace>
+    <NonSpaceCharacter>Geen witruimte (\S)</NonSpaceCharacter>
     <ZeroOrMore>Nul of meer (*)</ZeroOrMore>
     <OneOrMore>Eén of meer (+)</OneOrMore>
     <InCharacterGroup>In tekengroep ([test])</InCharacterGroup>
@@ -1502,7 +1532,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <SubtitleBold>Vet</SubtitleBold>
     <SubtitleCenter>Midden</SubtitleCenter>
     <SubtitleFontColor>Ondertitel tekstkleur</SubtitleFontColor>
-    <SubtitleBackgroundColor>Ondertitel achtergrond kleur</SubtitleBackgroundColor>
+    <SubtitleBackgroundColor>Ondertitel achtergrondkleur</SubtitleBackgroundColor>
     <SpellChecker>Spellingcontrole</SpellChecker>
     <RememberRecentFiles>Onthoud recente bestanden (voor heropenen)</RememberRecentFiles>
     <StartWithLastFileLoaded>Begin met laatst geladen bestand</StartWithLastFileLoaded>
@@ -1608,9 +1638,9 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <LastMinusX>Laatste - {0}</LastMinusX>
     <FixCommonerrors>Fouten corrigeren</FixCommonerrors>
     <MergeLinesShorterThan>Voeg regels samen korter dan</MergeLinesShorterThan>
-    <MusicSymbol>Muzieksymbolen</MusicSymbol>
+    <MusicSymbol>Vervangend muzieksymbool</MusicSymbol>
     <MusicSymbolsToReplace>Te vervangen muzieksymbolen (gescheiden door spatie)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Gangbare OCR fouten corrigeren - ook hardgecodeerde regels</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonOcrErrorsUseHardcodedRules>Gangbare OCR-fouten corrigeren - ook hardgecodeerde regels</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Korte weergavetĳd corrigeren - sta verplaatsen starttĳd toe</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Sneltoetsen</Shortcuts>
     <Shortcut>Sneltoets</Shortcut>
@@ -1740,8 +1770,8 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <SkipAll>Alle &amp;overslaan</SkipAll>
     <AddToUserDictionary>Toevoegen aan gebruikerswoordenboek</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Toevoegen aan naam/ruis-lĳst (hoofdlettergevoelig)</AddToNamesAndIgnoreList>
-    <AddToOcrReplaceList>Paar toevoegen aan OCR-correctielĳst</AddToOcrReplaceList>
-    <Abort>Afbreken</Abort>
+    <AddToOcrReplaceList>Toevoegen aan OCR-correctielĳst</AddToOcrReplaceList>
+    <Abort>&amp;Afbreken</Abort>
     <Use>Hier gebruiken</Use>
     <UseAlways>Altĳd &amp;gebruiken</UseAlways>
     <Suggestions>Tips</Suggestions>
@@ -1832,6 +1862,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <CharactersPerSecondMinimum>Tekens/sec. - minimum: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Tekens/sec. - maximum: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Tekens/sec. - gemiddeld: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Exporteren...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced SubStation Alpha eigenschappen</Title>
@@ -1939,13 +1970,13 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <Tip>Tip: Gebruik &lt;ctrl+pĳl links/rechts&gt; om 100 msec. terug/verder te gaan</Tip>
   </VisualSync>
   <VobSubEditCharacters>
-    <Title>Bewerken beeld vergelĳken databank</Title>
+    <Title>Beeldvergelĳkingsdatabank bewerken</Title>
     <ChooseCharacter>Kies teken(s)</ChooseCharacter>
-    <ImageCompareFiles>Afbeeldingsbestanden vergelĳken</ImageCompareFiles>
+    <ImageCompareFiles>Beeldbestanden vergelĳken</ImageCompareFiles>
     <CurrentCompareImage>Huidig vergelĳk-beeld</CurrentCompareImage>
-    <TextAssociatedWithImage>Tekst geassocieerd met beeld</TextAssociatedWithImage>
+    <TextAssociatedWithImage>Met beeld geassocieerde tekst</TextAssociatedWithImage>
     <IsItalic>Is &amp;cursief</IsItalic>
-    <Update>&amp;Update</Update>
+    <Update>&amp;Bĳwerken</Update>
     <Delete>&amp;Verwĳder</Delete>
     <ImageDoubleSize>Dubbele beeldgrootte</ImageDoubleSize>
     <ImageFileNotFound>Beeldbestand niet gevonden</ImageFileNotFound>
@@ -1954,7 +1985,7 @@ Wĳzigingen behouden?</KeepChangesMessage>
   <VobSubOcr>
     <Title>Importeer/OCR VobSub (sub/idx) ondertitel</Title>
     <TitleBluRay>Importeer/OCR blu-ray (sup) ondertitel</TitleBluRay>
-    <OcrMethod>OCR methode</OcrMethod>
+    <OcrMethod>OCR-methode</OcrMethod>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (vereist Microsoft Office)</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
@@ -1989,7 +2020,7 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <GuessesUsed>Gebruikte schattingen</GuessesUsed>
     <UnknownWords>Onbekende woorden</UnknownWords>
     <OcrAutoCorrectionSpellChecking>OCR automatische correctie / spellingcontrole</OcrAutoCorrectionSpellChecking>
-    <FixOcrErrors>Herstel OCR fouten</FixOcrErrors>
+    <FixOcrErrors>Herstel OCR-fouten</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importeer tekst met bĳpassende tĳdcodes...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Importeer nieuwe tĳdcodes.</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Ondertitelbeeld opslaan als...</SaveSubtitleImageAs>
@@ -2006,6 +2037,8 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <InspectCompareMatchesForCurrentImage>Inspecteer vergelĳkingsovereenkomsten voor huidig beeld...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Bewerk laatste beeldvergelĳkingstoevoegingen...</EditLastAdditions>
     <SetUnitalicFactor>Decursiveringsfactor bepalen</SetUnitalicFactor>
+    <DiscardTitle>OCR wĳzigingen verwerpen?</DiscardTitle>
+    <DiscardText>Wilt u de wĳzigingen in deze OCR sessie verwerpen?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Handmatig beeld naar tekst</Title>

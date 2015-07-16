@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p2 in subtitle.Paragraphs)
                 p2.Text = WebUtility.HtmlDecode(p2.Text);
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

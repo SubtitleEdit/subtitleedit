@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -35,24 +34,11 @@ namespace Nikse.SubtitleEdit.Forms
             labelLineBreak.Text = Configuration.Settings.Language.ImportText.LineBreak;
             columnHeaderFName.Text = Configuration.Settings.Language.JoinSubtitles.FileName;
             columnHeaderSize.Text = Configuration.Settings.Language.General.Size;
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.LineBreak)) //TODO: Remove in 3.4
-            {
-                labelLineBreak.Visible = false;
-                comboBoxLineBreak.Visible = false;
-            }
             comboBoxLineBreak.Left = labelLineBreak.Left + labelLineBreak.Width + 3;
             comboBoxLineBreak.Width = groupBoxSplitting.Width - comboBoxLineBreak.Left - 5;
-
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.OpenTextFiles)) //TODO: Fix in 3.4
-            {
-                checkBoxMultipleFiles.Visible = false;
-            }
-            else
-            {
-                checkBoxMultipleFiles.AutoSize = true;
-                checkBoxMultipleFiles.Text = Configuration.Settings.Language.ImportText.OneSubtitleIsOneFile;
-                checkBoxMultipleFiles.Left = buttonOpenText.Left - checkBoxMultipleFiles.Width - 9;
-            }
+            checkBoxMultipleFiles.AutoSize = true;
+            checkBoxMultipleFiles.Left = buttonOpenText.Left - checkBoxMultipleFiles.Width - 9;
+            checkBoxMultipleFiles.Text = Configuration.Settings.Language.ImportText.OneSubtitleIsOneFile;
             listViewInputFiles.Visible = false;
 
             radioButtonSplitAtBlankLines.Text = Configuration.Settings.Language.ImportText.SplitAtBlankLines;
@@ -75,12 +61,6 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.InitializeSubtitleFont(SubtitleListview1);
             SubtitleListview1.AutoSizeAllColumns(this);
 
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.GenerateTimeCodes)) //TODO: Remove in SE 3.4
-            {
-                checkBoxGenerateTimeCodes.Checked = true;
-                checkBoxGenerateTimeCodes.Visible = false;
-            }
-
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.ImportTextSplitting))
                 radioButtonAutoSplit.Checked = true;
             else if (Configuration.Settings.Tools.ImportTextSplitting.Equals("blank lines", StringComparison.OrdinalIgnoreCase))
@@ -91,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxLineBreak.Text = Configuration.Settings.Tools.ImportTextLineBreak;
 
             numericUpDownDurationFixed.Enabled = radioButtonDurationFixed.Checked;
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
             _refreshTimer.Interval = 400;
             _refreshTimer.Tick += RefreshTimerTick;
         }
@@ -100,17 +80,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _refreshTimer.Stop();
             GeneratePreviewReal();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void ButtonOpenTextClick(object sender, EventArgs e)
@@ -178,7 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxMergeShortLines.Checked)
                 MergeLinesWithContinuation();
 
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
             if (checkBoxGenerateTimeCodes.Checked)
             {
                 FixDurations();
@@ -357,7 +326,6 @@ namespace Nikse.SubtitleEdit.Forms
             var sb = new StringBuilder();
             foreach (string line in lines)
             {
-
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     if (sb.Length > 0)
@@ -781,7 +749,6 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxText.Visible = true;
                 buttonOpenText.Text = Configuration.Settings.Language.ImportText.OpenTextFile;
                 groupBoxSplitting.Enabled = true;
-
             }
             GeneratePreview();
         }

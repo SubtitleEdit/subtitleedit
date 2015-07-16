@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class F4Text : SubtitleFormat
     {
-        private static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d-\d$", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d-\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -42,14 +42,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public static string ToF4Text(Subtitle subtitle)
         {
             var sb = new StringBuilder();
-            double lastEndTimeMilliseconds = -1;
+            //double lastEndTimeMilliseconds = -1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 // if (p.StartTime.TotalMilliseconds == lastEndTimeMilliseconds)
-                sb.AppendFormat("{0}{1}", HtmlUtil.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime));
+                sb.AppendFormat("{0}{1}", HtmlUtil.RemoveHtmlTags(p.Text, true), EncodeTimeCode(p.EndTime));
                 //else
                 //    sb.Append(string.Format("{0}{1}{2}", EncodeTimeCode(p.StartTime), HtmlUtil.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime)));
-                lastEndTimeMilliseconds = p.EndTime.TotalMilliseconds;
+                //lastEndTimeMilliseconds = p.EndTime.TotalMilliseconds;
             }
             return sb.ToString().Trim();
         }
@@ -92,8 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (currentText.Length > 0)
                         {
                             p.Text = currentText.ToString().Trim().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                            p.Text = p.Text.Trim('\n');
-                            p.Text = p.Text.Trim('\r');
+                            p.Text = p.Text.Trim('\n', '\r');
                             subtitle.Paragraphs.Add(p);
                             p = new Paragraph();
                         }
@@ -106,12 +105,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         p.EndTime = DecodeTimeCode(line.Split(new[] { ':', '-' }, StringSplitOptions.RemoveEmptyEntries));
                         p.Text = currentText.ToString().Trim().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                        p.Text = p.Text.Trim('\n');
-                        p.Text = p.Text.Trim('\r');
-                        p.Text = p.Text.Trim();
+                        p.Text = p.Text.Trim('\n', '\r').Trim();
                         subtitle.Paragraphs.Add(p);
                         p = null;
-                        currentText = new StringBuilder();
+                        currentText.Clear();
                     }
                 }
                 else
@@ -130,13 +127,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p = new Paragraph();
 
                 p.Text = currentText.ToString().Trim().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                p.Text = p.Text.Trim('\n');
-                p.Text = p.Text.Trim('\r');
-                p.Text = p.Text.Trim();
+                p.Text = p.Text.Trim('\n', '\r').Trim();
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 3000;
                 subtitle.Paragraphs.Add(p);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private TimeCode DecodeTimeCode(string[] parts)
@@ -144,16 +139,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var tc = new TimeCode(0, 0, 0, 0);
             try
             {
-                string hour = parts[0];
-                string minutes = parts[1];
-                string seconds = parts[2];
-                string millisecond = parts[3];
+                int hour = int.Parse(parts[0]);
+                int minutes = int.Parse(parts[1]);
+                int seconds = int.Parse(parts[2]);
+                int millisecond = int.Parse(parts[3]);
 
-                int milliseconds = (int)(int.Parse(millisecond) * 100.0);
+                int milliseconds = (int)(millisecond * 100.0);
                 if (milliseconds > 999)
                     milliseconds = 999;
 
-                tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
+                tc = new TimeCode(hour, minutes, seconds, milliseconds);
             }
             catch (Exception exception)
             {

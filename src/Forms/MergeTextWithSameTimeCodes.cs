@@ -17,17 +17,6 @@ namespace Nikse.SubtitleEdit.Forms
         private string _language;
         private Dictionary<int, bool> _isFixAllowedList = new Dictionary<int, bool>();
 
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
-        }
-
         public Subtitle MergedSubtitle
         {
             get { return _mergedSubtitle; }
@@ -39,7 +28,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             _previewTimer.Tick += previewTimer_Tick;
             _previewTimer.Interval = 250;
-            FixLargeFonts();
+
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         public void Initialize(Subtitle subtitle)
@@ -237,7 +227,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!_loading)
                 listViewFixes.ItemChecked += listViewFixes_ItemChecked;
 
-            mergedSubtitle.Renumber(1);
+            mergedSubtitle.Renumber();
             return mergedSubtitle;
         }
 

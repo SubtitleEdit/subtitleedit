@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             if (paragraph != null)
                 subtitle.Paragraphs.Add(paragraph);
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

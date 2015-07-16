@@ -133,7 +133,7 @@ ST 0 EB 3.10
                         p.Text = p.Text + Environment.NewLine + line;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string[] parts)

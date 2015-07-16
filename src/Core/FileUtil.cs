@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -130,6 +129,22 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static bool IsJpg(string fileName)
+        {
+            // jpeg header - always starts with FFD8 (Start Of Image marker) + FF + a uknown byte (most often E0 or E1 though)
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[3];
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                    return false;
+
+                return buffer[0] == 0xFF
+                    && buffer[1] == 0xD8
+                    && buffer[2] == 0xFF;
+            }
+        }
+
         public static bool IsTorrentFile(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -153,28 +168,15 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool IsTransportStream(string fileName)
         {
-            FileStream fs = null;
-            try
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 var buffer = new byte[3761];
                 var count = fs.Read(buffer, 0, buffer.Length);
                 if (count != buffer.Length)
                     return false;
-                return buffer[0] == 0x47 && buffer[188] == 0x47 // 47hex (71 dec or 'G') == TS sync byte
-                    || buffer[0] == 0x54 && buffer[1] == 0x46 && buffer[2] == 0x72 && buffer[3760] == 0x47; // Topfield REC TS file
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                return false;
-            }
-            finally
-            {
-                if (fs != null)
-                {
-                    fs.Close();
-                }
+
+                return (buffer[0] == 0x47 && buffer[188] == 0x47) || // 47hex (71 dec or 'G') == TS sync byte
+                       (buffer[0] == 0x54 && buffer[1] == 0x46 && buffer[2] == 0x72 && buffer[3760] == 0x47); // Topfield REC TS file
             }
         }
 
@@ -239,10 +241,8 @@ namespace Nikse.SubtitleEdit.Core
         /// <returns>true if file is an MXF file, otherwise false</returns>
         public static bool IsMaterialExchangeFormat(string fileName)
         {
-            FileStream fs = null;
-            try
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 var buffer = new byte[65536];
                 var count = fs.Read(buffer, 0, buffer.Length);
                 if (count < 100)
@@ -267,18 +267,6 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                return false;
-            }
-            finally
-            {
-                if (fs != null)
-                {
-                    fs.Close();
-                }
-            }
             return false;
         }
 
@@ -292,5 +280,42 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static bool IsSubtitleFileAllBinaryZeroes(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                if (fs.Length < 10)
+                    return false; // too short to be a proper subtitle file
+
+                int numberOfBytes = 1;
+                var buffer = new byte[1024];
+                while (numberOfBytes > 0)
+                {
+                    numberOfBytes = fs.Read(buffer, 0, buffer.Length);
+                    for (int i = 0; i < numberOfBytes; i++)
+                    {
+                        if (buffer[i] > 0)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        public static bool IsFile(string path)
+        {
+            if (!Path.IsPathRooted(path))
+                return false;
+            return ((File.GetAttributes(path) & FileAttributes.Directory) != FileAttributes.Directory);
+        }
+
+        public static bool IsDirectory(string path)
+        {
+            if (!Path.IsPathRooted(path))
+                return false;
+            return ((File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory);
+        }
     }
 }

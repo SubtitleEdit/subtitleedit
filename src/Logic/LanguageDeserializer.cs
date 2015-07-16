@@ -324,6 +324,18 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AddWaveform/ExtractingMinutes":
                     language.AddWaveform.ExtractingMinutes = reader.Value;
                     break;
+                case "AddWaveform/WaveFileNotFound":
+                    language.AddWaveform.WaveFileNotFound = reader.Value;
+                    break;
+                case "AddWaveform/WaveFileMalformed":
+                    language.AddWaveform.WaveFileMalformed = reader.Value;
+                    break;
+                case "AddWaveform/LowDiskSpace":
+                    language.AddWaveform.LowDiskSpace = reader.Value;
+                    break;
+                case "AddWaveform/FreeDiskSpace":
+                    language.AddWaveform.FreeDiskSpace = reader.Value;
+                    break;
                 case "AddWaveformBatch/Title":
                     language.AddWaveformBatch.Title = reader.Value;
                     break;
@@ -335,6 +347,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "AddWaveformBatch/Done":
                     language.AddWaveformBatch.Done = reader.Value;
+                    break;
+                case "AddWaveformBatch/Error":
+                    language.AddWaveformBatch.Error = reader.Value;
                     break;
                 case "AdjustDisplayDuration/Title":
                     language.AdjustDisplayDuration.Title = reader.Value;
@@ -903,6 +918,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "EbuSaveOptions/CountryOfOrigin":
                     language.EbuSaveOptions.CountryOfOrigin = reader.Value;
                     break;
+                case "EbuSaveOptions/TimeCodeStatus":
+                    language.EbuSaveOptions.TimeCodeStatus = reader.Value;
+                    break;
+                case "EbuSaveOptions/TimeCodeStartOfProgramme":
+                    language.EbuSaveOptions.TimeCodeStartOfProgramme = reader.Value;
+                    break;
                 case "EbuSaveOptions/RevisionNumber":
                     language.EbuSaveOptions.RevisionNumber = reader.Value;
                     break;
@@ -1062,6 +1083,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ExportPngXml/ImageFormat":
                     language.ExportPngXml.ImageFormat = reader.Value;
                     break;
+                case "ExportPngXml/FullFrameImage":
+                    language.ExportPngXml.FullFrameImage = reader.Value;
+                    break;
                 case "ExportPngXml/SimpleRendering":
                     language.ExportPngXml.SimpleRendering = reader.Value;
                     break;
@@ -1119,6 +1143,18 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ExportPngXml/SaveDvdStudioProStlAs":
                     language.ExportPngXml.SaveDvdStudioProStlAs = reader.Value;
                     break;
+                case "ExportPngXml/SaveDigitalCinemaInteropAs":
+                    language.ExportPngXml.SaveDigitalCinemaInteropAs = reader.Value;
+                    break;
+                case "ExportPngXml/SavePremiereEdlAs":
+                    language.ExportPngXml.SavePremiereEdlAs = reader.Value;
+                    break;
+                case "ExportPngXml/SaveFcpAs":
+                    language.ExportPngXml.SaveFcpAs = reader.Value;
+                    break;
+                case "ExportPngXml/SaveDostAs":
+                    language.ExportPngXml.SaveDostAs = reader.Value;
+                    break;
                 case "ExportPngXml/SomeLinesWereTooLongX":
                     language.ExportPngXml.SomeLinesWereTooLongX = reader.Value;
                     break;
@@ -1133,6 +1169,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "ExportPngXml/Forced":
                     language.ExportPngXml.Forced = reader.Value;
+                    break;
+                case "ExportPngXml/ChooseBackgroundColor":
+                    language.ExportPngXml.ChooseBackgroundColor = reader.Value;
+                    break;
+                case "ExportPngXml/SaveImageAs":
+                    language.ExportPngXml.SaveImageAs = reader.Value;
                     break;
                 case "ExportText/Title":
                     language.ExportText.Title = reader.Value;
@@ -1833,6 +1875,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "JoinSubtitles/TotalNumberOfLinesX":
                     language.JoinSubtitles.TotalNumberOfLinesX = reader.Value;
                     break;
+                case "JoinSubtitles/Note":
+                    language.JoinSubtitles.Note = reader.Value;
+                    break;
                 case "Main/SaveChangesToUntitled":
                     language.Main.SaveChangesToUntitled = reader.Value;
                     break;
@@ -2223,6 +2268,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/NotAValidMatroskaFileX":
                     language.Main.NotAValidMatroskaFileX = reader.Value;
                     break;
+                case "Main/BlurayNotSubtitlesFound":
+                    language.Main.BlurayNotSubtitlesFound = reader.Value;
+                    break;
                 case "Main/ParsingMatroskaFile":
                     language.Main.ParsingMatroskaFile = reader.Value;
                     break;
@@ -2574,11 +2622,20 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/ErrorLoadPng":
                     language.Main.ErrorLoadPng = reader.Value;
                     break;
+                case "Main/ErrorLoadJpg":
+                    language.Main.ErrorLoadJpg = reader.Value;
+                    break;
                 case "Main/ErrorLoadSrr":
                     language.Main.ErrorLoadSrr = reader.Value;
                     break;
                 case "Main/ErrorLoadTorrent":
                     language.Main.ErrorLoadTorrent = reader.Value;
+                    break;
+                case "Main/ErrorLoadBinaryZeroes":
+                    language.Main.ErrorLoadBinaryZeroes = reader.Value;
+                    break;
+                case "Main/ErrorDirectoryDropNotAllowed":
+                    language.Main.ErrorDirectoryDropNotAllowed = reader.Value;
                     break;
                 case "Main/NoSupportEncryptedVobSub":
                     language.Main.NoSupportEncryptedVobSub = reader.Value;
@@ -3729,11 +3786,17 @@ namespace Nikse.SubtitleEdit.Logic
                 case "RegularExpressionContextMenu/AnyDigit":
                     language.RegularExpressionContextMenu.AnyDigit = reader.Value;
                     break;
+                case "RegularExpressionContextMenu/NonDigit":
+                    language.RegularExpressionContextMenu.NonDigit = reader.Value;
+                    break;
                 case "RegularExpressionContextMenu/AnyCharacter":
                     language.RegularExpressionContextMenu.AnyCharacter = reader.Value;
                     break;
                 case "RegularExpressionContextMenu/AnyWhitespace":
                     language.RegularExpressionContextMenu.AnyWhitespace = reader.Value;
+                    break;
+                case "RegularExpressionContextMenu/NonSpaceCharacter":
+                    language.RegularExpressionContextMenu.NonSpaceCharacter = reader.Value;
                     break;
                 case "RegularExpressionContextMenu/ZeroOrMore":
                     language.RegularExpressionContextMenu.ZeroOrMore = reader.Value;
@@ -4935,6 +4998,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Statistics/CharactersPerSecondAverage":
                     language.Statistics.CharactersPerSecondAverage = reader.Value;
                     break;
+                case "Statistics/Export":
+                    language.Statistics.Export = reader.Value;
+                    break;
                 case "SubStationAlphaProperties/Title":
                     language.SubStationAlphaProperties.Title = reader.Value;
                     break;
@@ -5402,6 +5468,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "VobSubOcr/SetUnitalicFactor":
                     language.VobSubOcr.SetUnitalicFactor = reader.Value;
+                    break;
+                case "VobSubOcr/DiscardTitle":
+                    language.VobSubOcr.DiscardTitle = reader.Value;
+                    break;
+                case "VobSubOcr/DiscardText":
+                    language.VobSubOcr.DiscardText = reader.Value;
                     break;
                 case "VobSubOcrCharacter/Title":
                     language.VobSubOcrCharacter.Title = reader.Value;

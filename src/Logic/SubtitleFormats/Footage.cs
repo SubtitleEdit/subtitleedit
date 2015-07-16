@@ -36,6 +36,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            var asc = new TimeLineFootageAscii();
+            if (fileName != null && asc.IsMine(null, fileName))
+                return false;
+
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
@@ -144,7 +148,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (paragraph != null && !string.IsNullOrEmpty(paragraph.Text))
                 subtitle.Paragraphs.Add(paragraph);
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static string EncodeTimeCode(TimeCode time)
@@ -157,9 +161,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string[] parts)
         {
-            string frames16 = parts[0];
-            string frames = parts[1];
-            return new TimeCode(0, 0, 0, FramesToMilliseconds(16 * int.Parse(frames16) + int.Parse(frames)));
+            int frames16 = int.Parse(parts[0]);
+            int frames = int.Parse(parts[1]);
+            return new TimeCode(0, 0, 0, FramesToMilliseconds(16 * frames16 + frames));
         }
 
     }

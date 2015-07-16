@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string ToTimeCode(double totalMilliseconds)
         {
-            TimeSpan ts = TimeSpan.FromMilliseconds(totalMilliseconds);
+            var ts = TimeSpan.FromMilliseconds(totalMilliseconds);
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
         }
 
@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static double ParseTimeCode(string start)

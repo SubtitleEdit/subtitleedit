@@ -62,9 +62,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".cap"; }
         }
 
+        public const string NameOfFormat = "Cheetah Caption";
+
         public override string Name
         {
-            get { return "Cheetah Caption"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -346,7 +348,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (last != null && last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

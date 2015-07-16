@@ -17,9 +17,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".ssa"; }
         }
 
+        public const string NameOfFormat = "Sub Station Alpha";
+
         public override string Name
         {
-            get { return "Sub Station Alpha"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -110,11 +112,13 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 string actor = "NTP";
                 if (!string.IsNullOrEmpty(p.Actor))
                     actor = p.Actor;
-                string effect = "!Effect";
+                string effect = "";
                 if (!string.IsNullOrEmpty(p.Effect))
                     effect = p.Effect;
                 if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
                     style = p.Extra;
+                if (style == "Default")
+                    style = "*Default";
                 if (p.IsComment)
                     sb.AppendLine(string.Format(commentWriteFormat, start, end, AdvancedSubStationAlpha.FormatText(p), style, p.Layer, actor, effect));
                 else
@@ -418,7 +422,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             }
             if (header.Length > 0)
                 subtitle.Header = header.ToString();
-            subtitle.Renumber(1);
+            subtitle.Renumber();
             Errors = errors.ToString();
         }
 
@@ -434,7 +438,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            if (newFormat != null && newFormat.Name == new AdvancedSubStationAlpha().Name)
+            if (newFormat != null && newFormat.Name == AdvancedSubStationAlpha.NameOfFormat)
             {
                 // do we need any conversion?
             }

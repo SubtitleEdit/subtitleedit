@@ -109,6 +109,7 @@
     <Word from="accldent" to="accident" />
     <Word from="Acool" to="A cool" />
     <Word from="afier" to="after" />
+    <Word from="affraid" to="afraid" />
     <Word from="Afriend" to="A friend" />
     <Word from="afterall" to="after all" />
     <Word from="afterthe" to="after the" />
@@ -172,6 +173,7 @@
     <Word from="bcmb" to="bomb" />
     <Word from="bcmbs" to="bombs" />
     <Word from="be//y" to="belly" />
+    <Word from="becuase" to="because" />
     <Word from="Beep/'ng" to="Beeping" />
     <Word from="bejumpy" to="be jumpy" />
     <Word from="besldes" to="besides" />
@@ -239,6 +241,7 @@
     <Word from="chjldishness" to="childishness" />
     <Word from="chlldrcn" to="children" />
     <Word from="chlldren" to="children" />
+    <Word from="chocolatte" to="chocolate" />
     <Word from="Cho/r" to="Choir" />
     <Word from="cHucKl_Es" to="CHUCKLES" />
     <Word from="CIark" to="Clark" />
@@ -380,6 +383,7 @@
     <Word from="ExacUy_" to="Exactly." />
     <Word from="excitedshrieking" to="excited shrieking" />
     <Word from="ExcLAllvls" to="EXCLAIMS" />
+    <Word from="exploatation" to="exploitation" />
     <Word from="expreusion" to="expression" />
     <Word from="fairthat" to="fair that" />
     <Word from="Fathef" to="Father" />
@@ -907,6 +911,7 @@
     <Word from="mejust" to="me just" />
     <Word from="Mexioo" to="Mexico" />
     <Word from="mi//&lt;" to="milk" />
+    <Word from="mischevious" to="mischievous" />
     <Word from="misfartune" to="misfortune" />
     <Word from="Ml6" to="MI6" />
     <Word from="Mlnd" to="Mind" />
@@ -1104,6 +1109,8 @@
     <Word from="Polynes/ans" to="Polynesians" />
     <Word from="poorshowing" to="poor showing" />
     <Word from="popsicle" to="Popsicle" />
+    <Word from="perscribed" to="prescribed" />
+    <Word from="perscription" to="prescription" />
     <Word from="Presidenfs" to="President's" />
     <Word from="probablyjust" to="probably just" />
     <Word from="pshyco" to="psycho" />
@@ -1193,11 +1200,14 @@
     <Word from="Smiih" to="Smith" />
     <Word from="so/id" to="solid" />
     <Word from="SoBl3lNG" to="SOBBING" />
+    <Word from="soemtimes" to="sometimes" />
     <Word from="Sojust" to="So just" />
     <Word from="soldierl" to="soldier!" />
-    <Word from="somethlng" to="somethlng" />
+    <Word from="somethlng" to="something" />
     <Word from="somethlng's" to="something's" />
     <Word from="somez'/7/ng" to="something" />
+    <Word from="somthing" to="something" />
+    <Word from="sumthing" to="something" />
     <Word from="sou/" to="soul" />
     <Word from="SoundofMusic" to="Sound of Music" />
     <Word from="SP/ash" to="Splash" />
@@ -1361,6 +1371,7 @@
     <Word from="ve/y" to="very" />
     <Word from="veiy" to="very" />
     <Word from="Véry" to="Very" />
+    <Word from="versioin" to="version" />
     <Word from="vi/ay" to="way" />
     <Word from="visitjails" to="visit jails" />
     <Word from="Viva/di's" to="Vivaldi's" />
@@ -1691,10 +1702,8 @@
     <Word from="Superrich" to="Super rich" />
     <Word from="Iprefer" to="I prefer" />
     <Word from="Theymust" to="They must" />
-    <Word from="can'tpronounce" to="can't pronounce" />
     <Word from="whatyou" to="what you" />
     <Word from="I'IIjump" to="I'll jump" />
-    <Word from="can'tpronounce" to="can't pronounce" />
     <Word from="nobodyknow" to="nobody know" />
     <Word from="neverknew" to="never knew" />
     <Word from="EIectronica" to="Electronica" />
@@ -1793,13 +1802,10 @@
     <WordPart from="lVI" to="M" />
     <WordPart from="IVl" to="M" />
     <WordPart from="lVl" to="M" />
-    <WordPart from="IVl" to="M" />
-    <WordPart from="I\/I" to="M" />
     <WordPart from="I\/I" to="M" />
     <WordPart from="l\/I" to="M" />
     <WordPart from="I\/l" to="M" />
     <WordPart from="l\/l" to="M" />
-    <WordPart from="I\/l" to="M" />
     <WordPart from="IVIa" to="Ma" />
     <WordPart from="IVIe" to="Me" />
     <WordPart from="IVIi" to="Mi" />
@@ -2094,7 +2100,6 @@
     <Beginning from="Lt'll" to="It'll" />
     <Beginning from="IVIa" to="Ma" />
     <Beginning from="IVIu" to="Mu" />
-    <Beginning from="lt'll" to="It'll" />
     <Beginning from="0ne" to="One" />
     <Beginning from="0nly" to="Only" />
     <Beginning from="0n " to="On " />
@@ -2102,9 +2107,6 @@
     <Beginning from="Lt " to="It " />
     <Beginning from="lt's " to="It's " />
     <Beginning from="Lt's " to="It's " />
-    <Beginning from="lt " to="It " />
-    <Beginning from="lt " to="It " />
-    <Beginning from="lt's " to="It's " />
     <Beginning from="ln " to="In " />
     <Beginning from="Ln " to="In " />
     <Beginning from="l-in " to="I-in " />
@@ -2154,9 +2156,7 @@
     <Beginning from="&lt;i&gt;NARRA TOR" to="&lt;i&gt;NARRATOR" />
     <Beginning from="lt'syour" to="It's your" />
     <Beginning from="It'syour" to="It's your" />
-    <Beginning from="Lt " to="It " />
     <Beginning from="Ls " to="Is " />
-    <Beginning from="Lt's " to="It's " />
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
@@ -2170,7 +2170,6 @@
     <!-- Whole lines - including -" etc -->
     <Line from="H ey." to="Hey." />
     <Line from="He)’-" to="Hey." />
-    <Line from="N0." to="No." />
     <Line from="N0." to="No." />
     <Line from="-N0." to="-No." />
     <Line from="Noll" to="No!!" />
@@ -2187,6 +2186,6 @@
     <Line from="ISIGHS]" to="[SIGHS]" />
   </WholeLines>
   <RegularExpressions>
-    <!--    <RegEx find="\bi\b" replaceWith="I" /> just an example - do not use this regex -->
+    <!-- <RegEx find="\bi\b" replaceWith="I" /> just an example - do not use this regex -->
   </RegularExpressions>
 </OCRFixReplaceList>

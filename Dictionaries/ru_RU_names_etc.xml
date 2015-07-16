@@ -1,4 +1,5 @@
-﻿<ignore_list>
+﻿<!-- This list contains names/words with specific casing - and specific to Russian only -->
+<ignore_list>
   <name>Абакум</name>
   <name>Абакумович</name>
   <name>Абакумовна</name>
@@ -151,6 +152,9 @@
   <name>Акинфовна</name>
   <name>Акинфьевич</name>
   <name>Акинфьевна</name>
+  <name>Аксён</name>
+  <name>Аксёнович</name>
+  <name>Аксёновна</name>
   <name>Аксентиевич</name>
   <name>Аксентиевна</name>
   <name>Аксентий</name>
@@ -158,9 +162,6 @@
   <name>Аксентьевна</name>
   <name>Аксиния</name>
   <name>Аксинья</name>
-  <name>Аксён</name>
-  <name>Аксёнович</name>
-  <name>Аксёновна</name>
   <name>Акулина</name>
   <name>Алевтина</name>
   <name>Александр</name>
@@ -175,6 +176,7 @@
   <name>Алексиевна</name>
   <name>Алексий</name>
   <name>Алексина</name>
+  <name>Алёна</name>
   <name>Алина</name>
   <name>Алиса</name>
   <name>Алла</name>
@@ -190,7 +192,6 @@
   <name>Альфред</name>
   <name>Альфредович</name>
   <name>Альфредовна</name>
-  <name>Алёна</name>
   <name>Амалия</name>
   <name>Амата</name>
   <name>Амвросиевич</name>
@@ -310,10 +311,7 @@
   <name>Антропьевич</name>
   <name>Антропьевна</name>
   <name>Ануфриевич</name>
-  <name>Ануфриевич</name>
   <name>Ануфриевна</name>
-  <name>Ануфриевна</name>
-  <name>Ануфрий</name>
   <name>Ануфрий</name>
   <name>Анфима</name>
   <name>Анфиса</name>
@@ -391,19 +389,19 @@
   <name>Артамон</name>
   <name>Артамонович</name>
   <name>Артамоновна</name>
+  <name>Артём</name>
   <name>Артемида</name>
   <name>Артемиевич</name>
   <name>Артемиевна</name>
   <name>Артемий</name>
   <name>Артемия</name>
+  <name>Артёмович</name>
+  <name>Артёмовна</name>
   <name>Артемьевич</name>
   <name>Артемьевна</name>
   <name>Артур</name>
   <name>Артурович</name>
   <name>Артуровна</name>
-  <name>Артём</name>
-  <name>Артёмович</name>
-  <name>Артёмовна</name>
   <name>Архип</name>
   <name>Архипович</name>
   <name>Архиповна</name>
@@ -537,6 +535,7 @@
   <name>Варфоломеевич</name>
   <name>Варфоломеевна</name>
   <name>Варфоломей</name>
+  <name>Васёна</name>
   <name>Василида</name>
   <name>Василий</name>
   <name>Василина</name>
@@ -549,7 +548,6 @@
   <name>Вассиан</name>
   <name>Вассианович</name>
   <name>Вассиановна</name>
-  <name>Васёна</name>
   <name>Вацлава</name>
   <name>Вевея</name>
   <name>Велизар</name>
@@ -721,7 +719,6 @@
   <name>Галактионовна</name>
   <name>Галата</name>
   <name>Галатея</name>
-  <name>Гали</name>
   <name>Гали</name>
   <name>Галина</name>
   <name>Галла</name>
@@ -1184,8 +1181,8 @@
   <name>Изида</name>
   <name>Измаил</name>
   <name>Измаилович</name>
-  <name>Измаиловна</name>
   <name>Измайлович</name>
+  <name>Измаиловна</name>
   <name>Измайловна</name>
   <name>Изольда</name>
   <name>Изосим</name>
@@ -1596,8 +1593,8 @@
   <name>Магна</name>
   <name>Маевич</name>
   <name>Маевна</name>
-  <name>Маина</name>
   <name>Май</name>
+  <name>Маина</name>
   <name>Майя</name>
   <name>Макар</name>
   <name>Макариевич</name>
@@ -1655,7 +1652,6 @@
   <name>Мариан</name>
   <name>Мариана</name>
   <name>Марианна</name>
-  <name>Марианна</name>
   <name>Марианович</name>
   <name>Мариановна</name>
   <name>Мариетта</name>
@@ -1664,7 +1660,6 @@
   <name>Маринович</name>
   <name>Мариновна</name>
   <name>Марионилла</name>
-  <name>Мария</name>
   <name>Мария</name>
   <name>Марк</name>
   <name>Марка</name>
@@ -1708,16 +1703,14 @@
   <name>Мартьяновна</name>
   <name>Марфа</name>
   <name>Марья</name>
-  <name>Марья</name>
-  <name>Марьяна</name>
   <name>Марьяна</name>
   <name>Мастридия</name>
   <name>Матвеевич</name>
   <name>Матвеевна</name>
   <name>Матвей</name>
   <name>Матильда</name>
-  <name>Матрона</name>
   <name>Матрёна</name>
+  <name>Матрона</name>
   <name>Мая</name>
   <name>Медея</name>
   <name>Мелания</name>
@@ -1768,7 +1761,6 @@
   <name>Милия</name>
   <name>Милослава</name>
   <name>Милютина</name>
-  <name>Мина</name>
   <name>Мина</name>
   <name>Минаевич</name>
   <name>Минаевна</name>
@@ -1924,19 +1916,13 @@
   <name>Ольга</name>
   <name>Ольда</name>
   <name>Онисим</name>
-  <name>Онисим</name>
   <name>Онисимович</name>
-  <name>Онисимович</name>
-  <name>Онисимовна</name>
   <name>Онисимовна</name>
   <name>Онисифор</name>
   <name>Онисифорович</name>
   <name>Онисифоровна</name>
   <name>Онуфриевич</name>
-  <name>Онуфриевич</name>
   <name>Онуфриевна</name>
-  <name>Онуфриевна</name>
-  <name>Онуфрий</name>
   <name>Онуфрий</name>
   <name>Орест</name>
   <name>Орестович</name>
@@ -2006,14 +1992,17 @@
   <name>Парамоновна</name>
   <name>Параскева</name>
   <name>Пармен</name>
-  <name>Парменович</name>
-  <name>Парменовна</name>
   <name>Пармён</name>
+  <name>Парменович</name>
   <name>Пармёнович</name>
+  <name>Парменовна</name>
   <name>Пармёновна</name>
+  <name>Парфён</name>
   <name>Парфениевич</name>
   <name>Парфениевна</name>
   <name>Парфений</name>
+  <name>Парфёнович</name>
+  <name>Парфёновна</name>
   <name>Парфентиевич</name>
   <name>Парфентиевна</name>
   <name>Парфентий</name>
@@ -2021,9 +2010,6 @@
   <name>Парфентьевна</name>
   <name>Парфеньевич</name>
   <name>Парфеньевна</name>
-  <name>Парфён</name>
-  <name>Парфёнович</name>
-  <name>Парфёновна</name>
   <name>Патрикеевич</name>
   <name>Патрикеевна</name>
   <name>Патрикей</name>
@@ -2052,6 +2038,7 @@
   <name>Перфилий</name>
   <name>Перфильевич</name>
   <name>Перфильевна</name>
+  <name>Пётр</name>
   <name>Петра</name>
   <name>Петрина</name>
   <name>Петрович</name>
@@ -2143,7 +2130,6 @@
   <name>Прохоровна</name>
   <name>Пульхерия</name>
   <name>Пульхерья</name>
-  <name>Пётр</name>
   <name>Рада</name>
   <name>Радана</name>
   <name>Радиевич</name>
@@ -2246,10 +2232,13 @@
   <name>Савватьевна</name>
   <name>Саввич</name>
   <name>Саввична</name>
+  <name>Савёл</name>
   <name>Савелиевич</name>
   <name>Савелиевна</name>
   <name>Савелий</name>
   <name>Савелла</name>
+  <name>Савёлович</name>
+  <name>Савёловна</name>
   <name>Савельевич</name>
   <name>Савельевна</name>
   <name>Савериевич</name>
@@ -2264,9 +2253,6 @@
   <name>Савиниановна</name>
   <name>Савинович</name>
   <name>Савиновна</name>
-  <name>Савёл</name>
-  <name>Савёлович</name>
-  <name>Савёловна</name>
   <name>Сакердон</name>
   <name>Сакердонович</name>
   <name>Сакердоновна</name>
@@ -2338,12 +2324,12 @@
   <name>Селифан</name>
   <name>Селифанович</name>
   <name>Селифановна</name>
-  <name>Семион</name>
-  <name>Семионович</name>
-  <name>Семионовна</name>
   <name>Семён</name>
   <name>Семёнович</name>
   <name>Семёновна</name>
+  <name>Семион</name>
+  <name>Семионович</name>
+  <name>Семионовна</name>
   <name>Серапион</name>
   <name>Серапионович</name>
   <name>Серапионовна</name>
@@ -2593,7 +2579,10 @@
   <name>Феврония</name>
   <name>Февронья</name>
   <name>Федоза</name>
+  <name>Фёдор</name>
   <name>Федора</name>
+  <name>Фёдорович</name>
+  <name>Фёдоровна</name>
   <name>Федос</name>
   <name>Федосеевич</name>
   <name>Федосеевна</name>
@@ -2621,6 +2610,7 @@
   <name>Федула</name>
   <name>Федулович</name>
   <name>Федуловна</name>
+  <name>Фёкла</name>
   <name>Фекуса</name>
   <name>Феликс</name>
   <name>Феликса</name>
@@ -2711,6 +2701,7 @@
   <name>Флегонт</name>
   <name>Флегонтович</name>
   <name>Флегонтовна</name>
+  <name>Флёна</name>
   <name>Флора</name>
   <name>Флорентиевич</name>
   <name>Флорентиевна</name>
@@ -2727,7 +2718,6 @@
   <name>Флорианович</name>
   <name>Флориановна</name>
   <name>Флорида</name>
-  <name>Флёна</name>
   <name>Фока</name>
   <name>Фокич</name>
   <name>Фокична</name>
@@ -2756,10 +2746,6 @@
   <name>Фрол</name>
   <name>Фролович</name>
   <name>Фроловна</name>
-  <name>Фёдор</name>
-  <name>Фёдорович</name>
-  <name>Фёдоровна</name>
-  <name>Фёкла</name>
   <name>Хаврония</name>
   <name>Хариесса</name>
   <name>Хариса</name>
@@ -2824,8 +2810,6 @@
   <name>Эмилия</name>
   <name>Эмиль</name>
   <name>Эмильевич</name>
-  <name>Эмильевич</name>
-  <name>Эмильевна</name>
   <name>Эмильевна</name>
   <name>Эмма</name>
   <name>Эммануил</name>

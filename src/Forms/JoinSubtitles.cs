@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -8,11 +7,11 @@ using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class JoinSubtitles : PositionAndSizeForm
+    public sealed partial class JoinSubtitles : PositionAndSizeForm
     {
         private List<string> _fileNamesToJoin = new List<string>();
         public Subtitle JoinedSubtitle { get; set; }
-        public Logic.SubtitleFormats.SubtitleFormat JoinedFormat { get; private set; }
+        public SubtitleFormat JoinedFormat { get; private set; }
 
         public JoinSubtitles()
         {
@@ -30,22 +29,11 @@ namespace Nikse.SubtitleEdit.Forms
             buttonClear.Text = Configuration.Settings.Language.DvdSubRip.Clear;
 
             Text = Configuration.Settings.Language.JoinSubtitles.Title;
+            labelNote.Text = Configuration.Settings.Language.JoinSubtitles.Note;
             groupBoxPreview.Text = Configuration.Settings.Language.JoinSubtitles.Information;
             buttonJoin.Text = Configuration.Settings.Language.JoinSubtitles.Join;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonCancel.Text, Font);
-            if (textSize.Height > buttonCancel.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonCancel);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -72,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewParts_DragDrop(object sender, DragEventArgs e)
         {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (string fileName in files)
             {
                 bool alreadyInList = false;
@@ -89,16 +77,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SortAndLoad()
         {
-            JoinedFormat = new Logic.SubtitleFormats.SubRip(); // default subtitle format
+            JoinedFormat = new SubRip(); // default subtitle format
             string header = null;
             SubtitleFormat lastFormat = null;
-            List<Subtitle> subtitles = new List<Subtitle>();
+            var subtitles = new List<Subtitle>();
             for (int k = 0; k < _fileNamesToJoin.Count; k++)
             {
                 string fileName = _fileNamesToJoin[k];
                 try
                 {
-                    Subtitle sub = new Subtitle();
+                    var sub = new Subtitle();
                     Encoding encoding;
                     var format = sub.LoadSubtitle(fileName, out encoding, null);
                     if (format == null)
@@ -108,16 +96,13 @@ namespace Nikse.SubtitleEdit.Forms
                         MessageBox.Show("Unkown subtitle format: " + fileName);
                         return;
                     }
-                    else
-                    {
-                        if (sub.Header != null)
-                            header = sub.Header;
+                    if (sub.Header != null)
+                        header = sub.Header;
 
-                        if (lastFormat == null || lastFormat.FriendlyName == format.FriendlyName)
-                            lastFormat = format;
-                        else
-                            lastFormat = new Logic.SubtitleFormats.SubRip(); // default subtitle format
-                    }
+                    if (lastFormat == null || lastFormat.FriendlyName == format.FriendlyName)
+                        lastFormat = format;
+                    else
+                        lastFormat = new SubRip(); // default subtitle format
                     subtitles.Add(sub);
                 }
                 catch (Exception exception)
@@ -149,12 +134,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            listViewParts.BeginUpdate();
             listViewParts.Items.Clear();
             int i = 0;
             foreach (string fileName in _fileNamesToJoin)
             {
                 Subtitle sub = subtitles[i];
-                ListViewItem lvi = new ListViewItem(string.Format("{0:#,###,###}", sub.Paragraphs.Count));
+                var lvi = new ListViewItem(string.Format("{0:#,###,###}", sub.Paragraphs.Count));
                 if (sub.Paragraphs.Count > 0)
                 {
                     lvi.SubItems.Add(sub.Paragraphs[0].StartTime.ToString());
@@ -169,9 +155,10 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewParts.Items.Add(lvi);
                 i++;
             }
+            listViewParts.EndUpdate();
 
             JoinedSubtitle = new Subtitle();
-            if (JoinedFormat.FriendlyName != new SubRip().FriendlyName)
+            if (JoinedFormat.FriendlyName != SubRip.NameOfFormat)
                 JoinedSubtitle.Header = header;
             foreach (Subtitle sub in subtitles)
             {
@@ -180,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
                     JoinedSubtitle.Paragraphs.Add(p);
                 }
             }
-            JoinedSubtitle.Renumber(1);
+            JoinedSubtitle.Renumber();
             labelTotalLines.Text = string.Format(Configuration.Settings.Language.JoinSubtitles.TotalNumberOfLinesX, JoinedSubtitle.Paragraphs.Count);
         }
 
@@ -214,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonRemoveVob_Click(object sender, EventArgs e)
         {
-            List<int> indices = new List<int>();
+            var indices = new List<int>();
             foreach (int index in listViewParts.SelectedIndices)
                 indices.Add(index);
             indices.Reverse();
@@ -225,7 +212,6 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonClear_Click(null, null);
             else
                 SortAndLoad();
-
         }
 
         private void buttonClear_Click(object sender, EventArgs e)

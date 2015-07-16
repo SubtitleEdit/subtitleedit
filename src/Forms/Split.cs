@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -48,18 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSubtitleFormats.Left = labelOutputFormat.Left + labelOutputFormat.Width + 3;
             comboBoxEncoding.Left = labelEncoding.Left + labelEncoding.Width + 3;
 
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonSplit.Text, this.Font);
-            if (textSize.Height > buttonSplit.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonSplit);
         }
 
         public void Initialize(Subtitle subtitle, string fileName, SubtitleFormat format)
@@ -142,7 +130,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int partSize = (int)(_subtitle.Paragraphs.Count / numericUpDownParts.Value);
                 for (int i = 0; i < numericUpDownParts.Value; i++)
                 {
-                    int noOfLines = (int)partSize;
+                    int noOfLines = partSize;
                     if (i == numericUpDownParts.Value - 1)
                         noOfLines = (int)(_subtitle.Paragraphs.Count - ((numericUpDownParts.Value - 1) * partSize));
 

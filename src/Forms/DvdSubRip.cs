@@ -62,18 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 radioButtonPal.Checked = true;
 
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonAddVobFile.Text, Font);
-            if (textSize.Height > buttonAddVobFile.Height - 4)
-            {
-                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonAddVobFile);
         }
 
         private void ButtonOpenIfoClick(object sender, EventArgs e)
@@ -177,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
                     RipSubtitles(vobFileName, ms, i - 1); // Rip/demux subtitle vob packs
             }
             progressBarRip.Visible = false;
-            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
+            TaskbarList.SetProgressState(_taskbarFormHandle, TaskbarButtonProgressFlags.NoProgress);
             buttonStartRipping.Enabled = false;
             if (_abort)
             {

@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
@@ -44,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxDictionaries.Items.Clear();
                 XmlDocument doc = new XmlDocument();
-                var rdr = new StreamReader(strm);
+                using (var rdr = new StreamReader(strm))
                 using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
                 {
                     byte[] data = new byte[275000];
@@ -54,7 +53,6 @@ namespace Nikse.SubtitleEdit.Forms
                     string s = System.Text.Encoding.UTF8.GetString(data2).Trim();
                     doc.LoadXml(s);
                 }
-                rdr.Close();
 
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
                 {
@@ -85,14 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (labelDescription1.Left + labelDescription1.Width + 5 > Width)
                 Width = labelDescription1.Left + labelDescription1.Width + 5;
-
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         private void FormGetDictionaries_KeyDown(object sender, KeyEventArgs e)
@@ -175,32 +166,32 @@ namespace Nikse.SubtitleEdit.Forms
 
             int index = comboBoxDictionaries.SelectedIndex;
 
-            var ms = new MemoryStream(e.Result);
-
-            ZipExtractor zip = ZipExtractor.Open(ms);
-            List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
-
-            // Extract dic/aff files in dictionary folder
-            bool found = false;
-            ExtractDic(dictionaryFolder, zip, dir, ref found);
-
-            if (!found) // check zip inside zip
+            using (var ms = new MemoryStream(e.Result))
+            using (ZipExtractor zip = ZipExtractor.Open(ms))
             {
-                foreach (ZipExtractor.ZipFileEntry entry in dir)
+                List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
+                // Extract dic/aff files in dictionary folder
+                bool found = false;
+                ExtractDic(dictionaryFolder, zip, dir, ref found);
+
+                if (!found) // check zip inside zip
                 {
-                    if (entry.FilenameInZip.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                    foreach (ZipExtractor.ZipFileEntry entry in dir)
                     {
-                        var innerMs = new MemoryStream();
-                        zip.ExtractFile(entry, innerMs);
-                        ZipExtractor innerZip = ZipExtractor.Open(innerMs);
-                        List<ZipExtractor.ZipFileEntry> innerDir = innerZip.ReadCentralDir();
-                        ExtractDic(dictionaryFolder, innerZip, innerDir, ref found);
-                        innerZip.Close();
+                        if (entry.FilenameInZip.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                        {
+                            using (var innerMs = new MemoryStream())
+                            {
+                                zip.ExtractFile(entry, innerMs);
+                                ZipExtractor innerZip = ZipExtractor.Open(innerMs);
+                                List<ZipExtractor.ZipFileEntry> innerDir = innerZip.ReadCentralDir();
+                                ExtractDic(dictionaryFolder, innerZip, innerDir, ref found);
+                            }
+                        }
                     }
                 }
             }
 
-            zip.Close();
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;
@@ -218,15 +209,15 @@ namespace Nikse.SubtitleEdit.Forms
                     string fileName = Path.GetFileName(entry.FilenameInZip);
 
                     // French fix
-                    if (fileName.StartsWith("fr-moderne"))
+                    if (fileName.StartsWith("fr-moderne", StringComparison.Ordinal))
                         fileName = fileName.Replace("fr-moderne", "fr_FR");
 
                     // German fix
-                    if (fileName.StartsWith("de_DE_frami"))
+                    if (fileName.StartsWith("de_DE_frami", StringComparison.Ordinal))
                         fileName = fileName.Replace("de_DE_frami", "de_DE");
 
                     // Russian fix
-                    if (fileName.StartsWith("russian-aot"))
+                    if (fileName.StartsWith("russian-aot", StringComparison.Ordinal))
                         fileName = fileName.Replace("russian-aot", "ru_RU");
 
                     string path = Path.Combine(dictionaryFolder, fileName);

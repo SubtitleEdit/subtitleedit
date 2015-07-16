@@ -13,9 +13,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".spt"; }
         }
 
+        public const string NameOfFormat = "spt";
+
         public override string Name
         {
-            get { return "spt"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -119,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (p != null)
                     subtitle.Paragraphs.Add(p);
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private Paragraph GetSptParagraph(ref int index, byte[] buffer)

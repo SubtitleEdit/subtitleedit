@@ -76,9 +76,8 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
                     numericUpDownTopBottomMargin.Value = ss.DCinemaBottomMargin;
                 else
                     numericUpDownTopBottomMargin.Value = 8;
-
             }
-            FixLargeFonts(buttonCancel);
+            Utilities.FixLargeFonts(this, buttonCancel);
         }
 
         private void buttonFontColor_Click(object sender, EventArgs e)
@@ -101,8 +100,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
 
         private void buttonGenerateID_Click(object sender, EventArgs e)
         {
-            string hex = Guid.NewGuid().ToString().Replace("-", string.Empty);
-            textBoxSubtitleID.Text = "urn:uuid:" + hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+            textBoxSubtitleID.Text = GenerateID();
         }
 
         private void buttonToday_Click(object sender, EventArgs e)
@@ -142,13 +140,18 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string hex = Guid.NewGuid().ToString().Replace("-", string.Empty);
-            textBoxFontUri.Text = "urn:uuid:" + hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+            textBoxFontUri.Text = GenerateID();
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private string GenerateID()
+        {
+            var hex = Guid.NewGuid().ToString().Replace("-", string.Empty);
+            return "urn:uuid:" + hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Enums;
@@ -26,24 +25,13 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonAllLines.Text = Configuration.Settings.Language.ShowEarlierLater.AllLines;
             radioButtonSelectedLinesOnly.Text = Configuration.Settings.Language.ShowEarlierLater.SelectedLinesOnly;
             radioButtonSelectedLineAndForward.Text = Configuration.Settings.Language.ShowEarlierLater.SelectedLinesAndForward;
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonShowEarlier);
         }
 
         public void ResetTotalAdjustment()
         {
             _totalAdjustment = TimeSpan.FromMilliseconds(0);
             labelTotalAdjustment.Text = string.Empty;
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonShowEarlier.Text, this.Font);
-            if (textSize.Height > buttonShowEarlier.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void ShowEarlierLater_KeyDown(object sender, KeyEventArgs e)
@@ -87,11 +75,9 @@ namespace Nikse.SubtitleEdit.Forms
             TimeCode tc = timeUpDownAdjust.TimeCode;
             if (tc != null && tc.TotalMilliseconds > 0)
             {
-
                 _adjustCallback.Invoke(-tc.TotalMilliseconds, GetSelectionChoice());
                 _totalAdjustment = TimeSpan.FromMilliseconds(_totalAdjustment.TotalMilliseconds - tc.TotalMilliseconds);
                 ShowTotalAdjustMent();
-                Configuration.Settings.General.DefaultAdjustMilliseconds = (int)tc.TotalMilliseconds;
             }
         }
 
@@ -99,6 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             TimeCode tc = new TimeCode(_totalAdjustment);
             labelTotalAdjustment.Text = string.Format(Configuration.Settings.Language.ShowEarlierLater.TotalAdjustmentX, tc.ToShortString());
+            Configuration.Settings.General.DefaultAdjustMilliseconds = (int)tc.TotalMilliseconds;
         }
 
         private void ButtonShowLaterClick(object sender, EventArgs e)
@@ -109,7 +96,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _adjustCallback.Invoke(tc.TotalMilliseconds, GetSelectionChoice());
                 _totalAdjustment = TimeSpan.FromMilliseconds(_totalAdjustment.TotalMilliseconds + tc.TotalMilliseconds);
                 ShowTotalAdjustMent();
-                Configuration.Settings.General.DefaultAdjustMilliseconds = (int)tc.TotalMilliseconds;
             }
         }
 

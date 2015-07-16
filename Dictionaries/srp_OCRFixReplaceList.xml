@@ -1,0 +1,236 @@
+﻿<!-- Credit goes to: MilanRS [http://www.prijevodi-online.org] -->
+<OCRFixReplaceList>
+  <WholeWords>
+    <Word from="ču" to="ću" />
+    <Word from="češ" to="ćeš" />
+    <Word from="če" to="će" />
+    <Word from="čemo" to="ćemo" />
+    <Word from="čete" to="čete" />
+    <Word from="djete" to="dijete" />
+    <Word from="Hey" to="Hej" />
+    <Word from="hey" to="hej" />
+    <Word from="htjeo" to="htio" />
+    <Word from="Hočeš" to="Hoćeš" />
+    <Word from="hočeš" to="hoćeš" />
+    <Word from="iči" to="ići" />
+    <Word from="jel" to="je l'" />
+    <Word from="Jel" to="Je l'" />
+    <Word from="moguče" to="moguće" />
+    <Word from="nedaj" to="ne daj" />
+    <Word from="nečemo" to="nećemo" />
+    <Word from="nečete" to="nećete" />
+    <Word from="odkad" to="otkad" />
+    <Word from="Odkad" to="Otkad" />
+    <Word from="odkako" to="otkako" />
+    <Word from="Odkako" to="Otkako" />
+    <Word from="Rješit" to="Riješit" />
+    <Word from="smjeo" to="smio" />
+    <Word from="uopče" to="uopće" />
+    <Word from="valda" to="valjda" />
+    <Word from="želila" to="željela" />
+  </WholeWords>
+  <PartialWordsAlways />
+  <PartialWords>
+    <WordPart from="¤" to="o" />
+    <WordPart from="vv" to="w" />
+    <WordPart from="IVI" to="M" />
+    <WordPart from="lVI" to="M" />
+    <WordPart from="IVl" to="M" />
+    <WordPart from="lVl" to="M" />
+  </PartialWords>
+  <PartialLines>
+    <LinePart from="bi smo" to="bismo" />
+    <LinePart from="dali je" to="da li je" />
+    <LinePart from="dali si" to="da li si" />
+    <LinePart from="Dali si" to="Da li si" />
+    <LinePart from="Jel sam ti" to="Jesam li ti" />
+    <LinePart from="Jel si" to="Jesi li" />
+    <LinePart from="Jel' si" to="Jesi li" />
+    <LinePart from="Je I'" to="Jesi li" />
+    <LinePart from="Jel si to" to="Jesi li to" />
+    <LinePart from="Jel' si to" to="Da li si to" />
+    <LinePart from="jel si to" to="da li si to" />
+    <LinePart from="jel' si to" to="jesi li to" />
+    <LinePart from="Jel si ti" to="Da li si ti" />
+    <LinePart from="Jel' si ti" to="Da li si ti" />
+    <LinePart from="jel si ti" to="da li si ti" />
+    <LinePart from="jel' si ti" to="da li si ti" />
+    <LinePart from="jel ste " to="jeste li " />
+    <LinePart from="Jel ste" to="Jeste li" />
+    <LinePart from="jel' ste " to="jeste li " />
+    <LinePart from="Jel' ste " to="Jeste li " />
+    <LinePart from="Jel su " to="Jesu li " />
+    <LinePart from="Jel da " to="Zar ne" />
+    <LinePart from="jel da " to="zar ne" />
+    <LinePart from="jel'da " to="zar ne" />
+    <LinePart from="Jeli sve " to="Je li sve" />
+    <LinePart from="Jeli on " to="Je li on" />
+    <LinePart from="Jeli ti " to="Je li ti" />
+    <LinePart from="jeli ti " to="je li ti" />
+    <LinePart from="Jeli to " to="Je li to" />
+    <LinePart from="Nebrini" to="Ne brini" />
+    <LinePart from="nedaj" to="ne daj" />
+    <LinePart from="ne ću" to="neću" />
+    <LinePart from="Nemogu" to="Ne mogu" />
+    <LinePart from="ne mogu" to="ne mogu" />
+    <LinePart from="Nemoraš" to="Ne moraš" />
+    <LinePart from="od kako" to="otkako" />
+    <LinePart from="Si dobro" to="Jesi li dobro" />
+    <LinePart from="Svo vreme" to="Sve vrijeme" />
+    <LinePart from="Svo vrijeme" to="Sve vrijeme" />
+    <LinePart from="Cijelo vrijeme" to="Sve vrijeme" />
+  </PartialLines>
+  <PartialLinesAlways />
+  <BeginLines />
+  <EndLines />
+  <WholeLines />
+  <RegularExpressions>
+    <RegEx find="ajsmiješnij" replaceWith="ajsmješnij" />
+    <RegEx find=" g-dine\.$" replaceWith=" gospodine." />
+    <RegEx find=" g-dine +(?=[A-ZČĐŠŽ])" replaceWith=" g. " />
+    <RegEx find="([gG])dine? +(?=[A-ZČĐŠŽ])" replaceWith="$1. " />
+    <RegEx find="([gG])-đo +(?=[A-ZČĐŠŽ])" replaceWith="$1gđo " />
+    <RegEx find="gdina +(?=[A-ZČĐŠŽ])" replaceWith="g. " />
+    <RegEx find=" gosp +" replaceWith=" g. " />
+    <RegEx find="Jel si sigur" replaceWith="Jesi li sigur" />
+    <RegEx find="Jel' si sigur" replaceWith="Jesi li sigur" />
+    <RegEx find="\b([jJ])jel\?" replaceWith="$1e l'?" />
+    <RegEx find="\bJel'" replaceWith="Je l'" />
+    <RegEx find="([kK]alib(?:ar|r[aeui]))\. *([0-9])" replaceWith="$1 .$2" />
+    <RegEx find="([mM])jenjati" replaceWith="$1ijenjati" />
+    <RegEx find="\b([nN])ebih?" replaceWith="$1e bi" />
+    <RegEx find="\b([nN])eč[ueš]\b" replaceWith="$1eć" />
+    <RegEx find="\b([nN])emože(mo|š)?\b" replaceWith="$1e može$2" />
+    <RegEx find="\b([nN])ezna(m|š|mo|te|ju)?\b" replaceWith="$1e zna$2" />
+    <RegEx find="najcijenjen" replaceWith="najcjenjen" />
+    <RegEx find="N[jJ]u Jork" replaceWith="Njujork" />
+    <RegEx find="(o|OP)ružij[aeu]" replaceWith="$1ružj" />
+    <RegEx find="([oO])sječa" replaceWith="$1sjeća" />
+    <RegEx find="([pPdD])onje[lt]" replaceWith="$1onije" />
+    <RegEx find="([pP])objedi[mšto]" replaceWith="$1obijedi" />
+    <RegEx find="([pP])redamnom" replaceWith="$1reda mnom" />
+    <RegEx find="([pP])redpostav" replaceWith="$1retpostav" />
+    <RegEx find="([pP])rimjeti" replaceWith="$1rimijeti" />
+    <RegEx find="([pP])romjeni[mštol]" replaceWith="$1romijeni" />
+    <RegEx find="([rR])azumijeć" replaceWith="$1azumjeć" />
+    <RegEx find="rascjepljen" replaceWith="rascijepljen" />
+    <RegEx find="redhodn" replaceWith="rethodn" />
+    <RegEx find="rimjenjen" replaceWith="rimijenjen" />
+    <RegEx find="([^d])rješit" replaceWith="$1riješit" />
+    <RegEx find="([sSzZ])amnom" replaceWith="$1a mnom" />
+    <RegEx find="sledeče" replaceWith="sledeće" />
+    <RegEx find="([sS])lijedeć[aeu]" replaceWith="$1ljedeć" />
+    <RegEx find="([sS])mješno" replaceWith="$1miješno" />
+    <RegEx find="([uU])mijesto" replaceWith="$1mjesto" />
+    <RegEx find="([uU])spijeh" replaceWith="$1spjeh" />
+    <RegEx find="([uU])spiješan" replaceWith="$1spješan" />
+    <RegEx find="([uU])spiješn[ao]" replaceWith="$1spješan" />
+    <RegEx find="([uU])vjek" replaceWith="$1vijek" />
+    <RegEx find="\b([vV])eč[aeiou]" replaceWith="$1eć" />
+    <RegEx find="([zZ])ahtijeva" replaceWith="$1ahtjeva" />
+    <RegEx find="([zZ])ahtjeva[ojlmšt]" replaceWith="$1ahtijeva" />
+    <RegEx find="([ks]ao)\.:" replaceWith="$1:" />
+    <RegEx find="(?&lt;=[a-zčđšž])Ij(?=[a-zčđšž])" replaceWith="lj" />
+    <RegEx find="(?&lt;=[^A-ZČĐŠŽa-zčđšž])Iju(?=bav|d|t)" replaceWith="lju" />
+    <!-- kad ima razmak izmedju tagova </i> <i> -->
+    <!-- <RegEx find="(&gt;) +(&lt;)" replaceWith="$1$2" /> -->
+    <!-- ',"' to '",' -->
+    <RegEx find="(?&lt;=\w),&quot;(?=\s|$)" replaceWith="&quot;," />
+    <RegEx find=",\.{3}|\.{3},|\.{2} \." replaceWith="..." />
+    <!-- "1 :", "2 :"... "n :" to "n:" -->
+    <RegEx find="([0-9]) +: +(\D)" replaceWith="$1: $2" />
+    <!-- Two or more consecutive "," to "..." -->
+    <RegEx find=",{2,}" replaceWith="..." />
+    <!-- Two or more consecutive "-" to "..." -->
+    <RegEx find="-{2,}" replaceWith="..." />
+    <RegEx find="([^().])\.{2}([^().:])" replaceWith="$1...$2" />
+    <!-- separator stotica i decimalnog ostatka 1,499,000.00 -> 1.499.000,00 -->
+    <RegEx find="([0-9]{3})\.([0-9]{2}[^0-9])" replaceWith="$1,$2" />
+    <RegEx find="([0-9]),([0-9]{3}\D)" replaceWith="$1.$2" />
+    <!-- Apostrophes -->
+    <RegEx find="´´" replaceWith="&quot;" />
+    <!-- <RegEx find="[´`]" replaceWith="'" /> -->
+    <!-- <RegEx find="[“”]" replaceWith="&quot;" /> -->
+    <RegEx find="''" replaceWith="&quot;" />
+    <!-- Two or more consecutive '"' to one '"' -->
+    <RegEx find="&quot;{2,}" replaceWith="&quot;" />
+    <!-- Fix zero and capital 'o' ripping mistakes -->
+    <RegEx find="(?&lt;=[0-9]\.?)O" replaceWith="0" />
+    <RegEx find="\b0(?=[A-ZČĐŠŽa-zčđšž])" replaceWith="O" />
+    <!-- Brisanje crte - na početku 1. reda (i kada ima dva reda) -->
+    <RegEx find="\A- ?([A-ZČĐŠŽa-zčđšž0-9„'&quot;]|\.{3})" replaceWith="$1" />
+    <RegEx find="\A(&lt;[ibu]&gt;)- ?" replaceWith="$1" />
+    <RegEx find="  - " replaceWith=" -" />
+    <!-- Brisanje razmaka iza crte - na početku 2. reda -->
+    <RegEx find="(?&lt;=\n(&lt;[ibu]&gt;)?)- (?=[A-ZČĐŠŽčš0-9„'&quot;&lt;])" replaceWith="-" />
+    <!-- Korigovanje crte - kad je u sredini prvog reda -->
+    <RegEx find="([.!?&quot;&gt;]) - ([A-ZČĐŠŽčš'&quot;&lt;])" replaceWith="$1 -$2" />
+    <!-- Zatvoren tag pa razmak poslije crtice -->
+    <RegEx find="(&gt;) - ([A-ZČĐŠŽčš„'&quot;])" replaceWith="$1 -$2" />
+    <!-- Zatvoren tag pa crtica razmak -->
+    <RegEx find="(&gt;)- ([A-ZČĐŠŽčš„'&quot;])" replaceWith="$1-$2" />
+    <!-- Zagrada pa crtica razmak -->
+    <RegEx find="\(- ([A-ZČĐŠŽčš„'&quot;])" replaceWith="(-$1" />
+    <!-- Smart space after dot -->
+    <!-- osim kad je zadnje t (rijec kolt) -->
+    <RegEx find="(?&lt;=[a-su-zá-úñä-ü])\.(?=[^\s\n().:?!*^“”'&quot;&lt;])" replaceWith=". " />
+    <!-- Oznaka za kalibar. Npr. "Colt .45" -->
+    <!-- Da bi radilo, da bi ovaj razmak bio dozvoljen, u SW idite Alt+I i odcekirajte "Razmaci ispred tacke" -->
+    <RegEx find="t\.(?=[0-9]{2})" replaceWith="t ." />
+    <!-- Joey(j)a -->
+    <RegEx find="(?&lt;=\b[A-Z][a-z])eyj(?=[a-z])" replaceWith="ey" />
+    <!-- Sređuje zarez sa razmakom -->
+    <RegEx find="(?&lt;=[A-ZČĐŠŽa-zčđšžá-úñä-ü&quot;]),(?=[^\s(),?!“&lt;])" replaceWith=", " />
+    <RegEx find=" +,(?=[A-ZČĐŠŽa-zčđšž])" replaceWith=", " />
+    <RegEx find=" +, +" replaceWith=", " />
+    <RegEx find=" +,$" replaceWith="," />
+    <RegEx find="([?!])-" replaceWith="$1 -" />
+    <!-- Space after last of some consecutive dots (eg. "...") -->
+    <RegEx find="(?&lt;=[a-zčđšž])(\.{3}|!)(?=[a-zčđšž])" replaceWith="$1 " />
+    <!-- Delete space after "..." that is at the beginning of the line. You may delete this line if you don't like it -->
+    <!-- <RegEx find="^\.{3} +" replaceWith="..." /> -->
+    <!-- "tekst ... tekst" mijenja u "tekst... tekst" -->
+    <RegEx find="(?&lt;=[A-ZČĐŠŽa-zčđšž]) +\.{3} +" replaceWith="... " />
+    <RegEx find="(?&lt;=\S)\. +&quot;" replaceWith=".&quot;" />
+    <RegEx find="&quot; +\." replaceWith="&quot;." />
+    <RegEx find="(?&lt;=\S\.{3}) +&quot;(?=\s|$)" replaceWith="&quot;" />
+    <RegEx find=" +\.{3}$" replaceWith="..." />
+    <RegEx find="(?&lt;=[a-zčđšž])(?: +\.{3}|\.{2}$)" replaceWith="..." />
+    <!-- Razmak ispred zagrade -->
+    <RegEx find="(?&lt;=[A-ZČĐŠŽa-zčđšž])\(" replaceWith=" (" />
+    <!-- Razmak iza upitnika -->
+    <RegEx find="\?(?=[A-ZČĐŠŽčš])" replaceWith="? " />
+    <RegEx find="(?&lt;=^|&gt;)\.{3} +(?=[A-ZČĐŠŽčš])" replaceWith="..." />
+    <!-- Brise ... kad je na poc. reda "... -->
+    <RegEx find="^&quot;\.{3} +" replaceWith="&quot;" />
+    <RegEx find="(?&lt;=[0-9])\$" replaceWith=" $$" />
+    <!-- ti š -> t š by Strider -->
+    <!-- Zamijeni sva "**ti šu*" s "**t šu*" i "**ti še*" s "**t še*" -->
+    <!-- <RegEx find="([a-z])ti (š+[eu])" replaceWith="$1t $2" /> -->
+    <!-- <RegEx find="([A-Za-z])ti( |\r?\n)(š[eu])" replaceWith="$1t$2$3" /> -->
+    <!-- <RegEx find="(?i)\b(ni)t (š[eu])" replaceWith="$1ti $2" /> -->
+    <!-- <RegEx find="\. +Mr. " replaceWith=". G. " /> -->
+    <!-- <RegEx find="\. +Mrs. " replaceWith=". Gđa " /> -->
+    <!-- <RegEx find="\. +Miss " replaceWith=". Gđica " /> -->
+    <!-- <RegEx find=", +Mrs. " replaceWith=", gđo " /> -->
+    <!-- <RegEx find=", +Miss " replaceWith=", gđice " /> -->
+    <!-- Razmak poslije <i> i poslije .. -->
+    <RegEx find="^(&lt;[ibu]&gt;) +" replaceWith="$1" />
+    <RegEx find="^\.{2} +" replaceWith="..." />
+    <!-- Razmak ? "</i> -->
+    <RegEx find="([.?!]) +(&quot;&lt;)" replaceWith="$1$2" />
+    <!-- Bez razmaka kod Npr.: -->
+    <RegEx find="(?&lt;=[Nn]pr\.) *: *" replaceWith=": " />
+    <RegEx find="\. ," replaceWith=".," />
+    <RegEx find="([?!])\." replaceWith="$1" />
+    <!-- Da ne kvari potpise sa ..:: -->
+    <RegEx find="\.{3}::" replaceWith="..::" />
+    <RegEx find="::\.{3}" replaceWith="::.." />
+    <RegEx find="\.{2} +::" replaceWith="..::" />
+    <!-- Skracenice bez razmaka -->
+    <RegEx find="d\. o\.o\." replaceWith="d.o.o." />
+    <!-- Kad red počinje sa ...pa malo slovo -->
+    <!-- <RegEx find="^\.{3}([a-zčđšž&quot;&lt;])" replaceWith="$1" /> -->
+    <!-- <RegEx find=" +([.?!])" replaceWith="$1" /> -->
+  </RegularExpressions>
+</OCRFixReplaceList>

@@ -291,6 +291,9 @@ namespace Nikse.SubtitleEdit.Forms
         private int _tesseractAsyncIndex;
         private BackgroundWorker _tesseractThread;
 
+        private DateTime _windowStartTime = DateTime.Now;
+        private int _linesOcred = 0;
+
         public static void SetDoubleBuffered(Control c)
         {
             //Taxes: Remote Desktop Connection and painting http://blogs.msdn.com/oldnewthing/archive/2006/01/03/508694.aspx
@@ -451,7 +454,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownPixelsIsSpace.Left = labelNoOfPixelsIsSpace.Left + labelNoOfPixelsIsSpace.Width + 3;
             checkBoxRightToLeft.Left = numericUpDownPixelsIsSpace.Left;
 
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonCancel);
             buttonEditCharacterDatabase.Top = buttonNewCharacterDatabase.Top + buttonNewCharacterDatabase.Height + 3;
 
             splitContainerBottom.Panel1MinSize = 400;
@@ -486,17 +489,6 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxDictionaries.Items.Add(name);
             }
             comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonCancel.Text, Font);
-            if (textSize.Height > buttonCancel.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings)
@@ -1076,7 +1068,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs.Add(p);
                 }
             }
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
 
             FixShortDisplayTimes(_subtitle);
 
@@ -1115,7 +1107,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs.Add(p);
                 }
             }
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
 
             FixShortDisplayTimes(_subtitle);
 
@@ -1157,7 +1149,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs.Add(p);
                 }
             }
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
 
             FixShortDisplayTimes(_subtitle);
 
@@ -1286,6 +1278,19 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (string fn in fileNames)
                     {
                         string fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), fn);
+                        if (!File.Exists(fullFileName))
+                        {
+                            // fix AVISubDetector lines
+                            int idxOfIEquals = fn.IndexOf("i=", StringComparison.OrdinalIgnoreCase);
+                            if (idxOfIEquals >= 0)
+                            {
+                                int idxOfSpace = fn.IndexOf(' ', idxOfIEquals);
+                                if (idxOfSpace > 0)
+                                {
+                                    fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), fn.Remove(0, idxOfSpace).Trim());
+                                }
+                            }
+                        }
                         if (File.Exists(fullFileName))
                         {
                             try
@@ -2075,7 +2080,6 @@ namespace Nikse.SubtitleEdit.Forms
                             return oc;
                     }
                 }
-
             }
 
             if (tryItalicScaling)
@@ -2625,7 +2629,6 @@ namespace Nikse.SubtitleEdit.Forms
                             return oc;
                     }
                 }
-
             }
 
             if (tryItalicScaling)
@@ -2681,7 +2684,6 @@ namespace Nikse.SubtitleEdit.Forms
                 //          return c;
                 //      }
                 //  }
-
             }
 
             return null;
@@ -3821,7 +3823,6 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (index + 1 < list.Count && list[index + 1].NikseBitmap != null) // only allow expand to EndOfLine or space
                         {
-
                             index++;
                             expandSelectionList.Add(list[index]);
                         }
@@ -3859,7 +3860,6 @@ namespace Nikse.SubtitleEdit.Forms
                             matches.Add(new CompareMatch("*", false, 0, null));
                         }
                         _italicCheckedLast = _vobSubOcrCharacter.IsItalic;
-
                     }
                     else if (item.NikseBitmap == null)
                     {
@@ -3922,7 +3922,7 @@ namespace Nikse.SubtitleEdit.Forms
                 line = threadText;
             }
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
-                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
+                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: Add abbreviations list
 
             if (checkBoxRightToLeft.Checked)
                 line = ReverseNumberStrings(line);
@@ -4117,7 +4117,7 @@ namespace Nikse.SubtitleEdit.Forms
             line = GetStringWithItalicTags(matches);
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
-                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
+                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: Add abbreviations list
 
             if (checkBoxRightToLeft.Checked)
                 line = ReverseNumberStrings(line);
@@ -4194,7 +4194,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SaveNOcr()
         {
-
             try
             {
                 _nOcrDb.Save();
@@ -4323,7 +4322,6 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (index + 1 < list.Count && list[index + 1].NikseBitmap != null) // only allow expand to EndOfLine or space
                         {
-
                             index++;
                             expandSelectionList.Add(list[index]);
                         }
@@ -4370,7 +4368,6 @@ namespace Nikse.SubtitleEdit.Forms
                             matches.Add(new CompareMatch("*", false, 0, null));
                         }
                         _italicCheckedLast = _vobSubOcrNOcrCharacter.IsItalic;
-
                     }
                     else if (item.NikseBitmap == null)
                     {
@@ -4616,7 +4613,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
-                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
+                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: Add abbreviations list
 
             if (checkBoxRightToLeft.Checked)
                 line = ReverseNumberStrings(line);
@@ -4961,6 +4958,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
+            _linesOcred = 0; // don't ask about discard changes
             if (_dvbSubtitles != null && checkBoxTransportStreamGetColorAndSplit.Checked)
                 MergeDvbForEachSubImage();
 
@@ -5112,7 +5110,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             bitmap.Dispose();
             p.Result = GetStringWithItalicTags(matches);
-
         }
 
         private void ImageCompareThreadRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -5549,6 +5546,8 @@ namespace Nikse.SubtitleEdit.Forms
                     text = "<font color=\"" + ColorTranslator.ToHtml(_dvbSubColor) + "\">" + text + "</font>";
             }
 
+            _linesOcred++;
+
             if (_abort)
             {
                 textBoxCurrentText.Text = text;
@@ -5589,7 +5588,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _mainOcrIndex++;
                 _mainOcrTimer.Start();
             }
-
         }
 
         private void LoadNOcrWithCurrentLanguage()
@@ -5686,6 +5684,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             string result = string.Empty;
             string outputFileName = tempTextFileName + ".html";
+            if (!File.Exists(outputFileName))
+                outputFileName = tempTextFileName + ".hocr";
             try
             {
                 if (File.Exists(outputFileName))
@@ -6204,7 +6204,6 @@ namespace Nikse.SubtitleEdit.Forms
                                         {
                                             unItalicText += "!";
                                         }
-
                                     }
                                 }
                                 if (line.EndsWith('?') && !unItalicText.EndsWith('?') && !unItalicText.EndsWith("?</i>"))
@@ -6458,7 +6457,7 @@ namespace Nikse.SubtitleEdit.Forms
                 s = "<i>" + HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagItalic) + "</i>";
             s = s.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
 
-            return Utilities.FixInvalidItalicTags(s);
+            return HtmlUtil.FixInvalidItalicTags(s);
         }
 
         private void LogUnknownWords()
@@ -6808,7 +6807,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var formVobSubEditCharacters = new VobSubEditCharacters(comboBoxCharacterDatabase.SelectedItem.ToString(), null, _binaryOcrDb))
             {
-
                 formVobSubEditCharacters.Initialize(name, text);
                 DialogResult result = formVobSubEditCharacters.ShowDialog();
                 if (result == DialogResult.OK)
@@ -7271,7 +7269,6 @@ namespace Nikse.SubtitleEdit.Forms
                         current.Text = old.Text;
                         break;
                     }
-
                 }
             }
             subtitleListView1.Fill(_subtitle);
@@ -7480,7 +7477,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     index++;
                 }
-
             }
         }
 
@@ -7693,7 +7689,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = new Paragraph(string.Empty, header.StartTime.TotalMilliseconds, header.StartTime.TotalMilliseconds + header.Picture.Delay.TotalMilliseconds);
                 _subtitle.Paragraphs.Add(p);
             }
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
@@ -7794,13 +7790,45 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = new Paragraph(string.Empty, subItem.Start.TotalMilliseconds, subItem.End.TotalMilliseconds);
                 _subtitle.Paragraphs.Add(p);
             }
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
 
+        private bool HasChangesBeenMade()
+        {
+            var secondsSinceOcrWindowOpened = DateTime.Now.Subtract(_windowStartTime).TotalSeconds;
+            if (_subtitle != null && _subtitle.Paragraphs.Count > 10 && secondsSinceOcrWindowOpened > 10)
+            {
+                int numberOfLinesWithText = 0;
+                foreach (var p in _subtitle.Paragraphs)
+                {
+                    if (p != null && !string.IsNullOrWhiteSpace(p.Text))
+                    {
+                        numberOfLinesWithText++;
+                    }
+                }
+
+                // ocr'ed more than 10 lines - or perhaps manually translated more than 10 lines in at least 30 seconds
+                if (_linesOcred > 10 || (numberOfLinesWithText > 10 && secondsSinceOcrWindowOpened > 30))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (HasChangesBeenMade())
+            {
+                if (MessageBox.Show(Configuration.Settings.Language.VobSubOcr.DiscardText, Configuration.Settings.Language.VobSubOcr.DiscardTitle, MessageBoxButtons.YesNo) == DialogResult.No)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
+
             _icThreadsStop = true;
             _abort = true;
             _nocrThreadsStop = true;
@@ -8338,7 +8366,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             _tesseractAsyncStrings = null;
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
@@ -8378,7 +8406,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _subtitle.Paragraphs.Add(new Paragraph(string.Empty, sub.StartMilliseconds, sub.EndMilliseconds));
             }
-            _subtitle.Renumber(1);
+            _subtitle.Renumber();
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }

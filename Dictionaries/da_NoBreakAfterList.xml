@@ -1,10 +1,10 @@
-<NoBreakAfterList>
+﻿<NoBreakAfterList>
   <Item> at</Item>
+  <Item> der</Item>
   <Item> en</Item>
   <Item> er</Item>
   <Item RegEx="True"> et</Item>
   <Item> fik</Item>
   <Item> som</Item>
   <Item> var</Item>
-  <Item> der</Item>
 </NoBreakAfterList>

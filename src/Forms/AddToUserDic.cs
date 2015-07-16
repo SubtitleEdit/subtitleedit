@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
@@ -8,7 +7,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class AddToUserDic : Form
     {
-
         public AddToUserDic()
         {
             InitializeComponent();
@@ -16,18 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelDescription.Text = Configuration.Settings.Language.AddToUserDictionary.Description;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         private void AddToUserDic_KeyDown(object sender, KeyEventArgs e)

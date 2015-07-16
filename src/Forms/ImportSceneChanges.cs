@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -30,18 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxTimeCodes.Text = Configuration.Settings.Language.ImportSceneChanges.TimeCodes;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         private void buttonOpenText_Click(object sender, EventArgs e)
@@ -98,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
                     // If 4 parts were found...
                     if (timeParts.Length == 4)
                     {
-                        SceneChangesInSeconds.Add(Convert.ToDouble(timeParts[0]) * 3600.0 + Convert.ToDouble(timeParts[1]) * 60.0 + Convert.ToDouble(timeParts[2]) + Convert.ToDouble(timeParts[3]) / 1000.0);
+                        SceneChangesInSeconds.Add(Convert.ToDouble(timeParts[0]) * 3600.0 + Convert.ToDouble(timeParts[1]) * 60.0 + Convert.ToDouble(timeParts[2]) + Convert.ToDouble(timeParts[3]) / TimeCode.BaseUnit);
                     }
                 }
                 else
@@ -116,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (radioButtonMilliseconds.Checked)
                         {
-                            SceneChangesInSeconds.Add(d / 1000.0);
+                            SceneChangesInSeconds.Add(d / TimeCode.BaseUnit);
                         }
                     }
                 }

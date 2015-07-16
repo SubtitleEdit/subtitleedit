@@ -59,6 +59,7 @@
             this.listViewFixes.TabIndex = 9;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
+            this.listViewFixes.Resize += new System.EventHandler(this.listViewFixes_Resize);
             // 
             // columnHeader4
             // 
@@ -123,7 +124,6 @@
             this.comboBoxConditions.Name = "comboBoxConditions";
             this.comboBoxConditions.Size = new System.Drawing.Size(150, 21);
             this.comboBoxConditions.TabIndex = 8;
-            this.comboBoxConditions.SelectedIndexChanged += new System.EventHandler(this.ComboBoxConditionsSelectedIndexChanged);
             // 
             // labelCondition
             // 

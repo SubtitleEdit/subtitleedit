@@ -8,8 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SonyDVDArchitect : SubtitleFormat
     {
-
-        private static Regex Regex = new Regex(@"^\d\d:\d\d:\d\d:\d\d[ ]+-[ ]+\d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);
+        private static readonly Regex Regex = new Regex(@"^\d\d:\d\d:\d\d:\d\d[ ]+-[ ]+\d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -103,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (!success)
                     _errorCount++;
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
     }
 }

@@ -2,10 +2,10 @@
 <Language Name="Portuguese - Portugal">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>------------------------------------------------------------------------------------------------
 Traduzido para Português de Portugal, por moob
-Email: mailto:moob@live.com.pt</TranslatedBy>
+Email: mailto:imhotepimhotep8@gmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -113,12 +113,24 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>A gerar o espectrograma...</GeneratingSpectrogram>
     <ExtractingSeconds>A extrair o áudio: {0:0.0} segundos</ExtractingSeconds>
     <ExtractingMinutes>A extrair o áudio: {0}.{1:00} minutos</ExtractingMinutes>
+    <WaveFileNotFound>Não é possível encontrar o ficheiro wav que foi extraído!
+É necessário o VLC media player 1.1.x ({0}-bit) ou superior para executar esta operação.
+
+Linha de comando: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} não foi possível extrair os dados do áudio para o ficheiro wave!
+
+Linha de comando: {1} {2}
+
+Nota: Verifique o espaço em disco.</WaveFileMalformed>
+    <LowDiskSpace>INSUFICIENTE ESPAÇO EM DISCO!</LowDiskSpace>
+    <FreeDiskSpace>{0} livre</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Gerar pacote de dados de forma de onda</Title>
     <ExtractingAudio>A extrair o áudio...</ExtractingAudio>
     <Calculating>A calcular...</Calculating>
     <Done>Concluído</Done>
+    <Error>Erro</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Ajustar duração</Title>
@@ -236,7 +248,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PleaseSelectAnEncoding>Por favor, escolha um codificador</PleaseSelectAnEncoding>
   </ChooseEncoding>
   <ChooseLanguage>
-    <Title>Escolha o idioma</Title>
+    <Title>Escolher o idioma</Title>
     <Language>Idioma</Language>
   </ChooseLanguage>
   <ColorChooser>
@@ -248,11 +260,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ColorChooser>
   <ColumnPaste>
     <Title>Colar coluna</Title>
-    <ChooseColumn>Escolher coluna</ChooseColumn>
+    <ChooseColumn>Escolha a coluna</ChooseColumn>
     <OverwriteShiftCellsDown>Substituir/Deslocar células para baixo</OverwriteShiftCellsDown>
     <Overwrite>Substituir</Overwrite>
     <ShiftCellsDown>Deslocar células para baixo</ShiftCellsDown>
-    <TimeCodesOnly>Só códigos de tempo</TimeCodesOnly>
+    <TimeCodesOnly>Apenas tempos</TimeCodesOnly>
     <TextOnly>Só texto</TextOnly>
     <OriginalTextOnly>Só texto original</OriginalTextOnly>
   </ColumnPaste>
@@ -279,7 +291,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Language>Idioma</Language>
     <IssueDate>Data de emissão</IssueDate>
     <EditRate>Editar taxa</EditRate>
-    <TimeCodeRate>Taxa de códigos de tempo</TimeCodeRate>
+    <TimeCodeRate>Taxa de velocidade dos tempos</TimeCodeRate>
     <StartTime>Tempo de início</StartTime>
     <Font>Tipo de letra</Font>
     <FontId>ID</FontId>
@@ -350,7 +362,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TranslatorsName>Nome dos tradutores</TranslatorsName>
     <SubtitleListReferenceCode>Código de referência da lista de legendas</SubtitleListReferenceCode>
     <CountryOfOrigin>País de origem</CountryOfOrigin>
-    <RevisionNumber>Revisão número</RevisionNumber>
+    <TimeCodeStatus>Estado do sequenciador de tempo</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Sequenciador de tempo: Início do programa</TimeCodeStartOfProgramme>
+    <RevisionNumber>Número da revisão</RevisionNumber>
     <MaxNoOfDisplayableChars>Max# de caracteres por linha</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max# de linhas</MaxNumberOfDisplayableRows>
     <DiskSequenceNumber>Número de sequencia do disco</DiskSequenceNumber>
@@ -392,7 +406,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Template>Modelo</Template>
     <Header>Cabeçalho</Header>
     <TextLine>Linha de texto (paragrafo)</TextLine>
-    <TimeCode>Código de tempo</TimeCode>
+    <TimeCode>Tempos</TimeCode>
     <NewLine>Nova linha</NewLine>
     <Footer>Rodapé</Footer>
     <DoNotModify>[Não alterar]</DoNotModify>
@@ -406,14 +420,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderColor>Cor da borda</BorderColor>
     <BorderWidth>Tamanho da borda</BorderWidth>
     <BorderStyle>Estilo da borda</BorderStyle>
-    <BorderStyleOneBox>Caixa opaca</BorderStyleOneBox>
-    <BorderStyleBoxForEachLine>Tudo em Caixa opaca</BorderStyleBoxForEachLine>
+    <BorderStyleOneBox>Caixa por linha</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Caixa por diálogo</BorderStyleBoxForEachLine>
     <BorderStyleNormalWidthX>Normal, largura={0}</BorderStyleNormalWidthX>
     <ShadowColor>Cor da sombra</ShadowColor>
     <ShadowWidth>Largura da sombra</ShadowWidth>
     <Transparency>Transparência</Transparency>
     <ImageFormat>Formato de Imagem</ImageFormat>
-    <SimpleRendering>Renderização simples</SimpleRendering>
+    <FullFrameImage>Fotograma completo</FullFrameImage>
+    <SimpleRendering>Processamento simples</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing com transparência</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
     <SideBySide3D>Lado-a-lado parcial</SideBySide3D>
@@ -427,16 +442,22 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Direita</Right>
     <Center>Centro</Center>
     <BottomMargin>Margem inferior</BottomMargin>
-    <LeftRightMargin>Margem esquerda/direita</LeftRightMargin>
+    <LeftRightMargin>Margem esq./dto.</LeftRightMargin>
     <SaveBluRraySupAs>Escolha o nome do ficheiro Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Escolha o nome do ficheiro VobSub</SaveVobSubAs>
-    <SaveFabImageScriptAs>Escolha o nome do ficheiro Blu-ray sup</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>Escolha o nome do ficheiro FAB script</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Escolha o nome do ficheiro DVD Studio Pro STL</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Escolha o nome do ficheiro Digital Cinema Interop</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Escolha o nome do ficheiro Premiere EDL</SavePremiereEdlAs>
+    <SaveFcpAs>Escolha o nome do ficheiro Final Cut Pro xml</SaveFcpAs>
+    <SaveDostAs>Escolha o nome do ficheiro DoStudio dost</SaveDostAs>
     <SomeLinesWereTooLongX>Linhas demasiado longas: {0}</SomeLinesWereTooLongX>
     <LineHeight>Altura da linha</LineHeight>
     <BoxSingleLine>Caixa - linha única</BoxSingleLine>
     <BoxMultiLine>Caixa - todas as linhas</BoxMultiLine>
     <Forced>Forçado</Forced>
+    <ChooseBackgroundColor>Escolha a cor do fundo</ChooseBackgroundColor>
+    <SaveImageAs>Guardar imagem como...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Exportar texto</Title>
@@ -449,19 +470,19 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveStyling>Remover estilo</RemoveStyling>
     <ShowLineNumbers>Mostrar número de linhas</ShowLineNumbers>
     <AddNewLineAfterLineNumber>Adicionar nova linha depois do número de linha</AddNewLineAfterLineNumber>
-    <ShowTimeCode>Mostrar códigos de tempo</ShowTimeCode>
-    <AddNewLineAfterTimeCode>Adicionar nova linha depois dos códigos de tempo</AddNewLineAfterTimeCode>
+    <ShowTimeCode>Mostrar os tempos</ShowTimeCode>
+    <AddNewLineAfterTimeCode>Adicionar nova linha depois dos tempos</AddNewLineAfterTimeCode>
     <AddNewLineAfterTexts>Adicionar nova linha depois do texto</AddNewLineAfterTexts>
     <AddNewLineBetweenSubtitles>Adicionar nova linha entre legendas</AddNewLineBetweenSubtitles>
-    <TimeCodeFormat>Formato de código de tempo</TimeCodeFormat>
+    <TimeCodeFormat>Formato dos tempos</TimeCodeFormat>
     <Srt>.srt</Srt>
     <Milliseconds>Milissegundos</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeparator>Separador código de tempo</TimeCodeSeparator>
+    <TimeCodeSeparator>Separador de tempos</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Criar tempos como texto</Title>
-    <OpenVideoFile>Escolher o ficheiro de vídeo para extrair informações de data / hora</OpenVideoFile>
+    <OpenVideoFile>Escolha o ficheiro de vídeo para extrair informações de data / hora</OpenVideoFile>
     <StartFrom>Iniciar a partir de</StartFrom>
     <DateTimeFormat>Formato Data/tempo</DateTimeFormat>
     <Example>Exemplo</Example>
@@ -471,12 +492,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Localizar</Title>
     <Find>Localizar</Find>
     <Normal>&amp;Normal</Normal>
-    <CaseSensitive>&amp;Respeitar maiúsculas/minúsculas...</CaseSensitive>
+    <CaseSensitive>&amp;Respeitar maiúsculas/minúsculas</CaseSensitive>
     <RegularExpression>E&amp;xpressão regular</RegularExpression>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Localizar linha da legenda</Title>
-    <Find>&amp;Localizar</Find>
+    <Find>&amp;Localizar...</Find>
     <FindNext>Localizar &amp;seguinte</FindNext>
   </FindSubtitleLine>
   <FixCommonErrors>
@@ -651,14 +672,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Importar imagens</Title>
     <ImageFiles>Ficheiros de imagens</ImageFiles>
     <Input>Entrada</Input>
-    <InputDescription>Escolher ficheiros de entrada (Selecionar ou arrastar-e-soltar)</InputDescription>
+    <InputDescription>Escolha os ficheiros de entrada (Selecionar ou arrastar-e-soltar)</InputDescription>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Importar mudanças de cena</Title>
     <OpenTextFile>Abrir ficheiro de texto...</OpenTextFile>
     <ImportOptions>Importar opções</ImportOptions>
     <TextFiles>Ficheiros de texto</TextFiles>
-    <TimeCodes>Códigos de tempo</TimeCodes>
+    <TimeCodes>Tempos</TimeCodes>
     <Frames>Fotogramas</Frames>
     <Seconds>Segundos</Seconds>
     <Milliseconds>Milissegundos</Milliseconds>
@@ -677,14 +698,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MergeShortLines>Combinar as linhas curtas continuadas</MergeShortLines>
     <RemoveEmptyLines>Remover as linhas em branco</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Remover as linhas sem letras</RemoveLinesWithoutLetters>
-    <GenerateTimeCodes>Gerar códigos de tempo</GenerateTimeCodes>
+    <GenerateTimeCodes>Gerar tempos</GenerateTimeCodes>
     <GapBetweenSubtitles>Espaço entre legendas (milissegundos)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
     <Fixed>Corrigido</Fixed>
     <Refresh>&amp;Actualizar</Refresh>
     <TextFiles>Ficheiros de texto</TextFiles>
     <PreviewLinesModifiedX>Pré-visualizar - legendas modificados: {0}</PreviewLinesModifiedX>
-    <TimeCodes>Códigos de tempo</TimeCodes>
+    <TimeCodes>Tempos</TimeCodes>
   </ImportText>
   <Interjections>
     <Title>Interjeições</Title>
@@ -698,6 +719,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Nome do ficheiro</FileName>
     <Join>Juntar</Join>
     <TotalNumberOfLinesX>Total do número de linhas: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Nota: Os ficheiros já devem ter os tempos correctos</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -729,7 +751,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSubtitleWithManualChosenEncoding>Importar legenda seleccionando codificação manualmente...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importar texto sem formatação...</ImportText>
         <ImportImages>Importar imagens...</ImportImages>
-        <ImportTimecodes>Importar códigos de tempo...</ImportTimecodes>
+        <ImportTimecodes>Importar tempos...</ImportTimecodes>
         <Export>Exportar</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
@@ -762,10 +784,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <InsertUnicodeControlCharactersRLE>Início de incorporação da direita para a esquerda (RLE)</InsertUnicodeControlCharactersRLE>
         <InsertUnicodeControlCharactersLRO>Início de substituição da esquerda para a direita (LRO)</InsertUnicodeControlCharactersLRO>
         <InsertUnicodeControlCharactersRLO>Início de substituição da direita para a esquerda (RLO)</InsertUnicodeControlCharactersRLO>
-        <Find>&amp;Localizar</Find>
+        <Find>&amp;Localizar...</Find>
         <FindNext>Localizar &amp;seguinte</FindNext>
-        <Replace>&amp;Substituir</Replace>
-        <MultipleReplace>&amp;Substituição múltipla...</MultipleReplace>
+        <Replace>&amp;Substituir...</Replace>
+        <MultipleReplace>&amp;Substituição múltipla</MultipleReplace>
         <GoToSubtitleNumber>&amp;Ir para a linha número...</GoToSubtitleNumber>
         <RightToLeftMode>Modo Direita-para-esquerda</RightToLeftMode>
         <FixTrlViaUnicodeControlCharacters>Corrigir RTL via controle de caracteres Unicode (para linhas seleccionadas)</FixTrlViaUnicodeControlCharacters>
@@ -787,7 +809,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeSpeedInPercent>Alterar a velocidade (percentagem)...</ChangeSpeedInPercent>
         <MergeShortLines>Combinar as linhas curtas...</MergeShortLines>
         <MergeDuplicateText>Combinar as linhas com o mesmo texto...</MergeDuplicateText>
-        <MergeSameTimeCodes>Combinar linhas com os mesmos códigos de tempo...</MergeSameTimeCodes>
+        <MergeSameTimeCodes>Combinar linhas com os mesmos tempos...</MergeSameTimeCodes>
         <SplitLongLines>Dividir as linhas longas...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Duração mínima entre legendas...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>
@@ -873,7 +895,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Open>Abrir</Open>
         <Save>Guardar</Save>
         <SaveAs>Guardar como</SaveAs>
-        <Find>Procurar</Find>
+        <Find>Localizar</Find>
         <Replace>Substituir</Replace>
         <FixCommonErrors>Corrigir erros comuns</FixCommonErrors>
         <VisualSync>Sincronia visual</VisualSync>
@@ -903,7 +925,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <InsertFirstLine>Inserir linha</InsertFirstLine>
         <InsertBefore>Inserir antes</InsertBefore>
         <InsertAfter>Inserir depois</InsertAfter>
-        <InsertSubtitleAfter>Inserir legenda após esta linha...</InsertSubtitleAfter>
+        <InsertSubtitleAfter>Inserir legenda após esta linha</InsertSubtitleAfter>
         <CopyToClipboard>Copiar como texto para a área de transferência</CopyToClipboard>
         <Column>Coluna</Column>
         <ColumnDeleteText>Eliminar texto</ColumnDeleteText>
@@ -911,7 +933,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnInsertEmptyTextAndShiftCellsDown>Inserir linhas em branco e deslocar células para baixo</ColumnInsertEmptyTextAndShiftCellsDown>
         <ColumnInsertTextFromSubtitle>Inserir texto através da legenda...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Importar texto e deslocar células para baixo</ColumnImportTextAndShiftCellsDown>
-        <ColumnPasteFromClipboard>Colar da área de transferência...</ColumnPasteFromClipboard>
+        <ColumnPasteFromClipboard>Colar da área de transferência</ColumnPasteFromClipboard>
         <ColumnCopyOriginalTextToCurrent>Copiar texto do original para o actual</ColumnCopyOriginalTextToCurrent>
         <Split>Dividir</Split>
         <MergeSelectedLines>Combinar as linhas seleccionadas</MergeSelectedLines>
@@ -920,22 +942,22 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MergeWithLineAfter>Combinar com a linha seguinte</MergeWithLineAfter>
         <Normal>Normal</Normal>
         <Underline>Sublinhado</Underline>
-        <Color>Cor...</Color>
-        <FontName>Tipo de letra...</FontName>
-        <Alignment>Alinhamento...</Alignment>
-        <AutoBalanceSelectedLines>Auto-ajustar linhas seleccionadas...</AutoBalanceSelectedLines>
-        <RemoveLineBreaksFromSelectedLines>Remover quebras de linha das linhas seleccionadas...</RemoveLineBreaksFromSelectedLines>
-        <TypewriterEffect>Efeito máquina de escrever...</TypewriterEffect>
-        <KaraokeEffect>Efeito Karaoke...</KaraokeEffect>
-        <ShowSelectedLinesEarlierLater>Mostrar linhas seleccionadas antes/depois...</ShowSelectedLinesEarlierLater>
-        <VisualSyncSelectedLines>Sincronia visual das linhas seleccionadas...</VisualSyncSelectedLines>
+        <Color>Cor</Color>
+        <FontName>Tipo de letra</FontName>
+        <Alignment>Alinhamento</Alignment>
+        <AutoBalanceSelectedLines>Auto-ajustar linhas seleccionadas</AutoBalanceSelectedLines>
+        <RemoveLineBreaksFromSelectedLines>Remover quebras de linha das linhas seleccionadas</RemoveLineBreaksFromSelectedLines>
+        <TypewriterEffect>Efeito máquina de escrever</TypewriterEffect>
+        <KaraokeEffect>Efeito Karaoke</KaraokeEffect>
+        <ShowSelectedLinesEarlierLater>Mostrar linhas seleccionadas antes/depois</ShowSelectedLinesEarlierLater>
+        <VisualSyncSelectedLines>Sincronia visual das linhas seleccionadas</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft traduzir linha original</GoogleAndMicrosoftTranslateSelectedLine>
-        <GoogleTranslateSelectedLines>Traduzir pelo Google as linhas seleccionadas...</GoogleTranslateSelectedLines>
-        <AdjustDisplayDurationForSelectedLines>Ajustar duração das linhas seleccionadas...</AdjustDisplayDurationForSelectedLines>
-        <FixCommonErrorsInSelectedLines>Corrigir erros comuns nas linhas seleccionadas...</FixCommonErrorsInSelectedLines>
-        <ChangeCasingForSelectedLines>Alterar maiúsculas das linhas seleccionadas...</ChangeCasingForSelectedLines>
+        <GoogleTranslateSelectedLines>Traduzir pelo Google as linhas seleccionadas</GoogleTranslateSelectedLines>
+        <AdjustDisplayDurationForSelectedLines>Ajustar duração das linhas seleccionadas</AdjustDisplayDurationForSelectedLines>
+        <FixCommonErrorsInSelectedLines>Corrigir erros comuns nas linhas seleccionadas</FixCommonErrorsInSelectedLines>
+        <ChangeCasingForSelectedLines>Alterar maiúsculas das linhas seleccionadas</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Guardar linhas seleccionadas como...</SaveSelectedLines>
-        <WebVTTSetNewVoice>Definir nova voz...</WebVTTSetNewVoice>
+        <WebVTTSetNewVoice>Definir nova voz</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Remover vozes</WebVTTRemoveVoices>
       </ContextMenu>
     </Menu>
@@ -1037,7 +1059,7 @@ A legenda não parece ter linhas legendadas - tente guardar novamente se estiver
     <BeforeShowLater>Antes de mostrar o seguinte</BeforeShowLater>
     <LineNumberX>Linha número: {0:#,##0.##}</LineNumberX>
     <OpenVideoFile>Abrir ficheiro de vídeo...</OpenVideoFile>
-    <NewFrameRateUsedToCalculateTimeCodes>Nova taxa de fotogramas ({0}) usada para calcular códigos de tempo inicial/final</NewFrameRateUsedToCalculateTimeCodes>
+    <NewFrameRateUsedToCalculateTimeCodes>Nova taxa de fotogramas ({0}) usada para calcular os tempos inicial/final</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Nova taxa de fotogramas ({0}) usada para calcular número de fotogramas inicial/final</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>O item procurado não foi encontrado.
 Deseja pesquisar o documento desde o início novamente?</FindContinue>
@@ -1139,6 +1161,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <MatroskaFiles>Ficheiros Matroska</MatroskaFiles>
     <NoSubtitlesFound>Nenhuma legenda encontrada</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Ficheiro Matroska (.mkv) inválido: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>O ficheiro Blu-ray sup não contém quaisquer legendas ou contém erros - tente demultiplexar novamente.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>A analisar o ficheiro Matroska (.mkv). Por favor, aguarde...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>A analisar o ficheiro Transport Stream. Por favor, aguarde...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Antes de importar legenda do ficheiro Matroska (.mkv)</BeforeImportFromMatroskaFile>
@@ -1191,7 +1214,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <XLinesSelected>{0} linhas seleccionadas</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>A legenda contém caracteres em Unicode. Guardar como ANSI irá removê-las. Deseja continuar?</UnicodeMusicSymbolsAnsiWarning>
     <UnicodeCharactersAnsiWarning>A legenda contém caracteres Unicode. Guardar a legenda com a codificação ANSI perde estes caracteres. Deseja continuar?</UnicodeCharactersAnsiWarning>
-    <NegativeTimeWarning>A legenda contém códigos de tempo negativos. Deseja continuar?</NegativeTimeWarning>
+    <NegativeTimeWarning>A legenda contém tempos negativos. Deseja continuar?</NegativeTimeWarning>
     <BeforeMergeShortLines>Antes de combinar as linhas curtas</BeforeMergeShortLines>
     <BeforeSplitLongLines>Antes de dividir linhas longas</BeforeSplitLongLines>
     <MergedShortLinesX>Número de linhas combinadas: {0}</MergedShortLinesX>
@@ -1202,8 +1225,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <TextImported>Texto importado</TextImported>
     <BeforePointSynchronization>Antes do ponto de sincronização</BeforePointSynchronization>
     <PointSynchronizationDone>Ponto de sincronização concluído</PointSynchronizationDone>
-    <BeforeTimeCodeImport>Antes de importar códigos de tempo</BeforeTimeCodeImport>
-    <TimeCodeImportedFromXY>Códigos de tempo importados de {0}: {1}</TimeCodeImportedFromXY>
+    <BeforeTimeCodeImport>Antes de importar os tempos</BeforeTimeCodeImport>
+    <TimeCodeImportedFromXY>Tempos importados de {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Antes de inserir a legenda na posição do vídeo</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Antes de defenir o tempo inicial e compensar o resto</BeforeSetStartTimeAndOffsetTheRest>
     <BeforeSetEndTimeAndOffsetTheRest>Antes de defenir o tempo final e compensar o resto</BeforeSetEndTimeAndOffsetTheRest>
@@ -1231,9 +1254,9 @@ Deseja continuar?</SubtitleAppendPrompt>
     <TextFiles>Ficheiros de texto</TextFiles>
     <SubtitleExported>Legenda exportada</SubtitleExported>
     <LineNumberXErrorReadingFromSourceLineY>Linha {0} - erro de leitura: {1}</LineNumberXErrorReadingFromSourceLineY>
-    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Linha {0} - erro ao ler os códigos de tempo: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
+    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Linha {0} - erro ao ler os tempos: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Linha {0} - número da legenda esperado: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <BeforeGuessingTimeCodes>Antes de saber os códigod de tempo</BeforeGuessingTimeCodes>
+    <BeforeGuessingTimeCodes>Antes de saber os tempos</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Antes de auto-duração para as linhas seleccionadas</BeforeAutoDuration>
     <BeforeColumnPaste>Antes de colar coluna</BeforeColumnPaste>
     <BeforeColumnDelete>Antes de eliminar coluna</BeforeColumnDelete>
@@ -1250,13 +1273,19 @@ Deseja continuar?</SubtitleAppendPrompt>
     <PluginXExecuted>Plugin '{0}' executado.</PluginXExecuted>
     <NotAValidXSubFile>Ficheiro XSub invalido!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Antes de combinar as linhas com o mesmo texto</BeforeMergeLinesWithSameText>
-    <ImportTimeCodesDifferentNumberOfLinesWarning>Legenda com códigos de tempo tem um número diferente de linhas ({0}) do que as legendas actuais ({1}) - mesmo assim deseja continuar?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>Legenda com tempos tem um número diferente de linhas ({0}) do que as legendas actuais ({1}) - mesmo assim deseja continuar?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>A analisar o fluxo de transporte - por favor aguarde...</ParsingTransportStream>
     <ErrorLoadIdx>Não foi possível ler/editar o ficheiro idx. Os ficheiros idx são parte de um par de ficheiros idx/sub (também conhecidos como VobSub) e o Subtitle Edit pode abrir o ficheiro sub.</ErrorLoadIdx>
     <ErrorLoadRar>Este ficheiro parece ser um ficheiro comprimido .rar. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadRar>
     <ErrorLoadZip>Este ficheiro parece ser um ficheiro comprimido .zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadZip>
     <ErrorLoadPng>Este ficheiro parece ser um ficheiro de imagem no formato PNG. O Subtitle Edit não pode abrir ficheiros PNG.</ErrorLoadPng>
-    <ErrorLoadSrr>Este ficheiro parece ser um ficheiro ReScene (.srr) - não um ficheiro de legenda.</ErrorLoadSrr>
+    <ErrorLoadJpg>Este ficheiro parece ser um ficheiro de imagem no formato JPG. O Subtitle Edit não pode abrir ficheiros JPG.</ErrorLoadJpg>
+    <ErrorLoadSrr>Este ficheiro parece ser um ficheiro ReScene (.srr) - não é um ficheiro de legenda.</ErrorLoadSrr>
+    <ErrorLoadTorrent>Este ficheiro parece ser um ficheiro BitTorrent - não é um ficheiro de legenda.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Lamentamos, mas este ficheiro só contém zeros no formato binário!
+
+Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de segurança através do menu Ficheiro -&gt; Restaurar cópia de segurança automática...</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>Arrastar e largar uma directoria não é suportado aqui.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Conteúdo encriptado do VobSub não é suportado.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Ficheiros Blu-ray sup não são suportados aqui.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>Ficheiros DVD sup não são suportados aqui.</NoSupportHereDvdSup>
@@ -1266,7 +1295,7 @@ Deseja continuar?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
     <PleaseChoose>Encontrada mais do que uma legenda - por favor, escolha uma</PleaseChoose>
-    <TrackXLanguageYTypeZ>Faixa {0} - {1} - idioma: {2} - tipo: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Faixa {0} - idioma: {1} - tipo: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Conversão de unidades</Title>
@@ -1298,7 +1327,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <OnlyMergeContinuationLines>Só combinar as linhas continuadas</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MergeTextWithSameTimeCodes>
-    <Title>Combinar linhas com os mesmos códigos de tempo</Title>
+    <Title>Combinar linhas com os mesmos tempos</Title>
     <MaxDifferenceMilliseconds>Max. diferença milissegundos</MaxDifferenceMilliseconds>
     <ReBreakLines>Requebrar as linhas</ReBreakLines>
     <NumberOfMergesX>Número de combinações: {0}</NumberOfMergesX>
@@ -1324,14 +1353,14 @@ Deseja continuar?</SubtitleAppendPrompt>
   </ModifySelection>
   <MultipleReplace>
     <Title>Múltipla substituição</Title>
-    <FindWhat>Localizar</FindWhat>
-    <ReplaceWith>Substituir por</ReplaceWith>
+    <FindWhat>Localizar:</FindWhat>
+    <ReplaceWith>Substituir por:</ReplaceWith>
     <Normal>Normal</Normal>
-    <CaseSensitive>Respeitar maiúsculas/minúsculas...</CaseSensitive>
+    <CaseSensitive>Respeitar maiúsculas/minúsculas</CaseSensitive>
     <RegularExpression>Expressão regular</RegularExpression>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
     <Delete>Eliminar</Delete>
-    <Add>Adicionar</Add>
+    <Add>&amp;Adicionar</Add>
     <Update>&amp;Actualizar</Update>
     <Enabled>Activado</Enabled>
     <SearchType>Tipo de pesquisa</SearchType>
@@ -1340,7 +1369,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <Export>Exportar...</Export>
     <ImportRulesTitle>Importar regra(s) de substituição de...</ImportRulesTitle>
     <ExportRulesTitle>Exportar regra(s) de substituição para...</ExportRulesTitle>
-    <Rules>Regras de exportação</Rules>
+    <Rules>Localizar e substituir Regras de exportação</Rules>
     <MoveToTop>Mover para o inicio</MoveToTop>
     <MoveToBottom>Mover para o fim</MoveToBottom>
   </MultipleReplace>
@@ -1370,8 +1399,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <OpenDvdFrom>Abrir DVD apartir de...</OpenDvdFrom>
     <Disc>Disco</Disc>
     <Folder>Pasta</Folder>
-    <ChooseDrive>Escolher disco</ChooseDrive>
-    <ChooseFolder>Escolher pasta</ChooseFolder>
+    <ChooseDrive>Escolha o disco</ChooseDrive>
+    <ChooseFolder>Escolha a pasta</ChooseFolder>
   </OpenVideoDvd>
   <PluginsGet>
     <Title>Plugins</Title>
@@ -1395,17 +1424,19 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <XPluginsUpdated>{0} plugin(s) actualizados</XPluginsUpdated>
   </PluginsGet>
   <RegularExpressionContextMenu>
-    <WordBoundary>Limite de palavra (\b)</WordBoundary>
-    <NonWordBoundary>Sem limite palavra (\B)</NonWordBoundary>
+    <WordBoundary>Delimitação de palavra (\b)</WordBoundary>
+    <NonWordBoundary>Sem delimitação de palavra (\B)</NonWordBoundary>
     <NewLine>Nova linha (\r\n)</NewLine>
     <NewLineShort>Nova linha (\n)</NewLineShort>
     <AnyDigit>Qualquer dígito (\d)</AnyDigit>
+    <NonDigit>Sem ser dígito (\D)</NonDigit>
     <AnyCharacter>Qualquer caractere (.)</AnyCharacter>
     <AnyWhitespace>Qualquer espaço em branco (\s)</AnyWhitespace>
+    <NonSpaceCharacter>Sem ser Carácter de espaço (\S)</NonSpaceCharacter>
     <ZeroOrMore>Zero ou mais (*)</ZeroOrMore>
     <OneOrMore>Um ou mais (+)</OneOrMore>
-    <InCharacterGroup>No grupo de caracteres ([teste])</InCharacterGroup>
-    <NotInCharacterGroup>Não estiver no grupo de caracteres ([^teste])</NotInCharacterGroup>
+    <InCharacterGroup>Dentro do grupo de caracteres ([teste])</InCharacterGroup>
+    <NotInCharacterGroup>Fora do grupo de caracteres ([^teste])</NotInCharacterGroup>
   </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
     <Title>Eliminar texto para surdos</Title>
@@ -1429,9 +1460,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Title>Substituir</Title>
     <FindWhat>Localizar:</FindWhat>
     <Normal>&amp;Normal</Normal>
-    <CaseSensitive>&amp;Respeitar maiúsculas/minúsculas...</CaseSensitive>
+    <CaseSensitive>&amp;Respeitar maiúsculas/minúsculas</CaseSensitive>
     <RegularExpression>E&amp;xpressão regular</RegularExpression>
-    <ReplaceWith>Substituir por</ReplaceWith>
+    <ReplaceWith>Substituir por:</ReplaceWith>
     <Find>&amp;Localizar</Find>
     <Replace>&amp;Substituir</Replace>
     <ReplaceAll>Substituir &amp;tudo</ReplaceAll>
@@ -1442,7 +1473,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DateAndTime>Data e hora</DateAndTime>
     <FileName>Nome do ficheiro</FileName>
     <Extension>Extensão</Extension>
-    <NoBackedUpFilesFound>Não foram encontrados cópias de segurança!</NoBackedUpFilesFound>
+    <NoBackedUpFilesFound>Não foram encontradas cópias de segurança!</NoBackedUpFilesFound>
   </RestoreAutoBackup>
   <SeekSilence>
     <Title>Localizar silêncio no áudio</Title>
@@ -1461,8 +1492,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <OneFrameXisYMilliseconds>Um fotograma de {0:0.00} fps é de {1} milissegundos</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
-    <Title>Estabelecer ponto de sincronia para a linha {0}</Title>
-    <SyncPointTimeCode>Código de tempo do ponto de sincronia</SyncPointTimeCode>
+    <Title>Definir ponto de sincronia para a linha {0}</Title>
+    <SyncPointTimeCode>Sincronizar pelo ponto de tempo</SyncPointTimeCode>
     <ThreeSecondsBack>&lt;&lt; 3 segs</ThreeSecondsBack>
     <HalfASecondBack>&lt;&lt; ½ seg</HalfASecondBack>
     <HalfASecondForward>½ seg &gt;&gt;</HalfASecondForward>
@@ -1529,7 +1560,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <CheckForUpdates>Verificar se há actualizações</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Permitir a edição da legenda original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmar eliminação de linhas</PromptDeleteLines>
-    <TimeCodeMode>Modo de código de tempo</TimeCodeMode>
+    <TimeCodeMode>Modo de tempos</TimeCodeMode>
     <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Mecanismo de vídeo</VideoEngine>
@@ -1555,8 +1586,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformShowGridLines>Mostrar linhas na grelha</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Inverter direcção da roda do rato</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Permitir sobreposição (ao mover / redimensionar)</WaveformAllowOverlap>
-    <WaveformFocusMouseEnter>Evidenciar na entrada do cursor do rato</WaveformFocusMouseEnter>
-    <WaveformListViewFocusMouseEnter>Também evidenciar a lista de visualização na entrada do cursor do rato</WaveformListViewFocusMouseEnter>
+    <WaveformFocusMouseEnter>Destacar a entrada do cursor do rato</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Destacar também a lista de visualização na entrada do cursor do rato</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>O acerto da marca da borda deve estar dentro</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milissegundos</WaveformBorderHitMs2>
     <WaveformColor>Cor</WaveformColor>
@@ -1577,7 +1608,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformBrowseToVLC>Procurar por VLC portátil</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha estilo (Avançado)</SubStationAlphaStyle>
     <ChooseFont>Tipo de letra</ChooseFont>
-    <ChooseColor>Escolher cor</ChooseColor>
+    <ChooseColor>Escolha a cor</ChooseColor>
     <SsaOutline>Contorno</SsaOutline>
     <SsaShadow>Sombra</SsaShadow>
     <SsaOpaqueBox>Caixa opaca</SsaOpaqueBox>
@@ -1588,7 +1619,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AddWord>Adicionar palavra</AddWord>
     <Remove>Remover</Remove>
     <AddPair>Adicionar par</AddPair>
-    <UserWordList>Lista de palavras do usuário</UserWordList>
+    <UserWordList>Lista de palavras do utilizador</UserWordList>
     <OcrFixList>Lista de correcções OCR</OcrFixList>
     <Location>Localização</Location>
     <UseOnlineNamesEtc>Usar lista de nomes XML online</UseOnlineNamesEtc>
@@ -1655,7 +1686,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformAddTextHere>Adicionar texto aqui (para nova selecção)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Reproduzir a nova selecção</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Evidenciar a lista de visualização</WaveformFocusListView>
+    <WaveformFocusListView>Destacar a lista de visualização</WaveformFocusListView>
     <GoBack1Frame>Um fotograma para atrás</GoBack1Frame>
     <GoForward1Frame>Um fotograma para a frente</GoForward1Frame>
     <GoBack100Milliseconds>100 ms atrás</GoBack100Milliseconds>
@@ -1679,7 +1710,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SyntaxColorDurationIfTooLarge>Cor duração muito longa</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Cor texto muito longo</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanXLines>Cor do texto se o número de linhas for superior a:</SyntaxColorTextMoreThanXLines>
-    <SyntaxColorOverlap>Cor do código de tempo sobreposto</SyntaxColorOverlap>
+    <SyntaxColorOverlap>Cor dos tempos sobrepostos</SyntaxColorOverlap>
     <SyntaxErrorColor>Cor dos erros</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ir para a primeira linha seleccionada</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Ir para a próxima linha em branco</GoToNextEmptyLine>
@@ -1693,7 +1724,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ListViewColumnDelete>Coluna, eliminar texto</ListViewColumnDelete>
     <ListViewColumnInsert>Coluna, inserir texto</ListViewColumnInsert>
     <ListViewColumnPaste>Coluna, colar</ListViewColumnPaste>
-    <ListViewFocusWaveform>Evidenciar forma de onda/espectrograma</ListViewFocusWaveform>
+    <ListViewFocusWaveform>Destacar a forma de onda/espectrograma</ListViewFocusWaveform>
     <ListViewGoToNextError>Ir para o próximo erro</ListViewGoToNextError>
     <ShowBeamer>Iniciar a legenda em ecrã inteiro</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mover a última palavra para baixo para a próxima linha de legendas</MainTextBoxMoveLastWordDown>
@@ -1834,6 +1865,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <CharactersPerSecondMinimum>Caracteres/seg - mínimo: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caracteres/seg - máximo: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caracteres/seg - médio: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Exportar...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha propriedades</Title>
@@ -1843,7 +1875,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <OriginalScript>Script original</OriginalScript>
     <Translation>Tradução</Translation>
     <Editing>Edição</Editing>
-    <Timing>Tempo</Timing>
+    <Timing>Temporização</Timing>
     <SyncPoint>Ponto de sincronia</SyncPoint>
     <UpdatedBy>Actualizado por</UpdatedBy>
     <UpdateDetails>Actualizar detalhes</UpdateDetails>
@@ -1898,7 +1930,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <RemoveAll>Remover tudo</RemoveAll>
     <ImportStyleFromFile>Importar estilo do ficheiro...</ImportStyleFromFile>
     <ExportStyleToFile>Exportar estilo para ficheiro... (adiciona o estilo se já existir o ficheiro)</ExportStyleToFile>
-    <ChooseStyle>Escolher estilo para importar</ChooseStyle>
+    <ChooseStyle>Escolha o estilo para importar</ChooseStyle>
     <StyleAlreadyExits>Estilo já existente: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>Estilo '{0}' exportado para o ficheiro '{1}'</StyleXExportedToFileY>
     <StyleXImportedFromFileY>Estilo '{0}' importado do ficheiro '{1}'</StyleXImportedFromFileY>
@@ -1992,8 +2024,8 @@ Manter as alterações?</KeepChangesMessage>
     <UnknownWords>Palavras desconhecidas</UnknownWords>
     <OcrAutoCorrectionSpellChecking>Auto correcção OCR / verificação ortográfica</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Corrigir erros de OCR</FixOcrErrors>
-    <ImportTextWithMatchingTimeCodes>Importar texto com código de tempo correspondente...</ImportTextWithMatchingTimeCodes>
-    <ImportNewTimeCodes>Importar códigos de tempo novos</ImportNewTimeCodes>
+    <ImportTextWithMatchingTimeCodes>Importar texto com tempos correspondente...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>Importar novos tempos</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Guardar imagem da legenda como...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Guardar todas as imagens (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Guardar todas as imagens com índice HTML...</SaveAllSubtitleImagesWithHtml>
@@ -2002,12 +2034,14 @@ Manter as alterações?</KeepChangesMessage>
     <DictionaryX>Dicionário: {0}</DictionaryX>
     <RightToLeft>Direita para esquerda</RightToLeft>
     <ShowOnlyForcedSubtitles>Mostrar somente legendas forçadas</ShowOnlyForcedSubtitles>
-    <UseTimeCodesFromIdx>Usar códigos de tempo do ficheiro (.idx)</UseTimeCodesFromIdx>
+    <UseTimeCodesFromIdx>Usar os tempos do ficheiro (.idx)</UseTimeCodesFromIdx>
     <NoMatch>&lt;Sem coincidências&gt;</NoMatch>
     <AutoTransparentBackground>Fundo auto transparente</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Inspeccionar coincidências para a imagem actual...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Editar última imagem comparando com as adicionadas...</EditLastAdditions>
     <SetUnitalicFactor>Definir um factor itálico...</SetUnitalicFactor>
+    <DiscardTitle>Rejeitar as alterações feitas no OCR?</DiscardTitle>
+    <DiscardText>Deseja rejeitar as alterações feitas na sessão corrente de OCR?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Imagem para texto manualmente</Title>
@@ -2046,7 +2080,7 @@ Manter as alterações?</KeepChangesMessage>
     <ZoomOut>Diminuir</ZoomOut>
     <AddParagraphHere>Adicionar texto aqui</AddParagraphHere>
     <AddParagraphHereAndPasteText>Adicionar texto da área de tranferência aqui</AddParagraphHereAndPasteText>
-    <FocusTextBox>Evidenciar a caixa de texto</FocusTextBox>
+    <FocusTextBox>Destacar a caixa de texto</FocusTextBox>
     <DeleteParagraph>Eliminar texto</DeleteParagraph>
     <Split>Dividir</Split>
     <SplitAtCursor>Dividir na posição do cursor</SplitAtCursor>
@@ -2056,11 +2090,11 @@ Manter as alterações?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Mostrar forma de onda e espectrograma</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Mostrar só forma de onda</ShowWaveformOnly>
     <ShowSpectrogramOnly>Mostrar só espectrograma</ShowSpectrogramOnly>
-    <GuessTimeCodes>Supor códigos de tempo...</GuessTimeCodes>
+    <GuessTimeCodes>Adivinhar os tempos...</GuessTimeCodes>
     <SeekSilence>Localizar silêncio no áudio...</SeekSilence>
   </Waveform>
   <WaveformGenerateTimeCodes>
-    <Title>Supor códigos de tempo</Title>
+    <Title>Adivinhar os tempos</Title>
     <StartFrom>Iniciar apartir de:</StartFrom>
     <CurrentVideoPosition>Posição de vídeo actual</CurrentVideoPosition>
     <Beginning>Início</Beginning>

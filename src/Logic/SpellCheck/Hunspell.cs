@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             if (Configuration.IsRunningOnMac())
                 return new MacHunspell(dictionary + ".aff", dictionary + ".dic");
 
-            // Finnish is uses Voikko (not available via hunspell)
+            // Finnish uses Voikko (not available via hunspell)
             if (dictionary.EndsWith("fi_fi", StringComparison.OrdinalIgnoreCase))
                 return new VoikkoSpellCheck(Configuration.BaseDirectory, Configuration.DictionariesFolder);
 

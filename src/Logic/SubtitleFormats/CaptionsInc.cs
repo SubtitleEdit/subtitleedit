@@ -8,7 +8,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class CaptionsInc : SubtitleFormat
     {
-
         public override string Extension
         {
             get { return ".cin"; }
@@ -99,7 +98,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static void WriteTime(FileStream fs, TimeCode timeCode, bool addEndBytes)
         {
-            string time = string.Format("{0:00}{1:00}{2:00}{3:00}", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds));
+            var time = timeCode.ToHHMMSSFF();
             var buffer = Encoding.ASCII.GetBytes(time);
             fs.Write(buffer, 0, buffer.Length);
             if (addEndBytes)
@@ -250,7 +249,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (last != null && last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
 
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
     }

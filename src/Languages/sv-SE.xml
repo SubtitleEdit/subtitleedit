@@ -2,7 +2,7 @@
 <Language Name="Swedish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Översätt av Ted</TranslatedBy>
     <CultureName>sv-Subtitle Edit</CultureName>
     <HelpFile />
@@ -1212,7 +1212,7 @@ Fortsätta?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Välj text från Matroska fil</Title>
     <PleaseChoose>Mer än en text hittades - välj</PleaseChoose>
-    <TrackXLanguageYTypeZ>Spår {0} - {1} - Språk: {2} - typ: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Spår {0} - Språk: {1} - typ: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Måttomräknare</Title>

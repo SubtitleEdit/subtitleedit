@@ -56,18 +56,8 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxTextAsImage.Text = Configuration.Settings.Language.SpellCheck.ImageText;
             buttonAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
             buttonChangeAllWholeText.Text = Configuration.Settings.Language.SpellCheck.ChangeAll;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonAddToNames.Text, this.Font);
-            if (textSize.Height > buttonAddToNames.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            buttonGoogleIt.Text = Configuration.Settings.Language.Main.VideoControls.GoogleIt;
+            Utilities.FixLargeFonts(this, buttonAddToNames);
         }
 
         private void ButtonAbortClick(object sender, EventArgs e)

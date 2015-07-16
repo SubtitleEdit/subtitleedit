@@ -1,0 +1,28 @@
+﻿<OCRFixReplaceList>
+  <WholeWords>
+    <Word from="ls" to="Is" />
+    <Word from="ln" to="In" />
+    <Word from="lk" to="Ik" />
+    <Word from="ledereen" to="Iedereen" />
+    <Word from="ledere" to="Iedere" />
+    <Word from="lemand" to="Iemand" />
+    <Word from="lsolement" to="Isolement" />
+    <Word from="ler" to="Ier" />
+    <Word from="lerland" to="Ierland" />
+    <Word from="lers" to="Iers" />
+    <Word from="lerse" to="Ierse" />
+    <Word from="eIk" to="elk" />
+    <Word from="eIkaar" to="elkaar" />
+    <Word from="eIke" to="elke" />
+  </WholeWords>
+  <PartialWordsAlways />
+  <PartialWords />
+  <PartialLines />
+  <PartialLinesAlways />
+  <BeginLines />
+  <EndLines />
+  <WholeLines />
+  <RegularExpressions>
+    <RegEx find="\bln(?=\p{Ll}{2})" replaceWith="In" />
+  </RegularExpressions>
+</OCRFixReplaceList>

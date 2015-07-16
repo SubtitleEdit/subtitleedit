@@ -2,8 +2,8 @@
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.BluRaySup;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,18 +42,18 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     Console.WriteLine();
                     Console.WriteLine("- Supported formats (input only):");
-                    Console.WriteLine("    " + new CapMakerPlus().FriendlyName);
-                    Console.WriteLine("    " + new Captionate().FriendlyName);
-                    Console.WriteLine("    " + new Cavena890().FriendlyName);
-                    Console.WriteLine("    " + new CheetahCaption().FriendlyName);
-                    Console.WriteLine("    " + new Chk().FriendlyName);
+                    Console.WriteLine("    " + CapMakerPlus.NameOfFormat);
+                    Console.WriteLine("    " + Captionate.NameOfFormat);
+                    Console.WriteLine("    " + Cavena890.NameOfFormat);
+                    Console.WriteLine("    " + CheetahCaption.NameOfFormat);
+                    Console.WriteLine("    " + Chk.NameOfFormat);
                     Console.WriteLine("    Matroska (.mkv)");
                     Console.WriteLine("    Matroska subtitle (.mks)");
-                    Console.WriteLine("    " + new NciCaption().FriendlyName);
-                    Console.WriteLine("    " + new AvidStl().FriendlyName);
-                    Console.WriteLine("    " + new Pac().FriendlyName);
-                    Console.WriteLine("    " + new Spt().FriendlyName);
-                    Console.WriteLine("    " + new Ultech130().FriendlyName);
+                    Console.WriteLine("    " + NciCaption.NameOfFormat);
+                    Console.WriteLine("    " + AvidStl.NameOfFormat);
+                    Console.WriteLine("    " + Pac.NameOfFormat);
+                    Console.WriteLine("    " + Spt.NameOfFormat);
+                    Console.WriteLine("    " + Ultech130.NameOfFormat);
                 }
 
                 Console.WriteLine();
@@ -218,8 +218,8 @@ namespace Nikse.SubtitleEdit.Logic
 
                                                 if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
                                                 {
-                                                    if (toFormat.ToLower() != new AdvancedSubStationAlpha().Name.ToLower().Replace(" ", string.Empty) &&
-                                                        toFormat.ToLower() != new SubStationAlpha().Name.ToLower().Replace(" ", string.Empty))
+                                                    if (toFormat.ToLower() != AdvancedSubStationAlpha.NameOfFormat.ToLower().Replace(" ", string.Empty) &&
+                                                        toFormat.ToLower() != SubStationAlpha.NameOfFormat.ToLower().Replace(" ", string.Empty))
                                                     {
 
                                                         foreach (SubtitleFormat sf in formats)
@@ -560,6 +560,11 @@ namespace Nikse.SubtitleEdit.Logic
                         else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
                             sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
 
+                        if ((sf.GetType() == typeof(WebVTT) || sf.GetType() == typeof(WebVTTFileWithLineNumber)))
+                        {
+                            targetEncoding = Encoding.UTF8;
+                        }
+
                         if (sf.GetType() == typeof(ItunesTimedText) || sf.GetType() == typeof(ScenaristClosedCaptions) || sf.GetType() == typeof(ScenaristClosedCaptionsDropFrame))
                         {
                             Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
@@ -614,6 +619,7 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                         }
                         Console.WriteLine(" done.");
+                        break;
                     }
                 }
                 if (!targetFormatFound)

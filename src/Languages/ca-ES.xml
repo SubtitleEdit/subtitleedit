@@ -2,7 +2,7 @@
 <Language Name="Catalan">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Traduït per Juansa</TranslatedBy>
     <CultureName>ca-ES</CultureName>
     <HelpFile />
@@ -1206,7 +1206,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <MatroskaSubtitleChooser>
     <Title>Escolliu subtítol des de fitxer Matroska</Title>
     <PleaseChoose>S'ha trobat més d'un subtítol - escolliu si us plau</PleaseChoose>
-    <TrackXLanguageYTypeZ>Pista {0} - {1} - Idioma: {2} - tipus: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Pista {0} - Idioma: {1} - tipus: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Convertidor de mides</Title>

@@ -62,6 +62,8 @@ namespace Nikse.SubtitleEdit.Logic
                 _paragraphs.Add(new Paragraph(p));
             }
             _wasLoadedWithFrameNumbers = subtitle.WasLoadedWithFrameNumbers;
+            Header = subtitle.Header;
+            Footer = subtitle.Footer;
         }
 
         public List<Paragraph> Paragraphs
@@ -242,10 +244,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <returns>True if times could be calculated</returns>
         public bool CalculateTimeCodesFromFrameNumbers(double frameRate)
         {
-            if (_format == null)
-                return false;
-
-            if (_format.IsTimeBased)
+            if (_format == null || _format.IsTimeBased)
                 return false;
 
             foreach (Paragraph p in Paragraphs)
@@ -262,10 +261,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <returns></returns>
         public bool CalculateFrameNumbersFromTimeCodes(double frameRate)
         {
-            if (_format == null)
-                return false;
-
-            if (_format.IsFrameBased)
+            if (_format == null || _format.IsFrameBased)
                 return false;
 
             foreach (Paragraph p in Paragraphs)
@@ -291,7 +287,7 @@ namespace Nikse.SubtitleEdit.Logic
             for (int i = 0; i < Paragraphs.Count - 1; i++)
             {
                 Paragraph p = Paragraphs[i];
-                Paragraph next = Paragraphs[i + 1];
+                Paragraph next = GetParagraphOrDefault(i + 1);
                 if (next != null && (p.EndFrame == next.StartFrame || p.EndFrame == next.StartFrame + 1))
                     p.EndFrame = next.StartFrame - 1;
             }
@@ -301,10 +297,10 @@ namespace Nikse.SubtitleEdit.Logic
         {
             foreach (Paragraph p in Paragraphs)
             {
-                double startFrame = p.StartTime.TotalMilliseconds / 1000.0 * oldFrameRate;
-                double endFrame = p.EndTime.TotalMilliseconds / 1000.0 * oldFrameRate;
-                p.StartTime.TotalMilliseconds = startFrame * (1000.0 / newFrameRate);
-                p.EndTime.TotalMilliseconds = endFrame * (1000.0 / newFrameRate);
+                double startFrame = p.StartTime.TotalMilliseconds / TimeCode.BaseUnit * oldFrameRate;
+                double endFrame = p.EndTime.TotalMilliseconds / TimeCode.BaseUnit * oldFrameRate;
+                p.StartTime.TotalMilliseconds = startFrame * (TimeCode.BaseUnit / newFrameRate);
+                p.EndTime.TotalMilliseconds = endFrame * (TimeCode.BaseUnit / newFrameRate);
                 p.CalculateFrameNumbersFromTimeCodes(newFrameRate);
             }
         }
@@ -327,7 +323,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (selectedIndexes == null || selectedIndexes.Contains(i))
                 {
-                    double nextStartMilliseconds = _paragraphs[_paragraphs.Count - 1].EndTime.TotalMilliseconds + 100000;
+                    double nextStartMilliseconds = _paragraphs[_paragraphs.Count - 1].EndTime.TotalMilliseconds + TimeCode.BaseUnit;
                     if (i + 1 < _paragraphs.Count)
                         nextStartMilliseconds = _paragraphs[i + 1].StartTime.TotalMilliseconds;
 
@@ -346,11 +342,11 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (selectedIndexes == null || selectedIndexes.Contains(i))
                 {
-                    double nextStartMilliseconds = _paragraphs[_paragraphs.Count - 1].EndTime.TotalMilliseconds + 100000;
+                    double nextStartMilliseconds = _paragraphs[_paragraphs.Count - 1].EndTime.TotalMilliseconds + TimeCode.BaseUnit;
                     if (i + 1 < _paragraphs.Count)
                         nextStartMilliseconds = _paragraphs[i + 1].StartTime.TotalMilliseconds;
 
-                    double newEndMilliseconds = _paragraphs[i].EndTime.TotalMilliseconds + (seconds * 1000.0);
+                    double newEndMilliseconds = _paragraphs[i].EndTime.TotalMilliseconds + (seconds * TimeCode.BaseUnit);
                     if (newEndMilliseconds > nextStartMilliseconds)
                         newEndMilliseconds = nextStartMilliseconds - 1;
 
@@ -396,7 +392,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public void Renumber(int startNumber)
+        public void Renumber(int startNumber = 1)
         {
             int i = startNumber;
             foreach (Paragraph p in _paragraphs)
@@ -458,24 +454,20 @@ namespace Nikse.SubtitleEdit.Logic
 
         public int RemoveEmptyLines()
         {
-            int count = 0;
-            if (_paragraphs.Count > 0)
+            int count = _paragraphs.Count;
+            if (count > 0)
             {
                 int firstNumber = _paragraphs[0].Number;
                 for (int i = _paragraphs.Count - 1; i >= 0; i--)
                 {
                     Paragraph p = _paragraphs[i];
-                    string s = p.Text.Trim();
-
-                    if (s.Length == 0)
-                    {
+                    if (string.IsNullOrWhiteSpace(p.Text))
                         _paragraphs.RemoveAt(i);
-                        count++;
-                    }
                 }
-                Renumber(firstNumber);
+                if (count != _paragraphs.Count)
+                    Renumber(firstNumber);
             }
-            return count;
+            return count - _paragraphs.Count;
         }
 
         /// <summary>

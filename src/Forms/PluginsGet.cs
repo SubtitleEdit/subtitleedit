@@ -11,16 +11,15 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class PluginsGet : Form
+    public sealed partial class PluginsGet : Form
     {
-        private XmlDocument _pluginDoc = new XmlDocument();
+        private readonly XmlDocument _pluginDoc = new XmlDocument();
         private string _downloadedPluginName;
         private readonly LanguageStructure.PluginsGet _language;
-        //        bool _firstTry = true;
         private List<string> _updateAllListUrls;
         private List<string> _updateAllListNames;
-        private bool _updatingAllPlugins = false;
-        private int _updatingAllPluginsCount = 0;
+        private bool _updatingAllPlugins;
+        private int _updatingAllPluginsCount;
 
         private static string GetPluginXmlFileUrl()
         {
@@ -58,11 +57,10 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
-                this.Refresh();
+                Refresh();
                 ShowInstalledPlugins();
                 string url = GetPluginXmlFileUrl();
-                var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                wc.Encoding = System.Text.Encoding.UTF8;
+                var wc = new WebClient { Proxy = Utilities.GetProxy(), Encoding = System.Text.Encoding.UTF8 };
                 wc.Headers.Add("Accept-Encoding", "");
                 wc.DownloadStringCompleted += wc_DownloadStringCompleted;
                 wc.DownloadStringAsync(new Uri(url));
@@ -79,18 +77,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void wc_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
-            //if (e.Error != null && _firstTry)
-            //{
-            //    _firstTry = false;
-            //    string url = "http://www.nikse.dk/Content/SubtitleEdit/Plugins/Plugins.xml"; // retry with alternate download url
-            //    var wc = new WebClient { Proxy = Utilities.GetProxy() };
-            //    wc.Encoding = System.Text.Encoding.UTF8;
-            //    wc.Headers.Add("Accept-Encoding", "");
-            //    wc.DownloadStringCompleted += new DownloadStringCompletedEventHandler(wc_DownloadStringCompleted);
-            //    wc.DownloadStringAsync(new Uri(url));
-            //    return;
-            //}
-
             labelPleaseWait.Text = string.Empty;
             if (e.Error != null)
             {
@@ -103,6 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             _updateAllListUrls = new List<string>();
             _updateAllListNames = new List<string>();
+            listViewGetPlugins.BeginUpdate();
             try
             {
                 _pluginDoc.LoadXml(e.Result);
@@ -121,7 +108,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 foreach (XmlNode node in _pluginDoc.DocumentElement.SelectNodes("Plugin"))
                 {
-                    ListViewItem item = new ListViewItem(node.SelectSingleNode("Name").InnerText.Trim('.'));
+                    var item = new ListViewItem(node.SelectSingleNode("Name").InnerText.Trim('.'));
                     item.SubItems.Add(node.SelectSingleNode("Description").InnerText);
                     item.SubItems.Add(node.SelectSingleNode("Version").InnerText);
                     item.SubItems.Add(node.SelectSingleNode("Date").InnerText);
@@ -129,8 +116,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                     foreach (ListViewItem installed in listViewInstalledPlugins.Items)
                     {
-                        if (installed.Text.TrimEnd('.') == node.SelectSingleNode("Name").InnerText.TrimEnd('.') &&
-                            installed.SubItems[2].Text.Replace(",", ".") != node.SelectSingleNode("Version").InnerText.Replace(",", "."))
+                        var installedVer = Convert.ToDouble(installed.SubItems[2].Text.Replace(',', '.'), CultureInfo.InvariantCulture);
+                        var currentVer = Convert.ToDouble(node.SelectSingleNode("Version").InnerText.Replace(',', '.'), CultureInfo.InvariantCulture);
+
+                        if (string.Compare(installed.Text, node.SelectSingleNode("Name").InnerText.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0 && installedVer < currentVer)
                         {
                             //item.BackColor = Color.LightGreen;
                             installed.BackColor = Color.LightPink;
@@ -146,6 +135,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(string.Format(_language.UnableToDownloadPluginListX, exception.Source + ": " + exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace));
             }
+            listViewGetPlugins.EndUpdate();
+
             if (_updateAllListUrls.Count > 0)
             {
                 buttonUpdateAll.BackColor = Color.LightGreen;
@@ -163,9 +154,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (!Directory.Exists(path))
                 return;
 
+            listViewInstalledPlugins.BeginUpdate();
             listViewInstalledPlugins.Items.Clear();
-            string[] pluginFiles = Directory.GetFiles(path, "*.DLL");
-            foreach (string pluginFileName in pluginFiles)
+            foreach (string pluginFileName in Directory.GetFiles(path, "*.DLL"))
             {
                 string name, description, text, shortcut, actionType;
                 decimal version;
@@ -175,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     try
                     {
-                        ListViewItem item = new ListViewItem(name.Trim('.'));
+                        var item = new ListViewItem(name.Trim('.'));
                         item.Tag = pluginFileName;
                         item.SubItems.Add(description);
                         item.SubItems.Add(version.ToString());
@@ -188,6 +179,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            listViewInstalledPlugins.EndUpdate();
         }
 
         private void buttonDownload_Click(object sender, EventArgs e)
@@ -201,7 +193,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Enabled = false;
                 buttonDownload.Enabled = false;
                 listViewGetPlugins.Enabled = false;
-                this.Refresh();
+                Refresh();
                 Cursor = Cursors.WaitCursor;
 
                 int index = listViewGetPlugins.SelectedItems[0].Index;
@@ -247,38 +239,37 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
             }
+
             var ms = new MemoryStream(e.Result);
-
-            ZipExtractor zip = ZipExtractor.Open(ms);
-            List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
-
-            // Extract dic/aff files in dictionary folder
-            foreach (ZipExtractor.ZipFileEntry entry in dir)
+            using (ZipExtractor zip = ZipExtractor.Open(ms))
             {
-                string fileName = Path.GetFileName(entry.FilenameInZip);
-                string fullPath = Path.Combine(pluginsFolder, fileName);
-                if (File.Exists(fullPath))
+                List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
+
+                // Extract dic/aff files in dictionary folder
+                foreach (ZipExtractor.ZipFileEntry entry in dir)
                 {
-                    try
+                    string fileName = Path.GetFileName(entry.FilenameInZip);
+                    string fullPath = Path.Combine(pluginsFolder, fileName);
+                    if (File.Exists(fullPath))
                     {
-                        File.Delete(fullPath);
+                        try
+                        {
+                            File.Delete(fullPath);
+                        }
+                        catch
+                        {
+                            MessageBox.Show(string.Format("{0} already exists - unable to overwrite it", fullPath));
+                            Cursor = Cursors.Default;
+                            labelPleaseWait.Text = string.Empty;
+                            buttonOK.Enabled = true;
+                            buttonDownload.Enabled = true;
+                            listViewGetPlugins.Enabled = true;
+                            return;
+                        }
                     }
-                    catch
-                    {
-                        MessageBox.Show(string.Format("{0} already exists - unable to overwrite it", fullPath));
-                        Cursor = Cursors.Default;
-                        labelPleaseWait.Text = string.Empty;
-                        buttonOK.Enabled = true;
-                        buttonDownload.Enabled = true;
-                        listViewGetPlugins.Enabled = true;
-                        return;
-                    }
+                    zip.ExtractFile(entry, fullPath);
                 }
-                zip.ExtractFile(entry, fullPath);
             }
-            // zip.Close();
-            zip.Dispose();
-            // ms.Close();
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;
@@ -369,14 +360,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonUpdateAll_Click(object sender, EventArgs e)
         {
             buttonUpdateAll.Enabled = false;
-            buttonUpdateAll.BackColor = Control.DefaultBackColor;
+            buttonUpdateAll.BackColor = DefaultBackColor;
             try
             {
                 labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
                 buttonOK.Enabled = false;
                 buttonDownload.Enabled = false;
                 listViewGetPlugins.Enabled = false;
-                this.Refresh();
+                Refresh();
                 Cursor = Cursors.WaitCursor;
                 _updatingAllPluginsCount = 0;
                 _updatingAllPlugins = true;

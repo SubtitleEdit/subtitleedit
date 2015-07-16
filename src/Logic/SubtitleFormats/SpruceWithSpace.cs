@@ -115,7 +115,7 @@ $TapeOffset         =   FALSE
                     _errorCount++;
                 }
             }
-            subtitle.Renumber(1);
+            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string time)
@@ -132,7 +132,7 @@ $TapeOffset         =   FALSE
         }
 
         private static string DecodeText(string text)
-        { //TODO: improve end tags
+        { // TODO: Improve end tags
             text = text.Replace("|", Environment.NewLine);
             if (text.Contains("^B"))
                 text = text.Replace("^B", "<b>") + "</b>";
