@@ -1294,6 +1294,8 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
+                // Cache allowfix
+                bool allowFix = AllowFix(p, fixAction);
 
                 // missing space after comma ","
                 Match match = FixMissingSpacesReComma.Match(p.Text);
@@ -1304,7 +1306,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (doFix && languageCode == "el" && (p.Text.Substring(match.Index).StartsWith("ό,τι", StringComparison.Ordinal) || p.Text.Substring(match.Index).StartsWith("ο,τι", StringComparison.Ordinal)))
                         doFix = false;
 
-                    if (doFix && AllowFix(p, fixAction))
+                    if (doFix && allowFix)
                     {
                         missingSpaces++;
                         string oldText = p.Text;
@@ -1313,8 +1315,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     match = match.NextMatch();
                 }
-
-                bool allowFix = AllowFix(p, fixAction);
 
                 // missing space after "?"
                 match = FixMissingSpacesReQuestionMark.Match(p.Text);
@@ -1390,7 +1390,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (match.Value.Equals("h.d", StringComparison.OrdinalIgnoreCase) && match.Index > 0 && p.Text.Substring(match.Index - 1, 4).Equals("ph.d", StringComparison.OrdinalIgnoreCase))
                             isMatchAbbreviation = true;
 
-                        if (!isMatchAbbreviation && AllowFix(p, fixAction))
+                        if (!isMatchAbbreviation && allowFix)
                         {
                             missingSpaces++;
                             string oldText = p.Text;
@@ -1415,7 +1415,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (arr[1].Length > 6 && arr[1].StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) && arr[1][4] != ' ')
                             arr[1] = arr[1].Insert(4, " ");
                         string newText = arr[0] + Environment.NewLine + arr[1];
-                        if (newText != p.Text && AllowFix(p, fixAction))
+                        if (newText != p.Text && allowFix)
                         {
                             missingSpaces++;
                             string oldText = p.Text;
@@ -1451,7 +1451,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 newText = newText.Insert(end + 1, " ");
                             }
                         }
-                        if (newText != p.Text && AllowFix(p, fixAction))
+                        if (newText != p.Text && allowFix)
                         {
                             missingSpaces++;
                             string oldText = p.Text;
@@ -1472,7 +1472,7 @@ namespace Nikse.SubtitleEdit.Forms
                         !newText.Substring(0, newText.Length - 1).EndsWith(Environment.NewLine, StringComparison.Ordinal) && !newText.Substring(0, newText.Length - 1).EndsWith('♪') &&
                         !newText.Substring(0, newText.Length - 1).EndsWith('♫'))
                         newText = newText.Insert(newText.Length - 1, " ");
-                    if (newText != p.Text && AllowFix(p, fixAction))
+                    if (newText != p.Text && allowFix)
                     {
                         missingSpaces++;
                         string oldText = p.Text;
@@ -1496,7 +1496,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         index = newText.IndexOf("...", index + 2, StringComparison.Ordinal);
                     }
-                    if (newText != p.Text && AllowFix(p, fixAction))
+                    if (newText != p.Text && allowFix)
                     {
                         missingSpaces++;
                         string oldText = p.Text;
@@ -1520,7 +1520,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         index = newText.IndexOf("<i>", index + 3, StringComparison.OrdinalIgnoreCase);
                     }
-                    if (newText != p.Text && AllowFix(p, fixAction))
+                    if (newText != p.Text && allowFix)
                     {
                         missingSpaces++;
                         string oldText = p.Text;
@@ -1544,7 +1544,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         index = newText.IndexOf("</i>", index + 4, StringComparison.OrdinalIgnoreCase);
                     }
-                    if (newText != p.Text && AllowFix(p, fixAction))
+                    if (newText != p.Text && allowFix)
                     {
                         missingSpaces++;
                         string oldText = p.Text;
@@ -1569,7 +1569,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         j++;
                     }
-                    if (newText != p.Text && AllowFix(p, fixAction))
+                    if (newText != p.Text && allowFix)
                     {
                         missingSpaces++;
                         string oldText = p.Text;
