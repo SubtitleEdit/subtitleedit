@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 SubtitleFormat format = new AdvancedSubStationAlpha();
                 var sub = new Subtitle();
                 string text = format.ToText(sub, string.Empty);
-                string[] lineArray = text.Replace(Environment.NewLine, "\n").Split('\n');
+                string[] lineArray = text.SplitToLines();
                 var lines = new List<string>();
                 foreach (string line in lineArray)
                     lines.Add(line);
@@ -260,7 +260,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             try
             {
                 var lines = new List<string>();
-                foreach (string s in subtitle.Header.Replace(Environment.NewLine, "\n").Split('\n'))
+                foreach (string s in subtitle.Header.SplitToLines())
                     lines.Add(s);
                 var tt = new TimedText10();
                 var sub = new Subtitle();
@@ -1265,7 +1265,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             bool stylesStarted = false;
             bool styleAdded = false;
             string styleFormat = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
-            foreach (string line in header.Replace(Environment.NewLine, "\n").Split('\n'))
+            foreach (string line in header.SplitToLines())
             {
                 if (line.Equals("[V4+ Styles]", StringComparison.OrdinalIgnoreCase) || line.Equals("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
                     stylesStarted = true;
