@@ -1005,7 +1005,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
         public static string GetSsaColorString(Color c)
         {
-            return string.Format("&H00{0:x2}{1:x2}{2:x2}", c.B, c.G, c.R).ToUpper();
+            return string.Format("&H00{0:X2}{1:X2}{2:X2}", c.B, c.G, c.R);
         }
 
         public static string CheckForErrors(string header)
