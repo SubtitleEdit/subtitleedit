@@ -838,22 +838,15 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string RemoveSsaTags(string s)
         {
-            int k = s.IndexOf('{');
+            const string tagStart = "{\\";
+            int k = s.IndexOf(tagStart, StringComparison.Ordinal);
             while (k >= 0)
             {
-                int l = s.IndexOf('}', k);
-                if (l > k)
-                {
-                    s = s.Remove(k, l - k + 1);
-                    if (s.Length > 1 && s.Length > k)
-                        k = s.IndexOf('{', k);
-                    else
-                        break;
-                }
-                else
-                {
+                int l = s.IndexOf('}', k + 1);
+                if (l < k)
                     break;
-                }
+                s = s.Remove(k, l - k + 1);
+                k = s.IndexOf(tagStart, k, StringComparison.Ordinal);
             }
             return s;
         }
