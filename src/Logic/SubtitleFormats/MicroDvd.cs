@@ -311,7 +311,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                             foreach (string s2 in parts)
                             {
-
                                 if (count > 0)
                                     lineSb.AppendLine();
 

@@ -680,7 +680,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         bold = true;
                     }
                 }
-
             }
             if (innerNode.HasChildNodes)
             {

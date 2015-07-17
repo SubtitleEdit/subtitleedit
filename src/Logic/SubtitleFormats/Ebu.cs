@@ -155,7 +155,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     return result;
                 return "Length must be 1024 but is " + result.Length;
             }
-
         }
 
         /// <summary>

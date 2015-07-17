@@ -875,7 +875,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             switch (code.ToLower(CultureInfo.InvariantCulture))
             {
-
                 //NO x-coordinate?
                 case "1140": return new SccPositionAndStyle(Color.White, FontStyle.Regular, 1, 0);
                 case "1160": return new SccPositionAndStyle(Color.White, FontStyle.Regular, 2, 0);
@@ -1664,7 +1663,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (part != "94ae" && part != "9420" && part != "94ad" && part != "9426")
                     {
-
                         //  Spanish inverted question mark (extended char)
                         if (part == "91b3" && k < parts.Length - 1 && parts[k + 1] == "91b3")
                         {

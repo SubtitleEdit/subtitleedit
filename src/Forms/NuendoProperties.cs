@@ -77,7 +77,9 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                 }
                 lineNumber++;
             }

@@ -185,7 +185,6 @@ namespace Nikse.SubtitleEdit.Forms
                             var arr = dialogText.SplitToLines();
                             if (arr.Length == 2 && (arr[0].StartsWith('-') || arr[0].StartsWith("<i>-")) && (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-")))
                                 isDialog = true;
-
                         }
 
                         if (!isDialog && !SplitLongLinesHelper.QualifiesForSplit(Utilities.AutoBreakLine(p.Text, language), singleLineMaxCharacters, totalLineMaxCharacters))

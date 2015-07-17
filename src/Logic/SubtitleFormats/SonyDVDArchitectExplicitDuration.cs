@@ -101,7 +101,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             success = true;
                         }
                     }
-
                 }
                 if (!isTimeCode && lastParagraph != null && Utilities.GetNumberOfLines(lastParagraph.Text) < 5)
                 {

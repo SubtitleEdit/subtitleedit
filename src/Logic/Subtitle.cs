@@ -387,7 +387,6 @@ namespace Nikse.SubtitleEdit.Logic
                         if (p.Duration.TotalMilliseconds <= 0)
                             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
                     }
-
                 }
             }
         }

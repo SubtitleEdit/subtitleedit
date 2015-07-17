@@ -96,7 +96,6 @@ namespace Test
                     CopyStream(strm, file);
                 }
             }
-
         }
 
         //Use ClassCleanup to run code after all tests in a class have run
@@ -572,7 +571,6 @@ namespace Test
         {
             using (var form = new FixCommonErrors())
             {
-
                 Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
                 const string input = "i.e., your killer.";
                 var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "not there", form);

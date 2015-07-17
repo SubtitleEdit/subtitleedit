@@ -9,14 +9,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     /// <summary>
     /// Timeline Ascii export - THE MOVIE TITRE EDITOR - http://www.pld.ttu.ee/~priidu/timeline/ by priidu@pld.ttu.ee
-    /// 
+    ///
     /// Sample:
     /// 1.
     ///    41,10
     ///    46,10
     /// ±NE/SEVÎ
     /// ³ÂÍÅ/ÑÅÁß
-    /// 
+    ///
     /// 2.
     ///    49,05
     ///    51,09

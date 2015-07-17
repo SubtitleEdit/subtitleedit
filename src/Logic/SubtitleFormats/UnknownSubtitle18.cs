@@ -137,7 +137,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             line = line.Trim();
             if (RegexTimeCodes.IsMatch(line))
             {
-
                 //0001 01:00:15:08 01:00:18:05
                 try
                 {

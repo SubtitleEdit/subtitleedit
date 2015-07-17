@@ -98,7 +98,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 _errorCount = 1;
                 return;
             }
-
         }
 
     }

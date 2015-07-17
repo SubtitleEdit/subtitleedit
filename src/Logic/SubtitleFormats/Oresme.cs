@@ -99,7 +99,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (subtitle.Paragraphs.Count > 0)
                     subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].StartTime.TotalMilliseconds +
                          Utilities.GetOptimalDisplayMilliseconds(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text);
-
             }
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();

@@ -126,7 +126,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 index++;
                 p.Number = index;
             }
-
         }
     }
 }
