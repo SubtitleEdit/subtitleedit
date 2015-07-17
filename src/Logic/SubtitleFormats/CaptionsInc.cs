@@ -75,7 +75,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         text.Add(0x74);
                         //text.Add(0x17);
                         //text.Add(0x21);
-
                     }
 
                     // codes+text length

@@ -727,7 +727,6 @@ namespace Nikse.SubtitleEdit.Logic
             GuessUnknownWords = true;
             AutoBreakSubtitleIfMoreThanTwoLines = true;
             ItalicFactor = 0.2;
-
         }
     }
 

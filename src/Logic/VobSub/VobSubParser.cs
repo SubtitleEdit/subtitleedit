@@ -105,7 +105,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                                             fs.Seek(position, SeekOrigin.Begin);
                                         }
                                     }
-
                                 }
                             }
                         }
@@ -212,7 +211,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                    buffer[1] == 0 &&
                    buffer[2] == 1 &&
                    buffer[3] == 0xba; // 0xba == 186 - MPEG-2 Pack Header
-
         }
 
         internal static bool IsPrivateStream1(byte[] buffer, int index)

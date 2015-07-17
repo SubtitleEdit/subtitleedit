@@ -87,7 +87,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string value = line.Substring(start + 3, end - start - 3);
                     return value;
                 }
-
             }
             return string.Empty;
         }

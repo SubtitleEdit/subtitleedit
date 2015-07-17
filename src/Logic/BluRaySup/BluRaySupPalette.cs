@@ -172,7 +172,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         public BluRaySupPalette(int palSize)
             : this(palSize, false)
         {
-
         }
 
         /**

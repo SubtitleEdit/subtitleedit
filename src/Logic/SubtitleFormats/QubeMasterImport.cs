@@ -56,7 +56,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text));
                 sb.AppendLine(EncodeTimeCode(p.StartTime));
                 sb.AppendLine(EncodeTimeCode(p.EndTime));
-
             }
             return sb.ToString();
         }

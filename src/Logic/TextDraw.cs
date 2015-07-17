@@ -107,7 +107,6 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 using (var path = new GraphicsPath())
                 {
-
                     var sb = new StringBuilder(text);
                     bool newLine = false;
                     const int leftMargin = 0;

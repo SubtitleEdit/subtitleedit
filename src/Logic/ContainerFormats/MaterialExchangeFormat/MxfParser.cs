@@ -19,7 +19,6 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
 
         public MxfParser(string fileName)
         {
-
             FileName = fileName;
             using (var fs = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
