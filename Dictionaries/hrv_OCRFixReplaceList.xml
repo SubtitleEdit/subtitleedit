@@ -963,7 +963,7 @@
     <RegEx find="\bLičn(a|e|i|o|u|im|om|oj)?" replaceWith="Osobn$1" />
     <RegEx find="([lL])obanj(a|e|i|u|om|ama)?" replaceWith="$1ubanj$2" />
     <RegEx find="\b([lL])jep(a|e|i|o|u|om|oj|ima)\b" replaceWith="$1ijep$2" />
-    <RegEx find="([lL])uda(k|ka|ku|kom|ci|čk[aeiou]|čkom|kinj[aeiou])?\b" replaceWith="$1uđa$2" />
+    <RegEx find="([lL])u([dđ])a(k|ka|ku|kom|ci|čk[aeiou]|čkom|kinj[aeiou])?\b" replaceWith="$1u$2a$2" />
     <RegEx find="([lL])udeo" replaceWith="$1udio" />
     <RegEx find="([lL])udel" replaceWith="$1udjel" />
     <RegEx find="([mM])anipulisa" replaceWith="$1anipulira" />
