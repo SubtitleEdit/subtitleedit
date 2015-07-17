@@ -849,7 +849,6 @@
     <RegEx find="([eE])vr(a|e|i|o|u|om|ima)?" replaceWith="$1ur$2" />
     <RegEx find="([eE])vrop(sk[aeiou]|skom|skoj)" replaceWith="$1urop$2" />
     <RegEx find="([eE])vrop(a|e|i|o|u|om)" replaceWith="Europ$1" />
-    <RegEx find="([fF])alsifikuje?(m|š|mo|te|ju)?" replaceWith="$1alsificira$2" />
     <RegEx find="fabri[kc]" replaceWith="tvornic" />
     <RegEx find="Fabri[kc]" replaceWith="Tvornic" />
     <RegEx find="farba" replaceWith="boja" />
@@ -889,7 +888,6 @@
     <RegEx find="Hroničn" replaceWith="Kroničn" />
     <RegEx find="([hH])tj?eo" replaceWith="$1tio" />
     <RegEx find="([hH])tel" replaceWith="$1tjel" />
-    <RegEx find="([iI])dentifikuje" replaceWith="$1dentificira" />
     <RegEx find="([iI])migracion(a|i|u|e|om|og)?" replaceWith="$1migracijsk$2" />
     <RegEx find="([iI])nostranstv(a|u|o|om|ima)" replaceWith="$1nozemstv$2" />
     <RegEx find="interesantn" replaceWith="zanimljiv" />
@@ -1313,6 +1311,7 @@
     <!-- experimental -->
     <RegEx find="beležen([aeiou])" replaceWith="bilježen$1" />
     <RegEx find="beležava" replaceWith="bilježava" />
+    <RegEx find="fikuj" replaceWith="ficir" />
     <RegEx find="mjenim" replaceWith="mijenim" />
     <RegEx find="sta[čć]u" replaceWith="stat ću" />
     <RegEx find="oćeju" replaceWith="oće" />
