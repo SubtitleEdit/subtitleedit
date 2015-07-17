@@ -3629,13 +3629,14 @@ namespace Nikse.SubtitleEdit.Forms
             TryLoadIcon(toolStripButtonSaveAs, "SaveAs");
             TryLoadIcon(toolStripButtonFind, "Find");
             TryLoadIcon(toolStripButtonReplace, "Replace");
+            TryLoadIcon(toolStripButtonFixCommonErrors, "FixCommonErrors");
             TryLoadIcon(toolStripButtonVisualSync, "VisualSync");
-            TryLoadIcon(toolStripButtonSettings, "Settings");
             TryLoadIcon(toolStripButtonSpellCheck, "SpellCheck");
+            TryLoadIcon(toolStripButtonSettings, "Settings");
             TryLoadIcon(toolStripButtonHelp, "Help");
 
-            TryLoadIcon(toolStripButtonToggleVideo, "VideoToggle");
             TryLoadIcon(toolStripButtonToggleWaveform, "WaveformToggle");
+            TryLoadIcon(toolStripButtonToggleVideo, "VideoToggle");
 
             toolStripButtonFileNew.Visible = gs.ShowToolbarNew;
             toolStripButtonFileOpen.Visible = gs.ShowToolbarOpen;
@@ -3643,10 +3644,10 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonSaveAs.Visible = gs.ShowToolbarSaveAs;
             toolStripButtonFind.Visible = gs.ShowToolbarFind;
             toolStripButtonReplace.Visible = gs.ShowToolbarReplace;
-            toolStripButtonVisualSync.Visible = gs.ShowToolbarVisualSync;
             toolStripButtonFixCommonErrors.Visible = gs.ShowToolbarFixCommonErrors;
-            toolStripButtonSettings.Visible = gs.ShowToolbarSettings;
+            toolStripButtonVisualSync.Visible = gs.ShowToolbarVisualSync;
             toolStripButtonSpellCheck.Visible = gs.ShowToolbarSpellCheck;
+            toolStripButtonSettings.Visible = gs.ShowToolbarSettings;
             toolStripButtonHelp.Visible = gs.ShowToolbarHelp;
 
             toolStripSeparatorFrameRate.Visible = gs.ShowFrameRate;
@@ -3655,10 +3656,11 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonGetFrameRate.Visible = gs.ShowFrameRate;
 
             toolStripSeparatorFindReplace.Visible = gs.ShowToolbarFind || gs.ShowToolbarReplace;
+            toolStripSeparatorFixSyncSpell.Visible = gs.ShowToolbarFixCommonErrors || gs.ShowToolbarVisualSync || gs.ShowToolbarSpellCheck || gs.ShowToolbarSettings;
             toolStripSeparatorHelp.Visible = gs.ShowToolbarHelp;
 
             toolStrip1.Visible = gs.ShowToolbarNew || gs.ShowToolbarOpen || gs.ShowToolbarSave || gs.ShowToolbarSaveAs || gs.ShowToolbarFind || gs.ShowToolbarReplace ||
-                                 gs.ShowToolbarVisualSync || gs.ShowToolbarSettings || gs.ShowToolbarSpellCheck || gs.ShowToolbarHelp;
+                                 gs.ShowToolbarFixCommonErrors || gs.ShowToolbarVisualSync || gs.ShowToolbarSpellCheck || gs.ShowToolbarSettings || gs.ShowToolbarHelp;
         }
 
         private void ToolStripButtonFileNewClick(object sender, EventArgs e)

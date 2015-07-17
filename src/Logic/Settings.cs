@@ -538,6 +538,7 @@ namespace Nikse.SubtitleEdit.Logic
             ShowToolbarSaveAs = false;
             ShowToolbarFind = true;
             ShowToolbarReplace = true;
+            ShowToolbarFixCommonErrors = false;
             ShowToolbarVisualSync = true;
             ShowToolbarSpellCheck = true;
             ShowToolbarSettings = false;

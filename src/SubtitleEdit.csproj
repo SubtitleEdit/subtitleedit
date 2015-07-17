@@ -1842,6 +1842,9 @@
     <Content Include="Icons\Find.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Icons\FixCommonErrors.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Icons\Help.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
