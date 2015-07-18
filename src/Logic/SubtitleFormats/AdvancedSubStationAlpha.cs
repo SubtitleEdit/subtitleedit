@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 SubtitleFormat format = new AdvancedSubStationAlpha();
                 var sub = new Subtitle();
                 string text = format.ToText(sub, string.Empty);
-                string[] lineArray = text.Replace(Environment.NewLine, "\n").Split('\n');
+                string[] lineArray = text.SplitToLines();
                 var lines = new List<string>();
                 foreach (string line in lineArray)
                     lines.Add(line);
@@ -180,6 +180,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             {
                 bool styleFound = false;
                 var ttStyles = new StringBuilder();
+                // Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+                const string styleFormat = "Style: {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},0,100,100,0,0,{10},{11},{12},{13},{14},{15},{16},1";
                 foreach (string styleName in GetStylesFromHeader(subtitle.Header))
                 {
                     try
@@ -187,8 +189,6 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         var ssaStyle = GetSsaStyle(styleName, subtitle.Header);
                         if (ssaStyle != null)
                         {
-                            // Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-                            const string styleFormat = "Style: {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},0,100,100,0,0,{10},{11},{12},{13},{14},{15},{16},1";
                             string bold = "0";
                             if (ssaStyle.Bold)
                                 bold = "1";
@@ -260,7 +260,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             try
             {
                 var lines = new List<string>();
-                foreach (string s in subtitle.Header.Replace(Environment.NewLine, "\n").Split('\n'))
+                foreach (string s in subtitle.Header.SplitToLines())
                     lines.Add(s);
                 var tt = new TimedText10();
                 var sub = new Subtitle();
@@ -1005,7 +1005,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
         public static string GetSsaColorString(Color c)
         {
-            return string.Format("&H00{0:x2}{1:x2}{2:x2}", c.B, c.G, c.R).ToUpper();
+            return string.Format("&H00{0:X2}{1:X2}{2:X2}", c.B, c.G, c.R);
         }
 
         public static string CheckForErrors(string header)
@@ -1265,7 +1265,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             bool stylesStarted = false;
             bool styleAdded = false;
             string styleFormat = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
-            foreach (string line in header.Replace(Environment.NewLine, "\n").Split('\n'))
+            foreach (string line in header.SplitToLines())
             {
                 if (line.Equals("[V4+ Styles]", StringComparison.OrdinalIgnoreCase) || line.Equals("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
                     stylesStarted = true;
