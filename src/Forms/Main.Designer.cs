@@ -50,20 +50,20 @@
             this.toolStripSeparatorFindReplace = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonFind = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonReplace = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparatorFixSyncSpell = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonFixCommonErrors = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonVisualSync = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSpellCheck = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparatorHelp = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparatorToggle = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonToggleWaveform = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonToggleVideo = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparatorSubtitleFormat = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelSubtitleFormat = new System.Windows.Forms.ToolStripLabel();
             this.comboBoxSubtitleFormats = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparatorEncoding = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelEncoding = new System.Windows.Forms.ToolStripLabel();
             this.comboBoxEncoding = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparatorFrameRate = new System.Windows.Forms.ToolStripSeparator();
@@ -557,20 +557,20 @@
             this.toolStripSeparatorFindReplace,
             this.toolStripButtonFind,
             this.toolStripButtonReplace,
-            this.toolStripSeparator4,
+            this.toolStripSeparatorFixSyncSpell,
             this.toolStripButtonFixCommonErrors,
             this.toolStripButtonVisualSync,
             this.toolStripButtonSpellCheck,
             this.toolStripButtonSettings,
             this.toolStripSeparatorHelp,
             this.toolStripButtonHelp,
-            this.toolStripSeparator13,
+            this.toolStripSeparatorToggle,
             this.toolStripButtonToggleWaveform,
             this.toolStripButtonToggleVideo,
-            this.toolStripSeparator6,
+            this.toolStripSeparatorSubtitleFormat,
             this.toolStripLabelSubtitleFormat,
             this.comboBoxSubtitleFormats,
-            this.toolStripSeparator15,
+            this.toolStripSeparatorEncoding,
             this.toolStripLabelEncoding,
             this.comboBoxEncoding,
             this.toolStripSeparatorFrameRate,
@@ -665,10 +665,10 @@
             this.toolStripButtonReplace.ToolTipText = "Replace";
             this.toolStripButtonReplace.Click += new System.EventHandler(this.ToolStripButtonReplaceClick);
             // 
-            // toolStripSeparator4
+            // toolStripSeparatorFixSyncSpell
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 40);
+            this.toolStripSeparatorFixSyncSpell.Name = "toolStripSeparatorFixSyncSpell";
+            this.toolStripSeparatorFixSyncSpell.Size = new System.Drawing.Size(6, 40);
             // 
             // toolStripButtonFixCommonErrors
             // 
@@ -736,10 +736,10 @@
             this.toolStripButtonHelp.Text = "Help";
             this.toolStripButtonHelp.Click += new System.EventHandler(this.ToolStripButtonHelpClick);
             // 
-            // toolStripSeparator13
+            // toolStripSeparatorToggle
             // 
-            this.toolStripSeparator13.Name = "toolStripSeparator13";
-            this.toolStripSeparator13.Size = new System.Drawing.Size(6, 40);
+            this.toolStripSeparatorToggle.Name = "toolStripSeparatorToggle";
+            this.toolStripSeparatorToggle.Size = new System.Drawing.Size(6, 40);
             // 
             // toolStripButtonToggleWaveform
             // 
@@ -767,10 +767,10 @@
             this.toolStripButtonToggleVideo.Text = "Show/hide video";
             this.toolStripButtonToggleVideo.Click += new System.EventHandler(this.toolStripButtonToggleVideo_Click);
             // 
-            // toolStripSeparator6
+            // toolStripSeparatorSubtitleFormat
             // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 40);
+            this.toolStripSeparatorSubtitleFormat.Name = "toolStripSeparatorSubtitleFormat";
+            this.toolStripSeparatorSubtitleFormat.Size = new System.Drawing.Size(6, 40);
             // 
             // toolStripLabelSubtitleFormat
             // 
@@ -790,10 +790,10 @@
             this.comboBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.ComboBoxSubtitleFormatsSelectedIndexChanged);
             this.comboBoxSubtitleFormats.Enter += new System.EventHandler(this.ComboBoxSubtitleFormatsEnter);
             // 
-            // toolStripSeparator15
+            // toolStripSeparatorEncoding
             // 
-            this.toolStripSeparator15.Name = "toolStripSeparator15";
-            this.toolStripSeparator15.Size = new System.Drawing.Size(6, 40);
+            this.toolStripSeparatorEncoding.Name = "toolStripSeparatorEncoding";
+            this.toolStripSeparatorEncoding.Size = new System.Drawing.Size(6, 40);
             // 
             // toolStripLabelEncoding
             // 
@@ -4581,7 +4581,7 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonSettings;
         private System.Windows.Forms.ToolStripButton toolStripButtonVisualSync;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorFindReplace;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorFixSyncSpell;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorHelp;
         private System.Windows.Forms.ToolStripButton toolStripButtonHelp;
         private System.Windows.Forms.Timer timer1;
@@ -4680,13 +4680,13 @@
         private System.Windows.Forms.Label labelAutoDuration;
         private System.Windows.Forms.Timer timerAutoContinue;
         private System.Windows.Forms.ToolStripComboBox comboBoxSubtitleFormats;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorToggle;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorSubtitleFormat;
         private System.Windows.Forms.ToolStripLabel toolStripLabelSubtitleFormat;
         private System.Windows.Forms.ToolStripLabel toolStripLabelEncoding;
         private System.Windows.Forms.ToolStripComboBox comboBoxEncoding;
         private System.Windows.Forms.ToolStripButton toolStripButtonToggleVideo;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorEncoding;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorFrameRate;
         private System.Windows.Forms.ToolStripLabel toolStripLabelFrameRate;
         private System.Windows.Forms.ToolStripComboBox toolStripComboBoxFrameRate;
@@ -4968,4 +4968,3 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddWaveformBatch;
     }
 }
-

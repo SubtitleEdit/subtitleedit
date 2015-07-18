@@ -73,7 +73,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             _errorCount++;
                             System.Diagnostics.Debug.WriteLine(exception.Message);
                         }
-
                     }
                 }
                 else if (line.StartsWith("$DROP="))

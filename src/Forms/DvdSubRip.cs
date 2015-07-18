@@ -280,7 +280,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 _lastNavEndPts = vobuEPtm;
                             }
                         }
-
                     }
                     position += 0x800;
 

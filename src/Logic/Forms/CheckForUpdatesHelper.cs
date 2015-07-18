@@ -181,7 +181,6 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             {
                 return false;
             }
-
         }
 
     }

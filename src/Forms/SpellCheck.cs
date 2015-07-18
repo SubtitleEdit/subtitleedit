@@ -736,7 +736,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 ShowDialog(_mainWindow);
                             return; // wait for user input
                         }
-
                     }
                 }
             }

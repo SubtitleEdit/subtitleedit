@@ -122,7 +122,6 @@ SRPSKI
                                 paragraph.Text += Environment.NewLine + s;
                             else
                                 paragraph.Text = s;
-
                         }
                     }
                 }

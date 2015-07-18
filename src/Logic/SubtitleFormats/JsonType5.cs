@@ -122,7 +122,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 try
                 {
-
                     string text = texts[i];
                     if (text.StartsWith('['))
                     {

@@ -246,7 +246,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-
             }
             return list;
         }

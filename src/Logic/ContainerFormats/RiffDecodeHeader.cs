@@ -390,7 +390,6 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats
                         {
                             m_audDataRate /= (double)avi->dwSampleSize;
                         }
-
                     }
                     else
                     {

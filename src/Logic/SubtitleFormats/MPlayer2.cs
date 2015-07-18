@@ -105,7 +105,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     count++;
                 }
                 sb.AppendLine();
-
             }
             return sb.ToString().Trim();
         }

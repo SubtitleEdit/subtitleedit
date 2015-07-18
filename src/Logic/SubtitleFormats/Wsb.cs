@@ -76,7 +76,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     try
                     {
-
                         string text = line.Substring(0, indexOfTen).Trim();
                         string time = line.Substring(indexOf7001 - 16, 16);
                         p = new Paragraph(DecodeTimeCode(time.Substring(0, 8)), DecodeTimeCode(time.Substring(8)), text);

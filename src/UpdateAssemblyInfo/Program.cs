@@ -9,7 +9,6 @@ namespace UpdateAssemblyInfo
 
         private class Template
         {
-
             private string templateFile;
             private string templateText;
 
@@ -31,7 +30,6 @@ namespace UpdateAssemblyInfo
             {
                 File.WriteAllText(target, templateText, Encoding.UTF8);
             }
-
         }
 
         private static int Main(string[] args)
@@ -165,7 +163,9 @@ namespace UpdateAssemblyInfo
                         return path;
                 }
             }
-            catch { }
+            catch
+            {
+            }
 
             Console.WriteLine("WARNING: Might not be able to run Git command line tool!");
             return "git";

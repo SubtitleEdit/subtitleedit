@@ -407,7 +407,9 @@ namespace System.IO.Compression
                     }
                 } while (this.ZipFileStream.Position > 0);
             }
-            catch { }
+            catch
+            {
+            }
 
             return false;
         }

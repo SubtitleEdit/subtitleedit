@@ -2438,7 +2438,6 @@ Keep changes?",
                 Title = "WebVTT - set new voice",
                 VoiceName = "Name of voice",
             };
-
         }
 
         //public static Language Load(StreamReader sr) // normal but slow .net way
