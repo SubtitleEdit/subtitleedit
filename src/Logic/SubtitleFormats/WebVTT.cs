@@ -169,7 +169,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             startIndex = s.IndexOf("<v ", startIndex + 1, StringComparison.Ordinal);
                     }
                 }
-
             }
             return list;
         }
@@ -185,7 +184,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text = text.Remove(indexOfTag, indexOfEnd - indexOfTag + 1);
                     text = text.Replace("</" + tag + ">", string.Empty);
                 }
-
             }
             return text;
         }

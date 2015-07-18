@@ -187,7 +187,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 _errorCount = 1;
                 return;
             }
-
         }
 
         private static TimeCode DecodeTime(XmlAttribute duration)
@@ -195,7 +194,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             // 220220/60000s
             if (duration != null)
             {
-
                 var arr = duration.Value.TrimEnd('s').Split('/');
                 if (arr.Length == 2)
                 {

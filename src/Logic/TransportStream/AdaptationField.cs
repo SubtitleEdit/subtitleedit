@@ -103,7 +103,6 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             {
                 AdaptationFieldExtensionLength = packetBuffer[index];
             }
-
         }
     }
 }

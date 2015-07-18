@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
                 richTextBoxPreview.Text += text;
 
                 _colorList.Add(new ColorEntry { Start = length, Length = text.Length, Color = string.IsNullOrWhiteSpace(color) ? Color.White : ColorTranslator.FromHtml(color) });
- 
+
                 var fontStyle = new FontStyle();
                 if (underline)
                     fontStyle = fontStyle | FontStyle.Underline;

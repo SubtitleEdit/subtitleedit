@@ -221,7 +221,6 @@ namespace Nikse.SubtitleEdit.Logic
                                                     if (toFormat.ToLower() != AdvancedSubStationAlpha.NameOfFormat.ToLower().Replace(" ", string.Empty) &&
                                                         toFormat.ToLower() != SubStationAlpha.NameOfFormat.ToLower().Replace(" ", string.Empty))
                                                     {
-
                                                         foreach (SubtitleFormat sf in formats)
                                                         {
                                                             if (sf.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase) || sf.Name.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
@@ -230,7 +229,6 @@ namespace Nikse.SubtitleEdit.Logic
                                                                 break;
                                                             }
                                                         }
-
                                                     }
                                                 }
 

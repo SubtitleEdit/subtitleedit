@@ -76,7 +76,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 index++;
             }
-
         }
 
         private void listBoxInspectItems_SelectedIndexChanged(object sender, EventArgs e)

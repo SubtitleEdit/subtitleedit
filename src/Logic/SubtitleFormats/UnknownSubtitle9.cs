@@ -102,7 +102,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int durationMilliseconds;
                     if (text.Length > 0 && int.TryParse(startTime, out startMilliseconds) && int.TryParse(duration, out durationMilliseconds))
                         subtitle.Paragraphs.Add(new Paragraph(text, startMilliseconds, startMilliseconds + durationMilliseconds));
-
                 }
             }
             subtitle.Renumber();

@@ -50,7 +50,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else
                         failed++;
                 }
-
             }
             return fine > failed;
         }

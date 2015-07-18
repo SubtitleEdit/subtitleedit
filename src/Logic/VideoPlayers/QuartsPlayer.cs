@@ -52,7 +52,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     else
                         (_quartzFilgraphManager as IBasicAudio).Volume = (value - 100) * 35;
                 }
-                catch { }
+                catch
+                {
+                }
             }
         }
 
@@ -207,7 +209,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 Marshal.ReleaseComObject(quartzFilgraphManager);
             }
-            catch { }
+            catch
+            {
+            }
             return info;
         }
 
@@ -230,7 +234,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     OnVideoLoaded.Invoke(_quartzFilgraphManager, new EventArgs());
                 }
-                catch { }
+                catch
+                {
+                }
             }
             _videoEndTimer = null;
         }
@@ -286,7 +292,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 if (_quartzVideo != null)
                     _quartzVideo.Owner = -1;
             }
-            catch { }
+            catch
+            {
+            }
 
             if (_quartzFilgraphManager != null)
             {
@@ -296,7 +304,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     Marshal.ReleaseComObject(_quartzFilgraphManager);
                     _quartzFilgraphManager = null;
                 }
-                catch { }
+                catch
+                {
+                }
             }
             _quartzVideo = null;
         }

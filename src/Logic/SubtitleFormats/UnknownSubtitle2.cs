@@ -118,7 +118,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         subtitle.Paragraphs.Add(_paragraph);
                         _paragraph = new Paragraph();
                         _expecting = ExpectingLine.Number;
-
                     }
                     break;
             }

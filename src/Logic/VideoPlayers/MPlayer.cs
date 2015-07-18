@@ -236,7 +236,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     _mplayer.StandardInput.WriteLine("loadfile " + _videoFileName);
                     if (OnVideoEnded != null)
                         OnVideoEnded.Invoke(this, null);
-
                 }
                 return;
             }

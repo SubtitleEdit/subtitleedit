@@ -34,7 +34,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-
             //1) 00:00:06:14 00:00:07:07 Durée : 00:18 Lisibilité : 011 Intervalle : 06:14 Nbc : 018
             //text
             //line2

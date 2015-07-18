@@ -54,7 +54,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else
                         failed++;
                 }
-
             }
             if (failed > 20)
                 return false;

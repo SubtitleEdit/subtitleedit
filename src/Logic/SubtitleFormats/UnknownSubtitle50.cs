@@ -146,7 +146,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         expecting = ExpectingLine.TimeCodes;
                     }
                 }
-
             }
             if (!string.IsNullOrWhiteSpace(p.Text))
                 subtitle.Paragraphs.Add(p);

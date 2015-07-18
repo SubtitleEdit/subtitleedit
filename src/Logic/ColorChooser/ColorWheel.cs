@@ -205,7 +205,6 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
         {
             try
             {
-
                 // You've moved the mouse.
                 // Now update the screen to match.
 
@@ -341,7 +340,6 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
 
                 // Draw the gradients and points.
                 UpdateDisplay();
-
             }
             catch (Exception e)
             {

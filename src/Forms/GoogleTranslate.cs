@@ -318,7 +318,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string languagePair = (comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|" + (comboBoxTo.SelectedItem as ComboBoxItem).Value;
             bool romanji = languagePair.EndsWith("|romanji", StringComparison.InvariantCulture);
-            if (romanji) 
+            if (romanji)
                 languagePair = (comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|ja" ;
 
             input = PreTranslate(input.TrimEnd('|').Trim());
@@ -485,7 +485,6 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
-                
             }
             string res = sb.ToString();
             res = res.Replace(NewlineString, Environment.NewLine);

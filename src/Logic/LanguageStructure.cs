@@ -1322,7 +1322,6 @@
                     public string SaveSelectedLines { get; set; }
                     public string WebVTTSetNewVoice { get; set; }
                     public string WebVTTRemoveVoices { get; set; }
-
                 }
 
                 public FileMenu File { get; set; }
@@ -1410,7 +1409,6 @@
                 public string Fast { get; set; }
                 public string VeryFast { get; set; }
             }
-
         }
 
         public class MatroskaSubtitleChooser
