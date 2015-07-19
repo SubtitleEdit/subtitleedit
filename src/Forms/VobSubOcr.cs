@@ -157,6 +157,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (Italic)
                     return Text + " (italic)";
+
+                if (Text == null)
+                    return string.Empty;
+
                 return Text;
             }
         }
