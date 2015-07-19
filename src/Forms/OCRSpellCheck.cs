@@ -86,41 +86,37 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void HighLightWord(RichTextBox richTextBoxParagraph, string word)
         {
-            if (word != null && richTextBoxParagraph.Text.Contains(word))
+            if (word == null || !richTextBoxParagraph.Text.Contains(word))
+                return;
+
+            var text = richTextBoxParagraph.Text;
+            var idx = text.IndexOf(word, StringComparison.Ordinal);
+            if (idx >= 0)
             {
-                for (int i = 0; i < richTextBoxParagraph.Text.Length; i++)
+                bool startOk = idx == 0;
+                const string chars = @" <>-""”“[]'‘`´¶()♪¿¡.…—!?,:;/";
+                if (!startOk)
+                    startOk = (chars + Environment.NewLine).Contains(text[idx - 1]);
+
+                if (startOk)
                 {
-                    if (richTextBoxParagraph.Text.Substring(i).StartsWith(word))
+                    bool endOk = (idx + word.Length == text.Length);
+                    if (!endOk)
+                        endOk = (chars + Environment.NewLine).Contains(text[idx + word.Length]);
+                    if (endOk)
                     {
-                        bool startOk = i == 0;
-                        if (!startOk)
-                            startOk = (@" <>-""”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(richTextBoxParagraph.Text[i - 1]);
-                        if (startOk)
+                        richTextBoxParagraph.SelectionStart = idx;
+                        richTextBoxParagraph.SelectionLength = word.Length;
+                        if (richTextBoxParagraph.SelectedText == word)
                         {
-                            bool endOk = (i + word.Length == richTextBoxParagraph.Text.Length);
-                            if (!endOk)
-                                endOk = (@" <>-""”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(richTextBoxParagraph.Text[i + word.Length]);
-                            if (endOk)
-                            {
-                                richTextBoxParagraph.SelectionStart = i + 1;
-                                richTextBoxParagraph.SelectionLength = word.Length;
-                                while (richTextBoxParagraph.SelectedText != word && richTextBoxParagraph.SelectionStart > 0)
-                                {
-                                    richTextBoxParagraph.SelectionStart = richTextBoxParagraph.SelectionStart - 1;
-                                    richTextBoxParagraph.SelectionLength = word.Length;
-                                }
-                                if (richTextBoxParagraph.SelectedText == word)
-                                {
-                                    richTextBoxParagraph.SelectionColor = Color.Red;
-                                }
-                            }
+                            richTextBoxParagraph.SelectionColor = Color.Red;
                         }
                     }
                 }
-
-                richTextBoxParagraph.SelectionLength = 0;
-                richTextBoxParagraph.SelectionStart = 0;
             }
+
+            richTextBoxParagraph.SelectionLength = 0;
+            richTextBoxParagraph.SelectionStart = 0;
         }
 
         private void ButtonEditWholeTextClick(object sender, EventArgs e)
