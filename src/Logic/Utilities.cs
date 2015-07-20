@@ -1356,11 +1356,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoDetectGoogleLanguage(Subtitle subtitle)
         {
-            string languageId = AutoDetectGoogleLanguageOrNull(subtitle);
-            if (languageId == null)
-                languageId = "en";
-
-            return languageId;
+            var languageId = AutoDetectGoogleLanguageOrNull(subtitle);
+            return (languageId == null) ? "en" : languageId;
         }
 
         public static string AutoDetectGoogleLanguageOrNull(Subtitle subtitle)
@@ -1369,11 +1366,8 @@ namespace Nikse.SubtitleEdit.Logic
             foreach (Paragraph p in subtitle.Paragraphs)
                 sb.AppendLine(p.Text);
 
-            string languageId = AutoDetectGoogleLanguage(sb.ToString(), subtitle.Paragraphs.Count / 14);
-            if (string.IsNullOrEmpty(languageId))
-                languageId = null;
-
-            return languageId;
+            var languageId = AutoDetectGoogleLanguage(sb.ToString(), subtitle.Paragraphs.Count / 14);
+            return string.IsNullOrEmpty(languageId) ? null : languageId;
         }
 
         public static string AutoDetectLanguageName(string languageName, Subtitle subtitle)
@@ -1620,7 +1614,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                Assembly assy = Assembly.GetExecutingAssembly();
+                var assy = Assembly.GetExecutingAssembly();
                 String assyName = assy.GetName().Name;
                 bool isdef = Attribute.IsDefined(assy, typeof(AssemblyDescriptionAttribute));
                 if (isdef)
