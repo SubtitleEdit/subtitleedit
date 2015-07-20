@@ -1391,6 +1391,10 @@ namespace Nikse.SubtitleEdit.Logic
                     containsEnGb = true;
                 if (name.Contains("[en_US]"))
                     containsEnUs = true;
+
+                // Avoid redundant loop
+                if (containsEnGb && containsEnUs)
+                    break;
             }
 
             foreach (string name in dictionaryNames)
