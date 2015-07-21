@@ -13498,15 +13498,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemAdjustAllTimes_Click(object sender, EventArgs e)
         {
-            if (SubtitleListview1.SelectedItems.Count > 1)
-            {
-                ShowSelectedLinesEarlierlaterToolStripMenuItemClick(null, null);
-                return;
-            }
-
             if (!IsSubtitleLoaded)
             {
                 MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (SubtitleListview1.SelectedItems.Count > 1)
+            {
+                ShowSelectedLinesEarlierlaterToolStripMenuItemClick(null, null);
                 return;
             }
 
