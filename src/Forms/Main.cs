@@ -13415,23 +13415,19 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var tc = new TimeCode(adjustMilliseconds);
             MakeHistoryForUndo(_language.BeforeShowSelectedLinesEarlierLater + ": " + tc);
-            if (adjustMilliseconds < 0)
+
+            var baseUnit = adjustMilliseconds < 0 ? -TimeCode.BaseUnit : TimeCode.BaseUnit;
+            switch (selection)
             {
-                if (selection == SelectionChoice.AllLines)
-                    ShowStatus(string.Format(_language.ShowAllLinesXSecondsLinesEarlier, adjustMilliseconds / -TimeCode.BaseUnit));
-                else if (selection == SelectionChoice.SelectionOnly)
-                    ShowStatus(string.Format(_language.ShowSelectedLinesXSecondsLinesEarlier, adjustMilliseconds / -TimeCode.BaseUnit));
-                else if (selection == SelectionChoice.SelectionAndForward)
-                    ShowStatus(string.Format(_language.ShowSelectionAndForwardXSecondsLinesEarlier, adjustMilliseconds / -TimeCode.BaseUnit));
-            }
-            else
-            {
-                if (selection == SelectionChoice.AllLines)
-                    ShowStatus(string.Format(_language.ShowAllLinesXSecondsLinesLater, adjustMilliseconds / TimeCode.BaseUnit));
-                else if (selection == SelectionChoice.SelectionOnly)
-                    ShowStatus(string.Format(_language.ShowSelectedLinesXSecondsLinesLater, adjustMilliseconds / TimeCode.BaseUnit));
-                else if (selection == SelectionChoice.SelectionAndForward)
-                    ShowStatus(string.Format(_language.ShowSelectionAndForwardXSecondsLinesLater, adjustMilliseconds / TimeCode.BaseUnit));
+                case SelectionChoice.SelectionOnly:
+                    ShowStatus(string.Format(_language.ShowSelectedLinesXSecondsLinesEarlier, adjustMilliseconds / baseUnit));
+                    break;
+                case SelectionChoice.AllLines:
+                    ShowStatus(string.Format(_language.ShowAllLinesXSecondsLinesEarlier, adjustMilliseconds / baseUnit));
+                    break;
+                case SelectionChoice.SelectionAndForward:
+                    ShowStatus(string.Format(_language.ShowSelectionAndForwardXSecondsLinesEarlier, adjustMilliseconds / baseUnit));
+                    break;
             }
 
             double frameRate = CurrentFrameRate;
