@@ -1787,10 +1787,6 @@
     <Content Include="Languages\vi-VN.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Languages\zh-CHS.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
     <None Include="Resources\pictureBoxNoFSOver.Image.png" />
     <None Include="Resources\pictureBoxNoFSDown.Image.png" />
     <None Include="Resources\pictureBoxNoFS.Image.png" />
@@ -1882,6 +1878,7 @@
     <None Include="Resources\pictureBoxFS.Image.png" />
     <None Include="Resources\pictureBoxFSDown.Image.png" />
     <None Include="Resources\pictureBoxFSOver.Image.png" />
+    <Content Include="Languages\zh-Hans.xml" />
     <Content Include="Languages\zh-tw.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
