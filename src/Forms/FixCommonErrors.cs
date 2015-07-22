@@ -1050,6 +1050,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void FixInvalidItalicTags()
         {
+            const string beginTagUpper = "<I>";
+            const string endTagUpper = "</I>";
             const string beginTag = "<i>";
             const string endTag = "</i>";
             string fixAction = _language.FixInvalidItalicTag;
@@ -1062,7 +1064,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var text = Subtitle.Paragraphs[i].Text;
                     if (text.Contains('<'))
                     {
-                        text = text.Replace(beginTag.ToUpper(), beginTag).Replace(endTag.ToUpper(), endTag);
+                        text = text.Replace(beginTagUpper, beginTag).Replace(endTagUpper, endTag);
                         string oldText = text;
 
                         text = HtmlUtil.FixInvalidItalicTags(text);
