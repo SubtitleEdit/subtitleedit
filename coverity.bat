@@ -4,7 +4,7 @@ SETLOCAL
 
 PUSHD %~dp0
 
-IF NOT DEFINED COVDIR SET "COVDIR=H:\progs\thirdparty\cov-analysis-win64-7.5.0"
+IF NOT DEFINED COVDIR SET "COVDIR=H:\progs\thirdparty\cov-analysis-win64"
 IF DEFINED COVDIR IF NOT EXIST "%COVDIR%" (
   ECHO.
   ECHO ERROR: Coverity not found in "%COVDIR%"
