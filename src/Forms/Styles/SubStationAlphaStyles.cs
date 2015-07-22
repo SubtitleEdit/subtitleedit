@@ -615,7 +615,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (_isSubStationAlpha)
                 return Color.FromArgb(0, c.B, c.G, c.R).ToArgb().ToString();
-            return string.Format("&H00{0:x2}{1:x2}{2:x2}", c.B, c.G, c.R).ToUpper();
+            return string.Format("&H00{0:X2}{1:X2}{2:X2}", c.B, c.G, c.R);
         }
 
         private void buttonCopy_Click(object sender, EventArgs e)
