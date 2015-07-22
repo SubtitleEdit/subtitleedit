@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.4.7 BETA (xth July 2015)
+3.4.7 (22th July 2015)
 * NEW:
    * Added (some) read support for PNS files
    * Added (some) read support for Timeline files
