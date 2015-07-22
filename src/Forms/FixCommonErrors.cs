@@ -81,10 +81,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private class FixItem
         {
-            public string Name { get; set; }
-            public string Example { get; set; }
-            public Action Action { get; set; }
-            public bool DefaultChecked { get; set; }
+            public string Name { get; private set; }
+            public string Example { get; private set; }
+            public Action Action { get; private set; }
+            public bool DefaultChecked { get; private set; }
 
             public FixItem(string name, string example, Action action, bool selected)
             {
