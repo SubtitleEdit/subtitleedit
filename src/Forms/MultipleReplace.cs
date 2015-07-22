@@ -256,15 +256,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddToPreviewListView(Paragraph p, string newText)
         {
-            var item = new ListViewItem("") { Tag = p, Checked = true };
-
-            var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString(CultureInfo.InvariantCulture));
-            item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(subItem);
-
+            var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
+            item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
+            item.SubItems.Add(p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             listViewFixes.Items.Add(item);
         }
 
