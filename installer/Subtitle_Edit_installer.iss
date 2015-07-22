@@ -22,8 +22,8 @@
 
 
 ; preprocessor checks
-#if VER < EncodeVer(5,5,5)
-  #error Update your Inno Setup version (5.5.5 or newer)
+#if VER < EncodeVer(5,5,6)
+  #error Update your Inno Setup version (5.5.6 or newer)
 #endif
 
 #ifndef UNICODE
@@ -102,6 +102,7 @@ ShowLanguageDialog=yes
 DisableDirPage=auto
 DisableProgramGroupPage=auto
 CloseApplications=true
+SetupMutex='subtitle_edit_setup_mutex'
 
 
 [Languages]
@@ -373,10 +374,6 @@ Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "uninst
 
 
 [Code]
-// Global variables/constants and general functions
-const installer_mutex = 'subtitle_edit_setup_mutex';
-
-
 // Check if Subtitle Edit's settings exist
 function SettingsExist(): Boolean;
 begin
@@ -513,44 +510,18 @@ function InitializeSetup(): Boolean;
 var
   iErrorCode, iMsgBoxResult: Integer;
 begin
-  // Create a mutex for the installer and if it's already running then expose a message and stop installation
-  if CheckForMutexes(installer_mutex) and not WizardSilent() then begin
-    SuppressibleMsgBox(CustomMessage('msg_SetupIsRunningWarning'), mbError, MB_OK, MB_OK);
-    Result := False;
-  end
-  else begin
-    Result := True;
-    CreateMutex(installer_mutex);
+  Result := True;
 
-
-    // Check if .NET Framework 4.0 is installed and if not offer to download it
-    try
-      ExpandConstant('{dotnet40}');
-    except
-      begin
-        if not WizardSilent() then begin
-          if SuppressibleMsgBox(CustomMessage('msg_AskToDownNET'), mbCriticalError, MB_YESNO or MB_DEFBUTTON1, IDNO) = IDYES then
-            ShellExec('open','http://download.microsoft.com/download/5/6/2/562A10F9-C9F4-4313-A044-9C94E0A8FAC8/dotNetFx40_Client_x86_x64.exe','','',SW_SHOWNORMAL,ewNoWait,iErrorCode);
-          Result := False;
-        end;
+  // Check if .NET Framework 4.0 is installed and if not offer to download it
+  try
+    ExpandConstant('{dotnet40}');
+  except
+    begin
+      if not WizardSilent() then begin
+        if SuppressibleMsgBox(CustomMessage('msg_AskToDownNET'), mbCriticalError, MB_YESNO or MB_DEFBUTTON1, IDNO) = IDYES then
+          ShellExec('open','http://download.microsoft.com/download/5/6/2/562A10F9-C9F4-4313-A044-9C94E0A8FAC8/dotNetFx40_Client_x86_x64.exe','','',SW_SHOWNORMAL,ewNoWait,iErrorCode);
+        Result := False;
       end;
     end;
-  end;
-end;
-
-
-function InitializeUninstall(): Boolean;
-var
-  iMsgBoxResult: Integer;
-begin
-  if CheckForMutexes(installer_mutex) then begin
-    SuppressibleMsgBox(CustomMessage('msg_SetupIsRunningWarning'), mbError, MB_OK, MB_OK);
-    Result := False;
-  end
-  else begin
-    Result := True;
-    CreateMutex(installer_mutex);
-
-
   end;
 end;
