@@ -221,9 +221,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         translateMatrix.Translate(1, 1);
                         shadowPath.Transform(translateMatrix);
 
-                        var p1 = new Pen(Color.FromArgb(250, panelBackColor.BackColor), outline);
-                        g.DrawPath(p1, shadowPath);
-                        p1.Dispose();
+                        using (var p1 = new Pen(Color.FromArgb(250, panelBackColor.BackColor), outline))
+                            g.DrawPath(p1, shadowPath);
                     }
                 }
 
