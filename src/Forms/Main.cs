@@ -5232,8 +5232,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!undo)
                     {
-                        if (_subtitle.HistoryItems[_undoIndex].RedoParagraphs != null)
                         // TODO: Sometimes redo paragraphs can be null - how?
+                        if (_subtitle.HistoryItems[_undoIndex].RedoParagraphs != null)
                         {
                             _subtitle.Paragraphs.Clear();
                             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
