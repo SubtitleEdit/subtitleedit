@@ -547,8 +547,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             int emptyLinesRemoved = 0;
-
-            int firstNumber = Subtitle.Paragraphs[0].Number;
             listViewFixes.BeginUpdate();
             for (int i = Subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
@@ -644,7 +642,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 LogStatus(_language.RemovedEmptyLinesUnsedLineBreaks, string.Format(_language.EmptyLinesRemovedX, emptyLinesRemoved));
                 _totalFixes += emptyLinesRemoved;
-                Subtitle.Renumber(firstNumber);
+                Subtitle.Renumber();
             }
         }
 
