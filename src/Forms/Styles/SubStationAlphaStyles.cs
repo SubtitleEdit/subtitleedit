@@ -221,9 +221,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         translateMatrix.Translate(1, 1);
                         shadowPath.Transform(translateMatrix);
 
-                        var p1 = new Pen(Color.FromArgb(250, panelBackColor.BackColor), outline);
-                        g.DrawPath(p1, shadowPath);
-                        p1.Dispose();
+                        using (var p1 = new Pen(Color.FromArgb(250, panelBackColor.BackColor), outline))
+                            g.DrawPath(p1, shadowPath);
                     }
                 }
 
@@ -616,7 +615,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (_isSubStationAlpha)
                 return Color.FromArgb(0, c.B, c.G, c.R).ToArgb().ToString();
-            return string.Format("&H00{0:x2}{1:x2}{2:x2}", c.B, c.G, c.R).ToUpper();
+            return string.Format("&H00{0:X2}{1:X2}{2:X2}", c.B, c.G, c.R);
         }
 
         private void buttonCopy_Click(object sender, EventArgs e)
@@ -625,7 +624,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string styleName = listViewStyles.SelectedItems[0].Text;
                 SsaStyle oldStyle = GetSsaStyle(styleName);
-                SsaStyle style = new SsaStyle(oldStyle); // Copy contructor
+                var style = new SsaStyle(oldStyle); // Copy contructor
                 style.Name = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.CopyOfY, styleName);
 
                 if (GetSsaStyle(style.Name).LoadedFromHeader)
