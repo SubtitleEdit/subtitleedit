@@ -3077,7 +3077,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var subtitle = new Subtitle { Header = matroskaSubtitleInfo.CodecPrivate };
             var lines = new List<string>();
-            foreach (string l in subtitle.Header.Trim().Replace(Environment.NewLine, "\n").Split('\n'))
+            foreach (string l in subtitle.Header.Trim().SplitToLines())
                 lines.Add(l);
             var footer = new StringBuilder();
             var comments = new Subtitle();
