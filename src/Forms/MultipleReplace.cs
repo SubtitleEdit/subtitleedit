@@ -11,7 +11,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class MultipleReplace : PositionAndSizeForm
     {
-
         internal class ReplaceExpression
         {
             internal const int SearchNormal = 0;
@@ -42,6 +41,8 @@ namespace Nikse.SubtitleEdit.Forms
         public List<int> DeleteIndices { get; private set; }
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
+
+        private readonly ContextMenu _regexContextMenu;
 
         public MultipleReplace()
         {
@@ -89,6 +90,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
+
+            _regexContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
         }
 
         public void Initialize(Subtitle subtitle)
@@ -118,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
         {
             if (sender == radioButtonRegEx)
-                textBoxFind.ContextMenu = FindReplaceDialogHelper.GetRegExContextMenu(textBoxFind);
+                textBoxFind.ContextMenu = _regexContextMenu;
             else
                 textBoxFind.ContextMenu = null;
         }
