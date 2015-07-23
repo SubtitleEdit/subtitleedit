@@ -1278,7 +1278,7 @@ Command line: {1} {2}
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件选择字幕</Title>
     <PleaseChoose>找到多个字幕 - 请选择</PleaseChoose>
-    <TrackXLanguageYTypeZ>曲目 {0}-{1} - 语言: {2} - 类型: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>曲目 {0} - 语言: {1} - 类型: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>度量转换器</Title>
@@ -1944,7 +1944,7 @@ Command line: {1} {2}
     <FindText>查找文本</FindText>
     <GoToSubPosition>转到字幕位置</GoToSubPosition>
     <KeepChangesTitle>保留更改吗？</KeepChangesTitle>
-    <KeepChangesMessage>“影音对照同步”中的字幕已被更改。保留更改吗？ </KeepChangesMessage>
+    <KeepChangesMessage>“影音对照同步”中的字幕已被更改。保留更改吗？</KeepChangesMessage>
     <SynchronizationDone>同步完成！</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>起始场景必须在末尾场景之前！</StartSceneMustComeBeforeEndScene>
     <Tip>提示: 使用 &lt;Ctrl + ←/→&gt; 键来 向前/向后 移动 100 毫秒</Tip>
