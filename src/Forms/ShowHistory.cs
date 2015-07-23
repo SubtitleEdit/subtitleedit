@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _selectedIndex = -1;
         private Subtitle _subtitle;
         private int _undoIndex;
-
+        private const string DateTimeFormat = "{0:00}:{1:00}:{2:00}";
         public ShowHistory()
         {
             InitializeComponent();
@@ -51,14 +51,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddHistoryItemToListView(HistoryItem hi, int index)
         {
-            var item = new ListViewItem("")
-                           {
-                               Tag = hi,
-                               Text = string.Format("{0:00}:{1:00}:{2:00}",
+            var item = new ListViewItem(string.Empty)
+            {
+                Tag = hi,
+                Text = string.Format(DateTimeFormat,
                                                     hi.Timestamp.Hour,
                                                     hi.Timestamp.Minute,
                                                     hi.Timestamp.Second)
-                           };
+            };
 
             if (index > _undoIndex)
             {
@@ -66,8 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
                 item.Font = new Font(item.Font.FontFamily, item.Font.SizeInPoints, FontStyle.Italic);
                 item.ForeColor = Color.Gray;
             }
-            var subItem = new ListViewItem.ListViewSubItem(item, hi.Description);
-            item.SubItems.Add(subItem);
+            item.SubItems.Add(hi.Description);
             listViewHistory.Items.Add(item);
         }
 
@@ -95,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewHistory.SelectedItems.Count == 1)
             {
                 HistoryItem h2 = _subtitle.HistoryItems[listViewHistory.SelectedItems[0].Index];
-                string descr2 = string.Format("{0:00}:{1:00}:{2:00}",
+                string descr2 = string.Format(DateTimeFormat,
                                                     h2.Timestamp.Hour,
                                                     h2.Timestamp.Minute,
                                                     h2.Timestamp.Second) + " - " + h2.Description;
@@ -109,10 +108,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ListViewHistorySelectedIndexChanged(object sender, EventArgs e)
         {
-            buttonRollback.Enabled = listViewHistory.SelectedItems.Count == 1;
-            buttonCompare.Enabled = listViewHistory.SelectedItems.Count == 1;
+            bool enable = listViewHistory.SelectedItems.Count == 1;
+            buttonRollback.Enabled = enable;
+            buttonCompare.Enabled = enable;
             buttonCompareHistory.Enabled = listViewHistory.SelectedItems.Count == 2;
-            buttonRollback.Enabled = listViewHistory.SelectedItems.Count == 1 && listViewHistory.SelectedItems[0].Index <= _undoIndex;
+            buttonRollback.Enabled = enable && listViewHistory.SelectedItems[0].Index <= _undoIndex;
         }
 
         private void ButtonCompareHistoryClick(object sender, EventArgs e)
@@ -121,11 +121,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 HistoryItem h1 = _subtitle.HistoryItems[listViewHistory.SelectedItems[0].Index];
                 HistoryItem h2 = _subtitle.HistoryItems[listViewHistory.SelectedItems[1].Index];
-                string descr1 = string.Format("{0:00}:{1:00}:{2:00}",
+                string descr1 = string.Format(DateTimeFormat,
                                                     h1.Timestamp.Hour,
                                                     h1.Timestamp.Minute,
                                                     h1.Timestamp.Second) + " - " + h1.Description;
-                string descr2 = string.Format("{0:00}:{1:00}:{2:00}",
+                string descr2 = string.Format(DateTimeFormat,
                                                     h2.Timestamp.Hour,
                                                     h2.Timestamp.Minute,
                                                     h2.Timestamp.Second) + " - " + h2.Description;
