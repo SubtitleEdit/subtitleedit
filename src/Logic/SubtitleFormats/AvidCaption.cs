@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb.AppendLine("<begin subtitles>");
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{0} {1}{2}{3}{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text, true)));
+                sb.AppendLine(string.Format("{0} {1}{2}{3}{2}", p.StartTime.ToHHMMSSFF(), EncodeEndTimeCode(p.EndTime), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text, true)));
                 //00:50:34:22 00:50:39:13
                 //Ich muss dafür sorgen,
                 //dass die Epsteins weiterleben
@@ -51,10 +51,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString();
         }
 
-        private static string EncodeTimeCode(TimeCode time)
+        private static string EncodeEndTimeCode(TimeCode time)
         {
             //00:50:39:13 (last is frame)
-            return time.ToHHMMSSFF();
+
+            //Bugfix for Avid - On 23.976 FPS and 24 FPS projects, when the End time of a subtitle ends in 02, 07, 12, 17, 22, 27 frames, the subtitle won't import.
+            if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 23.976) < 0.01 ||
+                Math.Abs(Configuration.Settings.General.CurrentFrameRate - 24) < 0.01)
+            {
+                var frames = SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds);
+                if (frames == 2 || frames == 7 || frames == 12 || frames == 17 || frames == 22 || frames == 27)
+                    frames--;
+                return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
+            }
+            else
+            {
+                return time.ToHHMMSSFF();
+            }
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
