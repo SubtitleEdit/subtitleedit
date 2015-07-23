@@ -2,10 +2,8 @@
   <WholeWords>
     <Word from="aluminijum" to="aluminij" />
     <Word from="bejah" to="bijah" />
-    <Word from="bašta" to="vrt" />
     <Word from="bašte" to="vrtovi" />
-    <Word from="baštu" to="vrt" />
-    <Word from="baštom" to="vrtom" />
+    <Word from="Bašte" to="Vrtovi" />
     <Word from="belešci" to="bilješci" />
     <Word from="bezbjedna" to="sigurna" />
     <Word from="bioskop" to="kino" />
@@ -22,6 +20,7 @@
     <Word from="bolesan" to="bolestan" />
     <Word from="braon" to="smeđa" />
     <Word from="ceo" to="cijeli" />
+    <Word from="Ceo" to="Cijeli" />
     <Word from="cjeli" to="cijeli" />
     <Word from="cena" to="cijena" />
     <Word from="ceni" to="cijeni" />
@@ -70,7 +69,6 @@
     <Word from="đavola" to="vraga" />
     <Word from="đemper" to="džemper" />
     <Word from="džanki" to="ovisnik" />
-    <Word from="džin" to="div" />
     <Word from="foka" to="tuljan" />
     <Word from="foku" to="tuljana" />
     <Word from="foke" to="tuljani" />
@@ -633,6 +631,8 @@
     <RegEx find="\b[aA]las(k[aui]|kom|ci)" replaceWith="Aljas$1" />
     <RegEx find="([aA])svalt" replaceWith="$1sfalt" />
     <RegEx find="\b([aA])vijon([aeiu]|ima)\b" replaceWith="$1vion$2" />
+    <RegEx find="bašt([au]|om)" replaceWith="vrt$1" />
+    <RegEx find="Bašt([au]|om)" replaceWith="Vrt$1" />
     <RegEx find="\b([bB])ekstv(a|u|om)\b" replaceWith="$1ijeg$2" />
     <RegEx find="([bB])eleg" replaceWith="$1iljeg" />
     <RegEx find="\bbezbed" replaceWith="sigur" />
@@ -972,7 +972,7 @@
     <RegEx find="\b([pP])oseti(o|m|š|l[aieo]|ti)?\b" replaceWith="$1osjeti$2" />
     <RegEx find="\b([pP])o[dt]sj?eti(o|m|š|l[aieo]|ti)?\b" replaceWith="$1odsjeti$2" />
     <RegEx find="([pP])osed(a|e|i|o|u|om)" replaceWith="$1osjed$2" />
-    <RegEx find="([pP])osmatra([čjmoš]|mo|te|ju|č[aeiu]|čn?ic[aeiu]|jući)?\b" replaceWith="$1romatra$2" />
+    <RegEx find="([pP])osmatra" replaceWith="$1romatra" />
     <RegEx find="([pP])oter([aeiu]|om|ama|aš|amo|ate|aju|nic[aeu]|nicama)?\b" replaceWith="$1otjer$2" />
     <RegEx find="([pP])ovinuje" replaceWith="$1okorava" />
     <RegEx find="([pP])ovrj?edi(o|l[aeio]|ti|še)" replaceWith="$1ovrijedi$2" />
