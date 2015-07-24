@@ -907,9 +907,9 @@ namespace Nikse.SubtitleEdit.Forms
                         form.RunFromBatch(p.Subtitle);
                         p.Subtitle = form.FixedSubtitle;
 
-                        foreach (int deleteIndex in form.DeleteIndices)
+                        for (int index = form.DeleteIndices.Count - 1; index >= 0; index--)
                         {
-                            p.Subtitle.Paragraphs.RemoveAt(deleteIndex);
+                            p.Subtitle.Paragraphs.RemoveAt(index);
                         }
                         p.Subtitle.Renumber();
                     }
@@ -956,10 +956,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-
             // always re-number
             p.Subtitle.Renumber();
-
             e.Result = p;
         }
 
