@@ -251,25 +251,28 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSelectAll_Click(object sender, EventArgs e)
         {
-            listViewNames.ItemChecked -= ListViewNamesItemChecked;
-            listViewNames.BeginUpdate();
-            foreach (ListViewItem item in listViewNames.Items)
-                item.Checked = true;
-            listViewNames.EndUpdate();
-            listViewNames.ItemChecked += ListViewNamesItemChecked;
-            GeneratePreview();
+            DoSelection(true);
         }
 
         private void buttonInverseSelection_Click(object sender, EventArgs e)
         {
+            DoSelection(false);
+        }
+
+        private void DoSelection(bool selectAll)
+        {
             listViewNames.ItemChecked -= ListViewNamesItemChecked;
             listViewNames.BeginUpdate();
             foreach (ListViewItem item in listViewNames.Items)
-                item.Checked = !item.Checked;
+            {
+                if (selectAll)
+                    item.Checked = true;
+                else
+                    item.Checked = !item.Checked;
+            }
             listViewNames.EndUpdate();
             listViewNames.ItemChecked += ListViewNamesItemChecked;
             GeneratePreview();
         }
-
     }
 }
