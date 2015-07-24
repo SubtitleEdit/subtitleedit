@@ -222,6 +222,15 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                    buffer[index + 3] == 0xbd; // 0xbd == 189 - MPEG-2 Private stream 1 (non MPEG audio, subpictures)
         }
 
+        internal static bool IsPrivateStream2(byte[] buffer, int index)
+        {
+            return buffer.Length >= index + 3 &&
+                   buffer[index + 0] == 0 &&
+                   buffer[index + 1] == 0 &&
+                   buffer[index + 2] == 1 &&
+                   buffer[index + 3] == 0xbf; // 0xbf == 191 - MPEG-2 Private stream 2
+        }
+
         internal static bool IsSubtitlePack(byte[] buffer)
         {
             if (IsMpeg2PackHeader(buffer) && IsPrivateStream1(buffer, Mpeg2Header.Length))

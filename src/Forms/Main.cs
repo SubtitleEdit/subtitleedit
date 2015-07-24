@@ -1729,8 +1729,18 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if ((ext == ".m2ts") && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName))
                 {
-                    ImportSubtitleFromTransportStream(fileName);
-                    return;
+                    bool isTextSt = false;
+                    if (file.Length < 1000000)
+                    {
+                        var textSt = new TextST();
+                        isTextSt = textSt.IsMine(null, fileName);
+                    }
+
+                    if (!isTextSt)
+                    {
+                        ImportSubtitleFromTransportStream(fileName);
+                        return;
+                    }
                 }
 
                 if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp") && file.Length > 10000)
@@ -1840,6 +1850,22 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         pac.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = pac;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+
+                if (ext == ".m2ts")
+                {
+                    var textST = new TextST();
+                    if (textST.IsMine(null, fileName))
+                    {
+                        textST.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = textST;
                         SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();

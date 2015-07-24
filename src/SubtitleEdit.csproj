@@ -902,6 +902,7 @@
     <Compile Include="Logic\Ocr\OcrImage.cs" />
     <Compile Include="Logic\Ocr\NOcrPoint.cs" />
     <Compile Include="Logic\Ocr\SpellCheckOcrTextResult.cs" />
+    <Compile Include="Logic\SubtitleFormats\TextST.cs" />
     <Compile Include="Logic\SubtitleFormats\TimelineFootageAscii.cs" />
     <Compile Include="Logic\SubtitleFormats\TimelineAscii.cs" />
     <Compile Include="Logic\SubtitleFormats\TimelineMvt.cs" />
