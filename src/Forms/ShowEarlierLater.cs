@@ -78,6 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _adjustCallback.Invoke(-tc.TotalMilliseconds, GetSelectionChoice());
                 _totalAdjustment = TimeSpan.FromMilliseconds(_totalAdjustment.TotalMilliseconds - tc.TotalMilliseconds);
                 ShowTotalAdjustMent();
+                Configuration.Settings.General.DefaultAdjustMilliseconds = (int)tc.TotalMilliseconds;
             }
         }
 
@@ -85,7 +86,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             TimeCode tc = new TimeCode(_totalAdjustment);
             labelTotalAdjustment.Text = string.Format(Configuration.Settings.Language.ShowEarlierLater.TotalAdjustmentX, tc.ToShortString());
-            Configuration.Settings.General.DefaultAdjustMilliseconds = (int)tc.TotalMilliseconds;
         }
 
         private void ButtonShowLaterClick(object sender, EventArgs e)
@@ -96,6 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _adjustCallback.Invoke(tc.TotalMilliseconds, GetSelectionChoice());
                 _totalAdjustment = TimeSpan.FromMilliseconds(_totalAdjustment.TotalMilliseconds + tc.TotalMilliseconds);
                 ShowTotalAdjustMent();
+                Configuration.Settings.General.DefaultAdjustMilliseconds = (int)tc.TotalMilliseconds;
             }
         }
 
