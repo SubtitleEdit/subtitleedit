@@ -337,7 +337,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var total = new StringBuilder();
                     var partial = new StringBuilder();
                     bool tagOn = false;
-                    for (int i = 0; i < text.Length; i++)
+                    for (int i = 0; i < text.Length && i < 999; i++)
                     {
                         string tmp = text.Substring(i);
                         if (tmp.StartsWith('<') &&
