@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 foreach (int pid in SubtitlePacketIds)
                 {
                     var bdMs = new MemoryStream();
-                    var list = MakeSubtitlePesPackets(pid);
+                    var list = MakeSubtitlePesPackets(pid, SubtitlePackets);
                     var startMsList = new List<ulong>();
                     var endMsList = new List<ulong>();
                     foreach (var item in list)
@@ -237,7 +237,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             SubtitlesLookup = new Dictionary<int, List<DvbSubPes>>();
             foreach (int pid in SubtitlePacketIds)
             {
-                var list = MakeSubtitlePesPackets(pid);
+                var list = MakeSubtitlePesPackets(pid, SubtitlePackets);
                 bool hasImageSubtitles = false;
                 foreach (var item in list)
                 {
@@ -307,12 +307,12 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             return null;
         }
 
-        private List<DvbSubPes> MakeSubtitlePesPackets(int packetId)
+        internal static List<DvbSubPes> MakeSubtitlePesPackets(int packetId, List<Packet> subtitlePackets)
         {
             var list = new List<DvbSubPes>();
             int last = -1;
             var packetList = new List<Packet>();
-            foreach (Packet packet in SubtitlePackets)
+            foreach (Packet packet in subtitlePackets)
             {
                 if (packet.PacketId == packetId)
                 {
