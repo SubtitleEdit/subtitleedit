@@ -3230,6 +3230,14 @@ namespace Nikse.SubtitleEdit.Forms
             text = text.Replace('\u00A0', ' '); // No-Break Space
             text = text.Replace("\u200B", string.Empty); // Zero Width Space
             text = text.Replace("\uFEFF", string.Empty); // Zero Width No-Break Space
+
+            // Intellectual property
+            text = text.Replace("\u00A9", "(Copyright)"); // copyright	©
+            text = text.Replace("\u2117", "(Sound-recording Copyright)"); // sound-recording copyright	℗
+            text = text.Replace("\u00AE", "(Registered Trademark)"); // registered trademark	®
+            text = text.Replace("\u2120", "(Service Mark)"); // service mark	℠
+            text = text.Replace("\u2122", "(Trademark)"); // trademark	™
+
             return text;
         }
 
