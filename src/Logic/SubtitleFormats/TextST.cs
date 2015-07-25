@@ -10,20 +10,151 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class TextST : SubtitleFormat
     {
 
+        public class Palette
+        { 
+            public int PaletteEntryId { get; set; }
+            public int Y { get; set; }
+            public int Cr { get; set; }
+            public int Cb { get; set; }
+            public int T { get; set; }
+        }
+
+        public class RegionStyle
+        {
+            public int RegionStyleId { get; set; }
+            public int RegionHorizontalPosition { get; set; }
+            public int RegionVerticalPosition { get; set; }
+            public int RegionWidth { get; set; }
+            public int RegionHeight { get; set; }
+            public int RegionBgPaletteEntryIdRef { get; set; }
+            public int TextBoxHorizontalPosition { get; set; }
+            public int TextBoxVerticalPosition { get; set; }
+            public int TextBoxWidth { get; set; }
+            public int TextBoxHeight { get; set; }
+            public int TextFlow { get; set; }
+            public int TextHorizontalAlignment { get; set; }
+            public int TextVerticalAlignment { get; set; }
+            public int LineSpace { get; set; }
+            public int FontIdRef { get; set; }
+            public int FontStyle { get; set; }
+            public int FontSize { get; set; }
+            public int FontPaletteEntryIdRef { get; set; }
+            public int FontOutlinePaletteEntryIdRef { get; set; }
+            public int FontOutlineThickness { get; set; }
+        }
+
+        public class UserStyle
+        {
+            public int UserStyleId { get; set; }
+            public int RegionHorizontalPositionDirection { get; set; }
+            public int RegionHorizontalPositionDelta { get; set; }
+            public int RegionVerticalPositionDirection { get; set; }
+            public int RegionVerticalPositionDelta { get; set; }
+            public int FontSizeIncDec { get; set; }
+            public int FontSizeDelta { get; set; }
+            public int TextBoxHorizontalPositionDirection { get; set; }
+            public int TextBoxHorizontalPositionDelta { get; set; }
+            public int TextBoxVerticalPositionDirection { get; set; }
+            public int TextBoxVerticalPositionDelta { get; set; }
+            public int TextBoxWidthIncDec { get; set; }
+            public int TextBoxWidthDelta { get; set; }
+            public int TextBoxHeightIncDec { get; set; }
+            public int TextBoxHeightDelta { get; set; }
+            public int LineSpaceIncDec { get; set; }
+            public int LineSpaceDelta { get; set; }
+        }
+
         public class DialogStyleSegment
         {
             public bool PlayerStyleFlag { get; set; }
             public int NumberOfRegionStyles { get; set; }
             public int NumberOfUserStyles { get; set; }
-            
+            public List<RegionStyle> RegionStyles { get; set; }
+            public List<UserStyle> UserStyles { get; set; }
+            public List<Palette> Palettes { get; set; }
+            public int NumberOfDialogPresentationSegments { get; set; }
+
             public DialogStyleSegment(byte[] buffer)
             {
-                PlayerStyleFlag = (buffer[13] & Helper.B10000000) > 0;
-                NumberOfRegionStyles = buffer[15];
-                NumberOfUserStyles = buffer[16];
+                PlayerStyleFlag = (buffer[9] & Helper.B10000000) > 0;
+                NumberOfRegionStyles = buffer[11];
+                NumberOfUserStyles = buffer[12];
+
+                int idx = 13;
+                RegionStyles = new List<RegionStyle>(NumberOfRegionStyles);
                 for (int i = 0; i < NumberOfRegionStyles; i++)
                 {
+                    var rs = new RegionStyle()
+                    {
+                        RegionStyleId = buffer[idx],
+                        RegionHorizontalPosition = (buffer[idx + 1] << 8) + buffer[idx + 2],
+                        RegionVerticalPosition = (buffer[idx + 3] << 8) + buffer[idx + 4],
+                        RegionWidth = (buffer[idx + 5] << 8) + buffer[idx + 6],
+                        RegionHeight = (buffer[idx + 7] << 8) + buffer[idx + 8],
+                        RegionBgPaletteEntryIdRef = buffer[idx + 9],
+                        TextBoxHorizontalPosition = (buffer[idx + 11] << 8) + buffer[idx + 12],
+                        TextBoxVerticalPosition = (buffer[idx + 13] << 8) + buffer[idx + 14],
+                        TextBoxWidth = (buffer[idx + 15] << 8) + buffer[idx + 16],
+                        TextBoxHeight = (buffer[idx + 17] << 8) + buffer[idx + 18],
+                        TextFlow = buffer[idx + 19],
+                        TextHorizontalAlignment = buffer[idx + 20],
+                        TextVerticalAlignment = buffer[idx + 21],
+                        LineSpace = buffer[idx + 22],
+                        FontIdRef = buffer[idx + 23],
+                        FontStyle = buffer[idx + 24],
+                        FontSize = buffer[idx + 25],
+                        FontPaletteEntryIdRef = buffer[idx + 26],
+                        FontOutlinePaletteEntryIdRef = buffer[idx + 27],
+                        FontOutlineThickness = buffer[idx + 28]
+                    };
+                    RegionStyles.Add(rs);
+                    idx += 29;
+
+                    UserStyles = new List<UserStyle>(NumberOfUserStyles);
+                    for (int j= 0; j < NumberOfUserStyles; j++)
+                    {
+                        var us = new UserStyle()
+                        {
+                            UserStyleId = buffer[idx],
+                            RegionHorizontalPositionDirection = buffer[idx + 1] >> 7,
+                            RegionHorizontalPositionDelta = ((buffer[idx + 1] & Helper.B01111111) << 8) + buffer[idx + 2],
+                            RegionVerticalPositionDirection = buffer[idx + 3] >> 7,
+                            RegionVerticalPositionDelta = ((buffer[idx + 3] & Helper.B01111111) << 8) + buffer[idx + 4],
+                            FontSizeIncDec = buffer[idx + 5] >> 7,
+                            FontSizeDelta = (buffer[idx + 5] & Helper.B01111111),
+                            TextBoxHorizontalPositionDirection = buffer[idx + 6] >> 7,
+                            TextBoxHorizontalPositionDelta = ((buffer[idx + 6] & Helper.B01111111) << 8) + buffer[idx + 7],
+                            TextBoxVerticalPositionDirection = buffer[idx + 8] >> 7,
+                            TextBoxVerticalPositionDelta = ((buffer[idx + 8] & Helper.B01111111) << 8) + buffer[idx + 9],
+                            TextBoxWidthIncDec = buffer[idx + 10] >> 7,
+                            TextBoxWidthDelta = ((buffer[idx + 10] & Helper.B01111111) << 8) + buffer[idx + 11],
+                            TextBoxHeightIncDec = buffer[idx + 12] >> 7,
+                            TextBoxHeightDelta = ((buffer[idx + 12] & Helper.B01111111) << 8) + buffer[idx + 13],
+                            LineSpaceIncDec = buffer[idx + 14] >> 7,
+                            LineSpaceDelta = (buffer[idx + 14] & Helper.B01111111)
+                        };
+                        UserStyles.Add(us);
+                        idx += 15;
+                    }
                 }
+
+                int numberOfPalettees = ((buffer[idx] << 8) + buffer[idx + 1]) / 5;
+                Palettes = new List<Palette>(numberOfPalettees);
+                idx += 2;
+                for (int i = 0; i < numberOfPalettees; i++)
+                {
+                    var palette = new Palette()
+                    {
+                        PaletteEntryId = buffer[idx],
+                        Y = buffer[idx + 1],
+                        Cr = buffer[idx + 2],
+                        Cb = buffer[idx + 3],
+                        T = buffer[idx + 4]
+                    };
+                    Palettes.Add(palette);
+                    idx += 5;
+                }
+                NumberOfDialogPresentationSegments = (buffer[idx] << 8) + buffer[idx + 1];
             }
         }
 
@@ -97,7 +228,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             System.Diagnostics.Debug.WriteLine("font style");
                             var fontStyle = buffer[idx];
-                            switch (fontStyle)                            
+                            switch (fontStyle)
                             {
                                 case 1: region.Texts.Add("<b>");
                                     endStyle = "</b>";
@@ -206,7 +337,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (string.IsNullOrEmpty(fileName) || 
+            if (string.IsNullOrEmpty(fileName) ||
                 !fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase) ||
                 !FileUtil.IsM2TransportStream(fileName))
             {
@@ -256,7 +387,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     ms.Read(m2TsTimeCodeBuffer, 0, m2TsTimeCodeBuffer.Length);
                     var tc = (m2TsTimeCodeBuffer[0] << 24) + (m2TsTimeCodeBuffer[1] << 16) + (m2TsTimeCodeBuffer[2] << 8) + (m2TsTimeCodeBuffer[3] & Helper.B00111111);
                     // should m2ts time code be used in any way?
-                    var msecs =  (ulong)Math.Round((tc) / 27.0); // 27 or 90?
+                    var msecs = (ulong)Math.Round((tc) / 27.0); // 27 or 90?
                     TimeCode tc2 = new TimeCode(msecs);
                     System.Diagnostics.Debug.WriteLine(tc2);
                     position += m2TsTimeCodeBuffer.Length;
@@ -297,7 +428,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
             }
-   
+
             subtitle.Renumber();
         }
 
