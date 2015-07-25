@@ -1730,7 +1730,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if ((ext == ".m2ts") && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName))
                 {
                     bool isTextSt = false;
-                    if (file.Length < 1000000)
+                    if (file.Length < 2000000)
                     {
                         var textSt = new TextST();
                         isTextSt = textSt.IsMine(null, fileName);
