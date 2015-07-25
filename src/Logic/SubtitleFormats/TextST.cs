@@ -74,6 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     idx += 2;
                     int processedLength = 0;
                     region.Texts = new List<string>();
+                    string endStyle = string.Empty;
                     while (processedLength < regionSubtitleLength)
                     {
                         byte escapeCode = buffer[idx];
@@ -86,19 +87,45 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (dataType == 0x01) // Text
                         {
                             string text = System.Text.Encoding.UTF8.GetString(buffer, idx, dataLength);
-                            region.Texts.Add(text);                            
+                            region.Texts.Add(text);
                         }
                         else if (dataType == 0x02) // Change a font set
                         {
+                            System.Diagnostics.Debug.WriteLine("font set");
                         }
                         else if (dataType == 0x03) // Change a font style
                         {
+                            System.Diagnostics.Debug.WriteLine("font style");
+                            var fontStyle = buffer[idx];
+                            switch (fontStyle)                            
+                            {
+                                case 1: region.Texts.Add("<b>");
+                                    endStyle = "</b>";
+                                    break;
+                                case 2: region.Texts.Add("<i>");
+                                    endStyle = "</i>";
+                                    break;
+                                case 3: region.Texts.Add("<b><i>");
+                                    endStyle = "</i></b>";
+                                    break;
+                                case 5: region.Texts.Add("<b>");
+                                    endStyle = "</b>";
+                                    break;
+                                case 6: region.Texts.Add("<i>");
+                                    endStyle = "</i>";
+                                    break;
+                                case 7: region.Texts.Add("<b><i>");
+                                    endStyle = "</i></b>";
+                                    break;
+                            }
                         }
                         else if (dataType == 0x04) // Change a font size
                         {
+                            System.Diagnostics.Debug.WriteLine("font size");
                         }
                         else if (dataType == 0x05) // Change a font color
                         {
+                            System.Diagnostics.Debug.WriteLine("font color");
                         }
                         else if (dataType == 0x0A) // Line break
                         {
@@ -106,9 +133,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else if (dataType == 0x0B) // End of inline style
                         {
+                            System.Diagnostics.Debug.WriteLine("End inline style");
+                            if (!string.IsNullOrEmpty(endStyle))
+                            {
+                                region.Texts.Add(endStyle);
+                                endStyle = string.Empty;
+                            }
                         }
                         processedLength += dataLength;
                         idx += dataLength;
+                    }
+                    if (!string.IsNullOrEmpty(endStyle))
+                    {
+                        region.Texts.Add(endStyle);
                     }
                     Regions.Add(region);
                 }
@@ -217,8 +254,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (IsM2TransportStream)
                 {
                     ms.Read(m2TsTimeCodeBuffer, 0, m2TsTimeCodeBuffer.Length);
-                    //var tc = (m2tsTimeCodeBuffer[0]<< 24) | (m2tsTimeCodeBuffer[1] << 16) | (m2tsTimeCodeBuffer[2] << 8) | (m2tsTimeCodeBuffer[3]);
+                    var tc = (m2TsTimeCodeBuffer[0] << 24) + (m2TsTimeCodeBuffer[1] << 16) + (m2TsTimeCodeBuffer[2] << 8) + (m2TsTimeCodeBuffer[3] & Helper.B00111111);
                     // should m2ts time code be used in any way?
+                    var msecs =  (ulong)Math.Round((tc) / 27.0); // 27 or 90?
+                    TimeCode tc2 = new TimeCode(msecs);
+                    System.Diagnostics.Debug.WriteLine(tc2);
                     position += m2TsTimeCodeBuffer.Length;
                 }
 
