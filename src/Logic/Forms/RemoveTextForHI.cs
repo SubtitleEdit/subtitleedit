@@ -931,7 +931,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
             if (text != oldText && lines.Length == 1 && Utilities.GetNumberOfLines(oldText) == 2)
             {
-                if ((oldText.StartsWith("-", StringComparison.Ordinal) || oldText.StartsWith("<i>-", StringComparison.Ordinal)) &&
+                if ((oldText.StartsWith('-') || oldText.StartsWith("<i>-", StringComparison.Ordinal)) &&
                     (oldText.Contains("." + Environment.NewLine) || oldText.Contains(".</i>" + Environment.NewLine) ||
                      oldText.Contains("!" + Environment.NewLine) || oldText.Contains("!</i>" + Environment.NewLine) ||
                      oldText.Contains("?" + Environment.NewLine) || oldText.Contains("?</i>" + Environment.NewLine)))

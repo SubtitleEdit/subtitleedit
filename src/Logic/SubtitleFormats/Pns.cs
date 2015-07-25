@@ -28,7 +28,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class Pns : SubtitleFormat
     {
-
         public override string Extension
         {
             get { return ".pns"; }
