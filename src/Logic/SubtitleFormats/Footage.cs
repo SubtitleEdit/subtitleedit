@@ -8,7 +8,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class Footage : SubtitleFormat
     {
-
         private static readonly Regex RegexTimeCode = new Regex(@"^\s*\d+,\d\d$", RegexOptions.Compiled);
 
         private enum ExpectingLine

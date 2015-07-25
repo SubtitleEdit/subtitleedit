@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 {
     public class CheckForUpdatesHelper
     {
-        private static Regex regex = new Regex(@"\d\.\d", RegexOptions.Compiled); // 3.4.0 (xth June 2014)
+        private readonly static Regex regex = new Regex(@"\d\.\d", RegexOptions.Compiled); // 3.4.0 (xth June 2014)
 
         //private const string ReleasesUrl = "https://api.github.com/repos/SubtitleEdit/subtitleedit/releases";
         private const string ChangeLogUrl = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Changelog.txt";

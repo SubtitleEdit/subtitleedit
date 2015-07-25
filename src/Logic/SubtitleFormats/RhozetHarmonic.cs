@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string ToTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return time.ToHHMMSSFF();
         }
 
         private static TimeCode DecodeTimeCode(string s)

@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonDontCheckUpdates.Text = Configuration.Settings.Language.CheckForUpdates.NoUpdates;
             buttonDontCheckUpdates.Visible = false;
 
-            this.Location = new System.Drawing.Point(_mainForm.Location.X + (_mainForm.Width / 2) - (Width / 2), _mainForm.Location.Y + (_mainForm.Height / 2) - (Height / 2) - 200);
+            Location = new System.Drawing.Point(_mainForm.Location.X + (_mainForm.Width / 2) - (Width / 2), _mainForm.Location.Y + (_mainForm.Height / 2) - (Height / 2) - 200);
         }
 
         public CheckForUpdates(Main mainForm, CheckForUpdatesHelper checkForUpdatesHelper)

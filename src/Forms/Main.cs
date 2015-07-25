@@ -61,6 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
             get { return _videoFileName; }
             set { _videoFileName = value; }
         }
+
         private DateTime _fileDateTime;
         private string _title;
         private FindReplaceDialogHelper _findHelper;
@@ -292,7 +293,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 InitializeComponent();
-                Icon = Nikse.SubtitleEdit.Properties.Resources.SubtitleEditFormIcon;
+                Icon = Properties.Resources.SubtitleEditFormIcon;
 
                 textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
@@ -451,7 +452,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 labelAutoDuration.Visible = false;
                 mediaPlayer.SubtitleText = string.Empty;
-                //                comboBoxAutoRepeat.SelectedIndex = 2;
+                // comboBoxAutoRepeat.SelectedIndex = 2;
                 comboBoxAutoContinue.SelectedIndex = 2;
                 timeUpDownVideoPosition.TimeCode = new TimeCode(0, 0, 0, 0);
                 timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(0, 0, 0, 0);
@@ -3112,7 +3113,7 @@ namespace Nikse.SubtitleEdit.Forms
                     currentEncoding = Encoding.UTF8;
                 }
 
-                if (Control.ModifierKeys == (Keys.Control | Keys.Shift))
+                if (ModifierKeys == (Keys.Control | Keys.Shift))
                     allText = allText.Replace("\r\n", "\n");
 
                 if (format.GetType() == typeof(ItunesTimedText) || format.GetType() == typeof(ScenaristClosedCaptions) || format.GetType() == typeof(ScenaristClosedCaptionsDropFrame))
