@@ -73,7 +73,7 @@ $ColorIndex3    = 2
 $ColorIndex4    = 3
 
 //Subtitles";
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine(Header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -85,7 +85,7 @@ $ColorIndex4    = 3
         private static string EncodeText(string text)
         {
             text = HtmlUtil.FixUpperTags(text);
-            bool allItalic = text.StartsWith("<i>") && text.EndsWith("</i>") && Utilities.CountTagInText(text, "<i>") == 1;
+            bool allItalic = text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1;
             text = text.Replace("<b>", Bold);
             text = text.Replace("</b>", Bold);
             text = text.Replace("<i>", Italic);
@@ -100,9 +100,7 @@ $ColorIndex4    = 3
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:01:54:19
-
             int frames = time.Milliseconds / (1000 / 25);
-
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
         }
 
@@ -123,7 +121,7 @@ $ColorIndex4    = 3
 
                     try
                     {
-                        Paragraph p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(24)));
+                        var p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(24)));
                         subtitle.Paragraphs.Add(p);
                     }
                     catch
@@ -142,18 +140,16 @@ $ColorIndex4    = 3
         private static TimeCode DecodeTimeCode(string time)
         {
             //00:01:54:19
+            var hour = int.Parse(time.Substring(0, 2));
+            var minutes = int.Parse(time.Substring(3, 2));
+            var seconds = int.Parse(time.Substring(6, 2));
+            var frames = int.Parse(time.Substring(9, 2));
 
-            string hour = time.Substring(0, 2);
-            string minutes = time.Substring(3, 2);
-            string seconds = time.Substring(6, 2);
-            string frames = time.Substring(9, 2);
-
-            int milliseconds = (int)((1000 / 25.0) * int.Parse(frames));
+            int milliseconds = (int)((1000 / 25.0) * frames);
             if (milliseconds > 999)
                 milliseconds = 999;
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
-            return tc;
+            return new TimeCode(hour, minutes, seconds, milliseconds);
         }
 
         private static string DecodeText(string text)

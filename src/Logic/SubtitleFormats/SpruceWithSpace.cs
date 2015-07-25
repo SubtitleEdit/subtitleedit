@@ -8,8 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SpruceWithSpace : SubtitleFormat
     {
-
-        private static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d, \d\d:\d\d:\d\d:\d\d,.+", RegexOptions.Compiled);
+        private readonly static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d, \d\d:\d\d:\d\d:\d\d,.+", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -62,7 +61,7 @@ $TapeOffset         =   FALSE
 \\Colour 6 = Cyan
 \\Colour 7 = White
 ";
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine(Header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -85,7 +84,7 @@ $TapeOffset         =   FALSE
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:01:54:19
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return time.ToHHMMSSFF();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -110,7 +109,7 @@ $TapeOffset         =   FALSE
                         _errorCount++;
                     }
                 }
-                else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//") && !line.StartsWith('$'))
+                else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//", StringComparison.Ordinal) && !line.StartsWith('$'))
                 {
                     _errorCount++;
                 }
@@ -121,18 +120,16 @@ $TapeOffset         =   FALSE
         private static TimeCode DecodeTimeCode(string time)
         {
             //00:01:54:19
-
-            string hour = time.Substring(0, 2);
-            string minutes = time.Substring(3, 2);
-            string seconds = time.Substring(6, 2);
-            string frames = time.Substring(9, 2);
-
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
+            var hour = int.Parse(time.Substring(0, 2));
+            var minutes = int.Parse(time.Substring(3, 2));
+            var seconds = int.Parse(time.Substring(6, 2));
+            var frames = int.Parse(time.Substring(9, 2));
+            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
         private static string DecodeText(string text)
-        { // TODO: Improve end tags
+        {
+            // TODO: Improve end tags
             text = text.Replace("|", Environment.NewLine);
             if (text.Contains("^B"))
                 text = text.Replace("^B", "<b>") + "</b>";
