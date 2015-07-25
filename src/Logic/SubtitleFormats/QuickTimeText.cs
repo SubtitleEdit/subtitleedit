@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class QuickTimeText : SubtitleFormat
     {
-        private static Regex regexTimeCodes = new Regex(@"^\[\d\d:\d\d:\d\d.\d\d\]", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodes = new Regex(@"^\[\d\d:\d\d:\d\d.\d\d\]", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (lines != null && lines.Count > 0 && lines[0].StartsWith("{\\rtf"))
+            if (lines != null && lines.Count > 0 && lines[0].StartsWith("{\\rtf", StringComparison.Ordinal))
                 return false;
 
             var subtitle = new Subtitle();
@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {width:160} {height:32}
 {timestamps:absolute} {language:0}";
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine(Header);
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)

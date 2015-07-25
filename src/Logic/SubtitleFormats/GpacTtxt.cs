@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class GpacTtxt : SubtitleFormat
     {
-
         public override string Extension
         {
             get { return ".ttxt"; }
