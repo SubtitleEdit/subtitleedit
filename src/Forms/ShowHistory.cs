@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _selectedIndex = -1;
         private Subtitle _subtitle;
         private int _undoIndex;
-
+        const string TimeFormat = "{0:00}:{1:00}:{2:00}";
         public ShowHistory()
         {
             InitializeComponent();
@@ -52,13 +52,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddHistoryItemToListView(HistoryItem hi, int index)
         {
             var item = new ListViewItem("")
-                           {
-                               Tag = hi,
-                               Text = string.Format("{0:00}:{1:00}:{2:00}",
-                                                    hi.Timestamp.Hour,
-                                                    hi.Timestamp.Minute,
-                                                    hi.Timestamp.Second)
-                           };
+            {
+                Tag = hi,
+                Text = string.Format(TimeFormat, hi.Timestamp.Hour, hi.Timestamp.Minute, hi.Timestamp.Second)
+            };
 
             if (index > _undoIndex)
             {
@@ -95,10 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewHistory.SelectedItems.Count == 1)
             {
                 HistoryItem h2 = _subtitle.HistoryItems[listViewHistory.SelectedItems[0].Index];
-                string descr2 = string.Format("{0:00}:{1:00}:{2:00}",
-                                                    h2.Timestamp.Hour,
-                                                    h2.Timestamp.Minute,
-                                                    h2.Timestamp.Second) + " - " + h2.Description;
+                string descr2 = string.Format(TimeFormat, h2.Timestamp.Hour, h2.Timestamp.Minute, h2.Timestamp.Second) + " - " + h2.Description;
                 using (var compareForm = new Compare())
                 {
                     compareForm.Initialize(_subtitle, Configuration.Settings.Language.General.CurrentSubtitle, h2.Subtitle, descr2);
@@ -121,14 +115,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 HistoryItem h1 = _subtitle.HistoryItems[listViewHistory.SelectedItems[0].Index];
                 HistoryItem h2 = _subtitle.HistoryItems[listViewHistory.SelectedItems[1].Index];
-                string descr1 = string.Format("{0:00}:{1:00}:{2:00}",
-                                                    h1.Timestamp.Hour,
-                                                    h1.Timestamp.Minute,
-                                                    h1.Timestamp.Second) + " - " + h1.Description;
-                string descr2 = string.Format("{0:00}:{1:00}:{2:00}",
-                                                    h2.Timestamp.Hour,
-                                                    h2.Timestamp.Minute,
-                                                    h2.Timestamp.Second) + " - " + h2.Description;
+                string descr1 = string.Format(TimeFormat, h1.Timestamp.Hour, h1.Timestamp.Minute, h1.Timestamp.Second) + " - " + h1.Description;
+                string descr2 = string.Format(TimeFormat, h2.Timestamp.Hour, h2.Timestamp.Minute, h2.Timestamp.Second) + " - " + h2.Description;
                 using (var compareForm = new Compare())
                 {
                     compareForm.Initialize(h1.Subtitle, descr1, h2.Subtitle, descr2);
