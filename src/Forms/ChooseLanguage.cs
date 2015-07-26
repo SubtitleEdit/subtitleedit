@@ -74,12 +74,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    if (cultureName.Equals("zh-CHS", StringComparison.OrdinalIgnoreCase))
-                        comboBoxLanguages.Items.Add(new CultureListItem(new CultureInfo(0x0004)));  // zh-Hans
-                    else if (cultureName.Equals("zh-tw", StringComparison.OrdinalIgnoreCase))
-                        comboBoxLanguages.Items.Add(new CultureListItem(new CultureInfo(0x7C04)));  // zh-Hant
-                    else
-                        comboBoxLanguages.Items.Add(new CultureListItem(CultureInfo.CreateSpecificCulture(cultureName)));
+                    var ci = CultureInfo.CreateSpecificCulture(cultureName);
+                    if (!ci.Name.Equals(cultureName, StringComparison.OrdinalIgnoreCase))
+                        ci = CultureInfo.GetCultureInfo(cultureName);
+                    comboBoxLanguages.Items.Add(new CultureListItem(ci));
                 }
                 catch (ArgumentException)
                 {
