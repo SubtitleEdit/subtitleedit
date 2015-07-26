@@ -108,11 +108,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     // first all to lower
                     text = text.ToLower().Trim();
-                    while (text.Contains("  "))
-                        text = text.Replace("  ", " ");
-                    text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-                    text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-
+                    text = text.FixExtraSpaces();
                     var st = new StripableText(text);
                     st.FixCasing(namesEtc, false, true, true, lastLine); // fix all casing but names (that's a seperate option)
                     text = st.MergedString;
