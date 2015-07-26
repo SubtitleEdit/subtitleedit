@@ -318,7 +318,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private const int TextSubtitleStreamPID = 0x1800;
         private const byte SegmentTypeDialogStyle = 0x81;
         private const byte SegmentTypeDialogPresentation = 0x82;
-        List<Packet> SubtitlePackets;
 
         public override string Extension
         {
