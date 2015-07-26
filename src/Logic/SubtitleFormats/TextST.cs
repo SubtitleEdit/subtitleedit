@@ -9,7 +9,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class TextST : SubtitleFormat
     {
-
         public class Palette
         { 
             public int PaletteEntryId { get; set; }

@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class Lrc : SubtitleFormat
     {
-        private static Regex _timeCode = new Regex(@"^\[\d+:\d\d\.\d\d\].*$", RegexOptions.Compiled);
+        private readonly static Regex _timeCode = new Regex(@"^\[\d+:\d\d\.\d\d\].*$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -61,29 +61,28 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             if (!string.IsNullOrEmpty(subtitle.Header) && (subtitle.Header.Contains("[ar:") || subtitle.Header.Contains("[ti:")))
                 sb.Append(subtitle.Header);
-
+            const string timeFormat = "[{0:00}:{1:00}.{2:00}]{3}";
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                Paragraph next = null;
-                if (i + 1 < subtitle.Paragraphs.Count)
-                    next = subtitle.Paragraphs[i + 1];
+                Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
 
-                string text = HtmlUtil.RemoveHtmlTags(p.Text);
+                var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 text = text.Replace(Environment.NewLine, " "); // text = text.Replace(Environment.NewLine, "|");
-                sb.AppendLine(string.Format("[{0:00}:{1:00}.{2:00}]{3}", p.StartTime.Hours * 60 + p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds / 10.0), text));
+                sb.AppendLine(string.Format(timeFormat, p.StartTime.Hours * 60 + p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds / 10.0), text));
 
                 if (next == null || next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 100)
                 {
-                    TimeCode tc = new TimeCode(p.EndTime.TotalMilliseconds);
-                    sb.AppendLine(string.Format("[{0:00}:{1:00}.{2:00}]{3}", tc.Hours * 60 + tc.Minutes, tc.Seconds, (int)Math.Round(tc.Milliseconds / 10.0), string.Empty));
+                    var tc = new TimeCode(p.EndTime.TotalMilliseconds);
+                    sb.AppendLine(string.Format(timeFormat, tc.Hours * 60 + tc.Minutes, tc.Seconds, (int)Math.Round(tc.Milliseconds / 10.0), string.Empty));
                 }
             }
             return sb.ToString().Trim();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
-        { //[01:05.99]I've been walking in the same way as I do
+        {
+            //[01:05.99]I've been walking in the same way as I do
             _errorCount = 0;
             var header = new StringBuilder();
             foreach (string line in lines)
@@ -115,32 +114,32 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         _errorCount++;
                     }
                 }
-                else if (line.StartsWith("[ar:")) // [ar:Lyrics artist]
+                else if (line.StartsWith("[ar:", StringComparison.Ordinal)) // [ar:Lyrics artist]
                 {
                     if (subtitle.Paragraphs.Count < 1)
                         header.AppendLine(line);
                 }
-                else if (line.StartsWith("[al:")) // [al:Album where the song is from]
+                else if (line.StartsWith("[al:", StringComparison.Ordinal)) // [al:Album where the song is from]
                 {
                     if (subtitle.Paragraphs.Count < 1)
                         header.AppendLine(line);
                 }
-                else if (line.StartsWith("[ti:")) // [ti:Lyrics (song) title]
+                else if (line.StartsWith("[ti:", StringComparison.Ordinal)) // [ti:Lyrics (song) title]
                 {
                     if (subtitle.Paragraphs.Count < 1)
                         header.AppendLine(line);
                 }
-                else if (line.StartsWith("[au:")) // [au:Creator of the Songtext]
+                else if (line.StartsWith("[au:", StringComparison.Ordinal)) // [au:Creator of the Songtext]
                 {
                     if (subtitle.Paragraphs.Count < 1)
                         header.AppendLine(line);
                 }
-                else if (line.StartsWith("[length:")) // [length:How long the song is]
+                else if (line.StartsWith("[length:", StringComparison.Ordinal)) // [length:How long the song is]
                 {
                     if (subtitle.Paragraphs.Count < 1)
                         header.AppendLine(line);
                 }
-                else if (line.StartsWith("[by:")) // [by:Creator of the LRC file]
+                else if (line.StartsWith("[by:", StringComparison.Ordinal)) // [by:Creator of the LRC file]
                 {
                     if (subtitle.Paragraphs.Count < 1)
                         header.AppendLine(line);
@@ -159,14 +158,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Header = header.ToString();
 
             int max = subtitle.Paragraphs.Count;
+            char[] chars = { ':', '.' };
             for (int i = 0; i < max; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 while (_timeCode.Match(p.Text).Success)
                 {
-                    string s = p.Text.Substring(1, 8);
+                    var s = p.Text.Substring(1, 8);
                     p.Text = p.Text.Remove(0, 10).Trim();
-                    string[] parts = s.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = s.Split(chars, StringSplitOptions.RemoveEmptyEntries);
                     try
                     {
                         int minutes = int.Parse(parts[0]);

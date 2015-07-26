@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class SoftNicolonSub : SubtitleFormat
     {
-        private static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d\\\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        private readonly static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d\\\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -40,13 +40,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             sb.AppendLine("*PART 1*");
             sb.AppendLine("00:00:00:00\\00:00:00:00");
+            const string format = "{0}{1}{2}\\{3}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string text = p.Text;
                 bool positionTop = false;
 
                 // If text starts with {\an8}, subtitle appears at the top
-                if (text.StartsWith("{\\an8}"))
+                if (text.StartsWith("{\\an8}", StringComparison.Ordinal))
                 {
                     positionTop = true;
                     // Remove the tag {\an8}.
@@ -58,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 int count = 0;
                 var lineSb = new StringBuilder();
                 string tempLine = string.Empty;
-                Boolean nextLineInItalics = false;
+                bool nextLineInItalics = false;
                 foreach (string line in lines)
                 {
                     // Append line break in every line except the first one
@@ -74,7 +75,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         nextLineInItalics = false;
                     }
 
-                    if (tempLine.StartsWith("<i>") && tempLine.EndsWith("</i>"))
+                    if (tempLine.StartsWith("<i>", StringComparison.Ordinal) && tempLine.EndsWith("</i>", StringComparison.Ordinal))
                     {
                         // Whole line is in italics
                         // Remove <i> from the beginning
@@ -84,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         // Add new italics tag at the beginning
                         tempLine = "[" + tempLine;
                     }
-                    else if (tempLine.StartsWith("<i>") && Utilities.CountTagInText(tempLine, "<i>") > Utilities.CountTagInText(tempLine, "</i>"))
+                    else if (tempLine.StartsWith("<i>", StringComparison.Ordinal) && Utilities.CountTagInText(tempLine, "<i>") > Utilities.CountTagInText(tempLine, "</i>"))
                     {
                         // Line starts with <i> but italics are not closed. So the next line should be in italics
                         nextLineInItalics = true;
@@ -103,7 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (positionTop)
                     text = "}" + text;
 
-                sb.AppendLine(string.Format("{0}{1}{2}\\{3}", text, Environment.NewLine, p.StartTime.ToHHMMSSPeriodFF().Replace(".", ":"), p.EndTime.ToHHMMSSPeriodFF().Replace(".", ":")));
+                sb.AppendLine(string.Format(format, text, Environment.NewLine, p.StartTime.ToHHMMSSPeriodFF().Replace('.', ':'), p.EndTime.ToHHMMSSPeriodFF().Replace('.', ':')));
             }
             sb.AppendLine(@"*END*");
             sb.AppendLine(@"...........\...........");
@@ -138,6 +139,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
+            char[] chars = { ':', '.' };
+            var lineSb = new StringBuilder();
             foreach (string line in lines)
             {
                 string s = line.Trim();
@@ -150,8 +153,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string start = temp[0];
                         string end = temp[1];
 
-                        string[] startParts = start.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
-                        string[] endParts = end.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] startParts = start.Split(chars, StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(chars, StringSplitOptions.RemoveEmptyEntries);
                         if (startParts.Length == 4 && endParts.Length == 4)
                         {
                             try
@@ -161,7 +164,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 p.EndTime = DecodeTimeCode(endParts);
                                 string text = sb.ToString().Trim();
 
-                                Boolean positionTop = false;
+                                bool positionTop = false;
                                 // If text starts with "}", subtitle appears at the top
                                 if (text.StartsWith('}'))
                                 {
@@ -176,7 +179,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 // Split subtitle lines (one subtitle has one or more lines)
                                 var subtitleLines = text.SplitToLines();
                                 int count = 0;
-                                var lineSb = new StringBuilder();
+                                lineSb.Clear();
                                 string tempLine = string.Empty;
                                 foreach (string subtitleLine in subtitleLines)
                                 {
@@ -203,7 +206,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 p.Text = text;
                                 if (text.Length > 0)
                                     subtitle.Paragraphs.Add(p);
-                                sb = new StringBuilder();
+                                sb.Clear();
                             }
                             catch (Exception exception)
                             {
@@ -229,13 +232,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(string[] parts)
         {
             //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = int.Parse(parts[3]);
+            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
     }

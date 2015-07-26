@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
 
             var tempText = Utilities.UnbreakLine(text);
-            if (Utilities.CountTagInText(tempText, '-') == 2 && (text.StartsWith('-') || text.StartsWith("<i>-")))
+            if (Utilities.CountTagInText(tempText, '-') == 2 && (text.StartsWith('-') || text.StartsWith("<i>-", StringComparison.Ordinal)))
             {
                 var idx = tempText.IndexOfAny(new[] { ". -", "! -", "? -" }, StringComparison.Ordinal);
                 if (idx > 1)
