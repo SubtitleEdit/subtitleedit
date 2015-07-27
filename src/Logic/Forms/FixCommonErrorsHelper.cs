@@ -455,7 +455,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     !(s.StartsWith('(') && s.Contains(")" + Environment.NewLine, StringComparison.Ordinal)) &&
                     s != s.ToUpper())
                 {
-                    return text.Replace(Environment.NewLine, " ").Replace("  ", " ");
+                    return Utilities.UnbreakLine(text);
                 }
             }
             return text;
