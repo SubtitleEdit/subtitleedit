@@ -618,7 +618,7 @@
     <RegEx find="([bB])i?j?ež(i|iš|imo|e|ao|al[aeio]|ati)\b" replaceWith="$1jež$2" />
     <RegEx find="bioskop(a|u|om)" replaceWith="kin$1" />
     <RegEx find="Bioskop(a|u|om)" replaceWith="Kin$1" />
-    <RegEx find="([bB])lj?ed(a|e|i|o|u|im|om|ima|el[aeiou]|elom|elima|io|jele)" replaceWith="$1lijed$2" />
+    <RegEx find="([bB])lj?ed([aeiou]|im|om|ima|el[aeiou]|elom|elima|io|jele)" replaceWith="$1lijed$2" />
     <RegEx find="([bB])ole(l[aieo]|ti)\b" replaceWith="$1olje$2" />
     <RegEx find="([bB])ožij([aiu]|om|ima)?\b" replaceWith="$1ožj$2" />
     <RegEx find="boži[čć]([aeiu]|em|ima)?\b" replaceWith="Božić$1" />
@@ -628,7 +628,7 @@
     <RegEx find="\bCaliforni(a|ja|i|ji|u|ju)?" replaceWith="Kaliforni$1" />
     <RegEx find="\b([cC])j?el([aeiou]|o[mgj]|ima|og|osti)\b" replaceWith="$1ijel$2" />
     <RegEx find="\b([cC])j?en([aeiou]|om|ama|iti|il[aeio]|io|im|iš|imo|ite|iše)" replaceWith="$1ijen$2" />
-    <RegEx find="([cC])j?enjen(a|e|i|im|ima|o|u|om|oj)?" replaceWith="$1ijenjen$2" />
+    <RegEx find="([cC])j?enjen([aeiou]|im|ima|om|oj)?" replaceWith="$1ijenjen$2" />
     <RegEx find="([cCsS])vj?e[ćč]\b" replaceWith="$1vijeć" />
     <RegEx find="čas(a|u|om|ovima|ov[aie])" replaceWith="sat$1" />
     <RegEx find="Čas(a|u|om|ovima|ov[aie])" replaceWith="Sat$1" />
@@ -670,7 +670,7 @@
     <RegEx find="\bDopada" replaceWith="Sviđa" />
     <RegEx find="([dD])oprinj?e(te|l[aeio]|t|ti|to|vši)" replaceWith="$1oprinije$2" />
     <RegEx find="([dD])oprin(eo|eso|jeo)" replaceWith="$1oprinio" />
-    <RegEx find="([dD])osije(a|e|i|u|ima)?" replaceWith="$1osje$2" />
+    <RegEx find="([dD])osije([aeiu]|ima)?" replaceWith="$1osje$2" />
     <RegEx find="([dD])ospe([l[aeio]|lo[mg]|lima|ti])\b" replaceWith="$1ospje$2" />
     <RegEx find="([dD])ospe(m|š|e|mo|te)" replaceWith="$1ospije$2" />
     <RegEx find="([dD])rj?ema" replaceWith="$1rijema" />
@@ -750,7 +750,7 @@
     <RegEx find="([iI])zgladne" replaceWith="$1zgladnje" />
     <RegEx find="([iI])zvešta" replaceWith="$1zvješta" />
     <RegEx find="\b([jJ])agnje" replaceWith="$1anje" />
-    <RegEx find="\bJovan(a|e|u|om)?" replaceWith="Ivan$1" />
+    <RegEx find="\bJovan([aeu]|om)?" replaceWith="Ivan$1" />
     <RegEx find="\b([kK])af([aeiu]|om|ama|an[aeiu]|anom|anama|ansk[aiu]|anskom)\b" replaceWith="$1av$2" />
     <RegEx find="([kK]alib(?:ar|r[aeui]))\. *([0-9])" replaceWith="$1 .$2" />
     <RegEx find="kancelarij(a|u|om)" replaceWith="ured$1" />
@@ -913,7 +913,7 @@
     <RegEx find="pacov" replaceWith="štakor" />
     <RegEx find="Pacov" replaceWith="Štakor" />
     <RegEx find="([pP])eva" replaceWith="$1jeva" />
-    <RegEx find="([pP])esm(a|e|i|o|u|om)" replaceWith="$1jesm$2" />
+    <RegEx find="([pP])esm([aeiou]|om)" replaceWith="$1jesm$2" />
     <RegEx find="([pP])eša([čkc])" replaceWith="$1ješa$2" />
     <RegEx find="peškir([aeiu]|om)?" replaceWith="ručnik$1" />
     <RegEx find="Peškir([aeiu]|om)?" replaceWith="Ručnik$1" />
@@ -944,12 +944,12 @@
     <RegEx find="([pP])ridik" replaceWith="$1rodik" />
     <RegEx find="([pP])rihvata" replaceWith="$1rihvaća" />
     <RegEx find="([pP])rimj?en(njen|njen[aeiou]|njeno[gm]|iti|il[aeio])" replaceWith="$1rimijen$2" />
-    <RegEx find="([pP])roleć(a|e|u|em|ima)" replaceWith="$1roljeć$2" />
+    <RegEx find="([pP])roleć([aeu]|em|ima)" replaceWith="$1roljeć$2" />
     <RegEx find="([pP])oseduj(e|em|eš|emo|ete|u|ući)" replaceWith="$1osjeduj$2" />
     <RegEx find="([pP])oseć" replaceWith="$1osjeć" />
     <RegEx find="\b([pP])oseti(o|m|š|l[aieo]|ti)?\b" replaceWith="$1osjeti$2" />
     <RegEx find="\b([pP])o[dt]sj?eti(o|m|š|l[aieo]|ti)?\b" replaceWith="$1odsjeti$2" />
-    <RegEx find="([pP])osed(a|e|i|o|u|om)" replaceWith="$1osjed$2" />
+    <RegEx find="([pP])osed([aeiou]|om)" replaceWith="$1osjed$2" />
     <RegEx find="([pP])osmatra" replaceWith="$1romatra" />
     <RegEx find="([pP])oter([aeiu]|om|ama|aš|amo|ate|aju|nic[aeu]|nicama)?\b" replaceWith="$1otjer$2" />
     <RegEx find="([pP])ovinuje" replaceWith="$1okorava" />
@@ -1063,7 +1063,7 @@
     <RegEx find="([sS])pri?j?ečava(m|š|mo|te|ju|l[aeio]|še|nje)?" replaceWith="$1prječava$2" />
     <RegEx find="([sS])prj?eči(m|š|mo|te|še|o|l[aeio]|ti)?" replaceWith="$1priječi$2" />
     <RegEx find="([sS])prj?eče" replaceWith="$1priječe" />
-    <RegEx find="([sS])reč(a|e|i|u|om|ama)" replaceWith="$1reć$2" />
+    <RegEx find="([sS])reč([aeui]|om|ama)" replaceWith="$1reć$2" />
     <RegEx find="([sS])re[čć](an|n[aeiou]|nik|nik[au]|nikom|nic[aeiu]|nicom|no|no[mjg]|nije[gm]|nij[aeiu]|nijom|nijoj)" replaceWith="$1ret$2" />
     <RegEx find="\b([sS])rj?ed([aeiu]|om|ama)\b" replaceWith="$1rijed$2" />
     <RegEx find="\b[Ss]ta[čć](e|u|emo|ete)" replaceWith="$1tat $1$2" />
@@ -1072,8 +1072,8 @@
     <RegEx find="stomačn" replaceWith="trbušn" />
     <RegEx find="Stomačn" replaceWith="Trbušn" />
     <RegEx find="\b([sS])trj?el([aeiou]|om|ac|cu|ci|cima|ama)" replaceWith="$1trijel$2" />
-    <RegEx find="sujeverj(a|e|u|ima|em)" replaceWith="praznovjerj$1" />
-    <RegEx find="Sujeverj(a|e|u|ima|em)" replaceWith="Praznovjerj$1" />
+    <RegEx find="sujeverj([aeu]|ima|em)" replaceWith="praznovjerj$1" />
+    <RegEx find="Sujeverj([aeu]|ima|em)" replaceWith="Praznovjerj$1" />
     <RegEx find="([sS])umlja" replaceWith="$1umnja" />
     <RegEx find="\bsup([aeiu]|om|ama)\b" replaceWith="juh$2" />
     <RegEx find="\bSup([aeiu]|om|ama)\b" replaceWith="Juh$2" />
@@ -1087,7 +1087,7 @@
     <!-- razlikuju se svjetlo i svijetlo no tu automatske pomoći nema, već je na korisnicima da dodaju i gdje je potrebno! -->
     <RegEx find="([sS])vetl([aeiou]|om|ost|osti|ošću)" replaceWith="$1vjetl$2" />
     <RegEx find="([sS])vešteni([kcč])" replaceWith="$1većeni$2" />
-    <RegEx find="([sS])vež(a|e|u|im|om|oj|in[aeiou]|inom)?\b" replaceWith="$1vjež$2" />
+    <RegEx find="([sS])vež([aeiu]|im|om|oj|in[aeiou]|inom)?\b" replaceWith="$1vjež$2" />
     <RegEx find="([sS])vide(l[aeio]|ti)" replaceWith="$1vidje$2" />
     <RegEx find="\b([sS])vj?et(a|u|om)?\b(?!\s+([A-ZČĐŠŽ]|vod|čovj?ek))" replaceWith="$1vijet$2" />
     <RegEx find="([sS])vi?j?etsk([aeiou]|im|o[mjg])" replaceWith="$1vjetsk$2" />
@@ -1117,7 +1117,7 @@
     <RegEx find="\b([tT])oleris" replaceWith="$1olerir" />
     <RegEx find="([tT])oleriše([mš])?" replaceWith="$1olerira$2" />
     <RegEx find="\b([tT])rpe(ti|l[aeio])" replaceWith="$1rpje$2" />
-    <RegEx find="([tT)ržn([aeiou]|om)\b" replaceWith="$1rgovačk$2 " />
+    <RegEx find="([tT])ržn([aeiou]|om)\b" replaceWith="$1rgovačk$2 " />
     <RegEx find="([uU])bi?j?edi([sšmo]|mo|l[aeio]|t[ei]|vši)?" replaceWith="$1vjeri$2" />
     <RegEx find="([uU])bj?edljiv" replaceWith="$1vjerljiv" />
     <RegEx find="([uU])bi?j?eđen" replaceWith="$1vjeren" />
@@ -1173,7 +1173,7 @@
     <RegEx find="vaspitn" replaceWith="obrazovn" />
     <RegEx find="Vaspitn" replaceWith="Obrazovn" />
     <RegEx find="([vV])eoma" replaceWith="$1rlo" />
-   <RegEx find="\b([vV])er([aeiou]|an|ama|n[aeiou]|nom|om|nik|nik[aeu]|nikom|nic[aeiu]|nicom|nicama|nicima|sk[iaou]|sko[gm]|skim|oval[aeio]|ti)\b" replaceWith="$1jer$2" />
+   <RegEx find="\b([vV])er([aeiou]|an|ama|n[aeiou]|no[mgj]|om|nik|nik[aeu]|nikom|nic[aeiu]|nicom|nicama|nicima|sk[iaou]|sko[mgj]|skim|oval[aeio]|ti)\b" replaceWith="$1jer$2" />
     <RegEx find="([vV])erova(o|l[aeio]|še|ti)" replaceWith="$1jerova$2" />
     <RegEx find="([vV])ero[vj]at" replaceWith="$1jerojat" />
     <RegEx find="([vV])eruj(e|u|em|eš|ete|emo|te)?" replaceWith="$1jeruj$2" />
@@ -1225,7 +1225,7 @@
     <RegEx find="([žŽ])ive(l[aeio]|lima|ti)" replaceWith="$1ivje$2" />
     <RegEx find="([žŽ])iveć(u|e|eš|emo|ete)" replaceWith="$1ivjet ć$2" />
     <RegEx find="([žŽ])iveo" replaceWith="$1ivio" />
-    <RegEx find="([žŽ])lj?ezd(a|e|i|o|u|ama)" replaceWith="$1lijezd$2" />
+    <RegEx find="([žŽ])lj?ezd([aeiou]|ama)" replaceWith="$1lijezd$2" />
     <RegEx find="žur[ck]" replaceWith="zabav" />
     <RegEx find="Žur[ck]" replaceWith="Zabav" />
     <RegEx find="([sSzZ])amnom" replaceWith="$1a mnom" />
