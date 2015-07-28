@@ -9,7 +9,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChangeCasing : PositionAndSizeForm
     {
-
         private int _noOfLinesChanged;
 
         public ChangeCasing()
@@ -83,15 +82,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string FixEnglishAloneILowerToUpper(string text)
         {
-            for (var indexOfI = text.IndexOf('i'); indexOfI >= 0; indexOfI = text.IndexOf('i', indexOfI + 1))
+            const string preChar = " >¡¿♪♫([";
+            const string postChar = " -<!?.:;,♪♫)]";
+            var idx = text.IndexOf('i');
+            while (idx >= 0)
             {
-                if (indexOfI == 0 || " >¡¿♪♫([".Contains(text[indexOfI - 1]))
+                // If 'i' is not inside word then convert it to uppercase.
+                if ((idx == 0 || preChar.Contains(text[idx - 1])) && (idx == text.Length - 1 || postChar.Contains(text[idx + 1])))
                 {
-                    if (indexOfI + 1 == text.Length || " <!?.:;,♪♫)]".Contains(text[indexOfI + 1]))
-                    {
-                        text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
-                    }
+                    text = text.Remove(idx, 1);
+                    text = text.Insert(idx, "I");
                 }
+                idx = text.IndexOf('i', idx + 1);
             }
             return text;
         }
