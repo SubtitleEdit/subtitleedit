@@ -55,8 +55,10 @@ namespace Nikse.SubtitleEdit
                 }
 
                 // Create an EventLog instance and assign its source.
-                var myLog = new EventLog { Source = "ThreadException" };
-                myLog.WriteEntry(errorMsg + ex.Message + "\n\nStack Trace:\n" + ex.StackTrace);
+                using (var eventLog = new EventLog { Source = "ThreadException" })
+                {
+                    eventLog.WriteEntry(errorMsg + ex.Message + "\n\nStack Trace:\n" + ex.StackTrace);
+                }
             }
             catch (Exception exc)
             {
