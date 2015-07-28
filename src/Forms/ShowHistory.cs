@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
                 HistoryItem h1 = _subtitle.HistoryItems[listViewHistory.SelectedItems[0].Index];
                 HistoryItem h2 = _subtitle.HistoryItems[listViewHistory.SelectedItems[1].Index];
                 string descr1 = h1.ToHHMMSS() + " - " + h1.Description;
-                string descr2 = h1.ToHHMMSS() + " - " + h2.Description;
+                string descr2 = h2.ToHHMMSS() + " - " + h2.Description;
                 using (var compareForm = new Compare())
                 {
                     compareForm.Initialize(h1.Subtitle, descr1, h2.Subtitle, descr2);
