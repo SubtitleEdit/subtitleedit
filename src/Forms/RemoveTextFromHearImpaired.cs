@@ -253,7 +253,7 @@ namespace Nikse.SubtitleEdit.Forms
                 RemoveTextBeforeColonOnlyUppercase = checkBoxRemoveTextBeforeColonOnlyUppercase.Checked,
                 ColonSeparateLine = checkBoxColonSeparateLine.Checked,
                 RemoveWhereContains = checkBoxRemoveWhereContains.Checked,
-                RemoveIfTextContains = comboBoxRemoveIfTextContains.Text,
+                RemoveIfTextContains = new List<string>(),
                 RemoveTextBetweenCustomTags = checkBoxRemoveTextBetweenCustomTags.Checked,
                 RemoveInterjections = checkBoxRemoveInterjections.Checked,
                 RemoveTextBetweenSquares = checkBoxRemoveTextBetweenSquares.Checked,
@@ -263,6 +263,10 @@ namespace Nikse.SubtitleEdit.Forms
                 CustomStart = comboBoxCustomStart.Text,
                 CustomEnd = comboBoxCustomEnd.Text
             };
+            foreach (string item in comboBoxRemoveIfTextContains.Text.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                settings.RemoveIfTextContains.Add(item.Trim());
+            }
             return settings;
         }
 

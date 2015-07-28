@@ -235,7 +235,8 @@
             this.comboBoxRemoveIfTextContains.Items.AddRange(new object[] {
             "¶",
             "♪",
-            "♫"});
+            "♫",
+            "♪,♫"});
             this.comboBoxRemoveIfTextContains.Location = new System.Drawing.Point(427, 131);
             this.comboBoxRemoveIfTextContains.MaxLength = 10;
             this.comboBoxRemoveIfTextContains.Name = "comboBoxRemoveIfTextContains";
