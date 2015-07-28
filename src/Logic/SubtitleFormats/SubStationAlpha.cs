@@ -303,7 +303,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             Errors = null;
             bool eventsStarted = false;
             subtitle.Paragraphs.Clear();
-            string[] format = "Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text".Split(',');
+            string[] format = { "Marked", " Start", " End", " Style", " Name", " MarginL", " MarginR", " MarginV", " Effect", " Text" };
             int indexLayer = 0;
             int indexStart = 1;
             int indexEnd = 2;
