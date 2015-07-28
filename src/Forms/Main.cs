@@ -3207,7 +3207,7 @@ namespace Nikse.SubtitleEdit.Forms
         public string NormalizeUnicode(string text)
         {
             const char defHyphen = '-'; // - Hyphen-minus (\u002D) (Basic Latin)
-            const char defColon = ':'; // : Colon (\u003A) (Basic Latin)
+            const char defColon = ':';  // : Colon (\u003A) (Basic Latin)
 
             // Hyphens
             text = text.Replace('\u2043', defHyphen); // ⁃ Hyphen bullet (\u2043)
@@ -3220,7 +3220,7 @@ namespace Nikse.SubtitleEdit.Forms
             // Colons:
             text = text.Replace('\u02F8', defColon); // ˸ Modifier Letter Raised Colon (\u02F8)
             text = text.Replace('\uFF1A', defColon); // ： Fullwidth Colon (\uFF1A)
-            text = text.Replace('\uF313', defColon); // ︓ Presentation Form for Vertical Colon (\uF313)
+            text = text.Replace('\uFE13', defColon); // ︓ Presentation Form for Vertical Colon (\uFE13)
 
             // Others
             text = text.Replace("…", "...");
@@ -3233,11 +3233,11 @@ namespace Nikse.SubtitleEdit.Forms
             text = text.Replace("\uFEFF", string.Empty); // Zero Width No-Break Space
 
             // Intellectual property
-            text = text.Replace("\u00A9", "(Copyright)"); // copyright	©
-            text = text.Replace("\u2117", "(Sound-recording Copyright)"); // sound-recording copyright	℗
-            text = text.Replace("\u00AE", "(Registered Trademark)"); // registered trademark	®
-            text = text.Replace("\u2120", "(Service Mark)"); // service mark	℠
-            text = text.Replace("\u2122", "(Trademark)"); // trademark	™
+            text = text.Replace("\u00A9", "(Copyright)");                 // © copyright
+            text = text.Replace("\u2117", "(Sound-recording Copyright)"); // ℗ sound-recording copyright
+            text = text.Replace("\u00AE", "(Registered Trademark)");      // ® registered trademark
+            text = text.Replace("\u2120", "(Service Mark)");              // ℠ service mark
+            text = text.Replace("\u2122", "(Trademark)");                 // ™ trademark
 
             return text;
         }
