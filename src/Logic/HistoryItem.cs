@@ -43,5 +43,10 @@ namespace Nikse.SubtitleEdit.Logic
             RedoLineIndex = -1;
             RedoLinePosition = -1;
         }
+
+        public string ToHHMMSS()
+        {
+            return string.Format("{0:00}:{1:00}:{2:00}", Timestamp.Hour, Timestamp.Minute, Timestamp.Second);
+        }
     }
 }
