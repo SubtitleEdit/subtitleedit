@@ -1,4 +1,8 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿// WORK IN PROGRESS - DO NOT REFACTOR //
+// WORK IN PROGRESS - DO NOT REFACTOR //
+// WORK IN PROGRESS - DO NOT REFACTOR //
+
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic.TransportStream;
 using System;
 using System.Collections.Generic;
@@ -84,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 RegionStyles = new List<RegionStyle>(NumberOfRegionStyles);
                 for (int i = 0; i < NumberOfRegionStyles; i++)
                 {
-                    var rs = new RegionStyle()
+                    var rs = new RegionStyle
                     {
                         RegionStyleId = buffer[idx],
                         RegionHorizontalPosition = (buffer[idx + 1] << 8) + buffer[idx + 2],
@@ -113,7 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     UserStyles = new List<UserStyle>(NumberOfUserStyles);
                     for (int j= 0; j < NumberOfUserStyles; j++)
                     {
-                        var us = new UserStyle()
+                        var us = new UserStyle
                         {
                             UserStyleId = buffer[idx],
                             RegionHorizontalPositionDirection = buffer[idx + 1] >> 7,
@@ -143,7 +147,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 idx += 2;
                 for (int i = 0; i < numberOfPalettees; i++)
                 {
-                    var palette = new Palette()
+                    var palette = new Palette
                     {
                         PaletteEntryId = buffer[idx],
                         Y = buffer[idx + 1],
@@ -170,13 +174,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             public DialogPresentationSegment(byte[] buffer)
             {
-                StartPts = (ulong)buffer[13];
+                StartPts = buffer[13];
                 StartPts += (ulong)buffer[12] << 8;
                 StartPts += (ulong)buffer[11] << 16;
                 StartPts += (ulong)buffer[10] << 24;
                 StartPts += (ulong)(buffer[9] & Helper.B00000001) << 32;
 
-                EndPts = (ulong)buffer[18];
+                EndPts = buffer[18];
                 EndPts += (ulong)buffer[17] << 8;
                 EndPts += (ulong)buffer[16] << 16;
                 EndPts += (ulong)buffer[15] << 24;
@@ -195,9 +199,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Regions = new List<SubtitleRegion>(numberOfRegions);
                 for (int i = 0; i < numberOfRegions; i++)
                 {
-                    var region = new SubtitleRegion();
-                    region.ContinuousPresentation = (buffer[idx] & Helper.B10000000) > 0;
-                    region.Forced = (buffer[idx] & Helper.B01000000) > 0;
+                    var region = new SubtitleRegion { ContinuousPresentation = (buffer[idx] & Helper.B10000000) > 0, Forced = (buffer[idx] & Helper.B01000000) > 0 };
                     idx++;
                     region.RegionStyleId = buffer[idx];
                     idx++;
@@ -217,7 +219,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         processedLength += 3;
                         if (dataType == 0x01) // Text
                         {
-                            string text = System.Text.Encoding.UTF8.GetString(buffer, idx, dataLength);
+                            string text = Encoding.UTF8.GetString(buffer, idx, dataLength);
                             region.Texts.Add(text);
                         }
                         else if (dataType == 0x02) // Change a font set
@@ -315,10 +317,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         }
 
-        private const int TextSubtitleStreamPID = 0x1800;
+        private const int TextSubtitleStreamPid = 0x1800;
         private const byte SegmentTypeDialogStyle = 0x81;
         private const byte SegmentTypeDialogPresentation = 0x82;
-        List<Packet> SubtitlePackets;
 
         public override string Extension
         {
@@ -364,9 +365,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public void LoadSubtitle(Subtitle subtitle, Stream ms)
         {
-            var SubtitlePackets = new List<Packet>();
+            var subtitlePackets = new List<Packet>();
             const int packetLength = 188;
-            bool IsM2TransportStream = DetectFormat(ms);
+            bool isM2TransportStream = DetectFormat(ms);
             var packetBuffer = new byte[packetLength];
             var m2TsTimeCodeBuffer = new byte[4];
             long position = 0;
@@ -382,7 +383,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             while (position < transportStreamLength)
             {
                 ms.Seek(position, SeekOrigin.Begin);
-                if (IsM2TransportStream)
+                if (isM2TransportStream)
                 {
                     ms.Read(m2TsTimeCodeBuffer, 0, m2TsTimeCodeBuffer.Length);
                     var tc = (m2TsTimeCodeBuffer[0] << 24) + (m2TsTimeCodeBuffer[1] << 16) + (m2TsTimeCodeBuffer[2] << 8) + (m2TsTimeCodeBuffer[3] & Helper.B00111111);
@@ -398,9 +399,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (syncByte == Packet.SynchronizationByte)
                 {
                     var packet = new Packet(packetBuffer);
-                    if (packet.PacketId == TextSubtitleStreamPID)
+                    if (packet.PacketId == TextSubtitleStreamPid)
                     {
-                        SubtitlePackets.Add(packet);
+                        subtitlePackets.Add(packet);
                     }
                     position += packetLength;
                 }
@@ -413,7 +414,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //TODO: merge ts packets
 
             DialogStyleSegment dss;
-            foreach (var item in SubtitlePackets)
+            foreach (var item in subtitlePackets)
             {
                 if (item.Payload != null && item.Payload.Length > 10 && VobSub.VobSubParser.IsPrivateStream2(item.Payload, 0))
                 {
