@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private readonly LanguageStructure.RemoveTextFromHearImpaired _language;
         private RemoveTextForHI _removeTextForHILib;
-        private Dictionary<Paragraph, string> _fixes;
+        private Dictionary<string, string> _fixes;
 
         public FormRemoveTextForHearImpaired()
         {
@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             int count = 0;
-            _fixes = new Dictionary<Paragraph, string>();
+            _fixes = new Dictionary<string, string>();
             for (int index = 0; index < _subtitle.Paragraphs.Count; index++)
             {
                 Paragraph p = _subtitle.Paragraphs[index];
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     count++;
                     AddToListView(p, newText);
-                    _fixes.Add(p, newText);
+                    _fixes.Add(p.ID, newText);
                 }
             }
             listViewFixes.EndUpdate();
@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (item.Checked)
                 {
                     var p = (Paragraph)item.Tag;
-                    string newText = _fixes[p];
+                    var newText = _fixes[p.ID];
                     if (string.IsNullOrWhiteSpace(newText))
                     {
                         _subtitle.Paragraphs.Remove(p);
