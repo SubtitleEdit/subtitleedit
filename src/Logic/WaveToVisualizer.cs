@@ -378,8 +378,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void Dispose()
         {
-            if (_stream != null)
-                _stream.Close();
+            Close();
         }
 
         public void Close()
