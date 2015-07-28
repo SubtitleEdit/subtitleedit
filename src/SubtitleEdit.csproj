@@ -1962,8 +1962,8 @@
     <PreBuildEvent>"$(ProjectDir)..\build_helpers.bat" rev &amp;&amp; "$(ProjectDir)..\build_helpers.bat" lang</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5554.16953\content\*.dll" "$(TargetDir)"
-"$(ProjectDir)packages\ILRepack.2.0.1\tools\ILRepack.exe" /out:"$(TargetDir)$(TargetName).exe" "$(TargetDir)$(TargetName).exe" "$(ProjectDir)packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll" "$(ProjectDir)packages\zlib.net.1.0.4.0\lib\zlib.net.dll" "$(ProjectDir)DLLs\Interop.QuartzTypeLib.dll" /targetplatform:v4 /internalize /parallel</PostBuildEvent>
+    <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5359.26126\content\*.dll" "$(TargetDir)"
+"$(ProjectDir)packages\ILRepack.2.0.3\tools\ILRepack.exe" /out:"$(TargetDir)$(TargetName).exe" "$(TargetDir)$(TargetName).exe" "$(ProjectDir)packages\NHunspell.1.2.5359.26126\lib\net\NHunspell.dll" "$(ProjectDir)packages\zlib.net.1.0.4.0\lib\zlib.net.dll" "$(ProjectDir)DLLs\Interop.QuartzTypeLib.dll" /targetplatform:v4 /internalize /parallel</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
