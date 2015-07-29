@@ -297,6 +297,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private DateTime _windowStartTime = DateTime.Now;
         private int _linesOcred = 0;
+        private bool OkClicked = false;
 
         public static void SetDoubleBuffered(Control c)
         {
@@ -4962,7 +4963,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            _linesOcred = 0; // don't ask about discard changes
+            OkClicked = true; // don't ask about discard changes
             if (_dvbSubtitles != null && checkBoxTransportStreamGetColorAndSplit.Checked)
                 MergeDvbForEachSubImage();
 
@@ -7824,7 +7825,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (HasChangesBeenMade())
+            if (!OkClicked && HasChangesBeenMade())
             {
                 if (MessageBox.Show(Configuration.Settings.Language.VobSubOcr.DiscardText, Configuration.Settings.Language.VobSubOcr.DiscardTitle, MessageBoxButtons.YesNo) == DialogResult.No)
                 {
