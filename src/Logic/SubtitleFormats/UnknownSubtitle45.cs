@@ -54,11 +54,11 @@ ST 0 EB 3.10
                 index++;
                 sb.AppendLine(string.Format("*         {0}-{1} 00.00 00.0 1 {2} 00 16-090-090{3}{4}{3}@", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), index.ToString().PadLeft(4, '0'), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text)));
             }
-            System.Windows.Forms.RichTextBox rtBox = new System.Windows.Forms.RichTextBox();
-            rtBox.Text = sb.ToString();
-            string rtf = rtBox.Rtf;
-            rtBox.Dispose();
-            return rtf;
+            using (var rtBox = new System.Windows.Forms.RichTextBox())
+            {
+                rtBox.Text = sb.ToString();
+                return rtBox.Rtf;
+            }
         }
 
         private static string EncodeTimeCode(TimeCode time)
@@ -139,10 +139,9 @@ ST 0 EB 3.10
         private static TimeCode DecodeTimeCode(string[] parts)
         {
             //00119.12
-            string seconds = parts[0];
-            string frames = parts[1];
-            TimeCode tc = new TimeCode(0, 0, int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
+            var seconds = int.Parse(parts[0]);
+            var frames = int.Parse(parts[1]);
+            return new TimeCode(0, 0, seconds, FramesToMillisecondsMax999(frames));
         }
 
     }

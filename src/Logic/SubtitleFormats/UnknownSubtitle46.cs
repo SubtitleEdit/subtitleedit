@@ -8,8 +8,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle46 : SubtitleFormat
     {
         //7:00:01:27AM
-        private static Regex regexTimeCodesAM = new Regex(@"^\d\:\d\d\:\d\d\:\d\dAM", RegexOptions.Compiled);
-        private static Regex regexTimeCodesPM = new Regex(@"^\d\:\d\d\:\d\d\:\d\dPM", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodesAM = new Regex(@"^\d\:\d\d\:\d\d\:\d\dAM", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodesPM = new Regex(@"^\d\:\d\d\:\d\d\:\d\dPM", RegexOptions.Compiled);
         public override string Extension
         {
             get { return ".pst"; }
@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode timeCode)
         {
-            return string.Format("{0}:{1:00}:{2:00}:{3:00}AM", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds));
+            return timeCode.ToHHMMSSFF() + "AM";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -100,7 +100,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 index++;
             }
-
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
         }

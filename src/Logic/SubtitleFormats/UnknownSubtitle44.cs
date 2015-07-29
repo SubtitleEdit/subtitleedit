@@ -8,7 +8,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class UnknownSubtitle44 : SubtitleFormat
     {
-
         //>>> "COMMON GROUND" IS FUNDED BY  10:01:04:12                         1
         //THE MINNESOTA ARTS AND CULTURAL   10:01:07:09
         private static Regex regexTimeCodes1 = new Regex(@" \d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
@@ -44,12 +43,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
+            var text = new StringBuilder();
             int index = 0;
             int index2 = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 index++;
-                StringBuilder text = new StringBuilder();
+                text.Clear();
                 text.Append(HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " ")));
                 while (text.Length < 34)
                     text.Append(' ');
@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Paragraph next = subtitle.GetParagraphOrDefault(index);
                 if (next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 150)
                 {
-                    text = new StringBuilder();
+                    text.Clear();
                     while (text.Length < 34)
                         text.Append(' ');
                     sb.AppendLine(string.Format("{0}{1}", text, EncodeTimeCode(p.EndTime)));
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return time.ToHHMMSSFF();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -140,13 +140,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(string[] parts)
         {
             //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = int.Parse(parts[3]);
+            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
     }
