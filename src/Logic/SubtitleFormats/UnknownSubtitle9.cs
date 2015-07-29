@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             //<a class="caption" starttime="0" duration="16000">[♪techno music♪]</a>
 
-            StringBuilder temp = new StringBuilder();
+            var temp = new StringBuilder();
             foreach (string l in lines)
                 temp.Append(l);
             string all = temp.ToString();
