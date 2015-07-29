@@ -399,7 +399,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 int end = text.IndexOf('>', start);
                 if (end > 0)
                 {
-                    string fontTag = text.Substring(start + 4, end - (start + 4));
+                    string fontTag = text.Substring(start + 5, end - (start + 4));
                     text = text.Remove(start, end - start + 1);
                     int indexOfEndFont = text.IndexOf("</font>", start, StringComparison.Ordinal);
                     if (indexOfEndFont > 0)
@@ -409,26 +409,29 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             text = text.Insert(indexOfEndFont, "{\\c}");
                     }
 
-                    fontTag = FormatTag(ref text, start, fontTag, "face=\"", "\"", "fn", "}");
-                    fontTag = FormatTag(ref text, start, fontTag, "face='", "'", "fn", "}");
+                    fontTag = FormatTag(ref text, start, fontTag, "face=\"", "fn", "}");
+                    fontTag = FormatTag(ref text, start, fontTag, "face='", "fn", "}");
+                    fontTag = FormatTag(ref text, start, fontTag, "face=", "fn", "}");
 
-                    fontTag = FormatTag(ref text, start, fontTag, "size=\"", "\"", "fs", "}");
-                    fontTag = FormatTag(ref text, start, fontTag, "size='", "'", "fs", "}");
+                    fontTag = FormatTag(ref text, start, fontTag, "size=\"", "fs", "}");
+                    fontTag = FormatTag(ref text, start, fontTag, "size='", "fs", "}");
+                    fontTag = FormatTag(ref text, start, fontTag, "size=", "fs", "}");
 
-                    fontTag = FormatTag(ref text, start, fontTag, "color=\"", "\"", "c&H", "&}");
-                    fontTag = FormatTag(ref text, start, fontTag, "color='", "'", "c&H", "&}");
+                    fontTag = FormatTag(ref text, start, fontTag, "color=\"", "c&H", "&}");
+                    fontTag = FormatTag(ref text, start, fontTag, "color='", "c&H", "&}");
+                    FormatTag(ref text, start, fontTag, "color=", "c&H", "&}");
                 }
                 count++;
             }
             return text.Replace("{\\c}", "@___@@").Replace("}{", string.Empty).Replace("@___@@", "{\\c}").Replace("{\\c}{\\c&", "{\\c&");
         }
 
-        private static string FormatTag(ref string text, int start, string fontTag, string tag, string endSign, string ssaTagName, string endSsaTag)
+        private static string FormatTag(ref string text, int start, string fontTag, string tag, string ssaTagName, string endSsaTag)
         {
             if (fontTag.Contains(tag))
             {
                 int fontStart = fontTag.IndexOf(tag, StringComparison.Ordinal);
-                int fontEnd = fontTag.IndexOf(endSign, fontStart + tag.Length, StringComparison.Ordinal);
+                int fontEnd = fontTag.IndexOfAny(new[] { '"', '\'', ' ', '>' }, fontStart + tag.Length);
                 if (fontEnd > 0)
                 {
                     string subTag = fontTag.Substring(fontStart + tag.Length, fontEnd - (fontStart + tag.Length));
