@@ -2,7 +2,9 @@
 // WORK IN PROGRESS - DO NOT REFACTOR //
 // WORK IN PROGRESS - DO NOT REFACTOR //
 
+using System.Drawing;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic.BluRaySup;
 using Nikse.SubtitleEdit.Logic.TransportStream;
 using System;
 using System.Collections.Generic;
@@ -21,6 +23,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             public int Cr { get; set; }
             public int Cb { get; set; }
             public int T { get; set; }
+
+            public Color Color
+            {
+                get
+                {
+                    var arr = BluRaySupPalette.YCbCr2Rgb(Y, Cb, Cr, false);
+                    return Color.FromArgb(T, arr[0], arr[1], arr[2]);
+                }
+            }
+
         }
 
         public class RegionStyle
@@ -68,13 +80,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             public int LineSpaceDelta { get; set; }
         }
 
+        public class Region
+        {
+            public RegionStyle RegionStyle { get; set; }
+            public List<UserStyle> UserStyles { get; set; }
+
+            public Region()
+            {
+                UserStyles = new List<UserStyle>();
+            }
+        }
+
         public class DialogStyleSegment
         {
             public bool PlayerStyleFlag { get; set; }
             public int NumberOfRegionStyles { get; set; }
             public int NumberOfUserStyles { get; set; }
-            public List<RegionStyle> RegionStyles { get; set; }
-            public List<UserStyle> UserStyles { get; set; }
+            public List<Region> Regions { get; set; }
             public List<Palette> Palettes { get; set; }
             public int NumberOfDialogPresentationSegments { get; set; }
 
@@ -85,9 +107,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 NumberOfUserStyles = buffer[12];
 
                 int idx = 13;
-                RegionStyles = new List<RegionStyle>(NumberOfRegionStyles);
+                Regions = new List<Region>(NumberOfRegionStyles);
                 for (int i = 0; i < NumberOfRegionStyles; i++)
                 {
+                    var region = new Region();
                     var rs = new RegionStyle
                     {
                         RegionStyleId = buffer[idx],
@@ -111,10 +134,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         FontOutlinePaletteEntryIdRef = buffer[idx + 27],
                         FontOutlineThickness = buffer[idx + 28]
                     };
-                    RegionStyles.Add(rs);
+                    region.RegionStyle = rs;
                     idx += 29;
 
-                    UserStyles = new List<UserStyle>(NumberOfUserStyles);
                     for (int j= 0; j < NumberOfUserStyles; j++)
                     {
                         var us = new UserStyle
@@ -137,9 +159,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             LineSpaceIncDec = buffer[idx + 14] >> 7,
                             LineSpaceDelta = (buffer[idx + 14] & Helper.B01111111)
                         };
-                        UserStyles.Add(us);
+                        region.UserStyles.Add(us);
                         idx += 15;
                     }
+                    Regions.Add(region);
                 }
 
                 int numberOfPalettees = ((buffer[idx] << 8) + buffer[idx + 1]) / 5;
@@ -317,6 +340,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         }
 
+        public DialogStyleSegment StyleSegment;
+        public List<DialogPresentationSegment> PresentationSegments;
+
         private const int TextSubtitleStreamPid = 0x1800;
         private const byte SegmentTypeDialogStyle = 0x81;
         private const byte SegmentTypeDialogPresentation = 0x82;
@@ -365,6 +391,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public void LoadSubtitle(Subtitle subtitle, Stream ms)
         {
+            //TODO: Parse PES
+
             var subtitlePackets = new List<Packet>();
             const int packetLength = 188;
             bool isM2TransportStream = DetectFormat(ms);
@@ -413,7 +441,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             //TODO: merge ts packets
 
-            DialogStyleSegment dss;
+            PresentationSegments = new List<DialogPresentationSegment>();
             foreach (var item in subtitlePackets)
             {
                 if (item.Payload != null && item.Payload.Length > 10 && VobSub.VobSubParser.IsPrivateStream2(item.Payload, 0))
@@ -421,11 +449,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (item.Payload[6] == SegmentTypeDialogPresentation)
                     {
                         var dps = new DialogPresentationSegment(item.Payload);
+                        PresentationSegments.Add(dps);
                         subtitle.Paragraphs.Add(new Paragraph(dps.PlainText.Trim(), dps.StartPtsMilliseconds, dps.EndPtsMilliseconds));
                     }
                     else if (item.Payload[6] == SegmentTypeDialogStyle)
                     {
-                        dss = new DialogStyleSegment(item.Payload);
+                        StyleSegment = new DialogStyleSegment(item.Payload);
                     }
                 }
             }
