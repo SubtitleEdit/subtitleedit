@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Nikse.SubtitleEdit.Controls;
+﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Logic;
@@ -62,6 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
             get { return _videoFileName; }
             set { _videoFileName = value; }
         }
+
         private DateTime _fileDateTime;
         private string _title;
         private FindReplaceDialogHelper _findHelper;
@@ -293,7 +293,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 InitializeComponent();
-                Icon = Nikse.SubtitleEdit.Properties.Resources.SubtitleEditFormIcon;
+                Icon = Properties.Resources.SubtitleEditFormIcon;
 
                 textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
@@ -452,7 +452,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 labelAutoDuration.Visible = false;
                 mediaPlayer.SubtitleText = string.Empty;
-                //                comboBoxAutoRepeat.SelectedIndex = 2;
+                // comboBoxAutoRepeat.SelectedIndex = 2;
                 comboBoxAutoContinue.SelectedIndex = 2;
                 timeUpDownVideoPosition.TimeCode = new TimeCode(0, 0, 0, 0);
                 timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(0, 0, 0, 0);
@@ -1556,7 +1556,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -1730,8 +1730,18 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if ((ext == ".m2ts") && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName))
                 {
-                    ImportSubtitleFromTransportStream(fileName);
-                    return;
+                    bool isTextSt = false;
+                    if (file.Length < 2000000)
+                    {
+                        var textSt = new TextST();
+                        isTextSt = textSt.IsMine(null, fileName);
+                    }
+
+                    if (!isTextSt)
+                    {
+                        ImportSubtitleFromTransportStream(fileName);
+                        return;
+                    }
                 }
 
                 if ((ext == ".mp4" || ext == ".m4v" || ext == ".3gp") && file.Length > 10000)
@@ -1841,6 +1851,22 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         pac.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = pac;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+
+                if (ext == ".m2ts")
+                {
+                    var textST = new TextST();
+                    if (textST.IsMine(null, fileName))
+                    {
+                        textST.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = textST;
                         SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
@@ -3087,7 +3113,7 @@ namespace Nikse.SubtitleEdit.Forms
                     currentEncoding = Encoding.UTF8;
                 }
 
-                if (Control.ModifierKeys == (Keys.Control | Keys.Shift))
+                if (ModifierKeys == (Keys.Control | Keys.Shift))
                     allText = allText.Replace("\r\n", "\n");
 
                 if (format.GetType() == typeof(ItunesTimedText) || format.GetType() == typeof(ScenaristClosedCaptions) || format.GetType() == typeof(ScenaristClosedCaptionsDropFrame))
@@ -3181,7 +3207,7 @@ namespace Nikse.SubtitleEdit.Forms
         public string NormalizeUnicode(string text)
         {
             const char defHyphen = '-'; // - Hyphen-minus (\u002D) (Basic Latin)
-            const char defColon = ':'; // : Colon (\u003A) (Basic Latin)
+            const char defColon = ':';  // : Colon (\u003A) (Basic Latin)
 
             // Hyphens
             text = text.Replace('\u2043', defHyphen); // ⁃ Hyphen bullet (\u2043)
@@ -3194,7 +3220,7 @@ namespace Nikse.SubtitleEdit.Forms
             // Colons:
             text = text.Replace('\u02F8', defColon); // ˸ Modifier Letter Raised Colon (\u02F8)
             text = text.Replace('\uFF1A', defColon); // ： Fullwidth Colon (\uFF1A)
-            text = text.Replace('\uF313', defColon); // ︓ Presentation Form for Vertical Colon (\uF313)
+            text = text.Replace('\uFE13', defColon); // ︓ Presentation Form for Vertical Colon (\uFE13)
 
             // Others
             text = text.Replace("…", "...");
@@ -3205,6 +3231,14 @@ namespace Nikse.SubtitleEdit.Forms
             text = text.Replace('\u00A0', ' '); // No-Break Space
             text = text.Replace("\u200B", string.Empty); // Zero Width Space
             text = text.Replace("\uFEFF", string.Empty); // Zero Width No-Break Space
+
+            // Intellectual property
+            text = text.Replace("\u00A9", "(Copyright)");                 // © copyright
+            text = text.Replace("\u2117", "(Sound-recording Copyright)"); // ℗ sound-recording copyright
+            text = text.Replace("\u00AE", "(Registered Trademark)");      // ® registered trademark
+            text = text.Replace("\u2120", "(Service Mark)");              // ℠ service mark
+            text = text.Replace("\u2122", "(Trademark)");                 // ™ trademark
+
             return text;
         }
 
@@ -3629,13 +3663,14 @@ namespace Nikse.SubtitleEdit.Forms
             TryLoadIcon(toolStripButtonSaveAs, "SaveAs");
             TryLoadIcon(toolStripButtonFind, "Find");
             TryLoadIcon(toolStripButtonReplace, "Replace");
+            TryLoadIcon(toolStripButtonFixCommonErrors, "FixCommonErrors");
             TryLoadIcon(toolStripButtonVisualSync, "VisualSync");
-            TryLoadIcon(toolStripButtonSettings, "Settings");
             TryLoadIcon(toolStripButtonSpellCheck, "SpellCheck");
+            TryLoadIcon(toolStripButtonSettings, "Settings");
             TryLoadIcon(toolStripButtonHelp, "Help");
 
-            TryLoadIcon(toolStripButtonToggleVideo, "VideoToggle");
             TryLoadIcon(toolStripButtonToggleWaveform, "WaveformToggle");
+            TryLoadIcon(toolStripButtonToggleVideo, "VideoToggle");
 
             toolStripButtonFileNew.Visible = gs.ShowToolbarNew;
             toolStripButtonFileOpen.Visible = gs.ShowToolbarOpen;
@@ -3643,10 +3678,10 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonSaveAs.Visible = gs.ShowToolbarSaveAs;
             toolStripButtonFind.Visible = gs.ShowToolbarFind;
             toolStripButtonReplace.Visible = gs.ShowToolbarReplace;
-            toolStripButtonVisualSync.Visible = gs.ShowToolbarVisualSync;
             toolStripButtonFixCommonErrors.Visible = gs.ShowToolbarFixCommonErrors;
-            toolStripButtonSettings.Visible = gs.ShowToolbarSettings;
+            toolStripButtonVisualSync.Visible = gs.ShowToolbarVisualSync;
             toolStripButtonSpellCheck.Visible = gs.ShowToolbarSpellCheck;
+            toolStripButtonSettings.Visible = gs.ShowToolbarSettings;
             toolStripButtonHelp.Visible = gs.ShowToolbarHelp;
 
             toolStripSeparatorFrameRate.Visible = gs.ShowFrameRate;
@@ -3655,10 +3690,11 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonGetFrameRate.Visible = gs.ShowFrameRate;
 
             toolStripSeparatorFindReplace.Visible = gs.ShowToolbarFind || gs.ShowToolbarReplace;
+            toolStripSeparatorFixSyncSpell.Visible = gs.ShowToolbarFixCommonErrors || gs.ShowToolbarVisualSync || gs.ShowToolbarSpellCheck || gs.ShowToolbarSettings;
             toolStripSeparatorHelp.Visible = gs.ShowToolbarHelp;
 
             toolStrip1.Visible = gs.ShowToolbarNew || gs.ShowToolbarOpen || gs.ShowToolbarSave || gs.ShowToolbarSaveAs || gs.ShowToolbarFind || gs.ShowToolbarReplace ||
-                                 gs.ShowToolbarVisualSync || gs.ShowToolbarSettings || gs.ShowToolbarSpellCheck || gs.ShowToolbarHelp;
+                                 gs.ShowToolbarFixCommonErrors || gs.ShowToolbarVisualSync || gs.ShowToolbarSpellCheck || gs.ShowToolbarSettings || gs.ShowToolbarHelp;
         }
 
         private void ToolStripButtonFileNewClick(object sender, EventArgs e)
@@ -4516,7 +4552,7 @@ namespace Nikse.SubtitleEdit.Forms
             ReloadFromSourceView();
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -4595,7 +4631,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -4742,7 +4778,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
             }
             ShowInTaskbar = true;
         }
@@ -4751,7 +4787,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -4781,7 +4817,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -4814,7 +4850,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -4861,7 +4897,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -4973,7 +5009,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -5074,7 +5110,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -5231,8 +5267,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!undo)
                     {
-                        if (_subtitle.HistoryItems[_undoIndex].RedoParagraphs != null)
                         // TODO: Sometimes redo paragraphs can be null - how?
+                        if (_subtitle.HistoryItems[_undoIndex].RedoParagraphs != null)
                         {
                             _subtitle.Paragraphs.Clear();
                             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
@@ -5442,7 +5478,11 @@ namespace Nikse.SubtitleEdit.Forms
             //    SpellCheckViaWord();
             //    return;
             //}
-
+            if (!IsSubtitleLoaded)
+            {
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
             try
             {
                 string dictionaryFolder = Utilities.DictionaryFolder;
@@ -7938,10 +7978,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateListSyntaxColoring()
         {
-            if (_loading)
-                return;
-
-            if (!IsSubtitleLoaded || _subtitleListViewIndex < 0 || _subtitleListViewIndex >= _subtitle.Paragraphs.Count)
+            if (_loading || !IsSubtitleLoaded || _subtitleListViewIndex < 0 || _subtitleListViewIndex >= _subtitle.Paragraphs.Count)
                 return;
 
             SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, _subtitleListViewIndex, _subtitle.Paragraphs[_subtitleListViewIndex]);
@@ -9709,7 +9746,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -9802,7 +9839,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -10014,7 +10051,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -11707,7 +11744,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -11745,7 +11782,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -12006,7 +12043,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -12033,7 +12070,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -12060,7 +12097,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -12279,7 +12316,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitle.Paragraphs.Count < 1)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -13504,7 +13541,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -17709,7 +17746,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -18662,7 +18699,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -18801,7 +18838,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -18828,7 +18865,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -18864,7 +18901,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -18878,7 +18915,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
             foreach (ListViewItem item in SubtitleListview1.Items)
@@ -18986,7 +19023,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!IsSubtitleLoaded)
             {
-                MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DisplaySubtitleNotLoadedMessage();
                 return;
             }
 
@@ -19329,6 +19366,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 form.ShowDialog(this);
             }
+        }
+
+        private void DisplaySubtitleNotLoadedMessage()
+        {
+            MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
     }

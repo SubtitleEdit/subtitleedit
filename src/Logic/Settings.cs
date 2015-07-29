@@ -538,6 +538,7 @@ namespace Nikse.SubtitleEdit.Logic
             ShowToolbarSaveAs = false;
             ShowToolbarFind = true;
             ShowToolbarReplace = true;
+            ShowToolbarFixCommonErrors = false;
             ShowToolbarVisualSync = true;
             ShowToolbarSpellCheck = true;
             ShowToolbarSettings = false;
@@ -726,7 +727,6 @@ namespace Nikse.SubtitleEdit.Logic
             GuessUnknownWords = true;
             AutoBreakSubtitleIfMoreThanTwoLines = true;
             ItalicFactor = 0.2;
-
         }
     }
 

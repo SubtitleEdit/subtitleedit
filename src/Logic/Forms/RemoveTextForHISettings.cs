@@ -1,4 +1,7 @@
-﻿namespace Nikse.SubtitleEdit.Logic.Forms
+﻿using System;
+using System.Collections.Generic;
+
+namespace Nikse.SubtitleEdit.Logic.Forms
 {
     public class RemoveTextForHISettings
     {
@@ -8,7 +11,7 @@
         public bool RemoveTextBeforeColonOnlyUppercase { get; set; }
         public bool ColonSeparateLine { get; set; }
         public bool RemoveWhereContains { get; set; }
-        public string RemoveIfTextContains { get; set; }
+        public List<string> RemoveIfTextContains { get; set; }
         public bool RemoveTextBetweenCustomTags { get; set; }
         public bool RemoveInterjections { get; set; }
         public bool RemoveTextBetweenSquares { get; set; }
@@ -26,7 +29,11 @@
             RemoveTextBeforeColonOnlyUppercase = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase;
             ColonSeparateLine = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine;
             RemoveWhereContains = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains;
-            RemoveIfTextContains = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText;
+            RemoveIfTextContains = new List<string>();
+            foreach (string item in Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                RemoveIfTextContains.Add(item.Trim());
+            }
             RemoveTextBetweenCustomTags = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustom;
             RemoveInterjections = Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjections;
             RemoveTextBetweenSquares = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenBrackets;

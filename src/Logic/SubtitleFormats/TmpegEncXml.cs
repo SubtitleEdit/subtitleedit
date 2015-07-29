@@ -40,7 +40,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string xmlAsString = sb.ToString().Trim();
             if ((xmlAsString.Contains("<TMPGEncVMESubtitleTextFormat>") || xmlAsString.Contains("<SubtitleItem ")) && (xmlAsString.Contains("<Subtitle")))
             {
-
                 var subtitle = new Subtitle();
                 LoadSubtitle(subtitle, lines, fileName);
                 return subtitle.Paragraphs.Count > _errorCount;

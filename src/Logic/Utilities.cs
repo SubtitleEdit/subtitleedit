@@ -1094,9 +1094,8 @@ namespace Nikse.SubtitleEdit.Logic
             return GetOptimalDisplayMilliseconds(text, Configuration.Settings.General.SubtitleOptimalCharactersPerSeconds);
         }
 
-        public static double GetOptimalDisplayMilliseconds(string text, double charactersPerSecond)
+        public static double GetOptimalDisplayMilliseconds(string text, double optimalCharactersPerSecond)
         {
-            double optimalCharactersPerSecond = charactersPerSecond;
             if (optimalCharactersPerSecond < 2 || optimalCharactersPerSecond > 100)
                 optimalCharactersPerSecond = 14.7;
             double duration = (HtmlUtil.RemoveHtmlTags(text, true).Length / optimalCharactersPerSecond) * TimeCode.BaseUnit;
@@ -3077,7 +3076,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var subtitle = new Subtitle { Header = matroskaSubtitleInfo.CodecPrivate };
             var lines = new List<string>();
-            foreach (string l in subtitle.Header.Trim().Replace(Environment.NewLine, "\n").Split('\n'))
+            foreach (string l in subtitle.Header.Trim().SplitToLines())
                 lines.Add(l);
             var footer = new StringBuilder();
             var comments = new Subtitle();

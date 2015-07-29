@@ -2,9 +2,9 @@
 <Language Name="简体中文">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.6</Version>
+    <Version>3.4.7</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis</TranslatedBy>
-    <CultureName>zh-CHS</CultureName>
+    <CultureName>zh-Hans</CultureName>
     <HelpFile />
     <Ok>确定(&amp;O)</Ok>
     <Cancel>取消(&amp;A)</Cancel>
@@ -65,6 +65,8 @@
     <ControlsWindowTitle>控制 - {0}</ControlsWindowTitle>
     <Advanced>高级</Advanced>
     <Style>样式</Style>
+    <StyleLanguage>样式 / 语言</StyleLanguage>
+    <Character>字符</Character>
     <Class>等级</Class>
     <GeneralText>常规</GeneralText>
     <LineNumber>行号</LineNumber>
@@ -98,7 +100,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
   </AddToUserDictionary>
   <AddWaveform>
     <Title>生成波形数据</Title>
-    <SourceVideoFile>源视频文件:</SourceVideoFile>
+    <SourceVideoFile>视频源文件:</SourceVideoFile>
     <GenerateWaveformData>生成波形数据</GenerateWaveformData>
     <PleaseWait>这可能需要几分钟 - 请稍候</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>未找到 VLC 媒体播放器</VlcMediaPlayerNotFoundTitle>
@@ -106,9 +108,27 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <GoToVlcMediaPlayerHomePage>您要访问 VLC 媒体播放器的主页吗？</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>正在生成波形缓冲文件...</GeneratingPeakFile>
     <GeneratingSpectrogram>正在生成频谱图...</GeneratingSpectrogram>
-    <ExtractingSeconds>正在提取音频文件: {0:0.0} 秒</ExtractingSeconds>
-    <ExtractingMinutes>正在提取音频文件: {0}.{1:00} 分</ExtractingMinutes>
+    <ExtractingSeconds>正在提取音频: {0:0.0} 秒</ExtractingSeconds>
+    <ExtractingMinutes>正在提取音频: {0}.{1:00} 分</ExtractingMinutes>
+    <WaveFileNotFound>未能找到提取后的波形文件！
+此特性需要安装 VLC 配体播放器 1.1.x 或更新版本 ({0}-bit).
+
+Command line: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} 无法将音频数据提取为波形文件！
+
+Command line: {1} {2}
+
+注意：请检查空闲的磁盘空间。</WaveFileMalformed>
+    <LowDiskSpace>磁盘空间不足！</LowDiskSpace>
+    <FreeDiskSpace>{0} 释放</FreeDiskSpace>
   </AddWaveform>
+  <AddWaveformBatch>
+    <Title>批量生成波形数据</Title>
+    <ExtractingAudio>正在提取音频...</ExtractingAudio>
+    <Calculating>正在计算...</Calculating>
+    <Done>已完成</Done>
+    <Error>错误</Error>
+  </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>调整时长</Title>
     <AdjustVia>调整</AdjustVia>
@@ -150,6 +170,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <Convert>转换</Convert>
     <NothingToConvert>没有什么可转换的！</NothingToConvert>
     <PleaseChooseOutputFolder>请选择输出文件夹</PleaseChooseOutputFolder>
+    <NotConverted>失败</NotConverted>
     <Converted>已转换</Converted>
     <ConvertedX>已转换 ({0})</ConvertedX>
     <Settings>设置</Settings>
@@ -160,6 +181,15 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <Recursive>包含子文件夹</Recursive>
     <SetMinMsBetweenSubtitles>设定字幕间的最小毫秒数</SetMinMsBetweenSubtitles>
     <PlainText>纯文本</PlainText>
+    <Ocr>OCR...</Ocr>
+    <Filter>过滤器</Filter>
+    <FilterSkipped>经过滤器剔除</FilterSkipped>
+    <FilterSrtNoUtf8BOM>不带UTF-8 BOM数据头的SubRip (.srt) 文件</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>单字幕包含有两行及以上</FilterMoreThanTwoLines>
+    <FilterContains>文字内容包含...</FilterContains>
+    <FixCommonErrorsErrorX>修复常见错误： {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>多内容替换： {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>自动平衡： {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>投影仪</Title>
@@ -329,6 +359,8 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <TranslatorsName>译者名称</TranslatorsName>
     <SubtitleListReferenceCode>字幕列表参考代码</SubtitleListReferenceCode>
     <CountryOfOrigin>原产国</CountryOfOrigin>
+    <TimeCodeStatus>时间码状态</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>时间码：程序起始</TimeCodeStartOfProgramme>
     <RevisionNumber>校订编号</RevisionNumber>
     <MaxNoOfDisplayableChars>每行最多字符数</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>最多行数</MaxNumberOfDisplayableRows>
@@ -392,6 +424,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <ShadowWidth>阴影宽度</ShadowWidth>
     <Transparency>透明度</Transparency>
     <ImageFormat>图像格式</ImageFormat>
+    <FullFrameImage>全幅图像</FullFrameImage>
     <SimpleRendering>简单渲染</SimpleRendering>
     <AntiAliasingWithTransparency>带透明度抗锯齿</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
@@ -406,16 +439,23 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <Right>右</Right>
     <Center>中</Center>
     <BottomMargin>底边距</BottomMargin>
-    <SaveBluRraySupAs>选择蓝光 sup 文件名</SaveBluRraySupAs>
-    <SaveVobSubAs>选择 VobSub 文件名</SaveVobSubAs>
-    <SaveFabImageScriptAs>选择蓝光 sup 文件名</SaveFabImageScriptAs>
-    <SaveDvdStudioProStlAs>选择 DVD Studio Pro STL 文件名</SaveDvdStudioProStlAs>
+    <LeftRightMargin>左/右边距</LeftRightMargin>
+    <SaveBluRraySupAs>选择 Blu-ray sup 文件的名称</SaveBluRraySupAs>
+    <SaveVobSubAs>选择 VobSub 文件的名称</SaveVobSubAs>
+    <SaveFabImageScriptAs>选择蓝光 sup 文件的名称</SaveFabImageScriptAs>
+    <SaveDvdStudioProStlAs>选择 DVD Studio Pro STL 文件的名称</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>选择 Digital Cinema Interop 文件的名称</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>选择 Premiere EDL 文件的名称</SavePremiereEdlAs>
+    <SaveFcpAs>选择 Final Cut Pro xml 文件的名称</SaveFcpAs>
+    <SaveDostAs>选择 DoStudio dost 文件的名称</SaveDostAs>
     <SomeLinesWereTooLongX>某些行过长:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>行高</LineHeight>
     <BoxSingleLine>边缘 - 单线条</BoxSingleLine>
     <BoxMultiLine>边缘 - 多线条</BoxMultiLine>
     <Forced>强制</Forced>
+    <ChooseBackgroundColor>选择背景色</ChooseBackgroundColor>
+    <SaveImageAs>图像另存为...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>导出文本</Title>
@@ -677,6 +717,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <FileName>文件名</FileName>
     <Join>合并</Join>
     <TotalNumberOfLinesX>总行数: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>注意：须先保证文件的时间码无误。</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -734,6 +775,13 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <Redo>重做</Redo>
         <ShowUndoHistory>显示历史记录 (用于撤消)</ShowUndoHistory>
         <InsertUnicodeSymbol>插入 Unicode 符号</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>插入Unicode控制字符</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>从左到右标记符 (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>从右到左标记符 (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>从左到右嵌入的起始符 (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>从左到右嵌入的起始符 (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>从左到右覆写的起始符 (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>从左到右覆写的起始符 (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>查找(&amp;F)</Find>
         <FindNext>查找下一个(&amp;N)</FindNext>
         <Replace>替换(&amp;R)</Replace>
@@ -792,6 +840,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <CloseVideo>关闭视频文件</CloseVideo>
         <ImportSceneChanges>导入场景变更...</ImportSceneChanges>
         <RemoveSceneChanges>移除场景变更</RemoveSceneChanges>
+        <WaveformBatchGenerate>批量生成波形...</WaveformBatchGenerate>
         <ShowHideVideo>显示/隐藏 视频</ShowHideVideo>
         <ShowHideWaveform>显示/隐藏 波形</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>显示/隐藏 波形和频谱图</ShowHideWaveformAndSpectrogram>
@@ -863,6 +912,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <TimedTextStyles>时间文本样式...</TimedTextStyles>
         <TimedTextSetLanguage>时间文本 - 选择语言</TimedTextSetLanguage>
         <SamiSetStyle>Sami - 设置等级</SamiSetStyle>
+        <NuendoSetStyle>Nuendo - 设置字符</NuendoSetStyle>
         <Cut>剪切</Cut>
         <Copy>复制</Copy>
         <Paste>粘贴</Paste>
@@ -968,7 +1018,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
       <Slow>慢</Slow>
       <Normal>正常</Normal>
       <Fast>快</Fast>
-      <VeryFast>很快</VeryFast>
+      <VeryFast>较快</VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>保存更改到未命名文件吗？</SaveChangesToUntitled>
     <SaveChangesToX>保存更改到 "{0}" 吗？</SaveChangesToX>
@@ -997,7 +1047,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <FileXIsReadOnly>无法保存 {0}
 
 文件只读!</FileXIsReadOnly>
-    <UnableToSaveSubtitleX>无法保存字幕文件 "{0}"</UnableToSaveSubtitleX>
+    <UnableToSaveSubtitleX>无法保存字幕文件 "{0}"。字幕文件可能无内容。如果当前操作的不是有效的字幕文件，请请尝试再次保存！</UnableToSaveSubtitleX>
     <BeforeNew>新建之前</BeforeNew>
     <New>新建</New>
     <BeforeConvertingToX>转换为 {0} 之前</BeforeConvertingToX>
@@ -1011,8 +1061,8 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <FindContinue>搜索的项目未找到。
 您要从文档开头开始再搜索一次吗？</FindContinue>
     <FindContinueTitle>继续查找？</FindContinueTitle>
-    <ReplaceContinueNotFound>搜索的项目未找到。您要继续从文档的开头搜索和替换吗？</ReplaceContinueNotFound>
-    <ReplaceXContinue>搜索的项目已被替换了 {0} 次。您要继续从文档的开头搜索和替换吗？</ReplaceXContinue>
+    <ReplaceContinueNotFound>搜索的项目未找到。是否继续从文档的开头搜索和替换？</ReplaceContinueNotFound>
+    <ReplaceXContinue>搜索项已被替换 {0} 次。是否继续从文档的开头搜索和替换？</ReplaceXContinue>
     <ReplaceContinueTitle>继续替换？</ReplaceContinueTitle>
     <SearchingForXFromLineY>正在搜索 '{0}' 从行 {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' 已找到在行号 {1}</XFoundAtLineNumberY>
@@ -1106,7 +1156,9 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <MatroskaFiles>Matroska 文件 (*.mkv)</MatroskaFiles>
     <NoSubtitlesFound>没有找到字幕</NoSubtitlesFound>
     <NotAValidMatroskaFileX>这不是有效的 Matroska 文件: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Blu-ray sup 文件不包含任何字幕或出现错误 - 请尝试再次复合。</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>正在解析 Matroska 文件。请稍候...</ParsingMatroskaFile>
+    <ParsingTransportStreamFile>正在解析 Transport Stream 文件，请稍候...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>从 Matroska 文件导入字幕之前</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>字幕已从 Matroska 文件导入</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>拖放的文件 '{0}' 未被接受 - 文件太大</DropFileXNotAccepted>
@@ -1358,8 +1410,10 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <NewLine>换行 (\r\n)</NewLine>
     <NewLineShort>换行 (\n)</NewLineShort>
     <AnyDigit>任意数字 (\d)</AnyDigit>
+    <NonDigit>非数字 (\D)</NonDigit>
     <AnyCharacter>任意字符 (.)</AnyCharacter>
     <AnyWhitespace>任意空白符(\s)</AnyWhitespace>
+    <NonSpaceCharacter>非空格字符 (\S)</NonSpaceCharacter>
     <ZeroOrMore>零个或更多个 (*)</ZeroOrMore>
     <OneOrMore>一个或更多个 (+)</OneOrMore>
     <InCharacterGroup>包含在字符组 ([test]) 中</InCharacterGroup>
@@ -1521,6 +1575,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <WaveformSelectedColor>选定颜色</WaveformSelectedColor>
     <WaveformBackgroundColor>背景颜色</WaveformBackgroundColor>
     <WaveformTextColor>文字颜色</WaveformTextColor>
+    <WaveformTextFontSize>字体大小</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>清空 'Spectrograms' 和 'Waveforms' 文件夹</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'Waveforms' 和 'Spectrograms' 文件夹含有 {0} 个文件 ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>频谱图</Spectrogram>
@@ -1789,6 +1844,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <CharactersPerSecondMinimum>每秒字符数 - 最小: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>每秒字符数 - 最大: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>每秒字符数 - 平均: {0:0.000}</CharactersPerSecondAverage>
+    <Export>导出...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>高级 Sub Station Alpha 特性</Title>
@@ -1960,9 +2016,12 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <AutoTransparentBackground>自动透明背景</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>为当前图像检查比较匹配数...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>编辑上个图像比较附加...</EditLastAdditions>
+    <SetUnitalicFactor>设置非倾斜因数...</SetUnitalicFactor>
+    <DiscardTitle>放弃对OCR设置的更改?</DiscardTitle>
+    <DiscardText>是否要放弃对当前OCR会话的更改?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
-    <Title>VobSub - 手动图像到文本</Title>
+    <Title>VobSub - 图像转文本（手动）</Title>
     <ShrinkSelection>收缩所选</ShrinkSelection>
     <ExpandSelection>展开所选</ExpandSelection>
     <SubtitleImage>字幕图像</SubtitleImage>
@@ -1986,6 +2045,10 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <Title>新建文件夹</Title>
     <Message>新字符数据库文件夹名称</Message>
   </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicFactor>
+    <Title>设置非倾斜因数</Title>
+    <Description>调节此值，直到文本样式为正常且不倾斜为止。注意：原始图像应为倾斜样式。</Description>
+  </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>点击以添加波形</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>点击以添加 波形/频谱图</ClickToAddWaveformAndSpectrogram>

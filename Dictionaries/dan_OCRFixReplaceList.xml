@@ -581,6 +581,17 @@
     <Word from="BIing" to="Bling" />
     <Word from="GIade" to="Glade" />
     <Word from="Iejrbålssange" to="lejrbålssange" />
+    <Word from="bedtjer" to="bedt jer" />
+    <Word from="hørerjeg" to="hører jeg" />
+    <Word from="Fårjeg" to="Får jeg" />
+    <Word from="fikJames" to="fik James" />
+    <Word from="atsnakke" to="at snakke" />
+    <Word from="varkun" to="var kun" />
+    <Word from="retterjeg" to="retter jeg" />
+    <Word from="ernormale" to="er normale" />
+    <Word from="viljeg" to="vil jeg" />
+    <Word from="Sætjer" to="Sæt jer" />
+    <Word from="udsatham" to="udsat ham" />
   </WholeWords>
   <PartialWordsAlways>
     <WordPart from="¤" to="o" />

@@ -2,7 +2,7 @@
 <Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.6</Version>
+    <Version>3.4.7</Version>
     <TranslatedBy>Překlad do češtiny: Trottel</TranslatedBy>
     <CultureName>cs-CZ</CultureName>
     <HelpFile />
@@ -360,6 +360,8 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <TranslatorsName>Jména překladatelů</TranslatorsName>
     <SubtitleListReferenceCode>Referenční kód seznamu</SubtitleListReferenceCode>
     <CountryOfOrigin>Země původu</CountryOfOrigin>
+    <TimeCodeStatus>Stav časového kódu</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Časový kód: Začátek programu</TimeCodeStartOfProgramme>
     <RevisionNumber>Číslo revize</RevisionNumber>
     <MaxNoOfDisplayableChars>Max. znaků na řádek</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max. řádků</MaxNumberOfDisplayableRows>
@@ -1276,11 +1278,13 @@ Pokračovat?</SubtitleAppendPrompt>
     <ErrorLoadRar>Tento soubor se zdá být komprimovaným souborem .rar. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadRar>
     <ErrorLoadZip>Tento soubor se zdá být komprimovaným souborem .zip. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadZip>
     <ErrorLoadPng>Tento soubor se zdá být obrazovým souborem PNG. Subtitle Edit neumí otvírat soubory PNG.</ErrorLoadPng>
+    <ErrorLoadJpg>Tento soubor se zdá být obrazovým souborem JPG. Subtitle Edit neumí otvírat soubory JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Tento soubor se zdá být souborem ReScene .srr - není to soubor titulků.</ErrorLoadSrr>
     <ErrorLoadTorrent>Tento soubor se zdá být souborem BitTorrentu - není to soubor titulků.</ErrorLoadTorrent>
     <ErrorLoadBinaryZeroes>Bohužel, tento soubor obsahuje pouze binární nuly!
 
 Pokud jste upravili tento soubor v Subtitle Edit, možná budete moci najít zálohu pomocí položky nabídky Soubor -&gt; Obnovit automatickou zálohu...</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>Přetahování adresářů zde není podporováno.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Šifrovaný obsah VobSub není podporován.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Soubory Blu-ray sup zde nejsou podporovány.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>Soubory DVD sup zde nejsou podporovány.</NoSupportHereDvdSup>

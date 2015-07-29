@@ -367,9 +367,13 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public string RemoveTextFromHearImpaired(string text)
         {
-            if (Settings.RemoveWhereContains && Settings.RemoveIfTextContains.Length > 0 && text.Contains(Settings.RemoveIfTextContains))
+            if (Settings.RemoveWhereContains)
             {
-                return string.Empty;
+                foreach (var removeIfTextContain in Settings.RemoveIfTextContains)
+                {
+                    if (text.Contains(removeIfTextContain))
+                        return string.Empty;
+                }
             }
 
             string oldText = text;
@@ -931,7 +935,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
             if (text != oldText && lines.Length == 1 && Utilities.GetNumberOfLines(oldText) == 2)
             {
-                if ((oldText.StartsWith("-", StringComparison.Ordinal) || oldText.StartsWith("<i>-", StringComparison.Ordinal)) &&
+                if ((oldText.StartsWith('-') || oldText.StartsWith("<i>-", StringComparison.Ordinal)) &&
                     (oldText.Contains("." + Environment.NewLine) || oldText.Contains(".</i>" + Environment.NewLine) ||
                      oldText.Contains("!" + Environment.NewLine) || oldText.Contains("!</i>" + Environment.NewLine) ||
                      oldText.Contains("?" + Environment.NewLine) || oldText.Contains("?</i>" + Environment.NewLine)))

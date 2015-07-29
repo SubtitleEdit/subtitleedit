@@ -102,7 +102,6 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4.Boxes
                     {
                         for (int i = 0; i < numberOfSampleTimes; i++)
                         {
-
                             uint sampleCount = GetUInt(8 + i * 8);
                             uint sampleDelta = GetUInt(12 + i * 8);
                             totalTime += sampleDelta / (double)timeScale;

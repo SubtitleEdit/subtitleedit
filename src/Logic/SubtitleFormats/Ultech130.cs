@@ -404,7 +404,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             ////    else if (code.Substring(11, 4) == "0101")
                             ////        sb.Append("<font color=\"yellow\">");
                             //}
-
                         }
                         else if (b == 0x80)
                         {

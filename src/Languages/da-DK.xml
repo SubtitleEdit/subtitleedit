@@ -2,7 +2,7 @@
 <Language Name="Dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.6</Version>
+    <Version>3.4.7</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <HelpFile />
@@ -111,12 +111,21 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generer spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Udpakker lyd: {0:0.0} sekunder</ExtractingSeconds>
     <ExtractingMinutes>Udpakker lyd:. {0} (1:00) minutter</ExtractingMinutes>
+    <WaveFileNotFound>Kunne ikke finde udpakket wave fil!
+Denne funktion kræver VLC media player 1.1.x eller nyere ({0} -bit).
+Kommandolinjen: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} kunne ikke udpakke lyd fil!
+Kommandolinjen: {1} {2}
+Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
+    <LowDiskSpace>LAV DISK PLADS!</LowDiskSpace>
+    <FreeDiskSpace>{0} fri</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Batch generer bølgeform data</Title>
     <ExtractingAudio>Udpakker lyd...</ExtractingAudio>
     <Calculating>Beregning...</Calculating>
     <Done>Udført</Done>
+    <Error>Fejl</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Juster visnings tid</Title>
@@ -348,6 +357,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <TranslatorsName>Translators name</TranslatorsName>
     <SubtitleListReferenceCode>Subtitle list reference code</SubtitleListReferenceCode>
     <CountryOfOrigin>Country of origin</CountryOfOrigin>
+    <TimeCodeStatus>Tidskode status</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Tidskode: Start på programmet</TimeCodeStartOfProgramme>
     <RevisionNumber>Revision number</RevisionNumber>
     <MaxNoOfDisplayableChars>Max# of chars per row</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max# of rows</MaxNumberOfDisplayableRows>
@@ -411,6 +422,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ShadowWidth>Skygge tykkelse</ShadowWidth>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Billed format</ImageFormat>
+    <FullFrameImage>Full frame billede</FullFrameImage>
     <SimpleRendering>Simpel rendering</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing med gennemsigtighed</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
@@ -1261,9 +1273,13 @@ Fortsæt?</SubtitleAppendPrompt>
     <ErrorLoadIdx>Subtitle Edit kan ikke læse/redigere .idx filer. Idx filer er en del af et idx/sub fil par (også kaldet VobSub), og Subtitle Edit kan kun åbne .sub filen.</ErrorLoadIdx>
     <ErrorLoadRar>Denne fil er sandsynligvis en komprimeret .rar fil. Subtitle Edit kan ikke åbne komprimerede filer.</ErrorLoadRar>
     <ErrorLoadZip>Denne fil er sandsynligvis en komprimeret .zip fil. Subtitle Edit kan ikke åbne komprimerede filer.</ErrorLoadZip>
-    <ErrorLoadPng>Denne fil synes at være en PNG billedfil. Subtitle Edit kan ikke åbne PNG-filer.</ErrorLoadPng>
+    <ErrorLoadPng>Denne fil er sandsynligvis en PNG billedfil. Subtitle Edit kan ikke åbne PNG-filer.</ErrorLoadPng>
+    <ErrorLoadJpg>Denne fil er sandsynligvis en JPG billedfil. Subtitle Edit kan ikke åbne JPG-filer.</ErrorLoadJpg>
     <ErrorLoadSrr>Denne fil synes at være en ReScene .srr fil - ikke en undertekst fil.</ErrorLoadSrr>
     <ErrorLoadTorrent>Denne fil ser ud til at være en BitTorrent-fil - ikke en undertekst fil.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Beklager, denne fil indeholder kun binære nuller!
+Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via menupunktet Filer -&gt; Gendan auto-backup...</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>Drop af foldere ikke understøttet her.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Krypteret VobSub indhold er ikke understøttet.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Blu-ray sup filer understøttes ikke her.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>DVD sup-filer understøttes ikke her.</NoSupportHereDvdSup>
@@ -1407,8 +1423,10 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <NewLine>New line (\r\n)</NewLine>
     <NewLineShort>New line (\n)</NewLineShort>
     <AnyDigit>Any digit (\d)</AnyDigit>
+    <NonDigit>Non digit(\D)</NonDigit>
     <AnyCharacter>Any character (.)</AnyCharacter>
     <AnyWhitespace>Any whitespace (\s)</AnyWhitespace>
+    <NonSpaceCharacter>Non whitespace (\S)</NonSpaceCharacter>
     <ZeroOrMore>Zero or more (*)</ZeroOrMore>
     <OneOrMore>One or more (+)</OneOrMore>
     <InCharacterGroup>In character group ([test])</InCharacterGroup>
@@ -2015,6 +2033,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <InspectCompareMatchesForCurrentImage>Undersøg resultater for aktuelle billede...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Rediger sidste tekst/billede...</EditLastAdditions>
     <SetUnitalicFactor>Juster de-kursiv faktor...</SetUnitalicFactor>
+    <DiscardTitle>Kassér ændringer i OCR?</DiscardTitle>
+    <DiscardText>Ønsker du at kassere ændringer i nuværende OCR-session?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual billede til tekst</Title>

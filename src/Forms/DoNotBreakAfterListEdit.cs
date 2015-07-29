@@ -32,7 +32,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-
                     string s = Path.GetFileName(fileName);
                     string languageId = s.Substring(0, s.IndexOf('_'));
                     var ci = CultureInfo.GetCultureInfoByIetfLanguageTag(languageId);

@@ -110,7 +110,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             System.Diagnostics.Debug.WriteLine(exception.Message);
                         }
                     }
-
                 }
                 else if (string.IsNullOrWhiteSpace(line) || regexTimeCodes1.IsMatch("   " + s))
                 {

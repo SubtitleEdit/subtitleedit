@@ -235,7 +235,8 @@
             this.comboBoxRemoveIfTextContains.Items.AddRange(new object[] {
             "¶",
             "♪",
-            "♫"});
+            "♫",
+            "♪,♫"});
             this.comboBoxRemoveIfTextContains.Location = new System.Drawing.Point(427, 131);
             this.comboBoxRemoveIfTextContains.MaxLength = 10;
             this.comboBoxRemoveIfTextContains.Name = "comboBoxRemoveIfTextContains";
@@ -399,6 +400,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Remove text for hearing impaired";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormRemoveTextForHearImpaired_FormClosing);
+            this.Load += new System.EventHandler(this.FormRemoveTextForHearImpaired_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormRemoveTextForHearImpaired_KeyDown);
             this.Resize += new System.EventHandler(this.FormRemoveTextForHearImpaired_Resize);
             this.groupBoxLinesFound.ResumeLayout(false);

@@ -63,7 +63,8 @@ LIST_FONT: Arial Unicode MS 450
 TV_SYS: 625/50
 TV_FPS: EBU 625/50
 LINE_LEN: 43.2
-SW_VER: 2.25";
+SW_VER: 2.25
+FILE_INFO_END";
             if (subtitle.Header != null && subtitle.Header.Contains("FILE_INFO_BEGIN"))
                 header = subtitle.Header;
             sb.AppendLine(header);
@@ -72,7 +73,7 @@ SW_VER: 2.25";
             {
                 string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
                 string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
-                string duration = string.Format(timeFormat, p.Duration.Hours, p.Duration.Minutes, p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
+                string duration = string.Format(timeFormat, p.Duration.Hours, p.Duration.Minutes, p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds));
                 sb.AppendLine(string.Format(paragraphWriteFormat, number, startTime, endTime, duration, HtmlUtil.RemoveHtmlTags(p.Text)));
                 number++;
             }

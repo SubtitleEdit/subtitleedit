@@ -83,11 +83,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string FixEnglishAloneILowerToUpper(string text)
         {
+            const string pre = " >¡¿♪♫([";
+            const string post = " <!?.:;,♪♫)]";
             for (var indexOfI = text.IndexOf('i'); indexOfI >= 0; indexOfI = text.IndexOf('i', indexOfI + 1))
             {
-                if (indexOfI == 0 || " >¡¿♪♫([".Contains(text[indexOfI - 1]))
+                if (indexOfI == 0 || pre.Contains(text[indexOfI - 1]))
                 {
-                    if (indexOfI + 1 == text.Length || " <!?.:;,♪♫)]".Contains(text[indexOfI + 1]))
+                    if (indexOfI + 1 == text.Length || post.Contains(text[indexOfI + 1]))
                     {
                         text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
                     }
@@ -108,11 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     // first all to lower
                     text = text.ToLower().Trim();
-                    while (text.Contains("  "))
-                        text = text.Replace("  ", " ");
-                    text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-                    text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-
+                    text = text.FixExtraSpaces();
                     var st = new StripableText(text);
                     st.FixCasing(namesEtc, false, true, true, lastLine); // fix all casing but names (that's a seperate option)
                     text = st.MergedString;

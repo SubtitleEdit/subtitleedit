@@ -902,6 +902,7 @@
     <Compile Include="Logic\Ocr\OcrImage.cs" />
     <Compile Include="Logic\Ocr\NOcrPoint.cs" />
     <Compile Include="Logic\Ocr\SpellCheckOcrTextResult.cs" />
+    <Compile Include="Logic\SubtitleFormats\TextST.cs" />
     <Compile Include="Logic\SubtitleFormats\TimelineFootageAscii.cs" />
     <Compile Include="Logic\SubtitleFormats\TimelineAscii.cs" />
     <Compile Include="Logic\SubtitleFormats\TimelineMvt.cs" />
@@ -1694,14 +1695,12 @@
     </Content>
     <Content Include="Languages\cs-CZ.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\da-DK.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Languages\de-DE.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\el-GR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1714,7 +1713,6 @@
     </Content>
     <Content Include="Languages\es-MX.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\eu-ES.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1745,11 +1743,9 @@
     </Content>
     <Content Include="Languages\nl-NL.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\pl-PL.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\pt-BR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1759,11 +1755,9 @@
     </Content>
     <Content Include="Languages\sl-SI.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\sr-Cyrl-RS.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\sr-Latn-RS.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1776,7 +1770,6 @@
     </Content>
     <Content Include="Languages\ro-RO.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\ru-RU.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1787,9 +1780,11 @@
     <Content Include="Languages\vi-VN.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Languages\zh-CHS.xml">
+    <Content Include="Languages\zh-Hans.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Languages\zh-tw.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\pictureBoxNoFSOver.Image.png" />
     <None Include="Resources\pictureBoxNoFSDown.Image.png" />
@@ -1842,6 +1837,9 @@
     <Content Include="Icons\Find.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Icons\FixCommonErrors.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Icons\Help.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1879,10 +1877,6 @@
     <None Include="Resources\pictureBoxFS.Image.png" />
     <None Include="Resources\pictureBoxFSDown.Image.png" />
     <None Include="Resources\pictureBoxFSOver.Image.png" />
-    <Content Include="Languages\zh-tw.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
     <None Include="Resources\pictureBoxFastForward.Image.png" />
     <None Include="Resources\pictureBoxFastForwardMouseDown.Image.png" />
     <None Include="Resources\pictureBoxFastForwardMouseOver.Image.png" />
