@@ -14096,6 +14096,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemImportOcrHardSub.Visible = showBeta;
             toolStripMenuItemMeasurementConverter.Visible = showBeta;
             toolStripMenuItemOpenDvd.Visible = showBeta;
+            //toolStripMenuItemExportBdTextSt.Visible = showBeta;
 
             if (Configuration.Settings.General.StartRememberPositionAndSize &&
                 Configuration.Settings.General.SplitContainerMainSplitterDistance > 0 &&
@@ -19371,6 +19372,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void DisplaySubtitleNotLoadedMessage()
         {
             MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void toolStripMenuItemExportBdTextSt_Click(object sender, EventArgs e)
+        {
+            using (var form = new ExportTextST(_subtitle))
+            {
+                form.ShowDialog(this);
+            }
         }
 
     }
