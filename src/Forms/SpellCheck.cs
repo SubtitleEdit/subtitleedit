@@ -218,7 +218,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.G)
             {
                 e.SuppressKeyPress = true;
-                System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(textBoxWord.Text));
+                System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(textBoxWord.Text));
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z)
             {
