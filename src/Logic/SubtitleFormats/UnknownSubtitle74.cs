@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class UnknownSubtitle74 : SubtitleFormat
     {
-
         //07:02:27
         //>> GOOD MORNING AND WELCOME TO THE FALL 2014 COMMENCEMENT CEREMONY, A TIME TO RECOGNIZE OUR GRADUATING SENIORS.
         //07:02:43
