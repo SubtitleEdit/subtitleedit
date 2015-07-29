@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle40 : SubtitleFormat
     {
         // 0:01 – 0:03
-        private static Regex regexTimeCodes = new Regex(@"^\d+:\d\d – \d+:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodes = new Regex(@"^\d+:\d\d – \d+:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -59,6 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
+            char[] splitChar = { ':' };
             foreach (string line in lines)
             {
                 if (regexTimeCodes.IsMatch(line))
@@ -67,8 +68,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string start = temp[0].Trim();
                     string end = temp[1].Trim();
 
-                    string[] startParts = start.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                    string[] endParts = end.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] startParts = start.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+                    string[] endParts = end.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
                     if (startParts.Length == 2 && endParts.Length == 2)
                     {
                         p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), string.Empty);
@@ -95,11 +96,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(string[] parts)
         {
             //00:00:07:12
-            string minutes = parts[0];
-            string seconds = parts[1];
-
-            TimeCode tc = new TimeCode(0, int.Parse(minutes), int.Parse(seconds), 0);
-            return tc;
+            var minutes = int.Parse(parts[0]);
+            var seconds = int.Parse(parts[1]);
+            return new TimeCode(0, minutes, seconds, 0);
         }
 
     }
