@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Logic
             Actor = paragraph.Actor;
             Effect = paragraph.Effect;
             Layer = paragraph.Layer;
-            ID = paragraph.ID;
+            ID = GenerateId(); // Do not reuse unique ID
             Language = paragraph.Language;
             Style = paragraph.Style;
             NewSection = paragraph.NewSection;

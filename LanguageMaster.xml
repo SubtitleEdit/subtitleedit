@@ -314,7 +314,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <BridgeGapsSmallerThanXPart2>milliseconds</BridgeGapsSmallerThanXPart2>
     <MinMillisecondsBetweenLines>Min. milliseconds between lines</MinMillisecondsBetweenLines>
     <ProlongEndTime>Previous text takes all gap time</ProlongEndTime>
-    <DivideEven>Texts divides gap time</DivideEven>
+    <DivideEven>Texts divide gap time</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
     <Title>Rip subtitles from IFO/VOBs (DVD)</Title>
