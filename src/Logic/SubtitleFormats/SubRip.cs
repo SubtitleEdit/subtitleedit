@@ -275,5 +275,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return new List<string> { ".wsrt" };
             }
         }
+
+        public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
+        {
+            // {i}Italic{/i}, {b}Bold{/b}, {u}Underline{/u}
+            var regex = new Regex(@"\{/?[ibu]\}");
+            var count = subtitle.Paragraphs.Count;
+            for (int i = 0; i < count; i++)
+            {
+                var p = subtitle.Paragraphs[i];
+                p.Text = regex.Replace(p.Text, string.Empty);
+            }
+        }
     }
 }
