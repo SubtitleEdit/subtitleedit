@@ -268,7 +268,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string text = textBoxWord.Text;
             if (!string.IsNullOrWhiteSpace(text))
-                System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(text));
+                System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(text));
         }
 
         private void OcrSpellCheck_KeyDown(object sender, KeyEventArgs e)

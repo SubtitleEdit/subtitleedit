@@ -8083,7 +8083,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (text.Contains(':'))
                 {
                     text = text.Substring(text.IndexOf(':') + 1).Trim();
-                    Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(text));
+                    Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(text));
                 }
             }
         }

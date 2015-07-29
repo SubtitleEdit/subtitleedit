@@ -13708,13 +13708,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonGoogleIt_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(textBoxSearchWord.Text));
+            System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(textBoxSearchWord.Text));
         }
 
         private void buttonGoogleTranslateIt_Click(object sender, EventArgs e)
         {
             string languageId = Utilities.AutoDetectGoogleLanguage(_subtitle);
-            System.Diagnostics.Process.Start("http://translate.google.com/#auto|" + languageId + "|" + Utilities.UrlEncode(textBoxSearchWord.Text));
+            System.Diagnostics.Process.Start("https://translate.google.com/#auto|" + languageId + "|" + Utilities.UrlEncode(textBoxSearchWord.Text));
         }
 
         private void ButtonPlayCurrentClick(object sender, EventArgs e)
