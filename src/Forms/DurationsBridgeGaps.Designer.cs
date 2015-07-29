@@ -168,9 +168,9 @@
             this.radioButtonDivideEven.AutoSize = true;
             this.radioButtonDivideEven.Location = new System.Drawing.Point(586, 40);
             this.radioButtonDivideEven.Name = "radioButtonDivideEven";
-            this.radioButtonDivideEven.Size = new System.Drawing.Size(130, 17);
+            this.radioButtonDivideEven.Size = new System.Drawing.Size(125, 17);
             this.radioButtonDivideEven.TabIndex = 6;
-            this.radioButtonDivideEven.Text = "Texts divides gap time";
+            this.radioButtonDivideEven.Text = "Texts divide gap time";
             this.radioButtonDivideEven.UseVisualStyleBackColor = true;
             this.radioButtonDivideEven.CheckedChanged += new System.EventHandler(this.numericUpDownMaxMs_ValueChanged);
             // 
@@ -186,7 +186,7 @@
             // numericUpDownMinMsBetweenLines
             // 
             this.numericUpDownMinMsBetweenLines.Increment = new decimal(new int[] {
-            25,
+            5,
             0,
             0,
             0});
@@ -209,6 +209,7 @@
             0,
             0,
             0});
+            this.numericUpDownMinMsBetweenLines.ValueChanged += new System.EventHandler(this.numericUpDownMinMsBetweenLines_ValueChanged);
             // 
             // DurationsBridgeGaps
             // 

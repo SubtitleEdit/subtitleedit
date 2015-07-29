@@ -471,7 +471,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BridgeGapsSmallerThanXPart2 = "milliseconds",
                 MinMillisecondsBetweenLines = "Min. milliseconds between lines",
                 ProlongEndTime = "Previous text takes all gap time",
-                DivideEven = "Texts divides gap time",
+                DivideEven = "Texts divide gap time",
             };
 
             DvdSubRip = new LanguageStructure.DvdSubRip

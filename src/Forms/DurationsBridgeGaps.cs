@@ -8,10 +8,10 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class DurationsBridgeGaps : PositionAndSizeForm
     {
-        private Subtitle _subtitle;
+        private readonly Subtitle _subtitle;
         private Subtitle _fixedSubtitle;
         private Dictionary<string, string> _dic;
-
+        private readonly Timer _refreshTimer = new Timer();
         public Subtitle FixedSubtitle { get { return _fixedSubtitle; } }
 
         public DurationsBridgeGaps(Subtitle subtitle)
@@ -49,7 +49,21 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.MinimumMillisecondsBetweenLines >= 1 && Configuration.Settings.General.MinimumMillisecondsBetweenLines <= numericUpDownMinMsBetweenLines.Maximum)
                 numericUpDownMinMsBetweenLines.Value = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
 
+            _refreshTimer.Interval = 400;
+            _refreshTimer.Tick += RefreshTimerTick;
             GeneratePreview();
+        }
+
+        private void RefreshTimerTick(object sender, EventArgs e)
+        {
+            _refreshTimer.Stop();
+            GeneratePreviewReal();
+        }
+
+        public override sealed string Text
+        {
+            get { return base.Text; }
+            set { base.Text = value; }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -65,9 +79,23 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreview()
         {
+            if (_refreshTimer.Enabled)
+            {
+                _refreshTimer.Stop();
+                _refreshTimer.Start();
+            }
+            else
+            {
+                _refreshTimer.Start();
+            }
+        }
+
+        private void GeneratePreviewReal()
+        {
             if (_subtitle == null)
                 return;
 
+            Cursor = Cursors.WaitCursor;
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
             int count = 0;
@@ -75,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
             _dic = new Dictionary<string, string>();
             var fixedIndexes = new List<int>(_fixedSubtitle.Paragraphs.Count);
 
-            int minMsBetweenLines = (int)numericUpDownMinMsBetweenLines.Value;
+            var minMsBetweenLines = (int)numericUpDownMinMsBetweenLines.Value;
             for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
             {
                 Paragraph cur = _fixedSubtitle.Paragraphs[i];
@@ -98,7 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var msToNext = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
                 if (msToNext < 2000)
                 {
-                    string info = string.Empty;
+                    string info;
                     if (!string.IsNullOrEmpty(before))
                         info = string.Format("{0} => {1:0.000}", before, msToNext / TimeCode.BaseUnit);
                     else
@@ -120,13 +148,18 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetBackgroundColor(index, Color.Green);
             SubtitleListview1.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.DurationsBridgeGaps.GapsBridgedX, count);
+
+            Cursor = Cursors.Default;
         }
 
         private void numericUpDownMaxMs_ValueChanged(object sender, EventArgs e)
-        {
-            Cursor = Cursors.WaitCursor;
+        {            
             GeneratePreview();
-            Cursor = Cursors.Default;
+        }
+
+        private void numericUpDownMinMsBetweenLines_ValueChanged(object sender, EventArgs e)
+        {
+            GeneratePreview();
         }
 
         private void DurationsBridgeGaps_KeyDown(object sender, KeyEventArgs e)
