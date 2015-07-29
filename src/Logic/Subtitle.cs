@@ -393,11 +393,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void Renumber(int startNumber = 1)
         {
-            int i = startNumber;
             foreach (Paragraph p in _paragraphs)
             {
-                p.Number = i;
-                i++;
+                p.Number = startNumber++;
             }
         }
 
