@@ -8,8 +8,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle46 : SubtitleFormat
     {
         //7:00:01:27AM
-        private static Regex regexTimeCodesAM = new Regex(@"^\d\:\d\d\:\d\d\:\d\dAM", RegexOptions.Compiled);
-        private static Regex regexTimeCodesPM = new Regex(@"^\d\:\d\d\:\d\d\:\d\dPM", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodesAM = new Regex(@"^\d\:\d\d\:\d\d\:\d\dAM", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodesPM = new Regex(@"^\d\:\d\d\:\d\d\:\d\dPM", RegexOptions.Compiled);
         public override string Extension
         {
             get { return ".pst"; }
@@ -37,9 +37,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //OFF THE RECORD STARTS RIGHT NOW.   7:00:01:27AM
             //HERE IS THE RUNDOWN.               7:00:05:03AM
             var sb = new StringBuilder();
+            const string format = "{0}{1}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{0}{1}", p.Text.Replace(Environment.NewLine, " ").PadRight(35), EncodeTimeCode(p.StartTime)));
+                sb.AppendLine(string.Format(format, p.Text.Replace(Environment.NewLine, " ").PadRight(35), EncodeTimeCode(p.StartTime)));
             }
             return sb.ToString().Trim();
         }
@@ -100,7 +101,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 index++;
             }
-
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
         }
