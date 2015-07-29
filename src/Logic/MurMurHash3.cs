@@ -4,7 +4,6 @@
     // This code is based on https://gist.github.com/automatonic/3725443
     public class MurMurHash3
     {
-
         private const uint seed = 144;
 
         /// <summary>
