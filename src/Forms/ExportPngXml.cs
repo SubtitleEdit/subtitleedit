@@ -662,16 +662,28 @@ namespace Nikse.SubtitleEdit.Forms
       <displayformat>NDF</displayformat>
     </timecode>
     <in>0</in>
-    <out>36066</out>
+    <out>[OUT]</out>
     <media>
       <video>
+        <format>
+          <samplecharacteristics>
+            <rate>
+              <timebase>25</timebase>
+            </rate>
+            <width>1920</width>
+            <height>1080</height>
+            <anamorphic>FALSE</anamorphic>
+            <pixelaspectratio>square</pixelaspectratio>
+            <fielddominance>none</fielddominance>
+            <colordepth>32</colordepth>
+          </samplecharacteristics>
+        </format>
         <track>
           <enabled>TRUE</enabled>
           <locked>FALSE</locked>
         </track>
         <track>
-" + sb +
-                               @"   <enabled>TRUE</enabled>
+" + sb + @"   <enabled>TRUE</enabled>
           <locked>FALSE</locked>
         </track>
       </video>
@@ -701,6 +713,24 @@ namespace Nikse.SubtitleEdit.Forms
     <ismasterclip>FALSE</ismasterclip>
   </sequence>
 </xmeml>";
+                    s = s.Replace("<timebase>25</timebase>", "<timebase>" + comboBoxFrameRate.Text + "</timebase>");
+
+                    if (_subtitle.Paragraphs.Count > 0)
+                    {
+                        var end = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * FrameRate);
+                        end ++;
+                        s = s.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
+                    }
+
+                    if (comboBoxLanguage.Text == "NTSC")
+                        s = s.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
+
+                    s = s.Replace("<width>1920</width>", "<width>" + width.ToString(CultureInfo.InvariantCulture) + "</width>");
+                    s = s.Replace("<height>1080</height>", "<height>" + height.ToString(CultureInfo.InvariantCulture) + "</height>");
+
+                    if (comboBoxImageFormat.Text.Contains("8-bit"))
+                        s = s.Replace("<colordepth>32</colordepth>", "<colordepth>8</colordepth>");
+
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, saveFileDialog1.FileName), s);
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
                 }
@@ -1182,14 +1212,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         imagesSavedCount++;
 
-                        int duration = (int)Math.Round(param.P.Duration.TotalSeconds * 25.0);
-                        int start = (int)Math.Round(param.P.StartTime.TotalSeconds * 25.0);
-                        int end = (int)Math.Round(param.P.EndTime.TotalSeconds * 25.0);
+                        int duration = (int)Math.Round(param.P.Duration.TotalSeconds * param.FramesPerSeconds);
+                        int start = (int)Math.Round(param.P.StartTime.TotalSeconds * param.FramesPerSeconds);
+                        int end = (int)Math.Round(param.P.EndTime.TotalSeconds * param.FramesPerSeconds);
 
-                        if (param.VideoResolution.StartsWith("NTSC"))
-                        {
-                            template = template.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
-                        }
                         template = template.Replace("[DURATION]", duration.ToString(CultureInfo.InvariantCulture));
                         template = template.Replace("[IN]", start.ToString(CultureInfo.InvariantCulture));
                         template = template.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
@@ -2055,7 +2081,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     var lastLine = lines[lines.Length - 1];
                     if (lastLine.Contains(new[] { 'g', 'j', 'p', 'q', 'y', ',', 'ý', 'ę', 'ç', 'Ç' }))
                     {
-                        var textNoBelow = lastLine.Replace('g', 'a').Replace('j', 'a').Replace('p', 'a').Replace('q', 'a').Replace('y', 'a').Replace(',', 'a').Replace('ý', 'a').Replace('ę', 'a').Replace('ç' , 'a').Replace('Ç' , 'a');
+                        var textNoBelow = lastLine.Replace('g', 'a').Replace('j', 'a').Replace('p', 'a').Replace('q', 'a').Replace('y', 'a').Replace(',', 'a').Replace('ý', 'a').Replace('ę', 'a').Replace('ç', 'a').Replace('Ç', 'a');
                         baseLinePadding -= (int)Math.Round((TextDraw.MeasureTextHeight(font, lastLine, parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold)));
                     }
                     else
@@ -2811,7 +2837,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             comboBoxImageFormat.Visible = showImageFormat;
             labelImageFormat.Visible = showImageFormat;
             labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
-            comboBoxFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME" || exportType == "FAB";
+            comboBoxFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME" || exportType == "FAB" || exportType == "FCP";
             checkBoxTransAntiAliase.Visible = exportType == "VOBSUB";
             if (exportType == "BDNXML")
             {
@@ -2886,6 +2912,19 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFrameRate.Items.Add("50");
                 comboBoxFrameRate.Items.Add("59.94");
                 comboBoxFrameRate.SelectedIndex = 1;
+                comboBoxFrameRate.DropDownStyle = ComboBoxStyle.DropDownList;
+            }
+            else if (exportType == "FCP")
+            {
+                labelFrameRate.Visible = true;
+                comboBoxFrameRate.Items.Add("23.976");
+                comboBoxFrameRate.Items.Add("24");
+                comboBoxFrameRate.Items.Add("25");
+                comboBoxFrameRate.Items.Add("29.97");
+                comboBoxFrameRate.Items.Add("50");
+                comboBoxFrameRate.Items.Add("59.94");
+                comboBoxFrameRate.Items.Add("60");
+                comboBoxFrameRate.SelectedIndex = 2;
                 comboBoxFrameRate.DropDownStyle = ComboBoxStyle.DropDownList;
             }
             if (comboBoxFrameRate.Items.Count >= 2)
@@ -2988,6 +3027,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxResolution.Items.Add("HD-(1440x1080)");
                 comboBoxResolution.SelectedIndex = 3; // 720p
                 buttonCustomResolution.Visible = true; // we still allow for custom resolutions
+
+                labelLanguage.Text = "NTSC/PAL";
+                comboBoxLanguage.Items.Clear();
+                comboBoxLanguage.Items.Add("PAL");
+                comboBoxLanguage.Items.Add("NTSC");
+                comboBoxLanguage.SelectedIndex = 0;
+                comboBoxLanguage.Visible = true;
+                labelLanguage.Visible = true;
             }
 
             comboBoxShadowWidth.SelectedIndex = 0;
@@ -3148,14 +3195,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 if (comboBoxHAlign.Visible)
                 {
-                    if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
-                        pictureBox1.Left = int.Parse(comboBoxLeftRightMargin.Text);
-                    else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
-                        pictureBox1.Left = w - bmp.Width - int.Parse(comboBoxLeftRightMargin.Text);
+                    if (comboBoxLeftRightMargin.Visible)
+                    {
+                        if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
+                            pictureBox1.Left = int.Parse(comboBoxLeftRightMargin.Text);
+                        else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
+                            pictureBox1.Left = w - bmp.Width - int.Parse(comboBoxLeftRightMargin.Text);
+                    }
 
                     if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
                         pictureBox1.Top = (groupBoxExportImage.Height - 4 - bmp.Height) / 2;
-                    else if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
+                    else if (comboBoxBottomMargin.Visible && alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
                         pictureBox1.Top = int.Parse(comboBoxBottomMargin.Text);
                 }
                 if (bmp.Width > groupBoxExportImage.Width + 20 || bmp.Height > groupBoxExportImage.Height + 20)
