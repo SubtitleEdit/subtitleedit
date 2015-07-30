@@ -106,6 +106,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             const string syncTag = "<p ";
             var syncStartPos = allInputLower.IndexOf(syncTag, StringComparison.Ordinal);
             int index = syncStartPos + syncTag.Length;
+
+            var tcBegin = new StringBuilder();
+            var tcEnd = new StringBuilder();
+            char[] splitChars = { '.', ':' };
             while (syncStartPos >= 0)
             {
                 var syncEndPos = allInputLower.IndexOf("</p>", index, StringComparison.Ordinal);
@@ -129,7 +133,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
 
                         string begin = s.Substring(indexOfBegin + " data-begin=".Length);
-                        var tcBegin = new StringBuilder();
+                        tcBegin.Clear();
                         for (int i = 0; i <= 10; i++)
                         {
                             if (begin.Length > i && @"0123456789:.".Contains(begin[i]))
@@ -138,7 +142,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
 
-                        var tcEnd = new StringBuilder();
+                        tcEnd.Clear();
                         var indexOfEnd = s.IndexOf(" data-end=", StringComparison.Ordinal);
                         if (indexOfEnd >= 0)
                         {
@@ -152,7 +156,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
 
-                        var arr = tcBegin.ToString().Split(new[] { '.', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        var arr = tcBegin.ToString().Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                         if (arr.Length == 3 || arr.Length == 4)
                         {
                             var p = new Paragraph();
@@ -162,7 +166,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 p.StartTime = DecodeTimeCode(arr);
                                 if (tcEnd.Length > 0)
                                 {
-                                    arr = tcEnd.ToString().Split(new[] { '.', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                                    arr = tcEnd.ToString().Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                                     p.EndTime = DecodeTimeCode(arr);
                                 }
                                 subtitle.Paragraphs.Add(p);

@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -96,10 +96,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             string[] parts = s.Split(':');
 
-            string minutes = parts[0];
-            string seconds = parts[1];
+            var minutes = int.Parse(parts[0]);
+            var seconds = int.Parse(parts[1]);
 
-            return new TimeCode(0, int.Parse(minutes), int.Parse(seconds), 0);
+            return new TimeCode(0, minutes, seconds, 0);
         }
 
     }

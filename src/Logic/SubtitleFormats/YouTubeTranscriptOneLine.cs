@@ -41,9 +41,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var sb = new StringBuilder();
             int index = 0;
+            const string writeFormat = "{0}{1}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{0}{1}", EncodeTimeCode(p.StartTime), HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " "))));
+                sb.AppendLine(string.Format(writeFormat, EncodeTimeCode(p.StartTime), HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " "))));
                 index++;
             }
             return sb.ToString();
@@ -58,6 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
+            char[] trimChars = { '–', '.', ';', ':' };
             foreach (string line in lines)
             {
                 if (regexTimeCodes.IsMatch(line))
@@ -66,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string text = line.Remove(0, splitter);
                     var p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), new TimeCode(0, 0, 0, 0), text);
                     subtitle.Paragraphs.Add(p);
-                    text = text.Trim().Trim('–', '.', ';', ':').Trim();
+                    text = text.Trim().Trim(trimChars).Trim();
                     if (text.Length > 0 && char.IsDigit(text[0]))
                         _errorCount++;
                 }

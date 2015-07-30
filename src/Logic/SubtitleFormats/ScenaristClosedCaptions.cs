@@ -16,7 +16,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class ScenaristClosedCaptions : SubtitleFormat
     {
-
         public class SccPositionAndStyle
         {
             public Color ForeColor { get; set; }
