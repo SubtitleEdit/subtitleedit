@@ -12739,8 +12739,18 @@ namespace Nikse.SubtitleEdit.Forms
                 var fileName = fileNameNoExtension + extension;
                 if (File.Exists(fileName))
                 {
-                    movieFileName = fileName;
-                    break;
+                    bool skipLoad = false;
+                    if (extension == ".m2ts" && new FileInfo(fileName).Length < 2000000)
+                    {
+                        var textSt = new TextST();
+                        skipLoad = textSt.IsMine(null, fileName); // don't load TextST files as video/audio file
+                    }
+
+                    if (!skipLoad)
+                    {
+                        movieFileName = fileName;
+                        break;
+                    }
                 }
             }
 
