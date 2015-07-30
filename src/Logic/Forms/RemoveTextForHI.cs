@@ -456,6 +456,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             text = text.Replace("<i> </i>", " ");
             text = text.Replace("<b></b>", string.Empty);
             text = text.Replace("<b> </b>", " ");
+            text = text.Replace("<u></u>", string.Empty);
+            text = text.Replace("<u> </u>", " ");
             text = RemoveEmptyFontTag(text);
             text = text.Replace("  ", " ").Trim();
             text = RemoveColon(text);
