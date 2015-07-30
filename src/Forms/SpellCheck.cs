@@ -134,6 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSkipText.Text = Configuration.Settings.Language.SpellCheck.SkipOnce;
             groupBoxSuggestions.Text = Configuration.Settings.Language.SpellCheck.Suggestions;
             buttonAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
+            buttonGoogleIt.Text = Configuration.Settings.Language.Main.VideoControls.GoogleIt;
             Utilities.FixLargeFonts(this, buttonAbort);
         }
 
@@ -1250,6 +1251,13 @@ namespace Nikse.SubtitleEdit.Forms
                 components.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void buttonGoogleIt_Click(object sender, EventArgs e)
+        {
+            string text = textBoxWord.Text.Trim();
+            if (!string.IsNullOrWhiteSpace(text))
+                System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(text));
         }
 
     }
