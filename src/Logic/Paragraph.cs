@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic
             ID = GenerateId();
         }
 
-        public Paragraph(Paragraph paragraph)
+        public Paragraph(Paragraph paragraph, bool generateNewId = true)
         {
             Number = paragraph.Number;
             Text = paragraph.Text;
@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Logic
             Actor = paragraph.Actor;
             Effect = paragraph.Effect;
             Layer = paragraph.Layer;
-            ID = GenerateId(); // Do not reuse unique ID
+            ID = generateNewId ? GenerateId() : paragraph.ID;
             Language = paragraph.Language;
             Style = paragraph.Style;
             NewSection = paragraph.NewSection;
