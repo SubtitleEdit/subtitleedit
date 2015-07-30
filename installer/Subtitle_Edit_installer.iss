@@ -323,6 +323,7 @@ Type: files;      Name: {app}\uninstall.ico;                          Check: IsU
 ; Language files not included anymore
 Type: files;      Name: {app}\Languages\sr-Cyrl-CS.xml
 Type: files;      Name: {app}\Languages\sr-Latn-CS.xml
+Type: files;      Name: {app}\Languages\zh-CHS.xml
 
 ; Remove the language files if it's an upgrade and the translations are not selected
 Type: files;      Name: {app}\Languages\ar-EG.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
