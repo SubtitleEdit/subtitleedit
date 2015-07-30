@@ -1,18 +1,21 @@
 ﻿Subtitle Edit Changelog
 
-3.4.8 (xth August 2015)
+3.4.8 (xth August 2015) BETA
 * NEW:
    * Added support for Blu-ray TextST - thx Timo/...
+   * Added "Google it" to spell check dialog
 * IMPROVED:
    * Updated Chinese Simplified translation - thx Leon
    * Updated Danish translation
    * Updated Croatian OCR fix replace list - thx diomed & xylographe
    * Remove text for HI - "Remove if text contains" now allows multiple items separated by comma or semicolon - thx Jesper
    * Added fix for invalid time codes in Avid (bug in Avid) - thx Xenophon
+   * All Google urls now uses https
 * FIXED:
    * Fixed "Discard" message in OCR when pressing "OK" (regression from 3.4.7) - thx Music Fan
    * Fixed Blu-ray sup export with frame rate 23.976 (regression from 3.4.7) - thx Arjan
    * Fixed remebered value from Tools -> Adjust all times (regression from 3.4.7) - thx GH
+   * Fixed GT by using https - thx Sopor
    * Fix for large data inside "Sami" files - thx hhgyu
    * Fix for font tags without quote/apos in "Advanced Substation Alpha" - thx hhgyu
    * Now comboboxes from "Remove text for HI " should save/restore last used value - thx Jesper
