@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
+            var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
         }
@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
-                if (line.StartsWith("-->> "))
+                if (line.StartsWith("-->> ", StringComparison.Ordinal))
                 {
                     string timePart = line.Substring(4).Trim();
                     if (timePart.Length > 0)

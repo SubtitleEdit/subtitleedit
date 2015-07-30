@@ -62,21 +62,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 get
                 {
-                    if (DiskFormatCode.StartsWith("STL23"))
+                    if (DiskFormatCode.StartsWith("STL23", StringComparison.Ordinal))
                         return 23.0;
-                    if (DiskFormatCode.StartsWith("STL24"))
+                    if (DiskFormatCode.StartsWith("STL24", StringComparison.Ordinal))
                         return 24.0;
-                    if (DiskFormatCode.StartsWith("STL25"))
+                    if (DiskFormatCode.StartsWith("STL25", StringComparison.Ordinal))
                         return 25.0;
-                    if (DiskFormatCode.StartsWith("STL29"))
+                    if (DiskFormatCode.StartsWith("STL29", StringComparison.Ordinal))
                         return 29.0;
-                    if (DiskFormatCode.StartsWith("STL35"))
+                    if (DiskFormatCode.StartsWith("STL35", StringComparison.Ordinal))
                         return 35.0;
-                    if (DiskFormatCode.StartsWith("STL48"))
+                    if (DiskFormatCode.StartsWith("STL48", StringComparison.Ordinal))
                         return 48.0;
-                    if (DiskFormatCode.StartsWith("STL50"))
+                    if (DiskFormatCode.StartsWith("STL50", StringComparison.Ordinal))
                         return 50.0;
-                    if (DiskFormatCode.StartsWith("STL60"))
+                    if (DiskFormatCode.StartsWith("STL60", StringComparison.Ordinal))
                         return 60.0;
                     return 30.0; // should be DiskFormatcode STL30.01
                 }
@@ -332,7 +332,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 if (header.DisplayStandardCode == "0")
                     newline = encoding.GetString(new byte[] { 0x8A }); //8Ah=CR/LF
-                //                    newline = encoding.GetString(new byte[] { 0x85, 0x8A, 0x0D, 0x84, 0x80 }); //85h=boxing off, 8Ah=CR/LF, 84h=boxing on, 80h, Italics on
+                // newline = encoding.GetString(new byte[] { 0x85, 0x8A, 0x0D, 0x84, 0x80 }); //85h=boxing off, 8Ah=CR/LF, 84h=boxing on, 80h, Italics on
 
                 TextField = TextField.Replace(Environment.NewLine, newline);
 
@@ -514,11 +514,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         else if (header.DisplayStandardCode == "0" && header.MaximumNumberOfDisplayableRows == "02") // open subtitling
                             rows = 15;
 
-                        if (p.Text.StartsWith("{\\an7}") || p.Text.StartsWith("{\\an8}") || p.Text.StartsWith("{\\an9}"))
+                        if (p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal))
                         {
                             tti.VerticalPosition = 1; // top (vertical)
                         }
-                        else if (p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an5}") || p.Text.StartsWith("{\\an6}"))
+                        else if (p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal))
                         {
                             tti.VerticalPosition = (byte)(rows / 2); // middle (vertical)
                         }
@@ -531,11 +531,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
 
                         tti.JustificationCode = saveOptions.JustificationCode;
-                        if (p.Text.StartsWith("{\\an1}") || p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an7}"))
+                        if (p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an7}", StringComparison.Ordinal))
                         {
                             tti.JustificationCode = 1; // 01h=left-justified text
                         }
-                        else if (p.Text.StartsWith("{\\an3}") || p.Text.StartsWith("{\\an6}") || p.Text.StartsWith("{\\an9}"))
+                        else if (p.Text.StartsWith("{\\an3}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal))
                         {
                             tti.JustificationCode = 3; // 03h=right-justified
                         }
@@ -547,7 +547,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         tti.SubtitleNumber = (ushort)subtitleNumber;
                         tti.TextField = p.Text;
                         int startTag = tti.TextField.IndexOf('}');
-                        if (tti.TextField.StartsWith("{\\") && startTag > 0 && startTag < 10)
+                        if (tti.TextField.StartsWith("{\\", StringComparison.Ordinal) && startTag > 0 && startTag < 10)
                         {
                             tti.TextField = tti.TextField.Remove(0, startTag + 1);
                         }
@@ -579,15 +579,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
                         EbuGeneralSubtitleInformation header = ReadHeader(buffer);
-                        if (header.DiskFormatCode.StartsWith("STL23") ||
-                            header.DiskFormatCode.StartsWith("STL24") ||
-                            header.DiskFormatCode.StartsWith("STL25") ||
-                            header.DiskFormatCode.StartsWith("STL29") ||
-                            header.DiskFormatCode.StartsWith("STL30") ||
-                            header.DiskFormatCode.StartsWith("STL35") ||
-                            header.DiskFormatCode.StartsWith("STL48") ||
-                            header.DiskFormatCode.StartsWith("STL50") ||
-                            header.DiskFormatCode.StartsWith("STL60"))
+                        if (header.DiskFormatCode.StartsWith("STL23", StringComparison.Ordinal) ||
+                            header.DiskFormatCode.StartsWith("STL24", StringComparison.Ordinal) ||
+                            header.DiskFormatCode.StartsWith("STL25", StringComparison.Ordinal) ||
+                            header.DiskFormatCode.StartsWith("STL29", StringComparison.Ordinal) ||
+                            header.DiskFormatCode.StartsWith("STL30", StringComparison.Ordinal) ||
+                            header.DiskFormatCode.StartsWith("STL35", StringComparison.Ordinal) ||
+                            header.DiskFormatCode.StartsWith("STL48", StringComparison.Ordinal) ||
+                            header.DiskFormatCode.StartsWith("STL50", StringComparison.Ordinal) ||
+                            header.DiskFormatCode.StartsWith("STL60", StringComparison.Ordinal))
                         {
                             return Utilities.IsInteger(header.CodePageNumber) || fileName.EndsWith("stl", StringComparison.OrdinalIgnoreCase);
                         }
@@ -688,7 +688,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (header.CharacterCodeTableNumber == "00")
             {
                 //note that 0xC1—0xCF combines characters - http://en.wikipedia.org/wiki/ISO/IEC_6937
-                Encoding encoding = Encoding.GetEncoding(20269);
+                var encoding = Encoding.GetEncoding(20269);
                 string next = encoding.GetString(buffer, index + 1, 1);
                 switch (buffer[index])
                 {
@@ -932,22 +932,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             if (header.CharacterCodeTableNumber == "01") // Latin/Cyrillic alphabet - from ISO 8859/5-1988
             {
-                Encoding encoding = Encoding.GetEncoding("ISO-8859-5");
+                var encoding = Encoding.GetEncoding("ISO-8859-5");
                 return encoding.GetString(buffer, index, 1);
             }
             if (header.CharacterCodeTableNumber == "02") // Latin/Arabic alphabet - from ISO 8859/6-1987
             {
-                Encoding encoding = Encoding.GetEncoding("ISO-8859-6");
+                var encoding = Encoding.GetEncoding("ISO-8859-6");
                 return encoding.GetString(buffer, index, 1);
             }
             if (header.CharacterCodeTableNumber == "03") // Latin/Greek alphabet - from ISO 8859/7-1987
             {
-                Encoding encoding = Encoding.GetEncoding("ISO-8859-7"); // or ISO-8859-1 ?
+                var encoding = Encoding.GetEncoding("ISO-8859-7"); // or ISO-8859-1 ?
                 return encoding.GetString(buffer, index, 1);
             }
             if (header.CharacterCodeTableNumber == "04") // Latin/Hebrew alphabet - from ISO 8859/8-1988
             {
-                Encoding encoding = Encoding.GetEncoding("ISO-8859-8");
+                var encoding = Encoding.GetEncoding("ISO-8859-8");
                 return encoding.GetString(buffer, index, 1);
             }
 
@@ -1016,28 +1016,36 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             switch (b)
                             {
                                 case 0x00:
-                                case 0x10: color = "Black";
+                                case 0x10:
+                                    color = "Black";
                                     break;
                                 case 0x01:
-                                case 0x11: color = "Red";
+                                case 0x11:
+                                    color = "Red";
                                     break;
                                 case 0x02:
-                                case 0x12: color = "Green";
+                                case 0x12:
+                                    color = "Green";
                                     break;
                                 case 0x03:
-                                case 0x13: color = "Yellow";
+                                case 0x13:
+                                    color = "Yellow";
                                     break;
                                 case 0x04:
-                                case 0x14: color = "Blue";
+                                case 0x14:
+                                    color = "Blue";
                                     break;
                                 case 0x05:
-                                case 0x15: color = "Magenta";
+                                case 0x15:
+                                    color = "Magenta";
                                     break;
                                 case 0x06:
-                                case 0x16: color = "Cyan";
+                                case 0x16:
+                                    color = "Cyan";
                                     break;
                                 case 0x07:
-                                case 0x17: color = "White";
+                                case 0x17:
+                                    color = "White";
                                     break;
                             }
                         }
