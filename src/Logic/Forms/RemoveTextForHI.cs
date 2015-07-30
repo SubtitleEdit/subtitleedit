@@ -478,16 +478,13 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             // fix 3 lines to two liners - if only two lines
             if (noOfNamesRemoved >= 1 && Utilities.GetNumberOfLines(text) == 3)
             {
-                string[] a = HtmlUtil.RemoveHtmlTags(text).Replace(" ", string.Empty).Split(new[] { '!', '?', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                char[] chars = { '!', '?', '.' };
+                string[] a = HtmlUtil.RemoveHtmlTags(text).Replace(" ", string.Empty).Split(chars, StringSplitOptions.RemoveEmptyEntries);
                 if (a.Length == 2)
                 {
                     var temp = new StripableText(text);
                     temp.StrippedText = temp.StrippedText.Replace(Environment.NewLine, " ");
-                    int splitIndex = temp.StrippedText.LastIndexOf('!');
-                    if (splitIndex < 0)
-                        splitIndex = temp.StrippedText.LastIndexOf('?');
-                    if (splitIndex < 0)
-                        splitIndex = temp.StrippedText.LastIndexOf('.');
+                    int splitIndex = temp.StrippedText.LastIndexOfAny(chars);
                     if (splitIndex > 0)
                     {
                         text = temp.Pre + temp.StrippedText.Insert(splitIndex + 1, Environment.NewLine) + temp.Post;
