@@ -102,7 +102,7 @@
     <RegEx find="\b([nN])ezna([šm]o?|t[ei]|ju|jući|vši)?\b" replaceWith="$1e zna$2" />
     <RegEx find="najcijenjen" replaceWith="najcjenjen" />
     <RegEx find="N[jJ]u Jork" replaceWith="Njujork" />
-    <RegEx find="(o|OP)ružij([aeu])" replaceWith="$1ružj$2" />
+    <RegEx find="([oO])ružij([aeu])" replaceWith="$1ružj$2" />
     <RegEx find="([oO])sječa" replaceWith="$1sjeća" />
     <RegEx find="([pPdD])onje([lt])" replaceWith="$1onije$2" />
     <RegEx find="([pP])objedi([mšto])" replaceWith="$1obijedi$2" />
