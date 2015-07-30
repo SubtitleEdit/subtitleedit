@@ -183,6 +183,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 NumberOfDialogPresentationSegments = (buffer[idx] << 8) + buffer[idx + 1];
             }
+
+            public void WriteToStream(Stream stream)
+            {
+            }
+
         }
 
         public class SubtitleRegion
@@ -195,6 +200,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public class DialogPresentationSegment
         {
+
+            public int Length { get; set; }
+            public UInt64 StartPts { get; set; }
+            public UInt64 EndPts { get; set; }
+            public bool PaletteUpdate { get; set; }
+            public int NumberOfPaletteEntries { get; set; }
+            public List<SubtitleRegion> Regions { get; set; }
+
             public DialogPresentationSegment(byte[] buffer)
             {
                 StartPts = buffer[13];
@@ -306,13 +319,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     Regions.Add(region);
                 }
             }
-
-            public int Length { get; set; }
-            public UInt64 StartPts { get; set; }
-            public UInt64 EndPts { get; set; }
-            public bool PaletteUpdate { get; set; }
-            public int NumberOfPaletteEntries { get; set; }
-            public List<SubtitleRegion> Regions { get; set; }
+           
             public string PlainText
             {
                 get
@@ -333,9 +340,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 get { return (ulong)Math.Round((StartPts) / 90.0); }
             }
+
             public ulong EndPtsMilliseconds
             {
                 get { return (ulong)Math.Round((EndPts) / 90.0); }
+            }
+
+            public static void WriteToStream(Stream stream, string text, TimeCode start, TimeCode end, int regionStyleId, bool forced)
+            {
             }
 
         }
@@ -417,7 +429,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var tc = (m2TsTimeCodeBuffer[0] << 24) + (m2TsTimeCodeBuffer[1] << 16) + (m2TsTimeCodeBuffer[2] << 8) + (m2TsTimeCodeBuffer[3] & Helper.B00111111);
                     // should m2ts time code be used in any way?
                     var msecs = (ulong)Math.Round((tc) / 27.0); // 27 or 90?
-                    TimeCode tc2 = new TimeCode(msecs);
+                    var tc2 = new TimeCode(msecs);
                     System.Diagnostics.Debug.WriteLine(tc2);
                     position += m2TsTimeCodeBuffer.Length;
                 }
