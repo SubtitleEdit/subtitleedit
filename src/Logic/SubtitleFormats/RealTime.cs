@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             int index = 0;
             sb.AppendLine("<Window" + Environment.NewLine +
                 "  Width    = \"640\"" + Environment.NewLine +
@@ -46,11 +46,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 ">" + Environment.NewLine +
                 "<center>" + Environment.NewLine +
                 "<b>" + Environment.NewLine);
-
+            const string writeFormat = "<Time begin=\"{0}\" end=\"{1}\" /><clear/>{2}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //<Time begin="0:03:24.8" end="0:03:29.4" /><clear/>Man stjæler ikke fra Chavo, nej.
-                sb.AppendLine(string.Format("<Time begin=\"{0}\" end=\"{1}\" /><clear/>{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), p.Text.Replace(Environment.NewLine, " ")));
+                sb.AppendLine(string.Format(writeFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), p.Text.Replace(Environment.NewLine, " ")));
                 index++;
             }
             sb.AppendLine("</b>");

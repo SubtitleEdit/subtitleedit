@@ -42,10 +42,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var sb = new StringBuilder();
             int index = 0;
+            const string writeFormat = "{0:0000}       {1}  {2}  {3}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //0001       00:49:26:22  00:49:27:13  t01_v001c001_22_0001.bmp
-                sb.AppendLine(string.Format("{0:0000}       {1}  {2}  {3}", index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "\t")));
+                sb.AppendLine(string.Format(writeFormat, index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "\t")));
                 index++;
             }
             return sb.ToString();
@@ -65,17 +66,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
             int index = 0;
+            char[] splitChar = { ' ' };
+            var sb = new StringBuilder();
             foreach (string line in lines)
             {
                 if (regexTimeCodes.IsMatch(line))
                 {
                     string temp = line.Substring(0, regexTimeCodes.Match(line).Length);
 
-                    string[] parts = temp.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = temp.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
 
                     if (parts.Length > 3)
                     {
-                        var sb = new StringBuilder();
+                        sb.Clear();
                         for (int i = 3; i < parts.Length; i++)
                             sb.Append(parts[i] + " ");
                         string text = sb.ToString().Trim();
@@ -83,7 +86,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         subtitle.Paragraphs.Add(p);
                     }
                 }
-                else if (string.IsNullOrWhiteSpace(line) || line.StartsWith("Display_Area") || line.StartsWith('#') || line.StartsWith("Color") || index < 10)
+                else if (string.IsNullOrWhiteSpace(line) || line.StartsWith("Display_Area", StringComparison.Ordinal) || line.StartsWith('#') || line.StartsWith("Color", StringComparison.Ordinal) || index < 10)
                 {
                     // skip these lines
                 }
@@ -99,16 +102,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(string[] parts)
         {
             //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = double.Parse(parts[3]);
 
-            int milliseconds = FramesToMillisecondsMax999(double.Parse(frames));
+            int milliseconds = FramesToMillisecondsMax999(frames);
             if (milliseconds > 999)
                 milliseconds = 999;
-
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
+            return new TimeCode(hour, minutes, seconds, milliseconds);
         }
 
     }

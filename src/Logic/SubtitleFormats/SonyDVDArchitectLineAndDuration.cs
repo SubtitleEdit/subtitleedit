@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SonyDVDArchitectLineAndDuration : SubtitleFormat
     {
-        private static Regex regex = new Regex(@"^\d+\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex regex = new Regex(@"^\d+\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -49,11 +49,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb.AppendLine("#\tIn\tOut\tDuration");
             sb.AppendLine();
             int count = 0;
+            const string writeFormat = "{13}\t{0:00}:{1:00}:{2:00}:{3:00}\t{4:00}:{5:00}:{6:00}:{7:00}\t{8:00}:{9:00}:{10:00}:{11:00}\r\n{12}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 count++;
-                string text = HtmlUtil.RemoveHtmlTags(p.Text);
-                sb.AppendLine(string.Format("{13}\t{0:00}:{1:00}:{2:00}:{3:00}\t{4:00}:{5:00}:{6:00}:{7:00}\t{8:00}:{9:00}:{10:00}:{11:00}\r\n{12}" + Environment.NewLine,
+                var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
+                sb.AppendLine(string.Format(writeFormat + Environment.NewLine,
                                             p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds),
                                             p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds),
                                             p.Duration.Hours, p.Duration.Minutes, p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds),
