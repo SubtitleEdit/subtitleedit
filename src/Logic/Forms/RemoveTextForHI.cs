@@ -1074,22 +1074,19 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (start < 0 || start == text.Length - 1)
                 return text;
 
-            int end = text.IndexOf(endTag, start + 1, StringComparison.Ordinal);
-            while (start >= 0 && end > start)
+            while (start >= 0)
             {
-                text = text.Remove(start, (end - start) + 1);
+                int end = text.IndexOf(endTag, start + 1, StringComparison.Ordinal);
+                if (end < start)
+                    break;
+                text = text.Remove(start, end - start + 1);
                 if (start > 3 && start < text.Length - 1 &&
                     text.Substring(0, start + 1).EndsWith(" :", StringComparison.Ordinal) &&
                     ".!?".Contains(text[start - 2]))
                 {
                     text = text.Remove(start - 1, 2);
                 }
-
                 start = text.IndexOf(startTag, StringComparison.Ordinal);
-                if (start >= 0 && start < text.Length - 1)
-                    end = text.IndexOf(endTag, start + 1, StringComparison.Ordinal);
-                else
-                    break;
             }
             return text.FixExtraSpaces().TrimEnd();
         }
