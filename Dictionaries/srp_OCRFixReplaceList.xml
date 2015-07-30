@@ -120,7 +120,7 @@
     <RegEx find="([sS])mješno" replaceWith="$1miješno" />
     <RegEx find="([uU])mijesto" replaceWith="$1mjesto" />
     <RegEx find="([uU])spijeh" replaceWith="$1spjeh" />
-    <RegEx find="([uU])spiješ(an|n[aeiou])" replaceWith="$1spješ$2" />
+    <RegEx find="([uU])spiješ(an|n[aeiou]|no[mgj])" replaceWith="$1spješ$2" />
     <RegEx find="([uU])vjek" replaceWith="$1vijek" />
     <RegEx find="\b([vV])eč([aeiou])" replaceWith="$1eć$2" />
     <RegEx find="([zZ])ahtijeva" replaceWith="$1ahtjeva" />
