@@ -91,7 +91,7 @@
     <RegEx find=" gosp +" replaceWith=" g. " />
     <RegEx find="Jel si sigur" replaceWith="Jesi li sigur" />
     <RegEx find="Jel' si sigur" replaceWith="Jesi li sigur" />
-    <RegEx find="\b([jJ])jel\?" replaceWith="$1e l'?" />
+    <RegEx find="\b([jJ])el\?" replaceWith="$1e l'?" />
     <RegEx find="\bJel'" replaceWith="Je l'" />
     <RegEx find="([kK]alib(?:ar|r[aeui]))\. *([0-9])" replaceWith="$1 .$2" />
     <RegEx find="([mM])jenjati" replaceWith="$1ijenjati" />
@@ -128,7 +128,7 @@
     <RegEx find="([ks]ao)\.:" replaceWith="$1:" />
     <RegEx find="(?&lt;=[a-zčđšž])Ij(?=[a-zčđšž])" replaceWith="lj" />
     <RegEx find="(?&lt;=[^A-ZČĐŠŽa-zčđšž])Iju(?=bav|d|t)" replaceWith="lju" />
-    <!-- kad ima razmak izmedju tagova </i> <i> -->
+    <!-- kad ima razmak između tagova </i> <i> -->
     <!-- <RegEx find="(&gt;) +(&lt;)" replaceWith="$1$2" /> -->
     <!-- ',"' to '",' -->
     <RegEx find="(?&lt;=\w),&quot;(?=\s|$)" replaceWith="&quot;," />
