@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                _paragraphs.Add(new Paragraph(p));
+                _paragraphs.Add(new Paragraph(p, false));
             }
             _wasLoadedWithFrameNumbers = subtitle.WasLoadedWithFrameNumbers;
             Header = subtitle.Header;
