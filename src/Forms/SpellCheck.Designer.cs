@@ -44,6 +44,7 @@
             this.textBoxWholeText = new System.Windows.Forms.TextBox();
             this.labelActionInfo = new System.Windows.Forms.Label();
             this.buttonSpellCheckDownload = new System.Windows.Forms.Button();
+            this.buttonGoogleIt = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxWordNotFound.SuspendLayout();
             this.groupBoxSuggestions.SuspendLayout();
@@ -121,10 +122,12 @@
             // 
             // listBoxSuggestions
             // 
+            this.listBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.listBoxSuggestions.FormattingEnabled = true;
             this.listBoxSuggestions.Location = new System.Drawing.Point(8, 44);
             this.listBoxSuggestions.Name = "listBoxSuggestions";
-            this.listBoxSuggestions.Size = new System.Drawing.Size(272, 108);
+            this.listBoxSuggestions.Size = new System.Drawing.Size(272, 134);
             this.listBoxSuggestions.TabIndex = 2;
             this.listBoxSuggestions.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListBoxSuggestionsMouseDoubleClick);
             // 
@@ -147,7 +150,8 @@
             // 
             // buttonAbort
             // 
-            this.buttonAbort.Location = new System.Drawing.Point(515, 318);
+            this.buttonAbort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAbort.Location = new System.Drawing.Point(515, 341);
             this.buttonAbort.Name = "buttonAbort";
             this.buttonAbort.Size = new System.Drawing.Size(85, 21);
             this.buttonAbort.TabIndex = 3;
@@ -225,6 +229,9 @@
             // 
             // groupBoxWordNotFound
             // 
+            this.groupBoxWordNotFound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxWordNotFound.Controls.Add(this.buttonGoogleIt);
             this.groupBoxWordNotFound.Controls.Add(this.buttonUndo);
             this.groupBoxWordNotFound.Controls.Add(this.buttonAddToNames);
             this.groupBoxWordNotFound.Controls.Add(this.buttonAddToDictionary);
@@ -235,17 +242,17 @@
             this.groupBoxWordNotFound.Controls.Add(this.buttonChange);
             this.groupBoxWordNotFound.Location = new System.Drawing.Point(11, 120);
             this.groupBoxWordNotFound.Name = "groupBoxWordNotFound";
-            this.groupBoxWordNotFound.Size = new System.Drawing.Size(292, 192);
+            this.groupBoxWordNotFound.Size = new System.Drawing.Size(292, 215);
             this.groupBoxWordNotFound.TabIndex = 0;
             this.groupBoxWordNotFound.TabStop = false;
             this.groupBoxWordNotFound.Text = "Word not found";
             // 
             // buttonUndo
             // 
-            this.buttonUndo.Location = new System.Drawing.Point(6, 158);
+            this.buttonUndo.Location = new System.Drawing.Point(6, 185);
             this.buttonUndo.Name = "buttonUndo";
             this.buttonUndo.Size = new System.Drawing.Size(280, 21);
-            this.buttonUndo.TabIndex = 7;
+            this.buttonUndo.TabIndex = 8;
             this.buttonUndo.Text = "Undo: skip all \'A\'";
             this.buttonUndo.UseVisualStyleBackColor = true;
             this.buttonUndo.Visible = false;
@@ -253,21 +260,24 @@
             // 
             // groupBoxSuggestions
             // 
+            this.groupBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestion);
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestionAlways);
             this.groupBoxSuggestions.Controls.Add(this.checkBoxAutoChangeNames);
             this.groupBoxSuggestions.Controls.Add(this.listBoxSuggestions);
             this.groupBoxSuggestions.Location = new System.Drawing.Point(309, 120);
             this.groupBoxSuggestions.Name = "groupBoxSuggestions";
-            this.groupBoxSuggestions.Size = new System.Drawing.Size(291, 192);
+            this.groupBoxSuggestions.Size = new System.Drawing.Size(291, 215);
             this.groupBoxSuggestions.TabIndex = 1;
             this.groupBoxSuggestions.TabStop = false;
             this.groupBoxSuggestions.Text = "Suggestions";
             // 
             // checkBoxAutoChangeNames
             // 
+            this.checkBoxAutoChangeNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxAutoChangeNames.AutoSize = true;
-            this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 161);
+            this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 191);
             this.checkBoxAutoChangeNames.Name = "checkBoxAutoChangeNames";
             this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(216, 17);
             this.checkBoxAutoChangeNames.TabIndex = 3;
@@ -330,7 +340,7 @@
             // 
             this.labelActionInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelActionInfo.AutoSize = true;
-            this.labelActionInfo.Location = new System.Drawing.Point(12, 321);
+            this.labelActionInfo.Location = new System.Drawing.Point(12, 352);
             this.labelActionInfo.Name = "labelActionInfo";
             this.labelActionInfo.Size = new System.Drawing.Size(79, 13);
             this.labelActionInfo.TabIndex = 2;
@@ -347,11 +357,21 @@
             this.buttonSpellCheckDownload.UseVisualStyleBackColor = true;
             this.buttonSpellCheckDownload.Click += new System.EventHandler(this.buttonSpellCheckDownload_Click);
             // 
+            // buttonGoogleIt
+            // 
+            this.buttonGoogleIt.Location = new System.Drawing.Point(6, 158);
+            this.buttonGoogleIt.Name = "buttonGoogleIt";
+            this.buttonGoogleIt.Size = new System.Drawing.Size(280, 21);
+            this.buttonGoogleIt.TabIndex = 7;
+            this.buttonGoogleIt.Text = "&Google it";
+            this.buttonGoogleIt.UseVisualStyleBackColor = true;
+            this.buttonGoogleIt.Click += new System.EventHandler(this.buttonGoogleIt_Click);
+            // 
             // SpellCheck
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(612, 347);
+            this.ClientSize = new System.Drawing.Size(612, 374);
             this.Controls.Add(this.buttonSpellCheckDownload);
             this.Controls.Add(this.labelActionInfo);
             this.Controls.Add(this.richTextBoxParagraph);
@@ -416,5 +436,6 @@
         private System.Windows.Forms.Label labelActionInfo;
         private System.Windows.Forms.Button buttonSpellCheckDownload;
         private System.Windows.Forms.Button buttonUndo;
+        private System.Windows.Forms.Button buttonGoogleIt;
     }
 }
