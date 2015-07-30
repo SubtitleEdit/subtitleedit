@@ -43,10 +43,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var sb = new StringBuilder();
             //double lastEndTimeMilliseconds = -1;
+            const string writeFormat = "{0}{1}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 // if (p.StartTime.TotalMilliseconds == lastEndTimeMilliseconds)
-                sb.AppendFormat("{0}{1}", HtmlUtil.RemoveHtmlTags(p.Text, true), EncodeTimeCode(p.EndTime));
+                sb.AppendFormat(writeFormat, HtmlUtil.RemoveHtmlTags(p.Text, true), EncodeTimeCode(p.EndTime));
                 //else
                 //    sb.Append(string.Format("{0}{1}{2}", EncodeTimeCode(p.StartTime), HtmlUtil.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime)));
                 //lastEndTimeMilliseconds = p.EndTime.TotalMilliseconds;

@@ -42,14 +42,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendFormat(paragraphWriteFormat, p.StartTime.ToString().Replace(",", "."), p.Text);
+                sb.AppendFormat(paragraphWriteFormat, p.StartTime.ToString().Replace(',', '.'), p.Text);
             }
             return sb.ToString().Trim();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            Paragraph paragraph = new Paragraph();
+            var paragraph = new Paragraph();
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
             for (int i = 0; i < lines.Count; i++)
