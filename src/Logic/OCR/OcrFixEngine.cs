@@ -363,7 +363,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             string lastWord = null;
             for (int i = 0; i < text.Length; i++)
             {
-                if (" ¡¿,.!?:;()[]{}+-£\"#&%\r\n".Contains(text[i])) // removed $
+                if (ExpectedChars.Contains(text[i]))
                 {
                     if (word.Length > 0)
                     {
@@ -533,7 +533,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             var word = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
             {
-                if (" ¡¿,.!?:;()[]{}+-£\"#&%\r\n".Contains(text[i])) // removed $
+                if (ExpectedChars.Contains(text[i])) // removed $
                 {
                     if (word.Length > 0)
                     {
