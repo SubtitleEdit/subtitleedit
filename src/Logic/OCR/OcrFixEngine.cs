@@ -437,8 +437,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private static string FixFrenchLApostrophe(string text, string tag, string lastLine)
         {
             bool endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') ||
-                                    lastLine.EndsWith(".</i>") || lastLine.EndsWith("!</i>") || lastLine.EndsWith("?</i>") ||
-                                    lastLine.EndsWith(".</font>") || lastLine.EndsWith("!</font>") || lastLine.EndsWith("?</font>");
+                                    lastLine.EndsWith(".</i>") || lastLine.EndsWith("!</i>", StringComparison.Ordinal) || lastLine.EndsWith("?</i>", StringComparison.Ordinal) ||
+                                    lastLine.EndsWith(".</font>", StringComparison.Ordinal) || lastLine.EndsWith("!</font>", StringComparison.Ordinal) || lastLine.EndsWith("?</font>", StringComparison.Ordinal);
             if (text.StartsWith(tag.TrimStart(), StringComparison.Ordinal) && text.Length > 3)
             {
                 if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text[2]))
