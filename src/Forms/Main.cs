@@ -1859,8 +1859,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-
-                if (ext == ".m2ts")
+                if (ext == ".m2ts" || ext == ".textst")
                 {
                     var textST = new TextST();
                     if (textST.IsMine(null, fileName))
