@@ -13,6 +13,43 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
+    public static class StreamExtensions
+    {
+        public static void WritePts(this Stream stream, TimeCode timeCode)
+        {
+            //TODO: check max
+            var pts = (ulong)Math.Round(timeCode.TotalMilliseconds * 90.0);
+            var buffer = BitConverter.GetBytes((UInt64)pts);
+            stream.Write(buffer, 0, 5);
+        }
+
+        public static void WriteWord(this Stream stream, int value)
+        {
+            //TODO: check max
+            stream.WriteByte((byte)(value / 256));
+            stream.WriteByte((byte)(value % 256));
+        }
+
+        public static void WriteWord(this Stream stream, int value, int firstBitValue)
+        {
+            //TODO: check max
+            var firstByte = (byte)(value / 256);
+            if (firstBitValue == 1)
+                firstByte = (byte)(firstByte | Helper.B10000000);
+            stream.WriteByte(firstByte);
+            stream.WriteByte((byte)(value % 256));
+        }
+
+        public static void WriteByte(this Stream stream, int value, int firstBitValue)
+        {
+            //TODO: check max
+            var firstByte = (byte)(value);
+            if (firstBitValue == 1)
+                firstByte = (byte)(firstByte | Helper.B10000000);
+            stream.WriteByte(firstByte);
+        }
+    }
+
     public class TextST : SubtitleFormat
     {
 
@@ -80,23 +117,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             public int LineSpaceDelta { get; set; }
         }
 
-        public class Region
-        {
-            public RegionStyle RegionStyle { get; set; }
-            public List<UserStyle> UserStyles { get; set; }
-
-            public Region()
-            {
-                UserStyles = new List<UserStyle>();
-            }
-        }
-
         public class DialogStyleSegment
         {
             public bool PlayerStyleFlag { get; set; }
             public int NumberOfRegionStyles { get; set; }
             public int NumberOfUserStyles { get; set; }
-            public List<Region> Regions { get; set; }
+            public List<RegionStyle> RegionStyles { get; set; }
+            public List<UserStyle> UserStyles { get; set; }
             public List<Palette> Palettes { get; set; }
             public int NumberOfDialogPresentationSegments { get; set; }
 
@@ -107,10 +134,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 NumberOfUserStyles = buffer[12];
 
                 int idx = 13;
-                Regions = new List<Region>(NumberOfRegionStyles);
+                RegionStyles = new List<RegionStyle>(NumberOfRegionStyles);
                 for (int i = 0; i < NumberOfRegionStyles; i++)
                 {
-                    var region = new Region();
                     var rs = new RegionStyle
                     {
                         RegionStyleId = buffer[idx],
@@ -134,35 +160,35 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         FontOutlinePaletteEntryIdRef = buffer[idx + 27],
                         FontOutlineThickness = buffer[idx + 28]
                     };
-                    region.RegionStyle = rs;
+                    RegionStyles.Add(rs);
                     idx += 29;
+                }
 
-                    for (int j= 0; j < NumberOfUserStyles; j++)
+                UserStyles = new List<UserStyle>();
+                for (int j = 0; j < NumberOfUserStyles; j++)
+                {
+                    var us = new UserStyle
                     {
-                        var us = new UserStyle
-                        {
-                            UserStyleId = buffer[idx],
-                            RegionHorizontalPositionDirection = buffer[idx + 1] >> 7,
-                            RegionHorizontalPositionDelta = ((buffer[idx + 1] & Helper.B01111111) << 8) + buffer[idx + 2],
-                            RegionVerticalPositionDirection = buffer[idx + 3] >> 7,
-                            RegionVerticalPositionDelta = ((buffer[idx + 3] & Helper.B01111111) << 8) + buffer[idx + 4],
-                            FontSizeIncDec = buffer[idx + 5] >> 7,
-                            FontSizeDelta = (buffer[idx + 5] & Helper.B01111111),
-                            TextBoxHorizontalPositionDirection = buffer[idx + 6] >> 7,
-                            TextBoxHorizontalPositionDelta = ((buffer[idx + 6] & Helper.B01111111) << 8) + buffer[idx + 7],
-                            TextBoxVerticalPositionDirection = buffer[idx + 8] >> 7,
-                            TextBoxVerticalPositionDelta = ((buffer[idx + 8] & Helper.B01111111) << 8) + buffer[idx + 9],
-                            TextBoxWidthIncDec = buffer[idx + 10] >> 7,
-                            TextBoxWidthDelta = ((buffer[idx + 10] & Helper.B01111111) << 8) + buffer[idx + 11],
-                            TextBoxHeightIncDec = buffer[idx + 12] >> 7,
-                            TextBoxHeightDelta = ((buffer[idx + 12] & Helper.B01111111) << 8) + buffer[idx + 13],
-                            LineSpaceIncDec = buffer[idx + 14] >> 7,
-                            LineSpaceDelta = (buffer[idx + 14] & Helper.B01111111)
-                        };
-                        region.UserStyles.Add(us);
-                        idx += 15;
-                    }
-                    Regions.Add(region);
+                        UserStyleId = buffer[idx],
+                        RegionHorizontalPositionDirection = buffer[idx + 1] >> 7,
+                        RegionHorizontalPositionDelta = ((buffer[idx + 1] & Helper.B01111111) << 8) + buffer[idx + 2],
+                        RegionVerticalPositionDirection = buffer[idx + 3] >> 7,
+                        RegionVerticalPositionDelta = ((buffer[idx + 3] & Helper.B01111111) << 8) + buffer[idx + 4],
+                        FontSizeIncDec = buffer[idx + 5] >> 7,
+                        FontSizeDelta = (buffer[idx + 5] & Helper.B01111111),
+                        TextBoxHorizontalPositionDirection = buffer[idx + 6] >> 7,
+                        TextBoxHorizontalPositionDelta = ((buffer[idx + 6] & Helper.B01111111) << 8) + buffer[idx + 7],
+                        TextBoxVerticalPositionDirection = buffer[idx + 8] >> 7,
+                        TextBoxVerticalPositionDelta = ((buffer[idx + 8] & Helper.B01111111) << 8) + buffer[idx + 9],
+                        TextBoxWidthIncDec = buffer[idx + 10] >> 7,
+                        TextBoxWidthDelta = ((buffer[idx + 10] & Helper.B01111111) << 8) + buffer[idx + 11],
+                        TextBoxHeightIncDec = buffer[idx + 12] >> 7,
+                        TextBoxHeightDelta = ((buffer[idx + 12] & Helper.B01111111) << 8) + buffer[idx + 13],
+                        LineSpaceIncDec = buffer[idx + 14] >> 7,
+                        LineSpaceDelta = (buffer[idx + 14] & Helper.B01111111)
+                    };
+                    UserStyles.Add(us);
+                    idx += 15;
                 }
 
                 int numberOfPalettees = ((buffer[idx] << 8) + buffer[idx + 1]) / 5;
@@ -184,10 +210,91 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 NumberOfDialogPresentationSegments = (buffer[idx] << 8) + buffer[idx + 1];
             }
 
-            public void WriteToStream(Stream stream)
+            public void WriteToStream(Stream stream, int numberOfSubtitles)
             {
+                byte[] regionStyle = MakeRegionStyle();
+                stream.Write(new byte[] { 0, 0, 1, 0xbf }, 0, 4); // MPEG-2 Private stream 2
+                var size = regionStyle.Length + 2;
+                stream.WriteWord(size);
+                stream.WriteByte(SegmentTypeDialogStyle); // 0x81
+                stream.WriteWord(size - 3);
+                stream.Write(regionStyle, 0, regionStyle.Length);
+                stream.WriteWord(numberOfSubtitles);
             }
 
+            private byte[] MakeRegionStyle()
+            {
+                using (var ms = new MemoryStream())
+                {
+                    if (PlayerStyleFlag)
+                        ms.WriteByte(Helper.B10000000);
+                    else
+                        ms.WriteByte(0);
+                    ms.WriteByte(0); // reserved?
+                    ms.WriteByte((byte)NumberOfRegionStyles);
+                    ms.WriteByte((byte)NumberOfUserStyles);
+
+                    foreach (var regionStyle in RegionStyles)
+                    {
+                        AddRegionStyle(ms, regionStyle);
+                    }
+
+                    foreach (var userStyle in UserStyles)
+                    {
+                        AddUserStyle(ms, userStyle);
+                    }
+
+                    ms.WriteWord(Palettes.Count * 5);
+                    foreach (var palette in Palettes)
+                    {
+                        ms.WriteByte((byte)palette.PaletteEntryId);
+                        ms.WriteByte((byte)palette.Y);
+                        ms.WriteByte((byte)palette.Cb);
+                        ms.WriteByte((byte)palette.Cr);
+                        ms.WriteByte((byte)palette.T);
+                    }
+
+                    return ms.ToArray();
+                }
+            }
+
+            private void AddUserStyle(Stream stream, UserStyle userStyle)
+            {
+                stream.WriteByte((byte)userStyle.UserStyleId);
+                stream.WriteWord(userStyle.RegionHorizontalPositionDelta, userStyle.RegionHorizontalPositionDirection);
+                stream.WriteWord(userStyle.RegionVerticalPositionDelta, userStyle.RegionVerticalPositionDirection);
+                stream.WriteByte(userStyle.FontSizeDelta, userStyle.FontSizeIncDec);
+                stream.WriteWord(userStyle.TextBoxHorizontalPositionDelta, userStyle.TextBoxHorizontalPositionDirection);
+                stream.WriteWord(userStyle.TextBoxVerticalPositionDelta, userStyle.TextBoxVerticalPositionDirection);
+                stream.WriteWord(userStyle.TextBoxWidthDelta, userStyle.TextBoxWidthIncDec);
+                stream.WriteWord(userStyle.TextBoxHeightDelta, userStyle.TextBoxHeightIncDec);
+                stream.WriteByte(userStyle.LineSpaceDelta, userStyle.LineSpaceIncDec);
+            }
+
+            private void AddRegionStyle(Stream stream, RegionStyle regionStyle)
+            {
+                stream.WriteByte((byte)regionStyle.RegionStyleId);
+                stream.WriteWord(regionStyle.RegionHorizontalPosition);
+                stream.WriteWord(regionStyle.RegionVerticalPosition);
+                stream.WriteWord(regionStyle.RegionWidth);
+                stream.WriteWord(regionStyle.RegionHeight);
+                stream.WriteByte((byte)regionStyle.RegionBgPaletteEntryIdRef);
+                stream.WriteByte(0); // reserved
+                stream.WriteWord(regionStyle.TextBoxHorizontalPosition);
+                stream.WriteWord(regionStyle.TextBoxVerticalPosition);
+                stream.WriteWord(regionStyle.TextBoxWidth);
+                stream.WriteWord(regionStyle.TextBoxHeight);
+                stream.WriteByte((byte)regionStyle.TextFlow);
+                stream.WriteByte((byte)regionStyle.TextHorizontalAlignment);
+                stream.WriteByte((byte)regionStyle.TextVerticalAlignment);
+                stream.WriteByte((byte)regionStyle.LineSpace);
+                stream.WriteByte((byte)regionStyle.FontIdRef);
+                stream.WriteByte((byte)regionStyle.FontStyle);
+                stream.WriteByte((byte)regionStyle.FontSize);
+                stream.WriteByte((byte)regionStyle.FontPaletteEntryIdRef);
+                stream.WriteByte((byte)regionStyle.FontOutlinePaletteEntryIdRef);
+                stream.WriteByte((byte)regionStyle.FontOutlineThickness);
+            }
         }
 
         public class SubtitleRegion
@@ -230,15 +337,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     idx += NumberOfPaletteEntries * 5;
                 }
 
-                int numberOfRegions = buffer[idx];
-                idx++;
+                int numberOfRegions = buffer[idx++];
                 Regions = new List<SubtitleRegion>(numberOfRegions);
                 for (int i = 0; i < numberOfRegions; i++)
                 {
                     var region = new SubtitleRegion { ContinuousPresentation = (buffer[idx] & Helper.B10000000) > 0, Forced = (buffer[idx] & Helper.B01000000) > 0 };
                     idx++;
-                    region.RegionStyleId = buffer[idx];
-                    idx++;
+                    region.RegionStyleId = buffer[idx++];
                     int regionSubtitleLength = buffer[idx + 1] + (buffer[idx] << 8);
                     idx += 2;
                     int processedLength = 0;
@@ -246,12 +351,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string endStyle = string.Empty;
                     while (processedLength < regionSubtitleLength)
                     {
-                        byte escapeCode = buffer[idx];
-                        idx++;
-                        byte dataType = buffer[idx];
-                        idx++;
-                        byte dataLength = buffer[idx];
-                        idx++;
+                        byte escapeCode = buffer[idx++];
+                        byte dataType = buffer[idx++];
+                        byte dataLength = buffer[idx++];
                         processedLength += 3;
                         if (dataType == 0x01) // Text
                         {
@@ -320,7 +422,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
            
-            public string PlainText
+            public string Text
             {
                 get
                 {
@@ -348,6 +450,123 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             public static void WriteToStream(Stream stream, string text, TimeCode start, TimeCode end, int regionStyleId, bool forced)
             {
+                byte[] regionSubtitle = MakeSubtitleRegion(text);
+                stream.Write(new byte[] { 0, 0, 1, 0xbf }, 0, 4); // MPEG-2 Private stream 2
+                int size = regionSubtitle.Length + 2 + 1 + 5 + 5 + 4;
+                stream.WriteWord(size);
+                stream.WriteByte(SegmentTypeDialogPresentation); // 0x82
+                stream.WriteWord(size-3); 
+                stream.WritePts(start);
+                stream.WritePts(end);
+                stream.WriteByte(0); // 1 bit = palette update (0=no update), next 7 bits reserved
+                stream.WriteByte(1); // number of regions
+
+                //first byte=continuous_present_flag, second byte=force, next 6 bits reserved
+                if (forced)
+                    stream.WriteByte(Helper.B01000000); 
+                else
+                    stream.WriteByte(0);
+
+                stream.WriteByte((byte)regionStyleId);
+                stream.Write(regionSubtitle, 0, regionSubtitle.Length);
+            }
+
+            private static byte[] MakeSubtitleRegion(string text)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    ms.WriteByte(0); // length
+                    ms.WriteByte(0); // length
+                    bool italic = false;
+                    bool bold = false;
+                    var lines = text.SplitToLines();
+                    for (int lineNumber = 0; lineNumber < lines.Length; lineNumber++)
+                    {
+                        string line = lines[lineNumber];
+                        if (lineNumber > 0)
+                        {
+                            ms.WriteByte(0x1b); // escape code
+                            ms.WriteByte(0x0a); // line break
+                            ms.WriteByte(0); // length
+                        }
+                        int i = 0;
+                        var sb = new StringBuilder();
+                        while (i < line.Length)
+                        {
+                            string s = line.Substring(i);
+                            if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                            {
+                                WriteFontStyle(ms, 2); // 2 == italic
+                                italic = true;
+                                i += 3;
+                            }
+                            else if (s.StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
+                            {
+                                WriteTextAndResetTextBuffer(ms, sb);
+                                WriteEndOfLineStyle(ms);
+                                italic = false;
+                                i += 4;
+                            }
+                            else if (s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
+                            {
+                                bold = true;
+                                i += 3;
+                            }
+                            else if (s.StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
+                            {
+                                WriteTextAndResetTextBuffer(ms, sb);
+                                WriteEndOfLineStyle(ms);
+                                bold = false;
+                                i += 4;
+                            }
+                            else
+                            {
+                                i++;
+                                sb.Append(s.Substring(0, 1));
+                            }
+                        }
+                        WriteTextAndResetTextBuffer(ms, sb);
+                    }
+                    var buffer = ms.ToArray();
+
+                    // set size field
+                    int size = buffer.Length - 2;
+                    buffer[0] = (byte)(size / 256);
+                    buffer[1] = (byte)(size % 256);
+
+                    return buffer;
+                }
+            }
+
+            private static void WriteEndOfLineStyle(MemoryStream ms)
+            {
+                ms.WriteByte(0x1b); // escape code
+                ms.WriteByte(0x0b); // data type, 3==font style
+                ms.WriteByte(3); // length
+            }
+
+            private static void WriteFontStyle(MemoryStream ms, int style)
+            {
+                ms.WriteByte(0x1b); // escape code
+                ms.WriteByte(3); // data type, 3==font style
+                ms.WriteByte(3); // length
+                ms.WriteByte((byte)style); // style, 0x00 Normal, 0x01 Bold, 0x02 Italic, 0x03 Bold and Italic, 0x04 Outline-bordered, 0x05 Bold and Outline-bordered, 0x06 Italic and Outline-bordered, 0x07 Bold and Italic and Outline-bordered
+                ms.WriteByte(0);
+                ms.WriteByte(0);
+            }
+
+            private static void WriteTextAndResetTextBuffer(MemoryStream ms, StringBuilder sb)
+            {
+                // TODO - max 254 chars!?
+                if (sb.Length > 0)
+                {
+                    ms.WriteByte(0x1b); // escape code
+                    ms.WriteByte(0x1); // data type, 1==text
+                    var textBytes = Encoding.UTF8.GetBytes(sb.ToString());
+                    ms.WriteByte((byte)(textBytes.Length));
+                    ms.Write(textBytes, 0, textBytes.Length);
+                    sb.Clear();
+                }
             }
 
         }
@@ -395,16 +614,57 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            if (FileUtil.IsMpeg2PrivateStream2(fileName))
             {
-                LoadSubtitle(subtitle, fs);
+                using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    LoadSubtitleFromMpeg2PesPackets(subtitle, fs);
+                }
+            }
+            else
+            {
+                using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    LoadSubtitleFromM2ts(subtitle, fs);
+                }
             }
         }
 
-        public void LoadSubtitle(Subtitle subtitle, Stream ms)
+        private void LoadSubtitleFromMpeg2PesPackets(Subtitle subtitle, Stream stream)
         {
-            //TODO: Parse PES
+            long position = 0;
+            stream.Position = 0;
+            stream.Seek(position, SeekOrigin.Begin);
+            long streamLength = stream.Length;
+            var buffer = new byte[1024];
+            PresentationSegments = new List<DialogPresentationSegment>();
+            while (position < streamLength)
+            {
+                int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                if (bytesRead < 20)
+                    break;
 
+                int size = (buffer[4] << 8) + buffer[5] + 4;
+                position += size; 
+
+                if (bytesRead > 10 && VobSub.VobSubParser.IsPrivateStream2(buffer, 0))
+                {
+                    if (buffer[6] == SegmentTypeDialogPresentation)
+                    {
+                        var dps = new DialogPresentationSegment(buffer);
+                        PresentationSegments.Add(dps);
+                        subtitle.Paragraphs.Add(new Paragraph(dps.Text.Trim(), dps.StartPtsMilliseconds, dps.EndPtsMilliseconds));
+                    }
+                    else if (buffer[6] == SegmentTypeDialogStyle)
+                    {
+                        StyleSegment = new DialogStyleSegment(buffer);
+                    }
+                }
+            }
+        }
+
+        public void LoadSubtitleFromM2ts(Subtitle subtitle, Stream ms)
+        {
             var subtitlePackets = new List<Packet>();
             const int packetLength = 188;
             bool isM2TransportStream = DetectFormat(ms);
@@ -462,7 +722,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         var dps = new DialogPresentationSegment(item.Payload);
                         PresentationSegments.Add(dps);
-                        subtitle.Paragraphs.Add(new Paragraph(dps.PlainText.Trim(), dps.StartPtsMilliseconds, dps.EndPtsMilliseconds));
+                        subtitle.Paragraphs.Add(new Paragraph(dps.Text.Trim(), dps.StartPtsMilliseconds, dps.EndPtsMilliseconds));
                     }
                     else if (item.Payload[6] == SegmentTypeDialogStyle)
                     {

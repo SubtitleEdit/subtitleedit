@@ -45,11 +45,6 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxPropertiesUserStyle.Anchor = groupBoxPropertiesRoot.Anchor;
         }
 
-        private void buttonOK_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-        }
-
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
@@ -72,27 +67,27 @@ namespace Nikse.SubtitleEdit.Forms
                 treeView1.Nodes.Add(_root);
                 if (_textST.StyleSegment != null)
                 {
-                    var regionsNode = new TreeNode(string.Format("Regions ({0})", _textST.StyleSegment.Regions.Count));
-                    _root.Nodes.Add(regionsNode);
-                    foreach (TextST.Region region in _textST.StyleSegment.Regions)
+                    var styleNode = new TreeNode(string.Format("Style segment", _textST.StyleSegment));
+                    _root.Nodes.Add(styleNode);
+
+                    var regionStylesNode = new TreeNode(string.Format("Region styles ({0})", _textST.StyleSegment.RegionStyles.Count));
+                    styleNode.Nodes.Add(regionStylesNode);
+                    foreach (TextST.RegionStyle regionStyle in _textST.StyleSegment.RegionStyles)
                     {
-                        var regionNode = new TreeNode("Region") { Tag = region };
-                        regionsNode.Nodes.Add(regionNode);
+                        var regionStyleNode = new TreeNode("Region style") { Tag = regionStyle };
+                        regionStylesNode.Nodes.Add(regionStyleNode);
+                    }
 
-                        var regionStyleNode = new TreeNode("Region style") { Tag = region.RegionStyle };
-                        regionNode.Nodes.Add(regionStyleNode);
-
-                        var userStylesNode = new TreeNode(string.Format("User styles ({0})", region.UserStyles.Count)) { Tag = region.UserStyles };
-                        regionNode.Nodes.Add(userStylesNode);
-                        foreach (var userStyle in region.UserStyles)
-                        {
-                            var userStyleNode = new TreeNode("User style") { Tag = userStyle };
-                            userStylesNode.Nodes.Add(userStyleNode);
-                        }
+                    var userStylesNode = new TreeNode(string.Format("User styles ({0})", _textST.StyleSegment.UserStyles.Count));
+                    styleNode.Nodes.Add(userStylesNode);
+                    foreach (TextST.UserStyle userStyle in _textST.StyleSegment.UserStyles)
+                    {
+                        var regionStyleNode = new TreeNode("User style") { Tag = userStyle };
+                        userStylesNode.Nodes.Add(regionStyleNode);
                     }
 
                     var palettesNode = new TreeNode(string.Format("Palettes ({0})", _textST.StyleSegment.Palettes.Count)) { Tag = _textST.StyleSegment.Palettes };
-                    _root.Nodes.Add(palettesNode);
+                    styleNode.Nodes.Add(palettesNode);
                     foreach (TextST.Palette palette in _textST.StyleSegment.Palettes)
                     {
                         var paletteNode = new TreeNode("Palette") { Tag = palette };
@@ -130,8 +125,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     groupBoxPropertiesRoot.Visible = true;
                     textBoxRoot.Text = "File name: " + _fileName + Environment.NewLine +
-                                       "Number of style regions: " + _textST.StyleSegment.Regions.Count + Environment.NewLine +
-                                       "Number of style palettes: " + _textST.StyleSegment.Palettes.Count + Environment.NewLine +
+                                       "Number of region styles: " + _textST.StyleSegment.RegionStyles.Count + Environment.NewLine +
+                                       "Number of user styles: " + _textST.StyleSegment.UserStyles.Count + Environment.NewLine +
+                                       "Number of palettes: " + _textST.StyleSegment.Palettes.Count + Environment.NewLine +
                                        "Number of subtitles: " + _textST.StyleSegment.NumberOfDialogPresentationSegments + Environment.NewLine;
                 }
                 else if (e.Node.Tag is TextST.Palette)
@@ -179,6 +175,43 @@ namespace Nikse.SubtitleEdit.Forms
                     panelPaletteColor.BackColor = colorChooser.Color;
                 }
             }
+        }
+
+        private void buttonSaveAsPes_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.DefaultExt = ".textst";
+            saveFileDialog1.FileName = string.Empty;
+            saveFileDialog1.Filter = "TextST files|*.textst";
+            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                using (var fs = new FileStream(saveFileDialog1.FileName, FileMode.Create))
+                {
+                    _textST.StyleSegment.WriteToStream(fs, _subtitle.Paragraphs.Count);
+                    foreach (Paragraph p in _subtitle.Paragraphs)
+                    {
+                        TextST.DialogPresentationSegment.WriteToStream(fs, p.Text, p.StartTime, p.EndTime, 1, false);
+                    }
+                }
+            }
+            MessageBox.Show("TextST PES packets saved as " + saveFileDialog1.FileName);
+        }
+
+        private void buttonSaveAsM2ts_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.DefaultExt = ".m2ts";
+            saveFileDialog1.FileName = string.Empty;
+            saveFileDialog1.Filter = "m2ts files|*.m2ts";
+            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                using (var fs = new FileStream(saveFileDialog1.FileName, FileMode.Create))
+                {
+                    foreach (Paragraph p in _subtitle.Paragraphs)
+                    {
+                        TextST.DialogPresentationSegment.WriteToStream(fs, p.Text, p.StartTime, p.EndTime, 1, false);
+                    }
+                }
+            }
+            MessageBox.Show("TextST M2TS file saved as " + saveFileDialog1.FileName);
         }
 
     }

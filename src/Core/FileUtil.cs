@@ -190,6 +190,16 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static bool IsMpeg2PrivateStream2(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[4];
+                fs.Read(buffer, 0, buffer.Length);
+                return VobSubParser.IsPrivateStream2(buffer, 0);
+            }
+        }
+
         public static bool IsVobSub(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
