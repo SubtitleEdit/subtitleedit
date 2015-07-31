@@ -21,7 +21,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 {
     public static class ToolBox
     {
-
         /// <summary>
         /// Convert bytes to a C-style hex string with leading zeroes
         /// </summary>

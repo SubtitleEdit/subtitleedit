@@ -18,7 +18,6 @@
 
 namespace Nikse.SubtitleEdit.Logic.BluRaySup
 {
-
     public class BluRaySupPalette
     {
         /** Number of palette entries */
