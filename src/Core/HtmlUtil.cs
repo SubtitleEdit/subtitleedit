@@ -402,7 +402,7 @@ namespace Nikse.SubtitleEdit.Core
 
         internal static string FixUpperTags(string text)
         {
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text) && !text.Contains('<'))
                 return text;
             var tags = new string[] { "<I>", "<U>", "<B>", "<FONT", "</I>", "</U>", "</B>", "</FONT>" };
             var idx = text.IndexOfAny(tags, StringComparison.Ordinal);
