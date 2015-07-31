@@ -27,7 +27,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 {
     public static class BluRaySupParser
     {
-
         private class SupSegment
         {
             /// <summary>

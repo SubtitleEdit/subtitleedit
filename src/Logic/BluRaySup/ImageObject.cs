@@ -20,7 +20,6 @@ using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Logic.BluRaySup
 {
-
     public class ImageObject
     {
         /// <summary>

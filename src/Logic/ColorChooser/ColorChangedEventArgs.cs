@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
         public ColorChangedEventArgs(ColorHandler.ARGB argb, ColorHandler.HSV hsv)
         {
             ARGB = argb;
-            this.HSV = hsv;
+            HSV = hsv;
         }
 
         public ColorHandler.ARGB ARGB { get; private set; }
