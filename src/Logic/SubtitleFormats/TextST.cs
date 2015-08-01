@@ -15,12 +15,27 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public static class StreamExtensions
     {
-        public static void WritePts(this Stream stream, TimeCode timeCode)
+     
+        public static void WritePts(this Stream stream, ulong pts)
         {
             //TODO: check max
-            var pts = (ulong)Math.Round(timeCode.TotalMilliseconds * 90.0);
-            var buffer = BitConverter.GetBytes((UInt64)pts);
-            stream.Write(buffer, 0, 5);
+            var buffer = BitConverter.GetBytes(pts);
+            if (BitConverter.IsLittleEndian)
+            {
+                stream.WriteByte(buffer[4]);
+                stream.WriteByte(buffer[3]);
+                stream.WriteByte(buffer[2]);
+                stream.WriteByte(buffer[1]);
+                stream.WriteByte(buffer[0]);
+            }
+            else
+            {
+                stream.WriteByte(buffer[buffer.Length - 1]);
+                stream.WriteByte(buffer[buffer.Length - 2]);
+                stream.WriteByte(buffer[buffer.Length - 3]);
+                stream.WriteByte(buffer[buffer.Length - 4]);
+                stream.WriteByte(buffer[buffer.Length - 5]);
+            }
         }
 
         public static void WriteWord(this Stream stream, int value)
@@ -54,7 +69,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     {
 
         public class Palette
-        { 
+        {
             public int PaletteEntryId { get; set; }
             public int Y { get; set; }
             public int Cr { get; set; }
@@ -126,6 +141,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             public List<UserStyle> UserStyles { get; set; }
             public List<Palette> Palettes { get; set; }
             public int NumberOfDialogPresentationSegments { get; set; }
+
+            public DialogStyleSegment()
+            {
+                PlayerStyleFlag = true;
+                RegionStyles = new List<RegionStyle>();
+                UserStyles = new List<UserStyle>();
+                Palettes = new List<Palette>();
+            }
 
             public DialogStyleSegment(byte[] buffer)
             {
@@ -214,7 +237,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 byte[] regionStyle = MakeRegionStyle();
                 stream.Write(new byte[] { 0, 0, 1, 0xbf }, 0, 4); // MPEG-2 Private stream 2
-                var size = regionStyle.Length + 2;
+                var size = regionStyle.Length + 5;
                 stream.WriteWord(size);
                 stream.WriteByte(SegmentTypeDialogStyle); // 0x81
                 stream.WriteWord(size - 3);
@@ -295,6 +318,213 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 stream.WriteByte((byte)regionStyle.FontOutlinePaletteEntryIdRef);
                 stream.WriteByte((byte)regionStyle.FontOutlineThickness);
             }
+
+            public static DialogStyleSegment DefaultDialogStyleSegment
+            {
+                get
+                {
+                    var dss = new DialogStyleSegment();
+
+                    dss.RegionStyles.Add(new RegionStyle
+                    {
+                        RegionStyleId = 0,
+                        RegionHorizontalPosition = 100,
+                        RegionVerticalPosition = 880,
+                        RegionWidth = 1720,
+                        RegionHeight = 200,
+                        RegionBgPaletteEntryIdRef = 2,
+                        TextBoxHorizontalPosition = 0,
+                        TextBoxVerticalPosition = 880,
+                        TextBoxWidth = 1719,
+                        TextBoxHeight = 130,
+                        TextFlow = 1,
+                        TextHorizontalAlignment = 2,
+                        TextVerticalAlignment = 1,
+                        LineSpace = 70,
+                        FontIdRef = 0,
+                        FontStyle = 4,
+                        FontSize = 45,
+                        FontPaletteEntryIdRef = 3,
+                        FontOutlinePaletteEntryIdRef = 1,
+                        FontOutlineThickness = 2,
+                    });
+                    dss.NumberOfRegionStyles = dss.RegionStyles.Count;
+
+                    dss.Palettes.Add(new Palette
+                    {
+                        PaletteEntryId = 0,
+                        Y = 235,
+                        Cr = 128,
+                        Cb = 128,
+                        T = 0
+                    });
+                    dss.Palettes.Add(new Palette
+                    {
+                        PaletteEntryId = 1,
+                        Y = 16,
+                        Cr = 128,
+                        Cb = 128,
+                        T = 255
+                    });
+                    dss.Palettes.Add(new Palette
+                    {
+                        PaletteEntryId = 2,
+                        Y = 235,
+                        Cr = 128,
+                        Cb = 128,
+                        T = 0
+                    });
+                    dss.Palettes.Add(new Palette
+                    {
+                        PaletteEntryId = 3,
+                        Y = 235,
+                        Cr = 128,
+                        Cb = 128,
+                        T = 255
+                    });
+                    dss.Palettes.Add(new Palette
+                    {
+                        PaletteEntryId = 254,
+                        Y = 16,
+                        Cr = 128,
+                        Cb = 128,
+                        T = 0
+                    });
+                    return dss;
+                }
+            }
+
+        }
+
+
+        public abstract class SubtitleRegionContent
+        {
+            public int EscapeCode { get; set; }
+            public int DataType { get; set; }
+            public int DataLength { get; set; }
+            public string Name { get; set; }
+            public abstract void WriteExtraToStream(Stream stream);
+
+        }
+
+        public class SubtitleRegionContentText : SubtitleRegionContent
+        {
+            public string Text { get; set; }
+
+            public SubtitleRegionContentText()
+            {
+                EscapeCode = 27;
+                DataType = 1;
+                Name = "Text";
+            }
+
+            public override void WriteExtraToStream(Stream stream)
+            {
+                var buffer = Encoding.UTF8.GetBytes(Text);
+                stream.Write(buffer, 0, buffer.Length);
+            }
+
+        }
+
+        public class SubtitleRegionContentChangeFontSet : SubtitleRegionContent
+        {
+            public int FontId { get; set; }
+            
+            public SubtitleRegionContentChangeFontSet()
+            {
+                EscapeCode = 27;
+                DataType = 2;
+                DataLength = 1;
+                Name = "Font set";
+            }
+
+            public override void WriteExtraToStream(Stream stream)
+            {
+                stream.WriteByte((byte)FontId);
+            }
+
+        }
+
+        public class SubtitleRegionContentChangeFontStyle : SubtitleRegionContent
+        {
+            public int FontStyle { get; set; }
+            public int FontOutlinePaletteId { get; set; }
+            public int FontOutlineThickness { get; set; }
+
+            public SubtitleRegionContentChangeFontStyle()
+            {
+                EscapeCode = 27;
+                DataType = 3;
+                DataLength = 3;
+                Name = "Font style";
+            }
+
+            public override void WriteExtraToStream(Stream stream)
+            {
+                stream.WriteByte((byte)FontStyle);
+                stream.WriteByte((byte)FontOutlinePaletteId);
+                stream.WriteByte((byte)FontOutlineThickness);
+            }
+        }
+
+        public class SubtitleRegionContentChangeFontSize : SubtitleRegionContent
+        {
+            public int FontSize { get; set; }
+
+            public SubtitleRegionContentChangeFontSize()
+            {
+                EscapeCode = 27;
+                DataType = 4;
+                DataLength = 1;
+                Name = "Font size";
+            }
+            public override void WriteExtraToStream(Stream stream)
+            {
+                stream.WriteByte((byte)FontSize);
+            }
+        }
+
+        public class SubtitleRegionContentChangeFontColor : SubtitleRegionContent
+        {
+            public int FontPaletteId { get; set; }
+
+            public SubtitleRegionContentChangeFontColor()
+            {
+                EscapeCode = 27;
+                DataType = 5;
+                DataLength = 1;
+                Name = "Font color";
+            }
+            public override void WriteExtraToStream(Stream stream)
+            {
+                stream.WriteByte((byte)FontPaletteId);
+            }
+        }
+
+        public class SubtitleRegionContentLineBreak : SubtitleRegionContent
+        {
+            public SubtitleRegionContentLineBreak()
+            {
+                EscapeCode = 27;
+                DataType = 0x0a;
+                Name = "Line break";
+            }
+            public override void WriteExtraToStream(Stream stream)
+            {
+            }
+        }
+
+        public class SubtitleRegionContentEndOfInlineStyle : SubtitleRegionContent
+        {
+            public SubtitleRegionContentEndOfInlineStyle()
+            {
+                EscapeCode = 27;
+                DataType = 0x0b;
+                Name = "End of inline style";
+            }
+            public override void WriteExtraToStream(Stream stream)
+            {
+            }
         }
 
         public class SubtitleRegion
@@ -303,17 +533,161 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             public bool Forced { get; set; }
             public int RegionStyleId { get; set; }
             public List<string> Texts { get; set; }
+            public List<SubtitleRegionContent> Content { get; set; }
         }
 
         public class DialogPresentationSegment
         {
-
             public int Length { get; set; }
             public UInt64 StartPts { get; set; }
             public UInt64 EndPts { get; set; }
             public bool PaletteUpdate { get; set; }
-            public int NumberOfPaletteEntries { get; set; }
+            public List<Palette> PaletteUpdates { get; set; }
             public List<SubtitleRegion> Regions { get; set; }
+
+            public DialogPresentationSegment(Paragraph paragraph, RegionStyle regionStyle)
+            {
+                StartPts = (ulong)Math.Round(paragraph.StartTime.TotalMilliseconds * 90.0);
+                EndPts = (ulong)Math.Round(paragraph.EndTime.TotalMilliseconds * 90.0);
+                PaletteUpdates = new List<Palette>();
+                Regions = new List<SubtitleRegion>
+                {
+                    new SubtitleRegion
+                    {
+                        ContinuousPresentation = false,
+                        Forced = false,
+                        RegionStyleId = regionStyle.RegionStyleId,
+                        Texts = new List<string>(),
+                        Content = new List<SubtitleRegionContent>()
+                    }
+                };
+
+                var content = Regions[0].Content;
+                var lines = paragraph.Text.SplitToLines();
+                var sb = new StringBuilder();
+                bool italic = false;
+                bool bold = false;
+                for (int lineNumber = 0; lineNumber < lines.Length; lineNumber++)
+                {
+                    string line = lines[lineNumber];
+                    if (lineNumber > 0)
+                    {
+                        if (italic || bold)
+                        {
+                            content.Add(new SubtitleRegionContentEndOfInlineStyle());
+                        }
+                        content.Add(new SubtitleRegionContentLineBreak());
+                        if (italic && bold)
+                        {
+                            content.Add(new SubtitleRegionContentChangeFontStyle
+                            {
+                                FontStyle = 3, // bold and italic
+                                FontOutlinePaletteId = regionStyle.FontOutlinePaletteEntryIdRef,
+                                FontOutlineThickness = regionStyle.FontOutlineThickness
+                            });
+                        }
+                        else if (italic)
+                        {
+                            content.Add(new SubtitleRegionContentChangeFontStyle
+                            {
+                                FontStyle = 2, // italic
+                                FontOutlinePaletteId = regionStyle.FontOutlinePaletteEntryIdRef,
+                                FontOutlineThickness = regionStyle.FontOutlineThickness
+                            });
+                        }
+                        else if (bold)
+                        {
+                            content.Add(new SubtitleRegionContentChangeFontStyle
+                            {
+                                FontStyle = 1, // bold
+                                FontOutlinePaletteId = regionStyle.FontOutlinePaletteEntryIdRef,
+                                FontOutlineThickness = regionStyle.FontOutlineThickness
+                            });
+                        }
+                    }
+                    int i = 0;
+                    while (i < line.Length)
+                    {
+                        string s = line.Substring(i);
+                        if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                        {
+                            italic = true;
+                            if (content.Count > 0 && content[content.Count - 1] is SubtitleRegionContentChangeFontStyle)
+                            {
+                                content.RemoveAt(content.Count - 1); // Remove last style tag (italic/bold will be  combined)
+                            }
+                            content.Add(new SubtitleRegionContentChangeFontStyle
+                            {
+                                FontStyle = bold ? 3 : 2, // italic
+                                FontOutlinePaletteId = regionStyle.FontOutlinePaletteEntryIdRef,
+                                FontOutlineThickness = regionStyle.FontOutlineThickness
+                            });
+                            i += 3;
+                        }
+                        else if (s.StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
+                        {
+                            italic = false;
+                            AddText(sb, content);
+                            if (content.Count > 0 && content[content.Count - 1] is SubtitleRegionContentEndOfInlineStyle)
+                            {
+                                content.RemoveAt(content.Count - 1); // Remove last to avoid duplicated
+                            }
+                            content.Add(new SubtitleRegionContentEndOfInlineStyle());
+                            i += 4;
+                        }
+                        else if (s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
+                        {
+                            bold = true;
+                            if (content.Count > 0 && content[content.Count - 1] is SubtitleRegionContentChangeFontStyle)
+                            {
+                                content.RemoveAt(content.Count - 1); // Remove last style tag (italic/bold will be  combined)
+                            }
+                            content.Add(new SubtitleRegionContentChangeFontStyle
+                            {
+                                FontStyle = italic ? 3 : 1, // bold
+                                FontOutlinePaletteId = regionStyle.FontOutlinePaletteEntryIdRef,
+                                FontOutlineThickness = regionStyle.FontOutlineThickness
+                            });
+                            i += 3;
+                        }
+                        else if (s.StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
+                        {
+                            bold = false;
+                            AddText(sb, content);
+                            if (content.Count > 0 && content[content.Count - 1] is SubtitleRegionContentEndOfInlineStyle)
+                            {
+                                content.RemoveAt(content.Count - 1); // Remove last to avoid duplicated
+                            }
+                            content.Add(new SubtitleRegionContentEndOfInlineStyle());
+                            i += 4;
+                        }
+                        else
+                        {
+                            i++;
+                            sb.Append(s.Substring(0, 1));
+                        }
+                    }
+                    AddText(sb, content);
+                    if (content.Count > 0 && content[content.Count - 1] is SubtitleRegionContentEndOfInlineStyle)
+                    {
+                        content.RemoveAt(content.Count - 1); // last 'end-of-inline-style' not needed
+                    }
+                }
+            }
+
+            private static void AddText(StringBuilder sb, List<SubtitleRegionContent> content)
+            {
+                if (sb.Length > 0)
+                {
+                    string text = HtmlUtil.RemoveHtmlTags(sb.ToString(), true);
+                    content.Add(new SubtitleRegionContentText
+                    {
+                        Text = text,
+                        DataLength = Encoding.UTF8.GetBytes(text).Length
+                    });
+                    sb.Clear();
+                }
+            }
 
             public DialogPresentationSegment(byte[] buffer)
             {
@@ -331,10 +705,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 PaletteUpdate = (buffer[19] & Helper.B10000000) > 0;
                 int idx = 20;
+                PaletteUpdates = new List<Palette>();
                 if (PaletteUpdate)
                 {
-                    NumberOfPaletteEntries = buffer[21] + (buffer[20] << 8);
-                    idx += NumberOfPaletteEntries * 5;
+                    int numberOfPaletteEntries = buffer[21] + (buffer[20] << 8);
+                    for (int i = 0; i < numberOfPaletteEntries; i++)
+                    {
+                        PaletteUpdates.Add(new Palette()
+                        {
+                            PaletteEntryId = buffer[idx++],
+                            Y = buffer[idx++],
+                            Cr = buffer[idx++],
+                            Cb = buffer[idx++],
+                            T = buffer[idx++]
+                        });
+                    }
                 }
 
                 int numberOfRegions = buffer[idx++];
@@ -348,6 +733,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     idx += 2;
                     int processedLength = 0;
                     region.Texts = new List<string>();
+                    region.Content = new List<SubtitleRegionContent>();
                     string endStyle = string.Empty;
                     while (processedLength < regionSubtitleLength)
                     {
@@ -359,15 +745,29 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             string text = Encoding.UTF8.GetString(buffer, idx, dataLength);
                             region.Texts.Add(text);
+                            region.Content.Add(new SubtitleRegionContentText
+                            {
+                                EscapeCode = escapeCode,
+                                DataType = dataType,
+                                DataLength = dataLength,
+                                Text = text                                
+                            });
                         }
                         else if (dataType == 0x02) // Change a font set
                         {
-                            System.Diagnostics.Debug.WriteLine("font set");
+                            region.Content.Add(new SubtitleRegionContentChangeFontSet
+                            {
+                                EscapeCode = escapeCode,
+                                DataType = dataType,
+                                DataLength = dataLength,
+                                FontId = buffer[idx]
+                            });
                         }
                         else if (dataType == 0x03) // Change a font style
                         {
-                            System.Diagnostics.Debug.WriteLine("font style");
                             var fontStyle = buffer[idx];
+                            var fontOutlinePaletteId = buffer[idx + 1];
+                            var fontOutlineThickness = buffer[idx + 2];
                             switch (fontStyle)
                             {
                                 case 1: region.Texts.Add("<b>");
@@ -389,27 +789,59 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     endStyle = "</i></b>";
                                     break;
                             }
+                            region.Content.Add(new SubtitleRegionContentChangeFontStyle
+                            {
+                                EscapeCode = escapeCode,
+                                DataType = dataType,
+                                DataLength = dataLength,
+                                FontStyle = fontStyle,
+                                FontOutlinePaletteId = fontOutlinePaletteId,
+                                FontOutlineThickness = fontOutlineThickness
+                            });
                         }
                         else if (dataType == 0x04) // Change a font size
                         {
-                            System.Diagnostics.Debug.WriteLine("font size");
+                            region.Content.Add(new SubtitleRegionContentChangeFontSize
+                            {
+                                EscapeCode = escapeCode,
+                                DataType = dataType,
+                                DataLength = dataLength,
+                                FontSize = buffer[idx]
+                            });
                         }
                         else if (dataType == 0x05) // Change a font color
                         {
-                            System.Diagnostics.Debug.WriteLine("font color");
+                            region.Content.Add(new SubtitleRegionContentChangeFontColor
+                            {
+                                EscapeCode = escapeCode,
+                                DataType = dataType,
+                                DataLength = dataLength,
+                                FontPaletteId = buffer[idx]
+                            });
                         }
                         else if (dataType == 0x0A) // Line break
                         {
                             region.Texts.Add(Environment.NewLine);
+                            region.Content.Add(new SubtitleRegionContentLineBreak
+                            {
+                                EscapeCode = escapeCode,
+                                DataType = dataType,
+                                DataLength = dataLength,
+                            });
                         }
                         else if (dataType == 0x0B) // End of inline style
                         {
-                            System.Diagnostics.Debug.WriteLine("End inline style");
                             if (!string.IsNullOrEmpty(endStyle))
                             {
                                 region.Texts.Add(endStyle);
                                 endStyle = string.Empty;
                             }
+                            region.Content.Add(new SubtitleRegionContentEndOfInlineStyle
+                            {
+                                EscapeCode = escapeCode,
+                                DataType = dataType,
+                                DataLength = dataLength,
+                            });
                         }
                         processedLength += dataLength;
                         idx += dataLength;
@@ -421,7 +853,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     Regions.Add(region);
                 }
             }
-           
+
             public string Text
             {
                 get
@@ -448,126 +880,73 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 get { return (ulong)Math.Round((EndPts) / 90.0); }
             }
 
-            public static void WriteToStream(Stream stream, string text, TimeCode start, TimeCode end, int regionStyleId, bool forced)
+            public void WriteToStream(Stream stream)
             {
-                byte[] regionSubtitle = MakeSubtitleRegion(text);
+                byte[] regionSubtitle = MakeSubtitleRegions();
                 stream.Write(new byte[] { 0, 0, 1, 0xbf }, 0, 4); // MPEG-2 Private stream 2
-                int size = regionSubtitle.Length + 2 + 1 + 5 + 5 + 4;
+                int size = regionSubtitle.Length + 15;
                 stream.WriteWord(size);
                 stream.WriteByte(SegmentTypeDialogPresentation); // 0x82
-                stream.WriteWord(size-3); 
-                stream.WritePts(start);
-                stream.WritePts(end);
-                stream.WriteByte(0); // 1 bit = palette update (0=no update), next 7 bits reserved
-                stream.WriteByte(1); // number of regions
-
-                //first byte=continuous_present_flag, second byte=force, next 6 bits reserved
-                if (forced)
-                    stream.WriteByte(Helper.B01000000); 
+                stream.WriteWord(size - 3);
+                stream.WritePts(StartPts);
+                stream.WritePts(EndPts);
+                if (PaletteUpdate)
+                {
+                    stream.WriteWord(PaletteUpdates.Count);
+                    foreach (var palette in PaletteUpdates)
+                    {
+                        stream.WriteByte((byte)palette.PaletteEntryId);
+                        stream.WriteByte((byte)palette.Y);
+                        stream.WriteByte((byte)palette.Cb);
+                        stream.WriteByte((byte)palette.Cr);
+                        stream.WriteByte((byte)palette.T);                        
+                    }
+                }
                 else
-                    stream.WriteByte(0);
+                {
+                    stream.WriteByte(0); // 1 bit = palette update (0=no update), next 7 bits reserved                    
+                }
+                stream.WriteByte((byte)Regions.Count); // number of regions
 
-                stream.WriteByte((byte)regionStyleId);
-                stream.Write(regionSubtitle, 0, regionSubtitle.Length);
+                stream.Write(regionSubtitle, 0, regionSubtitle.Length);                
             }
 
-            private static byte[] MakeSubtitleRegion(string text)
+            private byte[] MakeSubtitleRegions()
             {
                 using (var ms = new MemoryStream())
                 {
-                    ms.WriteByte(0); // length
-                    ms.WriteByte(0); // length
-                    bool italic = false;
-                    bool bold = false;
-                    var lines = text.SplitToLines();
-                    for (int lineNumber = 0; lineNumber < lines.Length; lineNumber++)
+                    foreach (var subtitleRegion in Regions)
                     {
-                        string line = lines[lineNumber];
-                        if (lineNumber > 0)
-                        {
-                            ms.WriteByte(0x1b); // escape code
-                            ms.WriteByte(0x0a); // line break
-                            ms.WriteByte(0); // length
-                        }
-                        int i = 0;
-                        var sb = new StringBuilder();
-                        while (i < line.Length)
-                        {
-                            string s = line.Substring(i);
-                            if (s.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
-                            {
-                                WriteFontStyle(ms, 2); // 2 == italic
-                                italic = true;
-                                i += 3;
-                            }
-                            else if (s.StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
-                            {
-                                WriteTextAndResetTextBuffer(ms, sb);
-                                WriteEndOfLineStyle(ms);
-                                italic = false;
-                                i += 4;
-                            }
-                            else if (s.StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
-                            {
-                                bold = true;
-                                i += 3;
-                            }
-                            else if (s.StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
-                            {
-                                WriteTextAndResetTextBuffer(ms, sb);
-                                WriteEndOfLineStyle(ms);
-                                bold = false;
-                                i += 4;
-                            }
-                            else
-                            {
-                                i++;
-                                sb.Append(s.Substring(0, 1));
-                            }
-                        }
-                        WriteTextAndResetTextBuffer(ms, sb);
+                        byte flags = 0;
+                        if (subtitleRegion.ContinuousPresentation)
+                            flags = (byte)(flags | Helper.B10000000);
+                        if (subtitleRegion.Forced)
+                            flags = (byte)(flags | Helper.B01000000);
+                        ms.WriteByte(flags); // first byte=continuous_present_flag, second byte=force, next 6 bits reserved
+
+                        ms.WriteByte((byte)subtitleRegion.RegionStyleId);
+                        var contentBuffer = MakeSubtitleRegionContent(subtitleRegion);
+                        ms.WriteWord(contentBuffer.Length); // set region subtitle size field
+                        ms.Write(contentBuffer, 0, contentBuffer.Length);
                     }
-                    var buffer = ms.ToArray();
-
-                    // set size field
-                    int size = buffer.Length - 2;
-                    buffer[0] = (byte)(size / 256);
-                    buffer[1] = (byte)(size % 256);
-
-                    return buffer;
+                    return ms.ToArray();
                 }
             }
 
-            private static void WriteEndOfLineStyle(MemoryStream ms)
+            private static byte[] MakeSubtitleRegionContent(SubtitleRegion subtitleRegion)
             {
-                ms.WriteByte(0x1b); // escape code
-                ms.WriteByte(0x0b); // data type, 3==font style
-                ms.WriteByte(3); // length
-            }
-
-            private static void WriteFontStyle(MemoryStream ms, int style)
-            {
-                ms.WriteByte(0x1b); // escape code
-                ms.WriteByte(3); // data type, 3==font style
-                ms.WriteByte(3); // length
-                ms.WriteByte((byte)style); // style, 0x00 Normal, 0x01 Bold, 0x02 Italic, 0x03 Bold and Italic, 0x04 Outline-bordered, 0x05 Bold and Outline-bordered, 0x06 Italic and Outline-bordered, 0x07 Bold and Italic and Outline-bordered
-                ms.WriteByte(0);
-                ms.WriteByte(0);
-            }
-
-            private static void WriteTextAndResetTextBuffer(MemoryStream ms, StringBuilder sb)
-            {
-                // TODO - max 254 chars!?
-                if (sb.Length > 0)
+                using (var ms = new MemoryStream())
                 {
-                    ms.WriteByte(0x1b); // escape code
-                    ms.WriteByte(0x1); // data type, 1==text
-                    var textBytes = Encoding.UTF8.GetBytes(sb.ToString());
-                    ms.WriteByte((byte)(textBytes.Length));
-                    ms.Write(textBytes, 0, textBytes.Length);
-                    sb.Clear();
+                    foreach (var content in subtitleRegion.Content)
+                    {
+                        ms.WriteByte((byte)content.EscapeCode); // escape code (0x1b / 27)
+                        ms.WriteByte((byte)content.DataType);
+                        ms.WriteByte((byte)content.DataLength);
+                        content.WriteExtraToStream(ms);
+                    }
+                    return ms.ToArray();
                 }
-            }
+            }           
 
         }
 
@@ -594,17 +973,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public override bool IsMine(List<string> lines, string fileName)
-        {
-            if (string.IsNullOrEmpty(fileName) ||
-                !fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase) ||
-                !FileUtil.IsM2TransportStream(fileName))
-            {
+        {            
+            if (string.IsNullOrEmpty(fileName))
                 return false;
+                
+            if ((fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase) && FileUtil.IsM2TransportStream(fileName)) ||
+                (fileName.EndsWith(".textst", StringComparison.OrdinalIgnoreCase) && FileUtil.IsMpeg2PrivateStream2(fileName)))
+            {
+                var subtitle = new Subtitle();
+                LoadSubtitle(subtitle, lines, fileName);
+                return subtitle.Paragraphs.Count > 0;
             }
-
-            var subtitle = new Subtitle();
-            LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > 0;
+            return false;
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -625,7 +1005,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    LoadSubtitleFromM2ts(subtitle, fs);
+                    LoadSubtitleFromM2Ts(subtitle, fs);
                 }
             }
         }
@@ -636,16 +1016,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             stream.Position = 0;
             stream.Seek(position, SeekOrigin.Begin);
             long streamLength = stream.Length;
-            var buffer = new byte[1024];
+            var buffer = new byte[512];
             PresentationSegments = new List<DialogPresentationSegment>();
             while (position < streamLength)
             {
+                stream.Seek(position, SeekOrigin.Begin);
                 int bytesRead = stream.Read(buffer, 0, buffer.Length);
                 if (bytesRead < 20)
                     break;
 
-                int size = (buffer[4] << 8) + buffer[5] + 4;
-                position += size; 
+                int size = (buffer[4] << 8) + buffer[5] + 6;
+                position += size;
 
                 if (bytesRead > 10 && VobSub.VobSubParser.IsPrivateStream2(buffer, 0))
                 {
@@ -663,7 +1044,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        public void LoadSubtitleFromM2ts(Subtitle subtitle, Stream ms)
+        public void LoadSubtitleFromM2Ts(Subtitle subtitle, Stream ms)
         {
             var subtitlePackets = new List<Packet>();
             const int packetLength = 188;

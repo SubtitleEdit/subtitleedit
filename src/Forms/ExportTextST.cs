@@ -3,11 +3,13 @@
 // WORK IN PROGRESS - DO NOT REFACTOR //
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using System.Linq;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -18,16 +20,13 @@ namespace Nikse.SubtitleEdit.Forms
         private string _fileName;
         private TextST _textST;
         private TextST.Palette _currentPalette;
-        private TextST.RegionStyle _currentRegionStyle;        
+        private TextST.RegionStyle _currentRegionStyle;
+        private TextST.UserStyle _currentUserStyle;
+        private TextST.SubtitleRegion _currentSubtitleRegion;      
 
         public ExportTextST(Subtitle subtitle)
         {
             InitializeComponent();
-
-            _subtitle = subtitle;
-
-            subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            subtitleListView1.Fill(_subtitle);
 
             groupBoxPropertiesPalette.Left = groupBoxPropertiesRoot.Left;
             groupBoxPropertiesPalette.Top = groupBoxPropertiesRoot.Top;
@@ -43,6 +42,27 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxPropertiesUserStyle.Top = groupBoxPropertiesRoot.Top;
             groupBoxPropertiesUserStyle.Size = groupBoxPropertiesRoot.Size;
             groupBoxPropertiesUserStyle.Anchor = groupBoxPropertiesRoot.Anchor;
+
+            groupBoxPresentationSegmentRegion.Left = groupBoxPropertiesRoot.Left;
+            groupBoxPresentationSegmentRegion.Top = groupBoxPropertiesRoot.Top;
+            groupBoxPresentationSegmentRegion.Size = groupBoxPropertiesRoot.Size;
+            groupBoxPresentationSegmentRegion.Anchor = groupBoxPropertiesRoot.Anchor;
+
+            _subtitle = subtitle;
+       
+            _textST = new TextST
+            {
+                StyleSegment = TextST.DialogStyleSegment.DefaultDialogStyleSegment,
+                PresentationSegments = new List<TextST.DialogPresentationSegment>(),           
+            };
+            _textST.StyleSegment.NumberOfDialogPresentationSegments = _subtitle.Paragraphs.Count;
+            foreach (var paragraph in _subtitle.Paragraphs)
+            {
+                var dps = new TextST.DialogPresentationSegment(paragraph, _textST.StyleSegment.RegionStyles[0]);
+                _textST.PresentationSegments.Add(dps);
+            }
+
+            UpdateTreeview();
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -55,61 +75,122 @@ namespace Nikse.SubtitleEdit.Forms
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 _textST = new TextST();
+                if (!_textST.IsMine(null, openFileDialog1.FileName))
+                {
+                    MessageBox.Show("Not a valid TextST file");
+                    return;
+                }
                 _subtitle = new Subtitle();
                 _fileName = openFileDialog1.FileName;
                 _textST.LoadSubtitle(_subtitle, null, _fileName);
                 groupBoxTextST.Text = "TextST structure: " + Path.GetFileName(_fileName);
-                
-                subtitleListView1.Fill(_subtitle);
-                
-                treeView1.Nodes.Clear();
-                _root = new TreeNode("TextST");
-                treeView1.Nodes.Add(_root);
-                if (_textST.StyleSegment != null)
+                UpdateTreeview();
+            }
+        }
+
+        private void UpdateTreeview()
+        {
+            treeView1.Nodes.Clear();
+            treeView1.BeginUpdate();
+            _root = new TreeNode("TextST");
+            treeView1.Nodes.Add(_root);
+            if (_textST.StyleSegment != null)
+            {
+                var styleNode = new TreeNode("Style segment");
+                _root.Nodes.Add(styleNode);
+
+                var regionStylesNode = new TreeNode(string.Format("Region styles ({0})", _textST.StyleSegment.RegionStyles.Count));
+                styleNode.Nodes.Add(regionStylesNode);
+                foreach (TextST.RegionStyle regionStyle in _textST.StyleSegment.RegionStyles)
                 {
-                    var styleNode = new TreeNode(string.Format("Style segment", _textST.StyleSegment));
-                    _root.Nodes.Add(styleNode);
-
-                    var regionStylesNode = new TreeNode(string.Format("Region styles ({0})", _textST.StyleSegment.RegionStyles.Count));
-                    styleNode.Nodes.Add(regionStylesNode);
-                    foreach (TextST.RegionStyle regionStyle in _textST.StyleSegment.RegionStyles)
-                    {
-                        var regionStyleNode = new TreeNode("Region style") { Tag = regionStyle };
-                        regionStylesNode.Nodes.Add(regionStyleNode);
-                    }
-
-                    var userStylesNode = new TreeNode(string.Format("User styles ({0})", _textST.StyleSegment.UserStyles.Count));
-                    styleNode.Nodes.Add(userStylesNode);
-                    foreach (TextST.UserStyle userStyle in _textST.StyleSegment.UserStyles)
-                    {
-                        var regionStyleNode = new TreeNode("User style") { Tag = userStyle };
-                        userStylesNode.Nodes.Add(regionStyleNode);
-                    }
-
-                    var palettesNode = new TreeNode(string.Format("Palettes ({0})", _textST.StyleSegment.Palettes.Count)) { Tag = _textST.StyleSegment.Palettes };
-                    styleNode.Nodes.Add(palettesNode);
-                    foreach (TextST.Palette palette in _textST.StyleSegment.Palettes)
-                    {
-                        var paletteNode = new TreeNode("Palette") { Tag = palette };
-                        palettesNode.Nodes.Add(paletteNode);
-                    }                    
+                    var regionStyleNode = new TreeNode("Region style") { Tag = regionStyle };
+                    regionStylesNode.Nodes.Add(regionStyleNode);
                 }
 
-                if (_textST.PresentationSegments != null)
+                var userStylesNode = new TreeNode(string.Format("User styles ({0})", _textST.StyleSegment.UserStyles.Count));
+                styleNode.Nodes.Add(userStylesNode);
+                foreach (TextST.UserStyle userStyle in _textST.StyleSegment.UserStyles)
                 {
-                    var presentationSegmentsNode = new TreeNode(string.Format("Presentation segments ({0})", _textST.PresentationSegments.Count));
-                    _root.Nodes.Add(presentationSegmentsNode);
-                    int count = 0;
-                    foreach (TextST.DialogPresentationSegment segment in _textST.PresentationSegments)
+                    var regionStyleNode = new TreeNode("User style") { Tag = userStyle };
+                    userStylesNode.Nodes.Add(regionStyleNode);
+                }
+
+                var palettesNode = new TreeNode(string.Format("Palettes ({0})", _textST.StyleSegment.Palettes.Count)) { Tag = _textST.StyleSegment.Palettes };
+                styleNode.Nodes.Add(palettesNode);
+                foreach (TextST.Palette palette in _textST.StyleSegment.Palettes)
+                {
+                    var paletteNode = new TreeNode("Palette") { Tag = palette };
+                    palettesNode.Nodes.Add(paletteNode);
+                }
+            }
+
+            if (_textST.PresentationSegments != null)
+            {
+                var presentationSegmentsNode = new TreeNode(string.Format("Presentation segments ({0})", _textST.PresentationSegments.Count));
+                _root.Nodes.Add(presentationSegmentsNode);
+                int count = 0;
+                foreach (var segment in _textST.PresentationSegments)
+                {
+                    count++;
+                    var presentationSegmentNode = new TreeNode(string.Format("Segment {0}: {1} -- > {2}", count,
+                        new TimeCode(segment.StartPtsMilliseconds), new TimeCode(segment.EndPtsMilliseconds))) { Tag = segment };
+                    presentationSegmentsNode.Nodes.Add(presentationSegmentNode);
+
+                    foreach (var subtitleRegion in segment.Regions)
                     {
-                        count++;
-                        var presentationSegmentNode = new TreeNode(string.Format("Segment {0}: {1} -- > {2}", count, 
-                            new TimeCode(segment.StartPtsMilliseconds), new TimeCode(segment.EndPtsMilliseconds))) { Tag = segment };
-                        presentationSegmentsNode.Nodes.Add(presentationSegmentNode);
+                        var subtitleRegionNode = new TreeNode("Subtitle region") { Tag = subtitleRegion };
+                        presentationSegmentNode.Nodes.Add(subtitleRegionNode);
+
+                        foreach (var content in subtitleRegion.Content)
+                        {
+                            if (content is TextST.SubtitleRegionContentText)
+                            {
+                                var textContent = content as TextST.SubtitleRegionContentText;
+                                var contentNode = new TreeNode(content.Name + ": " + textContent.Text) { Tag = content };
+                                subtitleRegionNode.Nodes.Add(contentNode);
+                            }
+                            else if (content is TextST.SubtitleRegionContentChangeFontStyle)
+                            {
+                                var fontStyleContent = content as TextST.SubtitleRegionContentChangeFontStyle;
+                                var contentNode = new TreeNode(content.Name + ": " + GetNameFromFrontStyle(fontStyleContent.FontStyle)) { Tag = content };
+                                subtitleRegionNode.Nodes.Add(contentNode);
+                            }
+                            else
+                            {
+                                var contentNode = new TreeNode(content.Name) { Tag = content };
+                                subtitleRegionNode.Nodes.Add(contentNode);                                
+                            }
+                        }
                     }
                 }
-                treeView1.ExpandAll();
-                treeView1.SelectedNode = _root;
+            }
+            treeView1.ExpandAll();
+            treeView1.EndUpdate();
+            treeView1.SelectedNode = _root;
+        }
+
+        private string GetNameFromFrontStyle(int fontStyle)
+        {
+            switch (fontStyle)
+            {
+                case 0:
+                    return "Normal";
+                case 1:
+                    return "Bold";
+                case 2:
+                    return "Italic";
+                case 3:
+                    return "Bold and italic";
+                case 4:
+                    return "Outline-bordered";
+                case 5:
+                    return "Bold and outline-bordered";
+                case 6:
+                    return "Italic and outline-bordered";
+                case 7:
+                    return "Bold and italic and outline-bordered";
+                default:
+                    return "Unknown";
             }
         }
 
@@ -119,13 +200,13 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxPropertiesPalette.Visible = false;
             groupBoxPropertiesRegionStyle.Visible = false;
             groupBoxPropertiesUserStyle.Visible = false;
+            groupBoxPresentationSegmentRegion.Visible = false;
             if (e.Node != null && _textST != null)
             {
                 if (e.Node == _root)
                 {
                     groupBoxPropertiesRoot.Visible = true;
-                    textBoxRoot.Text = "File name: " + _fileName + Environment.NewLine +
-                                       "Number of region styles: " + _textST.StyleSegment.RegionStyles.Count + Environment.NewLine +
+                    textBoxRoot.Text = "Number of region styles: " + _textST.StyleSegment.RegionStyles.Count + Environment.NewLine +
                                        "Number of user styles: " + _textST.StyleSegment.UserStyles.Count + Environment.NewLine +
                                        "Number of palettes: " + _textST.StyleSegment.Palettes.Count + Environment.NewLine +
                                        "Number of subtitles: " + _textST.StyleSegment.NumberOfDialogPresentationSegments + Environment.NewLine;
@@ -151,17 +232,50 @@ namespace Nikse.SubtitleEdit.Forms
                     numericUpDownRegionStyleWidth.Value = _currentRegionStyle.RegionWidth;
                     numericUpDownRegionStyleHeight.Value = _currentRegionStyle.RegionHeight;
                     numericUpDownRegionStylePaletteEntryId.Value = _currentRegionStyle.RegionBgPaletteEntryIdRef;
-
+                    numericUpDownRegionStyleTBHorPos.Value = _currentRegionStyle.TextBoxHorizontalPosition;
+                    numericUpDownRegionStyleTBVerPos.Value = _currentRegionStyle.RegionVerticalPosition;
+                    numericUpDownRegionStyleTBWidth.Value = _currentRegionStyle.TextBoxWidth;
+                    numericUpDownRegionStyleTBHeight.Value = _currentRegionStyle.TextBoxHeight;
+                    numericUpDownRegionStyleTextFlow.Value = _currentRegionStyle.TextFlow;
+                    numericUpDownRegionStyleTextHorAlign.Value = _currentRegionStyle.TextHorizontalAlignment;
+                    numericUpDownRegionStyleTextVerAlign.Value = _currentRegionStyle.TextVerticalAlignment;
+                    numericUpDownRegionStyleLineSpace.Value = _currentRegionStyle.LineSpace;
+                    numericUpDownRegionStyleFontIdRef.Value = _currentRegionStyle.FontIdRef;
+                    numericUpDownRegionStyleFontStyle.Value = _currentRegionStyle.FontStyle;
                     numericUpDownRegionStyleFontSize.Value = _currentRegionStyle.FontSize;
-
+                    numericUpDownRegionStyleFontPaletteId.Value = _currentRegionStyle.FontPaletteEntryIdRef;
+                    numericUpDownRegionStyleFontOutlinePaletteId.Value = _currentRegionStyle.FontOutlinePaletteEntryIdRef;
+                    numericUpDownRegionStyleFontOutlineThickness.Value = _currentRegionStyle.FontOutlineThickness;
                 }
                 else if (e.Node.Tag is TextST.UserStyle)
                 {
                     groupBoxPropertiesUserStyle.Visible = true;
+                    _currentUserStyle = e.Node.Tag as TextST.UserStyle;
+                    numericUpDownUserStyleId.Value = _currentUserStyle.UserStyleId;
+                    numericUpDownUserStyleHorPosDir.Value = _currentUserStyle.RegionHorizontalPositionDirection;
+                    numericUpDownUserStyleHorPosDelta.Value = _currentUserStyle.RegionHorizontalPositionDelta;
+                    numericUpDownUserStyleVerPosDir.Value = _currentUserStyle.RegionVerticalPositionDirection;
+                    numericUpDownUserStyleVerPosDelta.Value = _currentUserStyle.RegionVerticalPositionDelta;
+                    numericUpDownUserStyleFontSizeIncDec.Value = _currentUserStyle.FontSizeIncDec;
+                    numericUpDownUserStyleFontSizeDelta.Value = _currentUserStyle.FontSizeDelta;
+                    numericUpDownUserStyleTBHorPosDir.Value = _currentUserStyle.TextBoxHorizontalPositionDirection;
+                    numericUpDownUserStyleTBHorPosDelta.Value = _currentUserStyle.TextBoxHorizontalPositionDelta;
+                    numericUpDownUserStyleTBVerPosDir.Value = _currentUserStyle.TextBoxVerticalPositionDirection;
+                    numericUpDownUserStyleTBVerPosDelta.Value = _currentUserStyle.TextBoxVerticalPositionDelta;
+                    numericUpDownUserStyleTBWidthIncDec.Value = _currentUserStyle.TextBoxWidthIncDec;
+                    numericUpDownUserStyleTBWidthDelta.Value = _currentUserStyle.TextBoxWidthDelta;
+                    numericUpDownUserStyleTBHeightIncDec.Value = _currentUserStyle.TextBoxHeightIncDec;
+                    numericUpDownUserStyleTBHeightDelta.Value = _currentUserStyle.TextBoxHeightDelta;
+                    numericUpDownUserStyleLineSpaceIncDec.Value = _currentUserStyle.LineSpaceIncDec;
+                    numericUpDownUserStyleLineSpaceDelta.Value = _currentUserStyle.LineSpaceDelta;
                 }
-                else if (e.Node.Tag is TextST.DialogPresentationSegment)
+                else if (e.Node.Tag is TextST.SubtitleRegion)
                 {
-                    
+                    groupBoxPresentationSegmentRegion.Visible = true;
+                    _currentSubtitleRegion = e.Node.Tag as TextST.SubtitleRegion;
+                    checkBoxSubRegionContinuous.Checked = _currentSubtitleRegion.ContinuousPresentation;
+                    checkBoxSubRegionForced.Checked = _currentSubtitleRegion.Forced;
+                    numericUpDownSubRegionStyleIdRef.Value = _currentSubtitleRegion.RegionStyleId;
                 }
             }
         }
@@ -187,13 +301,13 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var fs = new FileStream(saveFileDialog1.FileName, FileMode.Create))
                 {
                     _textST.StyleSegment.WriteToStream(fs, _subtitle.Paragraphs.Count);
-                    foreach (Paragraph p in _subtitle.Paragraphs)
+                    foreach (var presentationSegment in _textST.PresentationSegments)
                     {
-                        TextST.DialogPresentationSegment.WriteToStream(fs, p.Text, p.StartTime, p.EndTime, 1, false);
+                        presentationSegment.WriteToStream(fs);
                     }
                 }
+                MessageBox.Show("TextST PES packets saved as " + saveFileDialog1.FileName);
             }
-            MessageBox.Show("TextST PES packets saved as " + saveFileDialog1.FileName);
         }
 
         private void buttonSaveAsM2ts_Click(object sender, EventArgs e)
@@ -205,14 +319,282 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 using (var fs = new FileStream(saveFileDialog1.FileName, FileMode.Create))
                 {
-                    foreach (Paragraph p in _subtitle.Paragraphs)
+                    
+                }
+                MessageBox.Show("TextST M2TS file saved as " + saveFileDialog1.FileName);
+            }
+        }
+
+        private int GetIntFromNumericUpDown(object sender)
+        {
+            var numericUpDown = sender as NumericUpDown;
+            if (numericUpDown != null)
+                return (int)numericUpDown.Value;
+            return 0;
+        }
+
+        private void numericUpDownRegionStyleId_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.RegionStyleId = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleHPos_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.RegionHorizontalPosition = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleVPos_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.RegionVerticalPosition = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleWidth_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.RegionWidth = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleHeight_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.RegionHeight = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStylePaletteEntryId_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.RegionBgPaletteEntryIdRef = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleTBHorPos_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.TextBoxHorizontalPosition = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleTBVerPos_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.TextBoxVerticalPosition = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleTBWidth_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.TextBoxWidth = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleTBHeight_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.TextBoxHeight = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleTextFlow_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.TextFlow = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleTextHorAlign_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.TextHorizontalAlignment = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleTextVerAlign_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.TextVerticalAlignment = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleLineSpace_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.LineSpace = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleFontIdRef_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.FontIdRef = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleFontStyle_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.FontStyle = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleFontSize_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.FontSize = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleFontPaletteId_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.FontPaletteEntryIdRef = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleFontOutlinePaletteId_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.FontOutlinePaletteEntryIdRef = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownRegionStyleFontOutlineThickness_ValueChanged(object sender, EventArgs e)
+        {
+            _currentRegionStyle.FontOutlineThickness = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleId_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.UserStyleId = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleHorPosDir_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.RegionHorizontalPositionDirection = GetIntFromNumericUpDown(sender); 
+        }
+
+        private void numericUpDownUserStyleHorPosDelta_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.RegionHorizontalPositionDelta = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleVerPosDir_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.RegionVerticalPositionDirection = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleVerPosDelta_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.RegionVerticalPositionDelta = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleFontSizeIncDec_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.FontSizeIncDec = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleFontSizeDelta_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.FontSizeDelta = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleTBHorPosDir_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.TextBoxHorizontalPositionDirection = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleTBHorPosDelta_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.TextBoxHorizontalPositionDelta = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleTBVerPosDir_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.TextBoxVerticalPositionDirection = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleTBVerPosDelta_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.TextBoxVerticalPositionDelta = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleTBWidthIncDec_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.TextBoxWidthIncDec = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleTBWidthDelta_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.TextBoxWidthDelta = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleTBHeightIncDec_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.TextBoxHeightIncDec = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleTBHeightDelta_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.TextBoxHeightDelta = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleLineSpaceIncDec_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.LineSpaceIncDec = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownUserStyleLineSpaceDelta_ValueChanged(object sender, EventArgs e)
+        {
+            _currentUserStyle.LineSpaceDelta = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownPaletteEntry_ValueChanged(object sender, EventArgs e)
+        {
+            _currentPalette.PaletteEntryId = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownPaletteY_ValueChanged(object sender, EventArgs e)
+        {
+            _currentPalette.Y = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownPaletteCr_ValueChanged(object sender, EventArgs e)
+        {
+            _currentPalette.Cr = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownPaletteCb_ValueChanged(object sender, EventArgs e)
+        {
+            _currentPalette.Cb = GetIntFromNumericUpDown(sender);
+        }
+
+        private void numericUpDownPaletteOpacity_ValueChanged(object sender, EventArgs e)
+        {
+            _currentPalette.T = GetIntFromNumericUpDown(sender);
+        }
+
+        private void checkBoxSubRegionContinuous_CheckedChanged(object sender, EventArgs e)
+        {
+            _currentSubtitleRegion.ContinuousPresentation = (sender as CheckBox).Checked;
+        }
+
+        private void checkBoxSubRegionForced_CheckedChanged(object sender, EventArgs e)
+        {
+            _currentSubtitleRegion.Forced = (sender as CheckBox).Checked;
+        }
+
+        private void numericUpDownSubRegionStyleIdRef_ValueChanged(object sender, EventArgs e)
+        {
+            _currentSubtitleRegion.RegionStyleId = GetIntFromNumericUpDown(sender);
+        }
+
+        private void treeView1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                var p = new Point(e.X, e.Y);
+                TreeNode node = treeView1.GetNodeAt(p);
+                if (node != null)
+                {
+                    treeView1.SelectedNode = node;
+                    if (node.Tag is List<TextST.Palette>)
                     {
-                        TextST.DialogPresentationSegment.WriteToStream(fs, p.Text, p.StartTime, p.EndTime, 1, false);
+                        contextMenuStripAddPalette.Show(treeView1, p);
                     }
                 }
             }
-            MessageBox.Show("TextST M2TS file saved as " + saveFileDialog1.FileName);
         }
+
+        private void addPaletteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_textST.StyleSegment.Palettes.Count < 254)
+            {
+                int id = 1;
+                while (_textST.StyleSegment.Palettes.Any(p => p.PaletteEntryId == id))
+                {
+                    id++;
+                }
+                _textST.StyleSegment.Palettes.Add(new TextST.Palette
+                {
+                    PaletteEntryId = id,
+                    Y = 235,
+                    Cr = 128,
+                    Cb = 128,
+                    T = 255
+                });
+                UpdateTreeview();
+            }
+        }       
 
     }
 }
