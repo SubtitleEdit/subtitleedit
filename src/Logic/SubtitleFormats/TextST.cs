@@ -711,7 +711,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int numberOfPaletteEntries = buffer[21] + (buffer[20] << 8);
                     for (int i = 0; i < numberOfPaletteEntries; i++)
                     {
-                        PaletteUpdates.Add(new Palette()
+                        PaletteUpdates.Add(new Palette
                         {
                             PaletteEntryId = buffer[idx++],
                             Y = buffer[idx++],
@@ -1008,6 +1008,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     LoadSubtitleFromM2Ts(subtitle, fs);
                 }
             }
+            subtitle.Renumber();
         }
 
         private void LoadSubtitleFromMpeg2PesPackets(Subtitle subtitle, Stream stream)
@@ -1044,7 +1045,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        public void LoadSubtitleFromM2Ts(Subtitle subtitle, Stream ms)
+        private void LoadSubtitleFromM2Ts(Subtitle subtitle, Stream ms)
         {
             var subtitlePackets = new List<Packet>();
             const int packetLength = 188;
