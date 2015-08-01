@@ -298,21 +298,12 @@ namespace Nikse.SubtitleEdit.Logic
         /// </summary>
         /// <param name="address">A <see cref="String"/> containing the URI to download.</param>
         /// <returns>A <see cref="String"/> containing the requested resource.</returns>
-        public static string DownloadString(string address)
+        public static string DownloadString(string address, Encoding encoding = null)
         {
             using (var wc = new WebClient())
             {
                 wc.Proxy = GetProxy();
-                return wc.DownloadString(address).Trim();
-            }
-        }
-
-        public static string DownloadString(string address, Encoding encoding)
-        {
-            using (var wc = new WebClient())
-            {
-                wc.Proxy = GetProxy();
-                wc.Encoding = encoding;
+                wc.Encoding = encoding ?? encoding;
                 return wc.DownloadString(address).Trim();
             }
         }
