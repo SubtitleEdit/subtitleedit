@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SonyDVDArchitectTabs : SubtitleFormat
     {
-        private static Regex regex = new Regex(@"^\d\d:\d\d:\d\d:\d\d[ \t]+\d\d:\d\d:\d\d:\d\d[ \t]+", RegexOptions.Compiled);
+        private static readonly Regex regex = new Regex(@"^\d\d:\d\d:\d\d:\d\d[ \t]+\d\d:\d\d:\d\d:\d\d[ \t]+", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -35,12 +35,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
+            const string writeFormat = "{0:00}:{1:00}:{2:00}:{3:00}\t{4:00}:{5:00}:{6:00}:{7:00}\t{8}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, "\r");
-                sb.AppendLine(string.Format("{0:00}:{1:00}:{2:00}:{3:00}\t{4:00}:{5:00}:{6:00}:{7:00}\t{8}",
-                                            p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10,
+                sb.AppendLine(string.Format(writeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10,
                                             p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10,
                                             text));
             }
@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         isTimeCode = true;
                         string s = line.Substring(0, match.Length);
-                        s = s.Replace("\t", ":");
+                        s = s.Replace('\t', ':');
                         s = s.Replace(" ", string.Empty);
                         s = s.Trim().TrimEnd(':').TrimEnd();
                         string[] parts = s.Split(':');

@@ -4,7 +4,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SamiYouTube : Sami
     {
-
         public override string Name
         {
             get { return "SAMI YouTube"; }
