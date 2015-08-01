@@ -1728,7 +1728,8 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if ((ext == ".m2ts") && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName))
+                if ((ext == ".m2ts" && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName)) ||
+                    (ext == ".textst" && FileUtil.IsMpeg2PrivateStream2(fileName)))
                 {
                     bool isTextSt = false;
                     if (file.Length < 2000000)
