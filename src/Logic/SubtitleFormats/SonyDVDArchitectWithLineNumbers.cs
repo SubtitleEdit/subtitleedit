@@ -8,8 +8,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SonyDVDArchitectWithLineNumbers : SubtitleFormat
     {
-        private static Regex regexTimeCode = new Regex(@"^\d\d\d\d  \d\d:\d\d:\d\d:\d\d  \d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);
-        private static Regex regex1DigitMilliseconds = new Regex(@"^\d\d\d\d  \d\d\d:\d\d:\d\d:\d  \d\d\d:\d\d:\d\d:\d", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCode = new Regex(@"^\d\d\d\d  \d\d:\d\d:\d\d:\d\d  \d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);
+        private static readonly Regex regex1DigitMilliseconds = new Regex(@"^\d\d\d\d  \d\d\d:\d\d:\d\d:\d  \d\d\d:\d\d:\d\d:\d", RegexOptions.Compiled);
 
         public override string Extension
         {

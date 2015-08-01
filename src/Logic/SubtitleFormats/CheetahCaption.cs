@@ -33,28 +33,28 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x95, // ®
           };
 
-        private static readonly List<string> LatinLetters = new List<string> {
-            "♪",
-            "á",
-            "é",
-            "í",
-            "ó",
-            "ú",
-            "â",
-            "ê",
-            "î",
-            "ô",
-            "û",
-            "à",
-            "è",
-            "Ñ",
-            "ñ",
-            "ç",
-            "¢",
-            "£",
-            "¿",
-            "½",
-            "®",
+        private static readonly IList<char> LatinLetters = new List<char> {
+            '♪',
+            'á',
+            'é',
+            'í',
+            'ó',
+            'ú',
+            'â',
+            'ê',
+            'î',
+            'ô',
+            'û',
+            'à',
+            'è',
+            'Ñ',
+            'ñ',
+            'ç',
+            '¢',
+            '£',
+            '¿',
+            '½',
+            '®',
         };
 
         public override string Extension
@@ -129,36 +129,36 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     //Right         : 12 01 00 00 00 00 03 0F 1E
                     //Left          : 12 03 00 00 00 00 03 0F 07
 
-                    if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an8}") || text.StartsWith("{\\an9}"))
+                    if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
                     {
                         buffer[7] = 1; // align top (vertial)
                         bufferShort[3] = 1; // align top (vertial)
                     }
-                    else if (text.StartsWith("{\\an4}") || text.StartsWith("{\\an5}") || text.StartsWith("{\\an6}"))
+                    else if (text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal))
                     {
                         buffer[7] = 8; // center (vertical)
                         bufferShort[3] = 8; // align top (vertial)
                     }
 
-                    if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an4}") || text.StartsWith("{\\an1}"))
+                    if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an1}"))
                     {
                         buffer[8] = 2; // align left (horizontal)
                         bufferShort[4] = 2; // align left (horizontal)
                     }
-                    else if (text.StartsWith("{\\an9}") || text.StartsWith("{\\an6}") || text.StartsWith("{\\an3}"))
+                    else if (text.StartsWith("{\\an9}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal) || text.StartsWith("{\\an3}", StringComparison.Ordinal))
                     {
                         buffer[8] = 0x1e; // align right (vertical)
                         bufferShort[4] = 0x1e; // align right (vertical)
                     }
 
                     int startTag = text.IndexOf('}');
-                    if (text.StartsWith("{\\") && startTag > 0 && startTag < 10)
+                    if (text.StartsWith("{\\", StringComparison.Ordinal) && startTag > 0 && startTag < 10)
                     {
                         text = text.Remove(0, startTag + 1);
                     }
 
                     var textBytes = new List<byte>();
-                    var italic = p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>");
+                    var italic = p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal);
                     text = HtmlUtil.RemoveHtmlTags(text);
                     int j = 0;
                     if (italic)
@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else
                         {
-                            int idx = LatinLetters.IndexOf(text.Substring(j, 1));
+                            int idx = LatinLetters.IndexOf(text[j]);
                             if (idx >= 0)
                                 textBytes.Add((byte)LatinCodes[idx]);
                             else
@@ -278,6 +278,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             int i = 128;
             Paragraph last = null;
+            var sb = new StringBuilder();
             while (i < buffer.Length - 20)
             {
                 var p = new Paragraph();
@@ -301,9 +302,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     p.EndTime = DecodeTimestamp(buffer, i + 6);
 
-                    var sb = new StringBuilder();
+                    sb.Clear();
                     int j = 0;
                     bool italics = false;
+                    var encoding = Encoding.GetEncoding(1252);
                     while (j < textLength)
                     {
                         int index = i + start + j;
@@ -329,7 +331,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else
                         {
-                            sb.Append(Encoding.GetEncoding(1252).GetString(buffer, index, 1));
+                            sb.Append(encoding.GetString(buffer, index, 1));
                         }
                         j++;
                     }
