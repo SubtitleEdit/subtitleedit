@@ -13,6 +13,7 @@
   <Item> como un</Item>
   <Item> con</Item>
   <Item> con la</Item>
+  <Item> cuán</Item>
   <Item> cuando</Item>
   <Item> de</Item>
   <Item> de la</Item>
@@ -27,6 +28,7 @@
   <Item> el</Item>
   <Item> en</Item>
   <Item> en este</Item>
+  <Item> en la</Item>
   <Item> en otro</Item>
   <Item> en su</Item>
   <Item> es</Item>
@@ -46,10 +48,12 @@
   <Item> lo</Item>
   <Item> los</Item>
   <Item> luego</Item>
+  <Item> más</Item>
   <Item> me</Item>
   <Item> mejor</Item>
   <Item> mi</Item>
   <Item> mientras</Item>
+  <Item> mis</Item>
   <Item> mucho</Item>
   <Item> muy</Item>
   <Item> ni</Item>
@@ -108,8 +112,4 @@
   <Item> ya que</Item>
   <Item RegEx="True">(?=[,\.\?\!]) </Item>
   <Item RegEx="True">(?=señora? [A-ZÁ-Ú][a-zá-úñü]+) </Item>
-  <Item> mis</Item>
-  <Item> en la</Item>
-  <Item> cuán</Item>
-  <Item> más</Item>
 </NoBreakAfterList>
