@@ -338,9 +338,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         private bool IsNotInsideBrackets(string text, int colonIdx)
         {
             // <i>♪ (THE CAPITOLS: "COOL JERK") ♪</i>
-            var bIdx = text.IndexOfAny(new[] { '(', '[' });
-
-            if (bIdx >= 0 && bIdx < colonIdx)
+            var bIdx = text.IndexOfAny(new[] { '(', '[' }, 0, colonIdx);
+            if (bIdx >= 0)
             {
                 char closeType = text[bIdx] == '(' ? ')' : ']';
                 var nIdx = text.IndexOf(closeType, bIdx + 1);
