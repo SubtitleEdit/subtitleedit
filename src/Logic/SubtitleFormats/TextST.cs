@@ -668,10 +668,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                     AddText(sb, content);
-                    if (content.Count > 0 && content[content.Count - 1] is SubtitleRegionContentEndOfInlineStyle)
-                    {
-                        content.RemoveAt(content.Count - 1); // last 'end-of-inline-style' not needed
-                    }
+                }
+                if (content.Count > 0 && content[content.Count - 1] is SubtitleRegionContentEndOfInlineStyle)
+                {
+                    content.RemoveAt(content.Count - 1); // last 'end-of-inline-style' not needed
                 }
             }
 
