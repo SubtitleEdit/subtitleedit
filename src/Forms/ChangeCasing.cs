@@ -9,7 +9,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChangeCasing : PositionAndSizeForm
     {
-
         private int _noOfLinesChanged;
 
         public ChangeCasing()
