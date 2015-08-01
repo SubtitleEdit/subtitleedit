@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public bool IsDictionaryLoaded { get; private set; }
 
         public CultureInfo DictionaryCulture { get; private set; }
-
+        private const string ExpectedChars = " ¡¿,.!?:;()[]{}+-£\"#&%\r\n"; // removed $
         /// <summary>
         /// Advanced OCR fixing via replace/spelling dictionaries + some hardcoded rules
         /// </summary>
@@ -363,7 +363,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             string lastWord = null;
             for (int i = 0; i < text.Length; i++)
             {
-                if (" ¡¿,.!?:;()[]{}+-£\"#&%\r\n".Contains(text[i])) // removed $
+                if (ExpectedChars.Contains(text[i]))
                 {
                     if (word.Length > 0)
                     {
@@ -437,8 +437,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private static string FixFrenchLApostrophe(string text, string tag, string lastLine)
         {
             bool endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') ||
-                                    lastLine.EndsWith(".</i>") || lastLine.EndsWith("!</i>") || lastLine.EndsWith("?</i>") ||
-                                    lastLine.EndsWith(".</font>") || lastLine.EndsWith("!</font>") || lastLine.EndsWith("?</font>");
+                                    lastLine.EndsWith(".</i>") || lastLine.EndsWith("!</i>", StringComparison.Ordinal) || lastLine.EndsWith("?</i>", StringComparison.Ordinal) ||
+                                    lastLine.EndsWith(".</font>", StringComparison.Ordinal) || lastLine.EndsWith("!</font>", StringComparison.Ordinal) || lastLine.EndsWith("?</font>", StringComparison.Ordinal);
             if (text.StartsWith(tag.TrimStart(), StringComparison.Ordinal) && text.Length > 3)
             {
                 if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text[2]))
@@ -533,7 +533,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             var word = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
             {
-                if (" ¡¿,.!?:;()[]{}+-£\"#&%\r\n".Contains(text[i])) // removed $
+                if (ExpectedChars.Contains(text[i])) // removed $
                 {
                     if (word.Length > 0)
                     {
