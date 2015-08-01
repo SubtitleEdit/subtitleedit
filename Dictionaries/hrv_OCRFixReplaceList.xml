@@ -605,7 +605,6 @@
     <RegEx find="([bB])eleg" replaceWith="$1iljeg" />
     <RegEx find="\bbezbed" replaceWith="sigur" />
     <RegEx find="\bBezbed" replaceWith="Sigur" />
-    <RegEx find="\b([bB])eži([mšt])?\b" replaceWith="$1ježi$2" />
     <RegEx find="\b[bB]iblij([aeiou]|om|ama)\b" replaceWith="Biblij$1" />
     <RegEx find="\b([bB])ić(eš|emo|ete)\b" replaceWith="$1it ć$2" />
     <!--futur 1. nema i na kraju glagola - "Pogrešno je pisati: biti ću" -->
@@ -617,7 +616,7 @@
     <RegEx find="([bB])j?esn([aeiou]|o[mgj])" replaceWith="$1ijesn$2" />
     <RegEx find="([bB])eznadež(an|n[aeiou]|no[mj]|nim|nima)" replaceWith="$1eznad$2" />
     <RegEx find="([bB])ežanj([aeu]|em)" replaceWith="$1jež$2" />
-    <RegEx find="([bB])i?j?ež([ei]|iš|imo|ite|ao|al[aeio]|ati)\b" replaceWith="$1jež$2" />
+    <RegEx find="([bB])i?j?ež([ei]|i[mš]|imo|ite|ao|al[aeio]|ati)\b" replaceWith="$1jež$2" />
     <RegEx find="bioskop(a|u|om)" replaceWith="kin$1" />
     <RegEx find="Bioskop(a|u|om)" replaceWith="Kin$1" />
     <RegEx find="([bB])lj?ed([aeiou]|im|om|ima|el[aeiou]|elom|elima|io|jele)" replaceWith="$1lijed$2" />
