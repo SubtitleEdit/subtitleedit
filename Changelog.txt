@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.4.8 (xth August 2015) BETA
+3.4.8 (2nd August 2015)
 * NEW:
    * Added support for Blu-ray TextST - thx Timo/ndjamena
    * Added "Google it" to spell check dialog
