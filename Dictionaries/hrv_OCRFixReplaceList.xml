@@ -375,18 +375,12 @@
     <Word from="venca" to="vijenca" />
     <Word from="veoma" to="vrlo" />
     <!-- nije za regex -->
-    <Word from="verovati" to="vjerovati" />
-    <Word from="verovanje" to="vjerovanje" />
-    <Word from="vetar" to="vjetar" />
-    <Word from="vetra" to="vjetra" />
-    <Word from="veče" to="večer" />
     <Word from="večnost" to="vječnost" />
     <Word from="vreme" to="vrijeme" />
     <Word from="Vreme" to="Vrijeme" />
     <Word from="voliti" to="voljeti" />
     <Word from="voleo" to="volio" />
     <Word from="Voleo" to="Volio" />
-    <Word from="vjetru" to="vetru" />
     <Word from="vređanje" to="vrijeđanje" />
     <Word from="vređa" to="vrijeđa" />
     <Word from="vrteo" to="vrtio" />
@@ -1209,8 +1203,8 @@
     <RegEx find="([vV])eoma" replaceWith="$1rlo" />
     <RegEx find="\b([vV])er([aeiou]|an|n[aeiou]|no[mgj]|om|ama|nik|nik[aeu]|ni[ck]om|nic[aeiu]|nic[ai]ma|sk[aeiou]|sko[mgj]|skim|oval[aeio]|ovanja|ovanjima]|ovati)\b" replaceWith="$1jer$2" />
     <RegEx find="\b([nN])ever([aeiount])\b" replaceWith="$1evjer$2" />
-    <RegEx find="([vV])erova(o|l[aeio]|še|ti)" replaceWith="$1jerova$2" />
-    <RegEx find="([vV])ero[vj]at" replaceWith="$1jerojat" />
+    <RegEx find="([vV])erova(o|l[aeio]|še|ti|nj[aeu])" replaceWith="$1jerova$2" />
+    <RegEx find="([vV])j?ero[vj]at" replaceWith="$1jerojat" />
     <RegEx find="([vV])eruj([eu]|e[mš]|ete|emo|te)?" replaceWith="$1jeruj$2" />
     <RegEx find="verenic([aeiou]|ima|ama)" replaceWith="zaručnic$1" />
     <RegEx find="Verenic([aeiou]|ima|ama)" replaceWith="Zaručnic$1" />
