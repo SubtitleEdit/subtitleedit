@@ -6,10 +6,9 @@ using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-
     public class UleadSubtitleFormat : SubtitleFormat
     {
-        private static Regex regexTimeCodes = new Regex(@"^#\d+ \d\d;\d\d;\d\d;\d\d \d\d;\d\d;\d\d;\d\d", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodes = new Regex(@"^#\d+ \d\d;\d\d;\d\d;\d\d \d\d;\d\d;\d\d;\d\d", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -48,16 +47,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 #/R:1,{0} /FP:8  /FS:24
 #Subtitle text attribute end";
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine(Header);
             int index = 0;
+            const string writeFormat = "#{0} {1} {2}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //#3 00;04;26;04 00;04;27;05
                 //How much in there? -
                 //Three...
-                sb.AppendLine(string.Format("#{0} {1} {2}", index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
-                sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text));
+                sb.AppendLine(string.Format(writeFormat, index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
+                sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text, true));
                 index++;
             }
             sb.AppendLine(string.Format(Footer, subtitle.Paragraphs.Count));
@@ -79,12 +79,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
+            char[] splitChar = { ' ' };
             foreach (string l2 in lines)
             {
                 string line = l2.TrimEnd('ഀ');
                 if (line.StartsWith('#') && regexTimeCodes.IsMatch(line))
                 {
-                    string[] parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length >= 3)
                     {
                         string start = parts[1];
@@ -123,17 +124,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             //00;04;26;04
 
-            string hour = time.Substring(0, 2);
-            string minutes = time.Substring(3, 2);
-            string seconds = time.Substring(6, 2);
-            string frames = time.Substring(9, 2);
+            var hour = int.Parse(time.Substring(0, 2));
+            var minutes = int.Parse(time.Substring(3, 2));
+            var seconds = int.Parse(time.Substring(6, 2));
+            var frames = int.Parse(time.Substring(9, 2));
 
-            int milliseconds = (int)((1000 / 25.0) * int.Parse(frames));
+            int milliseconds = (int)(1000 / 25.0 * frames);
             if (milliseconds > 999)
                 milliseconds = 999;
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
-            return tc;
+            return new TimeCode(hour, minutes, seconds, milliseconds);
         }
 
     }
