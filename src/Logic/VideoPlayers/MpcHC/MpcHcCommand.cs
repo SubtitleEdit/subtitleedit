@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
     /// </summary>
     public static class MpcHcCommand
     {
-
         public const UInt32 Connect = 0x50000000;
         public const UInt32 State = 0x50000001;
         public const UInt32 PlayMode = 0x50000002;
