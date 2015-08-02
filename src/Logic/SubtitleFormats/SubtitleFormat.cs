@@ -238,26 +238,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         try
                         {
                             var assembly = System.Reflection.Assembly.Load(FileUtil.ReadAllBytesShared(pluginFileName));
-                            string objectName = Path.GetFileNameWithoutExtension(pluginFileName);
+                            var objectName = Path.GetFileNameWithoutExtension(pluginFileName);
                             if (assembly != null)
                             {
                                 foreach (var exportedType in assembly.GetExportedTypes())
                                 {
-                                    try
-                                    {
-                                        object pluginObject = Activator.CreateInstance(exportedType);
-                                        var po = pluginObject as SubtitleFormat;
-                                        if (po != null)
-                                            _allSubtitleFormats.Insert(1, po);
-                                    }
-                                    catch
-                                    {
-                                    }
+                                    if (exportedType.IsInterface || exportedType.IsAbstract || exportedType.GetConstructor(Type.EmptyTypes) == null)
+                                        continue;
+                                    object pluginObject = Activator.CreateInstance(exportedType);
+                                    var po = pluginObject as SubtitleFormat;
+                                    if (po != null)
+                                        _allSubtitleFormats.Insert(1, po);
                                 }
                             }
                         }
                         catch
                         {
+                            System.Diagnostics.Debug.WriteLine(pluginFileName);
                         }
                     }
                 }
