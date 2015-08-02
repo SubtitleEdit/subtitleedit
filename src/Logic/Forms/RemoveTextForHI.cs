@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             foreach (string line in lines)
             {
                 int indexOfColon = line.IndexOf(':');
-                if (indexOfColon > 0 && IsNotInsideBrackets(text, indexOfColon))
+                if (indexOfColon > 0 && IsNotInsideBrackets(line, indexOfColon))
                 {
                     var pre = line.Substring(0, indexOfColon);
                     var noTagPre = HtmlUtil.RemoveHtmlTags(pre, true);
