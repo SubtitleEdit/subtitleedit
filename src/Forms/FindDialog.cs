@@ -40,12 +40,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
             set
             {
-                if (value == FindType.CaseSensitive)
-                    radioButtonCaseSensitive.Checked = true;
-                if (value == FindType.Normal)
-                    radioButtonNormal.Checked = true;
-                if (value == FindType.RegEx)
-                    radioButtonRegEx.Checked = true;
+                switch (value)
+                {
+                    case FindType.Normal:
+                        radioButtonNormal.Checked = true;
+                        break;
+                    case FindType.CaseSensitive:
+                        radioButtonCaseSensitive.Checked = true;
+                        break;
+                    case FindType.RegEx:
+                        radioButtonRegEx.Checked = true;
+                        break;
+                }
             }
         }
 
