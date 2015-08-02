@@ -409,7 +409,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public class SubtitleRegionContentText : SubtitleRegionContent
         {
-            public string Text { get; set; }
+
+            private string _text;
+
+            public string Text
+            {
+                get { return _text; }
+                set
+                {
+                    DataLength = Encoding.UTF8.GetBytes(value).Length;
+                    _text = value;
+                }
+            }
 
             public SubtitleRegionContentText()
             {

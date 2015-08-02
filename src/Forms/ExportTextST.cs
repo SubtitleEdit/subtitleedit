@@ -16,37 +16,42 @@ namespace Nikse.SubtitleEdit.Forms
     public partial class ExportTextST : Form
     {
         private Subtitle _subtitle;
-        private TreeNode _root;
+        private TreeNode _rootNode;
+        private TreeNode _palettesNode;
         private string _fileName;
         private TextST _textST;
         private TextST.Palette _currentPalette;
         private TextST.RegionStyle _currentRegionStyle;
         private TextST.UserStyle _currentUserStyle;
-        private TextST.SubtitleRegion _currentSubtitleRegion;      
+        private TextST.SubtitleRegion _currentSubtitleRegion;
+        private TextST.SubtitleRegionContentChangeFontStyle _currentSubtitleFontStyle;
+        private TextST.SubtitleRegionContentChangeFontSize _currentSubtitleFontSize;
+        private TextST.SubtitleRegionContentText _currentSubtitleText;
+        private TextST.SubtitleRegionContentChangeFontColor _currentSubtitleFontColor;
+        private TextST.SubtitleRegionContentChangeFontSet _currentSubtitleFontSet;
+        private TreeNode _currentNode;
+
+        private void SetGroupBoxProperties(GroupBox gb)
+        {
+            gb.Left = groupBoxPropertiesRoot.Left;
+            gb.Top = groupBoxPropertiesRoot.Top;
+            gb.Size = groupBoxPropertiesRoot.Size;
+            gb.Anchor = groupBoxPropertiesRoot.Anchor;
+        }
 
         public ExportTextST(Subtitle subtitle)
         {
             InitializeComponent();
 
-            groupBoxPropertiesPalette.Left = groupBoxPropertiesRoot.Left;
-            groupBoxPropertiesPalette.Top = groupBoxPropertiesRoot.Top;
-            groupBoxPropertiesPalette.Size = groupBoxPropertiesRoot.Size;
-            groupBoxPropertiesPalette.Anchor = groupBoxPropertiesRoot.Anchor;
-
-            groupBoxPropertiesRegionStyle.Left = groupBoxPropertiesRoot.Left;
-            groupBoxPropertiesRegionStyle.Top = groupBoxPropertiesRoot.Top;
-            groupBoxPropertiesRegionStyle.Size = groupBoxPropertiesRoot.Size;
-            groupBoxPropertiesRegionStyle.Anchor = groupBoxPropertiesRoot.Anchor;
-
-            groupBoxPropertiesUserStyle.Left = groupBoxPropertiesRoot.Left;
-            groupBoxPropertiesUserStyle.Top = groupBoxPropertiesRoot.Top;
-            groupBoxPropertiesUserStyle.Size = groupBoxPropertiesRoot.Size;
-            groupBoxPropertiesUserStyle.Anchor = groupBoxPropertiesRoot.Anchor;
-
-            groupBoxPresentationSegmentRegion.Left = groupBoxPropertiesRoot.Left;
-            groupBoxPresentationSegmentRegion.Top = groupBoxPropertiesRoot.Top;
-            groupBoxPresentationSegmentRegion.Size = groupBoxPropertiesRoot.Size;
-            groupBoxPresentationSegmentRegion.Anchor = groupBoxPropertiesRoot.Anchor;
+            SetGroupBoxProperties(groupBoxPropertiesPalette);
+            SetGroupBoxProperties(groupBoxPropertiesRegionStyle);
+            SetGroupBoxProperties(groupBoxPropertiesUserStyle);
+            SetGroupBoxProperties(groupBoxPresentationSegmentRegion);
+            SetGroupBoxProperties(groupBoxFontStyle);
+            SetGroupBoxProperties(groupBoxChangeFontSize);
+            SetGroupBoxProperties(groupBoxSubtitleText);
+            SetGroupBoxProperties(groupBoxChangeFontColor);
+            SetGroupBoxProperties(groupBoxFontSet);
 
             _subtitle = subtitle;
        
@@ -92,12 +97,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             treeView1.Nodes.Clear();
             treeView1.BeginUpdate();
-            _root = new TreeNode("TextST");
-            treeView1.Nodes.Add(_root);
+            _rootNode = new TreeNode("TextST");
+            treeView1.Nodes.Add(_rootNode);
             if (_textST.StyleSegment != null)
             {
                 var styleNode = new TreeNode("Style segment");
-                _root.Nodes.Add(styleNode);
+                _rootNode.Nodes.Add(styleNode);
 
                 var regionStylesNode = new TreeNode(string.Format("Region styles ({0})", _textST.StyleSegment.RegionStyles.Count));
                 styleNode.Nodes.Add(regionStylesNode);
@@ -115,19 +120,19 @@ namespace Nikse.SubtitleEdit.Forms
                     userStylesNode.Nodes.Add(regionStyleNode);
                 }
 
-                var palettesNode = new TreeNode(string.Format("Palettes ({0})", _textST.StyleSegment.Palettes.Count)) { Tag = _textST.StyleSegment.Palettes };
-                styleNode.Nodes.Add(palettesNode);
+                _palettesNode = new TreeNode(string.Format("Palettes ({0})", _textST.StyleSegment.Palettes.Count)) { Tag = _textST.StyleSegment.Palettes };
+                styleNode.Nodes.Add(_palettesNode);
                 foreach (TextST.Palette palette in _textST.StyleSegment.Palettes)
                 {
-                    var paletteNode = new TreeNode("Palette") { Tag = palette };
-                    palettesNode.Nodes.Add(paletteNode);
+                    var paletteNode = new TreeNode("Palette " + palette.PaletteEntryId) { Tag = palette };
+                    _palettesNode.Nodes.Add(paletteNode);
                 }
             }
 
             if (_textST.PresentationSegments != null)
             {
                 var presentationSegmentsNode = new TreeNode(string.Format("Presentation segments ({0})", _textST.PresentationSegments.Count));
-                _root.Nodes.Add(presentationSegmentsNode);
+                _rootNode.Nodes.Add(presentationSegmentsNode);
                 int count = 0;
                 foreach (var segment in _textST.PresentationSegments)
                 {
@@ -166,7 +171,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             treeView1.ExpandAll();
             treeView1.EndUpdate();
-            treeView1.SelectedNode = _root;
+            treeView1.SelectedNode = _rootNode;
         }
 
         private string GetNameFromFrontStyle(int fontStyle)
@@ -201,9 +206,15 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxPropertiesRegionStyle.Visible = false;
             groupBoxPropertiesUserStyle.Visible = false;
             groupBoxPresentationSegmentRegion.Visible = false;
+            groupBoxFontStyle.Visible = false;
+            groupBoxChangeFontSize.Visible = false;
+            groupBoxSubtitleText.Visible = false;
+            groupBoxChangeFontColor.Visible = false;
+            groupBoxFontSet.Visible = false;
             if (e.Node != null && _textST != null)
             {
-                if (e.Node == _root)
+                _currentNode = e.Node;
+                if (e.Node == _rootNode)
                 {
                     groupBoxPropertiesRoot.Visible = true;
                     textBoxRoot.Text = "Number of region styles: " + _textST.StyleSegment.RegionStyles.Count + Environment.NewLine +
@@ -277,6 +288,38 @@ namespace Nikse.SubtitleEdit.Forms
                     checkBoxSubRegionForced.Checked = _currentSubtitleRegion.Forced;
                     numericUpDownSubRegionStyleIdRef.Value = _currentSubtitleRegion.RegionStyleId;
                 }
+                else if (e.Node.Tag is TextST.SubtitleRegionContentChangeFontStyle)
+                {
+                    groupBoxFontStyle.Visible = true;
+                    _currentSubtitleFontStyle = e.Node.Tag as TextST.SubtitleRegionContentChangeFontStyle;
+                    comboBoxChangeFontStyleFontStyle.SelectedIndex = _currentSubtitleFontStyle.FontStyle;
+                    numericUpDownChangeFontStyleOutlinePaletteId.Value = _currentSubtitleFontStyle.FontOutlinePaletteId;
+                    comboBoxChangeFontStyleOutlineThickness.SelectedIndex = _currentSubtitleFontStyle.FontOutlineThickness - 1;
+                }
+                else if (e.Node.Tag is TextST.SubtitleRegionContentChangeFontSize)
+                {
+                    groupBoxChangeFontSize.Visible = true;
+                    _currentSubtitleFontSize = e.Node.Tag as TextST.SubtitleRegionContentChangeFontSize;
+                    numericUpDownChangeFontSize.Value = _currentSubtitleFontSize.FontSize;
+                }
+                else if (e.Node.Tag is TextST.SubtitleRegionContentText)
+                {
+                    groupBoxSubtitleText.Visible = true;
+                    _currentSubtitleText = e.Node.Tag as TextST.SubtitleRegionContentText;
+                    textBoxSubtitleText.Text = _currentSubtitleText.Text;
+                }
+                else if (e.Node.Tag is TextST.SubtitleRegionContentChangeFontColor)
+                {
+                    groupBoxChangeFontColor.Visible = true;
+                    _currentSubtitleFontColor = e.Node.Tag as TextST.SubtitleRegionContentChangeFontColor;
+                    numericUpDownChangeFontColor.Value = _currentSubtitleFontColor.FontPaletteId;
+                }
+                else if (e.Node.Tag is TextST.SubtitleRegionContentChangeFontSet)
+                {
+                    groupBoxFontSet.Visible = true;
+                    _currentSubtitleFontSet = e.Node.Tag as TextST.SubtitleRegionContentChangeFontSet;
+                    numericUpDownFontSetFontId.Value = _currentSubtitleFontSet.FontId;
+                }                
             }
         }
 
@@ -312,17 +355,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSaveAsM2ts_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.DefaultExt = ".m2ts";
-            saveFileDialog1.FileName = string.Empty;
-            saveFileDialog1.Filter = "m2ts files|*.m2ts";
-            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
-            {
-                using (var fs = new FileStream(saveFileDialog1.FileName, FileMode.Create))
-                {
+            //saveFileDialog1.DefaultExt = ".m2ts";
+            //saveFileDialog1.FileName = string.Empty;
+            //saveFileDialog1.Filter = "m2ts files|*.m2ts";
+            //if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            //{
+            //    using (var fs = new FileStream(saveFileDialog1.FileName, FileMode.Create))
+            //    {
                     
-                }
-                MessageBox.Show("TextST M2TS file saved as " + saveFileDialog1.FileName);
-            }
+            //    }
+            //    MessageBox.Show("TextST M2TS file saved as " + saveFileDialog1.FileName);
+            //}
         }
 
         private int GetIntFromNumericUpDown(object sender)
@@ -571,6 +614,16 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         contextMenuStripAddPalette.Show(treeView1, p);
                     }
+                    else if (node.Tag is TextST.SubtitleRegion)
+                    {
+                        contextMenuStripAddSubtitleContentFromSubRegion.Show(treeView1, p);
+                    }
+                    else if (node.Tag is TextST.SubtitleRegionContent)
+                    {
+                        contextMenuStripAddSubtitleContent.Show(treeView1, p);
+                    }
+                    
+
                 }
             }
         }
@@ -584,17 +637,165 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     id++;
                 }
-                _textST.StyleSegment.Palettes.Add(new TextST.Palette
+
+                var palette = new TextST.Palette
                 {
                     PaletteEntryId = id,
                     Y = 235,
                     Cr = 128,
                     Cb = 128,
                     T = 255
-                });
-                UpdateTreeview();
+                };
+
+                _textST.StyleSegment.Palettes.Add(palette);
+
+                var paletteNode = new TreeNode("Palette " + id) { Tag = palette };
+                _palettesNode.Nodes.Add(paletteNode);
+                treeView1.SelectedNode = paletteNode;
             }
-        }       
+        }
+
+        private void textBoxSubtitleText_TextChanged(object sender, EventArgs e)
+        {
+            _currentSubtitleText.Text = (sender as TextBox).Text;
+            _currentNode.Text = "Text: " + _currentSubtitleText.Text;
+        }
+
+        private void numericUpDownChangeFontColor_ValueChanged(object sender, EventArgs e)
+        {
+            _currentSubtitleFontColor.FontPaletteId = GetIntFromNumericUpDown(sender);
+        }
+
+        private List<TextST.SubtitleRegionContent> GetContentList(TextST.SubtitleRegionContent content)
+        {
+            foreach (var presentationSegment in _textST.PresentationSegments)
+            {
+                foreach (var region in presentationSegment.Regions)
+                {
+                    if (region.Content.Contains(content))
+                        return region.Content;
+                }
+            }
+            return null;
+        }
+
+        private void AddSubtitleContent(TextST.SubtitleRegionContent newContent, string title)
+        {
+            var content = _currentNode.Tag as TextST.SubtitleRegionContent;
+            if (content != null)
+            {
+                var list = GetContentList(content);
+                if (list != null)
+                {
+                    var newNode = new TreeNode(title) { Tag = newContent };
+                    _currentNode.Parent.Nodes.Insert(_currentNode.Parent.Nodes.IndexOf(_currentNode) + 1, newNode);
+                    int index = list.IndexOf(content);
+                    list.Insert(index + 1, newContent);
+                    treeView1.SelectedNode = newNode;
+                }
+            }
+        }
+
+        private void addLineBreakToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var newContent = new TextST.SubtitleRegionContentLineBreak();
+            AddSubtitleContent(newContent, newContent.Name);
+        }
+
+        private void addEndOfInlineStyleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var newContent = new TextST.SubtitleRegionContentEndOfInlineStyle();
+            AddSubtitleContent(newContent, newContent.Name);
+        }
+
+        private void addFontSizeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var newContent = new TextST.SubtitleRegionContentChangeFontSize { FontSize = 45};
+            AddSubtitleContent(newContent, newContent.Name);
+        }
+
+        private void addFontSetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var newContent = new TextST.SubtitleRegionContentChangeFontSet();
+            AddSubtitleContent(newContent, newContent.Name);
+        }
+
+        private void addFontStyleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var newContent = new TextST.SubtitleRegionContentChangeFontStyle { FontStyle = 0, FontOutlinePaletteId = 0, FontOutlineThickness = 2 };
+            AddSubtitleContent(newContent, newContent.Name);
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var newContent = new TextST.SubtitleRegionContentText();
+            AddSubtitleContent(newContent, newContent.Name + ": ");
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var content = _currentNode.Tag as TextST.SubtitleRegionContent;
+            if (content != null)
+            {
+                var list = GetContentList(content);
+                if (list != null)
+                {
+                    list.Remove(content);
+                    _currentNode.Parent.Nodes.Remove(_currentNode);
+                }
+            }
+        }
+
+        private void AddSubtitleContentFromRoot(TextST.SubtitleRegionContent newContent, string title)
+        {
+            var region = _currentNode.Tag as TextST.SubtitleRegion;
+            if (region != null)
+            {
+                var list = region.Content;
+                if (list != null)
+                {
+                    var newNode = new TreeNode(title) { Tag = newContent };
+                    _currentNode.Nodes.Insert(0, newNode);
+                    region.Content.Insert(0, newContent);
+                    treeView1.SelectedNode = newNode;
+                }
+            }
+        }
+
+        private void toolStripMenuItemRegionAddLineBreak_Click(object sender, EventArgs e)
+        {
+            var newContent = new TextST.SubtitleRegionContentLineBreak();
+            AddSubtitleContentFromRoot(newContent, newContent.Name);
+        }
+
+        private void toolStripMenuItemRegionAddText_Click(object sender, EventArgs e)
+        {
+            var newContent = new TextST.SubtitleRegionContentText();
+            AddSubtitleContentFromRoot(newContent, newContent.Name + ": ");
+        }
+
+        private void toolStripMenuItemRegionAddFontStyle_Click(object sender, EventArgs e)
+        {
+            var newContent = new TextST.SubtitleRegionContentChangeFontStyle { FontStyle = 0, FontOutlinePaletteId = 0, FontOutlineThickness = 2 };
+            AddSubtitleContentFromRoot(newContent, newContent.Name);
+        }
+
+        private void toolStripMenuItemRegionAddFontSize_Click(object sender, EventArgs e)
+        {
+            var newContent = new TextST.SubtitleRegionContentChangeFontSize { FontSize = 45 };
+            AddSubtitleContentFromRoot(newContent, newContent.Name);
+        }
+
+        private void toolStripMenuItemRegionAddInlineStyle_Click(object sender, EventArgs e)
+        {
+            var newContent = new TextST.SubtitleRegionContentEndOfInlineStyle();
+            AddSubtitleContentFromRoot(newContent, newContent.Name);
+        }
+
+        private void numericUpDownFontSetFontId_ValueChanged(object sender, EventArgs e)
+        {
+            _currentSubtitleFontSet.FontId = GetIntFromNumericUpDown(sender);
+        }
 
     }
 }

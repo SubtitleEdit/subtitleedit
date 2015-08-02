@@ -135,6 +135,41 @@
             this.checkBoxSubRegionContinuous = new System.Windows.Forms.CheckBox();
             this.contextMenuStripAddPalette = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addPaletteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupBoxFontStyle = new System.Windows.Forms.GroupBox();
+            this.label43 = new System.Windows.Forms.Label();
+            this.label42 = new System.Windows.Forms.Label();
+            this.comboBoxChangeFontStyleOutlineThickness = new System.Windows.Forms.ComboBox();
+            this.comboBoxChangeFontStyleFontStyle = new System.Windows.Forms.ComboBox();
+            this.numericUpDownChangeFontStyleOutlinePaletteId = new System.Windows.Forms.NumericUpDown();
+            this.label41 = new System.Windows.Forms.Label();
+            this.groupBoxChangeFontSize = new System.Windows.Forms.GroupBox();
+            this.groupBoxChangeFontColor = new System.Windows.Forms.GroupBox();
+            this.numericUpDownChangeFontColor = new System.Windows.Forms.NumericUpDown();
+            this.label45 = new System.Windows.Forms.Label();
+            this.numericUpDownChangeFontSize = new System.Windows.Forms.NumericUpDown();
+            this.label46 = new System.Windows.Forms.Label();
+            this.groupBoxSubtitleText = new System.Windows.Forms.GroupBox();
+            this.textBoxSubtitleText = new System.Windows.Forms.TextBox();
+            this.label44 = new System.Windows.Forms.Label();
+            this.contextMenuStripAddSubtitleContent = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.addFontStyleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addFontSizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addLineBreakToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addEndOfInlineStyleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStripAddSubtitleContentFromSubRegion = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemRegionAddText = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemRegionAddFontStyle = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemRegionAddFontSize = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemRegionAddLineBreak = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemRegionAddInlineStyle = new System.Windows.Forms.ToolStripMenuItem();
+            this.label47 = new System.Windows.Forms.Label();
+            this.groupBoxFontSet = new System.Windows.Forms.GroupBox();
+            this.numericUpDownFontSetFontId = new System.Windows.Forms.NumericUpDown();
+            this.label48 = new System.Windows.Forms.Label();
+            this.addFontSetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxPropertiesRoot.SuspendLayout();
             this.groupBoxTextST.SuspendLayout();
             this.groupBoxPropertiesRegionStyle.SuspendLayout();
@@ -185,6 +220,17 @@
             this.groupBoxPresentationSegmentRegion.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSubRegionStyleIdRef)).BeginInit();
             this.contextMenuStripAddPalette.SuspendLayout();
+            this.groupBoxFontStyle.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChangeFontStyleOutlinePaletteId)).BeginInit();
+            this.groupBoxChangeFontSize.SuspendLayout();
+            this.groupBoxChangeFontColor.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChangeFontColor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChangeFontSize)).BeginInit();
+            this.groupBoxSubtitleText.SuspendLayout();
+            this.contextMenuStripAddSubtitleContent.SuspendLayout();
+            this.contextMenuStripAddSubtitleContentFromSubRegion.SuspendLayout();
+            this.groupBoxFontSet.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSetFontId)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxPropertiesRoot
@@ -790,6 +836,7 @@
             // 
             this.groupBoxPropertiesPalette.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxPropertiesPalette.Controls.Add(this.label47);
             this.groupBoxPropertiesPalette.Controls.Add(this.panelPaletteColor);
             this.groupBoxPropertiesPalette.Controls.Add(this.buttonColor);
             this.groupBoxPropertiesPalette.Controls.Add(this.numericUpDownPaletteOpacity);
@@ -804,7 +851,7 @@
             this.groupBoxPropertiesPalette.Controls.Add(this.label1);
             this.groupBoxPropertiesPalette.Location = new System.Drawing.Point(231, 3);
             this.groupBoxPropertiesPalette.Name = "groupBoxPropertiesPalette";
-            this.groupBoxPropertiesPalette.Size = new System.Drawing.Size(167, 211);
+            this.groupBoxPropertiesPalette.Size = new System.Drawing.Size(261, 211);
             this.groupBoxPropertiesPalette.TabIndex = 9;
             this.groupBoxPropertiesPalette.TabStop = false;
             this.groupBoxPropertiesPalette.Text = "Properties: Region palette";
@@ -1401,7 +1448,7 @@
             this.groupBoxPresentationSegmentRegion.Controls.Add(this.checkBoxSubRegionContinuous);
             this.groupBoxPresentationSegmentRegion.Location = new System.Drawing.Point(404, 4);
             this.groupBoxPresentationSegmentRegion.Name = "groupBoxPresentationSegmentRegion";
-            this.groupBoxPresentationSegmentRegion.Size = new System.Drawing.Size(208, 211);
+            this.groupBoxPresentationSegmentRegion.Size = new System.Drawing.Size(208, 133);
             this.groupBoxPresentationSegmentRegion.TabIndex = 15;
             this.groupBoxPresentationSegmentRegion.TabStop = false;
             this.groupBoxPresentationSegmentRegion.Text = "Properties: Subtitle region";
@@ -1465,17 +1512,380 @@
             this.addPaletteToolStripMenuItem.Text = "Add palette";
             this.addPaletteToolStripMenuItem.Click += new System.EventHandler(this.addPaletteToolStripMenuItem_Click);
             // 
+            // groupBoxFontStyle
+            // 
+            this.groupBoxFontStyle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFontStyle.Controls.Add(this.label43);
+            this.groupBoxFontStyle.Controls.Add(this.label42);
+            this.groupBoxFontStyle.Controls.Add(this.comboBoxChangeFontStyleOutlineThickness);
+            this.groupBoxFontStyle.Controls.Add(this.comboBoxChangeFontStyleFontStyle);
+            this.groupBoxFontStyle.Controls.Add(this.numericUpDownChangeFontStyleOutlinePaletteId);
+            this.groupBoxFontStyle.Controls.Add(this.label41);
+            this.groupBoxFontStyle.Location = new System.Drawing.Point(16, 471);
+            this.groupBoxFontStyle.Name = "groupBoxFontStyle";
+            this.groupBoxFontStyle.Size = new System.Drawing.Size(230, 133);
+            this.groupBoxFontStyle.TabIndex = 36;
+            this.groupBoxFontStyle.TabStop = false;
+            this.groupBoxFontStyle.Text = "Properties: Subtitle font style";
+            this.groupBoxFontStyle.Visible = false;
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(6, 79);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(110, 13);
+            this.label43.TabIndex = 39;
+            this.label43.Text = "Font outline thickness";
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(6, 26);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(52, 13);
+            this.label42.TabIndex = 38;
+            this.label42.Text = "Font style";
+            // 
+            // comboBoxChangeFontStyleOutlineThickness
+            // 
+            this.comboBoxChangeFontStyleOutlineThickness.FormattingEnabled = true;
+            this.comboBoxChangeFontStyleOutlineThickness.Items.AddRange(new object[] {
+            "Thin border",
+            "Medium border",
+            "Thick border"});
+            this.comboBoxChangeFontStyleOutlineThickness.Location = new System.Drawing.Point(129, 76);
+            this.comboBoxChangeFontStyleOutlineThickness.Name = "comboBoxChangeFontStyleOutlineThickness";
+            this.comboBoxChangeFontStyleOutlineThickness.Size = new System.Drawing.Size(186, 21);
+            this.comboBoxChangeFontStyleOutlineThickness.TabIndex = 37;
+            // 
+            // comboBoxChangeFontStyleFontStyle
+            // 
+            this.comboBoxChangeFontStyleFontStyle.FormattingEnabled = true;
+            this.comboBoxChangeFontStyleFontStyle.Items.AddRange(new object[] {
+            "Normal",
+            "Bold",
+            "Italic",
+            "Bold and Italic",
+            "Outline-bordered",
+            "Bold and Outline-bordered",
+            "Italic and Outline-bordered",
+            "Bold and Italic and Outline-bordered"});
+            this.comboBoxChangeFontStyleFontStyle.Location = new System.Drawing.Point(129, 23);
+            this.comboBoxChangeFontStyleFontStyle.Name = "comboBoxChangeFontStyleFontStyle";
+            this.comboBoxChangeFontStyleFontStyle.Size = new System.Drawing.Size(186, 21);
+            this.comboBoxChangeFontStyleFontStyle.TabIndex = 36;
+            // 
+            // numericUpDownChangeFontStyleOutlinePaletteId
+            // 
+            this.numericUpDownChangeFontStyleOutlinePaletteId.Location = new System.Drawing.Point(129, 50);
+            this.numericUpDownChangeFontStyleOutlinePaletteId.Maximum = new decimal(new int[] {
+            254,
+            0,
+            0,
+            0});
+            this.numericUpDownChangeFontStyleOutlinePaletteId.Name = "numericUpDownChangeFontStyleOutlinePaletteId";
+            this.numericUpDownChangeFontStyleOutlinePaletteId.Size = new System.Drawing.Size(76, 20);
+            this.numericUpDownChangeFontStyleOutlinePaletteId.TabIndex = 35;
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(7, 52);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(108, 13);
+            this.label41.TabIndex = 34;
+            this.label41.Text = "Font outline palette id";
+            // 
+            // groupBoxChangeFontSize
+            // 
+            this.groupBoxChangeFontSize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxChangeFontSize.Controls.Add(this.groupBoxChangeFontColor);
+            this.groupBoxChangeFontSize.Controls.Add(this.numericUpDownChangeFontSize);
+            this.groupBoxChangeFontSize.Controls.Add(this.label46);
+            this.groupBoxChangeFontSize.Location = new System.Drawing.Point(355, 510);
+            this.groupBoxChangeFontSize.Name = "groupBoxChangeFontSize";
+            this.groupBoxChangeFontSize.Size = new System.Drawing.Size(183, 133);
+            this.groupBoxChangeFontSize.TabIndex = 40;
+            this.groupBoxChangeFontSize.TabStop = false;
+            this.groupBoxChangeFontSize.Text = "Properties: Subtitle font size";
+            this.groupBoxChangeFontSize.Visible = false;
+            // 
+            // groupBoxChangeFontColor
+            // 
+            this.groupBoxChangeFontColor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxChangeFontColor.Controls.Add(this.numericUpDownChangeFontColor);
+            this.groupBoxChangeFontColor.Controls.Add(this.label45);
+            this.groupBoxChangeFontColor.Location = new System.Drawing.Point(30, 12);
+            this.groupBoxChangeFontColor.Name = "groupBoxChangeFontColor";
+            this.groupBoxChangeFontColor.Size = new System.Drawing.Size(183, 133);
+            this.groupBoxChangeFontColor.TabIndex = 41;
+            this.groupBoxChangeFontColor.TabStop = false;
+            this.groupBoxChangeFontColor.Text = "Properties: Subtitle font color";
+            this.groupBoxChangeFontColor.Visible = false;
+            // 
+            // numericUpDownChangeFontColor
+            // 
+            this.numericUpDownChangeFontColor.Location = new System.Drawing.Point(100, 18);
+            this.numericUpDownChangeFontColor.Maximum = new decimal(new int[] {
+            254,
+            0,
+            0,
+            0});
+            this.numericUpDownChangeFontColor.Name = "numericUpDownChangeFontColor";
+            this.numericUpDownChangeFontColor.Size = new System.Drawing.Size(76, 20);
+            this.numericUpDownChangeFontColor.TabIndex = 15;
+            this.numericUpDownChangeFontColor.ValueChanged += new System.EventHandler(this.numericUpDownChangeFontColor_ValueChanged);
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(6, 20);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(74, 13);
+            this.label45.TabIndex = 14;
+            this.label45.Text = "Font palette id";
+            // 
+            // numericUpDownChangeFontSize
+            // 
+            this.numericUpDownChangeFontSize.Location = new System.Drawing.Point(80, 23);
+            this.numericUpDownChangeFontSize.Maximum = new decimal(new int[] {
+            144,
+            0,
+            0,
+            0});
+            this.numericUpDownChangeFontSize.Minimum = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            this.numericUpDownChangeFontSize.Name = "numericUpDownChangeFontSize";
+            this.numericUpDownChangeFontSize.Size = new System.Drawing.Size(76, 20);
+            this.numericUpDownChangeFontSize.TabIndex = 35;
+            this.numericUpDownChangeFontSize.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(15, 25);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(49, 13);
+            this.label46.TabIndex = 34;
+            this.label46.Text = "Font size";
+            // 
+            // groupBoxSubtitleText
+            // 
+            this.groupBoxSubtitleText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSubtitleText.Controls.Add(this.textBoxSubtitleText);
+            this.groupBoxSubtitleText.Controls.Add(this.label44);
+            this.groupBoxSubtitleText.Location = new System.Drawing.Point(284, 526);
+            this.groupBoxSubtitleText.Name = "groupBoxSubtitleText";
+            this.groupBoxSubtitleText.Size = new System.Drawing.Size(145, 111);
+            this.groupBoxSubtitleText.TabIndex = 41;
+            this.groupBoxSubtitleText.TabStop = false;
+            this.groupBoxSubtitleText.Text = "Properties: Subtitle text";
+            this.groupBoxSubtitleText.Visible = false;
+            // 
+            // textBoxSubtitleText
+            // 
+            this.textBoxSubtitleText.Location = new System.Drawing.Point(46, 22);
+            this.textBoxSubtitleText.MaxLength = 50;
+            this.textBoxSubtitleText.Name = "textBoxSubtitleText";
+            this.textBoxSubtitleText.Size = new System.Drawing.Size(228, 20);
+            this.textBoxSubtitleText.TabIndex = 36;
+            this.textBoxSubtitleText.TextChanged += new System.EventHandler(this.textBoxSubtitleText_TextChanged);
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(15, 25);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(28, 13);
+            this.label44.TabIndex = 34;
+            this.label44.Text = "Text";
+            // 
+            // contextMenuStripAddSubtitleContent
+            // 
+            this.contextMenuStripAddSubtitleContent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
+            this.addFontSetToolStripMenuItem,
+            this.addFontStyleToolStripMenuItem,
+            this.addFontSizeToolStripMenuItem,
+            this.addLineBreakToolStripMenuItem,
+            this.addEndOfInlineStyleToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.deleteToolStripMenuItem});
+            this.contextMenuStripAddSubtitleContent.Name = "contextMenuStripAddPalette";
+            this.contextMenuStripAddSubtitleContent.Size = new System.Drawing.Size(193, 186);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(192, 22);
+            this.toolStripMenuItem1.Text = "Add text";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
+            // addFontStyleToolStripMenuItem
+            // 
+            this.addFontStyleToolStripMenuItem.Name = "addFontStyleToolStripMenuItem";
+            this.addFontStyleToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.addFontStyleToolStripMenuItem.Text = "Add font style";
+            this.addFontStyleToolStripMenuItem.Click += new System.EventHandler(this.addFontStyleToolStripMenuItem_Click);
+            // 
+            // addFontSizeToolStripMenuItem
+            // 
+            this.addFontSizeToolStripMenuItem.Name = "addFontSizeToolStripMenuItem";
+            this.addFontSizeToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.addFontSizeToolStripMenuItem.Text = "Add font size";
+            this.addFontSizeToolStripMenuItem.Click += new System.EventHandler(this.addFontSizeToolStripMenuItem_Click);
+            // 
+            // addLineBreakToolStripMenuItem
+            // 
+            this.addLineBreakToolStripMenuItem.Name = "addLineBreakToolStripMenuItem";
+            this.addLineBreakToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.addLineBreakToolStripMenuItem.Text = "Add line break";
+            this.addLineBreakToolStripMenuItem.Click += new System.EventHandler(this.addLineBreakToolStripMenuItem_Click);
+            // 
+            // addEndOfInlineStyleToolStripMenuItem
+            // 
+            this.addEndOfInlineStyleToolStripMenuItem.Name = "addEndOfInlineStyleToolStripMenuItem";
+            this.addEndOfInlineStyleToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.addEndOfInlineStyleToolStripMenuItem.Text = "Add end of inline style";
+            this.addEndOfInlineStyleToolStripMenuItem.Click += new System.EventHandler(this.addEndOfInlineStyleToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(189, 6);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // contextMenuStripAddSubtitleContentFromSubRegion
+            // 
+            this.contextMenuStripAddSubtitleContentFromSubRegion.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemRegionAddText,
+            this.toolStripMenuItemRegionAddFontStyle,
+            this.toolStripMenuItemRegionAddFontSize,
+            this.toolStripMenuItemRegionAddLineBreak,
+            this.toolStripMenuItemRegionAddInlineStyle});
+            this.contextMenuStripAddSubtitleContentFromSubRegion.Name = "contextMenuStripAddPalette";
+            this.contextMenuStripAddSubtitleContentFromSubRegion.Size = new System.Drawing.Size(193, 114);
+            // 
+            // toolStripMenuItemRegionAddText
+            // 
+            this.toolStripMenuItemRegionAddText.Name = "toolStripMenuItemRegionAddText";
+            this.toolStripMenuItemRegionAddText.Size = new System.Drawing.Size(192, 22);
+            this.toolStripMenuItemRegionAddText.Text = "Add text";
+            this.toolStripMenuItemRegionAddText.Click += new System.EventHandler(this.toolStripMenuItemRegionAddText_Click);
+            // 
+            // toolStripMenuItemRegionAddFontStyle
+            // 
+            this.toolStripMenuItemRegionAddFontStyle.Name = "toolStripMenuItemRegionAddFontStyle";
+            this.toolStripMenuItemRegionAddFontStyle.Size = new System.Drawing.Size(192, 22);
+            this.toolStripMenuItemRegionAddFontStyle.Text = "Add font style";
+            this.toolStripMenuItemRegionAddFontStyle.Click += new System.EventHandler(this.toolStripMenuItemRegionAddFontStyle_Click);
+            // 
+            // toolStripMenuItemRegionAddFontSize
+            // 
+            this.toolStripMenuItemRegionAddFontSize.Name = "toolStripMenuItemRegionAddFontSize";
+            this.toolStripMenuItemRegionAddFontSize.Size = new System.Drawing.Size(192, 22);
+            this.toolStripMenuItemRegionAddFontSize.Text = "Add font size";
+            this.toolStripMenuItemRegionAddFontSize.Click += new System.EventHandler(this.toolStripMenuItemRegionAddFontSize_Click);
+            // 
+            // toolStripMenuItemRegionAddLineBreak
+            // 
+            this.toolStripMenuItemRegionAddLineBreak.Name = "toolStripMenuItemRegionAddLineBreak";
+            this.toolStripMenuItemRegionAddLineBreak.Size = new System.Drawing.Size(192, 22);
+            this.toolStripMenuItemRegionAddLineBreak.Text = "Add line break";
+            this.toolStripMenuItemRegionAddLineBreak.Click += new System.EventHandler(this.toolStripMenuItemRegionAddLineBreak_Click);
+            // 
+            // toolStripMenuItemRegionAddInlineStyle
+            // 
+            this.toolStripMenuItemRegionAddInlineStyle.Name = "toolStripMenuItemRegionAddInlineStyle";
+            this.toolStripMenuItemRegionAddInlineStyle.Size = new System.Drawing.Size(192, 22);
+            this.toolStripMenuItemRegionAddInlineStyle.Text = "Add end of inline style";
+            this.toolStripMenuItemRegionAddInlineStyle.Click += new System.EventHandler(this.toolStripMenuItemRegionAddInlineStyle_Click);
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(164, 133);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(137, 13);
+            this.label47.TabIndex = 15;
+            this.label47.Text = "0 is transparent, 255 is solid";
+            // 
+            // groupBoxFontSet
+            // 
+            this.groupBoxFontSet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFontSet.Controls.Add(this.numericUpDownFontSetFontId);
+            this.groupBoxFontSet.Controls.Add(this.label48);
+            this.groupBoxFontSet.Location = new System.Drawing.Point(544, 497);
+            this.groupBoxFontSet.Name = "groupBoxFontSet";
+            this.groupBoxFontSet.Size = new System.Drawing.Size(226, 133);
+            this.groupBoxFontSet.TabIndex = 42;
+            this.groupBoxFontSet.TabStop = false;
+            this.groupBoxFontSet.Text = "Properties: Subtitle font set";
+            this.groupBoxFontSet.Visible = false;
+            // 
+            // numericUpDownFontSetFontId
+            // 
+            this.numericUpDownFontSetFontId.Location = new System.Drawing.Point(100, 18);
+            this.numericUpDownFontSetFontId.Maximum = new decimal(new int[] {
+            254,
+            0,
+            0,
+            0});
+            this.numericUpDownFontSetFontId.Name = "numericUpDownFontSetFontId";
+            this.numericUpDownFontSetFontId.Size = new System.Drawing.Size(76, 20);
+            this.numericUpDownFontSetFontId.TabIndex = 15;
+            this.numericUpDownFontSetFontId.ValueChanged += new System.EventHandler(this.numericUpDownFontSetFontId_ValueChanged);
+            // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(6, 20);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(81, 13);
+            this.label48.TabIndex = 14;
+            this.label48.Text = "Font id from CIF";
+            // 
+            // addFontSetToolStripMenuItem
+            // 
+            this.addFontSetToolStripMenuItem.Name = "addFontSetToolStripMenuItem";
+            this.addFontSetToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.addFontSetToolStripMenuItem.Text = "Add font set";
+            this.addFontSetToolStripMenuItem.Click += new System.EventHandler(this.addFontSetToolStripMenuItem_Click);
+            // 
             // ExportTextST
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(871, 610);
+            this.Controls.Add(this.groupBoxFontSet);
+            this.Controls.Add(this.groupBoxPropertiesPalette);
+            this.Controls.Add(this.groupBoxChangeFontSize);
             this.Controls.Add(this.buttonImport);
+            this.Controls.Add(this.groupBoxSubtitleText);
+            this.Controls.Add(this.groupBoxFontStyle);
             this.Controls.Add(this.groupBoxPresentationSegmentRegion);
             this.Controls.Add(this.groupBoxPropertiesUserStyle);
             this.Controls.Add(this.groupBoxPropertiesRegionStyle);
             this.Controls.Add(this.buttonSaveAsM2ts);
-            this.Controls.Add(this.groupBoxPropertiesPalette);
             this.Controls.Add(this.groupBoxPropertiesRoot);
             this.Controls.Add(this.groupBoxTextST);
             this.Controls.Add(this.buttonCancel);
@@ -1541,6 +1951,22 @@
             this.groupBoxPresentationSegmentRegion.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSubRegionStyleIdRef)).EndInit();
             this.contextMenuStripAddPalette.ResumeLayout(false);
+            this.groupBoxFontStyle.ResumeLayout(false);
+            this.groupBoxFontStyle.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChangeFontStyleOutlinePaletteId)).EndInit();
+            this.groupBoxChangeFontSize.ResumeLayout(false);
+            this.groupBoxChangeFontSize.PerformLayout();
+            this.groupBoxChangeFontColor.ResumeLayout(false);
+            this.groupBoxChangeFontColor.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChangeFontColor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChangeFontSize)).EndInit();
+            this.groupBoxSubtitleText.ResumeLayout(false);
+            this.groupBoxSubtitleText.PerformLayout();
+            this.contextMenuStripAddSubtitleContent.ResumeLayout(false);
+            this.contextMenuStripAddSubtitleContentFromSubRegion.ResumeLayout(false);
+            this.groupBoxFontSet.ResumeLayout(false);
+            this.groupBoxFontSet.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSetFontId)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1653,5 +2079,40 @@
         private System.Windows.Forms.CheckBox checkBoxSubRegionContinuous;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripAddPalette;
         private System.Windows.Forms.ToolStripMenuItem addPaletteToolStripMenuItem;
+        private System.Windows.Forms.GroupBox groupBoxFontStyle;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.ComboBox comboBoxChangeFontStyleOutlineThickness;
+        private System.Windows.Forms.ComboBox comboBoxChangeFontStyleFontStyle;
+        private System.Windows.Forms.NumericUpDown numericUpDownChangeFontStyleOutlinePaletteId;
+        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.GroupBox groupBoxChangeFontSize;
+        private System.Windows.Forms.NumericUpDown numericUpDownChangeFontSize;
+        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.GroupBox groupBoxSubtitleText;
+        private System.Windows.Forms.TextBox textBoxSubtitleText;
+        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.GroupBox groupBoxChangeFontColor;
+        private System.Windows.Forms.NumericUpDown numericUpDownChangeFontColor;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripAddSubtitleContent;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem addFontStyleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addFontSizeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addLineBreakToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addEndOfInlineStyleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripAddSubtitleContentFromSubRegion;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRegionAddText;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRegionAddFontStyle;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRegionAddFontSize;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRegionAddLineBreak;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRegionAddInlineStyle;
+        private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.GroupBox groupBoxFontSet;
+        private System.Windows.Forms.NumericUpDown numericUpDownFontSetFontId;
+        private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.ToolStripMenuItem addFontSetToolStripMenuItem;
     }
 }
