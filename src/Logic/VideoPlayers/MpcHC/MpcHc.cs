@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         private Process _process;
         private IntPtr _messageHandlerHandle = IntPtr.Zero;
         private string _videoFileName;
-        private System.Windows.Forms.Timer _positionTimer;
+        private Timer _positionTimer;
         private double _positionInSeconds = 0;
         private double _durationInSeconds = 0;
         private MessageHandlerWindow _form;
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             get { return _playMode == ModePlay; }
         }
 
-        public override void Initialize(System.Windows.Forms.Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             if (ownerControl == null)
                 return;
