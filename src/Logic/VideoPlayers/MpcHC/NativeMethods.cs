@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 {
     internal static class NativeMethods
     {
-
         internal delegate bool EnumedWindow(IntPtr handleWindow, ArrayList handles);
 
         #region structs, constants and enums
@@ -153,5 +152,4 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         #endregion Win32 API
 
     }
-
 }

@@ -6,6 +6,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
     {
         public int Id { get; set; }
         public string Text { get; set; }
+
         public override string ToString()
         {
             return Text;
@@ -17,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             get
             {
-                List<ModiLanguage> list = new List<ModiLanguage>();
+                var list = new List<ModiLanguage>();
                 list.Add(new ModiLanguage { Id = DefaultLanguageId, Text = "Default" });
                 list.Add(new ModiLanguage { Id = 2052, Text = "Chinese simplified" });
                 list.Add(new ModiLanguage { Id = 1028, Text = "Chinese traditional" });
