@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             XmlNode episode = xml.DocumentElement.SelectSingleNode("Episode");
 
+            const string format = "{0:0.000}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //<Section type="filler" endTime="10.790" startTime="9.609">
@@ -58,20 +59,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 section.Attributes.Append(t);
 
                 XmlAttribute et = xml.CreateAttribute("endTime");
-                et.InnerText = string.Format("{0:0.000}", p.EndTime.TotalSeconds).Replace(",", ".");
+                et.InnerText = string.Format(format, p.EndTime.TotalSeconds).Replace(',', '.');
                 section.Attributes.Append(et);
 
                 XmlAttribute st = xml.CreateAttribute("startTime");
-                st.InnerText = string.Format("{0:0.000}", p.StartTime.TotalSeconds).Replace(",", ".");
+                st.InnerText = string.Format(format, p.StartTime.TotalSeconds).Replace(',', '.');
                 section.Attributes.Append(st);
 
                 XmlNode turn = xml.CreateElement("Turn");
                 et = xml.CreateAttribute("endTime");
-                et.InnerText = string.Format("{0:0.000}", p.EndTime.TotalSeconds).Replace(",", ".");
+                et.InnerText = string.Format(format, p.EndTime.TotalSeconds).Replace(',', '.');
                 turn.Attributes.Append(et);
 
                 st = xml.CreateAttribute("startTime");
-                st.InnerText = string.Format("{0:0.000}", p.StartTime.TotalSeconds).Replace(",", ".");
+                st.InnerText = string.Format(format, p.StartTime.TotalSeconds).Replace(',', '.');
                 turn.Attributes.Append(st);
 
                 turn.InnerText = p.Text;
