@@ -6,9 +6,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class UnknownSubtitle41 : SubtitleFormat
     {
-
-        private static Regex regexTimeCodes1 = new Regex(@"^\d+.\d$", RegexOptions.Compiled);
-        private static Regex regexTimeCodes2 = new Regex(@"^\d+.\d\d$", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodes1 = new Regex(@"^\d+.\d$", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodes2 = new Regex(@"^\d+.\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -88,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (regexTimeCodes1.Match(line).Success || regexTimeCodes2.Match(line).Success)
                         {
                             p = new Paragraph();
-                            sb = new StringBuilder();
+                            sb.Clear();
                             p.StartTime = DecodeTimeCode(line.Split('.'));
                             textOn = true;
                         }
@@ -120,9 +119,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(string[] parts)
         {
             Configuration.Settings.General.CurrentFrameRate = 24.0;
-            string frames16 = parts[0];
-            string frames = parts[1];
-            return new TimeCode(0, 0, 0, FramesToMilliseconds(16 * int.Parse(frames16) + int.Parse(frames)));
+            var frames16 = int.Parse(parts[0]);
+            var frames = int.Parse(parts[1]);
+            return new TimeCode(0, 0, 0, FramesToMilliseconds(16 * frames16 + frames));
         }
 
     }

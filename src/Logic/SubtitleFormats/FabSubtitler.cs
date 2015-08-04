@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class FabSubtitler : SubtitleFormat
     {
-        private static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d  \d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d  \d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -34,14 +34,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             int index = 0;
+            const string writeFormat = "{0}  {1}{2}{3}{2}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //00:50:34:22  00:50:39:13
                 //Ich muss dafür sorgen,
                 //dass die Epsteins weiterleben
-                sb.AppendLine(string.Format("{0}  {1}{2}{3}{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text)));
+                sb.AppendLine(string.Format(writeFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text)));
                 index++;
             }
             return sb.ToString();
@@ -95,12 +96,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(string[] parts)
         {
             //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = int.Parse(parts[3]);
+            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
     }

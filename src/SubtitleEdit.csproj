@@ -279,6 +279,12 @@
     <Compile Include="Forms\ExportPngXmlPreview.Designer.cs">
       <DependentUpon>ExportPngXmlPreview.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ExportTextST.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ExportTextST.Designer.cs">
+      <DependentUpon>ExportTextST.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FcpProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1332,6 +1338,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ExportPngXmlPreview.resx">
       <DependentUpon>ExportPngXmlPreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ExportTextST.resx">
+      <DependentUpon>ExportTextST.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FcpProperties.resx">
       <DependentUpon>FcpProperties.cs</DependentUpon>

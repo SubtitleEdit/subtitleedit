@@ -1728,7 +1728,8 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if ((ext == ".m2ts") && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName))
+                if ((ext == ".m2ts" && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName)) ||
+                    (ext == ".textst" && FileUtil.IsMpeg2PrivateStream2(fileName)))
                 {
                     bool isTextSt = false;
                     if (file.Length < 2000000)
@@ -1859,8 +1860,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-
-                if (ext == ".m2ts")
+                if (ext == ".m2ts" || ext == ".textst")
                 {
                     var textST = new TextST();
                     if (textST.IsMine(null, fileName))
@@ -12739,8 +12739,18 @@ namespace Nikse.SubtitleEdit.Forms
                 var fileName = fileNameNoExtension + extension;
                 if (File.Exists(fileName))
                 {
-                    movieFileName = fileName;
-                    break;
+                    bool skipLoad = false;
+                    if (extension == ".m2ts" && new FileInfo(fileName).Length < 2000000)
+                    {
+                        var textSt = new TextST();
+                        skipLoad = textSt.IsMine(null, fileName); // don't load TextST files as video/audio file
+                    }
+
+                    if (!skipLoad)
+                    {
+                        movieFileName = fileName;
+                        break;
+                    }
                 }
             }
 
@@ -13708,13 +13718,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonGoogleIt_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(textBoxSearchWord.Text));
+            System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(textBoxSearchWord.Text));
         }
 
         private void buttonGoogleTranslateIt_Click(object sender, EventArgs e)
         {
             string languageId = Utilities.AutoDetectGoogleLanguage(_subtitle);
-            System.Diagnostics.Process.Start("http://translate.google.com/#auto|" + languageId + "|" + Utilities.UrlEncode(textBoxSearchWord.Text));
+            System.Diagnostics.Process.Start("https://translate.google.com/#auto|" + languageId + "|" + Utilities.UrlEncode(textBoxSearchWord.Text));
         }
 
         private void ButtonPlayCurrentClick(object sender, EventArgs e)
@@ -14096,6 +14106,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemImportOcrHardSub.Visible = showBeta;
             toolStripMenuItemMeasurementConverter.Visible = showBeta;
             toolStripMenuItemOpenDvd.Visible = showBeta;
+            //toolStripMenuItemExportBdTextSt.Visible = showBeta;
 
             if (Configuration.Settings.General.StartRememberPositionAndSize &&
                 Configuration.Settings.General.SplitContainerMainSplitterDistance > 0 &&
@@ -19371,6 +19382,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void DisplaySubtitleNotLoadedMessage()
         {
             MessageBox.Show(this, _language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void toolStripMenuItemExportBdTextSt_Click(object sender, EventArgs e)
+        {
+            using (var form = new ExportTextST(_subtitle))
+            {
+                form.ShowDialog(this);
+            }
         }
 
     }

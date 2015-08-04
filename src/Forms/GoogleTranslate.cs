@@ -83,22 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.InitializeSubtitleFont(subtitleListViewTo);
             subtitleListViewFrom.AutoSizeAllColumns(this);
             subtitleListViewTo.AutoSizeAllColumns(this);
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            using (var graphics = CreateGraphics())
-            {
-                var textSize = graphics.MeasureString(buttonOK.Text, Font);
-                if (textSize.Height > buttonOK.Height - 4)
-                {
-                    subtitleListViewFrom.InitializeTimestampColumnWidths(this);
-                    subtitleListViewTo.InitializeTimestampColumnWidths(this);
-                    int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                    Utilities.SetButtonHeight(this, newButtonHeight, 1);
-                }
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         internal void Initialize(Subtitle subtitle, string title, bool googleTranslate, Encoding encoding)
@@ -359,7 +344,7 @@ namespace Nikse.SubtitleEdit.Forms
             // create the web request to the Google Translate REST interface
 
             //API V 1.0
-            Uri uri = new Uri("http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + Utilities.UrlEncode(input) + "&langpair=" + languagePair + "&key=" + googleApiKey);
+            var uri = new Uri("http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + Utilities.UrlEncode(input) + "&langpair=" + languagePair + "&key=" + googleApiKey);
 
             //API V 2.0 ?
             //string[] arr = languagePair.Split('|');
@@ -414,7 +399,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), "123 456");
+                string url = String.Format("https://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), "123 456");
                 var result = Utilities.DownloadString(url).ToLower();
                 int idx = result.IndexOf("charset", StringComparison.Ordinal);
                 int end = result.IndexOf('"', idx + 8);
@@ -429,7 +414,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         /// <summary>
         /// Translate Text using Google Translate API's
-        /// Google URL - http://www.google.com/translate_t?hl=en&amp;ie=UTF8&amp;text={0}&amp;langpair={1}
+        /// Google URL - https://www.google.com/translate_t?hl=en&amp;ie=UTF8&amp;text={0}&amp;langpair={1}
         /// </summary>
         /// <param name="input">Input string</param>
         /// <param name="languagePair">2 letter Language Pair, delimited by "|".
@@ -442,8 +427,8 @@ namespace Nikse.SubtitleEdit.Forms
             input = input.Replace(Environment.NewLine, NewlineString);
             //input = input.Replace("'", "&apos;");
 
-            //string url = String.Format("http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}", HttpUtility.UrlEncode(input), languagePair);
-            string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
+            //string url = String.Format("https://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}", HttpUtility.UrlEncode(input), languagePair);
+            string url = String.Format("https://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
             var result = Utilities.DownloadString(url, encoding);
 
             var sb = new StringBuilder();
@@ -667,7 +652,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void LinkLabel1LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (_googleTranslate)
-                System.Diagnostics.Process.Start("http://www.google.com/translate");
+                System.Diagnostics.Process.Start("https://www.google.com/translate");
             else
                 System.Diagnostics.Process.Start("http://www.microsofttranslator.com/");
         }
@@ -851,8 +836,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_microsoftTranslationService == null)
                 {
-                    _microsoftTranslationService = new MicrosoftTranslationService.SoapService();
-                    _microsoftTranslationService.Proxy = Utilities.GetProxy();
+                    _microsoftTranslationService = new MicrosoftTranslationService.SoapService { Proxy = Utilities.GetProxy() };
                 }
                 return _microsoftTranslationService;
             }

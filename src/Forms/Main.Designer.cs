@@ -112,6 +112,7 @@
             this.toolStripMenuItemAvidStl = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportPngXml = new System.Windows.Forms.ToolStripMenuItem();
             this.bluraySupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportBdTextSt = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportCapMakerPlus = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportCaptionInc = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemCavena890 = new System.Windows.Forms.ToolStripMenuItem();
@@ -1159,6 +1160,7 @@
             this.toolStripMenuItemAvidStl,
             this.toolStripMenuItemExportPngXml,
             this.bluraySupToolStripMenuItem,
+            this.toolStripMenuItemExportBdTextSt,
             this.toolStripMenuItemExportCapMakerPlus,
             this.toolStripMenuItemExportCaptionInc,
             this.toolStripMenuItemCavena890,
@@ -1209,6 +1211,13 @@
             this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.bluraySupToolStripMenuItem.Text = "Blu-ray sup...";
             this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.BluraySupToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemExportBdTextSt
+            // 
+            this.toolStripMenuItemExportBdTextSt.Name = "toolStripMenuItemExportBdTextSt";
+            this.toolStripMenuItemExportBdTextSt.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemExportBdTextSt.Text = "Blu-ray TextST...";
+            this.toolStripMenuItemExportBdTextSt.Click += new System.EventHandler(this.toolStripMenuItemExportBdTextSt_Click);
             // 
             // toolStripMenuItemExportCapMakerPlus
             // 
@@ -4966,5 +4975,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEbuProperties;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddWaveformBatch;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportBdTextSt;
     }
 }

@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (i == numericUpDownParts.Value - 1)
                         noOfLines = (int)(_subtitle.Paragraphs.Count - ((numericUpDownParts.Value - 1) * partSize));
 
-                    Subtitle temp = new Subtitle();
+                    var temp = new Subtitle();
                     temp.Header = _subtitle.Header;
                     int size = 0;
                     for (int number = 0; number < noOfLines; number++)
@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Forms
                     startNumber += noOfLines;
                     _parts.Add(temp);
 
-                    ListViewItem lvi = new ListViewItem(string.Format("{0:#,###,###}", noOfLines));
+                    var lvi = new ListViewItem(string.Format("{0:#,###,###}", noOfLines));
                     lvi.SubItems.Add(string.Format("{0:#,###,###}", size));
                     lvi.SubItems.Add(fileNameNoExt + ".Part" + (i + 1) + format.Extension);
                     listViewParts.Items.Add(lvi);
@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (currentSize + size > nextLimit + 4 && _parts.Count < numericUpDownParts.Value - 1)
                     {
                         _parts.Add(temp);
-                        ListViewItem lvi = new ListViewItem(string.Format("{0:#,###,###}", temp.Paragraphs.Count));
+                        var lvi = new ListViewItem(string.Format("{0:#,###,###}", temp.Paragraphs.Count));
                         lvi.SubItems.Add(string.Format("{0:#,###,###}", currentSize));
                         lvi.SubItems.Add(fileNameNoExt + ".Part" + _parts.Count + format.Extension);
                         listViewParts.Items.Add(lvi);
@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 _parts.Add(temp);
-                ListViewItem lvi2 = new ListViewItem(string.Format("{0:#,###,###}", temp.Paragraphs.Count));
+                var lvi2 = new ListViewItem(string.Format("{0:#,###,###}", temp.Paragraphs.Count));
                 lvi2.SubItems.Add(string.Format("{0:#,###,###}", currentSize));
                 lvi2.SubItems.Add(fileNameNoExt + ".Part" + numericUpDownParts.Value + ".srt");
                 listViewParts.Items.Add(lvi2);

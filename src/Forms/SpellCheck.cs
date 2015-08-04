@@ -134,6 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSkipText.Text = Configuration.Settings.Language.SpellCheck.SkipOnce;
             groupBoxSuggestions.Text = Configuration.Settings.Language.SpellCheck.Suggestions;
             buttonAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
+            buttonGoogleIt.Text = Configuration.Settings.Language.Main.VideoControls.GoogleIt;
             Utilities.FixLargeFonts(this, buttonAbort);
         }
 
@@ -218,7 +219,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.G)
             {
                 e.SuppressKeyPress = true;
-                System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(textBoxWord.Text));
+                System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(textBoxWord.Text));
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z)
             {
@@ -1200,7 +1201,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             _namesEtcList.Remove(undo.UndoWord);
                             _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper());
-                            if (_languageName.StartsWith("en_") && !undo.UndoWord.EndsWith('s'))
+                            if (_languageName.StartsWith("en_", StringComparison.Ordinal) && !undo.UndoWord.EndsWith('s'))
                             {
                                 _namesEtcList.Remove(undo.UndoWord + "s");
                                 _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper() + "S");
@@ -1250,6 +1251,13 @@ namespace Nikse.SubtitleEdit.Forms
                 components.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void buttonGoogleIt_Click(object sender, EventArgs e)
+        {
+            string text = textBoxWord.Text.Trim();
+            if (!string.IsNullOrWhiteSpace(text))
+                System.Diagnostics.Process.Start("https://www.google.com/search?q=" + Utilities.UrlEncode(text));
         }
 
     }

@@ -110,6 +110,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int count = 1;
             var sb = new StringBuilder();
             sb.AppendLine(header.Replace("_TITLE_", title).Replace("_LANGUAGE-STYLE_", languageStyle));
+            var total = new StringBuilder();
+            var partial = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 Paragraph next = subtitle.GetParagraphOrDefault(count);
@@ -117,20 +119,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 if (text.Contains('<') && text.Contains('>'))
                 {
-                    var total = new StringBuilder();
-                    var partial = new StringBuilder();
+
                     bool tagOn = false;
                     for (int i = 0; i < text.Length; i++)
                     {
-                        if (text.Substring(i).StartsWith("<font") ||
-                            text.Substring(i).StartsWith("<div") ||
-                            text.Substring(i).StartsWith("<i") ||
-                            text.Substring(i).StartsWith("<b") ||
-                            text.Substring(i).StartsWith("<s") ||
-                            text.Substring(i).StartsWith("</"))
+                        if (text.Substring(i).StartsWith("<font", StringComparison.Ordinal) ||
+                            text.Substring(i).StartsWith("<div", StringComparison.Ordinal) ||
+                            text.Substring(i).StartsWith("<i", StringComparison.Ordinal) ||
+                            text.Substring(i).StartsWith("<b", StringComparison.Ordinal) ||
+                            text.Substring(i).StartsWith("<s", StringComparison.Ordinal) ||
+                            text.Substring(i).StartsWith("</", StringComparison.Ordinal))
                         {
                             total.Append(EncodeText(partial.ToString()));
-                            partial = new StringBuilder();
+                            partial.Clear();
                             tagOn = true;
                             total.Append('<');
                         }
@@ -375,13 +376,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text = WebUtility.HtmlDecode(text);
                 }
 
-                string cleanText = text;
-                while (cleanText.Contains("  "))
-                    cleanText = cleanText.Replace("  ", " ");
-                while (cleanText.Contains(Environment.NewLine + " "))
-                    cleanText = cleanText.Replace(Environment.NewLine + " ", Environment.NewLine);
-                while (cleanText.Contains(" " + Environment.NewLine))
-                    cleanText = cleanText.Replace(" " + Environment.NewLine, Environment.NewLine);
+                var cleanText = text.FixExtraSpaces();
                 cleanText = cleanText.Trim();
 
                 if (!string.IsNullOrEmpty(p.Text) && !string.IsNullOrEmpty(millisecAsString))
@@ -427,7 +422,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             foreach (Paragraph p2 in subtitle.Paragraphs)
             {
-                p2.Text = p2.Text.Replace(Convert.ToChar(160), ' '); // non-breaking space to normal space
+                p2.Text = p2.Text.Replace('\u00A0', ' '); // non-breaking space to normal space
             }
         }
 

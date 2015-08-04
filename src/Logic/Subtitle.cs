@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                _paragraphs.Add(new Paragraph(p));
+                _paragraphs.Add(new Paragraph(p, false));
             }
             _wasLoadedWithFrameNumbers = subtitle.WasLoadedWithFrameNumbers;
             Header = subtitle.Header;
@@ -393,11 +393,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void Renumber(int startNumber = 1)
         {
-            int i = startNumber;
             foreach (Paragraph p in _paragraphs)
             {
-                p.Number = i;
-                i++;
+                p.Number = startNumber++;
             }
         }
 

@@ -18,7 +18,6 @@
 
 namespace Nikse.SubtitleEdit.Logic.BluRaySup
 {
-
     public class BluRaySupPalette
     {
         /** Number of palette entries */
@@ -47,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
          * @param cr 8 bit chrominance red
          * @return Integer array with red, blue, green component (in this order)
          */
-        private static int[] YCbCr2Rgb(int y, int cb, int cr, bool useBt601)
+        public static int[] YCbCr2Rgb(int y, int cb, int cr, bool useBt601)
         {
             int[] rgb = new int[3];
             double r, g, b;

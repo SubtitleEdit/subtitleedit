@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             if (addIfNotExists)
             {
-                OcrCharacter ch = new OcrCharacter(text);
+                var ch = new OcrCharacter(text);
                 OcrCharacters.Add(ch);
                 return ch;
             }

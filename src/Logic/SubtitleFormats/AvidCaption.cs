@@ -39,9 +39,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb.AppendLine("@ This file written with the Avid Caption plugin, version 1");
             sb.AppendLine();
             sb.AppendLine("<begin subtitles>");
+            const string writeFormat = "{0} {1}{2}{3}{2}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{0} {1}{2}{3}{2}", p.StartTime.ToHHMMSSFF(), EncodeEndTimeCode(p.EndTime), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text, true)));
+                sb.AppendLine(string.Format(writeFormat, p.StartTime.ToHHMMSSFF(), EncodeEndTimeCode(p.EndTime), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text, true)));
                 //00:50:34:22 00:50:39:13
                 //Ich muss dafür sorgen,
                 //dass die Epsteins weiterleben
