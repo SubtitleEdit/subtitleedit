@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -14,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         //   25       10:08:59:19   10:09:04:01       04:07
         //is this upside-down vision
         //permanent or only temporary?
-        private static Regex regexTimeCodes = new Regex(@"^\d+\s+\d\d:\d\d:\d\d\:\d\d\s+\d\d:\d\d:\d\d\:\d\d\s+\d\d:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d+\s+\d\d:\d\d:\d\d\:\d\d\s+\d\d:\d\d:\d\d\:\d\d\s+\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -50,7 +51,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(format, count.ToString().PadLeft(5), EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds)));
+                // to avoid rounding errors in duration
+                var startFrame = MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds);
+                var endFrame = MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds);
+                var durationCalc = new Paragraph(
+                        new TimeCode(p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, FramesToMillisecondsMax999(startFrame)),
+                        new TimeCode(p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, FramesToMillisecondsMax999(endFrame)),
+                        string.Empty);
+
+                sb.AppendLine(string.Format(format, count.ToString(CultureInfo.InvariantCulture).PadLeft(5), EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), durationCalc.Duration.Seconds, MillisecondsToFramesMaxFrameRate(durationCalc.Duration.Milliseconds)));
                 sb.AppendLine(p.Text);
                 sb.AppendLine();
                 count++;
@@ -72,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line.Trim().Replace("*", string.Empty);
-                var match = regexTimeCodes.Match(s);
+                var match = RegexTimeCodes.Match(s);
                 if (match.Success)
                 {
                     string[] parts = s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
