@@ -54,6 +54,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 while (fs.Length < 512)
                     fs.WriteByte(0);
 
+                var footer = new byte[] { 0xF1, 0x0B, 0x00, 0x00, 0x00, 0x1B, 0x18, 0x14, 0x20, 0x14, 0x2E, 0x14, 0x2F, 0x00 }; // footer
+
                 // paragraphs
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
@@ -61,35 +63,35 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var sb = new StringBuilder();
                     var line = new StringBuilder();
                     int skipCount = 0;
-                    int numberOfNewLines = Utilities.CountTagInText(p.Text, Environment.NewLine);
+                    int numberOfNewLines = Utilities.GetNumberOfLines(p.Text);
                     bool italic = p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>");
-                    string text = HtmlUtil.RemoveHtmlTags(p.Text);
+                    string text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                     if (italic)
                     {
-                        sb.Append(Convert.ToChar(0x11));
-                        sb.Append(Convert.ToChar(0x2E));
+                        sb.Append('\u0011');
+                        sb.Append('\u002E');
                     }
                     int y = 0x74 - (numberOfNewLines * 0x20);
                     for (int j = 0; j < text.Length; j++)
                     {
-                        if (text.Substring(j).StartsWith(Environment.NewLine))
+                        if (text.Substring(j).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                         {
                             y += 0x20;
                             if (line.Length > 0)
                                 sb.Append(line);
-                            line = new StringBuilder();
+                            line.Clear();
                             skipCount = Environment.NewLine.Length - 1;
-                            sb.Append(Convert.ToChar(0x14));
+                            sb.Append('\u0014');
                             sb.Append(Convert.ToChar((byte)(y)));
 
                             //center
-                            sb.Append(Convert.ToChar(0x17));
-                            sb.Append(Convert.ToChar(0x21));
+                            sb.Append('\u0017');
+                            sb.Append('\u0021');
 
                             if (italic)
                             {
-                                sb.Append(Convert.ToChar(0x11));
-                                sb.Append(Convert.ToChar(0x2E));
+                                sb.Append('\u0011');
+                                sb.Append('\u002E');
                             }
                         }
                         else if (skipCount == 0)
@@ -173,7 +175,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     fs.WriteByte(0);
                 }
 
-                buffer = new byte[] { 0xF1, 0x0B, 0x00, 0x00, 0x00, 0x1B, 0x18, 0x14, 0x20, 0x14, 0x2E, 0x14, 0x2F, 0x00 }; // footer
+                buffer = footer;
                 fs.Write(buffer, 0, buffer.Length);
             }
         }
@@ -222,6 +224,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             int i = 512;
             Paragraph last = null;
+            var sb = new StringBuilder();
             while (i < buffer.Length - 25)
             {
                 var p = new Paragraph();
@@ -234,7 +237,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (length > 22)
                 {
                     int start = i + 7;
-                    var sb = new StringBuilder();
+                    sb.Clear();
                     int skipCount = 0;
                     bool italics = false;
                     //bool font = false;
