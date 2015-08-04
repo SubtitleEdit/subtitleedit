@@ -23,8 +23,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
-            this.LoadSubtitle(subtitle, lines, fileName);
+            var subtitle = new Subtitle();
+            LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > this._errorCount;
         }
 
@@ -51,11 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 _errorCount++;
                 return;
             }
-            if (array.Length < 100)
-            {
-                return;
-            }
-            if (array[0] != 84 || array[1] != 83 || array[2] != 66 || array[3] != 52)
+            if (array.Length < 100 || array[0] != 84 || array[1] != 83 || array[2] != 66 || array[3] != 52)
             {
                 return;
             }
@@ -63,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (array[i] == 84 && array[i + 1] == 73 && array[i + 2] == 84 && array[i + 3] == 76 && array[i + 8] == 84 && array[i + 9] == 73 && array[i + 10] == 77 && array[i + 11] == 69) // TITL + TIME
                 {
-                    int endOfText = (int)array[i + 4];
+                    int endOfText = array[i + 4];
 
                     int start = array[i + 16] + array[i + 17] * 256;
                     if (array[i + 18] != 32)
@@ -82,9 +78,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     textStart += 8;
 
                     string text = Encoding.Default.GetString(array, textStart, length);
-                    //    text = Encoding.Default.GetString(array, i + 53, endOfText - 47);
+                    // text = Encoding.Default.GetString(array, i + 53, endOfText - 47);
                     text = text.Trim('\0').Replace("\0", " ").Trim();
-                    var item = new Paragraph(text, (double)SubtitleFormat.FramesToMilliseconds((double)start), (double)SubtitleFormat.FramesToMilliseconds((double)end));
+                    var item = new Paragraph(text, FramesToMilliseconds(start), FramesToMilliseconds(end));
                     subtitle.Paragraphs.Add(item);
                     i += endOfText + 5;
                 }
