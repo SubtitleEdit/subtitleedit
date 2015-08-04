@@ -71,9 +71,19 @@ FILE_INFO_END";
             int number = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
-                string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
-                string duration = string.Format(timeFormat, p.Duration.Hours, p.Duration.Minutes, p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds));
+                var startFrame = MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds);
+                string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, startFrame);
+
+                var endFrame = MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds);
+                string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, endFrame);
+
+                // to avoid rounding errors in duration
+                var durationCalc = new Paragraph(
+                        new TimeCode(p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, FramesToMillisecondsMax999(startFrame)),
+                        new TimeCode(p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, FramesToMillisecondsMax999(endFrame)),
+                        string.Empty);
+                string duration = string.Format(timeFormat, durationCalc.Duration.Hours, durationCalc.Duration.Minutes, durationCalc.Duration.Seconds, MillisecondsToFramesMaxFrameRate(durationCalc.Duration.Milliseconds));
+
                 sb.AppendLine(string.Format(paragraphWriteFormat, number, startTime, endTime, duration, HtmlUtil.RemoveHtmlTags(p.Text)));
                 number++;
             }
@@ -134,5 +144,6 @@ FILE_INFO_END";
             var timeCode = new TimeCode(int.Parse(timeParts[0]), int.Parse(timeParts[1]), int.Parse(timeParts[2]), milliseconds);
             return timeCode;
         }
+
     }
 }
