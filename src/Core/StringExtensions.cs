@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core
     {
         public static bool LineStartsWithHtmlTag(this string text, bool threeLengthTag, bool includeFont = false)
         {
-            if (text == null || (!threeLengthTag && !includeFont))
+            if (text == null || !(threeLengthTag || includeFont))
                 return false;
             return StartsWithHtmlTag(text, threeLengthTag, includeFont);
         }
@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static bool StartsWithHtmlTag(string text, bool threeLengthTag, bool includeFont)
         {
-            if (threeLengthTag && text.Length > 3 && text[0] == '<' && text[2] == '>' && (text[1] == 'i' || text[1] == 'I' || text[1] == 'u' || text[1] == 'U' || text[1] == 'b' || text[1] == 'B'))
+            if (threeLengthTag && text.Length >= 3 && text[0] == '<' && text[2] == '>' && (text[1] == 'i' || text[1] == 'I' || text[1] == 'u' || text[1] == 'U' || text[1] == 'b' || text[1] == 'B'))
                 return true;
             if (includeFont && text.Length > 5 && text.StartsWith("<font", StringComparison.OrdinalIgnoreCase))
                 return text.IndexOf('>', 5) >= 5; // <font> or <font color="#000000">
@@ -42,12 +42,13 @@ namespace Nikse.SubtitleEdit.Core
         private static bool EndsWithHtmlTag(string text, bool threeLengthTag, bool includeFont)
         {
             var len = text.Length;
-            if (text[len - 1] != '>')
+            if (len == 0 || text[len - 1] != '>')
                 return false;
 
-            // </font> </i>
+            // </i>, </u>, </b>
             if (threeLengthTag && len > 3 && text[len - 4] == '<' && text[len - 3] == '/')
                 return true;
+            // </font>
             if (includeFont && len > 8 && text[len - 7] == '<' && text[len - 6] == '/')
                 return true;
             return false;
