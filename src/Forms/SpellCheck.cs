@@ -77,6 +77,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string _currentDictionary;
 
+        public const string SplitChars = " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“";
+
         public class SuggestionParameter
         {
             public string InputWord { get; set; }
@@ -413,7 +415,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ListBoxSuggestionsMouseDoubleClick(object sender, MouseEventArgs e)
         {
             ButtonUseSuggestionAlwaysClick(null, null);
-        }
+        }      
 
         public void DoAction(SpellCheckAction action)
         {
@@ -421,13 +423,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 case SpellCheckAction.Change:
                     _noOfChangedWords++;
-                    _mainWindow.CorrectWord(_prefix + ChangeWord + _postfix, _currentParagraph, _prefix + _currentWord + _postfix, ref _firstChange);
+                    _mainWindow.CorrectWord(_prefix + ChangeWord + _postfix, _currentParagraph, _prefix + _currentWord + _postfix, ref _firstChange, _wordsIndex);
                     break;
                 case SpellCheckAction.ChangeAll:
                     _noOfChangedWords++;
                     if (!_changeAllDictionary.ContainsKey(_currentWord))
                         _changeAllDictionary.Add(_currentWord, ChangeWord);
-                    _mainWindow.CorrectWord(_prefix + ChangeWord + _postfix, _currentParagraph, _prefix + _currentWord + _postfix, ref _firstChange);
+                    _mainWindow.CorrectWord(_prefix + ChangeWord + _postfix, _currentParagraph, _prefix + _currentWord + _postfix, ref _firstChange, -1);
                     break;
                 case SpellCheckAction.Skip:
                     _noOfSkippedWords++;
@@ -592,12 +594,12 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (_changeAllDictionary.ContainsKey(_currentWord))
                     {
                         _noOfChangedWords++;
-                        _mainWindow.CorrectWord(_changeAllDictionary[_currentWord], _currentParagraph, _currentWord, ref _firstChange);
+                        _mainWindow.CorrectWord(_changeAllDictionary[_currentWord], _currentParagraph, _currentWord, ref _firstChange, -1);
                     }
                     else if (_changeAllDictionary.ContainsKey(_currentWord.Trim('\'')))
                     {
                         _noOfChangedWords++;
-                        _mainWindow.CorrectWord(_changeAllDictionary[_currentWord], _currentParagraph, _currentWord.Trim('\''), ref _firstChange);
+                        _mainWindow.CorrectWord(_changeAllDictionary[_currentWord], _currentParagraph, _currentWord.Trim('\''), ref _firstChange, -1);
                     }
                     else if (_namesEtcListUppercase.Contains(_currentWord)
                         || _namesEtcListWithApostrophe.Contains(_currentWord)
@@ -655,7 +657,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             _mainWindow.FocusParagraph(_currentIndex);
 
-                            List<string> suggestions = new List<string>();
+                            var suggestions = new List<string>();
 
                             if ((_currentWord == "Lt's" || _currentWord == "Lt'S") && _languageName.StartsWith("en_"))
                             {
@@ -744,16 +746,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static List<SpellCheckWord> Split(string s)
         {
-            const string splitChars = " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“";
             var list = new List<SpellCheckWord>();
             var sb = new StringBuilder();
             for (int i = 0; i < s.Length; i++)
             {
-                if (splitChars.Contains(s[i]))
+                if (SplitChars.Contains(s[i]))
                 {
                     if (sb.Length > 0)
                         list.Add(new SpellCheckWord { Text = sb.ToString(), Index = i - sb.Length });
-                    sb = new StringBuilder();
+                    sb.Clear();
                 }
                 else
                 {
@@ -765,29 +766,28 @@ namespace Nikse.SubtitleEdit.Forms
             return list;
         }
 
-        private string SetWords(string s)
+        private void SetWords(string s)
         {
             s = ReplaceHtmlTagsWithBlanks(s);
             s = ReplaceKnownWordsOrNamesWithBlanks(s);
             _words = Split(s);
-            return s;
         }
 
         private string ReplaceKnownWordsOrNamesWithBlanks(string s)
         {
-            List<string> replaceIds = new List<string>();
-            List<string> replaceNames = new List<string>();
+            var replaceIds = new List<string>();
+            var replaceNames = new List<string>();
             GetTextWithoutUserWordsAndNames(replaceIds, replaceNames, s);
             foreach (string name in replaceNames)
             {
                 int start = s.IndexOf(name, StringComparison.Ordinal);
                 while (start >= 0)
                 {
-                    bool startOk = start == 0 || " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“".Contains(s[start - 1]);
+                    bool startOk = start == 0 || SplitChars.Contains(s[start - 1]);
                     if (startOk)
                     {
                         int end = start + name.Length;
-                        bool endOk = end >= s.Length || " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“".Contains(s[end]);
+                        bool endOk = end >= s.Length || SplitChars.Contains(s[end]);
                         if (endOk)
                             s = s.Remove(start, name.Length).Insert(start, string.Empty.PadLeft(name.Length));
                     }
@@ -822,7 +822,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// <summary>
         /// Removes words with dash'es that are correct, so spell check can ignore the combination (do not split correct words with dash'es)
         /// </summary>
-        private string GetTextWithoutUserWordsAndNames(List<string> replaceIds, List<string> replaceNames, string text)
+        private void GetTextWithoutUserWordsAndNames(List<string> replaceIds, List<string> replaceNames, string text)
         {
             string[] wordsWithDash = text.Split(new[] { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '“' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string w in wordsWithDash)
@@ -869,7 +869,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            return text;
         }
 
         private void ShowEndStatusMessage(string completedMessage)
