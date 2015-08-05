@@ -631,6 +631,13 @@ namespace Nikse.SubtitleEdit.Forms
                                 _currentWord = _currentWord.TrimEnd('\'');
                                 correct = true;
                             }
+                            if (!correct)
+                            {
+                                string removeUnicode = _currentWord.Replace(Char.ConvertFromUtf32(0x200b), string.Empty); // zero width space
+                                removeUnicode = removeUnicode.Replace(Char.ConvertFromUtf32(0x2060), string.Empty); // word joiner
+                                removeUnicode = removeUnicode.Replace(Char.ConvertFromUtf32(0xfeff), string.Empty); // zero width no-break space
+                                correct = DoSpell(removeUnicode);
+                            }
                         }
                         else
                         {
