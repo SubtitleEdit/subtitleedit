@@ -119,7 +119,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 if (text.Contains('<') && text.Contains('>'))
                 {
-
                     bool tagOn = false;
                     for (int i = 0; i < text.Length; i++)
                     {

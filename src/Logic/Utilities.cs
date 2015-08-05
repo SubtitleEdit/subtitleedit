@@ -1191,8 +1191,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static readonly string[] AutoDetectWordsHungarian = { "hogy", "lesz", "tudom", "vagy", "mondtam", "még" };
         public static readonly string[] AutoDetectWordsCroatian = { "sam", "öto", "äto", "ovo", "vas", "što" };
         public static readonly string[] AutoDetectWordsTurkish = { "için", "Tamam", "Hayır", "benim", "daha", "deðil", "önce", "lazým", "benim", "çalýþýyor", "burada", "efendim" };
-        
-        
+
         public static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
             int count = GetCount(text, AutoDetectWordsEnglish);

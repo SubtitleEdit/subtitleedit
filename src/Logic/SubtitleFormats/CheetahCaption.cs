@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         bufferShort[3] = 8; // align top (vertial)
                     }
 
-                    if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an1}"))
+                    if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an1}", StringComparison.Ordinal))
                     {
                         buffer[8] = 2; // align left (horizontal)
                         bufferShort[4] = 2; // align left (horizontal)

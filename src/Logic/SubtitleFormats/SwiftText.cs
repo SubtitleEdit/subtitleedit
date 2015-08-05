@@ -56,7 +56,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-
                 // to avoid rounding errors in duration
                 var startFrame = MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds);
                 var endFrame = MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds);

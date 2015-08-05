@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void numericUpDownMaxMs_ValueChanged(object sender, EventArgs e)
-        {            
+        {
             GeneratePreview();
         }
 
