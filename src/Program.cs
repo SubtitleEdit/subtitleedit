@@ -28,14 +28,13 @@ namespace Nikse.SubtitleEdit
             Application.Run(new Main());
         }
 
-        static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+        private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
             if (!(e.Exception is System.Globalization.CultureNotFoundException)) // To avoid error when changing language (on some computers) - see https://github.com/SubtitleEdit/subtitleedit/issues/719
             {
                 ShowThreadExceptionDialog("Unhandled exception in SubtitleEdit.exe", e.Exception);
             }
         }
-
 
         // Handle the UI exceptions by showing a dialog box, and asking the user whether
         // or not they wish to abort execution.
@@ -64,7 +63,8 @@ namespace Nikse.SubtitleEdit
             {
                 try
                 {
-                    MessageBox.Show("Fatal Non-UI Error in Subtitle Edit", "Fatal Non-UI Error. Could not write the error to the event log. Reason: " + exc.Message, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    var errorMsg = "Fatal Non-UI Error. Could not write the error to the event log. Reason: " + exc.Message;
+                    MessageBox.Show(errorMsg, "Fatal Non-UI Error in Subtitle Edit", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 }
                 finally
                 {
