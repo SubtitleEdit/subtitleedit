@@ -21,7 +21,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public const int CodePageHebrew = 4;
         public const int CodePageThai = 5;
         public const int CodePageCyrillic = 6;
-        public const int CodePageChinese = 7;
+        public const int CodePageChineseTraditional = 7;
+        public const int CodePageChineseSimplified = 8;
 
         /// <summary>
         /// Contains Swedish, Danish, German, Spanish, and French letters
@@ -881,8 +882,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 textBuffer = GetLatinBytes(encoding, text, alignment);
             else if (_codePage == CodePageCyrillic)
                 textBuffer = GetCyrillicBytes(text, alignment);
-            else if (_codePage == CodePageChinese)
+            else if (_codePage == CodePageChineseTraditional)
                 textBuffer = GetChineseBig5Bytes(text, alignment);
+            else if (_codePage == CodePageChineseSimplified)
+                textBuffer = GetChineseSimplifiedBytes(text, alignment);
+            else if (_codePage == CodePageThai)
+                textBuffer = encoding.GetBytes(text.Replace("ต", "€"));
             else
                 textBuffer = encoding.GetBytes(text);
 
@@ -1122,7 +1127,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else if (buffer.Length > index + 1)
                         {
-                            sb.Append(Encoding.GetEncoding(950).GetString(buffer, index, 2));
+                            if (_codePage == CodePageChineseSimplified)
+                            {
+                                sb.Append(Encoding.GetEncoding(936).GetString(buffer, index, 2));
+                            }
+                            else
+                            {
+                                sb.Append(Encoding.GetEncoding(950).GetString(buffer, index, 2));                                
+                            }
                         }
                         index++;
                     }
@@ -1144,10 +1156,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     sb.Append(GetHebrewString(buffer, ref index));
                 else if (_codePage == CodePageCyrillic)
                     sb.Append(GetCyrillicString(buffer, ref index));
+                else if (_codePage == CodePageCyrillic)
+                    sb.Append(GetEncoding(_codePage).GetString(buffer, index, 1).Replace("€", "ต"));
                 else
-                {
                     sb.Append(GetEncoding(_codePage).GetString(buffer, index, 1));
-                }
                 index++;
             }
             if (index + 20 >= buffer.Length)
@@ -1391,7 +1403,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             if (buffer != null)
             {
-                byte[] textSample = new byte[200];
+                var textSample = new byte[200];
                 int textIndex = 0;
                 while (index < buffer.Length && buffer[index] != endDelimiter)
                 {
@@ -1488,7 +1500,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 i++;
             }
 
-            byte[] result = new byte[i + extra];
+            var result = new byte[i + extra];
             for (int j = 0; j < i + extra; j++)
                 result[j] = buffer[j];
             return result;
@@ -1512,7 +1524,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static byte[] GetBytesViaLists(string text, List<string> letters, List<int> codes, byte alignment)
         {
             int i = 0;
-            byte[] buffer = new byte[text.Length * 2];
+            var buffer = new byte[text.Length * 2];
             int extra = 0;
             while (i < text.Length)
             {
@@ -1582,7 +1594,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 i++;
             }
 
-            byte[] result = new byte[i + extra];
+            var result = new byte[i + extra];
             for (int j = 0; j < i + extra; j++)
                 result[j] = buffer[j];
             return result;
@@ -1617,6 +1629,44 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     result.Add(0x2e); // ?
 
                     foreach (var b in Encoding.GetEncoding(950).GetBytes(line))
+                    {
+                        result.Add(b);
+                    }
+                }
+                firstLine = false;
+            }
+            return result.ToArray();
+        }
+
+        private static byte[] GetChineseSimplifiedBytes(string text, byte alignment)
+        {
+            var result = new List<byte>();
+            bool firstLine = true;
+            foreach (var line in text.SplitToLines())
+            {
+                if (!firstLine)
+                {
+                    result.Add(0xfe);
+                    result.Add(alignment);
+                    result.Add(3);
+                }
+
+                if (OnlyAnsi(line))
+                {
+                    foreach (var b in GetLatinBytes(GetEncoding(CodePageLatin), line, alignment))
+                    {
+                        result.Add(b);
+                    }
+                }
+                else
+                {
+                    result.Add(0x1f); // ?
+                    result.Add(0x57); // W
+                    result.Add(0x31); // 1
+                    result.Add(0x36); // 6
+                    result.Add(0x2e); // ?
+
+                    foreach (var b in Encoding.GetEncoding(936).GetBytes(line))
                     {
                         result.Add(b);
                     }
