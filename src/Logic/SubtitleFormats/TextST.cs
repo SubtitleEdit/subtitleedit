@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public static class StreamExtensions
     {
-     
+
         public static void WritePts(this Stream stream, ulong pts)
         {
             //TODO: check max
@@ -84,7 +84,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     return Color.FromArgb(T, arr[0], arr[1], arr[2]);
                 }
             }
-
         }
 
         public class RegionStyle
@@ -393,7 +392,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     return dss;
                 }
             }
-
         }
 
 
@@ -404,12 +402,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             public int DataLength { get; set; }
             public string Name { get; set; }
             public abstract void WriteExtraToStream(Stream stream);
-
         }
 
         public class SubtitleRegionContentText : SubtitleRegionContent
         {
-
             private string _text;
 
             public string Text
@@ -434,13 +430,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var buffer = Encoding.UTF8.GetBytes(Text);
                 stream.Write(buffer, 0, buffer.Length);
             }
-
         }
 
         public class SubtitleRegionContentChangeFontSet : SubtitleRegionContent
         {
             public int FontId { get; set; }
-            
+
             public SubtitleRegionContentChangeFontSet()
             {
                 EscapeCode = 27;
@@ -453,7 +448,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 stream.WriteByte((byte)FontId);
             }
-
         }
 
         public class SubtitleRegionContentChangeFontStyle : SubtitleRegionContent
@@ -761,7 +755,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 EscapeCode = escapeCode,
                                 DataType = dataType,
                                 DataLength = dataLength,
-                                Text = text                                
+                                Text = text
                             });
                         }
                         else if (dataType == 0x02) // Change a font set
@@ -910,16 +904,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         stream.WriteByte((byte)palette.Y);
                         stream.WriteByte((byte)palette.Cb);
                         stream.WriteByte((byte)palette.Cr);
-                        stream.WriteByte((byte)palette.T);                        
+                        stream.WriteByte((byte)palette.T);
                     }
                 }
                 else
                 {
-                    stream.WriteByte(0); // 1 bit = palette update (0=no update), next 7 bits reserved                    
+                    stream.WriteByte(0); // 1 bit = palette update (0=no update), next 7 bits reserved
                 }
                 stream.WriteByte((byte)Regions.Count); // number of regions
 
-                stream.Write(regionSubtitle, 0, regionSubtitle.Length);                
+                stream.Write(regionSubtitle, 0, regionSubtitle.Length);
             }
 
             private byte[] MakeSubtitleRegions()
@@ -957,8 +951,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     return ms.ToArray();
                 }
-            }           
-
+            }
         }
 
         public DialogStyleSegment StyleSegment;
@@ -984,10 +977,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public override bool IsMine(List<string> lines, string fileName)
-        {            
+        {
             if (string.IsNullOrEmpty(fileName))
                 return false;
-                
+
             if ((fileName.EndsWith(".m2ts", StringComparison.OrdinalIgnoreCase) && FileUtil.IsM2TransportStream(fileName)) ||
                 (fileName.EndsWith(".textst", StringComparison.OrdinalIgnoreCase) && FileUtil.IsMpeg2PrivateStream2(fileName)))
             {
