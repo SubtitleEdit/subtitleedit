@@ -1156,7 +1156,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     sb.Append(GetHebrewString(buffer, ref index));
                 else if (_codePage == CodePageCyrillic)
                     sb.Append(GetCyrillicString(buffer, ref index));
-                else if (_codePage == CodePageCyrillic)
+                else if (_codePage == CodePageThai)
                     sb.Append(GetEncoding(_codePage).GetString(buffer, index, 1).Replace("€", "ต"));
                 else
                     sb.Append(GetEncoding(_codePage).GetString(buffer, index, 1));
