@@ -6,7 +6,6 @@
     <Word from="ledereen" to="Iedereen" />
     <Word from="ledere" to="Iedere" />
     <Word from="lemand" to="Iemand" />
-    <Word from="lsolement" to="Isolement" />
     <Word from="ler" to="Ier" />
     <Word from="lerland" to="Ierland" />
     <Word from="lers" to="Iers" />
@@ -23,6 +22,9 @@
   <EndLines />
   <WholeLines />
   <RegularExpressions>
-    <RegEx find="\bln(?=\p{Ll}{2})" replaceWith="In" />
+    <RegEx find="\blk(?=\p{Ll}{2})" replaceWith="Ik" />
+	<RegEx find="\bln(?=\p{Ll}{2})" replaceWith="In" />
+	<RegEx find="\bls(?=\p{Ll}{2})" replaceWith="Is" />
+	<RegEx find="\blsol(atie|eert|eer|eren|eerde|ement)" replaceWith="Isol\1" />
   </RegularExpressions>
 </OCRFixReplaceList>
