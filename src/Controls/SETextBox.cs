@@ -120,6 +120,7 @@ namespace Nikse.SubtitleEdit.Controls
             else
             {
                 bool justAppend = index == Text.Length - 1 && index > 0;
+                const string expectedChars = @";:]<.!?";
                 if (_dragFromThis)
                 {
                     _dragFromThis = false;
@@ -153,7 +154,7 @@ namespace Nikse.SubtitleEdit.Controls
                             if (_dragStartFrom < index)
                                 index--;
                         }
-                        else if (_dragStartFrom > 0 && Text.Length > _dragStartFrom + 1 && Text[_dragStartFrom] == ' ' && @";:]<.!?".Contains(Text[_dragStartFrom + 1]))
+                        else if (_dragStartFrom > 0 && Text.Length > _dragStartFrom + 1 && Text[_dragStartFrom] == ' ' && expectedChars.Contains(Text[_dragStartFrom + 1]))
                         {
                             Text = Text.Remove(_dragStartFrom, 1);
                             if (_dragStartFrom < index)
@@ -193,7 +194,7 @@ namespace Nikse.SubtitleEdit.Controls
                 // fix end spaces
                 if (endIndex < Text.Length && !newText.EndsWith(' ') && Text[endIndex] != ' ')
                 {
-                    bool lastWord = @";:]<.!?".Contains(Text[endIndex]);
+                    bool lastWord = expectedChars.Contains(base.Text[endIndex]);
                     if (!lastWord)
                         Text = Text.Insert(endIndex, " ");
                 }
