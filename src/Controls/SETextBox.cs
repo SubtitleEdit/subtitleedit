@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Controls
     /// </summary>
     public class SETextBox : TextBox
     {
-        private const string BreakChars = " \".!?,)([]<>:;♪{}-/#*|¿¡\r\n\t";
+        private const string BreakChars = " \".!?,)([]<>:;♪♫{}-/#*|¿¡\r\n\t";
         private string _dragText = string.Empty;
         private int _dragStartFrom = 0;
         private long _dragStartTicks = 0;
