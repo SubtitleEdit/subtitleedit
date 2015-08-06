@@ -87,12 +87,12 @@ namespace Nikse.SubtitleEdit.Controls
                     dataObject.SetText(_dragText, TextDataFormat.Text);
 
                     _dragFromThis = true;
-                    if (Control.ModifierKeys == Keys.Control)
+                    if (ModifierKeys == Keys.Control)
                     {
                         _dragRemoveOld = false;
                         DoDragDrop(dataObject, DragDropEffects.Copy);
                     }
-                    else if (Control.ModifierKeys == Keys.None)
+                    else if (ModifierKeys == Keys.None)
                     {
                         _dragRemoveOld = true;
                         DoDragDrop(dataObject, DragDropEffects.Move);
@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (e.Data.GetDataPresent(DataFormats.Text) || e.Data.GetDataPresent(DataFormats.UnicodeText))
             {
-                if (Control.ModifierKeys == Keys.Control)
+                if (ModifierKeys == Keys.Control)
                     e.Effect = DragDropEffects.Copy;
                 else
                     e.Effect = DragDropEffects.Move;
