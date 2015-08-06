@@ -6,14 +6,6 @@
     <Word from="ledereen" to="Iedereen" />
     <Word from="ledere" to="Iedere" />
     <Word from="lemand" to="Iemand" />
-    <Word from="lsolement" to="Isolement" />
-    <Word from="ler" to="Ier" />
-    <Word from="lerland" to="Ierland" />
-    <Word from="lers" to="Iers" />
-    <Word from="lerse" to="Ierse" />
-    <Word from="eIk" to="elk" />
-    <Word from="eIkaar" to="elkaar" />
-    <Word from="eIke" to="elke" />
   </WholeWords>
   <PartialWordsAlways />
   <PartialWords />
@@ -23,6 +15,11 @@
   <EndLines />
   <WholeLines />
   <RegularExpressions>
+    <RegEx find="\blk(?=\p{Ll}{2})" replaceWith="Ik" />
     <RegEx find="\bln(?=\p{Ll}{2})" replaceWith="In" />
+    <RegEx find="\bls(?=\p{Ll}{2})" replaceWith="Is" />
+    <RegEx find="\beIk(aar|e|)" replaceWith="elk\1" />
+    <RegEx find="\blsol(atie|eerde|eert|eer|eren|ement)" replaceWith="Isol\1" />
+    <RegEx find="\bler(land|se|s|)\b" replaceWith="Ier\1" /> 
   </RegularExpressions>
 </OCRFixReplaceList>
