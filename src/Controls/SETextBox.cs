@@ -226,12 +226,11 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        private const int WM_DBLCLICK = 0xA3;
+        private const int WM_LBUTTONDBLCLK = 0x203;
+        private const int WM_LBUTTONDOWN = 0x0201;
         protected override void WndProc(ref Message m)
         {
-            const int WM_DBLCLICK = 0xA3;
-            const int WM_LBUTTONDBLCLK = 0x203;
-            const int WM_LBUTTONDOWN = 0x0201;
-
             if (m.Msg == WM_DBLCLICK || m.Msg == WM_LBUTTONDBLCLK)
             {
                 SelectCurrentWord();
