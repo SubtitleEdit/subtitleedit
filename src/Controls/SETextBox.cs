@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Controls
                 // fix end spaces
                 if (endIndex < Text.Length && !newText.EndsWith(' ') && Text[endIndex] != ' ')
                 {
-                    bool lastWord = expectedChars.Contains(base.Text[endIndex]);
+                    bool lastWord = expectedChars.Contains(Text[endIndex]);
                     if (!lastWord)
                         Text = Text.Insert(endIndex, " ");
                 }
