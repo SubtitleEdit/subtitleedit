@@ -77,7 +77,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.UseFFmpegForWaveExtraction && File.Exists(Configuration.Settings.General.FFmpegLocation))
             {
                 encoderName = "FFmpeg";
-                const string fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav \"{1}\"";
+                string audioParameter = string.Empty;
+                if (audioTrackNumber > 0)
+                    audioParameter = string.Format("-map 0:a:{0}", audioTrackNumber);
+
+                const string fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav {2} \"{1}\"";
                 //-i indicates the input
                 //-vn means no video ouput
                 //-ar 44100 indicates the sampling frequency.
@@ -85,8 +89,10 @@ namespace Nikse.SubtitleEdit.Forms
                 //-vol 448 will boot volume... 256 is normal
                 //-ac 2 means 2 channels
 
+                // "-map 0:a:0" is the first audio stream, "-map 0:a:1" is the second audio stream
+
                 exeFilePath = Configuration.Settings.General.FFmpegLocation;
-                parameters = string.Format(fFmpegWaveTranscodeSettings, inputVideoFile, outWaveFile);
+                parameters = string.Format(fFmpegWaveTranscodeSettings, inputVideoFile, outWaveFile, audioParameter);
             }
             return new Process { StartInfo = new ProcessStartInfo(exeFilePath, parameters) { WindowStyle = ProcessWindowStyle.Hidden } };
         }
@@ -309,12 +315,6 @@ namespace Nikse.SubtitleEdit.Forms
                     catch
                     {
                     }
-                }
-
-                if (Configuration.Settings.General.UseFFmpegForWaveExtraction)
-                { // don't know how to extract audio number x via FFmpeg...
-                    numberOfAudioTracks = 1;
-                    _audioTrackNumber = 0;
                 }
 
                 // Choose audio track
