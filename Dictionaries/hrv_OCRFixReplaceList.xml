@@ -37,7 +37,6 @@
     <Word from="Dali si" to="Da li si" />
     <Word from="deda" to="djed" />
     <Word from="dedom" to="djedom" />
-    <Word from="definišu" to="definiraju" />
     <Word from="deli" to="dijeli" />
     <Word from="deo" to="dio" />
     <Word from="desiti" to="dogoditi" />
@@ -397,12 +396,9 @@
     <Word from="definiše" to="definira" />
     <Word from="definišem" to="definiram" />
     <Word from="definiši" to="definiraj" />
-    <Word from="eksperimentišem" to="eksperimentiram" />
+    <Word from="definišu" to="definiraju" />
     <Word from="eksperimentišu" to="eksperimentiraju" />
-    <Word from="eksperimentišeš" to="eksperimentiraš" />
-    <Word from="eksperimentišete" to="eksperimentirate" />
-    <Word from="eksperimentiše" to="eksperimentira" />
-    <Word from="eksperimentišemo" to="eksperimentiramo" />
+    <Word from="Eksperimentišu" to="Eksperimentiraju" />
     <Word from="familijama" to="obiteljima" />
     <Word from="familiji" to="obitelji" />
     <Word from="historija" to="povijest" />
@@ -414,12 +410,8 @@
     <Word from="Istorija" to="Povijest" />
     <Word from="istorije" to="povijesti" />
     <Word from="istoriju" to="povijest" />
-    <Word from="interesujem" to="zanimam" />
-    <Word from="interesuješ" to="zanimaš" />
-    <Word from="interesuje" to="zanima" />
-    <Word from="Interesuje" to="Zanima" />
+    <Word from="Interesuju" to="Zanimaju" />
     <Word from="interesuju" to="zanimaju" />
-    <Word from="interesovanje" to="zanimanje" />
     <Word from="izvinjavam" to="ispričavam" />
     <Word from="Izvinjavam" to="Ispričavam" />
     <Word from="kola" to="auto" />
@@ -491,13 +483,6 @@
     <Word from="udeo" to="udio" />
     <Word from="video" to="vidio" />
     <Word from="Video" to="Vidio" />
-    <!-- pridjevi optimalan, minimalan i maksimalan nemaju komparativ i superlativ. -->
-    <Word from="najoptimalnije" to="optimalno" />
-    <Word from="najoptimalnija" to="optimalna" />
-    <Word from="najminimalniji" to="minimalni" />
-    <Word from="najminimalnija" to="minimalna" />
-    <Word from="najmaksimalniji" to="maksimalan" />
-    <Word from="najmaksimalnija" to="maksimalna" />
     <!-- imena mjeseci -->
     <Word from="januar" to="siječanj" />
     <Word from="februar" to="veljača" />
@@ -675,6 +660,7 @@
     <RegEx find="([dD])žinovsk" replaceWith="$1ivovsk" />
     <RegEx find="\bđep" replaceWith="džep" />
     <RegEx find="\bĐep" replaceWith="Džep" />
+    <RegEx find="([eE])ksperimentiše([mš]|mo|te)?" replaceWith="$1ksperimentira$2"/> 
     <RegEx find="([eE])mitovan([aeiou]|o[mgj]|ima?)?" replaceWith="$1mitiran$2" />
     <RegEx find="([eE])vr([aeiou]|om|ima)" replaceWith="$1ur$2" />
     <RegEx find="([eE])vropsk" replaceWith="$1uropsk" />
@@ -729,8 +715,11 @@
     <RegEx find="\b([iI])mać(u|e|eš|emo|ete)\b" replaceWith="$1mat ć$2" />
     <RegEx find="([iI])migracion([aeiou]|om|og)?" replaceWith="$1migracijsk$2" />
     <RegEx find="([iI])nostranstv([auo]|om|ima)" replaceWith="$1nozemstv$2" />
+    <RegEx find="interesuje([mš]|mo|te)?" replaceWith="zanima$2" />
+    <RegEx find="Interesuje([mš]|mo|te)?" replaceWith="Zanima$2" />
     <RegEx find="interesantn" replaceWith="zanimljiv" />
     <RegEx find="Interesantn" replaceWith="Zanimljiv" />
+    <RegEx find="([iI])nteresova" replaceWith="$1nteresira" />
     <RegEx find="([iI])spoljava" replaceWith="$1zražava" />
     <RegEx find="([iI])spovj?ed" replaceWith="$1spovijed" />
     <RegEx find="([iI])zbe(ći|gne|gava|gava[mš]|gavamo|gavat[ei]|gavaju|gavanje|gaval[aeio]|gao|gl[aeiou])" replaceWith="$1zbje$2" />
@@ -913,8 +902,7 @@
     <RegEx find="([oO])slobodić([eu]|eš|emo|ete)" replaceWith="$1slobodit ć$2" />
     <RegEx find="([oO])sta[čć]([eu]š?|emo|ete)" replaceWith="$1stat ć$2" />
     <RegEx find="([oO])strv([au]|om)" replaceWith="$1tok$2" />
-    <RegEx find="([oO])sveženj" replaceWith="$1svježenj" />
-    <RegEx find="([oO])svežava" replaceWith="$1svježava" />
+    <RegEx find="([oO])svež(enj|ava)" replaceWith="$1svjež$2" />
     <RegEx find="\b([oO])tera" replaceWith="$1tjera" />
     <RegEx find="ovaploćenj([aeu]|em|ima)" replaceWith="utjelovljenj$1" />
     <RegEx find="Ovaploćenj([aeu]|em|ima)" replaceWith="Utjelovljenj$1" />
@@ -959,7 +947,7 @@
     <RegEx find="([pP])rimj?en(njen|njen[aeiou]|njeno[gm]|iti|il[aeio])" replaceWith="$1rimijen$2" />
     <RegEx find="([pP])roleć" replaceWith="$1roljeć" />
     <RegEx find="([pP])oseduj" replaceWith="$1osjeduj" />
-    <RegEx find="([pP])oseć" replaceWith="$1osjeć" />
+    <RegEx find="([pP])o(d?)seć" replaceWith="$1o$2sjeć" />
     <RegEx find="\b([pP])oset" replaceWith="$1osjet" />
     <RegEx find="\b([pP])o[dt]sj?eti([šmo]|l[aieo]|t[ei])?\b" replaceWith="$1odsjeti$2" />
     <RegEx find="([pP])osed([aeiou]|om)" replaceWith="$1osjed$2" />
@@ -1232,7 +1220,6 @@
     <RegEx find="\b([vV])rj?ed(e|an|n[aeiou]|nih|nosti?|nošću)?\b" replaceWith="$1rijed$2" />
     <RegEx find="([vV])rj?eđa" replaceWith="$1rijeđa" />
     <RegEx find="([vV])rtel([aeio])" replaceWith="$1rtjel$2" />
-    <RegEx find="([zZ])ainteresova" replaceWith="$1ainteresira" />
     <RegEx find="([zZ])ahtjeva([ojlmšt])" replaceWith="$1ahtijeva$2" />
     <RegEx find="([zZ])ahtev([aeiu]|om|ima)?" replaceWith="$1ahtjev$2" />
     <RegEx find="([zZ])amen([aeiou]|om|ama)" replaceWith="$1amjen$2" />
@@ -1269,6 +1256,10 @@
     <RegEx find="septembr([au]|om|ima)" replaceWith="rujn$1" />
     <RegEx find="oktobr([au]|om|ima)" replaceWith="listopad$1" />
     <RegEx find="decembr([au]|ima)" replaceWith="prosinc$1" />
+    <!-- pridjevi optimalan, minimalan i maksimalan nemaju komparativ i superlativ. -->
+        <RegEx find="([nN])aj([oO]ptimaln)ij([aeiou])" replaceWith="$2$3" />
+        <RegEx find="([nN])aj([mM]inimaln)ij([aeiou])" replaceWith="$2$3" />
+        <RegEx find="([nN])aj([mM]aksimaln)ij([aeiou])" replaceWith="$2$3" />
     <!-- experimental -->
     <RegEx find="belež" replaceWith="biljež" />
     <RegEx find="\bdral" replaceWith="deral" />
