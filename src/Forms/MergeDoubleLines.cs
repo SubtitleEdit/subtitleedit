@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.Globalization;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -12,16 +13,16 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private Subtitle _subtitle;
         private Subtitle _mergedSubtitle;
-        private bool loading = true;
-        private Timer previewTimer = new Timer();
+        private bool _loading = true;
+        private readonly Timer _previewTimer = new Timer();
 
         public int NumberOfMerges { get; private set; }
 
         public MergeDoubleLines()
         {
             InitializeComponent();
-            previewTimer.Tick += previewTimer_Tick;
-            previewTimer.Interval = 250;
+            _previewTimer.Tick += previewTimer_Tick;
+            _previewTimer.Interval = 250;
             Utilities.FixLargeFonts(this, buttonOK);
         }
 
@@ -99,7 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string numbers = item.SubItems[1].Text;
                 foreach (string number in numbers.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    if (number == p.Number.ToString())
+                    if (number == p.Number.ToString(CultureInfo.InvariantCulture))
                         return item.Checked;
                 }
             }
@@ -108,8 +109,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Subtitle MergeLineswithSameTextInSubtitle(Subtitle subtitle, List<int> mergedIndexes, out int numberOfMerges, bool clearFixes, bool fixIncrementing, bool lineAfterNext, int maxMsBetween)
         {
-            List<int> removed = new List<int>();
-            if (!loading)
+            var removed = new List<int>();
+            if (!_loading)
                 listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
             if (clearFixes)
                 listViewFixes.Items.Clear();
@@ -199,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!lastMerged)
                 mergedSubtitle.Paragraphs.Add(new Paragraph(subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1)));
 
-            if (!loading)
+            if (!_loading)
                 listViewFixes.ItemChecked += listViewFixes_ItemChecked;
 
             mergedSubtitle.Renumber();
@@ -218,7 +219,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string s = HtmlUtil.RemoveHtmlTags(p.Text.Trim());
                 string s2 = HtmlUtil.RemoveHtmlTags(next.Text.Trim());
-                return s == s2;
+                return string.Compare(s, s2, StringComparison.OrdinalIgnoreCase) == 0;
             }
             return false;
         }
@@ -235,7 +236,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string s = HtmlUtil.RemoveHtmlTags(p.Text.Trim());
                 string s2 = HtmlUtil.RemoveHtmlTags(next.Text.Trim());
-                if (!string.IsNullOrEmpty(s) && s2.Length > 0 && s2.StartsWith(s))
+                if (!string.IsNullOrEmpty(s) && s2.Length > 0 && s2.StartsWith(s, StringComparison.OrdinalIgnoreCase))
                     return true;
             }
             return false;
@@ -262,7 +263,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     foreach (Paragraph p in _subtitle.Paragraphs)
                     {
-                        if (p.Number.ToString() == number)
+                        if (p.Number.ToString(CultureInfo.InvariantCulture) == number)
                         {
                             index = _subtitle.GetIndex(p);
                             SubtitleListview1.EnsureVisible(index);
@@ -274,7 +275,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            if (loading)
+            if (_loading)
                 return;
 
             var mergedIndexes = new List<int>();
@@ -306,7 +307,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Focus();
             if (listViewFixes.Items.Count > 0)
                 listViewFixes.Items[0].Selected = true;
-            loading = false;
+            _loading = false;
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
         }
 
@@ -319,13 +320,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void numericUpDownMaxMillisecondsBetweenLines_ValueChanged(object sender, EventArgs e)
         {
-            previewTimer.Stop();
-            previewTimer.Start();
+            _previewTimer.Stop();
+            _previewTimer.Start();
         }
 
         private void previewTimer_Tick(object sender, EventArgs e)
         {
-            previewTimer.Stop();
+            _previewTimer.Stop();
             Cursor = Cursors.WaitCursor;
             GeneratePreview();
             Cursor = Cursors.Default;

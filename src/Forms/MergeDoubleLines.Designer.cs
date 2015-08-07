@@ -53,9 +53,9 @@
             this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLinesFound.Controls.Add(this.listViewFixes);
-            this.groupBoxLinesFound.Location = new System.Drawing.Point(15, 44);
+            this.groupBoxLinesFound.Location = new System.Drawing.Point(15, 55);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
-            this.groupBoxLinesFound.Size = new System.Drawing.Size(1025, 207);
+            this.groupBoxLinesFound.Size = new System.Drawing.Size(1025, 196);
             this.groupBoxLinesFound.TabIndex = 45;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines that will be merged";
