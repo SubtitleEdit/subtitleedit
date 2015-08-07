@@ -1281,6 +1281,7 @@ namespace Nikse.SubtitleEdit.Forms
             string languageCode = Language;
             string fixAction = _language.FixMissingSpace;
             int missingSpaces = 0;
+            const string expectedChars = @"""”<.";
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
@@ -1289,7 +1290,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Match match = FixMissingSpacesReComma.Match(p.Text);
                 while (match.Success)
                 {
-                    bool doFix = !@"""”<.".Contains(p.Text[match.Index + 2]);
+                    bool doFix = !expectedChars.Contains(p.Text[match.Index + 2]);
 
                     if (doFix && languageCode == "el" && (p.Text.Substring(match.Index).StartsWith("ό,τι", StringComparison.Ordinal) || p.Text.Substring(match.Index).StartsWith("ο,τι", StringComparison.Ordinal)))
                         doFix = false;

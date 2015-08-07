@@ -484,54 +484,54 @@ namespace Nikse.SubtitleEdit.Controls
             _panelcontrols = new Panel { Left = 0, Height = _controlsHeight };
 
             _pictureBoxBackground = new PictureBox
-                                        {
-                                            Image = ((Image)(_resources.GetObject("pictureBoxBar.Image"))),
-                                            Location = new Point(0, 0),
-                                            Name = "_pictureBoxBackground",
-                                            Size = new Size(200, 45),
-                                            SizeMode = PictureBoxSizeMode.StretchImage,
-                                            TabStop = false
-                                        };
+            {
+                Image = (Image)_resources.GetObject("pictureBoxBar.Image"),
+                Location = new Point(0, 0),
+                Name = "_pictureBoxBackground",
+                Size = new Size(200, 45),
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                TabStop = false
+            };
             _panelcontrols.Controls.Add(_pictureBoxBackground);
 
             _pictureBoxPlay = new PictureBox
-                                  {
-                                      Image = ((Image)(_resources.GetObject("pictureBoxPlay.Image"))),
-                                      Location = new Point(22, 126 - 113),
-                                      Name = "_pictureBoxPlay",
-                                      Size = new Size(29, 29),
-                                      SizeMode = PictureBoxSizeMode.AutoSize,
-                                      TabStop = false
-                                  };
+            {
+                Image = (Image)_resources.GetObject("pictureBoxPlay.Image"),
+                Location = new Point(22, 126 - 113),
+                Name = "_pictureBoxPlay",
+                Size = new Size(29, 29),
+                SizeMode = PictureBoxSizeMode.AutoSize,
+                TabStop = false
+            };
             _pictureBoxPlay.MouseEnter += PictureBoxPlayMouseEnter;
             _panelcontrols.Controls.Add(_pictureBoxPlay);
 
             _pictureBoxPlayDown = new PictureBox
-                                      {
-                                          Image = ((Image)(_resources.GetObject("pictureBoxPlayDown.Image"))),
-                                          Location = new Point(22, 127 - 113),
-                                          Name = "_pictureBoxPlayDown",
-                                          Size = new Size(29, 29),
-                                          SizeMode = PictureBoxSizeMode.AutoSize,
-                                          TabStop = false
-                                      };
+            {
+                Image = (Image)_resources.GetObject("pictureBoxPlayDown.Image"),
+                Location = new Point(22, 127 - 113),
+                Name = "_pictureBoxPlayDown",
+                Size = new Size(29, 29),
+                SizeMode = PictureBoxSizeMode.AutoSize,
+                TabStop = false
+            };
             _panelcontrols.Controls.Add(_pictureBoxPlayDown);
 
             _pictureBoxPlayOver = new PictureBox
-                                      {
-                                          Image = ((Image)(_resources.GetObject("pictureBoxPlayOver.Image"))),
-                                          Location = new Point(23, 126 - 113),
-                                          Name = "_pictureBoxPlayOver",
-                                          Size = new Size(29, 29),
-                                          SizeMode = PictureBoxSizeMode.AutoSize,
-                                          TabStop = false
-                                      };
+            {
+                Image = (Image)_resources.GetObject("pictureBoxPlayOver.Image"),
+                Location = new Point(23, 126 - 113),
+                Name = "_pictureBoxPlayOver",
+                Size = new Size(29, 29),
+                SizeMode = PictureBoxSizeMode.AutoSize,
+                TabStop = false
+            };
             _pictureBoxPlayOver.MouseLeave += PictureBoxPlayOverMouseLeave;
             _pictureBoxPlayOver.MouseDown += PictureBoxPlayOverMouseDown;
             _pictureBoxPlayOver.MouseUp += PictureBoxPlayOverMouseUp;
             _panelcontrols.Controls.Add(_pictureBoxPlayOver);
 
-            _pictureBoxPause.Image = ((Image)(_resources.GetObject("pictureBoxPause.Image")));
+            _pictureBoxPause.Image = (Image)_resources.GetObject("pictureBoxPause.Image");
             _pictureBoxPause.Location = new Point(23, 126 - 113);
             _pictureBoxPause.Name = "_pictureBoxPause";
             _pictureBoxPause.Size = new Size(29, 29);
@@ -540,7 +540,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxPause.MouseEnter += PictureBoxPauseMouseEnter;
             _panelcontrols.Controls.Add(_pictureBoxPause);
 
-            _pictureBoxPauseDown.Image = ((Image)(_resources.GetObject("pictureBoxPauseDown.Image")));
+            _pictureBoxPauseDown.Image = (Image)_resources.GetObject("pictureBoxPauseDown.Image");
             _pictureBoxPauseDown.Location = new Point(22, 127 - 113);
             _pictureBoxPauseDown.Name = "_pictureBoxPauseDown";
             _pictureBoxPauseDown.Size = new Size(29, 29);
@@ -548,7 +548,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxPauseDown.TabStop = false;
             _panelcontrols.Controls.Add(_pictureBoxPauseDown);
 
-            _pictureBoxPauseOver.Image = ((Image)(_resources.GetObject("pictureBoxPauseOver.Image")));
+            _pictureBoxPauseOver.Image = (Image)_resources.GetObject("pictureBoxPauseOver.Image");
             _pictureBoxPauseOver.Location = new Point(22, 127 - 113);
             _pictureBoxPauseOver.Name = "_pictureBoxPauseOver";
             _pictureBoxPauseOver.Size = new Size(29, 29);
@@ -559,7 +559,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxPauseOver.MouseUp += PictureBoxPauseOverMouseUp;
             _panelcontrols.Controls.Add(_pictureBoxPauseOver);
 
-            _pictureBoxStop.Image = ((Image)(_resources.GetObject("pictureBoxStop.Image")));
+            _pictureBoxStop.Image = (Image)_resources.GetObject("pictureBoxStop.Image");
             _pictureBoxStop.Location = new Point(52, 130 - 113);
             _pictureBoxStop.Name = "_pictureBoxStop";
             _pictureBoxStop.Size = new Size(20, 20);
@@ -568,7 +568,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxStop.MouseEnter += PictureBoxStopMouseEnter;
             _panelcontrols.Controls.Add(_pictureBoxStop);
 
-            _pictureBoxStopDown.Image = ((Image)(_resources.GetObject("pictureBoxStopDown.Image")));
+            _pictureBoxStopDown.Image = (Image)_resources.GetObject("pictureBoxStopDown.Image");
             _pictureBoxStopDown.Location = new Point(52, 130 - 113);
             _pictureBoxStopDown.Name = "_pictureBoxStopDown";
             _pictureBoxStopDown.Size = new Size(20, 20);
@@ -576,7 +576,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxStopDown.TabStop = false;
             _panelcontrols.Controls.Add(_pictureBoxStopDown);
 
-            _pictureBoxStopOver.Image = ((Image)(_resources.GetObject("pictureBoxStopOver.Image")));
+            _pictureBoxStopOver.Image = (Image)_resources.GetObject("pictureBoxStopOver.Image");
             _pictureBoxStopOver.Location = new Point(52, 130 - 113);
             _pictureBoxStopOver.Name = "_pictureBoxStopOver";
             _pictureBoxStopOver.Size = new Size(20, 20);
@@ -587,7 +587,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxStopOver.MouseUp += PictureBoxStopOverMouseUp;
             _panelcontrols.Controls.Add(_pictureBoxStopOver);
 
-            _pictureBoxFullscreen.Image = ((Image)(_resources.GetObject("pictureBoxFS.Image")));
+            _pictureBoxFullscreen.Image = (Image)_resources.GetObject("pictureBoxFS.Image");
             _pictureBoxFullscreen.Location = new Point(95, 130 - 113);
             _pictureBoxFullscreen.Name = "_pictureBoxFullscreen";
             _pictureBoxFullscreen.Size = new Size(20, 20);
@@ -596,7 +596,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFullscreen.MouseEnter += PictureBoxFullscreenMouseEnter;
             _panelcontrols.Controls.Add(_pictureBoxFullscreen);
 
-            _pictureBoxFullscreenDown.Image = ((Image)(_resources.GetObject("pictureBoxFSDown.Image")));
+            _pictureBoxFullscreenDown.Image = (Image)_resources.GetObject("pictureBoxFSDown.Image");
             _pictureBoxFullscreenDown.Location = new Point(95, 130 - 113);
             _pictureBoxFullscreenDown.Name = "_pictureBoxFullscreenDown";
             _pictureBoxFullscreenDown.Size = new Size(20, 20);
@@ -604,7 +604,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFullscreenDown.TabStop = false;
             _panelcontrols.Controls.Add(_pictureBoxFullscreenDown);
 
-            _pictureBoxFullscreenOver.Image = ((Image)(_resources.GetObject("pictureBoxFSOver.Image")));
+            _pictureBoxFullscreenOver.Image = (Image)_resources.GetObject("pictureBoxFSOver.Image");
             _pictureBoxFullscreenOver.Location = new Point(95, 130 - 113);
             _pictureBoxFullscreenOver.Name = "_pictureBoxFullscreenOver";
             _pictureBoxFullscreenOver.Size = new Size(20, 20);
@@ -627,7 +627,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxProgressbarBackground.MouseDown += PictureBoxProgressbarBackgroundMouseDown;
             _panelcontrols.Controls.Add(_pictureBoxProgressbarBackground);
 
-            _pictureBoxProgressBar.Image = (Image)(_resources.GetObject("pictureBoxProgressBar.Image"));
+            _pictureBoxProgressBar.Image = (Image)_resources.GetObject("pictureBoxProgressBar.Image");
             _pictureBoxProgressBar.Location = new Point(47, 118 - 113);
             _pictureBoxProgressBar.Name = "_pictureBoxProgressBar";
             _pictureBoxProgressBar.Size = new Size(318, 4);
@@ -637,7 +637,7 @@ namespace Nikse.SubtitleEdit.Controls
             _panelcontrols.Controls.Add(_pictureBoxProgressBar);
             _pictureBoxProgressBar.BringToFront();
 
-            _pictureBoxMute.Image = ((Image)(_resources.GetObject("pictureBoxMute.Image")));
+            _pictureBoxMute.Image = (Image)_resources.GetObject("pictureBoxMute.Image");
             _pictureBoxMute.Location = new Point(75, 131 - 113);
             _pictureBoxMute.Name = "_pictureBoxMute";
             _pictureBoxMute.Size = new Size(19, 19);
@@ -646,7 +646,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxMute.MouseEnter += PictureBoxMuteMouseEnter;
             _panelcontrols.Controls.Add(_pictureBoxMute);
 
-            _pictureBoxMuteDown.Image = ((Image)(_resources.GetObject("pictureBoxMuteDown.Image")));
+            _pictureBoxMuteDown.Image = (Image)_resources.GetObject("pictureBoxMuteDown.Image");
             _pictureBoxMuteDown.Location = new Point(75, 131 - 113);
             _pictureBoxMuteDown.Name = "_pictureBoxMuteDown";
             _pictureBoxMuteDown.Size = new Size(19, 19);
@@ -655,7 +655,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxMuteDown.Click += PictureBoxMuteDownClick;
             _panelcontrols.Controls.Add(_pictureBoxMuteDown);
 
-            _pictureBoxMuteOver.Image = ((Image)(_resources.GetObject("pictureBoxMuteOver.Image")));
+            _pictureBoxMuteOver.Image = (Image)_resources.GetObject("pictureBoxMuteOver.Image");
             _pictureBoxMuteOver.Location = new Point(75, 131 - 113);
             _pictureBoxMuteOver.Name = "_pictureBoxMuteOver";
             _pictureBoxMuteOver.Size = new Size(19, 19);
@@ -666,7 +666,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxMuteOver.MouseUp += PictureBoxMuteOverMouseUp;
             _panelcontrols.Controls.Add(_pictureBoxMuteOver);
 
-            _pictureBoxVolumeBarBackground.Image = ((Image)(_resources.GetObject("pictureBoxVolumeBarBackground.Image")));
+            _pictureBoxVolumeBarBackground.Image = (Image)_resources.GetObject("pictureBoxVolumeBarBackground.Image");
             _pictureBoxVolumeBarBackground.Location = new Point(111, 135 - 113);
             _pictureBoxVolumeBarBackground.Name = "_pictureBoxVolumeBarBackground";
             _pictureBoxVolumeBarBackground.Size = new Size(82, 13);
@@ -675,7 +675,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxVolumeBarBackground.MouseDown += PictureBoxVolumeBarBackgroundMouseDown;
             _panelcontrols.Controls.Add(_pictureBoxVolumeBarBackground);
 
-            _pictureBoxVolumeBar.Image = ((Image)(_resources.GetObject("pictureBoxVolumeBar.Image")));
+            _pictureBoxVolumeBar.Image = (Image)_resources.GetObject("pictureBoxVolumeBar.Image");
             _pictureBoxVolumeBar.Location = new Point(120, 139 - 113);
             _pictureBoxVolumeBar.Name = "_pictureBoxVolumeBar";
             _pictureBoxVolumeBar.Size = new Size(48, 4);
@@ -686,78 +686,78 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxVolumeBar.BringToFront();
 
             _pictureBoxReverse = new PictureBox
-                                     {
-                                         Image = ((Image)(_resources.GetObject("pictureBoxReverse.Image"))),
-                                         Location = new Point(28, 3),
-                                         Name = "_pictureBoxReverse",
-                                         Size = new Size(16, 8),
-                                         SizeMode = PictureBoxSizeMode.AutoSize,
-                                         TabStop = false
-                                     };
+            {
+                Image = (Image)_resources.GetObject("pictureBoxReverse.Image"),
+                Location = new Point(28, 3),
+                Name = "_pictureBoxReverse",
+                Size = new Size(16, 8),
+                SizeMode = PictureBoxSizeMode.AutoSize,
+                TabStop = false
+            };
             _panelcontrols.Controls.Add(_pictureBoxReverse);
             _pictureBoxReverse.MouseEnter += PictureBoxReverseMouseEnter;
 
             _pictureBoxReverseOver = new PictureBox
-                                         {
-                                             Image =
-                                                 ((Image)(_resources.GetObject("pictureBoxReverseMouseOver.Image"))),
-                                             Location = _pictureBoxReverse.Location,
-                                             Name = "_pictureBoxReverseOver",
-                                             Size = _pictureBoxReverse.Size,
-                                             SizeMode = PictureBoxSizeMode.AutoSize,
-                                             TabStop = false
-                                         };
+            {
+                Image =
+                                                 (Image)_resources.GetObject("pictureBoxReverseMouseOver.Image"),
+                Location = _pictureBoxReverse.Location,
+                Name = "_pictureBoxReverseOver",
+                Size = _pictureBoxReverse.Size,
+                SizeMode = PictureBoxSizeMode.AutoSize,
+                TabStop = false
+            };
             _panelcontrols.Controls.Add(_pictureBoxReverseOver);
             _pictureBoxReverseOver.MouseLeave += PictureBoxReverseOverMouseLeave;
             _pictureBoxReverseOver.MouseDown += PictureBoxReverseOverMouseDown;
             _pictureBoxReverseOver.MouseUp += PictureBoxReverseOverMouseUp;
 
             _pictureBoxReverseDown = new PictureBox
-                                         {
-                                             Image = ((Image)(_resources.GetObject("pictureBoxReverseMouseDown.Image"))),
-                                             Location = _pictureBoxReverse.Location,
-                                             Name = "_pictureBoxReverseOver",
-                                             Size = _pictureBoxReverse.Size,
-                                             SizeMode = PictureBoxSizeMode.AutoSize,
-                                             TabStop = false
-                                         };
+            {
+                Image = (Image)_resources.GetObject("pictureBoxReverseMouseDown.Image"),
+                Location = _pictureBoxReverse.Location,
+                Name = "_pictureBoxReverseOver",
+                Size = _pictureBoxReverse.Size,
+                SizeMode = PictureBoxSizeMode.AutoSize,
+                TabStop = false
+            };
             _panelcontrols.Controls.Add(_pictureBoxReverseDown);
 
             _pictureBoxFastForward = new PictureBox
-                                         {
-                                             Image = ((Image)(_resources.GetObject("pictureBoxFastForward.Image"))),
-                                             Location = new Point(571, 1),
-                                             Name = "_pictureBoxFastForward",
-                                             Size = new Size(17, 13),
-                                             SizeMode = PictureBoxSizeMode.AutoSize,
-                                             TabStop = false
-                                         };
+            {
+                Image = (Image)_resources.GetObject("pictureBoxFastForward.Image"),
+                Location = new Point(571, 1),
+                Name = "_pictureBoxFastForward",
+                Size = new Size(17, 13),
+                SizeMode = PictureBoxSizeMode.AutoSize,
+                TabStop = false
+            };
             _panelcontrols.Controls.Add(_pictureBoxFastForward);
             _pictureBoxFastForward.MouseEnter += PictureBoxFastForwardMouseEnter;
 
             _pictureBoxFastForwardOver = new PictureBox
-                                             {
-                                                 Image = ((Image)(_resources.GetObject("pictureBoxFastForwardMouseOver.Image"))),
-                                                 Location = _pictureBoxFastForward.Location,
-                                                 Name = "_pictureBoxFastForwardOver",
-                                                 Size = _pictureBoxFastForward.Size,
-                                                 SizeMode = PictureBoxSizeMode.AutoSize,
-                                                 TabStop = false
-                                             };
+            {
+                Image = (Image)_resources.GetObject("pictureBoxFastForwardMouseOver.Image"),
+                Location = _pictureBoxFastForward.Location,
+                Name = "_pictureBoxFastForwardOver",
+                Size = _pictureBoxFastForward.Size,
+                SizeMode = PictureBoxSizeMode.AutoSize,
+                TabStop = false
+            };
             _panelcontrols.Controls.Add(_pictureBoxFastForwardOver);
             _pictureBoxFastForwardOver.MouseLeave += PictureBoxFastForwardOverMouseLeave;
             _pictureBoxFastForwardOver.MouseDown += PictureBoxFastForwardOverMouseDown;
             _pictureBoxFastForwardOver.MouseUp += PictureBoxFastForwardOverMouseUp;
 
             _pictureBoxFastForwardDown = new PictureBox
-                                             {
-                                                 Image = ((Image)(_resources.GetObject("pictureBoxFastForwardMouseDown.Image"))),
-                                                 Location = _pictureBoxFastForward.Location,
-                                                 Name = "_pictureBoxFastForwardDown",
-                                                 Size = _pictureBoxFastForward.Size,
-                                                 SizeMode = PictureBoxSizeMode.AutoSize,
-                                                 TabStop = false
-                                             };
+            {
+                Image = (Image)_resources.GetObject("pictureBoxFastForwardMouseDown.Image"),
+                Location = _pictureBoxFastForward.Location,
+                Name = "_pictureBoxFastForwardDown",
+                Size = _pictureBoxFastForward.Size,
+                SizeMode = PictureBoxSizeMode.AutoSize,
+                TabStop = false
+            };
             _panelcontrols.Controls.Add(_pictureBoxFastForwardDown);
 
             _labelTimeCode.Location = new Point(280, 28);
@@ -985,16 +985,16 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void ShowFullScreenControls()
         {
-            _pictureBoxFullscreen.Image = ((Image)(_resources.GetObject("pictureBoxNoFS.Image")));
-            _pictureBoxFullscreenDown.Image = ((Image)(_resources.GetObject("pictureBoxNoFSDown.Image")));
-            _pictureBoxFullscreenOver.Image = ((Image)(_resources.GetObject("pictureBoxNoFSOver.Image")));
+            _pictureBoxFullscreen.Image = (Image)_resources.GetObject("pictureBoxNoFS.Image");
+            _pictureBoxFullscreenDown.Image = (Image)_resources.GetObject("pictureBoxNoFSDown.Image");
+            _pictureBoxFullscreenOver.Image = (Image)_resources.GetObject("pictureBoxNoFSOver.Image");
         }
 
         public void ShowNonFullScreenControls()
         {
-            _pictureBoxFullscreen.Image = ((Image)(_resources.GetObject("pictureBoxFS.Image")));
-            _pictureBoxFullscreenDown.Image = ((Image)(_resources.GetObject("pictureBoxFSDown.Image")));
-            _pictureBoxFullscreenOver.Image = ((Image)(_resources.GetObject("pictureBoxFSOver.Image")));
+            _pictureBoxFullscreen.Image = (Image)_resources.GetObject("pictureBoxFS.Image");
+            _pictureBoxFullscreenDown.Image = (Image)_resources.GetObject("pictureBoxFSDown.Image");
+            _pictureBoxFullscreenOver.Image = (Image)_resources.GetObject("pictureBoxFSOver.Image");
         }
 
         private void PictureBoxFullscreenMouseEnter(object sender, EventArgs e)
