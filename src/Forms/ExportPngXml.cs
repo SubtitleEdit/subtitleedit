@@ -643,9 +643,9 @@ namespace Nikse.SubtitleEdit.Forms
                     string s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
                                "<!DOCTYPE xmeml[]>" + Environment.NewLine +
                                "<xmeml version=\"4\">" + Environment.NewLine +
-                               "  <sequence id=\"" + fileNameNoExt + "\">" + Environment.NewLine +
+                               "  <sequence id=\"" + System.Security.SecurityElement.Escape(fileNameNoExt) + "\">" + Environment.NewLine +
                                "    <updatebehavior>add</updatebehavior>" + Environment.NewLine +
-                               "    <name>" + fileNameNoExt + @"</name>
+                               "    <name>" + System.Security.SecurityElement.Escape(fileNameNoExt) + @"</name>
     <duration>" + duration.ToString(CultureInfo.InvariantCulture) + @"</duration>
     <rate>
       <ntsc>FALSE</ntsc>
@@ -1141,11 +1141,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         string fileName = numberString + "." + comboBoxImageFormat.Text.ToLower();
                         string fileNameNoPath = Path.GetFileName(fileName);
                         string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
-                        string template = " <clipitem id=\"" + fileNameNoPath + "\">" + Environment.NewLine +
+                        string template = " <clipitem id=\"" + System.Security.SecurityElement.Escape(fileNameNoPath) + "\">" + Environment.NewLine +
 
 //              <pathurl>file://localhost/" + fileNameNoPath.Replace(" ", "%20") + @"</pathurl>
 
-                                          @"            <name>" + fileNameNoPath + @"</name>
+                                          @"            <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
             <duration>[DURATION]</duration>
             <rate>
               <ntsc>FALSE</ntsc>
@@ -1159,10 +1159,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             <stillframe>TRUE</stillframe>
             <anamorphic>FALSE</anamorphic>
             <alphatype>straight</alphatype>
-            <masterclipid>" + fileNameNoPath + @"1</masterclipid>" + Environment.NewLine +
+            <masterclipid>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"1</masterclipid>" + Environment.NewLine +
                                           "           <file id=\"" + fileNameNoExt + "\">" + @"
-              <name>" + fileNameNoPath + @"</name>
-              <pathurl>" + fileNameNoPath.Replace(" ", "%20") + @"</pathurl>
+              <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
+              <pathurl>" + Utilities.UrlEncode(fileNameNoPath) + @"</pathurl>
               <rate>
                 <timebase>25</timebase>
               </rate>
