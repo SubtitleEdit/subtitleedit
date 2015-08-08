@@ -1,5 +1,24 @@
 ﻿Subtitle Edit Changelog
 
+3.4.9 (xth August 2015) BETA
+* NEW:
+   * Option to play a sound when new network message arrives - thx InCogNiTo124
+* IMPROVED:
+   * Updated Croatian OCR fix replace list - thx diomed & xylographe
+   * FFMPEG audio extraction will now prompt for audio file if more than one
+   * Format PAC now includes "Chinese simplified" - thx Man
+   * Merge lines with same text now ignores casing - thx Michel
+   * Now keeps blank lines inside SubRip texts
+* FIXED:
+   * Fixed tags accumulating texts in Sami format (regression from 3.4.8 refact) - thx domddol
+   * Fixed several issues with format "Cavena 890" - thx Victor
+   * Better handling of some zero width Unicode spaces - thx Krystian
+   * Spell check issue with multiple occurrences of same word in one subtitle - thx Krystian
+   * Rounding issue in formats with duration in output - thx Victor
+   * Possible crash in export FCP/image export due to missing escape encoding - thx Bruno
+   * + Many minor fixes from Ivandrofly and xylographe
+
+
 3.4.8 (2nd August 2015)
 * NEW:
    * Added support for Blu-ray TextST - thx Timo/ndjamena
@@ -22,6 +41,7 @@
    * Now comboboxes from "Remove text for HI " should save/restore last used value - thx Jesper
    * Fixed several issues with format "CIP" output - thx Victor
    * + Many minor fixes from Ivandrofly and xylographe
+
 
 3.4.7 (22th July 2015)
 * NEW:
@@ -53,9 +73,9 @@
    * Fixed wrong styles in SSA - thx alundpeggybundy
    * Fixed multiple blank lines added after editing SSA/ASS properties
    * Fix in "Change casing" regarding "don't" - thx Chamallow
-   * Fixed missing last blank "Sami" end tag - thx domddol 
+   * Fixed missing last blank "Sami" end tag - thx domddol
    * Fixed possible crash when importing vobsub in mkv files
-   * Fixed extra space after remove text for HI - thx ivandrofly/sbraz 
+   * Fixed extra space after remove text for HI - thx ivandrofly/sbraz
    * Minor fix for "Unknown subtitle format 42" - thx Carles
    * Minor fix for italic in auto-translate - thx Shahrukh
    * Fixed bug in "Remove text for HI" regarding italic/interjections - thx Thunderbolt8
@@ -64,7 +84,7 @@
    * Don't load video when canceling mkv import - thx Andreas
    * Avoid crash in "Plugins" (due to culture specific decimal separator) - thx marb99
    * Fixed bug reading YouTube sbv files - thx msl521
-   * Fixed support for Tesseract 3.03RC - thx YamashitaRen 
+   * Fixed support for Tesseract 3.03RC - thx YamashitaRen
    * Fixed dead networking service (for networking sessions)
    * Fix for italic support in span in TTML 1.0 - thx Mampfi
    * Fix for (possible) "culture is not supported" crash when changing language - thx XuTpuK
