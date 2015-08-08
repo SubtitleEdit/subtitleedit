@@ -151,6 +151,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     total.Append(EncodeText(partial.ToString()));
                     text = total.ToString();
+                    total.Clear();
+                    partial.Clear();
                 }
                 else
                 {
