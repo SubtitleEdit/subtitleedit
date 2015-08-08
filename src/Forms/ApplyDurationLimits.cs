@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixShortDisplayTimes()
         {
-            Subtitle unfixables = new Subtitle();
+            var unfixables = new Subtitle();
             string fixAction = Configuration.Settings.Language.FixCommonErrors.FixShortDisplayTime;
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {

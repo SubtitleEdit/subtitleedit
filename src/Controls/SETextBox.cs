@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (MouseButtons == MouseButtons.Left && !string.IsNullOrEmpty(_dragText))
             {
-                Point pt = new Point(e.X, e.Y);
+                var pt = new Point(e.X, e.Y);
                 int index = GetCharIndexFromPosition(pt);
                 if (index >= _dragStartFrom && index <= _dragStartFrom + _dragText.Length)
                 {
@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Controls
                     SelectionStart = _dragStartFrom;
                     SelectionLength = _dragText.Length;
 
-                    DataObject dataObject = new DataObject();
+                    var dataObject = new DataObject();
                     dataObject.SetText(_dragText, TextDataFormat.UnicodeText);
                     dataObject.SetText(_dragText, TextDataFormat.Text);
 
@@ -103,11 +103,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SETextBox_DragDrop(object sender, DragEventArgs e)
         {
-            Point pt = new Point(e.X, e.Y);
+            var pt = new Point(e.X, e.Y);
             pt = PointToClient(pt);
             int index = GetCharIndexFromPosition(pt);
 
-            string newText = string.Empty;
+            var newText = string.Empty;
             if (e.Data.GetDataPresent(DataFormats.UnicodeText))
                 newText = (string)e.Data.GetData(DataFormats.UnicodeText);
             else

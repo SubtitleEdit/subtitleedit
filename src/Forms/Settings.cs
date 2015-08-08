@@ -821,7 +821,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Directory.Exists(waveformsFolder))
             {
-                DirectoryInfo di = new DirectoryInfo(waveformsFolder);
+                var di = new DirectoryInfo(waveformsFolder);
 
                 // waveform data
                 bytes = 0;
@@ -835,12 +835,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Directory.Exists(spectrogramsFolder))
             {
-                DirectoryInfo di = new DirectoryInfo(spectrogramsFolder);
+                var di = new DirectoryInfo(spectrogramsFolder);
 
                 // spectrogram data
                 foreach (DirectoryInfo dir in di.GetDirectories())
                 {
-                    DirectoryInfo spectrogramDir = new DirectoryInfo(dir.FullName);
+                    var spectrogramDir = new DirectoryInfo(dir.FullName);
                     foreach (FileInfo fi in spectrogramDir.GetFiles("*.gif"))
                     {
                         bytes += fi.Length;
@@ -1572,7 +1572,7 @@ namespace Nikse.SubtitleEdit.Forms
                 pictureBoxPreview.Image.Dispose();
             var bmp = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
 
-            using (Graphics g = Graphics.FromImage(bmp))
+            using (var g = Graphics.FromImage(bmp))
             {
                 // Draw background
                 const int rectangleSize = 9;
