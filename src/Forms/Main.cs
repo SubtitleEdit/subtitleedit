@@ -15842,6 +15842,19 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 _networkChat.AddChatMessage(update.User, update.Text);
                             }
+                            if (!string.IsNullOrEmpty(Configuration.Settings.NetworkSettings.NewMessageSound) && File.Exists(Configuration.Settings.NetworkSettings.NewMessageSound))
+                            {
+                                try
+                                {
+                                    using (var soundPlayer = new System.Media.SoundPlayer(Configuration.Settings.NetworkSettings.NewMessageSound))
+                                    {
+                                        soundPlayer.Play(); 
+                                    }
+                                }
+                                catch
+                                {
+                                }
+                            }
                             _networkSession.AppendToLog(string.Format(_language.NetworkMessage, update.User.UserName, update.User.Ip, update.Text));
                         }
                         else if (update.Action == "DEL")

@@ -744,6 +744,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string WebServiceUrl { get; set; }
         public string SessionKey { get; set; }
         public int PollIntervalSeconds { get; set; }
+        public string NewMessageSound { get; set; }
 
         public NetworkSettings()
         {
@@ -2098,6 +2099,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("PollIntervalSeconds");
                 if (subNode != null)
                     settings.NetworkSettings.PollIntervalSeconds = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("NewMessageSound");
+                if (subNode != null)
+                    settings.NetworkSettings.NewMessageSound = subNode.InnerText;
             }
 
             settings.VobSubOcr = new VobSubOcrSettings();
@@ -2993,6 +2997,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("UserName", settings.NetworkSettings.UserName);
                 textWriter.WriteElementString("WebServiceUrl", settings.NetworkSettings.WebServiceUrl);
                 textWriter.WriteElementString("PollIntervalSeconds", settings.NetworkSettings.PollIntervalSeconds.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("NewMessageSound", settings.NetworkSettings.NewMessageSound);
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("VobSubOcr", "");
