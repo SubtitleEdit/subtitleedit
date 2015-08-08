@@ -1666,7 +1666,7 @@
             public string Tools { get; set; }
             public string WordLists { get; set; }
             public string SsaStyle { get; set; }
-            public string Proxy { get; set; }
+            public string Network { get; set; }
             public string ShowToolBarButtons { get; set; }
             public string New { get; set; }
             public string Open { get; set; }
@@ -1792,6 +1792,8 @@
             public string ProxyUserName { get; set; }
             public string ProxyPassword { get; set; }
             public string ProxyDomain { get; set; }
+            public string NetworkSessionSettings { get; set; }
+            public string NetworkSessionNewSound { get; set; }
             public string PlayXSecondsAndBack { get; set; }
             public string StartSceneIndex { get; set; }
             public string EndSceneIndex { get; set; }

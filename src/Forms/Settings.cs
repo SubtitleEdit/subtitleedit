@@ -45,10 +45,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(fileName) || !fileName.StartsWith(folder.Substring(0, 2), StringComparison.OrdinalIgnoreCase))
                 return string.Empty;
 
-            Uri pathUri = new Uri(fileName);
+            var pathUri = new Uri(fileName);
             if (!folder.EndsWith(Path.DirectorySeparatorChar))
                 folder += Path.DirectorySeparatorChar;
-            Uri folderUri = new Uri(folder);
+            var folderUri = new Uri(folder);
             return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
         }
 
@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonVideoPlayerMPlayer.Enabled = false;
             if (!Utilities.IsQuartsDllInstalled)
                 radioButtonVideoPlayerDirectShow.Enabled = false;
-            if (Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC.MpcHc.GetMpcHcFileName() == null)
+            if (Logic.VideoPlayers.MpcHC.MpcHc.GetMpcHcFileName() == null)
                 radioButtonVideoPlayerMpcHc.Enabled = false;
 
             textBoxVlcPath.Text = gs.VlcLocation;
@@ -207,6 +207,8 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxProxyPassword.Text = proxy.DecodePassword();
             textBoxProxyDomain.Text = proxy.Domain;
 
+            textBoxNetworkSessionNewMessageSound.Text = Configuration.Settings.NetworkSettings.NewMessageSound;
+
             checkBoxSyntaxColorDurationTooSmall.Checked = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall;
             checkBoxSyntaxColorDurationTooLarge.Checked = Configuration.Settings.Tools.ListViewSyntaxColorDurationBig;
             checkBoxSyntaxColorTextTooLong.Checked = Configuration.Settings.Tools.ListViewSyntaxColorLongLines;
@@ -224,7 +226,7 @@ namespace Nikse.SubtitleEdit.Forms
             tabPageWordLists.Text = language.WordLists;
             tabPageTools.Text = language.Tools;
             tabPageSsaStyle.Text = language.SsaStyle;
-            tabPageProxy.Text = language.Proxy;
+            tabPageNetwork.Text = language.Network;
             tabPageToolBar.Text = language.Toolbar;
             tabPageShortcuts.Text = language.Shortcuts;
             tabPageSyntaxColoring.Text = language.SyntaxColoring;
@@ -417,6 +419,9 @@ namespace Nikse.SubtitleEdit.Forms
             labelProxyUserName.Text = language.ProxyUserName;
             labelProxyPassword.Text = language.ProxyPassword;
             labelProxyDomain.Text = language.ProxyDomain;
+
+            groupBoxNetworkSession.Text = language.NetworkSessionSettings;
+            labelNetworkSessionNewMessageSound.Text = language.NetworkSessionNewSound;
 
             groupBoxToolsVisualSync.Text = language.VisualSync;
             labelVerifyButton.Text = language.PlayXSecondsAndBack;
@@ -1159,6 +1164,8 @@ namespace Nikse.SubtitleEdit.Forms
                 proxy.EncodePassword(textBoxProxyPassword.Text);
             proxy.Domain = textBoxProxyDomain.Text;
 
+            Configuration.Settings.NetworkSettings.NewMessageSound = textBoxNetworkSessionNewMessageSound.Text;
+
             Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall = checkBoxSyntaxColorDurationTooSmall.Checked;
             Configuration.Settings.Tools.ListViewSyntaxColorDurationBig = checkBoxSyntaxColorDurationTooLarge.Checked;
             Configuration.Settings.Tools.ListViewSyntaxColorLongLines = checkBoxSyntaxColorTextTooLong.Checked;
@@ -1842,8 +1849,6 @@ namespace Nikse.SubtitleEdit.Forms
                 if (result == DialogResult.Yes)
                 {
                     int removeCount = 0;
-                    var namesEtc = new List<string>();
-                    var globalNamesEtc = new List<string>();
                     var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
                     for (int idx = listBoxNamesEtc.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
@@ -2563,6 +2568,15 @@ namespace Nikse.SubtitleEdit.Forms
             catch
             {
             }
+        }
+
+        private void buttonNetworkSessionNewMessageSound_Click(object sender, EventArgs e)
+        {
+            openFileDialogFFmpeg.FileName = string.Empty;
+            openFileDialogFFmpeg.Title = Configuration.Settings.Language.Settings.WaveformBrowseToFFmpeg;
+            openFileDialogFFmpeg.Filter = Configuration.Settings.Language.General.AudioFiles + "|*.wav";
+            if (openFileDialogFFmpeg.ShowDialog(this) == DialogResult.OK)
+                textBoxNetworkSessionNewMessageSound.Text = openFileDialogFFmpeg.FileName;
         }
 
     }

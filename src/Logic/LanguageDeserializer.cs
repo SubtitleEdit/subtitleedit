@@ -3981,8 +3981,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/SsaStyle":
                     language.Settings.SsaStyle = reader.Value;
                     break;
-                case "Settings/Proxy":
-                    language.Settings.Proxy = reader.Value;
+                case "Settings/Network":
+                    language.Settings.Network = reader.Value;
                     break;
                 case "Settings/ShowToolBarButtons":
                     language.Settings.ShowToolBarButtons = reader.Value;
@@ -4358,6 +4358,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/ProxyDomain":
                     language.Settings.ProxyDomain = reader.Value;
+                    break;
+                case "Settings/NetworkSessionSettings":
+                    language.Settings.NetworkSessionSettings = reader.Value;
+                    break;
+                case "Settings/NetworkSessionNewSound":
+                    language.Settings.NetworkSessionNewSound = reader.Value;
                     break;
                 case "Settings/PlayXSecondsAndBack":
                     language.Settings.PlayXSecondsAndBack = reader.Value;

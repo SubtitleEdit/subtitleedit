@@ -1507,7 +1507,7 @@ can edit in same subtitle file (collaboration)</Information>
     <Tools>Tools</Tools>
     <WordLists>Word lists</WordLists>
     <SsaStyle>ASS/SSA Style</SsaStyle>
-    <Proxy>Proxy</Proxy>
+    <Network>Network</Network>
     <ShowToolBarButtons>Show tool bar buttons</ShowToolBarButtons>
     <New>New</New>
     <Open>Open</Open>
@@ -1633,6 +1633,8 @@ can edit in same subtitle file (collaboration)</Information>
     <ProxyUserName>User name</ProxyUserName>
     <ProxyPassword>Password</ProxyPassword>
     <ProxyDomain>Domain</ProxyDomain>
+    <NetworkSessionSettings>Network session settings</NetworkSessionSettings>
+    <NetworkSessionNewSound>Play sound file when new message arrives</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Play X seconds and back, X is</PlayXSecondsAndBack>
     <StartSceneIndex>Start scene paragraph is</StartSceneIndex>
     <EndSceneIndex>End scene paragraph is</EndSceneIndex>
