@@ -110,8 +110,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int count = 1;
             var sb = new StringBuilder();
             sb.AppendLine(header.Replace("_TITLE_", title).Replace("_LANGUAGE-STYLE_", languageStyle));
-            var total = new StringBuilder();
-            var partial = new StringBuilder();
+            var totalLine = new StringBuilder();
+            var partialLine = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 Paragraph next = subtitle.GetParagraphOrDefault(count);
@@ -129,30 +129,30 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             text.Substring(i).StartsWith("<s", StringComparison.Ordinal) ||
                             text.Substring(i).StartsWith("</", StringComparison.Ordinal))
                         {
-                            total.Append(EncodeText(partial.ToString()));
-                            partial.Clear();
+                            totalLine.Append(EncodeText(partialLine.ToString()));
+                            partialLine.Clear();
                             tagOn = true;
-                            total.Append('<');
+                            totalLine.Append('<');
                         }
                         else if (text.Substring(i).StartsWith('>') && tagOn)
                         {
                             tagOn = false;
-                            total.Append('>');
+                            totalLine.Append('>');
                         }
                         else if (!tagOn)
                         {
-                            partial.Append(text[i]);
+                            partialLine.Append(text[i]);
                         }
                         else
                         {
-                            total.Append(text[i]);
+                            totalLine.Append(text[i]);
                         }
                     }
 
-                    total.Append(EncodeText(partial.ToString()));
-                    text = total.ToString();
-                    total.Clear();
-                    partial.Clear();
+                    totalLine.Append(EncodeText(partialLine.ToString()));
+                    text = totalLine.ToString();
+                    totalLine.Clear();
+                    partialLine.Clear();
                 }
                 else
                 {
