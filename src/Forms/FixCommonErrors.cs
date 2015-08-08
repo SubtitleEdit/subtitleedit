@@ -1177,17 +1177,19 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-
-                string s = HtmlUtil.RemoveHtmlTags(p.Text);
-                if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
+                if (AllowFix(p, fixAction))
                 {
-                    s = Utilities.AutoBreakLine(p.Text, Language);
-                    if (AllowFix(p, fixAction) && s != p.Text)
+                    string s = HtmlUtil.RemoveHtmlTags(p.Text, true);
+                    if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
                     {
-                        string oldCurrent = p.Text;
-                        p.Text = s;
-                        noOfShortLines++;
-                        AddFixToListView(p, fixAction, oldCurrent, p.Text);
+                        s = Utilities.AutoBreakLine(p.Text, Language);
+                        if (s != p.Text)
+                        {
+                            string oldCurrent = p.Text;
+                            p.Text = s;
+                            noOfShortLines++;
+                            AddFixToListView(p, fixAction, oldCurrent, p.Text);
+                        }
                     }
                 }
             }
