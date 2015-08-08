@@ -923,7 +923,10 @@ namespace Nikse.SubtitleEdit.Forms
                             foreach (CultureInfo ci in cultures)
                             {
                                 if (ci.ThreeLetterISOLanguageName == culture.ThreeLetterISOLanguageName)
+                                {
                                     found = true;
+                                    break;
+                                }
                             }
                             if (!found)
                                 cultures.Add(culture);
@@ -934,7 +937,10 @@ namespace Nikse.SubtitleEdit.Forms
                             foreach (CultureInfo ci in cultures)
                             {
                                 if (ci.ThreeLetterISOLanguageName == culture.ThreeLetterISOLanguageName)
+                                {
                                     found = true;
+                                    break;
+                                }
                             }
                             if (!found)
                                 cultures.Add(culture);
@@ -950,7 +956,10 @@ namespace Nikse.SubtitleEdit.Forms
                         foreach (CultureInfo ci in cultures)
                         {
                             if (ci.ThreeLetterISOLanguageName == culture.ThreeLetterISOLanguageName)
+                            {
                                 found = true;
+                                break;
+                            }
                         }
                         if (!found)
                             cultures.Add(culture);
@@ -961,7 +970,10 @@ namespace Nikse.SubtitleEdit.Forms
                         foreach (CultureInfo ci in cultures)
                         {
                             if (ci.ThreeLetterISOLanguageName == culture.ThreeLetterISOLanguageName)
+                            {
                                 found = true;
+                                break;
+                            }
                         }
                         if (!found)
                             cultures.Add(culture);
