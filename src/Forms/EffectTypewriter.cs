@@ -215,10 +215,8 @@ namespace Nikse.SubtitleEdit.Forms
             double duration = _paragraph.Duration.TotalMilliseconds - ((double)numericUpDownDelay.Value * TimeCode.BaseUnit);
             double stepsLength = CalculateStepLength(_paragraph.Text, duration);
 
-            double startMilliseconds;
-            double endMilliseconds;
-            TimeCode start;
-            TimeCode end;
+            double startMilliseconds, endMilliseconds;
+            TimeCode start, end;
             int index = 0;
             string text = string.Empty;
             bool tagOn = false;

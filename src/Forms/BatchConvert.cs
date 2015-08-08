@@ -17,7 +17,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class BatchConvert : PositionAndSizeForm
     {
-
         public class ThreadDoWorkParameter
         {
             public bool FixCommonErrors { get; set; }
