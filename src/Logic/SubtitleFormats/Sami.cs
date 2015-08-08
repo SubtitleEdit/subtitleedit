@@ -245,6 +245,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             var p = new Paragraph();
+            var totalLine = new StringBuilder();
+            var partialLine = new StringBuilder();
             while (syncStartPos >= 0)
             {
                 string millisecAsString = string.Empty;
@@ -336,8 +338,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 if (text.Contains('<') && text.Contains('>'))
                 {
-                    var total = new StringBuilder();
-                    var partial = new StringBuilder();
+                    totalLine.Clear();
+                    partialLine.Clear();
                     bool tagOn = false;
                     for (int i = 0; i < text.Length && i < 999; i++)
                     {
@@ -350,27 +352,27 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                              tmp.StartsWith("<s", StringComparison.Ordinal) ||
                              tmp.StartsWith("</", StringComparison.Ordinal)))
                         {
-                            total.Append(WebUtility.HtmlDecode(partial.ToString()));
-                            partial = new StringBuilder();
+                            totalLine.Append(WebUtility.HtmlDecode(partialLine.ToString()));
+                            partialLine = new StringBuilder();
                             tagOn = true;
-                            total.Append('<');
+                            totalLine.Append('<');
                         }
                         else if (text.Substring(i).StartsWith('>') && tagOn)
                         {
                             tagOn = false;
-                            total.Append('>');
+                            totalLine.Append('>');
                         }
                         else if (!tagOn)
                         {
-                            partial.Append(text[i]);
+                            partialLine.Append(text[i]);
                         }
                         else
                         {
-                            total.Append(text[i]);
+                            totalLine.Append(text[i]);
                         }
                     }
-                    total.Append(WebUtility.HtmlDecode(partial.ToString()));
-                    text = total.ToString();
+                    totalLine.Append(WebUtility.HtmlDecode(partialLine.ToString()));
+                    text = totalLine.ToString();
                 }
                 else
                 {
@@ -421,9 +423,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text.ToUpper().Trim() == "<BODY>"))
                 subtitle.Paragraphs.RemoveAt(subtitle.Paragraphs.Count - 1);
 
+            // non-breaking space to normal space
+            const char nonBreakingSpace = '\u00A0';
             foreach (Paragraph p2 in subtitle.Paragraphs)
             {
-                p2.Text = p2.Text.Replace('\u00A0', ' '); // non-breaking space to normal space
+                p2.Text = p2.Text.Replace(nonBreakingSpace, ' ');
             }
         }
 
