@@ -122,19 +122,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     bool tagOn = false;
                     for (int i = 0; i < text.Length; i++)
                     {
-                        if (text.Substring(i).StartsWith("<font", StringComparison.Ordinal) ||
-                            text.Substring(i).StartsWith("<div", StringComparison.Ordinal) ||
-                            text.Substring(i).StartsWith("<i", StringComparison.Ordinal) ||
-                            text.Substring(i).StartsWith("<b", StringComparison.Ordinal) ||
-                            text.Substring(i).StartsWith("<s", StringComparison.Ordinal) ||
-                            text.Substring(i).StartsWith("</", StringComparison.Ordinal))
+                        var t = text.Substring(i);
+                        if (t.StartsWith("<font", StringComparison.Ordinal) ||
+                            t.StartsWith("<div", StringComparison.Ordinal) ||
+                            t.StartsWith("<i", StringComparison.Ordinal) ||
+                            t.StartsWith("<b", StringComparison.Ordinal) ||
+                            t.StartsWith("<s", StringComparison.Ordinal) ||
+                            t.StartsWith("</", StringComparison.Ordinal))
                         {
                             totalLine.Append(EncodeText(partialLine.ToString()));
                             partialLine.Clear();
                             tagOn = true;
                             totalLine.Append('<');
                         }
-                        else if (text.Substring(i).StartsWith('>') && tagOn)
+                        else if (t.Substring(i).StartsWith('>') && tagOn)
                         {
                             tagOn = false;
                             totalLine.Append('>');
