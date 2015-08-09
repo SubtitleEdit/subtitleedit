@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
+            var subtitle = new Subtitle();
             this.LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > 0;
         }
@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<Subtitle/>";
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
 
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -69,14 +69,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
 
             string xmlString = sb.ToString();
             if (!xmlString.Contains("<Paragraph>") || !xmlString.Contains("<Text>"))
                 return;
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.XmlResolver = null;
             try
             {

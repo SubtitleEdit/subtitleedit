@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else
                 {
-                    string text = HtmlUtil.RemoveHtmlTags(p.Text);
+                    var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                     bool first = true;
                     foreach (string line in text.SplitToLines())
                     {

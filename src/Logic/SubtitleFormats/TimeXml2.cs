@@ -113,13 +113,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var parts = p.Split(new[] { ';', '.', ':', ',' });
 
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string ms = parts[3];
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var ms = int.Parse(parts[3]);
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), (int.Parse(ms)));
-            return tc;
+            return new TimeCode(hour, minutes, seconds, ms);
         }
 
     }

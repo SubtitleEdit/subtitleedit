@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string text = HtmlUtil.RemoveHtmlTags(p.Text);
+                var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 text = text.Replace(Environment.NewLine, "|");
                 sb.AppendLine(string.Format("{0:00}:{1:00}:{2:00}:{3}", p.StartTime.Hours,
                                                                p.StartTime.Minutes,

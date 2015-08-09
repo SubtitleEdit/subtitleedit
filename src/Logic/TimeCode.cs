@@ -28,10 +28,7 @@ namespace Nikse.SubtitleEdit.Logic
             string[] parts = text.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 4)
             {
-                int hours;
-                int minutes;
-                int seconds;
-                int milliseconds;
+                int hours, minutes, seconds, milliseconds;
                 if (int.TryParse(parts[0], out hours) && int.TryParse(parts[1], out minutes) && int.TryParse(parts[2], out seconds) && int.TryParse(parts[3], out milliseconds))
                 {
                     return new TimeSpan(0, hours, minutes, seconds, milliseconds).TotalMilliseconds;
@@ -45,10 +42,7 @@ namespace Nikse.SubtitleEdit.Logic
             string[] parts = text.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 4)
             {
-                int hours;
-                int minutes;
-                int seconds;
-                int frames;
+                int hours, minutes, seconds, frames;
                 if (int.TryParse(parts[0], out hours) && int.TryParse(parts[1], out minutes) && int.TryParse(parts[2], out seconds) && int.TryParse(parts[3], out frames))
                 {
                     return new TimeCode(hours, minutes, seconds, SubtitleFormat.FramesToMillisecondsMax999(frames)).TotalMilliseconds;
@@ -175,7 +169,7 @@ namespace Nikse.SubtitleEdit.Logic
         public override string ToString()
         {
             var ts = TimeSpan;
-            string s = string.Format("{0:00}:{1:00}:{2:00},{3:000}", ts.Hours + ts.Days * 24, ts.Minutes, ts.Seconds, ts.Milliseconds);
+            var s = string.Format("{0:00}:{1:00}:{2:00},{3:000}", ts.Hours + ts.Days * 24, ts.Minutes, ts.Seconds, ts.Milliseconds);
 
             if (TotalMilliseconds >= 0)
                 return s;

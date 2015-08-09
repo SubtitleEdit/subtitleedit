@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -44,11 +45,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 1,1
 
 [ItemData]").Replace("'", "\"");
+
+            const string writeFormat = "{0},1,\"{1}\",\"{2}\",0,\"{3}\"";
             int i = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 i++;
-                sb.AppendLine(string.Format("{0},1,\"{1}\",\"{2}\",0,\"{3}\"", i, p.StartTime, p.EndTime, p.Text.Replace(Environment.NewLine, "\\n").Replace("\"", string.Empty)));
+                var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
+                text = text.Replace(Environment.NewLine, "\\n").Replace("\"", string.Empty);
+                sb.AppendLine(string.Format(writeFormat, i, p.StartTime, p.EndTime, text));
             }
             return sb.ToString().Trim() + Environment.NewLine;
         }
@@ -57,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             //1,1,"00:01:57,269","00:01:59,169",0,"These hills here are full of Apaches."
 
-            StringBuilder temp = new StringBuilder();
+            var temp = new StringBuilder();
             foreach (string l in lines)
                 temp.Append(l);
             string all = temp.ToString();
@@ -72,7 +77,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var arr = line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 if (arr.Length >= 8 && Utilities.IsInteger(arr[0]) && Utilities.IsInteger(arr[1]))
                 {
-                    Paragraph p = new Paragraph();
+                    var p = new Paragraph();
                     try
                     {
                         p.StartTime = GetTimeCode(arr[2] + "," + arr[3]);
