@@ -91,15 +91,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Adicionar à lista de nomes</Title>
-    <Description>Adicionar à lista de nomes (respeita maiús/minús)</Description>
+    <Description>Adicionar à lista (diferencia maiús/minús)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
     <Title>Adicionar à lista de substituição de OCR</Title>
-    <Description>Duplo adicionar à lista de substituição de OCR (respeita maiús/minús)</Description>
+    <Description>Duplo adicionar à lista de substituição de OCR (diferencia maiús/minús)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Adicionar ao dicionário de utilizador</Title>
-    <Description>Adicionar palvra ao dicionário de utilizador (não respeita maiús/minús)</Description>
+    <Description>Adicionar palavra ao dicionário (não diferencia maiús/minús)</Description>
   </AddToUserDictionary>
   <AddWaveform>
     <Title>Gerar dados em forma de onda</Title>
@@ -492,7 +492,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Title>Localizar</Title>
     <Find>Localizar</Find>
     <Normal>&amp;Normal</Normal>
-    <CaseSensitive>&amp;Respeitar maiúsculas/minúsculas</CaseSensitive>
+    <CaseSensitive>&amp;Diferenciar maiúsculas/minúsculas</CaseSensitive>
     <RegularExpression>E&amp;xpressão regular</RegularExpression>
   </FindDialog>
   <FindSubtitleLine>
@@ -1042,7 +1042,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <LoadedEmptyOrShort>Legenda carregada em branco ou muito pequena {0}</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>Ficheiro vazio ou muito pequeno!</FileIsEmptyOrShort>
     <FileNotFound>Ficheiro não encontrado: {0}</FileNotFound>
-    <SavedSubtitleX>Legenda guardada {0}</SavedSubtitleX>
+    <SavedSubtitleX>Legenda exportada com êxito {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Legenda original guardada {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Ficheiro foi modificado no disco</FileOnDiskModified>
     <OverwriteModifiedFile>Substituir o ficheiro {0} modificado em {1} {2}{3} pelo ficheiro actual carregado do disco em {4} {5}?</OverwriteModifiedFile>
@@ -1356,7 +1356,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <FindWhat>Localizar:</FindWhat>
     <ReplaceWith>Substituir por:</ReplaceWith>
     <Normal>Normal</Normal>
-    <CaseSensitive>Respeitar maiúsculas/minúsculas</CaseSensitive>
+    <CaseSensitive>Diferenciar maiúsculas/minúsculas</CaseSensitive>
     <RegularExpression>Expressão regular</RegularExpression>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
     <Delete>Eliminar</Delete>
@@ -1460,7 +1460,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Title>Substituir</Title>
     <FindWhat>Localizar:</FindWhat>
     <Normal>&amp;Normal</Normal>
-    <CaseSensitive>&amp;Respeitar maiúsculas/minúsculas</CaseSensitive>
+    <CaseSensitive>&amp;Diferenciar maiúsculas/minúsculas</CaseSensitive>
     <RegularExpression>E&amp;xpressão regular</RegularExpression>
     <ReplaceWith>Substituir por:</ReplaceWith>
     <Find>&amp;Localizar</Find>
@@ -1508,7 +1508,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Tools>Ferramentas</Tools>
     <WordLists>Listas de palavras</WordLists>
     <SsaStyle>Estilo SSA/ASS</SsaStyle>
-    <Proxy>Proxy</Proxy>
+    <Network>Rede</Network>
     <ShowToolBarButtons>Mostrar botões da barra de ferramentas</ShowToolBarButtons>
     <New>Novo</New>
     <Open>Abrir</Open>
@@ -1614,7 +1614,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SsaOpaqueBox>Caixa opaca</SsaOpaqueBox>
     <Testing123>Testando 123...</Testing123>
     <Language>Idioma</Language>
-    <NamesIgnoreLists>Nomes ignorados (respeita maiús/minús)</NamesIgnoreLists>
+    <NamesIgnoreLists>Nomes ignorados (diferencia maiús/minús)</NamesIgnoreLists>
     <AddNameEtc>Adicionar nome</AddNameEtc>
     <AddWord>Adicionar palavra</AddWord>
     <Remove>Remover</Remove>
@@ -1634,6 +1634,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ProxyUserName>Nome do utilizador</ProxyUserName>
     <ProxyPassword>Senha</ProxyPassword>
     <ProxyDomain>Domínio</ProxyDomain>
+    <NetworkSessionSettings>Configurações da Sessão de rede</NetworkSessionSettings>
+    <NetworkSessionNewSound>Reproduzir o ficheiro de som quando houver uma nova mensagem</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Reproduzir X segundos e voltar, X é</PlayXSecondsAndBack>
     <StartSceneIndex>O parágrafo de início da cena é</StartSceneIndex>
     <EndSceneIndex>O parágrafo final da cena é</EndSceneIndex>
@@ -1772,7 +1774,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SkipOnce>Ignorar &amp;um</SkipOnce>
     <SkipAll>&amp;Ignorar todos</SkipAll>
     <AddToUserDictionary>Adicionar ao dicionário do utilizador</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>Adicionar à lista nomes (respeita maiús/minús)</AddToNamesAndIgnoreList>
+    <AddToNamesAndIgnoreList>Adicionar à lista (diferencia maiús/minús)</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>Adicionar par à lista de substituição de OCR</AddToOcrReplaceList>
     <Abort>Cancelar</Abort>
     <Use>Usar</Use>
