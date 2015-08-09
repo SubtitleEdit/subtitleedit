@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class UnknownSubtitle70 : SubtitleFormat
     {
-        private static Regex _regexMicroDvdLine = new Regex(@"^\[-?\d+\]\[-?\d+\].*$", RegexOptions.Compiled);
+        private static readonly Regex _regexMicroDvdLine = new Regex(@"^\[-?\d+\]\[-?\d+\].*$", RegexOptions.Compiled);
         public string Errors { get; private set; }
         private StringBuilder _errors;
         private int _lineNumber;

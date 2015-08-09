@@ -10,7 +10,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class UnknownSubtitle7 : SubtitleFormat
     {
-
         private enum ExpectingLine
         {
             TimeStart,
@@ -50,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             const string paragraphWriteFormat = "{0} {2}{3}{1}\t";
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), p.Text, Environment.NewLine));
@@ -64,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var regexTimeCodeEnd = new Regex(@"^\d\d:\d\d:\d\d:\d\d\t$", RegexOptions.Compiled);
 
             var paragraph = new Paragraph();
-            ExpectingLine expecting = ExpectingLine.TimeStart;
+            var expecting = ExpectingLine.TimeStart;
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
@@ -139,18 +138,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return time.ToHHMMSSFF();
         }
 
         private static TimeCode DecodeTimeCode(string[] parts)
         {
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = int.Parse(parts[3]);
+            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
     }

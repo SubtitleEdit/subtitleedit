@@ -56,12 +56,13 @@ BEWARE : No more than 40 characters ON A LINE
 ATTENTION : Pas plus de 40 caractères PAR LIGNE
 
 ");
+            const string writeFormant = "* {0} :\t{1}\t{2}\t{3}{4}{5}";
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 index++;
-                string text = HtmlUtil.RemoveHtmlTags(p.Text);
-                sb.AppendLine(string.Format("* {0} :\t{1}\t{2}\t{3}{4}{5}", index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), GetMaxCharsForDuration(p.Duration.TotalSeconds) + "c", Environment.NewLine, text));
+                var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
+                sb.AppendLine(string.Format(writeFormant, index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), GetMaxCharsForDuration(p.Duration.TotalSeconds) + "c", Environment.NewLine, text));
                 sb.AppendLine();
                 if (!text.Contains(Environment.NewLine))
                     sb.AppendLine();
@@ -72,7 +73,7 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:03:15:22 (last is frame)
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return time.ToHHMMSSFF();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -129,15 +130,15 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
         private TimeCode DecodeTimeCode(string[] parts)
         {
             //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            int frames = int.Parse(parts[3]);
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = int.Parse(parts[3]);
 
             if (frames > _maxMsDiv10)
                 _maxMsDiv10 = frames;
 
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(frames));
+            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
     }
