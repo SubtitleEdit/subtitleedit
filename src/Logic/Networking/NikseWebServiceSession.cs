@@ -270,10 +270,8 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         internal void DeleteLines(List<int> indices)
         {
             _seWs.DeleteLines(SessionId, indices.ToArray(), CurrentUser);
-            StringBuilder sb = new StringBuilder();
             foreach (int index in indices)
             {
-                sb.Append(index + ", ");
                 AdjustUpdateLogToDelete(index);
                 AppendToLog(string.Format(Configuration.Settings.Language.Main.NetworkDelete, CurrentUser.UserName, CurrentUser.Ip, index));
             }
