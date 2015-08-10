@@ -8,8 +8,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class NetworkChat : Form
     {
-        private Logic.Networking.NikseWebServiceSession _networkSession;
-        private string breakChars = "\".!?,)([]<>:;♪{}-/#*| ¿¡" + Environment.NewLine + "\t";
+        private NikseWebServiceSession _networkSession;
+        private const string breakChars = "\".!?,)([]<>:;♪{}-/#*| ¿¡\r\n\t";
 
         protected override bool ShowWithoutActivation
         {
@@ -60,11 +60,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void AddChatMessage(SeNetworkService.SeUser user, string message)
         {
-            ListViewItem item = new ListViewItem(user.UserName);
+            var item = new ListViewItem(user.UserName);
             item.Tag = _networkSession.CurrentUser;
             item.ForeColor = Utilities.GetColorFromUserName(user.UserName);
             item.ImageIndex = Utilities.GetNumber0To7FromUserName(user.UserName);
-            item.SubItems.Add(new ListViewItem.ListViewSubItem(item, message));
+            item.SubItems.Add(message);
             listViewChat.Items.Add(item);
         }
 
@@ -118,14 +118,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void AddUser(SeNetworkService.SeUser user)
         {
-            ListViewItem item = new ListViewItem(user.UserName);
+            var item = new ListViewItem(user.UserName);
             item.Tag = user;
             item.ForeColor = Utilities.GetColorFromUserName(user.UserName);
             if (DateTime.Now.Month == 12 && DateTime.Now.Day >= 23 && DateTime.Now.Day <= 25)
                 item.ImageIndex = 7;
             else
                 item.ImageIndex = Utilities.GetNumber0To7FromUserName(user.UserName);
-            item.SubItems.Add(new ListViewItem.ListViewSubItem(item, user.Ip));
+            item.SubItems.Add(user.Ip);
             listViewUsers.Items.Add(item);
         }
 
@@ -137,6 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if ((item.Tag as SeNetworkService.SeUser).UserName == user.UserName)
                 {
                     removeItem = item;
+                    break;
                 }
             }
             if (removeItem != null)
