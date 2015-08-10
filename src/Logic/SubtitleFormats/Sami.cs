@@ -167,10 +167,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string currentClass = languageTag;
                 if (useExtra && !string.IsNullOrEmpty(p.Extra))
                     currentClass = p.Extra;
-                if (next != null && Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) < 1)
-                    sb.AppendLine(string.Format(paragraphWriteFormatOpen, p.StartTime.TotalMilliseconds, text, currentClass));
+
+                var startMs = (long)(Math.Round(p.StartTime.TotalMilliseconds));
+                var endMs = (long)(Math.Round(p.EndTime.TotalMilliseconds));
+                if (next != null && Math.Abs( ((long) Math.Round(next.StartTime.TotalMilliseconds)) - endMs) < 1)
+                    sb.AppendLine(string.Format(paragraphWriteFormatOpen, startMs, text, currentClass));
                 else
-                    sb.AppendLine(string.Format(paragraphWriteFormat, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, text, currentClass));
+                    sb.AppendLine(string.Format(paragraphWriteFormat, startMs, endMs, text, currentClass));
                 count++;
             }
             sb.AppendLine("</BODY>");
