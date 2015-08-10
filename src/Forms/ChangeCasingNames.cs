@@ -133,6 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
                 sb.AppendLine(p.Text);
             string text = HtmlUtil.RemoveHtmlTags(sb.ToString());
             string textToLower = text.ToLower();
+            listViewNames.BeginUpdate();
             foreach (string name in namesEtcList)
             {
                 int startIndex = textToLower.IndexOf(name.ToLower(), StringComparison.Ordinal);
@@ -167,6 +168,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            listViewNames.EndUpdate();
             groupBoxNames.Text = string.Format(Configuration.Settings.Language.ChangeCasingNames.NamesFoundInSubtitleX, listViewNames.Items.Count);
         }
 
