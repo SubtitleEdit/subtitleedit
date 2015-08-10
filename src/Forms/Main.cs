@@ -14611,7 +14611,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.Footer = s.Footer;
                         foreach (var p in s.Paragraphs)
                             _subtitle.Paragraphs.Add(p);
-
+                        SetCurrentFormat(newFormat);
                         SaveSubtitleListviewIndices();
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         RestoreSubtitleListviewIndices();
