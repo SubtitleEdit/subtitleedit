@@ -119,13 +119,16 @@ namespace Nikse.SubtitleEdit.Forms
                 pictureBoxLastEdit.Visible = false;
             }
 
-            Bitmap org = (Bitmap)vobSubImage.Clone();
-            Bitmap bm = new Bitmap(org.Width, org.Height);
-            Graphics g = Graphics.FromImage(bm);
-            g.DrawImage(org, 0, 0, org.Width, org.Height);
-            g.DrawRectangle(Pens.Red, character.X, character.Y, character.NikseBitmap.Width, character.NikseBitmap.Height - 1);
-            g.Dispose();
-            pictureBoxSubtitleImage.Image = bm;
+            using (var org = (Bitmap)vobSubImage.Clone())
+            {
+                var bm = new Bitmap(org.Width, org.Height);
+                using (var g = Graphics.FromImage(bm))
+                {
+                    g.DrawImage(org, 0, 0, org.Width, org.Height);
+                    g.DrawRectangle(Pens.Red, character.X, character.Y, character.NikseBitmap.Width, character.NikseBitmap.Height - 1);
+                }
+                pictureBoxSubtitleImage.Image = bm;
+            }
 
             pictureBoxCharacter.Top = labelCharacters.Top + 16;
             pictureBoxLastEdit.Left = buttonLastEdit.Left + buttonLastEdit.Width + 5;
@@ -197,7 +200,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InsertLanguageCharacter(object sender, EventArgs e)
         {
-            textBoxCharacters.Text = textBoxCharacters.Text.Insert(textBoxCharacters.SelectionStart, (sender as ToolStripMenuItem).Text);
+            var toolStripMenuItem = sender as ToolStripMenuItem;
+            if (toolStripMenuItem != null) 
+                textBoxCharacters.Text = textBoxCharacters.Text.Insert(textBoxCharacters.SelectionStart, toolStripMenuItem.Text);
         }
 
         private void textBoxCharacters_TextChanged(object sender, EventArgs e)
@@ -223,22 +228,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VobSubOcrCharacter_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Left && buttonShrinkSelection.Visible)
+            if (buttonShrinkSelection.Visible &&
+                (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Left) ||
+                (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Subtract) ||
+                (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D))
             {
                 ButtonShrinkSelectionClick(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Right && buttonExpandSelection.Visible)
-            {
-                ButtonExpandSelectionClick(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Subtract && buttonShrinkSelection.Visible)
-            {
-                ButtonShrinkSelectionClick(null, null);
-                e.SuppressKeyPress = true;
-            }
-            else if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Add && buttonExpandSelection.Visible)
+            else if (buttonExpandSelection.Visible &&
+               (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Right) ||
+               (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Add) ||
+               (e.Modifiers == Keys.Alt && e.KeyCode == Keys.E))
             {
                 ButtonExpandSelectionClick(null, null);
                 e.SuppressKeyPress = true;
