@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
+            var subtitle = new Subtitle();
             this.LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > 0;
         }

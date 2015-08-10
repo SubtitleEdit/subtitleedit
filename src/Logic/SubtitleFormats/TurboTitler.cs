@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class TurboTitler : SubtitleFormat
     {
-
         private static Regex regexTimeCodes = new Regex(@"^\d:\d\d:\d\d\.\d\d,\d:\d\d:\d\d\.\d\d,NTP ", RegexOptions.Compiled);
 
         public override string Extension
@@ -27,7 +26,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
+            var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
         }
@@ -40,10 +39,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             const string paragraphWriteFormat = "{0},{1},NTP {2}";
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string text = p.Text.Replace(Environment.NewLine, "|");
+                var text = p.Text.Replace(Environment.NewLine, "|");
                 sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), text));
             }
             return sb.ToString().Trim();
@@ -96,11 +95,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string[] parts)
         {
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string ms = parts[3];
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), int.Parse(ms) * 10);
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var ms = int.Parse(parts[3]);
+            return new TimeCode(hour, minutes, seconds, ms * 10);
         }
 
     }
