@@ -7,9 +7,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class UnknownSubtitle20 : SubtitleFormat
     {
-        private static Regex _regexTimeCode1 = new Regex(@"^     \d\d:\d\d:\d\d:\d\d     \d\d\d\d            ", RegexOptions.Compiled);
-        private static Regex _regexTimeCode1Empty = new Regex(@"^     \d\d:\d\d:\d\d:\d\d     \d\d\d\d$", RegexOptions.Compiled);
-        private static Regex _regexTimeCode2 = new Regex(@"^     \d\d:\d\d:\d\d:\d\d     \d\d\d\-\d\d          ", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode1 = new Regex(@"^     \d\d:\d\d:\d\d:\d\d     \d\d\d\d            ", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode1Empty = new Regex(@"^     \d\d:\d\d:\d\d:\d\d     \d\d\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode2 = new Regex(@"^     \d\d:\d\d:\d\d:\d\d     \d\d\d\-\d\d          ", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line.TrimEnd();
-                if (_regexTimeCode1.IsMatch(s))
+                if (RegexTimeCode1.IsMatch(s))
                 {
                     try
                     {
@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         p = null;
                     }
                 }
-                else if (_regexTimeCode1Empty.IsMatch(s))
+                else if (RegexTimeCode1Empty.IsMatch(s))
                 {
                     try
                     {
@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         p = null;
                     }
                 }
-                else if (_regexTimeCode2.IsMatch(s))
+                else if (RegexTimeCode2.IsMatch(s))
                 {
                     try
                     {
