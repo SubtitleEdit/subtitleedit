@@ -77,12 +77,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             SceneChangesInSeconds = new List<double>();
+            char[] splitChars = { ':', '.' };
             foreach (string line in textBoxText.Lines)
             {
                 if (radioButtonHHMMSSMS.Checked)
                 {
                     // Parse string (HH:MM:SS.ms)
-                    string[] timeParts = line.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] timeParts = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     // If 4 parts were found...
                     if (timeParts.Length == 4)
                     {
