@@ -8,7 +8,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class RestoreAutoBackup : PositionAndSizeForm
     {
-
         private string[] _files;
         public string AutoBackupFileName { get; set; }
 
@@ -76,22 +75,16 @@ namespace Nikse.SubtitleEdit.Forms
             item.UseItemStyleForSubItems = false;
             item.Tag = fileName;
 
-            var subItem = new ListViewItem.ListViewSubItem(item, Path.GetFileNameWithoutExtension(displayName));
-            item.SubItems.Add(subItem);
-
-            subItem = new ListViewItem.ListViewSubItem(item, Path.GetExtension(fileName));
-            item.SubItems.Add(subItem);
-
+            item.SubItems.Add(Path.GetFileNameWithoutExtension(displayName));
+            item.SubItems.Add(Path.GetFileNameWithoutExtension(Path.GetExtension(fileName)));
             try
             {
-                FileInfo fi = new FileInfo(fileName);
-                subItem = new ListViewItem.ListViewSubItem(item, fi.Length + " bytes");
-                item.SubItems.Add(subItem);
+                var fi = new FileInfo(fileName);
+                item.SubItems.Add(fi.Length + " bytes");
             }
             catch
             {
             }
-
             listViewBackups.Items.Add(item);
         }
 
