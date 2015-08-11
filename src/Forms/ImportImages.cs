@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ImportImages : PositionAndSizeForm
     {
-
         public Subtitle Subtitle { get; private set; }
 
         public ImportImages()
@@ -49,7 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var fi = new FileInfo(fileName);
                 var item = new ListViewItem(fileName);
                 item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                string ext = Path.GetExtension(fileName).ToLowerInvariant();
+                var ext = fi.Extension.ToLowerInvariant();
                 if (ext == ".png" || ext == ".jpg" || ext == ".bmp" || ext == ".gif" || ext == ".tif" || ext == ".tiff")
                 {
                     SetTimeCodes(fileName, item);
