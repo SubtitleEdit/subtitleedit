@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     for (int i = 0; i < text.Length; i++)
                     {
                         string t = text.Substring(i);
-                        if (t.StartsWith('<') && 
+                        if (t.StartsWith('<') &&
                             (t.StartsWith("<font", StringComparison.Ordinal) ||
                              t.StartsWith("<div", StringComparison.Ordinal) ||
                              t.StartsWith("<i", StringComparison.Ordinal) ||
@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 var startMs = (long)(Math.Round(p.StartTime.TotalMilliseconds));
                 var endMs = (long)(Math.Round(p.EndTime.TotalMilliseconds));
-                if (next != null && Math.Abs( ((long) Math.Round(next.StartTime.TotalMilliseconds)) - endMs) < 1)
+                if (next != null && Math.Abs(((long)Math.Round(next.StartTime.TotalMilliseconds)) - endMs) < 1)
                     sb.AppendLine(string.Format(paragraphWriteFormatOpen, startMs, text, currentClass));
                 else
                     sb.AppendLine(string.Format(paragraphWriteFormat, startMs, endMs, text, currentClass));
@@ -183,12 +183,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string EncodeText(string text)
         {
-            if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 1)
-                return WebUtility.HtmlEncode(text);
-            if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 2)
-                return HtmlUtil.EncodeNamed(text);
-            if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 3)
-                return HtmlUtil.EncodeNumeric(text);
+            switch (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode)
+            {
+                case 1:
+                    return WebUtility.HtmlEncode(text);
+                case 2:
+                    return HtmlUtil.EncodeNamed(text);
+                case 3:
+                    return HtmlUtil.EncodeNumeric(text);
+            }
             return text;
         }
 
