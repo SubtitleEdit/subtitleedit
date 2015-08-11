@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (o.Text == null)
                 return -1;
 
-            return string.Compare(this.Text, o.Text, StringComparison.Ordinal);
+            return string.Compare(Text, o.Text, StringComparison.Ordinal);
         }
     }
 }
