@@ -57,13 +57,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //in een heel oude Griekse familie.
 
             const string paragraphWriteFormat = "SUBTITLE: {1}\tTIMEIN: {0}\tTIMEOUT: {2}\r\n{3}\r\n";
+            const string timeCodeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
 
             var sb = new StringBuilder();
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string startTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
-                string timeOut = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
+                string startTime = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
+                string timeOut = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
                 sb.AppendLine(string.Format(paragraphWriteFormat, startTime, count, timeOut, p.Text));
                 count++;
             }
