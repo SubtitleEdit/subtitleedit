@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             else // time codes
             {
-                _timeCodeQueue = new Queue<Paragraph>();
+                _timeCodeQueue.Clear();
                 for (int i = 0; i < 15; i++)
                 {
                     int start = index + 2 + (i * 8);
@@ -129,6 +129,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
             return null;
+        }
+
+        private bool IsDigit(char c)
+        {
+            return c >= '0' && c <= '9';
         }
 
         private string GetText(byte[] buffer, int start, int end)
@@ -144,11 +149,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (end - start > 0)
                     text = _codePage.GetString(buffer, start, end - start);
             }
-            if (text.Length > 4 && text[0] == 0x1f && text[1] == 'R' && text[4] == '.' && "0123456789".Contains(text[2]) && "0123456789".Contains(text[3]))
+            if (text.Length > 4 && text[0] == 0x1f && text[1] == 'R' && text[4] == '.' && IsDigit(text[2]) && IsDigit(text[3]))
             {
                 text = text.Remove(0, 5);
             }
-
 
             // special language codes...
             text = text.Replace("ÔA", "Á");
@@ -193,7 +197,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static string ApplyFont(string text)
         {
             var sb = new StringBuilder();
-            string post = string.Empty;
+            var post = string.Empty;
             int i = 0;
             while (i < text.Length)
             {
