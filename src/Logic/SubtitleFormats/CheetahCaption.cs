@@ -8,7 +8,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class CheetahCaption : SubtitleFormat
     {
-
         private static readonly List<int> LatinCodes = new List<int> {
             0x81, // ♪
             0x82, // á
@@ -163,6 +162,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int j = 0;
                     if (italic)
                         textBytes.Add(0xd0);
+
+                    var encoding = Encoding.GetEncoding(1252);
                     while (j < text.Length)
                     {
                         if (text.Substring(j).StartsWith(Environment.NewLine))
@@ -181,7 +182,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             if (idx >= 0)
                                 textBytes.Add((byte)LatinCodes[idx]);
                             else
-                                textBytes.Add(Encoding.GetEncoding(1252).GetBytes(new[] { text[j] })[0]);
+                                textBytes.Add(encoding.GetBytes(new[] { text[j] })[0]);
 
                             j++;
                         }
