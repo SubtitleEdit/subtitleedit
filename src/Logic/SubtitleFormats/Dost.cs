@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class Dost : SubtitleFormat
     {
-        private static Regex regexTimeCodes = new Regex(@"^\d\d\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line;
-                if (regexTimeCodes.IsMatch(s))
+                if (RegexTimeCodes.IsMatch(s))
                 {
                     var temp = s.Split('\t');
                     if (temp.Length > 7)
@@ -102,13 +102,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(string[] parts)
         {
             //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = int.Parse(parts[3]);
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
+            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
     }
