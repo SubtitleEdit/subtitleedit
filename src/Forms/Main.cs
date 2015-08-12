@@ -5611,6 +5611,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     startIndex = p.Text.IndexOf(oldWord, GetPositionFromWordIndex(p.Text, wordIndex), StringComparison.Ordinal);
                 }
+                const string expectedEndChars = " ,.!?:;')\r\n";
                 while (startIndex >= 0 && startIndex < p.Text.Length && p.Text.Substring(startIndex).Contains(oldWord))
                 {
                     bool startOk = startIndex == 0 ||
@@ -5622,7 +5623,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int end = startIndex + oldWord.Length;
                         if (end <= p.Text.Length)
                         {
-                            if (end == p.Text.Length || (@" ,.!?:;')" + Environment.NewLine).Contains(p.Text[end]))
+                            if (end == p.Text.Length || expectedEndChars.Contains(p.Text[end]))
                                 p.Text = p.Text.Remove(startIndex, oldWord.Length).Insert(startIndex, changeWord);
                         }
                     }
