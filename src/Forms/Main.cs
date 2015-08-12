@@ -7291,7 +7291,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var l0 = string.Empty;
                     if (lines.Length > 0)
-                        l0 = lines[0].Trim().TrimEnd('"').TrimEnd('\'').Trim();
+                        l0 = lines[0].Trim().TrimEnd('"', '\'').Trim();
                     if (lines.Length == 2 && (l0.EndsWith('.') || l0.EndsWith('!') || l0.EndsWith('?')))
                     {
                         currentParagraph.Text = Utilities.AutoBreakLine(lines[0], language);
