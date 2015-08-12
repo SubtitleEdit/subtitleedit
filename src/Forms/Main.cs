@@ -13740,7 +13740,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     selectedText = selectedText.Trim();
                     selectedText = selectedText.TrimEnd('.', ',', '!', '?');
-                    selectedText = selectedText.Trim();
+                    selectedText = selectedText.TrimEnd();
                     if (!string.IsNullOrEmpty(selectedText) && selectedText != textBoxSearchWord.Text)
                     {
                         textBoxSearchWord.Text = HtmlUtil.RemoveHtmlTags(selectedText);
