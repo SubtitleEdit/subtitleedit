@@ -6671,7 +6671,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p != null)
                     {
                         int indexOfEndBracket = p.Text.IndexOf('}');
-                        if (p.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                        if (p.Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                             p.Text = p.Text.Remove(0, indexOfEndBracket + 1).TrimStart();
                         p.Text = HtmlUtil.RemoveHtmlTags(p.Text);
                         p.Text = RemoveUnicodeCharacters(p.Text);
@@ -7884,15 +7884,15 @@ namespace Nikse.SubtitleEdit.Forms
                                 string s = Utilities.UnbreakLine(original.Text);
                                 if (s.StartsWith('-') || s.StartsWith("<i>-"))
                                     original.Text = s;
-                                else if (s.StartsWith("<i>"))
+                                else if (s.StartsWith("<i>", StringComparison.Ordinal))
                                     original.Text = s.Insert(3, "- ");
                                 else
                                     original.Text = "- " + s;
 
                                 s = Utilities.UnbreakLine(originalNext.Text);
-                                if (s.StartsWith('-') || s.StartsWith("<i>-"))
+                                if (s.StartsWith('-') || s.StartsWith("<i>-", StringComparison.Ordinal))
                                     original.Text += Environment.NewLine + s;
-                                else if (s.StartsWith("<i>"))
+                                else if (s.StartsWith("<i>", StringComparison.Ordinal))
                                     original.Text += Environment.NewLine + s.Insert(3, "- ");
                                 else
                                     original.Text += Environment.NewLine + "- " + s;
@@ -7927,15 +7927,15 @@ namespace Nikse.SubtitleEdit.Forms
                 if (insertDash)
                 {
                     string s = Utilities.UnbreakLine(currentParagraph.Text);
-                    if (s.StartsWith('-') || s.StartsWith("<i>-"))
+                    if (s.StartsWith('-') || s.StartsWith("<i>-", StringComparison.Ordinal))
                         currentParagraph.Text = s;
-                    else if (s.StartsWith("<i>"))
+                    else if (s.StartsWith("<i>", StringComparison.Ordinal))
                         currentParagraph.Text = s.Insert(3, "- ");
                     else
                         currentParagraph.Text = "- " + s;
 
                     s = Utilities.UnbreakLine(nextParagraph.Text);
-                    if (s.StartsWith('-') || s.StartsWith("<i>-"))
+                    if (s.StartsWith('-') || s.StartsWith("<i>-", StringComparison.Ordinal))
                         currentParagraph.Text += Environment.NewLine + s;
                     else if (s.StartsWith("<i>"))
                         currentParagraph.Text += Environment.NewLine + s.Insert(3, "- ");
