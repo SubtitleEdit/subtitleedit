@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly List<string> _usedNames = new List<string>();
         private int _noOfLinesChanged;
         private Subtitle _subtitle;
-
+        private const string ExpectedEndChars = " ,.!?:;')<-\"\r\n";
         public ChangeCasingNames()
         {
             InitializeComponent();
@@ -133,6 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
                 sb.AppendLine(p.Text);
             string text = HtmlUtil.RemoveHtmlTags(sb.ToString());
             string textToLower = text.ToLower();
+            listViewNames.BeginUpdate();
             foreach (string name in namesEtcList)
             {
                 int startIndex = textToLower.IndexOf(name.ToLower(), StringComparison.Ordinal);
@@ -150,7 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
                             int end = startIndex + name.Length;
                             bool endOk = end <= text.Length;
                             if (endOk)
-                                endOk = end == text.Length || (@" ,.!?:;')-<""" + Environment.NewLine).Contains(text[end]);
+                                endOk = end == text.Length || ExpectedEndChars.Contains(text[end]);
 
                             if (endOk && text.Substring(startIndex, name.Length) != name) // do not add names where casing already is correct
                             {
@@ -167,6 +168,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            listViewNames.EndUpdate();
             groupBoxNames.Text = string.Format(Configuration.Settings.Language.ChangeCasingNames.NamesFoundInSubtitleX, listViewNames.Items.Count);
         }
 
@@ -178,6 +180,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             string name = listViewNames.SelectedItems[0].SubItems[1].Text;
             listViewFixes.BeginUpdate();
+
             foreach (ListViewItem item in listViewFixes.Items)
             {
                 item.Selected = false;
@@ -198,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
                             int end = start + name.Length;
                             bool endOk = end <= lower.Length;
                             if (endOk)
-                                endOk = end == lower.Length || (@" ,.!?:;')<-""" + Environment.NewLine).Contains(lower[end]);
+                                endOk = end == lower.Length || ExpectedEndChars.Contains(lower[end]);
 
                             item.Selected = endOk;
                         }

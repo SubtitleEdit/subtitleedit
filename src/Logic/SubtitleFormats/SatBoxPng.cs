@@ -10,7 +10,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class SatBoxPng : SubtitleFormat
     {
-
         public override string Extension
         {
             get { return ".txt"; }

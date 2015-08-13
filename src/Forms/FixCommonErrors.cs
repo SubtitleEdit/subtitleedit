@@ -1177,17 +1177,19 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-
-                string s = HtmlUtil.RemoveHtmlTags(p.Text);
-                if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
+                if (AllowFix(p, fixAction))
                 {
-                    s = Utilities.AutoBreakLine(p.Text, Language);
-                    if (AllowFix(p, fixAction) && s != p.Text)
+                    string s = HtmlUtil.RemoveHtmlTags(p.Text, true);
+                    if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
                     {
-                        string oldCurrent = p.Text;
-                        p.Text = s;
-                        noOfShortLines++;
-                        AddFixToListView(p, fixAction, oldCurrent, p.Text);
+                        s = Utilities.AutoBreakLine(p.Text, Language);
+                        if (s != p.Text)
+                        {
+                            string oldCurrent = p.Text;
+                            p.Text = s;
+                            noOfShortLines++;
+                            AddFixToListView(p, fixAction, oldCurrent, p.Text);
+                        }
                     }
                 }
             }
@@ -1281,6 +1283,7 @@ namespace Nikse.SubtitleEdit.Forms
             string languageCode = Language;
             string fixAction = _language.FixMissingSpace;
             int missingSpaces = 0;
+            const string expectedChars = @"""”<.";
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
@@ -1289,7 +1292,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Match match = FixMissingSpacesReComma.Match(p.Text);
                 while (match.Success)
                 {
-                    bool doFix = !@"""”<.".Contains(p.Text[match.Index + 2]);
+                    bool doFix = !expectedChars.Contains(p.Text[match.Index + 2]);
 
                     if (doFix && languageCode == "el" && (p.Text.Substring(match.Index).StartsWith("ό,τι", StringComparison.Ordinal) || p.Text.Substring(match.Index).StartsWith("ο,τι", StringComparison.Ordinal)))
                         doFix = false;

@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle73 : SubtitleFormat
     {
         //59:00:22:09:14 00:22:12:04 02:15
-        private static Regex regexTimeCodes = new Regex(@"^\d+:\d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d \d\d:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex regexTimeCodes = new Regex(@"^\d+:\d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d \d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -123,13 +123,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(string[] parts)
         {
             //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = int.Parse(parts[3]);
+            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
     }

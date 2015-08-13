@@ -47,7 +47,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(format, count, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds)));
+                // to avoid rounding errors in duration
+                var startFrame = MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds);
+                var endFrame = MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds);
+                var durationCalc = new Paragraph(
+                        new TimeCode(p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, FramesToMillisecondsMax999(startFrame)),
+                        new TimeCode(p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, FramesToMillisecondsMax999(endFrame)),
+                        string.Empty);
+
+                sb.AppendLine(string.Format(format, count, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), durationCalc.Duration.Seconds, MillisecondsToFramesMaxFrameRate(durationCalc.Duration.Milliseconds)));
                 sb.AppendLine(p.Text);
                 sb.AppendLine();
                 count++;

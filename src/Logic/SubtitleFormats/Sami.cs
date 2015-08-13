@@ -43,9 +43,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string language = Utilities.AutoDetectLanguageName("en_US", subtitle);
             var ci = CultureInfo.GetCultureInfo(language.Replace("_", "-"));
             string languageTag = string.Format("{0}CC", language.Replace("_", string.Empty).ToUpper());
-            string languageName = ci.EnglishName;
-            if (ci.Parent != null)
-                languageName = ci.Parent.EnglishName;
+            string languageName = ci.Parent.EnglishName;
             string languageStyle = string.Format(".{0} [ name: {1}; lang: {2} ; SAMIType: CC ; ]", languageTag, languageName, language.Replace("_", "-"));
             languageStyle = languageStyle.Replace("[", "{").Replace("]", "}");
 
@@ -110,8 +108,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int count = 1;
             var sb = new StringBuilder();
             sb.AppendLine(header.Replace("_TITLE_", title).Replace("_LANGUAGE-STYLE_", languageStyle));
-            var total = new StringBuilder();
-            var partial = new StringBuilder();
+            var totalLine = new StringBuilder();
+            var partialLine = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 Paragraph next = subtitle.GetParagraphOrDefault(count);
@@ -119,39 +117,42 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 if (text.Contains('<') && text.Contains('>'))
                 {
-
                     bool tagOn = false;
                     for (int i = 0; i < text.Length; i++)
                     {
-                        if (text.Substring(i).StartsWith("<font", StringComparison.Ordinal) ||
-                            text.Substring(i).StartsWith("<div", StringComparison.Ordinal) ||
-                            text.Substring(i).StartsWith("<i", StringComparison.Ordinal) ||
-                            text.Substring(i).StartsWith("<b", StringComparison.Ordinal) ||
-                            text.Substring(i).StartsWith("<s", StringComparison.Ordinal) ||
-                            text.Substring(i).StartsWith("</", StringComparison.Ordinal))
+                        string t = text.Substring(i);
+                        if (t.StartsWith('<') &&
+                            (t.StartsWith("<font", StringComparison.Ordinal) ||
+                             t.StartsWith("<div", StringComparison.Ordinal) ||
+                             t.StartsWith("<i", StringComparison.Ordinal) ||
+                             t.StartsWith("<b", StringComparison.Ordinal) ||
+                             t.StartsWith("<s", StringComparison.Ordinal) ||
+                             t.StartsWith("</", StringComparison.Ordinal)))
                         {
-                            total.Append(EncodeText(partial.ToString()));
-                            partial.Clear();
+                            totalLine.Append(EncodeText(partialLine.ToString()));
+                            partialLine.Clear();
                             tagOn = true;
-                            total.Append('<');
+                            totalLine.Append('<');
                         }
-                        else if (text.Substring(i).StartsWith('>') && tagOn)
+                        else if (t.StartsWith('>') && tagOn)
                         {
                             tagOn = false;
-                            total.Append('>');
+                            totalLine.Append('>');
                         }
                         else if (!tagOn)
                         {
-                            partial.Append(text[i]);
+                            partialLine.Append(text[i]);
                         }
                         else
                         {
-                            total.Append(text[i]);
+                            totalLine.Append(text[i]);
                         }
                     }
 
-                    total.Append(EncodeText(partial.ToString()));
-                    text = total.ToString();
+                    totalLine.Append(EncodeText(partialLine.ToString()));
+                    text = totalLine.ToString();
+                    totalLine.Clear();
+                    partialLine.Clear();
                 }
                 else
                 {
@@ -166,10 +167,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string currentClass = languageTag;
                 if (useExtra && !string.IsNullOrEmpty(p.Extra))
                     currentClass = p.Extra;
-                if (next != null && Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) < 1)
-                    sb.AppendLine(string.Format(paragraphWriteFormatOpen, p.StartTime.TotalMilliseconds, text, currentClass));
+
+                var startMs = (long)(Math.Round(p.StartTime.TotalMilliseconds));
+                var endMs = (long)(Math.Round(p.EndTime.TotalMilliseconds));
+                if (next != null && Math.Abs(((long)Math.Round(next.StartTime.TotalMilliseconds)) - endMs) < 1)
+                    sb.AppendLine(string.Format(paragraphWriteFormatOpen, startMs, text, currentClass));
                 else
-                    sb.AppendLine(string.Format(paragraphWriteFormat, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, text, currentClass));
+                    sb.AppendLine(string.Format(paragraphWriteFormat, startMs, endMs, text, currentClass));
                 count++;
             }
             sb.AppendLine("</BODY>");
@@ -179,12 +183,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string EncodeText(string text)
         {
-            if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 1)
-                return WebUtility.HtmlEncode(text);
-            if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 2)
-                return HtmlUtil.EncodeNamed(text);
-            if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 3)
-                return HtmlUtil.EncodeNumeric(text);
+            switch (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode)
+            {
+                case 1:
+                    return WebUtility.HtmlEncode(text);
+                case 2:
+                    return HtmlUtil.EncodeNamed(text);
+                case 3:
+                    return HtmlUtil.EncodeNumeric(text);
+            }
             return text;
         }
 

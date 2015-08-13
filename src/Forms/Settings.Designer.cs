@@ -252,7 +252,11 @@
             this.labelSSAFont = new System.Windows.Forms.Label();
             this.buttonSSAChooseColor = new System.Windows.Forms.Button();
             this.buttonSSAChooseFont = new System.Windows.Forms.Button();
-            this.tabPageProxy = new System.Windows.Forms.TabPage();
+            this.tabPageNetwork = new System.Windows.Forms.TabPage();
+            this.groupBoxNetworkSession = new System.Windows.Forms.GroupBox();
+            this.buttonNetworkSessionNewMessageSound = new System.Windows.Forms.Button();
+            this.textBoxNetworkSessionNewMessageSound = new System.Windows.Forms.TextBox();
+            this.labelNetworkSessionNewMessageSound = new System.Windows.Forms.Label();
             this.groupBoxProxySettings = new System.Windows.Forms.GroupBox();
             this.groupBoxProxyAuthentication = new System.Windows.Forms.GroupBox();
             this.textBoxProxyDomain = new System.Windows.Forms.TextBox();
@@ -336,7 +340,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaShadow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaOutline)).BeginInit();
-            this.tabPageProxy.SuspendLayout();
+            this.tabPageNetwork.SuspendLayout();
+            this.groupBoxNetworkSession.SuspendLayout();
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
             this.tabPageShortcuts.SuspendLayout();
@@ -377,7 +382,7 @@
             this.tabControlSettings.Controls.Add(this.tabPageTools);
             this.tabControlSettings.Controls.Add(this.tabPageWordLists);
             this.tabControlSettings.Controls.Add(this.tabPageSsaStyle);
-            this.tabControlSettings.Controls.Add(this.tabPageProxy);
+            this.tabControlSettings.Controls.Add(this.tabPageNetwork);
             this.tabControlSettings.Controls.Add(this.tabPageShortcuts);
             this.tabControlSettings.Controls.Add(this.tabPageSyntaxColoring);
             this.tabControlSettings.Location = new System.Drawing.Point(13, 13);
@@ -2877,16 +2882,55 @@
             this.buttonSSAChooseFont.UseVisualStyleBackColor = true;
             this.buttonSSAChooseFont.Click += new System.EventHandler(this.ButtonSsaChooseFontClick);
             // 
-            // tabPageProxy
+            // tabPageNetwork
             // 
-            this.tabPageProxy.Controls.Add(this.groupBoxProxySettings);
-            this.tabPageProxy.Location = new System.Drawing.Point(4, 22);
-            this.tabPageProxy.Name = "tabPageProxy";
-            this.tabPageProxy.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageProxy.Size = new System.Drawing.Size(825, 444);
-            this.tabPageProxy.TabIndex = 4;
-            this.tabPageProxy.Text = "Proxy";
-            this.tabPageProxy.UseVisualStyleBackColor = true;
+            this.tabPageNetwork.Controls.Add(this.groupBoxNetworkSession);
+            this.tabPageNetwork.Controls.Add(this.groupBoxProxySettings);
+            this.tabPageNetwork.Location = new System.Drawing.Point(4, 22);
+            this.tabPageNetwork.Name = "tabPageNetwork";
+            this.tabPageNetwork.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageNetwork.Size = new System.Drawing.Size(825, 444);
+            this.tabPageNetwork.TabIndex = 4;
+            this.tabPageNetwork.Text = "Network";
+            this.tabPageNetwork.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxNetworkSession
+            // 
+            this.groupBoxNetworkSession.Controls.Add(this.buttonNetworkSessionNewMessageSound);
+            this.groupBoxNetworkSession.Controls.Add(this.textBoxNetworkSessionNewMessageSound);
+            this.groupBoxNetworkSession.Controls.Add(this.labelNetworkSessionNewMessageSound);
+            this.groupBoxNetworkSession.Location = new System.Drawing.Point(6, 189);
+            this.groupBoxNetworkSession.Name = "groupBoxNetworkSession";
+            this.groupBoxNetworkSession.Size = new System.Drawing.Size(813, 249);
+            this.groupBoxNetworkSession.TabIndex = 30;
+            this.groupBoxNetworkSession.TabStop = false;
+            this.groupBoxNetworkSession.Text = "Network session settings";
+            // 
+            // buttonNetworkSessionNewMessageSound
+            // 
+            this.buttonNetworkSessionNewMessageSound.Location = new System.Drawing.Point(352, 49);
+            this.buttonNetworkSessionNewMessageSound.Name = "buttonNetworkSessionNewMessageSound";
+            this.buttonNetworkSessionNewMessageSound.Size = new System.Drawing.Size(29, 21);
+            this.buttonNetworkSessionNewMessageSound.TabIndex = 24;
+            this.buttonNetworkSessionNewMessageSound.Text = "...";
+            this.buttonNetworkSessionNewMessageSound.UseVisualStyleBackColor = true;
+            this.buttonNetworkSessionNewMessageSound.Click += new System.EventHandler(this.buttonNetworkSessionNewMessageSound_Click);
+            // 
+            // textBoxNetworkSessionNewMessageSound
+            // 
+            this.textBoxNetworkSessionNewMessageSound.Location = new System.Drawing.Point(28, 50);
+            this.textBoxNetworkSessionNewMessageSound.Name = "textBoxNetworkSessionNewMessageSound";
+            this.textBoxNetworkSessionNewMessageSound.Size = new System.Drawing.Size(318, 21);
+            this.textBoxNetworkSessionNewMessageSound.TabIndex = 20;
+            // 
+            // labelNetworkSessionNewMessageSound
+            // 
+            this.labelNetworkSessionNewMessageSound.AutoSize = true;
+            this.labelNetworkSessionNewMessageSound.Location = new System.Drawing.Point(25, 34);
+            this.labelNetworkSessionNewMessageSound.Name = "labelNetworkSessionNewMessageSound";
+            this.labelNetworkSessionNewMessageSound.Size = new System.Drawing.Size(209, 13);
+            this.labelNetworkSessionNewMessageSound.TabIndex = 3;
+            this.labelNetworkSessionNewMessageSound.Text = "Play sound file when new message arrives";
             // 
             // groupBoxProxySettings
             // 
@@ -2895,7 +2939,7 @@
             this.groupBoxProxySettings.Controls.Add(this.labelProxyAddress);
             this.groupBoxProxySettings.Location = new System.Drawing.Point(6, 6);
             this.groupBoxProxySettings.Name = "groupBoxProxySettings";
-            this.groupBoxProxySettings.Size = new System.Drawing.Size(813, 432);
+            this.groupBoxProxySettings.Size = new System.Drawing.Size(813, 177);
             this.groupBoxProxySettings.TabIndex = 1;
             this.groupBoxProxySettings.TabStop = false;
             this.groupBoxProxySettings.Text = "Proxy server settings";
@@ -3448,7 +3492,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaShadow)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaOutline)).EndInit();
-            this.tabPageProxy.ResumeLayout(false);
+            this.tabPageNetwork.ResumeLayout(false);
+            this.groupBoxNetworkSession.ResumeLayout(false);
+            this.groupBoxNetworkSession.PerformLayout();
             this.groupBoxProxySettings.ResumeLayout(false);
             this.groupBoxProxySettings.PerformLayout();
             this.groupBoxProxyAuthentication.ResumeLayout(false);
@@ -3555,7 +3601,7 @@
         private System.Windows.Forms.ListBox listBoxUserWordLists;
         private System.Windows.Forms.TextBox textBoxUserWord;
         private System.Windows.Forms.Button buttonAddUserWord;
-        private System.Windows.Forms.TabPage tabPageProxy;
+        private System.Windows.Forms.TabPage tabPageNetwork;
         private System.Windows.Forms.GroupBox groupBoxProxySettings;
         private System.Windows.Forms.Label labelProxyPassword;
         private System.Windows.Forms.TextBox textBoxProxyAddress;
@@ -3726,5 +3772,9 @@
         private System.Windows.Forms.CheckBox checkBoxWaveformTextBold;
         private System.Windows.Forms.ComboBox comboBoxWaveformTextSize;
         private System.Windows.Forms.LinkLabel linkLabelOpenDictionaryFolder;
+        private System.Windows.Forms.GroupBox groupBoxNetworkSession;
+        private System.Windows.Forms.Button buttonNetworkSessionNewMessageSound;
+        private System.Windows.Forms.TextBox textBoxNetworkSessionNewMessageSound;
+        private System.Windows.Forms.Label labelNetworkSessionNewMessageSound;
     }
 }

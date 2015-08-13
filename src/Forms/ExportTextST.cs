@@ -54,11 +54,11 @@ namespace Nikse.SubtitleEdit.Forms
             SetGroupBoxProperties(groupBoxFontSet);
 
             _subtitle = subtitle;
-       
+
             _textST = new TextST
             {
                 StyleSegment = TextST.DialogStyleSegment.DefaultDialogStyleSegment,
-                PresentationSegments = new List<TextST.DialogPresentationSegment>(),           
+                PresentationSegments = new List<TextST.DialogPresentationSegment>(),
             };
             _textST.StyleSegment.NumberOfDialogPresentationSegments = _subtitle.Paragraphs.Count;
             foreach (var paragraph in _subtitle.Paragraphs)
@@ -163,7 +163,7 @@ namespace Nikse.SubtitleEdit.Forms
                             else
                             {
                                 var contentNode = new TreeNode(content.Name) { Tag = content };
-                                subtitleRegionNode.Nodes.Add(contentNode);                                
+                                subtitleRegionNode.Nodes.Add(contentNode);
                             }
                         }
                     }
@@ -319,7 +319,7 @@ namespace Nikse.SubtitleEdit.Forms
                     groupBoxFontSet.Visible = true;
                     _currentSubtitleFontSet = e.Node.Tag as TextST.SubtitleRegionContentChangeFontSet;
                     numericUpDownFontSetFontId.Value = _currentSubtitleFontSet.FontId;
-                }                
+                }
             }
         }
 
@@ -362,7 +362,7 @@ namespace Nikse.SubtitleEdit.Forms
             //{
             //    using (var fs = new FileStream(saveFileDialog1.FileName, FileMode.Create))
             //    {
-                    
+
             //    }
             //    MessageBox.Show("TextST M2TS file saved as " + saveFileDialog1.FileName);
             //}
@@ -483,7 +483,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void numericUpDownUserStyleHorPosDir_ValueChanged(object sender, EventArgs e)
         {
-            _currentUserStyle.RegionHorizontalPositionDirection = GetIntFromNumericUpDown(sender); 
+            _currentUserStyle.RegionHorizontalPositionDirection = GetIntFromNumericUpDown(sender);
         }
 
         private void numericUpDownUserStyleHorPosDelta_ValueChanged(object sender, EventArgs e)
@@ -622,8 +622,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         contextMenuStripAddSubtitleContent.Show(treeView1, p);
                     }
-                    
-
                 }
             }
         }

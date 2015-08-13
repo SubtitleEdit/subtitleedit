@@ -684,31 +684,34 @@ namespace Nikse.SubtitleEdit.Logic
                 splitPos = -1;
             }
 
+            const string expectedChars1 = ".!?, ";
+            const string expectedChars2 = " .!?";
+            const string expectedChars3 = ".!?";
             if (splitPos < 0)
             {
                 for (int j = 0; j < 25; j++)
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
                     {
-                        if (@".!?, ".Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && s.Length > mid + j + 2 && CanBreak(s, mid + j, language))
+                        if (expectedChars1.Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && s.Length > mid + j + 2 && CanBreak(s, mid + j, language))
                         {
                             splitPos = mid + j;
-                            if (@" .!?".Contains(s[mid + j + 1]))
+                            if (expectedChars2.Contains(s[mid + j + 1]))
                             {
                                 splitPos++;
-                                if (@" .!?".Contains(s[mid + j + 2]))
+                                if (expectedChars2.Contains(s[mid + j + 2]))
                                     splitPos++;
                             }
                             break;
                         }
-                        if (@".!?, ".Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && s.Length > mid + j + 2 && CanBreak(s, mid - j, language))
+                        if (expectedChars1.Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && s.Length > mid + j + 2 && CanBreak(s, mid - j, language))
                         {
                             splitPos = mid - j;
-                            if (@".!?".Contains(s[splitPos]))
+                            if (expectedChars3.Contains(s[splitPos]))
                                 splitPos--;
-                            if (@".!?".Contains(s[splitPos]))
+                            if (expectedChars3.Contains(s[splitPos]))
                                 splitPos--;
-                            if (@".!?".Contains(s[splitPos]))
+                            if (expectedChars3.Contains(s[splitPos]))
                                 splitPos--;
                             break;
                         }
@@ -1191,8 +1194,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static readonly string[] AutoDetectWordsHungarian = { "hogy", "lesz", "tudom", "vagy", "mondtam", "még" };
         public static readonly string[] AutoDetectWordsCroatian = { "sam", "öto", "äto", "ovo", "vas", "što" };
         public static readonly string[] AutoDetectWordsTurkish = { "için", "Tamam", "Hayır", "benim", "daha", "deðil", "önce", "lazým", "benim", "çalýþýyor", "burada", "efendim" };
-        
-        
+
         public static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
             int count = GetCount(text, AutoDetectWordsEnglish);

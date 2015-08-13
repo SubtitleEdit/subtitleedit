@@ -54,10 +54,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 count++;
                 var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
+
+                // to avoid rounding errors in duration
+                var startFrame = MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds);
+                var endFrame = MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds);
+                var durationCalc = new Paragraph(
+                        new TimeCode(p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, FramesToMillisecondsMax999(startFrame)),
+                        new TimeCode(p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, FramesToMillisecondsMax999(endFrame)),
+                        string.Empty);
+
                 sb.AppendLine(string.Format(writeFormat + Environment.NewLine,
-                                            p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds),
-                                            p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds),
-                                            p.Duration.Hours, p.Duration.Minutes, p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds),
+                                            p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, startFrame,
+                                            p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, endFrame,
+                                            durationCalc.Duration.Hours, durationCalc.Duration.Minutes, durationCalc.Duration.Seconds, MillisecondsToFramesMaxFrameRate(durationCalc.Duration.Milliseconds),
                                             text, count));
             }
             return sb.ToString().Trim() + Environment.NewLine + Environment.NewLine + Environment.NewLine;

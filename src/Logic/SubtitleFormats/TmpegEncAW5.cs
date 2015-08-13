@@ -8,7 +8,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class TmpegEncAW5 : TmpegEncXml
     {
-
         public override string Name
         {
             get { return "TMPGEnc AW5"; }
@@ -26,7 +25,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 XmlNode paragraph = xml.CreateElement("SubtitleItem");
 
-                string text = HtmlUtil.RemoveHtmlTags(p.Text);
+                var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 paragraph.InnerText = text;
                 paragraph.InnerXml = "<Text><![CDATA[" + paragraph.InnerXml.Replace(Environment.NewLine, "\\n") + "\\n]]></Text>";
 

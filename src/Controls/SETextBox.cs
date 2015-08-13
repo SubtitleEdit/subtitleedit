@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Controls
     /// </summary>
     public class SETextBox : TextBox
     {
-        private const string BreakChars = " \".!?,)([]<>:;♪{}-/#*|¿¡\r\n\t";
+        private const string BreakChars = " \".!?,)([]<>:;♪♫{}-/#*|¿¡\r\n\t";
         private string _dragText = string.Empty;
         private int _dragStartFrom = 0;
         private long _dragStartTicks = 0;
@@ -87,12 +87,12 @@ namespace Nikse.SubtitleEdit.Controls
                     dataObject.SetText(_dragText, TextDataFormat.Text);
 
                     _dragFromThis = true;
-                    if (Control.ModifierKeys == Keys.Control)
+                    if (ModifierKeys == Keys.Control)
                     {
                         _dragRemoveOld = false;
                         DoDragDrop(dataObject, DragDropEffects.Copy);
                     }
-                    else if (Control.ModifierKeys == Keys.None)
+                    else if (ModifierKeys == Keys.None)
                     {
                         _dragRemoveOld = true;
                         DoDragDrop(dataObject, DragDropEffects.Move);
@@ -120,6 +120,7 @@ namespace Nikse.SubtitleEdit.Controls
             else
             {
                 bool justAppend = index == Text.Length - 1 && index > 0;
+                const string expectedChars = @";:]<.!?";
                 if (_dragFromThis)
                 {
                     _dragFromThis = false;
@@ -153,7 +154,7 @@ namespace Nikse.SubtitleEdit.Controls
                             if (_dragStartFrom < index)
                                 index--;
                         }
-                        else if (_dragStartFrom > 0 && Text.Length > _dragStartFrom + 1 && Text[_dragStartFrom] == ' ' && @";:]<.!?".Contains(Text[_dragStartFrom + 1]))
+                        else if (_dragStartFrom > 0 && Text.Length > _dragStartFrom + 1 && Text[_dragStartFrom] == ' ' && expectedChars.Contains(Text[_dragStartFrom + 1]))
                         {
                             Text = Text.Remove(_dragStartFrom, 1);
                             if (_dragStartFrom < index)
@@ -193,7 +194,7 @@ namespace Nikse.SubtitleEdit.Controls
                 // fix end spaces
                 if (endIndex < Text.Length && !newText.EndsWith(' ') && Text[endIndex] != ' ')
                 {
-                    bool lastWord = @";:]<.!?".Contains(Text[endIndex]);
+                    bool lastWord = expectedChars.Contains(Text[endIndex]);
                     if (!lastWord)
                         Text = Text.Insert(endIndex, " ");
                 }
@@ -214,7 +215,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (e.Data.GetDataPresent(DataFormats.Text) || e.Data.GetDataPresent(DataFormats.UnicodeText))
             {
-                if (Control.ModifierKeys == Keys.Control)
+                if (ModifierKeys == Keys.Control)
                     e.Effect = DragDropEffects.Copy;
                 else
                     e.Effect = DragDropEffects.Move;
@@ -225,12 +226,11 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        private const int WM_DBLCLICK = 0xA3;
+        private const int WM_LBUTTONDBLCLK = 0x203;
+        private const int WM_LBUTTONDOWN = 0x0201;
         protected override void WndProc(ref Message m)
         {
-            const int WM_DBLCLICK = 0xA3;
-            const int WM_LBUTTONDBLCLK = 0x203;
-            const int WM_LBUTTONDOWN = 0x0201;
-
             if (m.Msg == WM_DBLCLICK || m.Msg == WM_LBUTTONDBLCLK)
             {
                 SelectCurrentWord();

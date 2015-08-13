@@ -11,7 +11,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class SplitLongLines : PositionAndSizeForm
     {
-
         private Subtitle _subtitle;
         private Subtitle _splittedSubtitle;
 
@@ -61,12 +60,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddToListView(Paragraph p, string lineNumbers, string newText)
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
-
-            var subItem = new ListViewItem.ListViewSubItem(item, lineNumbers);
-            item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(subItem);
-
+            item.SubItems.Add(lineNumbers);
+            item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             listViewFixes.Items.Add(item);
         }
 
@@ -153,6 +148,7 @@ namespace Nikse.SubtitleEdit.Forms
             numberOfSplits = 0;
             string language = Utilities.AutoDetectGoogleLanguage(subtitle);
             var splittedSubtitle = new Subtitle();
+            string[] expectedPunctuations = { ". -", "! -", "? -" };
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 bool added = false;
@@ -171,11 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
                             var tempText = p.Text.Replace(Environment.NewLine, " ").Replace("  ", " ");
                             if (Utilities.CountTagInText(tempText, '-') == 2 && (p.Text.StartsWith('-') || p.Text.StartsWith("<i>-")))
                             {
-                                int idx = tempText.IndexOf(". -", StringComparison.Ordinal);
-                                if (idx < 1)
-                                    idx = tempText.IndexOf("! -", StringComparison.Ordinal);
-                                if (idx < 1)
-                                    idx = tempText.IndexOf("? -", StringComparison.Ordinal);
+                                int idx = tempText.IndexOfAny(expectedPunctuations, StringComparison.Ordinal);
                                 if (idx > 1)
                                 {
                                     dialogText = tempText.Remove(idx + 1, 1).Insert(idx + 1, Environment.NewLine);
@@ -183,7 +175,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
 
                             var arr = dialogText.SplitToLines();
-                            if (arr.Length == 2 && (arr[0].StartsWith('-') || arr[0].StartsWith("<i>-")) && (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-")))
+                            if (arr.Length == 2 && (arr[0].StartsWith('-') || arr[0].StartsWith("<i>-", StringComparison.Ordinal)) && (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-", StringComparison.Ordinal)))
                                 isDialog = true;
                         }
 
@@ -244,20 +236,20 @@ namespace Nikse.SubtitleEdit.Forms
                                             newParagraph1.Text = newParagraph1.Text.Remove(0, 1).Trim();
                                             newParagraph2.Text = newParagraph2.Text.Remove(0, 1).Trim();
                                         }
-                                        else if (newParagraph1.Text.StartsWith("<i>-") && newParagraph2.Text.StartsWith('-'))
+                                        else if (newParagraph1.Text.StartsWith("<i>-", StringComparison.Ordinal) && newParagraph2.Text.StartsWith('-'))
                                         {
                                             newParagraph1.Text = newParagraph1.Text.Remove(3, 1).Trim();
-                                            if (newParagraph1.Text.StartsWith("<i> "))
+                                            if (newParagraph1.Text.StartsWith("<i> ", StringComparison.Ordinal))
                                                 newParagraph1.Text = newParagraph1.Text.Remove(3, 1).Trim();
                                             newParagraph2.Text = newParagraph2.Text.Remove(0, 1).Trim();
                                         }
                                     }
                                     else
                                     {
-                                        bool endsWithComma = newParagraph1.Text.EndsWith(',') || newParagraph1.Text.EndsWith(",</i>");
+                                        bool endsWithComma = newParagraph1.Text.EndsWith(',') || newParagraph1.Text.EndsWith(",</i>", StringComparison.Ordinal);
 
                                         string post = string.Empty;
-                                        if (newParagraph1.Text.EndsWith("</i>"))
+                                        if (newParagraph1.Text.EndsWith("</i>", StringComparison.Ordinal))
                                         {
                                             post = "</i>";
                                             newParagraph1.Text = newParagraph1.Text.Remove(newParagraph1.Text.Length - post.Length);
@@ -268,7 +260,7 @@ namespace Nikse.SubtitleEdit.Forms
                                             newParagraph1.Text += comboBoxLineContinuationEnd.Text.TrimEnd() + post;
 
                                         string pre = string.Empty;
-                                        if (newParagraph2.Text.StartsWith("<i>"))
+                                        if (newParagraph2.Text.StartsWith("<i>", StringComparison.Ordinal))
                                         {
                                             pre = "<i>";
                                             newParagraph2.Text = newParagraph2.Text.Remove(0, pre.Length);
@@ -359,10 +351,11 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             int index = -1;
             if (listViewFixes.SelectedItems.Count > 0)
+            {
                 index = listViewFixes.SelectedItems[0].Index;
-            GeneratePreview(true);
-            if (index >= 0)
                 listViewFixes.Items[index].Selected = true;
+            }
+            GeneratePreview(true);
             Cursor = Cursors.Default;
         }
 

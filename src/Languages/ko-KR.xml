@@ -1504,7 +1504,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Tools>도구</Tools>
     <WordLists>단어 목록</WordLists>
     <SsaStyle>ASS/SSA 스타일</SsaStyle>
-    <Proxy>프록시</Proxy>
+    <Network>네트워크</Network>
     <ShowToolBarButtons>표시할 도구 버튼</ShowToolBarButtons>
     <New>새 작업</New>
     <Open>열기</Open>
@@ -1554,8 +1554,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AutoBackupEveryFiveMinutes>5 분마다</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>15 분마다</AutoBackupEveryFifteenMinutes>
     <CheckForUpdates>업데이트 확인</CheckForUpdates>
-    <AllowEditOfOriginalSubtitle>원본 자막의 편집 허용</AllowEditOfOriginalSubtitle>
-    <PromptDeleteLines>삭제 라인 알림</PromptDeleteLines>
+    <AllowEditOfOriginalSubtitle>원본 자막의 편집을 허용</AllowEditOfOriginalSubtitle>
+    <PromptDeleteLines>줄 삭제시 알림</PromptDeleteLines>
     <TimeCodeMode>타임코드 모드</TimeCodeMode>
     <TimeCodeModeHHMMSSMS>HH:MM:SS.Msek (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
@@ -1630,6 +1630,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ProxyUserName>이름:</ProxyUserName>
     <ProxyPassword>암호:</ProxyPassword>
     <ProxyDomain>도메인:</ProxyDomain>
+    <NetworkSessionSettings>네트워크 세션 설정</NetworkSessionSettings>
+    <NetworkSessionNewSound>새로운 메시지가 도착할 때 사운드 파일을 재생합니다</NetworkSessionNewSound>
     <PlayXSecondsAndBack>X 초 재생하고 돌아가기</PlayXSecondsAndBack>
     <StartSceneIndex>시작 장면의 단락</StartSceneIndex>
     <EndSceneIndex>종료 장면의 단락</EndSceneIndex>
