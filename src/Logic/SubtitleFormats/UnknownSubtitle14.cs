@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.Globalization;
+using Nikse.SubtitleEdit.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,8 +26,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
-            this.LoadSubtitle(subtitle, lines, fileName);
+            var subtitle = new Subtitle();
+            LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > 0;
         }
 
@@ -43,25 +44,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
 
-            int id = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("Phrase");
 
                 XmlAttribute start = xml.CreateAttribute("TimeStart");
-                start.InnerText = p.StartTime.TotalMilliseconds.ToString();
+                start.InnerText = ((long)(Math.Round(p.StartTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture);
                 paragraph.Attributes.Append(start);
 
-                XmlAttribute duration = xml.CreateAttribute("TimeEnd");
-                duration.InnerText = p.EndTime.TotalMilliseconds.ToString();
-                paragraph.Attributes.Append(duration);
+                XmlAttribute end = xml.CreateAttribute("TimeEnd");
+                end.InnerText = ((long)(Math.Round(p.EndTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture);
+                paragraph.Attributes.Append(end);
 
                 XmlNode text = xml.CreateElement("Text");
                 text.InnerText = HtmlUtil.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "\\n");
                 paragraph.AppendChild(text);
 
                 xml.DocumentElement.AppendChild(paragraph);
-                id++;
             }
 
             return ToUtf8XmlString(xml);
@@ -71,15 +70,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
 
             string allText = sb.ToString();
             if (!allText.Contains("<Subtitle") || !allText.Contains("TimeStart="))
                 return;
 
-            XmlDocument xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             try
             {
                 xml.LoadXml(allText);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Xml;
 
@@ -43,7 +44,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("Cue");
 
                 XmlAttribute start = xml.CreateAttribute("value");
-                start.InnerText = string.Format("{0}", p.StartTime.TotalMilliseconds);
+                start.InnerText = ((long)(Math.Round(p.StartTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture);
                 paragraph.Attributes.Append(start);
 
                 XmlAttribute duration = xml.CreateAttribute("lineBreakBefore");
@@ -69,8 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!allText.Contains("<Cue") && allText.Contains("value="))
                 return;
 
-            var xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             try
             {
                 xml.LoadXml(allText);
@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         start = start.Replace(",", ".");
                     string text = node.InnerText;
 
-                    subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start, System.Globalization.CultureInfo.InvariantCulture), 0));
+                    subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start, CultureInfo.InvariantCulture), 0));
                 }
                 catch (Exception ex)
                 {

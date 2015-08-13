@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using Nikse.SubtitleEdit.Core;
 
@@ -40,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb.AppendLine("    <div id=\"transcriptPanel\">");
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("      <a class=\"caption\" starttime=\"{0}\" duration=\"{1}\">{2}</a>", p.StartTime.TotalMilliseconds, p.Duration.TotalMilliseconds, p.Text.Replace(Environment.NewLine, "<br />")));
+                sb.AppendLine(string.Format("      <a class=\"caption\" starttime=\"{0}\" duration=\"{1}\">{2}</a>",((long)(Math.Round(p.StartTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture), ((long)(Math.Round(p.Duration.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture), p.Text.Replace(Environment.NewLine, "<br />")));
             }
             sb.AppendLine("    </div>");
             sb.AppendLine("  </div>");
@@ -98,9 +99,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         text = text.Replace("<br />", Environment.NewLine);
                     }
 
-                    int startMilliseconds;
-                    int durationMilliseconds;
-                    if (text.Length > 0 && int.TryParse(startTime, out startMilliseconds) && int.TryParse(duration, out durationMilliseconds))
+                    long startMilliseconds;
+                    long durationMilliseconds;
+                    if (text.Length > 0 && long.TryParse(startTime, out startMilliseconds) && long.TryParse(duration, out durationMilliseconds))
                         subtitle.Paragraphs.Add(new Paragraph(text, startMilliseconds, startMilliseconds + durationMilliseconds));
                 }
             }
