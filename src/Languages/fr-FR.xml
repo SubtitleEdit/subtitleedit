@@ -1467,7 +1467,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <ReplaceWith>Remplacer par:</ReplaceWith>
     <Find>&amp;Suivant</Find>
     <Replace>&amp;Remplacer</Replace>
-    <ReplaceAll>&amp;Remplacer tout</ReplaceAll>
+    <ReplaceAll>Remplacer &amp;tout</ReplaceAll>
   </ReplaceDialog>
   <RestoreAutoBackup>
     <Title>Restaurer sauvegarde automatique</Title>
