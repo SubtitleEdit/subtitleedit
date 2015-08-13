@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using Nikse.SubtitleEdit.Core;
 
@@ -40,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (i > 0)
                     sb.Append(',');
                 sb.Append('{');
-                sb.AppendFormat("\"content\":\"{0}\",\"start_time\":{1},\"end_time\":{2}", p.Text.Replace(Environment.NewLine, " <br> "), p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds);
+                sb.AppendFormat("\"content\":\"{0}\",\"start_time\":{1},\"end_time\":{2}", p.Text.Replace(Environment.NewLine, " <br> "), ((long)(Math.Round(p.StartTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture), ((long)(Math.Round(p.EndTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture));
                 sb.Append('}');
                 i++;
             }

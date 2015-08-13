@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.Globalization;
+using Nikse.SubtitleEdit.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,8 +26,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
-            this.LoadSubtitle(subtitle, lines, fileName);
+            var subtitle = new Subtitle();
+            LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > 0;
         }
 
@@ -36,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<Subtitle/>";
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
 
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -44,15 +45,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("Paragraph");
 
                 XmlNode number = xml.CreateElement("Number");
-                number.InnerText = p.Number.ToString();
+                number.InnerText = p.Number.ToString(CultureInfo.InvariantCulture);
                 paragraph.AppendChild(number);
 
                 XmlNode start = xml.CreateElement("StartMilliseconds");
-                start.InnerText = p.StartTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                start.InnerText = ((long)(Math.Round(p.StartTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture);
                 paragraph.AppendChild(start);
 
                 XmlNode end = xml.CreateElement("EndMilliseconds");
-                end.InnerText = p.EndTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                end.InnerText = ((long)(Math.Round(p.EndTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture);
                 paragraph.AppendChild(end);
 
                 XmlNode text = xml.CreateElement("Text");
@@ -69,15 +70,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
 
             string xmlString = sb.ToString();
             if (!xmlString.Contains("<Paragraph>") || !xmlString.Contains("<Text>"))
                 return;
 
-            XmlDocument xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             try
             {
                 xml.LoadXml(xmlString);
@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string end = node.SelectSingleNode("EndMilliseconds").InnerText;
                     string text = node.SelectSingleNode("Text").InnerText;
 
-                    subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start, System.Globalization.CultureInfo.InvariantCulture), Convert.ToDouble(end, System.Globalization.CultureInfo.InvariantCulture)));
+                    subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start, CultureInfo.InvariantCulture), Convert.ToDouble(end, CultureInfo.InvariantCulture)));
                 }
                 catch (Exception ex)
                 {
