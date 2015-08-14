@@ -360,6 +360,8 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <TranslatorsName>Nom des traducteurs</TranslatorsName>
     <SubtitleListReferenceCode>Liste de code référence</SubtitleListReferenceCode>
     <CountryOfOrigin>Pays d'origine</CountryOfOrigin>
+    <TimeCodeStatus>Statut du Time code</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Début du programme</TimeCodeStartOfProgramme>
     <RevisionNumber>Numéro de révision</RevisionNumber>
     <MaxNoOfDisplayableChars>Max. caractères par ligne</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max. de lignes</MaxNumberOfDisplayableRows>
@@ -1510,7 +1512,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <Tools>Outils</Tools>
     <WordLists>Listes de mots</WordLists>
     <SsaStyle>Style SSA</SsaStyle>
-    <Proxy>Proxy</Proxy>
+    <Network>Réseau</Network>
     <ShowToolBarButtons>Afficher les boutons de la barre d'outils</ShowToolBarButtons>
     <New>Nouveau</New>
     <Open>Ouvrir</Open>
@@ -1636,6 +1638,8 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <ProxyUserName>Nom utilisateur</ProxyUserName>
     <ProxyPassword>Mot de passe</ProxyPassword>
     <ProxyDomain>Domaine</ProxyDomain>
+    <NetworkSessionSettings>Paramètres de session réseau</NetworkSessionSettings>
+    <NetworkSessionNewSound>Lecture fichier audio pour nouveau message</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Lire X secondes puis retour: X =</PlayXSecondsAndBack>
     <StartSceneIndex>Scène initiale: début du paragraphe</StartSceneIndex>
     <EndSceneIndex>Scène finale: fin du paragraphe</EndSceneIndex>
