@@ -1505,7 +1505,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <Tools>Extra</Tools>
     <WordLists>Woordenlĳsten</WordLists>
     <SsaStyle>SSA stĳl</SsaStyle>
-    <Proxy>Proxy</Proxy>
+    <Network>Netwerk</Network>
     <ShowToolBarButtons>Toon werkbalk knoppen</ShowToolBarButtons>
     <New>Nieuw</New>
     <Open>Openen</Open>
@@ -1631,6 +1631,8 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <ProxyUserName>Gebruikersnaam</ProxyUserName>
     <ProxyPassword>Wachtwoord</ProxyPassword>
     <ProxyDomain>Domein</ProxyDomain>
+    <NetworkSessionSettings>Netwerksessie instellingen</NetworkSessionSettings>
+    <NetworkSessionNewSound>Geluid afspelen ter kennisgrving van nieuw bericht</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Speel X seconden en spoel terug, X is</PlayXSecondsAndBack>
     <StartSceneIndex>Startscène ondertitel is</StartSceneIndex>
     <EndSceneIndex>Eindscène ondertitel is</EndSceneIndex>
