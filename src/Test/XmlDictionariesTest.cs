@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Text.RegularExpressions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using System.Linq;
@@ -18,6 +19,42 @@ namespace Test
             foreach (var xmlFileName in xmlFileNames)
             {
                 TestXmlWellFormedness(xmlFileName);    
+            }
+        }      
+
+        [TestMethod]
+        [DeploymentItem("..\\Dictionaries")]
+        public void DictionariesValidReplaceListRegEx()
+        {
+            var xmlFileNames = Directory.GetFiles(Directory.GetCurrentDirectory(), "???_OCRFixReplaceList.xml");
+            foreach (var xmlFileName in xmlFileNames)
+            {
+                try
+                {
+                    var doc = XDocument.Load(xmlFileName);
+                    var regExList = from regEx in doc.Descendants("RegularExpressions").DescendantNodes() select regEx;
+                    foreach (var xNode in regExList)
+                    {
+                        var e = xNode as XElement;
+                        if (e != null && e.NodeType == XmlNodeType.Element && e.Attribute("find") != null)
+                        {
+                            var regExPattern = e.Attribute("find").Value;
+                            try
+                            {
+                                new Regex(regExPattern);
+                            }
+                            catch (Exception exception)
+                            {
+                                string msg = Path.GetFileName(xmlFileName) + " has an invalid RegEx find expression: " + regExPattern + Environment.NewLine + 
+                                             exception.Message;
+                                Assert.Fail(msg);
+                            }
+                        }
+                    }
+                }
+                catch 
+                {
+                }   
             }
         }      
 
