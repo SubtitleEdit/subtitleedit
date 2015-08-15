@@ -11,36 +11,15 @@ namespace Test
     public class XmlDictionariesTest
     {
         [TestMethod]
-        [DeploymentItem("hrv_OCRFixReplaceList.xml")]
-        public void DictionaryValidXmlHrvOcrFixReplaceList()
+        [DeploymentItem("..\\Dictionaries")]
+        public void DictionariesValidXml()
         {
-            const string fileName = "hrv_OCRFixReplaceList.xml";
-            TestXmlWellFormedness(fileName);
-        }
-
-        [TestMethod]
-        [DeploymentItem("eng_OCRFixReplaceList.xml")]
-        public void DictionaryValidXmlEngOcrFixReplaceList()
-        {
-            const string fileName = "eng_OCRFixReplaceList.xml";
-            TestXmlWellFormedness(fileName);
-        }
-
-        [TestMethod]
-        [DeploymentItem("names_etc.xml")]
-        public void DictionaryValidXmlNamesEtc()
-        {
-            const string fileName = "names_etc.xml";
-            TestXmlWellFormedness(fileName);
-        }
-
-        [TestMethod]
-        [DeploymentItem("en_US_user.xml")]
-        public void DictionaryValidXmlEnUsUser()
-        {
-            const string fileName = "en_US_user.xml";
-            TestXmlWellFormedness(fileName);
-        }
+            var xmlFileNames = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.xml");
+            foreach (var xmlFileName in xmlFileNames)
+            {
+                TestXmlWellFormedness(xmlFileName);    
+            }
+        }      
 
         private static void TestXmlWellFormedness(string fileName)
         {
