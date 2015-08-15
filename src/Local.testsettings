@@ -4,10 +4,6 @@
   <Deployment>
     <DeploymentItem filename="packages\NHunspell.1.2.5554.16953\content\Hunspellx64.dll" />
     <DeploymentItem filename="packages\NHunspell.1.2.5554.16953\content\Hunspellx86.dll" />
-    <DeploymentItem filename="..\Dictionaries\hrv_OCRFixReplaceList.xml" />
-    <DeploymentItem filename="..\Dictionaries\eng_OCRFixReplaceList.xml" />
-    <DeploymentItem filename="..\Dictionaries\names_etc.xml" />
-    <DeploymentItem filename="..\Dictionaries\en_US_user.xml" />
   </Deployment>
   <Execution>
     <TestTypeSpecific>
