@@ -1632,7 +1632,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <ProxyPassword>Wachtwoord</ProxyPassword>
     <ProxyDomain>Domein</ProxyDomain>
     <NetworkSessionSettings>Netwerksessie instellingen</NetworkSessionSettings>
-    <NetworkSessionNewSound>Geluid afspelen ter kennisgrving van nieuw bericht</NetworkSessionNewSound>
+    <NetworkSessionNewSound>Geluid afspelen ter kennisgeving van nieuw bericht</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Speel X seconden en spoel terug, X is</PlayXSecondsAndBack>
     <StartSceneIndex>Startscène ondertitel is</StartSceneIndex>
     <EndSceneIndex>Eindscène ondertitel is</EndSceneIndex>
