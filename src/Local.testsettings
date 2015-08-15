@@ -4,10 +4,21 @@
   <Deployment>
     <DeploymentItem filename="packages\NHunspell.1.2.5554.16953\content\Hunspellx64.dll" />
     <DeploymentItem filename="packages\NHunspell.1.2.5554.16953\content\Hunspellx86.dll" />
+    <DeploymentItem filename="..\Dictionaries\hrv_OCRFixReplaceList.xml" />
+    <DeploymentItem filename="..\Dictionaries\eng_OCRFixReplaceList.xml" />
+    <DeploymentItem filename="..\Dictionaries\names_etc.xml" />
+    <DeploymentItem filename="..\Dictionaries\en_US_user.xml" />
   </Deployment>
   <Execution>
-    <TestTypeSpecific />
-    <AgentRule name="Execution Agents">
+    <TestTypeSpecific>
+      <UnitTestRunConfig testTypeId="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b">
+        <AssemblyResolution>
+          <TestDirectory useLoadContext="true" />
+        </AssemblyResolution>
+      </UnitTestRunConfig>
+    </TestTypeSpecific>
+    <AgentRule name="LocalMachineDefaultRole">
     </AgentRule>
   </Execution>
+  <Properties />
 </TestSettings>

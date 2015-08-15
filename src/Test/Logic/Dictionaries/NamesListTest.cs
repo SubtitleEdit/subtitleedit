@@ -14,8 +14,8 @@ namespace Test.Logic.Dictionaries
             var namesList = new NamesList(Directory.GetCurrentDirectory(), "en", false, null);
 
             // Act
-            namesList.Add("Jones");
-            var exists = namesList.GetNames().Contains("Jones");
+            namesList.Add("Jones123");
+            var exists = namesList.GetNames().Contains("Jones123");
 
             // Assert
             Assert.IsTrue(exists);
@@ -28,8 +28,8 @@ namespace Test.Logic.Dictionaries
             var namesList = new NamesList(Directory.GetCurrentDirectory(), "en", false, null);
 
             // Act
-            namesList.Add("Charlie Parker");
-            var exists = namesList.GetMultiNames().Contains("Charlie Parker");
+            namesList.Add("Charlie Parker123");
+            var exists = namesList.GetMultiNames().Contains("Charlie Parker123");
 
             // Assert
             Assert.IsTrue(exists);
@@ -42,8 +42,8 @@ namespace Test.Logic.Dictionaries
             var namesList = new NamesList(Directory.GetCurrentDirectory(), "en", false, null);
 
             // Act
-            namesList.Add("Charlie Parker");
-            var exists = namesList.IsInNamesEtcMultiWordList("This is Charlie Parker!", "Charlie Parker");
+            namesList.Add("Charlie Parker123");
+            var exists = namesList.IsInNamesEtcMultiWordList("This is Charlie Parker123!", "Charlie Parker123");
 
             // Assert
             Assert.IsTrue(exists);
@@ -66,13 +66,13 @@ namespace Test.Logic.Dictionaries
         {
             // Arrange
             var namesList = new NamesList(Directory.GetCurrentDirectory(), "en", false, null);
-            namesList.Add("Jones");
+            namesList.Add("Jones123");
 
             // Act
             namesList = new NamesList(Directory.GetCurrentDirectory(), "en", false, null);
 
             // Assert
-            Assert.IsTrue(namesList.GetNames().Contains("Jones"));
+            Assert.IsTrue(namesList.GetNames().Contains("Jones123"));
         }
 
         [TestMethod]
@@ -80,13 +80,13 @@ namespace Test.Logic.Dictionaries
         {
             // Arrange
             var namesList = new NamesList(Directory.GetCurrentDirectory(), "en", false, null);
-            namesList.Add("Jones");
+            namesList.Add("Jones123");
 
             // Act
-            namesList.Remove("Jones");
+            namesList.Remove("Jones123");
 
             // Assert
-            Assert.IsFalse(namesList.GetNames().Contains("Jones"));
+            Assert.IsFalse(namesList.GetNames().Contains("Jones123"));
         }
 
         [TestMethod]
@@ -94,14 +94,14 @@ namespace Test.Logic.Dictionaries
         {
             // Arrange
             var namesList = new NamesList(Directory.GetCurrentDirectory(), "da", false, null);
-            namesList.Add("Jones");
+            namesList.Add("Jones123");
 
             // Act
-            namesList.Remove("Jones");
+            namesList.Remove("Jones123");
             namesList = new NamesList(Directory.GetCurrentDirectory(), "da", false, null);
 
             // Assert
-            Assert.IsFalse(namesList.GetNames().Contains("Jones"));
+            Assert.IsFalse(namesList.GetNames().Contains("Jones123"));
         }
 
     }
