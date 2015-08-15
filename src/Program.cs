@@ -28,24 +28,45 @@ namespace Nikse.SubtitleEdit
             Application.Run(new Main());
         }
 
+        // Handle the UI exceptions by showing a dialog box, and asking the user whether or not they wish to abort execution.
         private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
-            if (!(e.Exception is System.Globalization.CultureNotFoundException)) // To avoid error when changing language (on some computers) - see https://github.com/SubtitleEdit/subtitleedit/issues/719
+            var exc = e.Exception;
+            // Ignore CultureNotFoundException to avoid error when changing language (on some computers) - see https://github.com/SubtitleEdit/subtitleedit/issues/719
+            if (!(exc is System.Globalization.CultureNotFoundException))
             {
-                ShowThreadExceptionDialog("Unhandled exception in SubtitleEdit.exe", e.Exception);
+                var dr = DialogResult.Abort;
+                try
+                {
+                    var cap = "Windows Forms Thread Exception";
+                    var msg = "An application error occurred in Subtitle Edit." +
+                              "\nPlease report at https://github.com/SubtitleEdit/subtitleedit/issues with the following information:" +
+                              "\n\nError Message:\n" + exc.Message +
+                              "\n\nStack Trace:\n" + exc.StackTrace;
+                    dr = MessageBox.Show(msg, cap, MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1);
+                }
+                catch
+                {
+                }
+                if (dr == DialogResult.Abort)
+                {
+                    Application.Exit();
+                }
             }
         }
 
-        // Handle the UI exceptions by showing a dialog box, and asking the user whether
-        // or not they wish to abort execution.
-        // NOTE: This exception cannot be kept from terminating the application - it can only
-        // log the event, and inform the user about it.
+        // Handle the non-UI exceptions by logging the event to the ThreadException event log before
+        // the system default handler reports the exception to the user and terminates the application.
+        // NOTE: This exception handler cannot prevent the termination of the application.
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             try
             {
-                var ex = (Exception)e.ExceptionObject;
-                const string errorMsg = "An error occurred in Subtitle Edit. Please contact the adminstrator with the following information:\n\n";
+                var exc = e.ExceptionObject as Exception;
+                var msg = "A fatal non-UI error occurred in Subtitle Edit." +
+                          "\nPlease report at https://github.com/SubtitleEdit/subtitleedit/issues with the following information:" +
+                          "\n\nError Message:\n" + exc.Message +
+                          "\n\nStack Trace:\n" + exc.StackTrace;
 
                 // Since we can't prevent the app from terminating, log this to the event log.
                 if (!EventLog.SourceExists("ThreadException"))
@@ -56,27 +77,24 @@ namespace Nikse.SubtitleEdit
                 // Create an EventLog instance and assign its source.
                 using (var eventLog = new EventLog { Source = "ThreadException" })
                 {
-                    eventLog.WriteEntry(errorMsg + ex.Message + "\n\nStack Trace:\n" + ex.StackTrace);
+                    eventLog.WriteEntry(msg);
                 }
             }
-            catch (Exception exc)
+            catch (Exception ex)
             {
                 try
                 {
-                    var errorMsg = "Fatal Non-UI Error. Could not write the error to the event log. Reason: " + exc.Message;
-                    MessageBox.Show(errorMsg, "Fatal Non-UI Error in Subtitle Edit", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    var cap = "Non-UI Thread Exception";
+                    var msg = "A fatal non-UI error occurred in Subtitle Edit." +
+                              "\nCould not write the error to the event log." +
+                              "\nReason: " + ex.Message;
+                    MessageBox.Show(msg, cap, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 }
                 finally
                 {
                     Application.Exit();
                 }
             }
-        }
-
-        private static void ShowThreadExceptionDialog(string title, Exception e)
-        {
-            var errorMsg = "An application error occurred. Please contact the adminstrator with the following information:\n\n" + e.Message + "\n\nStack Trace:\n" + e.StackTrace;
-            MessageBox.Show(errorMsg, title, MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Stop);
         }
 
     }
