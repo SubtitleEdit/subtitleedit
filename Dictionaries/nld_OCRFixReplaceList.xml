@@ -19,8 +19,6 @@
     <RegEx find="\bln(?=\p{Ll}{2})" replaceWith="In" />
     <RegEx find="\bls(?=\p{Ll}{2})" replaceWith="Is" />
     <RegEx find="\beIk" replaceWith="elk" />
-    <RegEx find="\blsol" replaceWith="Isol" />
-    <RegEx find="\bler\b" replaceWith="Ier" />
-    <RegEx find="\bler(land|se|s)\b" replaceWith="Ier$1" /> 
+    <RegEx find="\bler(land|se|s|)\b" replaceWith="Ier$1" />
   </RegularExpressions>
 </OCRFixReplaceList>
