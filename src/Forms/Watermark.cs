@@ -53,16 +53,17 @@ namespace Nikse.SubtitleEdit.Forms
             if (!input.Contains(ZeroWidthSpace))
                 return string.Empty;
             int i = 0;
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             bool letterOn = false;
             int letter = 0;
+            var encoding = new ASCIIEncoding();
             while (i < input.Length)
             {
                 var c = input[i];
                 if (c == ZeroWidthSpace)
                 {
                     if (letter > 0)
-                        sb.Append(Encoding.ASCII.GetString(new byte[] { (byte)letter }));
+                        sb.Append(encoding.GetString(new byte[] { (byte)letter }));
                     letterOn = true;
                     letter = 0;
                 }
@@ -73,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     if (letter > 0)
-                        sb.Append(Encoding.ASCII.GetString(new byte[] { (byte)letter }));
+                        sb.Append(encoding.GetString(new byte[] { (byte)letter }));
                     letterOn = false;
                     letter = 0;
                 }
