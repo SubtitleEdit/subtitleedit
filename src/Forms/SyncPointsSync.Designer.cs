@@ -43,6 +43,7 @@
             this.buttonApplySync = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
+            this.labelAdjustFactor = new System.Windows.Forms.Label();
             this.groupBoxImportResult.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,6 +52,7 @@
             this.groupBoxImportResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImportResult.Controls.Add(this.labelAdjustFactor);
             this.groupBoxImportResult.Controls.Add(this.buttonFindTextOther);
             this.groupBoxImportResult.Controls.Add(this.buttonFindText);
             this.groupBoxImportResult.Controls.Add(this.labelOtherSubtitleFileName);
@@ -122,8 +124,12 @@
             this.subtitleListView2.Name = "subtitleListView2";
             this.subtitleListView2.OwnerDraw = true;
             this.subtitleListView2.Size = new System.Drawing.Size(453, 368);
+            this.subtitleListView2.SubtitleFontBold = false;
+            this.subtitleListView2.SubtitleFontName = "Tahoma";
+            this.subtitleListView2.SubtitleFontSize = 8;
             this.subtitleListView2.TabIndex = 19;
             this.subtitleListView2.UseCompatibleStateImageBehavior = false;
+            this.subtitleListView2.UseSyntaxColoring = true;
             this.subtitleListView2.View = System.Windows.Forms.View.Details;
             // 
             // listBoxSyncPoints
@@ -185,8 +191,12 @@
             this.SubtitleListview1.Name = "SubtitleListview1";
             this.SubtitleListview1.OwnerDraw = true;
             this.SubtitleListview1.Size = new System.Drawing.Size(466, 368);
+            this.SubtitleListview1.SubtitleFontBold = false;
+            this.SubtitleListview1.SubtitleFontName = "Tahoma";
+            this.SubtitleListview1.SubtitleFontSize = 8;
             this.SubtitleListview1.TabIndex = 12;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
+            this.SubtitleListview1.UseSyntaxColoring = true;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             this.SubtitleListview1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListview1_MouseDoubleClick);
             // 
@@ -196,7 +206,7 @@
             this.labelSyncInfo.AutoSize = true;
             this.labelSyncInfo.Location = new System.Drawing.Point(18, 456);
             this.labelSyncInfo.Name = "labelSyncInfo";
-            this.labelSyncInfo.Size = new System.Drawing.Size(284, 13);
+            this.labelSyncInfo.Size = new System.Drawing.Size(290, 13);
             this.labelSyncInfo.TabIndex = 17;
             this.labelSyncInfo.Text = "Set at least two sync points to make rough synchronization";
             // 
@@ -235,6 +245,17 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            // 
+            // labelAdjustFactor
+            // 
+            this.labelAdjustFactor.AutoSize = true;
+            this.labelAdjustFactor.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelAdjustFactor.ForeColor = System.Drawing.Color.Gray;
+            this.labelAdjustFactor.Location = new System.Drawing.Point(482, 299);
+            this.labelAdjustFactor.Name = "labelAdjustFactor";
+            this.labelAdjustFactor.Size = new System.Drawing.Size(58, 11);
+            this.labelAdjustFactor.TabIndex = 35;
+            this.labelAdjustFactor.Text = "AdjustFactor";
             // 
             // SyncPointsSync
             // 
@@ -283,5 +304,6 @@
         private Controls.SubtitleListView subtitleListView2;
         private System.Windows.Forms.Button buttonFindText;
         private System.Windows.Forms.Button buttonFindTextOther;
+        private System.Windows.Forms.Label labelAdjustFactor;
     }
 }
