@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly LanguageStructure.VisualSync _language;
         private readonly LanguageStructure.General _languageGeneral;
         private readonly Timer _timerHideSyncLabel = new Timer();
+        private string _adjustInfo = string.Empty;
 
         public string VideoFileName { get; set; }
         public int AudioTrackNumber { get; set; }
@@ -86,12 +87,12 @@ namespace Nikse.SubtitleEdit.Forms
             labelTip.Text = _language.Tip;
             Utilities.FixLargeFonts(this, buttonCancel);
             _timerHideSyncLabel.Tick += timerHideSyncLabel_Tick;
-            _timerHideSyncLabel.Interval = 1000;
+            _timerHideSyncLabel.Interval = 1000;            
         }
 
         private void timerHideSyncLabel_Tick(object sender, EventArgs e)
         {
-            labelSyncDone.Text = string.Empty;
+            labelSyncDone.Text = _adjustInfo;
         }
 
         private void GotoSubtitlePosition(VideoPlayerContainer mediaPlayer)
@@ -389,52 +390,53 @@ namespace Nikse.SubtitleEdit.Forms
         {
             double startPos = MediaPlayerStart.CurrentPosition;
             double endPos = MediaPlayerEnd.CurrentPosition;
-            if (endPos > startPos)
-            {
-                double subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
-                double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
-
-                double subDiff = subEnd - subStart;
-                double realDiff = endPos - startPos;
-
-                // speed factor
-                double factor = realDiff / subDiff;
-
-                // adjust to starting position
-                double adjust = startPos - subStart * factor;
-
-                foreach (Paragraph p in _paragraphs)
-                {
-                    p.Adjust(factor, adjust);
-                }
-
-                // fix overlapping time codes
-                using (var formFix = new FixCommonErrors())
-                {
-                    var tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _originalSubtitle.WasLoadedWithFrameNumbers };
-                    foreach (Paragraph p in _paragraphs)
-                        tmpSubtitle.Paragraphs.Add(new Paragraph(p));
-                    formFix.Initialize(tmpSubtitle, tmpSubtitle.OriginalFormat, System.Text.Encoding.UTF8);
-                    formFix.FixOverlappingDisplayTimes();
-                    _paragraphs.Clear();
-                    foreach (Paragraph p in formFix.FixedSubtitle.Paragraphs)
-                        _paragraphs.Add(new Paragraph(p));
-                }
-
-                // update comboboxes
-                int startSaveIdx = comboBoxStartTexts.SelectedIndex;
-                int endSaveIdx = comboBoxEndTexts.SelectedIndex;
-                FillStartAndEndTexts();
-                comboBoxStartTexts.SelectedIndex = startSaveIdx;
-                comboBoxEndTexts.SelectedIndex = endSaveIdx;
-
-                labelSyncDone.Text = _language.SynchronizationDone;
-                _timerHideSyncLabel.Start();
-            }
-            else
+            if (!(endPos > startPos))
             {
                 MessageBox.Show(_language.StartSceneMustComeBeforeEndScene, "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
             }
+
+            SetSyncFactorLabel();
+
+            double subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds/TimeCode.BaseUnit;
+            double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds/TimeCode.BaseUnit;
+
+            double subDiff = subEnd - subStart;
+            double realDiff = endPos - startPos;
+
+            // speed factor
+            double factor = realDiff/subDiff;
+
+            // adjust to starting position
+            double adjust = startPos - subStart*factor;
+
+            foreach (Paragraph p in _paragraphs)
+            {
+                p.Adjust(factor, adjust);
+            }
+
+            // fix overlapping time codes
+            using (var formFix = new FixCommonErrors())
+            {
+                var tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _originalSubtitle.WasLoadedWithFrameNumbers };
+                foreach (Paragraph p in _paragraphs)
+                    tmpSubtitle.Paragraphs.Add(new Paragraph(p));
+                formFix.Initialize(tmpSubtitle, tmpSubtitle.OriginalFormat, System.Text.Encoding.UTF8);
+                formFix.FixOverlappingDisplayTimes();
+                _paragraphs.Clear();
+                foreach (Paragraph p in formFix.FixedSubtitle.Paragraphs)
+                    _paragraphs.Add(new Paragraph(p));
+            }
+
+            // update comboboxes
+            int startSaveIdx = comboBoxStartTexts.SelectedIndex;
+            int endSaveIdx = comboBoxEndTexts.SelectedIndex;
+            FillStartAndEndTexts();
+            comboBoxStartTexts.SelectedIndex = startSaveIdx;
+            comboBoxEndTexts.SelectedIndex = endSaveIdx;
+
+            labelSyncDone.Text = _language.SynchronizationDone;
+            _timerHideSyncLabel.Start();
         }
 
         private void GoBackSeconds(double seconds, VideoPlayerContainer mediaPlayer)
@@ -733,6 +735,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void timerProgressBarRefresh_Tick(object sender, EventArgs e)
         {
+            timerProgressBarRefresh.Stop();
             if (MediaPlayerStart.VideoPlayer != null) // && MediaPlayerStart.VideoPlayer.GetType() == typeof(QuartsPlayer))
             {
                 MediaPlayerStart.RefreshProgressBar();
@@ -740,6 +743,34 @@ namespace Nikse.SubtitleEdit.Forms
             if (MediaPlayerEnd.VideoPlayer != null) // && MediaPlayerEnd.VideoPlayer.GetType() == typeof(QuartsPlayer))
             {
                 MediaPlayerEnd.RefreshProgressBar();
+            }            
+            timerProgressBarRefresh.Start();
+        }
+
+        private void SetSyncFactorLabel()
+        {
+            _adjustInfo = string.Empty;
+            if (string.IsNullOrWhiteSpace(VideoFileName))
+                return;
+
+            double startPos = MediaPlayerStart.CurrentPosition;
+            double endPos = MediaPlayerEnd.CurrentPosition;
+            if (endPos > startPos)
+            {
+                double subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+                double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+
+                double subDiff = subEnd - subStart;
+                double realDiff = endPos - startPos;
+
+                // speed factor
+                double factor = realDiff / subDiff;
+
+                // adjust to starting position
+                double adjust = startPos - subStart * factor;
+
+                if (Math.Abs(adjust) > 0.001 || (Math.Abs(1 - factor)) > 0.001)
+                    _adjustInfo = string.Format("*{0:0.000}, {1:+0.000;-0.000}", factor, adjust);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Logic;
+﻿using System.Linq;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -62,6 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.AutoSizeAllColumns(this);
             subtitleListView2.AutoSizeAllColumns(this);
             Utilities.FixLargeFonts(this, buttonOK);
+            labelAdjustFactor.Text = string.Empty;
         }
 
         public void Initialize(Subtitle subtitle, string subtitleFileName, string videoFileName, int audioTrackNumber)
@@ -86,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelOtherSubtitleFileName.Visible = false;
             subtitleListView2.Visible = false;
             buttonFindTextOther.Visible = false;
-            groupBoxImportResult.Width = listBoxSyncPoints.Left + listBoxSyncPoints.Width + 20;
+            groupBoxImportResult.Width = listBoxSyncPoints.Left + listBoxSyncPoints.Width + 20;            
             Width = groupBoxImportResult.Left + groupBoxImportResult.Width + 15;
             SubtitleListview1.Anchor = AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Right;
             buttonSetSyncPoint.Anchor = AnchorStyles.Right;
@@ -97,6 +99,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonFindText.Left = SubtitleListview1.Left + SubtitleListview1.Width - buttonFindText.Width;
             Width = 800;
             groupBoxImportResult.Width = Width - groupBoxImportResult.Left * 3;
+            labelAdjustFactor.Left = listBoxSyncPoints.Left;
+            labelAdjustFactor.Anchor = listBoxSyncPoints.Anchor;
             MinimumSize = new Size(Width - 50, MinimumSize.Height);
         }
 
@@ -122,6 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRemoveSyncPoint.Anchor = AnchorStyles.Left;
             labelNoOfSyncPoints.Anchor = AnchorStyles.Left;
             listBoxSyncPoints.Anchor = AnchorStyles.Left;
+            labelAdjustFactor.Anchor = listBoxSyncPoints.Anchor;
             labelOtherSubtitleFileName.Visible = true;
             subtitleListView2.Visible = true;
             buttonFindTextOther.Visible = true;
@@ -187,6 +192,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            SetSyncFactorLabel();
         }
 
         private void SetSyncPointViaOthersubtitle()
@@ -202,6 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _synchronizationPoints.Add(index, TimeSpan.FromMilliseconds(_otherSubtitle.Paragraphs[indexOther].StartTime.TotalMilliseconds));
                 RefreshSynchronizationPointsUI();
             }
+            SetSyncFactorLabel();
         }
 
         private void buttonRemoveSyncPoint_Click(object sender, EventArgs e)
@@ -213,6 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _synchronizationPoints.Remove(index);
                 RefreshSynchronizationPointsUI();
             }
+            SetSyncFactorLabel();
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -257,6 +265,38 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndex);
                 e.SuppressKeyPress = true;
+            }
+        }
+
+        private void SetSyncFactorLabel()
+        {
+            labelAdjustFactor.Text = string.Empty;
+            if (_synchronizationPoints.Count == 1)
+            {
+                double startPos = _synchronizationPoints.First().Value.TotalMilliseconds / TimeCode.BaseUnit;
+                double subStart = _originalSubtitle.Paragraphs[_synchronizationPoints.First().Key].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+
+                var adjustment = startPos - subStart;
+                labelAdjustFactor.Text = string.Format("{0:+0.000;-0.000}", adjustment);
+            }
+            else if (_synchronizationPoints.Count == 2)
+            {
+                double startPos = _synchronizationPoints.First().Value.TotalMilliseconds / TimeCode.BaseUnit;
+                double endPos = _synchronizationPoints.Last().Value.TotalMilliseconds/TimeCode.BaseUnit;
+
+                double subStart = _originalSubtitle.Paragraphs[_synchronizationPoints.First().Key].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+                double subEnd = _originalSubtitle.Paragraphs[_synchronizationPoints.Last().Key].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+
+                double subDiff = subEnd - subStart;
+                double realDiff = endPos - startPos;
+
+                // speed factor
+                double factor = realDiff / subDiff;
+
+                // adjust to starting position
+                double adjust = startPos - subStart * factor;
+
+                labelAdjustFactor.Text = string.Format("*{0:0.000}, {1:+0.000;-0.000}", factor, adjust);
             }
         }
 
@@ -371,6 +411,7 @@ namespace Nikse.SubtitleEdit.Forms
                 listBoxSyncPoints.Left = SubtitleListview1.Left + SubtitleListview1.Width + 5;
                 buttonSetSyncPoint.Left = listBoxSyncPoints.Left;
                 buttonRemoveSyncPoint.Left = listBoxSyncPoints.Left;
+                labelAdjustFactor.Left = listBoxSyncPoints.Left;
                 labelNoOfSyncPoints.Left = listBoxSyncPoints.Left;
                 labelOtherSubtitleFileName.Left = subtitleListView2.Left;
                 buttonFindText.Left = SubtitleListview1.Left + SubtitleListview1.Width - buttonFindText.Width;
