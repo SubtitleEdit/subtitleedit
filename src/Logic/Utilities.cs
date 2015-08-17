@@ -1192,11 +1192,19 @@ namespace Nikse.SubtitleEdit.Logic
         public static readonly string[] AutoDetectWordsVietnamese = { "không", "tôi", "anh", "đó", "Tôi", "ông" };
         public static readonly string[] AutoDetectWordsHungarian = { "hogy", "lesz", "tudom", "vagy", "mondtam", "még" };
         public static readonly string[] AutoDetectWordsTurkish = { "için", "Tamam", "Hayır", "benim", "daha", "deðil", "önce", "lazým", "benim", "çalýþýyor", "burada", "efendim" };
-        public static readonly string[] AutoDetectWordsCroatianAndSerbian = { "sam", "što", "öto", "äto", "ovo", "vas", "nije", "Šta", "ovde", "za" };
-        public static readonly string[] AutoDetectWordsCroatian = { "sigurnošću", "ubojstvo", "službeni", "nedjelja", "izražava", "dogodilo", "svjetlo", "sigurno", "shvaćam",
-            "obitelj", "vijest", "svijet", "sjećam", "lijepa", "dijete", "cijeli", "bijeli", "smije", "smije", "ured", "otok", "opći", "križ", "htio", "gdje", "auto", "sat", "kći" };
-        public static readonly string[] AutoDetectWordsSerbian = { "ispoljava", "porodica", "ponaosob", "bukvalno", "ubistvo", "ubediti", "suštini", "komitet", "dejstvo",
-            "uopšte", "štampa", "ostrvo", "naučni", "kiriju", "kćerke", "nauka", "ivica", "čovek", "lepa", "krst", "kola", "hteo", "drug", "dete", "celi", "sme", "sem", "gde", "čas" };
+        public static readonly string[] AutoDetectWordsCroatianAndSerbian = { "sam", "ali", "nije", "samo", "ovo", "kako", "dobro", "sve", "tako", "će", "mogu", "ću", "zašto", "nešto", "za" };
+        public static readonly string[] AutoDetectWordsCroatian = { "što", "ovdje", "gdje", "kamo", "tko", "prije", "uvijek", "vrijeme", "vidjeti", "netko",
+                                                                    "vidio", "nitko", "bok", "lijepo", "oprosti", "htio", "mjesto", "oprostite", "čovjek", "dolje",
+                                                                    "čovječe", "dvije", "dijete", "dio", "poslije", "događa", "vjerovati", "vjerojatno", "vjerujem", "točno",
+                                                                    "razumijem", "vidjela", "cijeli", "svijet", "obitelj", "volio", "sretan", "dovraga", "svijetu", "htjela",
+                                                                    "vidjeli", "negdje", "želio", "ponovno", "djevojka", "umrijeti", "čovjeka", "mjesta", "djeca", "osjećam",
+                                                                    "uopće", "djecu", "naprijed", "obitelji", "doista", "mjestu", "lijepa", "također", "riječ", "tijelo" };
+        public static readonly string[] AutoDetectWordsSerbian = { "šta", "ovde", "gde", "ko", "pre", "uvek", "vreme", "videti", "neko",
+                                                                   "video", "niko", "ćao", "lepo", "izvini", "hteo", "mesto", "izvinite", "čovek", "dole",
+                                                                   "čoveče", "dve", "dete", "deo", "posle", "dešava", "verovati", "verovatno", "verujem", "tačno",
+                                                                   "razumem", "videla", "ceo", "svet", "porodica", "voleo", "srećan", "dođavola", "svetu", "htela",
+                                                                   "videli", "negde", "želeo", "ponovo", "devojka", "umreti", "čoveka", "mesta", "deca", "osećam",
+                                                                   "uopšte", "decu", "napred", "porodicu", "zaista", "mestu", "lepa", "takođe", "reč", "telo" };
 
         public static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
