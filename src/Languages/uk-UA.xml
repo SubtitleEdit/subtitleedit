@@ -12,15 +12,15 @@
     <None>None</None>
     <All>All</All>
     <Preview>Preview</Preview>
-    <SubtitleFiles>Subtitle files</SubtitleFiles>
-    <AllFiles>All files</AllFiles>
-    <VideoFiles>Video files</VideoFiles>
-    <AudioFiles>Audio files</AudioFiles>
-    <OpenSubtitle>Open subtitle...</OpenSubtitle>
-    <OpenVideoFile>Open video file...</OpenVideoFile>
-    <OpenVideoFileTitle>Open video file...</OpenVideoFileTitle>
-    <NoVideoLoaded>No video loaded</NoVideoLoaded>
-    <VideoInformation>Video info</VideoInformation>
+    <SubtitleFiles>Файли субтитрів</SubtitleFiles>
+    <AllFiles>Усі файли</AllFiles>
+    <VideoFiles>Відеофайли</VideoFiles>
+    <AudioFiles>Аудіофайли</AudioFiles>
+    <OpenSubtitle>Відкрити файл субтитрів...</OpenSubtitle>
+    <OpenVideoFile>Відкрити відеофайл...</OpenVideoFile>
+    <OpenVideoFileTitle>Відкрити відеофайл...</OpenVideoFileTitle>
+    <NoVideoLoaded>Відео не завантажено</NoVideoLoaded>
+    <VideoInformation>Інформація про відео</VideoInformation>
     <PositionX>Position / duration: {0}</PositionX>
     <StartTime>Початок</StartTime>
     <EndTime>Кінець</EndTime>
@@ -35,12 +35,12 @@
     <Visible>Visible</Visible>
     <FrameRate>Frame rate</FrameRate>
     <Name>Name</Name>
-    <FileNameXAndSize>File name: {0} ({1})</FileNameXAndSize>
-    <ResolutionX>Resolution: {0}</ResolutionX>
-    <FrameRateX>Frame rate: {0:0.0###}</FrameRateX>
-    <TotalFramesX>Total frames: {0:#,##0.##}</TotalFramesX>
-    <VideoEncodingX>Video encoding: {0}</VideoEncodingX>
-    <SingleLineLengths>Порядко́ва довжина:</SingleLineLengths>
+    <FileNameXAndSize>Ім'я файлу: {0} ({1})</FileNameXAndSize>
+    <ResolutionX>Роздільна здатність: {0}</ResolutionX>
+    <FrameRateX>Частота кадрів: {0:0.0###}</FrameRateX>
+    <TotalFramesX>Усього кадрів: {0:#,##0.##}</TotalFramesX>
+    <VideoEncodingX>Відео кодування: {0}</VideoEncodingX>
+    <SingleLineLengths>Порядкова́ довжина:</SingleLineLengths>
     <TotalLengthX>Загальна довжина: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Total length: {0} (split line!)</TotalLengthXSplitLine>
     <SplitLine>Split line!</SplitLine>
@@ -75,7 +75,7 @@
     <Size>Size</Size>
   </General>
   <About>
-    <Title>About Subtitle Edit</Title>
+    <Title>Про програму Subtitle Edit</Title>
     <AboutText1>Subtitle Edit is Free Software under the GNU Public License.
 You may distribute, modify and use it freely.
 
@@ -88,15 +88,15 @@ Suggestions are very welcome.
 Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
-    <Title>Add to names/etc list</Title>
-    <Description>Add to names/noise list (case sensitive)</Description>
+    <Title>Додати до списку імен/шумів і т. п.</Title>
+    <Description>Додати до списку імен (чутливий до регістру)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
     <Title>Add to OCR replace list</Title>
     <Description>Add pair to OCR replace list (case sensitive)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
-    <Title>Add to user dictionary</Title>
+    <Title>Додати до користувацького словника</Title>
     <Description>Add word to user dictionary (not case sensitive)</Description>
   </AddToUserDictionary>
   <AddWaveform>
@@ -213,12 +213,12 @@ Note: Do check free disk space.</WaveFileMalformed>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
-    <Title>Change frame rate</Title>
-    <ConvertFrameRateOfSubtitle>Convert frame rate of subtitle</ConvertFrameRateOfSubtitle>
-    <FromFrameRate>From frame rate</FromFrameRate>
-    <ToFrameRate>To frame rate</ToFrameRate>
-    <FrameRateNotCorrect>Frame rate is not correct</FrameRateNotCorrect>
-    <FrameRateNotChanged>Frame rate is the same - nothing to convert</FrameRateNotChanged>
+    <Title>Змінити частоту кадрів</Title>
+    <ConvertFrameRateOfSubtitle>Конвертувати частоту кадрів в субтитрах</ConvertFrameRateOfSubtitle>
+    <FromFrameRate>З</FromFrameRate>
+    <ToFrameRate>До</ToFrameRate>
+    <FrameRateNotCorrect>Частота кадрів неправильна</FrameRateNotCorrect>
+    <FrameRateNotChanged>Частота кадрів та ж, що й була - нема що ковертувати</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Adjust speed in percent</Title>
@@ -267,16 +267,16 @@ Note: Do check free disk space.</WaveFileMalformed>
     <OriginalTextOnly>Original text only</OriginalTextOnly>
   </ColumnPaste>
   <CompareSubtitles>
-    <Title>Compare subtitles</Title>
-    <PreviousDifference>&amp;Previous difference</PreviousDifference>
-    <NextDifference>&amp;Next difference</NextDifference>
-    <SubtitlesNotAlike>Subtitles have no similarities</SubtitlesNotAlike>
-    <XNumberOfDifference>Number of differences: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Number of differences: {0} ({1}% of words changed)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Number of differences: {0} ({1}% of letters changed)</XNumberOfDifferenceAndPercentLettersChanged>
-    <ShowOnlyDifferences>Show only differences</ShowOnlyDifferences>
-    <IgnoreLineBreaks>Ignore line breaks</IgnoreLineBreaks>
-    <OnlyLookForDifferencesInText>Only look for differences in text</OnlyLookForDifferencesInText>
+    <Title>Порівняння субтитрів</Title>
+    <PreviousDifference>&amp;Попередня відмінність</PreviousDifference>
+    <NextDifference>&amp;Наступна відмінність</NextDifference>
+    <SubtitlesNotAlike>Субтитри не мають подібностей</SubtitlesNotAlike>
+    <XNumberOfDifference>Кількість відмінностей: {0}</XNumberOfDifference>
+    <XNumberOfDifferenceAndPercentChanged>Кількість відмінностей: {0} ({1}% слів змінено)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Кількість відмінностей: {0} ({1}% літер змінено)</XNumberOfDifferenceAndPercentLettersChanged>
+    <ShowOnlyDifferences>Показувати тільки відмінності</ShowOnlyDifferences>
+    <IgnoreLineBreaks>Ігнорувати розриви рядків</IgnoreLineBreaks>
+    <OnlyLookForDifferencesInText>Шукати виключно різницю в тексті</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Cannot compare with image based subtitles</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
   <DCinemaProperties>
@@ -495,9 +495,9 @@ Note: Do check free disk space.</WaveFileMalformed>
     <RegularExpression>Regular e&amp;xpression</RegularExpression>
   </FindDialog>
   <FindSubtitleLine>
-    <Title>Find subtitle line</Title>
-    <Find>&amp;Find</Find>
-    <FindNext>Find &amp;next</FindNext>
+    <Title>Знайти рядок субтитрів</Title>
+    <Find>&amp;Знайти</Find>
+    <FindNext>Знайти &amp;наст.</FindNext>
   </FindSubtitleLine>
   <FixCommonErrors>
     <Title>Fix common errors</Title>
@@ -624,15 +624,15 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
-    <Title>Need dictionaries?</Title>
-    <DescriptionLine1>Subtitle Edit's spell check is based on the NHunspell engine which</DescriptionLine1>
-    <DescriptionLine2>uses the spell checking dictionaries from Open Office.</DescriptionLine2>
+    <Title>Потрібні словники?</Title>
+    <DescriptionLine1>Перевірка орфографії Subtitle Edit базується на рушії NHunspell, який</DescriptionLine1>
+    <DescriptionLine2>використовує орфографічні словники від Open Office.</DescriptionLine2>
     <GetDictionariesHere>Get dictionaries here:</GetDictionariesHere>
     <OpenOpenOfficeWiki>Open Office Wiki Dictionaries list</OpenOpenOfficeWiki>
     <GetAllDictionaries>Get all dictionaries</GetAllDictionaries>
-    <ChooseLanguageAndClickDownload>Choose your language and click download</ChooseLanguageAndClickDownload>
-    <OpenDictionariesFolder>Open 'Dictionaries' folder</OpenDictionariesFolder>
-    <Download>Download</Download>
+    <ChooseLanguageAndClickDownload>Оберіть мову і натисніть "Звантажити"</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>Відкрити теку зі словниками</OpenDictionariesFolder>
+    <Download>Звантажити</Download>
     <XDownloaded>{0} has been downloaded and installed</XDownloaded>
   </GetDictionaries>
   <GetTesseractDictionaries>
@@ -804,7 +804,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <StartNumberingFrom>Renumber...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Remove text for hearing impaired...</RemoveTextForHearingImpaired>
         <ChangeCasing>Change casing...</ChangeCasing>
-        <ChangeFrameRate>Change frame rate...</ChangeFrameRate>
+        <ChangeFrameRate>Змінити частоту кадрів...</ChangeFrameRate>
         <ChangeSpeedInPercent>Changed speed (percent)...</ChangeSpeedInPercent>
         <MergeShortLines>Merge short lines...</MergeShortLines>
         <MergeDuplicateText>Merge lines with same text...</MergeDuplicateText>
@@ -835,7 +835,7 @@ Note: Do check free disk space.</WaveFileMalformed>
       </Tools>
       <Video>
         <Title>Відео</Title>
-        <OpenVideo>Open video file...</OpenVideo>
+        <OpenVideo>Відкрити відеофайл...</OpenVideo>
         <OpenDvd>Open DVD...</OpenDvd>
         <ChooseAudioTrack>Choose audio track</ChooseAudioTrack>
         <CloseVideo>Close video file</CloseVideo>
@@ -849,13 +849,13 @@ Note: Do check free disk space.</WaveFileMalformed>
         <ReDockVideoControls>Re-dock video controls</ReDockVideoControls>
       </Video>
       <SpellCheck>
-        <Title>Перевірка орфографії</Title>
-        <SpellCheck>&amp;Spell check...</SpellCheck>
+        <Title>Орфографія</Title>
+        <SpellCheck>&amp;Перевірка орфографії...</SpellCheck>
         <SpellCheckFromCurrentLine>Spell check from current line...</SpellCheckFromCurrentLine>
-        <FindDoubleWords>Find double words</FindDoubleWords>
-        <FindDoubleLines>Find double lines</FindDoubleLines>
-        <GetDictionaries>Get dictionaries...</GetDictionaries>
-        <AddToNamesEtcList>Add word to names/etc list</AddToNamesEtcList>
+        <FindDoubleWords>Знайти слова, що дублюються</FindDoubleWords>
+        <FindDoubleLines>Знайти рядки, що дублюються</FindDoubleLines>
+        <GetDictionaries>Отримати словники...</GetDictionaries>
+        <AddToNamesEtcList>Додати слово до списку імен/шумів і т. п.</AddToNamesEtcList>
       </SpellCheck>
       <Synchronization>
         <Title>Синхронізація</Title>
@@ -1005,7 +1005,7 @@ Note: Do check free disk space.</WaveFileMalformed>
       <SetstartTimeAndOffsetOfRest>Set sta&amp;rt and off-set the rest</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Search text online</SearchTextOnline>
       <GoogleTranslate>Google translate</GoogleTranslate>
-      <GoogleIt>Google it</GoogleIt>
+      <GoogleIt>Заґуґлити</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Video position:</VideoPosition>
@@ -1021,15 +1021,15 @@ Note: Do check free disk space.</WaveFileMalformed>
       <Fast>Fast</Fast>
       <VeryFast>Very fast</VeryFast>
     </VideoControls>
-    <SaveChangesToUntitled>Save changes to untitled?</SaveChangesToUntitled>
-    <SaveChangesToX>Save changes to {0}?</SaveChangesToX>
-    <SaveChangesToUntitledOriginal>Save changes to untitled original?</SaveChangesToUntitledOriginal>
-    <SaveChangesToOriginalX>Save changes to original {0}?</SaveChangesToOriginalX>
-    <SaveSubtitleAs>Save subtitle as...</SaveSubtitleAs>
+    <SaveChangesToUntitled>Зберегти зміни до безіменного?</SaveChangesToUntitled>
+    <SaveChangesToX>Зберегти зміни до {0}?</SaveChangesToX>
+    <SaveChangesToUntitledOriginal>Зберегти зміни до безіменного оригіналу?</SaveChangesToUntitledOriginal>
+    <SaveChangesToOriginalX>Зберегти зміни до оригіналу {0}?</SaveChangesToOriginalX>
+    <SaveSubtitleAs>Зберегти субтитри як...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Save original subtitle as...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>No subtitle loaded</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Visual sync - selected lines</VisualSyncSelectedLines>
-    <VisualSyncTitle>Visual sync</VisualSyncTitle>
+    <VisualSyncTitle>Візуальна синхронізація</VisualSyncTitle>
     <BeforeVisualSync>Before visual sync</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visual sync performed on selected lines</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visual sync performed</VisualSyncPerformed>
@@ -1057,17 +1057,17 @@ Subtitle seems to be empty - try to re-save if you're working on a valid subtitl
     <BeforeShowEarlier>Before show earlier</BeforeShowEarlier>
     <BeforeShowLater>Before show later</BeforeShowLater>
     <LineNumberX>Line number: {0:#,##0.##}</LineNumberX>
-    <OpenVideoFile>Open video file...</OpenVideoFile>
+    <OpenVideoFile>Відкрити відеофайл...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>New frame rate ({0}) was used for calculating start/end time codes</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>New frame rate ({0}) was used for calculating start/end frame numbers</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>The search item was not found.
-Would you like to start from the top of the document and search one more time?</FindContinue>
-    <FindContinueTitle>Continue Find?</FindContinueTitle>
-    <ReplaceContinueNotFound>The search item was not found.
-Would you like to start from the top of the document and continue search and replace?</ReplaceContinueNotFound>
+    <FindContinue>Об'єкт пошуку не знайдено.
+Бажаєте розпочати з початку документу і шукати ще раз?</FindContinue>
+    <FindContinueTitle>Продовжити пошук?</FindContinueTitle>
+    <ReplaceContinueNotFound>Об'єкт пошуку не знайдено.
+Бажаєте розпочати з початку документу і продовжити пошук та заміну?</ReplaceContinueNotFound>
     <ReplaceXContinue>The search item was replaced {0} time(s).
 Would you like to start from the top of the document and continue search and replace?</ReplaceXContinue>
-    <ReplaceContinueTitle>Continue 'Replace'?</ReplaceContinueTitle>
+    <ReplaceContinueTitle>Продовжити заміну?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Searching for '{0}' from line number {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' found at line number {1}</XFoundAtLineNumberY>
     <XNotFound>'{0}' not found</XNotFound>
@@ -1124,18 +1124,18 @@ Continue?</SubtitleAppendPrompt>
     <NothingToUndo>Nothing to undo</NothingToUndo>
     <InvalidLanguageNameX>Invalid language name: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Unable to change language!</UnableToChangeLanguage>
-    <DoNotDisplayMessageAgain>Don't display this message again</DoNotDisplayMessageAgain>
+    <DoNotDisplayMessageAgain>Не показувати це повідомлення знову</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Number of corrected words: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Number of skipped words: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Number of correct words: {0}</NumberOfCorrectWords>
     <NumberOfWordsAddedToDictionary>Number of words added to dictionary: {0}</NumberOfWordsAddedToDictionary>
     <NumberOfNameHits>Number of name hits: {0}</NumberOfNameHits>
-    <SpellCheck>Spell check</SpellCheck>
+    <SpellCheck>Перевірка орфографії</SpellCheck>
     <BeforeSpellCheck>Before spell check</BeforeSpellCheck>
     <SpellCheckChangedXToY>Spell check: Changed '{0}' to '{1}'</SpellCheckChangedXToY>
     <BeforeAddingTagX>Before adding &lt;{0}&gt; tag</BeforeAddingTagX>
     <TagXAdded>&lt;{0}&gt; tags added</TagXAdded>
-    <LineXOfY>line {0} of {1}</LineXOfY>
+    <LineXOfY>рядок {0} із {1}</LineXOfY>
     <XLinesSavedAsY>{0} lines saved as {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} lines deleted</XLinesDeleted>
     <BeforeDeletingXLines>Before deleting {0} lines</BeforeDeletingXLines>
@@ -1499,12 +1499,12 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <ThreeSecondsForward>3 s &gt;&gt;</ThreeSecondsForward>
   </SetSyncPoint>
   <Settings>
-    <Title>Settings</Title>
-    <General>General</General>
-    <Toolbar>Toolbar</Toolbar>
-    <VideoPlayer>Video player</VideoPlayer>
+    <Title>Налаштування</Title>
+    <General>Загальні</General>
+    <Toolbar>Панель інструментів</Toolbar>
+    <VideoPlayer>Відеопрогравач</VideoPlayer>
     <WaveformAndSpectrogram>Waveform/spectrogram</WaveformAndSpectrogram>
-    <Tools>Tools</Tools>
+    <Tools>Інструменти</Tools>
     <WordLists>Word lists</WordLists>
     <SsaStyle>ASS/SSA Style</SsaStyle>
     <Network>Network</Network>
@@ -1516,7 +1516,7 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <Find>Find</Find>
     <Replace>Replace</Replace>
     <VisualSync>Visual sync</VisualSync>
-    <SpellCheck>Spell check</SpellCheck>
+    <SpellCheck>Перевірка орфографії</SpellCheck>
     <SettingsName>Settings</SettingsName>
     <Help>Help</Help>
     <ShowFrameRate>Show frame rate in toolbar</ShowFrameRate>
@@ -1764,15 +1764,15 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <Rollback>Rollback</Rollback>
   </ShowHistory>
   <SpellCheck>
-    <Title>Spell check</Title>
-    <FullText>Full text</FullText>
+    <Title>Перевірка орфографії</Title>
+    <FullText>Увесь текст</FullText>
     <WordNotFound>Word not found</WordNotFound>
-    <Language>Language</Language>
+    <Language>Мова</Language>
     <Change>Change</Change>
     <ChangeAll>Change all</ChangeAll>
     <SkipOnce>Skip &amp;one</SkipOnce>
     <SkipAll>&amp;Skip all</SkipAll>
-    <AddToUserDictionary>Add to user dictionary</AddToUserDictionary>
+    <AddToUserDictionary>Додати до користувацького словника</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Add to names/noise list (case sensitive)</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>Add pair to OCR replace list</AddToOcrReplaceList>
     <Abort>Abort</Abort>
@@ -1780,8 +1780,8 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <UseAlways>&amp;Use always</UseAlways>
     <Suggestions>Suggestions</Suggestions>
     <SpellCheckProgress>Spell check [{0}] - {1}</SpellCheckProgress>
-    <EditWholeText>Edit whole text</EditWholeText>
-    <EditWordOnly>Edit word only</EditWordOnly>
+    <EditWholeText>Редагувати увесь текст</EditWholeText>
+    <EditWordOnly>Редагувати тільки слово</EditWordOnly>
     <AddXToNamesEtc>Add '{0}' to names/etc list</AddXToNamesEtc>
     <AutoFixNames>Auto fix names where only casing differ</AutoFixNames>
     <CheckOneLetterWords>Prompt for unknown one letter words</CheckOneLetterWords>
@@ -1956,22 +1956,22 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <Message>If you want this fixed please send an email to mailto:niksedk@gmail.com and include a copy of the subtitle.</Message>
   </UnknownSubtitle>
   <VisualSync>
-    <Title>Visual sync</Title>
-    <StartScene>Start scene</StartScene>
-    <EndScene>End scene</EndScene>
-    <Synchronize>Sync</Synchronize>
-    <HalfASecondBack>&lt; ½ s</HalfASecondBack>
-    <ThreeSecondsBack>&lt; 3 s</ThreeSecondsBack>
-    <PlayXSecondsAndBack>Play {0} s and back</PlayXSecondsAndBack>
-    <FindText>Find text</FindText>
-    <GoToSubPosition>Go to sub pos</GoToSubPosition>
-    <KeepChangesTitle>Keep changes?</KeepChangesTitle>
-    <KeepChangesMessage>Changes have been made to subtitle in 'Visual sync'.
+    <Title>Візуальна синхронізація</Title>
+    <StartScene>Початкова сцена</StartScene>
+    <EndScene>Кінцева сцена</EndScene>
+    <Synchronize>Синхронізувати</Synchronize>
+    <HalfASecondBack>&lt; ½ с</HalfASecondBack>
+    <ThreeSecondsBack>&lt; 3 с</ThreeSecondsBack>
+    <PlayXSecondsAndBack>Програти {0} с і назад</PlayXSecondsAndBack>
+    <FindText>Знайти текст</FindText>
+    <GoToSubPosition>Поз. субтитру</GoToSubPosition>
+    <KeepChangesTitle>Зберегти зміни?</KeepChangesTitle>
+    <KeepChangesMessage>В режимі "візуальної синхронізації" до субтитрів було внесено зміни.
 
-Keep changes?</KeepChangesMessage>
-    <SynchronizationDone>Sync done!</SynchronizationDone>
+Зберегти ці зміни?</KeepChangesMessage>
+    <SynchronizationDone>Синхронізацію виконано!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Start scene must come before end scene!</StartSceneMustComeBeforeEndScene>
-    <Tip>Tip: Use &lt;ctrl+arrow left/right&gt; keys to move 100 ms back/forward</Tip>
+    <Tip>Підказка: Використовуйте клавіші &lt;ctrl+стрілка вліво/вправо&gt;, щоб просунутися на 100 мс назад/вперед</Tip>
   </VisualSync>
   <VobSubEditCharacters>
     <Title>Edit image compare database</Title>
