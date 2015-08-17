@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Language Name="English">
+<Language Name="Ukrainian">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.8</Version>
-    <TranslatedBy>Translated by Nikse</TranslatedBy>
-    <CultureName>en-US</CultureName>
+    <TranslatedBy>Переклад: Максим Кобєлєв</TranslatedBy>
+    <CultureName>uk-UA</CultureName>
     <HelpFile />
-    <Ok>&amp;OK</Ok>
-    <Cancel>C&amp;ancel</Cancel>
-    <Apply>Apply</Apply>
+    <Ok>&amp;Гаразд</Ok>
+    <Cancel>&amp;Скасувати</Cancel>
+    <Apply>Застосувати</Apply>
     <None>None</None>
     <All>All</All>
     <Preview>Preview</Preview>
@@ -22,12 +22,12 @@
     <NoVideoLoaded>No video loaded</NoVideoLoaded>
     <VideoInformation>Video info</VideoInformation>
     <PositionX>Position / duration: {0}</PositionX>
-    <StartTime>Start time</StartTime>
-    <EndTime>End time</EndTime>
-    <Duration>Duration</Duration>
-    <NumberSymbol>#</NumberSymbol>
+    <StartTime>Початок</StartTime>
+    <EndTime>Кінець</EndTime>
+    <Duration>Тривалість</Duration>
+    <NumberSymbol>№</NumberSymbol>
     <Number>Number</Number>
-    <Text>Text</Text>
+    <Text>Текст</Text>
     <HourMinutesSecondsMilliseconds>Hour:min:sec:ms</HourMinutesSecondsMilliseconds>
     <Bold>Bold</Bold>
     <Italic>Italic</Italic>
@@ -40,8 +40,8 @@
     <FrameRateX>Frame rate: {0:0.0###}</FrameRateX>
     <TotalFramesX>Total frames: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Video encoding: {0}</VideoEncodingX>
-    <SingleLineLengths>Single line length:</SingleLineLengths>
-    <TotalLengthX>Total length: {0}</TotalLengthX>
+    <SingleLineLengths>Порядко́ва довжина:</SingleLineLengths>
+    <TotalLengthX>Загальна довжина: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Total length: {0} (split line!)</TotalLengthXSplitLine>
     <SplitLine>Split line!</SplitLine>
     <NotAvailable>N/A</NotAvailable>
@@ -228,13 +228,13 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FromDropFrame>From drop frame</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
-    <Title>Check for updates</Title>
-    <CheckingForUpdates>Checking for updates...</CheckingForUpdates>
-    <CheckingForUpdatesFailedX>Checking for updates failed: {0}</CheckingForUpdatesFailedX>
-    <CheckingForUpdatesNoneAvailable>You're using the latest version of Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
-    <CheckingForUpdatesNewVersion>New version available!</CheckingForUpdatesNewVersion>
-    <InstallUpdate>Go to download page</InstallUpdate>
-    <NoUpdates>Don't update</NoUpdates>
+    <Title>Перевірка на наявність оновлень</Title>
+    <CheckingForUpdates>Перевірка на наявність оновлень...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>Не вдалося перевірити на наявність оновлень: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesNoneAvailable>Ви користуєтеся найсвіжішою версією Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNewVersion>Доступна нова версія!</CheckingForUpdatesNewVersion>
+    <InstallUpdate>Звантажити оновлення</InstallUpdate>
+    <NoUpdates>Не оновлювати</NoUpdates>
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Choose audio track</Title>
@@ -246,8 +246,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <PleaseSelectAnEncoding>Please select an encoding</PleaseSelectAnEncoding>
   </ChooseEncoding>
   <ChooseLanguage>
-    <Title>Choose language</Title>
-    <Language>Language</Language>
+    <Title>Змінити мову</Title>
+    <Language>Мова</Language>
   </ChooseLanguage>
   <ColorChooser>
     <Title>Choose color</Title>
@@ -723,13 +723,13 @@ Note: Do check free disk space.</WaveFileMalformed>
   <Main>
     <Menu>
       <File>
-        <Title>&amp;File</Title>
-        <New>&amp;New</New>
-        <Open>&amp;Open</Open>
+        <Title>&amp;Файл</Title>
+        <New>&amp;Новий</New>
+        <Open>&amp;Відкрити</Open>
         <OpenKeepVideo>Open (keep video)</OpenKeepVideo>
-        <Reopen>&amp;Reopen</Reopen>
-        <Save>&amp;Save</Save>
-        <SaveAs>Save &amp;as...</SaveAs>
+        <Reopen>&amp;Відкрити заново</Reopen>
+        <Save>&amp;Зберегти</Save>
+        <SaveAs>Зберегти &amp;як...</SaveAs>
         <RestoreAutoBackup>Restore auto-backup...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha properties...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha properties...</SubStationAlphaProperties>
@@ -751,7 +751,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <ImportText>Import plain text...</ImportText>
         <ImportImages>Import images...</ImportImages>
         <ImportTimecodes>Import time codes...</ImportTimecodes>
-        <Export>Export</Export>
+        <Export>Експортувати</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
@@ -768,13 +768,13 @@ Note: Do check free disk space.</WaveFileMalformed>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
         <ExportUltech130>Ultech caption...</ExportUltech130>
         <ExportCustomTextFormat>Export custom text format...</ExportCustomTextFormat>
-        <Exit>E&amp;xit</Exit>
+        <Exit>&amp;Вийти</Exit>
       </File>
       <Edit>
-        <Title>Edit</Title>
-        <Undo>Undo</Undo>
-        <Redo>Redo</Redo>
-        <ShowUndoHistory>Show history (for undo)</ShowUndoHistory>
+        <Title>Редагувати</Title>
+        <Undo>Скасувати</Undo>
+        <Redo>Повторити</Redo>
+        <ShowUndoHistory>Показати історію</ShowUndoHistory>
         <InsertUnicodeSymbol>Insert Unicode symbol</InsertUnicodeSymbol>
         <InsertUnicodeControlCharacters>Insert Unicode control characters</InsertUnicodeControlCharacters>
         <InsertUnicodeControlCharactersLRM>Left-to-right mark (LRM)</InsertUnicodeControlCharactersLRM>
@@ -796,7 +796,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <InverseSelection>Invert selection</InverseSelection>
       </Edit>
       <Tools>
-        <Title>Tools</Title>
+        <Title>Інструменти</Title>
         <AdjustDisplayDuration>&amp;Adjust durations...</AdjustDisplayDuration>
         <ApplyDurationLimits>Apply duration limits...</ApplyDurationLimits>
         <DurationsBridgeGap>Bridge gap in durations...</DurationsBridgeGap>
@@ -834,7 +834,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <JoinSubtitles>Join subtitles...</JoinSubtitles>
       </Tools>
       <Video>
-        <Title>Video</Title>
+        <Title>Відео</Title>
         <OpenVideo>Open video file...</OpenVideo>
         <OpenDvd>Open DVD...</OpenDvd>
         <ChooseAudioTrack>Choose audio track</ChooseAudioTrack>
@@ -842,14 +842,14 @@ Note: Do check free disk space.</WaveFileMalformed>
         <ImportSceneChanges>Import scene changes...</ImportSceneChanges>
         <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
-        <ShowHideVideo>Show/hide video</ShowHideVideo>
+        <ShowHideVideo>Показати/сховати відео</ShowHideVideo>
         <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Show/hide waveform and spectrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Un-dock video controls</UnDockVideoControls>
         <ReDockVideoControls>Re-dock video controls</ReDockVideoControls>
       </Video>
       <SpellCheck>
-        <Title>Spell check</Title>
+        <Title>Перевірка орфографії</Title>
         <SpellCheck>&amp;Spell check...</SpellCheck>
         <SpellCheckFromCurrentLine>Spell check from current line...</SpellCheckFromCurrentLine>
         <FindDoubleWords>Find double words</FindDoubleWords>
@@ -858,51 +858,51 @@ Note: Do check free disk space.</WaveFileMalformed>
         <AddToNamesEtcList>Add word to names/etc list</AddToNamesEtcList>
       </SpellCheck>
       <Synchronization>
-        <Title>Synchronization</Title>
-        <AdjustAllTimes>Adjust all times (show earlier/later)...</AdjustAllTimes>
-        <VisualSync>&amp;Visual sync...</VisualSync>
-        <PointSync>Point sync...</PointSync>
-        <PointSyncViaOtherSubtitle>Point sync via other subtitle...</PointSyncViaOtherSubtitle>
+        <Title>Синхронізація</Title>
+        <AdjustAllTimes>Зсунути всі часи (показувати раніше/пізніше)...</AdjustAllTimes>
+        <VisualSync>&amp;Візуальна синхронізація...</VisualSync>
+        <PointSync>Точкова синхронізація...</PointSync>
+        <PointSyncViaOtherSubtitle>Точкова синхронізація через інші субтитри...</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
-        <Title>Auto-translate</Title>
-        <TranslatePoweredByGoogle>Translate (powered by Google)...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Translate (powered by Microsoft)...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>Translate from Swedish to Danish (powered by nikse.dk)...</TranslateFromSwedishToDanish>
+        <Title>Автоматичний переклад</Title>
+        <TranslatePoweredByGoogle>Переклад (за допомогою Google)...</TranslatePoweredByGoogle>
+        <TranslatePoweredByMicrosoft>Переклад (за допомогою Microsoft)...</TranslatePoweredByMicrosoft>
+        <TranslateFromSwedishToDanish>Переклад зі шведської на данську (за допомогою nikse.dk)...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
-        <Title>Options</Title>
-        <Settings>&amp;Settings...</Settings>
-        <ChooseLanguage>&amp;Choose language...</ChooseLanguage>
+        <Title>Налаштування</Title>
+        <Settings>&amp;Налаштування...</Settings>
+        <ChooseLanguage>&amp;Змінити мову...</ChooseLanguage>
       </Options>
       <Networking>
-        <Title>Networking</Title>
-        <StartNewSession>Start new session</StartNewSession>
-        <JoinSession>Join session</JoinSession>
-        <ShowSessionInfoAndLog>Show session info and log</ShowSessionInfoAndLog>
-        <Chat>Chat</Chat>
-        <LeaveSession>Leave session</LeaveSession>
+        <Title>Мережа</Title>
+        <StartNewSession>Розпочати нову сесію</StartNewSession>
+        <JoinSession>Приєднатися до сесії</JoinSession>
+        <ShowSessionInfoAndLog>Показати журнал та інформацію про сесію</ShowSessionInfoAndLog>
+        <Chat>Балачка</Chat>
+        <LeaveSession>Облишити сесію</LeaveSession>
       </Networking>
       <Help>
-        <CheckForUpdates>Check for updates...</CheckForUpdates>
-        <Title>Help</Title>
-        <Help>&amp;Help</Help>
-        <About>&amp;About</About>
+        <CheckForUpdates>Перевірити наявність оновлень...</CheckForUpdates>
+        <Title>Допомога</Title>
+        <Help>&amp;Довідка</Help>
+        <About>&amp;Про програму</About>
       </Help>
       <ToolBar>
-        <New>New</New>
-        <Open>Open</Open>
-        <Save>Save</Save>
-        <SaveAs>Save as</SaveAs>
-        <Find>Find</Find>
-        <Replace>Replace</Replace>
+        <New>Новий</New>
+        <Open>Відкрити</Open>
+        <Save>Зберегти</Save>
+        <SaveAs>Зберегти як</SaveAs>
+        <Find>Пошук</Find>
+        <Replace>Заміна</Replace>
         <FixCommonErrors>Fix common errors</FixCommonErrors>
-        <VisualSync>Visual sync</VisualSync>
-        <SpellCheck>Spell check</SpellCheck>
-        <Settings>Settings</Settings>
-        <Help>Help</Help>
+        <VisualSync>Візуальна синхронізація</VisualSync>
+        <SpellCheck>Перевірка орфографії</SpellCheck>
+        <Settings>Налаштування</Settings>
+        <Help>Довідка</Help>
         <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
-        <ShowHideVideo>Show/hide video</ShowHideVideo>
+        <ShowHideVideo>Показати/сховати відео</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
         <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - set style</AdvancedSubStationAlphaSetStyle>
@@ -961,15 +961,15 @@ Note: Do check free disk space.</WaveFileMalformed>
       </ContextMenu>
     </Menu>
     <Controls>
-      <SubtitleFormat>Format</SubtitleFormat>
-      <FileEncoding>Encoding</FileEncoding>
-      <ListView>List view</ListView>
-      <SourceView>Source view</SourceView>
+      <SubtitleFormat>Формат</SubtitleFormat>
+      <FileEncoding>Кодування</FileEncoding>
+      <ListView>Список</ListView>
+      <SourceView>Сирець</SourceView>
       <UndoChangesInEditPanel>Undo changes in edit panel</UndoChangesInEditPanel>
-      <Previous>&lt; Prev</Previous>
-      <Next>Next &gt;</Next>
-      <AutoBreak>Auto &amp;br</AutoBreak>
-      <Unbreak>Unbreak</Unbreak>
+      <Previous>&lt; Поп.</Previous>
+      <Next>Наст. &gt;</Next>
+      <AutoBreak>Розбити на &amp;рядки</AutoBreak>
+      <Unbreak>Вилучити розбиття</Unbreak>
     </Controls>
     <VideoControls>
       <Translate>Translate</Translate>
@@ -1231,7 +1231,7 @@ Continue?</SubtitleAppendPrompt>
     <BeforeSetEndTimeAndOffsetTheRest>Before set end time and off-set the rest</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Before set end time at video position and auto calculate start</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Continue with current spell check?</ContinueWithCurrentSpellCheck>
-    <CharactersPerSecond>Chars/sec: {0:0.00}</CharactersPerSecond>
+    <CharactersPerSecond>Симв./сек.: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Get frame rate from video file</GetFrameRateFromVideoFile>
     <NetworkMessage>New message: {0} ({1}): {2}</NetworkMessage>
     <NetworkUpdate>Line updated: {0} ({1}): Index={2}, Text={3}</NetworkUpdate>
@@ -1377,21 +1377,21 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <Send>Send</Send>
   </NetworkChat>
   <NetworkJoin>
-    <Title>Join network session</Title>
-    <Information>Join existing session where multiple persons
-can edit in same subtitle file (collaboration)</Information>
-    <Join>Join</Join>
+    <Title>Приєднатися до сесії</Title>
+    <Information>Приєднатися до наявної сесії, де кілька осіб 
+	можуть спільно редагувати один файл субтитрів (співпрацювати)</Information>
+    <Join>Приєднатися</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
     <Title>Network session info and log</Title>
     <Log>Log:</Log>
   </NetworkLogAndInfo>
   <NetworkStart>
-    <Title>Start network session</Title>
-    <ConnectionTo>Connecting to {0}...</ConnectionTo>
-    <Information>Start new session where multiple persons
-can edit in same subtitle file (collaboration)</Information>
-    <Start>Start</Start>
+    <Title>Розпочати нову сесію</Title>
+    <ConnectionTo>З'єднуємося з {0}...</ConnectionTo>
+    <Information>Розпочати нову сесію, де кілька осіб зможуть 
+	спільно редагувати один файл субтитрів (співпрацювати)</Information>
+    <Start>Розпочати</Start>
   </NetworkStart>
   <OpenVideoDvd>
     <Title>Open DVD via VLC</Title>
