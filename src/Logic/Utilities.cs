@@ -437,7 +437,7 @@ namespace Nikse.SubtitleEdit.Logic
             if ((arr.Length < 2 && arr[0].Length <= maximumLineLength) || (arr[0].Length <= maximumLineLength && arr[1].Length <= maximumLineLength))
                 return s;
 
-            s = RemoveLineBreaks(s);
+            s = UnbreakLine(s);
 
             var htmlTags = new Dictionary<int, string>();
             var sb = new StringBuilder(s.Length);
@@ -549,7 +549,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            string s = RemoveLineBreaks(text);
+            string s = UnbreakLine(text);
             string noTagText = HtmlUtil.RemoveHtmlTags(s, true);
 
             if (noTagText.Length < mergeLinesShorterThan)
@@ -739,25 +739,6 @@ namespace Nikse.SubtitleEdit.Logic
             return s.TrimEnd();
         }
 
-        internal static string RemoveLineBreaks(string s)
-        {
-            s = HtmlUtil.FixUpperTags(s);
-            s = s.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
-            s = s.Replace(Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
-            s = s.Replace(Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
-            s = s.Replace(Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
-            s = s.Replace("</i> " + Environment.NewLine + "<i>", " ");
-            s = s.Replace("</i>" + Environment.NewLine + " <i>", " ");
-            s = s.Replace("</i>" + Environment.NewLine + "<i>", " ");
-            s = s.Replace(Environment.NewLine, " ");
-            s = s.Replace(" </i>", "</i> ");
-            s = s.Replace(" </b>", "</b> ");
-            s = s.Replace(" </u>", "</u> ");
-            s = s.Replace(" </font>", "</font> ");
-            s = s.FixExtraSpaces();
-            return s.Trim();
-        }
-
         private static string ReInsertHtmlTags(string s, Dictionary<int, string> htmlTags)
         {
             if (htmlTags.Count > 0)
@@ -794,22 +775,33 @@ namespace Nikse.SubtitleEdit.Logic
             if (!text.Contains(Environment.NewLine))
                 return text;
 
-            var singleLine = text.Replace(Environment.NewLine, " ");
-            while (singleLine.Contains("  "))
-                singleLine = singleLine.Replace("  ", " ");
+            text = HtmlUtil.FixUpperTags(text);
+            text = text.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
+            text = text.Replace(Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
+            text = text.Replace(Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
+            text = text.Replace(Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
+            text = text.Replace("</i> " + Environment.NewLine + "<i>", " ");
+            text = text.Replace("</i>" + Environment.NewLine + " <i>", " ");
+            text = text.Replace("</i>" + Environment.NewLine + "<i>", " ");
+            text = text.Replace(Environment.NewLine, " ");
+            text = text.Replace(" </i>", "</i> ");
+            text = text.Replace(" </b>", "</b> ");
+            text = text.Replace(" </u>", "</u> ");
+            text = text.Replace(" </font>", "</font> ");
+            text = text.FixExtraSpaces();
 
-            if (singleLine.Contains("</")) // Fix tag
+            if (text.Contains("</")) // Fix tag
             {
-                singleLine = singleLine.Replace("</i> <i>", " ");
-                singleLine = singleLine.Replace("</i><i>", " ");
+                text = text.Replace("</i> <i>", " ");
+                text = text.Replace("</i><i>", " ");
 
-                singleLine = singleLine.Replace("</b> <b>", " ");
-                singleLine = singleLine.Replace("</b><b>", " ");
+                text = text.Replace("</b> <b>", " ");
+                text = text.Replace("</b><b>", " ");
 
-                singleLine = singleLine.Replace("</u> <u>", " ");
-                singleLine = singleLine.Replace("</u><u>", " ");
+                text = text.Replace("</u> <u>", " ");
+                text = text.Replace("</u><u>", " ");
             }
-            return singleLine;
+            return text.Trim();
         }
 
         public static void InitializeSubtitleFont(Control control)
