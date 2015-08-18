@@ -13557,7 +13557,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowEarlierOrLaterParagraph(double adjustMilliseconds, int i)
         {
             var p = _subtitle.GetParagraphOrDefault(i);
-            if (p != null && !p.StartTime.IsMaxTime)
+            if (p != null && (p.StartTime.TotalMilliseconds + adjustMilliseconds < TimeCode.MaxTime.TotalMilliseconds))
             {
                 if (_subtitleAlternate != null)
                 {
