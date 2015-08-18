@@ -11,7 +11,7 @@
     <Apply>Застосувати</Apply>
     <None>None</None>
     <All>All</All>
-    <Preview>Preview</Preview>
+    <Preview>Поп. перегляд</Preview>
     <SubtitleFiles>Файли субтитрів</SubtitleFiles>
     <AllFiles>Усі файли</AllFiles>
     <VideoFiles>Відеофайли</VideoFiles>
@@ -29,9 +29,9 @@
     <Number>Number</Number>
     <Text>Текст</Text>
     <HourMinutesSecondsMilliseconds>Hour:min:sec:ms</HourMinutesSecondsMilliseconds>
-    <Bold>Bold</Bold>
-    <Italic>Italic</Italic>
-    <Underline>Underline</Underline>
+    <Bold>Жирний</Bold>
+    <Italic>Курсив</Italic>
+    <Underline>Підкреслений</Underline>
     <Visible>Visible</Visible>
     <FrameRate>Frame rate</FrameRate>
     <Name>Назва</Name>
@@ -42,11 +42,11 @@
     <VideoEncodingX>Відео кодування: {0}</VideoEncodingX>
     <SingleLineLengths>Порядкова́ довжина:</SingleLineLengths>
     <TotalLengthX>Загальна довжина: {0}</TotalLengthX>
-    <TotalLengthXSplitLine>Total length: {0} (split line!)</TotalLengthXSplitLine>
+    <TotalLengthXSplitLine>Заг. довжина: {0} (розбийте рядок!)</TotalLengthXSplitLine>
     <SplitLine>Split line!</SplitLine>
     <NotAvailable>N/A</NotAvailable>
-    <OverlapPreviousLineX>Overlap prev line ({0:#,##0.###})</OverlapPreviousLineX>
-    <OverlapX>Overlap ({0:#,##0.###})</OverlapX>
+    <OverlapPreviousLineX>Накладка на поп. рядок ({0:#,##0.###})</OverlapPreviousLineX>
+    <OverlapX>Накладка ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Overlap next ({0:#,##0.###})</OverlapNextX>
     <Negative>Negative</Negative>
     <RegularExpressionIsNotValid>Regular expression is not valid!</RegularExpressionIsNotValid>
@@ -69,7 +69,7 @@
     <Character>Character</Character>
     <Class>Class</Class>
     <GeneralText>General</GeneralText>
-    <LineNumber>№ рядка</LineNumber>
+    <LineNumber>№ субтитру</LineNumber>
     <Before>До</Before>
     <After>Після</After>
     <Size>Розмір</Size>
@@ -131,21 +131,21 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Error>Error</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
-    <Title>Adjust durations</Title>
-    <AdjustVia>Adjust via</AdjustVia>
-    <Seconds>Seconds</Seconds>
-    <Percent>Percent</Percent>
-    <Recalculate>Recalculate</Recalculate>
-    <AddSeconds>Add seconds</AddSeconds>
-    <SetAsPercent>Set as percent of duration</SetAsPercent>
-    <Note>Note: Display time will not overlap start time of next text</Note>
+    <Title>Зміна тривалостей</Title>
+    <AdjustVia>Змінити</AdjustVia>
+    <Seconds>Секунди</Seconds>
+    <Percent>Відсотки</Percent>
+    <Recalculate>Перерахувати</Recalculate>
+    <AddSeconds>Додати секунди</AddSeconds>
+    <SetAsPercent>Відсоток від поточної тривалості</SetAsPercent>
+    <Note>Зверніть увагу: Тривалість субтитру не буде накладатися на початок наступного</Note>
     <PleaseSelectAValueFromTheDropDownList>Please select a value from the dropdown list</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Please choose - </PleaseChoose>
+    <PleaseChoose> - Оберіть - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
-    <Title>Apply duration limits</Title>
-    <FixesAvailable>Fixes available: {0}</FixesAvailable>
-    <UnableToFix>Unable to fix: {0}</UnableToFix>
+    <Title>Застосування обмеження тривалостей</Title>
+    <FixesAvailable>Доступні виправлення: {0}</FixesAvailable>
+    <UnableToFix>Неможливо виправити: {0}</UnableToFix>
   </ApplyDurationLimits>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Auto balance selected lines</TitleAutoBreak>
@@ -196,14 +196,14 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Title>Beamer</Title>
   </Beamer>
   <ChangeCasing>
-    <Title>Change casing</Title>
-    <ChangeCasingTo>Change casing to</ChangeCasingTo>
-    <NormalCasing>Normal casing. Sentences begin with uppercase letter.</NormalCasing>
-    <FixNamesCasing>Fix names casing (via Dictionaries\NamesEtc.xml)</FixNamesCasing>
-    <FixOnlyNamesCasing>Fix only names casing (via Dictionaries\NamesEtc.xml)</FixOnlyNamesCasing>
+    <Title>Зміна регістру</Title>
+    <ChangeCasingTo>Змінити регістр на</ChangeCasingTo>
+    <NormalCasing>Нормальний регістр. Речення починаються з великих літер.</NormalCasing>
+    <FixNamesCasing>Виправити регістри імен (за допомогою Dictionaries\NamesEtc.xml)</FixNamesCasing>
+    <FixOnlyNamesCasing>Виправити тільки регістри імен (за допомогою Dictionaries\NamesEtc.xml)</FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>Only change all upper case lines.</OnlyChangeAllUppercaseLines>
-    <AllUppercase>ALL UPPERCASE</AllUppercase>
-    <AllLowercase>all lowercase</AllLowercase>
+    <AllUppercase>ВСІ ЛІТЕРИ - ВЕЛИКІ</AllUppercase>
+    <AllLowercase>всі літери - маленькі</AllLowercase>
   </ChangeCasing>
   <ChangeCasingNames>
     <Title>Change casing - Names</Title>
@@ -379,15 +379,15 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TextRightJustifiedText>Right justified text</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
-    <Title>Karaoke effect</Title>
-    <ChooseColor>Choose color:</ChooseColor>
-    <TotalMilliseconds>Total milliseconds:</TotalMilliseconds>
-    <EndDelayInMilliseconds>End delay in milliseconds:</EndDelayInMilliseconds>
+    <Title>Ефект Караоке</Title>
+    <ChooseColor>Оберіть колір:</ChooseColor>
+    <TotalMilliseconds>Всього мілісекунд:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Кінцева затримка в мілісекундах:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
-    <Title>Typewriter effect</Title>
-    <TotalMilliseconds>Total milliseconds:</TotalMilliseconds>
-    <EndDelayInMilliseconds>End delay in milliseconds:</EndDelayInMilliseconds>
+    <Title>Ефект друкарської машинки</Title>
+    <TotalMilliseconds>Всього мілісекунд:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Кінцева затримка в мілісекундах:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Експортувати в користувацький текстовий формат</Title>
@@ -500,18 +500,18 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FindNext>Знайти &amp;наст.</FindNext>
   </FindSubtitleLine>
   <FixCommonErrors>
-    <Title>Fix common errors</Title>
-    <Step1>Step 1/2 - Choose which errors to fix</Step1>
-    <WhatToFix>What to fix</WhatToFix>
-    <Example>Example</Example>
+    <Title>Виправлення типових помилок</Title>
+    <Step1>Крок 1/2 - Оберіть, які помилки виправити</Step1>
+    <WhatToFix>Що виправити</WhatToFix>
+    <Example>Приклад</Example>
     <SelectAll>Вибрати всі</SelectAll>
     <InverseSelection>Інвертувати вибір</InverseSelection>
-    <Back>&lt; &amp;Back</Back>
-    <Next>&amp;Next &gt;</Next>
-    <Step2>Step 2/2 - Verify fixes</Step2>
-    <Fixes>Fixes</Fixes>
-    <Log>Log</Log>
-    <Function>Function</Function>
+    <Back>&lt; &amp;Назад</Back>
+    <Next>&amp;Далі &gt;</Next>
+    <Step2>Крок 2/2 - Перевірте виправлення</Step2>
+    <Fixes>Виправлення</Fixes>
+    <Log>Журнал</Log>
+    <Function>Функція</Function>
     <RemovedEmptyLine>Remove empty line</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Remove empty line at top</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Remove empty line at bottom</RemovedEmptyLineAtBottom>
@@ -555,8 +555,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <X3PlusLinesFixed>Subtitles with more than two lines fixed: {0}</X3PlusLinesFixed>
     <Analysing>Analyzing...</Analysing>
     <NothingToFix>Nothing to fix :)</NothingToFix>
-    <FixesFoundX>Fixes found: {0}</FixesFoundX>
-    <XFixesApplied>Fixes applied: {0}</XFixesApplied>
+    <FixesFoundX>Знайдено виправлень: {0}</FixesFoundX>
+    <XFixesApplied>Виправлень застосовано: {0}</XFixesApplied>
     <NothingToFixBut>Nothing to fix but a few things could be improved - see log for details</NothingToFixBut>
     <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Fix alone lowercase 'i' to 'I' (English)" is checked but currently loaded subtitle seems not be English.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continue</Continue>
@@ -598,8 +598,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixMissingPeriodAtEndOfLine>Add missing period at end of line</FixMissingPeriodAtEndOfLine>
     <XDoubleApostrophesFixed>{0} double apostrophes fixed.</XDoubleApostrophesFixed>
     <XUppercaseIsFoundInsideLowercaseWords>{0} uppercase 'i's found inside lowercase words</XUppercaseIsFoundInsideLowercaseWords>
-    <RefreshFixes>Refresh available fixes</RefreshFixes>
-    <ApplyFixes>Apply selected fixes</ApplyFixes>
+    <RefreshFixes>Оновити доступні виправлення</RefreshFixes>
+    <ApplyFixes>Застосувати обрані виправлення</ApplyFixes>
     <AutoBreak>Auto &amp;br</AutoBreak>
     <Unbreak>&amp;Unbreak</Unbreak>
     <FixDoubleDash>Fix '--' -&gt; '...'</FixDoubleDash>
@@ -791,45 +791,45 @@ Note: Do check free disk space.</WaveFileMalformed>
         <RightToLeftMode>Режим справа наліво (RTL)</RightToLeftMode>
         <FixTrlViaUnicodeControlCharacters>Виправити RTL за допомогою керувальних символів Unicode (обрані рядки)</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Обміняти місцями початок/кінець RTL (обрані рядки)</ReverseRightToLeftStartEnd>
-        <ShowOriginalTextInAudioAndVideoPreview>Show original text in audio/video previews</ShowOriginalTextInAudioAndVideoPreview>
+        <ShowOriginalTextInAudioAndVideoPreview>Показувати оригінальний текст в попередніх аудіо-/відеопереглядах</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Змінити вибір...</ModifySelection>
         <InverseSelection>Інвертувати вибір</InverseSelection>
       </Edit>
       <Tools>
         <Title>Інструменти</Title>
-        <AdjustDisplayDuration>&amp;Adjust durations...</AdjustDisplayDuration>
-        <ApplyDurationLimits>Apply duration limits...</ApplyDurationLimits>
+        <AdjustDisplayDuration>&amp;Змінити тривалості...</AdjustDisplayDuration>
+        <ApplyDurationLimits>Застосувати обмеження тривалостей...</ApplyDurationLimits>
         <DurationsBridgeGap>Bridge gap in durations...</DurationsBridgeGap>
-        <FixCommonErrors>&amp;Fix common errors...</FixCommonErrors>
-        <StartNumberingFrom>Renumber...</StartNumberingFrom>
-        <RemoveTextForHearingImpaired>Remove text for hearing impaired...</RemoveTextForHearingImpaired>
-        <ChangeCasing>Change casing...</ChangeCasing>
+        <FixCommonErrors>&amp;Виправити типові помилки...</FixCommonErrors>
+        <StartNumberingFrom>Перенумерувати...</StartNumberingFrom>
+        <RemoveTextForHearingImpaired>Видалити текст для людей із вадами слуху...</RemoveTextForHearingImpaired>
+        <ChangeCasing>Змінити регістр...</ChangeCasing>
         <ChangeFrameRate>Змінити частоту кадрів...</ChangeFrameRate>
         <ChangeSpeedInPercent>Changed speed (percent)...</ChangeSpeedInPercent>
-        <MergeShortLines>Merge short lines...</MergeShortLines>
-        <MergeDuplicateText>Merge lines with same text...</MergeDuplicateText>
-        <MergeSameTimeCodes>Merge lines with same time codes...</MergeSameTimeCodes>
-        <SplitLongLines>Split long lines...</SplitLongLines>
-        <MinimumDisplayTimeBetweenParagraphs>Minimum display time between subtitles...</MinimumDisplayTimeBetweenParagraphs>
-        <SortBy>Sort by</SortBy>
-        <Number>Number</Number>
-        <StartTime>Start time</StartTime>
-        <EndTime>End time</EndTime>
-        <Duration>Duration</Duration>
-        <TextAlphabetically>Text - alphabetically</TextAlphabetically>
-        <TextSingleLineMaximumLength>Text - single line max. length</TextSingleLineMaximumLength>
-        <TextTotalLength>Text - total length</TextTotalLength>
-        <TextNumberOfLines>Text - number of lines</TextNumberOfLines>
-        <TextNumberOfCharactersPerSeconds>Text - number of chars/sec</TextNumberOfCharactersPerSeconds>
-        <WordsPerMinute>Text - words per minute (wpm)</WordsPerMinute>
+        <MergeShortLines>Об'єднати короткі рядки...</MergeShortLines>
+        <MergeDuplicateText>Об'єднати рядки з однаковим текстом...</MergeDuplicateText>
+        <MergeSameTimeCodes>Об'єднати рядки з однаковими часовими мітками...</MergeSameTimeCodes>
+        <SplitLongLines>Розбити довгі субтитри...</SplitLongLines>
+        <MinimumDisplayTimeBetweenParagraphs>Мінімальна відстань між субтитрами...</MinimumDisplayTimeBetweenParagraphs>
+        <SortBy>Сортувати за</SortBy>
+        <Number>Номером</Number>
+        <StartTime>Початком</StartTime>
+        <EndTime>Кінцем</EndTime>
+        <Duration>Тривалістю</Duration>
+        <TextAlphabetically>Текстом - в алфавітному порядку</TextAlphabetically>
+        <TextSingleLineMaximumLength>Текстом - макс. довжиною одного рядка</TextSingleLineMaximumLength>
+        <TextTotalLength>Текстом - загальною довжиною</TextTotalLength>
+        <TextNumberOfLines>Текстом - кількістю рядків</TextNumberOfLines>
+        <TextNumberOfCharactersPerSeconds>Текстом - кількістю символів/сек</TextNumberOfCharactersPerSeconds>
+        <WordsPerMinute>Текстом - кількістю слів на хвилину</WordsPerMinute>
         <Style>Style</Style>
-        <Ascending>Ascending</Ascending>
-        <Descending>Descending</Descending>
+        <Ascending>За зростанням</Ascending>
+        <Descending>За спаданням</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Make new empty translation from current subtitle</MakeNewEmptyTranslationFromCurrentSubtitle>
-        <BatchConvert>Batch convert...</BatchConvert>
+        <BatchConvert>Пакетна обробка...</BatchConvert>
         <GenerateTimeAsText>Generate time as text...</GenerateTimeAsText>
         <MeasurementConverter>Measurement converter...</MeasurementConverter>
-        <SplitSubtitle>Split subtitle...</SplitSubtitle>
+        <SplitSubtitle>Розбити субтитри на файли...</SplitSubtitle>
         <AppendSubtitle>Append subtitle...</AppendSubtitle>
         <JoinSubtitles>Join subtitles...</JoinSubtitles>
       </Tools>
@@ -896,7 +896,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <SaveAs>Зберегти як</SaveAs>
         <Find>Пошук</Find>
         <Replace>Заміна</Replace>
-        <FixCommonErrors>Fix common errors</FixCommonErrors>
+        <FixCommonErrors>Виправити типові помилки</FixCommonErrors>
         <VisualSync>Візуальна синхронізація</VisualSync>
         <SpellCheck>Перевірка орфографії</SpellCheck>
         <Settings>Налаштування</Settings>
@@ -917,15 +917,15 @@ Note: Do check free disk space.</WaveFileMalformed>
         <Cut>Cut</Cut>
         <Copy>Copy</Copy>
         <Paste>Paste</Paste>
-        <Delete>Delete</Delete>
+        <Delete>Видалити</Delete>
         <SplitLineAtCursorPosition>Split line at cursor position</SplitLineAtCursorPosition>
         <AutoDurationCurrentLine>Auto duration (current line)</AutoDurationCurrentLine>
         <SelectAll>Вибрати всі</SelectAll>
         <InsertFirstLine>Insert line</InsertFirstLine>
-        <InsertBefore>Insert before</InsertBefore>
-        <InsertAfter>Insert after</InsertAfter>
-        <InsertSubtitleAfter>Insert subtitle after this line...</InsertSubtitleAfter>
-        <CopyToClipboard>Copy as text to clipboard</CopyToClipboard>
+        <InsertBefore>Вставити перед</InsertBefore>
+        <InsertAfter>Вставити після</InsertAfter>
+        <InsertSubtitleAfter>Вставити субтитри після цього рядка...</InsertSubtitleAfter>
+        <CopyToClipboard>Скопіювати до буферу обміну як текст</CopyToClipboard>
         <Column>Column</Column>
         <ColumnDeleteText>Delete text</ColumnDeleteText>
         <ColumnDeleteTextAndShiftCellsUp>Delete text and shift cells up</ColumnDeleteTextAndShiftCellsUp>
@@ -934,20 +934,20 @@ Note: Do check free disk space.</WaveFileMalformed>
         <ColumnImportTextAndShiftCellsDown>Import text and shift cells down</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Paste from clipboard...</ColumnPasteFromClipboard>
         <ColumnCopyOriginalTextToCurrent>Copy text from original to current</ColumnCopyOriginalTextToCurrent>
-        <Split>Split</Split>
-        <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
-        <MergeSelectedLinesAsDialog>Merge selected lines as dialog</MergeSelectedLinesAsDialog>
-        <MergeWithLineBefore>Merge with line before</MergeWithLineBefore>
-        <MergeWithLineAfter>Merge with line after</MergeWithLineAfter>
-        <Normal>Normal</Normal>
-        <Underline>Underline</Underline>
-        <Color>Color...</Color>
-        <FontName>Font name...</FontName>
-        <Alignment>Alignment...</Alignment>
+        <Split>Розділити</Split>
+        <MergeSelectedLines>Об'єднати вибрані рядки</MergeSelectedLines>
+        <MergeSelectedLinesAsDialog>Об'єднати вибрані рядки як діалог</MergeSelectedLinesAsDialog>
+        <MergeWithLineBefore>Об'єднати з попереднім рядком</MergeWithLineBefore>
+        <MergeWithLineAfter>Об'єднати з наступним рядком</MergeWithLineAfter>
+        <Normal>Звичайний</Normal>
+        <Underline>Підкреслений</Underline>
+        <Color>Колір...</Color>
+        <FontName>Назва шрифту...</FontName>
+        <Alignment>Розташування...</Alignment>
         <AutoBalanceSelectedLines>Auto balance selected lines...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Remove line-breaks from selected lines...</RemoveLineBreaksFromSelectedLines>
-        <TypewriterEffect>Typewriter effect...</TypewriterEffect>
-        <KaraokeEffect>Karaoke effect...</KaraokeEffect>
+        <TypewriterEffect>Ефект друкарської машинки...</TypewriterEffect>
+        <KaraokeEffect>Ефект караоке...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Show selected lines earlier/later...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Visual sync selected lines...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft translate original line</GoogleAndMicrosoftTranslateSelectedLine>
@@ -1313,24 +1313,24 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <Kilos>Kilos</Kilos>
   </MeasurementConverter>
   <MergeDoubleLines>
-    <Title>Merge lines with same text</Title>
-    <MaxMillisecondsBetweenLines>Max. milliseconds between lines</MaxMillisecondsBetweenLines>
+    <Title>Об'єднання рядків з однаковим текстом</Title>
+    <MaxMillisecondsBetweenLines>Макс. мілісекунд між рядками</MaxMillisecondsBetweenLines>
     <IncludeIncrementing>Include incrementing lines</IncludeIncrementing>
   </MergeDoubleLines>
   <MergedShortLines>
-    <Title>Merge short lines</Title>
+    <Title>Об'єднання коротких рядків</Title>
     <MaximumCharacters>Maximum characters in one paragraph</MaximumCharacters>
     <MaximumMillisecondsBetween>Maximum milliseconds between lines</MaximumMillisecondsBetween>
-    <NumberOfMergesX>Number of merges: {0}</NumberOfMergesX>
-    <MergedText>Merged text</MergedText>
+    <NumberOfMergesX>Кількість об'єднань: {0}</NumberOfMergesX>
+    <MergedText>Об'єднаний текст</MergedText>
     <OnlyMergeContinuationLines>Only merge continuation lines</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MergeTextWithSameTimeCodes>
-    <Title>Merge lines with same time codes</Title>
-    <MaxDifferenceMilliseconds>Max. milliseconds difference</MaxDifferenceMilliseconds>
-    <ReBreakLines>Re-break lines</ReBreakLines>
-    <NumberOfMergesX>Number of merges: {0}</NumberOfMergesX>
-    <MergedText>Merged text</MergedText>
+    <Title>Об'єднати рядки з однаковими часовими мітками</Title>
+    <MaxDifferenceMilliseconds>Макс. відстань, мілісекунд</MaxDifferenceMilliseconds>
+    <ReBreakLines>Перерозбити рядки</ReBreakLines>
+    <NumberOfMergesX>Кількість об'єднань: {0}</NumberOfMergesX>
+    <MergedText>Об'єднаний текст</MergedText>
   </MergeTextWithSameTimeCodes>
   <ModifySelection>
     <Title>Зміна вибору</Title>
@@ -1438,22 +1438,22 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <NotInCharacterGroup>Not in character group ([^test])</NotInCharacterGroup>
   </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
-    <Title>Remove text for hearing impaired</Title>
-    <RemoveTextConditions>Remove text conditions</RemoveTextConditions>
-    <RemoveTextBetween>Remove text between</RemoveTextBetween>
-    <SquareBrackets>'[' and ']'</SquareBrackets>
-    <Brackets>'{' and '}'</Brackets>
-    <Parentheses>'(' and ')'</Parentheses>
-    <QuestionMarks>'?' and '?'</QuestionMarks>
-    <And>and</And>
-    <RemoveTextBeforeColon>Remove text before a colon (':')</RemoveTextBeforeColon>
-    <OnlyIfTextIsUppercase>Only if text is UPPERCASE</OnlyIfTextIsUppercase>
-    <OnlyIfInSeparateLine>Only if in separate line</OnlyIfInSeparateLine>
-    <LinesFoundX>Lines found: {0}</LinesFoundX>
-    <RemoveTextIfContains>Remove text if it contains:</RemoveTextIfContains>
-    <RemoveTextIfAllUppercase>Remove line if UPPERCASE</RemoveTextIfAllUppercase>
-    <RemoveInterjections>Remove interjections (shh, hmm, etc.)</RemoveInterjections>
-    <EditInterjections>Edit...</EditInterjections>
+    <Title>Видалення тексту для людей із вадами слуху</Title>
+    <RemoveTextConditions>Умови видалення тексту</RemoveTextConditions>
+    <RemoveTextBetween>Видалити текст між</RemoveTextBetween>
+    <SquareBrackets>'[' та ']'</SquareBrackets>
+    <Brackets>'{' та '}'</Brackets>
+    <Parentheses>'(' та ')'</Parentheses>
+    <QuestionMarks>'?' та '?'</QuestionMarks>
+    <And>та</And>
+    <RemoveTextBeforeColon>Видалити текст перед двокрапкою (':')</RemoveTextBeforeColon>
+    <OnlyIfTextIsUppercase>Тільки якщо текст у ВЕРХНЬОМУ РЕГІСТРІ</OnlyIfTextIsUppercase>
+    <OnlyIfInSeparateLine>Тільки якщо на окремому рядку</OnlyIfInSeparateLine>
+    <LinesFoundX>Рядків знайдено: {0}</LinesFoundX>
+    <RemoveTextIfContains>Видалити текст, що містить:</RemoveTextIfContains>
+    <RemoveTextIfAllUppercase>Видалити рядки у ВЕРХНЬОМУ РЕГІСТРІ</RemoveTextIfAllUppercase>
+    <RemoveInterjections>Видалити вигуки (цсс, хм, і т.д.)</RemoveInterjections>
+    <EditInterjections>Редагувати...</EditInterjections>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Заміна</Title>
@@ -1483,12 +1483,12 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <MaxVolume>Volume must be below</MaxVolume>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
-    <Title>Set minimum display time between subtitles</Title>
-    <PreviewLinesModifiedX>Preview - subtitles modified: {0}</PreviewLinesModifiedX>
-    <ShowOnlyModifiedLines>Show only modified lines</ShowOnlyModifiedLines>
-    <MinimumMillisecondsBetweenParagraphs>Minimum milliseconds between lines</MinimumMillisecondsBetweenParagraphs>
-    <FrameInfo>Frame rate info</FrameInfo>
-    <OneFrameXisYMilliseconds>One frame at {0:0.00} fps is {1} milliseconds</OneFrameXisYMilliseconds>
+    <Title>Встановлення мінімальної відстані між субтитрами</Title>
+    <PreviewLinesModifiedX>Попередній перегляд - субтитрів редаговано: {0}</PreviewLinesModifiedX>
+    <ShowOnlyModifiedLines>Показувати тільки змінені рядки</ShowOnlyModifiedLines>
+    <MinimumMillisecondsBetweenParagraphs>Мінімальна відстань між рядками, мілісекунд</MinimumMillisecondsBetweenParagraphs>
+    <FrameInfo>Інформація про частоту кадрів</FrameInfo>
+    <OneFrameXisYMilliseconds>Один кадр при частоті {0:0.00} кнс - це {1} мілісекунд</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Set Sync point for line {0}</Title>
@@ -1524,10 +1524,10 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <DefaultFileEncoding>Default file encoding</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto detect ANSI encoding</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Single line max. length</SubtitleLineMaximumLength>
-    <MaximumCharactersPerSecond>Max. chars/sec</MaximumCharactersPerSecond>
+    <MaximumCharactersPerSecond>Макс. симв/сек</MaximumCharactersPerSecond>
     <AutoWrapWhileTyping>Auto-wrap while typing</AutoWrapWhileTyping>
-    <DurationMinimumMilliseconds>Min. duration, milliseconds</DurationMinimumMilliseconds>
-    <DurationMaximumMilliseconds>Max. duration, milliseconds</DurationMaximumMilliseconds>
+    <DurationMinimumMilliseconds>Мін. тривалість, мілісекунд</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>Макс. тривалість, мілісекунд</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. gap between subtitles in ms</MinimumGapMilliseconds>
     <SubtitleFont>Subtitle font</SubtitleFont>
     <SubtitleFontSize>Subtitle font size</SubtitleFontSize>
@@ -1792,28 +1792,28 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <UndoX>Undo: {0}</UndoX>
   </SpellCheck>
   <Split>
-    <Title>Split</Title>
-    <SplitOptions>Split options</SplitOptions>
-    <Lines>Lines</Lines>
-    <Characters>Characters</Characters>
-    <NumberOfEqualParts>Number of equal parts</NumberOfEqualParts>
-    <SubtitleInfo>Subtitle info</SubtitleInfo>
-    <NumberOfLinesX>Number of lines: {0:#,###}</NumberOfLinesX>
-    <NumberOfCharactersX>Number of characters: {0:#,###,###}</NumberOfCharactersX>
-    <Output>Output</Output>
+    <Title>Розбиття</Title>
+    <SplitOptions>Налаштування розбиття</SplitOptions>
+    <Lines>Рядки</Lines>
+    <Characters>Символи</Characters>
+    <NumberOfEqualParts>Кількість рівних частин</NumberOfEqualParts>
+    <SubtitleInfo>Інформація про субтитри</SubtitleInfo>
+    <NumberOfLinesX>Кількість рядків: {0:#,###}</NumberOfLinesX>
+    <NumberOfCharactersX>Кількість символів: {0:#,###,###}</NumberOfCharactersX>
+    <Output>Вихід</Output>
     <FileName>Назва файлу</FileName>
-    <OutputFolder>Output folder</OutputFolder>
-    <DoSplit>Split</DoSplit>
+    <OutputFolder>Вихідна тека</OutputFolder>
+    <DoSplit>Розбити</DoSplit>
     <Basic>Basic</Basic>
   </Split>
   <SplitLongLines>
-    <Title>Split long lines</Title>
-    <SingleLineMaximumLength>Single line maximum length</SingleLineMaximumLength>
-    <LineMaximumLength>Line maximum length</LineMaximumLength>
-    <LineContinuationBeginEndStrings>Line continuation begin/end strings</LineContinuationBeginEndStrings>
-    <NumberOfSplits>Number of splits: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>Longest single line length is {0} at line {1}</LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>Longest total line length is {0} at line {1}</LongestLineIsXAtY>
+    <Title>Розбивання довгих субтитрів</Title>
+    <SingleLineMaximumLength>Максимальна довжина одного рядка</SingleLineMaximumLength>
+    <LineMaximumLength>Максимальна довжина субтитру</LineMaximumLength>
+    <LineContinuationBeginEndStrings>Символи початку/кінця продовження рядка</LineContinuationBeginEndStrings>
+    <NumberOfSplits>Кількість розбиттів: {0}</NumberOfSplits>
+    <LongestSingleLineIsXAtY>Довжина найдовшого рядка - {0} в рядку {1}</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Довжиина найдовшого субтитру - {0} в рядку {1}</LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Split subtitle</Title>
@@ -1832,9 +1832,9 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <Untitled>Untitled</Untitled>
   </SplitSubtitle>
   <StartNumberingFrom>
-    <Title>Renumber</Title>
-    <StartFromNumber>Start from number:</StartFromNumber>
-    <PleaseEnterAValidNumber>Ups, please enter a number</PleaseEnterAValidNumber>
+    <Title>Перенумерація</Title>
+    <StartFromNumber>Почати з числа:</StartFromNumber>
+    <PleaseEnterAValidNumber>Введіть число, будь ласка</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <Statistics>
     <Title>Статистика</Title>
