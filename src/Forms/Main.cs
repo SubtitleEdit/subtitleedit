@@ -13533,16 +13533,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             for (int i = startFrom; i < _subtitle.Paragraphs.Count; i++)
             {
-                switch (selection)
+                if (selection == SelectionChoice.SelectionOnly)
                 {
-                    case SelectionChoice.SelectionOnly:
-                        if (SubtitleListview1.Items[i].Selected)
-                            ShowEarlierOrLaterParagraph(adjustMilliseconds, i);
-                        break;
-                    case SelectionChoice.AllLines:
-                    case SelectionChoice.SelectionAndForward:
+                    if (SubtitleListview1.Items[i].Selected)
+                    {
                         ShowEarlierOrLaterParagraph(adjustMilliseconds, i);
-                        break;
+                        break; // Exit the loop
+                    }
+                }
+                else
+                {
+                    // AllLines or SelectionAndForward
+                    ShowEarlierOrLaterParagraph(adjustMilliseconds, i);
                 }
             }
 
