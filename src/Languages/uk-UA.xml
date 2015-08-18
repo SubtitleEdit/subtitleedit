@@ -5,7 +5,7 @@
     <Version>3.4.8</Version>
     <TranslatedBy>Переклад: Максим Кобєлєв</TranslatedBy>
     <CultureName>uk-UA</CultureName>
-    <HelpFile />
+    <HelpFile></HelpFile>
     <Ok>&amp;Гаразд</Ok>
     <Cancel>&amp;Скасувати</Cancel>
     <Apply>Застосувати</Apply>
@@ -34,7 +34,7 @@
     <Underline>Underline</Underline>
     <Visible>Visible</Visible>
     <FrameRate>Frame rate</FrameRate>
-    <Name>Name</Name>
+    <Name>Назва</Name>
     <FileNameXAndSize>Ім'я файлу: {0} ({1})</FileNameXAndSize>
     <ResolutionX>Роздільна здатність: {0}</ResolutionX>
     <FrameRateX>Частота кадрів: {0:0.0###}</FrameRateX>
@@ -52,13 +52,13 @@
     <RegularExpressionIsNotValid>Regular expression is not valid!</RegularExpressionIsNotValid>
     <SubtitleSaved>Subtitle saved</SubtitleSaved>
     <CurrentSubtitle>Current subtitle</CurrentSubtitle>
-    <OriginalText>Original text</OriginalText>
+    <OriginalText>Оригінальний текст</OriginalText>
     <OpenOriginalSubtitleFile>Open original subtitle file...</OpenOriginalSubtitleFile>
     <PleaseWait>Please wait...</PleaseWait>
-    <SessionKey>Session key</SessionKey>
-    <UserName>Username</UserName>
-    <UserNameAlreadyInUse>Username already in use</UserNameAlreadyInUse>
-    <WebServiceUrl>Webservice URL</WebServiceUrl>
+    <SessionKey>Ключ сесії</SessionKey>
+    <UserName>Ім'я користувача</UserName>
+    <UserNameAlreadyInUse>Ім'я користувача вже використовується</UserNameAlreadyInUse>
+    <WebServiceUrl>URL веб-сервісу</WebServiceUrl>
     <IP>IP</IP>
     <VideoWindowTitle>Video - {0}</VideoWindowTitle>
     <AudioWindowTitle>Audio - {0}</AudioWindowTitle>
@@ -69,10 +69,10 @@
     <Character>Character</Character>
     <Class>Class</Class>
     <GeneralText>General</GeneralText>
-    <LineNumber>Line#</LineNumber>
-    <Before>Before</Before>
-    <After>After</After>
-    <Size>Size</Size>
+    <LineNumber>№ рядка</LineNumber>
+    <Before>До</Before>
+    <After>Після</After>
+    <Size>Розмір</Size>
   </General>
   <About>
     <Title>Про програму Subtitle Edit</Title>
@@ -325,8 +325,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Add>Add...</Add>
     <Remove>Remove</Remove>
     <Clear>Clear</Clear>
-    <MoveUp>Move up</MoveUp>
-    <MoveDown>Move down</MoveDown>
+    <MoveUp>Посунути вгору</MoveUp>
+    <MoveDown>Посунути вниз</MoveDown>
     <Languages>Languages</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25fps)</Pal>
@@ -390,24 +390,24 @@ Note: Do check free disk space.</WaveFileMalformed>
     <EndDelayInMilliseconds>End delay in milliseconds:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
-    <Title>Export custom text format</Title>
-    <Formats>Formats</Formats>
-    <New>New</New>
-    <Edit>Edit</Edit>
-    <Delete>Delete</Delete>
-    <SaveAs>S&amp;ave as...</SaveAs>
-    <SaveSubtitleAs>Save subtitle as...</SaveSubtitleAs>
-    <SubtitleExportedInCustomFormatToX>Subtitle exported in custom format to: {0}</SubtitleExportedInCustomFormatToX>
+    <Title>Експортувати в користувацький текстовий формат</Title>
+    <Formats>Формат</Formats>
+    <New>Новий</New>
+    <Edit>Редагувати</Edit>
+    <Delete>Видалити</Delete>
+    <SaveAs>З&amp;берегти як...</SaveAs>
+    <SaveSubtitleAs>Зберегти субтитри як...</SaveSubtitleAs>
+    <SubtitleExportedInCustomFormatToX>Субтитри експортовано в користувацькому форматі до: {0}</SubtitleExportedInCustomFormatToX>
   </ExportCustomText>
   <ExportCustomTextFormat>
-    <Title>Custom text format template</Title>
-    <Template>Template</Template>
-    <Header>Header</Header>
-    <TextLine>Text line (paragraph)</TextLine>
-    <TimeCode>Time code</TimeCode>
-    <NewLine>New line</NewLine>
-    <Footer>Footer</Footer>
-    <DoNotModify>[Do not modify]</DoNotModify>
+    <Title>Шаблон користувацького текстового формату</Title>
+    <Template>Шаблон</Template>
+    <Header>Заголовок</Header>
+    <TextLine>Рядок тексту (абзац)</TextLine>
+    <TimeCode>Час. мітка</TimeCode>
+    <NewLine>Новий р.</NewLine>
+    <Footer>Підвал</Footer>
+    <DoNotModify>[Не змінювати]</DoNotModify>
   </ExportCustomTextFormat>
   <ExportPngXml>
     <Title>Export BDN XML/PNG</Title>
@@ -488,11 +488,11 @@ Note: Do check free disk space.</WaveFileMalformed>
     <GenerateSubtitle>&amp;Generate subtitle</GenerateSubtitle>
   </ExtractDateTimeInfo>
   <FindDialog>
-    <Title>Find</Title>
-    <Find>Find</Find>
-    <Normal>&amp;Normal</Normal>
-    <CaseSensitive>&amp;Case sensitive</CaseSensitive>
-    <RegularExpression>Regular e&amp;xpression</RegularExpression>
+    <Title>Пошук</Title>
+    <Find>Знайти</Find>
+    <Normal>&amp;Звичайний</Normal>
+    <CaseSensitive>&amp;Чутливий до регістру</CaseSensitive>
+    <RegularExpression>Регулярний &amp;вираз</RegularExpression>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Знайти рядок субтитрів</Title>
@@ -504,8 +504,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Step1>Step 1/2 - Choose which errors to fix</Step1>
     <WhatToFix>What to fix</WhatToFix>
     <Example>Example</Example>
-    <SelectAll>Select all</SelectAll>
-    <InverseSelection>Invert selection</InverseSelection>
+    <SelectAll>Вибрати всі</SelectAll>
+    <InverseSelection>Інвертувати вибір</InverseSelection>
     <Back>&lt; &amp;Back</Back>
     <Next>&amp;Next &gt;</Next>
     <Step2>Step 2/2 - Verify fixes</Step2>
@@ -664,8 +664,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <MicrosoftTranslate>Microsoft translate</MicrosoftTranslate>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
-    <Title>Go to subtitle number</Title>
-    <XIsNotAValidNumber>{0} is not a valid number</XIsNotAValidNumber>
+    <Title>Перейти до субтитру номер</Title>
+    <XIsNotAValidNumber>{0} - не валідний номер</XIsNotAValidNumber>
   </GoToLine>
   <ImportImages>
     <Title>Import images</Title>
@@ -677,34 +677,34 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Title>Import scene changes</Title>
     <OpenTextFile>Open text file...</OpenTextFile>
     <ImportOptions>Import options</ImportOptions>
-    <TextFiles>Text files</TextFiles>
+    <TextFiles>Текстові файли</TextFiles>
     <TimeCodes>Time codes</TimeCodes>
     <Frames>Frames</Frames>
     <Seconds>Seconds</Seconds>
     <Milliseconds>Milliseconds</Milliseconds>
   </ImportSceneChanges>
   <ImportText>
-    <Title>Import plain text</Title>
-    <OneSubtitleIsOneFile>Multiple files - one file is one subtitle</OneSubtitleIsOneFile>
-    <OpenTextFile>Open text file...</OpenTextFile>
+    <Title>Імпортування простого тексту</Title>
+    <OneSubtitleIsOneFile>Декілька файлів: один файл - один субтитр</OneSubtitleIsOneFile>
+    <OpenTextFile>Відкрити файл...</OpenTextFile>
     <OpenTextFiles>Open text files...</OpenTextFiles>
-    <ImportOptions>Import options</ImportOptions>
-    <Splitting>Splitting</Splitting>
-    <AutoSplitText>Auto split text</AutoSplitText>
-    <OneLineIsOneSubtitle>One line is one subtitle</OneLineIsOneSubtitle>
-    <LineBreak>Line break</LineBreak>
-    <SplitAtBlankLines>Split at blank lines</SplitAtBlankLines>
-    <MergeShortLines>Merge short lines with continuation</MergeShortLines>
-    <RemoveEmptyLines>Remove empty lines</RemoveEmptyLines>
-    <RemoveLinesWithoutLetters>Remove lines without letters</RemoveLinesWithoutLetters>
-    <GenerateTimeCodes>Generate time codes</GenerateTimeCodes>
-    <GapBetweenSubtitles>Gap between subtitles (milliseconds)</GapBetweenSubtitles>
-    <Auto>Auto</Auto>
-    <Fixed>Fixed</Fixed>
-    <Refresh>&amp;Refresh</Refresh>
-    <TextFiles>Text files</TextFiles>
-    <PreviewLinesModifiedX>Preview - subtitles modified: {0}</PreviewLinesModifiedX>
-    <TimeCodes>Time codes</TimeCodes>
+    <ImportOptions>Опції імпортування</ImportOptions>
+    <Splitting>Розбиття</Splitting>
+    <AutoSplitText>Автоматичне розбиття</AutoSplitText>
+    <OneLineIsOneSubtitle>Один рядок - один субтитр</OneLineIsOneSubtitle>
+    <LineBreak>Роздільник</LineBreak>
+    <SplitAtBlankLines>Розбити на порожніх рядках</SplitAtBlankLines>
+    <MergeShortLines>Об'єднати короткі рядки з продовженнями</MergeShortLines>
+    <RemoveEmptyLines>Вилучити порожні рядки</RemoveEmptyLines>
+    <RemoveLinesWithoutLetters>Вилучити рядки без літер</RemoveLinesWithoutLetters>
+    <GenerateTimeCodes>Згенерувати часові мітки</GenerateTimeCodes>
+    <GapBetweenSubtitles>Пауза між субтитрами (мілісекунд)</GapBetweenSubtitles>
+    <Auto>Автоматична</Auto>
+    <Fixed>Фіксована</Fixed>
+    <Refresh>&amp;Оновити</Refresh>
+    <TextFiles>Текстові файли</TextFiles>
+    <PreviewLinesModifiedX>Попередній перегляд - субтитрів модифіковано: {0}</PreviewLinesModifiedX>
+    <TimeCodes>Часові мітки</TimeCodes>
   </ImportText>
   <Interjections>
     <Title>Interjections</Title>
@@ -715,7 +715,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <NumberOfLines>#Lines</NumberOfLines>
     <StartTime>Start time</StartTime>
     <EndTime>End time</EndTime>
-    <FileName>File name</FileName>
+    <FileName>Назва файлу</FileName>
     <Join>Join</Join>
     <TotalNumberOfLinesX>Total number of lines: {0:#,###,###}</TotalNumberOfLinesX>
     <Note>Note: Files must already have correct time codes</Note>
@@ -730,25 +730,25 @@ Note: Do check free disk space.</WaveFileMalformed>
         <Reopen>&amp;Відкрити заново</Reopen>
         <Save>&amp;Зберегти</Save>
         <SaveAs>Зберегти &amp;як...</SaveAs>
-        <RestoreAutoBackup>Restore auto-backup...</RestoreAutoBackup>
+        <RestoreAutoBackup>Відновити автоматичну резервну копію...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha properties...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha properties...</SubStationAlphaProperties>
         <EbuProperties>EBU STL properties...</EbuProperties>
         <PacProperties>PAC properties...</PacProperties>
-        <OpenOriginal>Open original subtitle (translator mode)...</OpenOriginal>
-        <SaveOriginal>Save original subtitle</SaveOriginal>
-        <CloseOriginal>Close original subtitle</CloseOriginal>
-        <OpenContainingFolder>Open containing folder</OpenContainingFolder>
-        <Compare>&amp;Compare...</Compare>
-        <Statistics>Statisti&amp;cs...</Statistics>
-        <Plugins>Plugins...</Plugins>
+        <OpenOriginal>Відкрити оригінальні субтитри (режим перекладача)...</OpenOriginal>
+        <SaveOriginal>Зберегти оригінальні субтитри</SaveOriginal>
+        <CloseOriginal>Закрити оригінальні субтитри</CloseOriginal>
+        <OpenContainingFolder>Відкрити теку розташування</OpenContainingFolder>
+        <Compare>&amp;Порівняти...</Compare>
+        <Statistics>&amp;Статистика...</Statistics>
+        <Plugins>Плаґіни...</Plugins>
         <ImportOcrFromDvd>Import/OCR subtitle from VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) subtitle...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Import/OCR Blu-ray (.sup) subtitle file...</ImportBluRaySupFile>
         <ImportXSub>Import/OCR XSub from divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Import subtitle from Matroska (.mkv) file...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Import subtitle with manual chosen encoding...</ImportSubtitleWithManualChosenEncoding>
-        <ImportText>Import plain text...</ImportText>
+        <ImportText>Імпортувати простий текст...</ImportText>
         <ImportImages>Import images...</ImportImages>
         <ImportTimecodes>Import time codes...</ImportTimecodes>
         <Export>Експортувати</Export>
@@ -767,7 +767,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
         <ExportUltech130>Ultech caption...</ExportUltech130>
-        <ExportCustomTextFormat>Export custom text format...</ExportCustomTextFormat>
+        <ExportCustomTextFormat>Експортувати в користувацький текстовий формат...</ExportCustomTextFormat>
         <Exit>&amp;Вийти</Exit>
       </File>
       <Edit>
@@ -775,7 +775,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <Undo>Скасувати</Undo>
         <Redo>Повторити</Redo>
         <ShowUndoHistory>Показати історію</ShowUndoHistory>
-        <InsertUnicodeSymbol>Insert Unicode symbol</InsertUnicodeSymbol>
+        <InsertUnicodeSymbol>Вставити символ Unicode</InsertUnicodeSymbol>
         <InsertUnicodeControlCharacters>Insert Unicode control characters</InsertUnicodeControlCharacters>
         <InsertUnicodeControlCharactersLRM>Left-to-right mark (LRM)</InsertUnicodeControlCharactersLRM>
         <InsertUnicodeControlCharactersRLM>Right-to-left mark (RLM)</InsertUnicodeControlCharactersRLM>
@@ -783,17 +783,17 @@ Note: Do check free disk space.</WaveFileMalformed>
         <InsertUnicodeControlCharactersRLE>Start of right-to-left embedding (RLE)</InsertUnicodeControlCharactersRLE>
         <InsertUnicodeControlCharactersLRO>Start of left-to-right override (LRO)</InsertUnicodeControlCharactersLRO>
         <InsertUnicodeControlCharactersRLO>Start of right-to-left override (RLO)</InsertUnicodeControlCharactersRLO>
-        <Find>&amp;Find</Find>
-        <FindNext>Find &amp;next</FindNext>
-        <Replace>&amp;Replace</Replace>
-        <MultipleReplace>&amp;Multiple replace...</MultipleReplace>
-        <GoToSubtitleNumber>&amp;Go to subtitle number...</GoToSubtitleNumber>
-        <RightToLeftMode>Right-to-left mode</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Fix RTL via Unicode control characters (for selected lines)</FixTrlViaUnicodeControlCharacters>
-        <ReverseRightToLeftStartEnd>Reverse RTL start/end (for selected lines)</ReverseRightToLeftStartEnd>
+        <Find>&amp;Пошук</Find>
+        <FindNext>Шукати &amp;далі</FindNext>
+        <Replace>&amp;Заміна</Replace>
+        <MultipleReplace>&amp;Множинна заміна...</MultipleReplace>
+        <GoToSubtitleNumber>&amp;Перейти до субтитру номер...</GoToSubtitleNumber>
+        <RightToLeftMode>Режим справа наліво (RTL)</RightToLeftMode>
+        <FixTrlViaUnicodeControlCharacters>Виправити RTL за допомогою керувальних символів Unicode (обрані рядки)</FixTrlViaUnicodeControlCharacters>
+        <ReverseRightToLeftStartEnd>Обміняти місцями початок/кінець RTL (обрані рядки)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Show original text in audio/video previews</ShowOriginalTextInAudioAndVideoPreview>
-        <ModifySelection>Modify selection...</ModifySelection>
-        <InverseSelection>Invert selection</InverseSelection>
+        <ModifySelection>Змінити вибір...</ModifySelection>
+        <InverseSelection>Інвертувати вибір</InverseSelection>
       </Edit>
       <Tools>
         <Title>Інструменти</Title>
@@ -920,7 +920,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <Delete>Delete</Delete>
         <SplitLineAtCursorPosition>Split line at cursor position</SplitLineAtCursorPosition>
         <AutoDurationCurrentLine>Auto duration (current line)</AutoDurationCurrentLine>
-        <SelectAll>Select all</SelectAll>
+        <SelectAll>Вибрати всі</SelectAll>
         <InsertFirstLine>Insert line</InsertFirstLine>
         <InsertBefore>Insert before</InsertBefore>
         <InsertAfter>Insert after</InsertAfter>
@@ -1026,7 +1026,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <SaveChangesToUntitledOriginal>Зберегти зміни до безіменного оригіналу?</SaveChangesToUntitledOriginal>
     <SaveChangesToOriginalX>Зберегти зміни до оригіналу {0}?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Зберегти субтитри як...</SaveSubtitleAs>
-    <SaveOriginalSubtitleAs>Save original subtitle as...</SaveOriginalSubtitleAs>
+    <SaveOriginalSubtitleAs>Зберегти оригінальні субтитри як...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>No subtitle loaded</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Visual sync - selected lines</VisualSyncSelectedLines>
     <VisualSyncTitle>Візуальна синхронізація</VisualSyncTitle>
@@ -1168,7 +1168,7 @@ Continue?</SubtitleAppendPrompt>
     <DropFileXNotAccepted>Drop file '{0}' not accepted - file is too large</DropFileXNotAccepted>
     <DropOnlyOneFile>You can only drop one file</DropOnlyOneFile>
     <BeforeCreateAdjustLines>Before create/adjust lines</BeforeCreateAdjustLines>
-    <OpenAnsiSubtitle>Open subtitle...</OpenAnsiSubtitle>
+    <OpenAnsiSubtitle>Відкрити субтитри...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Before change casing</BeforeChangeCasing>
     <CasingCompleteMessageNoNames>Number of lines with casing changed: {0}/{1}</CasingCompleteMessageNoNames>
     <CasingCompleteMessageOnlyNames>Number of lines with names casing changed: {0}/{1}</CasingCompleteMessageOnlyNames>
@@ -1250,7 +1250,7 @@ Continue?</SubtitleAppendPrompt>
     <OpenOtherSubtitle>Open other subtitle</OpenOtherSubtitle>
     <BeforeToggleDialogDashes>Before toggle of dialog dashes</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Export plain text as</ExportPlainTextAs>
-    <TextFiles>Text files</TextFiles>
+    <TextFiles>Текстові файли</TextFiles>
     <SubtitleExported>Subtitle exported</SubtitleExported>
     <LineNumberXErrorReadingFromSourceLineY>Line {0} - error reading: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Line {0} - error reading time code: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
@@ -1333,44 +1333,44 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <MergedText>Merged text</MergedText>
   </MergeTextWithSameTimeCodes>
   <ModifySelection>
-    <Title>Modify selection</Title>
-    <Rule>Rule</Rule>
-    <CaseSensitive>Case sensitive</CaseSensitive>
-    <DoWithMatches>What to do with matches</DoWithMatches>
-    <MakeNewSelection>Make new selection</MakeNewSelection>
-    <AddToCurrentSelection>Add to current selection</AddToCurrentSelection>
-    <SubtractFromCurrentSelection>Subtract from current selection</SubtractFromCurrentSelection>
-    <IntersectWithCurrentSelection>Intersect with current selection</IntersectWithCurrentSelection>
-    <MatchingLinesX>Matching lines: {0}</MatchingLinesX>
-    <Contains>Contains</Contains>
-    <StartsWith>Starts with</StartsWith>
-    <EndsWith>Ends with</EndsWith>
-    <NoContains>Not contains</NoContains>
-    <RegEx>Regular expression</RegEx>
-    <UnequalLines>Odd-numbered lines</UnequalLines>
-    <EqualLines>Even-numbered lines</EqualLines>
+    <Title>Зміна вибору</Title>
+    <Rule>Правило</Rule>
+    <CaseSensitive>Чутливий до регістру</CaseSensitive>
+    <DoWithMatches>Що робити зі знайденим</DoWithMatches>
+    <MakeNewSelection>Зробити новий вибір</MakeNewSelection>
+    <AddToCurrentSelection>Додати до поточного вибору</AddToCurrentSelection>
+    <SubtractFromCurrentSelection>Відняти від поточного вибору</SubtractFromCurrentSelection>
+    <IntersectWithCurrentSelection>Утворити перетин з поточним вибором</IntersectWithCurrentSelection>
+    <MatchingLinesX>Знайдені рядки: {0}</MatchingLinesX>
+    <Contains>Містить</Contains>
+    <StartsWith>Починається з</StartsWith>
+    <EndsWith>Закінчується на</EndsWith>
+    <NoContains>Не містить</NoContains>
+    <RegEx>Регулярний вираз</RegEx>
+    <UnequalLines>Непарні рядки</UnequalLines>
+    <EqualLines>Парні рядки</EqualLines>
   </ModifySelection>
   <MultipleReplace>
-    <Title>Multiple replace</Title>
-    <FindWhat>Find what</FindWhat>
-    <ReplaceWith>Replace with</ReplaceWith>
-    <Normal>Normal</Normal>
-    <CaseSensitive>Case sensitive</CaseSensitive>
-    <RegularExpression>Regular expression</RegularExpression>
-    <LinesFoundX>Lines found: {0}</LinesFoundX>
-    <Delete>Delete</Delete>
-    <Add>&amp;Add</Add>
-    <Update>&amp;Update</Update>
-    <Enabled>Enabled</Enabled>
-    <SearchType>Search type</SearchType>
-    <RemoveAll>Remove all</RemoveAll>
-    <Import>Import...</Import>
-    <Export>Export...</Export>
-    <ImportRulesTitle>Import replace rule(s) from...</ImportRulesTitle>
-    <ExportRulesTitle>Export replace rule(s) to...</ExportRulesTitle>
-    <Rules>Find and replace rules</Rules>
-    <MoveToTop>Move to top</MoveToTop>
-    <MoveToBottom>Move to bottom</MoveToBottom>
+    <Title>Множинна заміна</Title>
+    <FindWhat>Знайти</FindWhat>
+    <ReplaceWith>Замінити на</ReplaceWith>
+    <Normal>Звичайний</Normal>
+    <CaseSensitive>Чутливий регістр</CaseSensitive>
+    <RegularExpression>Регулярний вираз</RegularExpression>
+    <LinesFoundX>Знайдено рядків: {0}</LinesFoundX>
+    <Delete>Видалити</Delete>
+    <Add>&amp;Додати</Add>
+    <Update>&amp;Оновити</Update>
+    <Enabled>Увімкнено</Enabled>
+    <SearchType>Тип пошуку</SearchType>
+    <RemoveAll>Видалити всі</RemoveAll>
+    <Import>Імпортувати...</Import>
+    <Export>Експортувати...</Export>
+    <ImportRulesTitle>Імпортувати правила заміна з...</ImportRulesTitle>
+    <ExportRulesTitle>Експортувати правила заміни до...</ExportRulesTitle>
+    <Rules>Правила пошуку і заміни</Rules>
+    <MoveToTop>Посунути на початок</MoveToTop>
+    <MoveToBottom>Посунути в кінець</MoveToBottom>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1402,25 +1402,25 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <ChooseFolder>Choose folder</ChooseFolder>
   </OpenVideoDvd>
   <PluginsGet>
-    <Title>Plugins</Title>
-    <InstalledPlugins>Installed plugins</InstalledPlugins>
-    <GetPlugins>Get plugins</GetPlugins>
-    <Description>Description</Description>
-    <Version>Version</Version>
-    <Date>Date</Date>
-    <Type>Type</Type>
-    <OpenPluginsFolder>Open 'Plugins' folder</OpenPluginsFolder>
-    <GetPluginsInfo1>Subtitle Edit plugins must be downloaded to the 'Plugins' folder</GetPluginsInfo1>
-    <GetPluginsInfo2>Choose plugin and click 'Download'</GetPluginsInfo2>
-    <PluginXDownloaded>Plugin {0} downloaded</PluginXDownloaded>
-    <Download>&amp;Download</Download>
-    <Remove>&amp;Remove</Remove>
-    <UpdateAllX>Update all ({0})</UpdateAllX>
-    <UnableToDownloadPluginListX>Unable to download plug list: {0}</UnableToDownloadPluginListX>
-    <NewVersionOfSubtitleEditRequired>Newer version of Subtitle Edit required!</NewVersionOfSubtitleEditRequired>
-    <UpdateAvailable>[Update available!]</UpdateAvailable>
-    <UpdateAll>Update all</UpdateAll>
-    <XPluginsUpdated>{0} plugin(s) updated</XPluginsUpdated>
+    <Title>Плаґіни</Title>
+    <InstalledPlugins>Встановлені плаґіни</InstalledPlugins>
+    <GetPlugins>Отримати плаґіни</GetPlugins>
+    <Description>Опис</Description>
+    <Version>Версія</Version>
+    <Date>Дата</Date>
+    <Type>Тип</Type>
+    <OpenPluginsFolder>Відкрити теку з плаґінами</OpenPluginsFolder>
+    <GetPluginsInfo1>Плаґіни до Subtitle Edit мають бути звантажені до теки "Plugins"</GetPluginsInfo1>
+    <GetPluginsInfo2>Оберіть плаґін та натисніть "Звантажити"</GetPluginsInfo2>
+    <PluginXDownloaded>Плаґін {0} звантажено</PluginXDownloaded>
+    <Download>&amp;Звантажити</Download>
+    <Remove>&amp;Видалити</Remove>
+    <UpdateAllX>Оновити усі ({0})</UpdateAllX>
+    <UnableToDownloadPluginListX>Не вдається звантажити список плаґінів: {0}</UnableToDownloadPluginListX>
+    <NewVersionOfSubtitleEditRequired>Потрібна новіша версія Subtitle Edit!</NewVersionOfSubtitleEditRequired>
+    <UpdateAvailable>[Доступне оновлення!]</UpdateAvailable>
+    <UpdateAll>Оновити усі</UpdateAll>
+    <XPluginsUpdated>{0} плаґінів оновлено</XPluginsUpdated>
   </PluginsGet>
   <RegularExpressionContextMenu>
     <WordBoundary>Word boundary (\b)</WordBoundary>
@@ -1456,23 +1456,23 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <EditInterjections>Edit...</EditInterjections>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
-    <Title>Replace</Title>
-    <FindWhat>Find what:</FindWhat>
-    <Normal>&amp;Normal</Normal>
-    <CaseSensitive>&amp;Case sensitive</CaseSensitive>
-    <RegularExpression>Regular e&amp;xpression</RegularExpression>
-    <ReplaceWith>Replace with</ReplaceWith>
-    <Find>&amp;Find</Find>
-    <Replace>&amp;Replace</Replace>
-    <ReplaceAll>Replace &amp;all</ReplaceAll>
+    <Title>Заміна</Title>
+    <FindWhat>Знайти:</FindWhat>
+    <Normal>&amp;Звичайний</Normal>
+    <CaseSensitive>&amp;Чутливий до регістру</CaseSensitive>
+    <RegularExpression>Регулярний &amp;вираз</RegularExpression>
+    <ReplaceWith>Замінити на</ReplaceWith>
+    <Find>&amp;Шукати</Find>
+    <Replace>&amp;Замінити</Replace>
+    <ReplaceAll>Замінити &amp;все</ReplaceAll>
   </ReplaceDialog>
   <RestoreAutoBackup>
-    <Title>Restore auto backup</Title>
-    <Information>Open auto-saved backup</Information>
-    <DateAndTime>Date and time</DateAndTime>
-    <FileName>File name</FileName>
-    <Extension>Extension</Extension>
-    <NoBackedUpFilesFound>No backup files found!</NoBackedUpFilesFound>
+    <Title>Відновлення автоматичної резервної копії</Title>
+    <Information>Відкрити автоматичну резервну копію</Information>
+    <DateAndTime>Дата і час</DateAndTime>
+    <FileName>Назва файлу</FileName>
+    <Extension>Розширення</Extension>
+    <NoBackedUpFilesFound>Не знайдено жодної автоматичної резервної копії!</NoBackedUpFilesFound>
   </RestoreAutoBackup>
   <SeekSilence>
     <Title>Seek silence</Title>
@@ -1755,13 +1755,13 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <SelectedLinesAndForward>Selected line(s) and forward</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
-    <Title>History (for undo)</Title>
-    <SelectRollbackPoint>Select time/description for rollback</SelectRollbackPoint>
-    <Time>Time</Time>
-    <Description>Description</Description>
-    <CompareHistoryItems>Compare history items</CompareHistoryItems>
-    <CompareWithCurrent>Compare with current</CompareWithCurrent>
-    <Rollback>Rollback</Rollback>
+    <Title>Історія (для відкочувань)</Title>
+    <SelectRollbackPoint>Оберіть час/опис для відкочування</SelectRollbackPoint>
+    <Time>Час</Time>
+    <Description>Опис</Description>
+    <CompareHistoryItems>Порівняти елементи історії</CompareHistoryItems>
+    <CompareWithCurrent>Порівняти з поточним</CompareWithCurrent>
+    <Rollback>Відкотити</Rollback>
   </ShowHistory>
   <SpellCheck>
     <Title>Перевірка орфографії</Title>
@@ -1801,7 +1801,7 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <NumberOfLinesX>Number of lines: {0:#,###}</NumberOfLinesX>
     <NumberOfCharactersX>Number of characters: {0:#,###,###}</NumberOfCharactersX>
     <Output>Output</Output>
-    <FileName>File name</FileName>
+    <FileName>Назва файлу</FileName>
     <OutputFolder>Output folder</OutputFolder>
     <DoSplit>Split</DoSplit>
     <Basic>Basic</Basic>
@@ -1837,36 +1837,36 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <PleaseEnterAValidNumber>Ups, please enter a number</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <Statistics>
-    <Title>Statistics</Title>
-    <TitleWithFileName>Statistics - {0}</TitleWithFileName>
-    <GeneralStatistics>General statistics</GeneralStatistics>
-    <MostUsed>Most used...</MostUsed>
-    <MostUsedLines>Most used lines</MostUsedLines>
-    <MostUsedWords>Most used words</MostUsedWords>
-    <NothingFound>Nothing found</NothingFound>
-    <NumberOfLinesX>Number of subtitle lines: {0:#,###}</NumberOfLinesX>
-    <LengthInFormatXinCharactersY>Number of characters as {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
-    <NumberOfCharactersInTextOnly>Number of characters in text only: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <Title>Статистика</Title>
+    <TitleWithFileName>Статистика - {0}</TitleWithFileName>
+    <GeneralStatistics>Загальна статистика</GeneralStatistics>
+    <MostUsed>Найуживаніше...</MostUsed>
+    <MostUsedLines>Найуживаніші рядки</MostUsedLines>
+    <MostUsedWords>Найуживаніші слова</MostUsedWords>
+    <NothingFound>Нічого не знайдено</NothingFound>
+    <NumberOfLinesX>Кількість субтитрів: {0:#,###}</NumberOfLinesX>
+    <LengthInFormatXinCharactersY>Кількість символів у вигляді {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
+    <NumberOfCharactersInTextOnly>Кількість символів суто тексту: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Total characters/second: {0:0.0} seconds</TotalCharsPerSecond>
     <NumberOfItalicTags>Number of italic tags: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Number of bold tags: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Number of underline tags: {0}</NumberOfUnderlineTags>
     <NumberOfFontTags>Number of font tags: {0}</NumberOfFontTags>
     <NumberOfAlignmentTags>Number of alignment tags: {0}</NumberOfAlignmentTags>
-    <LineLengthMinimum>Subtitle length - minimum: {0}</LineLengthMinimum>
-    <LineLengthMaximum>Subtitle length - maximum: {0}</LineLengthMaximum>
-    <LineLengthAverage>Subtitle length - average: {0}</LineLengthAverage>
-    <LinesPerSubtitleAverage>Subtitle, number of lines - average: {0:0.0}</LinesPerSubtitleAverage>
-    <SingleLineLengthMinimum>Single line length - minimum: {0}</SingleLineLengthMinimum>
-    <SingleLineLengthMaximum>Single line length - maximum: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Single line length - average: {0}</SingleLineLengthAverage>
-    <DurationMinimum>Duration - minimum: {0:0.000} seconds</DurationMinimum>
-    <DurationMaximum>Duration - maximum: {0:0.000} seconds</DurationMaximum>
-    <DurationAverage>Duration - average: {0:0.000} seconds</DurationAverage>
-    <CharactersPerSecondMinimum>Characters/sec - minimum: {0:0.000}</CharactersPerSecondMinimum>
-    <CharactersPerSecondMaximum>Characters/sec - maximum: {0:0.000}</CharactersPerSecondMaximum>
-    <CharactersPerSecondAverage>Characters/sec - average: {0:0.000}</CharactersPerSecondAverage>
-    <Export>Export...</Export>
+    <LineLengthMinimum>Довжина субтитру - мінімальна: {0}</LineLengthMinimum>
+    <LineLengthMaximum>Довжина субтитру - максимальна: {0}</LineLengthMaximum>
+    <LineLengthAverage>Довжина субтитру - середня: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Кількість рядків у субтитрі - середня: {0:0.0}</LinesPerSubtitleAverage>
+    <SingleLineLengthMinimum>Довжина одного рядка - мінімальна: {0}</SingleLineLengthMinimum>
+    <SingleLineLengthMaximum>Довжина одного рядка - максимальна: {0}</SingleLineLengthMaximum>
+    <SingleLineLengthAverage>Довжина одного рядка - середня: {0}</SingleLineLengthAverage>
+    <DurationMinimum>Тривалість - мінімум: {0:0.000} секунд</DurationMinimum>
+    <DurationMaximum>Тривалість - максимум: {0:0.000} секунд</DurationMaximum>
+    <DurationAverage>Тривалість - середня: {0:0.000} секунд</DurationAverage>
+    <CharactersPerSecondMinimum>Символів/секунду - мінімум: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Символів/секунду - максимум: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Символів/секунду - середньо: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Експортувати...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha properties</Title>
