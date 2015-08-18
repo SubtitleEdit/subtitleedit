@@ -649,22 +649,24 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (splitPos < 0)
             {
+                const string expectedChars = @".!?0123456789";
+                const string expectedPunct = @".!?";
                 for (int j = 0; j < 15; j++)
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
                     {
-                        if (@".!?".Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && CanBreak(s, mid + j + 1, language))
+                        if (expectedPunct.Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && CanBreak(s, mid + j + 1, language))
                         {
                             splitPos = mid + j + 1;
-                            if (@".!?0123456789".Contains(s[splitPos]))
+                            if (expectedChars.Contains(s[splitPos]))
                             { // do not break double/tripple end lines like "!!!" or "..."
                                 splitPos++;
-                                if (@".!?0123456789".Contains(s[mid + j + 1]))
+                                if (expectedChars.Contains(s[mid + j + 1]))
                                     splitPos++;
                             }
                             break;
                         }
-                        if (@".!?".Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && CanBreak(s, mid - j, language))
+                        if (expectedPunct.Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && CanBreak(s, mid - j, language))
                         {
                             splitPos = mid - j;
                             splitPos++;
