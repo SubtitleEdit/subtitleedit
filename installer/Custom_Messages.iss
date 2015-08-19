@@ -501,6 +501,21 @@ tr.tsk_ResetSettings=Reset Subtitle Edit's settings
 tr.types_custom=Custom installation
 tr.types_default=Default installation
 
+; Ukrainian
+uk.comp_translations=Файли локалізації
+uk.msg_AskToDownNET=Subtitle Edit потребує для своєї роботи .NET Framework 4.0. Будь ласка, звантажте та встановіть .NET Framework і запустіть інсталяцію ще раз.%n%nБажаєте звантажити .NET Framework 4.0 зараз?
+uk.msg_DeleteSettings=Бажаєте також видалити налаштування Subtitle Edit та будь-які зміни, які ви зробили у словниках?%n%nЯкщо ви плануєте перевстановлювати Subtitle Edit, вам не потрібно їх видаляти.
+uk.msg_OptimizingPerformance=Оптимізація швидкодії...
+uk.run_VisitWebsite=Відвідати веб-сторінку Subtitle Edit
+uk.sm_com_Changelog=Журнал версій Subtitle Edit
+uk.tsk_AllUsers=Для усіх користувачів
+uk.tsk_CurrentUser=Тільки для поточного користувача
+uk.tsk_Other=Інше:
+uk.tsk_ResetDictionaries=Скинути словники та видалити усі користувацькі імена
+uk.tsk_ResetSettings=Скинути налаштування Subtitle Edit
+uk.types_custom=Налаштовуване встановлення
+uk.types_default=Типове встановлення
+
 ; Vietnamese
 vi.comp_translations=Translations
 vi.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
