@@ -166,6 +166,13 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            // Break if FROM is same as TO
+            if (comboBoxFrom.SelectedIndex == comboBoxTo.SelectedIndex)
+            {
+                MessageBox.Show(string.Format("Cannot translate from: {0} to: {0}", comboBoxFrom.SelectedItem));
+                return;
+            }
+
             // empty all texts
             foreach (Paragraph p in _translatedSubtitle.Paragraphs)
                 p.Text = string.Empty;
@@ -304,7 +311,7 @@ namespace Nikse.SubtitleEdit.Forms
             string languagePair = (comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|" + (comboBoxTo.SelectedItem as ComboBoxItem).Value;
             bool romanji = languagePair.EndsWith("|romanji", StringComparison.InvariantCulture);
             if (romanji)
-                languagePair = (comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|ja" ;
+                languagePair = (comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|ja";
 
             input = PreTranslate(input.TrimEnd('|').Trim());
 
