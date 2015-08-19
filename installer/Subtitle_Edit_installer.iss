@@ -440,6 +440,8 @@ begin
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.dic'), False, True, False);
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.aff'), False, True, False);
   RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries'));
+  DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Plugins\*.*'), False, True, False);
+  RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Plugins'));
 end;
 
 
@@ -502,6 +504,7 @@ begin
       RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\VobSub\English'));
       RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\VobSub'));
       RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\WaveForms'));
+      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Plugins'));
       RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit'));
 
     end;
