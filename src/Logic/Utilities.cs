@@ -1189,11 +1189,22 @@ namespace Nikse.SubtitleEdit.Logic
         public static readonly string[] AutoDetectWordsRomanian = { "Какво", "тук", "може", "Как", "Ваше", "какво" };
         public static readonly string[] AutoDetectWordsArabic = { "Какво", "тук", "може", "Как", "Ваше", "какво" };
         public static readonly string[] AutoDetectWordsHebrew = { "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב" };
-        public static readonly string[] AutoDetectWordsSerbian = { "sam", "što", "öto", "äto", "ovo", "vas", "nije", "Šta", "ovde", "za" };
         public static readonly string[] AutoDetectWordsVietnamese = { "không", "tôi", "anh", "đó", "Tôi", "ông" };
         public static readonly string[] AutoDetectWordsHungarian = { "hogy", "lesz", "tudom", "vagy", "mondtam", "még" };
-        public static readonly string[] AutoDetectWordsCroatian = { "sam", "öto", "äto", "ovo", "vas", "što" };
         public static readonly string[] AutoDetectWordsTurkish = { "için", "Tamam", "Hayır", "benim", "daha", "deðil", "önce", "lazým", "benim", "çalýþýyor", "burada", "efendim" };
+        public static readonly string[] AutoDetectWordsCroatianAndSerbian = { "sam", "ali", "nije", "samo", "ovo", "kako", "dobro", "sve", "tako", "će", "mogu", "ću", "zašto", "nešto", "za" };
+        public static readonly string[] AutoDetectWordsCroatian = { "što", "ovdje", "gdje", "kamo", "tko", "prije", "uvijek", "vrijeme", "vidjeti", "netko",
+                                                                    "vidio", "nitko", "bok", "lijepo", "oprosti", "htio", "mjesto", "oprostite", "čovjek", "dolje",
+                                                                    "čovječe", "dvije", "dijete", "dio", "poslije", "događa", "vjerovati", "vjerojatno", "vjerujem", "točno",
+                                                                    "razumijem", "vidjela", "cijeli", "svijet", "obitelj", "volio", "sretan", "dovraga", "svijetu", "htjela",
+                                                                    "vidjeli", "negdje", "želio", "ponovno", "djevojka", "umrijeti", "čovjeka", "mjesta", "djeca", "osjećam",
+                                                                    "uopće", "djecu", "naprijed", "obitelji", "doista", "mjestu", "lijepa", "također", "riječ", "tijelo" };
+        public static readonly string[] AutoDetectWordsSerbian = { "šta", "ovde", "gde", "ko", "pre", "uvek", "vreme", "videti", "neko",
+                                                                   "video", "niko", "ćao", "lepo", "izvini", "hteo", "mesto", "izvinite", "čovek", "dole",
+                                                                   "čoveče", "dve", "dete", "deo", "posle", "dešava", "verovati", "verovatno", "verujem", "tačno",
+                                                                   "razumem", "videla", "ceo", "svet", "porodica", "voleo", "srećan", "dođavola", "svetu", "htela",
+                                                                   "videli", "negde", "želeo", "ponovo", "devojka", "umreti", "čoveka", "mesta", "deca", "osećam",
+                                                                   "uopšte", "decu", "napred", "porodicu", "zaista", "mestu", "lepa", "takođe", "reč", "telo" };
 
         public static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
@@ -1301,15 +1312,11 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "he"; // Hebrew
 
-            count = GetCount(text, AutoDetectWordsSerbian);
+            count = GetCount(text, AutoDetectWordsCroatianAndSerbian);
             if (count > bestCount)
             {
-                int croatianCount = GetCount(text, "sigurnošću", "ubojstvo", "službeni", "nedjelja", "izražava", "dogodilo", "svjetlo", "sigurno", "shvaćam",
-                                                   "obitelj", "vijest", "svijet", "sjećam", "lijepa", "dijete", "cijeli", "bijeli", "smije", "smije", "ured",
-                                                   "otok", "opći", "križ", "htio", "gdje", "auto", "sat", "kći");
-                int serbianCount = GetCount(text, "ispoljava", "porodica", "ponaosob", "bukvalno", "ubistvo", "ubediti", "suštini", "komitet", "dejstvo",
-                                                  "uopšte", "štampa", "ostrvo", "naučni", "kiriju", "kćerke", "nauka", "ivica", "čovek", "lepa", "krst",
-                                                  "kola", "hteo", "drug", "dete", "celi", "sme", "sem", "gde", "čas");
+                int croatianCount = GetCount(text, AutoDetectWordsCroatian);
+                int serbianCount = GetCount(text, AutoDetectWordsSerbian);
                 if (croatianCount > serbianCount)
                     return "hr"; // Croatian
 
@@ -1408,12 +1415,18 @@ namespace Nikse.SubtitleEdit.Logic
 
             bool containsEnGb = false;
             bool containsEnUs = false;
+            bool containsHrHr = false;
+            bool containsSrLatn = false;
             foreach (string name in dictionaryNames)
             {
                 if (name.Contains("[en_GB]"))
                     containsEnGb = true;
                 if (name.Contains("[en_US]"))
                     containsEnUs = true;
+                if (name.Contains("[hr_HR]"))
+                    containsHrHr = true;
+                if (name.Contains("[sr-Latn]"))
+                    containsSrLatn = true;
             }
 
             foreach (string name in dictionaryNames)
@@ -1453,18 +1466,13 @@ namespace Nikse.SubtitleEdit.Logic
                         count = GetCount(text, AutoDetectWordsEnglish);
                         if (count > bestCount)
                         {
+                            languageName = shortName;
                             if (containsEnGb)
                             {
                                 int usCount = GetCount(text, "color", "flavor", "honor", "humor", "neighbor", "honor");
                                 int gbCount = GetCount(text, "colour", "flavour", "honour", "humour", "neighbour", "honour");
-                                if (usCount >= gbCount)
-                                    languageName = "en_US";
-                                else
+                                if (gbCount > usCount)
                                     languageName = "en_GB";
-                            }
-                            else
-                            {
-                                languageName = shortName;
                             }
                         }
                         break;
@@ -1472,14 +1480,13 @@ namespace Nikse.SubtitleEdit.Logic
                         count = GetCount(text, "we", "are", "and", "you", "your", "what");
                         if (count > bestCount)
                         {
+                            languageName = shortName;
                             if (containsEnUs)
                             {
                                 int usCount = GetCount(text, "color", "flavor", "honor", "humor", "neighbor", "honor");
                                 int gbCount = GetCount(text, "colour", "flavour", "honour", "humour", "neighbour", "honour");
-                                if (usCount >= gbCount)
+                                if (gbCount < usCount)
                                     languageName = "en_US";
-                                else
-                                    languageName = "en_GB";
                             }
                         }
                         break;
@@ -1559,9 +1566,32 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         break;
                     case "hr_HR": // Croatian
-                        count = GetCount(text, AutoDetectWordsCroatian);
+                        count = GetCount(text, AutoDetectWordsCroatianAndSerbian);
                         if (count > bestCount)
+                        {
                             languageName = shortName;
+                            if (containsSrLatn)
+                            {
+                                int croatianCount = GetCount(text, AutoDetectWordsCroatian);
+                                int serbianCount = GetCount(text, AutoDetectWordsSerbian);
+                                if (serbianCount > croatianCount)
+                                    languageName = "sr-Latn";
+                            }
+                        }
+                        break;
+                    case "sr-Latn": // Serbian (Latin)
+                        count = GetCount(text, AutoDetectWordsCroatianAndSerbian);
+                        if (count > bestCount)
+                        {
+                            languageName = shortName;
+                            if (containsHrHr)
+                            {
+                                int croatianCount = GetCount(text, AutoDetectWordsCroatian);
+                                int serbianCount = GetCount(text, AutoDetectWordsSerbian);
+                                if (serbianCount < croatianCount)
+                                    languageName = "hr_HR";
+                            }
+                        }
                         break;
                     case "pt_PT": // Portuguese
                         count = GetCount(text, AutoDetectWordsPortuguese);
