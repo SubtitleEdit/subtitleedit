@@ -1,0 +1,2118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Ukrainian">
+  <General>
+    <Title>Subtitle Edit</Title>
+    <Version>3.4.8</Version>
+    <TranslatedBy>Переклад: Максим Кобєлєв</TranslatedBy>
+    <CultureName>uk-UA</CultureName>
+    <HelpFile></HelpFile>
+    <Ok>&amp;Гаразд</Ok>
+    <Cancel>&amp;Скасувати</Cancel>
+    <Apply>Застосувати</Apply>
+    <None>None</None>
+    <All>All</All>
+    <Preview>Поп. перегляд</Preview>
+    <SubtitleFiles>Файли субтитрів</SubtitleFiles>
+    <AllFiles>Усі файли</AllFiles>
+    <VideoFiles>Відеофайли</VideoFiles>
+    <AudioFiles>Аудіофайли</AudioFiles>
+    <OpenSubtitle>Відкрити файл субтитрів...</OpenSubtitle>
+    <OpenVideoFile>Відкрити відеофайл...</OpenVideoFile>
+    <OpenVideoFileTitle>Відкрити відеофайл...</OpenVideoFileTitle>
+    <NoVideoLoaded>Відео не завантажено</NoVideoLoaded>
+    <VideoInformation>Інформація про відео</VideoInformation>
+    <PositionX>Position / duration: {0}</PositionX>
+    <StartTime>Початок</StartTime>
+    <EndTime>Кінець</EndTime>
+    <Duration>Тривалість</Duration>
+    <NumberSymbol>№</NumberSymbol>
+    <Number>Number</Number>
+    <Text>Текст</Text>
+    <HourMinutesSecondsMilliseconds>Hour:min:sec:ms</HourMinutesSecondsMilliseconds>
+    <Bold>Жирний</Bold>
+    <Italic>Курсив</Italic>
+    <Underline>Підкреслений</Underline>
+    <Visible>Visible</Visible>
+    <FrameRate>Frame rate</FrameRate>
+    <Name>Назва</Name>
+    <FileNameXAndSize>Ім'я файлу: {0} ({1})</FileNameXAndSize>
+    <ResolutionX>Роздільна здатність: {0}</ResolutionX>
+    <FrameRateX>Частота кадрів: {0:0.0###}</FrameRateX>
+    <TotalFramesX>Усього кадрів: {0:#,##0.##}</TotalFramesX>
+    <VideoEncodingX>Відео кодування: {0}</VideoEncodingX>
+    <SingleLineLengths>Порядкова́ довжина:</SingleLineLengths>
+    <TotalLengthX>Загальна довжина: {0}</TotalLengthX>
+    <TotalLengthXSplitLine>Заг. довжина: {0} (розбийте рядок!)</TotalLengthXSplitLine>
+    <SplitLine>Split line!</SplitLine>
+    <NotAvailable>N/A</NotAvailable>
+    <OverlapPreviousLineX>Накладка на поп. рядок ({0:#,##0.###})</OverlapPreviousLineX>
+    <OverlapX>Накладка ({0:#,##0.###})</OverlapX>
+    <OverlapNextX>Overlap next ({0:#,##0.###})</OverlapNextX>
+    <Negative>Negative</Negative>
+    <RegularExpressionIsNotValid>Regular expression is not valid!</RegularExpressionIsNotValid>
+    <SubtitleSaved>Subtitle saved</SubtitleSaved>
+    <CurrentSubtitle>Current subtitle</CurrentSubtitle>
+    <OriginalText>Оригінальний текст</OriginalText>
+    <OpenOriginalSubtitleFile>Open original subtitle file...</OpenOriginalSubtitleFile>
+    <PleaseWait>Please wait...</PleaseWait>
+    <SessionKey>Ключ сесії</SessionKey>
+    <UserName>Ім'я користувача</UserName>
+    <UserNameAlreadyInUse>Ім'я користувача вже використовується</UserNameAlreadyInUse>
+    <WebServiceUrl>URL веб-сервісу</WebServiceUrl>
+    <IP>IP</IP>
+    <VideoWindowTitle>Video - {0}</VideoWindowTitle>
+    <AudioWindowTitle>Audio - {0}</AudioWindowTitle>
+    <ControlsWindowTitle>Controls - {0}</ControlsWindowTitle>
+    <Advanced>Advanced</Advanced>
+    <Style>Style</Style>
+    <StyleLanguage>Style / Language</StyleLanguage>
+    <Character>Character</Character>
+    <Class>Class</Class>
+    <GeneralText>General</GeneralText>
+    <LineNumber>№ субтитру</LineNumber>
+    <Before>До</Before>
+    <After>Після</After>
+    <Size>Розмір</Size>
+  </General>
+  <About>
+    <Title>Про програму Subtitle Edit</Title>
+    <AboutText1>Subtitle Edit is Free Software under the GNU Public License.
+You may distribute, modify and use it freely.
+
+C# source code is available on https://github.com/SubtitleEdit/subtitleedit
+
+Visit www.nikse.dk for the latest version.
+
+Suggestions are very welcome.
+
+Email: mailto:nikse.dk@gmail.com</AboutText1>
+  </About>
+  <AddToNames>
+    <Title>Додати до списку імен/шумів і т. п.</Title>
+    <Description>Додати до списку імен (чутливий до регістру)</Description>
+  </AddToNames>
+  <AddToOcrReplaceList>
+    <Title>Add to OCR replace list</Title>
+    <Description>Add pair to OCR replace list (case sensitive)</Description>
+  </AddToOcrReplaceList>
+  <AddToUserDictionary>
+    <Title>Додати до користувацького словника</Title>
+    <Description>Add word to user dictionary (not case sensitive)</Description>
+  </AddToUserDictionary>
+  <AddWaveform>
+    <Title>Generate waveform data</Title>
+    <SourceVideoFile>Source video file:</SourceVideoFile>
+    <GenerateWaveformData>Generate waveform data</GenerateWaveformData>
+    <PleaseWait>This may take a few minutes - please wait</PleaseWait>
+    <VlcMediaPlayerNotFoundTitle>VLC media player not found</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>Subtitle Edit needs VLC media player 1.1.x or newer for extracting audio data.</VlcMediaPlayerNotFound>
+    <GoToVlcMediaPlayerHomePage>Do you want to go to the VLC media player home page?</GoToVlcMediaPlayerHomePage>
+    <GeneratingPeakFile>Generating peak file...</GeneratingPeakFile>
+    <GeneratingSpectrogram>Generating spectrogram...</GeneratingSpectrogram>
+    <ExtractingSeconds>Extracting audio: {0:0.0} seconds</ExtractingSeconds>
+    <ExtractingMinutes>Extracting audio: {0}.{1:00} minutes</ExtractingMinutes>
+    <WaveFileNotFound>Could not find extracted wave file!
+This feature requires VLC media player 1.1.x or newer ({0}-bit).
+
+Command line: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} was unable to extract audio data to wave file!
+
+Command line: {1} {2}
+
+Note: Do check free disk space.</WaveFileMalformed>
+    <LowDiskSpace>LOW DISK SPACE!</LowDiskSpace>
+    <FreeDiskSpace>{0} free</FreeDiskSpace>
+  </AddWaveform>
+  <AddWaveformBatch>
+    <Title>Batch generate waveform data</Title>
+    <ExtractingAudio>Extracting audio...</ExtractingAudio>
+    <Calculating>Calculating...</Calculating>
+    <Done>Done</Done>
+    <Error>Error</Error>
+  </AddWaveformBatch>
+  <AdjustDisplayDuration>
+    <Title>Зміна тривалостей</Title>
+    <AdjustVia>Змінити</AdjustVia>
+    <Seconds>Секунди</Seconds>
+    <Percent>Відсотки</Percent>
+    <Recalculate>Перерахувати</Recalculate>
+    <AddSeconds>Додати секунди</AddSeconds>
+    <SetAsPercent>Відсоток від поточної тривалості</SetAsPercent>
+    <Note>Зверніть увагу: Тривалість субтитру не буде накладатися на початок наступного</Note>
+    <PleaseSelectAValueFromTheDropDownList>Please select a value from the dropdown list</PleaseSelectAValueFromTheDropDownList>
+    <PleaseChoose> - Оберіть - </PleaseChoose>
+  </AdjustDisplayDuration>
+  <ApplyDurationLimits>
+    <Title>Застосування обмеження тривалостей</Title>
+    <FixesAvailable>Доступні виправлення: {0}</FixesAvailable>
+    <UnableToFix>Неможливо виправити: {0}</UnableToFix>
+  </ApplyDurationLimits>
+  <AutoBreakUnbreakLines>
+    <TitleAutoBreak>Auto balance selected lines</TitleAutoBreak>
+    <TitleUnbreak>Remove line breaks from selected lines</TitleUnbreak>
+    <LinesFoundX>Lines found: {0}</LinesFoundX>
+    <OnlyBreakLinesLongerThan>Only break lines longer than</OnlyBreakLinesLongerThan>
+    <OnlyUnbreakLinesLongerThan>Only un-break lines longer than</OnlyUnbreakLinesLongerThan>
+  </AutoBreakUnbreakLines>
+  <BatchConvert>
+    <Title>Batch convert</Title>
+    <Input>Input</Input>
+    <InputDescription>Input files (browse or drag-n-drop)</InputDescription>
+    <Status>Status</Status>
+    <Output>Output</Output>
+    <ChooseOutputFolder>Choose output folder</ChooseOutputFolder>
+    <OverwriteExistingFiles>Overwrite existing files</OverwriteExistingFiles>
+    <Style>Style...</Style>
+    <ConvertOptions>Convert options</ConvertOptions>
+    <RemoveFormatting>Remove formatting tags</RemoveFormatting>
+    <RemoveTextForHI>Remove text for HI</RemoveTextForHI>
+    <OverwriteOriginalFiles>Overwrite original files (new extension if format is changed)</OverwriteOriginalFiles>
+    <RedoCasing>Redo casing</RedoCasing>
+    <Convert>Convert</Convert>
+    <NothingToConvert>Nothing to convert!</NothingToConvert>
+    <PleaseChooseOutputFolder>Please choose output folder</PleaseChooseOutputFolder>
+    <NotConverted>Failed</NotConverted>
+    <Converted>Converted</Converted>
+    <ConvertedX>Converted ({0})</ConvertedX>
+    <Settings>Settings</Settings>
+    <SplitLongLines>Split long lines</SplitLongLines>
+    <AutoBalance>Auto balance lines</AutoBalance>
+    <ScanFolder>Scan folder...</ScanFolder>
+    <ScanningFolder>Scanning {0} and subfolders for subtitle files...</ScanningFolder>
+    <Recursive>Include sub folders</Recursive>
+    <SetMinMsBetweenSubtitles>Set min. milliseconds between subtitles</SetMinMsBetweenSubtitles>
+    <PlainText>Plain text</PlainText>
+    <Ocr>OCR...</Ocr>
+    <Filter>Filter</Filter>
+    <FilterSkipped>Skipped by filter</FilterSkipped>
+    <FilterSrtNoUtf8BOM>SubRip (.srt) files without UTF-8 BOM header</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>More than two lines in one subtitle</FilterMoreThanTwoLines>
+    <FilterContains>Text contains...</FilterContains>
+    <FixCommonErrorsErrorX>Fix common errors: {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>Multiple replace: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>
+  </BatchConvert>
+  <Beamer>
+    <Title>Beamer</Title>
+  </Beamer>
+  <ChangeCasing>
+    <Title>Зміна регістру</Title>
+    <ChangeCasingTo>Змінити регістр на</ChangeCasingTo>
+    <NormalCasing>Нормальний регістр. Речення починаються з великих літер.</NormalCasing>
+    <FixNamesCasing>Виправити регістри імен (за допомогою Dictionaries\NamesEtc.xml)</FixNamesCasing>
+    <FixOnlyNamesCasing>Виправити тільки регістри імен (за допомогою Dictionaries\NamesEtc.xml)</FixOnlyNamesCasing>
+    <OnlyChangeAllUppercaseLines>Only change all upper case lines.</OnlyChangeAllUppercaseLines>
+    <AllUppercase>ВСІ ЛІТЕРИ - ВЕЛИКІ</AllUppercase>
+    <AllLowercase>всі літери - маленькі</AllLowercase>
+  </ChangeCasing>
+  <ChangeCasingNames>
+    <Title>Change casing - Names</Title>
+    <NamesFoundInSubtitleX>Names found in subtitle: {0}</NamesFoundInSubtitleX>
+    <Enabled>Enabled</Enabled>
+    <Name>Name</Name>
+    <LinesFoundX>Lines found: {0}</LinesFoundX>
+  </ChangeCasingNames>
+  <ChangeFrameRate>
+    <Title>Змінити частоту кадрів</Title>
+    <ConvertFrameRateOfSubtitle>Конвертувати частоту кадрів в субтитрах</ConvertFrameRateOfSubtitle>
+    <FromFrameRate>З</FromFrameRate>
+    <ToFrameRate>До</ToFrameRate>
+    <FrameRateNotCorrect>Частота кадрів неправильна</FrameRateNotCorrect>
+    <FrameRateNotChanged>Частота кадрів та ж, що й була - нема що ковертувати</FrameRateNotChanged>
+  </ChangeFrameRate>
+  <ChangeSpeedInPercent>
+    <Title>Adjust speed in percent</Title>
+    <Info>Change speed of subtitle in percent</Info>
+    <Custom>Custom</Custom>
+    <ToDropFrame>To drop frame</ToDropFrame>
+    <FromDropFrame>From drop frame</FromDropFrame>
+  </ChangeSpeedInPercent>
+  <CheckForUpdates>
+    <Title>Перевірка на наявність оновлень</Title>
+    <CheckingForUpdates>Перевірка на наявність оновлень...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>Не вдалося перевірити на наявність оновлень: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesNoneAvailable>Ви користуєтеся найсвіжішою версією Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNewVersion>Доступна нова версія!</CheckingForUpdatesNewVersion>
+    <InstallUpdate>Звантажити оновлення</InstallUpdate>
+    <NoUpdates>Не оновлювати</NoUpdates>
+  </CheckForUpdates>
+  <ChooseAudioTrack>
+    <Title>Choose audio track</Title>
+  </ChooseAudioTrack>
+  <ChooseEncoding>
+    <Title>Choose encoding</Title>
+    <CodePage>Code page</CodePage>
+    <DisplayName>Display name</DisplayName>
+    <PleaseSelectAnEncoding>Please select an encoding</PleaseSelectAnEncoding>
+  </ChooseEncoding>
+  <ChooseLanguage>
+    <Title>Змінити мову</Title>
+    <Language>Мова</Language>
+  </ChooseLanguage>
+  <ColorChooser>
+    <Title>Choose color</Title>
+    <Red>Red</Red>
+    <Green>Green</Green>
+    <Blue>Blue</Blue>
+    <Alpha>Alpha</Alpha>
+  </ColorChooser>
+  <ColumnPaste>
+    <Title>Column paste</Title>
+    <ChooseColumn>Choose column</ChooseColumn>
+    <OverwriteShiftCellsDown>Overwrite/Shift cells down</OverwriteShiftCellsDown>
+    <Overwrite>Overwrite</Overwrite>
+    <ShiftCellsDown>Shift cells down</ShiftCellsDown>
+    <TimeCodesOnly>Time codes only</TimeCodesOnly>
+    <TextOnly>Text only</TextOnly>
+    <OriginalTextOnly>Original text only</OriginalTextOnly>
+  </ColumnPaste>
+  <CompareSubtitles>
+    <Title>Порівняння субтитрів</Title>
+    <PreviousDifference>&amp;Попередня відмінність</PreviousDifference>
+    <NextDifference>&amp;Наступна відмінність</NextDifference>
+    <SubtitlesNotAlike>Субтитри не мають подібностей</SubtitlesNotAlike>
+    <XNumberOfDifference>Кількість відмінностей: {0}</XNumberOfDifference>
+    <XNumberOfDifferenceAndPercentChanged>Кількість відмінностей: {0} ({1}% слів змінено)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Кількість відмінностей: {0} ({1}% літер змінено)</XNumberOfDifferenceAndPercentLettersChanged>
+    <ShowOnlyDifferences>Показувати тільки відмінності</ShowOnlyDifferences>
+    <IgnoreLineBreaks>Ігнорувати розриви рядків</IgnoreLineBreaks>
+    <OnlyLookForDifferencesInText>Шукати виключно різницю в тексті</OnlyLookForDifferencesInText>
+    <CannotCompareWithImageBasedSubtitles>Cannot compare with image based subtitles</CannotCompareWithImageBasedSubtitles>
+  </CompareSubtitles>
+  <DCinemaProperties>
+    <Title>D-Cinema properties (interop)</Title>
+    <TitleSmpte>D-Cinema properties (SMPTE)</TitleSmpte>
+    <SubtitleId>Subtitle ID</SubtitleId>
+    <GenerateId>Generate ID</GenerateId>
+    <MovieTitle>Movie title</MovieTitle>
+    <ReelNumber>Reel number</ReelNumber>
+    <Language>Language</Language>
+    <IssueDate>Issue date</IssueDate>
+    <EditRate>Edit rate</EditRate>
+    <TimeCodeRate>Time code rate</TimeCodeRate>
+    <StartTime>Start time</StartTime>
+    <Font>Font</Font>
+    <FontId>ID</FontId>
+    <FontUri>URI</FontUri>
+    <FontColor>Color</FontColor>
+    <FontEffect>Effect</FontEffect>
+    <FontEffectColor>Effect color</FontEffectColor>
+    <FontSize>Size</FontSize>
+    <TopBottomMargin>Top/bottom margin</TopBottomMargin>
+    <FadeUpTime>Fade up time</FadeUpTime>
+    <FadeDownTime>Fade down time</FadeDownTime>
+    <ZPosition>Z-position</ZPosition>
+    <ZPositionHelp>Positive numbers moves text away, negative numbers moves text closer, if z-position is zero then it's 2D</ZPositionHelp>
+    <ChooseColor>Choose color...</ChooseColor>
+    <Generate>Generate</Generate>
+  </DCinemaProperties>
+  <DurationsBridgeGaps>
+    <Title>Bridge small gaps in durations</Title>
+    <GapsBridgedX>Number of small gaps bridged: {0}</GapsBridgedX>
+    <GapToNext>Gap to next in seconds</GapToNext>
+    <BridgeGapsSmallerThanXPart1>Bridge gaps smaller than</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart2>milliseconds</BridgeGapsSmallerThanXPart2>
+    <MinMillisecondsBetweenLines>Min. milliseconds between lines</MinMillisecondsBetweenLines>
+    <ProlongEndTime>Previous text takes all gap time</ProlongEndTime>
+    <DivideEven>Texts divide gap time</DivideEven>
+  </DurationsBridgeGaps>
+  <DvdSubRip>
+    <Title>Rip subtitles from IFO/VOBs (DVD)</Title>
+    <DvdGroupTitle>DVD files/info</DvdGroupTitle>
+    <IfoFile>IFO file</IfoFile>
+    <IfoFiles>IFO files</IfoFiles>
+    <VobFiles>VOB files</VobFiles>
+    <Add>Add...</Add>
+    <Remove>Remove</Remove>
+    <Clear>Clear</Clear>
+    <MoveUp>Посунути вгору</MoveUp>
+    <MoveDown>Посунути вниз</MoveDown>
+    <Languages>Languages</Languages>
+    <PalNtsc>PAL/NTSC</PalNtsc>
+    <Pal>PAL (25fps)</Pal>
+    <Ntsc>NTSC (29.97fps)</Ntsc>
+    <StartRipping>Start ripping</StartRipping>
+    <Abort>Abort</Abort>
+    <AbortedByUser>Aborted by user</AbortedByUser>
+    <ReadingSubtitleData>Reading subtitle data...</ReadingSubtitleData>
+    <RippingVobFileXofYZ>Ripping vob file {1} of {2}: {0}</RippingVobFileXofYZ>
+    <WrongIfoType>IFO type is '{0}' and not 'DVDVIDEO-VTS'.{1}Try another file than {2}</WrongIfoType>
+  </DvdSubRip>
+  <DvdSubRipChooseLanguage>
+    <Title>Choose language</Title>
+    <ChooseLanguageStreamId>Choose language (stream-id)</ChooseLanguageStreamId>
+    <UnknownLanguage>Unknown language</UnknownLanguage>
+    <SubtitleImageXofYAndWidthXHeight>Subtitle image {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImage>Subtitle image</SubtitleImage>
+  </DvdSubRipChooseLanguage>
+  <EbuSaveOptions>
+    <Title>EBU save options</Title>
+    <GeneralSubtitleInformation>General subtitle information</GeneralSubtitleInformation>
+    <CodePageNumber>Code page number</CodePageNumber>
+    <DiskFormatCode>Disk format code</DiskFormatCode>
+    <DisplayStandardCode>Display standard code</DisplayStandardCode>
+    <CharacterCodeTable>Character table</CharacterCodeTable>
+    <LanguageCode>Language code</LanguageCode>
+    <OriginalProgramTitle>Original program title</OriginalProgramTitle>
+    <OriginalEpisodeTitle>Original episode title</OriginalEpisodeTitle>
+    <TranslatedProgramTitle>Translated program title</TranslatedProgramTitle>
+    <TranslatedEpisodeTitle>Translated episode title</TranslatedEpisodeTitle>
+    <TranslatorsName>Translators name</TranslatorsName>
+    <SubtitleListReferenceCode>Subtitle list reference code</SubtitleListReferenceCode>
+    <CountryOfOrigin>Country of origin</CountryOfOrigin>
+    <TimeCodeStatus>Time code status</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Time code: Start of programme</TimeCodeStartOfProgramme>
+    <RevisionNumber>Revision number</RevisionNumber>
+    <MaxNoOfDisplayableChars>Max# of chars per row</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>Max# of rows</MaxNumberOfDisplayableRows>
+    <DiskSequenceNumber>Disk sequence number</DiskSequenceNumber>
+    <TotalNumberOfDisks>Total number of disks</TotalNumberOfDisks>
+    <Import>Import...</Import>
+    <TextAndTimingInformation>Text and timing information</TextAndTimingInformation>
+    <JustificationCode>Justification code</JustificationCode>
+    <Errors>Errors</Errors>
+    <ErrorsX>Errors: {0}</ErrorsX>
+    <MaxLengthError>Line {0} exceeds max length ({1}) by {2}: {3}</MaxLengthError>
+    <TextUnchangedPresentation>Unchanged presentation</TextUnchangedPresentation>
+    <TextLeftJustifiedText>Left justified text</TextLeftJustifiedText>
+    <TextCenteredText>Centered text</TextCenteredText>
+    <TextRightJustifiedText>Right justified text</TextRightJustifiedText>
+  </EbuSaveOptions>
+  <EffectKaraoke>
+    <Title>Ефект Караоке</Title>
+    <ChooseColor>Оберіть колір:</ChooseColor>
+    <TotalMilliseconds>Всього мілісекунд:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Кінцева затримка в мілісекундах:</EndDelayInMilliseconds>
+  </EffectKaraoke>
+  <EffectTypewriter>
+    <Title>Ефект друкарської машинки</Title>
+    <TotalMilliseconds>Всього мілісекунд:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Кінцева затримка в мілісекундах:</EndDelayInMilliseconds>
+  </EffectTypewriter>
+  <ExportCustomText>
+    <Title>Експортувати в користувацький текстовий формат</Title>
+    <Formats>Формат</Formats>
+    <New>Новий</New>
+    <Edit>Редагувати</Edit>
+    <Delete>Видалити</Delete>
+    <SaveAs>З&amp;берегти як...</SaveAs>
+    <SaveSubtitleAs>Зберегти субтитри як...</SaveSubtitleAs>
+    <SubtitleExportedInCustomFormatToX>Субтитри експортовано в користувацькому форматі до: {0}</SubtitleExportedInCustomFormatToX>
+  </ExportCustomText>
+  <ExportCustomTextFormat>
+    <Title>Шаблон користувацького текстового формату</Title>
+    <Template>Шаблон</Template>
+    <Header>Заголовок</Header>
+    <TextLine>Рядок тексту (абзац)</TextLine>
+    <TimeCode>Час. мітка</TimeCode>
+    <NewLine>Новий р.</NewLine>
+    <Footer>Підвал</Footer>
+    <DoNotModify>[Не змінювати]</DoNotModify>
+  </ExportCustomTextFormat>
+  <ExportPngXml>
+    <Title>Export BDN XML/PNG</Title>
+    <ImageSettings>Image settings</ImageSettings>
+    <FontFamily>Font family</FontFamily>
+    <FontSize>Font size</FontSize>
+    <FontColor>Font color</FontColor>
+    <BorderColor>Border color</BorderColor>
+    <BorderWidth>Border width</BorderWidth>
+    <BorderStyle>Border style</BorderStyle>
+    <BorderStyleOneBox>One box</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Box for each line</BorderStyleBoxForEachLine>
+    <BorderStyleNormalWidthX>Normal, width={0}</BorderStyleNormalWidthX>
+    <ShadowColor>Shadow color</ShadowColor>
+    <ShadowWidth>Shadow width</ShadowWidth>
+    <Transparency>Alpha</Transparency>
+    <ImageFormat>Image format</ImageFormat>
+    <FullFrameImage>Full frame image</FullFrameImage>
+    <SimpleRendering>Simple rendering</SimpleRendering>
+    <AntiAliasingWithTransparency>Anti-aliasing with transparency</AntiAliasingWithTransparency>
+    <Text3D>3D</Text3D>
+    <SideBySide3D>Half-side-by-side</SideBySide3D>
+    <HalfTopBottom3D>Half-Top/Bottom</HalfTopBottom3D>
+    <Depth>Depth</Depth>
+    <ExportAllLines>Export all lines...</ExportAllLines>
+    <XImagesSavedInY>{0} images saved in {1}</XImagesSavedInY>
+    <VideoResolution>Video res</VideoResolution>
+    <Align>Align</Align>
+    <Left>Left</Left>
+    <Right>Right</Right>
+    <Center>Center</Center>
+    <BottomMargin>Bottom margin</BottomMargin>
+    <LeftRightMargin>Left/right margin</LeftRightMargin>
+    <SaveBluRraySupAs>Choose Blu-ray sup file name</SaveBluRraySupAs>
+    <SaveVobSubAs>Choose VobSub file name</SaveVobSubAs>
+    <SaveFabImageScriptAs>Choose FAB image script file name</SaveFabImageScriptAs>
+    <SaveDvdStudioProStlAs>Choose DVD Studio Pro STL file name</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Choose Digital Cinema Interop file name</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Choose Premiere EDL file name</SavePremiereEdlAs>
+    <SaveFcpAs>Choose Final Cut Pro xml file name</SaveFcpAs>
+    <SaveDostAs>Choose DoStudio dost file name</SaveDostAs>
+    <SomeLinesWereTooLongX>Some lines were too long:
+{0}</SomeLinesWereTooLongX>
+    <LineHeight>Line height</LineHeight>
+    <BoxSingleLine>Box - single line</BoxSingleLine>
+    <BoxMultiLine>Box - multi line</BoxMultiLine>
+    <Forced>Forced</Forced>
+    <ChooseBackgroundColor>Choose background color</ChooseBackgroundColor>
+    <SaveImageAs>Save image as...</SaveImageAs>
+  </ExportPngXml>
+  <ExportText>
+    <Title>Export text</Title>
+    <Preview>Preview</Preview>
+    <ExportOptions>Export options</ExportOptions>
+    <FormatText>Format text</FormatText>
+    <None>None</None>
+    <MergeAllLines>Merge all lines</MergeAllLines>
+    <UnbreakLines>Unbreak lines</UnbreakLines>
+    <RemoveStyling>Remove styling</RemoveStyling>
+    <ShowLineNumbers>Show line numbers</ShowLineNumbers>
+    <AddNewLineAfterLineNumber>Add new line after line number</AddNewLineAfterLineNumber>
+    <ShowTimeCode>Show time code</ShowTimeCode>
+    <AddNewLineAfterTimeCode>Add new line after time code</AddNewLineAfterTimeCode>
+    <AddNewLineAfterTexts>Add new line after text</AddNewLineAfterTexts>
+    <AddNewLineBetweenSubtitles>Add new line between subtitles</AddNewLineBetweenSubtitles>
+    <TimeCodeFormat>Time code format</TimeCodeFormat>
+    <Srt>.srt</Srt>
+    <Milliseconds>Milliseconds</Milliseconds>
+    <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
+    <TimeCodeSeparator>Time code separator</TimeCodeSeparator>
+  </ExportText>
+  <ExtractDateTimeInfo>
+    <Title>Generate time as text</Title>
+    <OpenVideoFile>Choose video file to extract date/time info from</OpenVideoFile>
+    <StartFrom>Start from</StartFrom>
+    <DateTimeFormat>Date/time format</DateTimeFormat>
+    <Example>Example</Example>
+    <GenerateSubtitle>&amp;Generate subtitle</GenerateSubtitle>
+  </ExtractDateTimeInfo>
+  <FindDialog>
+    <Title>Пошук</Title>
+    <Find>Знайти</Find>
+    <Normal>&amp;Звичайний</Normal>
+    <CaseSensitive>&amp;Чутливий до регістру</CaseSensitive>
+    <RegularExpression>Регулярний &amp;вираз</RegularExpression>
+  </FindDialog>
+  <FindSubtitleLine>
+    <Title>Знайти рядок субтитрів</Title>
+    <Find>&amp;Знайти</Find>
+    <FindNext>Знайти &amp;наст.</FindNext>
+  </FindSubtitleLine>
+  <FixCommonErrors>
+    <Title>Виправлення типових помилок</Title>
+    <Step1>Крок 1/2 - Оберіть, які помилки виправити</Step1>
+    <WhatToFix>Що виправити</WhatToFix>
+    <Example>Приклад</Example>
+    <SelectAll>Вибрати всі</SelectAll>
+    <InverseSelection>Інвертувати вибір</InverseSelection>
+    <Back>&lt; &amp;Назад</Back>
+    <Next>&amp;Далі &gt;</Next>
+    <Step2>Крок 2/2 - Перевірте виправлення</Step2>
+    <Fixes>Виправлення</Fixes>
+    <Log>Журнал</Log>
+    <Function>Функція</Function>
+    <RemovedEmptyLine>Remove empty line</RemovedEmptyLine>
+    <RemovedEmptyLineAtTop>Remove empty line at top</RemovedEmptyLineAtTop>
+    <RemovedEmptyLineAtBottom>Remove empty line at bottom</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLinesUnsedLineBreaks>Remove empty lines/unused line breaks</RemovedEmptyLinesUnsedLineBreaks>
+    <EmptyLinesRemovedX>Empty lines removed: {0}</EmptyLinesRemovedX>
+    <FixOverlappingDisplayTimes>Fix overlapping display times</FixOverlappingDisplayTimes>
+    <FixShortDisplayTimes>Fix short display times</FixShortDisplayTimes>
+    <FixLongDisplayTimes>Fix long display times</FixLongDisplayTimes>
+    <FixInvalidItalicTags>Fix invalid italic tags</FixInvalidItalicTags>
+    <RemoveUnneededSpaces>Remove unneeded spaces</RemoveUnneededSpaces>
+    <RemoveUnneededPeriods>Remove unneeded periods</RemoveUnneededPeriods>
+    <FixMissingSpaces>Fix missing spaces</FixMissingSpaces>
+    <BreakLongLines>Break long lines</BreakLongLines>
+    <RemoveLineBreaks>Remove line breaks in short texts with only one sentence</RemoveLineBreaks>
+    <RemoveLineBreaksAll>Remove line breaks in short texts (all except dialogs)</RemoveLineBreaksAll>
+    <FixUppercaseIInsindeLowercaseWords>Fix uppercase 'i' inside lowercase words (OCR error)</FixUppercaseIInsindeLowercaseWords>
+    <FixDoubleApostrophes>Fix double apostrophe characters ('') to a single quote (")</FixDoubleApostrophes>
+    <AddPeriods>Add period after lines where next line start with uppercase letter</AddPeriods>
+    <StartWithUppercaseLetterAfterParagraph>Start with uppercase letter after paragraph</StartWithUppercaseLetterAfterParagraph>
+    <StartWithUppercaseLetterAfterPeriodInsideParagraph>Start with uppercase letter after period inside paragraph</StartWithUppercaseLetterAfterPeriodInsideParagraph>
+    <StartWithUppercaseLetterAfterColon>Start with uppercase letter after colon/semicolon</StartWithUppercaseLetterAfterColon>
+    <FixLowercaseIToUppercaseI>Fix alone lowercase 'i' to 'I' (English)</FixLowercaseIToUppercaseI>
+    <FixCommonOcrErrors>Fix common OCR errors (using OCR replace list)</FixCommonOcrErrors>
+    <CommonOcrErrorsFixed>Common OCR errors fixed (OcrReplaceList file used): {0}</CommonOcrErrorsFixed>
+    <RemoveSpaceBetweenNumber>Remove space between numbers</RemoveSpaceBetweenNumber>
+    <FixDialogsOnOneLine>Fix dialogs on one line</FixDialogsOnOneLine>
+    <RemoveSpaceBetweenNumbersFixed>Remove space between numbers fixed: {0}</RemoveSpaceBetweenNumbersFixed>
+    <FixTurkishAnsi>Fix Turkish ANSI (Icelandic) letters to Unicode</FixTurkishAnsi>
+    <FixDanishLetterI>Fix Danish letter 'i'</FixDanishLetterI>
+    <FixSpanishInvertedQuestionAndExclamationMarks>Fix Spanish inverted question and exclamation marks</FixSpanishInvertedQuestionAndExclamationMarks>
+    <AddMissingQuote>Add missing quote (")</AddMissingQuote>
+    <AddMissingQuotes>Add missing quotes (")</AddMissingQuotes>
+    <FixHyphens>Fix (remove dash) lines beginning with dash (-)</FixHyphens>
+    <FixHyphensAdd>Fix (add dash) line pairs with only one dash (-)</FixHyphensAdd>
+    <FixHyphen>Fix line beginning with dash (-)</FixHyphen>
+    <XHyphensFixed>Dashes removed: {0}</XHyphensFixed>
+    <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
+    <XMissingQuotesAdded>Missing quotes added: {0}</XMissingQuotesAdded>
+    <Fix3PlusLines>Fix subtitles with more than two lines</Fix3PlusLines>
+    <Fix3PlusLine>Fix subtitle with more than two lines</Fix3PlusLine>
+    <X3PlusLinesFixed>Subtitles with more than two lines fixed: {0}</X3PlusLinesFixed>
+    <Analysing>Analyzing...</Analysing>
+    <NothingToFix>Nothing to fix :)</NothingToFix>
+    <FixesFoundX>Знайдено виправлень: {0}</FixesFoundX>
+    <XFixesApplied>Виправлень застосовано: {0}</XFixesApplied>
+    <NothingToFixBut>Nothing to fix but a few things could be improved - see log for details</NothingToFixBut>
+    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Fix alone lowercase 'i' to 'I' (English)" is checked but currently loaded subtitle seems not be English.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
+    <Continue>Continue</Continue>
+    <ContinueAnyway>Continue anyway?</ContinueAnyway>
+    <UncheckedFixLowercaseIToUppercaseI>Unchecked "Fix alone lowercase 'i' to 'I' (English)"</UncheckedFixLowercaseIToUppercaseI>
+    <XIsChangedToUppercase>{0} i's changed to uppercase</XIsChangedToUppercase>
+    <FixFirstLetterToUppercaseAfterParagraph>Fix first letter to uppercase after paragraph</FixFirstLetterToUppercaseAfterParagraph>
+    <MergeShortLine>Merge short line (single sentence)</MergeShortLine>
+    <MergeShortLineAll>Merge short line (all except dialogs)</MergeShortLineAll>
+    <XLineBreaksAdded>{0} line breaks added</XLineBreaksAdded>
+    <BreakLongLine>Break long line</BreakLongLine>
+    <FixLongDisplayTime>Fix long display time</FixLongDisplayTime>
+    <FixInvalidItalicTag>Fix invalid italic tag</FixInvalidItalicTag>
+    <FixShortDisplayTime>Fix short display time</FixShortDisplayTime>
+    <FixOverlappingDisplayTime>Fix overlapping display time</FixOverlappingDisplayTime>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
+    <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
+    <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
+    <StartTimeLaterThanEndTime>Text number {0}: Start time is later than end time: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>Unable to fix text number {0}: Start time is later end end time: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <XFixedToYZ>{0} fixed to: {1}{2}</XFixedToYZ>
+    <UnableToFixTextXY>Unable to fix text number {0}: {1}</UnableToFixTextXY>
+    <XOverlappingTimestampsFixed>{0} overlapping timestamps fixed</XOverlappingTimestampsFixed>
+    <XDisplayTimesProlonged>{0} display times prolonged</XDisplayTimesProlonged>
+    <XInvalidHtmlTagsFixed>{0} invalid HTML tags fixed</XInvalidHtmlTagsFixed>
+    <XDisplayTimesShortned>{0} display times shortened</XDisplayTimesShortned>
+    <XLinesUnbreaked>{0} lines unbreaked</XLinesUnbreaked>
+    <UnneededSpace>Unneeded space</UnneededSpace>
+    <XUnneededSpacesRemoved>{0} unneeded spaces removed</XUnneededSpacesRemoved>
+    <UnneededPeriod>Unneeded period</UnneededPeriod>
+    <XUnneededPeriodsRemoved>{0} unneeded periods removed</XUnneededPeriodsRemoved>
+    <FixMissingSpace>Fix missing space</FixMissingSpace>
+    <XMissingSpacesAdded>{0} missing spaces added</XMissingSpacesAdded>
+    <FixUppercaseIInsideLowercaseWord>Fix uppercase 'i' inside lowercase word</FixUppercaseIInsideLowercaseWord>
+    <XPeriodsAdded>{0} periods added.</XPeriodsAdded>
+    <FixMissingPeriodAtEndOfLine>Add missing period at end of line</FixMissingPeriodAtEndOfLine>
+    <XDoubleApostrophesFixed>{0} double apostrophes fixed.</XDoubleApostrophesFixed>
+    <XUppercaseIsFoundInsideLowercaseWords>{0} uppercase 'i's found inside lowercase words</XUppercaseIsFoundInsideLowercaseWords>
+    <RefreshFixes>Оновити доступні виправлення</RefreshFixes>
+    <ApplyFixes>Застосувати обрані виправлення</ApplyFixes>
+    <AutoBreak>Auto &amp;br</AutoBreak>
+    <Unbreak>&amp;Unbreak</Unbreak>
+    <FixDoubleDash>Fix '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>Remove '&gt;&gt;'</FixDoubleGreaterThan>
+    <FixEllipsesStart>Remove leading '...'</FixEllipsesStart>
+    <FixMissingOpenBracket>Fix missing [ in line</FixMissingOpenBracket>
+    <FixMusicNotation>Replace music symbols (e.g. âTª) with preferred symbol</FixMusicNotation>
+    <XFixDoubleDash>{0} fixed '--'</XFixDoubleDash>
+    <XFixDoubleGreaterThan>{0} removed '&gt;&gt;'</XFixDoubleGreaterThan>
+    <XFixEllipsesStart>{0} remove starting '...'</XFixEllipsesStart>
+    <XFixMissingOpenBracket>{0} fixed missing [ in line</XFixMissingOpenBracket>
+    <XFixMusicNotation>{0} fix music notation in line</XFixMusicNotation>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <NumberOfImportantLogMessages>{0} important log messages!</NumberOfImportantLogMessages>
+    <FixedOkXY>Fixed and OK - '{0}': {1}</FixedOkXY>
+    <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
+  </FixCommonErrors>
+  <GetDictionaries>
+    <Title>Потрібні словники?</Title>
+    <DescriptionLine1>Перевірка орфографії Subtitle Edit базується на рушії NHunspell, який</DescriptionLine1>
+    <DescriptionLine2>використовує орфографічні словники від Open Office.</DescriptionLine2>
+    <GetDictionariesHere>Get dictionaries here:</GetDictionariesHere>
+    <OpenOpenOfficeWiki>Open Office Wiki Dictionaries list</OpenOpenOfficeWiki>
+    <GetAllDictionaries>Get all dictionaries</GetAllDictionaries>
+    <ChooseLanguageAndClickDownload>Оберіть мову і натисніть "Звантажити"</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>Відкрити теку зі словниками</OpenDictionariesFolder>
+    <Download>Звантажити</Download>
+    <XDownloaded>{0} has been downloaded and installed</XDownloaded>
+  </GetDictionaries>
+  <GetTesseractDictionaries>
+    <Title>Need dictionaries?</Title>
+    <DescriptionLine1>Get Tesseract OCR dictionaries from the web</DescriptionLine1>
+    <DownloadFailed>Download failed!</DownloadFailed>
+    <GetDictionariesHere>Get dictionaries here:</GetDictionariesHere>
+    <ChooseLanguageAndClickDownload>Choose your language and click download</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>Open 'Dictionaries' folder</OpenDictionariesFolder>
+    <Download>Download</Download>
+    <XDownloaded>{0} has been downloaded and installed</XDownloaded>
+  </GetTesseractDictionaries>
+  <GoogleTranslate>
+    <Title>Google translate</Title>
+    <From>From:</From>
+    <To>To:</To>
+    <Translate>Translate</Translate>
+    <PleaseWait>Please wait... this may take a while</PleaseWait>
+    <PoweredByGoogleTranslate>Powered by Google translate</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>Powered by Microsoft translate</PoweredByMicrosoftTranslate>
+  </GoogleTranslate>
+  <GoogleOrMicrosoftTranslate>
+    <Title>Google vs Microsoft translate</Title>
+    <From>From:</From>
+    <To>To:</To>
+    <Translate>Translate</Translate>
+    <SourceText>Source text</SourceText>
+    <GoogleTranslate>Google translate</GoogleTranslate>
+    <MicrosoftTranslate>Microsoft translate</MicrosoftTranslate>
+  </GoogleOrMicrosoftTranslate>
+  <GoToLine>
+    <Title>Перейти до субтитру номер</Title>
+    <XIsNotAValidNumber>{0} - не валідний номер</XIsNotAValidNumber>
+  </GoToLine>
+  <ImportImages>
+    <Title>Import images</Title>
+    <ImageFiles>Image files</ImageFiles>
+    <Input>Input</Input>
+    <InputDescription>Choose input files (browse or drag-n-drop)</InputDescription>
+  </ImportImages>
+  <ImportSceneChanges>
+    <Title>Import scene changes</Title>
+    <OpenTextFile>Open text file...</OpenTextFile>
+    <ImportOptions>Import options</ImportOptions>
+    <TextFiles>Текстові файли</TextFiles>
+    <TimeCodes>Time codes</TimeCodes>
+    <Frames>Frames</Frames>
+    <Seconds>Seconds</Seconds>
+    <Milliseconds>Milliseconds</Milliseconds>
+  </ImportSceneChanges>
+  <ImportText>
+    <Title>Імпортування простого тексту</Title>
+    <OneSubtitleIsOneFile>Декілька файлів: один файл - один субтитр</OneSubtitleIsOneFile>
+    <OpenTextFile>Відкрити файл...</OpenTextFile>
+    <OpenTextFiles>Open text files...</OpenTextFiles>
+    <ImportOptions>Опції імпортування</ImportOptions>
+    <Splitting>Розбиття</Splitting>
+    <AutoSplitText>Автоматичне розбиття</AutoSplitText>
+    <OneLineIsOneSubtitle>Один рядок - один субтитр</OneLineIsOneSubtitle>
+    <LineBreak>Роздільник</LineBreak>
+    <SplitAtBlankLines>Розбити на порожніх рядках</SplitAtBlankLines>
+    <MergeShortLines>Об'єднати короткі рядки з продовженнями</MergeShortLines>
+    <RemoveEmptyLines>Вилучити порожні рядки</RemoveEmptyLines>
+    <RemoveLinesWithoutLetters>Вилучити рядки без літер</RemoveLinesWithoutLetters>
+    <GenerateTimeCodes>Згенерувати часові мітки</GenerateTimeCodes>
+    <GapBetweenSubtitles>Пауза між субтитрами (мілісекунд)</GapBetweenSubtitles>
+    <Auto>Автоматична</Auto>
+    <Fixed>Фіксована</Fixed>
+    <Refresh>&amp;Оновити</Refresh>
+    <TextFiles>Текстові файли</TextFiles>
+    <PreviewLinesModifiedX>Попередній перегляд - субтитрів модифіковано: {0}</PreviewLinesModifiedX>
+    <TimeCodes>Часові мітки</TimeCodes>
+  </ImportText>
+  <Interjections>
+    <Title>Interjections</Title>
+  </Interjections>
+  <JoinSubtitles>
+    <Title>Join subtitles</Title>
+    <Information>Add subtitles to join (drop also supported)</Information>
+    <NumberOfLines>#Lines</NumberOfLines>
+    <StartTime>Start time</StartTime>
+    <EndTime>End time</EndTime>
+    <FileName>Назва файлу</FileName>
+    <Join>Join</Join>
+    <TotalNumberOfLinesX>Total number of lines: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Note: Files must already have correct time codes</Note>
+  </JoinSubtitles>
+  <Main>
+    <Menu>
+      <File>
+        <Title>&amp;Файл</Title>
+        <New>&amp;Новий</New>
+        <Open>&amp;Відкрити</Open>
+        <OpenKeepVideo>Open (keep video)</OpenKeepVideo>
+        <Reopen>&amp;Відкрити заново</Reopen>
+        <Save>&amp;Зберегти</Save>
+        <SaveAs>Зберегти &amp;як...</SaveAs>
+        <RestoreAutoBackup>Відновити автоматичну резервну копію...</RestoreAutoBackup>
+        <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha properties...</AdvancedSubStationAlphaProperties>
+        <SubStationAlphaProperties>Sub Station Alpha properties...</SubStationAlphaProperties>
+        <EbuProperties>EBU STL properties...</EbuProperties>
+        <PacProperties>PAC properties...</PacProperties>
+        <OpenOriginal>Відкрити оригінальні субтитри (режим перекладача)...</OpenOriginal>
+        <SaveOriginal>Зберегти оригінальні субтитри</SaveOriginal>
+        <CloseOriginal>Закрити оригінальні субтитри</CloseOriginal>
+        <OpenContainingFolder>Відкрити теку розташування</OpenContainingFolder>
+        <Compare>&amp;Порівняти...</Compare>
+        <Statistics>&amp;Статистика...</Statistics>
+        <Plugins>Плаґіни...</Plugins>
+        <ImportOcrFromDvd>Import/OCR subtitle from VOB/IFO (DVD)...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) subtitle...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Import/OCR Blu-ray (.sup) subtitle file...</ImportBluRaySupFile>
+        <ImportXSub>Import/OCR XSub from divx/avi...</ImportXSub>
+        <ImportSubtitleFromMatroskaFile>Import subtitle from Matroska (.mkv) file...</ImportSubtitleFromMatroskaFile>
+        <ImportSubtitleWithManualChosenEncoding>Import subtitle with manual chosen encoding...</ImportSubtitleWithManualChosenEncoding>
+        <ImportText>Імпортувати простий текст...</ImportText>
+        <ImportImages>Import images...</ImportImages>
+        <ImportTimecodes>Import time codes...</ImportTimecodes>
+        <Export>Експортувати</Export>
+        <ExportBdnXml>BDN xml/png...</ExportBdnXml>
+        <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
+        <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
+        <ExportCavena890>Cavena 890...</ExportCavena890>
+        <ExportEbu>EBU STL...</ExportEbu>
+        <ExportPac>PAC (Screen Electronics)...</ExportPac>
+        <ExportPlainText>Plain text...</ExportPlainText>
+        <ExportAdobeEncoreFabImageScript>Adobe Encore FAB image script...</ExportAdobeEncoreFabImageScript>
+        <ExportKoreanAtsFilePair>Korean ATS file pair...</ExportKoreanAtsFilePair>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
+        <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
+        <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
+        <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
+        <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
+        <ExportUltech130>Ultech caption...</ExportUltech130>
+        <ExportCustomTextFormat>Експортувати в користувацький текстовий формат...</ExportCustomTextFormat>
+        <Exit>&amp;Вийти</Exit>
+      </File>
+      <Edit>
+        <Title>Редагувати</Title>
+        <Undo>Скасувати</Undo>
+        <Redo>Повторити</Redo>
+        <ShowUndoHistory>Показати історію</ShowUndoHistory>
+        <InsertUnicodeSymbol>Вставити символ Unicode</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>Insert Unicode control characters</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>Left-to-right mark (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>Right-to-left mark (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>Start of left-to-right embedding (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Start of right-to-left embedding (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>Start of left-to-right override (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>Start of right-to-left override (RLO)</InsertUnicodeControlCharactersRLO>
+        <Find>&amp;Пошук</Find>
+        <FindNext>Шукати &amp;далі</FindNext>
+        <Replace>&amp;Заміна</Replace>
+        <MultipleReplace>&amp;Множинна заміна...</MultipleReplace>
+        <GoToSubtitleNumber>&amp;Перейти до субтитру номер...</GoToSubtitleNumber>
+        <RightToLeftMode>Режим справа наліво (RTL)</RightToLeftMode>
+        <FixTrlViaUnicodeControlCharacters>Виправити RTL за допомогою керувальних символів Unicode (обрані рядки)</FixTrlViaUnicodeControlCharacters>
+        <ReverseRightToLeftStartEnd>Обміняти місцями початок/кінець RTL (обрані рядки)</ReverseRightToLeftStartEnd>
+        <ShowOriginalTextInAudioAndVideoPreview>Показувати оригінальний текст в попередніх аудіо-/відеопереглядах</ShowOriginalTextInAudioAndVideoPreview>
+        <ModifySelection>Змінити вибір...</ModifySelection>
+        <InverseSelection>Інвертувати вибір</InverseSelection>
+      </Edit>
+      <Tools>
+        <Title>Інструменти</Title>
+        <AdjustDisplayDuration>&amp;Змінити тривалості...</AdjustDisplayDuration>
+        <ApplyDurationLimits>Застосувати обмеження тривалостей...</ApplyDurationLimits>
+        <DurationsBridgeGap>Bridge gap in durations...</DurationsBridgeGap>
+        <FixCommonErrors>&amp;Виправити типові помилки...</FixCommonErrors>
+        <StartNumberingFrom>Перенумерувати...</StartNumberingFrom>
+        <RemoveTextForHearingImpaired>Видалити текст для людей із вадами слуху...</RemoveTextForHearingImpaired>
+        <ChangeCasing>Змінити регістр...</ChangeCasing>
+        <ChangeFrameRate>Змінити частоту кадрів...</ChangeFrameRate>
+        <ChangeSpeedInPercent>Changed speed (percent)...</ChangeSpeedInPercent>
+        <MergeShortLines>Об'єднати короткі рядки...</MergeShortLines>
+        <MergeDuplicateText>Об'єднати рядки з однаковим текстом...</MergeDuplicateText>
+        <MergeSameTimeCodes>Об'єднати рядки з однаковими часовими мітками...</MergeSameTimeCodes>
+        <SplitLongLines>Розбити довгі субтитри...</SplitLongLines>
+        <MinimumDisplayTimeBetweenParagraphs>Мінімальна відстань між субтитрами...</MinimumDisplayTimeBetweenParagraphs>
+        <SortBy>Сортувати за</SortBy>
+        <Number>Номером</Number>
+        <StartTime>Початком</StartTime>
+        <EndTime>Кінцем</EndTime>
+        <Duration>Тривалістю</Duration>
+        <TextAlphabetically>Текстом - в алфавітному порядку</TextAlphabetically>
+        <TextSingleLineMaximumLength>Текстом - макс. довжиною одного рядка</TextSingleLineMaximumLength>
+        <TextTotalLength>Текстом - загальною довжиною</TextTotalLength>
+        <TextNumberOfLines>Текстом - кількістю рядків</TextNumberOfLines>
+        <TextNumberOfCharactersPerSeconds>Текстом - кількістю символів/сек</TextNumberOfCharactersPerSeconds>
+        <WordsPerMinute>Текстом - кількістю слів на хвилину</WordsPerMinute>
+        <Style>Style</Style>
+        <Ascending>За зростанням</Ascending>
+        <Descending>За спаданням</Descending>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>Make new empty translation from current subtitle</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <BatchConvert>Пакетна обробка...</BatchConvert>
+        <GenerateTimeAsText>Generate time as text...</GenerateTimeAsText>
+        <MeasurementConverter>Measurement converter...</MeasurementConverter>
+        <SplitSubtitle>Розбити субтитри на файли...</SplitSubtitle>
+        <AppendSubtitle>Append subtitle...</AppendSubtitle>
+        <JoinSubtitles>Join subtitles...</JoinSubtitles>
+      </Tools>
+      <Video>
+        <Title>Відео</Title>
+        <OpenVideo>Відкрити відеофайл...</OpenVideo>
+        <OpenDvd>Open DVD...</OpenDvd>
+        <ChooseAudioTrack>Choose audio track</ChooseAudioTrack>
+        <CloseVideo>Close video file</CloseVideo>
+        <ImportSceneChanges>Import scene changes...</ImportSceneChanges>
+        <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
+        <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
+        <ShowHideVideo>Показати/сховати відео</ShowHideVideo>
+        <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
+        <ShowHideWaveformAndSpectrogram>Show/hide waveform and spectrogram</ShowHideWaveformAndSpectrogram>
+        <UnDockVideoControls>Un-dock video controls</UnDockVideoControls>
+        <ReDockVideoControls>Re-dock video controls</ReDockVideoControls>
+      </Video>
+      <SpellCheck>
+        <Title>Орфографія</Title>
+        <SpellCheck>&amp;Перевірка орфографії...</SpellCheck>
+        <SpellCheckFromCurrentLine>Spell check from current line...</SpellCheckFromCurrentLine>
+        <FindDoubleWords>Знайти слова, що дублюються</FindDoubleWords>
+        <FindDoubleLines>Знайти рядки, що дублюються</FindDoubleLines>
+        <GetDictionaries>Отримати словники...</GetDictionaries>
+        <AddToNamesEtcList>Додати слово до списку імен/шумів і т. п.</AddToNamesEtcList>
+      </SpellCheck>
+      <Synchronization>
+        <Title>Синхронізація</Title>
+        <AdjustAllTimes>Зсунути всі часи (показувати раніше/пізніше)...</AdjustAllTimes>
+        <VisualSync>&amp;Візуальна синхронізація...</VisualSync>
+        <PointSync>Точкова синхронізація...</PointSync>
+        <PointSyncViaOtherSubtitle>Точкова синхронізація через інші субтитри...</PointSyncViaOtherSubtitle>
+      </Synchronization>
+      <AutoTranslate>
+        <Title>Автоматичний переклад</Title>
+        <TranslatePoweredByGoogle>Переклад (за допомогою Google)...</TranslatePoweredByGoogle>
+        <TranslatePoweredByMicrosoft>Переклад (за допомогою Microsoft)...</TranslatePoweredByMicrosoft>
+        <TranslateFromSwedishToDanish>Переклад зі шведської на данську (за допомогою nikse.dk)...</TranslateFromSwedishToDanish>
+      </AutoTranslate>
+      <Options>
+        <Title>Налаштування</Title>
+        <Settings>&amp;Налаштування...</Settings>
+        <ChooseLanguage>&amp;Змінити мову...</ChooseLanguage>
+      </Options>
+      <Networking>
+        <Title>Мережа</Title>
+        <StartNewSession>Розпочати нову сесію</StartNewSession>
+        <JoinSession>Приєднатися до сесії</JoinSession>
+        <ShowSessionInfoAndLog>Показати журнал та інформацію про сесію</ShowSessionInfoAndLog>
+        <Chat>Балачка</Chat>
+        <LeaveSession>Облишити сесію</LeaveSession>
+      </Networking>
+      <Help>
+        <CheckForUpdates>Перевірити наявність оновлень...</CheckForUpdates>
+        <Title>Допомога</Title>
+        <Help>&amp;Довідка</Help>
+        <About>&amp;Про програму</About>
+      </Help>
+      <ToolBar>
+        <New>Новий</New>
+        <Open>Відкрити</Open>
+        <Save>Зберегти</Save>
+        <SaveAs>Зберегти як</SaveAs>
+        <Find>Пошук</Find>
+        <Replace>Заміна</Replace>
+        <FixCommonErrors>Виправити типові помилки</FixCommonErrors>
+        <VisualSync>Візуальна синхронізація</VisualSync>
+        <SpellCheck>Перевірка орфографії</SpellCheck>
+        <Settings>Налаштування</Settings>
+        <Help>Довідка</Help>
+        <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
+        <ShowHideVideo>Показати/сховати відео</ShowHideVideo>
+      </ToolBar>
+      <ContextMenu>
+        <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - set style</AdvancedSubStationAlphaSetStyle>
+        <SubStationAlphaSetStyle>Sub Station Alpha - set style</SubStationAlphaSetStyle>
+        <SubStationAlphaStyles>Sub Station Alpha styles...</SubStationAlphaStyles>
+        <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha styles...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetStyle>Timed Text - set style</TimedTextSetStyle>
+        <TimedTextStyles>Timed Text styles...</TimedTextStyles>
+        <TimedTextSetLanguage>Timed Text - set language</TimedTextSetLanguage>
+        <SamiSetStyle>Sami - set class</SamiSetStyle>
+        <NuendoSetStyle>Nuendo - set character</NuendoSetStyle>
+        <Cut>Cut</Cut>
+        <Copy>Copy</Copy>
+        <Paste>Paste</Paste>
+        <Delete>Видалити</Delete>
+        <SplitLineAtCursorPosition>Split line at cursor position</SplitLineAtCursorPosition>
+        <AutoDurationCurrentLine>Auto duration (current line)</AutoDurationCurrentLine>
+        <SelectAll>Вибрати всі</SelectAll>
+        <InsertFirstLine>Insert line</InsertFirstLine>
+        <InsertBefore>Вставити перед</InsertBefore>
+        <InsertAfter>Вставити після</InsertAfter>
+        <InsertSubtitleAfter>Вставити субтитри після цього рядка...</InsertSubtitleAfter>
+        <CopyToClipboard>Скопіювати до буферу обміну як текст</CopyToClipboard>
+        <Column>Column</Column>
+        <ColumnDeleteText>Delete text</ColumnDeleteText>
+        <ColumnDeleteTextAndShiftCellsUp>Delete text and shift cells up</ColumnDeleteTextAndShiftCellsUp>
+        <ColumnInsertEmptyTextAndShiftCellsDown>Insert empty text and shift cells down</ColumnInsertEmptyTextAndShiftCellsDown>
+        <ColumnInsertTextFromSubtitle>Insert text from subtitle...</ColumnInsertTextFromSubtitle>
+        <ColumnImportTextAndShiftCellsDown>Import text and shift cells down</ColumnImportTextAndShiftCellsDown>
+        <ColumnPasteFromClipboard>Paste from clipboard...</ColumnPasteFromClipboard>
+        <ColumnCopyOriginalTextToCurrent>Copy text from original to current</ColumnCopyOriginalTextToCurrent>
+        <Split>Розділити</Split>
+        <MergeSelectedLines>Об'єднати вибрані рядки</MergeSelectedLines>
+        <MergeSelectedLinesAsDialog>Об'єднати вибрані рядки як діалог</MergeSelectedLinesAsDialog>
+        <MergeWithLineBefore>Об'єднати з попереднім рядком</MergeWithLineBefore>
+        <MergeWithLineAfter>Об'єднати з наступним рядком</MergeWithLineAfter>
+        <Normal>Звичайний</Normal>
+        <Underline>Підкреслений</Underline>
+        <Color>Колір...</Color>
+        <FontName>Назва шрифту...</FontName>
+        <Alignment>Розташування...</Alignment>
+        <AutoBalanceSelectedLines>Auto balance selected lines...</AutoBalanceSelectedLines>
+        <RemoveLineBreaksFromSelectedLines>Remove line-breaks from selected lines...</RemoveLineBreaksFromSelectedLines>
+        <TypewriterEffect>Ефект друкарської машинки...</TypewriterEffect>
+        <KaraokeEffect>Ефект караоке...</KaraokeEffect>
+        <ShowSelectedLinesEarlierLater>Show selected lines earlier/later...</ShowSelectedLinesEarlierLater>
+        <VisualSyncSelectedLines>Visual sync selected lines...</VisualSyncSelectedLines>
+        <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft translate original line</GoogleAndMicrosoftTranslateSelectedLine>
+        <GoogleTranslateSelectedLines>Google translate selected lines...</GoogleTranslateSelectedLines>
+        <AdjustDisplayDurationForSelectedLines>Adjust durations for selected lines...</AdjustDisplayDurationForSelectedLines>
+        <FixCommonErrorsInSelectedLines>Fix common errors in selected lines...</FixCommonErrorsInSelectedLines>
+        <ChangeCasingForSelectedLines>Change casing for selected lines...</ChangeCasingForSelectedLines>
+        <SaveSelectedLines>Save selected lines as...</SaveSelectedLines>
+        <WebVTTSetNewVoice>Set new voice...</WebVTTSetNewVoice>
+        <WebVTTRemoveVoices>Remove voices</WebVTTRemoveVoices>
+      </ContextMenu>
+    </Menu>
+    <Controls>
+      <SubtitleFormat>Формат</SubtitleFormat>
+      <FileEncoding>Кодування</FileEncoding>
+      <ListView>Список</ListView>
+      <SourceView>Сирець</SourceView>
+      <UndoChangesInEditPanel>Undo changes in edit panel</UndoChangesInEditPanel>
+      <Previous>&lt; Поп.</Previous>
+      <Next>Наст. &gt;</Next>
+      <AutoBreak>Розбити на &amp;рядки</AutoBreak>
+      <Unbreak>Вилучити розбиття</Unbreak>
+    </Controls>
+    <VideoControls>
+      <Translate>Translate</Translate>
+      <Create>Create</Create>
+      <Adjust>Adjust</Adjust>
+      <SelectCurrentElementWhilePlaying>Select current subtitle while playing</SelectCurrentElementWhilePlaying>
+      <AutoRepeat>Auto repeat</AutoRepeat>
+      <AutoRepeatOn>Auto repeat on</AutoRepeatOn>
+      <AutoRepeatCount>Repeat count (times)</AutoRepeatCount>
+      <AutoContinue>Auto continue</AutoContinue>
+      <AutoContinueOn>Auto continue on</AutoContinueOn>
+      <DelayInSeconds>Delay (seconds)</DelayInSeconds>
+      <OriginalText>Original text</OriginalText>
+      <Previous>&lt; Pre&amp;vious</Previous>
+      <Stop>&amp;Stop</Stop>
+      <PlayCurrent>&amp;Play current</PlayCurrent>
+      <Next>&amp;Next &gt;</Next>
+      <Playing>Playing...</Playing>
+      <RepeatingLastTime>Repeating... last time</RepeatingLastTime>
+      <RepeatingXTimesLeft>Repeating... {0} times left</RepeatingXTimesLeft>
+      <AutoContinueInOneSecond>Auto continue in one second</AutoContinueInOneSecond>
+      <AutoContinueInXSeconds>Auto continue in {0} seconds</AutoContinueInXSeconds>
+      <StillTypingAutoContinueStopped>Still typing... auto continue stopped</StillTypingAutoContinueStopped>
+      <InsertNewSubtitleAtVideoPosition>&amp;Insert new subtitle at video pos</InsertNewSubtitleAtVideoPosition>
+      <Auto>Auto</Auto>
+      <PlayFromJustBeforeText>Play from just before &amp;text</PlayFromJustBeforeText>
+      <Pause>Pause</Pause>
+      <GoToSubtitlePositionAndPause>Go to sub position and pause</GoToSubtitlePositionAndPause>
+      <SetStartTime>Set &amp;start time</SetStartTime>
+      <SetEndTimeAndGoToNext>Set &amp;end &amp;&amp; go to next</SetEndTimeAndGoToNext>
+      <AdjustedViaEndTime>Adjusted via end time {0}</AdjustedViaEndTime>
+      <SetEndTime>Set e&amp;nd time</SetEndTime>
+      <SetstartTimeAndOffsetOfRest>Set sta&amp;rt and off-set the rest</SetstartTimeAndOffsetOfRest>
+      <SearchTextOnline>Search text online</SearchTextOnline>
+      <GoogleTranslate>Google translate</GoogleTranslate>
+      <GoogleIt>Заґуґлити</GoogleIt>
+      <SecondsBackShort>&lt;&lt;</SecondsBackShort>
+      <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
+      <VideoPosition>Video position:</VideoPosition>
+      <TranslateTip>Tip: Use &lt;alt+arrow up/down&gt; to go to previous/next subtitle</TranslateTip>
+      <CreateTip>Tip: Use &lt;ctrl+arrow left/right&gt; keys</CreateTip>
+      <AdjustTip>Tip: Use &lt;alt+arrow up/down&gt; to go to previous/next subtitle</AdjustTip>
+      <BeforeChangingTimeInWaveformX>Before changing time in waveform: {0}</BeforeChangingTimeInWaveformX>
+      <NewTextInsertAtX>New text inserted at {0}</NewTextInsertAtX>
+      <Center>Center</Center>
+      <PlayRate>Play rate (speed)</PlayRate>
+      <Slow>Slow</Slow>
+      <Normal>Normal</Normal>
+      <Fast>Fast</Fast>
+      <VeryFast>Very fast</VeryFast>
+    </VideoControls>
+    <SaveChangesToUntitled>Зберегти зміни до безіменного?</SaveChangesToUntitled>
+    <SaveChangesToX>Зберегти зміни до {0}?</SaveChangesToX>
+    <SaveChangesToUntitledOriginal>Зберегти зміни до безіменного оригіналу?</SaveChangesToUntitledOriginal>
+    <SaveChangesToOriginalX>Зберегти зміни до оригіналу {0}?</SaveChangesToOriginalX>
+    <SaveSubtitleAs>Зберегти субтитри як...</SaveSubtitleAs>
+    <SaveOriginalSubtitleAs>Зберегти оригінальні субтитри як...</SaveOriginalSubtitleAs>
+    <NoSubtitleLoaded>No subtitle loaded</NoSubtitleLoaded>
+    <VisualSyncSelectedLines>Visual sync - selected lines</VisualSyncSelectedLines>
+    <VisualSyncTitle>Візуальна синхронізація</VisualSyncTitle>
+    <BeforeVisualSync>Before visual sync</BeforeVisualSync>
+    <VisualSyncPerformedOnSelectedLines>Visual sync performed on selected lines</VisualSyncPerformedOnSelectedLines>
+    <VisualSyncPerformed>Visual sync performed</VisualSyncPerformed>
+    <ImportThisVobSubSubtitle>Import this VobSub subtitle?</ImportThisVobSubSubtitle>
+    <FileXIsLargerThan10MB>File is larger than 10 MB: {0}</FileXIsLargerThan10MB>
+    <ContinueAnyway>Continue anyway?</ContinueAnyway>
+    <BeforeLoadOf>Before load of {0}</BeforeLoadOf>
+    <LoadedSubtitleX>Loaded subtitle {0}</LoadedSubtitleX>
+    <LoadedEmptyOrShort>Loaded empty or very short subtitle {0}</LoadedEmptyOrShort>
+    <FileIsEmptyOrShort>File is empty or very short!</FileIsEmptyOrShort>
+    <FileNotFound>File not found: {0}</FileNotFound>
+    <SavedSubtitleX>Saved subtitle {0}</SavedSubtitleX>
+    <SavedOriginalSubtitleX>Saved original subtitle {0}</SavedOriginalSubtitleX>
+    <FileOnDiskModified>File on disk modified</FileOnDiskModified>
+    <OverwriteModifiedFile>Overwrite the file {0} modified at {1} {2}{3} with current file loaded from disk at {4} {5}?</OverwriteModifiedFile>
+    <FileXIsReadOnly>Cannot save {0}
+
+File is read-only!</FileXIsReadOnly>
+    <UnableToSaveSubtitleX>Unable to save subtitle file {0}
+Subtitle seems to be empty - try to re-save if you're working on a valid subtitle!</UnableToSaveSubtitleX>
+    <BeforeNew>Before new</BeforeNew>
+    <New>New</New>
+    <BeforeConvertingToX>Before converting to {0}</BeforeConvertingToX>
+    <ConvertedToX>Converted to {0}</ConvertedToX>
+    <BeforeShowEarlier>Before show earlier</BeforeShowEarlier>
+    <BeforeShowLater>Before show later</BeforeShowLater>
+    <LineNumberX>Line number: {0:#,##0.##}</LineNumberX>
+    <OpenVideoFile>Відкрити відеофайл...</OpenVideoFile>
+    <NewFrameRateUsedToCalculateTimeCodes>New frame rate ({0}) was used for calculating start/end time codes</NewFrameRateUsedToCalculateTimeCodes>
+    <NewFrameRateUsedToCalculateFrameNumbers>New frame rate ({0}) was used for calculating start/end frame numbers</NewFrameRateUsedToCalculateFrameNumbers>
+    <FindContinue>Об'єкт пошуку не знайдено.
+Бажаєте розпочати з початку документу і шукати ще раз?</FindContinue>
+    <FindContinueTitle>Продовжити пошук?</FindContinueTitle>
+    <ReplaceContinueNotFound>Об'єкт пошуку не знайдено.
+Бажаєте розпочати з початку документу і продовжити пошук та заміну?</ReplaceContinueNotFound>
+    <ReplaceXContinue>The search item was replaced {0} time(s).
+Would you like to start from the top of the document and continue search and replace?</ReplaceXContinue>
+    <ReplaceContinueTitle>Продовжити заміну?</ReplaceContinueTitle>
+    <SearchingForXFromLineY>Searching for '{0}' from line number {1}...</SearchingForXFromLineY>
+    <XFoundAtLineNumberY>'{0}' found at line number {1}</XFoundAtLineNumberY>
+    <XNotFound>'{0}' not found</XNotFound>
+    <BeforeReplace>Before replace: {0}</BeforeReplace>
+    <MatchFoundX>Match found: {0}</MatchFoundX>
+    <NoMatchFoundX>No match found: {0}</NoMatchFoundX>
+    <FoundNothingToReplace>Found nothing to replace</FoundNothingToReplace>
+    <ReplaceCountX>Replace count: {0}</ReplaceCountX>
+    <NoXFoundAtLineY>Match found at line {0}: {1}</NoXFoundAtLineY>
+    <OneReplacementMade>One replacement made.</OneReplacementMade>
+    <BeforeChangesMadeInSourceView>Before changes made in source view</BeforeChangesMadeInSourceView>
+    <UnableToParseSourceView>Unable to parse source view text!</UnableToParseSourceView>
+    <GoToLineNumberX>Go to line number {0}</GoToLineNumberX>
+    <CreateAdjustChangesApplied>Create/adjust lines changes applied</CreateAdjustChangesApplied>
+    <SelectedLines>selected lines</SelectedLines>
+    <BeforeDisplayTimeAdjustment>Before display time adjustment</BeforeDisplayTimeAdjustment>
+    <DisplayTimeAdjustedX>Display time adjusted: {0}</DisplayTimeAdjustedX>
+    <DisplayTimesAdjustedX>Display times adjusted: {0}</DisplayTimesAdjustedX>
+    <StarTimeAdjustedX>Start time adjusted: {0}</StarTimeAdjustedX>
+    <BeforeCommonErrorFixes>Before common error fixes</BeforeCommonErrorFixes>
+    <CommonErrorsFixedInSelectedLines>Common errors fixed in selected lines</CommonErrorsFixedInSelectedLines>
+    <CommonErrorsFixed>Common errors fixed</CommonErrorsFixed>
+    <BeforeRenumbering>Before renumbering</BeforeRenumbering>
+    <RenumberedStartingFromX>Renumbered starting from: {0}</RenumberedStartingFromX>
+    <BeforeRemovalOfTextingForHearingImpaired>Before removal of texting for hearing impaired</BeforeRemovalOfTextingForHearingImpaired>
+    <TextingForHearingImpairedRemovedOneLine>Texting for hearing impaired removed: One line</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Texting for hearing impaired removed: {0} lines</TextingForHearingImpairedRemovedXLines>
+    <SubtitleSplitted>Subtitle was split</SubtitleSplitted>
+    <SubtitleAppendPrompt>This will append an existing subtitle to the currently loaded subtitle which should
+already be in sync with video file.
+
+Continue?</SubtitleAppendPrompt>
+    <SubtitleAppendPromptTitle>Append subtitle</SubtitleAppendPromptTitle>
+    <OpenSubtitleToAppend>Open subtitle to append...</OpenSubtitleToAppend>
+    <AppendViaVisualSyncTitle>Visual sync - append second part of subtitle</AppendViaVisualSyncTitle>
+    <AppendSynchronizedSubtitlePrompt>Append this synchronized subtitle?</AppendSynchronizedSubtitlePrompt>
+    <BeforeAppend>Before append</BeforeAppend>
+    <SubtitleAppendedX>Subtitle appended: {0}</SubtitleAppendedX>
+    <SubtitleNotAppended>Subtitle NOT appended!</SubtitleNotAppended>
+    <GoogleTranslate>Google translate</GoogleTranslate>
+    <MicrosoftTranslate>Microsoft translate</MicrosoftTranslate>
+    <BeforeGoogleTranslation>Before Google translation</BeforeGoogleTranslation>
+    <SelectedLinesTranslated>Selected lines translated</SelectedLinesTranslated>
+    <SubtitleTranslated>Subtitle translated</SubtitleTranslated>
+    <TranslateSwedishToDanish>Translate currently loaded Swedish subtitle to Danish</TranslateSwedishToDanish>
+    <TranslateSwedishToDanishWarning>Translate currently loaded SWEDISH (are you sure it's Swedish?) subtitle to Danish?</TranslateSwedishToDanishWarning>
+    <TranslatingViaNikseDkMt>Translating via www.nikse.dk/mt...</TranslatingViaNikseDkMt>
+    <BeforeSwedishToDanishTranslation>Before Swedish to Danish translation</BeforeSwedishToDanishTranslation>
+    <TranslationFromSwedishToDanishComplete>Translation from Swedish to Danish complete</TranslationFromSwedishToDanishComplete>
+    <TranslationFromSwedishToDanishFailed>Translation from Swedish to Danish failed</TranslationFromSwedishToDanishFailed>
+    <BeforeUndo>Before undo</BeforeUndo>
+    <UndoPerformed>Undo performed</UndoPerformed>
+    <RedoPerformed>Redo performed</RedoPerformed>
+    <NothingToUndo>Nothing to undo</NothingToUndo>
+    <InvalidLanguageNameX>Invalid language name: {0}</InvalidLanguageNameX>
+    <UnableToChangeLanguage>Unable to change language!</UnableToChangeLanguage>
+    <DoNotDisplayMessageAgain>Не показувати це повідомлення знову</DoNotDisplayMessageAgain>
+    <NumberOfCorrectedWords>Number of corrected words: {0}</NumberOfCorrectedWords>
+    <NumberOfSkippedWords>Number of skipped words: {0}</NumberOfSkippedWords>
+    <NumberOfCorrectWords>Number of correct words: {0}</NumberOfCorrectWords>
+    <NumberOfWordsAddedToDictionary>Number of words added to dictionary: {0}</NumberOfWordsAddedToDictionary>
+    <NumberOfNameHits>Number of name hits: {0}</NumberOfNameHits>
+    <SpellCheck>Перевірка орфографії</SpellCheck>
+    <BeforeSpellCheck>Before spell check</BeforeSpellCheck>
+    <SpellCheckChangedXToY>Spell check: Changed '{0}' to '{1}'</SpellCheckChangedXToY>
+    <BeforeAddingTagX>Before adding &lt;{0}&gt; tag</BeforeAddingTagX>
+    <TagXAdded>&lt;{0}&gt; tags added</TagXAdded>
+    <LineXOfY>рядок {0} із {1}</LineXOfY>
+    <XLinesSavedAsY>{0} lines saved as {1}</XLinesSavedAsY>
+    <XLinesDeleted>{0} lines deleted</XLinesDeleted>
+    <BeforeDeletingXLines>Before deleting {0} lines</BeforeDeletingXLines>
+    <DeleteXLinesPrompt>Delete {0} lines?</DeleteXLinesPrompt>
+    <OneLineDeleted>Line deleted</OneLineDeleted>
+    <BeforeDeletingOneLine>Before deleting one line</BeforeDeletingOneLine>
+    <DeleteOneLinePrompt>Delete one line?</DeleteOneLinePrompt>
+    <BeforeInsertLine>Before insert line</BeforeInsertLine>
+    <LineInserted>Line inserted</LineInserted>
+    <BeforeLineUpdatedInListView>Before line updated in listview</BeforeLineUpdatedInListView>
+    <BeforeSettingFontToNormal>Before setting font to normal</BeforeSettingFontToNormal>
+    <BeforeSplitLine>Before split line</BeforeSplitLine>
+    <LineSplitted>Line was split</LineSplitted>
+    <BeforeMergeLines>Before merge lines</BeforeMergeLines>
+    <LinesMerged>Lines merged</LinesMerged>
+    <BeforeSettingColor>Before setting color</BeforeSettingColor>
+    <BeforeSettingFontName>Before setting font name</BeforeSettingFontName>
+    <BeforeTypeWriterEffect>Before typewriter effect</BeforeTypeWriterEffect>
+    <BeforeKaraokeEffect>Before karaoke effect</BeforeKaraokeEffect>
+    <BeforeImportingDvdSubtitle>Before importing subtitle from DVD</BeforeImportingDvdSubtitle>
+    <OpenMatroskaFile>Open Matroska file...</OpenMatroskaFile>
+    <MatroskaFiles>Matroska files</MatroskaFiles>
+    <NoSubtitlesFound>No subtitles found</NoSubtitlesFound>
+    <NotAValidMatroskaFileX>This is not a valid Matroska file: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Blu-ray sup file does not contain any subtitles or contains errors - try demuxing again.</BlurayNotSubtitlesFound>
+    <ParsingMatroskaFile>Parsing Matroska file. Please wait...</ParsingMatroskaFile>
+    <ParsingTransportStreamFile>Parsing Transport Stream file. Please wait...</ParsingTransportStreamFile>
+    <BeforeImportFromMatroskaFile>Before import subtitle from Matroska file</BeforeImportFromMatroskaFile>
+    <SubtitleImportedFromMatroskaFile>Subtitle imported from Matroska file</SubtitleImportedFromMatroskaFile>
+    <DropFileXNotAccepted>Drop file '{0}' not accepted - file is too large</DropFileXNotAccepted>
+    <DropOnlyOneFile>You can only drop one file</DropOnlyOneFile>
+    <BeforeCreateAdjustLines>Before create/adjust lines</BeforeCreateAdjustLines>
+    <OpenAnsiSubtitle>Відкрити субтитри...</OpenAnsiSubtitle>
+    <BeforeChangeCasing>Before change casing</BeforeChangeCasing>
+    <CasingCompleteMessageNoNames>Number of lines with casing changed: {0}/{1}</CasingCompleteMessageNoNames>
+    <CasingCompleteMessageOnlyNames>Number of lines with names casing changed: {0}/{1}</CasingCompleteMessageOnlyNames>
+    <CasingCompleteMessage>Number of lines with casing changed: {0}/{1}, changed casing for names: {2}</CasingCompleteMessage>
+    <BeforeChangeFrameRate>Before change frame rate</BeforeChangeFrameRate>
+    <BeforeAdjustSpeedInPercent>Before adjust speed in percent</BeforeAdjustSpeedInPercent>
+    <FrameRateChangedFromXToY>Frame rate changed from {0} to {1}</FrameRateChangedFromXToY>
+    <IdxFileNotFoundWarning>{0} not found! Import VobSub file anyway?</IdxFileNotFoundWarning>
+    <InvalidVobSubHeader>Header not valid VobSub file: {0}</InvalidVobSubHeader>
+    <OpenVobSubFile>Open VobSub (sub/idx) subtitle...</OpenVobSubFile>
+    <VobSubFiles>VobSub subtitle files</VobSubFiles>
+    <OpenBluRaySupFile>Open Blu-ray .sup file...</OpenBluRaySupFile>
+    <BluRaySupFiles>Blu-ray .sup files</BluRaySupFiles>
+    <OpenXSubFiles>Open XSub file...</OpenXSubFiles>
+    <XSubFiles>XSub files</XSubFiles>
+    <BeforeImportingVobSubFile>Before importing VobSub subtitle</BeforeImportingVobSubFile>
+    <BeforeImportingBluRaySupFile>Before importing Blu-ray sup file</BeforeImportingBluRaySupFile>
+    <BeforeImportingBdnXml>Before importing BDN xml file</BeforeImportingBdnXml>
+    <BeforeShowSelectedLinesEarlierLater>Before show selected lines earlier/later</BeforeShowSelectedLinesEarlierLater>
+    <ShowAllLinesXSecondsLinesEarlier>Show all lines {0:0.0##} seconds earlier</ShowAllLinesXSecondsLinesEarlier>
+    <ShowAllLinesXSecondsLinesLater>Show all lines {0:0.0##} seconds later</ShowAllLinesXSecondsLinesLater>
+    <ShowSelectedLinesXSecondsLinesEarlier>Show selected lines {0:0.0##} seconds earlier</ShowSelectedLinesXSecondsLinesEarlier>
+    <ShowSelectedLinesXSecondsLinesLater>Show selected lines {0:0.0##} seconds later</ShowSelectedLinesXSecondsLinesLater>
+    <ShowSelectionAndForwardXSecondsLinesEarlier>Show selection and forward {0:0.0##} seconds earlier</ShowSelectionAndForwardXSecondsLinesEarlier>
+    <ShowSelectionAndForwardXSecondsLinesLater>Show selection and forward {0:0.0##} seconds later</ShowSelectionAndForwardXSecondsLinesLater>
+    <ShowSelectedLinesEarlierLaterPerformed>Show earlier/later performed on selected lines</ShowSelectedLinesEarlierLaterPerformed>
+    <DoubleWordsViaRegEx>Double words via regex {0}</DoubleWordsViaRegEx>
+    <BeforeSortX>Before sort: {0}</BeforeSortX>
+    <SortedByX>Sorted by: {0}</SortedByX>
+    <BeforeAutoBalanceSelectedLines>Before auto balance selected lines</BeforeAutoBalanceSelectedLines>
+    <NumberOfLinesAutoBalancedX>Number of auto balanced lines: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeRemoveLineBreaksInSelectedLines>Before remove line-breaks from selected lines</BeforeRemoveLineBreaksInSelectedLines>
+    <NumberOfWithRemovedLineBreakX>Number of lines with removed line-break: {0}</NumberOfWithRemovedLineBreakX>
+    <BeforeMultipleReplace>Before multiple replace</BeforeMultipleReplace>
+    <NumberOfLinesReplacedX>Number of lines with text replaced: {0}</NumberOfLinesReplacedX>
+    <NameXAddedToNamesEtcList>The name '{0}' was added to names/etc list</NameXAddedToNamesEtcList>
+    <NameXNotAddedToNamesEtcList>The name '{0}' was NOT added to names/etc list</NameXNotAddedToNamesEtcList>
+    <WordXAddedToUserDic>The word '{0}' was added to the user dictionary</WordXAddedToUserDic>
+    <WordXNotAddedToUserDic>The word '{0}' was NOT added to the user dictionary</WordXNotAddedToUserDic>
+    <OcrReplacePairXAdded>The OCR replace list pair '{0} -&gt; {1}' was added to the OCR replace list</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>The OCR replace list pair '{0} -&gt; {1}' was NOT added to the OCR replace list</OcrReplacePairXNotAdded>
+    <XLinesSelected>{0} lines selected</XLinesSelected>
+    <UnicodeMusicSymbolsAnsiWarning>Subtitle contains unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeCharactersAnsiWarning>Subtitle contains unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?</UnicodeCharactersAnsiWarning>
+    <NegativeTimeWarning>Subtitle contains negative time codes. Continue with saving?</NegativeTimeWarning>
+    <BeforeMergeShortLines>Before merge short lines</BeforeMergeShortLines>
+    <BeforeSplitLongLines>Before split long lines</BeforeSplitLongLines>
+    <MergedShortLinesX>Number of lines merged: {0}</MergedShortLinesX>
+    <BeforeDurationsBridgeGap>Before bridge small gaps</BeforeDurationsBridgeGap>
+    <BeforeSetMinimumDisplayTimeBetweenParagraphs>Before set minimum display time between subtitles</BeforeSetMinimumDisplayTimeBetweenParagraphs>
+    <XMinimumDisplayTimeBetweenParagraphsChanged>Number of lines with minimum display time between subtitles changed: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
+    <BeforeImportText>Before import plain text</BeforeImportText>
+    <TextImported>Text imported</TextImported>
+    <BeforePointSynchronization>Before point synchronization</BeforePointSynchronization>
+    <PointSynchronizationDone>Point synchronization done</PointSynchronizationDone>
+    <BeforeTimeCodeImport>Before import of time codes</BeforeTimeCodeImport>
+    <TimeCodeImportedFromXY>Time codes imported from {0}: {1}</TimeCodeImportedFromXY>
+    <BeforeInsertSubtitleAtVideoPosition>Before insert subtitle at video position</BeforeInsertSubtitleAtVideoPosition>
+    <BeforeSetStartTimeAndOffsetTheRest>Before set start time and off-set the rest</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndTimeAndOffsetTheRest>Before set end time and off-set the rest</BeforeSetEndTimeAndOffsetTheRest>
+    <BeforeSetEndAndVideoPosition>Before set end time at video position and auto calculate start</BeforeSetEndAndVideoPosition>
+    <ContinueWithCurrentSpellCheck>Continue with current spell check?</ContinueWithCurrentSpellCheck>
+    <CharactersPerSecond>Симв./сек.: {0:0.00}</CharactersPerSecond>
+    <GetFrameRateFromVideoFile>Get frame rate from video file</GetFrameRateFromVideoFile>
+    <NetworkMessage>New message: {0} ({1}): {2}</NetworkMessage>
+    <NetworkUpdate>Line updated: {0} ({1}): Index={2}, Text={3}</NetworkUpdate>
+    <NetworkInsert>Line inserted: {0} ({1}): Index={2}, Text={3}</NetworkInsert>
+    <NetworkDelete>Line deleted: {0} ({1}): Index={2}</NetworkDelete>
+    <NetworkNewUser>New user: {0} ({1})</NetworkNewUser>
+    <NetworkByeUser>Bye {0} ({1})</NetworkByeUser>
+    <NetworkUnableToConnectToServer>Unable to connect to server: {0}</NetworkUnableToConnectToServer>
+    <UserAndAction>User/action</UserAndAction>
+    <NetworkMode>Networking mode</NetworkMode>
+    <XStartedSessionYAtZ>{0}: Started session {1} at {2}</XStartedSessionYAtZ>
+    <SpellChekingViaWordXLineYOfX>Spell checking using Word {0} - line {1} / {2}</SpellChekingViaWordXLineYOfX>
+    <UnableToStartWord>Unable to start Microsoft Word</UnableToStartWord>
+    <SpellCheckAbortedXCorrections>Spell check aborted. {0} lines were modified.</SpellCheckAbortedXCorrections>
+    <SpellCheckCompletedXCorrections>Spell check completed. {0} lines were modified.</SpellCheckCompletedXCorrections>
+    <OpenOtherSubtitle>Open other subtitle</OpenOtherSubtitle>
+    <BeforeToggleDialogDashes>Before toggle of dialog dashes</BeforeToggleDialogDashes>
+    <ExportPlainTextAs>Export plain text as</ExportPlainTextAs>
+    <TextFiles>Текстові файли</TextFiles>
+    <SubtitleExported>Subtitle exported</SubtitleExported>
+    <LineNumberXErrorReadingFromSourceLineY>Line {0} - error reading: {1}</LineNumberXErrorReadingFromSourceLineY>
+    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Line {0} - error reading time code: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>Line {0} - expected subtitle number: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <BeforeGuessingTimeCodes>Before guessing time codes</BeforeGuessingTimeCodes>
+    <BeforeAutoDuration>Before auto-duration for selected lines</BeforeAutoDuration>
+    <BeforeColumnPaste>Before column paste</BeforeColumnPaste>
+    <BeforeColumnDelete>Before column delete</BeforeColumnDelete>
+    <BeforeColumnImportText>Before column import text</BeforeColumnImportText>
+    <BeforeColumnShiftCellsDown>Before column shift cells down</BeforeColumnShiftCellsDown>
+    <ErrorLoadingPluginXErrorY>Error loading plugin: {0}: {1}</ErrorLoadingPluginXErrorY>
+    <BeforeRunningPluginXVersionY>Before running plugin: {0}: {1}</BeforeRunningPluginXVersionY>
+    <UnableToReadPluginResult>Unable to read subtitle result from plugin!</UnableToReadPluginResult>
+    <UnableToCreateBackupDirectory>Unable to create backup directory {0}: {1}</UnableToCreateBackupDirectory>
+    <BeforeDisplaySubtitleJoin>Before join of subtitles</BeforeDisplaySubtitleJoin>
+    <SubtitlesJoined>Subtitles joined</SubtitlesJoined>
+    <StatusLog>Status log</StatusLog>
+    <XSceneChangesImported>{0} scene changes imported</XSceneChangesImported>
+    <PluginXExecuted>Plugin '{0}' executed.</PluginXExecuted>
+    <NotAValidXSubFile>Not a valid XSub file!</NotAValidXSubFile>
+    <BeforeMergeLinesWithSameText>Before merging lines with same text</BeforeMergeLinesWithSameText>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>Subtitle with time codes has a different number of lines ({0}) than current subtitle ({1}) - continue anyway?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ParsingTransportStream>Parsing transport stream - please wait...</ParsingTransportStream>
+    <ErrorLoadIdx>Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and Subtitle Edit can open the .sub file.</ErrorLoadIdx>
+    <ErrorLoadRar>This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.</ErrorLoadRar>
+    <ErrorLoadZip>This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.</ErrorLoadZip>
+    <ErrorLoadPng>This file seems to be a PNG image file. Subtitle Edit cannot open PNG files.</ErrorLoadPng>
+    <ErrorLoadJpg>This file seems to be a JPG image file. Subtitle Edit cannot open JPG files.</ErrorLoadJpg>
+    <ErrorLoadSrr>This file seems to be a ReScene .srr file - not a subtitle file.</ErrorLoadSrr>
+    <ErrorLoadTorrent>This file seems to be a BitTorrent file - not a subtitle file.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Sorry, this file contains only binary zeroes!
+
+If you have edited this file with Subtitle Edit you might be alble to find a backup via the menu item File -&gt; Restore auto-backup...</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>Directory drop are not supported here.</ErrorDirectoryDropNotAllowed>
+    <NoSupportEncryptedVobSub>Encrypted VobSub content is not supported.</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>Blu-ray sup files are not supported here.</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>DVD sup files are not supported here.</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>VobSub files are not supported here.</NoSupportHereVobSub>
+    <NoSupportHereDivx>Divx files are not supported here.</NoSupportHereDivx>
+  </Main>
+  <MatroskaSubtitleChooser>
+    <Title>Choose subtitle from Matroska file</Title>
+    <PleaseChoose>More than one subtitle found - please choose</PleaseChoose>
+    <TrackXLanguageYTypeZ>Track {0} - language: {1} - type: {2}</TrackXLanguageYTypeZ>
+  </MatroskaSubtitleChooser>
+  <MeasurementConverter>
+    <Title>Measurement converter</Title>
+    <ConvertFrom>Convert from</ConvertFrom>
+    <ConvertTo>Convert to</ConvertTo>
+    <CopyToClipboard>Copy to clipboard</CopyToClipboard>
+    <Celsius>Celsius</Celsius>
+    <Fahrenheit>Fahrenheit</Fahrenheit>
+    <Miles>Miles</Miles>
+    <Kilometers>Kilometers</Kilometers>
+    <Meters>Meters</Meters>
+    <Yards>Yards</Yards>
+    <Feet>Feet</Feet>
+    <Inches>Inches</Inches>
+    <Pounds>Pounds</Pounds>
+    <Kilos>Kilos</Kilos>
+  </MeasurementConverter>
+  <MergeDoubleLines>
+    <Title>Об'єднання рядків з однаковим текстом</Title>
+    <MaxMillisecondsBetweenLines>Макс. мілісекунд між рядками</MaxMillisecondsBetweenLines>
+    <IncludeIncrementing>Include incrementing lines</IncludeIncrementing>
+  </MergeDoubleLines>
+  <MergedShortLines>
+    <Title>Об'єднання коротких рядків</Title>
+    <MaximumCharacters>Maximum characters in one paragraph</MaximumCharacters>
+    <MaximumMillisecondsBetween>Maximum milliseconds between lines</MaximumMillisecondsBetween>
+    <NumberOfMergesX>Кількість об'єднань: {0}</NumberOfMergesX>
+    <MergedText>Об'єднаний текст</MergedText>
+    <OnlyMergeContinuationLines>Only merge continuation lines</OnlyMergeContinuationLines>
+  </MergedShortLines>
+  <MergeTextWithSameTimeCodes>
+    <Title>Об'єднати рядки з однаковими часовими мітками</Title>
+    <MaxDifferenceMilliseconds>Макс. відстань, мілісекунд</MaxDifferenceMilliseconds>
+    <ReBreakLines>Перерозбити рядки</ReBreakLines>
+    <NumberOfMergesX>Кількість об'єднань: {0}</NumberOfMergesX>
+    <MergedText>Об'єднаний текст</MergedText>
+  </MergeTextWithSameTimeCodes>
+  <ModifySelection>
+    <Title>Зміна вибору</Title>
+    <Rule>Правило</Rule>
+    <CaseSensitive>Чутливий до регістру</CaseSensitive>
+    <DoWithMatches>Що робити зі знайденим</DoWithMatches>
+    <MakeNewSelection>Зробити новий вибір</MakeNewSelection>
+    <AddToCurrentSelection>Додати до поточного вибору</AddToCurrentSelection>
+    <SubtractFromCurrentSelection>Відняти від поточного вибору</SubtractFromCurrentSelection>
+    <IntersectWithCurrentSelection>Утворити перетин з поточним вибором</IntersectWithCurrentSelection>
+    <MatchingLinesX>Знайдені рядки: {0}</MatchingLinesX>
+    <Contains>Містить</Contains>
+    <StartsWith>Починається з</StartsWith>
+    <EndsWith>Закінчується на</EndsWith>
+    <NoContains>Не містить</NoContains>
+    <RegEx>Регулярний вираз</RegEx>
+    <UnequalLines>Непарні рядки</UnequalLines>
+    <EqualLines>Парні рядки</EqualLines>
+  </ModifySelection>
+  <MultipleReplace>
+    <Title>Множинна заміна</Title>
+    <FindWhat>Знайти</FindWhat>
+    <ReplaceWith>Замінити на</ReplaceWith>
+    <Normal>Звичайний</Normal>
+    <CaseSensitive>Чутливий регістр</CaseSensitive>
+    <RegularExpression>Регулярний вираз</RegularExpression>
+    <LinesFoundX>Знайдено рядків: {0}</LinesFoundX>
+    <Delete>Видалити</Delete>
+    <Add>&amp;Додати</Add>
+    <Update>&amp;Оновити</Update>
+    <Enabled>Увімкнено</Enabled>
+    <SearchType>Тип пошуку</SearchType>
+    <RemoveAll>Видалити всі</RemoveAll>
+    <Import>Імпортувати...</Import>
+    <Export>Експортувати...</Export>
+    <ImportRulesTitle>Імпортувати правила заміна з...</ImportRulesTitle>
+    <ExportRulesTitle>Експортувати правила заміни до...</ExportRulesTitle>
+    <Rules>Правила пошуку і заміни</Rules>
+    <MoveToTop>Посунути на початок</MoveToTop>
+    <MoveToBottom>Посунути в кінець</MoveToBottom>
+  </MultipleReplace>
+  <NetworkChat>
+    <Title>Chat</Title>
+    <Send>Send</Send>
+  </NetworkChat>
+  <NetworkJoin>
+    <Title>Приєднатися до сесії</Title>
+    <Information>Приєднатися до наявної сесії, де кілька осіб 
+	можуть спільно редагувати один файл субтитрів (співпрацювати)</Information>
+    <Join>Приєднатися</Join>
+  </NetworkJoin>
+  <NetworkLogAndInfo>
+    <Title>Network session info and log</Title>
+    <Log>Log:</Log>
+  </NetworkLogAndInfo>
+  <NetworkStart>
+    <Title>Розпочати нову сесію</Title>
+    <ConnectionTo>З'єднуємося з {0}...</ConnectionTo>
+    <Information>Розпочати нову сесію, де кілька осіб зможуть 
+	спільно редагувати один файл субтитрів (співпрацювати)</Information>
+    <Start>Розпочати</Start>
+  </NetworkStart>
+  <OpenVideoDvd>
+    <Title>Open DVD via VLC</Title>
+    <OpenDvdFrom>Open DVD from...</OpenDvdFrom>
+    <Disc>Disc</Disc>
+    <Folder>Folder</Folder>
+    <ChooseDrive>Choose drive</ChooseDrive>
+    <ChooseFolder>Choose folder</ChooseFolder>
+  </OpenVideoDvd>
+  <PluginsGet>
+    <Title>Плаґіни</Title>
+    <InstalledPlugins>Встановлені плаґіни</InstalledPlugins>
+    <GetPlugins>Отримати плаґіни</GetPlugins>
+    <Description>Опис</Description>
+    <Version>Версія</Version>
+    <Date>Дата</Date>
+    <Type>Тип</Type>
+    <OpenPluginsFolder>Відкрити теку з плаґінами</OpenPluginsFolder>
+    <GetPluginsInfo1>Плаґіни до Subtitle Edit мають бути звантажені до теки "Plugins"</GetPluginsInfo1>
+    <GetPluginsInfo2>Оберіть плаґін та натисніть "Звантажити"</GetPluginsInfo2>
+    <PluginXDownloaded>Плаґін {0} звантажено</PluginXDownloaded>
+    <Download>&amp;Звантажити</Download>
+    <Remove>&amp;Видалити</Remove>
+    <UpdateAllX>Оновити усі ({0})</UpdateAllX>
+    <UnableToDownloadPluginListX>Не вдається звантажити список плаґінів: {0}</UnableToDownloadPluginListX>
+    <NewVersionOfSubtitleEditRequired>Потрібна новіша версія Subtitle Edit!</NewVersionOfSubtitleEditRequired>
+    <UpdateAvailable>[Доступне оновлення!]</UpdateAvailable>
+    <UpdateAll>Оновити усі</UpdateAll>
+    <XPluginsUpdated>{0} плаґінів оновлено</XPluginsUpdated>
+  </PluginsGet>
+  <RegularExpressionContextMenu>
+    <WordBoundary>Word boundary (\b)</WordBoundary>
+    <NonWordBoundary>Non word boundary (\B)</NonWordBoundary>
+    <NewLine>New line (\r\n)</NewLine>
+    <NewLineShort>New line (\n)</NewLineShort>
+    <AnyDigit>Any digit (\d)</AnyDigit>
+    <NonDigit>Non digit (\D)</NonDigit>
+    <AnyCharacter>Any character (.)</AnyCharacter>
+    <AnyWhitespace>Any whitespace (\s)</AnyWhitespace>
+    <NonSpaceCharacter>Non space character (\S)</NonSpaceCharacter>
+    <ZeroOrMore>Zero or more (*)</ZeroOrMore>
+    <OneOrMore>One or more (+)</OneOrMore>
+    <InCharacterGroup>In character group ([test])</InCharacterGroup>
+    <NotInCharacterGroup>Not in character group ([^test])</NotInCharacterGroup>
+  </RegularExpressionContextMenu>
+  <RemoveTextFromHearImpaired>
+    <Title>Видалення тексту для людей із вадами слуху</Title>
+    <RemoveTextConditions>Умови видалення тексту</RemoveTextConditions>
+    <RemoveTextBetween>Видалити текст між</RemoveTextBetween>
+    <SquareBrackets>'[' та ']'</SquareBrackets>
+    <Brackets>'{' та '}'</Brackets>
+    <Parentheses>'(' та ')'</Parentheses>
+    <QuestionMarks>'?' та '?'</QuestionMarks>
+    <And>та</And>
+    <RemoveTextBeforeColon>Видалити текст перед двокрапкою (':')</RemoveTextBeforeColon>
+    <OnlyIfTextIsUppercase>Тільки якщо текст у ВЕРХНЬОМУ РЕГІСТРІ</OnlyIfTextIsUppercase>
+    <OnlyIfInSeparateLine>Тільки якщо на окремому рядку</OnlyIfInSeparateLine>
+    <LinesFoundX>Рядків знайдено: {0}</LinesFoundX>
+    <RemoveTextIfContains>Видалити текст, що містить:</RemoveTextIfContains>
+    <RemoveTextIfAllUppercase>Видалити рядки у ВЕРХНЬОМУ РЕГІСТРІ</RemoveTextIfAllUppercase>
+    <RemoveInterjections>Видалити вигуки (цсс, хм, і т.д.)</RemoveInterjections>
+    <EditInterjections>Редагувати...</EditInterjections>
+  </RemoveTextFromHearImpaired>
+  <ReplaceDialog>
+    <Title>Заміна</Title>
+    <FindWhat>Знайти:</FindWhat>
+    <Normal>&amp;Звичайний</Normal>
+    <CaseSensitive>&amp;Чутливий до регістру</CaseSensitive>
+    <RegularExpression>Регулярний &amp;вираз</RegularExpression>
+    <ReplaceWith>Замінити на</ReplaceWith>
+    <Find>&amp;Шукати</Find>
+    <Replace>&amp;Замінити</Replace>
+    <ReplaceAll>Замінити &amp;все</ReplaceAll>
+  </ReplaceDialog>
+  <RestoreAutoBackup>
+    <Title>Відновлення автоматичної резервної копії</Title>
+    <Information>Відкрити автоматичну резервну копію</Information>
+    <DateAndTime>Дата і час</DateAndTime>
+    <FileName>Назва файлу</FileName>
+    <Extension>Розширення</Extension>
+    <NoBackedUpFilesFound>Не знайдено жодної автоматичної резервної копії!</NoBackedUpFilesFound>
+  </RestoreAutoBackup>
+  <SeekSilence>
+    <Title>Seek silence</Title>
+    <SearchDirection>Search direction</SearchDirection>
+    <Forward>Forward</Forward>
+    <Back>Back</Back>
+    <LengthInSeconds>Silence must be at at least (seconds)</LengthInSeconds>
+    <MaxVolume>Volume must be below</MaxVolume>
+  </SeekSilence>
+  <SetMinimumDisplayTimeBetweenParagraphs>
+    <Title>Встановлення мінімальної відстані між субтитрами</Title>
+    <PreviewLinesModifiedX>Попередній перегляд - субтитрів редаговано: {0}</PreviewLinesModifiedX>
+    <ShowOnlyModifiedLines>Показувати тільки змінені рядки</ShowOnlyModifiedLines>
+    <MinimumMillisecondsBetweenParagraphs>Мінімальна відстань між рядками, мілісекунд</MinimumMillisecondsBetweenParagraphs>
+    <FrameInfo>Інформація про частоту кадрів</FrameInfo>
+    <OneFrameXisYMilliseconds>Один кадр при частоті {0:0.00} кнс - це {1} мілісекунд</OneFrameXisYMilliseconds>
+  </SetMinimumDisplayTimeBetweenParagraphs>
+  <SetSyncPoint>
+    <Title>Set Sync point for line {0}</Title>
+    <SyncPointTimeCode>Sync point time code</SyncPointTimeCode>
+    <ThreeSecondsBack>&lt;&lt; 3 s</ThreeSecondsBack>
+    <HalfASecondBack>&lt;&lt; ½ s</HalfASecondBack>
+    <HalfASecondForward>½ s &gt;&gt;</HalfASecondForward>
+    <ThreeSecondsForward>3 s &gt;&gt;</ThreeSecondsForward>
+  </SetSyncPoint>
+  <Settings>
+    <Title>Налаштування</Title>
+    <General>Загальні</General>
+    <Toolbar>Панель інструментів</Toolbar>
+    <VideoPlayer>Відеопрогравач</VideoPlayer>
+    <WaveformAndSpectrogram>Waveform/spectrogram</WaveformAndSpectrogram>
+    <Tools>Інструменти</Tools>
+    <WordLists>Word lists</WordLists>
+    <SsaStyle>ASS/SSA Style</SsaStyle>
+    <Network>Network</Network>
+    <ShowToolBarButtons>Show tool bar buttons</ShowToolBarButtons>
+    <New>New</New>
+    <Open>Open</Open>
+    <Save>Save</Save>
+    <SaveAs>Save as</SaveAs>
+    <Find>Find</Find>
+    <Replace>Replace</Replace>
+    <VisualSync>Visual sync</VisualSync>
+    <SpellCheck>Перевірка орфографії</SpellCheck>
+    <SettingsName>Settings</SettingsName>
+    <Help>Help</Help>
+    <ShowFrameRate>Show frame rate in toolbar</ShowFrameRate>
+    <DefaultFrameRate>Default frame rate</DefaultFrameRate>
+    <DefaultFileEncoding>Default file encoding</DefaultFileEncoding>
+    <AutoDetectAnsiEncoding>Auto detect ANSI encoding</AutoDetectAnsiEncoding>
+    <SubtitleLineMaximumLength>Single line max. length</SubtitleLineMaximumLength>
+    <MaximumCharactersPerSecond>Макс. симв/сек</MaximumCharactersPerSecond>
+    <AutoWrapWhileTyping>Auto-wrap while typing</AutoWrapWhileTyping>
+    <DurationMinimumMilliseconds>Мін. тривалість, мілісекунд</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>Макс. тривалість, мілісекунд</DurationMaximumMilliseconds>
+    <MinimumGapMilliseconds>Min. gap between subtitles in ms</MinimumGapMilliseconds>
+    <SubtitleFont>Subtitle font</SubtitleFont>
+    <SubtitleFontSize>Subtitle font size</SubtitleFontSize>
+    <SubtitleBold>Bold</SubtitleBold>
+    <SubtitleCenter>Center</SubtitleCenter>
+    <SubtitleFontColor>Subtitle font color</SubtitleFontColor>
+    <SubtitleBackgroundColor>Subtitle background color</SubtitleBackgroundColor>
+    <SpellChecker>Spell checker</SpellChecker>
+    <RememberRecentFiles>Show recent files (for reopen)</RememberRecentFiles>
+    <StartWithLastFileLoaded>Start with last file loaded</StartWithLastFileLoaded>
+    <RememberSelectedLine>Remember selected line</RememberSelectedLine>
+    <RememberPositionAndSize>Remember main window position and size</RememberPositionAndSize>
+    <StartInSourceView>Start in source view</StartInSourceView>
+    <RemoveBlankLinesWhenOpening>Remove blank lines when opening a subtitle</RemoveBlankLinesWhenOpening>
+    <ShowLineBreaksAs>Show line breaks in list view as</ShowLineBreaksAs>
+    <MainListViewDoubleClickAction>Double-clicking line in main window list view will</MainListViewDoubleClickAction>
+    <MainListViewNothing>Nothing</MainListViewNothing>
+    <MainListViewVideoGoToPositionAndPause>Go to video position and pause</MainListViewVideoGoToPositionAndPause>
+    <MainListViewVideoGoToPositionAndPlay>Go to video position and play</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewEditText>Go to edit text box</MainListViewEditText>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Go to video position - 1 s and pause</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Go to video position - 0.5 s and pause</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Go to video position - 1 s and play</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewEditTextAndPause>Go to edit text box, and pause at video position</MainListViewEditTextAndPause>
+    <AutoBackup>Auto-backup</AutoBackup>
+    <AutoBackupEveryMinute>Every minute</AutoBackupEveryMinute>
+    <AutoBackupEveryFiveMinutes>Every 5th minute</AutoBackupEveryFiveMinutes>
+    <AutoBackupEveryFifteenMinutes>Every 15th minute</AutoBackupEveryFifteenMinutes>
+    <CheckForUpdates>Check for updates</CheckForUpdates>
+    <AllowEditOfOriginalSubtitle>Allow edit of original subtitle</AllowEditOfOriginalSubtitle>
+    <PromptDeleteLines>Prompt for delete lines</PromptDeleteLines>
+    <TimeCodeMode>Time code mode</TimeCodeMode>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
+    <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
+    <VideoEngine>Video engine</VideoEngine>
+    <DirectShow>DirectShow</DirectShow>
+    <DirectShowDescription>quartz.dll in system32 folder</DirectShowDescription>
+    <ManagedDirectX>Managed DirectX</ManagedDirectX>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
+    <MpcHc>MPC-HC</MpcHc>
+    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
+    <MPlayer>MPlayer</MPlayer>
+    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll from VLC media player 1.1.0 or newer</VlcMediaPlayerDescription>
+    <VlcBrowseToLabel>VLC path (only needed if you're using the portable version of VLC)</VlcBrowseToLabel>
+    <ShowStopButton>Show stop button</ShowStopButton>
+    <ShowMuteButton>Show mute button</ShowMuteButton>
+    <ShowFullscreenButton>Show fullscreen button</ShowFullscreenButton>
+    <PreviewFontSize>Subtitle preview font size</PreviewFontSize>
+    <MainWindowVideoControls>Main window video controls</MainWindowVideoControls>
+    <CustomSearchTextAndUrl>Custom search text and URL</CustomSearchTextAndUrl>
+    <WaveformAppearance>Waveform appearance</WaveformAppearance>
+    <WaveformGridColor>Grid color</WaveformGridColor>
+    <WaveformShowGridLines>Show grid lines</WaveformShowGridLines>
+    <ReverseMouseWheelScrollDirection>Reverse mouse wheel scroll direction</ReverseMouseWheelScrollDirection>
+    <WaveformAllowOverlap>Allow overlap (when moving/resizing)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Set focus on mouse enter</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Also set list view focus on mouse enter in list view</WaveformListViewFocusMouseEnter>
+    <WaveformBorderHitMs1>Border marker hit must be within</WaveformBorderHitMs1>
+    <WaveformBorderHitMs2>milliseconds</WaveformBorderHitMs2>
+    <WaveformColor>Color</WaveformColor>
+    <WaveformSelectedColor>Selected color</WaveformSelectedColor>
+    <WaveformBackgroundColor>Back color</WaveformBackgroundColor>
+    <WaveformTextColor>Text color</WaveformTextColor>
+    <WaveformTextFontSize>Text font size</WaveformTextFontSize>
+    <WaveformAndSpectrogramsFolderEmpty>Empty 'Spectrograms' and 'Waveforms' folders</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderInfo>'Waveforms' and 'Spectrograms' folders contain {0} files ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
+    <Spectrogram>Spectrogram</Spectrogram>
+    <GenerateSpectrogram>Generate spectrogram</GenerateSpectrogram>
+    <SpectrogramAppearance>Spectrogram appearance</SpectrogramAppearance>
+    <SpectrogramOneColorGradient>One color gradient</SpectrogramOneColorGradient>
+    <SpectrogramClassic>Classic</SpectrogramClassic>
+    <WaveformUseFFmpeg>Use FFmpeg for wave extraction</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Path to FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Browse to FFmpeg</WaveformBrowseToFFmpeg>
+    <WaveformBrowseToVLC>Browse to VLC portable</WaveformBrowseToVLC>
+    <SubStationAlphaStyle>(Advanced) Sub Station Alpha style</SubStationAlphaStyle>
+    <ChooseFont>Choose font</ChooseFont>
+    <ChooseColor>Choose color</ChooseColor>
+    <SsaOutline>Outline</SsaOutline>
+    <SsaShadow>Shadow</SsaShadow>
+    <SsaOpaqueBox>Opaque box</SsaOpaqueBox>
+    <Testing123>Testing 123...</Testing123>
+    <Language>Language</Language>
+    <NamesIgnoreLists>Names/ignore list (case sensitive)</NamesIgnoreLists>
+    <AddNameEtc>Add name</AddNameEtc>
+    <AddWord>Add word</AddWord>
+    <Remove>Remove</Remove>
+    <AddPair>Add pair</AddPair>
+    <UserWordList>User word list</UserWordList>
+    <OcrFixList>OCR fix list</OcrFixList>
+    <Location>Location</Location>
+    <UseOnlineNamesEtc>Use online names etc xml file</UseOnlineNamesEtc>
+    <WordAddedX>Word added: {0}</WordAddedX>
+    <WordAlreadyExists>Word already exists!</WordAlreadyExists>
+    <WordNotFound>Word not found</WordNotFound>
+    <RemoveX>Remove {0}?</RemoveX>
+    <CannotUpdateNamesEtcOnline>Cannot update NamesEtc.xml online!</CannotUpdateNamesEtcOnline>
+    <ProxyServerSettings>Proxy server settings</ProxyServerSettings>
+    <ProxyAddress>Proxy address</ProxyAddress>
+    <ProxyAuthentication>Authentication</ProxyAuthentication>
+    <ProxyUserName>User name</ProxyUserName>
+    <ProxyPassword>Password</ProxyPassword>
+    <ProxyDomain>Domain</ProxyDomain>
+    <NetworkSessionSettings>Network session settings</NetworkSessionSettings>
+    <NetworkSessionNewSound>Play sound file when new message arrives</NetworkSessionNewSound>
+    <PlayXSecondsAndBack>Play X seconds and back, X is</PlayXSecondsAndBack>
+    <StartSceneIndex>Start scene paragraph is</StartSceneIndex>
+    <EndSceneIndex>End scene paragraph is</EndSceneIndex>
+    <FirstPlusX>First + {0}</FirstPlusX>
+    <LastMinusX>Last - {0}</LastMinusX>
+    <FixCommonerrors>Fix common errors</FixCommonerrors>
+    <MergeLinesShorterThan>Unbreak subtitles shorter than</MergeLinesShorterThan>
+    <MusicSymbol>Music symbol</MusicSymbol>
+    <MusicSymbolsToReplace>Music symbols to replace (separate by space)</MusicSymbolsToReplace>
+    <FixCommonOcrErrorsUseHardcodedRules>Fix common OCR errors - also use hardcoded rules</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix short display time - allow move of start time</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <Shortcuts>Shortcuts</Shortcuts>
+    <Shortcut>Shortcut</Shortcut>
+    <Control>Control</Control>
+    <Alt>Alt</Alt>
+    <Shift>Shift</Shift>
+    <Key>Key</Key>
+    <TextBox>Textbox</TextBox>
+    <UpdateShortcut>Update</UpdateShortcut>
+    <ShortcutIsNotValid>Shortcut is not valid: {0}</ShortcutIsNotValid>
+    <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>
+    <CreateSetEndAddNewAndGoToNew>Set end, add new and go to new</CreateSetEndAddNewAndGoToNew>
+    <AdjustViaEndAutoStartAndGoToNext>Adjust via end position and go to next</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Set end and go to next</AdjustSetEndTimeAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>Set start, auto duration and go to next</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetEndNextStartAndGoToNext>Set end, next start and go to next</AdjustSetEndNextStartAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>Key down=set start, Key up=set end and go to next</AdjustStartDownEndUpAndGoToNext>
+    <AdjustSelected100MsForward>Move selected lines 100 ms forward</AdjustSelected100MsForward>
+    <AdjustSelected100MsBack>Move selected lines 100 ms back</AdjustSelected100MsBack>
+    <AdjustSetStartTimeKeepDuration>Set start time, keep duration</AdjustSetStartTimeKeepDuration>
+    <AdjustSetEndAndOffsetTheRest>Set end, offset the rest</AdjustSetEndAndOffsetTheRest>
+    <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <MainCreateStartDownEndUp>Create new at key-down, set end time at key-up</MainCreateStartDownEndUp>
+    <MergeDialog>Merge dialog (insert dashes)</MergeDialog>
+    <GoToNext>Go to next line</GoToNext>
+    <GoToPrevious>Go to previous line</GoToPrevious>
+    <GoToCurrentSubtitleStart>Go to current line start</GoToCurrentSubtitleStart>
+    <GoToCurrentSubtitleEnd>Go to current line end</GoToCurrentSubtitleEnd>
+    <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
+    <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
+    <Alignment>Alignment (selected lines)</Alignment>
+    <CopyTextOnly>Copy text only to clip board (selected lines)</CopyTextOnly>
+    <CopyTextOnlyFromOriginalToCurrent>Copy text from original to current</CopyTextOnlyFromOriginalToCurrent>
+    <AutoDurationSelectedLines>Auto-duration (selected lines)</AutoDurationSelectedLines>
+    <ReverseStartAndEndingForRTL>Reverse RTL start/end</ReverseStartAndEndingForRTL>
+    <VerticalZoom>Vertical zoom in</VerticalZoom>
+    <VerticalZoomOut>Vertical zoom out</VerticalZoomOut>
+    <WaveformSeekSilenceForward>Seek silence forward</WaveformSeekSilenceForward>
+    <WaveformSeekSilenceBack>Seek silence back</WaveformSeekSilenceBack>
+    <WaveformAddTextHere>Add text here (for new selection)</WaveformAddTextHere>
+    <WaveformPlayNewSelection>Play new selection</WaveformPlayNewSelection>
+    <WaveformPlayFirstSelectedSubtitle>Play first selected subtitle</WaveformPlayFirstSelectedSubtitle>
+    <WaveformFocusListView>Focus list view</WaveformFocusListView>
+    <GoBack1Frame>One frame back</GoBack1Frame>
+    <GoForward1Frame>One frame forward</GoForward1Frame>
+    <GoBack100Milliseconds>100 ms back</GoBack100Milliseconds>
+    <GoForward100Milliseconds>100 ms forward</GoForward100Milliseconds>
+    <GoBack500Milliseconds>500 ms back</GoBack500Milliseconds>
+    <GoForward500Milliseconds>500 ms forward</GoForward500Milliseconds>
+    <GoBack1Second>One second back</GoBack1Second>
+    <GoForward1Second>One second forward</GoForward1Second>
+    <TogglePlayPause>Toggle play/pause</TogglePlayPause>
+    <Pause>Pause</Pause>
+    <Fullscreen>Fullscreen</Fullscreen>
+    <CustomSearch1>Translate, custom search 1</CustomSearch1>
+    <CustomSearch2>Translate, custom search 2</CustomSearch2>
+    <CustomSearch3>Translate, custom search 3</CustomSearch3>
+    <CustomSearch4>Translate, custom search 4</CustomSearch4>
+    <CustomSearch5>Translate, custom search 5</CustomSearch5>
+    <CustomSearch6>Translate, custom search 6</CustomSearch6>
+    <SyntaxColoring>Syntax coloring</SyntaxColoring>
+    <ListViewSyntaxColoring>List view syntax coloring</ListViewSyntaxColoring>
+    <SyntaxColorDurationIfTooSmall>Color duration if too short</SyntaxColorDurationIfTooSmall>
+    <SyntaxColorDurationIfTooLarge>Color duration if too long</SyntaxColorDurationIfTooLarge>
+    <SyntaxColorTextIfTooLong>Color text if too long</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextMoreThanXLines>Color text if more than lines:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorOverlap>Color time code overlap</SyntaxColorOverlap>
+    <SyntaxErrorColor>Error color</SyntaxErrorColor>
+    <GoToFirstSelectedLine>Go to first selected line</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>Go to next empty line</GoToNextEmptyLine>
+    <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
+    <MergeSelectedLinesOnlyFirstText>Merge selected lines, keep only first non-empty text</MergeSelectedLinesOnlyFirstText>
+    <ToggleTranslationMode>Toggle translation mode</ToggleTranslationMode>
+    <SwitchOriginalAndTranslation>Switch original and translation</SwitchOriginalAndTranslation>
+    <MergeOriginalAndTranslation>Merge original and translation</MergeOriginalAndTranslation>
+    <ShortcutIsAlreadyDefinedX>Shortcut already defined: {0}</ShortcutIsAlreadyDefinedX>
+    <ToggleTranslationAndOriginalInPreviews>Toggle translation and original in video/audio preview</ToggleTranslationAndOriginalInPreviews>
+    <ListViewColumnDelete>Column, delete text</ListViewColumnDelete>
+    <ListViewColumnInsert>Column, insert text</ListViewColumnInsert>
+    <ListViewColumnPaste>Column, paste</ListViewColumnPaste>
+    <ListViewFocusWaveform>Focus waveform/spectrogram</ListViewFocusWaveform>
+    <ListViewGoToNextError>Go to next error</ListViewGoToNextError>
+    <ShowBeamer>Start subtitle fullscreen beamer</ShowBeamer>
+    <MainTextBoxMoveLastWordDown>Move last word down to next subtitle line</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveFirstWordFromNextUp>Move first word from next subtitle line up</MainTextBoxMoveFirstWordFromNextUp>
+    <MainTextBoxSelectionToLower>Selection to lowercase</MainTextBoxSelectionToLower>
+    <MainTextBoxSelectionToUpper>Selection to uppercase</MainTextBoxSelectionToUpper>
+    <MainTextBoxToggleAutoDuration>Toggle auto duration</MainTextBoxToggleAutoDuration>
+    <MainTextBoxAutoBreak>Auto break text</MainTextBoxAutoBreak>
+    <MainTextBoxUnbreak>Unbreak text</MainTextBoxUnbreak>
+    <MainFileSaveAll>Save all</MainFileSaveAll>
+    <Miscellaneous>Misc.</Miscellaneous>
+    <UseDoNotBreakAfterList>Use do-not-break-after list (for auto-br)</UseDoNotBreakAfterList>
+  </Settings>
+  <SetVideoOffset>
+    <Title>Set video offset</Title>
+    <Description>Set video offset (subtitles should not follow real video time, but e.g. +10 hours)</Description>
+    <RelativeToCurrentVideoPosition>Relative to current video position</RelativeToCurrentVideoPosition>
+  </SetVideoOffset>
+  <ShowEarlierLater>
+    <Title>Show selected lines earlier/later</Title>
+    <TitleAll>Show all lines earlier/later</TitleAll>
+    <ShowEarlier>Show earlier</ShowEarlier>
+    <ShowLater>Show later</ShowLater>
+    <TotalAdjustmentX>Total adjustment: {0}</TotalAdjustmentX>
+    <AllLines>All lines</AllLines>
+    <SelectedLinesOnly>Selected lines only</SelectedLinesOnly>
+    <SelectedLinesAndForward>Selected line(s) and forward</SelectedLinesAndForward>
+  </ShowEarlierLater>
+  <ShowHistory>
+    <Title>Історія (для відкочувань)</Title>
+    <SelectRollbackPoint>Оберіть час/опис для відкочування</SelectRollbackPoint>
+    <Time>Час</Time>
+    <Description>Опис</Description>
+    <CompareHistoryItems>Порівняти елементи історії</CompareHistoryItems>
+    <CompareWithCurrent>Порівняти з поточним</CompareWithCurrent>
+    <Rollback>Відкотити</Rollback>
+  </ShowHistory>
+  <SpellCheck>
+    <Title>Перевірка орфографії</Title>
+    <FullText>Увесь текст</FullText>
+    <WordNotFound>Word not found</WordNotFound>
+    <Language>Мова</Language>
+    <Change>Change</Change>
+    <ChangeAll>Change all</ChangeAll>
+    <SkipOnce>Skip &amp;one</SkipOnce>
+    <SkipAll>&amp;Skip all</SkipAll>
+    <AddToUserDictionary>Додати до користувацького словника</AddToUserDictionary>
+    <AddToNamesAndIgnoreList>Add to names/noise list (case sensitive)</AddToNamesAndIgnoreList>
+    <AddToOcrReplaceList>Add pair to OCR replace list</AddToOcrReplaceList>
+    <Abort>Abort</Abort>
+    <Use>Use</Use>
+    <UseAlways>&amp;Use always</UseAlways>
+    <Suggestions>Suggestions</Suggestions>
+    <SpellCheckProgress>Spell check [{0}] - {1}</SpellCheckProgress>
+    <EditWholeText>Редагувати увесь текст</EditWholeText>
+    <EditWordOnly>Редагувати тільки слово</EditWordOnly>
+    <AddXToNamesEtc>Add '{0}' to names/etc list</AddXToNamesEtc>
+    <AutoFixNames>Auto fix names where only casing differ</AutoFixNames>
+    <CheckOneLetterWords>Prompt for unknown one letter words</CheckOneLetterWords>
+    <TreatINQuoteAsING>Treat word ending " in' " as " ing " (English only)</TreatINQuoteAsING>
+    <ImageText>Image text</ImageText>
+    <SpellCheckCompleted>Spell check completed</SpellCheckCompleted>
+    <SpellCheckAborted>Spell check aborted</SpellCheckAborted>
+    <UndoX>Undo: {0}</UndoX>
+  </SpellCheck>
+  <Split>
+    <Title>Розбиття</Title>
+    <SplitOptions>Налаштування розбиття</SplitOptions>
+    <Lines>Рядки</Lines>
+    <Characters>Символи</Characters>
+    <NumberOfEqualParts>Кількість рівних частин</NumberOfEqualParts>
+    <SubtitleInfo>Інформація про субтитри</SubtitleInfo>
+    <NumberOfLinesX>Кількість рядків: {0:#,###}</NumberOfLinesX>
+    <NumberOfCharactersX>Кількість символів: {0:#,###,###}</NumberOfCharactersX>
+    <Output>Вихід</Output>
+    <FileName>Назва файлу</FileName>
+    <OutputFolder>Вихідна тека</OutputFolder>
+    <DoSplit>Розбити</DoSplit>
+    <Basic>Basic</Basic>
+  </Split>
+  <SplitLongLines>
+    <Title>Розбивання довгих субтитрів</Title>
+    <SingleLineMaximumLength>Максимальна довжина одного рядка</SingleLineMaximumLength>
+    <LineMaximumLength>Максимальна довжина субтитру</LineMaximumLength>
+    <LineContinuationBeginEndStrings>Символи початку/кінця продовження рядка</LineContinuationBeginEndStrings>
+    <NumberOfSplits>Кількість розбиттів: {0}</NumberOfSplits>
+    <LongestSingleLineIsXAtY>Довжина найдовшого рядка - {0} в рядку {1}</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Довжиина найдовшого субтитру - {0} в рядку {1}</LongestLineIsXAtY>
+  </SplitLongLines>
+  <SplitSubtitle>
+    <Title>Split subtitle</Title>
+    <Description1>Enter length of first part of video or browse</Description1>
+    <Description2>and get length from video file:</Description2>
+    <Split>&amp;Split</Split>
+    <Done>&amp;Done</Done>
+    <NothingToSplit>Nothing to split!</NothingToSplit>
+    <SavePartOneAs>Save part 1 as...</SavePartOneAs>
+    <SavePartTwoAs>Save part 2 as...</SavePartTwoAs>
+    <Part1>Part1</Part1>
+    <Part2>Part2</Part2>
+    <UnableToSaveFileX>Unable to save {0}</UnableToSaveFileX>
+    <OverwriteExistingFiles>Overwrite existing files?</OverwriteExistingFiles>
+    <FolderNotFoundX>Folder not found: {0}</FolderNotFoundX>
+    <Untitled>Untitled</Untitled>
+  </SplitSubtitle>
+  <StartNumberingFrom>
+    <Title>Перенумерація</Title>
+    <StartFromNumber>Почати з числа:</StartFromNumber>
+    <PleaseEnterAValidNumber>Введіть число, будь ласка</PleaseEnterAValidNumber>
+  </StartNumberingFrom>
+  <Statistics>
+    <Title>Статистика</Title>
+    <TitleWithFileName>Статистика - {0}</TitleWithFileName>
+    <GeneralStatistics>Загальна статистика</GeneralStatistics>
+    <MostUsed>Найуживаніше...</MostUsed>
+    <MostUsedLines>Найуживаніші рядки</MostUsedLines>
+    <MostUsedWords>Найуживаніші слова</MostUsedWords>
+    <NothingFound>Нічого не знайдено</NothingFound>
+    <NumberOfLinesX>Кількість субтитрів: {0:#,###}</NumberOfLinesX>
+    <LengthInFormatXinCharactersY>Кількість символів у вигляді {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
+    <NumberOfCharactersInTextOnly>Кількість символів суто тексту: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalCharsPerSecond>Total characters/second: {0:0.0} seconds</TotalCharsPerSecond>
+    <NumberOfItalicTags>Number of italic tags: {0}</NumberOfItalicTags>
+    <NumberOfBoldTags>Number of bold tags: {0}</NumberOfBoldTags>
+    <NumberOfUnderlineTags>Number of underline tags: {0}</NumberOfUnderlineTags>
+    <NumberOfFontTags>Number of font tags: {0}</NumberOfFontTags>
+    <NumberOfAlignmentTags>Number of alignment tags: {0}</NumberOfAlignmentTags>
+    <LineLengthMinimum>Довжина субтитру - мінімальна: {0}</LineLengthMinimum>
+    <LineLengthMaximum>Довжина субтитру - максимальна: {0}</LineLengthMaximum>
+    <LineLengthAverage>Довжина субтитру - середня: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Кількість рядків у субтитрі - середня: {0:0.0}</LinesPerSubtitleAverage>
+    <SingleLineLengthMinimum>Довжина одного рядка - мінімальна: {0}</SingleLineLengthMinimum>
+    <SingleLineLengthMaximum>Довжина одного рядка - максимальна: {0}</SingleLineLengthMaximum>
+    <SingleLineLengthAverage>Довжина одного рядка - середня: {0}</SingleLineLengthAverage>
+    <DurationMinimum>Тривалість - мінімум: {0:0.000} секунд</DurationMinimum>
+    <DurationMaximum>Тривалість - максимум: {0:0.000} секунд</DurationMaximum>
+    <DurationAverage>Тривалість - середня: {0:0.000} секунд</DurationAverage>
+    <CharactersPerSecondMinimum>Символів/секунду - мінімум: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Символів/секунду - максимум: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Символів/секунду - середньо: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Експортувати...</Export>
+  </Statistics>
+  <SubStationAlphaProperties>
+    <Title>Advanced Sub Station Alpha properties</Title>
+    <TitleSubstationAlpha>Sub Station Alpha properties</TitleSubstationAlpha>
+    <Script>Script</Script>
+    <ScriptTitle>Title</ScriptTitle>
+    <OriginalScript>Original script</OriginalScript>
+    <Translation>Translation</Translation>
+    <Editing>Editing</Editing>
+    <Timing>Timing</Timing>
+    <SyncPoint>Sync point</SyncPoint>
+    <UpdatedBy>Updated by</UpdatedBy>
+    <UpdateDetails>Update details</UpdateDetails>
+    <Resolution>Resolution</Resolution>
+    <VideoResolution>Video resolution</VideoResolution>
+    <Options>Options</Options>
+    <WrapStyle>Wrap style</WrapStyle>
+    <Collision>Collision</Collision>
+    <ScaleBorderAndShadow>Scale border and shadow</ScaleBorderAndShadow>
+  </SubStationAlphaProperties>
+  <SubStationAlphaStyles>
+    <Title>Advanced Sub Station Alpha styles</Title>
+    <TitleSubstationAlpha>Sub Station Alpha styles</TitleSubstationAlpha>
+    <Styles>Styles</Styles>
+    <Properties>Properties</Properties>
+    <Name>Name</Name>
+    <Font>Font</Font>
+    <FontName>Font name</FontName>
+    <FontSize>Font size</FontSize>
+    <UseCount>Used</UseCount>
+    <Primary>Primary</Primary>
+    <Secondary>Secondary</Secondary>
+    <Tertiary>Tertiary</Tertiary>
+    <Outline>Outline</Outline>
+    <Shadow>Shadow</Shadow>
+    <Back>Back</Back>
+    <Alignment>Alignment</Alignment>
+    <TopLeft>Top/left</TopLeft>
+    <TopCenter>Top/center</TopCenter>
+    <TopRight>Top/right</TopRight>
+    <MiddleLeft>Middle/left</MiddleLeft>
+    <MiddleCenter>Middle/center</MiddleCenter>
+    <MiddleRight>Middle/right</MiddleRight>
+    <BottomLeft>Bottom/left</BottomLeft>
+    <BottomCenter>Bottom/center</BottomCenter>
+    <BottomRight>Bottom/right</BottomRight>
+    <Colors>Colors</Colors>
+    <Margins>Margins</Margins>
+    <MarginLeft>Margin left</MarginLeft>
+    <MarginRight>Margin right</MarginRight>
+    <MarginVertical>Margin vertical</MarginVertical>
+    <Border>Border</Border>
+    <PlusShadow>+ Shadow</PlusShadow>
+    <OpaqueBox>Opaque box (uses outline color)</OpaqueBox>
+    <Import>Import...</Import>
+    <Export>Export...</Export>
+    <Copy>Copy</Copy>
+    <CopyOfY>Copy of {0}</CopyOfY>
+    <CopyXOfY>Copy {0} of {1}</CopyXOfY>
+    <New>New</New>
+    <Remove>Remove</Remove>
+    <RemoveAll>Remove all</RemoveAll>
+    <ImportStyleFromFile>Import style from file...</ImportStyleFromFile>
+    <ExportStyleToFile>Export style to file... (will add style if file already exists)</ExportStyleToFile>
+    <ChooseStyle>Choose style to import</ChooseStyle>
+    <StyleAlreadyExits>Style already exists: {0}</StyleAlreadyExits>
+    <StyleXExportedToFileY>Style '{0}' exported to file '{1}'</StyleXExportedToFileY>
+    <StyleXImportedFromFileY>Style '{0}' imported from file '{1}'</StyleXImportedFromFileY>
+  </SubStationAlphaStyles>
+  <PointSync>
+    <Title>Point synchronization</Title>
+    <TitleViaOtherSubtitle>Point sync via other subtitle</TitleViaOtherSubtitle>
+    <SyncHelp>Set at least two sync points to make rough synchronization</SyncHelp>
+    <SetSyncPoint>Set sync point</SetSyncPoint>
+    <RemoveSyncPoint>Remove sync point</RemoveSyncPoint>
+    <SyncPointsX>Sync points: {0}</SyncPointsX>
+    <Info>One sync point will adjust position, two or more sync points will adjust position and speed</Info>
+    <ApplySync>Apply</ApplySync>
+  </PointSync>
+  <TransportStreamSubtitleChooser>
+    <Title>Transport stream subtitle chooser - {0}</Title>
+    <PidLine>Transport Packet Identifier (PID) = {0}, number of subtitles = {1}</PidLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} image(s)</SubLine>
+  </TransportStreamSubtitleChooser>
+  <UnknownSubtitle>
+    <Title>Unknown subtitle type</Title>
+    <Message>If you want this fixed please send an email to mailto:niksedk@gmail.com and include a copy of the subtitle.</Message>
+  </UnknownSubtitle>
+  <VisualSync>
+    <Title>Візуальна синхронізація</Title>
+    <StartScene>Початкова сцена</StartScene>
+    <EndScene>Кінцева сцена</EndScene>
+    <Synchronize>Синхронізувати</Synchronize>
+    <HalfASecondBack>&lt; ½ с</HalfASecondBack>
+    <ThreeSecondsBack>&lt; 3 с</ThreeSecondsBack>
+    <PlayXSecondsAndBack>Програти {0} с і назад</PlayXSecondsAndBack>
+    <FindText>Знайти текст</FindText>
+    <GoToSubPosition>Поз. субтитру</GoToSubPosition>
+    <KeepChangesTitle>Зберегти зміни?</KeepChangesTitle>
+    <KeepChangesMessage>В режимі "візуальної синхронізації" до субтитрів було внесено зміни.
+
+Зберегти ці зміни?</KeepChangesMessage>
+    <SynchronizationDone>Синхронізацію виконано!</SynchronizationDone>
+    <StartSceneMustComeBeforeEndScene>Start scene must come before end scene!</StartSceneMustComeBeforeEndScene>
+    <Tip>Підказка: Використовуйте клавіші &lt;ctrl+стрілка вліво/вправо&gt;, щоб просунутися на 100 мс назад/вперед</Tip>
+  </VisualSync>
+  <VobSubEditCharacters>
+    <Title>Edit image compare database</Title>
+    <ChooseCharacter>Choose character(s)</ChooseCharacter>
+    <ImageCompareFiles>Image compare files</ImageCompareFiles>
+    <CurrentCompareImage>Current compare image</CurrentCompareImage>
+    <TextAssociatedWithImage>Text associated with image</TextAssociatedWithImage>
+    <IsItalic>Is &amp;italic</IsItalic>
+    <Update>&amp;Update</Update>
+    <Delete>&amp;Delete</Delete>
+    <ImageDoubleSize>Image double size</ImageDoubleSize>
+    <ImageFileNotFound>Image file not found</ImageFileNotFound>
+    <Image>Image</Image>
+  </VobSubEditCharacters>
+  <VobSubOcr>
+    <Title>Import/OCR VobSub (sub/idx) subtitle</Title>
+    <TitleBluRay>Import/OCR Blu-ray (.sup) subtitle</TitleBluRay>
+    <OcrMethod>OCR method</OcrMethod>
+    <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Requires Microsoft Office</OcrViaModi>
+    <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
+    <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
+    <Language>Language</Language>
+    <OcrViaImageCompare>OCR via image compare</OcrViaImageCompare>
+    <ImageDatabase>Image database</ImageDatabase>
+    <NoOfPixelsIsSpace>No of pixels is space</NoOfPixelsIsSpace>
+    <MaxErrorPercent>Max. error%</MaxErrorPercent>
+    <New>New</New>
+    <Edit>Edit</Edit>
+    <StartOcr>Start OCR</StartOcr>
+    <Stop>Stop</Stop>
+    <StartOcrFrom>Start OCR from subtitle no:</StartOcrFrom>
+    <LoadingVobSubImages>Loading VobSub images...</LoadingVobSubImages>
+    <LoadingImageCompareDatabase>Loading image compare database...</LoadingImageCompareDatabase>
+    <ConvertingImageCompareDatabase>Converting image compare database to new format (images.db/images.xml)...</ConvertingImageCompareDatabase>
+    <SubtitleImage>Subtitle image</SubtitleImage>
+    <SubtitleText>Subtitle text</SubtitleText>
+    <UnableToCreateCharacterDatabaseFolder>Unable to create 'Character database folder': {0}</UnableToCreateCharacterDatabaseFolder>
+    <SubtitleImageXofY>Subtitle image {0} of {1}</SubtitleImageXofY>
+    <ImagePalette>Image palette</ImagePalette>
+    <UseCustomColors>Use custom colors</UseCustomColors>
+    <Transparent>Transparent</Transparent>
+    <TransparentMinAlpha>Min. alpha value (0=transparent, 255=fully visible)</TransparentMinAlpha>
+    <TransportStream>Transport stream</TransportStream>
+    <TransportStreamGrayscale>Grayscale</TransportStreamGrayscale>
+    <TransportStreamGetColor>Use color (will include some splitting of lines)</TransportStreamGetColor>
+    <PromptForUnknownWords>Prompt for unknown words</PromptForUnknownWords>
+    <TryToGuessUnkownWords>Try to guess unknown words</TryToGuessUnkownWords>
+    <AutoBreakSubtitleIfMoreThanTwoLines>Auto break paragraph if more than two lines</AutoBreakSubtitleIfMoreThanTwoLines>
+    <AllFixes>All fixes</AllFixes>
+    <GuessesUsed>Guesses used</GuessesUsed>
+    <UnknownWords>Unknown words</UnknownWords>
+    <OcrAutoCorrectionSpellChecking>OCR auto correction / spell checking</OcrAutoCorrectionSpellChecking>
+    <FixOcrErrors>Fix OCR errors</FixOcrErrors>
+    <ImportTextWithMatchingTimeCodes>Import text with matching time codes...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>Import new time codes</ImportNewTimeCodes>
+    <SaveSubtitleImageAs>Save subtitle image as...</SaveSubtitleImageAs>
+    <SaveAllSubtitleImagesAsBdnXml>Save all images (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
+    <SaveAllSubtitleImagesWithHtml>Save all images with HTML index...</SaveAllSubtitleImagesWithHtml>
+    <XImagesSavedInY>{0} images saved in {1}</XImagesSavedInY>
+    <TryModiForUnknownWords>Try Microsoft MODI OCR for unknown words</TryModiForUnknownWords>
+    <DictionaryX>Dictionary: {0}</DictionaryX>
+    <RightToLeft>Right to left</RightToLeft>
+    <ShowOnlyForcedSubtitles>Show only forced subtitles</ShowOnlyForcedSubtitles>
+    <UseTimeCodesFromIdx>Use time codes from .idx file</UseTimeCodesFromIdx>
+    <NoMatch>&lt;No match&gt;</NoMatch>
+    <AutoTransparentBackground>Auto transparent background</AutoTransparentBackground>
+    <InspectCompareMatchesForCurrentImage>Inspect compare matches for current image...</InspectCompareMatchesForCurrentImage>
+    <EditLastAdditions>Edit last image compare additions...</EditLastAdditions>
+    <SetUnitalicFactor>Set un-italic factor...</SetUnitalicFactor>
+    <DiscardTitle>Discard changes made in OCR?</DiscardTitle>
+    <DiscardText>Do you want to discard changes made in current OCR session?</DiscardText>
+  </VobSubOcr>
+  <VobSubOcrCharacter>
+    <Title>VobSub - Manual image to text</Title>
+    <ShrinkSelection>Shrink selection</ShrinkSelection>
+    <ExpandSelection>Expand selection</ExpandSelection>
+    <SubtitleImage>Subtitle image</SubtitleImage>
+    <Characters>Character(s)</Characters>
+    <CharactersAsText>Character(s) as text</CharactersAsText>
+    <Italic>&amp;Italic</Italic>
+    <Abort>&amp;Abort</Abort>
+    <Skip>&amp;Skip</Skip>
+    <Nordic>Nordic</Nordic>
+    <Spanish>Spanish</Spanish>
+    <German>German</German>
+    <AutoSubmitOnFirstChar>Auto submit on &amp;first char</AutoSubmitOnFirstChar>
+    <EditLastX>Edit last: {0}</EditLastX>
+  </VobSubOcrCharacter>
+  <VobSubOcrCharacterInspect>
+    <Title>Inspect compare matches for current image</Title>
+    <InspectItems>Inspect items</InspectItems>
+    <AddBetterMatch>Add better match</AddBetterMatch>
+  </VobSubOcrCharacterInspect>
+  <VobSubOcrNewFolder>
+    <Title>New folder</Title>
+    <Message>Name of new character database folder</Message>
+  </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicFactor>
+    <Title>Set un-italic factor</Title>
+    <Description>Adjust value until text style is normal and not italic. Note that original image should be italic.</Description>
+  </VobSubOcrSetItalicFactor>
+  <Waveform>
+    <ClickToAddWaveform>Click to add waveform</ClickToAddWaveform>
+    <ClickToAddWaveformAndSpectrogram>Click to add waveform/spectrogram</ClickToAddWaveformAndSpectrogram>
+    <Seconds>seconds</Seconds>
+    <ZoomIn>Zoom in</ZoomIn>
+    <ZoomOut>Zoom out</ZoomOut>
+    <AddParagraphHere>Add text here</AddParagraphHere>
+    <AddParagraphHereAndPasteText>Add text from clipboard here</AddParagraphHereAndPasteText>
+    <FocusTextBox>Focus text box</FocusTextBox>
+    <DeleteParagraph>Delete text</DeleteParagraph>
+    <Split>Split</Split>
+    <SplitAtCursor>Split at cursor</SplitAtCursor>
+    <MergeWithPrevious>Merge with previous</MergeWithPrevious>
+    <MergeWithNext>Merge with next</MergeWithNext>
+    <PlaySelection>Play selection</PlaySelection>
+    <ShowWaveformAndSpectrogram>Show waveform and spectrogram</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>Show waveform only</ShowWaveformOnly>
+    <ShowSpectrogramOnly>Show spectrogram only</ShowSpectrogramOnly>
+    <GuessTimeCodes>Guess time codes...</GuessTimeCodes>
+    <SeekSilence>Seek silence...</SeekSilence>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
+    <Title>Guess time codes</Title>
+    <StartFrom>Start from</StartFrom>
+    <CurrentVideoPosition>Current video position</CurrentVideoPosition>
+    <Beginning>Beginning</Beginning>
+    <DeleteLines>Delete lines</DeleteLines>
+    <FromCurrentVideoPosition>From current video position</FromCurrentVideoPosition>
+    <DetectOptions>Detect options</DetectOptions>
+    <ScanBlocksOfMs>Scan blocks of milliseconds</ScanBlocksOfMs>
+    <BlockAverageVolMin1>Block average volume must be above</BlockAverageVolMin1>
+    <BlockAverageVolMin2>% of total average volume</BlockAverageVolMin2>
+    <BlockAverageVolMax1>Block average volume must be below</BlockAverageVolMax1>
+    <BlockAverageVolMax2>% of total max volume</BlockAverageVolMax2>
+    <SplitLongLinesAt1>Split long subtitles at</SplitLongLinesAt1>
+    <SplitLongLinesAt2>milliseconds</SplitLongLinesAt2>
+    <Other>Other</Other>
+  </WaveformGenerateTimeCodes>
+  <WebVttNewVoice>
+    <Title>WebVTT - set new voice</Title>
+    <VoiceName>Name of voice</VoiceName>
+  </WebVttNewVoice>
+</Language>
