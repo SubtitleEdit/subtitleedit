@@ -68,6 +68,8 @@
 
 
 [Setup]
+ArchitecturesAllowed=x64 x86
+ArchitecturesInstallIn64BitMode=x64
 AppID=SubtitleEdit
 AppCopyright={#app_copyright}
 AppContact=http://www.nikse.dk/SubtitleEdit/
