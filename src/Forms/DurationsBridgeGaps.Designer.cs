@@ -234,6 +234,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "DurationsBridgeGaps";
+            this.Shown += new System.EventHandler(this.DurationsBridgeGaps_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DurationsBridgeGaps_KeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMs)).EndInit();
