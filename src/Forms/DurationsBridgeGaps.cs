@@ -168,5 +168,10 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
         }
 
+        private void DurationsBridgeGaps_Shown(object sender, EventArgs e)
+        {
+            SubtitleListview1.Focus();
+        }
+
     }
 }
