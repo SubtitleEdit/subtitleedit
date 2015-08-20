@@ -85,6 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new MicroDvd(),
                     new MidwayInscriberCGX(),
                     new MPlayer2(),
+                    new NciTimedRollUpCaptions(),
                     new OpenDvt(),
                     new Oresme(),
                     new OresmeDocXDocument(),
