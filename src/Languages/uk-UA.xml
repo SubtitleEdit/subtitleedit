@@ -104,7 +104,7 @@ Email: mailto:nikse.dk@gmail.com
   <AddWaveform>
     <Title>Генерування даних для аудіохвиль</Title>
     <SourceVideoFile>Відеофайл:</SourceVideoFile>
-    <GenerateWaveformData>Згенерувати дані для аудіохвиль</GenerateWaveformData>
+    <GenerateWaveformData>Згенерувати аудіохвилі</GenerateWaveformData>
     <PleaseWait>Це може зайняти декілька хвилин - будь ласка, зачекайте</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>Не знайдено медіапрогравач VLC</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit потребує медіапрогравач VLC 1.1.x або новішої версії для виокремлення аудіоданих.</VlcMediaPlayerNotFound>
@@ -126,11 +126,11 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FreeDiskSpace>{0} free</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
-    <Title>Batch generate waveform data</Title>
-    <ExtractingAudio>Extracting audio...</ExtractingAudio>
-    <Calculating>Calculating...</Calculating>
-    <Done>Done</Done>
-    <Error>Error</Error>
+    <Title>Пакетне генерування аудіохвиль</Title>
+    <ExtractingAudio>Виокремлюємо аудіо...</ExtractingAudio>
+    <Calculating>Обчислюємо...</Calculating>
+    <Done>Готово</Done>
+    <Error>Помилка</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Зміна тривалостей</Title>
@@ -157,39 +157,39 @@ Note: Do check free disk space.</WaveFileMalformed>
     <OnlyUnbreakLinesLongerThan>Вилучити розбиття тільки із субтитрів, довших за</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
   <BatchConvert>
-    <Title>Batch convert</Title>
-    <Input>Input</Input>
-    <InputDescription>Input files (browse or drag-n-drop)</InputDescription>
-    <Status>Status</Status>
-    <Output>Output</Output>
-    <ChooseOutputFolder>Choose output folder</ChooseOutputFolder>
-    <OverwriteExistingFiles>Overwrite existing files</OverwriteExistingFiles>
+    <Title>Пакетна обробка</Title>
+    <Input>Вхід</Input>
+    <InputDescription>Файли для обробки (виберіть або перетягніть)</InputDescription>
+    <Status>Стан</Status>
+    <Output>Вихід</Output>
+    <ChooseOutputFolder>Оберіть вихідну теку</ChooseOutputFolder>
+    <OverwriteExistingFiles>Перезаписати наявні файли</OverwriteExistingFiles>
     <Style>Style...</Style>
-    <ConvertOptions>Convert options</ConvertOptions>
-    <RemoveFormatting>Remove formatting tags</RemoveFormatting>
-    <RemoveTextForHI>Remove text for HI</RemoveTextForHI>
-    <OverwriteOriginalFiles>Overwrite original files (new extension if format is changed)</OverwriteOriginalFiles>
-    <RedoCasing>Redo casing</RedoCasing>
-    <Convert>Convert</Convert>
+    <ConvertOptions>Параметри обробки</ConvertOptions>
+    <RemoveFormatting>Видалити теги форматування</RemoveFormatting>
+    <RemoveTextForHI>Видалити текст для ЛзВС</RemoveTextForHI>
+    <OverwriteOriginalFiles>Перезаписати оригінальні файли (нове розширення, якщо змінився формат)</OverwriteOriginalFiles>
+    <RedoCasing>Відновити регістр</RedoCasing>
+    <Convert>Обробити</Convert>
     <NothingToConvert>Nothing to convert!</NothingToConvert>
     <PleaseChooseOutputFolder>Please choose output folder</PleaseChooseOutputFolder>
     <NotConverted>Failed</NotConverted>
     <Converted>Converted</Converted>
     <ConvertedX>Converted ({0})</ConvertedX>
-    <Settings>Settings</Settings>
-    <SplitLongLines>Split long lines</SplitLongLines>
-    <AutoBalance>Auto balance lines</AutoBalance>
-    <ScanFolder>Scan folder...</ScanFolder>
+    <Settings>Налаштування</Settings>
+    <SplitLongLines>Розділити довгі рядки</SplitLongLines>
+    <AutoBalance>Автобалансування рядків</AutoBalance>
+    <ScanFolder>Сканувати теку...</ScanFolder>
     <ScanningFolder>Scanning {0} and subfolders for subtitle files...</ScanningFolder>
-    <Recursive>Include sub folders</Recursive>
-    <SetMinMsBetweenSubtitles>Set min. milliseconds between subtitles</SetMinMsBetweenSubtitles>
+    <Recursive>Включаючи підтеки</Recursive>
+    <SetMinMsBetweenSubtitles>Встановити мін. відстань між субтитрами</SetMinMsBetweenSubtitles>
     <PlainText>Plain text</PlainText>
     <Ocr>OCR...</Ocr>
-    <Filter>Filter</Filter>
+    <Filter>Фільтр</Filter>
     <FilterSkipped>Skipped by filter</FilterSkipped>
-    <FilterSrtNoUtf8BOM>SubRip (.srt) files without UTF-8 BOM header</FilterSrtNoUtf8BOM>
-    <FilterMoreThanTwoLines>More than two lines in one subtitle</FilterMoreThanTwoLines>
-    <FilterContains>Text contains...</FilterContains>
+    <FilterSrtNoUtf8BOM>Файли SubRip (.srt) без заголовку UTF-8 BOM</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>Більше двох рядків в одному субтитрі</FilterMoreThanTwoLines>
+    <FilterContains>Текст містить...</FilterContains>
     <FixCommonErrorsErrorX>Fix common errors: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Multiple replace: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>
@@ -282,29 +282,29 @@ Note: Do check free disk space.</WaveFileMalformed>
     <CannotCompareWithImageBasedSubtitles>Cannot compare with image based subtitles</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
   <DCinemaProperties>
-    <Title>D-Cinema properties (interop)</Title>
-    <TitleSmpte>D-Cinema properties (SMPTE)</TitleSmpte>
-    <SubtitleId>Subtitle ID</SubtitleId>
-    <GenerateId>Generate ID</GenerateId>
-    <MovieTitle>Movie title</MovieTitle>
+    <Title>Властивості D-Cinema (interop)</Title>
+    <TitleSmpte>Властивості D-Cinema (SMPTE)</TitleSmpte>
+    <SubtitleId>ID Субитру</SubtitleId>
+    <GenerateId>Згенерувати ID</GenerateId>
+    <MovieTitle>Назва фільму</MovieTitle>
     <ReelNumber>Reel number</ReelNumber>
-    <Language>Language</Language>
-    <IssueDate>Issue date</IssueDate>
+    <Language>Мова</Language>
+    <IssueDate>Дата виходу</IssueDate>
     <EditRate>Edit rate</EditRate>
     <TimeCodeRate>Time code rate</TimeCodeRate>
     <StartTime>Start time</StartTime>
-    <Font>Font</Font>
+    <Font>Шрифт</Font>
     <FontId>ID</FontId>
     <FontUri>URI</FontUri>
-    <FontColor>Color</FontColor>
+    <FontColor>Колір</FontColor>
     <FontEffect>Effect</FontEffect>
     <FontEffectColor>Effect color</FontEffectColor>
     <FontSize>Size</FontSize>
     <TopBottomMargin>Top/bottom margin</TopBottomMargin>
     <FadeUpTime>Fade up time</FadeUpTime>
     <FadeDownTime>Fade down time</FadeDownTime>
-    <ZPosition>Z-position</ZPosition>
-    <ZPositionHelp>Positive numbers moves text away, negative numbers moves text closer, if z-position is zero then it's 2D</ZPositionHelp>
+    <ZPosition>Z-позиція</ZPosition>
+    <ZPositionHelp>Додатні числа віддаляють текст, від'ємні наближують; якщо z-позиція дорівнює 0, використовується 2D</ZPositionHelp>
     <ChooseColor>Choose color...</ChooseColor>
     <Generate>Generate</Generate>
   </DCinemaProperties>
@@ -423,9 +423,9 @@ Note: Do check free disk space.</WaveFileMalformed>
     <BorderStyleOneBox>Одна рамка</BorderStyleOneBox>
     <BorderStyleBoxForEachLine>Рамка/рядок</BorderStyleBoxForEachLine>
     <BorderStyleNormalWidthX>Звич., ширина={0}</BorderStyleNormalWidthX>
-    <ShadowColor>Shadow color</ShadowColor>
-    <ShadowWidth>Shadow width</ShadowWidth>
-    <Transparency>Alpha</Transparency>
+    <ShadowColor>Колір тіні</ShadowColor>
+    <ShadowWidth>Ширина тіні</ShadowWidth>
+    <Transparency>Альфа</Transparency>
     <ImageFormat>Формат зображення</ImageFormat>
     <FullFrameImage>Зображення на весь кадр</FullFrameImage>
     <SimpleRendering>Проста промальовка</SimpleRendering>
@@ -435,7 +435,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <HalfTopBottom3D>Half-Top/Bottom</HalfTopBottom3D>
     <Depth>Глибина</Depth>
     <ExportAllLines>Експортувати всі рядки...</ExportAllLines>
-    <XImagesSavedInY>{0} images saved in {1}</XImagesSavedInY>
+    <XImagesSavedInY>{0} зображень збережено у {1}</XImagesSavedInY>
     <VideoResolution>Розд. зд. відео</VideoResolution>
     <Align>Вирівнювання</Align>
     <Left>Ліворуч</Left>
@@ -451,7 +451,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <SavePremiereEdlAs>Choose Premiere EDL file name</SavePremiereEdlAs>
     <SaveFcpAs>Choose Final Cut Pro xml file name</SaveFcpAs>
     <SaveDostAs>Choose DoStudio dost file name</SaveDostAs>
-    <SomeLinesWereTooLongX>Some lines were too long:
+    <SomeLinesWereTooLongX>Деякі рядки були надто довгими:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Висота рядка</LineHeight>
     <BoxSingleLine>Box - single line</BoxSingleLine>
@@ -843,7 +843,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <CloseVideo>Закрити відеофайл</CloseVideo>
         <ImportSceneChanges>Імпортувати зміни сцен...</ImportSceneChanges>
         <RemoveSceneChanges>Видалити зміни сцен</RemoveSceneChanges>
-        <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
+        <WaveformBatchGenerate>Пакетно згенерувати дані для аудіохвиль...</WaveformBatchGenerate>
         <ShowHideVideo>Показати/сховати відео</ShowHideVideo>
         <ShowHideWaveform>Показати/сховати аудіохвилі</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Показати/сховати аудіохвилі та спектрограму</ShowHideWaveformAndSpectrogram>
@@ -1014,8 +1014,8 @@ Note: Do check free disk space.</WaveFileMalformed>
       <TranslateTip>Порада: Викор. &lt;alt+↑/↓&gt;, щоб перейти до поп./наст. субтитру</TranslateTip>
       <CreateTip>Порада: Використовуйте &lt;ctrl+←/→&gt;</CreateTip>
       <AdjustTip>Порада: Викор. &lt;alt+↑/↓&gt;, щоб перейти до поп./наст. субтитру</AdjustTip>
-      <BeforeChangingTimeInWaveformX>Before changing time in waveform: {0}</BeforeChangingTimeInWaveformX>
-      <NewTextInsertAtX>New text inserted at {0}</NewTextInsertAtX>
+      <BeforeChangingTimeInWaveformX>Перед зміною часу на аудіохвилі: {0}</BeforeChangingTimeInWaveformX>
+      <NewTextInsertAtX>Вставлено новий текст о {0}</NewTextInsertAtX>
       <Center>Центрувати</Center>
       <PlayRate>Швидкість відтворення</PlayRate>
       <Slow>Повільно</Slow>
@@ -1268,7 +1268,7 @@ Would you like to start from the top of the document and continue search and rep
     <UnableToCreateBackupDirectory>Unable to create backup directory {0}: {1}</UnableToCreateBackupDirectory>
     <BeforeDisplaySubtitleJoin>Before join of subtitles</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Субтитри об'єднано</SubtitlesJoined>
-    <StatusLog>Журнал статусів</StatusLog>
+    <StatusLog>Журнал станів</StatusLog>
     <XSceneChangesImported>{0} змін сцен імпортовано</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' executed.</PluginXExecuted>
     <NotAValidXSubFile>Not a valid XSub file!</NotAValidXSubFile>
@@ -1892,7 +1892,7 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <Title>Advanced Sub Station Alpha styles</Title>
     <TitleSubstationAlpha>Sub Station Alpha styles</TitleSubstationAlpha>
     <Styles>Styles</Styles>
-    <Properties>Properties</Properties>
+    <Properties>Властивості</Properties>
     <Name>Name</Name>
     <Font>Font</Font>
     <FontName>Font name</FontName>
@@ -1904,16 +1904,16 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <Outline>Outline</Outline>
     <Shadow>Shadow</Shadow>
     <Back>Back</Back>
-    <Alignment>Alignment</Alignment>
-    <TopLeft>Top/left</TopLeft>
-    <TopCenter>Top/center</TopCenter>
-    <TopRight>Top/right</TopRight>
-    <MiddleLeft>Middle/left</MiddleLeft>
-    <MiddleCenter>Middle/center</MiddleCenter>
-    <MiddleRight>Middle/right</MiddleRight>
-    <BottomLeft>Bottom/left</BottomLeft>
-    <BottomCenter>Bottom/center</BottomCenter>
-    <BottomRight>Bottom/right</BottomRight>
+    <Alignment>Розташування</Alignment>
+    <TopLeft>Верх/ліво</TopLeft>
+    <TopCenter>Верх/центр</TopCenter>
+    <TopRight>Верх/право</TopRight>
+    <MiddleLeft>Центр/ліво</MiddleLeft>
+    <MiddleCenter>Центр/центр</MiddleCenter>
+    <MiddleRight>Центр/право</MiddleRight>
+    <BottomLeft>Низ/ліво</BottomLeft>
+    <BottomCenter>Низ/центр</BottomCenter>
+    <BottomRight>Низ/право</BottomRight>
     <Colors>Colors</Colors>
     <Margins>Margins</Margins>
     <MarginLeft>Margin left</MarginLeft>
@@ -1928,8 +1928,8 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <CopyOfY>Copy of {0}</CopyOfY>
     <CopyXOfY>Copy {0} of {1}</CopyXOfY>
     <New>New</New>
-    <Remove>Remove</Remove>
-    <RemoveAll>Remove all</RemoveAll>
+    <Remove>Вилучити</Remove>
+    <RemoveAll>Вилучити всі</RemoveAll>
     <ImportStyleFromFile>Import style from file...</ImportStyleFromFile>
     <ExportStyleToFile>Export style to file... (will add style if file already exists)</ExportStyleToFile>
     <ChooseStyle>Choose style to import</ChooseStyle>
