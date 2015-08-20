@@ -50,6 +50,12 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxFrameRate.SelectedIndex = 3;
         }
 
+        public override sealed string Text
+        {
+            get { return base.Text; }
+            set { base.Text = value; }
+        }
+
         public Subtitle FixedSubtitle
         {
             get { return _fixedSubtitle; }
@@ -62,12 +68,11 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMinMillisecondsBetweenLines.Value = Configuration.Settings.General.MinimumMillisecondsBetweenLines != 0
                                                            ? Configuration.Settings.General.MinimumMillisecondsBetweenLines
                                                            : 1;
-            //GeneratePreview();
         }
 
         private void GeneratePreview()
         {
-            List<int> fixes = new List<int>();
+            var fixes = new List<int>();
             if (_subtitle == null)
                 return;
 
@@ -144,9 +149,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void comboBoxFrameRate_SelectedIndexChanged(object sender, EventArgs e)
         {
             double frameRate;
-            if (!double.TryParse(comboBoxFrameRate.Text.Trim().Replace(',', '.'),
-                                 NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out frameRate))
+            if (!double.TryParse(comboBoxFrameRate.Text.Trim().Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out frameRate))
+            {
                 frameRate = 25.0;
+            }
 
             long ms = (long)Math.Round(1000 / frameRate);
             labelOneFrameIsXMS.Text = string.Format(Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.OneFrameXisYMilliseconds, frameRate, ms);
@@ -155,6 +161,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void comboBoxFrameRate_KeyUp(object sender, KeyEventArgs e)
         {
             comboBoxFrameRate_SelectedIndexChanged(sender, e);
+        }
+
+        private void SetMinimumDisplayTimeBetweenParagraphs_Shown(object sender, EventArgs e)
+        {
+            SubtitleListview1.Focus();
         }
 
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 
@@ -193,5 +194,31 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get { return _working; }
         }
+
+        private void numericUpDownDurationMin_KeyUp(object sender, KeyEventArgs e)
+        {
+            GeneratePreview();
+        }
+
+        private void numericUpDownDurationMax_KeyUp(object sender, KeyEventArgs e)
+        {
+            GeneratePreview();
+        }
+
+        private void numericUpDownDurationMin_MouseUp(object sender, MouseEventArgs e)
+        {
+            GeneratePreview();
+        }
+
+        private void numericUpDownDurationMax_MouseUp(object sender, MouseEventArgs e)
+        {
+            GeneratePreview();
+        }
+
+        private void ApplyDurationLimits_Shown(object sender, EventArgs e)
+        {
+            listViewFixes.Focus();
+        }
+
     }
 }
