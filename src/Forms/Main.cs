@@ -6540,10 +6540,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowLineInformationListView()
         {
-            if (SubtitleListview1.SelectedItems.Count == 1)
-                toolStripSelected.Text = string.Format("{0}/{1}", SubtitleListview1.SelectedItems[0].Index + 1, SubtitleListview1.Items.Count);
-            else
-                toolStripSelected.Text = string.Format(_language.XLinesSelected, SubtitleListview1.SelectedItems.Count);
+            if (tabControlSubtitle.SelectedIndex == TabControlListView)
+            {
+                if (SubtitleListview1.SelectedItems.Count == 1)
+                    toolStripSelected.Text = string.Format("{0}/{1}", SubtitleListview1.SelectedItems[0].Index + 1, SubtitleListview1.Items.Count);
+                else
+                    toolStripSelected.Text = string.Format(_language.XLinesSelected, SubtitleListview1.SelectedItems.Count);
+            }
         }
 
         private void UpdateListViewTextCharactersPerSeconds(Label charsPerSecond, Paragraph paragraph)
@@ -12866,7 +12869,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
-            }
+            }         
 
             if (string.CompareOrdinal(_changeSubtitleToString, SerializeSubtitle(_subtitle)) != 0)
             {
@@ -17491,6 +17494,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TimerTextUndoTick(object sender, EventArgs e)
         {
+            // progress check
+            ShowTranslationProgress();
+
+            // text undo
             int index = _listViewTextUndoIndex;
             if (_listViewTextTicks == -1 || !this.CanFocus || _subtitle == null || _subtitle.Paragraphs.Count == 0 || index < 0 || index >= _subtitle.Paragraphs.Count)
                 return;
@@ -17513,6 +17520,43 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _listViewTextUndoLast = newText;
                     _listViewTextUndoIndex = -1;
+                }
+            }
+        }
+
+        private void ShowTranslationProgress()
+        {
+            if (Configuration.Settings.General.ShowProgress)
+            {
+                if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                {
+                    int numberOfNonBlankLines = 0;
+                    foreach (var paragraph in _subtitle.Paragraphs)
+                    {
+                        if (!string.IsNullOrWhiteSpace(paragraph.Text))
+                            numberOfNonBlankLines++;
+                    }
+                    int percent = (int)Math.Round(numberOfNonBlankLines*100.0/_subtitle.Paragraphs.Count);
+                    toolStripStatusLabelProgress.Text = string.Format("{0}% completed", percent);
+                    if (!toolStripStatusLabelProgress.Visible)
+                        toolStripStatusLabelProgress.Visible = true;
+                }
+                else if (_subtitle.Paragraphs.Count > 0 && !string.IsNullOrWhiteSpace(_videoFileName) && mediaPlayer != null && mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer.Duration > 0)
+                {
+                    var last = _subtitle.Paragraphs.LastOrDefault();
+                    if (last != null)
+                    {
+                        var subtitleEndSeconds = last.EndTime.TotalSeconds;
+                        var videoEndSeconds = mediaPlayer.VideoPlayer.Duration;
+                        int percent = (int)Math.Round(subtitleEndSeconds*100.0/videoEndSeconds);
+                        toolStripStatusLabelProgress.Text = string.Format("{0}% completed", percent);
+                        if (!toolStripStatusLabelProgress.Visible)
+                            toolStripStatusLabelProgress.Visible = true;
+                    }
+                }
+                else
+                {
+                    toolStripStatusLabelProgress.Visible = false;
                 }
             }
         }
@@ -19443,6 +19487,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 form.ShowDialog(this);
             }
+        }
+
+        private void toolStripSelected_Click(object sender, EventArgs e)
+        {
+            labelStatus_Click(sender, e);
         }
 
     }
