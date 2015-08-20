@@ -1177,6 +1177,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BeforeMergeLinesWithSameText = "Before merging lines with same text",
                 ImportTimeCodesDifferentNumberOfLinesWarning = "Subtitle with time codes has a different number of lines ({0}) than current subtitle ({1}) - continue anyway?",
                 ParsingTransportStream = "Parsing transport stream - please wait...",
+                XPercentCompleted = "{0}% completed",
                 ErrorLoadIdx = "Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and Subtitle Edit can open the .sub file.",
                 ErrorLoadRar = "This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.",
                 ErrorLoadZip = "This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.",

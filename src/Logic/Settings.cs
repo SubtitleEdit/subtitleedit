@@ -528,6 +528,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string LastSaveAsFormat { get; set; }
         public bool CheckForUpdates { get; set; }
         public DateTime LastCheckForUpdates { get; set; }
+        public bool ShowProgress { get; set; }
         public bool ShowBetaStuff { get; set; }
 
         public GeneralSettings()
@@ -613,6 +614,7 @@ namespace Nikse.SubtitleEdit.Logic
             LastSaveAsFormat = string.Empty;
             CheckForUpdates = true;
             LastCheckForUpdates = DateTime.Now;
+            ShowProgress = false;
             ShowBetaStuff = false;
             NewEmptyDefaultMs = 2000;
         }
@@ -1490,6 +1492,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("LastCheckForUpdates");
             if (subNode != null)
                 settings.General.LastCheckForUpdates = Convert.ToDateTime(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("ShowProgress");
+            if (subNode != null)
+                settings.General.ShowProgress = Convert.ToBoolean(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("ShowBetaStuff");
             if (subNode != null)
                 settings.General.ShowBetaStuff = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -2773,6 +2778,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("LastSaveAsFormat", settings.General.LastSaveAsFormat);
                 textWriter.WriteElementString("CheckForUpdates", settings.General.CheckForUpdates.ToString());
                 textWriter.WriteElementString("LastCheckForUpdates", settings.General.LastCheckForUpdates.ToString("yyyy-MM-dd"));
+                textWriter.WriteElementString("ShowProgress", settings.General.ShowProgress.ToString());
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
                 textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
 
