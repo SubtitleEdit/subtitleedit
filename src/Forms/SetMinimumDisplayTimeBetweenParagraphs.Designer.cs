@@ -202,6 +202,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Set minimum display time between paragraphs";
+            this.Shown += new System.EventHandler(this.SetMinimumDisplayTimeBetweenParagraphs_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SetMinimalDisplayTimeDifference_KeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinMillisecondsBetweenLines)).EndInit();

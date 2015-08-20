@@ -173,5 +173,25 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Focus();
         }
 
+        private void numericUpDownMaxMs_Validated(object sender, EventArgs e)
+        {
+            GeneratePreview();
+        }
+
+        private void numericUpDownMaxMs_KeyUp(object sender, KeyEventArgs e)
+        {
+            GeneratePreview();
+        }
+
+        private void numericUpDownMinMsBetweenLines_Validated(object sender, EventArgs e)
+        {
+            GeneratePreview();
+        }
+
+        private void numericUpDownMinMsBetweenLines_KeyUp(object sender, KeyEventArgs e)
+        {
+            GeneratePreview();
+        }
+
     }
 }
