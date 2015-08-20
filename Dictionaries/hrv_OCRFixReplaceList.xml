@@ -57,6 +57,7 @@
     <Word from="dospeju" to="dospiju" />
     <Word from="dođavola" to="dovraga" />
     <Word from="drug" to="prijatelj" />
+    <Word from="drugde" to="drugdje" />
     <Word from="duuga" to="dúga" />
     <Word from="dve" to="dvije" />
     <Word from="Dve" to="Dvije" />
@@ -160,6 +161,7 @@
     <Word from="nemogu" to="ne mogu" />
     <Word from="Nemogu" to="Ne mogu" />
     <Word from="nene" to="njene" />
+    <Word from="Niče" to="Nietzsche" />
     <Word from="nigde" to="nigdje" />
     <Word from="Nigde" to="Nigdje" />
     <Word from="niko" to="nitko" />
@@ -324,7 +326,6 @@
     <Word from="teraj" to="tjeraj" />
     <Word from="točak" to="kotač" />
     <Word from="Točak" to="Kotač" />
-    <Word from="točku" to="kotaču" />
     <Word from="tugi" to="tuzi" />
     <Word from="tvrtci" to="tvrtki" />
     <Word from="ubede" to="uvjere" />
@@ -922,6 +923,8 @@
     <RegEx find="Peškir(?!i(ma)?\b)" replaceWith="Ručnik" />
     <RegEx find="peškir(?=i(ma)?\b)" replaceWith="ručnic" />
     <RegEx find="Peškir(?=i(ma)?\b)" replaceWith="Ručnic" />
+    <RegEx find="pijac([aeiuo])" replaceWith="tržnic$1" />
+    <RegEx find="Pijac([aeiuo])" replaceWith="Tržnic$1" />
     <RegEx find="([pP])itać([eu])" replaceWith="$1itat ć$2" />
     <RegEx find="([pP])latić([eu])" replaceWith="$1latit ć$2" />
     <RegEx find="([pP])obed([aeioun])" replaceWith="$1objed$2" />
@@ -1075,8 +1078,8 @@
     <RegEx find="([sS])pakuje" replaceWith="$1pakira" />
     <RegEx find="([sS])pasava" replaceWith="$1pašava" />
     <RegEx find="([sS])pase([mšt])?" replaceWith="$1pasi$2" />
-    <RegEx find="spolja?š?nj([aeiu])" replaceWith="vanjsk$1" />
-    <RegEx find="Spolja?š?nj([aeiu])" replaceWith="Vanjsk$1" />
+    <RegEx find="spolja?š?nj?([aeiu])" replaceWith="vanjsk$1" />
+    <RegEx find="Spolja?š?nj?([aeiu])" replaceWith="Vanjsk$1" />
     <RegEx find="\bsprat" replaceWith="kat" />
     <RegEx find="\bSprat" replaceWith="Kat" />
     <RegEx find="([sS])pri?j?ečava" replaceWith="$1prječava" />
@@ -1333,6 +1336,7 @@
     <RegEx find="Braun" replaceWith="Brown" />
     <RegEx find="Brussels" replaceWith="Bruxelles" />
     <RegEx find="Čarls" replaceWith="Charles" />
+    <RegEx find="Čikag" replaceWith="Chicag" />
     <RegEx find="Dajan([aeiou]|om)" replaceWith="Dian$1" />
     <RegEx find="Darvin([aeiou]|om)?" replaceWith="Darwin$1" />
     <RegEx find="Dejv\b" replaceWith="Dave" />
