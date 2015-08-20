@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class GetTesseractDictionaries : Form
     {
+        private readonly WebClient _webClient = new WebClient { Proxy = Utilities.GetProxy() };
         private List<string> _dictionaryDownloadLinks = new List<string>();
         private List<string> _descriptions = new List<string>();
         private string _xmlName = null;
@@ -86,16 +87,12 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Enabled = false;
                 buttonDownload.Enabled = false;
                 comboBoxDictionaries.Enabled = false;
-                this.Refresh();
+                Refresh();
                 Cursor = Cursors.WaitCursor;
-
                 int index = comboBoxDictionaries.SelectedIndex;
                 string url = _dictionaryDownloadLinks[index];
-
-                var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                wc.DownloadDataAsync(new Uri(url));
-                Cursor = Cursors.Default;
+                _webClient.DownloadDataCompleted += wc_DownloadDataCompleted;
+                _webClient.DownloadDataAsync(new Uri(url));
             }
             catch (Exception exception)
             {
@@ -103,8 +100,11 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Enabled = true;
                 buttonDownload.Enabled = true;
                 comboBoxDictionaries.Enabled = true;
-                Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
             }
         }
 
