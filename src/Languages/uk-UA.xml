@@ -10,7 +10,7 @@
     <Cancel>&amp;Скасувати</Cancel>
     <Apply>Застосувати</Apply>
     <None>Немає</None>
-    <All>All</All>
+    <All>Усі</All>
     <Preview>Поп. перегляд</Preview>
     <SubtitleFiles>Файли субтитрів</SubtitleFiles>
     <AllFiles>Усі файли</AllFiles>
@@ -53,8 +53,8 @@
     <SubtitleSaved>Subtitle saved</SubtitleSaved>
     <CurrentSubtitle>Current subtitle</CurrentSubtitle>
     <OriginalText>Оригінальний текст</OriginalText>
-    <OpenOriginalSubtitleFile>Open original subtitle file...</OpenOriginalSubtitleFile>
-    <PleaseWait>Please wait...</PleaseWait>
+    <OpenOriginalSubtitleFile>Відкрийте файл з оригінальними субтитрами...</OpenOriginalSubtitleFile>
+    <PleaseWait>Зачекайте, будь ласка...</PleaseWait>
     <SessionKey>Ключ сесії</SessionKey>
     <UserName>Ім'я користувача</UserName>
     <UserNameAlreadyInUse>Ім'я користувача вже використовується</UserNameAlreadyInUse>
@@ -102,17 +102,17 @@ Email: mailto:nikse.dk@gmail.com
     <Description>Add word to user dictionary (not case sensitive)</Description>
   </AddToUserDictionary>
   <AddWaveform>
-    <Title>Generate waveform data</Title>
-    <SourceVideoFile>Source video file:</SourceVideoFile>
-    <GenerateWaveformData>Generate waveform data</GenerateWaveformData>
-    <PleaseWait>This may take a few minutes - please wait</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC media player not found</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit needs VLC media player 1.1.x or newer for extracting audio data.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Do you want to go to the VLC media player home page?</GoToVlcMediaPlayerHomePage>
+    <Title>Генерування даних для аудіохвиль</Title>
+    <SourceVideoFile>Відеофайл:</SourceVideoFile>
+    <GenerateWaveformData>Згенерувати дані для аудіохвиль</GenerateWaveformData>
+    <PleaseWait>Це може зайняти декілька хвилин - будь ласка, зачекайте</PleaseWait>
+    <VlcMediaPlayerNotFoundTitle>Не знайдено медіапрогравач VLC</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>Subtitle Edit потребує медіапрогравач VLC 1.1.x або новішої версії для виокремлення аудіоданих.</VlcMediaPlayerNotFound>
+    <GoToVlcMediaPlayerHomePage>Бажаєте завітати на домашню сторінку медіапрогравача VLC?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generating peak file...</GeneratingPeakFile>
-    <GeneratingSpectrogram>Generating spectrogram...</GeneratingSpectrogram>
-    <ExtractingSeconds>Extracting audio: {0:0.0} seconds</ExtractingSeconds>
-    <ExtractingMinutes>Extracting audio: {0}.{1:00} minutes</ExtractingMinutes>
+    <GeneratingSpectrogram>Створення спектрограми...</GeneratingSpectrogram>
+    <ExtractingSeconds>Виокремлення аудіо: {0:0.0} секунд</ExtractingSeconds>
+    <ExtractingMinutes>Виокремлення аудіо: {0}.{1:00} хвилин</ExtractingMinutes>
     <WaveFileNotFound>Could not find extracted wave file!
 This feature requires VLC media player 1.1.x or newer ({0}-bit).
 
@@ -150,11 +150,11 @@ Note: Do check free disk space.</WaveFileMalformed>
     <UnableToFix>Неможливо виправити: {0}</UnableToFix>
   </ApplyDurationLimits>
   <AutoBreakUnbreakLines>
-    <TitleAutoBreak>Auto balance selected lines</TitleAutoBreak>
-    <TitleUnbreak>Remove line breaks from selected lines</TitleUnbreak>
-    <LinesFoundX>Lines found: {0}</LinesFoundX>
-    <OnlyBreakLinesLongerThan>Only break lines longer than</OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesLongerThan>Only un-break lines longer than</OnlyUnbreakLinesLongerThan>
+    <TitleAutoBreak>Автоматичне балансування вибраних субтитрів</TitleAutoBreak>
+    <TitleUnbreak>Вилучення розбиття рядків із вибраних субтитрів</TitleUnbreak>
+    <LinesFoundX>Субтитрів знайдено: {0}</LinesFoundX>
+    <OnlyBreakLinesLongerThan>Розбити тільки субтитри, довші за</OnlyBreakLinesLongerThan>
+    <OnlyUnbreakLinesLongerThan>Вилучити розбиття тільки із субтитрів, довших за</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
   <BatchConvert>
     <Title>Batch convert</Title>
@@ -259,14 +259,14 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Alpha>Альфа</Alpha>
   </ColorChooser>
   <ColumnPaste>
-    <Title>Column paste</Title>
-    <ChooseColumn>Choose column</ChooseColumn>
-    <OverwriteShiftCellsDown>Overwrite/Shift cells down</OverwriteShiftCellsDown>
-    <Overwrite>Overwrite</Overwrite>
-    <ShiftCellsDown>Shift cells down</ShiftCellsDown>
-    <TimeCodesOnly>Time codes only</TimeCodesOnly>
-    <TextOnly>Text only</TextOnly>
-    <OriginalTextOnly>Original text only</OriginalTextOnly>
+    <Title>Вставлення у стовпчик</Title>
+    <ChooseColumn>Оберіть стовпчик</ChooseColumn>
+    <OverwriteShiftCellsDown>Перезапис./посунути комірки вниз</OverwriteShiftCellsDown>
+    <Overwrite>Перезаписати</Overwrite>
+    <ShiftCellsDown>Посунути комірки вниз</ShiftCellsDown>
+    <TimeCodesOnly>Тільки часові мітки</TimeCodesOnly>
+    <TextOnly>Тільки текст</TextOnly>
+    <OriginalTextOnly>Тільки оригінальний текст</OriginalTextOnly>
   </ColumnPaste>
   <CompareSubtitles>
     <Title>Порівняння субтитрів</Title>
@@ -319,26 +319,26 @@ Note: Do check free disk space.</WaveFileMalformed>
     <DivideEven>Texts divide gap time</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Rip subtitles from IFO/VOBs (DVD)</Title>
-    <DvdGroupTitle>DVD files/info</DvdGroupTitle>
-    <IfoFile>IFO file</IfoFile>
-    <IfoFiles>IFO files</IfoFiles>
-    <VobFiles>VOB files</VobFiles>
+    <Title>Витягування субтитрів з IFO/VOB-файлів (DVD)</Title>
+    <DvdGroupTitle>DVD файли/інформація</DvdGroupTitle>
+    <IfoFile>Файл IFO</IfoFile>
+    <IfoFiles>Файли IFO</IfoFiles>
+    <VobFiles>Файли VOB</VobFiles>
     <Add>Додати...</Add>
     <Remove>Вилучити</Remove>
     <Clear>Очистити</Clear>
     <MoveUp>Посун. вгору</MoveUp>
     <MoveDown>Посун. вниз</MoveDown>
-    <Languages>Languages</Languages>
+    <Languages>Мови</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
-    <Pal>PAL (25fps)</Pal>
-    <Ntsc>NTSC (29.97fps)</Ntsc>
-    <StartRipping>Start ripping</StartRipping>
-    <Abort>Abort</Abort>
-    <AbortedByUser>Aborted by user</AbortedByUser>
-    <ReadingSubtitleData>Reading subtitle data...</ReadingSubtitleData>
-    <RippingVobFileXofYZ>Ripping vob file {1} of {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>IFO type is '{0}' and not 'DVDVIDEO-VTS'.{1}Try another file than {2}</WrongIfoType>
+    <Pal>PAL (25кнс)</Pal>
+    <Ntsc>NTSC (29.97кнс)</Ntsc>
+    <StartRipping>Почати витягування</StartRipping>
+    <Abort>Скасувати</Abort>
+    <AbortedByUser>Скасовано користувачем</AbortedByUser>
+    <ReadingSubtitleData>Читаємо дані субтитрів...</ReadingSubtitleData>
+    <RippingVobFileXofYZ>Обробка vob-файлу {1} із {2}: {0}</RippingVobFileXofYZ>
+    <WrongIfoType>Тип IFO - '{0}', а не 'DVDVIDEO-VTS'.{1}Спробуйте інший файл замість {2}</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Choose language</Title>
@@ -635,7 +635,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ChooseLanguageAndClickDownload>Оберіть мову і натисніть "Звантажити"</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Відкрити теку зі словниками</OpenDictionariesFolder>
     <Download>Звантажити</Download>
-    <XDownloaded>{0} has been downloaded and installed</XDownloaded>
+    <XDownloaded>{0} звантажено та встановлено</XDownloaded>
   </GetDictionaries>
   <GetTesseractDictionaries>
     <Title>Need dictionaries?</Title>
@@ -645,7 +645,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ChooseLanguageAndClickDownload>Choose your language and click download</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Open 'Dictionaries' folder</OpenDictionariesFolder>
     <Download>Download</Download>
-    <XDownloaded>{0} has been downloaded and installed</XDownloaded>
+    <XDownloaded>{0} звантажено та встановлено</XDownloaded>
   </GetTesseractDictionaries>
   <GoogleTranslate>
     <Title>Google-перекладач</Title>
@@ -657,33 +657,33 @@ Note: Do check free disk space.</WaveFileMalformed>
     <PoweredByMicrosoftTranslate>Працює заавдяки перекладачу Microsoft</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
-    <Title>Google vs Microsoft translate</Title>
-    <From>From:</From>
-    <To>To:</To>
-    <Translate>Translate</Translate>
-    <SourceText>Source text</SourceText>
-    <GoogleTranslate>Google translate</GoogleTranslate>
-    <MicrosoftTranslate>Microsoft translate</MicrosoftTranslate>
+    <Title>Переклад Google vs Microsoft</Title>
+    <From>З:</From>
+    <To>На:</To>
+    <Translate>Перекласти</Translate>
+    <SourceText>Текст</SourceText>
+    <GoogleTranslate>Google-перекладач</GoogleTranslate>
+    <MicrosoftTranslate>Microsoft-перекладач</MicrosoftTranslate>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
     <Title>Перейти до субтитру номер</Title>
     <XIsNotAValidNumber>{0} - не валідний номер</XIsNotAValidNumber>
   </GoToLine>
   <ImportImages>
-    <Title>Import images</Title>
-    <ImageFiles>Image files</ImageFiles>
-    <Input>Input</Input>
-    <InputDescription>Choose input files (browse or drag-n-drop)</InputDescription>
+    <Title>Імпортувати зображення</Title>
+    <ImageFiles>Файли зображень</ImageFiles>
+    <Input>Вхід</Input>
+    <InputDescription>Оберіть вхідні файли (вкажіть місце розташування або перетягніть)</InputDescription>
   </ImportImages>
   <ImportSceneChanges>
-    <Title>Import scene changes</Title>
-    <OpenTextFile>Open text file...</OpenTextFile>
-    <ImportOptions>Import options</ImportOptions>
+    <Title>Імпорт змін сцен</Title>
+    <OpenTextFile>Відкрити текст. файл...</OpenTextFile>
+    <ImportOptions>Налаштування імпортування</ImportOptions>
     <TextFiles>Текстові файли</TextFiles>
-    <TimeCodes>Time codes</TimeCodes>
-    <Frames>Frames</Frames>
-    <Seconds>Seconds</Seconds>
-    <Milliseconds>Milliseconds</Milliseconds>
+    <TimeCodes>Часові мітки</TimeCodes>
+    <Frames>Кадри</Frames>
+    <Seconds>Секунди</Seconds>
+    <Milliseconds>Мілісекунди</Milliseconds>
   </ImportSceneChanges>
   <ImportText>
     <Title>Імпортування простого тексту</Title>
@@ -841,12 +841,12 @@ Note: Do check free disk space.</WaveFileMalformed>
         <OpenDvd>Відкрити DVD...</OpenDvd>
         <ChooseAudioTrack>Choose audio track</ChooseAudioTrack>
         <CloseVideo>Закрити відеофайл</CloseVideo>
-        <ImportSceneChanges>Import scene changes...</ImportSceneChanges>
-        <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
+        <ImportSceneChanges>Імпортувати зміни сцен...</ImportSceneChanges>
+        <RemoveSceneChanges>Видалити зміни сцен</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
         <ShowHideVideo>Показати/сховати відео</ShowHideVideo>
-        <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
-        <ShowHideWaveformAndSpectrogram>Show/hide waveform and spectrogram</ShowHideWaveformAndSpectrogram>
+        <ShowHideWaveform>Показати/сховати аудіохвилі</ShowHideWaveform>
+        <ShowHideWaveformAndSpectrogram>Показати/сховати аудіохвилі та спектрограму</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Відкріпити елементи керування відео</UnDockVideoControls>
         <ReDockVideoControls>Прикріпити елементи керування відео</ReDockVideoControls>
       </Video>
@@ -903,7 +903,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <SpellCheck>Перевірка орфографії</SpellCheck>
         <Settings>Налаштування</Settings>
         <Help>Довідка</Help>
-        <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
+        <ShowHideWaveform>Показати/сховати аудіохвилі</ShowHideWaveform>
         <ShowHideVideo>Показати/сховати відео</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -923,19 +923,19 @@ Note: Do check free disk space.</WaveFileMalformed>
         <SplitLineAtCursorPosition>Split line at cursor position</SplitLineAtCursorPosition>
         <AutoDurationCurrentLine>Auto duration (current line)</AutoDurationCurrentLine>
         <SelectAll>Вибрати всі</SelectAll>
-        <InsertFirstLine>Insert line</InsertFirstLine>
+        <InsertFirstLine>Вставити рядок</InsertFirstLine>
         <InsertBefore>Вставити перед</InsertBefore>
         <InsertAfter>Вставити після</InsertAfter>
         <InsertSubtitleAfter>Вставити субтитри після цього рядка...</InsertSubtitleAfter>
         <CopyToClipboard>Скопіювати до буферу обміну як текст</CopyToClipboard>
-        <Column>Column</Column>
-        <ColumnDeleteText>Delete text</ColumnDeleteText>
-        <ColumnDeleteTextAndShiftCellsUp>Delete text and shift cells up</ColumnDeleteTextAndShiftCellsUp>
-        <ColumnInsertEmptyTextAndShiftCellsDown>Insert empty text and shift cells down</ColumnInsertEmptyTextAndShiftCellsDown>
-        <ColumnInsertTextFromSubtitle>Insert text from subtitle...</ColumnInsertTextFromSubtitle>
-        <ColumnImportTextAndShiftCellsDown>Import text and shift cells down</ColumnImportTextAndShiftCellsDown>
-        <ColumnPasteFromClipboard>Paste from clipboard...</ColumnPasteFromClipboard>
-        <ColumnCopyOriginalTextToCurrent>Copy text from original to current</ColumnCopyOriginalTextToCurrent>
+        <Column>Стовпчик</Column>
+        <ColumnDeleteText>Видалити текст</ColumnDeleteText>
+        <ColumnDeleteTextAndShiftCellsUp>Видалити текст і посунути комірки вгору</ColumnDeleteTextAndShiftCellsUp>
+        <ColumnInsertEmptyTextAndShiftCellsDown>Вставити порожній текст і посунути комірки вниз</ColumnInsertEmptyTextAndShiftCellsDown>
+        <ColumnInsertTextFromSubtitle>Вставити текст із субтитрів...</ColumnInsertTextFromSubtitle>
+        <ColumnImportTextAndShiftCellsDown>Імпортувати текст і посунути комірки вниз</ColumnImportTextAndShiftCellsDown>
+        <ColumnPasteFromClipboard>Вставити з буферу обміну...</ColumnPasteFromClipboard>
+        <ColumnCopyOriginalTextToCurrent>Продублювати оригінальний текст</ColumnCopyOriginalTextToCurrent>
         <Split>Розділити</Split>
         <MergeSelectedLines>Об'єднати вибрані рядки</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>Об'єднати вибрані рядки як діалог</MergeSelectedLinesAsDialog>
@@ -946,18 +946,18 @@ Note: Do check free disk space.</WaveFileMalformed>
         <Color>Колір...</Color>
         <FontName>Назва шрифту...</FontName>
         <Alignment>Розташування...</Alignment>
-        <AutoBalanceSelectedLines>Auto balance selected lines...</AutoBalanceSelectedLines>
-        <RemoveLineBreaksFromSelectedLines>Remove line-breaks from selected lines...</RemoveLineBreaksFromSelectedLines>
+        <AutoBalanceSelectedLines>Автоматично збалансувати вибрані рядки...</AutoBalanceSelectedLines>
+        <RemoveLineBreaksFromSelectedLines>Вилучити розбиття рядків із вибраних субтитрів...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Ефект друкарської машинки...</TypewriterEffect>
         <KaraokeEffect>Ефект караоке...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Показувати вибрані рядки раніше/пізніше...</ShowSelectedLinesEarlierLater>
-        <VisualSyncSelectedLines>Visual sync selected lines...</VisualSyncSelectedLines>
-        <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft translate original line</GoogleAndMicrosoftTranslateSelectedLine>
-        <GoogleTranslateSelectedLines>Перекласти обрані рядки (Google-перекладач)...</GoogleTranslateSelectedLines>
-        <AdjustDisplayDurationForSelectedLines>Adjust durations for selected lines...</AdjustDisplayDurationForSelectedLines>
-        <FixCommonErrorsInSelectedLines>Fix common errors in selected lines...</FixCommonErrorsInSelectedLines>
-        <ChangeCasingForSelectedLines>Change casing for selected lines...</ChangeCasingForSelectedLines>
-        <SaveSelectedLines>Save selected lines as...</SaveSelectedLines>
+        <VisualSyncSelectedLines>Візуальна синхронізація вибраних рядків...</VisualSyncSelectedLines>
+        <GoogleAndMicrosoftTranslateSelectedLine>Перекласти оригінальний рядок через Google/Microsoft</GoogleAndMicrosoftTranslateSelectedLine>
+        <GoogleTranslateSelectedLines>Перекласти вибрані рядки (Google-перекладач)...</GoogleTranslateSelectedLines>
+        <AdjustDisplayDurationForSelectedLines>Змінити тривалості вибраних рядків...</AdjustDisplayDurationForSelectedLines>
+        <FixCommonErrorsInSelectedLines>Виправити типові помилки у вибраних рядках...</FixCommonErrorsInSelectedLines>
+        <ChangeCasingForSelectedLines>Змінити регістр у вибраних рядках...</ChangeCasingForSelectedLines>
+        <SaveSelectedLines>Зберегти обрані рядки як...</SaveSelectedLines>
         <WebVTTSetNewVoice>Set new voice...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Remove voices</WebVTTRemoveVoices>
       </ContextMenu>
@@ -995,33 +995,33 @@ Note: Do check free disk space.</WaveFileMalformed>
       <AutoContinueInOneSecond>Auto continue in one second</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>Auto continue in {0} seconds</AutoContinueInXSeconds>
       <StillTypingAutoContinueStopped>Still typing... auto continue stopped</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>&amp;Insert new subtitle at video pos</InsertNewSubtitleAtVideoPosition>
+      <InsertNewSubtitleAtVideoPosition>&amp;Вставити субтитр тут</InsertNewSubtitleAtVideoPosition>
       <Auto>Auto</Auto>
-      <PlayFromJustBeforeText>Play from just before &amp;text</PlayFromJustBeforeText>
+      <PlayFromJustBeforeText>Грати за мить до &amp;тексту</PlayFromJustBeforeText>
       <Pause>Призупин.</Pause>
-      <GoToSubtitlePositionAndPause>Go to sub position and pause</GoToSubtitlePositionAndPause>
-      <SetStartTime>Set &amp;start time</SetStartTime>
+      <GoToSubtitlePositionAndPause>Йти в поз-ю тексту і призупин.</GoToSubtitlePositionAndPause>
+      <SetStartTime>Встановити &amp;початок</SetStartTime>
       <SetEndTimeAndGoToNext>Set &amp;end &amp;&amp; go to next</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Adjusted via end time {0}</AdjustedViaEndTime>
-      <SetEndTime>Set e&amp;nd time</SetEndTime>
+      <SetEndTime>Встановити &amp;кінець</SetEndTime>
       <SetstartTimeAndOffsetOfRest>Set sta&amp;rt and off-set the rest</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Шукати текст онлайн</SearchTextOnline>
       <GoogleTranslate>Google-перекладач</GoogleTranslate>
       <GoogleIt>Заґуґлити</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
-      <VideoPosition>Video position:</VideoPosition>
-      <TranslateTip>Підказка: Викор. &lt;alt+стрілка вгору/вниз&gt;, щоб перейти до поп./наст. субтитру</TranslateTip>
-      <CreateTip>Tip: Use &lt;ctrl+arrow left/right&gt; keys</CreateTip>
-      <AdjustTip>Tip: Use &lt;alt+arrow up/down&gt; to go to previous/next subtitle</AdjustTip>
+      <VideoPosition>Позиція відео:</VideoPosition>
+      <TranslateTip>Порада: Викор. &lt;alt+↑/↓&gt;, щоб перейти до поп./наст. субтитру</TranslateTip>
+      <CreateTip>Порада: Використовуйте &lt;ctrl+←/→&gt;</CreateTip>
+      <AdjustTip>Порада: Викор. &lt;alt+↑/↓&gt;, щоб перейти до поп./наст. субтитру</AdjustTip>
       <BeforeChangingTimeInWaveformX>Before changing time in waveform: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>New text inserted at {0}</NewTextInsertAtX>
-      <Center>Center</Center>
-      <PlayRate>Play rate (speed)</PlayRate>
-      <Slow>Slow</Slow>
-      <Normal>Normal</Normal>
-      <Fast>Fast</Fast>
-      <VeryFast>Very fast</VeryFast>
+      <Center>Центрувати</Center>
+      <PlayRate>Швидкість відтворення</PlayRate>
+      <Slow>Повільно</Slow>
+      <Normal>Звичайно</Normal>
+      <Fast>Швидко</Fast>
+      <VeryFast>Дуже швидко</VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>Зберегти зміни до безіменного?</SaveChangesToUntitled>
     <SaveChangesToX>Зберегти зміни до {0}?</SaveChangesToX>
@@ -1030,7 +1030,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <SaveSubtitleAs>Зберегти субтитри як...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Зберегти оригінальні субтитри як...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>Не завантажено жодних субитрів</NoSubtitleLoaded>
-    <VisualSyncSelectedLines>Visual sync - selected lines</VisualSyncSelectedLines>
+    <VisualSyncSelectedLines>Візуальна синхронізація - вибрані рядки</VisualSyncSelectedLines>
     <VisualSyncTitle>Візуальна синхронізація</VisualSyncTitle>
     <BeforeVisualSync>Перед візуальною синхронізацією</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visual sync performed on selected lines</VisualSyncPerformedOnSelectedLines>
@@ -1039,7 +1039,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FileXIsLargerThan10MB>File is larger than 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Continue anyway?</ContinueAnyway>
     <BeforeLoadOf>Before load of {0}</BeforeLoadOf>
-    <LoadedSubtitleX>Loaded subtitle {0}</LoadedSubtitleX>
+    <LoadedSubtitleX>Завантажено субтитри {0}</LoadedSubtitleX>
     <LoadedEmptyOrShort>Loaded empty or very short subtitle {0}</LoadedEmptyOrShort>
     <FileIsEmptyOrShort>File is empty or very short!</FileIsEmptyOrShort>
     <FileNotFound>File not found: {0}</FileNotFound>
@@ -1052,9 +1052,9 @@ Note: Do check free disk space.</WaveFileMalformed>
 File is read-only!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Unable to save subtitle file {0}
 Subtitle seems to be empty - try to re-save if you're working on a valid subtitle!</UnableToSaveSubtitleX>
-    <BeforeNew>Before new</BeforeNew>
-    <New>New</New>
-    <BeforeConvertingToX>Before converting to {0}</BeforeConvertingToX>
+    <BeforeNew>Перед створенням нового файлу</BeforeNew>
+    <New>Новий</New>
+    <BeforeConvertingToX>Перед конвернтацією в {0}</BeforeConvertingToX>
     <ConvertedToX>Converted to {0}</ConvertedToX>
     <BeforeShowEarlier>Перед "показувати раніше"</BeforeShowEarlier>
     <BeforeShowLater>Перед "показувати пізніше"</BeforeShowLater>
@@ -1070,21 +1070,21 @@ Subtitle seems to be empty - try to re-save if you're working on a valid subtitl
     <ReplaceXContinue>The search item was replaced {0} time(s).
 Would you like to start from the top of the document and continue search and replace?</ReplaceXContinue>
     <ReplaceContinueTitle>Продовжити заміну?</ReplaceContinueTitle>
-    <SearchingForXFromLineY>Searching for '{0}' from line number {1}...</SearchingForXFromLineY>
+    <SearchingForXFromLineY>Пошук '{0}', починаючи з рядка {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' found at line number {1}</XFoundAtLineNumberY>
     <XNotFound>'{0}' не знайдено</XNotFound>
     <BeforeReplace>Перед заміною: {0}</BeforeReplace>
-    <MatchFoundX>Match found: {0}</MatchFoundX>
-    <NoMatchFoundX>No match found: {0}</NoMatchFoundX>
-    <FoundNothingToReplace>Found nothing to replace</FoundNothingToReplace>
+    <MatchFoundX>Знайдено: {0}</MatchFoundX>
+    <NoMatchFoundX>Не знайдено: {0}</NoMatchFoundX>
+    <FoundNothingToReplace>Нічого не знайдено для заміни</FoundNothingToReplace>
     <ReplaceCountX>Replace count: {0}</ReplaceCountX>
-    <NoXFoundAtLineY>Match found at line {0}: {1}</NoXFoundAtLineY>
-    <OneReplacementMade>One replacement made.</OneReplacementMade>
+    <NoXFoundAtLineY>Знайдено в рядку {0}: {1}</NoXFoundAtLineY>
+    <OneReplacementMade>Здійснено одну заміну.</OneReplacementMade>
     <BeforeChangesMadeInSourceView>Перед змінами у сирцевому вигляді</BeforeChangesMadeInSourceView>
     <UnableToParseSourceView>Unable to parse source view text!</UnableToParseSourceView>
     <GoToLineNumberX>Go to line number {0}</GoToLineNumberX>
     <CreateAdjustChangesApplied>Create/adjust lines changes applied</CreateAdjustChangesApplied>
-    <SelectedLines>selected lines</SelectedLines>
+    <SelectedLines>вибрані рядки</SelectedLines>
     <BeforeDisplayTimeAdjustment>Перед зміною тривалостей</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Display time adjusted: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Display times adjusted: {0}</DisplayTimesAdjustedX>
@@ -1106,8 +1106,8 @@ Would you like to start from the top of the document and continue search and rep
     <AppendViaVisualSyncTitle>Візуальна синхронізація - приєднання другої частини субтитрів</AppendViaVisualSyncTitle>
     <AppendSynchronizedSubtitlePrompt>Приєднати ці синхронізовані субтитри?</AppendSynchronizedSubtitlePrompt>
     <BeforeAppend>Перед приєднанням</BeforeAppend>
-    <SubtitleAppendedX>Subtitle appended: {0}</SubtitleAppendedX>
-    <SubtitleNotAppended>Subtitle NOT appended!</SubtitleNotAppended>
+    <SubtitleAppendedX>Субтитри приєднано: {0}</SubtitleAppendedX>
+    <SubtitleNotAppended>Субтитри НЕ приєднано!</SubtitleNotAppended>
     <GoogleTranslate>Google translate</GoogleTranslate>
     <MicrosoftTranslate>Microsoft translate</MicrosoftTranslate>
     <BeforeGoogleTranslation>Перед Google-перекладом</BeforeGoogleTranslation>
@@ -1119,21 +1119,21 @@ Would you like to start from the top of the document and continue search and rep
     <BeforeSwedishToDanishTranslation>Перед перекладом зі шведської на данську</BeforeSwedishToDanishTranslation>
     <TranslationFromSwedishToDanishComplete>Переклад зі шведської на данську завершено</TranslationFromSwedishToDanishComplete>
     <TranslationFromSwedishToDanishFailed>Не вдалося перекласти зі шведської на данську</TranslationFromSwedishToDanishFailed>
-    <BeforeUndo>Перед скасуванням</BeforeUndo>
-    <UndoPerformed>Undo performed</UndoPerformed>
-    <RedoPerformed>Redo performed</RedoPerformed>
+    <BeforeUndo>Перед відкочуванням дії</BeforeUndo>
+    <UndoPerformed>Здійснено відкочування</UndoPerformed>
+    <RedoPerformed>Здійснено повторення</RedoPerformed>
     <NothingToUndo>Nothing to undo</NothingToUndo>
-    <InvalidLanguageNameX>Invalid language name: {0}</InvalidLanguageNameX>
-    <UnableToChangeLanguage>Unable to change language!</UnableToChangeLanguage>
+    <InvalidLanguageNameX>Неправильна назва мови: {0}</InvalidLanguageNameX>
+    <UnableToChangeLanguage>Неможливо змінити мову!</UnableToChangeLanguage>
     <DoNotDisplayMessageAgain>Не показувати це повідомлення знову</DoNotDisplayMessageAgain>
-    <NumberOfCorrectedWords>Number of corrected words: {0}</NumberOfCorrectedWords>
-    <NumberOfSkippedWords>Number of skipped words: {0}</NumberOfSkippedWords>
-    <NumberOfCorrectWords>Number of correct words: {0}</NumberOfCorrectWords>
-    <NumberOfWordsAddedToDictionary>Number of words added to dictionary: {0}</NumberOfWordsAddedToDictionary>
-    <NumberOfNameHits>Number of name hits: {0}</NumberOfNameHits>
+    <NumberOfCorrectedWords>Кількість виправлених слів: {0}</NumberOfCorrectedWords>
+    <NumberOfSkippedWords>Кількість пропущених слів: {0}</NumberOfSkippedWords>
+    <NumberOfCorrectWords>Кількість правильних слів: {0}</NumberOfCorrectWords>
+    <NumberOfWordsAddedToDictionary>Кількість слів, доданих до словника: {0}</NumberOfWordsAddedToDictionary>
+    <NumberOfNameHits>Кількість знайдених імен: {0}</NumberOfNameHits>
     <SpellCheck>Перевірка орфографії</SpellCheck>
     <BeforeSpellCheck>Перед перевіркою орфографії</BeforeSpellCheck>
-    <SpellCheckChangedXToY>Spell check: Changed '{0}' to '{1}'</SpellCheckChangedXToY>
+    <SpellCheckChangedXToY>Перевірка орфографії: Замінено '{0}' на '{1}'</SpellCheckChangedXToY>
     <BeforeAddingTagX>Перед додаванням тегу &lt;{0}&gt;</BeforeAddingTagX>
     <TagXAdded>&lt;{0}&gt; tags added</TagXAdded>
     <LineXOfY>рядок {0} із {1}</LineXOfY>
@@ -1149,7 +1149,7 @@ Would you like to start from the top of the document and continue search and rep
     <BeforeLineUpdatedInListView>Before line updated in listview</BeforeLineUpdatedInListView>
     <BeforeSettingFontToNormal>Before setting font to normal</BeforeSettingFontToNormal>
     <BeforeSplitLine>Перед розбиттям рядка</BeforeSplitLine>
-    <LineSplitted>Line was split</LineSplitted>
+    <LineSplitted>Рядок розділено</LineSplitted>
     <BeforeMergeLines>Перед об'єднанням рядків</BeforeMergeLines>
     <LinesMerged>Рядки об'єднано</LinesMerged>
     <BeforeSettingColor>Перед встановленням кольору</BeforeSettingColor>
@@ -1157,8 +1157,8 @@ Would you like to start from the top of the document and continue search and rep
     <BeforeTypeWriterEffect>Перед ефектом друкарської машинки</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Перед ефектом караоке</BeforeKaraokeEffect>
     <BeforeImportingDvdSubtitle>Перед імпортуванням субтитрів з DVD</BeforeImportingDvdSubtitle>
-    <OpenMatroskaFile>Open Matroska file...</OpenMatroskaFile>
-    <MatroskaFiles>Matroska files</MatroskaFiles>
+    <OpenMatroskaFile>Відкрити файл Matroska...</OpenMatroskaFile>
+    <MatroskaFiles>Файли Matroska</MatroskaFiles>
     <NoSubtitlesFound>No subtitles found</NoSubtitlesFound>
     <NotAValidMatroskaFileX>This is not a valid Matroska file: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Blu-ray sup file does not contain any subtitles or contains errors - try demuxing again.</BlurayNotSubtitlesFound>
@@ -1179,10 +1179,10 @@ Would you like to start from the top of the document and continue search and rep
     <FrameRateChangedFromXToY>Frame rate changed from {0} to {1}</FrameRateChangedFromXToY>
     <IdxFileNotFoundWarning>{0} not found! Import VobSub file anyway?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>Header not valid VobSub file: {0}</InvalidVobSubHeader>
-    <OpenVobSubFile>Open VobSub (sub/idx) subtitle...</OpenVobSubFile>
-    <VobSubFiles>VobSub subtitle files</VobSubFiles>
-    <OpenBluRaySupFile>Open Blu-ray .sup file...</OpenBluRaySupFile>
-    <BluRaySupFiles>Blu-ray .sup files</BluRaySupFiles>
+    <OpenVobSubFile>Відкрити субтитри VobSub (sub/idx)...</OpenVobSubFile>
+    <VobSubFiles>Файли субтитрів VobSub</VobSubFiles>
+    <OpenBluRaySupFile>Вікрити файл Blu-ray .sup...</OpenBluRaySupFile>
+    <BluRaySupFiles>Файли Blu-ray .sup</BluRaySupFiles>
     <OpenXSubFiles>Відкрити файл XSub...</OpenXSubFiles>
     <XSubFiles>Файли XSub</XSubFiles>
     <BeforeImportingVobSubFile>Перед імпортуванням субтитрів VobSub</BeforeImportingVobSubFile>
@@ -1196,42 +1196,42 @@ Would you like to start from the top of the document and continue search and rep
     <ShowSelectionAndForwardXSecondsLinesEarlier>Show selection and forward {0:0.0##} seconds earlier</ShowSelectionAndForwardXSecondsLinesEarlier>
     <ShowSelectionAndForwardXSecondsLinesLater>Show selection and forward {0:0.0##} seconds later</ShowSelectionAndForwardXSecondsLinesLater>
     <ShowSelectedLinesEarlierLaterPerformed>Show earlier/later performed on selected lines</ShowSelectedLinesEarlierLaterPerformed>
-    <DoubleWordsViaRegEx>Double words via regex {0}</DoubleWordsViaRegEx>
+    <DoubleWordsViaRegEx>Повторювані слова за допомогою виразу {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Перед сортуванням: за {0}</BeforeSortX>
     <SortedByX>Відсортовано: за {0}</SortedByX>
-    <BeforeAutoBalanceSelectedLines>Before auto balance selected lines</BeforeAutoBalanceSelectedLines>
-    <NumberOfLinesAutoBalancedX>Number of auto balanced lines: {0}</NumberOfLinesAutoBalancedX>
-    <BeforeRemoveLineBreaksInSelectedLines>Before remove line-breaks from selected lines</BeforeRemoveLineBreaksInSelectedLines>
+    <BeforeAutoBalanceSelectedLines>Перед автоматичним збалансуванням вибраних рядків</BeforeAutoBalanceSelectedLines>
+    <NumberOfLinesAutoBalancedX>Кількість автоматично збалансованих рядків: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeRemoveLineBreaksInSelectedLines>Перед вилученням розбиття рядків з вибраних субтитрів</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Number of lines with removed line-break: {0}</NumberOfWithRemovedLineBreakX>
-    <BeforeMultipleReplace>Before multiple replace</BeforeMultipleReplace>
-    <NumberOfLinesReplacedX>Number of lines with text replaced: {0}</NumberOfLinesReplacedX>
+    <BeforeMultipleReplace>Перед множинною заміною</BeforeMultipleReplace>
+    <NumberOfLinesReplacedX>Кількість рядків із заміненим текстом: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNamesEtcList>The name '{0}' was added to names/etc list</NameXAddedToNamesEtcList>
     <NameXNotAddedToNamesEtcList>The name '{0}' was NOT added to names/etc list</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>The word '{0}' was added to the user dictionary</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>The word '{0}' was NOT added to the user dictionary</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>The OCR replace list pair '{0} -&gt; {1}' was added to the OCR replace list</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>The OCR replace list pair '{0} -&gt; {1}' was NOT added to the OCR replace list</OcrReplacePairXNotAdded>
-    <XLinesSelected>{0} lines selected</XLinesSelected>
+    <XLinesSelected>{0} рядків вибрано</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Subtitle contains unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?</UnicodeMusicSymbolsAnsiWarning>
     <UnicodeCharactersAnsiWarning>Subtitle contains unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Subtitle contains negative time codes. Continue with saving?</NegativeTimeWarning>
-    <BeforeMergeShortLines>Before merge short lines</BeforeMergeShortLines>
-    <BeforeSplitLongLines>Before split long lines</BeforeSplitLongLines>
+    <BeforeMergeShortLines>Перед об'єднанням коротких рядків</BeforeMergeShortLines>
+    <BeforeSplitLongLines>Перед розбиттям довгих рядків</BeforeSplitLongLines>
     <MergedShortLinesX>Number of lines merged: {0}</MergedShortLinesX>
     <BeforeDurationsBridgeGap>Before bridge small gaps</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Before set minimum display time between subtitles</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Number of lines with minimum display time between subtitles changed: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Перед імпортуванням простого тексту</BeforeImportText>
     <TextImported>Text imported</TextImported>
-    <BeforePointSynchronization>Before point synchronization</BeforePointSynchronization>
-    <PointSynchronizationDone>Point synchronization done</PointSynchronizationDone>
+    <BeforePointSynchronization>Перед точковою синхронізацією</BeforePointSynchronization>
+    <PointSynchronizationDone>Точкову синхронізацію здійснено</PointSynchronizationDone>
     <BeforeTimeCodeImport>Перед імпортуванням часових міток</BeforeTimeCodeImport>
     <TimeCodeImportedFromXY>Time codes imported from {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Before insert subtitle at video position</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Before set start time and off-set the rest</BeforeSetStartTimeAndOffsetTheRest>
     <BeforeSetEndTimeAndOffsetTheRest>Before set end time and off-set the rest</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Before set end time at video position and auto calculate start</BeforeSetEndAndVideoPosition>
-    <ContinueWithCurrentSpellCheck>Continue with current spell check?</ContinueWithCurrentSpellCheck>
+    <ContinueWithCurrentSpellCheck>Продовжити поточну перевірку орфографії?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Симв./сек.: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Get frame rate from video file</GetFrameRateFromVideoFile>
     <NetworkMessage>New message: {0} ({1}): {2}</NetworkMessage>
@@ -1248,7 +1248,7 @@ Would you like to start from the top of the document and continue search and rep
     <UnableToStartWord>Unable to start Microsoft Word</UnableToStartWord>
     <SpellCheckAbortedXCorrections>Spell check aborted. {0} lines were modified.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Spell check completed. {0} lines were modified.</SpellCheckCompletedXCorrections>
-    <OpenOtherSubtitle>Open other subtitle</OpenOtherSubtitle>
+    <OpenOtherSubtitle>Відкрити інші субтитри</OpenOtherSubtitle>
     <BeforeToggleDialogDashes>Before toggle of dialog dashes</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Ескпортувати простий текст як</ExportPlainTextAs>
     <TextFiles>Текстові файли</TextFiles>
@@ -1256,20 +1256,20 @@ Would you like to start from the top of the document and continue search and rep
     <LineNumberXErrorReadingFromSourceLineY>Line {0} - error reading: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Line {0} - error reading time code: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Line {0} - expected subtitle number: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <BeforeGuessingTimeCodes>Before guessing time codes</BeforeGuessingTimeCodes>
+    <BeforeGuessingTimeCodes>Перед припущенням часових міток</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Before auto-duration for selected lines</BeforeAutoDuration>
-    <BeforeColumnPaste>Before column paste</BeforeColumnPaste>
-    <BeforeColumnDelete>Before column delete</BeforeColumnDelete>
+    <BeforeColumnPaste>Перед вставленням у стовпчик</BeforeColumnPaste>
+    <BeforeColumnDelete>Перед видаленням зі стовпчика</BeforeColumnDelete>
     <BeforeColumnImportText>Before column import text</BeforeColumnImportText>
-    <BeforeColumnShiftCellsDown>Before column shift cells down</BeforeColumnShiftCellsDown>
+    <BeforeColumnShiftCellsDown>Перед посуненням комірок стовпчика вниз</BeforeColumnShiftCellsDown>
     <ErrorLoadingPluginXErrorY>Error loading plugin: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Before running plugin: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Unable to read subtitle result from plugin!</UnableToReadPluginResult>
     <UnableToCreateBackupDirectory>Unable to create backup directory {0}: {1}</UnableToCreateBackupDirectory>
     <BeforeDisplaySubtitleJoin>Before join of subtitles</BeforeDisplaySubtitleJoin>
-    <SubtitlesJoined>Subtitles joined</SubtitlesJoined>
-    <StatusLog>Status log</StatusLog>
-    <XSceneChangesImported>{0} scene changes imported</XSceneChangesImported>
+    <SubtitlesJoined>Субтитри об'єднано</SubtitlesJoined>
+    <StatusLog>Журнал статусів</StatusLog>
+    <XSceneChangesImported>{0} змін сцен імпортовано</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' executed.</PluginXExecuted>
     <NotAValidXSubFile>Not a valid XSub file!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Before merging lines with same text</BeforeMergeLinesWithSameText>
@@ -1476,12 +1476,12 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <NoBackedUpFilesFound>Не знайдено жодної автоматичної резервної копії!</NoBackedUpFilesFound>
   </RestoreAutoBackup>
   <SeekSilence>
-    <Title>Seek silence</Title>
-    <SearchDirection>Search direction</SearchDirection>
-    <Forward>Forward</Forward>
-    <Back>Back</Back>
-    <LengthInSeconds>Silence must be at at least (seconds)</LengthInSeconds>
-    <MaxVolume>Volume must be below</MaxVolume>
+    <Title>Знайти тишу</Title>
+    <SearchDirection>Напрям пошуку</SearchDirection>
+    <Forward>Вперед</Forward>
+    <Back>Назад</Back>
+    <LengthInSeconds>Тиша має тривати щонайменше (секунд)</LengthInSeconds>
+    <MaxVolume>Гучність має бути менше ніж</MaxVolume>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Встановлення мінімальної відстані між субтитрами</Title>
@@ -1492,22 +1492,22 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <OneFrameXisYMilliseconds>Один кадр при частоті {0:0.00} кнс - це {1} мілісекунд</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
-    <Title>Set Sync point for line {0}</Title>
-    <SyncPointTimeCode>Sync point time code</SyncPointTimeCode>
-    <ThreeSecondsBack>&lt;&lt; 3 s</ThreeSecondsBack>
-    <HalfASecondBack>&lt;&lt; ½ s</HalfASecondBack>
-    <HalfASecondForward>½ s &gt;&gt;</HalfASecondForward>
-    <ThreeSecondsForward>3 s &gt;&gt;</ThreeSecondsForward>
+    <Title>Встановлення точки синхронізації для субтитру {0}</Title>
+    <SyncPointTimeCode>Часова мітка точки синхрон-ї</SyncPointTimeCode>
+    <ThreeSecondsBack>&lt;&lt; 3 с</ThreeSecondsBack>
+    <HalfASecondBack>&lt;&lt; ½ с</HalfASecondBack>
+    <HalfASecondForward>½ с &gt;&gt;</HalfASecondForward>
+    <ThreeSecondsForward>3 с &gt;&gt;</ThreeSecondsForward>
   </SetSyncPoint>
   <Settings>
     <Title>Налаштування</Title>
     <General>Загальні</General>
     <Toolbar>Панель інструментів</Toolbar>
     <VideoPlayer>Відеопрогравач</VideoPlayer>
-    <WaveformAndSpectrogram>Waveform/spectrogram</WaveformAndSpectrogram>
+    <WaveformAndSpectrogram>Аудіохвилі/спектрограма</WaveformAndSpectrogram>
     <Tools>Інструменти</Tools>
     <WordLists>Списки слів</WordLists>
-    <SsaStyle>ASS/SSA Style</SsaStyle>
+    <SsaStyle>Стиль ASS/SSA</SsaStyle>
     <Network>Мережа</Network>
     <ShowToolBarButtons>Показувати кнопки в панелі інструментів</ShowToolBarButtons>
     <New>Новий</New>
@@ -1581,37 +1581,37 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <PreviewFontSize>Кегль попереднього перегляду субтитрів</PreviewFontSize>
     <MainWindowVideoControls>Елементи керування відео головного вікна</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Користувацький пошук: текст та URL</CustomSearchTextAndUrl>
-    <WaveformAppearance>Waveform appearance</WaveformAppearance>
-    <WaveformGridColor>Grid color</WaveformGridColor>
-    <WaveformShowGridLines>Show grid lines</WaveformShowGridLines>
-    <ReverseMouseWheelScrollDirection>Reverse mouse wheel scroll direction</ReverseMouseWheelScrollDirection>
-    <WaveformAllowOverlap>Allow overlap (when moving/resizing)</WaveformAllowOverlap>
-    <WaveformFocusMouseEnter>Set focus on mouse enter</WaveformFocusMouseEnter>
-    <WaveformListViewFocusMouseEnter>Also set list view focus on mouse enter in list view</WaveformListViewFocusMouseEnter>
+    <WaveformAppearance>Вигляд аудіохвиль</WaveformAppearance>
+    <WaveformGridColor>Колір сітки</WaveformGridColor>
+    <WaveformShowGridLines>Показувати сітку</WaveformShowGridLines>
+    <ReverseMouseWheelScrollDirection>Інвертувати напрям колеса миші</ReverseMouseWheelScrollDirection>
+    <WaveformAllowOverlap>Дозволити налкадки (під час переміщення/зміни розміру)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Встановлювати фокус при наведенні миші</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Також встановлювати фокус на список субтитрів при наведенні миші на ньго</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Border marker hit must be within</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milliseconds</WaveformBorderHitMs2>
-    <WaveformColor>Color</WaveformColor>
-    <WaveformSelectedColor>Selected color</WaveformSelectedColor>
-    <WaveformBackgroundColor>Back color</WaveformBackgroundColor>
-    <WaveformTextColor>Text color</WaveformTextColor>
-    <WaveformTextFontSize>Text font size</WaveformTextFontSize>
-    <WaveformAndSpectrogramsFolderEmpty>Empty 'Spectrograms' and 'Waveforms' folders</WaveformAndSpectrogramsFolderEmpty>
-    <WaveformAndSpectrogramsFolderInfo>'Waveforms' and 'Spectrograms' folders contain {0} files ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
-    <Spectrogram>Spectrogram</Spectrogram>
-    <GenerateSpectrogram>Generate spectrogram</GenerateSpectrogram>
-    <SpectrogramAppearance>Spectrogram appearance</SpectrogramAppearance>
-    <SpectrogramOneColorGradient>One color gradient</SpectrogramOneColorGradient>
-    <SpectrogramClassic>Classic</SpectrogramClassic>
-    <WaveformUseFFmpeg>Use FFmpeg for wave extraction</WaveformUseFFmpeg>
-    <WaveformFFmpegPath>Path to FFmpeg</WaveformFFmpegPath>
-    <WaveformBrowseToFFmpeg>Browse to FFmpeg</WaveformBrowseToFFmpeg>
+    <WaveformColor>Колір</WaveformColor>
+    <WaveformSelectedColor>Колір обраного</WaveformSelectedColor>
+    <WaveformBackgroundColor>Колір тла</WaveformBackgroundColor>
+    <WaveformTextColor>Колір тексту</WaveformTextColor>
+    <WaveformTextFontSize>Кегль тексту</WaveformTextFontSize>
+    <WaveformAndSpectrogramsFolderEmpty>Спорожнити теки 'Spectrograms' та 'Waveforms'</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderInfo>Теки 'Waveforms' та 'Spectrograms' містять {0} файлів ({1:0.00} МБ)</WaveformAndSpectrogramsFolderInfo>
+    <Spectrogram>Спектрограма</Spectrogram>
+    <GenerateSpectrogram>Генерувати спектрограму</GenerateSpectrogram>
+    <SpectrogramAppearance>Вигляд спектрограми</SpectrogramAppearance>
+    <SpectrogramOneColorGradient>Одноколірний градієнт</SpectrogramOneColorGradient>
+    <SpectrogramClassic>Класичний</SpectrogramClassic>
+    <WaveformUseFFmpeg>Використовувати FFmpeg для виокремлення аудіо</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Шлях до FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Вкажіть розташування FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Вкажіть розташування VLC</WaveformBrowseToVLC>
-    <SubStationAlphaStyle>(Advanced) Sub Station Alpha style</SubStationAlphaStyle>
-    <ChooseFont>Choose font</ChooseFont>
-    <ChooseColor>Choose color</ChooseColor>
-    <SsaOutline>Outline</SsaOutline>
-    <SsaShadow>Shadow</SsaShadow>
-    <SsaOpaqueBox>Opaque box</SsaOpaqueBox>
+    <SubStationAlphaStyle>Стиль (Advanced) Sub Station Alpha</SubStationAlphaStyle>
+    <ChooseFont>Обрати шрифт</ChooseFont>
+    <ChooseColor>Обрати колір</ChooseColor>
+    <SsaOutline>Облямівка</SsaOutline>
+    <SsaShadow>Тінь</SsaShadow>
+    <SsaOpaqueBox>Непрозорий прямокутник</SsaOpaqueBox>
     <Testing123>Testing 123...</Testing123>
     <Language>Мова</Language>
     <NamesIgnoreLists>Список імен/ігнор. (чутливий до регістру)</NamesIgnoreLists>
@@ -1659,7 +1659,7 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Set end, add new and go to new</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Adjust via end position and go to next</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetEndTimeAndGoToNext>Set end and go to next</AdjustSetEndTimeAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Встан. кінець і йти до наступного</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Set start, auto duration and go to next</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Set end, next start and go to next</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Key down=set start, Key up=set end and go to next</AdjustStartDownEndUpAndGoToNext>
@@ -1687,7 +1687,7 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <WaveformSeekSilenceBack>Seek silence back</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Add text here (for new selection)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Play new selection</WaveformPlayNewSelection>
-    <WaveformPlayFirstSelectedSubtitle>Play first selected subtitle</WaveformPlayFirstSelectedSubtitle>
+    <WaveformPlayFirstSelectedSubtitle>Відтворити перший вибраний субтитр</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus list view</WaveformFocusListView>
     <GoBack1Frame>One frame back</GoBack1Frame>
     <GoForward1Frame>One frame forward</GoForward1Frame>
@@ -1716,11 +1716,11 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <SyntaxErrorColor>Колір помилки</SyntaxErrorColor>
     <GoToFirstSelectedLine>Go to first selected line</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Go to next empty line</GoToNextEmptyLine>
-    <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
+    <MergeSelectedLines>Об'єднати вибрані рядки</MergeSelectedLines>
     <MergeSelectedLinesOnlyFirstText>Merge selected lines, keep only first non-empty text</MergeSelectedLinesOnlyFirstText>
     <ToggleTranslationMode>Toggle translation mode</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Switch original and translation</SwitchOriginalAndTranslation>
-    <MergeOriginalAndTranslation>Merge original and translation</MergeOriginalAndTranslation>
+    <MergeOriginalAndTranslation>Об'єднати оригінал і переклад</MergeOriginalAndTranslation>
     <ShortcutIsAlreadyDefinedX>Shortcut already defined: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Toggle translation and original in video/audio preview</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Column, delete text</ListViewColumnDelete>
@@ -1767,30 +1767,30 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
   <SpellCheck>
     <Title>Перевірка орфографії</Title>
     <FullText>Увесь текст</FullText>
-    <WordNotFound>Word not found</WordNotFound>
+    <WordNotFound>Слово, якого нема у словнику</WordNotFound>
     <Language>Мова</Language>
-    <Change>Change</Change>
-    <ChangeAll>Change all</ChangeAll>
-    <SkipOnce>Skip &amp;one</SkipOnce>
-    <SkipAll>&amp;Skip all</SkipAll>
+    <Change>Замінити</Change>
+    <ChangeAll>Замінити всі</ChangeAll>
+    <SkipOnce>Пропустити &amp;один раз</SkipOnce>
+    <SkipAll>&amp;Пропустити всі</SkipAll>
     <AddToUserDictionary>Додати до користувацького словника</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>Add to names/noise list (case sensitive)</AddToNamesAndIgnoreList>
+    <AddToNamesAndIgnoreList>Додати в список імен/шумів (чутливий до регістру)</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>Add pair to OCR replace list</AddToOcrReplaceList>
     <Abort>Abort</Abort>
-    <Use>Use</Use>
-    <UseAlways>&amp;Use always</UseAlways>
-    <Suggestions>Suggestions</Suggestions>
+    <Use>Використати</Use>
+    <UseAlways>&amp;Викор. завжди</UseAlways>
+    <Suggestions>Пропозиції</Suggestions>
     <SpellCheckProgress>Spell check [{0}] - {1}</SpellCheckProgress>
-    <EditWholeText>Редагувати увесь текст</EditWholeText>
-    <EditWordOnly>Редагувати тільки слово</EditWordOnly>
+    <EditWholeText>Редагувати все</EditWholeText>
+    <EditWordOnly>Редагувати слово</EditWordOnly>
     <AddXToNamesEtc>Add '{0}' to names/etc list</AddXToNamesEtc>
-    <AutoFixNames>Автомат. виправляти імена, якщо відрізняється лише регістр</AutoFixNames>
+    <AutoFixNames>Автомат. виправляти імена, де інший лише регістр</AutoFixNames>
     <CheckOneLetterWords>Запитувати щодо невідомих слів з однієї літери</CheckOneLetterWords>
     <TreatINQuoteAsING>Сприймати закінчення слова " in' " як " ing " (тільки англійська)</TreatINQuoteAsING>
     <ImageText>Image text</ImageText>
-    <SpellCheckCompleted>Spell check completed</SpellCheckCompleted>
-    <SpellCheckAborted>Spell check aborted</SpellCheckAborted>
-    <UndoX>Undo: {0}</UndoX>
+    <SpellCheckCompleted>Перевірку орфографії завершено</SpellCheckCompleted>
+    <SpellCheckAborted>Перевірку орфографії скасовано</SpellCheckAborted>
+    <UndoX>Скасувати: {0}</UndoX>
   </SpellCheck>
   <Split>
     <Title>Розбиття</Title>
@@ -1938,14 +1938,14 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <StyleXImportedFromFileY>Style '{0}' imported from file '{1}'</StyleXImportedFromFileY>
   </SubStationAlphaStyles>
   <PointSync>
-    <Title>Point synchronization</Title>
-    <TitleViaOtherSubtitle>Point sync via other subtitle</TitleViaOtherSubtitle>
+    <Title>Точкова синхронізація</Title>
+    <TitleViaOtherSubtitle>Точкова синхронізація через інші субтитри</TitleViaOtherSubtitle>
     <SyncHelp>Set at least two sync points to make rough synchronization</SyncHelp>
-    <SetSyncPoint>Set sync point</SetSyncPoint>
-    <RemoveSyncPoint>Remove sync point</RemoveSyncPoint>
-    <SyncPointsX>Sync points: {0}</SyncPointsX>
-    <Info>One sync point will adjust position, two or more sync points will adjust position and speed</Info>
-    <ApplySync>Apply</ApplySync>
+    <SetSyncPoint>Встановити точку</SetSyncPoint>
+    <RemoveSyncPoint>Видалити точку</RemoveSyncPoint>
+    <SyncPointsX>Точки синхрон-ї: {0}</SyncPointsX>
+    <Info>Одна точка синхронізації встановить позицію, дві або більше - позицію та швидкість</Info>
+    <ApplySync>Застосувати</ApplySync>
   </PointSync>
   <TransportStreamSubtitleChooser>
     <Title>Transport stream subtitle chooser - {0}</Title>
@@ -1972,7 +1972,7 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
 Зберегти ці зміни?</KeepChangesMessage>
     <SynchronizationDone>Синхронізацію виконано!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Початкова сцена має бути раніше за кінцеву сцену!</StartSceneMustComeBeforeEndScene>
-    <Tip>Підказка: Використовуйте клавіші &lt;ctrl+стрілка вліво/вправо&gt;, щоб просунутися на 100 мс назад/вперед</Tip>
+    <Tip>Порада: Використовуйте клавіші &lt;ctrl+←/→&gt;, щоб просунутися на 100 мс назад/вперед</Tip>
   </VisualSync>
   <VobSubEditCharacters>
     <Title>Edit image compare database</Title>
@@ -2075,42 +2075,42 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <Description>Adjust value until text style is normal and not italic. Note that original image should be italic.</Description>
   </VobSubOcrSetItalicFactor>
   <Waveform>
-    <ClickToAddWaveform>Click to add waveform</ClickToAddWaveform>
-    <ClickToAddWaveformAndSpectrogram>Click to add waveform/spectrogram</ClickToAddWaveformAndSpectrogram>
+    <ClickToAddWaveform>Клацніть, щоб додати аудіохвилі</ClickToAddWaveform>
+    <ClickToAddWaveformAndSpectrogram>Клацніть, щоб додати аудіохвилі/спектрограму</ClickToAddWaveformAndSpectrogram>
     <Seconds>seconds</Seconds>
-    <ZoomIn>Zoom in</ZoomIn>
-    <ZoomOut>Zoom out</ZoomOut>
-    <AddParagraphHere>Add text here</AddParagraphHere>
-    <AddParagraphHereAndPasteText>Add text from clipboard here</AddParagraphHereAndPasteText>
-    <FocusTextBox>Focus text box</FocusTextBox>
-    <DeleteParagraph>Delete text</DeleteParagraph>
-    <Split>Split</Split>
+    <ZoomIn>Збільшити масштаб</ZoomIn>
+    <ZoomOut>Зменшити масштаб</ZoomOut>
+    <AddParagraphHere>Додати сюди текст</AddParagraphHere>
+    <AddParagraphHereAndPasteText>Додати сюди текст з буферу обміну</AddParagraphHereAndPasteText>
+    <FocusTextBox>Фокусуватися на текстовому полі</FocusTextBox>
+    <DeleteParagraph>Видалити текст</DeleteParagraph>
+    <Split>Розбити</Split>
     <SplitAtCursor>Split at cursor</SplitAtCursor>
-    <MergeWithPrevious>Merge with previous</MergeWithPrevious>
-    <MergeWithNext>Merge with next</MergeWithNext>
-    <PlaySelection>Play selection</PlaySelection>
-    <ShowWaveformAndSpectrogram>Show waveform and spectrogram</ShowWaveformAndSpectrogram>
-    <ShowWaveformOnly>Show waveform only</ShowWaveformOnly>
-    <ShowSpectrogramOnly>Show spectrogram only</ShowSpectrogramOnly>
-    <GuessTimeCodes>Guess time codes...</GuessTimeCodes>
-    <SeekSilence>Seek silence...</SeekSilence>
+    <MergeWithPrevious>Об'єднати з попереднім</MergeWithPrevious>
+    <MergeWithNext>Об'єднати з наступним</MergeWithNext>
+    <PlaySelection>Відтворити виділене</PlaySelection>
+    <ShowWaveformAndSpectrogram>Показати аудіохвилі та спектрограму</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>Показати тільки аудіохвилі</ShowWaveformOnly>
+    <ShowSpectrogramOnly>Показати тільки спектрограму</ShowSpectrogramOnly>
+    <GuessTimeCodes>Припустити часові мітки...</GuessTimeCodes>
+    <SeekSilence>Знайти тишу...</SeekSilence>
   </Waveform>
   <WaveformGenerateTimeCodes>
-    <Title>Guess time codes</Title>
-    <StartFrom>Start from</StartFrom>
-    <CurrentVideoPosition>Current video position</CurrentVideoPosition>
-    <Beginning>Beginning</Beginning>
-    <DeleteLines>Delete lines</DeleteLines>
-    <FromCurrentVideoPosition>From current video position</FromCurrentVideoPosition>
-    <DetectOptions>Detect options</DetectOptions>
-    <ScanBlocksOfMs>Scan blocks of milliseconds</ScanBlocksOfMs>
-    <BlockAverageVolMin1>Block average volume must be above</BlockAverageVolMin1>
-    <BlockAverageVolMin2>% of total average volume</BlockAverageVolMin2>
-    <BlockAverageVolMax1>Block average volume must be below</BlockAverageVolMax1>
-    <BlockAverageVolMax2>% of total max volume</BlockAverageVolMax2>
-    <SplitLongLinesAt1>Split long subtitles at</SplitLongLinesAt1>
-    <SplitLongLinesAt2>milliseconds</SplitLongLinesAt2>
-    <Other>Other</Other>
+    <Title>Припустити часові мітки</Title>
+    <StartFrom>Почати з</StartFrom>
+    <CurrentVideoPosition>Поточної позиції відео</CurrentVideoPosition>
+    <Beginning>Початку</Beginning>
+    <DeleteLines>Видалити рядки</DeleteLines>
+    <FromCurrentVideoPosition>З поточної позиції відео</FromCurrentVideoPosition>
+    <DetectOptions>Налаштування виявлення</DetectOptions>
+    <ScanBlocksOfMs>Сканувати блоки мілісекунд</ScanBlocksOfMs>
+    <BlockAverageVolMin1>Середня гучність блоку має бути вищою за</BlockAverageVolMin1>
+    <BlockAverageVolMin2>% від загальної середньої гучності</BlockAverageVolMin2>
+    <BlockAverageVolMax1>Середня гучність блоку має бути нижчою за</BlockAverageVolMax1>
+    <BlockAverageVolMax2>% від загальної максимальної гучності</BlockAverageVolMax2>
+    <SplitLongLinesAt1>Розити довгі субтитри при</SplitLongLinesAt1>
+    <SplitLongLinesAt2>мілісекунд</SplitLongLinesAt2>
+    <Other>Інше</Other>
   </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - set new voice</Title>
