@@ -988,6 +988,7 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle76.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle75.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle74.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle78.cs" />
     <Compile Include="Logic\SubtitleFormats\WebVTTFileWithLineNumber.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProXmlGap.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle66.cs" />
