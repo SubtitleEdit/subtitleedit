@@ -10049,8 +10049,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemMergeLinesClick(object sender, EventArgs e)
         {
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
-                MergeAfterToolStripMenuItemClick(null, null);
+            MergeAfterToolStripMenuItemClick(null, null);
         }
 
         private void VisualSyncSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
