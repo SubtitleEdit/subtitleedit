@@ -1366,7 +1366,7 @@ namespace Nikse.SubtitleEdit.Logic
             count += GetCountContains(text, "シ", "ュ", "う", "シ", "ン", "サ");
             count += GetCountContains(text, "シ", "ュ", "シ", "ン", "だ", "う");
             if (count > bestCount * 2)
-                return "jp"; // Japanese - not tested...
+                return "ja"; // Japanese - not tested...
 
             count = GetCountContains(text, "是", "是早", "吧", "的", "爱", "上好");
             count += GetCountContains(text, "的", "啊", "好", "好", "亲", "的");
