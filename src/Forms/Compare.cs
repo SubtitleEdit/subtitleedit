@@ -450,7 +450,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool GetBreakToLetter()
         {
-            if (_language1 != null && (_language1 == "jp" || _language1 == "zh"))
+            if (_language1 != null && (_language1 == "ja" || _language1 == "zh"))
                 return true;
             return false;
         }
