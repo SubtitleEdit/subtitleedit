@@ -21,12 +21,12 @@
     <OpenVideoFileTitle>Відкрити відеофайл...</OpenVideoFileTitle>
     <NoVideoLoaded>Відео не завантажено</NoVideoLoaded>
     <VideoInformation>Інформація про відео</VideoInformation>
-    <PositionX>Position / duration: {0}</PositionX>
+    <PositionX>Позиція / тривалість: {0}</PositionX>
     <StartTime>Початок</StartTime>
     <EndTime>Кінець</EndTime>
     <Duration>Тривалість</Duration>
     <NumberSymbol>№</NumberSymbol>
-    <Number>Number</Number>
+    <Number>Номер</Number>
     <Text>Текст</Text>
     <HourMinutesSecondsMilliseconds>Год:хв:сек:мсек</HourMinutesSecondsMilliseconds>
     <Bold>Жирний</Bold>
@@ -43,15 +43,15 @@
     <SingleLineLengths>Порядкова́ довжина:</SingleLineLengths>
     <TotalLengthX>Загальна довжина: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Заг. довжина: {0} (розбийте рядок!)</TotalLengthXSplitLine>
-    <SplitLine>Split line!</SplitLine>
-    <NotAvailable>N/A</NotAvailable>
+    <SplitLine>Розбити!</SplitLine>
+    <NotAvailable>Н/Д</NotAvailable>
     <OverlapPreviousLineX>Накладка на поп. рядок ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Накладка ({0:#,##0.###})</OverlapX>
-    <OverlapNextX>Overlap next ({0:#,##0.###})</OverlapNextX>
-    <Negative>Negative</Negative>
-    <RegularExpressionIsNotValid>Regular expression is not valid!</RegularExpressionIsNotValid>
-    <SubtitleSaved>Subtitle saved</SubtitleSaved>
-    <CurrentSubtitle>Current subtitle</CurrentSubtitle>
+    <OverlapNextX>Пізніше ніж наступний ({0:#,##0.###})</OverlapNextX>
+    <Negative>Від'ємна</Negative>
+    <RegularExpressionIsNotValid>Некоректний регулярний вираз!</RegularExpressionIsNotValid>
+    <SubtitleSaved>Субтитри збережено</SubtitleSaved>
+    <CurrentSubtitle>Поточні субтитри</CurrentSubtitle>
     <OriginalText>Оригінальний текст</OriginalText>
     <OpenOriginalSubtitleFile>Відкрийте файл з оригінальними субтитрами...</OpenOriginalSubtitleFile>
     <PleaseWait>Зачекайте, будь ласка...</PleaseWait>
@@ -64,10 +64,10 @@
     <AudioWindowTitle>Аудіо - {0}</AudioWindowTitle>
     <ControlsWindowTitle>Елементи керування - {0}</ControlsWindowTitle>
     <Advanced>Розширене</Advanced>
-    <Style>Style</Style>
-    <StyleLanguage>Style / Language</StyleLanguage>
-    <Character>Character</Character>
-    <Class>Class</Class>
+    <Style>Стиль</Style>
+    <StyleLanguage>Стиль / Мова</StyleLanguage>
+    <Character>Символ</Character>
+    <Class>Клас</Class>
     <GeneralText>Загальні</GeneralText>
     <LineNumber>№ субтитру</LineNumber>
     <Before>До</Before>
@@ -76,18 +76,19 @@
   </General>
   <About>
     <Title>Про програму Subtitle Edit</Title>
-    <AboutText1>Subtitle Edit - це вільне програмне забезпечення під ліцензією 
-	GNU Public License. Ви можете вільно поширювати, редагувати
-	та використовувати його.
+    <AboutText1>
+      Subtitle Edit - це вільне програмне забезпечення під ліцензією
+      GNU Public License. Ви можете вільно поширювати, редагувати
+      та використовувати його.
 
-Сирцевий код на C# доступний тут https://github.com/SubtitleEdit/subtitleedit
+      Сирцевий код на C# доступний тут https://github.com/SubtitleEdit/subtitleedit
 
-Відвідайте www.nikse.dk, щоб отримати останню версію.
+      Відвідайте www.nikse.dk, щоб отримати останню версію.
 
-Пропозиції дуже радо вітаються.
+      Пропозиції дуже радо вітаються.
 
-Email: mailto:nikse.dk@gmail.com
-</AboutText1>
+      Email: mailto:nikse.dk@gmail.com
+    </AboutText1>
   </About>
   <AddToNames>
     <Title>Додати до списку імен/шумів і т. п.</Title>
@@ -113,15 +114,19 @@ Email: mailto:nikse.dk@gmail.com
     <GeneratingSpectrogram>Створення спектрограми...</GeneratingSpectrogram>
     <ExtractingSeconds>Виокремлення аудіо: {0:0.0} секунд</ExtractingSeconds>
     <ExtractingMinutes>Виокремлення аудіо: {0}.{1:00} хвилин</ExtractingMinutes>
-    <WaveFileNotFound>Could not find extracted wave file!
-This feature requires VLC media player 1.1.x or newer ({0}-bit).
+    <WaveFileNotFound>
+      Could not find extracted wave file!
+      This feature requires VLC media player 1.1.x or newer ({0}-bit).
 
-Command line: {1} {2}</WaveFileNotFound>
-    <WaveFileMalformed>{0} was unable to extract audio data to wave file!
+      Command line: {1} {2}
+    </WaveFileNotFound>
+    <WaveFileMalformed>
+      {0} was unable to extract audio data to wave file!
 
-Command line: {1} {2}
+      Command line: {1} {2}
 
-Note: Do check free disk space.</WaveFileMalformed>
+      Note: Do check free disk space.
+    </WaveFileMalformed>
     <LowDiskSpace>LOW DISK SPACE!</LowDiskSpace>
     <FreeDiskSpace>{0} free</FreeDiskSpace>
   </AddWaveform>
@@ -309,14 +314,14 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Generate>Generate</Generate>
   </DCinemaProperties>
   <DurationsBridgeGaps>
-    <Title>Bridge small gaps in durations</Title>
-    <GapsBridgedX>Number of small gaps bridged: {0}</GapsBridgedX>
-    <GapToNext>Gap to next in seconds</GapToNext>
-    <BridgeGapsSmallerThanXPart1>Bridge gaps smaller than</BridgeGapsSmallerThanXPart1>
-    <BridgeGapsSmallerThanXPart2>milliseconds</BridgeGapsSmallerThanXPart2>
-    <MinMillisecondsBetweenLines>Min. milliseconds between lines</MinMillisecondsBetweenLines>
-    <ProlongEndTime>Previous text takes all gap time</ProlongEndTime>
-    <DivideEven>Texts divide gap time</DivideEven>
+    <Title>Ліквідувати малі розриви між субтитрами</Title>
+    <GapsBridgedX>Кількість ліквідованих малих розривів: {0}</GapsBridgedX>
+    <GapToNext>Розрив із наступним, сек.</GapToNext>
+    <BridgeGapsSmallerThanXPart1>Ліквідувати розриви, менші за</BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart2>мілісекунд</BridgeGapsSmallerThanXPart2>
+    <MinMillisecondsBetweenLines>Лишити мінімальну відстань між рядками, мілісекунд</MinMillisecondsBetweenLines>
+    <ProlongEndTime>Попередній текст поглинає увесь розрив</ProlongEndTime>
+    <DivideEven>Тексти ділять розрив порівну</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
     <Title>Витягування субтитрів з IFO/VOB-файлів (DVD)</Title>
@@ -443,7 +448,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Center>По центру</Center>
     <BottomMargin>Нижній відступ</BottomMargin>
     <LeftRightMargin>Лів/прав відступ</LeftRightMargin>
-    <SaveBluRraySupAs>Choose Blu-ray sup file name</SaveBluRraySupAs>
+    <SaveBluRraySupAs>Оберіть назву для Blu-ray sup-файлу</SaveBluRraySupAs>
     <SaveVobSubAs>Оберіть назву для VobSub-файлу</SaveVobSubAs>
     <SaveFabImageScriptAs>Choose FAB image script file name</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Choose DVD Studio Pro STL file name</SaveDvdStudioProStlAs>
@@ -451,8 +456,10 @@ Note: Do check free disk space.</WaveFileMalformed>
     <SavePremiereEdlAs>Choose Premiere EDL file name</SavePremiereEdlAs>
     <SaveFcpAs>Choose Final Cut Pro xml file name</SaveFcpAs>
     <SaveDostAs>Choose DoStudio dost file name</SaveDostAs>
-    <SomeLinesWereTooLongX>Деякі рядки були надто довгими:
-{0}</SomeLinesWereTooLongX>
+    <SomeLinesWereTooLongX>
+      Деякі рядки були надто довгими:
+      {0}
+    </SomeLinesWereTooLongX>
     <LineHeight>Висота рядка</LineHeight>
     <BoxSingleLine>Box - single line</BoxSingleLine>
     <BoxMultiLine>Box - multi line</BoxMultiLine>
@@ -638,13 +645,13 @@ Note: Do check free disk space.</WaveFileMalformed>
     <XDownloaded>{0} звантажено та встановлено</XDownloaded>
   </GetDictionaries>
   <GetTesseractDictionaries>
-    <Title>Need dictionaries?</Title>
-    <DescriptionLine1>Get Tesseract OCR dictionaries from the web</DescriptionLine1>
-    <DownloadFailed>Download failed!</DownloadFailed>
-    <GetDictionariesHere>Get dictionaries here:</GetDictionariesHere>
-    <ChooseLanguageAndClickDownload>Choose your language and click download</ChooseLanguageAndClickDownload>
-    <OpenDictionariesFolder>Open 'Dictionaries' folder</OpenDictionariesFolder>
-    <Download>Download</Download>
+    <Title>Потрібні словники?</Title>
+    <DescriptionLine1>Отримайте словники для Tesseract-розпізнавання тексту з інтернету</DescriptionLine1>
+    <DownloadFailed>Звантаження не вдалося!</DownloadFailed>
+    <GetDictionariesHere>Отримайте словники тут:</GetDictionariesHere>
+    <ChooseLanguageAndClickDownload>Оберіть свою мову і клацніть "Звантажити"</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>Відкрити теку 'Dictionaries'</OpenDictionariesFolder>
+    <Download>Звантажити</Download>
     <XDownloaded>{0} звантажено та встановлено</XDownloaded>
   </GetTesseractDictionaries>
   <GoogleTranslate>
@@ -709,7 +716,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <TimeCodes>Часові мітки</TimeCodes>
   </ImportText>
   <Interjections>
-    <Title>Interjections</Title>
+    <Title>Вигуки</Title>
   </Interjections>
   <JoinSubtitles>
     <Title>Об'єднання субтитрів</Title>
@@ -801,7 +808,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <Title>Інструменти</Title>
         <AdjustDisplayDuration>&amp;Змінити тривалості...</AdjustDisplayDuration>
         <ApplyDurationLimits>Застосувати обмеження тривалостей...</ApplyDurationLimits>
-        <DurationsBridgeGap>Bridge gap in durations...</DurationsBridgeGap>
+        <DurationsBridgeGap>Ліквідувати розриви між субтитрами...</DurationsBridgeGap>
         <FixCommonErrors>&amp;Виправити типові помилки...</FixCommonErrors>
         <StartNumberingFrom>Перенумерувати...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Видалити текст для людей із вадами слуху...</RemoveTextForHearingImpaired>
@@ -1047,28 +1054,38 @@ Note: Do check free disk space.</WaveFileMalformed>
     <SavedOriginalSubtitleX>Saved original subtitle {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>File on disk modified</FileOnDiskModified>
     <OverwriteModifiedFile>Overwrite the file {0} modified at {1} {2}{3} with current file loaded from disk at {4} {5}?</OverwriteModifiedFile>
-    <FileXIsReadOnly>Cannot save {0}
+    <FileXIsReadOnly>
+      Cannot save {0}
 
-File is read-only!</FileXIsReadOnly>
-    <UnableToSaveSubtitleX>Unable to save subtitle file {0}
-Subtitle seems to be empty - try to re-save if you're working on a valid subtitle!</UnableToSaveSubtitleX>
+      File is read-only!
+    </FileXIsReadOnly>
+    <UnableToSaveSubtitleX>
+      Unable to save subtitle file {0}
+      Subtitle seems to be empty - try to re-save if you're working on a valid subtitle!
+    </UnableToSaveSubtitleX>
     <BeforeNew>Перед створенням нового файлу</BeforeNew>
     <New>Новий</New>
     <BeforeConvertingToX>Перед конвернтацією в {0}</BeforeConvertingToX>
-    <ConvertedToX>Converted to {0}</ConvertedToX>
+    <ConvertedToX>Конвертовано в {0}</ConvertedToX>
     <BeforeShowEarlier>Перед "показувати раніше"</BeforeShowEarlier>
     <BeforeShowLater>Перед "показувати пізніше"</BeforeShowLater>
     <LineNumberX>Line number: {0:#,##0.##}</LineNumberX>
     <OpenVideoFile>Відкрити відеофайл...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>New frame rate ({0}) was used for calculating start/end time codes</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>New frame rate ({0}) was used for calculating start/end frame numbers</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>Об'єкт пошуку не знайдено.
-Бажаєте розпочати з початку документу і шукати ще раз?</FindContinue>
+    <FindContinue>
+      Об'єкт пошуку не знайдено.
+      Бажаєте розпочати з початку документу і шукати ще раз?
+    </FindContinue>
     <FindContinueTitle>Продовжити пошук?</FindContinueTitle>
-    <ReplaceContinueNotFound>Об'єкт пошуку не знайдено.
-Бажаєте розпочати з початку документу і продовжити пошук та заміну?</ReplaceContinueNotFound>
-    <ReplaceXContinue>The search item was replaced {0} time(s).
-Would you like to start from the top of the document and continue search and replace?</ReplaceXContinue>
+    <ReplaceContinueNotFound>
+      Об'єкт пошуку не знайдено.
+      Бажаєте розпочати з початку документу і продовжити пошук та заміну?
+    </ReplaceContinueNotFound>
+    <ReplaceXContinue>
+      The search item was replaced {0} time(s).
+      Would you like to start from the top of the document and continue search and replace?
+    </ReplaceXContinue>
     <ReplaceContinueTitle>Продовжити заміну?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Пошук '{0}', починаючи з рядка {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' found at line number {1}</XFoundAtLineNumberY>
@@ -1098,9 +1115,11 @@ Would you like to start from the top of the document and continue search and rep
     <TextingForHearingImpairedRemovedOneLine>Текст для людей із вадами слуху видалено: Один рядок</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Текст для людей із вадами слуху видалено: {0} рядків</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Subtitle was split</SubtitleSplitted>
-    <SubtitleAppendPrompt>Ви приєднаєте файл субтитрів до субтитрів, які зараз завантажені і які повинні бути вже синхронізовані з відеофайлом.
+    <SubtitleAppendPrompt>
+      Ви приєднаєте файл субтитрів до субтитрів, які зараз завантажені і які повинні бути вже синхронізовані з відеофайлом.
 
-Продовжити?</SubtitleAppendPrompt>
+      Продовжити?
+    </SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Приєднати субтитри</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Відкрити субтитри, які слід приєднати...</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Візуальна синхронізація - приєднання другої частини субтитрів</AppendViaVisualSyncTitle>
@@ -1160,7 +1179,7 @@ Would you like to start from the top of the document and continue search and rep
     <OpenMatroskaFile>Відкрити файл Matroska...</OpenMatroskaFile>
     <MatroskaFiles>Файли Matroska</MatroskaFiles>
     <NoSubtitlesFound>No subtitles found</NoSubtitlesFound>
-    <NotAValidMatroskaFileX>This is not a valid Matroska file: {0}</NotAValidMatroskaFileX>
+    <NotAValidMatroskaFileX>Це не коректний файл Matroska: {0}</NotAValidMatroskaFileX>
     <BlurayNotSubtitlesFound>Blu-ray sup file does not contain any subtitles or contains errors - try demuxing again.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Parsing Matroska file. Please wait...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Parsing Transport Stream file. Please wait...</ParsingTransportStreamFile>
@@ -1209,8 +1228,8 @@ Would you like to start from the top of the document and continue search and rep
     <NameXNotAddedToNamesEtcList>The name '{0}' was NOT added to names/etc list</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>The word '{0}' was added to the user dictionary</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>The word '{0}' was NOT added to the user dictionary</WordXNotAddedToUserDic>
-    <OcrReplacePairXAdded>The OCR replace list pair '{0} -&gt; {1}' was added to the OCR replace list</OcrReplacePairXAdded>
-    <OcrReplacePairXNotAdded>The OCR replace list pair '{0} -&gt; {1}' was NOT added to the OCR replace list</OcrReplacePairXNotAdded>
+    <OcrReplacePairXAdded>Пару '{0} -&gt; {1}' було додано до списку замін при розпізнаванні</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>Пару '{0} -&gt; {1}' НЕ було додано до списку замін при розпізнаванні</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} рядків вибрано</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Subtitle contains unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?</UnicodeMusicSymbolsAnsiWarning>
     <UnicodeCharactersAnsiWarning>Subtitle contains unicode characters. Saving using ANSI file encoding will lose these. Continue with saving?</UnicodeCharactersAnsiWarning>
@@ -1218,7 +1237,7 @@ Would you like to start from the top of the document and continue search and rep
     <BeforeMergeShortLines>Перед об'єднанням коротких рядків</BeforeMergeShortLines>
     <BeforeSplitLongLines>Перед розбиттям довгих рядків</BeforeSplitLongLines>
     <MergedShortLinesX>Number of lines merged: {0}</MergedShortLinesX>
-    <BeforeDurationsBridgeGap>Before bridge small gaps</BeforeDurationsBridgeGap>
+    <BeforeDurationsBridgeGap>Перед ліквідацією малих розривів</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Before set minimum display time between subtitles</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Number of lines with minimum display time between subtitles changed: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Перед імпортуванням простого тексту</BeforeImportText>
@@ -1241,7 +1260,7 @@ Would you like to start from the top of the document and continue search and rep
     <NetworkNewUser>New user: {0} ({1})</NetworkNewUser>
     <NetworkByeUser>Bye {0} ({1})</NetworkByeUser>
     <NetworkUnableToConnectToServer>Unable to connect to server: {0}</NetworkUnableToConnectToServer>
-    <UserAndAction>User/action</UserAndAction>
+    <UserAndAction>Користувач/дія</UserAndAction>
     <NetworkMode>Мережний режим</NetworkMode>
     <XStartedSessionYAtZ>{0}: Розпочато сесію {1} о {2}</XStartedSessionYAtZ>
     <SpellChekingViaWordXLineYOfX>Spell checking using Word {0} - line {1} / {2}</SpellChekingViaWordXLineYOfX>
@@ -1271,7 +1290,7 @@ Would you like to start from the top of the document and continue search and rep
     <StatusLog>Журнал станів</StatusLog>
     <XSceneChangesImported>{0} змін сцен імпортовано</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' executed.</PluginXExecuted>
-    <NotAValidXSubFile>Not a valid XSub file!</NotAValidXSubFile>
+    <NotAValidXSubFile>Це не коректний файл XSub!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Before merging lines with same text</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Субтитри з часовими мітками мають іншу кількість рядків ({0}), аніж поточні субтитри ({1}) - все одно продовжити?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Parsing transport stream - please wait...</ParsingTransportStream>
@@ -1282,9 +1301,11 @@ Would you like to start from the top of the document and continue search and rep
     <ErrorLoadJpg>This file seems to be a JPG image file. Subtitle Edit cannot open JPG files.</ErrorLoadJpg>
     <ErrorLoadSrr>This file seems to be a ReScene .srr file - not a subtitle file.</ErrorLoadSrr>
     <ErrorLoadTorrent>This file seems to be a BitTorrent file - not a subtitle file.</ErrorLoadTorrent>
-    <ErrorLoadBinaryZeroes>Sorry, this file contains only binary zeroes!
+    <ErrorLoadBinaryZeroes>
+      Sorry, this file contains only binary zeroes!
 
-If you have edited this file with Subtitle Edit you might be alble to find a backup via the menu item File -&gt; Restore auto-backup...</ErrorLoadBinaryZeroes>
+      If you have edited this file with Subtitle Edit you might be alble to find a backup via the menu item File -&gt; Restore auto-backup...
+    </ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Directory drop are not supported here.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Encrypted VobSub content is not supported.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Blu-ray sup files are not supported here.</NoSupportHereBluRaySup>
@@ -1379,8 +1400,10 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
   </NetworkChat>
   <NetworkJoin>
     <Title>Приєднатися до сесії</Title>
-    <Information>Приєднатися до наявної сесії, де кілька осіб 
-	можуть спільно редагувати один файл субтитрів (співпрацювати)</Information>
+    <Information>
+      Приєднатися до наявної сесії, де кілька осіб
+      можуть спільно редагувати один файл субтитрів (співпрацювати)
+    </Information>
     <Join>Приєднатися</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1390,8 +1413,10 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
   <NetworkStart>
     <Title>Розпочати нову сесію</Title>
     <ConnectionTo>З'єднуємося з {0}...</ConnectionTo>
-    <Information>Розпочати нову сесію, де кілька осіб зможуть 
-	спільно редагувати один файл субтитрів (співпрацювати)</Information>
+    <Information>
+      Розпочати нову сесію, де кілька осіб зможуть
+      спільно редагувати один файл субтитрів (співпрацювати)
+    </Information>
     <Start>Розпочати</Start>
   </NetworkStart>
   <OpenVideoDvd>
@@ -1529,11 +1554,11 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <AutoWrapWhileTyping>Автоперенос під час введення</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Мін. тривалість, мілісекунд</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Макс. тривалість, мілісекунд</DurationMaximumMilliseconds>
-    <MinimumGapMilliseconds>Min. gap between subtitles in ms</MinimumGapMilliseconds>
+    <MinimumGapMilliseconds>Мін. розрив між субтитрами в мс</MinimumGapMilliseconds>
     <SubtitleFont>Шрифт субтитрів</SubtitleFont>
     <SubtitleFontSize>Кегль</SubtitleFontSize>
     <SubtitleBold>Жирний</SubtitleBold>
-    <SubtitleCenter>Center</SubtitleCenter>
+    <SubtitleCenter>По центру</SubtitleCenter>
     <SubtitleFontColor>Колір субтитрів</SubtitleFontColor>
     <SubtitleBackgroundColor>Колір тла субтитрів</SubtitleBackgroundColor>
     <SpellChecker>Spell checker</SpellChecker>
@@ -1559,7 +1584,7 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <AutoBackupEveryFifteenMinutes>Кожні 15 хвилин</AutoBackupEveryFifteenMinutes>
     <CheckForUpdates>Перевіряти наявність оновлень</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Дозволити редагування оригінальних субтитрів</AllowEditOfOriginalSubtitle>
-    <PromptDeleteLines>Prompt for delete lines</PromptDeleteLines>
+    <PromptDeleteLines>Запитувати підтвердження на видалення рядків</PromptDeleteLines>
     <TimeCodeMode>Режим час. міток</TimeCodeMode>
     <TimeCodeModeHHMMSSMS>ГГ:ХХ:СС.МС (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>ГГ:ХХ:СС:КК (00:00:01:12)</TimeCodeModeHHMMSSFF>
@@ -1588,8 +1613,8 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <WaveformAllowOverlap>Дозволити налкадки (під час переміщення/зміни розміру)</WaveformAllowOverlap>
     <WaveformFocusMouseEnter>Встановлювати фокус при наведенні миші</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Також встановлювати фокус на список субтитрів при наведенні миші на ньго</WaveformListViewFocusMouseEnter>
-    <WaveformBorderHitMs1>Border marker hit must be within</WaveformBorderHitMs1>
-    <WaveformBorderHitMs2>milliseconds</WaveformBorderHitMs2>
+    <WaveformBorderHitMs1>Прив'язка до границі субтитру в межах</WaveformBorderHitMs1>
+    <WaveformBorderHitMs2>мілісекунд</WaveformBorderHitMs2>
     <WaveformColor>Колір</WaveformColor>
     <WaveformSelectedColor>Колір обраного</WaveformSelectedColor>
     <WaveformBackgroundColor>Колір тла</WaveformBackgroundColor>
@@ -1622,12 +1647,12 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <UserWordList>Користувацький список слів</UserWordList>
     <OcrFixList>Виправлення помилок розпізнавання тексту</OcrFixList>
     <Location>Розташування</Location>
-    <UseOnlineNamesEtc>Use online names etc xml file</UseOnlineNamesEtc>
-    <WordAddedX>Word added: {0}</WordAddedX>
-    <WordAlreadyExists>Word already exists!</WordAlreadyExists>
-    <WordNotFound>Word not found</WordNotFound>
-    <RemoveX>Remove {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Cannot update NamesEtc.xml online!</CannotUpdateNamesEtcOnline>
+    <UseOnlineNamesEtc>Використовувати онлайн xml-файл імен</UseOnlineNamesEtc>
+    <WordAddedX>Слово додано: {0}</WordAddedX>
+    <WordAlreadyExists>Слово вже існує!</WordAlreadyExists>
+    <WordNotFound>Слово не знайдено</WordNotFound>
+    <RemoveX>Видалити {0}?</RemoveX>
+    <CannotUpdateNamesEtcOnline>Не вдалося оновити онлайн-файл NamesEtc.xml!</CannotUpdateNamesEtcOnline>
     <ProxyServerSettings>Налаштування сервера-прокладки</ProxyServerSettings>
     <ProxyAddress>Адреса прокладки</ProxyAddress>
     <ProxyAuthentication>Автнетифікація</ProxyAuthentication>
@@ -1635,7 +1660,7 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <ProxyPassword>Пароль</ProxyPassword>
     <ProxyDomain>Домен</ProxyDomain>
     <NetworkSessionSettings>Налаштування мережевої сесії</NetworkSessionSettings>
-    <NetworkSessionNewSound>Play sound file when new message arrives</NetworkSessionNewSound>
+    <NetworkSessionNewSound>Відтворювати звуковий файл, коли надходить нове повідомлення</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Програти X с і назад, X - це</PlayXSecondsAndBack>
     <StartSceneIndex>Початкова сцена - це</StartSceneIndex>
     <EndSceneIndex>Кінцева сцена - це</EndSceneIndex>
@@ -1646,7 +1671,7 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <MusicSymbol>Символ музики</MusicSymbol>
     <MusicSymbolsToReplace>Замінювані символи музики (відокремлюйте пробілами)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Застос. жорстко закодовані правила до помилок розпізнавання</FixCommonOcrErrorsUseHardcodedRules>
-    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix short display time - allow move of start time</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Виправити короткі тривалості - дозволити зміну часу початку</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Комбінації клавіш</Shortcuts>
     <Shortcut>Комбінація</Shortcut>
     <Control>Ctrl</Control>
@@ -1774,8 +1799,8 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <SkipOnce>Пропустити &amp;один раз</SkipOnce>
     <SkipAll>&amp;Пропустити всі</SkipAll>
     <AddToUserDictionary>Додати до користувацького словника</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>Додати в список імен/шумів (чутливий до регістру)</AddToNamesAndIgnoreList>
-    <AddToOcrReplaceList>Add pair to OCR replace list</AddToOcrReplaceList>
+    <AddToNamesAndIgnoreList>Додати в список імен/шумів (чутл. до рег-ру)</AddToNamesAndIgnoreList>
+    <AddToOcrReplaceList>Додати до списку замін при розпізн-ні</AddToOcrReplaceList>
     <Abort>Abort</Abort>
     <Use>Використати</Use>
     <UseAlways>&amp;Викор. завжди</UseAlways>
@@ -1967,112 +1992,114 @@ If you have edited this file with Subtitle Edit you might be alble to find a bac
     <FindText>Знайти текст</FindText>
     <GoToSubPosition>Поз. субтитру</GoToSubPosition>
     <KeepChangesTitle>Зберегти зміни?</KeepChangesTitle>
-    <KeepChangesMessage>В режимі "візуальної синхронізації" до субтитрів було внесено зміни.
+    <KeepChangesMessage>
+      В режимі "візуальної синхронізації" до субтитрів було внесено зміни.
 
-Зберегти ці зміни?</KeepChangesMessage>
+      Зберегти ці зміни?
+    </KeepChangesMessage>
     <SynchronizationDone>Синхронізацію виконано!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Початкова сцена має бути раніше за кінцеву сцену!</StartSceneMustComeBeforeEndScene>
     <Tip>Порада: Використовуйте клавіші &lt;ctrl+←/→&gt;, щоб просунутися на 100 мс назад/вперед</Tip>
   </VisualSync>
   <VobSubEditCharacters>
-    <Title>Edit image compare database</Title>
-    <ChooseCharacter>Choose character(s)</ChooseCharacter>
-    <ImageCompareFiles>Image compare files</ImageCompareFiles>
-    <CurrentCompareImage>Current compare image</CurrentCompareImage>
-    <TextAssociatedWithImage>Text associated with image</TextAssociatedWithImage>
-    <IsItalic>Is &amp;italic</IsItalic>
-    <Update>&amp;Update</Update>
-    <Delete>&amp;Delete</Delete>
-    <ImageDoubleSize>Image double size</ImageDoubleSize>
-    <ImageFileNotFound>Image file not found</ImageFileNotFound>
-    <Image>Image</Image>
+    <Title>Редагування бази даних порівняння зображень</Title>
+    <ChooseCharacter>Оберіть символ(и)</ChooseCharacter>
+    <ImageCompareFiles>Файли порівняння зображень</ImageCompareFiles>
+    <CurrentCompareImage>Поточне зображення</CurrentCompareImage>
+    <TextAssociatedWithImage>Текст, що відповідає зображенню</TextAssociatedWithImage>
+    <IsItalic>&amp;Курсив</IsItalic>
+    <Update>&amp;Оновити</Update>
+    <Delete>&amp;Видалити</Delete>
+    <ImageDoubleSize>Вдвічі збільшене зображення</ImageDoubleSize>
+    <ImageFileNotFound>Зображення не знайдено</ImageFileNotFound>
+    <Image>Зображення</Image>
   </VobSubEditCharacters>
   <VobSubOcr>
-    <Title>Import/OCR VobSub (sub/idx) subtitle</Title>
-    <TitleBluRay>Import/OCR Blu-ray (.sup) subtitle</TitleBluRay>
-    <OcrMethod>OCR method</OcrMethod>
+    <Title>Імпортування/розпізнавання субтитрів VobSub (sub/idx)</Title>
+    <TitleBluRay>Імпортування/розпізнавання субтитрів Blu-ray (.sup)</TitleBluRay>
+    <OcrMethod>Метод розпізнавання тексту</OcrMethod>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Requires Microsoft Office</OcrViaModi>
-    <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
+    <OcrViaTesseract>Розпізнавання за допомогою Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
-    <Language>Language</Language>
-    <OcrViaImageCompare>OCR via image compare</OcrViaImageCompare>
-    <ImageDatabase>Image database</ImageDatabase>
-    <NoOfPixelsIsSpace>No of pixels is space</NoOfPixelsIsSpace>
-    <MaxErrorPercent>Max. error%</MaxErrorPercent>
-    <New>New</New>
-    <Edit>Редагувати</Edit>
-    <StartOcr>Start OCR</StartOcr>
-    <Stop>Stop</Stop>
-    <StartOcrFrom>Start OCR from subtitle no:</StartOcrFrom>
+    <Language>Мова</Language>
+    <OcrViaImageCompare>Розпізнавання за допомогою порівняння зображень</OcrViaImageCompare>
+    <ImageDatabase>Б/д зображень</ImageDatabase>
+    <NoOfPixelsIsSpace>К-ть пікселів складає пробіл</NoOfPixelsIsSpace>
+    <MaxErrorPercent>Макс. % похибки</MaxErrorPercent>
+    <New>Створити</New>
+    <Edit>Редаг-ти</Edit>
+    <StartOcr>Почати</StartOcr>
+    <Stop>Зупинити</Stop>
+    <StartOcrFrom>Починати розпізн-ня з рядка:</StartOcrFrom>
     <LoadingVobSubImages>Loading VobSub images...</LoadingVobSubImages>
     <LoadingImageCompareDatabase>Loading image compare database...</LoadingImageCompareDatabase>
     <ConvertingImageCompareDatabase>Converting image compare database to new format (images.db/images.xml)...</ConvertingImageCompareDatabase>
-    <SubtitleImage>Subtitle image</SubtitleImage>
-    <SubtitleText>Subtitle text</SubtitleText>
+    <SubtitleImage>Зображення субтитрів</SubtitleImage>
+    <SubtitleText>Текст субтитрів</SubtitleText>
     <UnableToCreateCharacterDatabaseFolder>Unable to create 'Character database folder': {0}</UnableToCreateCharacterDatabaseFolder>
-    <SubtitleImageXofY>Subtitle image {0} of {1}</SubtitleImageXofY>
-    <ImagePalette>Image palette</ImagePalette>
-    <UseCustomColors>Use custom colors</UseCustomColors>
-    <Transparent>Transparent</Transparent>
+    <SubtitleImageXofY>Зображення субтитру {0} із {1}</SubtitleImageXofY>
+    <ImagePalette>Палітра зображень</ImagePalette>
+    <UseCustomColors>Використовувати нетипові кольори</UseCustomColors>
+    <Transparent>Прозорий</Transparent>
     <TransparentMinAlpha>Min. alpha value (0=transparent, 255=fully visible)</TransparentMinAlpha>
     <TransportStream>Transport stream</TransportStream>
     <TransportStreamGrayscale>Grayscale</TransportStreamGrayscale>
     <TransportStreamGetColor>Use color (will include some splitting of lines)</TransportStreamGetColor>
-    <PromptForUnknownWords>Prompt for unknown words</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Try to guess unknown words</TryToGuessUnkownWords>
-    <AutoBreakSubtitleIfMoreThanTwoLines>Auto break paragraph if more than two lines</AutoBreakSubtitleIfMoreThanTwoLines>
-    <AllFixes>All fixes</AllFixes>
-    <GuessesUsed>Guesses used</GuessesUsed>
-    <UnknownWords>Unknown words</UnknownWords>
-    <OcrAutoCorrectionSpellChecking>OCR auto correction / spell checking</OcrAutoCorrectionSpellChecking>
-    <FixOcrErrors>Fix OCR errors</FixOcrErrors>
-    <ImportTextWithMatchingTimeCodes>Import text with matching time codes...</ImportTextWithMatchingTimeCodes>
-    <ImportNewTimeCodes>Import new time codes</ImportNewTimeCodes>
-    <SaveSubtitleImageAs>Save subtitle image as...</SaveSubtitleImageAs>
+    <PromptForUnknownWords>Запитувати про невідомі слова</PromptForUnknownWords>
+    <TryToGuessUnkownWords>Намагатися вгадати невідомі слова</TryToGuessUnkownWords>
+    <AutoBreakSubtitleIfMoreThanTwoLines>Автоматично розбивати субтитр, якщо більше двох рядків</AutoBreakSubtitleIfMoreThanTwoLines>
+    <AllFixes>Всі виправлення</AllFixes>
+    <GuessesUsed>Використані здогадки</GuessesUsed>
+    <UnknownWords>Невідомі слова</UnknownWords>
+    <OcrAutoCorrectionSpellChecking>Автоматичне виправлення помилок розпізнавання / перевірка правопису</OcrAutoCorrectionSpellChecking>
+    <FixOcrErrors>Випр. помилки розпізн.</FixOcrErrors>
+    <ImportTextWithMatchingTimeCodes>Імпортувати текст з відповідними часовими мітками...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>Імпортувати нові часові мітки</ImportNewTimeCodes>
+    <SaveSubtitleImageAs>Зберегти зображення субтитру як...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Save all images (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Save all images with HTML index...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Зберегти усі зображення із HTML index-файлом...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} зображень збережено у {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Try Microsoft MODI OCR for unknown words</TryModiForUnknownWords>
-    <DictionaryX>Dictionary: {0}</DictionaryX>
-    <RightToLeft>Right to left</RightToLeft>
-    <ShowOnlyForcedSubtitles>Show only forced subtitles</ShowOnlyForcedSubtitles>
-    <UseTimeCodesFromIdx>Use time codes from .idx file</UseTimeCodesFromIdx>
+    <TryModiForUnknownWords>Викор-ти розпізнавання Microsoft MODI для невідомих слів</TryModiForUnknownWords>
+    <DictionaryX>Словник: {0}</DictionaryX>
+    <RightToLeft>Справа наліво</RightToLeft>
+    <ShowOnlyForcedSubtitles>Показувати тільки субтитри перекладу</ShowOnlyForcedSubtitles>
+    <UseTimeCodesFromIdx>Використовувати часові мітки з файлу .idx</UseTimeCodesFromIdx>
     <NoMatch>&lt;No match&gt;</NoMatch>
-    <AutoTransparentBackground>Auto transparent background</AutoTransparentBackground>
+    <AutoTransparentBackground>Автоматично прозоре тло</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Inspect compare matches for current image...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Edit last image compare additions...</EditLastAdditions>
-    <SetUnitalicFactor>Set un-italic factor...</SetUnitalicFactor>
-    <DiscardTitle>Discard changes made in OCR?</DiscardTitle>
-    <DiscardText>Do you want to discard changes made in current OCR session?</DiscardText>
+    <SetUnitalicFactor>Встановити коефіцієнт усунення курсиву...</SetUnitalicFactor>
+    <DiscardTitle>Відкинути результати розпізнавання?</DiscardTitle>
+    <DiscardText>Бажаєте відкинути зміни, зроблені в поточній сесії розпізнавання тексту?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
-    <Title>VobSub - Manual image to text</Title>
-    <ShrinkSelection>Shrink selection</ShrinkSelection>
-    <ExpandSelection>Expand selection</ExpandSelection>
-    <SubtitleImage>Subtitle image</SubtitleImage>
-    <Characters>Character(s)</Characters>
-    <CharactersAsText>Character(s) as text</CharactersAsText>
-    <Italic>&amp;Italic</Italic>
-    <Abort>&amp;Abort</Abort>
-    <Skip>&amp;Skip</Skip>
+    <Title>VobSub - Ручне розпізнавання символів</Title>
+    <ShrinkSelection>Звузити вид-ня</ShrinkSelection>
+    <ExpandSelection>Розширити вид-ня</ExpandSelection>
+    <SubtitleImage>Зображення субтитру</SubtitleImage>
+    <Characters>Символ(и)</Characters>
+    <CharactersAsText>Символ(и) як текст</CharactersAsText>
+    <Italic>&amp;Курсив</Italic>
+    <Abort>&amp;Скасувати</Abort>
+    <Skip>&amp;Пропустити</Skip>
     <Nordic>Nordic</Nordic>
     <Spanish>Spanish</Spanish>
     <German>German</German>
-    <AutoSubmitOnFirstChar>Auto submit on &amp;first char</AutoSubmitOnFirstChar>
-    <EditLastX>Edit last: {0}</EditLastX>
+    <AutoSubmitOnFirstChar>Автоматично приймати після &amp;першого символу</AutoSubmitOnFirstChar>
+    <EditLastX>Попереднє: {0}</EditLastX>
   </VobSubOcrCharacter>
   <VobSubOcrCharacterInspect>
-    <Title>Inspect compare matches for current image</Title>
-    <InspectItems>Inspect items</InspectItems>
-    <AddBetterMatch>Add better match</AddBetterMatch>
+    <Title>Перевірити результати порівняння для поточного зображення</Title>
+    <InspectItems>Елементи для перевірки</InspectItems>
+    <AddBetterMatch>Додати кращий відповідник</AddBetterMatch>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
-    <Title>New folder</Title>
-    <Message>Name of new character database folder</Message>
+    <Title>Створення теки</Title>
+    <Message>Назва нової теки для бази даних символів</Message>
   </VobSubOcrNewFolder>
   <VobSubOcrSetItalicFactor>
-    <Title>Set un-italic factor</Title>
-    <Description>Adjust value until text style is normal and not italic. Note that original image should be italic.</Description>
+    <Title>Встановлення коефіцієнту усунення курсиву</Title>
+    <Description>Коригуйте значення, поки стиль тексту стане звичайним, а не курсивом. Зверніть увагу, що оригінальне зображення має бути курсивом.</Description>
   </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Клацніть, щоб додати аудіохвилі</ClickToAddWaveform>
