@@ -2610,6 +2610,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/ParsingTransportStream":
                     language.Main.ParsingTransportStream = reader.Value;
                     break;
+                case "Main/XPercentCompleted":
+                    language.Main.XPercentCompleted = reader.Value;
+                    break;
                 case "Main/ErrorLoadIdx":
                     language.Main.ErrorLoadIdx = reader.Value;
                     break;
