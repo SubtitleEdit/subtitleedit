@@ -7827,11 +7827,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string ChangeAllLinesItalictoSingleItalic(string text)
         {
-            bool allLinesStartAndEndsWithItalic = text.Contains("<i>");
+            if (!text.Contains("<i>"))
+                return text;
+            bool allLinesStartAndEndsWithItalic = true;
             foreach (var line in text.SplitToLines())
             {
                 if (!line.TrimStart().StartsWith("<i>", StringComparison.Ordinal) || !line.TrimEnd().EndsWith("</i>", StringComparison.Ordinal))
+                {
                     allLinesStartAndEndsWithItalic = false;
+                    break;
+                }
             }
             if (allLinesStartAndEndsWithItalic)
             {
