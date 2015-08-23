@@ -949,7 +949,6 @@ namespace Nikse.SubtitleEdit.Controls
                         item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
 
                     item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
-                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
                 }
                 else
                 {
@@ -964,7 +963,6 @@ namespace Nikse.SubtitleEdit.Controls
                         item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
 
                     item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds);
-                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
                 }
             }
         }
