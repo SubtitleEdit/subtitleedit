@@ -1156,7 +1156,7 @@ namespace Nikse.SubtitleEdit.Forms
             changeLanguageToolStripMenuItem.Text = _language.Menu.Options.ChooseLanguage;
             try
             {
-                var ci = new System.Globalization.CultureInfo(_languageGeneral.CultureName);
+                var ci = System.Globalization.CultureInfo.GetCultureInfo(_languageGeneral.CultureName);
                 changeLanguageToolStripMenuItem.Text += " [" + ci.NativeName + "]";
             }
             catch
