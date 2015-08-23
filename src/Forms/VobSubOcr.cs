@@ -7347,7 +7347,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_ocrFixEngine != null)
                     _ocrFixEngine.Dispose();
                 _ocrFixEngine = null;
-                var ci = new CultureInfo(LanguageString.Replace("_", "-"));
+                var ci = CultureInfo.GetCultureInfo(LanguageString.Replace("_", "-"));
                 threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
             }
             catch

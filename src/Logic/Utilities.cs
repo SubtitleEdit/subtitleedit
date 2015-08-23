@@ -1070,7 +1070,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         try
                         {
-                            var ci = new CultureInfo(name.Replace('_', '-'));
+                            var ci = CultureInfo.GetCultureInfo(name.Replace('_', '-'));
                             name = ci.DisplayName + " [" + name + "]";
                         }
                         catch (Exception exception)
