@@ -864,7 +864,7 @@
     <RegEx find="\b([nN])eg([aeu]|om|ama)\b" replaceWith="$1jeg$2" />
     <RegEx find="\b([nN])ež(an|n[aeiou]|nom|nima)\b" replaceWith="$1jež$2" />
     <RegEx find="([nN])emačk" replaceWith="$1jemačk" />
-    <RegEx find="([nN])j?em(a?)c([ei])" replaceWith="Nijem$1c$2" />
+    <RegEx find="[nN]j?em(a?)c([ei])" replaceWith="Nijem$1c$2" />
     <RegEx find="([nN])emože" replaceWith="$1e može" />
     <RegEx find="([nN])eprijatn" replaceWith="$1eugodn" />
     <RegEx find="([nN])epobediv" replaceWith="$1epobjediv" />
