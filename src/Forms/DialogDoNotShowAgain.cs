@@ -13,18 +13,18 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
-            Rectangle screenRectangle = RectangleToScreen(this.ClientRectangle);
-            int titleBarHeight = screenRectangle.Top - this.Top;
+            Rectangle screenRectangle = RectangleToScreen(ClientRectangle);
+            int titleBarHeight = screenRectangle.Top - Top;
 
             checkBoxDoNotDisplayAgain.Text = Configuration.Settings.Language.Main.DoNotDisplayMessageAgain;
 
-            this.Text = title;
+            Text = title;
             labelText.Text = text;
             Utilities.FixLargeFonts(this, buttonOK);
 
             int width = Math.Max(checkBoxDoNotDisplayAgain.Width, labelText.Width);
-            this.Width = width + buttonOK.Width + 75;
-            this.Height = labelText.Top + labelText.Height + buttonOK.Height + titleBarHeight + 40;
+            Width = width + buttonOK.Width + 75;
+            Height = labelText.Top + labelText.Height + buttonOK.Height + titleBarHeight + 40;
         }
 
         private void SpellCheckCompleted_KeyDown(object sender, KeyEventArgs e)
