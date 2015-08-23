@@ -1294,6 +1294,7 @@
     <BeforeMergeLinesWithSameText>Перед об'єднанням рядків з однаковим текстом</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Субтитри з часовими мітками мають іншу кількість рядків ({0}), аніж поточні субтитри ({1}) - все одно продовжити?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Розбирання транспортного потоку - зачекайте, будь ласка...</ParsingTransportStream>
+    <XPercentCompleted>{0}% завершено</XPercentCompleted>
     <ErrorLoadIdx>Неможливо прочитати/змінити файли .idx. Файл idx - це частина пари файлів idx/sub (яку також називають VobSub), і Subtitle Edit може відкрити файл .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Здається, цей файл - стиснений файл .rar. Subtitle Edit не відкриває стиснені файли.</ErrorLoadRar>
     <ErrorLoadZip>Здається, цей файл - стиснений файл .zip. Subtitle Edit не відкриває стиснені файли.</ErrorLoadZip>
