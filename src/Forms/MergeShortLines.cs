@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void Initialize(Subtitle subtitle)
         {
             if (subtitle.Paragraphs.Count > 0)
-                subtitle.Renumber(subtitle.Paragraphs[0].Number);
+                subtitle.Renumber();
 
             Text = Configuration.Settings.Language.MergedShortLines.Title;
             labelMaxCharacters.Text = Configuration.Settings.Language.MergedShortLines.MaximumCharacters;
