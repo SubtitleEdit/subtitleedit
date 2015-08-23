@@ -892,12 +892,18 @@ namespace Nikse.SubtitleEdit.Controls
                 if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                 {
                     item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
-                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
+                    if (paragraph.EndTime.IsMaxTime)
+                        item.SubItems[ColumnIndexEnd].Text = "-";
+                    else
+                        item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
                 }
                 else
                 {
                     item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds);
-                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
+                    if (paragraph.EndTime.IsMaxTime)
+                        item.SubItems[ColumnIndexEnd].Text = "-";
+                    else
+                        item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
                 }
             }
         }

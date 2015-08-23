@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public EventHandler TimeCodeChanged;
 
-        private bool _forceHHMMSSFF = false;
+        private bool _forceHHMMSSFF;
 
         internal void ForceHHMMSSFF()
         {
@@ -146,9 +146,13 @@ namespace Nikse.SubtitleEdit.Controls
 
                         int minutes;
                         int.TryParse(times[1], out minutes);
+                        if (minutes > 59)
+                            minutes = 59;
 
                         int seconds;
                         int.TryParse(times[2], out seconds);
+                        if (seconds > 59)
+                            seconds = 59;
 
                         int milliSeconds;
                         int.TryParse(times[3].PadRight(3, '0'), out milliSeconds);
