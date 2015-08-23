@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             try
             {
-                var ci = new System.Globalization.CultureInfo(languageId);
+                var ci = System.Globalization.CultureInfo.GetCultureInfo(languageId);
                 _languageId = ci.LCID;
             }
             catch
