@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             try
             {
-                var ci = new CultureInfo(languageString.Replace('_', '-'));
+                var ci = CultureInfo.GetCultureInfo(languageString.Replace('_', '-'));
                 _threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
             }
             catch (CultureNotFoundException exception)

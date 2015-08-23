@@ -88,27 +88,27 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_gb", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_GB.dic")))
             {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-GB"), "en_GB.dic", true);
+                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-GB"), "en_GB.dic", true);
                 return;
             }
             if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_ca", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_CA.dic")))
             {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-CA"), "en_CA.dic", true);
+                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-CA"), "en_CA.dic", true);
                 return;
             }
             if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_au", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_AU.dic")))
             {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-AU"), "en_AU.dic", true);
+                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-AU"), "en_AU.dic", true);
                 return;
             }
             if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_za", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_ZA.dic")))
             {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-ZA"), "en_ZA.dic", true);
+                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-ZA"), "en_ZA.dic", true);
                 return;
             }
             if (threeLetterIsoLanguageName == "eng" && File.Exists(Path.Combine(dictionaryFolder, "en_US.dic")))
             {
-                LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-US"), "en_US.dic", true);
+                LoadSpellingDictionariesViaDictionaryFileName("eng", CultureInfo.GetCultureInfo("en-US"), "en_US.dic", true);
                 return;
             }
 
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 name = name.Replace('_', '-');
                                 if (name.Length > 5)
                                     name = name.Substring(0, 5);
-                                var ci = new CultureInfo(name);
+                                var ci = CultureInfo.GetCultureInfo(name);
                                 if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName || ci.ThreeLetterWindowsLanguageName.Equals(threeLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
                                 {
                                     dictionaryFileName = dic;
@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 name = name.Replace('_', '-');
                                 if (name.Length > 5)
                                     name = name.Substring(0, 5);
-                                var ci = new CultureInfo(name);
+                                var ci = CultureInfo.GetCultureInfo(name);
                                 if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName || ci.ThreeLetterWindowsLanguageName.Equals(threeLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
                                 {
                                     dictionaryFileName = dic;
@@ -286,13 +286,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 try
                 {
                     if (value == "sh")
-                        ci = new CultureInfo("sr-Latn-RS");
+                        ci = CultureInfo.GetCultureInfo("sr-Latn-RS");
                     else
-                        ci = new CultureInfo(value);
+                        ci = CultureInfo.GetCultureInfo(value);
                 }
                 catch
                 {
-                    ci = CultureInfo.CurrentCulture;
+                    ci = CultureInfo.CurrentUICulture;
                 }
                 LoadSpellingDictionariesViaDictionaryFileName(ci.ThreeLetterISOLanguageName, ci, spellCheckDictionaryName, false);
             }
