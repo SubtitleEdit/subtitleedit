@@ -1097,8 +1097,8 @@
     <RegEx find="stomačn" replaceWith="trbušn" />
     <RegEx find="Stomačn" replaceWith="Trbušn" />
     <RegEx find="\b([sS])trj?el([aeiouc])" replaceWith="$1trijel$2" />
-    <RegEx find="sugeriše([mšt])" replaceWith="predlaže$2" />
-    <RegEx find="Sugeriše([mšt])" replaceWith="Predlaže$2" />
+    <RegEx find="sugeriše([mšt])" replaceWith="predlaže$1" />
+    <RegEx find="Sugeriše([mšt])" replaceWith="Predlaže$1" />
     <RegEx find="sujever" replaceWith="praznovjer" />
     <RegEx find="Sujever" replaceWith="Praznovjer" />
     <RegEx find="([sS])umlja" replaceWith="$1umnja" />
