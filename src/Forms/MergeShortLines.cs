@@ -223,9 +223,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (p != null && p.Text != null && next != null && next.Text != null)
             {
-                string s = HtmlUtil.RemoveHtmlTags(p.Text.Trim());
-
-                if (p.Text.Length + next.Text.Length < maximumTotalLength && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < maximumMillisecondsBetweenLines)
+                var s = HtmlUtil.RemoveHtmlTags(p.Text.Trim(), true);
+                var nextText = HtmlUtil.RemoveHtmlTags(next.Text.Trim(), true);
+                if (s.Length + nextText.Length < maximumTotalLength && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < maximumMillisecondsBetweenLines)
                 {
                     if (string.IsNullOrEmpty(s))
                         return true;
@@ -234,8 +234,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!checkBoxOnlyContinuationLines.Checked)
                         return true;
 
-                    if (isLineContinuation)
-                        return true;
+                    return isLineContinuation;
                 }
             }
             return false;
