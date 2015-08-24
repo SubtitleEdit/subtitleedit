@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void Initialize(Subtitle subtitle)
         {
             if (subtitle.Paragraphs.Count > 0)
-                subtitle.Renumber(subtitle.Paragraphs[0].Number);
+                subtitle.Renumber();
 
             Text = Configuration.Settings.Language.MergedShortLines.Title;
             labelMaxCharacters.Text = Configuration.Settings.Language.MergedShortLines.MaximumCharacters;
@@ -61,12 +61,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddToListView(Paragraph p, string lineNumbers, string newText)
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
-
-            var subItem = new ListViewItem.ListViewSubItem(item, lineNumbers.TrimEnd(','));
-            item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(subItem);
-
+            item.SubItems.Add(lineNumbers.TrimEnd(','));
+            item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             listViewFixes.Items.Add(item);
         }
 
@@ -227,9 +223,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (p != null && p.Text != null && next != null && next.Text != null)
             {
-                string s = HtmlUtil.RemoveHtmlTags(p.Text.Trim());
-
-                if (p.Text.Length + next.Text.Length < maximumTotalLength && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < maximumMillisecondsBetweenLines)
+                var s = HtmlUtil.RemoveHtmlTags(p.Text.Trim(), true);
+                var nextText = HtmlUtil.RemoveHtmlTags(next.Text.Trim(), true);
+                if (s.Length + nextText.Length < maximumTotalLength && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < maximumMillisecondsBetweenLines)
                 {
                     if (string.IsNullOrEmpty(s))
                         return true;
@@ -238,8 +234,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!checkBoxOnlyContinuationLines.Checked)
                         return true;
 
-                    if (isLineContinuation)
-                        return true;
+                    return isLineContinuation;
                 }
             }
             return false;
