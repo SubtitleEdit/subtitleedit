@@ -1153,15 +1153,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             optionsToolStripMenuItem.Text = _language.Menu.Options.Title;
             settingsToolStripMenuItem.Text = _language.Menu.Options.Settings;
-            changeLanguageToolStripMenuItem.Text = _language.Menu.Options.ChooseLanguage;
-            try
-            {
-                var ci = System.Globalization.CultureInfo.GetCultureInfo(_languageGeneral.CultureName);
-                changeLanguageToolStripMenuItem.Text += " [" + ci.NativeName + "]";
-            }
-            catch
-            {
-            }
+            changeLanguageToolStripMenuItem.Text = _language.Menu.Options.ChooseLanguage + " [" + Configuration.Settings.Language.Name + "]";
 
             toolStripMenuItemNetworking.Text = _language.Menu.Networking.Title;
             startServerToolStripMenuItem.Text = _language.Menu.Networking.StartNewSession;
@@ -2581,7 +2573,7 @@ namespace Nikse.SubtitleEdit.Forms
                             MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         errors = (format as AdvancedSubStationAlpha).Errors;
                         if (!string.IsNullOrEmpty(errors))
-                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     else if (format.GetType() == typeof(SubRip))
                     {
@@ -9100,7 +9092,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (noOfErrors > 0)
             {
-                MessageBox.Show(string.Format("{0} error(s) occured during extraction of bdsup\r\n\r\n{1}", noOfErrors, lastError));
+                MessageBox.Show(string.Format("{0} error(s) occurred during extraction of bdsup\r\n\r\n{1}", noOfErrors, lastError));
             }
 
             using (var formSubOcr = new VobSubOcr())
@@ -11760,11 +11752,13 @@ namespace Nikse.SubtitleEdit.Forms
                 _language = Configuration.Settings.Language.Main;
                 InitializeLanguage();
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                MessageBox.Show(exception.Message + Environment.NewLine +
-                                Environment.NewLine +
-                                exception.StackTrace, "Error loading language file");
+                var cap = "Language file load error";
+                var msg = "Could not load language file " + cultureName + ".xml" +
+                          "\n\nError Message:\n" + ex.Message +
+                          "\n\nStack Trace:\n" + ex.StackTrace;
+                MessageBox.Show(this, msg, cap);
                 Configuration.Settings.Language = new Language(); // default is en-US
                 Configuration.Settings.General.Language = null;
                 _languageGeneral = Configuration.Settings.Language.General;
