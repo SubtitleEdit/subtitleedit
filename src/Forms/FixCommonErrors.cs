@@ -46,8 +46,6 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexUppercaseIInsideLowercaseWord = 26;
         private const int IndexRemoveSpaceBetweenNumbers = 27;
         private const int IndexDialogsOnOneLine = 28;
-        //private const int IndexDanishLetterI = 30;
-        //private const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 31;
         private int _indexAloneLowercaseIToUppercaseIEnglish = -1;
         private int _turkishAnsiIndex = -1;
         private int _danishLetterIIndex = -1;
@@ -4021,18 +4019,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                /*
-                if (listView1.Items[_indexAloneLowercaseIToUppercaseIEnglish].Checked && Language != "en")
-                {
-                    if (MessageBox.Show(_language.FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish + Environment.NewLine +
-                                                      Environment.NewLine +
-                                                      _language.ContinueAnyway, _language.Continue, MessageBoxButtons.YesNo) == DialogResult.No)
-                    {
-                        listView1.Items[_indexAloneLowercaseIToUppercaseIEnglish].Checked = false;
-                        ShowStatus(_language.UncheckedFixLowercaseIToUppercaseI);
-                        return;
-                    }
-                }*/
                 Cursor = Cursors.WaitCursor;
                 Next();
                 ShowAvailableFixesStatus();
