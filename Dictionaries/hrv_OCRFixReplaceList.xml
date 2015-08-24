@@ -36,6 +36,7 @@
     <Word from="Ćerka" to="Kći" />
     <Word from="ćerku" to="kćer" />
     <Word from="ćmo" to="ćemo" />
+    <Word from="ćte" to="ćete" />
     <Word from="ćutao" to="šutio" />
     <Word from="Ćutao" to="Šutio" />
     <Word from="daga" to="da ga" />
@@ -808,7 +809,7 @@
     <RegEx find="([lL])udel" replaceWith="$1udjel" />
     <RegEx find="makaz([ea])" replaceWith="škar$1" />
     <RegEx find="Makaz([ea])" replaceWith="Škar$1" />
-    <RegEx find="([mM])aloletni([cčk])" replaceWith="$1aloljetni$2" />
+    <RegEx find="([mM])aloletn" replaceWith="$1aloljetn" />
     <RegEx find="\bmap([aeiou]|om|ama)" replaceWith="kart$1" />
     <RegEx find="\bMap([aeiou]|om|ama)" replaceWith="Kart$1" />
     <RegEx find="mator(i)?" replaceWith="star$1" />
@@ -1026,6 +1027,7 @@
     <RegEx find="([rR])e[čć]ić([eu])" replaceWith="$1reći ć$2" />
     <RegEx find="([rR])egulis" replaceWith="$1egulir" />
     <RegEx find="([rR])eligijoz" replaceWith="$1eligioz" />
+    <RegEx find="([rR])eskira" replaceWith="$1iskira" />
     <RegEx find="\b([rR])i?j?ešava" replaceWith="$1ješava" />
     <RegEx find="rimjenjen" replaceWith="rimijenjen" />
     <RegEx find="([rR])izikovanj" replaceWith="$1iskiranj" />
@@ -1284,7 +1286,7 @@
     <RegEx find="\bmaj([au]|em)" replaceWith="svibnj$1" />
     <RegEx find="\bjun([au])" replaceWith="lipnj$1" />
     <RegEx find="\bjul([au])" replaceWith="srpnj$1" />
-    <RegEx find="\ba[uv]gust([au]|om|ima)?" replaceWith="kolovoz$1" />
+    <RegEx find="\ba[uv]gust" replaceWith="kolovoz" />
     <RegEx find="septembr([au]|om|ima)" replaceWith="rujn$1" />
     <RegEx find="oktobr([au]|om|ima)" replaceWith="listopad$1" />
     <RegEx find="decembr([au]|ima)" replaceWith="prosinc$1" />
@@ -1293,6 +1295,7 @@
     <RegEx find="([nN])aj(minimaln)ij([aeiou])" replaceWith="$2$3" />
     <RegEx find="([nN])aj(maksimaln)ij([aeiou])" replaceWith="$2$3" />
     <!-- experimental -->
+    <RegEx find="đž" replaceWith="dž" />
     <RegEx find="\bdral" replaceWith="deral" />
     <RegEx find="erišu" replaceWith="eriraju" />
     <RegEx find="fikovan" replaceWith="ficiran" />
