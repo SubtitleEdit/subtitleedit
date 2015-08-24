@@ -1789,6 +1789,9 @@
     <Content Include="Languages\sv-SE.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\uk-UA.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\vi-VN.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
