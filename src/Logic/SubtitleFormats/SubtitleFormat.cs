@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.IO.Compression;
+using Nikse.SubtitleEdit.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -145,6 +146,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new VocapiaSplit(),
                     new WebVTT(),
                     new WebVTTFileWithLineNumber(),
+                    new Xif(),
                     new YouTubeAnnotations(),
                     new YouTubeSbv(),
                     new YouTubeTranscript(),

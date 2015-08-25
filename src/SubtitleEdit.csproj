@@ -1136,6 +1136,7 @@
     <Compile Include="Logic\SubtitleFormats\VocapiaSplit.cs" />
     <Compile Include="Logic\SubtitleFormats\WebVTT.cs" />
     <Compile Include="Logic\SubtitleFormats\Wsb.cs" />
+    <Compile Include="Logic\SubtitleFormats\Xif.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeAnnotations.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeSbv.cs" />
     <Compile Include="Logic\SubtitleFormats\SubViewer10.cs" />
