@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="Viet Nam">
+<Language Name="Tiếng Việt">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.8</Version>
     <TranslatedBy>Dịch qua Tiếng Việt bởi by everytime
 Mọi góp ý về bản dịch vui lòng gửi thư tới hộp thư: handes1990@gmail.com
 Cảm ơn rất nhiều</TranslatedBy>
-    <CultureName>vn-VN</CultureName>
+    <CultureName>vi-VN</CultureName>
     <HelpFile />
     <Ok>&amp;Đồng ý</Ok>
     <Cancel>H&amp;ủy bỏ</Cancel>

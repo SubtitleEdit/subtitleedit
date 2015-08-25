@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="Swedish">
+<Language Name="svenska">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.8</Version>
     <TranslatedBy>Översätt av Ted</TranslatedBy>
-    <CultureName>sv-Subtitle Edit</CultureName>
+    <CultureName>sv-SE</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
     <Cancel>Avbryt</Cancel>

@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Language Name="Ukrainian">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="українська">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.8</Version>
     <TranslatedBy>Переклад: Максим Кобєлєв http://mazepa-studio.com</TranslatedBy>
     <CultureName>uk-UA</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile />
     <Ok>&amp;Гаразд</Ok>
     <Cancel>&amp;Скасувати</Cancel>
     <Apply>Застосувати</Apply>
@@ -76,19 +76,17 @@
   </General>
   <About>
     <Title>Про програму Subtitle Edit</Title>
-    <AboutText1>
-      Subtitle Edit - це вільне програмне забезпечення під ліцензією
-      GNU Public License. Ви можете вільно поширювати, редагувати
-      та використовувати його.
+    <AboutText1>Subtitle Edit - це вільне програмне забезпечення під ліцензією
+GNU Public License. Ви можете вільно поширювати, редагувати
+та використовувати його.
 
-      Сирцевий код на C# доступний тут https://github.com/SubtitleEdit/subtitleedit
+Сирцевий код на C# доступний тут https://github.com/SubtitleEdit/subtitleedit
 
-      Відвідайте www.nikse.dk, щоб отримати останню версію.
+Відвідайте www.nikse.dk, щоб отримати останню версію.
 
-      Пропозиції дуже радо вітаються.
+Пропозиції дуже радо вітаються.
 
-      Email: mailto:nikse.dk@gmail.com
-    </AboutText1>
+Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Додати до списку імен/шумів і т. п.</Title>
@@ -114,19 +112,15 @@
     <GeneratingSpectrogram>Створення спектрограми...</GeneratingSpectrogram>
     <ExtractingSeconds>Виокремлення аудіо: {0:0.0} секунд</ExtractingSeconds>
     <ExtractingMinutes>Виокремлення аудіо: {0}.{1:00} хвилин</ExtractingMinutes>
-    <WaveFileNotFound>
-      Не вдалося знайти виокремлений wav-файл!
-      Цей функціонал потребує медіапрогравача VLC версії 1.1.x або новішої ({0}-bit).
+    <WaveFileNotFound>Не вдалося знайти виокремлений wav-файл!
+Цей функціонал потребує медіапрогравача VLC версії 1.1.x або новішої ({0}-bit).
 
-      Командний рядок: {1} {2}
-    </WaveFileNotFound>
-    <WaveFileMalformed>
-      {0} не вдалося виокремити аудіодані до wav-файлу!
+Командний рядок: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} не вдалося виокремити аудіодані до wav-файлу!
 
-      Командний рядок: {1} {2}
+Командний рядок: {1} {2}
 
-      Примітка: Перевірте наявність вільного місця на диску.
-    </WaveFileMalformed>
+Примітка: Перевірте наявність вільного місця на диску.</WaveFileMalformed>
     <LowDiskSpace>НИЗЬКИЙ РІВЕНЬ ВІЛЬНОГО МІСЦЯ НА ДИСКУ!</LowDiskSpace>
     <FreeDiskSpace>Вільно {0}</FreeDiskSpace>
   </AddWaveform>
@@ -456,10 +450,8 @@
     <SavePremiereEdlAs>Оберіть ім'я для файлу Premiere EDL</SavePremiereEdlAs>
     <SaveFcpAs>Оберіть ім'я для xml-файлу Final Cut Pro</SaveFcpAs>
     <SaveDostAs>Оберіть ім'я для файлу DoStudio dost</SaveDostAs>
-    <SomeLinesWereTooLongX>
-      Деякі рядки були надто довгими:
-      {0}
-    </SomeLinesWereTooLongX>
+    <SomeLinesWereTooLongX>Деякі рядки були надто довгими:
+{0}</SomeLinesWereTooLongX>
     <LineHeight>Висота рядка</LineHeight>
     <BoxSingleLine>Рамка на рядок</BoxSingleLine>
     <BoxMultiLine>Рамка на всі рядки</BoxMultiLine>
@@ -1054,15 +1046,11 @@
     <SavedOriginalSubtitleX>Збережено оригінальний субтитр {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Файл на диску змінено</FileOnDiskModified>
     <OverwriteModifiedFile>Перезаписати файл {0}, змінений {1} о {2}{3}, поточним файлом, завантаженим з диску {4} о {5}?</OverwriteModifiedFile>
-    <FileXIsReadOnly>
-      Неможливо зберегти {0}
+    <FileXIsReadOnly>Неможливо зберегти {0}
 
-      Файл тільки для читання!
-    </FileXIsReadOnly>
-    <UnableToSaveSubtitleX>
-      Неможливо зберегти файл субтитрів {0}
-      Субтитри видаються порожніми - спробуйте зберегти ще раз, якщо ви працюєте над коректними субтитрами!
-    </UnableToSaveSubtitleX>
+Файл тільки для читання!</FileXIsReadOnly>
+    <UnableToSaveSubtitleX>Неможливо зберегти файл субтитрів {0}
+Субтитри видаються порожніми - спробуйте зберегти ще раз, якщо ви працюєте над коректними субтитрами!</UnableToSaveSubtitleX>
     <BeforeNew>Перед створенням нового файлу</BeforeNew>
     <New>Новий</New>
     <BeforeConvertingToX>Перед конвертацією в {0}</BeforeConvertingToX>
@@ -1073,19 +1061,13 @@
     <OpenVideoFile>Відкрити відеофайл...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Нову частоту кадрів ({0}) було використано для обрахунку часових міток початку/кінця</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Нову частоту кадрів ({0}) було використано для обрахунку номерів кадрів початку/кінця</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>
-      Об'єкт пошуку не знайдено.
-      Бажаєте розпочати з початку документу і шукати ще раз?
-    </FindContinue>
+    <FindContinue>Об'єкт пошуку не знайдено.
+Бажаєте розпочати з початку документу і шукати ще раз?</FindContinue>
     <FindContinueTitle>Продовжити пошук?</FindContinueTitle>
-    <ReplaceContinueNotFound>
-      Об'єкт пошуку не знайдено.
-      Бажаєте розпочати з початку документу і продовжити пошук та заміну?
-    </ReplaceContinueNotFound>
-    <ReplaceXContinue>
-      Об'єкт пошуку було замінено {0} раз(ів).
-      Ви хотіли б розпочати з початку документу і продовжити пошук та заміну?
-    </ReplaceXContinue>
+    <ReplaceContinueNotFound>Об'єкт пошуку не знайдено.
+Бажаєте розпочати з початку документу і продовжити пошук та заміну?</ReplaceContinueNotFound>
+    <ReplaceXContinue>Об'єкт пошуку було замінено {0} раз(ів).
+Ви хотіли б розпочати з початку документу і продовжити пошук та заміну?</ReplaceXContinue>
     <ReplaceContinueTitle>Продовжити заміну?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Пошук '{0}', починаючи з рядка {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' знайдено в рядку номер {1}</XFoundAtLineNumberY>
@@ -1115,11 +1097,9 @@
     <TextingForHearingImpairedRemovedOneLine>Текст для людей із вадами слуху видалено: Один рядок</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Текст для людей із вадами слуху видалено: {0} рядків</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Субтитр було розділено</SubtitleSplitted>
-    <SubtitleAppendPrompt>
-      Ви приєднаєте файл субтитрів до субтитрів, які зараз завантажені і які повинні бути вже синхронізовані з відеофайлом.
+    <SubtitleAppendPrompt>Ви приєднаєте файл субтитрів до субтитрів, які зараз завантажені і які повинні бути вже синхронізовані з відеофайлом.
 
-      Продовжити?
-    </SubtitleAppendPrompt>
+Продовжити?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Приєднати субтитри</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Відкрити субтитри, які слід приєднати...</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Візуальна синхронізація - приєднання другої частини субтитрів</AppendViaVisualSyncTitle>
@@ -1302,11 +1282,9 @@
     <ErrorLoadJpg>Здається, цей файл - файл зображення JPG. Subtitle Edit не відкриває файли JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Здається, цей файл - файл ReScene .srr - не є файлом субтитрів.</ErrorLoadSrr>
     <ErrorLoadTorrent>Здається, цей файл - файл BitTorrent - не є файлом субтитрів.</ErrorLoadTorrent>
-    <ErrorLoadBinaryZeroes>
-      Даруйте, цей файл містить тільки бінарні нулі!
+    <ErrorLoadBinaryZeroes>Даруйте, цей файл містить тільки бінарні нулі!
 
-      Якщо ви редагували цей файл за допомогою Subtitle Edit, ймовірно ви зможете знайти резервну копію через пункт меню Файл -&gt; Відновити автоматичну резервну копію...
-    </ErrorLoadBinaryZeroes>
+Якщо ви редагували цей файл за допомогою Subtitle Edit, ймовірно ви зможете знайти резервну копію через пункт меню Файл -&gt; Відновити автоматичну резервну копію...</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Перетягування тек тут не підтримується.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Зашифрований вміст VobSub не підтримується.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Файли blu-ray sup тут не підтримуються.</NoSupportHereBluRaySup>
@@ -1401,10 +1379,8 @@
   </NetworkChat>
   <NetworkJoin>
     <Title>Приєднатися до сесії</Title>
-    <Information>
-      Приєднатися до наявної сесії, де кілька осіб
-      можуть спільно редагувати один файл субтитрів (співпрацювати)
-    </Information>
+    <Information>Приєднатися до наявної сесії, де кілька осіб
+можуть спільно редагувати один файл субтитрів (співпрацювати)</Information>
     <Join>Приєднатися</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1414,10 +1390,8 @@
   <NetworkStart>
     <Title>Розпочати нову сесію</Title>
     <ConnectionTo>З'єднуємося з {0}...</ConnectionTo>
-    <Information>
-      Розпочати нову сесію, де кілька осіб зможуть
-      спільно редагувати один файл субтитрів (співпрацювати)
-    </Information>
+    <Information>Розпочати нову сесію, де кілька осіб зможуть
+спільно редагувати один файл субтитрів (співпрацювати)</Information>
     <Start>Розпочати</Start>
   </NetworkStart>
   <OpenVideoDvd>
@@ -1993,11 +1967,9 @@
     <FindText>Знайти текст</FindText>
     <GoToSubPosition>Поз. субтитру</GoToSubPosition>
     <KeepChangesTitle>Зберегти зміни?</KeepChangesTitle>
-    <KeepChangesMessage>
-      В режимі "візуальної синхронізації" до субтитрів було внесено зміни.
+    <KeepChangesMessage>В режимі "візуальної синхронізації" до субтитрів було внесено зміни.
 
-      Зберегти ці зміни?
-    </KeepChangesMessage>
+Зберегти ці зміни?</KeepChangesMessage>
     <SynchronizationDone>Синхронізацію виконано!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Початкова сцена має бути раніше за кінцеву сцену!</StartSceneMustComeBeforeEndScene>
     <Tip>Порада: Використовуйте клавіші &lt;ctrl+←/→&gt;, щоб просунутися на 100 мс назад/вперед</Tip>
