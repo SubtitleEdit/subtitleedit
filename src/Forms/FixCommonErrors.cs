@@ -4772,7 +4772,8 @@ namespace Nikse.SubtitleEdit.Forms
                         int number = Convert.ToInt32(item.SubItems[1].Text);
                         if (number > firstIndex)
                             number -= subtitleListView1.SelectedItems.Count;
-                        deSelectedFixes.Add(number + item.SubItems[2].Text + item.SubItems[3].Text);
+                        if (number >= 0)
+                            deSelectedFixes.Add(number + item.SubItems[2].Text + item.SubItems[3].Text);
                     }
                 }
 
