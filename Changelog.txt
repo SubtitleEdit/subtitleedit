@@ -1,21 +1,34 @@
 ﻿Subtitle Edit Changelog
 
-3.4.9 (xth August 2015) BETA
+3.4.9 (xth September 2015) BETA
 * NEW:
+   * New subtitle formats
+   * Ukranian translation - thx Maximaximum
    * Option to play a sound when new network message arrives - thx InCogNiTo124
 * IMPROVED:
+   * Updated Portuguese translation - thx moob
+   * Updated Korean translation - thx domddol
+   * Updated French language file - thx JM GBT
+   * Updated Hungarian translation - thx Zityi
+   * Updated Dutch translation - thx xylographe
    * Updated Croatian OCR fix replace list - thx diomed & xylographe
    * FFMPEG audio extraction will now prompt for audio file if more than one
    * Format PAC now includes "Chinese simplified" - thx Man
    * Merge lines with same text now ignores casing - thx Michel
    * Now keeps blank lines inside SubRip texts
+   * Better Croatian/Serbian language detection - thx aaaxx/xylographe
+   * Sync tools now display info about what is applied (factor and -/+ adjustment)
+   * Plugins are now allowed to return another format than SubRip
+   * "Fix common errors" only shows English "i to I" fix for English language - Ivandrofly
 * FIXED:
    * Fixed tags accumulating texts in Sami format (regression from 3.4.8 refact) - thx domddol
    * Fixed several issues with format "Cavena 890" - thx Victor
    * Better handling of some zero width Unicode spaces - thx Krystian
    * Spell check issue with multiple occurrences of same word in one subtitle - thx Krystian
-   * Rounding issue in formats with duration in output - thx Victor
-   * Possible crash in export FCP/image export due to missing escape encoding - thx Bruno
+   * Rounding issue in formats with duration in output - thx Victor/Jamakmake
+   * Fixed possible crash in setting regarding VLC path - thx xylographe 
+   * Fixed shortcut key in French replace dialog - thx Claude
+   * Go to first empty line now also focuses it - thx Jamakmake
    * + Many minor fixes from Ivandrofly and xylographe
 
 
