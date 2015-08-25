@@ -95,13 +95,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         </TimingObject>
         <Content Override='0' RaisedRowUp='0' RaisedRowDown='0' DirectionState='0' PositionState='1' ConfidenceValue='0'>
           <SubtitleText>
-            <Paragraph Type='Open' Justification='Centre' LineLimit='15' CharactersPerRow='99' Alignment='None' Language='IDN' VideoLanguage='IDN' Xpercent='0.0' Ypercent='0.0'>
+            <Paragraph Type='Open' Justification='Centre' LineLimit='15' CharactersPerRow='99' Alignment='None' Language='ENG' VideoLanguage='ENG' Xpercent='0.0' Ypercent='0.0'>
               <StartState Foreground='7' Background='0' Flash='No' Underline='No' Italic='No' Bold='No' Indent='0' SBOnOff='Yes' FontID='4'/>
               <Boxing Colour='0' Transparency='0' Type='None'/>
               <AntiAliasing Style='Default'/>
-              <Row Number='1' JustificationOverride='Centre' Highlight='0'/>
-              <ForegroundColour Colour='7'/>
-              <Text>text1</Text>
             </Paragraph>
           </SubtitleText>
         </Content>
@@ -173,7 +170,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     paragraphNode.AppendChild(textNode);
 
                 }
-                fileBodyNode.AppendChild(content);
+                fileBodyNode.AppendChild(content.SelectSingleNode("ContentBlock"));
             }
             return ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty);
         }
