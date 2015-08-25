@@ -1108,5 +1108,12 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public void SetCustomResize(EventHandler handler)
+        {
+            if (handler == null)
+                return;
+            Resize -= SubtitleListViewResize;
+            Resize += handler;
+        }
     }
 }

@@ -19,6 +19,9 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             Utilities.FixLargeFonts(this, buttonOK);
 
+            // Remove SE's built-in ListView resize logic
+            SubtitleListview1.SetCustomResize(SubtitleListView1_Resize);
+
             Text = Configuration.Settings.Language.DurationsBridgeGaps.Title;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -191,6 +194,20 @@ namespace Nikse.SubtitleEdit.Forms
         private void numericUpDownMinMsBetweenLines_KeyUp(object sender, KeyEventArgs e)
         {
             GeneratePreview();
+        }
+
+        private void SubtitleListView1_Resize(object sender, EventArgs e)
+        {
+            // Store last column with 'cause it won't be changed
+            var columnsCount = SubtitleListview1.Columns.Count - 1;
+            var lastColumnWidth = SubtitleListview1.Columns[columnsCount].Width;
+            var width = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                width += SubtitleListview1.Columns[i].Width;
+            }
+            SubtitleListview1.Columns[4].Width = SubtitleListview1.Width - (width + lastColumnWidth);
+            SubtitleListview1.Columns[columnsCount].Width = lastColumnWidth;
         }
 
     }
