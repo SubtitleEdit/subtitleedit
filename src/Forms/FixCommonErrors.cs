@@ -44,11 +44,9 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexFixMissingOpenBracket = 24;
         private const int IndexFixOcrErrorsViaReplaceList = 25;
         private const int IndexUppercaseIInsideLowercaseWord = 26;
-        private const int IndexAloneLowercaseIToUppercaseIEnglish = 27;
-        private const int IndexRemoveSpaceBetweenNumbers = 28;
-        private const int IndexDialogsOnOneLine = 29;
-        //private const int IndexDanishLetterI = 30;
-        //private const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 31;
+        private const int IndexRemoveSpaceBetweenNumbers = 27;
+        private const int IndexDialogsOnOneLine = 28;
+        private int _indexAloneLowercaseIToUppercaseIEnglish = -1;
         private int _turkishAnsiIndex = -1;
         private int _danishLetterIIndex = -1;
         private int _spanishInvertedQuestionAndExclamationMarksIndex = -1;
@@ -357,6 +355,7 @@ namespace Nikse.SubtitleEdit.Forms
             _turkishAnsiIndex = -1;
             _danishLetterIIndex = -1;
             _spanishInvertedQuestionAndExclamationMarksIndex = -1;
+            _indexAloneLowercaseIToUppercaseIEnglish = -1;
 
             FixCommonErrorsSettings ce = Configuration.Settings.CommonErrors;
             _fixActions = new List<FixItem>
@@ -388,11 +387,16 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, FixMissingOpenBracket, ce.FixMissingOpenBracketTicked),
                 new FixItem(_language.FixCommonOcrErrors, _language.FixOcrErrorExample, delegate { FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked),
                 new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, FixUppercaseIInsideWords, ce.UppercaseIInsideLowercaseWordTicked),
-                new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, FixAloneLowercaseIToUppercaseI, ce.AloneLowercaseIToUppercaseIEnglishTicked),
                 new FixItem(_language.RemoveSpaceBetweenNumber, _language.FixSpaceBetweenNumbersExample, RemoveSpaceBetweenNumbers, ce.RemoveSpaceBetweenNumberTicked),
                 new FixItem(_language.FixDialogsOnOneLine, _language.FixDialogsOneLineExample, DialogsOnOneLine, ce.FixDialogsOnOneLineTicked)
             };
 
+            if (Language == "en")
+            {
+                _indexAloneLowercaseIToUppercaseIEnglish = _fixActions.Count;
+                _fixActions.Add(new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, FixAloneLowercaseIToUppercaseI, ce.AloneLowercaseIToUppercaseIEnglishTicked));
+
+            }
             if (Language == "tr")
             {
                 _turkishAnsiIndex = _fixActions.Count;
@@ -4015,17 +4019,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (listView1.Items[IndexAloneLowercaseIToUppercaseIEnglish].Checked && Language != "en")
-                {
-                    if (MessageBox.Show(_language.FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish + Environment.NewLine +
-                                                      Environment.NewLine +
-                                                      _language.ContinueAnyway, _language.Continue, MessageBoxButtons.YesNo) == DialogResult.No)
-                    {
-                        listView1.Items[IndexAloneLowercaseIToUppercaseIEnglish].Checked = false;
-                        ShowStatus(_language.UncheckedFixLowercaseIToUppercaseI);
-                        return;
-                    }
-                }
                 Cursor = Cursors.WaitCursor;
                 Next();
                 ShowAvailableFixesStatus();
@@ -4349,7 +4342,8 @@ namespace Nikse.SubtitleEdit.Forms
             ce.FixDoubleGreaterThanTicked = listView1.Items[IndexFixDoubleGreaterThan].Checked;
             ce.FixEllipsesStartTicked = listView1.Items[IndexFixEllipsesStart].Checked;
             ce.FixMissingOpenBracketTicked = listView1.Items[IndexFixMissingOpenBracket].Checked;
-            ce.AloneLowercaseIToUppercaseIEnglishTicked = listView1.Items[IndexAloneLowercaseIToUppercaseIEnglish].Checked;
+            if (_indexAloneLowercaseIToUppercaseIEnglish >= 0)
+                ce.AloneLowercaseIToUppercaseIEnglishTicked = listView1.Items[_indexAloneLowercaseIToUppercaseIEnglish].Checked;
             ce.FixOcrErrorsViaReplaceListTicked = listView1.Items[IndexFixOcrErrorsViaReplaceList].Checked;
             ce.RemoveSpaceBetweenNumberTicked = listView1.Items[IndexRemoveSpaceBetweenNumbers].Checked;
             ce.FixDialogsOnOneLineTicked = listView1.Items[IndexDialogsOnOneLine].Checked;
