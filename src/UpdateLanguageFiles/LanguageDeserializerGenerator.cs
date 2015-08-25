@@ -39,6 +39,8 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         if (!reader.IsEmptyElement && reader.Depth > 0)
                             name.Append('/').Append(reader.Name);
+                        else if (reader.Depth == 0)
+                            language.Name = reader[""Name""];
                     }
                     else if (reader.NodeType == XmlNodeType.EndElement)
                     {

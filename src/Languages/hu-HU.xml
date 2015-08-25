@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="Hungarian">
+<Language Name="magyar">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.8</Version>
@@ -440,7 +440,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <Right>Jobbra</Right>
     <Center>Középre</Center>
     <BottomMargin>Alsó margó</BottomMargin>
-   <LeftRightMargin>Bal/jobb margó</LeftRightMargin>
+    <LeftRightMargin>Bal/jobb margó</LeftRightMargin>
     <SaveBluRraySupAs>Válassza ki a Blu-ray sup fájl nevét</SaveBluRraySupAs>
     <SaveVobSubAs>Válassza ki a VobSub fájl nevét</SaveVobSubAs>
     <SaveFabImageScriptAs>Válassza ki a FAB képszkript fájl nevét</SaveFabImageScriptAs>
@@ -1658,7 +1658,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ToggleDockUndockOfVideoControls>Videóvezérlő dokkolás/leválasztás kapcsoló</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Befejezés beállítása, új hozzáadása és ugrás az újra</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Beállítás a végpozíción keresztül és ugrás a következőre</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetEndTimeAndGoToNext>Befejezés beállítása és ugrás a következőre</AdjustSetEndTimeAndGoToNext> 
+    <AdjustSetEndTimeAndGoToNext>Befejezés beállítása és ugrás a következőre</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Indítás beállítása, automatikus időtartam és ugrás a következőre</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Befejezés beállítása, következő indítás és ugrás a következőre</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Le gomb=indítás beállítása, Fel gomb=befejezés beállítása és ugrás a következőre</AdjustStartDownEndUpAndGoToNext>
