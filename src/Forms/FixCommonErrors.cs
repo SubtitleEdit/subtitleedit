@@ -4763,10 +4763,6 @@ namespace Nikse.SubtitleEdit.Forms
                     indexes.Add(item.Index);
                 int firstIndex = subtitleListView1.SelectedItems[0].Index;
 
-                int startNumber = _originalSubtitle.Paragraphs[0].Number;
-                if (startNumber == 2)
-                    startNumber = 1;
-
                 // save de-seleced fixes
                 var deSelectedFixes = new List<string>();
                 foreach (ListViewItem item in listViewFixes.Items)
@@ -4776,7 +4772,8 @@ namespace Nikse.SubtitleEdit.Forms
                         int number = Convert.ToInt32(item.SubItems[1].Text);
                         if (number > firstIndex)
                             number -= subtitleListView1.SelectedItems.Count;
-                        deSelectedFixes.Add(number + item.SubItems[2].Text + item.SubItems[3].Text);
+                        if (number >= 0)
+                            deSelectedFixes.Add(number + item.SubItems[2].Text + item.SubItems[3].Text);
                     }
                 }
 
@@ -4785,7 +4782,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _originalSubtitle.Paragraphs.RemoveAt(i);
                 }
-                _originalSubtitle.Renumber(startNumber);
+                _originalSubtitle.Renumber();
                 subtitleListView1.Fill(_originalSubtitle);
                 if (subtitleListView1.Items.Count > firstIndex)
                 {
@@ -4802,10 +4799,13 @@ namespace Nikse.SubtitleEdit.Forms
                 Next();
 
                 // restore de-selected fixes
-                foreach (ListViewItem item in listViewFixes.Items)
+                if (deSelectedFixes.Count > 0)
                 {
-                    if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
-                        item.Checked = false;
+                    foreach (ListViewItem item in listViewFixes.Items)
+                    {
+                        if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
+                            item.Checked = false;
+                    }
                 }
             }
         }
