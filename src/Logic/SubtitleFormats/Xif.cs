@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 fileBodyNode.AppendChild(content.SelectSingleNode("ContentBlock"));
             }
-            return ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty);
+            return ToUtf8XmlString(xml, true).Replace(" xmlns=\"\"", string.Empty);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
