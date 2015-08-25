@@ -4763,10 +4763,6 @@ namespace Nikse.SubtitleEdit.Forms
                     indexes.Add(item.Index);
                 int firstIndex = subtitleListView1.SelectedItems[0].Index;
 
-                int startNumber = _originalSubtitle.Paragraphs[0].Number;
-                if (startNumber == 2)
-                    startNumber = 1;
-
                 // save de-seleced fixes
                 var deSelectedFixes = new List<string>();
                 foreach (ListViewItem item in listViewFixes.Items)
@@ -4785,7 +4781,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _originalSubtitle.Paragraphs.RemoveAt(i);
                 }
-                _originalSubtitle.Renumber(startNumber);
+                _originalSubtitle.Renumber();
                 subtitleListView1.Fill(_originalSubtitle);
                 if (subtitleListView1.Items.Count > firstIndex)
                 {
