@@ -4799,10 +4799,13 @@ namespace Nikse.SubtitleEdit.Forms
                 Next();
 
                 // restore de-selected fixes
-                foreach (ListViewItem item in listViewFixes.Items)
+                if (deSelectedFixes.Count > 0)
                 {
-                    if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
-                        item.Checked = false;
+                    foreach (ListViewItem item in listViewFixes.Items)
+                    {
+                        if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
+                            item.Checked = false;
+                    }
                 }
             }
         }
