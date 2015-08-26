@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InsertLanguageCharacter(object sender, EventArgs e)
         {
             var toolStripMenuItem = sender as ToolStripMenuItem;
-            if (toolStripMenuItem != null) 
+            if (toolStripMenuItem != null)
                 textBoxCharacters.Text = textBoxCharacters.Text.Insert(textBoxCharacters.SelectionStart, toolStripMenuItem.Text);
         }
 

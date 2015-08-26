@@ -414,7 +414,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ListBoxSuggestionsMouseDoubleClick(object sender, MouseEventArgs e)
         {
             ButtonUseSuggestionAlwaysClick(null, null);
-        }      
+        }
 
         public void DoAction(SpellCheckAction action)
         {

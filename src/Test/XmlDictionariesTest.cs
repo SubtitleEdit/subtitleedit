@@ -18,9 +18,9 @@ namespace Test
             var xmlFileNames = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.xml");
             foreach (var xmlFileName in xmlFileNames)
             {
-                TestXmlWellFormedness(xmlFileName);    
+                TestXmlWellFormedness(xmlFileName);
             }
-        }      
+        }
 
         [TestMethod]
         [DeploymentItem("..\\Dictionaries")]
@@ -45,18 +45,18 @@ namespace Test
                             }
                             catch (Exception exception)
                             {
-                                string msg = Path.GetFileName(xmlFileName) + " has an invalid RegEx find expression: " + regExPattern + Environment.NewLine + 
+                                string msg = Path.GetFileName(xmlFileName) + " has an invalid RegEx find expression: " + regExPattern + Environment.NewLine +
                                              exception.Message;
                                 Assert.Fail(msg);
                             }
                         }
                     }
                 }
-                catch 
+                catch
                 {
-                }   
+                }
             }
-        }      
+        }
 
         private static void TestXmlWellFormedness(string fileName)
         {
