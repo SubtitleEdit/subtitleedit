@@ -2700,7 +2700,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 foreach (string item in comboBoxSubtitleFontSize.Items)
                 {
                     if (item == Convert.ToInt32(_subtitleFontSize).ToString(CultureInfo.InvariantCulture))
+                    {
                         comboBoxSubtitleFontSize.SelectedIndex = i;
+                        break;
+                    }
                     i++;
                 }
                 checkBoxSimpleRender.Checked = Configuration.Settings.Tools.ExportVobSubSimpleRendering;
