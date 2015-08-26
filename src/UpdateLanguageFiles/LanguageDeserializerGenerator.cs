@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic
 {

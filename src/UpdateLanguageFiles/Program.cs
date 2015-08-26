@@ -31,7 +31,7 @@ namespace UpdateLanguageFiles
             {
                 int noOfChanges = 0;
 
-                var language = new Nikse.SubtitleEdit.Logic.Language();
+                var language = new Nikse.SubtitleEdit.Core.Language();
                 language.General.Version = FindVersionNumber();
                 var languageAsXml = language.GetCurrentLanguageAsXml();
                 var oldLanguageAsXml = string.Empty;

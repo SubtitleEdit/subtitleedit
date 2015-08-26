@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Nikse.Core.Enums;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.Core;
-using Nikse.Core.Enums;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core
 {
