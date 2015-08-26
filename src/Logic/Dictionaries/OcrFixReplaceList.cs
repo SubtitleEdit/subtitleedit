@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.Core;
 using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.Dictionaries

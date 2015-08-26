@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.TransportStream;
 using System;
 using System.Windows.Forms;
 
@@ -6,7 +7,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class TransportStreamSubtitleChooser : PositionAndSizeForm
     {
-        private Logic.TransportStream.TransportStreamParser _tsParser;
+        private TransportStreamParser _tsParser;
 
         public TransportStreamSubtitleChooser()
         {
@@ -33,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
         }
 
-        internal void Initialize(Logic.TransportStream.TransportStreamParser tsParser, string fileName)
+        internal void Initialize(TransportStreamParser tsParser, string fileName)
         {
             _tsParser = tsParser;
             Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.Title, fileName);

@@ -1,6 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;

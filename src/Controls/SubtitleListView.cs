@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
+using Nikse.Core;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Core;
 
@@ -618,7 +619,7 @@ namespace Nikse.SubtitleEdit.Controls
                     subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToHHMMSSFF());
                 item.SubItems.Add(subItem);
 
-                subItem = new ListViewItem.ListViewSubItem(item, string.Format("{0},{1:00}", paragraph.Duration.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds)));
+                subItem = new ListViewItem.ListViewSubItem(item, string.Format("{0},{1:00}", paragraph.Duration.Seconds, Core.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds)));
                 item.SubItems.Add(subItem);
             }
             else
@@ -768,7 +769,7 @@ namespace Nikse.SubtitleEdit.Controls
                     else
                         item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
 
-                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
+                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Nikse.SubtitleEdit.Core.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
                 }
                 else
                 {
@@ -891,7 +892,7 @@ namespace Nikse.SubtitleEdit.Controls
                 ListViewItem item = Items[index];
                 if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                 {
-                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
+                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Nikse.SubtitleEdit.Core.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
                     if (paragraph.EndTime.IsMaxTime)
                         item.SubItems[ColumnIndexEnd].Text = "-";
                     else
@@ -930,7 +931,7 @@ namespace Nikse.SubtitleEdit.Controls
                         Paragraph p = subtitle.Paragraphs[i];
                         item.SubItems[ColumnIndexStart].Text = p.StartTime.ToHHMMSSFF();
                         item.SubItems[ColumnIndexEnd].Text = p.EndTime.ToHHMMSSFF();
-                        item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", p.Duration.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds));
+                        item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", p.Duration.Seconds, Core.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds));
                     }
                 }
                 EndUpdate();
@@ -954,7 +955,7 @@ namespace Nikse.SubtitleEdit.Controls
                     else
                         item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
 
-                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
+                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Core.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
                 }
                 else
                 {
@@ -990,7 +991,7 @@ namespace Nikse.SubtitleEdit.Controls
                     else
                         item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
 
-                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
+                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Core.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
                 }
                 else
                 {

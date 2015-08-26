@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nikse.SubtitleEdit.Logic.Forms;
+using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Forms;
 
 namespace Test.Logic.Forms
 {

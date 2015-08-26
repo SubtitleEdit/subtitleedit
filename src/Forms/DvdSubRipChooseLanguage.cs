@@ -1,9 +1,9 @@
-﻿using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.VobSub;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.VobSub;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 using (var exportBdnXmlPng = new ExportPngXml())
                 {
-                    exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Logic.SubtitleFormats.SubRip(), "VOBSUB", "DVD", formSubOcr, SelectedLanguageString);
+                    exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Core.SubtitleFormats.SubRip(), "VOBSUB", "DVD", formSubOcr, SelectedLanguageString);
                     exportBdnXmlPng.ShowDialog(this);
                 }
             }

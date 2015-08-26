@@ -1,8 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+﻿using Nikse.Core;
+using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using Nikse.SubtitleEdit.Logic.VobSub;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -248,7 +249,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void MakeBluRaySupImage(MakeBitmapParameter param)
         {
-            var brSub = new Logic.BluRaySup.BluRaySupPicture
+            var brSub = new BluRaySupPicture
             {
                 StartTime = (long)param.P.StartTime.TotalMilliseconds,
                 EndTime = (long)param.P.EndTime.TotalMilliseconds,
@@ -284,14 +285,14 @@ namespace Nikse.SubtitleEdit.Forms
                                 g.DrawImage(bmp, left, top);
                                 g.Dispose();
                             }
-                            param.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, fullSize, param.FramesPerSeconds, 0, 0, ContentAlignment.BottomCenter);
+                            param.Buffer = BluRaySupPicture.CreateSupFrame(brSub, fullSize, param.FramesPerSeconds, 0, 0, ContentAlignment.BottomCenter);
                         }
                     }
                 }
             }
             else
             {
-                param.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, param.Bitmap, param.FramesPerSeconds, param.BottomMargin, param.LeftRightMargin, param.Alignment);
+                param.Buffer = BluRaySupPicture.CreateSupFrame(brSub, param.Bitmap, param.FramesPerSeconds, param.BottomMargin, param.LeftRightMargin, param.Alignment);
             }
         }
 
@@ -3844,7 +3845,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             subtitleListView1.Columns[columnIndexText].Width = -2;
         }
 
-        private void SubtitleListView1InitializeLanguage(LanguageStructure.General general, Logic.Settings settings)
+        private void SubtitleListView1InitializeLanguage(LanguageStructure.General general, Core.Settings settings)
         {
             int columnIndexNumber = 0;
             int columnIndexStart = 1;

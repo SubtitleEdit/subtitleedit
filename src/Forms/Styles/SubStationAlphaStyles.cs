@@ -7,8 +7,9 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.Core;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {

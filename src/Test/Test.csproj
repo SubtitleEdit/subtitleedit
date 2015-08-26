@@ -68,6 +68,10 @@
     <Compile Include="XmlDictionariesTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\libse\LibSE.csproj">
+      <Project>{3e3cb28f-3a7b-430f-9eb3-0d6c1e53b753}</Project>
+      <Name>LibSE</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SubtitleEdit.csproj">
       <Project>{511A5B59-1C35-4719-8536-23B19AF9B21A}</Project>
       <Name>SubtitleEdit</Name>

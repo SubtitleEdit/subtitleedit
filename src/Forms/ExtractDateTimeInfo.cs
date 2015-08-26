@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -78,7 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var fi = new FileInfo(VideoFileName);
                     start = fi.CreationTime;
-                    VideoInfo vi = Utilities.GetVideoInfo(VideoFileName);
+                    VideoInfo vi = UiUtil.GetVideoInfo(VideoFileName);
                     durationInSeconds = vi.TotalMilliseconds / TimeCode.BaseUnit;
                     if (durationInSeconds < 1)
                     {

@@ -1,12 +1,11 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Test.Logic.SubtitleFormats
 {

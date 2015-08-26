@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Core;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms

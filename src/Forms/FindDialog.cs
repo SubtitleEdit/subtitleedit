@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.Core.Enums;
+using Nikse.SubtitleEdit.Core;
+using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Enums;
 
 namespace Nikse.SubtitleEdit.Forms
 {

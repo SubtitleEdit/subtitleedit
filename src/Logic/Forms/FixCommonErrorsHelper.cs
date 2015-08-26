@@ -1,6 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using System;
 using System.Linq;
+using Paragraph = Nikse.SubtitleEdit.Core.Paragraph;
+using Subtitle = Nikse.SubtitleEdit.Core.Subtitle;
+using Utilities = Nikse.SubtitleEdit.Core.Utilities;
 
 namespace Nikse.SubtitleEdit.Logic.Forms
 {

@@ -1,9 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Dictionaries;
-using Nikse.SubtitleEdit.Logic.Forms;
+using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Ocr;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
