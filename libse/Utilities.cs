@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.ContainerFormats;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -10,11 +14,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using Nikse.Core;
-using Nikse.SubtitleEdit.Core.ContainerFormats;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core
 {
