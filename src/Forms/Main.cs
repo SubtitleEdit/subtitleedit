@@ -277,7 +277,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // avoid weird looking layout for high DPI
                 if (graphics.DpiX > 120)
                 {
-                    Font = new Font(Font.FontFamily, (float)(Font.Size*graphics.DpiX/96.0));
+                    Font = new Font(Font.FontFamily, (float)(Font.Size * graphics.DpiX / 96.0));
 
                     numericUpDownDuration.Left = timeUpDownStartTime.Right + 15;
                     numericUpDownDuration.Width += 5;
@@ -377,7 +377,7 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripButtonGetFrameRate.Visible = true;
                 }
 
-                _timerClearStatus.Interval = Configuration.Settings.General.ClearStatusBarAfterSeconds*1000;
+                _timerClearStatus.Interval = Configuration.Settings.General.ClearStatusBarAfterSeconds * 1000;
                 _timerClearStatus.Tick += TimerClearStatus_Tick;
 
                 var fileName = string.Empty;
@@ -508,7 +508,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 for (double zoomCounter = AudioVisualizer.ZoomMinimum; zoomCounter <= AudioVisualizer.ZoomMaximum + (0.001); zoomCounter += 0.1)
                 {
-                    int percent = (int)Math.Round((zoomCounter*100));
+                    int percent = (int)Math.Round((zoomCounter * 100));
                     ComboBoxZoomItem item = new ComboBoxZoomItem { Text = percent + "%", ZoomFactor = zoomCounter };
                     toolStripComboBoxWaveform.Items.Add(item);
                     if (percent == 100)
@@ -752,17 +752,17 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                 { // so we don't get weird rounds we'll use whole frames when moving start time
-                    double fr = TimeCode.BaseUnit/Configuration.Settings.General.CurrentFrameRate;
+                    double fr = TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate;
                     if (e.BeforeParagraph != null && e.BeforeParagraph.StartTime.TotalMilliseconds != e.Paragraph.StartTime.TotalMilliseconds &&
                         e.BeforeParagraph.Duration.TotalMilliseconds == e.Paragraph.Duration.TotalMilliseconds)
                     {
                         // move paragraph
-                        paragraph.StartTime.TotalMilliseconds = ((int)Math.Round(paragraph.StartTime.TotalMilliseconds/fr))*fr;
+                        paragraph.StartTime.TotalMilliseconds = ((int)Math.Round(paragraph.StartTime.TotalMilliseconds / fr)) * fr;
                         paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds + e.BeforeParagraph.Duration.TotalMilliseconds;
                     }
                     else if (e.BeforeParagraph != null && e.BeforeParagraph.EndTime.TotalMilliseconds == e.Paragraph.EndTime.TotalMilliseconds)
                     {
-                        paragraph.EndTime.TotalMilliseconds = ((int)Math.Round(paragraph.EndTime.TotalMilliseconds/fr))*fr;
+                        paragraph.EndTime.TotalMilliseconds = ((int)Math.Round(paragraph.EndTime.TotalMilliseconds / fr)) * fr;
                         int end = SubtitleFormat.MillisecondsToFrames(paragraph.EndTime.TotalMilliseconds);
                         int dur = SubtitleFormat.MillisecondsToFrames(paragraph.Duration.TotalMilliseconds);
                         paragraph.StartTime.TotalMilliseconds = SubtitleFormat.FramesToMilliseconds(end - dur);
@@ -1526,7 +1526,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_makeHistoryPaused)
                 return;
 
-            if ((DateTime.Now.Ticks - _lastHistoryTicks) > 10000*500) // only if last change was longer ago than 500 milliseconds
+            if ((DateTime.Now.Ticks - _lastHistoryTicks) > 10000 * 500) // only if last change was longer ago than 500 milliseconds
             {
                 MakeHistoryForUndo(description);
                 _lastHistoryTicks = DateTime.Now.Ticks;
@@ -1785,7 +1785,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (file.Length > 1024*1024*10) // max 10 mb
+                if (file.Length > 1024 * 1024 * 10) // max 10 mb
                 {
                     // retry Blu-ray sup (file with wrong extension)
                     if (FileUtil.IsBluRaySup(fileName))
@@ -2400,7 +2400,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (format == null && file.Length < 100*1000000 && TransportStreamParser.IsDvbSup(fileName))
+                if (format == null && file.Length < 100 * 1000000 && TransportStreamParser.IsDvbSup(fileName))
                 {
                     ImportSubtitleFromDvbSupFile(fileName);
                     return;
@@ -3597,7 +3597,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.General.AutoBackupSeconds > 0)
             {
-                _timerAutoSave.Interval = 1000*Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
+                _timerAutoSave.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
                 _timerAutoSave.Start();
             }
             SetTitle();
@@ -4025,8 +4025,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_findHelper == null)
                 {
                     _findHelper = replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
-                    _findHelper.WindowPositionLeft = Left + (Width/2) - (replaceDialog.Width/2);
-                    _findHelper.WindowPositionTop = Top + (Height/2) - (replaceDialog.Height/2);
+                    _findHelper.WindowPositionLeft = Left + (Width / 2) - (replaceDialog.Width / 2);
+                    _findHelper.WindowPositionTop = Top + (Height / 2) - (replaceDialog.Height / 2);
                 }
             }
             else
@@ -4123,8 +4123,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_findHelper == null)
                 {
                     _findHelper = replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
-                    _findHelper.WindowPositionLeft = Left + (Width/2) - (replaceDialog.Width/2);
-                    _findHelper.WindowPositionTop = Top + (Height/2) - (replaceDialog.Height/2);
+                    _findHelper.WindowPositionLeft = Left + (Width / 2) - (replaceDialog.Width / 2);
+                    _findHelper.WindowPositionTop = Top + (Height / 2) - (replaceDialog.Height / 2);
                 }
                 int index = 0;
 
@@ -4577,7 +4577,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int end = textBoxSource.Text.Length;
                         while (end - start > 10)
                         {
-                            int middle = start + (end - start)/2;
+                            int middle = start + (end - start) / 2;
                             if (goToLine.LineNumber - 1 >= textBoxSource.GetLineFromCharIndex(middle))
                                 start = middle;
                             else
@@ -12863,7 +12863,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
-            }         
+            }
 
             if (string.CompareOrdinal(_changeSubtitleToString, SerializeSubtitle(_subtitle)) != 0)
             {
@@ -15845,7 +15845,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     using (var soundPlayer = new System.Media.SoundPlayer(Configuration.Settings.NetworkSettings.NewMessageSound))
                                     {
-                                        soundPlayer.Play(); 
+                                        soundPlayer.Play();
                                     }
                                 }
                                 catch
@@ -17530,7 +17530,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!string.IsNullOrWhiteSpace(paragraph.Text))
                             numberOfNonBlankLines++;
                     }
-                    int percent = (int)Math.Round(numberOfNonBlankLines*100.0/_subtitle.Paragraphs.Count);
+                    int percent = (int)Math.Round(numberOfNonBlankLines * 100.0 / _subtitle.Paragraphs.Count);
                     toolStripStatusLabelProgress.Text = string.Format("{0}% completed", percent);
                     if (!toolStripStatusLabelProgress.Visible)
                         toolStripStatusLabelProgress.Visible = true;
@@ -17542,7 +17542,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var subtitleEndSeconds = last.EndTime.TotalSeconds;
                         var videoEndSeconds = mediaPlayer.VideoPlayer.Duration;
-                        int percent = (int)Math.Round(subtitleEndSeconds*100.0/videoEndSeconds);
+                        int percent = (int)Math.Round(subtitleEndSeconds * 100.0 / videoEndSeconds);
                         toolStripStatusLabelProgress.Text = string.Format("{0}% completed", percent);
                         if (!toolStripStatusLabelProgress.Visible)
                             toolStripStatusLabelProgress.Visible = true;
