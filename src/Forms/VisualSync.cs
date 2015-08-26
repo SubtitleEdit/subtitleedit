@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelTip.Text = _language.Tip;
             Utilities.FixLargeFonts(this, buttonCancel);
             _timerHideSyncLabel.Tick += timerHideSyncLabel_Tick;
-            _timerHideSyncLabel.Interval = 1000;            
+            _timerHideSyncLabel.Interval = 1000;
         }
 
         private void timerHideSyncLabel_Tick(object sender, EventArgs e)
@@ -743,7 +743,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (MediaPlayerEnd.VideoPlayer != null) // && MediaPlayerEnd.VideoPlayer.GetType() == typeof(QuartsPlayer))
             {
                 MediaPlayerEnd.RefreshProgressBar();
-            }            
+            }
             timerProgressBarRefresh.Start();
         }
 
