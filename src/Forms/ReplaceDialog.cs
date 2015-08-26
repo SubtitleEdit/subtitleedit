@@ -1,9 +1,9 @@
-﻿using Nikse.Core.Enums;
-using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core;
 using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Regex _regEx;
         private int _left;
         private int _top;
-        private bool _userAction = false;
+        private bool _userAction;
 
         public ReplaceDialog()
         {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Nikse.Core;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
 {

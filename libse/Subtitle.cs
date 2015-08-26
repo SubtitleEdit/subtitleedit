@@ -1,4 +1,4 @@
-﻿using Nikse.Core.Enums;
+﻿using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;

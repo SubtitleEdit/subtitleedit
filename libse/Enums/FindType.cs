@@ -1,4 +1,4 @@
-﻿namespace Nikse.Core.Enums
+﻿namespace Nikse.SubtitleEdit.Core.Enums
 {
     public enum FindType
     {

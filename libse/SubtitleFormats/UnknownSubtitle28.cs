@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Xml;
 
@@ -25,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             var subtitle = new Subtitle();
-            this.LoadSubtitle(subtitle, lines, fileName);
+            LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > 0;
         }
 
@@ -41,7 +42,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 id++;
                 XmlNode paragraph = xml.CreateElement("title");
                 XmlAttribute idAttr = xml.CreateAttribute("id");
-                idAttr.InnerText = id.ToString();
+                idAttr.InnerText = id.ToString(CultureInfo.InvariantCulture);
                 paragraph.Attributes.Append(idAttr);
 
                 XmlNode time = xml.CreateElement("time");
@@ -83,8 +84,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!xmlString.Contains("<titles") || !xmlString.Contains("<text1>"))
                 return;
 
-            var xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             try
             {
                 xml.LoadXml(xmlString);
@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static double ParseTimeCode(string start)
         {
             string[] arr = start.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
-            TimeSpan ts = new TimeSpan(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3]));
+            var ts = new TimeSpan(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3]));
             return ts.TotalMilliseconds;
         }
 

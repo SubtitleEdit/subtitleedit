@@ -2,7 +2,6 @@
 
 using System;
 using System.Text;
-using Nikse.Core;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats
 {
