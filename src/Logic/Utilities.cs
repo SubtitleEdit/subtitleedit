@@ -1205,6 +1205,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                                    "razumem", "videla", "ceo", "svet", "porodica", "voleo", "srećan", "dođavola", "svetu", "htela",
                                                                    "videli", "negde", "želeo", "ponovo", "devojka", "umreti", "čoveka", "mesta", "deca", "osećam",
                                                                    "uopšte", "decu", "napred", "porodicu", "zaista", "mestu", "lepa", "takođe", "reč", "telo" };
+        public static readonly string[] AutoDetectWordsSerbian-Cyrl = { "сам", "али", "није", "само", "ово", "како", "добро", "све", "тако", "ће", "могу", "ћу", "зашто", "нешто", "за", "шта", "овде" };
 
         public static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
