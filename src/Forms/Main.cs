@@ -1,18 +1,20 @@
-﻿using Nikse.SubtitleEdit.Controls;
+﻿using Nikse.Core;
+using Nikse.Core.Enums;
+using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
+using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.TransportStream;
+using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.BluRaySup;
-using Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat;
-using Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska;
-using Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4;
-using Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4.Boxes;
-using Nikse.SubtitleEdit.Logic.Enums;
 using Nikse.SubtitleEdit.Logic.Networking;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.TransportStream;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using Nikse.SubtitleEdit.Logic.VobSub;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -97,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
         private StringBuilder _statusLog = new StringBuilder();
         private bool _makeHistoryPaused = false;
 
-        private Logic.Forms.CheckForUpdatesHelper _checkForUpdatesHelper;
+        private CheckForUpdatesHelper _checkForUpdatesHelper;
         private Timer _timerCheckForUpdates;
 
         private NikseWebServiceSession _networkSession;
@@ -332,6 +334,10 @@ namespace Nikse.SubtitleEdit.Forms
                         comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
                 }
                 SetEncoding(Configuration.Settings.General.DefaultEncoding);
+
+                // set up UI interfaces in subtitle formats
+                (SubtitleFormat.AllSubtitleFormats.First(p => p.Name == YouTubeAnnotations.NameOfFormat) as YouTubeAnnotations).GetYouTubeAnnotationStyles = new UiGetYouTubeAnnotationStyles();
+                Ebu.EbuUiHelper = new UiEbuSaveHelper();
 
                 toolStripComboBoxFrameRate.Items.Add((23.976).ToString());
                 toolStripComboBoxFrameRate.Items.Add((24.0).ToString());
@@ -895,7 +901,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         Paragraph originalNext = null;
                         if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
-                            originalNext = Nikse.SubtitleEdit.Logic.Utilities.GetOriginalParagraph(index + 1, next, _subtitleAlternate.Paragraphs);
+                            originalNext = Utilities.GetOriginalParagraph(index + 1, next, _subtitleAlternate.Paragraphs);
 
                         next.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + (e.Paragraph.EndTime.TotalMilliseconds - beforeParagraph.EndTime.TotalMilliseconds);
                         SubtitleListview1.SetStartTimeAndDuration(index + 1, next);
@@ -3633,10 +3639,10 @@ namespace Nikse.SubtitleEdit.Forms
         private int ShowSubtitle()
         {
             if (_splitDualSami)
-                return Utilities.ShowSubtitle(_subtitle.Paragraphs, _subtitleAlternate, mediaPlayer);
+                return UiUtil.ShowSubtitle(_subtitle.Paragraphs, _subtitleAlternate, mediaPlayer);
             if (SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable)
-                return Utilities.ShowSubtitle(_subtitleAlternate.Paragraphs, mediaPlayer);
-            return Utilities.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
+                return UiUtil.ShowSubtitle(_subtitleAlternate.Paragraphs, mediaPlayer);
+            return UiUtil.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
         }
 
         private static void TryLoadIcon(ToolStripButton button, string iconName)
@@ -3792,7 +3798,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 _videoFileName = openFileDialog1.FileName;
-                var info = Utilities.GetVideoInfo(openFileDialog1.FileName);
+                var info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
                 if (info != null && info.Success)
                 {
                     string oldFrameRate = toolStripComboBoxFrameRate.Text;
@@ -8933,15 +8939,15 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.Paragraphs.Clear();
 
             List<VobSubMergedPack> mergedVobSubPacks = new List<VobSubMergedPack>();
-            Nikse.SubtitleEdit.Logic.VobSub.Idx idx = new Logic.VobSub.Idx(matroskaSubtitleInfo.CodecPrivate.SplitToLines());
+            var idx = new Nikse.SubtitleEdit.Core.VobSub.Idx(matroskaSubtitleInfo.CodecPrivate.SplitToLines());
             foreach (var p in sub)
             {
                 if (matroskaSubtitleInfo.ContentEncodingType == 0) // compressed with zlib
                 {
                     bool error = false;
-                    MemoryStream outStream = new MemoryStream();
+                    var outStream = new MemoryStream();
                     var outZStream = new zlib.ZOutputStream(outStream);
-                    MemoryStream inStream = new MemoryStream(p.Data);
+                    var inStream = new MemoryStream(p.Data);
                     byte[] buffer = null;
                     try
                     {
@@ -12676,7 +12682,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_videoInfo.FramesPerSecond > 0)
                     toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", _videoInfo.FramesPerSecond);
 
-                Utilities.InitializeVideoPlayerAndContainer(fileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
+                UiUtil.InitializeVideoPlayerAndContainer(fileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
                 mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
                 mediaPlayer.OnButtonClicked -= MediaPlayer_OnButtonClicked;
                 mediaPlayer.OnButtonClicked += MediaPlayer_OnButtonClicked;
@@ -12764,7 +12770,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static VideoInfo ShowVideoInfo(string fileName)
         {
-            return Utilities.GetVideoInfo(fileName);
+            return UiUtil.GetVideoInfo(fileName);
         }
 
         private void TryToFindAndOpenVideoFile(string fileNameNoExtension)
@@ -14165,7 +14171,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (Configuration.Settings.General.CheckForUpdates && Configuration.Settings.General.LastCheckForUpdates < DateTime.Now.AddDays(-5))
             {
-                _checkForUpdatesHelper = new Nikse.SubtitleEdit.Logic.Forms.CheckForUpdatesHelper();
+                _checkForUpdatesHelper = new CheckForUpdatesHelper();
                 _checkForUpdatesHelper.CheckForUpdates();
                 _timerCheckForUpdates = new Timer();
                 _timerCheckForUpdates.Interval = 7000;
@@ -15046,7 +15052,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p != null)
                 {
                     mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
-                    Utilities.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
+                    UiUtil.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
                     mediaPlayer.Play();
                     _endSeconds = p.EndTime.TotalSeconds;
                 }
@@ -17434,7 +17440,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += pac.Extension;
                 }
-                pac.Save(fileName, _subtitle);
+                pac.Save(fileName, _subtitle, new UiGetPacEncoding());
             }
         }
 
@@ -19172,7 +19178,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         Configuration.Settings.General.VideoPlayer = "VLC";
-                        Utilities.InitializeVideoPlayerAndContainer(VideoFileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
+                        UiUtil.InitializeVideoPlayerAndContainer(VideoFileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
                         mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
                         mediaPlayer.OnButtonClicked -= MediaPlayer_OnButtonClicked;
                         mediaPlayer.OnButtonClicked += MediaPlayer_OnButtonClicked;

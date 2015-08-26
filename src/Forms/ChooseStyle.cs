@@ -1,6 +1,6 @@
-﻿using Nikse.SubtitleEdit.Forms.Styles;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Forms.Styles;
 using System;
 using System.Windows.Forms;
 

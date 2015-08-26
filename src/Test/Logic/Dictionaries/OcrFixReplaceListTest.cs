@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nikse.SubtitleEdit.Logic.Dictionaries;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 
 namespace Test.Logic.Dictionaries
 {

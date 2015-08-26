@@ -1,7 +1,6 @@
-﻿using System;
-using System.Drawing;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {

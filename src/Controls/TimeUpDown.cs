@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using Nikse.Core;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Globalization;
@@ -72,12 +73,12 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (numericUpDown1.Value > NumericUpDownValue)
                     {
-                        SetTotalMilliseconds(milliseconds.Value + Logic.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
+                        SetTotalMilliseconds(milliseconds.Value + Core.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
                     }
                     else if (numericUpDown1.Value < NumericUpDownValue)
                     {
                         if (milliseconds.Value - 100 > 0)
-                            SetTotalMilliseconds(milliseconds.Value - Logic.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
+                            SetTotalMilliseconds(milliseconds.Value - Core.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
                         else if (milliseconds.Value > 0)
                             SetTotalMilliseconds(0);
                     }
@@ -110,7 +111,7 @@ namespace Nikse.SubtitleEdit.Controls
             else
             {
                 var tc = new TimeCode(milliseconds);
-                maskedTextBox1.Text = tc.ToString().Substring(0, 9) + string.Format("{0:00}", Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds));
+                maskedTextBox1.Text = tc.ToString().Substring(0, 9) + string.Format("{0:00}", Core.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds));
             }
         }
 
@@ -184,7 +185,7 @@ namespace Nikse.SubtitleEdit.Controls
                         int milliSeconds;
                         if (int.TryParse(times[3], out milliSeconds))
                         {
-                            milliSeconds = Logic.SubtitleFormats.SubtitleFormat.FramesToMillisecondsMax999(milliSeconds);
+                            milliSeconds = Core.SubtitleFormats.SubtitleFormat.FramesToMillisecondsMax999(milliSeconds);
                         }
 
                         return new TimeCode(hours, minutes, seconds, milliSeconds);

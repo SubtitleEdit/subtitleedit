@@ -1,13 +1,12 @@
-﻿using System.Windows.Forms.VisualStyles;
-using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms;
-using Nikse.SubtitleEdit.Logic.BluRaySup;
-using Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Nikse.SubtitleEdit.Core.BluRaySup;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -644,7 +643,7 @@ namespace Nikse.SubtitleEdit.Logic
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension, outputFolder, overwrite);
                         Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
-                        pac.Save(outputFileName, sub);
+                        pac.Save(outputFileName, sub, null);
                         Console.WriteLine(" done.");
                     }
                 }

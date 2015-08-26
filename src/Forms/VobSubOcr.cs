@@ -1,10 +1,12 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using Nikse.Core;
+using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.TransportStream;
+using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.BluRaySup;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.Binary;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.VobSub;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -256,7 +258,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<XSub> _xSubList;
 
         // DVB (from transport stream)
-        private List<Logic.TransportStream.TransportStreamSubtitle> _dvbSubtitles;
+        private List<TransportStreamSubtitle> _dvbSubtitles;
         private Color _dvbSubColor = Color.Transparent;
 
         private string _lastLine;
@@ -8291,7 +8293,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         // TODO: Get language from ts file
-        internal void Initialize(List<Logic.TransportStream.TransportStreamSubtitle> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
+        internal void Initialize(List<TransportStreamSubtitle> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
         {
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
@@ -8378,14 +8380,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SplitDvbForEachSubImage()
         {
-            var list = new List<Logic.TransportStream.TransportStreamSubtitle>();
+            var list = new List<TransportStreamSubtitle>();
             foreach (var dvbSub in _dvbSubtitles)
             {
                 if (dvbSub.ActiveImageIndex == null)
                 {
                     for (int i = 0; i < dvbSub.Pes.ObjectDataList.Count; i++)
                     {
-                        var newDbvSub = new Logic.TransportStream.TransportStreamSubtitle();
+                        var newDbvSub = new TransportStreamSubtitle();
                         newDbvSub.Pes = dvbSub.Pes;
                         newDbvSub.ActiveImageIndex = i;
                         newDbvSub.StartMilliseconds = dvbSub.StartMilliseconds;

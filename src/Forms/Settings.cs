@@ -1,6 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
@@ -121,22 +121,22 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (gs.VideoPlayer.Trim().Equals("VLC", StringComparison.OrdinalIgnoreCase) && LibVlcDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Checked = true;
-            else if (gs.VideoPlayer.Trim().Equals("MPlayer", StringComparison.OrdinalIgnoreCase) && Utilities.IsMPlayerAvailable)
+            else if (gs.VideoPlayer.Trim().Equals("MPlayer", StringComparison.OrdinalIgnoreCase) && UiUtil.IsMPlayerAvailable)
                 radioButtonVideoPlayerMPlayer.Checked = true;
-            else if (gs.VideoPlayer.Trim().Equals("MPC-HC", StringComparison.OrdinalIgnoreCase) && Utilities.IsMpcHcInstalled)
+            else if (gs.VideoPlayer.Trim().Equals("MPC-HC", StringComparison.OrdinalIgnoreCase) && UiUtil.IsMpcHcInstalled)
                 radioButtonVideoPlayerMpcHc.Checked = true;
-            else if (Utilities.IsQuartsDllInstalled)
+            else if (UiUtil.IsQuartsDllInstalled)
                 radioButtonVideoPlayerDirectShow.Checked = true;
-            else if (Utilities.IsMPlayerAvailable)
+            else if (UiUtil.IsMPlayerAvailable)
                 radioButtonVideoPlayerMPlayer.Checked = true;
             else if (LibVlcDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Checked = true;
 
             if (!LibVlcDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Enabled = false;
-            if (!Utilities.IsMPlayerAvailable)
+            if (!UiUtil.IsMPlayerAvailable)
                 radioButtonVideoPlayerMPlayer.Enabled = false;
-            if (!Utilities.IsQuartsDllInstalled)
+            if (!UiUtil.IsQuartsDllInstalled)
                 radioButtonVideoPlayerDirectShow.Enabled = false;
             if (Logic.VideoPlayers.MpcHC.MpcHc.GetMpcHcFileName() == null)
                 radioButtonVideoPlayerMpcHc.Enabled = false;

@@ -1,6 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
+using System;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -49,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                VideoInfo info = Utilities.GetVideoInfo(openFileDialog1.FileName);
+                VideoInfo info = UiUtil.GetVideoInfo(openFileDialog1.FileName);
                 if (info != null && info.Success)
                 {
                     return info.FramesPerSecond.ToString();

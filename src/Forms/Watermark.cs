@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
-using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -21,9 +20,9 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.FixLargeFonts(this, buttonOK);
         }
 
-        internal void Initialize(Logic.Subtitle subtitle, int firstSelectedIndex)
+        internal void Initialize(Subtitle subtitle, int firstSelectedIndex)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
                 sb.AppendLine(p.Text);
 

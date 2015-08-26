@@ -1,10 +1,10 @@
-﻿using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Forms;
+﻿using Nikse.SubtitleEdit.Core;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {

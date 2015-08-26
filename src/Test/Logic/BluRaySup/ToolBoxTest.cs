@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nikse.SubtitleEdit.Logic.BluRaySup;
+using Nikse.SubtitleEdit.Core.BluRaySup;
 
 namespace Test.Logic.BluRaySup
 {

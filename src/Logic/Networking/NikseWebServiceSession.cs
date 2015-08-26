@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using Nikse.Core;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.Networking
 {

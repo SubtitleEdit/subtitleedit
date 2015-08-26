@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nikse.SubtitleEdit.Core;
+using Nikse.Core;
 
 namespace Nikse.SubtitleEdit.Logic.Forms
 {

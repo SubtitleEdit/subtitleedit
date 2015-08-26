@@ -1,6 +1,6 @@
-﻿using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska;
-using Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -5,9 +5,9 @@ using System.Drawing.Text;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.Core;
 using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
