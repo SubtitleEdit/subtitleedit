@@ -1,8 +1,8 @@
-﻿using Nikse.Core.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {

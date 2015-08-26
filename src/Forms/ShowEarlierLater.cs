@@ -1,7 +1,7 @@
-﻿using Nikse.Core.Enums;
-using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core;
 using System;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Forms
 {

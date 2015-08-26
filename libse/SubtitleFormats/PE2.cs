@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.Core;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {

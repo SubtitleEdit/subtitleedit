@@ -1,7 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.Core;
-using Nikse.Core.Enums;
+using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Core
 {
