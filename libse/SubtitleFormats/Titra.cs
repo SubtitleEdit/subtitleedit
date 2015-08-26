@@ -55,13 +55,13 @@ BEWARE : No more than 40 characters ON A LINE
 ATTENTION : Pas plus de 40 caractères PAR LIGNE
 
 ");
-            const string writeFormant = "* {0} :\t{1}\t{2}\t{3}{4}{5}";
+            const string writeFormat = "* {0} :\t{1}\t{2}\t{3}{4}{5}";
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 index++;
                 var text = HtmlUtil.RemoveHtmlTags(p.Text, true);
-                sb.AppendLine(string.Format(writeFormant, index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), GetMaxCharsForDuration(p.Duration.TotalSeconds) + "c", Environment.NewLine, text));
+                sb.AppendLine(string.Format(writeFormat, index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), GetMaxCharsForDuration(p.Duration.TotalSeconds) + "c", Environment.NewLine, text));
                 sb.AppendLine();
                 if (!text.Contains(Environment.NewLine))
                     sb.AppendLine();
