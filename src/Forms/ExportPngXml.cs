@@ -2685,7 +2685,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 foreach (string item in comboBoxImageFormat.Items)
                 {
                     if (item == Configuration.Settings.Tools.ExportFcpImageType)
+                    {
                         comboBoxImageFormat.SelectedIndex = i;
+                        break;
+                    }
                     i++;
                 }
             }
