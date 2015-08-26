@@ -2685,7 +2685,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 foreach (string item in comboBoxImageFormat.Items)
                 {
                     if (item == Configuration.Settings.Tools.ExportFcpImageType)
+                    {
                         comboBoxImageFormat.SelectedIndex = i;
+                        break;
+                    }
                     i++;
                 }
             }
@@ -2697,7 +2700,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 foreach (string item in comboBoxSubtitleFontSize.Items)
                 {
                     if (item == Convert.ToInt32(_subtitleFontSize).ToString(CultureInfo.InvariantCulture))
+                    {
                         comboBoxSubtitleFontSize.SelectedIndex = i;
+                        break;
+                    }
                     i++;
                 }
                 checkBoxSimpleRender.Checked = Configuration.Settings.Tools.ExportVobSubSimpleRendering;
@@ -2710,7 +2716,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 foreach (string item in comboBoxSubtitleFontSize.Items)
                 {
                     if (item == Convert.ToInt32(_subtitleFontSize).ToString(CultureInfo.InvariantCulture))
+                    {
                         comboBoxSubtitleFontSize.SelectedIndex = i;
+                        break;
+                    }
                     i++;
                 }
             }
@@ -2721,7 +2730,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 foreach (string item in comboBoxSubtitleFontSize.Items)
                 {
                     if (item == Convert.ToInt32(_subtitleFontSize).ToString(CultureInfo.InvariantCulture))
+                    {
                         comboBoxSubtitleFontSize.SelectedIndex = i;
+                        break;
+                    }
                     i++;
                 }
             }
