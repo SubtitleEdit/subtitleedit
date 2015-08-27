@@ -7,95 +7,170 @@ namespace UpdateAssemblyInfo
     internal class Program
     {
 
-        private class Template
+        private class VersionInfo
         {
-            private string templateFile;
-            private string templateText;
+            public string Version { get; set; }
+            public string RevisionGuid { get; set; }
+            public string BuildNumber { get; set; }
+        }      
 
-            public Template(string path)
+        private static void UpdateAssemblyInfo(string templateFileName, VersionInfo versionInfo)
+        {
+            var lines = File.ReadAllLines(templateFileName);
+            var sb = new StringBuilder();
+            bool change = false;
+            foreach (var line in lines)
             {
-                templateFile = path;
-            }
-
-            public void Replace(string source, string replacement)
-            {
-                if (templateText == null)
+                var original = line;
+                var l = line.Trim();
+                while (l.Contains("  "))
                 {
-                    templateText = File.ReadAllText(templateFile);
+                    l = l.Replace("  ", " ");
                 }
-                templateText = templateText.Replace(source, replacement);
+                if (l.StartsWith("[assembly: AssemblyVersion", StringComparison.Ordinal) ||
+                    l.StartsWith("[assembly:AssemblyVersion", StringComparison.Ordinal) ||
+                    l.StartsWith("[assembly: AssemblyFileVersion", StringComparison.Ordinal) ||
+                    l.StartsWith("[assembly:AssemblyFileVersion", StringComparison.Ordinal))
+                {
+                    int begin = original.IndexOf('"');
+                    int end = original.LastIndexOf('"');
+                    if (end > begin && begin > 0)
+                    {
+                        begin++;
+                        string oldVersion = original.Substring(begin, end - begin);
+                        if (oldVersion != versionInfo.Version)
+                        {
+                            change = true;
+                            original = original.Substring(0, begin) + versionInfo.Version + original.Remove(0, end);
+                        }
+                    }
+                } 
+                else if (l.StartsWith("[assembly: AssemblyDescription", StringComparison.Ordinal) ||
+                     l.StartsWith("[assembly:AssemblyDescription", StringComparison.Ordinal))
+                {
+                    int begin = original.IndexOf('"');
+                    int end = original.LastIndexOf('"');
+                    if (end > begin && begin > 0)
+                    {
+                        begin++;
+                        string oldVersion = original.Substring(begin, end - begin);
+                        if (oldVersion != versionInfo.Version)
+                        {
+                            change = true;
+                            original = original.Substring(0, begin) + versionInfo.RevisionGuid + original.Remove(0, end);
+                        }
+                    }
+                }
+                sb.AppendLine(original);
             }
-
-            public void Save(string target)
+            if (change)
             {
-                File.WriteAllText(target, templateText, Encoding.UTF8);
+                File.WriteAllText(templateFileName.Replace(".template", string.Empty), sb.ToString().Trim());
             }
+        }
+
+        private static VersionInfo GetOldVersionNumber(string subtitleEditTemplateFileName)
+        {
+            var version = new VersionInfo { Version = "1.0.0.0", RevisionGuid = "0" };
+            var lines = File.ReadAllLines(subtitleEditTemplateFileName.Replace(".template", string.Empty));
+            foreach (var line in lines)
+            {
+                var l = line.Trim();
+                while (l.Contains("  "))
+                {
+                    l = l.Replace("  ", " ");
+                }
+                if (l.StartsWith("[assembly: AssemblyVersion", StringComparison.Ordinal) ||
+                    l.StartsWith("[assembly:AssemblyVersion", StringComparison.Ordinal) ||
+                    l.StartsWith("[assembly: AssemblyFileVersion", StringComparison.Ordinal) ||
+                    l.StartsWith("[assembly:AssemblyFileVersion", StringComparison.Ordinal))
+                {
+                    int begin = l.IndexOf('"');
+                    int end = l.LastIndexOf('"');
+                    if (end > begin && begin > 0)
+                    {
+                        begin++;
+                        version.Version = l.Substring(begin, end - begin);
+                        version.BuildNumber = version.Version.Substring(version.Version.LastIndexOf('.') + 1);
+                    }
+                }
+                else if (l.StartsWith("[assembly: AssemblyDescription", StringComparison.Ordinal) ||
+                    l.StartsWith("[assembly:AssemblyDescription", StringComparison.Ordinal))
+                {
+                    int begin = l.IndexOf("\"", StringComparison.Ordinal);
+                    int end = l.LastIndexOf("\"", StringComparison.Ordinal);
+                    if (end > begin && begin > 0)
+                    {
+                        begin++;
+                        version.RevisionGuid = l.Substring(begin, end - begin); 
+                    }
+                }
+            }
+            if (string.IsNullOrWhiteSpace(version.Version))
+            {
+                Console.WriteLine("WARNING: Could not find version number - will use 1.0.0");
+            }
+            return version; 
+        }
+
+        private static VersionInfo GetNewVersion()
+        {
+            var version = new VersionInfo { Version = "1.0.0.0", RevisionGuid = "0", BuildNumber = "9999" };
+            var workingFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            var clrHash = new CommandLineRunner();
+            var clrTags = new CommandLineRunner();
+            var gitPath = GetGitPath();
+            if (clrHash.RunCommandAndGetOutput(gitPath, "rev-parse --verify HEAD", workingFolder) && clrTags.RunCommandAndGetOutput(gitPath, "describe --tags", workingFolder))
+            {
+                version.RevisionGuid = clrHash.Result;
+
+                version.Version = clrTags.Result.Substring(0, clrTags.Result.LastIndexOf('-'));
+                version.Version = version.Version.Replace("-", ".");
+
+                version.BuildNumber = version.Version.Remove(0, version.Version.LastIndexOf('.')).Trim('.');
+            }
+            if (version.RevisionGuid == "0" && version.BuildNumber == "9999")
+            {
+                Console.WriteLine("WARNING: Could not run Git - build number will be 9999!");
+            }
+            return version;
         }
 
         private static int Main(string[] args)
         {
             var myName = Environment.GetCommandLineArgs()[0];
-            myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName)
-                   ? System.Reflection.Assembly.GetEntryAssembly().Location
-                   : myName);
-
+            myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName) ? System.Reflection.Assembly.GetEntryAssembly().Location : myName);
             if (args.Length != 2)
             {
-                Console.Write("Usage: " + myName + @" <template> <target>
-  <template> Path to the template file with [GITHASH] and [REVNO]
-  <target>   Path to the target file (AssemblyInfo.cs)
-");
+                Console.WriteLine("Usage: " + myName + " <se-assmbly-template> <libse-assmbly-template>");
                 return 1;
             }
 
-            Console.WriteLine("Updating assembly info...");
-            var workingFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-            var templateFile = args[0];
-            var targetFile = args[1];
-            var template = new Template(templateFile);
+            try
+            {
+                var seTemplateFileName = Environment.GetCommandLineArgs()[1];
+                var libSeTmplateFileName = Environment.GetCommandLineArgs()[2];
+                Console.Write("Updating version number... ");
+                var oldSeVersion = GetOldVersionNumber(seTemplateFileName);
+                var oldLibSeVersion = GetOldVersionNumber(libSeTmplateFileName);
+                var newVersion = GetNewVersion();
 
-            var clrHash = new CommandLineRunner();
-            var clrTags = new CommandLineRunner();
-            var gitPath = GetGitPath();
-            string exceptionMessage;
-            if (clrHash.RunCommandAndGetOutput(gitPath, "rev-parse --verify HEAD", workingFolder) &&
-                clrTags.RunCommandAndGetOutput(gitPath, "describe --tags", workingFolder))
-            {
-                try
+                if (oldSeVersion.RevisionGuid != newVersion.RevisionGuid || oldSeVersion.Version != newVersion.Version ||
+                    oldLibSeVersion.RevisionGuid != newVersion.RevisionGuid || oldLibSeVersion.Version != newVersion.Version)
                 {
-                    template.Replace("[GITHASH]", clrHash.Result);
-                    if (clrTags.Result.IndexOf('-') < 0)
-                        clrTags.Result += "-0";
-                    template.Replace("[REVNO]", clrTags.Result.Split('-')[1]);
-                    template.Save(targetFile);
+                    Console.WriteLine("updating version number to " + newVersion.Version + " " + newVersion.RevisionGuid);
+                    UpdateAssemblyInfo(seTemplateFileName, newVersion);
+                    UpdateAssemblyInfo(libSeTmplateFileName, newVersion);
                     return 0;
                 }
-                catch (Exception ex)
-                {
-                    exceptionMessage = ex.Message;
-                }
+                Console.WriteLine("no changes");
+                return 0;
             }
-            else
+            catch (Exception exception)
             {
-                try
-                {
-                    // allow to compile without git
-                    Console.WriteLine("WARNING: Could not run Git - build number will be 9999!");
-                    template.Replace("[GITHASH]", string.Empty);
-                    template.Replace("[REVNO]", "9999");
-                    template.Save(targetFile);
-                    return 0;
-                }
-                catch (Exception ex)
-                {
-                    exceptionMessage = ex.Message;
-                }
+                Console.WriteLine("Something bad happened when running " + myName + ": " + exception.Message + Environment.NewLine + exception.StackTrace);
+                return 0;
             }
-            Console.WriteLine(myName + ": Could not update AssemblyInfo: " + exceptionMessage);
-            Console.WriteLine(" - Git folder: " + workingFolder);
-            Console.WriteLine(" - Template: " + templateFile);
-            Console.WriteLine(" - Target: " + targetFile);
-            return 1;
         }
 
         private static string GetGitPath()
@@ -130,6 +205,10 @@ namespace UpdateAssemblyInfo
             }
 
             var envSystemDrive = Environment.GetEnvironmentVariable("SystemDrive");
+            if (string.IsNullOrEmpty(envSystemDrive))
+            {
+                throw new Exception("Environment.GetEnvironmentVariable('SystemDrive') returned null!");
+            }
             if (!string.IsNullOrWhiteSpace(envSystemDrive))
             {
                 var path = Path.Combine(envSystemDrive, "Program Files", gitPath);
@@ -163,8 +242,9 @@ namespace UpdateAssemblyInfo
                         return path;
                 }
             }
-            catch
+            catch (Exception exception)
             {
+                throw new Exception("UpdateAssemblyInfo - GetGitPath: " + exception.Message);
             }
 
             Console.WriteLine("WARNING: Might not be able to run Git command line tool!");
