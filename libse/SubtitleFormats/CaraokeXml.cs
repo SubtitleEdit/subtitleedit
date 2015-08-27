@@ -76,8 +76,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             xmlAsText = xmlAsText.Replace("< /", "</");
 
-            var xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             try
             {
                 xml.LoadXml(xmlAsText);

@@ -31,8 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 try
                 {
-                    var xml = new XmlDocument();
-                    xml.XmlResolver = null;
+                    var xml = new XmlDocument { XmlResolver = null };
                     xml.LoadXml(xmlAsString);
                     int numberOfParagraphs = xml.DocumentElement.SelectSingleNode("Lines").ChildNodes.Count;
                     return numberOfParagraphs > 0;
@@ -141,8 +140,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            var xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(sb.ToString().Trim());
 
             XmlNode div = xml.DocumentElement.SelectSingleNode("Lines");

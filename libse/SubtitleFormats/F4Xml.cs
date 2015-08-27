@@ -59,8 +59,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!xml.Contains("<transcript") || !xml.Contains("<content"))
                 return;
 
-            var doc = new XmlDocument();
-            doc.XmlResolver = null;
+            var doc = new XmlDocument { XmlResolver = null };
             doc.LoadXml(xml);
             var content = doc.DocumentElement.SelectSingleNode("content");
             if (content == null)
