@@ -101,8 +101,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!xmlString.Contains("<SpeechSegment"))
                 return;
 
-            var xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             try
             {
                 xml.LoadXml(xmlString);

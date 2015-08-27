@@ -116,8 +116,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!x.Contains("<fcpxml version=\"1.4\">") && !x.Contains("<fcpxml version=\"1.5\">"))
                 return;
 
-            var xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             try
             {
                 xml.LoadXml(x.Trim());
