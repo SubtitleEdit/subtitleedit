@@ -399,12 +399,13 @@ namespace Nikse.SubtitleEdit.Core
             return IsUrl(arr[0]);
         }
 
+        private static readonly string[] UppercaseTags = { "<I>", "<U>", "<B>", "<FONT", "</I>", "</U>", "</B>", "</FONT>" };
+
         public static string FixUpperTags(string text)
         {
             if (string.IsNullOrEmpty(text))
                 return text;
-            var tags = new string[] { "<I>", "<U>", "<B>", "<FONT", "</I>", "</U>", "</B>", "</FONT>" };
-            var idx = text.IndexOfAny(tags, StringComparison.Ordinal);
+            var idx = text.IndexOfAny(UppercaseTags, StringComparison.Ordinal);
             while (idx >= 0)
             {
                 var endIdx = text.IndexOf('>', idx + 2);
@@ -412,7 +413,7 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 var tag = text.Substring(idx, endIdx - idx).ToLowerInvariant();
                 text = text.Remove(idx, endIdx - idx).Insert(idx, tag);
-                idx = text.IndexOfAny(tags, StringComparison.Ordinal);
+                idx = text.IndexOfAny(UppercaseTags, StringComparison.Ordinal);
             }
             return text;
         }
