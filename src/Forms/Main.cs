@@ -3250,6 +3250,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
 
+            labelStartTimeWarning.Text = string.Empty;
+            labelDurationWarning.Text = string.Empty;
+
             _subtitle = new Subtitle(_subtitle.HistoryItems);
             _changeAlternateSubtitleToString = string.Empty;
             _changeSubtitleToString = string.Empty;
