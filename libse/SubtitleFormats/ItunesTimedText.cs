@@ -81,8 +81,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            var xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
             nsmgr.AddNamespace("ttp", "http://www.w3.org/ns/10/ttml#parameter");

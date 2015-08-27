@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     <StoryBlock TimingType='Manual'>
       <SceneBaseBlock NewsID='0' Position='0' NewsRoomInternalID='0'/>
     </StoryBlock>
-    
+
   </FileBody>
 </XIF>";
 
@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         </Content>
       </ThreadedObject>
     </ContentBlock>";
-         
+
             var xml = new XmlDocument();
             var lastTimeCode = new TimeCode(0);
             if (subtitle.Paragraphs.Count > 0)
@@ -163,11 +163,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                      attrColor.InnerText = "7";
                      foregroundColorNode.Attributes.Append(attrColor);
                      paragraphNode.AppendChild(foregroundColorNode);
-                     
+
                     var textNode = xml.CreateElement("Text");
                     textNode.InnerText = line;
                     paragraphNode.AppendChild(textNode);
-
                 }
                 fileBodyNode.AppendChild(content.SelectSingleNode("ContentBlock"));
             }
@@ -214,7 +213,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
                 subtitle.Renumber();
-
             }
             catch (Exception)
             {

@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelOtherSubtitleFileName.Visible = false;
             subtitleListView2.Visible = false;
             buttonFindTextOther.Visible = false;
-            groupBoxImportResult.Width = listBoxSyncPoints.Left + listBoxSyncPoints.Width + 20;            
+            groupBoxImportResult.Width = listBoxSyncPoints.Left + listBoxSyncPoints.Width + 20;
             Width = groupBoxImportResult.Left + groupBoxImportResult.Width + 15;
             SubtitleListview1.Anchor = AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Right;
             buttonSetSyncPoint.Anchor = AnchorStyles.Right;
