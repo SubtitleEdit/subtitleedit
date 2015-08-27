@@ -7238,6 +7238,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 var newParagraph = new Paragraph(currentParagraph);
+                newParagraph.NewSection = false;
 
                 currentParagraph.Text = currentParagraph.Text.Replace("< /i>", "</i>");
                 currentParagraph.Text = currentParagraph.Text.Replace("< i>", "<i>");
@@ -7476,6 +7477,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         originalCurrent.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
                         var originalNew = new Paragraph(newParagraph);
+                        originalNew.NewSection = false;
 
                         lines = originalCurrent.Text.SplitToLines();
 
