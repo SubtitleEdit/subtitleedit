@@ -1547,7 +1547,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             get
             {
-                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                return Assembly.GetEntryAssembly().GetName().Version.ToString();
             }
         }
 
@@ -1555,15 +1555,14 @@ namespace Nikse.SubtitleEdit.Core
         {
             get
             {
-                Assembly assy = Assembly.GetExecutingAssembly();
-                String assyName = assy.GetName().Name;
-                bool isdef = Attribute.IsDefined(assy, typeof(AssemblyDescriptionAttribute));
-                if (isdef)
+                var assembly = Assembly.GetEntryAssembly();
+                string assemblyName = assembly.GetName().Name;
+                if (Attribute.IsDefined(assembly, typeof(AssemblyDescriptionAttribute)))
                 {
-                    Console.WriteLine(assyName);
-                    var adAttr = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(assy, typeof(AssemblyDescriptionAttribute));
-                    if (adAttr != null)
-                        return adAttr.Description;
+                    Console.WriteLine(assemblyName);
+                    var descriptionAttribute = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(assembly, typeof(AssemblyDescriptionAttribute));
+                    if (descriptionAttribute != null)
+                        return descriptionAttribute.Description;
                 }
                 return null;
             }
