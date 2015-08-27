@@ -170,107 +170,106 @@ Name: quicklaunchicon;    Description: {cm:CreateQuickLaunchIcon}; GroupDescript
 Name: reset_dictionaries; Description: {cm:tsk_ResetDictionaries}; GroupDescription: {cm:tsk_Other};       Flags: checkedonce unchecked; Check: DictionariesExist()
 Name: reset_settings;     Description: {cm:tsk_ResetSettings};     GroupDescription: {cm:tsk_Other};       Flags: checkedonce unchecked; Check: SettingsExist()
 
-
 [Files]
-Source: ..\Dictionaries\da_DK_names_etc.xml;       DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\da_DK_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\da_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\dan_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\de_DE_names_etc.xml;       DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\de_DE_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\deu_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\en_GB_names_etc.xml;       DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\en_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\en_US.aff;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\en_US.dic;                 DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\en_US_names_etc.xml;       DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\en_US_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\eng_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\es_MX_names_etc.xml;       DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\es_MX_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\es_NoBreakAfterList.xml;   DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\fi_FI_names_etc.xml;       DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\fi_FI_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\fin_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\fr_FR_names_etc.xml;       DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\fra_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\hrv_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\names_etc.xml;             DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\nld_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\nor_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\por_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\pt_PT_names_etc.xml;       DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\pt_PT_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\ru_RU_names_etc.xml;       DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\ru_RU_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\rus_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\spa_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\srp_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Dictionaries\swe_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: {#bindir}\Hunspellx64.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main
-Source: {#bindir}\Hunspellx86.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\Find.png;                  DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\FixCommonErrors.png;       DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\Help.png;                  DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\New.png;                   DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\Open.png;                  DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\Replace.png;               DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\Save.png;                  DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\SaveAs.png;                DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\Settings.png;              DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\SpellCheck.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\VideoToggle.png;           DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\VisualSync.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\WaveformToggle.png;        DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+Source: "..\Dictionaries\da_DK_names_etc.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\da_DK_user.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\da_NoBreakAfterList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\dan_OCRFixReplaceList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\de_DE_names_etc.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\de_DE_user.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\deu_OCRFixReplaceList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\en_GB_names_etc.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\en_NoBreakAfterList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\en_US.aff"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\en_US.dic"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\en_US_names_etc.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\en_US_user.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\eng_OCRFixReplaceList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\es_MX_names_etc.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\es_MX_user.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\es_NoBreakAfterList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\fi_FI_names_etc.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\fi_FI_user.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\fin_OCRFixReplaceList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\fr_FR_names_etc.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\fra_OCRFixReplaceList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\hrv_OCRFixReplaceList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\names_etc.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\nld_OCRFixReplaceList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\nor_OCRFixReplaceList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\por_OCRFixReplaceList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\pt_PT_names_etc.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\pt_PT_user.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\ru_RU_names_etc.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\ru_RU_user.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\rus_OCRFixReplaceList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\spa_OCRFixReplaceList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\srp_OCRFixReplaceList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "..\Dictionaries\swe_OCRFixReplaceList.xml"; DestDir: "{userappdata}\Subtitle Edit\Dictionaries"; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: "{#bindir}\Hunspellx64.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: main
+Source: "{#bindir}\Hunspellx86.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: main
+Source: "{#bindir}\libse.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: main
+Source: "{#bindir}\Icons\Find.png"; DestDir: "{app}\Icons"; Flags: ignoreversion; Components: main
+Source: "{#bindir}\Icons\FixCommonErrors.png"; DestDir: "{app}\Icons"; Flags: ignoreversion; Components: main
+Source: "{#bindir}\Icons\Help.png"; DestDir: "{app}\Icons"; Flags: ignoreversion; Components: main
+Source: "{#bindir}\Icons\New.png"; DestDir: "{app}\Icons"; Flags: ignoreversion; Components: main
+Source: "{#bindir}\Icons\Open.png"; DestDir: "{app}\Icons"; Flags: ignoreversion; Components: main
+Source: "{#bindir}\Icons\Replace.png"; DestDir: "{app}\Icons"; Flags: ignoreversion; Components: main
+Source: "{#bindir}\Icons\Save.png"; DestDir: "{app}\Icons"; Flags: ignoreversion; Components: main
+Source: "{#bindir}\Icons\SaveAs.png"; DestDir: "{app}\Icons"; Flags: ignoreversion; Components: main
+Source: "{#bindir}\Icons\Settings.png"; DestDir: "{app}\Icons"; Flags: ignoreversion; Components: main
+Source: "{#bindir}\Icons\SpellCheck.png"; DestDir: "{app}\Icons"; Flags: ignoreversion; Components: main
+Source: "{#bindir}\Icons\VideoToggle.png"; DestDir: "{app}\Icons"; Flags: ignoreversion; Components: main
+Source: "{#bindir}\Icons\VisualSync.png"; DestDir: "{app}\Icons"; Flags: ignoreversion; Components: main
+Source: "{#bindir}\Icons\WaveformToggle.png"; DestDir: "{app}\Icons"; Flags: ignoreversion; Components: main
 
 #ifdef localize
-Source: {#bindir}\Languages\ar-EG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\bg-BG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\ca-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\cs-CZ.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\da-DK.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\de-DE.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\el-GR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\es-AR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\es-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\es-MX.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\eu-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\fa-IR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\fi-FI.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\fr-FR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\hr-HR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\hu-HU.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\it-IT.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\ja-JP.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\ko-KR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\nl-NL.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\pl-PL.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\pt-BR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\pt-PT.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\ro-RO.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\ru-RU.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\sl-SI.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\sr-Cyrl-RS.xml;        DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\sr-Latn-RS.xml;        DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\sv-SE.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\th-TH.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\tr-TR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\vi-VN.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\zh-Hans.xml;           DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\zh-tw.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\ar-EG.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\bg-BG.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\ca-ES.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\cs-CZ.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\da-DK.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\de-DE.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\el-GR.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\es-AR.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\es-ES.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\es-MX.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\eu-ES.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\fa-IR.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\fi-FI.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\fr-FR.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\hr-HR.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\hu-HU.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\it-IT.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\ja-JP.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\ko-KR.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\nl-NL.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\pl-PL.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\pt-BR.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\pt-PT.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\ro-RO.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\ru-RU.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\sl-SI.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\sr-Cyrl-RS.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\sr-Latn-RS.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\sv-SE.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\th-TH.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\tr-TR.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\vi-VN.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\zh-Hans.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
+Source: "{#bindir}\Languages\zh-tw.xml"; DestDir: "{app}\Languages"; Flags: ignoreversion; Components: translations
 #endif
 
-Source: {#bindir}\SubtitleEdit.exe;                DestDir: {app};                                    Flags: ignoreversion; Components: main
-Source: ..\Changelog.txt;                          DestDir: {app};                                    Flags: ignoreversion; Components: main
-Source: ..\gpl.txt;                                DestDir: {app};                                    Flags: ignoreversion; Components: main
-Source: ..\Tesseract\msvcp90.dll;                  DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
-Source: ..\Tesseract\msvcr90.dll;                  DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
-Source: ..\Tesseract\tessdata\configs\hocr;        DestDir: {app}\Tesseract\tessdata\configs;         Flags: ignoreversion; Components: main
-Source: ..\Tesseract\tessdata\eng.traineddata;     DestDir: {app}\Tesseract\tessdata;                 Flags: ignoreversion; Components: main
-Source: ..\Tesseract\tessdata\music.traineddata;   DestDir: {app}\Tesseract\tessdata;                 Flags: ignoreversion; Components: main
-Source: ..\Tesseract\tesseract.exe;                DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
-Source: Icons\uninstall.ico;                       DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-
+Source: "{#bindir}\SubtitleEdit.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: main
+Source: "..\Changelog.txt"; DestDir: "{app}"; Flags: ignoreversion; Components: main
+Source: "..\gpl.txt"; DestDir: "{app}"; Flags: ignoreversion; Components: main
+Source: "..\Tesseract\msvcp90.dll"; DestDir: "{app}\Tesseract"; Flags: ignoreversion; Components: main
+Source: "..\Tesseract\msvcr90.dll"; DestDir: "{app}\Tesseract"; Flags: ignoreversion; Components: main
+Source: "..\Tesseract\tessdata\configs\hocr"; DestDir: "{app}\Tesseract\tessdata\configs"; Flags: ignoreversion; Components: main
+Source: "..\Tesseract\tessdata\eng.traineddata"; DestDir: "{app}\Tesseract\tessdata"; Flags: ignoreversion; Components: main
+Source: "..\Tesseract\tessdata\music.traineddata"; DestDir: "{app}\Tesseract\tessdata"; Flags: ignoreversion; Components: main
+Source: "..\Tesseract\tesseract.exe"; DestDir: "{app}\Tesseract"; Flags: ignoreversion; Components: main
+Source: "Icons\uninstall.ico"; DestDir: "{app}\Icons"; Flags: ignoreversion; Components: main
 
 [Icons]
 Name: {group}\Subtitle Edit;                Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
