@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace UpdateAssemblyInfo
 {
@@ -113,15 +114,23 @@ namespace UpdateAssemblyInfo
             return version;
         }
 
+        // 3.4.8-226-g7037fef
+        private static readonly Regex VersionNumberRegex = new Regex(@"^\d+\.\d+\.\d+\-.+$", RegexOptions.Compiled);
+
         private static VersionInfo GetNewVersion()
         {
-            var version = new VersionInfo { Version = "1.0.0.0", RevisionGuid = "0", BuildNumber = "9999" };
+            var version = new VersionInfo { Version = "1.0.0", RevisionGuid = "0", BuildNumber = "9999" };
             var workingFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             var clrHash = new CommandLineRunner();
             var clrTags = new CommandLineRunner();
             var gitPath = GetGitPath();
             if (clrHash.RunCommandAndGetOutput(gitPath, "rev-parse --verify HEAD", workingFolder) && clrTags.RunCommandAndGetOutput(gitPath, "describe --tags", workingFolder))
             {
+                if (!VersionNumberRegex.IsMatch(clrTags.Result))
+                {
+                    throw new Exception("Error: Invalid Git version tag (should number.number.number): '" + clrTags.Result + "'");
+                }
+
                 version.RevisionGuid = clrHash.Result;
 
                 version.Version = clrTags.Result.Substring(0, clrTags.Result.LastIndexOf('-'));
@@ -151,9 +160,9 @@ namespace UpdateAssemblyInfo
                 var seTemplateFileName = Environment.GetCommandLineArgs()[1];
                 var libSeTmplateFileName = Environment.GetCommandLineArgs()[2];
                 Console.Write("Updating version number... ");
+                var newVersion = GetNewVersion();
                 var oldSeVersion = GetOldVersionNumber(seTemplateFileName);
                 var oldLibSeVersion = GetOldVersionNumber(libSeTmplateFileName);
-                var newVersion = GetNewVersion();
 
                 if (oldSeVersion.RevisionGuid != newVersion.RevisionGuid || oldSeVersion.Version != newVersion.Version ||
                     oldLibSeVersion.RevisionGuid != newVersion.RevisionGuid || oldLibSeVersion.Version != newVersion.Version)
