@@ -4,11 +4,11 @@ namespace Nikse.SubtitleEdit.Logic.Networking
 {
     public class UpdateLogEntry
     {
-        public int Id { get; set; }
-        public string UserName { get; set; }
+        public int Id { get; private set; }
+        public string UserName { get; private set; }
         public int Index { get; set; }
-        public DateTime OccuredAt { get; set; }
-        public string Action { get; set; }
+        public DateTime OccuredAt { get; private set; }
+        public string Action { get; private set; }
 
         public UpdateLogEntry(int id, string userName, int index, string action)
         {
