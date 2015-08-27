@@ -12,7 +12,7 @@ namespace UpdateAssemblyInfo
             public string Version { get; set; }
             public string RevisionGuid { get; set; }
             public string BuildNumber { get; set; }
-        }      
+        }
 
         private static void UpdateAssemblyInfo(string templateFileName, VersionInfo versionInfo)
         {
@@ -44,7 +44,7 @@ namespace UpdateAssemblyInfo
                             original = original.Substring(0, begin) + versionInfo.Version + original.Remove(0, end);
                         }
                     }
-                } 
+                }
                 else if (l.StartsWith("[assembly: AssemblyDescription", StringComparison.Ordinal) ||
                      l.StartsWith("[assembly:AssemblyDescription", StringComparison.Ordinal))
                 {
@@ -71,46 +71,46 @@ namespace UpdateAssemblyInfo
 
         private static VersionInfo GetOldVersionNumber(string subtitleEditTemplateFileName)
         {
-            var version = new VersionInfo { Version = "1.0.0.0", RevisionGuid = "0" };
-            var lines = File.ReadAllLines(subtitleEditTemplateFileName.Replace(".template", string.Empty));
-            foreach (var line in lines)
+            var version = new VersionInfo { Version = "1.0.0.0", RevisionGuid = "0", BuildNumber = "0" };
+            var oldFileName = subtitleEditTemplateFileName.Replace(".template", string.Empty);
+            if (File.Exists(oldFileName))
             {
-                var l = line.Trim();
-                while (l.Contains("  "))
+                var lines = File.ReadAllLines(oldFileName);
+                foreach (var line in lines)
                 {
-                    l = l.Replace("  ", " ");
-                }
-                if (l.StartsWith("[assembly: AssemblyVersion", StringComparison.Ordinal) ||
-                    l.StartsWith("[assembly:AssemblyVersion", StringComparison.Ordinal) ||
-                    l.StartsWith("[assembly: AssemblyFileVersion", StringComparison.Ordinal) ||
-                    l.StartsWith("[assembly:AssemblyFileVersion", StringComparison.Ordinal))
-                {
-                    int begin = l.IndexOf('"');
-                    int end = l.LastIndexOf('"');
-                    if (end > begin && begin > 0)
+                    var l = line.Trim();
+                    while (l.Contains("  "))
                     {
-                        begin++;
-                        version.Version = l.Substring(begin, end - begin);
-                        version.BuildNumber = version.Version.Substring(version.Version.LastIndexOf('.') + 1);
+                        l = l.Replace("  ", " ");
                     }
-                }
-                else if (l.StartsWith("[assembly: AssemblyDescription", StringComparison.Ordinal) ||
-                    l.StartsWith("[assembly:AssemblyDescription", StringComparison.Ordinal))
-                {
-                    int begin = l.IndexOf("\"", StringComparison.Ordinal);
-                    int end = l.LastIndexOf("\"", StringComparison.Ordinal);
-                    if (end > begin && begin > 0)
+                    if (l.StartsWith("[assembly: AssemblyVersion", StringComparison.Ordinal) ||
+                        l.StartsWith("[assembly:AssemblyVersion", StringComparison.Ordinal) ||
+                        l.StartsWith("[assembly: AssemblyFileVersion", StringComparison.Ordinal) ||
+                        l.StartsWith("[assembly:AssemblyFileVersion", StringComparison.Ordinal))
                     {
-                        begin++;
-                        version.RevisionGuid = l.Substring(begin, end - begin); 
+                        int begin = l.IndexOf('"');
+                        int end = l.LastIndexOf('"');
+                        if (end > begin && begin > 0)
+                        {
+                            begin++;
+                            version.Version = l.Substring(begin, end - begin);
+                            version.BuildNumber = version.Version.Substring(version.Version.LastIndexOf('.') + 1);
+                        }
+                    }
+                    else if (l.StartsWith("[assembly: AssemblyDescription", StringComparison.Ordinal) ||
+                             l.StartsWith("[assembly:AssemblyDescription", StringComparison.Ordinal))
+                    {
+                        int begin = l.IndexOf("\"", StringComparison.Ordinal);
+                        int end = l.LastIndexOf("\"", StringComparison.Ordinal);
+                        if (end > begin && begin > 0)
+                        {
+                            begin++;
+                            version.RevisionGuid = l.Substring(begin, end - begin);
+                        }
                     }
                 }
             }
-            if (string.IsNullOrWhiteSpace(version.Version))
-            {
-                Console.WriteLine("WARNING: Could not find version number - will use 1.0.0");
-            }
-            return version; 
+            return version;
         }
 
         private static VersionInfo GetNewVersion()

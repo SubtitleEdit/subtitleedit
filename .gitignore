@@ -25,3 +25,4 @@ SubtitleEdit-*-setup.exe
 /src/.nuget/NuGet.exe
 /src/.nuget/NuGet.Config
 /src/packages/
+/libse/Properties/AssemblyInfo.cs
