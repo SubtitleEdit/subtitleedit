@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool LineEndsWithHtmlTag(this string text, bool threeLengthTag, bool includeFont = false)
         {
-            if (text == null) 
+            if (text == null)
                 return false;
 
             var len = text.Length;
@@ -27,7 +27,6 @@ namespace Nikse.SubtitleEdit.Core
             if (includeFont && len > 8 && text[len - 7] == '<' && text[len - 6] == '/')
                 return true;
             return false;
-
         }
 
         public static bool LineBreakStartsWithHtmlTag(this string text, bool threeLengthTag, bool includeFont = false)

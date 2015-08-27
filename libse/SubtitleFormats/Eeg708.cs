@@ -70,8 +70,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!allText.Contains("<EEG708Captions") || !allText.Contains("<Caption"))
                 return;
 
-            var xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             try
             {
                 xml.LoadXml(allText);

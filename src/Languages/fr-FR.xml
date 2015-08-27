@@ -1272,6 +1272,7 @@ Poursuivre ?</SubtitleAppendPrompt>
 
 Continuer ?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analyse des flux de transport - s'il vous plaît patienter...</ParsingTransportStream>
+    <XPercentCompleted>{0}% réalisé</XPercentCompleted>
     <ErrorLoadIdx>Subtitle Edit ne peut pas lire les fichiers .idx :
 - Ils font partie de paires de fichiers idx/sub (également appelés VobSub).
 - Subtitle Edit peut ouvrir le fichier .sub.</ErrorLoadIdx>

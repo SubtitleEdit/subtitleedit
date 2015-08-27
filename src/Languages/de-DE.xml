@@ -360,6 +360,8 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <TranslatorsName>Übersetzername</TranslatorsName>
     <SubtitleListReferenceCode>Untertitellisten Referenzcode</SubtitleListReferenceCode>
     <CountryOfOrigin>Herkunftsland</CountryOfOrigin>
+    <TimeCodeStatus>Zeitstempel-Status</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Zeitstempel: Start des Programms</TimeCodeStartOfProgramme>
     <RevisionNumber>Versionsnummer</RevisionNumber>
     <MaxNoOfDisplayableChars>Max# Zeichen pro Zeile</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max# Zeilen</MaxNumberOfDisplayableRows>
@@ -1271,6 +1273,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <BeforeMergeLinesWithSameText>Vor Zeilenverbinden mit gleichen Text</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Untertitel mit Zeitstempel hat eine andere Zeilenanzahl ({0}) als der aktuelle ({1}) - Trotzdem fortfahren?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Untersuche Transport Stream - Bitte warten...</ParsingTransportStream>
+    <XPercentCompleted>{0}% vollendet</XPercentCompleted>
     <ErrorLoadIdx>Subtitle Edit kann keine .idx Dateien lesen. Sie sind Teile von idx/sub Dateipaaren (VobSub). Die .sub Dateien können geöffnet werden.</ErrorLoadIdx>
     <ErrorLoadRar>Diese Datei ist ein .rar Archiv. Subtitle Edit kann keine komprimierten Dateien öffnen.</ErrorLoadRar>
     <ErrorLoadZip>Diese Datei ist ein .zip Archiv. Subtitle Edit kann keine komprimierten Dateien öffnen.</ErrorLoadZip>
@@ -1504,7 +1507,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Tools>Werkzeuge</Tools>
     <WordLists>Wortlisten</WordLists>
     <SsaStyle>ASS/SSA Formatierung</SsaStyle>
-    <Proxy>Proxy</Proxy>
+    <Network>Netzwerk</Network>
     <ShowToolBarButtons>Knöpfe in Symbolleiste anzeigen</ShowToolBarButtons>
     <New>Neu</New>
     <Open>Öffnen</Open>
@@ -1630,6 +1633,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ProxyUserName>Benutzername</ProxyUserName>
     <ProxyPassword>Passwort</ProxyPassword>
     <ProxyDomain>Domain</ProxyDomain>
+    <NetworkSessionSettings>Netzwerk Sitzungseinstellungen</NetworkSessionSettings>
+    <NetworkSessionNewSound>Audiodatei abspielen beim Eintreffen neuer Nachrichten</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Spiele X Sekunden und zurück, X ist</PlayXSecondsAndBack>
     <StartSceneIndex>Anfangsszenen Text ist</StartSceneIndex>
     <EndSceneIndex>Endszenen Text ist</EndSceneIndex>

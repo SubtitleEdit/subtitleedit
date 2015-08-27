@@ -146,8 +146,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!allText.Contains("<TitlerData") || !allText.Contains("<Data"))
                 return;
 
-            var xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             try
             {
                 xml.LoadXml(allText);
