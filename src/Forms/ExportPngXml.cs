@@ -2098,17 +2098,38 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 //baseLinePadding = (int)Math.Round(baselineOffsetPixels);
 
                 var lefts = new List<float>();
-                if (text.Contains("<font", StringComparison.OrdinalIgnoreCase) || text.Contains("<i>", StringComparison.OrdinalIgnoreCase))
+                if (text.Contains("<font", StringComparison.OrdinalIgnoreCase) || text.Contains("<i>", StringComparison.OrdinalIgnoreCase) || text.Contains("<b>", StringComparison.OrdinalIgnoreCase))
                 {
+                    bool tempItalicOn = false;
+                    bool tempBoldOn = false;
                     foreach (string line in text.SplitToLines())
                     {
-                        var lineNoHtml = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic, HtmlUtil.TagFont);
+                        var tempLine = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagFont);
+
+                        if (tempItalicOn)
+                            tempLine = "<i>" + tempLine;
+
+                        if (tempBoldOn)
+                            tempLine = "<b>" + tempLine;
+
+                        if (tempLine.Contains("<i>") && !tempLine.Contains("</i>"))
+                            tempItalicOn = true;
+
+                        if (tempLine.Contains("<b>") && !tempLine.Contains("</b>"))
+                            tempBoldOn = true;
+
                         if (parameter.AlignLeft)
                             lefts.Add(5);
                         else if (parameter.AlignRight)
-                            lefts.Add(bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) - 15); // calculate via drawing+crop
+                            lefts.Add(bmp.Width - CalcWidthViaDraw(tempLine, parameter) - 15); // calculate via drawing+crop
                         else
-                            lefts.Add((float)((bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) + 5.0) / 2.0)); // calculate via drawing+crop
+                            lefts.Add((float)((bmp.Width - CalcWidthViaDraw(tempLine, parameter) + 5.0) / 2.0)); // calculate via drawing+crop
+
+                        if (line.Contains("</i>"))
+                            tempItalicOn = false;
+
+                        if (line.Contains("</b>"))
+                            tempBoldOn = false;
                     }
                 }
                 else
@@ -2268,7 +2289,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 if (sb.Length > 0)
                                 {
                                     lastText.Append(sb);
-                                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                    TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                 }
                                 if (path.PointCount > 0)
                                 {
@@ -2352,7 +2373,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                                         lastText.Append(sb);
 
-                                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                        TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                     }
                                     if (path.PointCount > 0)
                                     {
@@ -2383,7 +2404,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 if (sb.Length > 0)
                                 {
                                     lastText.Append(sb);
-                                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                    TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                 }
                                 isItalic = true;
                                 i += 2;
@@ -2398,7 +2419,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     sb.Append(t);
                                 }
                                 lastText.Append(sb);
-                                TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                 isItalic = false;
                                 i += 3;
                             }
@@ -2452,7 +2473,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             }
                         }
                         if (sb.Length > 0)
-                            TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                            TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
                         DrawShadowAndPath(parameter, g, path);
                         g.FillPath(new SolidBrush(c), path);
