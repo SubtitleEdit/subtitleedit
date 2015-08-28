@@ -743,7 +743,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     "NO\tINTIME\t\tOUTTIME\t\tXPOS\tYPOS\tFILENAME\tFADEIN\tFADEOUT";
 
                     string dropValue = "30000";
-                    if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "23.98")
+                    if (comboBoxFrameRate.SelectedIndex == -1)
+                    {
+                        var numberAsString = comboBoxFrameRate.Text.Trim().Replace(".", string.Empty).Replace(",", string.Empty);
+                        if (numberAsString.Length > 0 && Utilities.IsInteger(numberAsString))
+                            dropValue = numberAsString;
+                    }
+                    else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "23.98")
                         dropValue = "23976";
                     else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "24")
                         dropValue = "24000";
@@ -756,6 +762,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "59.94")
                         dropValue = "59940";
                     header = header.Replace("[DROPVALUE]", dropValue);
+                    comboBoxFrameRate.SelectedIndex = 0;
 
                     File.WriteAllText(saveFileDialog1.FileName, header + Environment.NewLine + sb);
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
