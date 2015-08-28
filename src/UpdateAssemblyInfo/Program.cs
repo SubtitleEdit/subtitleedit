@@ -54,8 +54,8 @@ namespace UpdateAssemblyInfo
                     if (end > begin && begin > 0)
                     {
                         begin++;
-                        string oldVersion = original.Substring(begin, end - begin);
-                        if (oldVersion != versionInfo.Version)
+                        string oldRevisionGuid = original.Substring(begin, end - begin);
+                        if (oldRevisionGuid != versionInfo.RevisionGuid)
                         {
                             change = true;
                             original = original.Substring(0, begin) + versionInfo.RevisionGuid + original.Remove(0, end);
