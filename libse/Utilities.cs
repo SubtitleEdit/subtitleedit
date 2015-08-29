@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core
         /// <summary>
         /// Cached environment new line characters for faster lookup.
         /// </summary>
-        public static readonly char[] NewLineChars = Environment.NewLine.ToCharArray();
+        public static readonly char[] NewLineChars = { '\r', '\n' };
 
         public static VideoInfo TryReadVideoInfoViaMatroskaHeader(string fileName)
         {
@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Core
             return string.Format("{0:0.0} gb", (float)fileSize / (1024 * 1024 * 1024));
         }
 
-        
+
 
         /// <summary>
         /// Downloads the requested resource as a <see cref="String"/> using the configured <see cref="WebProxy"/>.
@@ -899,7 +899,7 @@ namespace Nikse.SubtitleEdit.Core
 
             try
             {
-                Encoding encoding =DetectEncoding.EncodingTools.DetectInputCodepage(buffer);
+                Encoding encoding = DetectEncoding.EncodingTools.DetectInputCodepage(buffer);
 
                 Encoding greekEncoding = Encoding.GetEncoding(1253); // Greek
                 if (GetCount(greekEncoding.GetString(buffer), AutoDetectWordsGreek) > 5)
