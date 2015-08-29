@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             // "...foobar" / "... foobar" / ". .. foobar"
-            if (text.StartsWith("\"") && (text.StartsWith("\"..") || text.StartsWith("\". .") || text.StartsWith("\" ..") || text.StartsWith("\" . .")))
+            if (text.StartsWith("\"", StringComparison.Ordinal) && (text.StartsWith("\"..", StringComparison.Ordinal) || text.StartsWith("\". .", StringComparison.Ordinal) || text.StartsWith("\" ..", StringComparison.Ordinal) || text.StartsWith("\" . .", StringComparison.Ordinal)))
             {
                 int removeLength = 0;
                 while (removeLength + 1 < text.Length && (text[1 + removeLength] == '.' || text[1 + removeLength] == ' '))
