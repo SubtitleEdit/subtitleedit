@@ -48,7 +48,7 @@ IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
 ECHO.
 ECHO ILRepack...
-"packages\ILRepack.2.0.1\tools\ILRepack.exe" /out:"bin\Release\SubtitleEdit.exe" "bin\Release\SubtitleEdit.exe" "bin\Release\libse.dll" "packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll" "packages\zlib.net.1.0.4.0\lib\zlib.net.dll" "DLLs\Interop.QuartzTypeLib.dll" /targetplatform:v4 /internalize /parallel
+"packages\ILRepack.2.0.5\tools\ILRepack.exe" /out:"bin\Release\SubtitleEdit.exe" "bin\Release\SubtitleEdit.exe" "bin\Release\libse.dll" "packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll" "packages\zlib.net.1.0.4.0\lib\zlib.net.dll" "DLLs\Interop.QuartzTypeLib.dll" /targetplatform:v4 /internalize /parallel
 ECHO.
 ECHO.
 POPD
