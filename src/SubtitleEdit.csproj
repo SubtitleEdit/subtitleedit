@@ -1600,7 +1600,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>"$(ProjectDir)..\build_helpers.bat" rev &amp;&amp; "$(ProjectDir)..\build_helpers.bat" lang</PreBuildEvent>
+    <PreBuildEvent>"$(ProjectDir)..\build_helpers.bat" rev $(ConfigurationName) &amp;&amp; "$(ProjectDir)..\build_helpers.bat" lang $(ConfigurationName)</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5554.16953\content\*.dll" "$(TargetDir)"
