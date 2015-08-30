@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 {
                     namesMultiList.Add(s);
                 }
-                else if (!namesList.Contains(s))
+                else if (s.Length > 1 && !namesList.Contains(s))
                 {
                     namesList.Add(s);
                 }
