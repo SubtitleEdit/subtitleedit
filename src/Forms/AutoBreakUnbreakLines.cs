@@ -9,7 +9,6 @@ namespace Nikse.SubtitleEdit.Forms
     public partial class AutoBreakUnbreakLines : PositionAndSizeForm
     {
         private List<Paragraph> _paragraphs;
-        private int _changes;
         private bool _modeAutoBalance;
         private HashSet<string> _notAllowedFixes = new HashSet<string>();
 
@@ -17,11 +16,6 @@ namespace Nikse.SubtitleEdit.Forms
         public Dictionary<string, string> FixedText
         {
             get { return _fixedText; }
-        }
-
-        public int Changes
-        {
-            get { return _changes; }
         }
 
         public AutoBreakUnbreakLines()
@@ -118,7 +112,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         AddToListView(p, text);
                         _fixedText.Add(p.ID, text);
-                        _changes++;
                     }
                 }
             }
@@ -145,7 +138,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         AddToListView(p, text);
                         _fixedText.Add(p.ID, text);
-                        _changes++;
                     }
                 }
             }
