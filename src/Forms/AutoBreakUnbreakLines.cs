@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (HtmlUtil.RemoveHtmlTags(p.Text, true).Length > minLength || p.Text.Contains(Environment.NewLine))
                 {
-                    var text = Utilities.AutoBreakLine(p.Text, 5, MergeLinesShorterThan, language);
+                    var text = Utilities.AutoBreakLine(p.Text, 5, minLength, language);
                     if (text != p.Text)
                     {
                         AddToListView(p, text);
