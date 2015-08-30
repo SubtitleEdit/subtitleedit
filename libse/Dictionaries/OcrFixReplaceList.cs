@@ -85,21 +85,16 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private static Dictionary<string, string> LoadReplaceList(XmlDocument doc, string name)
         {
             var list = new Dictionary<string, string>();
-            if (doc.DocumentElement != null)
+            if (!IsValidXmlDocument(doc, name))
+                return list;
+            foreach (XmlNode item in doc.SelectSingleNode(name).ChildNodes)
             {
-                XmlNode node = doc.DocumentElement.SelectSingleNode(name);
-                if (node != null)
+                if (item.Attributes != null && item.Attributes["to"] != null && item.Attributes["from"] != null)
                 {
-                    foreach (XmlNode item in node.ChildNodes)
-                    {
-                        if (item.Attributes != null && item.Attributes["to"] != null && item.Attributes["from"] != null)
-                        {
-                            string to = item.Attributes["to"].InnerText;
-                            string from = item.Attributes["from"].InnerText;
-                            if (!list.ContainsKey(from))
-                                list.Add(from, to);
-                        }
-                    }
+                    string to = item.Attributes["to"].InnerText;
+                    string from = item.Attributes["from"].InnerText;
+                    if (!list.ContainsKey(from))
+                        list.Add(from, to);
                 }
             }
             return list;
@@ -108,24 +103,26 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private static Dictionary<string, string> LoadRegExList(XmlDocument doc, string name)
         {
             var list = new Dictionary<string, string>();
-            if (doc.DocumentElement != null)
+            if (!IsValidXmlDocument(doc, name))
+                return list;
+            foreach (XmlNode item in doc.SelectSingleNode(name).ChildNodes)
             {
-                XmlNode node = doc.DocumentElement.SelectSingleNode(name);
-                if (node != null)
+                if (item.Attributes != null && item.Attributes["replaceWith"] != null && item.Attributes["find"] != null)
                 {
-                    foreach (XmlNode item in node.ChildNodes)
-                    {
-                        if (item.Attributes != null && item.Attributes["replaceWith"] != null && item.Attributes["find"] != null)
-                        {
-                            string to = item.Attributes["replaceWith"].InnerText;
-                            string from = item.Attributes["find"].InnerText;
-                            if (!list.ContainsKey(from))
-                                list.Add(from, to);
-                        }
-                    }
+                    string to = item.Attributes["replaceWith"].InnerText;
+                    string from = item.Attributes["find"].InnerText;
+                    if (!list.ContainsKey(from))
+                        list.Add(from, to);
                 }
             }
             return list;
+        }
+
+        private static bool IsValidXmlDocument(XmlDocument doc, string elementName)
+        {
+            if (doc.DocumentElement == null || doc.DocumentElement.SelectSingleNode(elementName) == null)
+                return false;
+            return true;
         }
 
         public string FixOcrErrorViaLineReplaceList(string input)
