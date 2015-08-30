@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             string lower = StrippedText.ToLower();
-
+            const string EndChars = @" ,.!?:;')- <""\r\n";
             foreach (string name in namesEtc)
             {
                 int start = lower.IndexOf(name, StringComparison.OrdinalIgnoreCase);
@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Core
                         int end = start + name.Length;
                         bool endOk = end <= lower.Length;
                         if (endOk)
-                            endOk = end == lower.Length || (@" ,.!?:;')- <""" + Environment.NewLine).Contains(lower[end]);
+                            endOk = end == lower.Length || EndChars.Contains(lower[end]);
 
                         if (endOk && StrippedText.Length >= start + name.Length)
                         {
@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Core
 
             if (checkLastLine)
             {
-                string s = HtmlUtil.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('\"').TrimEnd();
+                string s = HtmlUtil.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('"').TrimEnd();
 
                 bool startWithUppercase = string.IsNullOrEmpty(s) ||
                                           s.EndsWith('.') ||
@@ -214,8 +214,8 @@ namespace Nikse.SubtitleEdit.Core
 
             if (makeUppercaseAfterBreak && StrippedText.Contains(new[] { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' }))
             {
-                const string breakAfterChars = @".!?:;)]}([{";
-
+                const string breakAfterChars = ".!?:;)]}([{";
+                const string ExpectedChars = "\"`´'()<>!?.- \r\n";
                 var sb = new StringBuilder();
                 bool lastWasBreak = false;
                 for (int i = 0; i < StrippedText.Length; i++)
@@ -223,7 +223,7 @@ namespace Nikse.SubtitleEdit.Core
                     var s = StrippedText[i];
                     if (lastWasBreak)
                     {
-                        if (("\"`´'()<>!?.- " + Environment.NewLine).Contains(s))
+                        if (ExpectedChars.Contains(s))
                         {
                             sb.Append(s);
                         }
