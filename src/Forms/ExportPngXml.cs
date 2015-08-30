@@ -118,14 +118,19 @@ namespace Nikse.SubtitleEdit.Forms
                     return d;
                 return 25;
             }
+        }       
+
+        private int MillisecondsToFramesMaxFrameRate(double milliseconds)
+        {
+            int frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / FrameRate));
+            if (frames >= FrameRate)
+                frames = (int)(FrameRate - 0.01);
+            return frames;
         }
 
-        private string BdnXmlTimeCode(TimeCode timecode)
+        private string ToHHMMSSFF(TimeCode timecode)
         {
-            var fr = FrameRate;
-            var tc = new TimeCode(timecode.TotalMilliseconds * (Math.Ceiling(fr) / fr));
-            int frames = SubtitleFormat.MillisecondsToFramesMaxFrameRate(tc.Milliseconds);
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", tc.Hours, tc.Minutes, tc.Seconds, frames);
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", timecode.Hours, timecode.Minutes, timecode.Seconds, MillisecondsToFramesMaxFrameRate(timecode.Milliseconds));
         }
 
         private static ContentAlignment GetAlignmentFromParagraph(MakeBitmapParameter p, SubtitleFormat format, Subtitle subtitle)
@@ -841,7 +846,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 "<Name Title=\"subtitle_exp\" Content=\"\"/>" + Environment.NewLine +
                                 "<Language Code=\"eng\"/>" + Environment.NewLine +
                                 "<Format VideoFormat=\"" + videoFormat + "\" FrameRate=\"" + FrameRate.ToString(CultureInfo.InvariantCulture) + "\" DropFrame=\"False\"/>" + Environment.NewLine +
-                                "<Events Type=\"Graphic\" FirstEventInTC=\"" + BdnXmlTimeCode(first.StartTime) + "\" LastEventOutTC=\"" + BdnXmlTimeCode(last.EndTime) + "\" NumberofEvents=\"" + imagesSavedCount.ToString(CultureInfo.InvariantCulture) + "\"/>" + Environment.NewLine +
+                                "<Events Type=\"Graphic\" FirstEventInTC=\"" + ToHHMMSSFF(first.StartTime) + "\" LastEventOutTC=\"" + ToHHMMSSFF(last.EndTime) + "\" NumberofEvents=\"" + imagesSavedCount.ToString(CultureInfo.InvariantCulture) + "\"/>" + Environment.NewLine +
                                 "</Description>" + Environment.NewLine +
                                 "<Events>" + Environment.NewLine +
                                 "</Events>" + Environment.NewLine +
@@ -1270,8 +1275,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
                             top = param.ScreenHeight - (param.Bitmap.Height / 2);
 
-                        string startTime = BdnXmlTimeCode(param.P.StartTime);
-                        string endTime = BdnXmlTimeCode(param.P.EndTime);
+                        string startTime = ToHHMMSSFF(param.P.StartTime);
+                        string endTime = ToHHMMSSFF(param.P.EndTime);
                         sb.AppendLine(string.Format(paragraphWriteFormat, numberString, startTime, endTime, Path.GetFileName(fileName), left, top));
 
                         param.Saved = true;
@@ -1399,8 +1404,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         //<Event InTC="00:00:24:07" OutTC="00:00:31:13" Forced="False">
                         //  <Graphic Width="696" Height="111" X="612" Y="930">subtitle_exp_0001.png</Graphic>
                         //</Event>
-                        sb.AppendLine("<Event InTC=\"" + BdnXmlTimeCode(param.P.StartTime) + "\" OutTC=\"" +
-                                      BdnXmlTimeCode(param.P.EndTime) + "\" Forced=\"" + param.Forced.ToString().ToLower() + "\">");
+                        sb.AppendLine("<Event InTC=\"" + ToHHMMSSFF(param.P.StartTime) + "\" OutTC=\"" +
+                                      ToHHMMSSFF(param.P.EndTime) + "\" Forced=\"" + param.Forced.ToString().ToLower() + "\">");
 
                         int x = (width - param.Bitmap.Width) / 2;
                         int y = height - (param.Bitmap.Height + param.BottomMargin);
