@@ -1139,7 +1139,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                             else
                             {
-                                sb.Append(Encoding.GetEncoding(950).GetString(buffer, index, 2));                                
+                                sb.Append(Encoding.GetEncoding(950).GetString(buffer, index, 2));
                             }
                         }
                         index++;

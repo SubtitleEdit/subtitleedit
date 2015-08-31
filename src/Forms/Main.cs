@@ -32,7 +32,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private class ComboBoxZoomItem
         {
-
             public string Text { get; set; }
             public double ZoomFactor { get; set; }
 
@@ -40,7 +39,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return Text;
             }
-
         }
 
         private const int TabControlListView = 0;
