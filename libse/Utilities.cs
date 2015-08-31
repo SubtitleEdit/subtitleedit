@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Core
             return string.Format("{0:0.0} gb", (float)fileSize / (1024 * 1024 * 1024));
         }
 
-        
+
 
         /// <summary>
         /// Downloads the requested resource as a <see cref="String"/> using the configured <see cref="WebProxy"/>.
