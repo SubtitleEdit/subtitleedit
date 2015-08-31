@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         public bool Add(string name)
         {
-            name = name.Trim().RemoveControlCharacters();
+            name = name.RemoveControlCharacters().Trim();
             if (name.Length > 1 && name.ContainsLetter())
             {
                 if (name.Contains(' '))
