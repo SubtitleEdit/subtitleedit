@@ -124,7 +124,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAddClick(object sender, EventArgs e)
         {
-            if (textBoxFind.Text.Length > 0)
+            string findText = textBoxFind.Text.RemoveControlCharacters();
+            if (findText.Length > 0)
             {
                 string searchType = SearchTypeNormal;
                 if (radioButtonCaseSensitive.Checked)
@@ -132,7 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (radioButtonRegEx.Checked)
                 {
                     searchType = SearchTypeRegularExpression;
-                    if (!Utilities.IsValidRegex(textBoxFind.Text))
+                    if (!Utilities.IsValidRegex(findText))
                     {
                         MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
                         textBoxFind.Select();
@@ -140,7 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                AddToReplaceListView(true, textBoxFind.Text, textBoxReplace.Text, EnglishSearchTypeToLocal(searchType));
+                AddToReplaceListView(true, findText, textBoxReplace.Text.RemoveControlCharacters(), EnglishSearchTypeToLocal(searchType));
                 textBoxFind.Text = string.Empty;
                 textBoxReplace.Text = string.Empty;
                 GeneratePreview();
