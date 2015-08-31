@@ -872,6 +872,7 @@ namespace Nikse.SubtitleEdit.Core
         public string WaveformZoomIn { get; set; }
         public string WaveformZoomOut { get; set; }
         public string WaveformPlaySelection { get; set; }
+        public string WaveformPlaySelectionEnd { get; set; }
         public string WaveformSearchSilenceForward { get; set; }
         public string WaveformSearchSilenceBack { get; set; }
         public string WaveformAddTextHere { get; set; }
@@ -975,6 +976,7 @@ namespace Nikse.SubtitleEdit.Core
             WaveformVerticalZoom = "Shift+Add";
             WaveformVerticalZoomOut = "Shift+Subtract";
             WaveformPlaySelection = string.Empty;
+            WaveformPlaySelectionEnd = string.Empty;
             GeneralPlayFirstSelected = string.Empty;
             WaveformSearchSilenceForward = string.Empty;
             WaveformSearchSilenceBack = string.Empty;
@@ -2545,6 +2547,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("WaveformPlaySelection");
                 if (subNode != null)
                     settings.Shortcuts.WaveformPlaySelection = subNode.InnerText;
+                subNode = node.SelectSingleNode("WaveformPlaySelectionEnd");
+                if (subNode != null)
+                    settings.Shortcuts.WaveformPlaySelectionEnd = subNode.InnerText;
                 subNode = node.SelectSingleNode("WaveformSearchSilenceForward");
                 if (subNode != null)
                     settings.Shortcuts.WaveformSearchSilenceForward = subNode.InnerText;
@@ -3159,6 +3164,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("WaveformZoomIn", settings.Shortcuts.WaveformZoomIn);
                 textWriter.WriteElementString("WaveformZoomOut", settings.Shortcuts.WaveformZoomOut);
                 textWriter.WriteElementString("WaveformPlaySelection", settings.Shortcuts.WaveformPlaySelection);
+                textWriter.WriteElementString("WaveformPlaySelectionEnd", settings.Shortcuts.WaveformPlaySelectionEnd);
                 textWriter.WriteElementString("WaveformSearchSilenceForward", settings.Shortcuts.WaveformSearchSilenceForward);
                 textWriter.WriteElementString("WaveformSearchSilenceBack", settings.Shortcuts.WaveformSearchSilenceBack);
                 textWriter.WriteElementString("WaveformAddTextHere", settings.Shortcuts.WaveformAddTextHere);
