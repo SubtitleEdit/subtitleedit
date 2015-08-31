@@ -184,6 +184,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         public Paragraph NewSelectionParagraph { get; set; }
+        public Paragraph SelectedParagraph { get { return _selectedParagraph; } }
         public Paragraph RightClickedParagraph { get; private set; }
         public double RightClickedSeconds { get; private set; }
 

@@ -1846,6 +1846,7 @@
             public string WaveformSeekSilenceBack { get; set; }
             public string WaveformAddTextHere { get; set; }
             public string WaveformPlayNewSelection { get; set; }
+            public string WaveformPlayNewSelectionEnd { get; set; }
             public string WaveformPlayFirstSelectedSubtitle { get; set; }
             public string WaveformFocusListView { get; set; }
             public string GoBack1Frame { get; set; }
