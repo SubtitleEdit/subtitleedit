@@ -162,5 +162,28 @@ namespace Nikse.SubtitleEdit.Core
             }
             return false;
         }
+
+        public static string RemoveControlCharacters(this string s)
+        {
+            var sb = new StringBuilder(s.Length);
+            foreach (var ch in s)
+            {
+                if (!Char.IsControl(ch))
+                    sb.Append(ch);
+            }
+            return sb.ToString();
+        }
+
+        public static string RemoveControlCharactersButWhiteSpace(this string s)
+        {
+            var sb = new StringBuilder(s.Length);
+            foreach (var ch in s)
+            {
+                if (!Char.IsControl(ch) || ch == '\u000d' || ch == '\u000a' || ch == '\u0009')
+                    sb.Append(ch);
+            }
+            return sb.ToString();
+        }
+
     }
 }
