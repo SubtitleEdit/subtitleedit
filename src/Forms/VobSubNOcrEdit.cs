@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
 using System.Collections.Generic;

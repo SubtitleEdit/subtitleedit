@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.VideoPlayers;
 //using Nikse.SubtitleEdit.Logic.DirectShow.Custom;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -39,10 +40,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _videoFileName = openFileDialogVideo.FileName;
                 tbFileName.Text = openFileDialogVideo.FileName;
-                _videoInfo = Utilities.GetVideoInfo(_videoFileName);
+                _videoInfo = UiUtil.GetVideoInfo(_videoFileName);
                 var oldPlayer = Configuration.Settings.General.VideoPlayer;
                 Configuration.Settings.General.VideoPlayer = "VLC";
-                Utilities.InitializeVideoPlayerAndContainer(_videoFileName, _videoInfo, mediaPlayer, VideoLoaded, null);
+                UiUtil.InitializeVideoPlayerAndContainer(_videoFileName, _videoInfo, mediaPlayer, VideoLoaded, null);
                 Configuration.Settings.General.VideoPlayer = oldPlayer;
                 _libVlc = mediaPlayer.VideoPlayer as LibVlcDynamic;
             }

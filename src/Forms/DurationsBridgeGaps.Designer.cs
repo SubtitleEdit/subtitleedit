@@ -115,6 +115,8 @@
             0,
             0});
             this.numericUpDownMaxMs.ValueChanged += new System.EventHandler(this.numericUpDownMaxMs_ValueChanged);
+            this.numericUpDownMaxMs.KeyUp += new System.Windows.Forms.KeyEventHandler(this.numericUpDownMaxMs_KeyUp);
+            this.numericUpDownMaxMs.Validated += new System.EventHandler(this.numericUpDownMaxMs_Validated);
             // 
             // labelBridgePart1
             // 
@@ -210,6 +212,8 @@
             0,
             0});
             this.numericUpDownMinMsBetweenLines.ValueChanged += new System.EventHandler(this.numericUpDownMinMsBetweenLines_ValueChanged);
+            this.numericUpDownMinMsBetweenLines.KeyUp += new System.Windows.Forms.KeyEventHandler(this.numericUpDownMinMsBetweenLines_KeyUp);
+            this.numericUpDownMinMsBetweenLines.Validated += new System.EventHandler(this.numericUpDownMinMsBetweenLines_Validated);
             // 
             // DurationsBridgeGaps
             // 
@@ -234,6 +238,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "DurationsBridgeGaps";
+            this.Shown += new System.EventHandler(this.DurationsBridgeGaps_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DurationsBridgeGaps_KeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMs)).EndInit();

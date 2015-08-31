@@ -1,7 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -450,7 +449,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool GetBreakToLetter()
         {
-            if (_language1 != null && (_language1 == "jp" || _language1 == "zh"))
+            if (_language1 != null && (_language1 == "ja" || _language1 == "zh"))
                 return true;
             return false;
         }

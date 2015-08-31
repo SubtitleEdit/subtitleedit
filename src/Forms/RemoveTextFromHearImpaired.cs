@@ -1,10 +1,10 @@
-﻿using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Forms;
+﻿using Nikse.SubtitleEdit.Core;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -33,6 +33,9 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveInterjections.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjections;
             checkBoxRemoveWhereContains.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains;
             checkBoxRemoveIfAllUppercase.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfAllUppercase;
+
+            contextMenuStrip1.Items[0].Text = Configuration.Settings.Language.Main.Menu.ContextMenu.SelectAll;
+            contextMenuStrip1.Items[1].Text = Configuration.Settings.Language.Main.Menu.Edit.InverseSelection;
 
             _language = Configuration.Settings.Language.RemoveTextFromHearImpaired;
             Text = _language.Title;
@@ -275,5 +278,24 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxRemoveIfTextContains.Text = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText;
         }
 
+        private void toolStripMenuItemSelAll_Click(object sender, EventArgs e)
+        {
+            DoSelection(true);
+        }
+
+        private void toolStripMenuItemInvertSel_Click(object sender, EventArgs e)
+        {
+            DoSelection(false);
+        }
+
+        private void DoSelection(bool selectAll)
+        {
+            if (listViewFixes.Items.Count == 0)
+                return;
+            foreach (ListViewItem item in listViewFixes.Items)
+            {
+                item.Checked = selectAll ? selectAll : !item.Checked;
+            }
+        }
     }
 }

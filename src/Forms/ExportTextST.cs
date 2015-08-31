@@ -1,15 +1,11 @@
-﻿// WORK IN PROGRESS - DO NOT REFACTOR //
-// WORK IN PROGRESS - DO NOT REFACTOR //
-// WORK IN PROGRESS - DO NOT REFACTOR //
-
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.VobSub;
+using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.VobSub;
 using System;
 using System.Drawing;
 

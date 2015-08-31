@@ -29,6 +29,8 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         if (!reader.IsEmptyElement && reader.Depth > 0)
                             name.Append('/').Append(reader.Name);
+                        else if (reader.Depth == 0)
+                            language.Name = reader["Name"];
                     }
                     else if (reader.NodeType == XmlNodeType.EndElement)
                     {
@@ -2609,6 +2611,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/ParsingTransportStream":
                     language.Main.ParsingTransportStream = reader.Value;
+                    break;
+                case "Main/XPercentCompleted":
+                    language.Main.XPercentCompleted = reader.Value;
                     break;
                 case "Main/ErrorLoadIdx":
                     language.Main.ErrorLoadIdx = reader.Value;

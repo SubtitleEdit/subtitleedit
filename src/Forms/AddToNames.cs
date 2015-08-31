@@ -1,8 +1,8 @@
-﻿using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Core;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic.Dictionaries;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(text))
             {
-                textBoxAddName.Text = text.Trim().TrimEnd('.').TrimEnd('!').TrimEnd('?');
+                textBoxAddName.Text = text.Trim().TrimEnd('.', '!', '?');
                 if (textBoxAddName.Text.Length > 1)
                     textBoxAddName.Text = char.ToUpper(textBoxAddName.Text[0]) + textBoxAddName.Text.Substring(1);
             }
@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(text))
             {
-                textBoxAddName.Text = text.Trim().TrimEnd('.').TrimEnd('!').TrimEnd('?');
+                textBoxAddName.Text = text.Trim().TrimEnd('.','!', '?');
                 if (textBoxAddName.Text.Length > 1)
                     textBoxAddName.Text = char.ToUpper(textBoxAddName.Text[0]) + textBoxAddName.Text.Substring(1);
             }

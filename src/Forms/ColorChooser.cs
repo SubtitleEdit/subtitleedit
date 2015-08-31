@@ -17,7 +17,7 @@
 
 #region Using directives
 
-using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic.ColorChooser;
 using System;
 using System.Drawing;

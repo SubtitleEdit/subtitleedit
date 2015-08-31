@@ -1,44 +1,74 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChooseLanguage : PositionAndSizeForm
     {
-        public class CultureListItem
+        private class TranslationInfo : IEquatable<TranslationInfo>
         {
-            private CultureInfo _cultureInfo;
-
-            public CultureListItem(CultureInfo cultureInfo)
+            private readonly string _cultureName;
+            public string CultureName
             {
-                _cultureInfo = cultureInfo;
+                get { return _cultureName; }
+            }
+
+            private readonly string _displayName;
+            public string DisplayName
+            {
+                get { return _displayName; }
+            }
+
+            public TranslationInfo(string cultureName, string displayName)
+            {
+                _cultureName = cultureName;
+                try
+                {
+                    var ci = CultureInfo.GetCultureInfo(cultureName);
+                    _displayName = char.ToUpper(displayName[0], ci) + displayName.Substring(1);
+                }
+                catch
+                {
+                    _displayName = char.ToUpperInvariant(displayName[0]) + displayName.Substring(1);
+                }
+            }
+
+            public bool Equals(TranslationInfo ti)
+            {
+                return (ti != null) ? CultureName.Equals(ti.CultureName, StringComparison.OrdinalIgnoreCase) : false;
+            }
+
+            public override bool Equals(Object obj)
+            {
+                return Equals(obj as TranslationInfo);
+            }
+
+            public override int GetHashCode()
+            {
+                return CultureName.ToUpperInvariant().GetHashCode();
             }
 
             public override string ToString()
             {
-                return char.ToUpper(_cultureInfo.NativeName[0]) + _cultureInfo.NativeName.Substring(1);
-            }
-
-            public string Name
-            {
-                get { return _cultureInfo.Name; }
+                return DisplayName;
             }
         }
+
+        private readonly TranslationInfo DefaultTranslation;
+        private readonly TranslationInfo CurrentTranslation;
 
         public string CultureName
         {
             get
             {
-                int index = comboBoxLanguages.SelectedIndex;
-                if (index == -1)
-                    return "en-US";
-                else
-                    return (comboBoxLanguages.Items[index] as CultureListItem).Name;
+                var translation = comboBoxLanguages.SelectedItem as TranslationInfo;
+                return (translation == null) ? DefaultTranslation.CultureName : translation.CultureName;
             }
         }
 
@@ -46,50 +76,51 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
-            List<string> list = new List<string>();
+            var defaultLanguage = new Language();
+            DefaultTranslation = new TranslationInfo(defaultLanguage.General.CultureName, defaultLanguage.Name);
+            var currentLanguage = Configuration.Settings.Language;
+            if (currentLanguage == null)
+            {
+                CurrentTranslation = new TranslationInfo(CultureInfo.CurrentUICulture.Name, CultureInfo.CurrentUICulture.NativeName);
+            }
+            else
+            {
+                CurrentTranslation = new TranslationInfo(currentLanguage.General.CultureName, currentLanguage.Name);
+            }
+
+            var translations = new HashSet<TranslationInfo>();
+            translations.Add(DefaultTranslation);
             if (Directory.Exists(Path.Combine(Configuration.BaseDirectory, "Languages")))
             {
-                string[] versionInfo = Utilities.AssemblyVersion.Split('.');
-                string currentVersion = String.Format("{0}.{1}.{2}", versionInfo[0], versionInfo[1], versionInfo[2]);
+                var versionInfo = Utilities.AssemblyVersion.Split('.');
+                var currentVersion = string.Format("{0}.{1}.{2}", versionInfo[0], versionInfo[1], versionInfo[2]);
+                var document = new XmlDocument { XmlResolver = null };
 
-                foreach (string fileName in Directory.GetFiles(Path.Combine(Configuration.BaseDirectory, "Languages"), "*.xml"))
+                foreach (var fileName in Directory.GetFiles(Path.Combine(Configuration.BaseDirectory, "Languages"), "*.xml"))
                 {
-                    string cultureName = Path.GetFileNameWithoutExtension(fileName);
-                    XmlDocument doc = new XmlDocument();
-                    doc.Load(fileName);
+                    document.Load(fileName);
                     try
                     {
-                        string version = doc.DocumentElement.SelectSingleNode("General/Version").InnerText;
+                        var version = document.DocumentElement.SelectSingleNode("General/Version").InnerText.Trim();
                         if (version == currentVersion)
-                            list.Add(cultureName);
+                        {
+                            var cultureName = document.DocumentElement.SelectSingleNode("General/CultureName").InnerText.Trim();
+                            var displayName = document.DocumentElement.Attributes["Name"].Value.Trim();
+                            if (!string.IsNullOrEmpty(cultureName) && !string.IsNullOrEmpty(displayName))
+                                translations.Add(new TranslationInfo(cultureName, displayName));
+                        }
                     }
                     catch
                     {
                     }
                 }
             }
-            list.Sort();
-            comboBoxLanguages.Items.Add(new CultureListItem(CultureInfo.CreateSpecificCulture("en-US")));
-            foreach (string cultureName in list)
-            {
-                try
-                {
-                    var ci = CultureInfo.CreateSpecificCulture(cultureName);
-                    if (!ci.Name.Equals(cultureName, StringComparison.OrdinalIgnoreCase))
-                        ci = CultureInfo.GetCultureInfo(cultureName);
-                    comboBoxLanguages.Items.Add(new CultureListItem(ci));
-                }
-                catch (ArgumentException)
-                {
-                    System.Diagnostics.Debug.WriteLine(cultureName + " is not a valid culture");
-                }
-            }
 
-            int index = 0;
-            for (int i = 0; i < comboBoxLanguages.Items.Count; i++)
+            int index = -1;
+            foreach (var translation in translations.OrderBy(ti => ti.DisplayName, StringComparer.CurrentCultureIgnoreCase).ThenBy(ti => ti.CultureName, StringComparer.Ordinal))
             {
-                var item = (CultureListItem)comboBoxLanguages.Items[i];
-                if (item.Name == Configuration.Settings.Language.General.CultureName)
+                int i = comboBoxLanguages.Items.Add(translation);
+                if (translation.Equals(CurrentTranslation) || (index < 0 && translation.Equals(DefaultTranslation)))
                     index = i;
             }
             comboBoxLanguages.SelectedIndex = index;

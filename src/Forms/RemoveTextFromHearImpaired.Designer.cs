@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
@@ -55,8 +56,12 @@
             this.checkBoxRemoveTextBetweenBrackets = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveTextBetweenSquares = new System.Windows.Forms.CheckBox();
             this.labelAnd = new System.Windows.Forms.Label();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemSelAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemInvertSel = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxLinesFound.SuspendLayout();
             this.groupBoxRemoveTextConditions.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -105,6 +110,7 @@
             this.columnHeaderLine,
             this.columnHeaderBefore,
             this.columnHeaderAfter});
+            this.listViewFixes.ContextMenuStrip = this.contextMenuStrip1;
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.Location = new System.Drawing.Point(6, 17);
             this.listViewFixes.Name = "listViewFixes";
@@ -381,6 +387,28 @@
             this.labelAnd.TabIndex = 7;
             this.labelAnd.Text = "and";
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSelAll,
+            this.toolStripMenuItemInvertSel});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(155, 48);
+            // 
+            // toolStripMenuItemSelAll
+            // 
+            this.toolStripMenuItemSelAll.Name = "toolStripMenuItemSelAll";
+            this.toolStripMenuItemSelAll.Size = new System.Drawing.Size(154, 22);
+            this.toolStripMenuItemSelAll.Text = "Select all";
+            this.toolStripMenuItemSelAll.Click += new System.EventHandler(this.toolStripMenuItemSelAll_Click);
+            // 
+            // toolStripMenuItemInvertSel
+            // 
+            this.toolStripMenuItemInvertSel.Name = "toolStripMenuItemInvertSel";
+            this.toolStripMenuItemInvertSel.Size = new System.Drawing.Size(154, 22);
+            this.toolStripMenuItemInvertSel.Text = "Invert selection";
+            this.toolStripMenuItemInvertSel.Click += new System.EventHandler(this.toolStripMenuItemInvertSel_Click);
+            // 
             // FormRemoveTextForHearImpaired
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -406,6 +434,7 @@
             this.groupBoxLinesFound.ResumeLayout(false);
             this.groupBoxRemoveTextConditions.ResumeLayout(false);
             this.groupBoxRemoveTextConditions.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -439,5 +468,8 @@
         private System.Windows.Forms.Button buttonEditInterjections;
         private System.Windows.Forms.CheckBox checkBoxColonSeparateLine;
         private System.Windows.Forms.CheckBox checkBoxRemoveIfAllUppercase;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelAll;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInvertSel;
     }
 }

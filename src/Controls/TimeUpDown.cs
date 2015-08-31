@@ -1,5 +1,4 @@
 ﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Globalization;
 using System.Windows.Forms;
@@ -18,7 +17,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public EventHandler TimeCodeChanged;
 
-        private bool _forceHHMMSSFF = false;
+        private bool _forceHHMMSSFF;
 
         internal void ForceHHMMSSFF()
         {
@@ -72,12 +71,12 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (numericUpDown1.Value > NumericUpDownValue)
                     {
-                        SetTotalMilliseconds(milliseconds.Value + Logic.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
+                        SetTotalMilliseconds(milliseconds.Value + Core.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
                     }
                     else if (numericUpDown1.Value < NumericUpDownValue)
                     {
                         if (milliseconds.Value - 100 > 0)
-                            SetTotalMilliseconds(milliseconds.Value - Logic.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
+                            SetTotalMilliseconds(milliseconds.Value - Core.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
                         else if (milliseconds.Value > 0)
                             SetTotalMilliseconds(0);
                     }
@@ -110,7 +109,7 @@ namespace Nikse.SubtitleEdit.Controls
             else
             {
                 var tc = new TimeCode(milliseconds);
-                maskedTextBox1.Text = tc.ToString().Substring(0, 9) + string.Format("{0:00}", Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds));
+                maskedTextBox1.Text = tc.ToString().Substring(0, 9) + string.Format("{0:00}", Core.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds));
             }
         }
 
@@ -146,9 +145,13 @@ namespace Nikse.SubtitleEdit.Controls
 
                         int minutes;
                         int.TryParse(times[1], out minutes);
+                        if (minutes > 59)
+                            minutes = 59;
 
                         int seconds;
                         int.TryParse(times[2], out seconds);
+                        if (seconds > 59)
+                            seconds = 59;
 
                         int milliSeconds;
                         int.TryParse(times[3].PadRight(3, '0'), out milliSeconds);
@@ -180,7 +183,7 @@ namespace Nikse.SubtitleEdit.Controls
                         int milliSeconds;
                         if (int.TryParse(times[3], out milliSeconds))
                         {
-                            milliSeconds = Logic.SubtitleFormats.SubtitleFormat.FramesToMillisecondsMax999(milliSeconds);
+                            milliSeconds = Core.SubtitleFormats.SubtitleFormat.FramesToMillisecondsMax999(milliSeconds);
                         }
 
                         return new TimeCode(hours, minutes, seconds, milliSeconds);

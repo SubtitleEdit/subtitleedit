@@ -1,8 +1,8 @@
-﻿using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Dictionaries;
+﻿using Nikse.SubtitleEdit.Core;
 using System;
 using System.Globalization;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.Dictionaries;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             try
             {
-                var ci = new CultureInfo(languageString.Replace('_', '-'));
+                var ci = CultureInfo.GetCultureInfo(languageString.Replace('_', '-'));
                 _threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
             }
             catch (CultureNotFoundException exception)

@@ -42,12 +42,13 @@
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxUnfixable = new System.Windows.Forms.GroupBox();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).BeginInit();
             this.groupBoxFixesAvailable.SuspendLayout();
             this.groupBoxUnfixable.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -93,6 +94,8 @@
             0,
             0});
             this.numericUpDownDurationMax.ValueChanged += new System.EventHandler(this.numericUpDownDurationMax_ValueChanged);
+            this.numericUpDownDurationMax.KeyUp += new System.Windows.Forms.KeyEventHandler(this.numericUpDownDurationMax_KeyUp);
+            this.numericUpDownDurationMax.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numericUpDownDurationMax_MouseUp);
             // 
             // numericUpDownDurationMin
             // 
@@ -116,6 +119,8 @@
             0,
             0});
             this.numericUpDownDurationMin.ValueChanged += new System.EventHandler(this.numericUpDownDurationMin_ValueChanged);
+            this.numericUpDownDurationMin.KeyUp += new System.Windows.Forms.KeyEventHandler(this.numericUpDownDurationMin_KeyUp);
+            this.numericUpDownDurationMin.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numericUpDownDurationMin_MouseUp);
             // 
             // labelNote
             // 
@@ -213,6 +218,29 @@
             this.groupBoxUnfixable.TabStop = false;
             this.groupBoxUnfixable.Text = "Unable to fix min duration: {0}";
             // 
+            // subtitleListView1
+            // 
+            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.subtitleListView1.DisplayExtraFromExtra = false;
+            this.subtitleListView1.FirstVisibleIndex = -1;
+            this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.subtitleListView1.FullRowSelect = true;
+            this.subtitleListView1.GridLines = true;
+            this.subtitleListView1.HideSelection = false;
+            this.subtitleListView1.Location = new System.Drawing.Point(6, 19);
+            this.subtitleListView1.Name = "subtitleListView1";
+            this.subtitleListView1.OwnerDraw = true;
+            this.subtitleListView1.Size = new System.Drawing.Size(919, 129);
+            this.subtitleListView1.SubtitleFontBold = false;
+            this.subtitleListView1.SubtitleFontName = "Tahoma";
+            this.subtitleListView1.SubtitleFontSize = 8;
+            this.subtitleListView1.TabIndex = 111;
+            this.subtitleListView1.UseCompatibleStateImageBehavior = false;
+            this.subtitleListView1.UseSyntaxColoring = true;
+            this.subtitleListView1.View = System.Windows.Forms.View.Details;
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -234,26 +262,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(931, 460);
             this.splitContainer1.SplitterDistance = 302;
             this.splitContainer1.TabIndex = 54;
-            // 
-            // subtitleListView1
-            // 
-            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.subtitleListView1.DisplayExtraFromExtra = false;
-            this.subtitleListView1.FirstVisibleIndex = -1;
-            this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.subtitleListView1.FullRowSelect = true;
-            this.subtitleListView1.GridLines = true;
-            this.subtitleListView1.HideSelection = false;
-            this.subtitleListView1.Location = new System.Drawing.Point(6, 19);
-            this.subtitleListView1.Name = "subtitleListView1";
-            this.subtitleListView1.OwnerDraw = true;
-            this.subtitleListView1.Size = new System.Drawing.Size(919, 129);
-            this.subtitleListView1.TabIndex = 111;
-            this.subtitleListView1.UseCompatibleStateImageBehavior = false;
-            this.subtitleListView1.UseSyntaxColoring = true;
-            this.subtitleListView1.View = System.Windows.Forms.View.Details;
             // 
             // ApplyDurationLimits
             // 
@@ -277,6 +285,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Apply duration limits";
+            this.Shown += new System.EventHandler(this.ApplyDurationLimits_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ApplyDurationLimits_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).EndInit();
@@ -284,6 +293,7 @@
             this.groupBoxUnfixable.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

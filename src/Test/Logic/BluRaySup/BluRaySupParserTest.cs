@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nikse.SubtitleEdit.Logic.BluRaySup;
+using Nikse.SubtitleEdit.Core.BluRaySup;
 using System.IO;
 
 namespace Test.Logic.BluRaySup

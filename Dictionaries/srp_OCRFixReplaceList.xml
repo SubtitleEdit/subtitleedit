@@ -4,6 +4,9 @@
     <Word from="ču" to="ću" />
     <Word from="češ" to="ćeš" />
     <Word from="če" to="će" />
+    <Word from="ćš" to="ćeš" />
+    <Word from="ćmo" to="ćemo" />
+    <Word from="ćte" to="ćete" />
     <Word from="čemo" to="ćemo" />
     <Word from="čete" to="čete" />
     <Word from="djete" to="dijete" />
@@ -82,7 +85,9 @@
   <EndLines />
   <WholeLines />
   <RegularExpressions>
+    <RegEx find="đž" replaceWith="dž" />
     <RegEx find="ajsmiješnij" replaceWith="ajsmješnij" />
+    <RegEx find="boži[čć]([aeiu]|em|ima)?\b" replaceWith="Božić$1" />
     <RegEx find=" g-dine\.$" replaceWith=" gospodine." />
     <RegEx find=" g-dine +(?=[A-ZČĐŠŽ])" replaceWith=" g. " />
     <RegEx find="([gG])dine? +(?=[A-ZČĐŠŽ])" replaceWith="$1. " />

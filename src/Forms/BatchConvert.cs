@@ -1,9 +1,10 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.BluRaySup;
-using Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -54,7 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string _assStyle;
         private string _ssaStyle;
-        private readonly Logic.Forms.RemoveTextForHI _removeTextForHearingImpaired;
+        private readonly RemoveTextForHI _removeTextForHearingImpaired;
         private readonly ChangeCasing _changeCasing = new ChangeCasing();
         private readonly ChangeCasingNames _changeCasingNames = new ChangeCasingNames();
         private bool _converting;
@@ -193,7 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
             checkBoxSetMinimumDisplayTimeBetweenSubs.Text = l.SetMinMsBetweenSubtitles;
 
-            _removeTextForHearingImpaired = new Logic.Forms.RemoveTextForHI(new Logic.Forms.RemoveTextForHISettings());
+            _removeTextForHearingImpaired = new RemoveTextForHI(new RemoveTextForHISettings());
 
             labelFilter.Text = l.Filter;
             comboBoxFilter.Items[0] = Configuration.Settings.Language.General.AllFiles;
@@ -923,7 +924,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    p.Subtitle = Logic.Forms.SplitLongLinesHelper.SplitLongLinesInSubtitle(p.Subtitle, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.General.SubtitleLineMaximumLength);
+                    p.Subtitle = SplitLongLinesHelper.SplitLongLinesInSubtitle(p.Subtitle, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.General.SubtitleLineMaximumLength);
                 }
                 catch (Exception exception)
                 {

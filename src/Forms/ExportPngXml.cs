@@ -1,8 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using Nikse.SubtitleEdit.Logic.VobSub;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -118,14 +118,19 @@ namespace Nikse.SubtitleEdit.Forms
                     return d;
                 return 25;
             }
+        }       
+
+        private int MillisecondsToFramesMaxFrameRate(double milliseconds)
+        {
+            int frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / FrameRate));
+            if (frames >= FrameRate)
+                frames = (int)(FrameRate - 0.01);
+            return frames;
         }
 
-        private string BdnXmlTimeCode(TimeCode timecode)
+        private string ToHHMMSSFF(TimeCode timecode)
         {
-            var fr = FrameRate;
-            var tc = new TimeCode(timecode.TotalMilliseconds * (Math.Ceiling(fr) / fr));
-            int frames = SubtitleFormat.MillisecondsToFramesMaxFrameRate(tc.Milliseconds);
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", tc.Hours, tc.Minutes, tc.Seconds, frames);
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", timecode.Hours, timecode.Minutes, timecode.Seconds, MillisecondsToFramesMaxFrameRate(timecode.Milliseconds));
         }
 
         private static ContentAlignment GetAlignmentFromParagraph(MakeBitmapParameter p, SubtitleFormat format, Subtitle subtitle)
@@ -248,7 +253,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void MakeBluRaySupImage(MakeBitmapParameter param)
         {
-            var brSub = new Logic.BluRaySup.BluRaySupPicture
+            var brSub = new BluRaySupPicture
             {
                 StartTime = (long)param.P.StartTime.TotalMilliseconds,
                 EndTime = (long)param.P.EndTime.TotalMilliseconds,
@@ -284,14 +289,14 @@ namespace Nikse.SubtitleEdit.Forms
                                 g.DrawImage(bmp, left, top);
                                 g.Dispose();
                             }
-                            param.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, fullSize, param.FramesPerSeconds, 0, 0, ContentAlignment.BottomCenter);
+                            param.Buffer = BluRaySupPicture.CreateSupFrame(brSub, fullSize, param.FramesPerSeconds, 0, 0, ContentAlignment.BottomCenter);
                         }
                     }
                 }
             }
             else
             {
-                param.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, param.Bitmap, param.FramesPerSeconds, param.BottomMargin, param.LeftRightMargin, param.Alignment);
+                param.Buffer = BluRaySupPicture.CreateSupFrame(brSub, param.Bitmap, param.FramesPerSeconds, param.BottomMargin, param.LeftRightMargin, param.Alignment);
             }
         }
 
@@ -743,7 +748,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     "NO\tINTIME\t\tOUTTIME\t\tXPOS\tYPOS\tFILENAME\tFADEIN\tFADEOUT";
 
                     string dropValue = "30000";
-                    if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "23.98")
+                    if (comboBoxFrameRate.SelectedIndex == -1)
+                    {
+                        var numberAsString = comboBoxFrameRate.Text.Trim().Replace(".", string.Empty).Replace(",", string.Empty);
+                        if (numberAsString.Length > 0 && Utilities.IsInteger(numberAsString))
+                            dropValue = numberAsString;
+                    }
+                    else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "23.98")
                         dropValue = "23976";
                     else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "24")
                         dropValue = "24000";
@@ -756,6 +767,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "59.94")
                         dropValue = "59940";
                     header = header.Replace("[DROPVALUE]", dropValue);
+                    comboBoxFrameRate.SelectedIndex = 0;
 
                     File.WriteAllText(saveFileDialog1.FileName, header + Environment.NewLine + sb);
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
@@ -834,7 +846,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 "<Name Title=\"subtitle_exp\" Content=\"\"/>" + Environment.NewLine +
                                 "<Language Code=\"eng\"/>" + Environment.NewLine +
                                 "<Format VideoFormat=\"" + videoFormat + "\" FrameRate=\"" + FrameRate.ToString(CultureInfo.InvariantCulture) + "\" DropFrame=\"False\"/>" + Environment.NewLine +
-                                "<Events Type=\"Graphic\" FirstEventInTC=\"" + BdnXmlTimeCode(first.StartTime) + "\" LastEventOutTC=\"" + BdnXmlTimeCode(last.EndTime) + "\" NumberofEvents=\"" + imagesSavedCount.ToString(CultureInfo.InvariantCulture) + "\"/>" + Environment.NewLine +
+                                "<Events Type=\"Graphic\" FirstEventInTC=\"" + ToHHMMSSFF(first.StartTime) + "\" LastEventOutTC=\"" + ToHHMMSSFF(last.EndTime) + "\" NumberofEvents=\"" + imagesSavedCount.ToString(CultureInfo.InvariantCulture) + "\"/>" + Environment.NewLine +
                                 "</Description>" + Environment.NewLine +
                                 "<Events>" + Environment.NewLine +
                                 "</Events>" + Environment.NewLine +
@@ -1263,8 +1275,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
                             top = param.ScreenHeight - (param.Bitmap.Height / 2);
 
-                        string startTime = BdnXmlTimeCode(param.P.StartTime);
-                        string endTime = BdnXmlTimeCode(param.P.EndTime);
+                        string startTime = ToHHMMSSFF(param.P.StartTime);
+                        string endTime = ToHHMMSSFF(param.P.EndTime);
                         sb.AppendLine(string.Format(paragraphWriteFormat, numberString, startTime, endTime, Path.GetFileName(fileName), left, top));
 
                         param.Saved = true;
@@ -1392,8 +1404,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         //<Event InTC="00:00:24:07" OutTC="00:00:31:13" Forced="False">
                         //  <Graphic Width="696" Height="111" X="612" Y="930">subtitle_exp_0001.png</Graphic>
                         //</Event>
-                        sb.AppendLine("<Event InTC=\"" + BdnXmlTimeCode(param.P.StartTime) + "\" OutTC=\"" +
-                                      BdnXmlTimeCode(param.P.EndTime) + "\" Forced=\"" + param.Forced.ToString().ToLower() + "\">");
+                        sb.AppendLine("<Event InTC=\"" + ToHHMMSSFF(param.P.StartTime) + "\" OutTC=\"" +
+                                      ToHHMMSSFF(param.P.EndTime) + "\" Forced=\"" + param.Forced.ToString().ToLower() + "\">");
 
                         int x = (width - param.Bitmap.Width) / 2;
                         int y = height - (param.Bitmap.Height + param.BottomMargin);
@@ -2098,17 +2110,38 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 //baseLinePadding = (int)Math.Round(baselineOffsetPixels);
 
                 var lefts = new List<float>();
-                if (text.Contains("<font", StringComparison.OrdinalIgnoreCase) || text.Contains("<i>", StringComparison.OrdinalIgnoreCase))
+                if (text.Contains("<font", StringComparison.OrdinalIgnoreCase) || text.Contains("<i>", StringComparison.OrdinalIgnoreCase) || text.Contains("<b>", StringComparison.OrdinalIgnoreCase))
                 {
+                    bool tempItalicOn = false;
+                    bool tempBoldOn = false;
                     foreach (string line in text.SplitToLines())
                     {
-                        var lineNoHtml = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic, HtmlUtil.TagFont);
+                        var tempLine = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagFont);
+
+                        if (tempItalicOn)
+                            tempLine = "<i>" + tempLine;
+
+                        if (tempBoldOn)
+                            tempLine = "<b>" + tempLine;
+
+                        if (tempLine.Contains("<i>") && !tempLine.Contains("</i>"))
+                            tempItalicOn = true;
+
+                        if (tempLine.Contains("<b>") && !tempLine.Contains("</b>"))
+                            tempBoldOn = true;
+
                         if (parameter.AlignLeft)
                             lefts.Add(5);
                         else if (parameter.AlignRight)
-                            lefts.Add(bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) - 15); // calculate via drawing+crop
+                            lefts.Add(bmp.Width - CalcWidthViaDraw(tempLine, parameter) - 15); // calculate via drawing+crop
                         else
-                            lefts.Add((float)((bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) + 5.0) / 2.0)); // calculate via drawing+crop
+                            lefts.Add((float)((bmp.Width - CalcWidthViaDraw(tempLine, parameter) + 5.0) / 2.0)); // calculate via drawing+crop
+
+                        if (line.Contains("</i>"))
+                            tempItalicOn = false;
+
+                        if (line.Contains("</b>"))
+                            tempBoldOn = false;
                     }
                 }
                 else
@@ -2268,7 +2301,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 if (sb.Length > 0)
                                 {
                                     lastText.Append(sb);
-                                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                    TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                 }
                                 if (path.PointCount > 0)
                                 {
@@ -2352,7 +2385,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                                         lastText.Append(sb);
 
-                                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                        TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                     }
                                     if (path.PointCount > 0)
                                     {
@@ -2383,7 +2416,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 if (sb.Length > 0)
                                 {
                                     lastText.Append(sb);
-                                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                    TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                 }
                                 isItalic = true;
                                 i += 2;
@@ -2398,7 +2431,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     sb.Append(t);
                                 }
                                 lastText.Append(sb);
-                                TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                 isItalic = false;
                                 i += 3;
                             }
@@ -2452,7 +2485,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             }
                         }
                         if (sb.Length > 0)
-                            TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                            TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
                         DrawShadowAndPath(parameter, g, path);
                         g.FillPath(new SolidBrush(c), path);
@@ -2685,7 +2718,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 foreach (string item in comboBoxImageFormat.Items)
                 {
                     if (item == Configuration.Settings.Tools.ExportFcpImageType)
+                    {
                         comboBoxImageFormat.SelectedIndex = i;
+                        break;
+                    }
                     i++;
                 }
             }
@@ -2697,7 +2733,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 foreach (string item in comboBoxSubtitleFontSize.Items)
                 {
                     if (item == Convert.ToInt32(_subtitleFontSize).ToString(CultureInfo.InvariantCulture))
+                    {
                         comboBoxSubtitleFontSize.SelectedIndex = i;
+                        break;
+                    }
                     i++;
                 }
                 checkBoxSimpleRender.Checked = Configuration.Settings.Tools.ExportVobSubSimpleRendering;
@@ -2710,7 +2749,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 foreach (string item in comboBoxSubtitleFontSize.Items)
                 {
                     if (item == Convert.ToInt32(_subtitleFontSize).ToString(CultureInfo.InvariantCulture))
+                    {
                         comboBoxSubtitleFontSize.SelectedIndex = i;
+                        break;
+                    }
                     i++;
                 }
             }
@@ -2721,7 +2763,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 foreach (string item in comboBoxSubtitleFontSize.Items)
                 {
                     if (item == Convert.ToInt32(_subtitleFontSize).ToString(CultureInfo.InvariantCulture))
+                    {
                         comboBoxSubtitleFontSize.SelectedIndex = i;
+                        break;
+                    }
                     i++;
                 }
             }
@@ -3844,7 +3889,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             subtitleListView1.Columns[columnIndexText].Width = -2;
         }
 
-        private void SubtitleListView1InitializeLanguage(LanguageStructure.General general, Logic.Settings settings)
+        private void SubtitleListView1InitializeLanguage(LanguageStructure.General general, Core.Settings settings)
         {
             int columnIndexNumber = 0;
             int columnIndexStart = 1;

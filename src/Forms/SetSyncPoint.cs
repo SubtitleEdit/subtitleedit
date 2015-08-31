@@ -1,9 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using System;
+using System.IO;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -135,9 +135,9 @@ namespace Nikse.SubtitleEdit.Forms
                     videoPlayerContainer1.VideoPlayer.DisposeVideoPlayer();
                 }
 
-                VideoInfo videoInfo = Utilities.GetVideoInfo(fileName);
+                VideoInfo videoInfo = UiUtil.GetVideoInfo(fileName);
 
-                Utilities.InitializeVideoPlayerAndContainer(fileName, videoInfo, videoPlayerContainer1, VideoStartLoaded, VideoStartEnded);
+                UiUtil.InitializeVideoPlayerAndContainer(fileName, videoInfo, videoPlayerContainer1, VideoStartLoaded, VideoStartEnded);
             }
         }
 
@@ -189,7 +189,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (pos != _lastPosition)
                 {
-                    Utilities.ShowSubtitle(_subtitle.Paragraphs, videoPlayerContainer1);
+                    UiUtil.ShowSubtitle(_subtitle.Paragraphs, videoPlayerContainer1);
                     timeUpDownLine.TimeCode = TimeCode.FromSeconds(pos);
                     _lastPosition = pos;
                 }

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
-using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InsertLanguageCharacter(object sender, EventArgs e)
         {
             var toolStripMenuItem = sender as ToolStripMenuItem;
-            if (toolStripMenuItem != null) 
+            if (toolStripMenuItem != null)
                 textBoxCharacters.Text = textBoxCharacters.Text.Insert(textBoxCharacters.SelectionStart, toolStripMenuItem.Text);
         }
 

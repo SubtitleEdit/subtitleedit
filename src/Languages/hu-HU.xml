@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="Hungarian">
+<Language Name="magyar">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.8</Version>
-    <TranslatedBy>Fordító: ZityiSoft Team (http://szoftverforditasok.hu)</TranslatedBy>
+    <TranslatedBy>Fordító: Zityi's Translator Team (http://szoftverforditasok.hu)</TranslatedBy>
     <CultureName>hu-HU</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
@@ -65,6 +65,8 @@
     <ControlsWindowTitle>Vezérlők - {0}</ControlsWindowTitle>
     <Advanced>Speciális</Advanced>
     <Style>Stílus</Style>
+    <StyleLanguage>Stílus / Nyelv</StyleLanguage>
+    <Character>Karakter</Character>
     <Class>Osztály</Class>
     <GeneralText>Általános</GeneralText>
     <LineNumber>LineSor</LineNumber>
@@ -109,7 +111,25 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Spektrogram létrehozása...</GeneratingSpectrogram>
     <ExtractingSeconds>Audió kiemelés: {0:0.0} másodperc</ExtractingSeconds>
     <ExtractingMinutes>Audió kiemelés: {0}.{1:00} perc</ExtractingMinutes>
+    <WaveFileNotFound>Nem található a kiemelt wave fájl!
+Ehhez a funkcióhoz VLC media player 1.1.x vagy újabb ({0}-bit) szükséges.
+
+Parancssor: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} nem tudta kiemelni az audió adatokat a wave fájlból!
+
+Parancssor: {1} {2}
+
+Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
+    <LowDiskSpace>KEVÉS A LEMEZTERÜLET!</LowDiskSpace>
+    <FreeDiskSpace>{0} szabad</FreeDiskSpace>
   </AddWaveform>
+  <AddWaveformBatch>
+    <Title>Hullámforma adatok kötegelt létrehozása</Title>
+    <ExtractingAudio>Hang kiemelése...</ExtractingAudio>
+    <Calculating>Kiszámítás...</Calculating>
+    <Done>Kész</Done>
+    <Error>Hiba</Error>
+  </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Időtartam beállítások</Title>
     <AdjustVia>Igazítás</AdjustVia>
@@ -151,6 +171,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Convert>Konvertálás</Convert>
     <NothingToConvert>Nincs konvertálandó!</NothingToConvert>
     <PleaseChooseOutputFolder>Kérjük, válasszon kimeneti mappát</PleaseChooseOutputFolder>
+    <NotConverted>Sikertelen</NotConverted>
     <Converted>Konvertálva</Converted>
     <ConvertedX>Konvertálva ({0})</ConvertedX>
     <Settings>Beállítások</Settings>
@@ -160,6 +181,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ScanningFolder>Feliratfájlok keresése a(z){0} mappában és almappáiban...</ScanningFolder>
     <Recursive>Tartalmazza az almappákat is</Recursive>
     <SetMinMsBetweenSubtitles>Min. ezredmp. beállítása a feliratok között</SetMinMsBetweenSubtitles>
+    <PlainText>Egyszerű szöveg</PlainText>
+    <Ocr>OCR...</Ocr>
+    <Filter>Szűrő</Filter>
+    <FilterSkipped>Kihagyva a szűrő által</FilterSkipped>
+    <FilterSrtNoUtf8BOM>SubRip (.srt) fájlok UTF-8 BOM fejléc nélkül</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>Több mint két sor egy feliratban</FilterMoreThanTwoLines>
+    <FilterContains>Szöveget tartalmaz...</FilterContains>
+    <FixCommonErrorsErrorX>Gyakori hibák javítása: {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>Csoportos csere: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Automatikus kiegyenlítés: {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>Projektor</Title>
@@ -192,6 +223,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <ChangeSpeedInPercent>
     <Title>Sebesség beállítása százalékban</Title>
     <Info>A felirat sebességének módosítása százalékban</Info>
+    <Custom>Egyéni</Custom>
+    <ToDropFrame>To drop frame</ToDropFrame>
+    <FromDropFrame>From drop frame</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Frissítések keresése</Title>
@@ -279,8 +313,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BridgeGapsSmallerThanXPart1>A következőnél kisebb hézagok áthidalása:</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milliszekundum</BridgeGapsSmallerThanXPart2>
     <MinMillisecondsBetweenLines>Min. ezredmásodperc a sorok között</MinMillisecondsBetweenLines>
-    <ProlongEndTime>Previous text takes all gap time</ProlongEndTime>
-    <DivideEven>Texts divides gap time</DivideEven>
+    <ProlongEndTime>A korábbi szöveg hézag időegységét kapja</ProlongEndTime>
+    <DivideEven>A szövegek közti rész idejének felosztása</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
     <Title>Feliratok rippelése IFO/VOB fájlokból (DVD)</Title>
@@ -326,6 +360,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TranslatorsName>Fordítók neve</TranslatorsName>
     <SubtitleListReferenceCode>Felirat lista referencia kód</SubtitleListReferenceCode>
     <CountryOfOrigin>Származási ország</CountryOfOrigin>
+    <TimeCodeStatus>Időkód állapota</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Időkód: Program indítása</TimeCodeStartOfProgramme>
     <RevisionNumber>Revíziószám</RevisionNumber>
     <MaxNoOfDisplayableChars>Max# karakter soronként</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max# sor</MaxNumberOfDisplayableRows>
@@ -389,6 +425,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShadowWidth>Árnyék szélessége</ShadowWidth>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Képformátum</ImageFormat>
+    <FullFrameImage>Teljes képkocka</FullFrameImage>
     <SimpleRendering>Egyszerű leképezés</SimpleRendering>
     <AntiAliasingWithTransparency>Élsimítás átlátszósággal</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
@@ -403,15 +440,23 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Jobbra</Right>
     <Center>Középre</Center>
     <BottomMargin>Alsó margó</BottomMargin>
-    <SaveBluRraySupAs>Válassza ki a Blu-ray sup fájlnevet</SaveBluRraySupAs>
-    <SaveVobSubAs>Válassza ki a VobSub fájlnevet</SaveVobSubAs>
-    <SaveFabImageScriptAs>Válassza ki a Blu-ray sup fájlnevet</SaveFabImageScriptAs>
-    <SaveDvdStudioProStlAs>Válassza ki a DVD Studio Pro STL fájlnevet</SaveDvdStudioProStlAs>
+    <LeftRightMargin>Bal/jobb margó</LeftRightMargin>
+    <SaveBluRraySupAs>Válassza ki a Blu-ray sup fájl nevét</SaveBluRraySupAs>
+    <SaveVobSubAs>Válassza ki a VobSub fájl nevét</SaveVobSubAs>
+    <SaveFabImageScriptAs>Válassza ki a FAB képszkript fájl nevét</SaveFabImageScriptAs>
+    <SaveDvdStudioProStlAs>Válassza ki a DVD Studio Pro STL fájl nevét</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Válassza ki a Digital Cinema Interop fájl nevét</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Válassza ki a Premiere EDL fájl nevét</SavePremiereEdlAs>
+    <SaveFcpAs>Válassza ki a Final Cut Pro xml fájl nevét</SaveFcpAs>
+    <SaveDostAs>Válassza ki a DoStudio dost fájl nevét</SaveDostAs>
     <SomeLinesWereTooLongX>Néhány sor túl hosszú volt:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Sor magassága</LineHeight>
     <BoxSingleLine>Mező - egy sor</BoxSingleLine>
     <BoxMultiLine>Mező - több sor</BoxMultiLine>
+    <Forced>Kényszerített</Forced>
+    <ChooseBackgroundColor>Válasszon háttérszínt</ChooseBackgroundColor>
+    <SaveImageAs>Kép mentése másként...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Szöveg exportálása</Title>
@@ -574,6 +619,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} fontos napló üzenetek!</NumberOfImportantLogMessages>
     <FixedOkXY>Fixálva és OK - '{0}': {1}</FixedOkXY>
+    <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Szüksége van szótárakra?</Title>
@@ -670,6 +718,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Fájlnév</FileName>
     <Join>Egyesítés</Join>
     <TotalNumberOfLinesX>Sorok száma összesen: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Note: Files must already have correct time codes</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -684,6 +733,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RestoreAutoBackup>Automatikus biztonsági mentés visszaállítása...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha tulajdonságok...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha tulajdonságok...</SubStationAlphaProperties>
+        <EbuProperties>EBU STL tulajdonságok...</EbuProperties>
+        <PacProperties>PAC tulajdonságok...</PacProperties>
         <OpenOriginal>Eredeti felirat megnyitása (fordító mód)...</OpenOriginal>
         <SaveOriginal>Eredeti felirat mentése</SaveOriginal>
         <CloseOriginal>Eredeti felirat bezárása</CloseOriginal>
@@ -725,6 +776,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Redo>Újra</Redo>
         <ShowUndoHistory>Előzmények megjelenítése (visszavonási mód)</ShowUndoHistory>
         <InsertUnicodeSymbol>Unicode szimbólum beszúrása</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>Insert Unicode control characters</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>Left-to-right mark (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>Right-to-left mark (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>Start of left-to-right embedding (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Start of right-to-left embedding (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>Start of left-to-right override (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>Start of right-to-left override (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>&amp;Keresés</Find>
         <FindNext>Következő keresése</FindNext>
         <Replace>Csere</Replace>
@@ -783,6 +841,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Videó fájl választás</CloseVideo>
         <ImportSceneChanges>Jelenet változások importálása...</ImportSceneChanges>
         <RemoveSceneChanges>Jelenet váltások eltávolítása</RemoveSceneChanges>
+        <WaveformBatchGenerate>Hullámformák csoportos létrehozása...</WaveformBatchGenerate>
         <ShowHideVideo>Videó megjelenítése/elrejtése</ShowHideVideo>
         <ShowHideWaveform>Hullámforma megjelenítése/elrejtése</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>A hullámforma és spektrogram megjelenítése/rejtése</ShowHideWaveformAndSpectrogram>
@@ -796,7 +855,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Ismétlődő szavak keresése</FindDoubleWords>
         <FindDoubleLines>Ismétlődő sorok keresése</FindDoubleLines>
         <GetDictionaries>Szótárak letöltése...</GetDictionaries>
-        <AddToNamesEtcList>Szó hozzáadás a nevek/ect listához</AddToNamesEtcList>
+        <AddToNamesEtcList>Szó hozzáadás a nevek/stb. listához</AddToNamesEtcList>
       </SpellCheck>
       <Synchronization>
         <Title>Szinkronizálás</Title>
@@ -809,7 +868,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Automatikus fordítás</Title>
         <TranslatePoweredByGoogle>Fordítás (Google technológia)...</TranslatePoweredByGoogle>
         <TranslatePoweredByMicrosoft>Fordítás (Microsoft technológia)...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>Fordítás Svédről Dán nyelvre (nikse.dk technológia)...</TranslateFromSwedishToDanish>
+        <TranslateFromSwedishToDanish>Fordítás Svédről-Dán nyelvre (nikse.dk technológia)...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
         <Title>Beállítások</Title>
@@ -854,6 +913,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TimedTextStyles>Időzített szövegstílusok...</TimedTextStyles>
         <TimedTextSetLanguage>Időzített szöveg - nyelv beállítása</TimedTextSetLanguage>
         <SamiSetStyle>Sami - osztály beállítása</SamiSetStyle>
+        <NuendoSetStyle>Nuendo - karakter beállítása</NuendoSetStyle>
         <Cut>Kivágás</Cut>
         <Copy>Másolás</Copy>
         <Paste>Beillesztés</Paste>
@@ -985,6 +1045,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Eredeti felirat mentése {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>a fájl módosítva lett a lemezen</FileOnDiskModified>
     <OverwriteModifiedFile>{0} fájl felülírása {1} {2}{3} módosítva a jelenlegi fájlnál betölti a lemezről: {4} {5}?</OverwriteModifiedFile>
+    <FileXIsReadOnly>A(z) {0} nem menthető
+
+A fájl írásvédett!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Nem sikerült menteni a(z) {0} feliratfájlt.
 A felirat üresnek tűnik - próbálja meg újra elmenteni, ha egy érvényes feliraton dolgozik!</UnableToSaveSubtitleX>
     <BeforeNew>Az új előtt</BeforeNew>
@@ -1061,6 +1124,7 @@ Folytatja?</SubtitleAppendPrompt>
     <NothingToUndo>Nincs visszavonandó</NothingToUndo>
     <InvalidLanguageNameX>Érvénytelen nyelvnév: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Nem sikerült megváltoztatni a nyelvet!</UnableToChangeLanguage>
+    <DoNotDisplayMessageAgain>Ne jelenjen meg ez az üzenet többé</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Javított szavak száma: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Kihagyott szavak száma: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Megfelelő szavak száma: {0}</NumberOfCorrectWords>
@@ -1096,7 +1160,9 @@ Folytatja?</SubtitleAppendPrompt>
     <MatroskaFiles>Matroska fájlok</MatroskaFiles>
     <NoSubtitlesFound>Nincs felirat</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Ez nem érvényes Matroska fájl: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>A Blu-ray sup fájlban nincsenek feliratok vagy hibákat tartalmaz - próbálja meg újra demuxolni.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Matroska fájl elemzés. Kis türelmet...</ParsingMatroskaFile>
+    <ParsingTransportStreamFile>Átviteli adatfolyam fájl elemzése. Kis türelmet...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>A Matroska fájlból történő felirat importálás előtti állapotra fájlból</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Felirat importálva a Matroska fájlból</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>A(z) '{0}' ráejtett fájl nincs elfogadva - a fájl túl nagy</DropFileXNotAccepted>
@@ -1151,6 +1217,7 @@ Folytatja?</SubtitleAppendPrompt>
     <BeforeMergeShortLines>A rövid sorok egyesítése előtti állapotra</BeforeMergeShortLines>
     <BeforeSplitLongLines>A hosszú sorok felosztáa előtt</BeforeSplitLongLines>
     <MergedShortLinesX>Egyesített sorok száma: {0}</MergedShortLinesX>
+    <BeforeDurationsBridgeGap>Kis hézagok áthidalása előtt</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>A feliratok közti legkisebb megjelenítési idő beállítása előtt</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>A sorok száma a feliratok közti legkisebb megjelenítési időnél módosult: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Az egyszerű szöveg importálása előtti állapotra</BeforeImportText>
@@ -1210,6 +1277,19 @@ Folytatja?</SubtitleAppendPrompt>
     <ErrorLoadIdx>Nem lehet olvasni/szerkeszteni az .idx fájlokat. Az idx fájlok egy idx/sub állomány pár részei (más néven VobSub), és az Subtitle Edit nem tudja megnyitni a .sub fájlt.</ErrorLoadIdx>
     <ErrorLoadRar>Ez a fájl úgy tűnik, hogy egy tömörített .rar fájl. Az Subtitle Edit nem tudja megnyitni a tömörített fájlokat.</ErrorLoadRar>
     <ErrorLoadZip>Ez a fájl úgy tűnik, hogy egy tömörített .zip fájl. Az Subtitle Edit nem tudja megnyitni a tömörített fájlokat.</ErrorLoadZip>
+    <ErrorLoadPng>Ez a fájl úgy tűnik, hogy egy PNG képfájl. A Subtitle Edit nem tudja megnyitni a PNG fájlokat.</ErrorLoadPng>
+    <ErrorLoadJpg>Ez a fájl úgy tűnik, hogy egy JPG képfájl. A Subtitle Edit nem tudja megnyitni a JPG fájlokat.</ErrorLoadJpg>
+    <ErrorLoadSrr>Ez a fájl úgy tűnik, hogy egy ReScene .srr fájl - nem egy feliratfájl.</ErrorLoadSrr>
+    <ErrorLoadTorrent>Ez a fájl úgy tűnik, hogy egy BitTorrent fájl - nem pedig egy feliratfájl.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Sajnáljuk, ez a fájl csak bináris nullákat tartalmaz!
+
+Ha ezt a fájlt a Subtitle Edit programmal módosította, akkor lehet, hogy megtalálja annak biztonsági másolatát a Fájl -&gt; Automatikus biztonsági mentés visszaállítása... menüpontban</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>A könyvtár vonszolás itt nem támogatott.</ErrorDirectoryDropNotAllowed>
+    <NoSupportEncryptedVobSub>A kódolt VobSub tartalom nem támogatott.</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>A Blu-ray sup fájlok itt nem támogatottak.</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>A DVD sup fájlok itt nem támogatottak.</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>A VobSub fájlok itt nem támogatottak.</NoSupportHereVobSub>
+    <NoSupportHereDivx>A Divx fájlok itt nem támogatottak.</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Válassza ki a feliratot a Matroska fájlból</Title>
@@ -1230,7 +1310,7 @@ Folytatja?</SubtitleAppendPrompt>
     <Feet>Láb</Feet>
     <Inches>Hüvelyk</Inches>
     <Pounds>Font</Pounds>
-    <Kilos>Kiló</Kilos>
+    <Kilos>Kilo</Kilos>
   </MeasurementConverter>
   <MergeDoubleLines>
     <Title>Azonos szövegű sorok egyesítése</Title>
@@ -1289,6 +1369,8 @@ Folytatja?</SubtitleAppendPrompt>
     <ImportRulesTitle>Csere szabály(ok) importálása...</ImportRulesTitle>
     <ExportRulesTitle>Csere szabály(ok) exportálása...</ExportRulesTitle>
     <Rules>Szabályok exportálása</Rules>
+    <MoveToTop>Áthelyezés felülre</MoveToTop>
+    <MoveToBottom>Áthelyezés alulra</MoveToBottom>
   </MultipleReplace>
   <NetworkChat>
     <Title>Csevegés</Title>
@@ -1346,8 +1428,10 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <NewLine>Új sor (\r\n)</NewLine>
     <NewLineShort>Új sor (\n)</NewLineShort>
     <AnyDigit>Bármilyen számjegy (d)</AnyDigit>
+    <NonDigit>Nem számjegy (\D)</NonDigit>
     <AnyCharacter>Bármilyen karakter (.)</AnyCharacter>
     <AnyWhitespace>Bármilyen szóköz (s)</AnyWhitespace>
+    <NonSpaceCharacter>Nem szóköz karakter (\S)</NonSpaceCharacter>
     <ZeroOrMore>Nulla vagy több (*)</ZeroOrMore>
     <OneOrMore>Egy vagy több (+)</OneOrMore>
     <InCharacterGroup>A karakter csoportban ([teszt])</InCharacterGroup>
@@ -1423,7 +1507,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <Tools>Eszközök</Tools>
     <WordLists>Szólisták</WordLists>
     <SsaStyle>ASS/SSA stílus</SsaStyle>
-    <Proxy>Proxy</Proxy>
+    <Proxy>Hálózat</Proxy>
     <ShowToolBarButtons>Eszköztár gombok megjelenítése</ShowToolBarButtons>
     <New>Új</New>
     <Open>Megnyitás</Open>
@@ -1483,6 +1567,8 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <DirectShowDescription>quartz.dll a system32 mappában</DirectShowDescription>
     <ManagedDirectX>Kezelt DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET felügyelt-kód a DirectX-ből</ManagedDirectXDescription>
+    <MpcHc>MPC-HC</MpcHc>
+    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Médialejátszó</VlcMediaPlayer>
@@ -1507,6 +1593,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <WaveformSelectedColor>Kiválasztott szín</WaveformSelectedColor>
     <WaveformBackgroundColor>Hátszín</WaveformBackgroundColor>
     <WaveformTextColor>Szöveg színe</WaveformTextColor>
+    <WaveformTextFontSize>Szöveg betűméret</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Üres "Spektrogram" és "Hullámforma" mappa</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>A 'Hullámforma' és 'Spektrogram' mappa {0} fájlt tartalmaz ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektogram</Spectrogram>
@@ -1546,6 +1633,8 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ProxyUserName>Felhasználónév</ProxyUserName>
     <ProxyPassword>Jelszó</ProxyPassword>
     <ProxyDomain>Tartomány</ProxyDomain>
+    <NetworkSessionSettings>Hálózati adatfolyam beállítások</NetworkSessionSettings>
+    <NetworkSessionNewSound>Hangjelzés új üzenet érkezése esetén</NetworkSessionNewSound>
     <PlayXSecondsAndBack>X mp lejátszás és visszajátszás, az X</PlayXSecondsAndBack>
     <StartSceneIndex>Kezdő jelenet index</StartSceneIndex>
     <EndSceneIndex>Befejező jelenet index</EndSceneIndex>
@@ -1569,6 +1658,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ToggleDockUndockOfVideoControls>Videóvezérlő dokkolás/leválasztás kapcsoló</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Befejezés beállítása, új hozzáadása és ugrás az újra</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Beállítás a végpozíción keresztül és ugrás a következőre</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Befejezés beállítása és ugrás a következőre</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Indítás beállítása, automatikus időtartam és ugrás a következőre</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Befejezés beállítása, következő indítás és ugrás a következőre</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Le gomb=indítás beállítása, Fel gomb=befejezés beállítása és ugrás a következőre</AdjustStartDownEndUpAndGoToNext>
@@ -1587,6 +1677,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ToggleDialogDashes>Párbeszéd gondolatjel váltó</ToggleDialogDashes>
     <Alignment>Igazítás (kijelölt sorok)</Alignment>
     <CopyTextOnly>Csak szöveg másolása a vágólapra (kijelölt sorok)</CopyTextOnly>
+    <CopyTextOnlyFromOriginalToCurrent>Szöveg másolása az eredetiből a jelenlegibe</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Automatikus időtartam (kijelölt sorok)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Fordított RTL indítás/befejezés</ReverseStartAndEndingForRTL>
     <VerticalZoom>Függőleges nagyítás</VerticalZoom>
@@ -1623,7 +1714,9 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <SyntaxColorOverlap>Színes időkód átfedés</SyntaxColorOverlap>
     <SyntaxErrorColor>Hiba szín</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ugrás az első kijelölt sorra</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>Ugrás a következő üres sorra</GoToNextEmptyLine>
     <MergeSelectedLines>A kijelölt sorok egyesítése</MergeSelectedLines>
+    <MergeSelectedLinesOnlyFirstText>Kijelölt sorok egyesítése, csak az első nem üres szöveg megtartása</MergeSelectedLinesOnlyFirstText>
     <ToggleTranslationMode>Fordítási mód váltó</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Az eredeti és a fordítás váltása</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Az eredeti és a fordítás egyesítése</MergeOriginalAndTranslation>
@@ -1639,12 +1732,18 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Az első szó áthelyezése felfelé a következő felirat sorból</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Kijelölés kisbetűsre</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Kijelölés nagybetűsre</MainTextBoxSelectionToUpper>
+    <MainTextBoxToggleAutoDuration>Automatikus időtartam kapcsoló</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Automatikus sortörés</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Tördeletlen szöveg</MainTextBoxUnbreak>
     <MainFileSaveAll>Összes mentése</MainFileSaveAll>
     <Miscellaneous>Egyéb</Miscellaneous>
     <UseDoNotBreakAfterList>A ne-tördelje-utána lista használata (auto-tördelésre)</UseDoNotBreakAfterList>
   </Settings>
+  <SetVideoOffset>
+    <Title>Videó eltolás beállítása</Title>
+    <Description>Videó eltolás beállítása (a feliratoknak nem kell követniük a valós videó időt, pl. +10 óra)</Description>
+    <RelativeToCurrentVideoPosition>Az aktuális videó pozícióhoz képest</RelativeToCurrentVideoPosition>
+  </SetVideoOffset>
   <ShowEarlierLater>
     <Title>A kijelölt sorok megjelenítése korábban/később</Title>
     <TitleAll>Az összes sor megjelenítése korábban/később</TitleAll>
@@ -1764,6 +1863,10 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <DurationMinimum>Időtartam - minimum: {0:0.000} másodperc</DurationMinimum>
     <DurationMaximum>Időtartam - maximum: {0:0.000} másodperc</DurationMaximum>
     <DurationAverage>Időtartam - átlagos: {0:0.000} másodperc</DurationAverage>
+    <CharactersPerSecondMinimum>Karakter/mp - minimum: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Karakter/mp - maximum: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Karakter/mp - átlagos: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Exportálás...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha tulajdonságok</Title>
@@ -1923,6 +2026,7 @@ Megtartja a változásokat?</KeepChangesMessage>
     <OcrAutoCorrectionSpellChecking>OCR auto korrekció / helyesírás-ellenőrzés</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>OCR hibák javítása</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Az egyező időkódú szöveg importálása...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>Új időkódok importálása</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Felirat-kép mentése mint...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Az összes kép mentése (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Az összes kép mentése az HTML index-el...</SaveAllSubtitleImagesWithHtml>
@@ -1936,6 +2040,9 @@ Megtartja a változásokat?</KeepChangesMessage>
     <AutoTransparentBackground>Auto-átlátszó háttér</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Összehasonlítási egyezőségek vizsgálata a jelenlegi kép esetén...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Utolsó kép összehasonlítási kiegészítések szerkesztése...</EditLastAdditions>
+    <SetUnitalicFactor>Nem-dőlt tényező beállítása...</SetUnitalicFactor>
+    <DiscardTitle>Elveti a változtatásokat az OCR-ben?</DiscardTitle>
+    <DiscardText>Elvetia a változtatásokat a jelenlegi OCR műveletnél?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manuális kép hozzáadás a szöveghez</Title>
@@ -1962,6 +2069,10 @@ Megtartja a változásokat?</KeepChangesMessage>
     <Title>Új mappa</Title>
     <Message>Az új karakter adatbázis mappa neve</Message>
   </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicFactor>
+    <Title>Nem-dőlt tényező beállítása</Title>
+    <Description>Állítsa be az értéket, amikor a szöveg stílusa normál és nem dőlt. Ne feledje, az eredeti képnek dőltnek kell lennie.</Description>
+  </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Kattintson ide a hullámforma hozzáadásához</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Kattintson ide a hullámforma/spektogram hozzáadásához</ClickToAddWaveformAndSpectrogram>

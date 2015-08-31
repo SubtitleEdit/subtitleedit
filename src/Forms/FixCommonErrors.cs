@@ -1,9 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Dictionaries;
-using Nikse.SubtitleEdit.Logic.Forms;
+using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Ocr;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -44,11 +43,9 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexFixMissingOpenBracket = 24;
         private const int IndexFixOcrErrorsViaReplaceList = 25;
         private const int IndexUppercaseIInsideLowercaseWord = 26;
-        private const int IndexAloneLowercaseIToUppercaseIEnglish = 27;
-        private const int IndexRemoveSpaceBetweenNumbers = 28;
-        private const int IndexDialogsOnOneLine = 29;
-        //private const int IndexDanishLetterI = 30;
-        //private const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 31;
+        private const int IndexRemoveSpaceBetweenNumbers = 27;
+        private const int IndexDialogsOnOneLine = 28;
+        private int _indexAloneLowercaseIToUppercaseIEnglish = -1;
         private int _turkishAnsiIndex = -1;
         private int _danishLetterIIndex = -1;
         private int _spanishInvertedQuestionAndExclamationMarksIndex = -1;
@@ -357,6 +354,7 @@ namespace Nikse.SubtitleEdit.Forms
             _turkishAnsiIndex = -1;
             _danishLetterIIndex = -1;
             _spanishInvertedQuestionAndExclamationMarksIndex = -1;
+            _indexAloneLowercaseIToUppercaseIEnglish = -1;
 
             FixCommonErrorsSettings ce = Configuration.Settings.CommonErrors;
             _fixActions = new List<FixItem>
@@ -388,11 +386,16 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, FixMissingOpenBracket, ce.FixMissingOpenBracketTicked),
                 new FixItem(_language.FixCommonOcrErrors, _language.FixOcrErrorExample, delegate { FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked),
                 new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, FixUppercaseIInsideWords, ce.UppercaseIInsideLowercaseWordTicked),
-                new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, FixAloneLowercaseIToUppercaseI, ce.AloneLowercaseIToUppercaseIEnglishTicked),
                 new FixItem(_language.RemoveSpaceBetweenNumber, _language.FixSpaceBetweenNumbersExample, RemoveSpaceBetweenNumbers, ce.RemoveSpaceBetweenNumberTicked),
                 new FixItem(_language.FixDialogsOnOneLine, _language.FixDialogsOneLineExample, DialogsOnOneLine, ce.FixDialogsOnOneLineTicked)
             };
 
+            if (Language == "en")
+            {
+                _indexAloneLowercaseIToUppercaseIEnglish = _fixActions.Count;
+                _fixActions.Add(new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, FixAloneLowercaseIToUppercaseI, ce.AloneLowercaseIToUppercaseIEnglishTicked));
+
+            }
             if (Language == "tr")
             {
                 _turkishAnsiIndex = _fixActions.Count;
@@ -4015,17 +4018,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (listView1.Items[IndexAloneLowercaseIToUppercaseIEnglish].Checked && Language != "en")
-                {
-                    if (MessageBox.Show(_language.FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish + Environment.NewLine +
-                                                      Environment.NewLine +
-                                                      _language.ContinueAnyway, _language.Continue, MessageBoxButtons.YesNo) == DialogResult.No)
-                    {
-                        listView1.Items[IndexAloneLowercaseIToUppercaseIEnglish].Checked = false;
-                        ShowStatus(_language.UncheckedFixLowercaseIToUppercaseI);
-                        return;
-                    }
-                }
                 Cursor = Cursors.WaitCursor;
                 Next();
                 ShowAvailableFixesStatus();
@@ -4349,7 +4341,8 @@ namespace Nikse.SubtitleEdit.Forms
             ce.FixDoubleGreaterThanTicked = listView1.Items[IndexFixDoubleGreaterThan].Checked;
             ce.FixEllipsesStartTicked = listView1.Items[IndexFixEllipsesStart].Checked;
             ce.FixMissingOpenBracketTicked = listView1.Items[IndexFixMissingOpenBracket].Checked;
-            ce.AloneLowercaseIToUppercaseIEnglishTicked = listView1.Items[IndexAloneLowercaseIToUppercaseIEnglish].Checked;
+            if (_indexAloneLowercaseIToUppercaseIEnglish >= 0)
+                ce.AloneLowercaseIToUppercaseIEnglishTicked = listView1.Items[_indexAloneLowercaseIToUppercaseIEnglish].Checked;
             ce.FixOcrErrorsViaReplaceListTicked = listView1.Items[IndexFixOcrErrorsViaReplaceList].Checked;
             ce.RemoveSpaceBetweenNumberTicked = listView1.Items[IndexRemoveSpaceBetweenNumbers].Checked;
             ce.FixDialogsOnOneLineTicked = listView1.Items[IndexDialogsOnOneLine].Checked;
@@ -4763,10 +4756,6 @@ namespace Nikse.SubtitleEdit.Forms
                     indexes.Add(item.Index);
                 int firstIndex = subtitleListView1.SelectedItems[0].Index;
 
-                int startNumber = _originalSubtitle.Paragraphs[0].Number;
-                if (startNumber == 2)
-                    startNumber = 1;
-
                 // save de-seleced fixes
                 var deSelectedFixes = new List<string>();
                 foreach (ListViewItem item in listViewFixes.Items)
@@ -4776,7 +4765,8 @@ namespace Nikse.SubtitleEdit.Forms
                         int number = Convert.ToInt32(item.SubItems[1].Text);
                         if (number > firstIndex)
                             number -= subtitleListView1.SelectedItems.Count;
-                        deSelectedFixes.Add(number + item.SubItems[2].Text + item.SubItems[3].Text);
+                        if (number >= 0)
+                            deSelectedFixes.Add(number + item.SubItems[2].Text + item.SubItems[3].Text);
                     }
                 }
 
@@ -4785,7 +4775,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _originalSubtitle.Paragraphs.RemoveAt(i);
                 }
-                _originalSubtitle.Renumber(startNumber);
+                _originalSubtitle.Renumber();
                 subtitleListView1.Fill(_originalSubtitle);
                 if (subtitleListView1.Items.Count > firstIndex)
                 {
@@ -4802,10 +4792,13 @@ namespace Nikse.SubtitleEdit.Forms
                 Next();
 
                 // restore de-selected fixes
-                foreach (ListViewItem item in listViewFixes.Items)
+                if (deSelectedFixes.Count > 0)
                 {
-                    if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
-                        item.Checked = false;
+                    foreach (ListViewItem item in listViewFixes.Items)
+                    {
+                        if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
+                            item.Checked = false;
+                    }
                 }
             }
         }

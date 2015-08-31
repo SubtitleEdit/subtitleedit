@@ -39,13 +39,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Logic\Language.cs">
+    <Compile Include="..\..\libse\Language.cs">
       <Link>Language.cs</Link>
     </Compile>
-    <Compile Include="..\Logic\LanguageDeserializer.cs">
+    <Compile Include="..\..\libse\LanguageDeserializer.cs">
       <Link>LanguageDeserializer.cs</Link>
     </Compile>
-    <Compile Include="..\Logic\LanguageStructure.cs">
+    <Compile Include="..\..\libse\LanguageStructure.cs">
       <Link>LanguageStructure.cs</Link>
     </Compile>
     <Compile Include="LanguageDeserializerGenerator.cs" />
