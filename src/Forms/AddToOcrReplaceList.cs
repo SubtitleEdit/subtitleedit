@@ -22,8 +22,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            string key = textBoxOcrFixKey.Text.Trim();
-            string value = textBoxOcrFixValue.Text.Trim();
+            string key = textBoxOcrFixKey.Text.Trim().RemoveControlCharacters();
+            string value = textBoxOcrFixValue.Text.Trim().RemoveControlCharacters();
             if (key.Length == 0 || value.Length == 0 || key == value)
                 return;
 
