@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic
             _header = header;
             _justificationCode = justificationCode;
             _fileName = fileName;
-            _subtitle = subtitle;            
+            _subtitle = subtitle;
         }
 
         public bool ShowDialogOk()
@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public byte JustificationCode
         {
-            get { return _justificationCode; } 
+            get { return _justificationCode; }
             set { _justificationCode = value; }
         }
 

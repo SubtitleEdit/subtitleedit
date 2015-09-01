@@ -172,7 +172,7 @@ namespace UpdateAssemblyInfo
                     }
                     else
                     {
-                        Console.WriteLine("updating version number to " + newVersionInfo.Version + " " + newVersionInfo.RevisionGuid);                        
+                        Console.WriteLine("updating version number to " + newVersionInfo.Version + " " + newVersionInfo.RevisionGuid);
                     }
                     UpdateAssemblyInfo(seTemplateFileName, newVersionInfo);
                     UpdateAssemblyInfo(libSeTmplateFileName, newVersionInfo);
