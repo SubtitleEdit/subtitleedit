@@ -15059,8 +15059,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var p =
                     audioVisualizer.NewSelectionParagraph ??
-                    audioVisualizer.SelectedParagraph ??
-                    audioVisualizer.RightClickedParagraph;
+                    audioVisualizer.SelectedParagraph;
 
                 if (p != null)
                 {
