@@ -402,8 +402,7 @@ namespace Nikse.SubtitleEdit.Core
             const int bitmapWidth = 1024;
 
             List<Bitmap> bitmaps = new List<Bitmap>();
-            Color[] palette = GeneratePalette(nfft);
-            RealFFT f = new RealFFT(nfft);
+            SpectrogramDrawer drawer = new SpectrogramDrawer(nfft);
             ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataRerader();
             double sampleScale = 1.0 / Math.Pow(2.0, Header.BitsPerSample - 1);
 
@@ -484,7 +483,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 // generate spectrogram for this chunk
-                Bitmap bmp = DrawSpectrogram(nfft, chunkSamples, f, palette);
+                Bitmap bmp = drawer.Draw(chunkSamples);
                 bmp.Save(Path.Combine(spectrogramDirectory, iChunk + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
                 bitmaps.Add(bmp);
             }
@@ -503,175 +502,192 @@ namespace Nikse.SubtitleEdit.Core
             return bitmaps;
         }
 
-        private static Bitmap DrawSpectrogram(int nfft, double[] samples, RealFFT f, Color[] palette)
+        private class SpectrogramDrawer
         {
-            const int overlap = 0;
-            int numSamples = samples.Length;
-            int colIncrement = nfft * (1 - overlap);
+            private int _nfft;
+            private RealFFT _fft;
+            Color[] _palette;
+            private double[] _segment;
+            private double[] _window;
+            private double[] _magnitude;
 
-            int numcols = numSamples / colIncrement;
-            // make sure we don't step beyond the end of the recording
-            while ((numcols - 1) * colIncrement + nfft > numSamples)
-                numcols--;
-
-            const double raisedCosineWindowScale = 0.5;
-            double[] segment = new double[nfft];
-            double[] window = CreateRaisedCosineWindow(nfft);
-            double[] magnitude = new double[nfft / 2];
-            double scaleCorrection = 1.0 / (raisedCosineWindowScale * f.ForwardScaleFactor);
-            var bmp = new Bitmap(numcols, nfft / 2);
-            for (int col = 0; col < numcols; col++)
+            public SpectrogramDrawer(int nfft)
             {
-                // read a segment of the recorded signal
-                for (int c = 0; c < nfft; c++)
+                _nfft = nfft;
+                _fft = new RealFFT(nfft);
+                _palette = GeneratePalette(nfft);
+                _segment = new double[nfft];
+                _window = CreateRaisedCosineWindow(nfft);
+                _magnitude = new double[nfft / 2];
+            }
+
+            public Bitmap Draw(double[] samples)
+            {
+                const int overlap = 0;
+                int numSamples = samples.Length;
+                int colIncrement = _nfft * (1 - overlap);
+
+                int numcols = numSamples / colIncrement;
+                // make sure we don't step beyond the end of the recording
+                while ((numcols - 1) * colIncrement + _nfft > numSamples)
+                    numcols--;
+
+                const double raisedCosineWindowScale = 0.5;
+
+                double scaleCorrection = 1.0 / (raisedCosineWindowScale * _fft.ForwardScaleFactor);
+                var bmp = new Bitmap(numcols, _nfft / 2);
+                for (int col = 0; col < numcols; col++)
                 {
-                    segment[c] = samples[col * colIncrement + c] * window[c] * scaleCorrection;
+                    // read a segment of the recorded signal
+                    for (int c = 0; c < _nfft; c++)
+                    {
+                        _segment[c] = samples[col * colIncrement + c] * _window[c] * scaleCorrection;
+                    }
+
+                    // transform to the frequency domain
+                    _fft.ComputeForward(_segment);
+
+                    // and compute the magnitude spectrum
+                    MagnitudeSpectrum(_segment, _magnitude);
+
+                    // Draw
+                    var fbmp = new FastBitmap(bmp);
+                    fbmp.LockImage();
+                    for (int newY = 0; newY < _nfft / 2 - 1; newY++)
+                    {
+                        int colorIndex = MapToPixelIndex(_magnitude[newY], 100, 255);
+                        fbmp.SetPixel(col, (_nfft / 2 - 1) - newY, _palette[colorIndex]);
+                    }
+                    fbmp.UnlockImage();
+                }
+                return bmp;
+            }
+
+            private static double[] CreateRaisedCosineWindow(int n)
+            {
+                double twoPiOverN = Math.PI * 2.0 / n;
+                double[] dst = new double[n];
+                for (int i = 0; i < n; i++)
+                    dst[i] = 0.5 * (1.0 - Math.Cos(twoPiOverN * i));
+                return dst;
+            }
+
+            private static void MagnitudeSpectrum(double[] segment, double[] magnitude)
+            {
+                magnitude[0] = Math.Sqrt(SquareSum(segment[0], segment[1]));
+                for (int i = 2; i < segment.Length; i += 2)
+                    magnitude[i / 2] = Math.Sqrt(SquareSum(segment[i], segment[i + 1]) * 2.0);
+            }
+
+            private static double SquareSum(double a, double b)
+            {
+                return a * a + b * b;
+            }
+
+            private static Color[] GeneratePalette(int nfft)
+            {
+                Color[] palette = new Color[nfft];
+                if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Classic")
+                {
+                    for (int colorIndex = 0; colorIndex < nfft; colorIndex++)
+                        palette[colorIndex] = PaletteValue(colorIndex, nfft);
+                }
+                else
+                {
+                    var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveformColor.R,
+                                                     Configuration.Settings.VideoControls.WaveformColor.G,
+                                                     Configuration.Settings.VideoControls.WaveformColor.B, nfft);
+                    for (int i = 0; i < nfft; i++)
+                        palette[i] = list[i];
+                }
+                return palette;
+            }
+
+            private static Color PaletteValue(int x, int range)
+            {
+                double g;
+                double r;
+                double b;
+
+                double r4 = range / 4.0;
+                const double u = 255;
+
+                if (x < r4)
+                {
+                    b = x / r4;
+                    g = 0;
+                    r = 0;
+                }
+                else if (x < 2 * r4)
+                {
+                    b = (1 - (x - r4) / r4);
+                    g = 1 - b;
+                    r = 0;
+                }
+                else if (x < 3 * r4)
+                {
+                    b = 0;
+                    g = (2 - (x - r4) / r4);
+                    r = 1 - g;
+                }
+                else
+                {
+                    b = (x - 3 * r4) / r4;
+                    g = 0;
+                    r = 1 - b;
                 }
 
-                // transform to the frequency domain
-                f.ComputeForward(segment);
+                r = ((int)(Math.Sqrt(r) * u)) & 0xff;
+                g = ((int)(Math.Sqrt(g) * u)) & 0xff;
+                b = ((int)(Math.Sqrt(b) * u)) & 0xff;
 
-                // and compute the magnitude spectrum
-                MagnitudeSpectrum(segment, magnitude);
+                return Color.FromArgb((int)r, (int)g, (int)b);
+            }
 
-                // Draw
-                var fbmp = new FastBitmap(bmp);
-                fbmp.LockImage();
-                for (int newY = 0; newY < nfft / 2 - 1; newY++)
+            /// <summary>
+            /// Maps magnitudes in the range [-rangedB .. 0] dB to palette index values in the range [0 .. rangeIndex-1]
+            /// and computes and returns the index value which corresponds to passed-in magnitude
+            /// </summary>
+            private static int MapToPixelIndex(double magnitude, double rangedB, int rangeIndex)
+            {
+                const double log10 = 2.30258509299405;
+
+                if (magnitude == 0)
+                    return 0;
+
+                double levelIndB = 20 * Math.Log(magnitude) / log10;
+                if (levelIndB < -rangedB)
+                    return 0;
+
+                return (int)(rangeIndex * (levelIndB + rangedB) / rangedB);
+            }
+
+            private static List<Color> SmoothColors(int fromR, int fromG, int fromB, int toR, int toG, int toB, int count)
+            {
+                while (toR < 255 && toG < 255 && toB < 255)
                 {
-                    int colorIndex = MapToPixelIndex(magnitude[newY], 100, 255);
-                    fbmp.SetPixel(col, (nfft / 2 - 1) - newY, palette[colorIndex]);
+                    toR++;
+                    toG++;
+                    toB++;
                 }
-                fbmp.UnlockImage();
+
+                var list = new List<Color>();
+                double r = fromR;
+                double g = fromG;
+                double b = fromB;
+                double diffR = (toR - fromR) / (double)count;
+                double diffG = (toG - fromG) / (double)count;
+                double diffB = (toB - fromB) / (double)count;
+
+                for (int i = 0; i < count; i++)
+                {
+                    list.Add(Color.FromArgb((int)r, (int)g, (int)b));
+                    r += diffR;
+                    g += diffG;
+                    b += diffB;
+                }
+                return list;
             }
-            return bmp;
         }
-
-        private static double[] CreateRaisedCosineWindow(int n)
-        {
-            double twoPiOverN = Math.PI * 2.0 / n;
-            double[] dst = new double[n];
-            for (int i = 0; i < n; i++)
-                dst[i] = 0.5 * (1.0 - Math.Cos(twoPiOverN * i));
-            return dst;
-        }
-
-        private static void MagnitudeSpectrum(double[] segment, double[] magnitude)
-        {
-            magnitude[0] = Math.Sqrt(SquareSum(segment[0], segment[1]));
-            for (int i = 2; i < segment.Length; i += 2)
-                magnitude[i / 2] = Math.Sqrt(SquareSum(segment[i], segment[i + 1]) * 2.0);
-        }
-
-        private static double SquareSum(double a, double b)
-        {
-            return a * a + b * b;
-        }
-
-        private static Color[] GeneratePalette(int nfft)
-        {
-            Color[] palette = new Color[nfft];
-            if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Classic")
-            {
-                for (int colorIndex = 0; colorIndex < nfft; colorIndex++)
-                    palette[colorIndex] = PaletteValue(colorIndex, nfft);
-            }
-            else
-            {
-                var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveformColor.R,
-                                                 Configuration.Settings.VideoControls.WaveformColor.G,
-                                                 Configuration.Settings.VideoControls.WaveformColor.B, nfft);
-                for (int i = 0; i < nfft; i++)
-                    palette[i] = list[i];
-            }
-            return palette;
-        }
-
-        private static Color PaletteValue(int x, int range)
-        {
-            double g;
-            double r;
-            double b;
-
-            double r4 = range / 4.0;
-            const double u = 255;
-
-            if (x < r4)
-            {
-                b = x / r4;
-                g = 0;
-                r = 0;
-            }
-            else if (x < 2 * r4)
-            {
-                b = (1 - (x - r4) / r4);
-                g = 1 - b;
-                r = 0;
-            }
-            else if (x < 3 * r4)
-            {
-                b = 0;
-                g = (2 - (x - r4) / r4);
-                r = 1 - g;
-            }
-            else
-            {
-                b = (x - 3 * r4) / r4;
-                g = 0;
-                r = 1 - b;
-            }
-
-            r = ((int)(Math.Sqrt(r) * u)) & 0xff;
-            g = ((int)(Math.Sqrt(g) * u)) & 0xff;
-            b = ((int)(Math.Sqrt(b) * u)) & 0xff;
-
-            return Color.FromArgb((int)r, (int)g, (int)b);
-        }
-
-        /// <summary>
-        /// Maps magnitudes in the range [-rangedB .. 0] dB to palette index values in the range [0 .. rangeIndex-1]
-        /// and computes and returns the index value which corresponds to passed-in magnitude
-        /// </summary>
-        private static int MapToPixelIndex(double magnitude, double rangedB, int rangeIndex)
-        {
-            const double log10 = 2.30258509299405;
-
-            if (magnitude == 0)
-                return 0;
-
-            double levelIndB = 20 * Math.Log(magnitude) / log10;
-            if (levelIndB < -rangedB)
-                return 0;
-
-            return (int)(rangeIndex * (levelIndB + rangedB) / rangedB);
-        }
-
-        private static List<Color> SmoothColors(int fromR, int fromG, int fromB, int toR, int toG, int toB, int count)
-        {
-            while (toR < 255 && toG < 255 && toB < 255)
-            {
-                toR++;
-                toG++;
-                toB++;
-            }
-
-            var list = new List<Color>();
-            double r = fromR;
-            double g = fromG;
-            double b = fromB;
-            double diffR = (toR - fromR) / (double)count;
-            double diffG = (toG - fromG) / (double)count;
-            double diffB = (toB - fromB) / (double)count;
-
-            for (int i = 0; i < count; i++)
-            {
-                list.Add(Color.FromArgb((int)r, (int)g, (int)b));
-                r += diffR;
-                g += diffG;
-                b += diffB;
-            }
-            return list;
-        }
-
     }
 }
