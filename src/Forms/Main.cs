@@ -2412,6 +2412,32 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null && file.Length < 500000)
                 {
+
+                    // check for valid timed text
+                    if (ext == ".xml" || ext == ".dfxp")
+                    {
+                        var sb = new StringBuilder();
+                        foreach (var line in File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName)))
+                            sb.AppendLine(line);
+                        var xmlAsString = sb.ToString().Trim();
+
+                        if (xmlAsString.Contains("http://www.w3.org/ns/ttml") && xmlAsString.Contains("<?xml version=") ||
+                            xmlAsString.Contains("http://www.w3.org/") && xmlAsString.Contains("/ttaf1"))
+                        {
+                            var xml = new System.Xml.XmlDocument();
+                            try
+                            {
+                                xml.LoadXml(xmlAsString);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Timed text is not valid (xml is not well-formed): " + ex.Message);
+                                return;
+                            }
+                        }
+                    }
+
+
                     // Try to use a generic subtitle format parser (guessing subtitle format)
                     try
                     {
@@ -2618,30 +2644,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MessageBox.Show(_language.FileIsEmptyOrShort);
                     }
                     else
-                    {
-                        if (ext == ".xml")
-                        {
-                            var sb = new StringBuilder();
-                            foreach (var line in File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName)))
-                                sb.AppendLine(line);
-                            var xmlAsString = sb.ToString().Trim();
-
-                            if (xmlAsString.Contains("http://www.w3.org/ns/ttml") && xmlAsString.Contains("<?xml version=") ||
-                                xmlAsString.Contains("http://www.w3.org/") && xmlAsString.Contains("/ttaf1"))
-                            {
-                                var xml = new System.Xml.XmlDocument();
-                                try
-                                {
-                                    xml.LoadXml(xmlAsString);
-                                }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show("Timed text is not valid: " + ex.Message);
-                                    return;
-                                }
-                            }
-                        }
-
+                    {                       
                         ShowUnknownSubtitle();
                         return;
                     }
