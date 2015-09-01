@@ -185,8 +185,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 }
                 sb.AppendLine(s);
             }
-            newText = sb.ToString().TrimEnd('\r').TrimEnd('\n').TrimEnd('\r').TrimEnd('\n');
-            newText = pre + newText;
+            newText = pre + sb.ToString().TrimEnd('\r', '\n');
 
             string post = string.Empty;
             if (newText.EndsWith("</i>", StringComparison.Ordinal))
