@@ -592,6 +592,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             listViewReplaceList.Items.Clear();
             Configuration.Settings.MultipleSearchAndReplaceList.Clear();
+            GeneratePreview();
         }
 
         private void MultipleReplace_Shown(object sender, EventArgs e)
