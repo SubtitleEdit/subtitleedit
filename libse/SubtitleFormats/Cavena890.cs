@@ -235,7 +235,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     _languageIdLine1 = LanguageIdDanish;
                     _languageIdLine2 = LanguageIdDanish;
-                }               
+                }
 
                 // prompt???
                 //if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine1 >= 0)
@@ -707,7 +707,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (_languageIdLine1 == LanguageIdHebrew || fontNameLine1 == "HEBNOA" || fontNameLine2 == "HEBNOA")
             {
                 _languageIdLine1 = LanguageIdHebrew;
-                _languageIdLine2 = LanguageIdHebrew;                
+                _languageIdLine2 = LanguageIdHebrew;
             }
 
             // Russian
@@ -727,7 +727,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             else if (_languageIdLine1 == LanguageIdChineseTraditional || fontNameLine1 == "CCKM44" || fontNameLine2 == "CCKM44")
             {
                 _languageIdLine1 = LanguageIdChineseTraditional;
-                _languageIdLine2 = LanguageIdChineseTraditional;                
+                _languageIdLine2 = LanguageIdChineseTraditional;
             }
 
 
