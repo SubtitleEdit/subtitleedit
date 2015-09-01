@@ -1800,7 +1800,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonAddNamesEtcClick(object sender, EventArgs e)
         {
             string language = GetCurrentWordListLanguage();
-            string text = textBoxNameEtc.Text.Trim().RemoveControlCharacters();
+            string text = textBoxNameEtc.Text.RemoveControlCharacters().Trim();
             if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNamesEtc.Contains(text))
             {
                 var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
@@ -1900,7 +1900,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonAddUserWordClick(object sender, EventArgs e)
         {
             string language = GetCurrentWordListLanguage();
-            string text = textBoxUserWord.Text.Trim().ToLower().RemoveControlCharacters();
+            string text = textBoxUserWord.Text.RemoveControlCharacters().Trim().ToLower();
             if (!string.IsNullOrEmpty(language) && text.Length > 0 && !_userWordList.Contains(text))
             {
                 Utilities.AddToUserDictionary(text, language);
@@ -2009,8 +2009,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAddOcrFixClick(object sender, EventArgs e)
         {
-            string key = textBoxOcrFixKey.Text.Trim().RemoveControlCharacters();
-            string value = textBoxOcrFixValue.Text.Trim().RemoveControlCharacters();
+            string key = textBoxOcrFixKey.Text.RemoveControlCharacters().Trim();
+            string value = textBoxOcrFixValue.Text.RemoveControlCharacters().Trim();
             if (key.Length == 0 || value.Length == 0 || key == value || Utilities.IsInteger(key))
                 return;
 

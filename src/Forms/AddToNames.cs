@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            NewName = textBoxAddName.Text.Trim().RemoveControlCharacters();
+            NewName = textBoxAddName.Text.RemoveControlCharacters().Trim();
             string languageName = null;
             _language = Configuration.Settings.Language.Main;
 
