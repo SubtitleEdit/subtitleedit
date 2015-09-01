@@ -538,11 +538,14 @@ namespace Nikse.SubtitleEdit.Core
                 MagnitudeSpectrum(segment, magnitude);
 
                 // Draw
+                var fbmp = new FastBitmap(bmp);
+                fbmp.LockImage();
                 for (int newY = 0; newY < nfft / 2 - 1; newY++)
                 {
                     int colorIndex = MapToPixelIndex(magnitude[newY], 100, 255);
-                    bmp.SetPixel(col, (nfft / 2 - 1) - newY, palette[colorIndex]);
+                    fbmp.SetPixel(col, (nfft / 2 - 1) - newY, palette[colorIndex]);
                 }
+                fbmp.UnlockImage();
             }
             return bmp;
         }
