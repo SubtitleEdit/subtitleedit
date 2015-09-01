@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             List<string> GetYouTubeAnnotationStyles(Dictionary<string, int> stylesWithCount);
         }
 
-        public IGetYouTubeAnnotationStyles GetYouTubeAnnotationStyles { get; set; }
+        public static IGetYouTubeAnnotationStyles GetYouTubeAnnotationStyles { get; set; }
 
         private bool _promtForStyles = true;
 

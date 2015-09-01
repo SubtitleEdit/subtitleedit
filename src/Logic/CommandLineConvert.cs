@@ -643,7 +643,7 @@ namespace Nikse.SubtitleEdit.Logic
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension, outputFolder, overwrite);
                         Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
-                        pac.Save(outputFileName, sub, null);
+                        pac.Save(outputFileName, sub);
                         Console.WriteLine(" done.");
                     }
                 }
