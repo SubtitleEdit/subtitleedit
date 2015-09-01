@@ -454,6 +454,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SwapReplaceList(int index, int index2)
         {
+            listViewReplaceList.ItemChecked -= ListViewReplaceListItemChecked;
             bool enabled = listViewReplaceList.Items[index].Checked;
             string findWhat = listViewReplaceList.Items[index].SubItems[1].Text;
             string replaceWith = listViewReplaceList.Items[index].SubItems[2].Text;
@@ -473,6 +474,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewReplaceList.Items[index2].Selected = true;
             SaveReplaceList(false);
             GeneratePreview();
+            listViewReplaceList.ItemChecked += ListViewReplaceListItemChecked;
         }
 
         private void moveDownToolStripMenuItem_Click(object sender, EventArgs e)
