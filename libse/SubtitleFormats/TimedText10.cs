@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (xmlAsString.Contains("http://www.w3.org/ns/ttml"))
             {
+                xmlAsString = xmlAsString.RemoveControlCharactersButWhiteSpace();
                 var xml = new XmlDocument { XmlResolver = null };
                 try
                 {
@@ -465,11 +466,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xml = new XmlDocument { XmlResolver = null };
             try
             {
-                xml.LoadXml(sb.ToString().Trim());
+                xml.LoadXml(sb.ToString().RemoveControlCharactersButWhiteSpace().Trim());
             }
             catch
             {
-                xml.LoadXml(sb.ToString().Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A").Trim());
+                xml.LoadXml(sb.ToString().Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A").RemoveControlCharactersButWhiteSpace().Trim());
             }
 
             const string ns = "http://www.w3.org/ns/ttml";

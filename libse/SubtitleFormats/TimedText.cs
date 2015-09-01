@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            string xmlAsString = sb.ToString().RemoveControlCharactersButWhiteSpace().Trim();
 
             if (xmlAsString.Contains("xmlns:tts=\"http://www.w3.org/2006/04"))
                 return false;
@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(sb.ToString().Trim());
+            xml.LoadXml(sb.ToString().RemoveControlCharactersButWhiteSpace().Trim());
 
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
