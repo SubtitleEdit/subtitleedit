@@ -506,7 +506,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             private int _nfft;
             private RealFFT _fft;
-            Color[] _palette;
+            private Color[] _palette;
             private double[] _segment;
             private double[] _window;
             private double[] _magnitude;
