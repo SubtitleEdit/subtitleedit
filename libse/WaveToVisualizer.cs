@@ -558,12 +558,14 @@ namespace Nikse.SubtitleEdit.Core
 
         private static void MagnitudeSpectrum(double[] segment, double[] magnitude)
         {
-            for (int i = 0; i < segment.Length; i += 2)
-            {
-                double real = segment[i];
-                double imag = segment[i + 1];
-                magnitude[i / 2] = Math.Sqrt(real * real + imag * imag);
-            }
+            magnitude[0] = Math.Sqrt(SquareSum(segment[0], segment[1]));
+            for (int i = 2; i < segment.Length; i += 2)
+                magnitude[i / 2] = Math.Sqrt(SquareSum(segment[i], segment[i + 1]) * 2.0);
+        }
+
+        private static double SquareSum(double a, double b)
+        {
+            return a * a + b * b;
         }
 
         public static Color PaletteValue(int x, int range)
