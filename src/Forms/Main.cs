@@ -333,8 +333,9 @@ namespace Nikse.SubtitleEdit.Forms
                 SetEncoding(Configuration.Settings.General.DefaultEncoding);
 
                 // set up UI interfaces in subtitle formats
-                (SubtitleFormat.AllSubtitleFormats.First(p => p.Name == YouTubeAnnotations.NameOfFormat) as YouTubeAnnotations).GetYouTubeAnnotationStyles = new UiGetYouTubeAnnotationStyles();
+                YouTubeAnnotations.GetYouTubeAnnotationStyles = new UiGetYouTubeAnnotationStyles();
                 Ebu.EbuUiHelper = new UiEbuSaveHelper();
+                Pac.GetPacEncodingImplementation = new UiGetPacEncoding();
 
                 toolStripComboBoxFrameRate.Items.Add((23.976).ToString());
                 toolStripComboBoxFrameRate.Items.Add((24.0).ToString());
@@ -17445,7 +17446,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += pac.Extension;
                 }
-                pac.Save(fileName, _subtitle, new UiGetPacEncoding());
+                pac.Save(fileName, _subtitle);
             }
         }
 
