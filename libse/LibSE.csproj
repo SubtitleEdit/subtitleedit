@@ -132,7 +132,6 @@
     <Compile Include="Forms\RemoveTextForHI.cs" />
     <Compile Include="Forms\RemoveTextForHISettings.cs" />
     <Compile Include="Forms\SplitLongLinesHelper.cs" />
-    <Compile Include="Fourier.cs" />
     <Compile Include="HistoryItem.cs" />
     <Compile Include="HtmlUtil.cs" />
     <Compile Include="IfoParser.cs" />
@@ -148,6 +147,7 @@
     <Compile Include="NoBreakAfterItem.cs" />
     <Compile Include="Paragraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RealFFT.cs" />
     <Compile Include="RegistryUtil.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SpellCheckWord.cs" />

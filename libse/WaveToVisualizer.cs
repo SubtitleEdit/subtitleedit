@@ -395,10 +395,8 @@ namespace Nikse.SubtitleEdit.Core
             var bitmaps = new List<Bitmap>();
 
             // setup fourier transformation
-            var f = new Fourier(nfft, true);
-            double divider = 2.0;
-            for (int k = 0; k < Header.BitsPerSample - 2; k++)
-                divider *= 2;
+            var f = new RealFFT(nfft);
+            double divider = Math.Pow(2.0, Header.BitsPerSample - 1);
 
             // determine how to read sample values
             ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataRerader();
@@ -508,7 +506,7 @@ namespace Nikse.SubtitleEdit.Core
             return bitmaps;
         }
 
-        private static Bitmap DrawSpectrogram(int nfft, double[] samples, Fourier f, Color[] palette)
+        private static Bitmap DrawSpectrogram(int nfft, double[] samples, RealFFT f, Color[] palette)
         {
             const int overlap = 0;
             int numSamples = samples.Length;
@@ -519,24 +517,25 @@ namespace Nikse.SubtitleEdit.Core
             while ((numcols - 1) * colIncrement + nfft > numSamples)
                 numcols--;
 
-            double[] real = new double[nfft];
-            double[] imag = new double[nfft];
+            const double raisedCosineWindowScale = 0.5;
+            double[] segment = new double[nfft];
+            double[] window = CreateRaisedCosineWindow(nfft);
             double[] magnitude = new double[nfft / 2];
+            double scaleCorrection = 1.0 / (raisedCosineWindowScale * f.ForwardScaleFactor);
             var bmp = new Bitmap(numcols, nfft / 2);
-            for (int col = 0; col <= numcols - 1; col++)
+            for (int col = 0; col < numcols; col++)
             {
                 // read a segment of the recorded signal
-                for (int c = 0; c <= nfft - 1; c++)
+                for (int c = 0; c < nfft; c++)
                 {
-                    imag[c] = 0;
-                    real[c] = samples[col * colIncrement + c] * Fourier.Hanning(nfft, c);
+                    segment[c] = samples[col * colIncrement + c] * window[c] * scaleCorrection;
                 }
 
                 // transform to the frequency domain
-                f.FourierTransform(real, imag);
+                f.ComputeForward(segment);
 
                 // and compute the magnitude spectrum
-                f.MagnitudeSpectrum(real, imag, Fourier.W0Hanning, magnitude);
+                MagnitudeSpectrum(segment, magnitude);
 
                 // Draw
                 for (int newY = 0; newY < nfft / 2 - 1; newY++)
@@ -546,6 +545,25 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
             return bmp;
+        }
+
+        private static double[] CreateRaisedCosineWindow(int n)
+        {
+            double twoPiOverN = Math.PI * 2.0 / n;
+            double[] dst = new double[n];
+            for (int i = 0; i < n; i++)
+                dst[i] = 0.5 * (1.0 - Math.Cos(twoPiOverN * i));
+            return dst;
+        }
+
+        private static void MagnitudeSpectrum(double[] segment, double[] magnitude)
+        {
+            for (int i = 0; i < segment.Length; i += 2)
+            {
+                double real = segment[i];
+                double imag = segment[i + 1];
+                magnitude[i / 2] = Math.Sqrt(real * real + imag * imag);
+            }
         }
 
         public static Color PaletteValue(int x, int range)
