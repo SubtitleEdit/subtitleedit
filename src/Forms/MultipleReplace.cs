@@ -10,7 +10,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class MultipleReplace : PositionAndSizeForm
     {
-
         internal class ReplaceExpression
         {
             internal const int SearchNormal = 0;
@@ -31,6 +30,12 @@ namespace Nikse.SubtitleEdit.Forms
                     SearchType = SearchCaseSensitive;
             }
         }
+
+        private const string MultipleSearchAndReplaceItem = "MultipleSearchAndReplaceItem";
+        private const string RuleEnabled = "Enabled";
+        private const string FindWhat = "FindWhat";
+        private const string ReplaceWith = "ReplaceWith";
+        private const string SearchType = "SearchType";
 
         public const string SearchTypeNormal = "Normal";
         public const string SearchTypeCaseSensitive = "CaseSensitive";
@@ -242,15 +247,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddToReplaceListView(bool enabled, string findWhat, string replaceWith, string searchType)
         {
-            var item = new ListViewItem("") { Checked = enabled };
-
-            var subItem = new ListViewItem.ListViewSubItem(item, findWhat);
-            item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, replaceWith);
-            item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, searchType);
-            item.SubItems.Add(subItem);
-
+            var item = new ListViewItem(string.Empty) { Checked = enabled };
+            item.SubItems.Add(findWhat);
+            item.SubItems.Add(replaceWith);
+            item.SubItems.Add(searchType);
             listViewReplaceList.Items.Add(item);
         }
 
@@ -436,10 +436,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            moveUpToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
-            moveDownToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
-            moveTopToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
-            moveBottomToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
+            bool isVisible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
+            moveUpToolStripMenuItem.Visible = isVisible;
+            moveDownToolStripMenuItem.Visible = isVisible;
+            moveTopToolStripMenuItem.Visible = isVisible;
+            moveBottomToolStripMenuItem.Visible = isVisible;
         }
 
         private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
@@ -453,6 +454,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SwapReplaceList(int index, int index2)
         {
+            listViewReplaceList.ItemChecked -= ListViewReplaceListItemChecked;
             bool enabled = listViewReplaceList.Items[index].Checked;
             string findWhat = listViewReplaceList.Items[index].SubItems[1].Text;
             string replaceWith = listViewReplaceList.Items[index].SubItems[2].Text;
@@ -472,6 +474,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewReplaceList.Items[index2].Selected = true;
             SaveReplaceList(false);
             GeneratePreview();
+            listViewReplaceList.ItemChecked += ListViewReplaceListItemChecked;
         }
 
         private void moveDownToolStripMenuItem_Click(object sender, EventArgs e)
@@ -523,15 +526,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var textWriter = new XmlTextWriter(saveFileDialog1.FileName, null) { Formatting = Formatting.Indented };
                 textWriter.WriteStartDocument();
-                textWriter.WriteStartElement("Settings", "");
-                textWriter.WriteStartElement("MultipleSearchAndReplaceList", "");
+                textWriter.WriteStartElement("Settings", string.Empty);
+                textWriter.WriteStartElement("MultipleSearchAndReplaceList", string.Empty);
                 foreach (var item in Configuration.Settings.MultipleSearchAndReplaceList)
                 {
-                    textWriter.WriteStartElement("MultipleSearchAndReplaceItem", "");
-                    textWriter.WriteElementString("Enabled", item.Enabled.ToString());
-                    textWriter.WriteElementString("FindWhat", item.FindWhat);
-                    textWriter.WriteElementString("ReplaceWith", item.ReplaceWith);
-                    textWriter.WriteElementString("SearchType", item.SearchType);
+                    textWriter.WriteStartElement(MultipleSearchAndReplaceItem, string.Empty);
+                    textWriter.WriteElementString(RuleEnabled, item.Enabled.ToString());
+                    textWriter.WriteElementString(FindWhat, item.FindWhat);
+                    textWriter.WriteElementString(ReplaceWith, item.ReplaceWith);
+                    textWriter.WriteElementString(SearchType, item.SearchType);
                     textWriter.WriteEndElement();
                 }
                 textWriter.WriteEndElement();
@@ -541,7 +544,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonOpen_Click(object sender, EventArgs e)
+        private void buttonImport_Click(object sender, EventArgs e)
         {
             openFileDialog1.Title = Configuration.Settings.Language.MultipleReplace.ImportRulesTitle;
             openFileDialog1.Filter = Configuration.Settings.Language.MultipleReplace.Rules + "|*.template";
@@ -561,16 +564,16 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
                 {
                     var item = new MultipleSearchAndReplaceSetting();
-                    var subNode = listNode.SelectSingleNode("Enabled");
+                    var subNode = listNode.SelectSingleNode(RuleEnabled);
                     if (subNode != null)
                         item.Enabled = Convert.ToBoolean(subNode.InnerText);
-                    subNode = listNode.SelectSingleNode("FindWhat");
+                    subNode = listNode.SelectSingleNode(FindWhat);
                     if (subNode != null)
                         item.FindWhat = subNode.InnerText;
-                    subNode = listNode.SelectSingleNode("ReplaceWith");
+                    subNode = listNode.SelectSingleNode(ReplaceWith);
                     if (subNode != null)
                         item.ReplaceWith = subNode.InnerText;
-                    subNode = listNode.SelectSingleNode("SearchType");
+                    subNode = listNode.SelectSingleNode(SearchType);
                     if (subNode != null)
                         item.SearchType = subNode.InnerText;
                     Configuration.Settings.MultipleSearchAndReplaceList.Add(item);
@@ -591,6 +594,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             listViewReplaceList.Items.Clear();
             Configuration.Settings.MultipleSearchAndReplaceList.Clear();
+            GeneratePreview();
         }
 
         private void MultipleReplace_Shown(object sender, EventArgs e)

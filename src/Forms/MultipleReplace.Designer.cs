@@ -230,7 +230,7 @@
             this.buttonImport.TabIndex = 6;
             this.buttonImport.Text = "Import...";
             this.buttonImport.UseVisualStyleBackColor = true;
-            this.buttonImport.Click += new System.EventHandler(this.buttonOpen_Click);
+            this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
             // 
             // textBoxFind
             // 
