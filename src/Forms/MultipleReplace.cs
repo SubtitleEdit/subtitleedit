@@ -242,15 +242,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddToReplaceListView(bool enabled, string findWhat, string replaceWith, string searchType)
         {
-            var item = new ListViewItem("") { Checked = enabled };
-
-            var subItem = new ListViewItem.ListViewSubItem(item, findWhat);
-            item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, replaceWith);
-            item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, searchType);
-            item.SubItems.Add(subItem);
-
+            var item = new ListViewItem(string.Empty) { Checked = enabled };
+            item.SubItems.Add(findWhat);
+            item.SubItems.Add(replaceWith);
+            item.SubItems.Add(searchType);
             listViewReplaceList.Items.Add(item);
         }
 
