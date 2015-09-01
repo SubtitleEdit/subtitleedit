@@ -10,7 +10,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class MultipleReplace : PositionAndSizeForm
     {
-
         internal class ReplaceExpression
         {
             internal const int SearchNormal = 0;
@@ -31,6 +30,12 @@ namespace Nikse.SubtitleEdit.Forms
                     SearchType = SearchCaseSensitive;
             }
         }
+
+        private const string MultipleSearchAndReplaceItem = "MultipleSearchAndReplaceItem";
+        private const string RuleEnabled = "Enabled";
+        private const string FindWhat = "FindWhat";
+        private const string ReplaceWith = "ReplaceWith";
+        private const string SearchType = "SearchType";
 
         public const string SearchTypeNormal = "Normal";
         public const string SearchTypeCaseSensitive = "CaseSensitive";
@@ -519,15 +524,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var textWriter = new XmlTextWriter(saveFileDialog1.FileName, null) { Formatting = Formatting.Indented };
                 textWriter.WriteStartDocument();
-                textWriter.WriteStartElement("Settings", "");
-                textWriter.WriteStartElement("MultipleSearchAndReplaceList", "");
+                textWriter.WriteStartElement("Settings", string.Empty);
+                textWriter.WriteStartElement("MultipleSearchAndReplaceList", string.Empty);
                 foreach (var item in Configuration.Settings.MultipleSearchAndReplaceList)
                 {
-                    textWriter.WriteStartElement("MultipleSearchAndReplaceItem", "");
-                    textWriter.WriteElementString("Enabled", item.Enabled.ToString());
-                    textWriter.WriteElementString("FindWhat", item.FindWhat);
-                    textWriter.WriteElementString("ReplaceWith", item.ReplaceWith);
-                    textWriter.WriteElementString("SearchType", item.SearchType);
+                    textWriter.WriteStartElement(MultipleSearchAndReplaceItem, string.Empty);
+                    textWriter.WriteElementString(RuleEnabled, item.Enabled.ToString());
+                    textWriter.WriteElementString(FindWhat, item.FindWhat);
+                    textWriter.WriteElementString(ReplaceWith, item.ReplaceWith);
+                    textWriter.WriteElementString(SearchType, item.SearchType);
                     textWriter.WriteEndElement();
                 }
                 textWriter.WriteEndElement();
@@ -557,16 +562,16 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
                 {
                     var item = new MultipleSearchAndReplaceSetting();
-                    var subNode = listNode.SelectSingleNode("Enabled");
+                    var subNode = listNode.SelectSingleNode(RuleEnabled);
                     if (subNode != null)
                         item.Enabled = Convert.ToBoolean(subNode.InnerText);
-                    subNode = listNode.SelectSingleNode("FindWhat");
+                    subNode = listNode.SelectSingleNode(FindWhat);
                     if (subNode != null)
                         item.FindWhat = subNode.InnerText;
-                    subNode = listNode.SelectSingleNode("ReplaceWith");
+                    subNode = listNode.SelectSingleNode(ReplaceWith);
                     if (subNode != null)
                         item.ReplaceWith = subNode.InnerText;
-                    subNode = listNode.SelectSingleNode("SearchType");
+                    subNode = listNode.SelectSingleNode(SearchType);
                     if (subNode != null)
                         item.SearchType = subNode.InnerText;
                     Configuration.Settings.MultipleSearchAndReplaceList.Add(item);
