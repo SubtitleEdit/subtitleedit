@@ -17,8 +17,13 @@ namespace Nikse.SubtitleEdit.Core
 
         public RealFFT(int length)
         {
+            if (length < 2 || (length & (length - 1)) != 0)
+            {
+                throw new ArgumentException("length", "FFT length must be at least 2 and a power of 2.");
+            }
+
             _length = length;
-            _ip = new int[2 + (1 << (Convert.ToInt32(Math.Log(length / 4, 2)) / 2))];
+            _ip = new int[2 + (1 << (Convert.ToInt32(Math.Log(Math.Max(length / 4, 1), 2)) / 2))];
             _w = new double[length / 2];
 
             ForwardScaleFactor = length;
@@ -27,6 +32,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public unsafe void ComputeForward(double[] buff)
         {
+            if (buff.Length < _length)
+            {
+                throw new ArgumentException("buff", "Buffer length must be greater than or equal to the FFT length.");
+            }
+
             fixed (double* a = buff)
             fixed (int* ip = _ip)
             fixed (double* w = _w)
@@ -37,6 +47,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public unsafe void ComputeReverse(double[] buff)
         {
+            if (buff.Length < _length)
+            {
+                throw new ArgumentException("buff", "Buffer length must be greater than or equal to the FFT length.");
+            }
+
             fixed (double* a = buff)
             fixed (int* ip = _ip)
             fixed (double* w = _w)
