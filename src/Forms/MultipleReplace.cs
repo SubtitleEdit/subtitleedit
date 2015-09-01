@@ -541,7 +541,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonOpen_Click(object sender, EventArgs e)
+        private void buttonImport_Click(object sender, EventArgs e)
         {
             openFileDialog1.Title = Configuration.Settings.Language.MultipleReplace.ImportRulesTitle;
             openFileDialog1.Filter = Configuration.Settings.Language.MultipleReplace.Rules + "|*.template";
