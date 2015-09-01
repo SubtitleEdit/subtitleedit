@@ -431,10 +431,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            moveUpToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
-            moveDownToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
-            moveTopToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
-            moveBottomToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
+            bool isVisible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
+            moveUpToolStripMenuItem.Visible = isVisible;
+            moveDownToolStripMenuItem.Visible = isVisible;
+            moveTopToolStripMenuItem.Visible = isVisible;
+            moveBottomToolStripMenuItem.Visible = isVisible;
         }
 
         private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
