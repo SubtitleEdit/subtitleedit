@@ -111,8 +111,11 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 {
                     string to = item.Attributes["replaceWith"].Value;
                     string from = item.Attributes["find"].Value;
-                    if (!list.ContainsKey(from))
-                        list.Add(from, to);
+                    if (Utilities.IsValidRegex(from))
+                    {
+                        if (!list.ContainsKey(from))
+                            list.Add(from, to);
+                    }
                 }
             }
             return list;
