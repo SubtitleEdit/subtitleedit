@@ -17,8 +17,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private static readonly Regex HexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
         private static readonly Regex StartEndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
 
-        public Dictionary<string, string> WordReplaceList;
-        public Dictionary<string, string> PartialLineWordBoundaryReplaceList;
+        public readonly Dictionary<string, string> WordReplaceList;
+        public readonly Dictionary<string, string> PartialLineWordBoundaryReplaceList;
         private readonly Dictionary<string, string> _partialLineAlwaysReplaceList;
         private readonly Dictionary<string, string> _beginLineReplaceList;
         private readonly Dictionary<string, string> _endLineReplaceList;
@@ -85,21 +85,16 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private static Dictionary<string, string> LoadReplaceList(XmlDocument doc, string name)
         {
             var list = new Dictionary<string, string>();
-            if (doc.DocumentElement != null)
+            if (!IsValidXmlDocument(doc, name))
+                return list;
+            foreach (XmlNode item in doc.DocumentElement.SelectSingleNode(name).ChildNodes)
             {
-                XmlNode node = doc.DocumentElement.SelectSingleNode(name);
-                if (node != null)
+                if (HasValidAttributes(item, false))
                 {
-                    foreach (XmlNode item in node.ChildNodes)
-                    {
-                        if (item.Attributes != null && item.Attributes["to"] != null && item.Attributes["from"] != null)
-                        {
-                            string to = item.Attributes["to"].InnerText;
-                            string from = item.Attributes["from"].InnerText;
-                            if (!list.ContainsKey(from))
-                                list.Add(from, to);
-                        }
-                    }
+                    string to = item.Attributes["to"].Value;
+                    string from = item.Attributes["from"].Value;
+                    if (!list.ContainsKey(from))
+                        list.Add(from, to);
                 }
             }
             return list;
@@ -108,24 +103,47 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private static Dictionary<string, string> LoadRegExList(XmlDocument doc, string name)
         {
             var list = new Dictionary<string, string>();
-            if (doc.DocumentElement != null)
+            if (!IsValidXmlDocument(doc, name))
+                return list;
+            foreach (XmlNode item in doc.DocumentElement.SelectSingleNode(name).ChildNodes)
             {
-                XmlNode node = doc.DocumentElement.SelectSingleNode(name);
-                if (node != null)
+                if (HasValidAttributes(item, true))
                 {
-                    foreach (XmlNode item in node.ChildNodes)
-                    {
-                        if (item.Attributes != null && item.Attributes["replaceWith"] != null && item.Attributes["find"] != null)
-                        {
-                            string to = item.Attributes["replaceWith"].InnerText;
-                            string from = item.Attributes["find"].InnerText;
-                            if (!list.ContainsKey(from))
-                                list.Add(from, to);
-                        }
-                    }
+                    string to = item.Attributes["replaceWith"].Value;
+                    string from = item.Attributes["find"].Value;
+                    if (!list.ContainsKey(from))
+                        list.Add(from, to);
                 }
             }
             return list;
+        }
+
+        private static bool IsValidXmlDocument(XmlDocument doc, string elementName)
+        {
+            if (doc.DocumentElement == null || doc.DocumentElement.SelectSingleNode(elementName) == null)
+                return false;
+            return true;
+        }
+
+        private static bool HasValidAttributes(XmlNode node, bool isRegex)
+        {
+            if (node == null || node.Attributes == null)
+                return false;
+            if (isRegex)
+            {
+                if (node.Attributes["find"] != null && node.Attributes["replaceWith"] != null)
+                {
+                    return Utilities.IsValidRegex(node.Attributes["find"].Value);
+                }
+            }
+            else
+            {
+                if (node.Attributes["from"] != null && node.Attributes["to"] != null)
+                {
+                    return (node.Attributes["from"].Value != node.Attributes["to"].Value);
+                }
+            }
+            return false;
         }
 
         public string FixOcrErrorViaLineReplaceList(string input)
