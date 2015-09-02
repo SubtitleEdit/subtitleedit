@@ -535,7 +535,8 @@ namespace Nikse.SubtitleEdit.Core
                 const double raisedCosineWindowScale = 0.5;
 
                 double scaleCorrection = 1.0 / (raisedCosineWindowScale * _fft.ForwardScaleFactor);
-                var bmp = new Bitmap(numcols, _nfft / 2);
+                var bmp = new FastBitmap(new Bitmap(numcols, _nfft / 2));
+                bmp.LockImage();
                 for (int col = 0; col < numcols; col++)
                 {
                     // read a segment of the recorded signal
@@ -551,16 +552,14 @@ namespace Nikse.SubtitleEdit.Core
                     MagnitudeSpectrum(_segment, _magnitude);
 
                     // Draw
-                    var fbmp = new FastBitmap(bmp);
-                    fbmp.LockImage();
                     for (int newY = 0; newY < _nfft / 2 - 1; newY++)
                     {
                         int colorIndex = MapToPixelIndex(_magnitude[newY], 100, 255);
-                        fbmp.SetPixel(col, (_nfft / 2 - 1) - newY, _palette[colorIndex]);
+                        bmp.SetPixel(col, (_nfft / 2 - 1) - newY, _palette[colorIndex]);
                     }
-                    fbmp.UnlockImage();
                 }
-                return bmp;
+                bmp.UnlockImage();
+                return bmp.GetBitmap();
             }
 
             private static double[] CreateRaisedCosineWindow(int n)
