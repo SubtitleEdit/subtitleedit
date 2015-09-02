@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (arr.Length == 6)
                 {
                     var lvi = new ListViewItem(arr[0]);
-                    lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi, arr[2].Replace(Environment.NewLine, "<br />")));
+                    lvi.SubItems.Add(arr[2].Replace(Environment.NewLine, "<br />"));
                     listViewTemplates.Items.Add(lvi);
                 }
             }
@@ -296,18 +296,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (listViewTemplates.SelectedItems.Count == 0)
-            {
-                toolStripMenuItem2.Visible = false;
-                editToolStripMenuItem.Visible = false;
-                deleteToolStripMenuItem.Visible = false;
-            }
-            else
-            {
-                toolStripMenuItem2.Visible = true;
-                editToolStripMenuItem.Visible = true;
-                deleteToolStripMenuItem.Visible = true;
-            }
+            bool enableVisibility = listViewTemplates.SelectedItems.Count > 0;
+            toolStripMenuItem2.Visible = enableVisibility;
+            editToolStripMenuItem.Visible = enableVisibility;
+            deleteToolStripMenuItem.Visible = enableVisibility;
         }
 
     }
