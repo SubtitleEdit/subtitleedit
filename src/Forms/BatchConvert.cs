@@ -778,8 +778,8 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             double fromFrameRate;
                             double toFrameRate;
-                            if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out fromFrameRate) &&
-                            double.TryParse(comboBoxFrameRateTo.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out toFrameRate))
+                            if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out fromFrameRate) &&
+                            double.TryParse(comboBoxFrameRateTo.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out toFrameRate))
                             {
                                 sub.ChangeFrameRate(fromFrameRate, toFrameRate);
                             }
