@@ -505,6 +505,7 @@ namespace Nikse.SubtitleEdit.Core
         private class SpectrogramDrawer
         {
             private int _nfft;
+            private MagnitudeToIndexMapper _mapper;
             private RealFFT _fft;
             private Color[] _palette;
             private double[] _segment;
@@ -514,6 +515,7 @@ namespace Nikse.SubtitleEdit.Core
             public SpectrogramDrawer(int nfft)
             {
                 _nfft = nfft;
+                _mapper = new MagnitudeToIndexMapper(100.0, 255);
                 _fft = new RealFFT(nfft);
                 _palette = GeneratePalette(nfft);
                 _segment = new double[nfft];
@@ -554,7 +556,7 @@ namespace Nikse.SubtitleEdit.Core
                     // Draw
                     for (int newY = 0; newY < _nfft / 2 - 1; newY++)
                     {
-                        int colorIndex = MapToPixelIndex(_magnitude[newY], 100, 255);
+                        int colorIndex = _mapper.Map(_magnitude[newY]);
                         bmp.SetPixel(col, (_nfft / 2 - 1) - newY, _palette[colorIndex]);
                     }
                 }
@@ -643,24 +645,6 @@ namespace Nikse.SubtitleEdit.Core
                 return Color.FromArgb((int)r, (int)g, (int)b);
             }
 
-            /// <summary>
-            /// Maps magnitudes in the range [-rangedB .. 0] dB to palette index values in the range [0 .. rangeIndex-1]
-            /// and computes and returns the index value which corresponds to passed-in magnitude
-            /// </summary>
-            private static int MapToPixelIndex(double magnitude, double rangedB, int rangeIndex)
-            {
-                const double log10 = 2.30258509299405;
-
-                if (magnitude == 0)
-                    return 0;
-
-                double levelIndB = 20 * Math.Log(magnitude) / log10;
-                if (levelIndB < -rangedB)
-                    return 0;
-
-                return (int)(rangeIndex * (levelIndB + rangedB) / rangedB);
-            }
-
             private static List<Color> SmoothColors(int fromR, int fromG, int fromB, int toR, int toG, int toB, int count)
             {
                 while (toR < 255 && toG < 255 && toB < 255)
@@ -686,6 +670,35 @@ namespace Nikse.SubtitleEdit.Core
                     b += diffB;
                 }
                 return list;
+            }
+
+            /// Maps magnitudes in the range [-decibelRange .. 0] dB to palette index values in the range [0 .. indexRange-1]
+            private class MagnitudeToIndexMapper
+            {
+                private readonly double _minMagnitude;
+                private readonly double _multiplier;
+                private readonly double _addend;
+
+                public MagnitudeToIndexMapper(double decibelRange, int indexRange)
+                {
+                    double mappingScale = indexRange / decibelRange;
+                    _minMagnitude = Math.Pow(10.0, -decibelRange / 20.0);
+                    _multiplier = 20.0 * mappingScale;
+                    _addend = decibelRange * mappingScale;
+                }
+
+                public int Map(double magnitude)
+                {
+                    return magnitude >= _minMagnitude ? (int)(_multiplier * Math.Log10(magnitude) + _addend) : 0;
+                }
+
+                // Less optimized but readable version of the above
+                public static int Map(double magnitude, double decibelRange, int indexRange)
+                {
+                    if (magnitude == 0) return 0;
+                    double decibelLevel = 20.0 * Math.Log10(magnitude);
+                    return decibelLevel >= -decibelRange ? (int)(indexRange * (decibelLevel + decibelRange) / decibelRange) : 0;
+                }
             }
         }
     }
