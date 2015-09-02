@@ -296,18 +296,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (listViewTemplates.SelectedItems.Count == 0)
-            {
-                toolStripMenuItem2.Visible = false;
-                editToolStripMenuItem.Visible = false;
-                deleteToolStripMenuItem.Visible = false;
-            }
-            else
-            {
-                toolStripMenuItem2.Visible = true;
-                editToolStripMenuItem.Visible = true;
-                deleteToolStripMenuItem.Visible = true;
-            }
+            bool enableVisibility = listViewTemplates.SelectedItems.Count > 0;
+            toolStripMenuItem2.Visible = enableVisibility;
+            editToolStripMenuItem.Visible = enableVisibility;
+            deleteToolStripMenuItem.Visible = enableVisibility;
         }
 
     }
