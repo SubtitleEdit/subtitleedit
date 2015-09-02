@@ -428,10 +428,9 @@ namespace Nikse.SubtitleEdit.Forms
                 string fileName = files[0];
 
                 var fi = new FileInfo(fileName);
-                string ext = Path.GetExtension(fileName).ToLower();
                 if (fi.Length < 1024 * 1024 * 2) // max 2 mb
                 {
-                    if (ext == ".ifo")
+                    if (fi.Extension.ToLowerInvariant() == ".ifo")
                         OpenIfoFile(fileName);
                 }
             }
