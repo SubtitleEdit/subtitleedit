@@ -124,18 +124,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
         private string GetStringFromResponse(IAsyncResult result)
         {
             HttpWebResponse response = (result.AsyncState as HttpWebRequest).EndGetResponse(result) as HttpWebResponse;
-            System.IO.Stream responseStream = response.GetResponseStream();
-            byte[] buffer = new byte[5000000];
-            int count = 1;
-            int index = 0;
-            while (count > 0)
+            using (var stream = new System.IO.StreamReader(response.GetResponseStream()))
             {
-                count = responseStream.Read(buffer, index, 2048);
-                index += count;
+                string s = stream.ReadToEnd();
+                if (s.Length > 0)
+                    _successCount++;
+                return s;
             }
-            if (index > 0)
-                _successCount++;
-            return Encoding.UTF8.GetString(buffer, 0, index);
         }
 
         public CheckForUpdatesHelper()
