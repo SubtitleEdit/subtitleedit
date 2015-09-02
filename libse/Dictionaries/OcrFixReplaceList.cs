@@ -273,7 +273,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
                 word = word.Replace("ﬁ", "fi");
-                word = word.Replace("ν", "v"); // NOTE: first 'v' is a special unicode character!!!!
+                word = word.Replace('ν', 'v'); // NOTE: first 'v' is a special unicode character!!!!
 
                 if (word.Contains('’'))
                     word = word.Replace('’', '\'');
@@ -544,12 +544,13 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                     match = RegExTime1.Match(word);
                 }
 
+                const string expectedDigits = "123456789";
                 match = RegExTime2.Match(word);
                 while (match.Success)
                 {
                     if (word[match.Index] == '0')
                     {
-                        if (match.Index == 0 || !@"123456789".Contains(word[match.Index - 1]))
+                        if (match.Index == 0 || !expectedDigits.Contains(word[match.Index - 1]))
                         {
                             string oldText = word;
                             word = word.Substring(0, match.Index) + "o";
