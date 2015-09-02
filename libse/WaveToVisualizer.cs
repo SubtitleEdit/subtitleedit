@@ -689,7 +689,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 public int Map(double magnitude)
                 {
-                    return magnitude >= _minMagnitude ? (int)(_multiplier * Math.Log10(magnitude) + _addend) : 0;
+                    return magnitude >= _minMagnitude ? (int)(Math.Log10(magnitude) * _multiplier + _addend) : 0;
                 }
 
                 // Less optimized but readable version of the above
