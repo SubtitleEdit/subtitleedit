@@ -682,7 +682,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 _interjectionList = new List<string>();
                 foreach (string s in arr)
                 {
-                    if (s.Length > 0)
+                    if (s.Length > 1)
                     {
                         if (!_interjectionList.Contains(s))
                             _interjectionList.Add(s);
