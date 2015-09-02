@@ -695,7 +695,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         if (!_interjectionList.Contains(upper))
                             _interjectionList.Add(upper);
 
-                        string pascalCasing = char.ToUpper(s[0]) + s.Substring(1);
+                        string pascalCasing = char.ToUpper(s[0]) + lower.Substring(1);
                         if (!_interjectionList.Contains(pascalCasing))
                             _interjectionList.Add(pascalCasing);
                     }
