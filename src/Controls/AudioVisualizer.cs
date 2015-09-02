@@ -1789,7 +1789,12 @@ namespace Nikse.SubtitleEdit.Controls
                 for (var count = 0; ; count++)
                 {
                     var fileName = Path.Combine(_spectrogramDirectory, count + ".gif");
-                    _spectrogramBitmaps.Add((Bitmap)Image.FromFile(fileName));
+
+                    // important that this does not lock file (do NOT use Image.FromFile(fileName) or alike!!!)
+                    using (var ms = new MemoryStream(File.ReadAllBytes(fileName)))
+                    {
+                        _spectrogramBitmaps.Add((Bitmap)Image.FromStream(ms));
+                    }
                 }
             }
             catch (FileNotFoundException)
