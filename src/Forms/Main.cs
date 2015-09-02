@@ -2644,7 +2644,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MessageBox.Show(_language.FileIsEmptyOrShort);
                     }
                     else
-                    {                       
+                    {
                         ShowUnknownSubtitle();
                         return;
                     }
@@ -11206,11 +11206,11 @@ namespace Nikse.SubtitleEdit.Forms
             const string k = "@__<<>___@";
 
             s = s.Replace("(", k);
-            s = s.Replace(")", "(");
+            s = s.Replace(')', '(');
             s = s.Replace(k, ")");
 
             s = s.Replace("[", k);
-            s = s.Replace("]", "[");
+            s = s.Replace(']', '[');
             s = s.Replace(k, "]");
 
             return s;
@@ -11281,7 +11281,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var line in lines)
                 {
                     var trimmed = line.TrimStart();
-                    if (trimmed.StartsWith('-') || trimmed.StartsWith("<i>-") || trimmed.StartsWith("<i> -"))
+                    if (trimmed.StartsWith('-') || trimmed.StartsWith("<i>-", StringComparison.Ordinal) || trimmed.StartsWith("<i> -", StringComparison.Ordinal))
                     {
                         hasStartDash = true;
                         break;
@@ -11330,7 +11330,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (line.TrimStart().StartsWith('-'))
                         sb.AppendLine(line.TrimStart().TrimStart('-').TrimStart());
-                    else if (line.TrimStart().StartsWith("<i>-") || line.TrimStart().StartsWith("<i> -"))
+                    else if (line.TrimStart().StartsWith("<i>-", StringComparison.Ordinal) || line.TrimStart().StartsWith("<i> -", StringComparison.Ordinal))
                         sb.AppendLine("<i>" + line.TrimStart().Substring(3).TrimStart().TrimStart('-').TrimStart());
                     else
                         sb.AppendLine(line);
