@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (arr.Length == 6)
                 {
                     var lvi = new ListViewItem(arr[0]);
-                    lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi, arr[2].Replace(Environment.NewLine, "<br />")));
+                    lvi.SubItems.Add(arr[2].Replace(Environment.NewLine, "<br />"));
                     listViewTemplates.Items.Add(lvi);
                 }
             }
