@@ -114,15 +114,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string GetTimeCode(TimeCode timeCode, string template)
         {
-            if (template.Trim() == "ss")
+            var templateTrimmed = template.Trim();
+            if (templateTrimmed == "ss")
                 template = template.Replace("ss", string.Format("{0:00}", timeCode.TotalSeconds));
-            if (template.Trim() == "s")
+            if (templateTrimmed == "s")
                 template = template.Replace("s", string.Format("{0}", timeCode.TotalSeconds));
-            if (template.Trim() == "zzz")
+            if (templateTrimmed == "zzz")
                 template = template.Replace("zzz", string.Format("{0:000}", timeCode.TotalMilliseconds));
-            if (template.Trim() == "z")
+            if (templateTrimmed == "z")
                 template = template.Replace("z", string.Format("{0}", timeCode.TotalMilliseconds));
-            if (template.Trim() == "ff")
+            if (templateTrimmed == "ff")
                 template = template.Replace("ff", string.Format("{0}", SubtitleFormat.MillisecondsToFrames(timeCode.TotalMilliseconds)));
 
             if (template.StartsWith("ssssssss"))
