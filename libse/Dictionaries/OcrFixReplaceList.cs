@@ -91,8 +91,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 if (item.Attributes != null && item.Attributes["to"] != null && item.Attributes["from"] != null)
                 {
-                    string to = item.Attributes["to"].InnerText;
-                    string from = item.Attributes["from"].InnerText;
+                    string to = item.Attributes["to"].Value;
+                    string from = item.Attributes["from"].Value;
                     if (!list.ContainsKey(from))
                         list.Add(from, to);
                 }
@@ -109,8 +109,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 if (item.Attributes != null && item.Attributes["replaceWith"] != null && item.Attributes["find"] != null)
                 {
-                    string to = item.Attributes["replaceWith"].InnerText;
-                    string from = item.Attributes["find"].InnerText;
+                    string to = item.Attributes["replaceWith"].Value;
+                    string from = item.Attributes["find"].Value;
                     if (!list.ContainsKey(from))
                         list.Add(from, to);
                 }
