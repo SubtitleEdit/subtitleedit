@@ -227,7 +227,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             PeaksPerSecond = peaksPerSecond;
 
-            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataRerader();
+            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataReader();
             DataMinValue = int.MaxValue;
             DataMaxValue = int.MinValue;
             PeakSamples = new List<int>();
@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Core
         public void GenerateAllSamples()
         {
             // determine how to read sample values
-            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataRerader();
+            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataReader();
 
             // load data
             _data = new byte[Header.DataChunkSize];
@@ -333,7 +333,9 @@ namespace Nikse.SubtitleEdit.Core
 
         private int ReadValue16Bit(ref int index)
         {
-            int result = BitConverter.ToInt16(_data, index);
+            int result = (short)(
+                (_data[index    ]     ) |
+                (_data[index + 1] << 8));
             index += 2;
             return result;
         }
@@ -361,7 +363,7 @@ namespace Nikse.SubtitleEdit.Core
         /// Determine how to read sample values
         /// </summary>
         /// <returns>Sample data reader that matches bits per sample</returns>
-        private ReadSampleDataValueDelegate GetSampleDataRerader()
+        private ReadSampleDataValueDelegate GetSampleDataReader()
         {
             ReadSampleDataValueDelegate readSampleDataValue;
             switch (Header.BitsPerSample)
@@ -403,8 +405,8 @@ namespace Nikse.SubtitleEdit.Core
 
             List<Bitmap> bitmaps = new List<Bitmap>();
             SpectrogramDrawer drawer = new SpectrogramDrawer(nfft);
-            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataRerader();
-            double sampleScale = 1.0 / Math.Pow(2.0, Header.BitsPerSample - 1);
+            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataReader();
+            double sampleScale = 1.0 / (Math.Pow(2.0, Header.BitsPerSample - 1) * Header.NumberOfChannels);
 
             int delaySampleCount = (int)(Header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
 
@@ -467,9 +469,6 @@ namespace Nikse.SubtitleEdit.Core
                         {
                             value += readSampleDataValue(ref dataByteOffset);
                         }
-                        value /= Header.NumberOfChannels;
-                        if (value < DataMinValue) DataMinValue = value;
-                        if (value > DataMaxValue) DataMaxValue = value;
                         chunkSamples[chunkSampleOffset] = value * sampleScale;
                         chunkSampleOffset += 1;
                     }
@@ -504,10 +503,12 @@ namespace Nikse.SubtitleEdit.Core
 
         private class SpectrogramDrawer
         {
+            private const double raisedCosineWindowScale = 0.5;
+
             private int _nfft;
             private MagnitudeToIndexMapper _mapper;
             private RealFFT _fft;
-            private Color[] _palette;
+            private FastBitmap.PixelData[] _palette;
             private double[] _segment;
             private double[] _window;
             private double[] _magnitude;
@@ -521,43 +522,39 @@ namespace Nikse.SubtitleEdit.Core
                 _segment = new double[nfft];
                 _window = CreateRaisedCosineWindow(nfft);
                 _magnitude = new double[nfft / 2];
+
+                double scaleCorrection = 1.0 / (raisedCosineWindowScale * _fft.ForwardScaleFactor);
+                for (int i = 0; i < _window.Length; i++)
+                {
+                    _window[i] *= scaleCorrection;
+                }
             }
 
             public Bitmap Draw(double[] samples)
             {
-                const int overlap = 0;
-                int numSamples = samples.Length;
-                int colIncrement = _nfft * (1 - overlap);
-
-                int numcols = numSamples / colIncrement;
-                // make sure we don't step beyond the end of the recording
-                while ((numcols - 1) * colIncrement + _nfft > numSamples)
-                    numcols--;
-
-                const double raisedCosineWindowScale = 0.5;
-
-                double scaleCorrection = 1.0 / (raisedCosineWindowScale * _fft.ForwardScaleFactor);
-                var bmp = new FastBitmap(new Bitmap(numcols, _nfft / 2));
+                int width = samples.Length / _nfft;
+                int height = _nfft / 2;
+                var bmp = new FastBitmap(new Bitmap(width, height));
                 bmp.LockImage();
-                for (int col = 0; col < numcols; col++)
+                for (int x = 0; x < width; x++)
                 {
                     // read a segment of the recorded signal
-                    for (int c = 0; c < _nfft; c++)
+                    for (int i = 0; i < _nfft; i++)
                     {
-                        _segment[c] = samples[col * colIncrement + c] * _window[c] * scaleCorrection;
+                        _segment[i] = samples[x * _nfft + i] * _window[i];
                     }
 
                     // transform to the frequency domain
                     _fft.ComputeForward(_segment);
 
-                    // and compute the magnitude spectrum
+                    // compute the magnitude of the spectrum
                     MagnitudeSpectrum(_segment, _magnitude);
 
-                    // Draw
-                    for (int newY = 0; newY < _nfft / 2 - 1; newY++)
+                    // draw
+                    for (int y = 0; y < height; y++)
                     {
-                        int colorIndex = _mapper.Map(_magnitude[newY]);
-                        bmp.SetPixel(col, (_nfft / 2 - 1) - newY, _palette[colorIndex]);
+                        int colorIndex = _mapper.Map(_magnitude[y]);
+                        bmp.SetPixel(x, height - y - 1, _palette[colorIndex]);
                     }
                 }
                 bmp.UnlockImage();
@@ -585,13 +582,13 @@ namespace Nikse.SubtitleEdit.Core
                 return a * a + b * b;
             }
 
-            private static Color[] GeneratePalette(int nfft)
+            private static FastBitmap.PixelData[] GeneratePalette(int nfft)
             {
-                Color[] palette = new Color[nfft];
+                var palette = new FastBitmap.PixelData[nfft];
                 if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Classic")
                 {
                     for (int colorIndex = 0; colorIndex < nfft; colorIndex++)
-                        palette[colorIndex] = PaletteValue(colorIndex, nfft);
+                        palette[colorIndex] = new FastBitmap.PixelData(PaletteValue(colorIndex, nfft));
                 }
                 else
                 {
@@ -599,7 +596,7 @@ namespace Nikse.SubtitleEdit.Core
                                                      Configuration.Settings.VideoControls.WaveformColor.G,
                                                      Configuration.Settings.VideoControls.WaveformColor.B, nfft);
                     for (int i = 0; i < nfft; i++)
-                        palette[i] = list[i];
+                        palette[i] = new FastBitmap.PixelData(list[i]);
                 }
                 return palette;
             }
