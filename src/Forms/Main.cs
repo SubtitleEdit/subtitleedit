@@ -1761,7 +1761,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 SetEncoding(Configuration.Settings.General.DefaultEncoding);
                                 encoding = GetCurrentEncoding();
-                                var list = new List<string>(subtitles[0].Replace(Environment.NewLine, "\r").Replace("\n", "\r").Split('\r'));
+                                var list = new List<string>(subtitles[0].SplitToLines());
                                 _subtitle = new Subtitle();
                                 var mxfFormat = _subtitle.ReloadLoadSubtitle(list, null);
                                 SetCurrentFormat(mxfFormat);
@@ -2412,7 +2412,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null && file.Length < 500000)
                 {
-
                     // check for valid timed text
                     if (ext == ".xml" || ext == ".dfxp")
                     {
@@ -2644,7 +2643,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MessageBox.Show(_language.FileIsEmptyOrShort);
                     }
                     else
-                    {                       
+                    {
                         ShowUnknownSubtitle();
                         return;
                     }
