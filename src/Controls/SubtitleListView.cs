@@ -856,9 +856,9 @@ namespace Nikse.SubtitleEdit.Controls
                     ShowExtraColumn(string.Empty);
                 }
                 if (Items[index].SubItems.Count <= ColumnIndexExtra)
-                    Items[index].SubItems.Add(new ListViewItem.ListViewSubItem());
+                    Items[index].SubItems.Add(string.Empty);
                 if (Items[index].SubItems.Count <= ColumnIndexExtra)
-                    Items[index].SubItems.Add(new ListViewItem.ListViewSubItem());
+                    Items[index].SubItems.Add(string.Empty);
                 Items[index].SubItems[ColumnIndexExtra].Text = text;
 
                 Items[index].UseItemStyleForSubItems = false;
@@ -873,8 +873,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (Items[index].SubItems.Count <= ColumnIndexTextAlternate)
                 {
-                    var subItem = new ListViewItem.ListViewSubItem(Items[index], text.Replace(Environment.NewLine, _lineSeparatorString));
-                    Items[index].SubItems.Add(subItem);
+                    Items[index].SubItems.Add(text.Replace(Environment.NewLine, _lineSeparatorString));
                 }
                 else
                 {
@@ -890,7 +889,7 @@ namespace Nikse.SubtitleEdit.Controls
                 ListViewItem item = Items[index];
                 if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                 {
-                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Nikse.SubtitleEdit.Core.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
+                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Core.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
                     if (paragraph.EndTime.IsMaxTime)
                         item.SubItems[ColumnIndexEnd].Text = "-";
                     else
