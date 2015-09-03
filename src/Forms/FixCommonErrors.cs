@@ -561,6 +561,17 @@ namespace Nikse.SubtitleEdit.Forms
                     var pre = string.Empty;
                     var post = string.Empty;
 
+                    // Ssa Tags
+                    if (text.StartsWith("{\\", StringComparison.Ordinal))
+                    {
+                        var endIDx = text.IndexOf('}', 2);
+                        if (endIDx > 2)
+                        {
+                            pre = text.Substring(0, endIDx + 1);
+                            text = text.Remove(0, endIDx + 1);
+                        }
+                    }
+
                     while (text.LineStartsWithHtmlTag(true, true))
                     {
                         // Three length tag
