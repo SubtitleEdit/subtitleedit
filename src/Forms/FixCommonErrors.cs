@@ -2837,12 +2837,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixMusicNotation;
             int fixCount = 0;
+            string[] musicSymbols = Configuration.Settings.Tools.MusicSymbolToReplace.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
                 if (AllowFix(p, fixAction))
                 {
-                    string[] musicSymbols = Configuration.Settings.Tools.MusicSymbolToReplace.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     var oldText = p.Text;
                     var newText = oldText;
 
