@@ -598,7 +598,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    if (AllowFix(p, fixAction1) && text.StartsWith(Environment.NewLine))
+                    if (AllowFix(p, fixAction1) && text.StartsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
                         if (pre.Length > 0)
                             text = pre + text.TrimStart(Utilities.NewLineChars);
