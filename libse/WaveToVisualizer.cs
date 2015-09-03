@@ -124,6 +124,14 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public long LengthInSamples
+        {
+            get
+            {
+                return DataChunkSize / BlockAlign;
+            }
+        }
+
         internal void WriteHeader(Stream toStream, int sampleRate, int numberOfChannels, int bitsPerSample, int dataSize)
         {
             const int fmtChunckSize = 16;
@@ -219,7 +227,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             PeaksPerSecond = peaksPerSecond;
 
-            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataRerader();
+            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataReader();
             DataMinValue = int.MaxValue;
             DataMaxValue = int.MinValue;
             PeakSamples = new List<int>();
@@ -258,7 +266,7 @@ namespace Nikse.SubtitleEdit.Core
         public void GenerateAllSamples()
         {
             // determine how to read sample values
-            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataRerader();
+            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataReader();
 
             // load data
             _data = new byte[Header.DataChunkSize];
@@ -325,7 +333,9 @@ namespace Nikse.SubtitleEdit.Core
 
         private int ReadValue16Bit(ref int index)
         {
-            int result = BitConverter.ToInt16(_data, index);
+            int result = (short)(
+                (_data[index    ]     ) |
+                (_data[index + 1] << 8));
             index += 2;
             return result;
         }
@@ -353,7 +363,7 @@ namespace Nikse.SubtitleEdit.Core
         /// Determine how to read sample values
         /// </summary>
         /// <returns>Sample data reader that matches bits per sample</returns>
-        private ReadSampleDataValueDelegate GetSampleDataRerader()
+        private ReadSampleDataValueDelegate GetSampleDataReader()
         {
             ReadSampleDataValueDelegate readSampleDataValue;
             switch (Header.BitsPerSample)
@@ -392,115 +402,98 @@ namespace Nikse.SubtitleEdit.Core
         public List<Bitmap> GenerateFourierData(int nfft, string spectrogramDirectory, int delayInMilliseconds)
         {
             const int bitmapWidth = 1024;
-            var bitmaps = new List<Bitmap>();
 
-            // setup fourier transformation
-            var f = new Fourier(nfft, true);
-            double divider = 2.0;
-            for (int k = 0; k < Header.BitsPerSample - 2; k++)
-                divider *= 2;
+            List<Bitmap> bitmaps = new List<Bitmap>();
+            SpectrogramDrawer drawer = new SpectrogramDrawer(nfft);
+            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataReader();
+            double sampleScale = 1.0 / (Math.Pow(2.0, Header.BitsPerSample - 1) * Header.NumberOfChannels);
 
-            // determine how to read sample values
-            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataRerader();
-
-            // set up one column of the spectrogram
-            var palette = new Color[nfft];
-            if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Classic")
-            {
-                for (int colorIndex = 0; colorIndex < nfft; colorIndex++)
-                    palette[colorIndex] = PaletteValue(colorIndex, nfft);
-            }
-            else
-            {
-                var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveformColor.R,
-                                                 Configuration.Settings.VideoControls.WaveformColor.G,
-                                                 Configuration.Settings.VideoControls.WaveformColor.B, nfft);
-                for (int i = 0; i < nfft; i++)
-                    palette[i] = list[i];
-            }
-
-            // read sample values
-            DataMinValue = int.MaxValue;
-            DataMaxValue = int.MinValue;
-            var samples = new List<int>();
-            int index = 0;
-            int sampleSize = nfft * bitmapWidth;
-            int count = 0;
-            long totalSamples = 0;
-
-            // write delay (if any)
             int delaySampleCount = (int)(Header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
-            for (int i = 0; i < delaySampleCount; i++)
+
+            // other code (e.g. generating peaks) doesn't handle negative delays, so we'll do the same for now
+            delaySampleCount = Math.Max(delaySampleCount, 0);
+
+            long fileSampleCount = Header.LengthInSamples;
+            long fileSampleOffset = -delaySampleCount;
+            int chunkSampleCount = nfft * bitmapWidth;
+            int chunkCount = (int)Math.Ceiling((double)(fileSampleCount + delaySampleCount) / chunkSampleCount);
+            double[] chunkSamples = new double[chunkSampleCount];
+
+            _data = new byte[chunkSampleCount * Header.BlockAlign];
+            _stream.Seek(Header.DataStartPosition, SeekOrigin.Begin);
+
+            // for negative delays, skip samples at the beginning
+            if (fileSampleOffset > 0)
             {
-                samples.Add(0);
-                if (samples.Count == sampleSize)
-                {
-                    var samplesAsReal = new double[sampleSize];
-                    for (int k = 0; k < sampleSize; k++)
-                        samplesAsReal[k] = 0;
-                    var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
-                    bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
-                    bitmaps.Add(bmp);
-                    samples = new List<int>();
-                    count++;
-                }
+                _stream.Seek(fileSampleOffset * Header.BlockAlign, SeekOrigin.Current);
             }
 
-            // load data in smaller parts
-            _data = new byte[Header.BytesPerSecond];
-            _stream.Position = Header.DataStartPosition;
-            int bytesRead = _stream.Read(_data, 0, _data.Length);
-            while (bytesRead == Header.BytesPerSecond)
+            for (int iChunk = 0; iChunk < chunkCount; iChunk++)
             {
-                while (index < Header.BytesPerSecond)
+                // calculate padding at the beginning (for positive delays)
+                int startPaddingSampleCount = 0;
+                if (fileSampleOffset < 0)
                 {
-                    int value = 0;
-                    for (int channelNumber = 0; channelNumber < Header.NumberOfChannels; channelNumber++)
-                    {
-                        value += readSampleDataValue.Invoke(ref index);
-                    }
-                    value = value / Header.NumberOfChannels;
-                    if (value < DataMinValue)
-                        DataMinValue = value;
-                    if (value > DataMaxValue)
-                        DataMaxValue = value;
-                    samples.Add(value);
-                    totalSamples++;
+                    startPaddingSampleCount = (int)Math.Min(-fileSampleOffset, chunkSampleCount);
+                    fileSampleOffset += startPaddingSampleCount;
+                }
 
-                    if (samples.Count == sampleSize)
+                // calculate how many samples to read from the file
+                long fileSamplesRemaining = fileSampleCount - Math.Max(fileSampleOffset, 0);
+                int fileReadSampleCount = (int)Math.Min(fileSamplesRemaining, chunkSampleCount - startPaddingSampleCount);
+
+                // calculate padding at the end (when the data isn't an even multiple of our chunk size)
+                int endPaddingSampleCount = chunkSampleCount - startPaddingSampleCount - fileReadSampleCount;
+
+                int chunkSampleOffset = 0;
+
+                // add padding at the beginning
+                if (startPaddingSampleCount > 0)
+                {
+                    Array.Clear(chunkSamples, chunkSampleOffset, startPaddingSampleCount);
+                    chunkSampleOffset += startPaddingSampleCount;
+                }
+
+                // read samples from the file
+                if (fileReadSampleCount > 0)
+                {
+                    int fileReadByteCount = fileReadSampleCount * Header.BlockAlign;
+                    _stream.Read(_data, 0, fileReadByteCount);
+                    fileSampleOffset += fileReadSampleCount;
+
+                    int dataByteOffset = 0;
+                    while (dataByteOffset < fileReadByteCount)
                     {
-                        var samplesAsReal = new double[sampleSize];
-                        for (int k = 0; k < sampleSize; k++)
-                            samplesAsReal[k] = samples[k] / divider;
-                        var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
-                        bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
-                        bitmaps.Add(bmp);
-                        samples = new List<int>();
-                        count++;
+                        int value = 0;
+                        for (int iChannel = 0; iChannel < Header.NumberOfChannels; iChannel++)
+                        {
+                            value += readSampleDataValue(ref dataByteOffset);
+                        }
+                        chunkSamples[chunkSampleOffset] = value * sampleScale;
+                        chunkSampleOffset += 1;
                     }
                 }
-                bytesRead = _stream.Read(_data, 0, _data.Length);
-                index = 0;
-            }
 
-            if (samples.Count > 0)
-            {
-                var samplesAsReal = new double[sampleSize];
-                for (int k = 0; k < sampleSize && k < samples.Count; k++)
-                    samplesAsReal[k] = samples[k] / divider;
-                var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
-                bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
+                // add padding at the end
+                if (endPaddingSampleCount > 0)
+                {
+                    Array.Clear(chunkSamples, chunkSampleOffset, endPaddingSampleCount);
+                    chunkSampleOffset += endPaddingSampleCount;
+                }
+
+                // generate spectrogram for this chunk
+                Bitmap bmp = drawer.Draw(chunkSamples);
+                bmp.Save(Path.Combine(spectrogramDirectory, iChunk + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
                 bitmaps.Add(bmp);
             }
 
             var doc = new XmlDocument();
             doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/><AudioFormat /><AudioFormat /><ChunkId /><SecondsPerImage /><ImageWidth /><NFFT /></SpectrogramInfo>");
-            double sampleDuration = Header.LengthInSeconds / (totalSamples / Convert.ToDouble(nfft));
-            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = sampleDuration.ToString(CultureInfo.InvariantCulture);
+            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = ((double)nfft / Header.SampleRate).ToString(CultureInfo.InvariantCulture);
             doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText = Header.LengthInSeconds.ToString(CultureInfo.InvariantCulture);
             doc.DocumentElement.SelectSingleNode("AudioFormat").InnerText = Header.AudioFormat.ToString(CultureInfo.InvariantCulture);
             doc.DocumentElement.SelectSingleNode("ChunkId").InnerText = Header.ChunkId.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)(sampleSize / (double)Header.SampleRate)).ToString(CultureInfo.InvariantCulture);
+            doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)chunkSampleCount / Header.SampleRate).ToString(CultureInfo.InvariantCulture);
             doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = bitmapWidth.ToString(CultureInfo.InvariantCulture);
             doc.DocumentElement.SelectSingleNode("NFFT").InnerText = nfft.ToString(CultureInfo.InvariantCulture);
             doc.Save(Path.Combine(spectrogramDirectory, "Info.xml"));
@@ -508,131 +501,202 @@ namespace Nikse.SubtitleEdit.Core
             return bitmaps;
         }
 
-        private static Bitmap DrawSpectrogram(int nfft, double[] samples, Fourier f, Color[] palette)
+        private class SpectrogramDrawer
         {
-            const int overlap = 0;
-            int numSamples = samples.Length;
-            int colIncrement = nfft * (1 - overlap);
+            private const double raisedCosineWindowScale = 0.5;
 
-            int numcols = numSamples / colIncrement;
-            // make sure we don't step beyond the end of the recording
-            while ((numcols - 1) * colIncrement + nfft > numSamples)
-                numcols--;
+            private int _nfft;
+            private MagnitudeToIndexMapper _mapper;
+            private RealFFT _fft;
+            private FastBitmap.PixelData[] _palette;
+            private double[] _segment;
+            private double[] _window;
+            private double[] _magnitude;
 
-            double[] real = new double[nfft];
-            double[] imag = new double[nfft];
-            double[] magnitude = new double[nfft / 2];
-            var bmp = new Bitmap(numcols, nfft / 2);
-            for (int col = 0; col <= numcols - 1; col++)
+            public SpectrogramDrawer(int nfft)
             {
-                // read a segment of the recorded signal
-                for (int c = 0; c <= nfft - 1; c++)
+                _nfft = nfft;
+                _mapper = new MagnitudeToIndexMapper(100.0, 255);
+                _fft = new RealFFT(nfft);
+                _palette = GeneratePalette(nfft);
+                _segment = new double[nfft];
+                _window = CreateRaisedCosineWindow(nfft);
+                _magnitude = new double[nfft / 2];
+
+                double scaleCorrection = 1.0 / (raisedCosineWindowScale * _fft.ForwardScaleFactor);
+                for (int i = 0; i < _window.Length; i++)
                 {
-                    imag[c] = 0;
-                    real[c] = samples[col * colIncrement + c] * Fourier.Hanning(nfft, c);
-                }
-
-                // transform to the frequency domain
-                f.FourierTransform(real, imag);
-
-                // and compute the magnitude spectrum
-                f.MagnitudeSpectrum(real, imag, Fourier.W0Hanning, magnitude);
-
-                // Draw
-                for (int newY = 0; newY < nfft / 2 - 1; newY++)
-                {
-                    int colorIndex = MapToPixelIndex(magnitude[newY], 100, 255);
-                    bmp.SetPixel(col, (nfft / 2 - 1) - newY, palette[colorIndex]);
+                    _window[i] *= scaleCorrection;
                 }
             }
-            return bmp;
+
+            public Bitmap Draw(double[] samples)
+            {
+                int width = samples.Length / _nfft;
+                int height = _nfft / 2;
+                var bmp = new FastBitmap(new Bitmap(width, height));
+                bmp.LockImage();
+                for (int x = 0; x < width; x++)
+                {
+                    // read a segment of the recorded signal
+                    for (int i = 0; i < _nfft; i++)
+                    {
+                        _segment[i] = samples[x * _nfft + i] * _window[i];
+                    }
+
+                    // transform to the frequency domain
+                    _fft.ComputeForward(_segment);
+
+                    // compute the magnitude of the spectrum
+                    MagnitudeSpectrum(_segment, _magnitude);
+
+                    // draw
+                    for (int y = 0; y < height; y++)
+                    {
+                        int colorIndex = _mapper.Map(_magnitude[y]);
+                        bmp.SetPixel(x, height - y - 1, _palette[colorIndex]);
+                    }
+                }
+                bmp.UnlockImage();
+                return bmp.GetBitmap();
+            }
+
+            private static double[] CreateRaisedCosineWindow(int n)
+            {
+                double twoPiOverN = Math.PI * 2.0 / n;
+                double[] dst = new double[n];
+                for (int i = 0; i < n; i++)
+                    dst[i] = 0.5 * (1.0 - Math.Cos(twoPiOverN * i));
+                return dst;
+            }
+
+            private static void MagnitudeSpectrum(double[] segment, double[] magnitude)
+            {
+                magnitude[0] = Math.Sqrt(SquareSum(segment[0], segment[1]));
+                for (int i = 2; i < segment.Length; i += 2)
+                    magnitude[i / 2] = Math.Sqrt(SquareSum(segment[i], segment[i + 1]) * 2.0);
+            }
+
+            private static double SquareSum(double a, double b)
+            {
+                return a * a + b * b;
+            }
+
+            private static FastBitmap.PixelData[] GeneratePalette(int nfft)
+            {
+                var palette = new FastBitmap.PixelData[nfft];
+                if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Classic")
+                {
+                    for (int colorIndex = 0; colorIndex < nfft; colorIndex++)
+                        palette[colorIndex] = new FastBitmap.PixelData(PaletteValue(colorIndex, nfft));
+                }
+                else
+                {
+                    var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveformColor.R,
+                                                     Configuration.Settings.VideoControls.WaveformColor.G,
+                                                     Configuration.Settings.VideoControls.WaveformColor.B, nfft);
+                    for (int i = 0; i < nfft; i++)
+                        palette[i] = new FastBitmap.PixelData(list[i]);
+                }
+                return palette;
+            }
+
+            private static Color PaletteValue(int x, int range)
+            {
+                double g;
+                double r;
+                double b;
+
+                double r4 = range / 4.0;
+                const double u = 255;
+
+                if (x < r4)
+                {
+                    b = x / r4;
+                    g = 0;
+                    r = 0;
+                }
+                else if (x < 2 * r4)
+                {
+                    b = (1 - (x - r4) / r4);
+                    g = 1 - b;
+                    r = 0;
+                }
+                else if (x < 3 * r4)
+                {
+                    b = 0;
+                    g = (2 - (x - r4) / r4);
+                    r = 1 - g;
+                }
+                else
+                {
+                    b = (x - 3 * r4) / r4;
+                    g = 0;
+                    r = 1 - b;
+                }
+
+                r = ((int)(Math.Sqrt(r) * u)) & 0xff;
+                g = ((int)(Math.Sqrt(g) * u)) & 0xff;
+                b = ((int)(Math.Sqrt(b) * u)) & 0xff;
+
+                return Color.FromArgb((int)r, (int)g, (int)b);
+            }
+
+            private static List<Color> SmoothColors(int fromR, int fromG, int fromB, int toR, int toG, int toB, int count)
+            {
+                while (toR < 255 && toG < 255 && toB < 255)
+                {
+                    toR++;
+                    toG++;
+                    toB++;
+                }
+
+                var list = new List<Color>();
+                double r = fromR;
+                double g = fromG;
+                double b = fromB;
+                double diffR = (toR - fromR) / (double)count;
+                double diffG = (toG - fromG) / (double)count;
+                double diffB = (toB - fromB) / (double)count;
+
+                for (int i = 0; i < count; i++)
+                {
+                    list.Add(Color.FromArgb((int)r, (int)g, (int)b));
+                    r += diffR;
+                    g += diffG;
+                    b += diffB;
+                }
+                return list;
+            }
+
+            /// Maps magnitudes in the range [-decibelRange .. 0] dB to palette index values in the range [0 .. indexRange-1]
+            private class MagnitudeToIndexMapper
+            {
+                private readonly double _minMagnitude;
+                private readonly double _multiplier;
+                private readonly double _addend;
+
+                public MagnitudeToIndexMapper(double decibelRange, int indexRange)
+                {
+                    double mappingScale = indexRange / decibelRange;
+                    _minMagnitude = Math.Pow(10.0, -decibelRange / 20.0);
+                    _multiplier = 20.0 * mappingScale;
+                    _addend = decibelRange * mappingScale;
+                }
+
+                public int Map(double magnitude)
+                {
+                    return magnitude >= _minMagnitude ? (int)(Math.Log10(magnitude) * _multiplier + _addend) : 0;
+                }
+
+                // Less optimized but readable version of the above
+                public static int Map(double magnitude, double decibelRange, int indexRange)
+                {
+                    if (magnitude == 0) return 0;
+                    double decibelLevel = 20.0 * Math.Log10(magnitude);
+                    return decibelLevel >= -decibelRange ? (int)(indexRange * (decibelLevel + decibelRange) / decibelRange) : 0;
+                }
+            }
         }
-
-        public static Color PaletteValue(int x, int range)
-        {
-            double g;
-            double r;
-            double b;
-
-            double r4 = range / 4.0;
-            const double u = 255;
-
-            if (x < r4)
-            {
-                b = x / r4;
-                g = 0;
-                r = 0;
-            }
-            else if (x < 2 * r4)
-            {
-                b = (1 - (x - r4) / r4);
-                g = 1 - b;
-                r = 0;
-            }
-            else if (x < 3 * r4)
-            {
-                b = 0;
-                g = (2 - (x - r4) / r4);
-                r = 1 - g;
-            }
-            else
-            {
-                b = (x - 3 * r4) / r4;
-                g = 0;
-                r = 1 - b;
-            }
-
-            r = ((int)(Math.Sqrt(r) * u)) & 0xff;
-            g = ((int)(Math.Sqrt(g) * u)) & 0xff;
-            b = ((int)(Math.Sqrt(b) * u)) & 0xff;
-
-            return Color.FromArgb((int)r, (int)g, (int)b);
-        }
-
-        /// <summary>
-        /// Maps magnitudes in the range [-rangedB .. 0] dB to palette index values in the range [0 .. rangeIndex-1]
-        /// and computes and returns the index value which corresponds to passed-in magnitude
-        /// </summary>
-        private static int MapToPixelIndex(double magnitude, double rangedB, int rangeIndex)
-        {
-            const double log10 = 2.30258509299405;
-
-            if (magnitude == 0)
-                return 0;
-
-            double levelIndB = 20 * Math.Log(magnitude) / log10;
-            if (levelIndB < -rangedB)
-                return 0;
-
-            return (int)(rangeIndex * (levelIndB + rangedB) / rangedB);
-        }
-
-        private static List<Color> SmoothColors(int fromR, int fromG, int fromB, int toR, int toG, int toB, int count)
-        {
-            while (toR < 255 && toG < 255 && toB < 255)
-            {
-                toR++;
-                toG++;
-                toB++;
-            }
-
-            var list = new List<Color>();
-            double r = fromR;
-            double g = fromG;
-            double b = fromB;
-            double diffR = (toR - fromR) / (double)count;
-            double diffG = (toG - fromG) / (double)count;
-            double diffB = (toB - fromB) / (double)count;
-
-            for (int i = 0; i < count; i++)
-            {
-                list.Add(Color.FromArgb((int)r, (int)g, (int)b));
-                r += diffR;
-                g += diffG;
-                b += diffB;
-            }
-            return list;
-        }
-
     }
 }
