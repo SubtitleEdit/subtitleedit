@@ -3107,7 +3107,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static Regex MyRegEx(string inputRegex)
         {
-            return new Regex(inputRegex.Replace(" ", "[ \r\n]+"), RegexOptions.Compiled);
+            return new Regex(inputRegex.Replace(" ", "[ \r\n]+"));
         }
 
         private void FixDanishLetterI()
@@ -3115,7 +3115,7 @@ namespace Nikse.SubtitleEdit.Forms
             const string fixAction = "Fix Danish letter 'i'";
             int fixCount = 0;
 
-            var littleIRegex = new Regex(@"\bi\b", RegexOptions.Compiled);
+            var littleIRegex = new Regex(@"\bi\b");
 
             var iList = new List<Regex>
                              { // not a complete list, more phrases will come
@@ -3499,29 +3499,9 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\bi vel ikke\b"),
                                  MyRegEx(@"\bi vil\b"),
                                  MyRegEx(@"\bi ville\b"),
-                                 MyRegEx(@"\b[Kk]an i lugte\b"),
-                                 MyRegEx(@"\b[Kk]an i overleve\b"),
-                                 MyRegEx(@"\b[Kk]an i spise\b"),
-                                 MyRegEx(@"\b[Kk]an i se\b"),
-                                 MyRegEx(@"\b[Kk]an i smage\b"),
-                                 MyRegEx(@"\b[Kk]an i forstå\b"),
                                  MyRegEx(@"\b[Kk]ørte i hele\b"),
                                  MyRegEx(@"\b[Kk]ørte i ikke\b"),
-                                 MyRegEx(@"\b[Kk]an i godt\b"),
-                                 MyRegEx(@"\b[Kk]an i gøre\b"),
-                                 MyRegEx(@"\b[Kk]an i huske\b"),
-                                 MyRegEx(@"\b[Kk]an i ikke\b"),
-                                 MyRegEx(@"\b[Kk]an i lide\b"),
-                                 MyRegEx(@"\b[Kk]an i leve\b"),
-                                 MyRegEx(@"\b[Kk]an i love\b"),
-                                 MyRegEx(@"\b[Kk]an i måske\b"),
-                                 MyRegEx(@"\b[Kk]an i nok\b"),
-                                 MyRegEx(@"\b[Kk]an i se\b"),
-                                 MyRegEx(@"\b[Kk]an i sige\b"),
-                                 MyRegEx(@"\b[Kk]an i tilgive\b"),
-                                 MyRegEx(@"\b[Kk]an i tygge\b"),
-                                 MyRegEx(@"\b[Kk]an i to ikke\b"),
-                                 MyRegEx(@"\b[Kk]an i tro\b"),
+                                 MyRegEx(@"\b[Kk]an i (?:tro|to ikke|tygge|tilgive|sige|se|nok|måske|love|leve|lide|ikke|huske|gøre|godt|lugte|overleve|spise|se|smage|forstå)\b"),
                                  MyRegEx(@"\bKender i "),
                                  MyRegEx(@"\b[Kk]ender i hinanden\b"),
                                  MyRegEx(@"\b[Kk]ender i to hinanden\b"),
@@ -3533,13 +3513,7 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\b[Kk]ommer i ofte\b"),
                                  MyRegEx(@"\b[Kk]ommer i sammen\b"),
                                  MyRegEx(@"\b[Kk]ommer i tit\b"),
-                                 MyRegEx(@"\b[Kk]unne i fortælle\b"),
-                                 MyRegEx(@"\b[Kk]unne i give\b"),
-                                 MyRegEx(@"\b[Kk]unne i gøre\b"),
-                                 MyRegEx(@"\b[Kk]unne i ikke\b"),
-                                 MyRegEx(@"\b[Kk]unne i lide\b"),
-                                 MyRegEx(@"\b[Kk]unne i mødes\b"),
-                                 MyRegEx(@"\b[Kk]unne i se\b"),
+                                 MyRegEx(@"\b[Kk]unne i (?:se|mødes|lide|ikke|gøre|give|fortælle)\b"),
                                  MyRegEx(@"\b[Ll]eder i efter\b"),
                                  MyRegEx(@"\b[Ll]aver i ikke\b"),
                                  MyRegEx(@"\blaver i her\b"),
@@ -3552,10 +3526,7 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\b[Ll]øb i hellere\b"),
                                  MyRegEx(@"\b[Mm]ødte i "),
                                  MyRegEx(@"\b[Mm]angler i en\b"),
-                                 MyRegEx(@"\b[Mm]en i gutter\b"),
-                                 MyRegEx(@"\b[Mm]en i drenge\b"),
-                                 MyRegEx(@"\b[Mm]en i fyre\b"),
-                                 MyRegEx(@"\b[Mm]en i står\b"),
+                                 MyRegEx(@"\b[Mm]en i (?:står|fyre|drenge|gutter)\b"),
                                  MyRegEx(@"\b[Mm]ener i at\b"),
                                  MyRegEx(@"\b[Mm]ener i det\b"),
                                  MyRegEx(@"\b[Mm]ener i virkelig\b"),
