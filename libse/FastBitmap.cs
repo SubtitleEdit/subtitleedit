@@ -8,12 +8,20 @@ namespace Nikse.SubtitleEdit.Core
 {
     unsafe public class FastBitmap
     {
-        private struct PixelData
+        public struct PixelData
         {
             public byte Blue;
             public byte Green;
             public byte Red;
             public byte Alpha;
+
+            public PixelData(Color c)
+            {
+                Alpha = c.A;
+                Red = c.R;
+                Green = c.G;
+                Blue = c.B;
+            }
 
             public override string ToString()
             {
@@ -80,6 +88,12 @@ namespace Nikse.SubtitleEdit.Core
             data->Red = color.R;
             data->Green = color.G;
             data->Blue = color.B;
+        }
+
+        public void SetPixel(int x, int y, PixelData color)
+        {
+            var data = (PixelData*)(_pBase + y * _width + x * sizeof(PixelData));
+            *data = color;
         }
 
         public void SetPixel(int x, int y, Color color, int length)

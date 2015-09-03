@@ -8,9 +8,9 @@ namespace Nikse.SubtitleEdit.Core
 {
     public class RealFFT
     {
-        private int _length;
-        private int[] _ip;
-        private double[] _w;
+        private readonly int _length;
+        private readonly int[] _ip;
+        private readonly double[] _w;
 
         public readonly double ForwardScaleFactor;
         public readonly double ReverseScaleFactor;
