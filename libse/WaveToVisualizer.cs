@@ -505,13 +505,13 @@ namespace Nikse.SubtitleEdit.Core
         {
             private const double raisedCosineWindowScale = 0.5;
 
-            private int _nfft;
-            private MagnitudeToIndexMapper _mapper;
-            private RealFFT _fft;
-            private FastBitmap.PixelData[] _palette;
-            private double[] _segment;
-            private double[] _window;
-            private double[] _magnitude;
+            private readonly int _nfft;
+            private readonly MagnitudeToIndexMapper _mapper;
+            private readonly RealFFT _fft;
+            private readonly FastBitmap.PixelData[] _palette;
+            private readonly double[] _segment;
+            private readonly double[] _window;
+            private readonly double[] _magnitude;
 
             public SpectrogramDrawer(int nfft)
             {
