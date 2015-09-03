@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             try
             {
                 rtBox.Rtf = rtf;
-                arr = rtBox.Text.Replace("\r", string.Empty).Split('\n');
+                arr = rtBox.Text.SplitToLines();
             }
             catch (Exception exception)
             {
