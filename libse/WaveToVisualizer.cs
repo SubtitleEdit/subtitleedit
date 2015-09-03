@@ -504,6 +504,7 @@ namespace Nikse.SubtitleEdit.Core
         private class SpectrogramDrawer
         {
             private const double raisedCosineWindowScale = 0.5;
+            private const int magnitudeIndexRange = 256;
 
             private readonly int _nfft;
             private readonly MagnitudeToIndexMapper _mapper;
@@ -516,9 +517,9 @@ namespace Nikse.SubtitleEdit.Core
             public SpectrogramDrawer(int nfft)
             {
                 _nfft = nfft;
-                _mapper = new MagnitudeToIndexMapper(100.0, 255);
+                _mapper = new MagnitudeToIndexMapper(100.0, magnitudeIndexRange - 1);
                 _fft = new RealFFT(nfft);
-                _palette = GeneratePalette(nfft);
+                _palette = GeneratePalette();
                 _segment = new double[nfft];
                 _window = CreateRaisedCosineWindow(nfft);
                 _magnitude = new double[nfft / 2];
@@ -582,20 +583,20 @@ namespace Nikse.SubtitleEdit.Core
                 return a * a + b * b;
             }
 
-            private static FastBitmap.PixelData[] GeneratePalette(int nfft)
+            private static FastBitmap.PixelData[] GeneratePalette()
             {
-                var palette = new FastBitmap.PixelData[nfft];
+                var palette = new FastBitmap.PixelData[magnitudeIndexRange];
                 if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Classic")
                 {
-                    for (int colorIndex = 0; colorIndex < nfft; colorIndex++)
-                        palette[colorIndex] = new FastBitmap.PixelData(PaletteValue(colorIndex, nfft));
+                    for (int colorIndex = 0; colorIndex < magnitudeIndexRange; colorIndex++)
+                        palette[colorIndex] = new FastBitmap.PixelData(PaletteValue(colorIndex, magnitudeIndexRange));
                 }
                 else
                 {
                     var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveformColor.R,
                                                      Configuration.Settings.VideoControls.WaveformColor.G,
-                                                     Configuration.Settings.VideoControls.WaveformColor.B, nfft);
-                    for (int i = 0; i < nfft; i++)
+                                                     Configuration.Settings.VideoControls.WaveformColor.B, magnitudeIndexRange);
+                    for (int i = 0; i < magnitudeIndexRange; i++)
                         palette[i] = new FastBitmap.PixelData(list[i]);
                 }
                 return palette;
@@ -669,16 +670,16 @@ namespace Nikse.SubtitleEdit.Core
                 return list;
             }
 
-            /// Maps magnitudes in the range [-decibelRange .. 0] dB to palette index values in the range [0 .. indexRange-1]
+            /// Maps magnitudes in the range [-decibelRange .. 0] dB to palette index values in the range [0 .. indexMax]
             private class MagnitudeToIndexMapper
             {
                 private readonly double _minMagnitude;
                 private readonly double _multiplier;
                 private readonly double _addend;
 
-                public MagnitudeToIndexMapper(double decibelRange, int indexRange)
+                public MagnitudeToIndexMapper(double decibelRange, int indexMax)
                 {
-                    double mappingScale = indexRange / decibelRange;
+                    double mappingScale = indexMax / decibelRange;
                     _minMagnitude = Math.Pow(10.0, -decibelRange / 20.0);
                     _multiplier = 20.0 * mappingScale;
                     _addend = decibelRange * mappingScale;
@@ -690,11 +691,11 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 // Less optimized but readable version of the above
-                public static int Map(double magnitude, double decibelRange, int indexRange)
+                public static int Map(double magnitude, double decibelRange, int indexMax)
                 {
                     if (magnitude == 0) return 0;
                     double decibelLevel = 20.0 * Math.Log10(magnitude);
-                    return decibelLevel >= -decibelRange ? (int)(indexRange * (decibelLevel + decibelRange) / decibelRange) : 0;
+                    return decibelLevel >= -decibelRange ? (int)(indexMax * (decibelLevel + decibelRange) / decibelRange) : 0;
                 }
             }
         }
