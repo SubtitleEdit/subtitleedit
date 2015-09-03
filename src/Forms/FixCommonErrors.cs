@@ -394,7 +394,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _indexAloneLowercaseIToUppercaseIEnglish = _fixActions.Count;
                 _fixActions.Add(new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, FixAloneLowercaseIToUppercaseI, ce.AloneLowercaseIToUppercaseIEnglishTicked));
-
             }
             if (Language == "tr")
             {
