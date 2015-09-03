@@ -70,11 +70,7 @@ namespace Test.Logic.SubtitleFormats
 
         private static List<string> GetSrtLines(string text)
         {
-            var lines = new List<string>();
-            string[] arr = text.Replace(Environment.NewLine, "\r").Replace("\n", "\r").Split('\r');
-            foreach (string line in arr)
-                lines.Add(line);
-            return lines;
+            return new List<string>(text.SplitToLines());
         }
 
         [TestMethod]
@@ -200,11 +196,7 @@ Style: rechts,Arial,73,&H00FFFFFF,&H0000FFFF,&H00000000,&H4B404040,0,0,0,0,100,1
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
-            var lines = new List<string>();
-            string[] arr = text.Replace(Environment.NewLine, "\r").Replace("\n", "\r").Split('\r');
-            foreach (string line in arr)
-                lines.Add(line);
-            return lines;
+            return new List<string>(text.SplitToLines());
         }
 
         [TestMethod]
@@ -360,11 +352,7 @@ Style: Default,Arial,20,16777215,65535,65535,-2147483640,-1,0,1,3,0,2,30,30,30,0
 [Events]
 Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + lineOneText;
-            var lines = new List<string>();
-            string[] arr = text.Replace(Environment.NewLine, "\r").Replace("\n", "\r").Split('\r');
-            foreach (string line in arr)
-                lines.Add(line);
-            return lines;
+            return new List<string>(text.SplitToLines());
         }
 
         [TestMethod]

@@ -82,11 +82,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
                 return false;
             }
 
-            var list = new List<string>();
-            foreach (string line in s.Replace(Environment.NewLine, "\r").Replace("\n", "\r").Split('\r'))
-            {
-                list.Add(line);
-            }
+            var list = new List<string>(s.SplitToLines());
             var subtitle = new Subtitle();
             return subtitle.ReloadLoadSubtitle(list, null) != null;
         }
