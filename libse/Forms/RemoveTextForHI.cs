@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             for (int i = 6; i < newText.Length; i++)
             {
                 var s = newText.Substring(i);
-                if (s.Length > 2 && (s.StartsWith('.') || s.StartsWith('!') || s.StartsWith('?')))
+                if (s.Length > 2 && ".?!".Contains(s[0]))
                 {
                     var pre = string.Empty;
 
@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     if (pre.Length > 0)
                     {
                         s = s.Remove(0, pre.Length);
-                        if (s.StartsWith(' ') && s.Length > 1)
+                        if (s.Length > 1 && s[0] == ' ')
                         {
                             pre += " ";
                             s = s.Remove(0, 1);
@@ -70,21 +70,24 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public string RemoveColon(string text)
         {
-            if (!Settings.RemoveTextBeforeColon || text.IndexOf(':') < 0)
+            if (!(Settings.RemoveTextBeforeColon && text.Contains(':')))
                 return text;
 
             string preAssTag = string.Empty;
-            if (text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') > 0)
+            if (text.StartsWith("{\\", StringComparison.Ordinal))
             {
-                int indexOfEndBracket = text.IndexOf('}') + 1;
-                preAssTag = text.Substring(0, indexOfEndBracket);
-                text = text.Remove(0, indexOfEndBracket).TrimStart();
+                int indexOfEndBracketSuccessor = text.IndexOf('}') + 1;
+                if (indexOfEndBracketSuccessor > 0)
+                {
+                    preAssTag = text.Substring(0, indexOfEndBracketSuccessor);
+                    text = text.Remove(0, indexOfEndBracketSuccessor).TrimStart();
+                }
             }
 
             // House 7x01 line 52: and she would like you to do three things:
             // Okay or remove???
-            var noTagText = HtmlUtil.RemoveHtmlTags(text);
-            if (noTagText.IndexOf(':') > 0 && noTagText.IndexOf(':') == noTagText.Length - 1 && noTagText != noTagText.ToUpper() && noTagText.Length > 10)
+            string noTagText = HtmlUtil.RemoveHtmlTags(text);
+            if (noTagText.Length > 10 && noTagText.IndexOf(':') == noTagText.Length - 1 && noTagText != noTagText.ToUpper())
                 return text;
 
             string newText = string.Empty;
@@ -96,7 +99,16 @@ namespace Nikse.SubtitleEdit.Core.Forms
             foreach (string line in lines)
             {
                 int indexOfColon = line.IndexOf(':');
-                if (indexOfColon > 0 && IsNotInsideBrackets(line, indexOfColon))
+                if (indexOfColon <= 0 || IsInsideBrackets(line, indexOfColon))
+                {
+                    newText = (newText + Environment.NewLine + line).Trim();
+
+                    if (newText.EndsWith("</i>", StringComparison.Ordinal) && text.StartsWith("<i>", StringComparison.Ordinal) && !newText.StartsWith("<i>", StringComparison.Ordinal))
+                        newText = "<i>" + newText;
+                    else if (newText.EndsWith("</b>", StringComparison.Ordinal) && text.StartsWith("<b>", StringComparison.Ordinal) && !newText.StartsWith("<b>", StringComparison.Ordinal))
+                        newText = "<b>" + newText;
+                }
+                else
                 {
                     var pre = line.Substring(0, indexOfColon);
                     var noTagPre = HtmlUtil.RemoveHtmlTags(pre, true);
@@ -106,106 +118,105 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     }
                     else
                     {
-                        var st = new StripableText(pre);
-                        if (count == 1 && newText.Length > 1 && removedInFirstLine && Utilities.CountTagInText(line, ':') == 1 &&
-                            ".?!".IndexOf(newText[newText.Length - 1]) < 0 && newText.LineEndsWithHtmlTag(true) &&
-                            line != line.ToUpper())
+                        if (Utilities.CountTagInText(line, ':') == 1)
                         {
-                            if (pre.Contains("<i>") && line.Contains("</i>"))
-                                newText = newText + Environment.NewLine + "<i>" + line;
-                            else if (pre.Contains("<b>") && line.Contains("</b>"))
-                                newText = newText + Environment.NewLine + "<b>" + line;
-                            else if (pre.Contains("<u>") && line.Contains("</u>"))
-                                newText = newText + Environment.NewLine + "<u>" + line;
-                            else if (pre.Contains('[') && line.Contains(']'))
-                                newText = newText + Environment.NewLine + "[" + line;
-                            else if (pre.Contains('(') && line.EndsWith(')'))
-                                newText = newText + Environment.NewLine + "(" + line;
-                            else
-                                newText = newText + Environment.NewLine + line;
-                        }
-                        else if (count == 1 && newText.Length > 1 && indexOfColon > 15 && line.Substring(0, indexOfColon).Contains(' ') && Utilities.CountTagInText(line, ':') == 1 &&
-                            ".?!".IndexOf(newText[newText.Length - 1]) < 0 && newText.LineEndsWithHtmlTag(true) &&
-                            line != line.ToUpper())
-                        {
-                            if (pre.Contains("<i>") && line.Contains("</i>"))
-                                newText = newText + Environment.NewLine + "<i>" + line;
-                            else if (pre.Contains("<b>") && line.Contains("</b>"))
-                                newText = newText + Environment.NewLine + "<b>" + line;
-                            else if (pre.Contains("<u>") && line.Contains("</u>"))
-                                newText = newText + Environment.NewLine + "<u>" + line;
-                            else if (pre.Contains('[') && line.Contains(']'))
-                                newText = newText + Environment.NewLine + "[" + line;
-                            else if (pre.Contains('(') && line.EndsWith(')'))
-                                newText = newText + Environment.NewLine + "(" + line;
-                            else
-                                newText = newText + Environment.NewLine + line;
-                        }
-                        else if (Utilities.CountTagInText(line, ':') == 1)
-                        {
-                            bool remove = true;
-                            if (indexOfColon > 0 && indexOfColon < line.Length - 1)
+                            if (count == 1 && newText.Length > 1 && removedInFirstLine &&
+                                !".?!".Contains(newText[newText.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
+                                line != line.ToUpper())
                             {
-                                remove = !Utilities.IsBetweenNumbers(line, indexOfColon);
-                            }
-
-                            if (!DoRemove(pre))
-                                remove = false;
-
-                            if (remove && Settings.ColonSeparateLine)
-                            {
-                                if (indexOfColon == line.Length - 1 || line.Substring(indexOfColon + 1).StartsWith(Environment.NewLine, StringComparison.Ordinal))
-                                    remove = true;
+                                if (pre.Contains("<i>") && line.Contains("</i>"))
+                                    newText = newText + Environment.NewLine + "<i>" + line;
+                                else if (pre.Contains("<b>") && line.Contains("</b>"))
+                                    newText = newText + Environment.NewLine + "<b>" + line;
+                                else if (pre.Contains("<u>") && line.Contains("</u>"))
+                                    newText = newText + Environment.NewLine + "<u>" + line;
+                                else if (pre.Contains('[') && line.Contains(']'))
+                                    newText = newText + Environment.NewLine + "[" + line;
+                                else if (pre.Contains('(') && line.EndsWith(')'))
+                                    newText = newText + Environment.NewLine + "(" + line;
                                 else
-                                    remove = false;
+                                    newText = newText + Environment.NewLine + line;
                             }
-
-                            if (remove)
+                            else if (count == 1 && newText.Length > 1 && indexOfColon > 15 && line.Substring(0, indexOfColon).Contains(' ') &&
+                                !".?!".Contains(newText[newText.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
+                                line != line.ToUpper())
                             {
-                                var content = line.Substring(indexOfColon + 1).Trim();
-                                if (content.Length > 0)
-                                {
-                                    if (pre.Contains("<i>") && content.Contains("</i>"))
-                                        newText = newText + Environment.NewLine + "<i>" + content;
-                                    else if (pre.Contains("<b>") && content.Contains("</b>"))
-                                        newText = newText + Environment.NewLine + "<b>" + content;
-                                    else if (pre.Contains('[') && content.Contains(']'))
-                                        newText = newText + Environment.NewLine + "[" + content;
-                                    else if (pre.Contains('(') && content.EndsWith(')'))
-                                        newText = newText + Environment.NewLine + "(" + content;
-                                    else
-                                        newText = newText + Environment.NewLine + content;
-
-                                    if (count == 0)
-                                        removedInFirstLine = true;
-                                    else if (count == 1)
-                                        removedInSecondLine = true;
-                                }
-                                newText = newText.Trim();
-
-                                if (text.StartsWith('(') && newText.EndsWith(')') && !newText.Contains('('))
-                                    newText = newText.TrimEnd(')');
-                                else if (text.StartsWith('[') && newText.EndsWith(']') && !newText.Contains('['))
-                                    newText = newText.TrimEnd(']');
-                                else if (newText.EndsWith("</i>", StringComparison.Ordinal) && text.StartsWith("<i>", StringComparison.Ordinal) && !newText.StartsWith("<i>", StringComparison.Ordinal))
-                                    newText = "<i>" + newText;
-                                else if (newText.EndsWith("</b>", StringComparison.Ordinal) && text.StartsWith("<b>", StringComparison.Ordinal) && !newText.StartsWith("<b>", StringComparison.Ordinal))
-                                    newText = "<b>" + newText;
-                                else if (newText.EndsWith("</u>", StringComparison.Ordinal) && text.StartsWith("<u>", StringComparison.Ordinal) && !newText.StartsWith("<u>", StringComparison.Ordinal))
-                                    newText = "<u>" + newText;
-
-                                if (!IsHIDescription(st.StrippedText))
-                                    noOfNames++;
+                                if (pre.Contains("<i>") && line.Contains("</i>"))
+                                    newText = newText + Environment.NewLine + "<i>" + line;
+                                else if (pre.Contains("<b>") && line.Contains("</b>"))
+                                    newText = newText + Environment.NewLine + "<b>" + line;
+                                else if (pre.Contains("<u>") && line.Contains("</u>"))
+                                    newText = newText + Environment.NewLine + "<u>" + line;
+                                else if (pre.Contains('[') && line.Contains(']'))
+                                    newText = newText + Environment.NewLine + "[" + line;
+                                else if (pre.Contains('(') && line.EndsWith(')'))
+                                    newText = newText + Environment.NewLine + "(" + line;
+                                else
+                                    newText = newText + Environment.NewLine + line;
                             }
                             else
                             {
-                                newText = (newText + Environment.NewLine + line).Trim();
-                                if (newText.EndsWith("</i>", StringComparison.Ordinal) && text.StartsWith("<i>", StringComparison.Ordinal) && !newText.StartsWith("<i>", StringComparison.Ordinal))
-                                    newText = "<i>" + newText;
-                                else if (newText.EndsWith("</b>", StringComparison.Ordinal) && text.StartsWith("<b>", StringComparison.Ordinal) && !newText.StartsWith("<b>", StringComparison.Ordinal))
-                                    newText = "<b>" + newText;
-                                else if ((newText.EndsWith("</u>", StringComparison.Ordinal) && text.StartsWith("<u>", StringComparison.Ordinal) && !newText.StartsWith("<u>", StringComparison.Ordinal)))
-                                    newText = "<u>" + newText;
+                                var preStripable = new StripableText(pre);
+                                var remove = true;
+
+                                if (indexOfColon < line.Length - 1)
+                                {
+                                    if (Settings.ColonSeparateLine && !line.Substring(indexOfColon + 1).StartsWith(Environment.NewLine, StringComparison.Ordinal))
+                                        remove = false;
+                                    else if (Utilities.IsBetweenNumbers(line, indexOfColon))
+                                        remove = false;
+                                }
+
+                                if (remove && !DoRemove(pre))
+                                    remove = false;
+
+                                if (remove)
+                                {
+                                    var content = line.Substring(indexOfColon + 1).Trim();
+                                    if (content.Length > 0)
+                                    {
+                                        if (pre.Contains("<i>") && content.Contains("</i>"))
+                                            newText = newText + Environment.NewLine + "<i>" + content;
+                                        else if (pre.Contains("<b>") && content.Contains("</b>"))
+                                            newText = newText + Environment.NewLine + "<b>" + content;
+                                        else if (pre.Contains('[') && content.Contains(']'))
+                                            newText = newText + Environment.NewLine + "[" + content;
+                                        else if (pre.Contains('(') && content.EndsWith(')'))
+                                            newText = newText + Environment.NewLine + "(" + content;
+                                        else
+                                            newText = newText + Environment.NewLine + content;
+
+                                        if (count == 0)
+                                            removedInFirstLine = true;
+                                        else if (count == 1)
+                                            removedInSecondLine = true;
+                                    }
+                                    newText = newText.Trim();
+
+                                    if (text.StartsWith('(') && newText.EndsWith(')') && !newText.Contains('('))
+                                        newText = newText.TrimEnd(')');
+                                    else if (text.StartsWith('[') && newText.EndsWith(']') && !newText.Contains('['))
+                                        newText = newText.TrimEnd(']');
+                                    else if (newText.EndsWith("</i>", StringComparison.Ordinal) && text.StartsWith("<i>", StringComparison.Ordinal) && !newText.StartsWith("<i>", StringComparison.Ordinal))
+                                        newText = "<i>" + newText;
+                                    else if (newText.EndsWith("</b>", StringComparison.Ordinal) && text.StartsWith("<b>", StringComparison.Ordinal) && !newText.StartsWith("<b>", StringComparison.Ordinal))
+                                        newText = "<b>" + newText;
+                                    else if (newText.EndsWith("</u>", StringComparison.Ordinal) && text.StartsWith("<u>", StringComparison.Ordinal) && !newText.StartsWith("<u>", StringComparison.Ordinal))
+                                        newText = "<u>" + newText;
+
+                                    if (!IsHIDescription(preStripable.StrippedText))
+                                        noOfNames++;
+                                }
+                                else
+                                {
+                                    newText = (newText + Environment.NewLine + line).Trim();
+                                    if (newText.EndsWith("</i>", StringComparison.Ordinal) && text.StartsWith("<i>", StringComparison.Ordinal) && !newText.StartsWith("<i>", StringComparison.Ordinal))
+                                        newText = "<i>" + newText;
+                                    else if (newText.EndsWith("</b>", StringComparison.Ordinal) && text.StartsWith("<b>", StringComparison.Ordinal) && !newText.StartsWith("<b>", StringComparison.Ordinal))
+                                        newText = "<b>" + newText;
+                                    else if ((newText.EndsWith("</u>", StringComparison.Ordinal) && text.StartsWith("<u>", StringComparison.Ordinal) && !newText.StartsWith("<u>", StringComparison.Ordinal)))
+                                        newText = "<u>" + newText;
+                                }
                             }
                         }
                         else
@@ -243,15 +254,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         }
                     }
                 }
-                else
-                {
-                    newText = (newText + Environment.NewLine + line).Trim();
-
-                    if (newText.EndsWith("</i>", StringComparison.Ordinal) && text.StartsWith("<i>", StringComparison.Ordinal) && !newText.StartsWith("<i>", StringComparison.Ordinal))
-                        newText = "<i>" + newText;
-                    else if (newText.EndsWith("</b>", StringComparison.Ordinal) && text.StartsWith("<b>", StringComparison.Ordinal) && !newText.StartsWith("<b>", StringComparison.Ordinal))
-                        newText = "<b>" + newText;
-                }
                 count++;
             }
             newText = newText.Trim();
@@ -263,26 +265,40 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
                 {
                     string arr0 = new StripableText(arr[0]).StrippedText;
-                    string arr1 = new StripableText(arr[1]).StrippedText;
+                    var arr1Stripable = new StripableText(arr[1]);
+                    string arr1 = arr1Stripable.StrippedText;
 
-                    //line continuation?
-                    if (arr0.Length > 0 && arr1.Length > 1 && (Utilities.LowercaseLetters + ",").Contains(arr0.Substring(arr0.Length - 1)) && Utilities.LowercaseLetters.Contains(arr1[0]))
+                    if (arr0.Length > 0 && arr1.Length > 1)
                     {
-                        if (new StripableText(arr[1]).Pre.Contains("...") == false)
-                            insertDash = false;
+                        // line continuation?
+                        if (Utilities.LowercaseLetters.Contains(arr1[0])) // second line starts with lower case letter
+                        {
+                            char c = arr0[arr0.Length - 1];
+                            if (Utilities.LowercaseLetters.Contains(c) ||  c == ',') // first line ends with comma or lower case letter
+                            {
+                                if (!arr1Stripable.Pre.Contains("..."))
+                                {
+                                    insertDash = false;
+                                }
+                            }
+                        }
+
+                        if (insertDash)
+                        {
+                            string arr0QuoteTrimmed = arr[0].TrimEnd('"');
+                            if (arr0QuoteTrimmed.Length > 0 && !".?!".Contains(arr0QuoteTrimmed[arr0QuoteTrimmed.Length - 1]) && !arr0QuoteTrimmed.EndsWith("</i>", StringComparison.Ordinal))
+                            {
+                                if (!arr1Stripable.Pre.Contains('-'))
+                                {
+                                    insertDash = false;
+                                }
+                            }
+                        }
                     }
 
-                    string tempArr0QuoteTrimmed = arr[0].TrimEnd('"');
-                    if (arr0.Length > 0 && arr1.Length > 1 &&
-                        !(tempArr0QuoteTrimmed.EndsWith('.') || tempArr0QuoteTrimmed.EndsWith('!') || tempArr0QuoteTrimmed.EndsWith('?') || tempArr0QuoteTrimmed.EndsWith("</i>", StringComparison.Ordinal)) &&
-                        !(new StripableText(arr[1]).Pre.Contains('-')))
+                    if (insertDash && removedInFirstLine && !removedInSecondLine && !text.StartsWith('-') && !text.StartsWith("<i>-", StringComparison.Ordinal))
                     {
-                        insertDash = false;
-                    }
-
-                    if (removedInFirstLine && !removedInSecondLine && !text.StartsWith('-') && !text.StartsWith("<i>-", StringComparison.Ordinal))
-                    {
-                        if (!insertDash || (!arr[1].StartsWith('-') && !arr[1].StartsWith("<i>-", StringComparison.Ordinal)))
+                        if (!arr[1].StartsWith('-') && !arr[1].StartsWith("<i>-", StringComparison.Ordinal))
                             insertDash = false;
                     }
                 }
@@ -306,13 +322,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     }
                 }
             }
-            else if (!newText.Contains(Environment.NewLine) && newText.Contains('-'))
+            else if (newText.Contains('-') && !newText.Contains(Environment.NewLine))
             {
                 var st = new StripableText(newText);
                 if (st.Pre.Contains('-'))
                     newText = st.Pre.Replace("-", string.Empty) + st.StrippedText + st.Post;
             }
-            else if (Utilities.GetNumberOfLines(newText) == 2 && removedInFirstLine == false && removedInSecondLine)
+            else if (removedInSecondLine && !removedInFirstLine && Utilities.GetNumberOfLines(newText) == 2)
             {
                 string noTags = HtmlUtil.RemoveHtmlTags(newText, true).Trim();
                 bool insertDash = noTags.StartsWith('-') && Utilities.CountTagInText(noTags, '-') == 1;
@@ -333,20 +349,18 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return preAssTag + newText;
         }
 
-        private bool IsNotInsideBrackets(string text, int colonIdx)
+        private bool IsInsideBrackets(string text, int targetIndex)
         {
             // <i>♪ (THE CAPITOLS: "COOL JERK") ♪</i>
-            var bIdx = text.IndexOfAny(new[] { '(', '[' }, 0, colonIdx);
-            if (bIdx >= 0)
-            {
-                char closeType = text[bIdx] == '(' ? ')' : ']';
-                var nIdx = text.IndexOf(closeType, bIdx + 1);
-                if (nIdx > colonIdx)
-                {
-                    return false;
-                }
-            }
-            return true;
+            var index = text.LastIndexOf('(', targetIndex - 1) + 1;
+            if (index > 0 && text.IndexOf(')', index) > targetIndex)
+                return true;
+
+            index = text.LastIndexOf('[', targetIndex - 1) + 1;
+            if (index > 0 && text.IndexOf(']', index) > targetIndex)
+                return true;
+
+            return false;
         }
 
         private bool DoRemove(string pre)
@@ -495,7 +509,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 string part0 = arr[0].Trim().Replace("</i>", string.Empty).Trim();
                 if (!part0.EndsWith(',') && (!part0.EndsWith('-') || noOfNamesRemovedNotInLineOne > 0))
                 {
-                    if (part0.Length > 0 && @".!?".Contains(part0[part0.Length - 1]))
+                    if (part0.Length > 0 && ".?!".Contains(part0[part0.Length - 1]))
                     {
                         if (noOfNamesRemovedNotInLineOne > 0)
                         {
@@ -1076,7 +1090,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 text = text.Remove(start, (end - start) + 1);
                 if (start > 3 && start < text.Length - 1 &&
                     text.Substring(0, start + 1).EndsWith(" :", StringComparison.Ordinal) &&
-                    ".!?".Contains(text[start - 2]))
+                    ".?!".Contains(text[start - 2]))
                 {
                     text = text.Remove(start - 1, 2);
                 }
