@@ -9776,7 +9776,7 @@ namespace Nikse.SubtitleEdit.Forms
                     chooseEncoding.Initialize(openFileDialog1.FileName);
                     if (chooseEncoding.ShowDialog(this) == DialogResult.OK)
                     {
-                        Encoding encoding = chooseEncoding.GetEncoding;
+                        Encoding encoding = chooseEncoding.Encoding;
                         SetEncoding(encoding);
                         OpenSubtitle(openFileDialog1.FileName, encoding);
                         _converted = true;

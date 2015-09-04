@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Encoding _encoding;
         private byte[] _fileBuffer;
 
-        public Encoding GetEncoding
+        public Encoding Encoding
         {
             get { return _encoding; }
         }
