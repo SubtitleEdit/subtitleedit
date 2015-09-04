@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core
@@ -405,6 +406,7 @@ namespace Nikse.SubtitleEdit.Core
 
             List<Bitmap> bitmaps = new List<Bitmap>();
             SpectrogramDrawer drawer = new SpectrogramDrawer(nfft);
+            Task saveImageTask = null;
             ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataReader();
             double sampleScale = 1.0 / (Math.Pow(2.0, Header.BitsPerSample - 1) * Header.NumberOfChannels);
 
@@ -483,9 +485,24 @@ namespace Nikse.SubtitleEdit.Core
 
                 // generate spectrogram for this chunk
                 Bitmap bmp = drawer.Draw(chunkSamples);
-                bmp.Save(Path.Combine(spectrogramDirectory, iChunk + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
                 bitmaps.Add(bmp);
+
+                // wait for previous image to finish saving
+                if (saveImageTask != null)
+                    Task.WaitAll(saveImageTask);
+
+                // save image
+                string imagePath = Path.Combine(spectrogramDirectory, iChunk + ".gif");
+                saveImageTask = new Task(() =>
+                {
+                    bmp.Save(imagePath, System.Drawing.Imaging.ImageFormat.Gif);
+                });
+                saveImageTask.Start();
             }
+
+            // wait for last image to finish saving
+            if (saveImageTask != null)
+                Task.WaitAll(saveImageTask);
 
             var doc = new XmlDocument();
             doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/><AudioFormat /><AudioFormat /><ChunkId /><SecondsPerImage /><ImageWidth /><NFFT /></SpectrogramInfo>");
