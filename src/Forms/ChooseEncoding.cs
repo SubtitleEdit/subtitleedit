@@ -31,23 +31,22 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-
-                int length = (int)file.Length;
-                if (length > 100000)
-                    length = 100000;
-
-                file.Position = 0;
-                _fileBuffer = new byte[length];
-                file.Read(_fileBuffer, 0, length);
-
-                for (int i = 0; i < length; i++)
+                using (var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    if (_fileBuffer[i] == 0)
-                        _fileBuffer[i] = 32;
-                }
+                    int length = (int)file.Length;
+                    if (length > 100000)
+                        length = 100000;
 
-                file.Close();
+                    file.Position = 0;
+                    _fileBuffer = new byte[length];
+                    file.Read(_fileBuffer, 0, length);
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        if (_fileBuffer[i] == 0)
+                            _fileBuffer[i] = 32;
+                    }
+                }
             }
             catch
             {
