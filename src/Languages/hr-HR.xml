@@ -1057,11 +1057,11 @@ Datoteka samo za čitanje!</FileXIsReadOnly>
     <NewFrameRateUsedToCalculateTimeCodes>Novi broj sličica ({0}) je korišten za računanje početka/kraja.</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Novi broj sličica ({0}) je korišten za računanje početnog/završnog broja sličica.</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>Nijedna stavka nije pronađena.
-Želite li da krenem s vrha stranice?</FindContinue>
+Želite li krenuti s vrha stranice?</FindContinue>
     <FindContinueTitle>Nastavljanje pretrage</FindContinueTitle>
     <ReplaceContinueNotFound>Traženi predmet nije pronađen.
 Želite li početi od vrha dokumenta i nastaviti pretraživanje i zamjenu?</ReplaceContinueNotFound>
-    <ReplaceXContinue>Traženi predmet je zamijenjen {0} vrijeme (s).
+    <ReplaceXContinue>Traženi predmet je zamijenjen {0} puta.
 Želite li početi od vrha dokumenta i nastaviti pretraživanje i zamjenu?</ReplaceXContinue>
     <ReplaceContinueTitle>Nastavi 'Zamijeni'?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Potraži za '{0}' s linije broj {1}...</SearchingForXFromLineY>
@@ -1088,7 +1088,7 @@ Datoteka samo za čitanje!</FileXIsReadOnly>
     <CommonErrorsFixed>Česte pogreške su ispravljene.</CommonErrorsFixed>
     <BeforeRenumbering>Izvršeno brojanje</BeforeRenumbering>
     <RenumberedStartingFromX>Brojanje počinje od broja {0}.</RenumberedStartingFromX>
-    <BeforeRemovalOfTextingForHearingImpaired>Uklonjen tekst za gluhe</BeforeRemovalOfTextingForHearingImpaired>
+    <BeforeRemovalOfTextingForHearingImpaired>Tekst za gluhe je uklonjen.</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Tekst za gluhe je uklonjen u jednoj liniji.</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Tekst za gluhe je uklonjen u {0} linija.</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Podnaslov je razdvojen.</SubtitleSplitted>
@@ -1959,7 +1959,7 @@ određeni podnaslov s drugim ljudima.</Information>
 Želite li spremiti izmjene?</KeepChangesMessage>
     <SynchronizationDone>Usklađivanje je završeno.</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Početna scena mora biti prije završne!</StartSceneMustComeBeforeEndScene>
-    <Tip>Koristite Ctrl i lijevu ili desnu strelicu da pomjerite 100 ms unazad ili unaprijed.</Tip>
+    <Tip>Koristite Ctrl i lijevu ili desnu strelicu da pomaknete 100 ms unazad ili unaprijed.</Tip>
   </VisualSync>
   <VobSubEditCharacters>
     <Title>Uređivanje slika za uspoređivanje znakova</Title>
