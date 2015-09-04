@@ -11,6 +11,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -90,40 +91,6 @@ namespace Nikse.SubtitleEdit.Forms
                 Action = action;
                 DefaultChecked = selected;
             }
-        }
-
-        private class ListViewSorter : System.Collections.IComparer
-        {
-            public int Compare(object o1, object o2)
-            {
-                var lvi1 = o1 as ListViewItem;
-                var lvi2 = o2 as ListViewItem;
-                if (lvi1 == null || lvi2 == null)
-                    return 0;
-
-                if (Descending)
-                {
-                    ListViewItem temp = lvi1;
-                    lvi1 = lvi2;
-                    lvi2 = temp;
-                }
-
-                if (IsNumber)
-                {
-                    int i1 = int.Parse(lvi1.SubItems[ColumnNumber].Text);
-                    int i2 = int.Parse(lvi2.SubItems[ColumnNumber].Text);
-
-                    if (i1 > i2)
-                        return 1;
-                    if (i1 == i2)
-                        return 0;
-                    return -1;
-                }
-                return string.Compare(lvi2.SubItems[ColumnNumber].Text, lvi1.SubItems[ColumnNumber].Text, StringComparison.Ordinal);
-            }
-            public int ColumnNumber { get; set; }
-            public bool IsNumber { get; set; }
-            public bool Descending { get; set; }
         }
 
         public Subtitle Subtitle;

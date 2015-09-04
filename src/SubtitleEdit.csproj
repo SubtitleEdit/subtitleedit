@@ -805,6 +805,7 @@
     <Compile Include="Logic\CommandLineConvert.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Logic\ListViewSorter.cs" />
     <Compile Include="Logic\NativeMethods.cs" />
     <Compile Include="Logic\NikseBitmapImageSplitter.cs" />
     <Compile Include="Logic\Networking\NikseWebServiceSession.cs">
