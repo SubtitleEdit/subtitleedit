@@ -39,8 +39,8 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     int length = (int)file.Length;
-                    if (length > 100000)
-                        length = 100000;
+                    if (length > textBoxPreview.MaxLength)
+                        length = textBoxPreview.MaxLength;
 
                     file.Position = 0;
                     _fileBuffer = new byte[length];
