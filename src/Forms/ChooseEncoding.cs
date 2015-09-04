@@ -12,6 +12,11 @@ namespace Nikse.SubtitleEdit.Forms
         private Encoding _encoding;
         private byte[] _fileBuffer;
 
+        public Encoding GetEncoding
+        {
+            get { return _encoding; }
+        }
+
         public ChooseEncoding()
         {
             InitializeComponent();
@@ -69,11 +74,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
-        }
-
-        internal Encoding GetEncoding()
-        {
-            return _encoding;
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
