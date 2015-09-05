@@ -9667,11 +9667,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (ContinueNewOrExit())
             {
                 string fileName = _dragAndDropFiles[0];
-
-                var dirName = Path.GetDirectoryName(fileName);
-                saveFileDialog1.InitialDirectory = dirName;
-                openFileDialog1.InitialDirectory = dirName;
-
                 var file = new FileInfo(fileName);
 
                 // Do not allow directory drop
@@ -9680,6 +9675,10 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(_language.ErrorDirectoryDropNotAllowed, file.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+
+                var dirName = Path.GetDirectoryName(fileName);
+                saveFileDialog1.InitialDirectory = dirName;
+                openFileDialog1.InitialDirectory = dirName;
                 var ext = file.Extension.ToLowerInvariant();
 
                 if (ext == ".mkv")
