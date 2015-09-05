@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Core
         /// <returns>An encoded string.</returns>
         public static string EncodeNamed(string source)
         {
-            if (source == null)
+            if (string.IsNullOrEmpty(source))
                 return string.Empty;
 
             var encoded = new StringBuilder(source.Length);
@@ -327,7 +327,7 @@ namespace Nikse.SubtitleEdit.Core
         /// <returns>An encoded string.</returns>
         public static string EncodeNumeric(string source)
         {
-            if (source == null)
+            if (string.IsNullOrEmpty(source))
                 return string.Empty;
 
             var encoded = new StringBuilder(source.Length);
