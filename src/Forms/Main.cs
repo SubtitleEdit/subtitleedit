@@ -15200,7 +15200,9 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            OpenVideo(fileName);
+            if (_videoFileName == null)
+                OpenVideo(fileName);
+
             using (var addWaveform = new AddWaveform())
             {
                 string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
