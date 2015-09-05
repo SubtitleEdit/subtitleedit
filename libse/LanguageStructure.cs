@@ -1103,6 +1103,7 @@
                     public string ImportImages { get; set; }
                     public string ImportTimecodes { get; set; }
                     public string Export { get; set; }
+                    public string Import { get; set; }
                     public string ExportBdnXml { get; set; }
                     public string ExportBluRaySup { get; set; }
                     public string ExportVobSub { get; set; }

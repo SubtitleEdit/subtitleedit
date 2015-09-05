@@ -753,6 +753,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
         <ImportImages>Importer images...</ImportImages>
         <ImportTimecodes>Importer timecodes...</ImportTimecodes>
         <Export>Exporter</Export>
+        <Import>Importer</Import>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>

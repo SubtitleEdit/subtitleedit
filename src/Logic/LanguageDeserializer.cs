@@ -2747,6 +2747,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/File/Export":
                     language.Main.Menu.File.Export = reader.Value;
                     break;
+                case "Main/Menu/File/Import":
+                    language.Main.Menu.File.Import = reader.Value;
+                    break;
                 case "Main/Menu/File/ExportBdnXml":
                     language.Main.Menu.File.ExportBdnXml = reader.Value;
                     break;

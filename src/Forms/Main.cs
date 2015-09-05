@@ -1043,6 +1043,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemImportImages.Text = _language.Menu.File.ImportImages;
             toolStripMenuItemImportTimeCodes.Text = _language.Menu.File.ImportTimecodes;
             toolStripMenuItemExport.Text = _language.Menu.File.Export;
+            toolStripMenuItemImport.Text = _language.Menu.File.Import;
             toolStripMenuItemExportPngXml.Text = _language.Menu.File.ExportBdnXml;
             bluraySupToolStripMenuItem.Text = _language.Menu.File.ExportBluRaySup;
             adobeEncoreFABImageScriptToolStripMenuItem.Text = _language.Menu.File.ExportAdobeEncoreFabImageScript;
@@ -13803,7 +13804,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemOpenContainingFolder.Visible = !string.IsNullOrEmpty(_fileName) && File.Exists(_fileName);
             bool subtitleLoaded = IsSubtitleLoaded;
             toolStripMenuItemStatistics.Visible = subtitleLoaded;
-            toolStripSeparator22.Visible = subtitleLoaded;
+            toolStripSeparator1.Visible = subtitleLoaded;
             toolStripMenuItemExport.Visible = subtitleLoaded;
             openOriginalToolStripMenuItem.Visible = subtitleLoaded;
             toolStripMenuItemOpenKeepVideo.Visible = _videoFileName != null;
