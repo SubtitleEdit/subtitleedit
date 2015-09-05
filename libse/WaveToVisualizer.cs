@@ -506,10 +506,11 @@ namespace Nikse.SubtitleEdit.Core
 
             var doc = new XmlDocument();
             var culture = CultureInfo.InvariantCulture;
-            doc.LoadXml("<SpectrogramInfo><SampleDuration/><NFFT/><ImageWidth/></SpectrogramInfo>");
+            doc.LoadXml("<SpectrogramInfo><SampleDuration/><NFFT/><ImageWidth/><SecondsPerImage/></SpectrogramInfo>");
             doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = ((double)nfft / Header.SampleRate).ToString(culture);
             doc.DocumentElement.SelectSingleNode("NFFT").InnerText = nfft.ToString(culture);
             doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = bitmapWidth.ToString(culture);
+            doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)chunkSampleCount / Header.SampleRate).ToString(culture); // currently unused; for backwards compatibility
             doc.Save(Path.Combine(spectrogramDirectory, "Info.xml"));
 
             return bitmaps;
