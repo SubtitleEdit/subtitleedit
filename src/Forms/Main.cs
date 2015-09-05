@@ -15194,17 +15194,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (string.IsNullOrEmpty(_videoFileName))
-                buttonOpenVideo_Click(null, null);
-            if (_videoFileName == null)
-                return;
-
             if (ext != ".wav")
             {
                 MessageBox.Show(".wav only!");
                 return;
             }
 
+            OpenVideo(fileName);
             using (var addWaveform = new AddWaveform())
             {
                 string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
