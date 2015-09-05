@@ -2,16 +2,18 @@
 
 3.4.9 (xth September 2015) BETA
 * NEW:
-   * New subtitle formats
+   * New subtitle formats (XIF xml, Jetsen, NCI Timed Roll Up Captions and more)
    * Ukranian translation - thx Maximaximum
    * Option to play a sound when new network message arrives - thx InCogNiTo124
 * IMPROVED:
    * Updated Portuguese translation - thx moob
    * Updated Korean translation - thx domddol
-   * Updated French language file - thx JM GBT
+   * Updated French language file - thx JM GBT/xylographe
    * Updated Hungarian translation - thx Zityi
    * Updated Dutch translation - thx xylographe
+   * Updated German translation - thx xylographe
    * Updated Croatian OCR fix replace list - thx diomed & xylographe
+   * Generating of spectrogram is now *many* times faster - thx jdpurcell
    * FFMPEG audio extraction will now prompt for audio file if more than one
    * Format PAC now includes "Chinese simplified" - thx Man
    * Merge lines with same text now ignores casing - thx Michel
@@ -19,6 +21,7 @@
    * Better Croatian/Serbian language detection - thx aaaxx/xylographe
    * Sync tools now display info about what is applied (factor and -/+ adjustment)
    * Plugins are now allowed to return another format than SubRip
+   * Better resizing of list view in "Bridge gaps in durations" - thx Ivandrofly
    * "Fix common errors" only shows English "i to I" fix for English language - Ivandrofly
 * FIXED:
    * Fixed tags accumulating texts in Sami format (regression from 3.4.8 refact) - thx domddol
@@ -29,6 +32,12 @@
    * Fixed possible crash in setting regarding VLC path - thx xylographe
    * Fixed shortcut key in French replace dialog - thx Claude
    * Go to first empty line now also focuses it - thx Jamakmake
+   * Clear overlap messages in main window after "New" - thx domddol
+   * Minor fix for split / timed text 1.0 - thx Krystian
+   * Issues with italic+bold tags in image export - thx marb99/aaaxx
+   * Possible crash in export to DOST
+   * Time codes in export to DOST - thx Christian
+   * Fixed crash when cleaning spectrogram temp images
    * + Many minor fixes from Ivandrofly and xylographe
 
 
