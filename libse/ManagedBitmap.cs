@@ -17,9 +17,8 @@ namespace Nikse.SubtitleEdit.Core
             try
             {
                 byte[] buffer = new byte[1024];
-                MemoryStream fd = new MemoryStream();
-                Stream fs = File.OpenRead(fileName);
-                using (Stream csStream = new GZipStream(fs, CompressionMode.Decompress))
+                using (var fd = new MemoryStream())
+                using (Stream csStream = new GZipStream(File.OpenRead(fileName), CompressionMode.Decompress))
                 {
                     int nRead;
                     while ((nRead = csStream.Read(buffer, 0, buffer.Length)) > 0)
