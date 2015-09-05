@@ -493,11 +493,10 @@ namespace Nikse.SubtitleEdit.Core
 
                 // save image
                 string imagePath = Path.Combine(spectrogramDirectory, iChunk + ".gif");
-                saveImageTask = new Task(() =>
+                saveImageTask = Task.Factory.StartNew(() =>
                 {
                     bmp.Save(imagePath, System.Drawing.Imaging.ImageFormat.Gif);
                 });
-                saveImageTask.Start();
             }
 
             // wait for last image to finish saving
