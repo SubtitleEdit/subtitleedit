@@ -85,6 +85,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private List<Bitmap> _spectrogramBitmaps = new List<Bitmap>();
         private string _spectrogramDirectory;
+        private const int SpectrogramDisplayHeight = 128;
         private double _sampleDuration;
         private double _imageWidth;
         private int _nfft;
@@ -481,7 +482,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     DrawSpectrogramBitmap(StartPositionSeconds, graphics);
                     if (ShowWaveform)
-                        imageHeight -= _nfft / 2;
+                        imageHeight -= SpectrogramDisplayHeight;
                 }
 
                 //                using (var penOther = new Pen(ParagraphColor))
@@ -1835,7 +1836,7 @@ namespace Nikse.SubtitleEdit.Controls
             double duration = EndPositionSeconds - StartPositionSeconds;
             var width = (int)(duration / _sampleDuration);
 
-            var bmpDestination = new Bitmap(width, 128); //calculate width
+            var bmpDestination = new Bitmap(width, _nfft / 2); //calculate width
             var gfx = Graphics.FromImage(bmpDestination);
 
             double startRow = seconds / _secondsPerImage;
@@ -1857,7 +1858,7 @@ namespace Nikse.SubtitleEdit.Controls
             gfx.Dispose();
 
             if (ShowWaveform)
-                graphics.DrawImage(bmpDestination, new Rectangle(0, Height - bmpDestination.Height, Width, bmpDestination.Height));
+                graphics.DrawImage(bmpDestination, new Rectangle(0, Height - SpectrogramDisplayHeight, Width, SpectrogramDisplayHeight));
             else
                 graphics.DrawImage(bmpDestination, new Rectangle(0, 0, Width, Height));
             bmpDestination.Dispose();
