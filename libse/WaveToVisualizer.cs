@@ -526,7 +526,8 @@ namespace Nikse.SubtitleEdit.Core
             private readonly FastBitmap.PixelData[] _palette;
             private readonly double[] _segment;
             private readonly double[] _window;
-            private readonly double[] _magnitude;
+            private readonly double[] _magnitude1;
+            private readonly double[] _magnitude2;
 
             public SpectrogramDrawer(int nfft)
             {
@@ -536,7 +537,8 @@ namespace Nikse.SubtitleEdit.Core
                 _palette = GeneratePalette();
                 _segment = new double[nfft];
                 _window = CreateRaisedCosineWindow(nfft);
-                _magnitude = new double[nfft / 2];
+                _magnitude1 = new double[nfft / 2];
+                _magnitude2 = new double[nfft / 2];
 
                 double scaleCorrection = 1.0 / (raisedCosineWindowScale * _fft.ForwardScaleFactor);
                 for (int i = 0; i < _window.Length; i++)
@@ -553,22 +555,30 @@ namespace Nikse.SubtitleEdit.Core
                 bmp.LockImage();
                 for (int x = 0; x < width; x++)
                 {
-                    // read a segment of the recorded signal
-                    for (int i = 0; i < _nfft; i++)
+                    Action<int, double[]> processSegment = (offset, magnitude) =>
                     {
-                        _segment[i] = samples[x * _nfft + i] * _window[i];
-                    }
+                        // read a segment of the recorded signal
+                        for (int i = 0; i < _nfft; i++)
+                        {
+                            _segment[i] = samples[x * _nfft + offset + i] * _window[i];
+                        }
 
-                    // transform to the frequency domain
-                    _fft.ComputeForward(_segment);
+                        // transform to the frequency domain
+                        _fft.ComputeForward(_segment);
 
-                    // compute the magnitude of the spectrum
-                    MagnitudeSpectrum(_segment, _magnitude);
+                        // compute the magnitude of the spectrum
+                        MagnitudeSpectrum(_segment, magnitude);
+                    };
+
+                    // process 2 segments offset by -1/4 and 1/4 fft size, resulting in 1/2 fft size
+                    // window spacing (the minimum overlap to avoid discarding parts of the signal)
+                    processSegment(x > 0 ? -_nfft / 4 : 0, _magnitude1);
+                    processSegment(x < width - 1 ? _nfft / 4 : 0, _magnitude2);
 
                     // draw
                     for (int y = 0; y < height; y++)
                     {
-                        int colorIndex = _mapper.Map(_magnitude[y]);
+                        int colorIndex = _mapper.Map((_magnitude1[y] + _magnitude2[y]) / 2.0);
                         bmp.SetPixel(x, height - y - 1, _palette[colorIndex]);
                     }
                 }
