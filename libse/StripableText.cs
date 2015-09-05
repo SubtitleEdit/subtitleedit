@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Core
             if (makeUppercaseAfterBreak && StrippedText.Contains(new[] { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' }))
             {
                 const string breakAfterChars = @".!?:;)]}([{";
-
+                const string ExpectedChars = "\"`´'()<>!?.- \r\n";
                 var sb = new StringBuilder();
                 bool lastWasBreak = false;
                 for (int i = 0; i < StrippedText.Length; i++)
@@ -223,7 +223,7 @@ namespace Nikse.SubtitleEdit.Core
                     var s = StrippedText[i];
                     if (lastWasBreak)
                     {
-                        if (("\"`´'()<>!?.- " + Environment.NewLine).Contains(s))
+                        if (ExpectedChars.Contains(s))
                         {
                             sb.Append(s);
                         }
