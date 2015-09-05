@@ -558,7 +558,7 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     // process 2 segments offset by -1/4 and 1/4 fft size, resulting in 1/2 fft size
                     // window spacing (the minimum overlap to avoid discarding parts of the signal)
-                    ProcessSegment(samples, (x * _nfft) + (x > 0 ? -_nfft / 4 : 0), _magnitude1);
+                    ProcessSegment(samples, (x * _nfft) - (x > 0 ? _nfft / 4 : 0), _magnitude1);
                     ProcessSegment(samples, (x * _nfft) + (x < width - 1 ? _nfft / 4 : 0), _magnitude2);
 
                     // draw
