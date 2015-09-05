@@ -505,14 +505,11 @@ namespace Nikse.SubtitleEdit.Core
                 Task.WaitAll(saveImageTask);
 
             var doc = new XmlDocument();
-            doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/><AudioFormat /><AudioFormat /><ChunkId /><SecondsPerImage /><ImageWidth /><NFFT /></SpectrogramInfo>");
-            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = ((double)nfft / Header.SampleRate).ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText = Header.LengthInSeconds.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("AudioFormat").InnerText = Header.AudioFormat.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("ChunkId").InnerText = Header.ChunkId.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)chunkSampleCount / Header.SampleRate).ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = bitmapWidth.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("NFFT").InnerText = nfft.ToString(CultureInfo.InvariantCulture);
+            var culture = CultureInfo.InvariantCulture;
+            doc.LoadXml("<SpectrogramInfo><SampleDuration/><NFFT/><ImageWidth/></SpectrogramInfo>");
+            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = ((double)nfft / Header.SampleRate).ToString(culture);
+            doc.DocumentElement.SelectSingleNode("NFFT").InnerText = nfft.ToString(culture);
+            doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = bitmapWidth.ToString(culture);
             doc.Save(Path.Combine(spectrogramDirectory, "Info.xml"));
 
             return bitmaps;
