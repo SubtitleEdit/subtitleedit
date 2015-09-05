@@ -489,7 +489,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 // wait for previous image to finish saving
                 if (saveImageTask != null)
-                    Task.WaitAll(saveImageTask);
+                    saveImageTask.Wait();
 
                 // save image
                 string imagePath = Path.Combine(spectrogramDirectory, iChunk + ".gif");
@@ -501,7 +501,7 @@ namespace Nikse.SubtitleEdit.Core
 
             // wait for last image to finish saving
             if (saveImageTask != null)
-                Task.WaitAll(saveImageTask);
+                saveImageTask.Wait();
 
             var doc = new XmlDocument();
             var culture = CultureInfo.InvariantCulture;
