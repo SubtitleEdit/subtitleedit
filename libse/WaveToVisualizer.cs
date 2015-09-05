@@ -556,25 +556,10 @@ namespace Nikse.SubtitleEdit.Core
                 bmp.LockImage();
                 for (int x = 0; x < width; x++)
                 {
-                    Action<int, double[]> processSegment = (offset, magnitude) =>
-                    {
-                        // read a segment of the recorded signal
-                        for (int i = 0; i < _nfft; i++)
-                        {
-                            _segment[i] = samples[x * _nfft + offset + i] * _window[i];
-                        }
-
-                        // transform to the frequency domain
-                        _fft.ComputeForward(_segment);
-
-                        // compute the magnitude of the spectrum
-                        MagnitudeSpectrum(_segment, magnitude);
-                    };
-
                     // process 2 segments offset by -1/4 and 1/4 fft size, resulting in 1/2 fft size
                     // window spacing (the minimum overlap to avoid discarding parts of the signal)
-                    processSegment(x > 0 ? -_nfft / 4 : 0, _magnitude1);
-                    processSegment(x < width - 1 ? _nfft / 4 : 0, _magnitude2);
+                    ProcessSegment(samples, (x * _nfft) + (x > 0 ? -_nfft / 4 : 0), _magnitude1);
+                    ProcessSegment(samples, (x * _nfft) + (x < width - 1 ? _nfft / 4 : 0), _magnitude2);
 
                     // draw
                     for (int y = 0; y < height; y++)
@@ -585,6 +570,19 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 bmp.UnlockImage();
                 return bmp.GetBitmap();
+            }
+
+            private void ProcessSegment(double[] samples, int offset, double[] magnitude)
+            {
+                // read a segment of the recorded signal
+                for (int i = 0; i < _nfft; i++)
+                    _segment[i] = samples[offset + i] * _window[i];
+
+                // transform to the frequency domain
+                _fft.ComputeForward(_segment);
+
+                // compute the magnitude of the spectrum
+                MagnitudeSpectrum(_segment, magnitude);
             }
 
             private static double[] CreateRaisedCosineWindow(int n)
