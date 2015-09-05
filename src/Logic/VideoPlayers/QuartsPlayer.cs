@@ -15,8 +15,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public override event EventHandler OnVideoLoaded;
         public override event EventHandler OnVideoEnded;
 
-        private QuartzTypeLib.IVideoWindow _quartzVideo;
-        private QuartzTypeLib.FilgraphManager _quartzFilgraphManager;
+        private IVideoWindow _quartzVideo;
+        private FilgraphManager _quartzFilgraphManager;
         private IMediaPosition _mediaPosition;
         private bool _isPaused;
         private Control _owner;
@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             const int wsChild = 0x40000000;
 
             string ext = System.IO.Path.GetExtension(videoFileName).ToLower();
-            bool isAudio = ext == ".mp3" || ext == ".wav" || ext == ".wma" || ext == ".m4a";
+            bool isAudio = ext == ".mp3" || ext == ".wav" || ext == ".wma" || ext == ".ogg" || ext == ".mpa" || ext == ".ape" || ext == ".aiff" || ext == ".flac" || ext == ".acc" || ext == ".mka";
 
             OnVideoLoaded = onVideoLoaded;
             OnVideoEnded = onVideoEnded;
