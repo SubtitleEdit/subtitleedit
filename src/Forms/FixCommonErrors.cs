@@ -517,7 +517,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             int emptyLinesRemoved = 0;
 
-            int firstNumber = Subtitle.Paragraphs[0].Number;
             listViewFixes.BeginUpdate();
             for (int i = Subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
@@ -528,6 +527,17 @@ namespace Nikse.SubtitleEdit.Forms
                     var oldText = text;
                     var pre = string.Empty;
                     var post = string.Empty;
+
+                    // Ssa Tags
+                    if (text.StartsWith("{\\", StringComparison.Ordinal))
+                    {
+                        var endIDx = text.IndexOf('}', 2);
+                        if (endIDx > 2)
+                        {
+                            pre = text.Substring(0, endIDx + 1);
+                            text = text.Remove(0, endIDx + 1);
+                        }
+                    }
 
                     while (text.LineStartsWithHtmlTag(true, true))
                     {
@@ -566,7 +576,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    if (AllowFix(p, fixAction1) && text.StartsWith(Environment.NewLine))
+                    if (AllowFix(p, fixAction1) && text.StartsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
                         if (pre.Length > 0)
                             text = pre + text.TrimStart(Utilities.NewLineChars);
@@ -613,7 +623,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 LogStatus(_language.RemovedEmptyLinesUnsedLineBreaks, string.Format(_language.EmptyLinesRemovedX, emptyLinesRemoved));
                 _totalFixes += emptyLinesRemoved;
-                Subtitle.Renumber(firstNumber);
+                Subtitle.Renumber();
             }
         }
 
