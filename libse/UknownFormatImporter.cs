@@ -584,7 +584,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)
                 {
-                    string[] arr = line.Replace("-", " ").Replace(">", " ").Replace("{", " ").Replace("}", " ").Replace("[", " ").Replace("]", " ").Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] arr = line.Replace('-', ' ').Replace('>', ' ').Replace('{', ' ').Replace('}', ' ').Replace('[', ' ').Replace(']', ' ').Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 2)
                     {
                         string[] start = arr[0].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
