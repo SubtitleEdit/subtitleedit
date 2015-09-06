@@ -672,6 +672,8 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <ImageFiles>Fichier image</ImageFiles>
     <Input>Entrée</Input>
     <InputDescription>Entrer fichiers (naviguer ou glisser-déposer)</InputDescription>
+    <Remove>Effacer</Remove>
+    <RemoveAll>Enlever tous</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Importer les changements de scène</Title>
@@ -1692,6 +1694,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <WaveformSeekSilenceBack>Recherche après le silence</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Ajouter le texte ici (Pour la nouvelle sélection)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Lecture de la nouvelle sélection</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Lecture de la fin de la sélection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Lecture du premier sous-titre sélectionné</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus du mode liste</WaveformFocusListView>
     <GoBack1Frame>Une image arrière</GoBack1Frame>
