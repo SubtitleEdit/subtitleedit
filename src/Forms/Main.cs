@@ -776,7 +776,13 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownStartTime.TimeCode = paragraph.StartTime;
                 var durationInSeconds = (decimal)(paragraph.Duration.TotalSeconds);
                 if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
+                {
                     SetDurationInSeconds((double)durationInSeconds);
+                    if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.Start)
+                    {
+                        paragraph.EndTime.TotalMilliseconds = e.BeforeParagraph.EndTime.TotalMilliseconds;
+                    }
+                }
 
                 MovePrevNext(e, beforeParagraph, index);
 
