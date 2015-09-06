@@ -87,18 +87,19 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (word != null && richTextBoxParagraph.Text.Contains(word))
             {
+                const string ExpectedWordBoundaryChars = @" <>-""”“[]'‘`´¶()♪¿¡.…—!?,:;/\r\n";
                 for (int i = 0; i < richTextBoxParagraph.Text.Length; i++)
                 {
                     if (richTextBoxParagraph.Text.Substring(i).StartsWith(word))
                     {
                         bool startOk = i == 0;
                         if (!startOk)
-                            startOk = (@" <>-""”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(richTextBoxParagraph.Text[i - 1]);
+                            startOk = ExpectedWordBoundaryChars.Contains(richTextBoxParagraph.Text[i - 1]);
                         if (startOk)
                         {
                             bool endOk = (i + word.Length == richTextBoxParagraph.Text.Length);
                             if (!endOk)
-                                endOk = (@" <>-""”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(richTextBoxParagraph.Text[i + word.Length]);
+                                endOk = ExpectedWordBoundaryChars.Contains(richTextBoxParagraph.Text[i + word.Length]);
                             if (endOk)
                             {
                                 richTextBoxParagraph.SelectionStart = i + 1;

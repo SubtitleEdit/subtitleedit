@@ -177,6 +177,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        private static readonly char[] ExpectedCharsArray = { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' };
         public void FixCasing(List<string> namesEtc, bool changeNameCases, bool makeUppercaseAfterBreak, bool checkLastLine, string lastLine)
         {
             var replaceIds = new List<string>();
@@ -212,10 +213,10 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
 
-            if (makeUppercaseAfterBreak && StrippedText.Contains(new[] { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' }))
+            if (makeUppercaseAfterBreak && StrippedText.Contains(ExpectedCharsArray))
             {
                 const string breakAfterChars = @".!?:;)]}([{";
-
+                const string ExpectedChars = "\"`´'()<>!?.- \r\n";
                 var sb = new StringBuilder();
                 bool lastWasBreak = false;
                 for (int i = 0; i < StrippedText.Length; i++)
@@ -223,7 +224,7 @@ namespace Nikse.SubtitleEdit.Core
                     var s = StrippedText[i];
                     if (lastWasBreak)
                     {
-                        if (("\"`´'()<>!?.- " + Environment.NewLine).Contains(s))
+                        if (ExpectedChars.Contains(s))
                         {
                             sb.Append(s);
                         }
