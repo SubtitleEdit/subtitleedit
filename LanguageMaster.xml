@@ -1688,7 +1688,8 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformSeekSilenceForward>Seek silence forward</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Seek silence back</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Add text here (for new selection)</WaveformAddTextHere>
-    <WaveformPlayNewSelection>Play new selection</WaveformPlayNewSelection>
+    <WaveformPlayNewSelection>Play selection</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Play end of selection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Play first selected subtitle</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus list view</WaveformFocusListView>
     <GoBack1Frame>One frame back</GoBack1Frame>

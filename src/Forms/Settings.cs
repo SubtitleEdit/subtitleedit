@@ -757,6 +757,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizerNode.Nodes.Add(language.WaveformSeekSilenceBack + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack));
             audioVisualizerNode.Nodes.Add(language.WaveformAddTextHere + GetShortcutText(Configuration.Settings.Shortcuts.WaveformAddTextHere));
             audioVisualizerNode.Nodes.Add(language.WaveformPlayNewSelection + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlaySelection));
+            audioVisualizerNode.Nodes.Add(language.WaveformPlayNewSelectionEnd + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition + GetShortcutText(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition));
             audioVisualizerNode.Nodes.Add(language.WaveformFocusListView + GetShortcutText(Configuration.Settings.Shortcuts.WaveformFocusListView));
             treeViewShortcuts.Nodes.Add(audioVisualizerNode);
@@ -1535,6 +1536,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.WaveformZoomOut = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.WaveformPlayNewSelection).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformPlaySelection = GetShortcut(node.Text);
+                    else if (text == (Configuration.Settings.Language.Settings.WaveformPlayNewSelectionEnd).Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.VerticalZoom).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformVerticalZoom = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.VerticalZoomOut).Replace("&", string.Empty))

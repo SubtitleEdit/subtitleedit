@@ -187,6 +187,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _waveformZoomIn = Keys.None;
         private Keys _waveformZoomOut = Keys.None;
         private Keys _waveformPlaySelection = Keys.None;
+        private Keys _waveformPlaySelectionEnd = Keys.None;
         private Keys _waveformSearchSilenceForward = Keys.None;
         private Keys _waveformSearchSilenceBack = Keys.None;
         private Keys _waveformAddTextAtHere = Keys.None;
@@ -10224,9 +10225,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 PlayFirstSelectedSubtitle();
             }
-            else if (audioVisualizer != null && audioVisualizer.Visible && e.KeyData == _waveformPlaySelection)
+            else if (audioVisualizer != null && audioVisualizer.Visible && (e.KeyData == _waveformPlaySelection || e.KeyData == _waveformPlaySelectionEnd))
             {
-                toolStripMenuItemWaveformPlaySelection_Click(null, null);
+                WaveformPlaySelection(nearEnd: e.KeyData == _waveformPlaySelectionEnd);
                 e.SuppressKeyPress = true;
             }
             else if (audioVisualizer != null && audioVisualizer.Visible && e.KeyData == _waveformSearchSilenceForward)
@@ -14354,6 +14355,7 @@ namespace Nikse.SubtitleEdit.Forms
             _waveformZoomIn = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomIn);
             _waveformZoomOut = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomOut);
             _waveformPlaySelection = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelection);
+            _waveformPlaySelectionEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd);
             _waveformSearchSilenceForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward);
             _waveformSearchSilenceBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack);
             _waveformAddTextAtHere = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHere);
@@ -15053,18 +15055,28 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemWaveformPlaySelection_Click(object sender, EventArgs e)
         {
+            WaveformPlaySelection();
+        }
+
+        private void WaveformPlaySelection(bool nearEnd = false)
+        {
             if (mediaPlayer.VideoPlayer != null)
             {
-                var p = audioVisualizer.NewSelectionParagraph;
-                if (p == null)
-                    p = audioVisualizer.RightClickedParagraph;
+                var p =
+                    audioVisualizer.NewSelectionParagraph ??
+                    audioVisualizer.SelectedParagraph;
 
                 if (p != null)
                 {
-                    mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                    double startSeconds = p.StartTime.TotalSeconds;
+                    _endSeconds = p.EndTime.TotalSeconds;
+                    if (nearEnd)
+                    {
+                        startSeconds = Math.Max(startSeconds, _endSeconds - 1.0);
+                    }
+                    mediaPlayer.CurrentPosition = startSeconds;
                     UiUtil.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
                     mediaPlayer.Play();
-                    _endSeconds = p.EndTime.TotalSeconds;
                 }
             }
         }
