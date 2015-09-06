@@ -73,7 +73,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-
             var paragraph = new Paragraph();
             var expecting = ExpectingLine.TimeCodes;
             _errorCount = 0;

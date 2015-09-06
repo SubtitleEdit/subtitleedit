@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return d;
                 return 25;
             }
-        }       
+        }
 
         private int MillisecondsToFramesMaxFrameRate(double milliseconds)
         {

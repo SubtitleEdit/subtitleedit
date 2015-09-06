@@ -11,6 +11,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -90,40 +91,6 @@ namespace Nikse.SubtitleEdit.Forms
                 Action = action;
                 DefaultChecked = selected;
             }
-        }
-
-        private class ListViewSorter : System.Collections.IComparer
-        {
-            public int Compare(object o1, object o2)
-            {
-                var lvi1 = o1 as ListViewItem;
-                var lvi2 = o2 as ListViewItem;
-                if (lvi1 == null || lvi2 == null)
-                    return 0;
-
-                if (Descending)
-                {
-                    ListViewItem temp = lvi1;
-                    lvi1 = lvi2;
-                    lvi2 = temp;
-                }
-
-                if (IsNumber)
-                {
-                    int i1 = int.Parse(lvi1.SubItems[ColumnNumber].Text);
-                    int i2 = int.Parse(lvi2.SubItems[ColumnNumber].Text);
-
-                    if (i1 > i2)
-                        return 1;
-                    if (i1 == i2)
-                        return 0;
-                    return -1;
-                }
-                return string.Compare(lvi2.SubItems[ColumnNumber].Text, lvi1.SubItems[ColumnNumber].Text, StringComparison.Ordinal);
-            }
-            public int ColumnNumber { get; set; }
-            public bool IsNumber { get; set; }
-            public bool Descending { get; set; }
         }
 
         public Subtitle Subtitle;
@@ -394,7 +361,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _indexAloneLowercaseIToUppercaseIEnglish = _fixActions.Count;
                 _fixActions.Add(new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, FixAloneLowercaseIToUppercaseI, ce.AloneLowercaseIToUppercaseIEnglishTicked));
-
             }
             if (Language == "tr")
             {
@@ -551,7 +517,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             int emptyLinesRemoved = 0;
 
-            int firstNumber = Subtitle.Paragraphs[0].Number;
             listViewFixes.BeginUpdate();
             for (int i = Subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
@@ -562,6 +527,17 @@ namespace Nikse.SubtitleEdit.Forms
                     var oldText = text;
                     var pre = string.Empty;
                     var post = string.Empty;
+
+                    // Ssa Tags
+                    if (text.StartsWith("{\\", StringComparison.Ordinal))
+                    {
+                        var endIDx = text.IndexOf('}', 2);
+                        if (endIDx > 2)
+                        {
+                            pre = text.Substring(0, endIDx + 1);
+                            text = text.Remove(0, endIDx + 1);
+                        }
+                    }
 
                     while (text.LineStartsWithHtmlTag(true, true))
                     {
@@ -600,7 +576,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    if (AllowFix(p, fixAction1) && text.StartsWith(Environment.NewLine))
+                    if (AllowFix(p, fixAction1) && text.StartsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
                         if (pre.Length > 0)
                             text = pre + text.TrimStart(Utilities.NewLineChars);
@@ -632,7 +608,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = Subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                var text = HtmlUtil.RemoveHtmlTags(p.Text).Trim();
+                var text = HtmlUtil.RemoveHtmlTags(p.Text, true).Trim();
                 if (AllowFix(p, fixAction0) && string.IsNullOrEmpty(text))
                 {
                     Subtitle.Paragraphs.RemoveAt(i);
@@ -647,7 +623,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 LogStatus(_language.RemovedEmptyLinesUnsedLineBreaks, string.Format(_language.EmptyLinesRemovedX, emptyLinesRemoved));
                 _totalFixes += emptyLinesRemoved;
-                Subtitle.Renumber(firstNumber);
+                Subtitle.Renumber();
             }
         }
 
@@ -2838,12 +2814,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixMusicNotation;
             int fixCount = 0;
+            string[] musicSymbols = Configuration.Settings.Tools.MusicSymbolToReplace.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
                 if (AllowFix(p, fixAction))
                 {
-                    string[] musicSymbols = Configuration.Settings.Tools.MusicSymbolToReplace.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     var oldText = p.Text;
                     var newText = oldText;
 

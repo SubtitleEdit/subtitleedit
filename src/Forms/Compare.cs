@@ -343,21 +343,23 @@ namespace Nikse.SubtitleEdit.Forms
                             int columnsAlike = GetColumnsEqualExceptNumber(p1, p2);
                             if (columnsAlike > 0)
                             {
-                                if (p1.StartTime.TotalMilliseconds != p2.StartTime.TotalMilliseconds)
+                                const double tolerance = 0.1;
+
+                                if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) > tolerance)
                                 {
                                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen,
                                                                          SubtitleListView.ColumnIndexStart);
                                     subtitleListView2.SetBackgroundColor(index, Color.LightGreen,
                                                                          SubtitleListView.ColumnIndexStart);
                                 }
-                                if (p1.EndTime.TotalMilliseconds != p2.EndTime.TotalMilliseconds)
+                                if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) > tolerance)
                                 {
                                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen,
                                                                          SubtitleListView.ColumnIndexEnd);
                                     subtitleListView2.SetBackgroundColor(index, Color.LightGreen,
                                                                          SubtitleListView.ColumnIndexEnd);
                                 }
-                                if (p1.Duration.TotalMilliseconds != p2.Duration.TotalMilliseconds)
+                                if (Math.Abs(p1.Duration.TotalMilliseconds - p2.Duration.TotalMilliseconds) > tolerance)
                                 {
                                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen,
                                                                          SubtitleListView.ColumnIndexDuration);
@@ -470,14 +472,16 @@ namespace Nikse.SubtitleEdit.Forms
             if (p1 == null || p2 == null)
                 return 0;
 
+            const double tolerance = 0.1;
+
             int columnsEqual = 0;
-            if (p1.StartTime.TotalMilliseconds == p2.StartTime.TotalMilliseconds)
+            if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) < tolerance)
                 columnsEqual++;
 
-            if (p1.EndTime.TotalMilliseconds == p2.EndTime.TotalMilliseconds)
+            if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) < tolerance)
                 columnsEqual++;
 
-            if (p1.Duration.TotalMilliseconds == p2.Duration.TotalMilliseconds)
+            if (Math.Abs(p1.Duration.TotalMilliseconds - p2.Duration.TotalMilliseconds) < tolerance)
                 columnsEqual++;
 
             if (p1.Text.Trim() == p2.Text.Trim())
@@ -757,6 +761,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Timer1Tick(object sender, EventArgs e)
         {
+            if (subtitleListView1.TopItem == null || subtitleListView2.TopItem == null)
+                return;
+
             char activeListView;
             var p = PointToClient(MousePosition);
             if (p.X >= subtitleListView1.Left && p.X <= subtitleListView1.Left + subtitleListView1.Width + 2)
@@ -778,7 +785,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 subtitleListView2.SelectedIndexChanged -= SubtitleListView2SelectedIndexChanged;
                 subtitleListView2.SelectIndexAndEnsureVisible(subtitleListView1.SelectedItems[0].Index);
-                if (subtitleListView2.TopItem != null && subtitleListView1.TopItem.Index != subtitleListView2.TopItem.Index &&
+                if (subtitleListView1.TopItem.Index != subtitleListView2.TopItem.Index &&
                     subtitleListView2.Items.Count > subtitleListView1.TopItem.Index)
                     subtitleListView2.TopItem = subtitleListView2.Items[subtitleListView1.TopItem.Index];
                 subtitleListView2.SelectedIndexChanged += SubtitleListView2SelectedIndexChanged;
@@ -870,6 +877,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void VerifyDragDrop(ListView listView, DragEventArgs e)
         {
             var files = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (files == null)
+            {
+                return;
+            }
             if (files.Length > 1)
             {
                 MessageBox.Show(Configuration.Settings.Language.Main.DropOnlyOneFile,

@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var xml = new XmlDocument { XmlResolver = null };
                 try
                 {
-                    xml.LoadXml(xmlAsString);
+                    xml.LoadXml(xmlAsString.RemoveControlCharactersButWhiteSpace());
 
                     var nsmgr = new XmlNamespaceManager(xml.NameTable);
                     nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(sb.ToString().Trim().Replace("http://www.w3.org/2006/04/ttaf1#styling\"xml:lang", "http://www.w3.org/2006/04/ttaf1#styling\" xml:lang"));
+            xml.LoadXml(sb.ToString().RemoveControlCharactersButWhiteSpace().Trim().Replace("http://www.w3.org/2006/04/ttaf1#styling\"xml:lang", "http://www.w3.org/2006/04/ttaf1#styling\" xml:lang"));
 
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
