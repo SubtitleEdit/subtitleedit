@@ -4522,6 +4522,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformPlayNewSelection":
                     language.Settings.WaveformPlayNewSelection = reader.Value;
                     break;
+                case "Settings/WaveformPlayNewSelectionEnd":
+                    language.Settings.WaveformPlayNewSelectionEnd = reader.Value;
+                    break;
                 case "Settings/WaveformPlayFirstSelectedSubtitle":
                     language.Settings.WaveformPlayFirstSelectedSubtitle = reader.Value;
                     break;
