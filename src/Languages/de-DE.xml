@@ -671,6 +671,8 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <ImageFiles>Bilddateien</ImageFiles>
     <Input>Eingabe</Input>
     <InputDescription>Eingabedateien auswählen (Suchen oder Ziehen)</InputDescription>
+    <Remove>Löschen</Remove>
+    <RemoveAll>Alle löschen</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Szenenwechsel importieren</Title>
@@ -1685,7 +1687,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformSeekSilenceForward>Suche stumm vor</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Suche stumm zurück</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Text hier ergänzen (für neue Auswahl)</WaveformAddTextHere>
-    <WaveformPlayNewSelection>Neue Auswahl abspielen</WaveformPlayNewSelection>
+    <WaveformPlayNewSelection>Auswahl abspielen</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Ende der Auswahl abspielen</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Ersten gewählten Untertitel abspielen</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Listenansicht fokussieren</WaveformFocusListView>
     <GoBack1Frame>Ein Bild zurück</GoBack1Frame>
