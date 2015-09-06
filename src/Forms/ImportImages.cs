@@ -2,13 +2,14 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Collections;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ImportImages : PositionAndSizeForm
     {
         public Subtitle Subtitle { get; private set; }
-
+        private readonly Hashtable FilesAlreadyInList;
         public ImportImages()
         {
             InitializeComponent();
@@ -23,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderDuration.Text = Configuration.Settings.Language.General.Duration;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            FilesAlreadyInList = new Hashtable();
         }
 
         private void buttonInputBrowse_Click(object sender, EventArgs e)
@@ -35,7 +37,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (string fileName in openFileDialog1.FileNames)
                 {
-                    AddInputFile(fileName);
+                    if (!FilesAlreadyInList.Contains(fileName))
+                        AddInputFile(fileName);
                 }
             }
             buttonInputBrowse.Enabled = true;
@@ -51,6 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var ext = fi.Extension.ToLowerInvariant();
                 if (ext == ".png" || ext == ".jpg" || ext == ".bmp" || ext == ".gif" || ext == ".tif" || ext == ".tiff")
                 {
+                    FilesAlreadyInList.Add(fileName, null);
                     SetTimeCodes(fileName, item);
                     listViewInputFiles.Items.Add(item);
                 }
