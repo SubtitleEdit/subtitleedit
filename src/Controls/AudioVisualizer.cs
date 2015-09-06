@@ -85,10 +85,10 @@ namespace Nikse.SubtitleEdit.Controls
 
         private List<Bitmap> _spectrogramBitmaps = new List<Bitmap>();
         private string _spectrogramDirectory;
+        private const int SpectrogramDisplayHeight = 128;
         private double _sampleDuration;
         private double _imageWidth;
         private int _nfft;
-        private double _secondsPerImage;
 
         public delegate void ParagraphEventHandler(object sender, ParagraphEventArgs e);
         public event ParagraphEventHandler OnNewSelectionRightClicked;
@@ -481,7 +481,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     DrawSpectrogramBitmap(StartPositionSeconds, graphics);
                     if (ShowWaveform)
-                        imageHeight -= _nfft / 2;
+                        imageHeight -= SpectrogramDisplayHeight;
                 }
 
                 //                using (var penOther = new Pen(ParagraphColor))
@@ -1825,7 +1825,6 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     doc.Load(xmlInfoFileName);
                     _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText, CultureInfo.InvariantCulture);
-                    _secondsPerImage = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText, CultureInfo.InvariantCulture);
                     _nfft = Convert.ToInt32(doc.DocumentElement.SelectSingleNode("NFFT").InnerText, CultureInfo.InvariantCulture);
                     _imageWidth = Convert.ToInt32(doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText, CultureInfo.InvariantCulture);
                     ShowSpectrogram = true;
@@ -1846,12 +1845,12 @@ namespace Nikse.SubtitleEdit.Controls
             double duration = EndPositionSeconds - StartPositionSeconds;
             var width = (int)(duration / _sampleDuration);
 
-            using (var bmpDestination = new Bitmap(width, 128)) //calculate width
+            using (var bmpDestination = new Bitmap(width, _nfft / 2)) //calculate width
             {
                 using (var gfx = Graphics.FromImage(bmpDestination))
                 {
 
-                    double startRow = seconds / _secondsPerImage;
+                    double startRow = seconds / (_sampleDuration * _imageWidth);
                     var bitmapIndex = (int)startRow;
                     var subtractValue = (int)Math.Round((startRow - bitmapIndex) * _imageWidth);
 
@@ -1869,7 +1868,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
                 if (ShowWaveform)
-                    graphics.DrawImage(bmpDestination, new Rectangle(0, Height - bmpDestination.Height, Width, bmpDestination.Height));
+                    graphics.DrawImage(bmpDestination, new Rectangle(0, Height - SpectrogramDisplayHeight, Width, SpectrogramDisplayHeight));
                 else
                     graphics.DrawImage(bmpDestination, new Rectangle(0, 0, Width, Height));
             }

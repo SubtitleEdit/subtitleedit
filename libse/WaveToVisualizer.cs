@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core
@@ -405,6 +406,7 @@ namespace Nikse.SubtitleEdit.Core
 
             List<Bitmap> bitmaps = new List<Bitmap>();
             SpectrogramDrawer drawer = new SpectrogramDrawer(nfft);
+            Task saveImageTask = null;
             ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataReader();
             double sampleScale = 1.0 / (Math.Pow(2.0, Header.BitsPerSample - 1) * Header.NumberOfChannels);
 
@@ -483,19 +485,31 @@ namespace Nikse.SubtitleEdit.Core
 
                 // generate spectrogram for this chunk
                 Bitmap bmp = drawer.Draw(chunkSamples);
-                bmp.Save(Path.Combine(spectrogramDirectory, iChunk + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
                 bitmaps.Add(bmp);
+
+                // wait for previous image to finish saving
+                if (saveImageTask != null)
+                    saveImageTask.Wait();
+
+                // save image
+                string imagePath = Path.Combine(spectrogramDirectory, iChunk + ".gif");
+                saveImageTask = Task.Factory.StartNew(() =>
+                {
+                    bmp.Save(imagePath, System.Drawing.Imaging.ImageFormat.Gif);
+                });
             }
 
+            // wait for last image to finish saving
+            if (saveImageTask != null)
+                saveImageTask.Wait();
+
             var doc = new XmlDocument();
-            doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/><AudioFormat /><AudioFormat /><ChunkId /><SecondsPerImage /><ImageWidth /><NFFT /></SpectrogramInfo>");
-            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = ((double)nfft / Header.SampleRate).ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText = Header.LengthInSeconds.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("AudioFormat").InnerText = Header.AudioFormat.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("ChunkId").InnerText = Header.ChunkId.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)chunkSampleCount / Header.SampleRate).ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = bitmapWidth.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("NFFT").InnerText = nfft.ToString(CultureInfo.InvariantCulture);
+            var culture = CultureInfo.InvariantCulture;
+            doc.LoadXml("<SpectrogramInfo><SampleDuration/><NFFT/><ImageWidth/><SecondsPerImage/></SpectrogramInfo>");
+            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = ((double)nfft / Header.SampleRate).ToString(culture);
+            doc.DocumentElement.SelectSingleNode("NFFT").InnerText = nfft.ToString(culture);
+            doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = bitmapWidth.ToString(culture);
+            doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)chunkSampleCount / Header.SampleRate).ToString(culture); // currently unused; for backwards compatibility
             doc.Save(Path.Combine(spectrogramDirectory, "Info.xml"));
 
             return bitmaps;
@@ -504,6 +518,7 @@ namespace Nikse.SubtitleEdit.Core
         private class SpectrogramDrawer
         {
             private const double raisedCosineWindowScale = 0.5;
+            private const int magnitudeIndexRange = 256;
 
             private readonly int _nfft;
             private readonly MagnitudeToIndexMapper _mapper;
@@ -511,17 +526,19 @@ namespace Nikse.SubtitleEdit.Core
             private readonly FastBitmap.PixelData[] _palette;
             private readonly double[] _segment;
             private readonly double[] _window;
-            private readonly double[] _magnitude;
+            private readonly double[] _magnitude1;
+            private readonly double[] _magnitude2;
 
             public SpectrogramDrawer(int nfft)
             {
                 _nfft = nfft;
-                _mapper = new MagnitudeToIndexMapper(100.0, 255);
+                _mapper = new MagnitudeToIndexMapper(100.0, magnitudeIndexRange - 1);
                 _fft = new RealFFT(nfft);
-                _palette = GeneratePalette(nfft);
+                _palette = GeneratePalette();
                 _segment = new double[nfft];
                 _window = CreateRaisedCosineWindow(nfft);
-                _magnitude = new double[nfft / 2];
+                _magnitude1 = new double[nfft / 2];
+                _magnitude2 = new double[nfft / 2];
 
                 double scaleCorrection = 1.0 / (raisedCosineWindowScale * _fft.ForwardScaleFactor);
                 for (int i = 0; i < _window.Length; i++)
@@ -538,27 +555,33 @@ namespace Nikse.SubtitleEdit.Core
                 bmp.LockImage();
                 for (int x = 0; x < width; x++)
                 {
-                    // read a segment of the recorded signal
-                    for (int i = 0; i < _nfft; i++)
-                    {
-                        _segment[i] = samples[x * _nfft + i] * _window[i];
-                    }
-
-                    // transform to the frequency domain
-                    _fft.ComputeForward(_segment);
-
-                    // compute the magnitude of the spectrum
-                    MagnitudeSpectrum(_segment, _magnitude);
+                    // process 2 segments offset by -1/4 and 1/4 fft size, resulting in 1/2 fft size
+                    // window spacing (the minimum overlap to avoid discarding parts of the signal)
+                    ProcessSegment(samples, (x * _nfft) - (x > 0 ? _nfft / 4 : 0), _magnitude1);
+                    ProcessSegment(samples, (x * _nfft) + (x < width - 1 ? _nfft / 4 : 0), _magnitude2);
 
                     // draw
                     for (int y = 0; y < height; y++)
                     {
-                        int colorIndex = _mapper.Map(_magnitude[y]);
+                        int colorIndex = _mapper.Map((_magnitude1[y] + _magnitude2[y]) / 2.0);
                         bmp.SetPixel(x, height - y - 1, _palette[colorIndex]);
                     }
                 }
                 bmp.UnlockImage();
                 return bmp.GetBitmap();
+            }
+
+            private void ProcessSegment(double[] samples, int offset, double[] magnitude)
+            {
+                // read a segment of the recorded signal
+                for (int i = 0; i < _nfft; i++)
+                    _segment[i] = samples[offset + i] * _window[i];
+
+                // transform to the frequency domain
+                _fft.ComputeForward(_segment);
+
+                // compute the magnitude of the spectrum
+                MagnitudeSpectrum(_segment, magnitude);
             }
 
             private static double[] CreateRaisedCosineWindow(int n)
@@ -582,20 +605,20 @@ namespace Nikse.SubtitleEdit.Core
                 return a * a + b * b;
             }
 
-            private static FastBitmap.PixelData[] GeneratePalette(int nfft)
+            private static FastBitmap.PixelData[] GeneratePalette()
             {
-                var palette = new FastBitmap.PixelData[nfft];
+                var palette = new FastBitmap.PixelData[magnitudeIndexRange];
                 if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Classic")
                 {
-                    for (int colorIndex = 0; colorIndex < nfft; colorIndex++)
-                        palette[colorIndex] = new FastBitmap.PixelData(PaletteValue(colorIndex, nfft));
+                    for (int colorIndex = 0; colorIndex < magnitudeIndexRange; colorIndex++)
+                        palette[colorIndex] = new FastBitmap.PixelData(PaletteValue(colorIndex, magnitudeIndexRange));
                 }
                 else
                 {
                     var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveformColor.R,
                                                      Configuration.Settings.VideoControls.WaveformColor.G,
-                                                     Configuration.Settings.VideoControls.WaveformColor.B, nfft);
-                    for (int i = 0; i < nfft; i++)
+                                                     Configuration.Settings.VideoControls.WaveformColor.B, magnitudeIndexRange);
+                    for (int i = 0; i < magnitudeIndexRange; i++)
                         palette[i] = new FastBitmap.PixelData(list[i]);
                 }
                 return palette;
@@ -669,16 +692,16 @@ namespace Nikse.SubtitleEdit.Core
                 return list;
             }
 
-            /// Maps magnitudes in the range [-decibelRange .. 0] dB to palette index values in the range [0 .. indexRange-1]
+            /// Maps magnitudes in the range [-decibelRange .. 0] dB to palette index values in the range [0 .. indexMax]
             private class MagnitudeToIndexMapper
             {
                 private readonly double _minMagnitude;
                 private readonly double _multiplier;
                 private readonly double _addend;
 
-                public MagnitudeToIndexMapper(double decibelRange, int indexRange)
+                public MagnitudeToIndexMapper(double decibelRange, int indexMax)
                 {
-                    double mappingScale = indexRange / decibelRange;
+                    double mappingScale = indexMax / decibelRange;
                     _minMagnitude = Math.Pow(10.0, -decibelRange / 20.0);
                     _multiplier = 20.0 * mappingScale;
                     _addend = decibelRange * mappingScale;
@@ -690,11 +713,11 @@ namespace Nikse.SubtitleEdit.Core
                 }
 
                 // Less optimized but readable version of the above
-                public static int Map(double magnitude, double decibelRange, int indexRange)
+                public static int Map(double magnitude, double decibelRange, int indexMax)
                 {
                     if (magnitude == 0) return 0;
                     double decibelLevel = 20.0 * Math.Log10(magnitude);
-                    return decibelLevel >= -decibelRange ? (int)(indexRange * (decibelLevel + decibelRange) / decibelRange) : 0;
+                    return decibelLevel >= -decibelRange ? (int)(indexMax * (decibelLevel + decibelRange) / decibelRange) : 0;
                 }
             }
         }
