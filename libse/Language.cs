@@ -866,6 +866,8 @@ namespace Nikse.SubtitleEdit.Core
                 Input = "Input",
                 InputDescription = "Choose input files (browse or drag-n-drop)",
                 ImageFiles = "Image files",
+                Remove = "Remove",
+                RemoveAll = "Remove all"
             };
 
             ImportSceneChanges = new LanguageStructure.ImportSceneChanges
