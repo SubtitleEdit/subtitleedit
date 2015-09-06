@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Core
             for (int idx = 0; idx < lines.Length; idx++)
             {
                 string line = lines[idx];
-                string lineWithPerhapsOnlyNumbers = line.Replace(" ", string.Empty).Replace(".", string.Empty).Replace(",", string.Empty).Replace("\t", string.Empty).Replace(":", string.Empty).Replace(";", string.Empty).Replace("{", string.Empty).Replace("}", string.Empty).Replace("[", string.Empty).Replace("]", string.Empty).Replace("-", string.Empty).Replace(">", string.Empty).Replace("<", string.Empty);
+                string lineWithPerhapsOnlyNumbers = GetLineWithPerhapsOnlyNumbers(line);
                 bool allNumbers = lineWithPerhapsOnlyNumbers.Length > 0;
                 foreach (char c in lineWithPerhapsOnlyNumbers)
                 {
@@ -244,7 +244,7 @@ namespace Nikse.SubtitleEdit.Core
             for (int idx = 0; idx < lines.Length; idx++)
             {
                 string line = lines[idx];
-                string lineWithPerhapsOnlyNumbers = line.Replace(" ", string.Empty).Replace(".", string.Empty).Replace(",", string.Empty).Replace("\t", string.Empty).Replace(":", string.Empty).Replace(";", string.Empty).Replace("{", string.Empty).Replace("}", string.Empty).Replace("[", string.Empty).Replace("]", string.Empty).Replace("-", string.Empty).Replace(">", string.Empty).Replace("<", string.Empty);
+                string lineWithPerhapsOnlyNumbers = GetLineWithPerhapsOnlyNumbers(line);
                 bool allNumbers = lineWithPerhapsOnlyNumbers.Length > 0;
                 foreach (char c in lineWithPerhapsOnlyNumbers)
                 {
@@ -468,10 +468,11 @@ namespace Nikse.SubtitleEdit.Core
             Paragraph p = null;
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
+            char[] SplitChars = { ' ', '\t' };
             for (int idx = 0; idx < lines.Length; idx++)
             {
                 string line = lines[idx];
-                string lineWithPerhapsOnlyNumbers = line.Replace(" ", string.Empty).Replace(".", string.Empty).Replace(",", string.Empty).Replace("\t", string.Empty).Replace(":", string.Empty).Replace(";", string.Empty).Replace("{", string.Empty).Replace("}", string.Empty).Replace("[", string.Empty).Replace("]", string.Empty).Replace("-", string.Empty).Replace(">", string.Empty).Replace("<", string.Empty);
+                string lineWithPerhapsOnlyNumbers = GetLineWithPerhapsOnlyNumbers(line);
                 bool allNumbers = lineWithPerhapsOnlyNumbers.Length > 0;
                 foreach (char c in lineWithPerhapsOnlyNumbers)
                 {
@@ -480,7 +481,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)
                 {
-                    string[] arr = line.Replace('-', ' ').Replace('>', ' ').Replace('{', ' ').Replace('}', ' ').Replace('[', ' ').Replace(']', ' ').Trim().Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] arr = line.Replace('-', ' ').Replace('>', ' ').Replace('{', ' ').Replace('}', ' ').Replace('[', ' ').Replace(']', ' ').Trim().Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 2)
                     {
                         string[] start = arr[0].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
@@ -572,10 +573,11 @@ namespace Nikse.SubtitleEdit.Core
             Paragraph p = null;
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
+            char[] SplitChar = new[] { ' ' };
             for (int idx = 0; idx < lines.Length; idx++)
             {
                 string line = lines[idx];
-                string lineWithPerhapsOnlyNumbers = line.Replace(" ", string.Empty).Replace(".", string.Empty).Replace(",", string.Empty).Replace("\t", string.Empty).Replace(":", string.Empty).Replace(";", string.Empty).Replace("{", string.Empty).Replace("}", string.Empty).Replace("[", string.Empty).Replace("]", string.Empty).Replace("-", string.Empty).Replace(">", string.Empty).Replace("<", string.Empty);
+                string lineWithPerhapsOnlyNumbers = GetLineWithPerhapsOnlyNumbers(line);
                 bool allNumbers = lineWithPerhapsOnlyNumbers.Length > 0;
                 foreach (char c in lineWithPerhapsOnlyNumbers)
                 {
@@ -584,7 +586,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)
                 {
-                    string[] arr = line.Replace('-', ' ').Replace('>', ' ').Replace('{', ' ').Replace('}', ' ').Replace('[', ' ').Replace(']', ' ').Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] arr = line.Replace('-', ' ').Replace('>', ' ').Replace('{', ' ').Replace('}', ' ').Replace('[', ' ').Replace(']', ' ').Trim().Split(SplitChar, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 2)
                     {
                         string[] start = arr[0].Trim().Split(ExpectedSplitChars, StringSplitOptions.RemoveEmptyEntries);
@@ -656,6 +658,11 @@ namespace Nikse.SubtitleEdit.Core
 
             subtitle.Renumber();
             return subtitle;
+        }
+
+        private static string GetLineWithPerhapsOnlyNumbers(string line)
+        {
+            return line.Replace(" ", string.Empty).Replace(".", string.Empty).Replace(",", string.Empty).Replace("\t", string.Empty).Replace(":", string.Empty).Replace(";", string.Empty).Replace("{", string.Empty).Replace("}", string.Empty).Replace("[", string.Empty).Replace("]", string.Empty).Replace("-", string.Empty).Replace(">", string.Empty).Replace("<", string.Empty);
         }
 
         private static TimeCode DecodeTime(string[] parts)
