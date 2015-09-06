@@ -77,8 +77,8 @@ namespace Nikse.SubtitleEdit.Forms
                 string newLine = comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNoModify);
                 string template = GetParagraphTemplate(textBoxParagraph.Text);
                 textBoxPreview.Text = GetHeaderOrFooter("Demo", subtitle, textBoxHeader.Text) +
-                                      GetParagraph(template, start1, end1, GetText(p1.Text, newLine), GetText("Linje 1a." + Environment.NewLine + "Line 1b.", newLine), 0, p1.Duration, comboBoxTimeCode.Text) +
-                                      GetParagraph(template, start2, end2, GetText(p2.Text, newLine), GetText("Linje 2a." + Environment.NewLine + "Line 2b.", newLine), 1, p2.Duration, comboBoxTimeCode.Text) +
+                                      GetParagraph(template, start1, end1, GetText(p1.Text, newLine), GetText("Line 1a." + Environment.NewLine + "Line 1b.", newLine), 0, p1.Duration, comboBoxTimeCode.Text) +
+                                      GetParagraph(template, start2, end2, GetText(p2.Text, newLine), GetText("Line 2a." + Environment.NewLine + "Line 2b.", newLine), 1, p2.Duration, comboBoxTimeCode.Text) +
                                       GetHeaderOrFooter("Demo", subtitle, textBoxFooter.Text);
             }
             catch (Exception ex)
@@ -114,43 +114,44 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string GetTimeCode(TimeCode timeCode, string template)
         {
-            if (template.Trim() == "ss")
+            var templateTrimmed = template.Trim();
+            if (templateTrimmed == "ss")
                 template = template.Replace("ss", string.Format("{0:00}", timeCode.TotalSeconds));
-            if (template.Trim() == "s")
+            if (templateTrimmed == "s")
                 template = template.Replace("s", string.Format("{0}", timeCode.TotalSeconds));
-            if (template.Trim() == "zzz")
+            if (templateTrimmed == "zzz")
                 template = template.Replace("zzz", string.Format("{0:000}", timeCode.TotalMilliseconds));
-            if (template.Trim() == "z")
+            if (templateTrimmed == "z")
                 template = template.Replace("z", string.Format("{0}", timeCode.TotalMilliseconds));
-            if (template.Trim() == "ff")
+            if (templateTrimmed == "ff")
                 template = template.Replace("ff", string.Format("{0}", SubtitleFormat.MillisecondsToFrames(timeCode.TotalMilliseconds)));
 
-            if (template.StartsWith("ssssssss"))
+            if (template.StartsWith("ssssssss", StringComparison.Ordinal))
                 template = template.Replace("ssssssss", string.Format("{0:00000000}", timeCode.TotalSeconds));
-            if (template.StartsWith("sssssss"))
+            if (template.StartsWith("sssssss", StringComparison.Ordinal))
                 template = template.Replace("sssssss", string.Format("{0:0000000}", timeCode.TotalSeconds));
-            if (template.StartsWith("ssssss"))
+            if (template.StartsWith("ssssss", StringComparison.Ordinal))
                 template = template.Replace("ssssss", string.Format("{0:000000}", timeCode.TotalSeconds));
-            if (template.StartsWith("sssss"))
+            if (template.StartsWith("sssss", StringComparison.Ordinal))
                 template = template.Replace("sssss", string.Format("{0:00000}", timeCode.TotalSeconds));
-            if (template.StartsWith("ssss"))
+            if (template.StartsWith("ssss", StringComparison.Ordinal))
                 template = template.Replace("ssss", string.Format("{0:0000}", timeCode.TotalSeconds));
-            if (template.StartsWith("sss"))
+            if (template.StartsWith("sss", StringComparison.Ordinal))
                 template = template.Replace("sss", string.Format("{0:000}", timeCode.TotalSeconds));
-            if (template.StartsWith("ss"))
+            if (template.StartsWith("ss", StringComparison.Ordinal))
                 template = template.Replace("ss", string.Format("{0:00}", timeCode.TotalSeconds));
 
-            if (template.StartsWith("zzzzzzzz"))
+            if (template.StartsWith("zzzzzzzz", StringComparison.Ordinal))
                 template = template.Replace("zzzzzzzz", string.Format("{0:00000000}", timeCode.TotalMilliseconds));
-            if (template.StartsWith("zzzzzzz"))
+            if (template.StartsWith("zzzzzzz", StringComparison.Ordinal))
                 template = template.Replace("zzzzzzz", string.Format("{0:0000000}", timeCode.TotalMilliseconds));
-            if (template.StartsWith("zzzzzz"))
+            if (template.StartsWith("zzzzzz", StringComparison.Ordinal))
                 template = template.Replace("zzzzzz", string.Format("{0:000000}", timeCode.TotalMilliseconds));
-            if (template.StartsWith("zzzzz"))
+            if (template.StartsWith("zzzzz", StringComparison.Ordinal))
                 template = template.Replace("zzzzz", string.Format("{0:00000}", timeCode.TotalMilliseconds));
-            if (template.StartsWith("zzzz"))
+            if (template.StartsWith("zzzz", StringComparison.Ordinal))
                 template = template.Replace("zzzz", string.Format("{0:0000}", timeCode.TotalMilliseconds));
-            if (template.StartsWith("zzz"))
+            if (template.StartsWith("zzz", StringComparison.Ordinal))
                 template = template.Replace("zzz", string.Format("{0:000}", timeCode.TotalMilliseconds));
 
             template = template.Replace("hh", string.Format("{0:00}", timeCode.Hours));

@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int GetPacEncoding(byte[] previewBuffer , string fileName);
         }
 
-        private IGetPacEncoding _getPacEncodingImplementation;
+        public static IGetPacEncoding GetPacEncodingImplementation;
 
         public static readonly TimeCode PacNullTime = new TimeCode(655, 35, 00, 0);
 
@@ -28,6 +28,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const int CodePageCyrillic = 6;
         public const int CodePageChineseTraditional = 7;
         public const int CodePageChineseSimplified = 8;
+        public const int CodePageKorean = 9;
+
+        private const int EncodingChineseSimplified = 936;
+        private const int EncodingChineseTraditional = 950;
+        private const int EncodingKorean = 949;
 
         /// <summary>
         /// Contains Swedish, Danish, German, Spanish, and French letters
@@ -780,6 +785,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "ш", //0x6938
         };
 
+        private static readonly List<int> KoreanCodes = new List<int> {
+            0x20, //space
+        };
+
+        private static readonly List<string> KoreanLetters = new List<string> {
+            " ", //0x20
+
+        };
+
         private string _fileName = string.Empty;
         private int _codePage = -1;
 
@@ -812,9 +826,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             get { return true; }
         }
 
-        public void Save(string fileName, Subtitle subtitle, IGetPacEncoding getPacEncoding)
+        public void Save(string fileName, Subtitle subtitle)
         {
-            _getPacEncodingImplementation = getPacEncoding;
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
                 _fileName = fileName;
@@ -889,9 +902,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             else if (_codePage == CodePageCyrillic)
                 textBuffer = GetCyrillicBytes(text, alignment);
             else if (_codePage == CodePageChineseTraditional)
-                textBuffer = GetChineseBig5Bytes(text, alignment);
+                textBuffer = GetW16Bytes(text, alignment, EncodingChineseTraditional);
             else if (_codePage == CodePageChineseSimplified)
-                textBuffer = GetChineseSimplifiedBytes(text, alignment);
+                textBuffer = GetW16Bytes(text, alignment, EncodingChineseSimplified);
+            else if (_codePage == CodePageKorean)
+                textBuffer = GetW16Bytes(text, alignment, EncodingKorean);
             else if (_codePage == CodePageThai)
                 textBuffer = encoding.GetBytes(text.Replace("ต", "€"));
             else
@@ -1135,11 +1150,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             if (_codePage == CodePageChineseSimplified)
                             {
-                                sb.Append(Encoding.GetEncoding(936).GetString(buffer, index, 2));
+                                sb.Append(Encoding.GetEncoding(EncodingChineseSimplified).GetString(buffer, index, 2));
+                            }
+                            else if (_codePage == CodePageKorean)
+                            {
+                                sb.Append(Encoding.GetEncoding(EncodingKorean).GetString(buffer, index, 2));
                             }
                             else
                             {
-                                sb.Append(Encoding.GetEncoding(950).GetString(buffer, index, 2));                                
+                                sb.Append(Encoding.GetEncoding(EncodingChineseTraditional).GetString(buffer, index, 2));
                             }
                         }
                         index++;
@@ -1440,9 +1459,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     previewBuffer[i] = textSample[i];
             }
 
-            if (_getPacEncodingImplementation != null)
+            if (GetPacEncodingImplementation != null)
             {
-                _codePage = _getPacEncodingImplementation.GetPacEncoding(previewBuffer, _fileName);
+                _codePage = GetPacEncodingImplementation.GetPacEncoding(previewBuffer, _fileName);
             }
             else
             {
@@ -1601,7 +1620,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return result;
         }
 
-        private static byte[] GetChineseBig5Bytes(string text, byte alignment)
+        private static byte[] GetW16Bytes(string text, byte alignment, int encoding)
         {
             var result = new List<byte>();
             bool firstLine = true;
@@ -1629,45 +1648,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     result.Add(0x36); // 6
                     result.Add(0x2e); // ?
 
-                    foreach (var b in Encoding.GetEncoding(950).GetBytes(line))
-                    {
-                        result.Add(b);
-                    }
-                }
-                firstLine = false;
-            }
-            return result.ToArray();
-        }
-
-        private static byte[] GetChineseSimplifiedBytes(string text, byte alignment)
-        {
-            var result = new List<byte>();
-            bool firstLine = true;
-            foreach (var line in text.SplitToLines())
-            {
-                if (!firstLine)
-                {
-                    result.Add(0xfe);
-                    result.Add(alignment);
-                    result.Add(3);
-                }
-
-                if (OnlyAnsi(line))
-                {
-                    foreach (var b in GetLatinBytes(GetEncoding(CodePageLatin), line, alignment))
-                    {
-                        result.Add(b);
-                    }
-                }
-                else
-                {
-                    result.Add(0x1f); // ?
-                    result.Add(0x57); // W
-                    result.Add(0x31); // 1
-                    result.Add(0x36); // 6
-                    result.Add(0x2e); // ?
-
-                    foreach (var b in Encoding.GetEncoding(936).GetBytes(line))
+                    foreach (var b in Encoding.GetEncoding(encoding).GetBytes(line))
                     {
                         result.Add(b);
                     }
@@ -1761,6 +1742,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (buffer.Length > index + 1)
             {
                 idx = CyrillicCodes.IndexOf(b * 256 + buffer[index + 1]);
+                if (idx >= 0)
+                {
+                    index++;
+                    return CyrillicLetters[idx];
+                }
+            }
+
+            return string.Format("({0})", b);
+        }
+
+        public static string GetKoreanString(byte[] buffer, ref int index)
+        {
+            byte b = buffer[index];
+
+            if (b >= 0x30 && b <= 0x39) // decimal digits
+                return Encoding.ASCII.GetString(buffer, index, 1);
+
+            int idx = KoreanCodes.IndexOf(b);
+            if (idx >= 0)
+                return KoreanLetters[idx];
+
+            if (buffer.Length > index + 1)
+            {
+                idx = KoreanCodes.IndexOf(b * 256 + buffer[index + 1]);
                 if (idx >= 0)
                 {
                     index++;

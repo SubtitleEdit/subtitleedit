@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 sb.Append('|');
                 sb.Append(Configuration.Settings.Language.General.AudioFiles);
-                sb.Append("|*.mp3;*.wav;*.wma;*.ogg;*.mpa;*.m4a;*.ape;*.aiff;*.flac;*.aac");
+                sb.Append("|*.mp3;*.wav;*.wma;*.ogg;*.mpa;*.m4a;*.ape;*.aiff;*.flac;*.aac;*.mka");
             }
             sb.Append('|');
             sb.Append(Configuration.Settings.Language.General.AllFiles);
@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Core
             return string.Format("{0:0.0} gb", (float)fileSize / (1024 * 1024 * 1024));
         }
 
-        
+
 
         /// <summary>
         /// Downloads the requested resource as a <see cref="String"/> using the configured <see cref="WebProxy"/>.

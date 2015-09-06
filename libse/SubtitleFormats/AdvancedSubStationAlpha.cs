@@ -121,8 +121,8 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
 Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
-            const string paragraphWriteFormat = "Dialogue: {6},{0},{1},{3},{4},0,0,0,{5},{2}";
-            const string commentWriteFormat = "Comment: {6},{0},{1},{3},{4},0,0,0,{5},{2}";
+            const string paragraphWriteFormat = "Dialogue: {9},{0},{1},{3},{4},{5},{6},{7},{8},{2}";
+            const string commentWriteFormat = "Comment: {9},{0},{1},{3},{4},{5},{6},{7},{8},{2}";
 
             var sb = new StringBuilder();
             bool isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
@@ -152,17 +152,29 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 string style = "Default";
                 if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
                     style = p.Extra;
+
                 string actor = "";
                 if (!string.IsNullOrEmpty(p.Actor))
                     actor = p.Actor;
+
+                string marginL = "0";
+                if (!string.IsNullOrEmpty(p.MarginL) && Utilities.IsInteger(p.MarginL))
+                    marginL = p.MarginL;
+                string marginR = "0";
+                if (!string.IsNullOrEmpty(p.MarginR) && Utilities.IsInteger(p.MarginR))
+                    marginR = p.MarginR;
+                string marginV = "0";
+                if (!string.IsNullOrEmpty(p.MarginV) && Utilities.IsInteger(p.MarginV))
+                    marginV = p.MarginV;
+
                 string effect = "";
                 if (!string.IsNullOrEmpty(p.Effect))
                     effect = p.Effect;
 
                 if (p.IsComment)
-                    sb.AppendLine(string.Format(commentWriteFormat, start, end, FormatText(p), style, actor, effect, p.Layer));
+                    sb.AppendLine(string.Format(commentWriteFormat, start, end, FormatText(p), style, actor, marginL, marginR, marginV, effect, p.Layer));
                 else
-                    sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style, actor, effect, p.Layer));
+                    sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style, actor, marginL, marginR, marginV, effect, p.Layer));
             }
 
             if (!string.IsNullOrEmpty(subtitle.Footer) && (subtitle.Footer.Contains("[Fonts]" + Environment.NewLine) || subtitle.Footer.Contains("[Graphics]" + Environment.NewLine)))
@@ -681,12 +693,16 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             bool fontsStarted = false;
             bool graphicsStarted = false;
             subtitle.Paragraphs.Clear();
-            string[] format = "Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text".Split(',');
+
+            // Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             int indexLayer = 0;
             int indexStart = 1;
             int indexEnd = 2;
             int indexStyle = 3;
             int indexActor = 4;
+            int indexMarginL = 5;
+            int indexMarginR = 6;
+            int indexMarginV = 7;
             int indexEffect = 8;
             int indexText = 9;
             var errors = new StringBuilder();
@@ -748,7 +764,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     {
                         if (line.Length > 10)
                         {
-                            format = line.ToLower().Substring(8).Split(',');
+                            var format = line.ToLower().Substring(8).Split(',');
                             for (int i = 0; i < format.Length; i++)
                             {
                                 if (format[i].Trim().Equals("start", StringComparison.OrdinalIgnoreCase))
@@ -761,6 +777,12 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                     indexStyle = i;
                                 else if (format[i].Trim().Equals("actor", StringComparison.OrdinalIgnoreCase))
                                     indexActor = i;
+                                else if (format[i].Trim().Equals("marginl", StringComparison.OrdinalIgnoreCase))
+                                    indexMarginL = i;
+                                else if (format[i].Trim().Equals("marginr", StringComparison.OrdinalIgnoreCase))
+                                    indexMarginR = i;
+                                else if (format[i].Trim().Equals("marginv", StringComparison.OrdinalIgnoreCase))
+                                    indexMarginV = i;
                                 else if (format[i].Trim().Equals("effect", StringComparison.OrdinalIgnoreCase))
                                     indexEffect = i;
                                 else if (format[i].Trim().Equals("layer", StringComparison.OrdinalIgnoreCase))
@@ -775,6 +797,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         var end = string.Empty;
                         var style = string.Empty;
                         var actor = string.Empty;
+                        var marginL = string.Empty;
+                        var marginR = string.Empty;
+                        var marginV = string.Empty;
                         var effect = string.Empty;
                         var layer = 0;
 
@@ -796,6 +821,12 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 style = splittedLine[i].Trim();
                             else if (i == indexActor)
                                 actor = splittedLine[i].Trim();
+                            else if (i == indexMarginL)
+                                marginL = splittedLine[i].Trim();
+                            else if (i == indexMarginR)
+                                marginR = splittedLine[i].Trim();
+                            else if (i == indexMarginV)
+                                marginV = splittedLine[i].Trim();
                             else if (i == indexEffect)
                                 effect = splittedLine[i].Trim();
                             else if (i == indexLayer)
@@ -819,6 +850,12 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 p.Extra = style;
                             if (!string.IsNullOrEmpty(actor))
                                 p.Actor = actor;
+                            if (!string.IsNullOrEmpty(marginL))
+                                p.MarginL = marginL;
+                            if (!string.IsNullOrEmpty(marginR))
+                                p.MarginR = marginR;
+                            if (!string.IsNullOrEmpty(marginV))
+                                p.MarginV = marginV;
                             if (!string.IsNullOrEmpty(effect))
                                 p.Effect = effect;
                             p.Layer = layer;

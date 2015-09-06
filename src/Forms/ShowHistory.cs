@@ -41,8 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 0;
             foreach (HistoryItem item in subtitle.HistoryItems)
             {
-                AddHistoryItemToListView(item, i);
-                i++;
+                AddHistoryItemToListView(item, i++);
             }
             ListViewHistorySelectedIndexChanged(null, null);
             if (listViewHistory.Items.Count > 0 && _undoIndex >= 0 && _undoIndex < listViewHistory.Items.Count)
@@ -51,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddHistoryItemToListView(HistoryItem hi, int index)
         {
-            var item = new ListViewItem("")
+            var item = new ListViewItem(string.Empty)
             {
                 Tag = hi,
                 Text = hi.ToHHMMSS()
@@ -63,8 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
                 item.Font = new Font(item.Font.FontFamily, item.Font.SizeInPoints, FontStyle.Italic);
                 item.ForeColor = Color.Gray;
             }
-            var subItem = new ListViewItem.ListViewSubItem(item, hi.Description);
-            item.SubItems.Add(subItem);
+            item.SubItems.Add(hi.Description);
             listViewHistory.Items.Add(item);
         }
 

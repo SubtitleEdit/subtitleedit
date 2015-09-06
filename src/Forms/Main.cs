@@ -32,7 +32,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private class ComboBoxZoomItem
         {
-
             public string Text { get; set; }
             public double ZoomFactor { get; set; }
 
@@ -40,7 +39,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return Text;
             }
-
         }
 
         private const int TabControlListView = 0;
@@ -335,8 +333,9 @@ namespace Nikse.SubtitleEdit.Forms
                 SetEncoding(Configuration.Settings.General.DefaultEncoding);
 
                 // set up UI interfaces in subtitle formats
-                (SubtitleFormat.AllSubtitleFormats.First(p => p.Name == YouTubeAnnotations.NameOfFormat) as YouTubeAnnotations).GetYouTubeAnnotationStyles = new UiGetYouTubeAnnotationStyles();
+                YouTubeAnnotations.GetYouTubeAnnotationStyles = new UiGetYouTubeAnnotationStyles();
                 Ebu.EbuUiHelper = new UiEbuSaveHelper();
+                Pac.GetPacEncodingImplementation = new UiGetPacEncoding();
 
                 toolStripComboBoxFrameRate.Items.Add((23.976).ToString());
                 toolStripComboBoxFrameRate.Items.Add((24.0).ToString());
@@ -777,7 +776,13 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownStartTime.TimeCode = paragraph.StartTime;
                 var durationInSeconds = (decimal)(paragraph.Duration.TotalSeconds);
                 if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
+                {
                     SetDurationInSeconds((double)durationInSeconds);
+                    if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.Start)
+                    {
+                        paragraph.EndTime.TotalMilliseconds = e.BeforeParagraph.EndTime.TotalMilliseconds;
+                    }
+                }
 
                 MovePrevNext(e, beforeParagraph, index);
 
@@ -1762,7 +1767,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 SetEncoding(Configuration.Settings.General.DefaultEncoding);
                                 encoding = GetCurrentEncoding();
-                                var list = new List<string>(subtitles[0].Replace(Environment.NewLine, "\r").Replace("\n", "\r").Split('\r'));
+                                var list = new List<string>(subtitles[0].SplitToLines());
                                 _subtitle = new Subtitle();
                                 var mxfFormat = _subtitle.ReloadLoadSubtitle(list, null);
                                 SetCurrentFormat(mxfFormat);
@@ -2413,6 +2418,31 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null && file.Length < 500000)
                 {
+                    // check for valid timed text
+                    if (ext == ".xml" || ext == ".dfxp")
+                    {
+                        var sb = new StringBuilder();
+                        foreach (var line in File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName)))
+                            sb.AppendLine(line);
+                        var xmlAsString = sb.ToString().Trim();
+
+                        if (xmlAsString.Contains("http://www.w3.org/ns/ttml") && xmlAsString.Contains("<?xml version=") ||
+                            xmlAsString.Contains("http://www.w3.org/") && xmlAsString.Contains("/ttaf1"))
+                        {
+                            var xml = new System.Xml.XmlDocument();
+                            try
+                            {
+                                xml.LoadXml(xmlAsString);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Timed text is not valid (xml is not well-formed): " + ex.Message);
+                                return;
+                            }
+                        }
+                    }
+
+
                     // Try to use a generic subtitle format parser (guessing subtitle format)
                     try
                     {
@@ -2620,29 +2650,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        if (ext == ".xml")
-                        {
-                            var sb = new StringBuilder();
-                            foreach (var line in File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName)))
-                                sb.AppendLine(line);
-                            var xmlAsString = sb.ToString().Trim();
-
-                            if (xmlAsString.Contains("http://www.w3.org/ns/ttml") && xmlAsString.Contains("<?xml version=") ||
-                                xmlAsString.Contains("http://www.w3.org/") && xmlAsString.Contains("/ttaf1"))
-                            {
-                                var xml = new System.Xml.XmlDocument();
-                                try
-                                {
-                                    xml.LoadXml(xmlAsString);
-                                }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show("Timed text is not valid: " + ex.Message);
-                                    return;
-                                }
-                            }
-                        }
-
                         ShowUnknownSubtitle();
                         return;
                     }
@@ -9666,11 +9673,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (ContinueNewOrExit())
             {
                 string fileName = _dragAndDropFiles[0];
-
-                var dirName = Path.GetDirectoryName(fileName);
-                saveFileDialog1.InitialDirectory = dirName;
-                openFileDialog1.InitialDirectory = dirName;
-
                 var file = new FileInfo(fileName);
 
                 // Do not allow directory drop
@@ -9679,6 +9681,10 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(_language.ErrorDirectoryDropNotAllowed, file.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+
+                var dirName = Path.GetDirectoryName(fileName);
+                saveFileDialog1.InitialDirectory = dirName;
+                openFileDialog1.InitialDirectory = dirName;
                 var ext = file.Extension.ToLowerInvariant();
 
                 if (ext == ".mkv")
@@ -11204,11 +11210,11 @@ namespace Nikse.SubtitleEdit.Forms
             const string k = "@__<<>___@";
 
             s = s.Replace("(", k);
-            s = s.Replace(")", "(");
+            s = s.Replace(')', '(');
             s = s.Replace(k, ")");
 
             s = s.Replace("[", k);
-            s = s.Replace("]", "[");
+            s = s.Replace(']', '[');
             s = s.Replace(k, "]");
 
             return s;
@@ -11279,7 +11285,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var line in lines)
                 {
                     var trimmed = line.TrimStart();
-                    if (trimmed.StartsWith('-') || trimmed.StartsWith("<i>-") || trimmed.StartsWith("<i> -"))
+                    if (trimmed.StartsWith('-') || trimmed.StartsWith("<i>-", StringComparison.Ordinal) || trimmed.StartsWith("<i> -", StringComparison.Ordinal))
                     {
                         hasStartDash = true;
                         break;
@@ -11328,7 +11334,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (line.TrimStart().StartsWith('-'))
                         sb.AppendLine(line.TrimStart().TrimStart('-').TrimStart());
-                    else if (line.TrimStart().StartsWith("<i>-") || line.TrimStart().StartsWith("<i> -"))
+                    else if (line.TrimStart().StartsWith("<i>-", StringComparison.Ordinal) || line.TrimStart().StartsWith("<i> -", StringComparison.Ordinal))
                         sb.AppendLine("<i>" + line.TrimStart().Substring(3).TrimStart().TrimStart('-').TrimStart());
                     else
                         sb.AppendLine(line);
@@ -15193,16 +15199,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (string.IsNullOrEmpty(_videoFileName))
-                buttonOpenVideo_Click(null, null);
-            if (_videoFileName == null)
-                return;
-
             if (ext != ".wav")
             {
                 MessageBox.Show(".wav only!");
                 return;
             }
+
+            if (_videoFileName == null)
+                OpenVideo(fileName);
 
             using (var addWaveform = new AddWaveform())
             {
@@ -17444,7 +17448,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += pac.Extension;
                 }
-                pac.Save(fileName, _subtitle, new UiGetPacEncoding());
+                pac.Save(fileName, _subtitle);
             }
         }
 

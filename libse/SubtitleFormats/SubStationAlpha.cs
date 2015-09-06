@@ -69,13 +69,13 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour
 Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
-            const string paragraphWriteFormat = "Dialogue: Marked={4},{0},{1},{3},{5},0000,0000,0000,{6},{2}";
-            const string commentWriteFormat = "Comment: Marked={4},{0},{1},{3},{5},0000,0000,0000,{6},{2}";
+            const string paragraphWriteFormat = "Dialogue: Marked={4},{0},{1},{3},{5},{6},{7},{8},{9},{2}";
+            const string commentWriteFormat = "Comment: Marked={4},{0},{1},{3},{5},{6},{7},{8},{9},{2}";
 
             var sb = new StringBuilder();
             Color fontColor = Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
             bool isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]");
-            List<string> styles = new List<string>();
+            var styles = new List<string>();
             if (isValidAssHeader)
             {
                 sb.AppendLine(subtitle.Header.Trim());
@@ -108,20 +108,34 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 string start = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
                 string end = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
                 string style = "Default";
+
                 string actor = "NTP";
                 if (!string.IsNullOrEmpty(p.Actor))
                     actor = p.Actor;
+
+                string marginL = "0000";
+                if (!string.IsNullOrEmpty(p.MarginL) && Utilities.IsInteger(p.MarginL))
+                    marginL = p.MarginL.PadLeft(4, '0');
+                string marginR = "0000";
+                if (!string.IsNullOrEmpty(p.MarginR) && Utilities.IsInteger(p.MarginR))
+                    marginR = p.MarginR.PadLeft(4, '0');
+                string marginV = "0000";
+                if (!string.IsNullOrEmpty(p.MarginV) && Utilities.IsInteger(p.MarginV))
+                    marginV = p.MarginV.PadLeft(4, '0');
+
+
                 string effect = "";
                 if (!string.IsNullOrEmpty(p.Effect))
                     effect = p.Effect;
+
                 if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
                     style = p.Extra;
                 if (style == "Default")
                     style = "*Default";
                 if (p.IsComment)
-                    sb.AppendLine(string.Format(commentWriteFormat, start, end, AdvancedSubStationAlpha.FormatText(p), style, p.Layer, actor, effect));
+                    sb.AppendLine(string.Format(commentWriteFormat, start, end, AdvancedSubStationAlpha.FormatText(p), style, p.Layer, actor, marginL, marginR, marginV, effect));
                 else
-                    sb.AppendLine(string.Format(paragraphWriteFormat, start, end, AdvancedSubStationAlpha.FormatText(p), style, p.Layer, actor, effect));
+                    sb.AppendLine(string.Format(paragraphWriteFormat, start, end, AdvancedSubStationAlpha.FormatText(p), style, p.Layer, actor, marginL, marginR, marginV, effect));
             }
             return sb.ToString().Trim();
         }
@@ -250,7 +264,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         string color = "#ffffff";
                         if (node.Attributes["tts:color"] != null)
                             color = node.Attributes["tts:color"].Value.Trim();
-                        Color c = Color.White;
+                        var c = Color.White;
                         try
                         {
                             if (color.StartsWith("rgb(", StringComparison.Ordinal))
@@ -302,12 +316,15 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             Errors = null;
             bool eventsStarted = false;
             subtitle.Paragraphs.Clear();
-            string[] format = { "Marked", " Start", " End", " Style", " Name", " MarginL", " MarginR", " MarginV", " Effect", " Text" };
+            // "Marked", " Start", " End", " Style", " Name", " MarginL", " MarginR", " MarginV", " Effect", " Text" 
             int indexLayer = 0;
             int indexStart = 1;
             int indexEnd = 2;
             int indexStyle = 3;
             const int indexName = 4;
+            int indexMarginL = 5;
+            int indexMarginR = 6;
+            int indexMarginV = 7;
             int indexEffect = 8;
             int indexText = 9;
             var errors = new StringBuilder();
@@ -335,7 +352,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     {
                         if (line.Length > 10)
                         {
-                            format = line.ToLower().Substring(8).Split(',');
+                            var format = line.ToLower().Substring(8).Split(',');
                             for (int i = 0; i < format.Length; i++)
                             {
                                 if (format[i].Trim().Equals("layer", StringComparison.OrdinalIgnoreCase))
@@ -350,6 +367,13 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                     indexEffect = i;
                                 else if (format[i].Trim().Equals("style", StringComparison.OrdinalIgnoreCase))
                                     indexStyle = i;
+                                else if (format[i].Trim().Equals("marginl", StringComparison.OrdinalIgnoreCase))
+                                    indexMarginL = i;
+                                else if (format[i].Trim().Equals("marginr", StringComparison.OrdinalIgnoreCase))
+                                    indexMarginR = i;
+                                else if (format[i].Trim().Equals("marginv", StringComparison.OrdinalIgnoreCase))
+                                    indexMarginV = i;
+
                             }
                         }
                     }
@@ -359,6 +383,9 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         string start = string.Empty;
                         string end = string.Empty;
                         string style = string.Empty;
+                        var marginL = string.Empty;
+                        var marginR = string.Empty;
+                        var marginV = string.Empty;
                         var layer = 0;
                         string effect = string.Empty;
                         string name = string.Empty;
@@ -385,6 +412,12 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                 text = splittedLine[i];
                             else if (i == indexStyle)
                                 style = splittedLine[i];
+                            else if (i == indexMarginL)
+                                marginL = splittedLine[i].Trim();
+                            else if (i == indexMarginR)
+                                marginR = splittedLine[i].Trim();
+                            else if (i == indexMarginV)
+                                marginV = splittedLine[i].Trim();
                             else if (i == indexName)
                                 name = splittedLine[i];
                             else if (i > indexText)
@@ -402,6 +435,12 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
                             if (!string.IsNullOrEmpty(style))
                                 p.Extra = style;
+                            if (!string.IsNullOrEmpty(marginL))
+                                p.MarginL = marginL;
+                            if (!string.IsNullOrEmpty(marginR))
+                                p.MarginR = marginR;
+                            if (!string.IsNullOrEmpty(marginV))
+                                p.MarginV = marginV;
                             if (!string.IsNullOrEmpty(effect))
                                 p.Effect = effect;
                             p.Layer = layer;
