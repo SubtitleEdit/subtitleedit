@@ -671,6 +671,8 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <ImageFiles>Beeldbestanden</ImageFiles>
     <Input>Invoer</Input>
     <InputDescription>Kies invoerbestanden (blader of sleep-en-plaats)</InputDescription>
+    <Remove>Verwĳderen</Remove>
+    <RemoveAll>Alle verwĳderen</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Scènewisselingen importeren</Title>
@@ -1684,7 +1686,8 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WaveformSeekSilenceForward>Zoek stilte vooruit</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Zoek stilte terug</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Voeg hier tekst toe (voor nieuwe selectie)</WaveformAddTextHere>
-    <WaveformPlayNewSelection>Speel nieuwe selectie</WaveformPlayNewSelection>
+    <WaveformPlayNewSelection>Speel selectie</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Speel selectie-einde</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Speel eerste geselecteerde ondertitel</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus lĳstweergave</WaveformFocusListView>
     <GoBack1Frame>Eén frame terug</GoBack1Frame>
