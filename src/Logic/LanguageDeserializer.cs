@@ -1763,6 +1763,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ImportImages/InputDescription":
                     language.ImportImages.InputDescription = reader.Value;
                     break;
+                case "ImportImages/Remove":
+                    language.ImportImages.Remove = reader.Value;
+                    break;
+                case "ImportImages/RemoveAll":
+                    language.ImportImages.RemoveAll = reader.Value;
+                    break;
                 case "ImportSceneChanges/Title":
                     language.ImportSceneChanges.Title = reader.Value;
                     break;

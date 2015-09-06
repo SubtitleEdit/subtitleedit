@@ -747,6 +747,8 @@
             public string ImageFiles { get; set; }
             public string Input { get; set; }
             public string InputDescription { get; set; }
+            public string Remove { get; set; }
+            public string RemoveAll { get; set; }
         }
 
         public class ImportSceneChanges
