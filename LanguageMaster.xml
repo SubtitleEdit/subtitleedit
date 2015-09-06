@@ -672,6 +672,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ImageFiles>Image files</ImageFiles>
     <Input>Input</Input>
     <InputDescription>Choose input files (browse or drag-n-drop)</InputDescription>
+    <Remove>Remove</Remove>
+    <RemoveAll>Remove all</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Import scene changes</Title>
