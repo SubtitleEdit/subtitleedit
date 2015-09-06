@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _mouseDownParagraphType = MouseDownParagraphType.Start;
                 _previousAndNextParagraphs = new List<Paragraph>();
                 _currentVideoPositionSeconds = -1;
-                _subtitle = null;
+                _subtitle = new Subtitle();
                 _noClear = false;
                 _wavePeaks = value;
             }
@@ -370,7 +370,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             StartPositionSeconds = startPositionSeconds;
             _selectedIndices = selectedIndexes;
-            _subtitle = new Subtitle();
+            _subtitle.Paragraphs.Clear();
             foreach (var p in subtitle.Paragraphs)
             {
                 if (!p.StartTime.IsMaxTime)
@@ -394,7 +394,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (pos < lastCurrentEnd)
                 return true;
 
-            if (_selectedIndices == null || _subtitle == null)
+            if (_selectedIndices == null)
                 return false;
 
             foreach (Paragraph p in selectedParagraphs)
@@ -619,23 +619,25 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 DrawBackground(e.Graphics);
 
-                var textBrush = new SolidBrush(TextColor);
-                var textFont = new Font(Font.FontFamily, 8);
-
-                if (Width > 90)
+                using (var textBrush = new SolidBrush(TextColor))
                 {
-                    e.Graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(Width / 2 - 65, Height / 2 - 10));
-                }
-                else
-                {
-                    using (var stringFormat = new StringFormat())
+                    using (var textFont = new Font(Font.FontFamily, 8))
                     {
-                        stringFormat.FormatFlags = StringFormatFlags.DirectionVertical;
-                        e.Graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(1, 10), stringFormat);
+
+                        if (Width > 90)
+                        {
+                            e.Graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(Width / 2 - 65, Height / 2 - 10));
+                        }
+                        else
+                        {
+                            using (var stringFormat = new StringFormat())
+                            {
+                                stringFormat.FormatFlags = StringFormatFlags.DirectionVertical;
+                                e.Graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(1, 10), stringFormat);
+                            }
+                        }
                     }
                 }
-                textBrush.Dispose();
-                textFont.Dispose();
             }
             if (Focused)
             {
@@ -687,29 +689,33 @@ namespace Nikse.SubtitleEdit.Controls
             var start = (int)Math.Round(startPositionSeconds + 0.5);
             double seconds = start - StartPositionSeconds;
             float position = SecondsToXPosition(seconds);
-            var pen = new Pen(TextColor);
-            var textBrush = new SolidBrush(TextColor);
-            var textFont = new Font(Font.FontFamily, 7);
-            while (position < Width)
+            using (var pen = new Pen(TextColor))
             {
-                var n = _zoomFactor * _wavePeaks.Header.SampleRate;
-                if (n > 38 || (int)Math.Round(StartPositionSeconds + seconds) % 5 == 0)
+                using (var textBrush = new SolidBrush(TextColor))
                 {
-                    e.Graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 10);
-                    e.Graphics.DrawString(GetDisplayTime(StartPositionSeconds + seconds), textFont, textBrush, new PointF(position + 2, imageHeight - 13));
+                    using (var textFont = new Font(Font.FontFamily, 7))
+                    {
+                        while (position < Width)
+                        {
+                            var n = _zoomFactor * _wavePeaks.Header.SampleRate;
+                            if (n > 38 || (int)Math.Round(StartPositionSeconds + seconds) % 5 == 0)
+                            {
+                                e.Graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 10);
+                                e.Graphics.DrawString(GetDisplayTime(StartPositionSeconds + seconds), textFont, textBrush, new PointF(position + 2, imageHeight - 13));
+                            }
+
+                            seconds += 0.5;
+                            position = SecondsToXPosition(seconds);
+
+                            if (n > 64)
+                                e.Graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 5);
+
+                            seconds += 0.5;
+                            position = SecondsToXPosition(seconds);
+                        }
+                    }
                 }
-
-                seconds += 0.5;
-                position = SecondsToXPosition(seconds);
-
-                if (n > 64)
-                    e.Graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 5);
-
-                seconds += 0.5;
-                position = SecondsToXPosition(seconds);
             }
-            pen.Dispose();
-            textBrush.Dispose();
         }
 
         private static string GetDisplayTime(double seconds)
@@ -1840,32 +1846,33 @@ namespace Nikse.SubtitleEdit.Controls
             double duration = EndPositionSeconds - StartPositionSeconds;
             var width = (int)(duration / _sampleDuration);
 
-            var bmpDestination = new Bitmap(width, 128); //calculate width
-            var gfx = Graphics.FromImage(bmpDestination);
-
-            double startRow = seconds / _secondsPerImage;
-            var bitmapIndex = (int)startRow;
-            var subtractValue = (int)Math.Round((startRow - bitmapIndex) * _imageWidth);
-
-            int i = 0;
-            while (i * _imageWidth < width && i + bitmapIndex < _spectrogramBitmaps.Count)
+            using (var bmpDestination = new Bitmap(width, 128)) //calculate width
             {
-                var bmp = _spectrogramBitmaps[i + bitmapIndex];
-                gfx.DrawImageUnscaled(bmp, new Point(bmp.Width * i - subtractValue, 0));
-                i++;
-            }
-            if (i + bitmapIndex < _spectrogramBitmaps.Count && subtractValue > 0)
-            {
-                var bmp = _spectrogramBitmaps[i + bitmapIndex];
-                gfx.DrawImageUnscaled(bmp, new Point(bmp.Width * i - subtractValue, 0));
-            }
-            gfx.Dispose();
+                using (var gfx = Graphics.FromImage(bmpDestination))
+                {
 
-            if (ShowWaveform)
-                graphics.DrawImage(bmpDestination, new Rectangle(0, Height - bmpDestination.Height, Width, bmpDestination.Height));
-            else
-                graphics.DrawImage(bmpDestination, new Rectangle(0, 0, Width, Height));
-            bmpDestination.Dispose();
+                    double startRow = seconds / _secondsPerImage;
+                    var bitmapIndex = (int)startRow;
+                    var subtractValue = (int)Math.Round((startRow - bitmapIndex) * _imageWidth);
+
+                    int i = 0;
+                    while (i * _imageWidth < width && i + bitmapIndex < _spectrogramBitmaps.Count)
+                    {
+                        var bmp = _spectrogramBitmaps[i + bitmapIndex];
+                        gfx.DrawImageUnscaled(bmp, new Point(bmp.Width * i - subtractValue, 0));
+                        i++;
+                    }
+                    if (i + bitmapIndex < _spectrogramBitmaps.Count && subtractValue > 0)
+                    {
+                        var bmp = _spectrogramBitmaps[i + bitmapIndex];
+                        gfx.DrawImageUnscaled(bmp, new Point(bmp.Width * i - subtractValue, 0));
+                    }
+                }
+                if (ShowWaveform)
+                    graphics.DrawImage(bmpDestination, new Rectangle(0, Height - bmpDestination.Height, Width, bmpDestination.Height));
+                else
+                    graphics.DrawImage(bmpDestination, new Rectangle(0, 0, Width, Height));
+            }
         }
 
         private double GetAverageVolumeForNextMilliseconds(int sampleIndex, int milliseconds)
