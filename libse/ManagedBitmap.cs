@@ -17,16 +17,10 @@ namespace Nikse.SubtitleEdit.Core
             try
             {
                 byte[] buffer = new byte[1024];
-                MemoryStream fd = new MemoryStream();
-                Stream fs = File.OpenRead(fileName);
-                using (Stream csStream = new GZipStream(fs, CompressionMode.Decompress))
+                using (var fd = new MemoryStream())
+                using (Stream csStream = new GZipStream(File.OpenRead(fileName), CompressionMode.Decompress))
                 {
-                    int nRead;
-                    while ((nRead = csStream.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        fd.Write(buffer, 0, nRead);
-                    }
-                    csStream.Flush();
+                    csStream.CopyTo(fd);
                     buffer = fd.ToArray();
                 }
 
@@ -147,10 +141,10 @@ namespace Nikse.SubtitleEdit.Core
         private static void WriteColor(Stream stream, Color c)
         {
             byte[] buffer = new byte[4];
-            buffer[0] = (byte)c.A;
-            buffer[1] = (byte)c.R;
-            buffer[2] = (byte)c.G;
-            buffer[3] = (byte)c.B;
+            buffer[0] = c.A;
+            buffer[1] = c.R;
+            buffer[2] = c.G;
+            buffer[3] = c.B;
             stream.Write(buffer, 0, buffer.Length);
         }
 
