@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Core
                     line = line.Replace(matches[0].ToString(), string.Empty);
                     line = line.Replace(matches[1].ToString(), string.Empty);
                     line = line.Trim();
-                    if (line.StartsWith("}{}") || line.StartsWith("][]"))
+                    if (line.StartsWith("}{}", StringComparison.Ordinal) || line.StartsWith("][]", StringComparison.Ordinal))
                         line = line.Remove(0, 3);
                     line = line.Trim();
                 }
@@ -130,6 +130,7 @@ namespace Nikse.SubtitleEdit.Core
             Paragraph p = null;
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
+            char[] ExpectedChars = { '.', ',', ';', ':' };
             for (int idx = 0; idx < lines.Length; idx++)
             {
                 string line = lines[idx];
@@ -142,11 +143,11 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 2)
                 {
-                    string[] arr = line.Replace("-", " ").Replace(">", " ").Replace("{", " ").Replace("}", " ").Replace("[", " ").Replace("]", " ").Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] arr = line.Replace('-', ' ').Replace('>', ' ').Replace('{', ' ').Replace('}', ' ').Replace('[', ' ').Replace(']', ' ').Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 2)
                     {
-                        string[] start = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
-                        string[] end = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] start = arr[0].Trim().Split(ExpectedChars, StringSplitOptions.RemoveEmptyEntries);
+                        string[] end = arr[0].Trim().Split(ExpectedChars, StringSplitOptions.RemoveEmptyEntries);
                         if (start.Length == 1 && end.Length == 1)
                         {
                             if (p != null)
@@ -178,9 +179,9 @@ namespace Nikse.SubtitleEdit.Core
                     }
                     else if (arr.Length == 3)
                     {
-                        string[] start = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
-                        string[] end = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
-                        string[] duration = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] start = arr[0].Trim().Split(ExpectedChars, StringSplitOptions.RemoveEmptyEntries);
+                        string[] end = arr[0].Trim().Split(ExpectedChars, StringSplitOptions.RemoveEmptyEntries);
+                        string[] duration = arr[0].Trim().Split(ExpectedChars, StringSplitOptions.RemoveEmptyEntries);
 
                         if (end.Length == 1 && duration.Length == 1)
                         {
@@ -221,7 +222,7 @@ namespace Nikse.SubtitleEdit.Core
                 if (p != null && !allNumbers && line.Length > 1)
                 {
                     line = line.Trim();
-                    if (line.StartsWith("}{}") || line.StartsWith("][]"))
+                    if (line.StartsWith("}{}", StringComparison.Ordinal) || line.StartsWith("][]", StringComparison.Ordinal))
                         line = line.Remove(0, 3);
                     sb.AppendLine(line.Trim());
                 }
