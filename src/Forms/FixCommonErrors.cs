@@ -1900,6 +1900,9 @@ namespace Nikse.SubtitleEdit.Forms
             UpdateFixStatus(fixCount, _language.FixDoubleApostrophes, _language.XDoubleApostrophesFixed);
         }
 
+
+        private static readonly char[] WordSplitChars = { ' ', '.', ',', '-', '?', '!', ':', ';', '"', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n' };
+
         public void FixMissingPeriodsAtEndOfLine()
         {
             string fixAction = _language.FixMissingPeriodAtEndOfLine;
@@ -1930,7 +1933,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!next.Text.StartsWith("I ", StringComparison.Ordinal) && !next.Text.StartsWith("I'", StringComparison.Ordinal))
                         {
                             //test to see if the first word of the next line is a name
-                            if (!IsName(next.Text.Split(new[] { ' ', '.', ',', '-', '?', '!', ':', ';', '"', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n' })[0]) && AllowFix(p, fixAction))
+                            if (!IsName(next.Text.Split(WordSplitChars)[0]) && AllowFix(p, fixAction))
                             {
                                 string oldText = p.Text;
                                 if (p.Text.EndsWith('>'))
