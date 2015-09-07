@@ -123,8 +123,10 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (value < ZoomMinimum) value = ZoomMinimum;
-                if (value > ZoomMaximum) value = ZoomMaximum;
+                if (value < ZoomMinimum)
+                    value = ZoomMinimum;
+                if (value > ZoomMaximum)
+                    value = ZoomMaximum;
                 _zoomFactor = Math.Round(value, 2); // round to prevent accumulated rounding errors
                 Invalidate();
             }
@@ -141,8 +143,10 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (value < VerticalZoomMinimum) value = VerticalZoomMinimum;
-                if (value > VerticalZoomMaximum) value = VerticalZoomMaximum;
+                if (value < VerticalZoomMinimum)
+                    value = VerticalZoomMinimum;
+                if (value > VerticalZoomMaximum)
+                    value = VerticalZoomMaximum;
                 _verticalZoomFactor = Math.Round(value, 2); // round to prevent accumulated rounding errors
                 Invalidate();
             }
@@ -446,7 +450,9 @@ namespace Nikse.SubtitleEdit.Controls
 
             private void AddParagraph(Paragraph p, Func<double, int> secondsToPosition)
             {
-                if (p == null) return;
+                if (p == null)
+                    return;
+
                 _ranges.Add(new SelectionRange(secondsToPosition(p.StartTime.TotalSeconds), secondsToPosition(p.EndTime.TotalSeconds)));
             }
 
@@ -1714,7 +1720,8 @@ namespace Nikse.SubtitleEdit.Controls
             // The scroll wheel could work in theory without the waveform loaded (it would be
             // just like dragging the slider, which does work without the waveform), but the
             // code below doesn't support it, so bail out until someone feels like fixing it.
-            if (_wavePeaks == null) return;
+            if (_wavePeaks == null)
+                return;
 
             int delta = e.Delta;
             if (!MouseWheelScrollUpIsForward)
