@@ -1708,6 +1708,16 @@ namespace Nikse.SubtitleEdit.Controls
             if (_wavePeaks == null)
                 return;
 
+            if (ModifierKeys == Keys.Control)
+            {
+                if (e.Delta > 0)
+                    ZoomIn();
+                else
+                    ZoomOut();
+
+                return;
+            }
+
             int delta = e.Delta;
             if (!MouseWheelScrollUpIsForward)
                 delta = delta * -1;
