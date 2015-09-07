@@ -899,7 +899,7 @@ namespace Nikse.SubtitleEdit.Core
 
             try
             {
-                Encoding encoding =DetectEncoding.EncodingTools.DetectInputCodepage(buffer);
+                Encoding encoding = DetectEncoding.EncodingTools.DetectInputCodepage(buffer);
 
                 Encoding greekEncoding = Encoding.GetEncoding(1253); // Greek
                 if (GetCount(greekEncoding.GetString(buffer), AutoDetectWordsGreek) > 5)
@@ -1518,15 +1518,13 @@ namespace Nikse.SubtitleEdit.Core
             return maxLength;
         }
 
+        private const string ZeroWidthSpace = "\u200B";
+        private const string ZeroWidthNoBreakSpace = "\uFEFF";
         public static double GetCharactersPerSecond(Paragraph paragraph)
         {
             if (paragraph.Duration.TotalMilliseconds < 1)
                 return 999;
-
-            const string zeroWidthSpace = "\u200B";
-            const string zeroWidthNoBreakSpace = "\uFEFF";
-
-            string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(zeroWidthSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
+            string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(ZeroWidthSpace, string.Empty).Replace(ZeroWidthNoBreakSpace, string.Empty);
             return s.Length / paragraph.Duration.TotalSeconds;
         }
 
