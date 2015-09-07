@@ -960,26 +960,37 @@ namespace Nikse.SubtitleEdit.Core.Forms
         {
             string newText = text;
             string s = text;
-            if (Settings.RemoveTextBetweenSquares && s.StartsWith('[') && s.IndexOf("]:", StringComparison.Ordinal) > 0)
-                newText = s.Remove(0, s.IndexOf("]:", StringComparison.Ordinal) + 2);
-            else if (Settings.RemoveTextBetweenBrackets && s.StartsWith('{') && s.IndexOf("}:", StringComparison.Ordinal) > 0)
-                newText = s.Remove(0, s.IndexOf("}:", StringComparison.Ordinal) + 2);
-            else if (Settings.RemoveTextBetweenParentheses && s.StartsWith('(') && s.IndexOf("):", StringComparison.Ordinal) > 0)
-                newText = s.Remove(0, s.IndexOf("):", StringComparison.Ordinal) + 2);
-            else if (Settings.RemoveTextBetweenQuestionMarks && s.StartsWith('?') && s.IndexOf("?:", 1, StringComparison.Ordinal) > 0)
-                newText = s.Remove(0, s.IndexOf("?:", StringComparison.Ordinal) + 2);
-            else if (Settings.RemoveTextBetweenSquares && s.StartsWith('[') && s.IndexOf(']') > 0)
-                newText = s.Remove(0, s.IndexOf(']') + 1);
-            else if (Settings.RemoveTextBetweenBrackets && s.StartsWith('{') && s.IndexOf('}') > 0)
-                newText = s.Remove(0, s.IndexOf('}') + 1);
-            else if (Settings.RemoveTextBetweenParentheses && s.StartsWith('(') && s.IndexOf(')') > 0)
-                newText = s.Remove(0, s.IndexOf(')') + 1);
-            else if (Settings.RemoveTextBetweenQuestionMarks && s.StartsWith('?') && s.IndexOf('?', 1) > 0)
-                newText = s.Remove(0, s.IndexOf('?', 1) + 1);
+            int index;
+            if (Settings.RemoveTextBetweenSquares && s.StartsWith('[') && (index = s.IndexOf(']', 1)) > 0)
+            {
+                if (++index < s.Length && s[index] == ':')
+                    index++;
+                newText = s.Remove(0, index);
+            }
+            else if (Settings.RemoveTextBetweenBrackets && s.StartsWith('{') && (index = s.IndexOf('}', 1)) > 0)
+            {
+                if (++index < s.Length && s[index] == ':')
+                    index++;
+                newText = s.Remove(0, index);
+            }
+            else if (Settings.RemoveTextBetweenParentheses && s.StartsWith('(') && (index = s.IndexOf(')', 1)) > 0)
+            {
+                if (++index < s.Length && s[index] == ':')
+                    index++;
+                newText = s.Remove(0, index);
+            }
+            else if (Settings.RemoveTextBetweenQuestionMarks && s.StartsWith('?') && (index = s.IndexOf('?', 1)) > 0)
+            {
+                if (++index < s.Length && s[index] == ':')
+                    index++;
+                newText = s.Remove(0, index);
+            }
             else if (Settings.RemoveTextBetweenCustomTags &&
                      s.Length > 0 && Settings.CustomEnd.Length > 0 && Settings.CustomStart.Length > 0 &&
-                     s.StartsWith(Settings.CustomStart, StringComparison.Ordinal) && s.LastIndexOf(Settings.CustomEnd, StringComparison.Ordinal) > 0)
-                newText = s.Remove(0, s.LastIndexOf(Settings.CustomEnd, StringComparison.Ordinal) + Settings.CustomEnd.Length);
+                     s.StartsWith(Settings.CustomStart, StringComparison.Ordinal) && (index = s.LastIndexOf(Settings.CustomEnd, StringComparison.Ordinal)) > 0)
+            {
+                newText = s.Remove(0, index + Settings.CustomEnd.Length);
+            }
             if (newText != text)
                 newText = newText.TrimStart(' ');
             return newText;
@@ -988,11 +999,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
         public string RemoveHearImpairedTags(string text)
         {
             string preAssTag = string.Empty;
-            if (text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') > 0)
+            if (text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}', 2) > 0)
             {
-                int indexOfEndBracket = text.IndexOf('}') + 1;
-                preAssTag = text.Substring(0, indexOfEndBracket);
-                text = text.Remove(0, indexOfEndBracket).TrimStart();
+                int indexOfEndBracketSuccessor = text.IndexOf('}', 3) + 1;
+                preAssTag = text.Substring(0, indexOfEndBracketSuccessor);
+                text = text.Remove(0, indexOfEndBracketSuccessor).TrimStart();
             }
             if (Settings.RemoveTextBetweenSquares)
             {
@@ -1004,15 +1015,15 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 text = RemoveTextBetweenTags("{", "}:", text);
                 text = RemoveTextBetweenTags("{", "}", text);
             }
-            if (Settings.RemoveTextBetweenQuestionMarks)
-            {
-                text = RemoveTextBetweenTags("?", "?:", text);
-                text = RemoveTextBetweenTags("?", "?", text);
-            }
             if (Settings.RemoveTextBetweenParentheses)
             {
                 text = RemoveTextBetweenTags("(", "):", text);
                 text = RemoveTextBetweenTags("(", ")", text);
+            }
+            if (Settings.RemoveTextBetweenQuestionMarks)
+            {
+                text = RemoveTextBetweenTags("?", "?:", text);
+                text = RemoveTextBetweenTags("?", "?", text);
             }
             if (Settings.RemoveTextBetweenCustomTags && Settings.CustomStart.Length > 0 && Settings.CustomEnd.Length > 0)
             {
@@ -1068,26 +1079,23 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             int start = text.IndexOf(startTag, StringComparison.Ordinal);
-            if (start < 0 || start == text.Length - 1)
+            if (start < 0 || text.Length - start - startTag.Length < endTag.Length)
                 return text;
-
-            int end = text.IndexOf(endTag, start + 1, StringComparison.Ordinal);
-            while (start >= 0 && end > start)
+            do
             {
-                text = text.Remove(start, (end - start) + 1);
-                if (start > 3 && start < text.Length - 1 &&
-                    text.Substring(0, start + 1).EndsWith(" :", StringComparison.Ordinal) &&
-                    ".?!".Contains(text[start - 2]))
+                int end = text.IndexOf(endTag, start + startTag.Length, StringComparison.Ordinal);
+                if (end < 0)
+                    break;
+                text = text.Remove(start, end - start + 1);
+                if (start > 3 && text.Length - start > 1 &&
+                    text[start] == ':' && text[start - 1] == ' ' && ".?!".Contains(text[start - 2]))
                 {
                     text = text.Remove(start - 1, 2);
                 }
-
                 start = text.IndexOf(startTag, StringComparison.Ordinal);
-                if (start >= 0 && start < text.Length - 1)
-                    end = text.IndexOf(endTag, start + 1, StringComparison.Ordinal);
-                else
-                    break;
             }
+            while (start >=0 && text.Length - start - startTag.Length >= endTag.Length);
+
             return text.FixExtraSpaces().TrimEnd();
         }
 
@@ -1101,11 +1109,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
             foreach (var line in lines)
             {
                 var lineNoHtml = HtmlUtil.RemoveHtmlTags(line, true);
-                var tmp = lineNoHtml.TrimEnd('.', '!', '?', ':').Trim();
                 if (lineNoHtml == lineNoHtml.ToUpper())
                 {
-                    tmp = tmp.Trim(' ', '-', '—');
-                    if (tmp.Length == 1 || tmp == "YES" || tmp == "NO" || tmp == "WHY" || tmp == "HI")
+                    var temp = lineNoHtml.TrimEnd('.', '!', '?', ':').Trim().Trim(' ', '-', '—');
+                    if (temp.Length == 1 || temp == "YES" || temp == "NO" || temp == "WHY" || temp == "HI")
                     {
                         sb.AppendLine(line);
                     }
