@@ -37,20 +37,8 @@ namespace Nikse.SubtitleEdit.Core
 
         public int CompareTo(object obj)
         {
-            if (obj == null)
-                return -1;
-
-            var o = obj as NoBreakAfterItem;
-            if (o == null)
-                return -1;
-
-            if (o.Text == null && this.Text == null)
-                return 0;
-
-            if (o.Text == null)
-                return -1;
-
-            return string.Compare(Text, o.Text, StringComparison.Ordinal);
+            var item = obj as NoBreakAfterItem;
+            return ReferenceEquals(item, null) ? 1 : string.CompareOrdinal(Text, item.Text);
         }
     }
 }
