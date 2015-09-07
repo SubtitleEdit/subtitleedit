@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    string ext = Path.GetExtension(openFileDialog1.FileName).ToLower();
+                    string ext = Path.GetExtension(openFileDialog1.FileName).ToLowerInvariant();
                     if (ext == ".astx")
                         LoadAdobeStory(openFileDialog1.FileName);
                     else
@@ -646,7 +646,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetVideoFileName(string fileName)
         {
             _videoFileName = fileName.Substring(0, fileName.Length - Path.GetExtension(fileName).Length);
-            if (_videoFileName.EndsWith(".en"))
+            if (_videoFileName.EndsWith(".en", StringComparison.Ordinal))
                 _videoFileName = _videoFileName.Remove(_videoFileName.Length - 3);
             if (File.Exists(_videoFileName + ".avi"))
             {

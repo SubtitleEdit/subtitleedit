@@ -912,7 +912,6 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             p.Subtitle.Paragraphs.RemoveAt(deleteIndex);
                         }
-                        p.Subtitle.Renumber();
                     }
                 }
                 catch (Exception exception)
