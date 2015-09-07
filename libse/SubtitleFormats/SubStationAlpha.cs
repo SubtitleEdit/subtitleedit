@@ -316,7 +316,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             Errors = null;
             bool eventsStarted = false;
             subtitle.Paragraphs.Clear();
-            // "Marked", " Start", " End", " Style", " Name", " MarginL", " MarginR", " MarginV", " Effect", " Text" 
+            // "Marked", " Start", " End", " Style", " Name", " MarginL", " MarginR", " MarginV", " Effect", " Text"
             int indexLayer = 0;
             int indexStart = 1;
             int indexEnd = 2;
@@ -373,7 +373,6 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                     indexMarginR = i;
                                 else if (format[i].Trim().Equals("marginv", StringComparison.OrdinalIgnoreCase))
                                     indexMarginV = i;
-
                             }
                         }
                     }
