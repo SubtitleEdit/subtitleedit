@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core
@@ -174,24 +175,31 @@ namespace Nikse.SubtitleEdit.Core
 
         public override string ToString()
         {
+            return ToString(false);
+        }
+
+        public string ToString(bool localize)
+        {
             var ts = TimeSpan;
-            string s = string.Format("{0:00}:{1:00}:{2:00},{3:000}", ts.Hours + ts.Days * 24, ts.Minutes, ts.Seconds, ts.Milliseconds);
+            string decimalSeparator = localize ? CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator : ",";
+            string s = string.Format("{0:00}:{1:00}:{2:00}{3}{4:000}", ts.Hours + ts.Days * 24, ts.Minutes, ts.Seconds, decimalSeparator, ts.Milliseconds);
 
             if (TotalMilliseconds >= 0)
                 return s;
             return "-" + s.Replace("-", string.Empty);
         }
 
-        public string ToShortString()
+        public string ToShortString(bool localize = false)
         {
             var ts = TimeSpan;
+            string decimalSeparator = localize ? CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator : ",";
             string s;
             if (ts.Minutes == 0 && ts.Hours == 0 && ts.Days == 0)
-                s = string.Format("{0:0},{1:000}", ts.Seconds, ts.Milliseconds);
+                s = string.Format("{0:0}{1}{2:000}", ts.Seconds, decimalSeparator, ts.Milliseconds);
             else if (ts.Hours == 0 && ts.Days == 0)
-                s = string.Format("{0:0}:{1:00},{2:000}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                s = string.Format("{0:0}:{1:00}{2}{3:000}", ts.Minutes, ts.Seconds, decimalSeparator, ts.Milliseconds);
             else
-                s = string.Format("{0:0}:{1:00}:{2:00},{3:000}", ts.Hours + ts.Days * 24, ts.Minutes, ts.Seconds, ts.Milliseconds);
+                s = string.Format("{0:0}:{1:00}:{2:00}{3}{4:000}", ts.Hours + ts.Days * 24, ts.Minutes, ts.Seconds, decimalSeparator, ts.Milliseconds);
 
             if (TotalMilliseconds >= 0)
                 return s;

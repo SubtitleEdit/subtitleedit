@@ -714,73 +714,58 @@ namespace Nikse.SubtitleEdit.Controls
                 pen = new Pen(new SolidBrush(Color.FromArgb(175, 110, 10, 10))) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash, Width = 2 };
                 e.Graphics.DrawLine(pen, currentRegionRight - 1, 0, currentRegionRight - 1, e.Graphics.VisibleClipBounds.Height);
 
-                var n = _zoomFactor * _wavePeaks.Header.SampleRate;
+                string durationStr;
                 if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
-                {
-                    if (n > 80)
-                    {
-                        using (var font = new Font(Font.FontFamily, TextSize, drawingStyle))
-                        {
-                            e.Graphics.DrawString(paragraph.Text.Replace(Environment.NewLine, "  "), font, textBrush, new PointF(currentRegionLeft + 3, 10));
-                            e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortStringHHMMSSFF() + " --> " + paragraph.EndTime.ToShortStringHHMMSSFF(), font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
-                        }
-                    }
-                    else if (n > 51)
-                        e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortStringHHMMSSFF(), Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
-                    else if (n > 25)
-                        e.Graphics.DrawString("#" + paragraph.Number, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
-                }
+                    durationStr = paragraph.Duration.ToShortStringHHMMSSFF();
                 else
+                    durationStr = paragraph.Duration.ToShortString(true);
+
+                var n = _zoomFactor * _wavePeaks.Header.SampleRate;
+                if (n > 80)
                 {
-                    if (n > 80)
+                    using (var font = new Font(Configuration.Settings.General.SubtitleFontName, TextSize, drawingStyle))
+                    using (var blackBrush = new SolidBrush(Color.Black))
                     {
-                        using (var font = new Font(Configuration.Settings.General.SubtitleFontName, TextSize, drawingStyle))
+                        var text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
+                        text = text.Replace(Environment.NewLine, "  ");
+
+                        int actualWidth = (int)e.Graphics.MeasureString(text, font).Width;
+                        bool shortned = false;
+                        while (actualWidth > currentRegionWidth - 12 && text.Length > 1)
                         {
-                            using (var blackBrush = new SolidBrush(Color.Black))
-                            {
-                                var text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
-                                text = text.Replace(Environment.NewLine, "  ");
-
-                                int w = currentRegionRight - currentRegionLeft;
-                                int actualWidth = (int)e.Graphics.MeasureString(text, font).Width;
-                                bool shortned = false;
-                                while (actualWidth > w - 12 && text.Length > 1)
-                                {
-                                    text = text.Remove(text.Length - 1);
-                                    actualWidth = (int)e.Graphics.MeasureString(text, font).Width;
-                                    shortned = true;
-                                }
-                                if (shortned)
-                                {
-                                    text = text.TrimEnd() + "…";
-                                }
-
-                                // poor mans outline + text
-                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, 11 - 7));
-                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, 9 - 7));
-                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, 10 - 7));
-                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 4, 10 - 7));
-                                e.Graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, 10 - 7));
-
-                                text = "#" + paragraph.Number + "  " + paragraph.Duration.ToShortString();
-                                actualWidth = (int)e.Graphics.MeasureString(text, font).Width;
-                                if (actualWidth >= w)
-                                    text = paragraph.Duration.ToShortString();
-                                int top = Height - 14 - (int)e.Graphics.MeasureString("#", font).Height;
-                                // poor mans outline + text
-                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top + 1));
-                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top - 1));
-                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, top));
-                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 4, top));
-                                e.Graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, top));
-                            }
+                            text = text.Remove(text.Length - 1);
+                            actualWidth = (int)e.Graphics.MeasureString(text, font).Width;
+                            shortned = true;
                         }
+                        if (shortned)
+                        {
+                            text = text.TrimEnd() + "…";
+                        }
+
+                        // poor mans outline + text
+                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, 11 - 7));
+                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, 9 - 7));
+                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, 10 - 7));
+                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 4, 10 - 7));
+                        e.Graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, 10 - 7));
+
+                        text = "#" + paragraph.Number + "  " + durationStr;
+                        actualWidth = (int)e.Graphics.MeasureString(text, font).Width;
+                        if (actualWidth >= currentRegionWidth)
+                            text = durationStr;
+                        int top = Height - 14 - (int)e.Graphics.MeasureString("#", font).Height;
+                        // poor mans outline + text
+                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top + 1));
+                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top - 1));
+                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, top));
+                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 4, top));
+                        e.Graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, top));
                     }
-                    else if (n > 51)
-                        e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortString(), Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
-                    else if (n > 25)
-                        e.Graphics.DrawString("#" + paragraph.Number, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
                 }
+                else if (n > 51)
+                    e.Graphics.DrawString("#" + paragraph.Number + "  " + durationStr, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
+                else if (n > 25)
+                    e.Graphics.DrawString("#" + paragraph.Number, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
                 pen.Dispose();
             }
         }
