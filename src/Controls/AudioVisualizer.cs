@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Controls
         private class IsSelectedHelper
         {
             private readonly List<SelectionRange> _ranges = new List<SelectionRange>();
-            private int _lastPosition = Int32.MaxValue;
+            private int _lastPosition = int.MaxValue;
             private SelectionRange _nextSelection;
 
             public IsSelectedHelper(IList<Paragraph> paragraphs, IEnumerable<int> selectedIndices, Paragraph additionalSelectedParagraph, Func<double, int> secondsToPosition)
@@ -436,7 +436,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             private void FindNextSelection(int position)
             {
-                _nextSelection = new SelectionRange(Int32.MaxValue, Int32.MaxValue);
+                _nextSelection = new SelectionRange(int.MaxValue, int.MaxValue);
                 foreach (SelectionRange range in _ranges)
                 {
                     if (range.End >= position && (range.Start < _nextSelection.Start || (range.Start == _nextSelection.Start && range.End > _nextSelection.End)))
