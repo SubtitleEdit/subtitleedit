@@ -1711,6 +1711,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void WaveformMouseWheel(object sender, MouseEventArgs e)
         {
+            // The scroll wheel could work in theory without the waveform loaded (it would be
+            // just like dragging the slider, which does work without the waveform), but the
+            // code below doesn't support it, so bail out until someone feels like fixing it.
+            if (_wavePeaks == null) return;
+
             int delta = e.Delta;
             if (!MouseWheelScrollUpIsForward)
                 delta = delta * -1;
