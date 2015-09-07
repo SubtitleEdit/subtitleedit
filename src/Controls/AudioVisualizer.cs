@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -79,7 +80,7 @@ namespace Nikse.SubtitleEdit.Controls
         private double _currentVideoPositionSeconds = -1;
         private WavePeakGenerator _wavePeaks;
         private Subtitle _subtitle;
-        private ListView.SelectedIndexCollection _selectedIndices;
+        private IEnumerable<int> _selectedIndices = Enumerable.Empty<int>();
         private bool _noClear;
         private double _gapAtStart = -1;
 
@@ -370,7 +371,7 @@ namespace Nikse.SubtitleEdit.Controls
         public void SetPosition(double startPositionSeconds, Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex, ListView.SelectedIndexCollection selectedIndexes)
         {
             StartPositionSeconds = startPositionSeconds;
-            _selectedIndices = selectedIndexes;
+            _selectedIndices = selectedIndexes.Cast<int>();
             _subtitle.Paragraphs.Clear();
             foreach (var p in subtitle.Paragraphs)
             {
@@ -390,52 +391,69 @@ namespace Nikse.SubtitleEdit.Controls
             return imageHeight - result;
         }
 
-        private bool IsSelectedIndex(int pos, ref int lastCurrentEnd, List<Paragraph> selectedParagraphs)
+        private class IsSelectedHelper
         {
-            if (pos < lastCurrentEnd)
-                return true;
+            private readonly List<SelectionRange> _ranges = new List<SelectionRange>();
+            private int _lastPosition = Int32.MaxValue;
+            private SelectionRange _nextSelection;
 
-            if (_selectedIndices == null)
-                return false;
-
-            foreach (Paragraph p in selectedParagraphs)
+            public IsSelectedHelper(IList<Paragraph> paragraphs, IEnumerable<int> selectedIndices, Paragraph additionalSelectedParagraph, Func<double, int> secondsToPosition)
             {
-                if (pos >= p.StartFrame && pos <= p.EndFrame) // not really frames...
+                // I'm not sure why there's a try/catch, I copied it from the original code. It
+                // seems unnecessary but perhaps there's a thread safety issue.
+                try
                 {
-                    lastCurrentEnd = p.EndFrame;
-                    return true;
+                    foreach (int index in selectedIndices)
+                        AddParagraph(paragraphs[index], secondsToPosition);
+                }
+                catch { }
+
+                AddParagraph(additionalSelectedParagraph, secondsToPosition);
+            }
+
+            public bool IsSelected(int position)
+            {
+                if (position < _lastPosition || position > _nextSelection.End)
+                    FindNextSelection(position);
+
+                _lastPosition = position;
+
+                return position >= _nextSelection.Start && position <= _nextSelection.End;
+            }
+
+            private void FindNextSelection(int position)
+            {
+                _nextSelection = new SelectionRange(Int32.MaxValue, Int32.MaxValue);
+                foreach (SelectionRange range in _ranges)
+                {
+                    if (range.End >= position && (range.Start < _nextSelection.Start || (range.Start == _nextSelection.Start && range.End > _nextSelection.End)))
+                        _nextSelection = range;
                 }
             }
-            return false;
+
+            private void AddParagraph(Paragraph p, Func<double, int> secondsToPosition)
+            {
+                if (p == null) return;
+                _ranges.Add(new SelectionRange(secondsToPosition(p.StartTime.TotalSeconds), secondsToPosition(p.EndTime.TotalSeconds)));
+            }
+
+            private struct SelectionRange
+            {
+                public readonly int Start;
+                public readonly int End;
+
+                public SelectionRange(int start, int end)
+                {
+                    Start = start;
+                    End = end;
+                }
+            }
         }
 
         internal void WaveformPaint(object sender, PaintEventArgs e)
         {
             if (_wavePeaks != null && _wavePeaks.AllSamples != null)
             {
-                var selectedParagraphs = new List<Paragraph>();
-                if (_selectedIndices != null)
-                {
-                    try
-                    {
-                        foreach (int index in _selectedIndices)
-                        {
-                            Paragraph p = _subtitle.Paragraphs[index];
-                            if (p != null)
-                            {
-                                p = new Paragraph(p);
-                                // not really frames... just using them as position markers for better performance
-                                p.StartFrame = SecondsToXPositionNoZoom(p.StartTime.TotalSeconds);
-                                p.EndFrame = SecondsToXPositionNoZoom(p.EndTime.TotalSeconds);
-                                selectedParagraphs.Add(p);
-                            }
-                        }
-                    }
-                    catch
-                    {
-                    }
-                }
-
                 if (StartPositionSeconds < 0)
                     StartPositionSeconds = 0;
 
@@ -443,7 +461,6 @@ namespace Nikse.SubtitleEdit.Controls
                     StartPositionSeconds = _wavePeaks.Header.LengthInSeconds - ((Width / (double)_wavePeaks.Header.SampleRate) / _zoomFactor);
 
                 Graphics graphics = e.Graphics;
-
                 int imageHeight = Height;
 
                 DrawBackground(graphics);
@@ -462,11 +479,9 @@ namespace Nikse.SubtitleEdit.Controls
                     using (var penSelected = new Pen(SelectedColor)) // selected paragraph
                     {
                         var pen = penNormal;
+                        var isSelectedHelper = new IsSelectedHelper(_subtitle.Paragraphs, _selectedIndices, _selectedParagraph, SecondsToXPositionNoZoom);
                         int maxHeight = (int)(Math.Max(Math.Abs(_wavePeaks.DataMinValue), Math.Abs(_wavePeaks.DataMaxValue)) * VerticalZoomPercent);
                         int start = SecondsToXPositionNoZoom(StartPositionSeconds);
-                        int selectionStart = _selectedParagraph != null ? SecondsToXPositionNoZoom(_selectedParagraph.StartTime.TotalSeconds) : -1;
-                        int selectionEnd = _selectedParagraph != null ? SecondsToXPositionNoZoom(_selectedParagraph.EndTime.TotalSeconds) : -1;
-                        int lastCurrentEnd = -1;
                         float xPrev = 0;
                         int yPrev = Height / 2;
                         float x = 0;
@@ -479,9 +494,7 @@ namespace Nikse.SubtitleEdit.Controls
                             graphics.DrawLine(pen, xPrev, yPrev, x, y);
                             xPrev = x;
                             yPrev = y;
-                            bool isSelected = (n >= selectionStart && n <= selectionEnd) ||
-                                IsSelectedIndex(n, ref lastCurrentEnd, selectedParagraphs);
-                            pen = isSelected ? penSelected : penNormal;
+                            pen = isSelectedHelper.IsSelected(n) ? penSelected : penNormal;
                         }
                     }
                 }
