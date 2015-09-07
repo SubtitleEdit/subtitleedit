@@ -111,6 +111,7 @@ namespace Nikse.SubtitleEdit.Controls
         private System.ComponentModel.BackgroundWorker _spectrogramBackgroundWorker;
         public Keys InsertAtVideoPositionShortcut = Keys.None;
         public bool MouseWheelScrollUpIsForward = true;
+
         public const double ZoomMinimum = 0.1;
         public const double ZoomMaximum = 2.5;
         private double _zoomFactor = 1.0; // 1.0=no zoom
@@ -122,12 +123,27 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (value < ZoomMinimum)
-                    _zoomFactor = ZoomMinimum;
-                else if (value > ZoomMaximum)
-                    _zoomFactor = ZoomMaximum;
-                else
-                    _zoomFactor = (float)Math.Round(value, 2); // round to prevent accumulated rounding errors
+                if (value < ZoomMinimum) value = ZoomMinimum;
+                if (value > ZoomMaximum) value = ZoomMaximum;
+                _zoomFactor = Math.Round(value, 2); // round to prevent accumulated rounding errors
+                Invalidate();
+            }
+        }
+
+        public const double VerticalZoomMinimum = 1.0;
+        public const double VerticalZoomMaximum = 20.0;
+        private double _verticalZoomFactor = 1.0; // 1.0=no zoom
+        public double VerticalZoomFactor
+        {
+            get
+            {
+                return _verticalZoomFactor;
+            }
+            set
+            {
+                if (value < VerticalZoomMinimum) value = VerticalZoomMinimum;
+                if (value > VerticalZoomMaximum) value = VerticalZoomMaximum;
+                _verticalZoomFactor = Math.Round(value, 2); // round to prevent accumulated rounding errors
                 Invalidate();
             }
         }
@@ -202,8 +218,6 @@ namespace Nikse.SubtitleEdit.Controls
         public bool AllowNewSelection { get; set; }
 
         public bool Locked { get; set; }
-
-        public double VerticalZoomPercent { get; set; }
 
         public double EndPositionSeconds
         {
@@ -287,7 +301,6 @@ namespace Nikse.SubtitleEdit.Controls
             AllowNewSelection = true;
             ShowSpectrogram = true;
             ShowWaveform = true;
-            VerticalZoomPercent = 1.0;
             InsertAtVideoPositionShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
         }
 
@@ -480,7 +493,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         var pen = penNormal;
                         var isSelectedHelper = new IsSelectedHelper(_subtitle.Paragraphs, _selectedIndices, _selectedParagraph, SecondsToXPositionNoZoom);
-                        int maxHeight = (int)(Math.Max(Math.Abs(_wavePeaks.DataMinValue), Math.Abs(_wavePeaks.DataMaxValue)) * VerticalZoomPercent);
+                        int maxHeight = (int)(Math.Max(Math.Abs(_wavePeaks.DataMinValue), Math.Abs(_wavePeaks.DataMaxValue)) / VerticalZoomFactor);
                         int start = SecondsToXPositionNoZoom(StartPositionSeconds);
                         float xPrev = 0;
                         int yPrev = Height / 2;
