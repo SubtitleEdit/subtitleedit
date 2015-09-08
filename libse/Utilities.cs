@@ -1681,7 +1681,7 @@ namespace Nikse.SubtitleEdit.Core
 
             try
             {
-                Regex.Match("", testPattern);
+                Regex.Match(string.Empty, testPattern);
             }
             catch (ArgumentException)
             {
