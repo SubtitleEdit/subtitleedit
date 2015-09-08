@@ -340,7 +340,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Title>Wybierz języka</Title>
     <ChooseLanguageStreamId>Wybierz język (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Nieznany język</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Obraz napisów</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -670,6 +670,8 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <ImageFiles>Pliki obrazów</ImageFiles>
     <Input>Wejście</Input>
     <InputDescription>Wybierz pliki wejściowe (przeglądaj lub przeciągnij i upuść)</InputDescription>
+    <Remove>Usuń</Remove>
+    <RemoveAll>Usuń wszystko</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Import zmian w scenach</Title>
@@ -1272,6 +1274,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <BeforeMergeLinesWithSameText>Przed połączeniem linii z takim samym tekstem</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Napisy z kodami czasowymi różnią się ilością linii ({0}) od aktualnych napisów ({1}) - Czy na pewno chcesz kontynuować?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Parsowanie strumienia transportowego - proszę czekać...</ParsingTransportStream>
+    <XPercentCompleted>Ukończono {0}%</XPercentCompleted>
     <ErrorLoadIdx>Nie można odczytać/edytować plików .idx. Pliki Idx są częścią składową dwóch plików idx/sub (zwane również VobSub), a Subtitle Edit może otworzyć tylko plik .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Ten plik wydaje się być skompresowanym plikiem .rar. Subtitle Edit nie otwiera plików skompresowanych.</ErrorLoadRar>
     <ErrorLoadZip>Ten plik wydaje się być skompresowanym plikiem .zip. Subtitle Edit nie otwiera plików skompresowanych.</ErrorLoadZip>
@@ -1505,7 +1508,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <Tools>Narzędzia</Tools>
     <WordLists>Listy słów</WordLists>
     <SsaStyle>Styl ASS/SSA</SsaStyle>
-    <Proxy>Serwer pośredniczący</Proxy>
+    <Network>Sieć</Network>
     <ShowToolBarButtons>Pokaż przyciski Paska narzędziowego</ShowToolBarButtons>
     <New>Nowy</New>
     <Open>Otwórz</Open>
@@ -1631,6 +1634,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <ProxyUserName>Użytkownik</ProxyUserName>
     <ProxyPassword>Hasło</ProxyPassword>
     <ProxyDomain>Domena</ProxyDomain>
+    <NetworkSessionSettings>Ustawienia sesji sieciowej</NetworkSessionSettings>
+    <NetworkSessionNewSound>Odtwórz plik dźwiękowy po nadejściu nowej wiadomości</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Odtwórz X sek. i wróć, gdzie X to</PlayXSecondsAndBack>
     <StartSceneIndex>Akapit sceny początkowej to</StartSceneIndex>
     <EndSceneIndex>Akapit sceny końcowej to</EndSceneIndex>
@@ -1682,7 +1687,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <WaveformSeekSilenceForward>Szukaj ciszy do przodu</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Szukaj ciszy wstecz</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Dodaj tutaj tekst (dla nowego zaznaczenia)</WaveformAddTextHere>
-    <WaveformPlayNewSelection>Odtwarzaj nowe zaznaczenie</WaveformPlayNewSelection>
+    <WaveformPlayNewSelection>Odtwarzaj zaznaczenie</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Odtwarzaj koniec zaznaczenia</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Odtwarzaj pierwsze zaznaczone napisy</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Koncentruj uwagę na "Widoku listy"</WaveformFocusListView>
     <GoBack1Frame>Jedna klatka do tyłu</GoBack1Frame>
@@ -1809,8 +1815,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <LineMaximumLength>Maksymalna długość linii</LineMaximumLength>
     <LineContinuationBeginEndStrings>Znak kontynuacji na początku/końcu linii</LineContinuationBeginEndStrings>
     <NumberOfSplits>Ilość podzielonych: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków</LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków</LongestLineIsXAtY>
+    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków </LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków </LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Podziel napisy</Title>
