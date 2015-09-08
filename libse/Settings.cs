@@ -1079,7 +1079,6 @@ namespace Nikse.SubtitleEdit.Core
         public void Save()
         {
             //this is too slow: Serialize(Configuration.SettingsFileName, this);
-
             CustomSerialize(Configuration.SettingsFileName, this);
         }
 
@@ -2665,10 +2664,10 @@ namespace Nikse.SubtitleEdit.Core
             {
                 textWriter.WriteStartDocument();
 
-                textWriter.WriteStartElement("Settings", "");
+                textWriter.WriteStartElement("Settings", string.Empty);
 
-                textWriter.WriteStartElement("RecentFiles", "");
-                textWriter.WriteStartElement("FileNames", "");
+                textWriter.WriteStartElement("RecentFiles", string.Empty);
+                textWriter.WriteStartElement("FileNames", string.Empty);
                 foreach (var item in settings.RecentFiles.Files)
                 {
                     textWriter.WriteStartElement("FileName");
@@ -2684,7 +2683,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteEndElement();
                 textWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("General", "");
+                textWriter.WriteStartElement("General", string.Empty);
                 textWriter.WriteElementString("ShowToolbarNew", settings.General.ShowToolbarNew.ToString());
                 textWriter.WriteElementString("ShowToolbarOpen", settings.General.ShowToolbarOpen.ToString());
                 textWriter.WriteElementString("ShowToolbarSave", settings.General.ShowToolbarSave.ToString());
@@ -2789,7 +2788,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 textWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("Tools", "");
+                textWriter.WriteStartElement("Tools", string.Empty);
                 textWriter.WriteElementString("StartSceneIndex", settings.Tools.StartSceneIndex.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("EndSceneIndex", settings.Tools.EndSceneIndex.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("VerifyPlaySeconds", settings.Tools.VerifyPlaySeconds.ToString(CultureInfo.InvariantCulture));
@@ -2881,7 +2880,7 @@ namespace Nikse.SubtitleEdit.Core
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
                     const int maximumFindHistoryItems = 10;
-                    textWriter.WriteStartElement("FindHistory", "");
+                    textWriter.WriteStartElement("FindHistory", string.Empty);
                     int maxIndex = settings.Tools.FindHistory.Count;
                     if (maxIndex > maximumFindHistoryItems)
                         maxIndex = maximumFindHistoryItems;
@@ -2894,7 +2893,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 textWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("SubtitleSettings", "");
+                textWriter.WriteStartElement("SubtitleSettings", string.Empty);
                 textWriter.WriteElementString("SsaFontName", settings.SubtitleSettings.SsaFontName);
                 textWriter.WriteElementString("SsaFontSize", settings.SubtitleSettings.SsaFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SsaFontColorArgb", settings.SubtitleSettings.SsaFontColorArgb.ToString(CultureInfo.InvariantCulture));
@@ -2916,20 +2915,20 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("NuendoCharacterListFile", settings.SubtitleSettings.NuendoCharacterListFile);
                 textWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("Proxy", "");
+                textWriter.WriteStartElement("Proxy", string.Empty);
                 textWriter.WriteElementString("ProxyAddress", settings.Proxy.ProxyAddress);
                 textWriter.WriteElementString("UserName", settings.Proxy.UserName);
                 textWriter.WriteElementString("Password", settings.Proxy.Password);
                 textWriter.WriteElementString("Domain", settings.Proxy.Domain);
                 textWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("WordLists", "");
+                textWriter.WriteStartElement("WordLists", string.Empty);
                 textWriter.WriteElementString("LastLanguage", settings.WordLists.LastLanguage);
                 textWriter.WriteElementString("NamesEtcUrl", settings.WordLists.NamesEtcUrl);
                 textWriter.WriteElementString("UseOnlineNamesEtc", settings.WordLists.UseOnlineNamesEtc.ToString());
                 textWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("CommonErrors", "");
+                textWriter.WriteStartElement("CommonErrors", string.Empty);
                 textWriter.WriteElementString("StartPosition", settings.CommonErrors.StartPosition);
                 textWriter.WriteElementString("StartSize", settings.CommonErrors.StartSize);
                 textWriter.WriteElementString("EmptyLinesTicked", settings.CommonErrors.EmptyLinesTicked.ToString());
@@ -2967,7 +2966,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("FixMusicNotationTicked", settings.CommonErrors.FixMusicNotationTicked.ToString());
                 textWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("VideoControls", "");
+                textWriter.WriteStartElement("VideoControls", string.Empty);
                 textWriter.WriteElementString("CustomSearchText1", settings.VideoControls.CustomSearchText1);
                 textWriter.WriteElementString("CustomSearchText2", settings.VideoControls.CustomSearchText2);
                 textWriter.WriteElementString("CustomSearchText3", settings.VideoControls.CustomSearchText3);
@@ -3003,7 +3002,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("WaveformSeeksSilenceMaxVolume", settings.VideoControls.WaveformSeeksSilenceMaxVolume.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("NetworkSettings", "");
+                textWriter.WriteStartElement("NetworkSettings", string.Empty);
                 textWriter.WriteElementString("SessionKey", settings.NetworkSettings.SessionKey);
                 textWriter.WriteElementString("UserName", settings.NetworkSettings.UserName);
                 textWriter.WriteElementString("WebServiceUrl", settings.NetworkSettings.WebServiceUrl);
@@ -3011,7 +3010,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("NewMessageSound", settings.NetworkSettings.NewMessageSound);
                 textWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("VobSubOcr", "");
+                textWriter.WriteStartElement("VobSubOcr", string.Empty);
                 textWriter.WriteElementString("XOrMorePixelsMakesSpace", settings.VobSubOcr.XOrMorePixelsMakesSpace.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AllowDifferenceInPercent", settings.VobSubOcr.AllowDifferenceInPercent.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("BlurayAllowDifferenceInPercent", settings.VobSubOcr.BlurayAllowDifferenceInPercent.ToString(CultureInfo.InvariantCulture));
@@ -3038,10 +3037,10 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("LineOcrMaxLineHeight", settings.VobSubOcr.LineOcrMaxLineHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("MultipleSearchAndReplaceList", "");
+                textWriter.WriteStartElement("MultipleSearchAndReplaceList", string.Empty);
                 foreach (var item in settings.MultipleSearchAndReplaceList)
                 {
-                    textWriter.WriteStartElement("MultipleSearchAndReplaceItem", "");
+                    textWriter.WriteStartElement("MultipleSearchAndReplaceItem", string.Empty);
                     textWriter.WriteElementString("Enabled", item.Enabled.ToString());
                     textWriter.WriteElementString("FindWhat", item.FindWhat);
                     textWriter.WriteElementString("ReplaceWith", item.ReplaceWith);
@@ -3050,7 +3049,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 textWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("Shortcuts", "");
+                textWriter.WriteStartElement("Shortcuts", string.Empty);
                 textWriter.WriteElementString("GeneralGoToFirstSelectedLine", settings.Shortcuts.GeneralGoToFirstSelectedLine);
                 textWriter.WriteElementString("GeneralGoToNextEmptyLine", settings.Shortcuts.GeneralGoToNextEmptyLine);
                 textWriter.WriteElementString("GeneralMergeSelectedLines", settings.Shortcuts.GeneralMergeSelectedLines);
@@ -3177,7 +3176,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainTranslateCustomSearch6", settings.Shortcuts.MainTranslateCustomSearch6);
                 textWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("RemoveTextForHearingImpaired", "");
+                textWriter.WriteStartElement("RemoveTextForHearingImpaired", string.Empty);
                 textWriter.WriteElementString("RemoveTextBetweenBrackets", settings.RemoveTextForHearingImpaired.RemoveTextBetweenBrackets.ToString());
                 textWriter.WriteElementString("RemoveTextBetweenParentheses", settings.RemoveTextForHearingImpaired.RemoveTextBetweenParentheses.ToString());
                 textWriter.WriteElementString("RemoveTextBetweenCurlyBrackets", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCurlyBrackets.ToString());
@@ -3195,7 +3194,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("RemoveIfContainsText", settings.RemoveTextForHearingImpaired.RemoveIfContainsText);
                 textWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("SubtitleBeaming", "");
+                textWriter.WriteStartElement("SubtitleBeaming", string.Empty);
                 textWriter.WriteElementString("FontName", settings.SubtitleBeaming.FontName);
                 textWriter.WriteElementString("FontColor", settings.SubtitleBeaming.FontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FontSize", settings.SubtitleBeaming.FontSize.ToString(CultureInfo.InvariantCulture));
