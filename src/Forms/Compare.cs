@@ -68,7 +68,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             subtitleListView1.SelectIndexAndEnsureVisible(0);
-            subtitleListView2.SelectIndexAndEnsureVisible(0);
             _language1 = Utilities.AutoDetectGoogleLanguage(_subtitle1);
         }
 
