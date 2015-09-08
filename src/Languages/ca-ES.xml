@@ -512,7 +512,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Correccions trobades: {0}</FixesFoundX>
     <XFixesApplied>Correccions aplicades: {0}</XFixesApplied>
     <NothingToFixBut>Res per corregir però algunes coses per millorar - veure log pels detalls</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Fixa minúscules solitàries 'i' a 'I' (Anglés)" està comprovat però sembla que el subtítol carregat no és Anglés.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continua</Continue>
     <ContinueAnyway>Continua de tota manera?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Desmarcat "Fixa minúscula 'i' solitària a 'I' (Anglés)"</UncheckedFixLowercaseIToUppercaseI>

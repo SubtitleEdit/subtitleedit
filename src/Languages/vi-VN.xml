@@ -424,7 +424,6 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Tìm thấy việc sữa lỗi: {0}</FixesFoundX>
     <XFixesApplied>Áp dụng việc sửa lỗi: {0}</XFixesApplied>
     <NothingToFixBut>Không có gì để sửa lỗi nhưng một vài điều có thể được cải thiện-xem để biết chi tiết đăng nhập</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Sửa lỗi 'i' thành 'I' (trong tiếng Anh)"khi được chọn, nhưng phụ đề hiện đang được nạp dường như không phải là tiếng Anh.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Tiếp tục</Continue>
     <ContinueAnyway>Vẫn tiếp tục ?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Bỏ chọn "Sửa lỗi 'i' thành 'I' (trong tiếng Anh)"</UncheckedFixLowercaseIToUppercaseI>

@@ -318,7 +318,6 @@ http://soft98.ir
     <FixesFoundX>Fixes found: {0}</FixesFoundX>
     <XFixesApplied>Fixes applied: {0}</XFixesApplied>
     <NothingToFixBut>چیزی برای تصحیح پیدا نشد اما چند چیز می تواند بهبود یابد - نوشته (log) را برای جزییات ببینید.</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"حروف کوچک ثابت به تنهایی« من »به« من »(به انگلیسی)" انتخاب شده است اما در حال حاضر لود زیرنویس به نظر می رسد نمی شود انگلیسی.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>ادامه</Continue>
     <ContinueAnyway>در هر صورت ادامه میدهید؟</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>بدون کنترل "ثابت به تنهایی کوچک« من »به« من »/به انگلیسی"</UncheckedFixLowercaseIToUppercaseI>

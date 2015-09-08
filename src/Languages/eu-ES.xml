@@ -535,7 +535,6 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Aurkitutako zuzenketak: {0}</FixesFoundX>
     <XFixesApplied>Zuzenketak ezarrita: {0}</XFixesApplied>
     <NothingToFixBut>Ezer ez zuzentzeko baina gauza gutxi batzuk hobetu daitezke</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Zuzendu 'i' hizki xehe bakuna 'I'-ra (Ingelera)" egiaztatuta dago baina orain igota dagoen azpidatzia ez dirudi ingelerazkoa denik.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Jarraitu</Continue>
     <ContinueAnyway>Jarraitu edonola?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Egiaztatu gabe "Zuzendu 'i' hizki xehea 'I' -ra (Ingelera)"</UncheckedFixLowercaseIToUppercaseI>

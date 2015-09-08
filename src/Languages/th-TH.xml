@@ -517,7 +517,6 @@
     <FixesFoundX>สิ่งที่ต้องแก้ที่พบ: {0}</FixesFoundX>
     <XFixesApplied>สี่งที่แก้ไปแล้ว: {0}</XFixesApplied>
     <NothingToFixBut>ไม่มีสิ่งที่ต้องแก้แต่อาจปรับปรุงได้อีกนิดหน่อย - ดูล็อกเพิ่มเติม</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"แก้เฉพาะตัวพิมพ์เล็ก 'i' เป็น 'I' (อังกฤษ)" ถูกเลือก แต่ซับไตเติ้ลที่โหลดอยู่ ไม่ใช่ภาษาอังกฤษ</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>ทำต่อ</Continue>
     <ContinueAnyway>ยืนยันการทำต่อ</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>ยกเลิกกา "แก้เฉพาะตัวพิมพ์เล็ก 'i' เป็น 'I' (อังกฤษ)"</UncheckedFixLowercaseIToUppercaseI>

@@ -512,7 +512,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Намерени грешки: {0}</FixesFoundX>
     <XFixesApplied>Направени поправки: {0}</XFixesApplied>
     <NothingToFixBut>Няма нищо за поправяне, но някои неща могат да се подобрят – вижте отчета...</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Поправяне на единична малка буква 'i' към 'I' (англ.)" е маркирано, но текущите заредени субтитри изглежда не са английски.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Продължаване</Continue>
     <ContinueAnyway>Искате ли да продължите?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Де маркиране на “Единична малка буква 'i' към 'I' (англ.)"</UncheckedFixLowercaseIToUppercaseI>

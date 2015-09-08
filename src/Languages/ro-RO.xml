@@ -558,7 +558,6 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
     <FixesFoundX>Corecturi găsite: {0}</FixesFoundX>
     <XFixesApplied>Corecturi făcute: {0}</XFixesApplied>
     <NothingToFixBut>Nimic de corectat, dar o serie de lucruri ar putea fi îmbunătățite - a se vedea jurnalul de detalii</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Corectarea doar a lui 'i' la 'I' (în Engleză)" este bifată, dar subtitrarea încărcată nu pare să fie în engleză.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continuă</Continue>
     <ContinueAnyway>Continui oricum?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"Corectarea doar a lui 'i' la 'I' (în Engleză" debifată</UncheckedFixLowercaseIToUppercaseI>

@@ -519,7 +519,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixesFoundX>Найдено неточностей: {0}</FixesFoundX>
     <XFixesApplied>Сделано исправлений: {0}</XFixesApplied>
     <NothingToFixBut>Исправлять нечего, но кое-что можно улучшить - подробности смотри в отчете</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>Выбрана опция "Исправить одиночную букву "i" на "I" (English)", но загруженные субтитры не на английском языке.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Продолжить</Continue>
     <ContinueAnyway>Все равно продолжить?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Опция "Исправить одиночную букву "i" на "I" (English)" не выбрана</UncheckedFixLowercaseIToUppercaseI>

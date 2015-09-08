@@ -516,7 +516,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Επιδιορθώσεις που βρέθηκαν: {0}</FixesFoundX>
     <XFixesApplied>Επιδιορθώσεις που εφαρμόστηκαν: {0}</XFixesApplied>
     <NothingToFixBut>Τίποτα για επιδιόρθωση, αλλά μερικά πράγματα θα μπορούσαν να βελτιωθούν - δείτε το αρχείο καταγραφής για λεπτομέρειες</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>Η "Επιδιόρθωση μονού πεζού 'i' σε 'Ι' (Αγγλικά)" έχει επιλεγεί, αλλά ο υπότιτλος που έχει φορτωθεί δεν φαίνεται να είναι Αγγλικός.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Συνέχεια</Continue>
     <ContinueAnyway>Θέλετε να συνεχίσετε;</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Αποεπιλέχθηκε η "Επιδιόρθωση μονού πεζού 'i' σε 'Ι' (Αγγλικά)"</UncheckedFixLowercaseIToUppercaseI>

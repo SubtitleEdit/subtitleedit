@@ -311,7 +311,6 @@
     <FixesFoundX>Пронађено исправки: {0}</FixesFoundX>
     <XFixesApplied>Примењено исправки: {0}</XFixesApplied>
     <NothingToFixBut>Нема ништа за исправљање, али се неке ствари могу побољшати. Погледајте извештај за више информација.</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>„Промени мало латиничко И у велико када се налази сâмо“ је означено, али учитани титл није на енглеском.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Настави</Continue>
     <ContinueAnyway>Желите ли да наставите?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>„Промени мало латиничко И у велико када се налази сâмо“ није означено.</UncheckedFixLowercaseIToUppercaseI>

@@ -556,7 +556,6 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <FixesFoundX>Znalezionych błędów: {0}</FixesFoundX>
     <XFixesApplied>Zastosowanych poprawek: {0}</XFixesApplied>
     <NothingToFixBut>Nic nie poprawiono, ale jest kilka elementów, które można poprawić - zobacz szczegóły w Dzienniku</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>Zaznaczono "Popraw osamotnione małe litery 'i' na 'I' (angielski)", ale aktualnie wczytane napisy nie wydają się być angielskie.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Kontynuacja</Continue>
     <ContinueAnyway>Chcesz kontynuować?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Odznaczono "Popraw osamotnione małe litery 'i' na 'I' (angielski)"</UncheckedFixLowercaseIToUppercaseI>

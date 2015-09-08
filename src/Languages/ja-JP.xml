@@ -411,7 +411,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <FixesFoundX>見つかった修正: {0}</FixesFoundX>
     <XFixesApplied>適用された修正: {0}</XFixesApplied>
     <NothingToFixBut>修正するものはありませんが改善できることがあります - 詳細はログをご覧ください</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"小文字の 'i' 1 文字を 'I' に修正する (英語)" がチェックされていますが現在読み込まれている字幕は英語ではないようです。</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>続行</Continue>
     <ContinueAnyway>そのまま続行しますか?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"小文字の 'i' 1 文字を 'I' に修正する (英語)" のチェックを解除しました</UncheckedFixLowercaseIToUppercaseI>

@@ -739,7 +739,6 @@ namespace Nikse.SubtitleEdit.Core
                 FixesFoundX = "Fixes found: {0}",
                 XFixesApplied = "Fixes applied: {0}",
                 NothingToFixBut = "Nothing to fix but a few things could be improved - see log for details",
-                FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish = "\"Fix alone lowercase 'i' to 'I' (English)\" is checked but currently loaded subtitle seems not be English.",
                 Continue = "Continue",
                 ContinueAnyway = "Continue anyway?",
                 UncheckedFixLowercaseIToUppercaseI = "Unchecked \"Fix alone lowercase 'i' to 'I' (English)\"",

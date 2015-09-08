@@ -535,7 +535,6 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Korjattavia löytyi: {0}</FixesFoundX>
     <XFixesApplied>Korjauksia tehty: {0}</XFixesApplied>
     <NothingToFixBut>Mitään korjattavaa ei löytynyt, mutta jotain voisi parantaa - lisätietoja lokissa</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Korjattavat yksinäiset 'i'-&gt;'I' (englanti)" ovat valittuina, mutta ladattu tekstitys ei näytä olevan englantia.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Jatka</Continue>
     <ContinueAnyway>Haluatko jatkaa?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Merkitsemätön "Korjaa yksinäiset pienet kirjaimet 'i' -&gt; 'I' (englanti)"</UncheckedFixLowercaseIToUppercaseI>
