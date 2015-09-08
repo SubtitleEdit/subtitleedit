@@ -14819,7 +14819,7 @@ namespace Nikse.SubtitleEdit.Forms
             name = Path.Combine(dir, name);
             return name;
         }
-
+       
         private void AudioWaveform_Click(object sender, EventArgs e)
         {
             if (audioVisualizer.WavePeaks == null)
@@ -14829,14 +14829,21 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonOpenVideo_Click(sender, e);
                     if (string.IsNullOrEmpty(_videoFileName))
                         return;
-                }
-
+                }                
                 mediaPlayer.Pause();
                 using (var addWaveform = new AddWaveform())
                 {
                     var peakWaveFileName = GetPeakWaveFileName(_videoFileName);
                     var spectrogramFolder = GetSpectrogramFolder(_videoFileName);
-                    addWaveform.Initialize(_videoFileName, spectrogramFolder, _videoAudioTrackNumber);
+
+                    if (_videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+                    {
+                        addWaveform.InitializeViaWaveFile(_videoFileName, spectrogramFolder);
+                    }
+                    else
+                    {
+                        addWaveform.Initialize(_videoFileName, spectrogramFolder, _videoAudioTrackNumber);                        
+                    }
                     if (addWaveform.ShowDialog() == DialogResult.OK)
                     {
                         addWaveform.WavePeak.WritePeakSamples(peakWaveFileName);
@@ -15181,7 +15188,7 @@ namespace Nikse.SubtitleEdit.Forms
             string ext = Path.GetExtension(fileName).ToLowerInvariant();
             if (ext != ".wav")
             {
-                if (audioVisualizer.WavePeaks == null && (Utilities.GetMovieFileExtensions().Contains(ext) || ext == ".mp3"))
+                if (audioVisualizer.WavePeaks == null && (Utilities.GetMovieFileExtensions().Contains(ext) || ext == ".mp3" || ext == ".mka" || ext == ".m4a" || ext == ".wma"))
                 {
                     _videoFileName = fileName;
                     AudioWaveform_Click(null, null);
