@@ -19367,8 +19367,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void audioVisualizer_MouseEnter(object sender, EventArgs e)
         {
-            if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused && Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter &&
-                audioVisualizer.WavePeaks != null && !audioVisualizer.Focused && audioVisualizer.CanFocus)
+            if (Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter && audioVisualizer.WavePeaks != null && !audioVisualizer.Focused && audioVisualizer.CanFocus)
             {
                 audioVisualizer.Focus();
             }
@@ -19376,8 +19375,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubtitleListview1_MouseEnter(object sender, EventArgs e)
         {
-            if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused && Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter &&
-                Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter && !SubtitleListview1.Focused && SubtitleListview1.CanFocus)
+            if (Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter && Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter && SubtitleListview1.CanFocus)
             {
                 SubtitleListview1.Focus();
             }
