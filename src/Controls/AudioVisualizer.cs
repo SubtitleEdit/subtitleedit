@@ -1820,7 +1820,6 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 using (var gfx = Graphics.FromImage(bmpDestination))
                 {
-
                     double startRow = seconds / (_sampleDuration * _imageWidth);
                     var bitmapIndex = (int)startRow;
                     var subtractValue = (int)Math.Round((startRow - bitmapIndex) * _imageWidth);
