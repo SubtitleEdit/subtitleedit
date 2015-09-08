@@ -512,7 +512,6 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Korrigeringar hittades: {0}</FixesFoundX>
     <XFixesApplied>Korrigeringar som tillämpas: {0}</XFixesApplied>
     <NothingToFixBut>Inget att fixa men några saker kan förbättras - se logg för detaljer</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Fixa ensam små 'i' till 'I' (engelska)" är markerad, men laddad text verkar inte vara engelska.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Fortsätt</Continue>
     <ContinueAnyway>Fortsätt ändå?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Avmarkera "Fixa ensam små 'i' till 'I' (engelska)"</UncheckedFixLowercaseIToUppercaseI>

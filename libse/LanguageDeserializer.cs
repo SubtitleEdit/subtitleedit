@@ -1450,9 +1450,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "FixCommonErrors/NothingToFixBut":
                     language.FixCommonErrors.NothingToFixBut = reader.Value;
                     break;
-                case "FixCommonErrors/FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish":
-                    language.FixCommonErrors.FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish = reader.Value;
-                    break;
                 case "FixCommonErrors/Continue":
                     language.FixCommonErrors.Continue = reader.Value;
                     break;

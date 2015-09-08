@@ -411,7 +411,6 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Pronađeno ispravki: {0}</FixesFoundX>
     <XFixesApplied>Primijenjeno ispravki: {0}</XFixesApplied>
     <NothingToFixBut>Nema ništa za ispravljanje, ali se neke stvari mogu poboljšati. Pogledajte izvještaj za više informacija.</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>„Promeni malo latinično I u veliko kada se nalazi sâmo“ je označeno, ali učitani prevod nije na engleskom.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Nastavi</Continue>
     <ContinueAnyway>Želite li da nastavite?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>„Promeni malo latinično I u veliko kada se nalazi sâmo“ nije označeno.</UncheckedFixLowercaseIToUppercaseI>

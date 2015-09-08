@@ -557,7 +557,6 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <FixesFoundX>Gevonden correcties: {0}</FixesFoundX>
     <XFixesApplied>Toegepaste correcties: {0}</XFixesApplied>
     <NothingToFixBut>Niets te corrigeren, maar een paar dingen kunnen worden verbeterd - zie log voor details</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Alleenstaande 'i' door 'I' vervangen (Engels)" is aangevinkt, maar de nu geladen ondertitel lĳkt niet Engels te zĳn.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Doorgaan</Continue>
     <ContinueAnyway>Toch doorgaan?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"Alleenstaande 'i' door 'I' vervangen (Engels)" uitgeschakeld</UncheckedFixLowercaseIToUppercaseI>

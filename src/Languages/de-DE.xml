@@ -557,7 +557,6 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <FixesFoundX>Korrekturen gefunden: {0}</FixesFoundX>
     <XFixesApplied>Korrekturen angewendet: {0}</XFixesApplied>
     <NothingToFixBut>Nichts zu korrigieren, aber ein paar Dinge könnten verbessert werden - siehe Log für Details</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Allein stehendes 'i' zu 'I' korrigieren (Englisch)" ist ausgewählt, aber der geladene Untertitel scheint nicht Englisch zu sein.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Fortsetzen</Continue>
     <ContinueAnyway>Trotzdem fortsetzen?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"Allein stehendes 'i' zu 'I' (Englisch) korrigieren" deaktiviert</UncheckedFixLowercaseIToUppercaseI>

@@ -524,7 +524,6 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <FixesFoundX>Popravki: {0}</FixesFoundX>
     <XFixesApplied>Uporabljeni popravki: {0}</XFixesApplied>
     <NothingToFixBut>Nič za popravit, nekatere zadeve bi se lahko izboljšale - preglej poročilo za podrobnosti</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Popravi samostoječo začetnico 'i' to 'I' (Angleščina)" je preverjeno, vendar trenutni podnapis ni angleški.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Nadaljuj</Continue>
     <ContinueAnyway>Nadaljuj vseeno?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Ni izbrano "Popravi samostoječo začetnico 'i' to 'I' (Angleščina)"</UncheckedFixLowercaseIToUppercaseI>

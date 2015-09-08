@@ -557,7 +557,6 @@ Command line: {1} {2}
     <FixesFoundX>已找到修复: {0}</FixesFoundX>
     <XFixesApplied>已应用修复: {0}</XFixesApplied>
     <NothingToFixBut>没有什么需要修复，但有几个问题可以改进 - 详见记录</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>“单独的小写 'i' 修复为 'I' (英语)”已选中但当前加载的字幕似乎不是英语。</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>继续</Continue>
     <ContinueAnyway>仍要继续吗？</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>已取消选中“单独的小写 'i' 修复为 'I' (英语)”</UncheckedFixLowercaseIToUppercaseI>

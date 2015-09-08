@@ -558,7 +558,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixesFoundX>Fixes found: {0}</FixesFoundX>
     <XFixesApplied>Fixes applied: {0}</XFixesApplied>
     <NothingToFixBut>Nothing to fix but a few things could be improved - see log for details</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Fix alone lowercase 'i' to 'I' (English)" is checked but currently loaded subtitle seems not be English.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continue</Continue>
     <ContinueAnyway>Continue anyway?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Unchecked "Fix alone lowercase 'i' to 'I' (English)"</UncheckedFixLowercaseIToUppercaseI>

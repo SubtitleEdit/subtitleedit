@@ -555,7 +555,6 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <FixesFoundX>Correções encontradas: {0}</FixesFoundX>
     <XFixesApplied>Correções aplicadas: {0}</XFixesApplied>
     <NothingToFixBut>Nada para corrigir, mas algumas coisas podem ser melhoradas - veja o log para mais detalhes</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Corrigir "i" minúscula sozinha por "I" maiúscula (Inglês)" está marcada mas a legenda carregada não parece ser em Inglês.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continuar</Continue>
     <ContinueAnyway>Continuar assim mesmo?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Desmarcar "Corrigir "i" minúscula sozinha por "I" maiúscula (Inglês)"</UncheckedFixLowercaseIToUppercaseI>

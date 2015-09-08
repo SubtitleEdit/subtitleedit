@@ -558,7 +558,6 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <FixesFoundX>Nalezeno oprav: {0}</FixesFoundX>
     <XFixesApplied>Použito oprav: {0}</XFixesApplied>
     <NothingToFixBut>Není co opravovat, ale pár věcí lze vylepšit - viz zpráva pro podrobnosti</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Opravit samotná malá 'i' na 'I' (angličtina)" je zatrženo, ale aktuálně načtené titulky se nezdají být v angličtině.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Pokračovat</Continue>
     <ContinueAnyway>Přesto pokračovat?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Nezatrženo "Opravit samotná malá 'i' na 'I' (angličtina)"</UncheckedFixLowercaseIToUppercaseI>

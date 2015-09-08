@@ -619,7 +619,6 @@
             public string FixesFoundX { get; set; }
             public string XFixesApplied { get; set; }
             public string NothingToFixBut { get; set; }
-            public string FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish { get; set; }
             public string Continue { get; set; }
             public string ContinueAnyway { get; set; }
             public string UncheckedFixLowercaseIToUppercaseI { get; set; }

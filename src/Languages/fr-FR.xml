@@ -558,7 +558,6 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <FixesFoundX>Corrections trouvées: {0}</FixesFoundX>
     <XFixesApplied>Corrections effectuées: {0}</XFixesApplied>
     <NothingToFixBut>Rien à corriger mais quelques points peuvent être améliorés - voir le rapport</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Le remplacement du 'i' minuscule isolé en 'I' (Anglais)" est activé mais le sous-titre actuel ne semble pas être de l'anglais.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continuer</Continue>
     <ContinueAnyway>Continuer quand même ?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Décocher "Remplacer minuscules 'i' isolé par 'I' (anglais uniquement)"</UncheckedFixLowercaseIToUppercaseI>

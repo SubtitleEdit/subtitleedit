@@ -555,7 +555,6 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
     <FixesFoundX>Correzioni da applicare trovate: {0}</FixesFoundX>
     <XFixesApplied>Correzioni applicate: {0}</XFixesApplied>
     <NothingToFixBut>Nessuna correzione da applicare, ma qualcosa può essere migliorato. Guarda il rapporto per i dettagli.</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Correggi la 'i' minuscola da sola in 'I' (Inglese)" è spuntato ma il sottotitolo attualmente caricato non sembra essere inglese.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continua</Continue>
     <ContinueAnyway>Continuare comunque?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"Correggi la 'i' minuscola da sola in 'I' (Inglese)" non è spuntato</UncheckedFixLowercaseIToUppercaseI>

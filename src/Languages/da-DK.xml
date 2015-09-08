@@ -555,7 +555,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixesFoundX>Rettelser fundet: {0}</FixesFoundX>
     <XFixesApplied>Rettelser udført: {0}</XFixesApplied>
     <NothingToFixBut>Intet at rette, men nogle ting kan forbedres - se log for detailjer</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Fix alene små bogstaver 'i' til 'I' (engelsk)" er markeret, men aktuelt er indlæst undertekst ser ikke ud til at være engelsk.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Fortsæt</Continue>
     <ContinueAnyway>Fortsæt alligevel?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"Ret alene små bogstaver 'i' til 'I' (engelsk)" er ikke længere valgt</UncheckedFixLowercaseIToUppercaseI>

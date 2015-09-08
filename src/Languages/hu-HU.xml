@@ -558,7 +558,6 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <FixesFoundX>Talált javítások: {0}</FixesFoundX>
     <XFixesApplied>Alkalmazott javítások: {0}</XFixesApplied>
     <NothingToFixBut>Nincs javítandó, de néhány dolgot lehetne javítani - részletekért, tekintse meg a naplót</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Az egyedülálló 'i' javítása nagy 'I' betűsre (Angol)" opció ki van jelölve, de a jelenleg betöltött felirat nem tűnik Angol nyelvűnek.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Folytatás</Continue>
     <ContinueAnyway>Folytatja mindenképp?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"Az egyedülálló 'i' javítása nagy 'I' betűsre (Angol)" opció kijelöletlen</UncheckedFixLowercaseIToUppercaseI>

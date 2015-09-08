@@ -416,7 +416,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>{إصلاحات وجدت : {0</FixesFoundX>
     <XFixesApplied>{الإصلاحات التي تم تطبيقها : {0</XFixesApplied>
     <NothingToFixBut>لا شيء لإصلاح ولكن يمكن تحسين بعض الأشياء - مراجعة السجل للحصول على التفاصيل</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>بالانجليزية محددا ولكن الترجمة التي تم تحميلها حاليا لا تبدو أنها اللغة الإنجليزية ' i 'إلى' I ' الأصلاح الوحيد صغير</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>إستمر</Continue>
     <ContinueAnyway>المتابعة على أية حال؟</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>بالانجليزية "' i 'إلى' I ' "  الأصلاح الوحيد صغير لم يتم التحقق منه</UncheckedFixLowercaseIToUppercaseI>
