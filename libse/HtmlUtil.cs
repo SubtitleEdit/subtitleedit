@@ -499,7 +499,7 @@ namespace Nikse.SubtitleEdit.Core
                     if (lines.Length == 2 && lines[0].StartsWith("<i>", StringComparison.Ordinal) && lines[0].EndsWith("</i>", StringComparison.Ordinal) &&
                         lines[1].StartsWith("<i>", StringComparison.Ordinal))
                     {
-                        text = text.TrimEnd() + "</i>";
+                        text = text.TrimEnd() + endTag;
                     }
                     else
                     {
@@ -509,9 +509,9 @@ namespace Nikse.SubtitleEdit.Core
                         else
                             text = text.Substring(0, lastIndex - 1) + endTag;
                     }
-                    if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && text.Contains("</i>" + Environment.NewLine + "<i>"))
+                    if (text.StartsWith(beginTag, StringComparison.Ordinal) && text.EndsWith(endTag, StringComparison.Ordinal) && text.Contains(endTag + Environment.NewLine + beginTag))
                     {
-                        text = text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+                        text = text.Replace(endTag + Environment.NewLine + beginTag, Environment.NewLine);
                     }
                 }
 
