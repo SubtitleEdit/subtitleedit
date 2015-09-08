@@ -10201,14 +10201,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (audioVisualizer != null && audioVisualizer.Visible && e.KeyData == _waveformVerticalZoom)
             {
-                if (audioVisualizer.VerticalZoomPercent >= 0.1)
-                    audioVisualizer.VerticalZoomPercent -= 0.05;
+                audioVisualizer.VerticalZoomFactor *= 1.1;
                 e.SuppressKeyPress = true;
             }
             else if (audioVisualizer != null && audioVisualizer.Visible && e.KeyData == _waveformVerticalZoomOut)
             {
-                if (audioVisualizer.VerticalZoomPercent < 1)
-                    audioVisualizer.VerticalZoomPercent += 0.05;
+                audioVisualizer.VerticalZoomFactor /= 1.1;
                 e.SuppressKeyPress = true;
             }
             if (audioVisualizer != null && audioVisualizer.Visible && e.KeyData == _waveformZoomIn)
