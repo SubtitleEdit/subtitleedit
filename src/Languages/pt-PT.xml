@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="português (Portugal)">
+<Language Name="Portuguese - Portugal">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.8</Version>
@@ -673,6 +673,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <ImageFiles>Ficheiros de imagens</ImageFiles>
     <Input>Entrada</Input>
     <InputDescription>Escolha os ficheiros de entrada (Selecionar ou arrastar-e-soltar)</InputDescription>
+    <Remove>Remover</Remove>
+    <RemoveAll>Remover todas</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Importar mudanças de cena</Title>
@@ -1687,7 +1689,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformSeekSilenceForward>Localizar silêncio no áudio adiante</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Localizar silêncio no áudio atrás</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Adicionar texto aqui (para nova selecção)</WaveformAddTextHere>
-    <WaveformPlayNewSelection>Reproduzir a nova selecção</WaveformPlayNewSelection>
+    <WaveformPlayNewSelection>Reproduzir selecção</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Reproduzir a partir do fim da selecção</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Destacar a lista de visualização</WaveformFocusListView>
     <GoBack1Frame>Um fotograma para atrás</GoBack1Frame>
