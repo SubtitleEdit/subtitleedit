@@ -68,7 +68,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             subtitleListView1.SelectIndexAndEnsureVisible(0);
-            subtitleListView2.SelectIndexAndEnsureVisible(0);
             _language1 = Utilities.AutoDetectGoogleLanguage(_subtitle1);
         }
 
@@ -225,9 +224,7 @@ namespace Nikse.SubtitleEdit.Forms
             int index = 0;
             Paragraph p1 = sub1.GetParagraphOrDefault(index);
             Paragraph p2 = sub2.GetParagraphOrDefault(index);
-            int max = sub1.Paragraphs.Count;
-            if (max < sub2.Paragraphs.Count)
-                max = sub2.Paragraphs.Count;
+            int max = Math.Max(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
             while (index < max)
             {
                 if (p1 != null && p2 != null)
