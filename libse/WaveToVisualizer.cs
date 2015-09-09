@@ -15,7 +15,6 @@ namespace Nikse.SubtitleEdit.Core
     public class WaveHeader
     {
         private const int ConstantHeaderSize = 20;
-        private readonly byte[] _headerData;
 
         public string ChunkId { get; private set; }
         public uint ChunkSize { get; private set; }
@@ -104,16 +103,24 @@ namespace Nikse.SubtitleEdit.Core
                 DataStartPosition = (int)oldPos + 8;
             }
 
-            _headerData = new byte[DataStartPosition];
-            stream.Position = 0;
-            stream.Read(_headerData, 0, _headerData.Length);
+            // recalculate BlockAlign (older versions wrote incorrect values)
+            BlockAlign = BytesPerSample * NumberOfChannels;
+        }
+
+        public int BytesPerSample
+        {
+            get
+            {
+                // round up to the next byte (20 bit WAVs are like 24 bit WAVs with the 4 least significant bits unused)
+                return (BitsPerSample + 7) / 8;
+            }
         }
 
         public long BytesPerSecond
         {
             get
             {
-                return (long)SampleRate * (BitsPerSample / 8) * NumberOfChannels;
+                return (long)SampleRate * BlockAlign;
             }
         }
 
@@ -133,37 +140,45 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        internal void WriteHeader(Stream toStream, int sampleRate, int numberOfChannels, int bitsPerSample, int dataSize)
+        internal static void WriteHeader(Stream toStream, int sampleRate, int numberOfChannels, int bitsPerSample, int dataSize)
         {
-            const int fmtChunckSize = 16;
             const int headerSize = 44;
-            int byteRate = sampleRate * (bitsPerSample / 8) * numberOfChannels;
-            WriteInt32ToByteArray(_headerData, 4, dataSize + headerSize - 8);
-            WriteInt16ToByteArray(_headerData, 16, fmtChunckSize); //
-            WriteInt16ToByteArray(_headerData, ConstantHeaderSize + 2, numberOfChannels);
-            WriteInt32ToByteArray(_headerData, ConstantHeaderSize + 4, sampleRate);
-            WriteInt32ToByteArray(_headerData, ConstantHeaderSize + 8, byteRate);
-            WriteInt16ToByteArray(_headerData, ConstantHeaderSize + 14, bitsPerSample);
-            _headerData[ConstantHeaderSize + fmtChunckSize + 0] = Convert.ToByte('d');
-            _headerData[ConstantHeaderSize + fmtChunckSize + 1] = Convert.ToByte('a');
-            _headerData[ConstantHeaderSize + fmtChunckSize + 2] = Convert.ToByte('t');
-            _headerData[ConstantHeaderSize + fmtChunckSize + 3] = Convert.ToByte('a');
-            WriteInt32ToByteArray(_headerData, ConstantHeaderSize + fmtChunckSize + 4, dataSize);
-            toStream.Write(_headerData, 0, headerSize);
+            int bytesPerSample = (bitsPerSample + 7) / 8;
+            int blockAlign = numberOfChannels * bytesPerSample;
+            int byteRate = sampleRate * blockAlign;
+            byte[] header = new byte[headerSize];
+            WriteStringToByteArray(header, 0, "RIFF");
+            WriteInt32ToByteArray(header, 4, headerSize + dataSize - 8); // size of RIFF chunk's data
+            WriteStringToByteArray(header, 8, "WAVE");
+            WriteStringToByteArray(header, 12, "fmt ");
+            WriteInt32ToByteArray(header, 16, 16); // size of fmt chunk's data
+            WriteInt16ToByteArray(header, 20, 1); // format, 1 = PCM
+            WriteInt16ToByteArray(header, 22, numberOfChannels);
+            WriteInt32ToByteArray(header, 24, sampleRate);
+            WriteInt32ToByteArray(header, 28, byteRate);
+            WriteInt16ToByteArray(header, 32, blockAlign);
+            WriteInt16ToByteArray(header, 34, bitsPerSample);
+            WriteStringToByteArray(header, 36, "data");
+            WriteInt32ToByteArray(header, 40, dataSize);
+            toStream.Write(header, 0, headerSize);
         }
 
         private static void WriteInt16ToByteArray(byte[] headerData, int index, int value)
         {
             byte[] buffer = BitConverter.GetBytes((short)value);
-            for (int i = 0; i < buffer.Length; i++)
-                headerData[index + i] = buffer[i];
+            Buffer.BlockCopy(buffer, 0, headerData, index, buffer.Length);
         }
 
         private static void WriteInt32ToByteArray(byte[] headerData, int index, int value)
         {
             byte[] buffer = BitConverter.GetBytes(value);
-            for (int i = 0; i < buffer.Length; i++)
-                headerData[index + i] = buffer[i];
+            Buffer.BlockCopy(buffer, 0, headerData, index, buffer.Length);
+        }
+
+        private static void WriteStringToByteArray(byte[] headerData, int index, string value)
+        {
+            byte[] buffer = Encoding.ASCII.GetBytes(value);
+            Buffer.BlockCopy(buffer, 0, headerData, index, buffer.Length);
         }
     }
 
@@ -226,6 +241,12 @@ namespace Nikse.SubtitleEdit.Core
         /// <param name="delayInMilliseconds">Delay in milliseconds (normally zero)</param>
         public void GeneratePeakSamples(int peaksPerSecond, int delayInMilliseconds)
         {
+            if (Header.BytesPerSample == 4)
+            {
+                // Can't handle 32-bit samples due to the way the channel averaging is done
+                throw new Exception("32-bit samples are unsupported.");
+            }
+
             PeaksPerSecond = peaksPerSecond;
 
             ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataReader();
@@ -266,6 +287,12 @@ namespace Nikse.SubtitleEdit.Core
 
         public void GenerateAllSamples()
         {
+            if (Header.BytesPerSample == 4)
+            {
+                // Can't handle 32-bit samples due to the way the channel averaging is done
+                throw new Exception("32-bit samples are unsupported.");
+            }
+
             // determine how to read sample values
             ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataReader();
 
@@ -305,17 +332,20 @@ namespace Nikse.SubtitleEdit.Core
 
         public void WritePeakSamples(Stream stream)
         {
-            Header.WriteHeader(stream, PeaksPerSecond, 1, 16, PeakSamples.Count * 2);
+            WaveHeader.WriteHeader(stream, PeaksPerSecond, 1, Header.BytesPerSample * 8, PeakSamples.Count * Header.BytesPerSample);
             WritePeakData(stream);
             stream.Flush();
         }
 
         private void WritePeakData(Stream stream)
         {
+            var writeSample = GetSampleDataWriter();
+            byte[] buffer = new byte[4];
+            int bytesPerSample = Header.BytesPerSample;
             foreach (var value in PeakSamples)
             {
-                byte[] buffer = BitConverter.GetBytes((short)(value));
-                stream.Write(buffer, 0, buffer.Length);
+                writeSample(buffer, value);
+                stream.Write(buffer, 0, bytesPerSample);
             }
         }
 
@@ -327,37 +357,65 @@ namespace Nikse.SubtitleEdit.Core
 
         private int ReadValue8Bit(ref int index)
         {
-            int result = _data[index];
-            index += 2;
+            int result = sbyte.MinValue + _data[index];
+            index += 1;
             return result;
         }
 
         private int ReadValue16Bit(ref int index)
         {
-            int result = (short)(
-                (_data[index    ]     ) |
-                (_data[index + 1] << 8));
+            int result = (short)
+                ((_data[index    ]     ) |
+                 (_data[index + 1] << 8));
             index += 2;
             return result;
         }
 
         private int ReadValue24Bit(ref int index)
         {
-            var buffer = new byte[4];
-            buffer[0] = 0;
-            buffer[1] = _data[index];
-            buffer[2] = _data[index + 1];
-            buffer[3] = _data[index + 2];
-            int result = BitConverter.ToInt32(buffer, 0);
+            int result =
+                ((_data[index    ] <<  8) |
+                 (_data[index + 1] << 16) |
+                 (_data[index + 2] << 24)) >> 8;
             index += 3;
             return result;
         }
 
         private int ReadValue32Bit(ref int index)
         {
-            int result = BitConverter.ToInt32(_data, index);
+            int result =
+                (_data[index    ]      ) |
+                (_data[index + 1] <<  8) |
+                (_data[index + 2] << 16) |
+                (_data[index + 3] << 24);
             index += 4;
             return result;
+        }
+
+        private void WriteValue8Bit(byte[] buffer, int value)
+        {
+            buffer[0] = (byte)(value - sbyte.MinValue);
+        }
+
+        private void WriteValue16Bit(byte[] buffer, int value)
+        {
+            buffer[0] = (byte)value;
+            buffer[1] = (byte)(value >> 8);
+        }
+
+        private void WriteValue24Bit(byte[] buffer, int value)
+        {
+            buffer[0] = (byte)value;
+            buffer[1] = (byte)(value >> 8);
+            buffer[2] = (byte)(value >> 16);
+        }
+
+        private void WriteValue32Bit(byte[] buffer, int value)
+        {
+            buffer[0] = (byte)value;
+            buffer[1] = (byte)(value >> 8);
+            buffer[2] = (byte)(value >> 16);
+            buffer[3] = (byte)(value >> 24);
         }
 
         /// <summary>
@@ -366,25 +424,36 @@ namespace Nikse.SubtitleEdit.Core
         /// <returns>Sample data reader that matches bits per sample</returns>
         private ReadSampleDataValueDelegate GetSampleDataReader()
         {
-            ReadSampleDataValueDelegate readSampleDataValue;
-            switch (Header.BitsPerSample)
+            switch (Header.BytesPerSample)
             {
-                case 8:
-                    readSampleDataValue = ReadValue8Bit;
-                    break;
-                case 16:
-                    readSampleDataValue = ReadValue16Bit;
-                    break;
-                case 24:
-                    readSampleDataValue = ReadValue24Bit;
-                    break;
-                case 32:
-                    readSampleDataValue = ReadValue32Bit;
-                    break;
+                case 1:
+                    return ReadValue8Bit;
+                case 2:
+                    return ReadValue16Bit;
+                case 3:
+                    return ReadValue24Bit;
+                case 4:
+                    return ReadValue32Bit;
                 default:
                     throw new InvalidDataException("Cannot read bits per sample of " + Header.BitsPerSample);
             }
-            return readSampleDataValue;
+        }
+
+        private Action<byte[], int> GetSampleDataWriter()
+        {
+            switch (Header.BytesPerSample)
+            {
+                case 1:
+                    return WriteValue8Bit;
+                case 2:
+                    return WriteValue16Bit;
+                case 3:
+                    return WriteValue24Bit;
+                case 4:
+                    return WriteValue32Bit;
+                default:
+                    throw new InvalidDataException("Cannot write bits per sample of " + Header.BitsPerSample);
+            }
         }
 
         public void Dispose()
@@ -402,13 +471,19 @@ namespace Nikse.SubtitleEdit.Core
 
         public List<Bitmap> GenerateFourierData(int nfft, string spectrogramDirectory, int delayInMilliseconds)
         {
+            if (Header.BytesPerSample == 4)
+            {
+                // Can't handle 32-bit samples due to the way the channel averaging is done
+                throw new Exception("32-bit samples are unsupported.");
+            }
+
             const int bitmapWidth = 1024;
 
             List<Bitmap> bitmaps = new List<Bitmap>();
             SpectrogramDrawer drawer = new SpectrogramDrawer(nfft);
             Task saveImageTask = null;
             ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataReader();
-            double sampleScale = 1.0 / (Math.Pow(2.0, Header.BitsPerSample - 1) * Header.NumberOfChannels);
+            double sampleScale = 1.0 / (Math.Pow(2.0, Header.BytesPerSample * 8 - 1) * Header.NumberOfChannels);
 
             int delaySampleCount = (int)(Header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
 
