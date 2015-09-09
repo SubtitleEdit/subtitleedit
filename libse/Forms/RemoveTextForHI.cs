@@ -124,35 +124,37 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 !".?!".Contains(newText[newText.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
                                 line != line.ToUpper())
                             {
+                                newText += Environment.NewLine;
                                 if (pre.Contains("<i>") && line.Contains("</i>"))
-                                    newText = newText + Environment.NewLine + "<i>" + line;
+                                    newText += "<i>" + line;
                                 else if (pre.Contains("<b>") && line.Contains("</b>"))
-                                    newText = newText + Environment.NewLine + "<b>" + line;
+                                    newText += "<b>" + line;
                                 else if (pre.Contains("<u>") && line.Contains("</u>"))
-                                    newText = newText + Environment.NewLine + "<u>" + line;
+                                    newText += "<u>" + line;
                                 else if (pre.Contains('[') && line.Contains(']'))
-                                    newText = newText + Environment.NewLine + "[" + line;
+                                    newText += "[" + line;
                                 else if (pre.Contains('(') && line.EndsWith(')'))
-                                    newText = newText + Environment.NewLine + "(" + line;
+                                    newText += "(" + line;
                                 else
-                                    newText = newText + Environment.NewLine + line;
+                                    newText += line;
                             }
                             else if (count == 1 && newText.Length > 1 && indexOfColon > 15 && line.Substring(0, indexOfColon).Contains(' ') &&
                                 !".?!".Contains(newText[newText.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
                                 line != line.ToUpper())
                             {
+                                newText += Environment.NewLine;
                                 if (pre.Contains("<i>") && line.Contains("</i>"))
-                                    newText = newText + Environment.NewLine + "<i>" + line;
+                                    newText += "<i>" + line;
                                 else if (pre.Contains("<b>") && line.Contains("</b>"))
-                                    newText = newText + Environment.NewLine + "<b>" + line;
+                                    newText += "<b>" + line;
                                 else if (pre.Contains("<u>") && line.Contains("</u>"))
-                                    newText = newText + Environment.NewLine + "<u>" + line;
+                                    newText += "<u>" + line;
                                 else if (pre.Contains('[') && line.Contains(']'))
-                                    newText = newText + Environment.NewLine + "[" + line;
+                                    newText += "[" + line;
                                 else if (pre.Contains('(') && line.EndsWith(')'))
-                                    newText = newText + Environment.NewLine + "(" + line;
+                                    newText += "(" + line;
                                 else
-                                    newText = newText + Environment.NewLine + line;
+                                    newText += line;
                             }
                             else
                             {
@@ -175,16 +177,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                     var content = line.Substring(indexOfColon + 1).Trim();
                                     if (content.Length > 0)
                                     {
+                                        newText += Environment.NewLine;
                                         if (pre.Contains("<i>") && content.Contains("</i>"))
-                                            newText = newText + Environment.NewLine + "<i>" + content;
+                                            newText += "<i>" + content;
                                         else if (pre.Contains("<b>") && content.Contains("</b>"))
-                                            newText = newText + Environment.NewLine + "<b>" + content;
+                                            newText += "<b>" + content;
                                         else if (pre.Contains('[') && content.Contains(']'))
-                                            newText = newText + Environment.NewLine + "[" + content;
+                                            newText += "[" + content;
                                         else if (pre.Contains('(') && content.EndsWith(')'))
-                                            newText = newText + Environment.NewLine + "(" + content;
+                                            newText += "(" + content;
                                         else
-                                            newText = newText + Environment.NewLine + content;
+                                            newText += content;
 
                                         if (count == 0)
                                             removedInFirstLine = true;
@@ -221,6 +224,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         }
                         else
                         {
+                            char[] endChars = { '.', '?', '!' };
                             string s2 = line;
                             for (int k = 0; k < 2; k++)
                             {
@@ -231,7 +235,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                                     if (!Settings.RemoveTextBeforeColonOnlyUppercase || start == start.ToUpper())
                                     {
-                                        int endIndex = start.LastIndexOfAny(new[] { '.', '!', '?' });
+                                        int endIndex = start.LastIndexOfAny(endChars);
                                         if (colonIndex > 0 && colonIndex < s2.Length - 1)
                                         {
                                             if (char.IsDigit(s2[colonIndex - 1]) && char.IsDigit(s2[colonIndex + 1]))
@@ -249,8 +253,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                         removedInSecondLine = true;
                                 }
                             }
-                            newText = newText + Environment.NewLine + s2;
-                            newText = newText.Trim();
+                            newText = (newText + Environment.NewLine + s2).Trim();
                         }
                     }
                 }
@@ -274,7 +277,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         if (Utilities.LowercaseLetters.Contains(arr1[0])) // second line starts with lower case letter
                         {
                             char c = arr0[arr0.Length - 1];
-                            if (Utilities.LowercaseLetters.Contains(c) ||  c == ',') // first line ends with comma or lower case letter
+                            if (Utilities.LowercaseLetters.Contains(c) || c == ',') // first line ends with comma or lower case letter
                             {
                                 if (!arr1Stripable.Pre.Contains("..."))
                                 {
@@ -587,7 +590,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         text = text.Insert(index, " ");
                 }
                 index = text.IndexOf(Environment.NewLine + "<i>-", StringComparison.Ordinal);
-                if (index >=0 && text.Length - index > 5)
+                if (index >= 0 && text.Length - index > 5)
                 {
                     index += Environment.NewLine.Length + 4;
                     if (text[index] != ' ' && text[index] != '-')
@@ -1094,7 +1097,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
                 start = text.IndexOf(startTag, StringComparison.Ordinal);
             }
-            while (start >=0 && text.Length - start - startTag.Length >= endTag.Length);
+            while (start >= 0 && text.Length - start - startTag.Length >= endTag.Length);
 
             return text.FixExtraSpaces().TrimEnd();
         }
