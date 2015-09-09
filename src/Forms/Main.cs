@@ -14820,6 +14820,17 @@ namespace Nikse.SubtitleEdit.Forms
             return name;
         }
 
+        private bool IsFileValidForVisualizer(string fileName)
+        {
+            if (!_videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            using (var wpg = new WavePeakGenerator(_videoFileName))
+            {
+                return wpg.IsSupported;
+            }
+        }
+
         private void AudioWaveform_Click(object sender, EventArgs e)
         {
             if (audioVisualizer.WavePeaks == null)
@@ -14836,7 +14847,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var peakWaveFileName = GetPeakWaveFileName(_videoFileName);
                     var spectrogramFolder = GetSpectrogramFolder(_videoFileName);
 
-                    if (_videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+                    if (IsFileValidForVisualizer(_videoFileName))
                     {
                         addWaveform.InitializeViaWaveFile(_videoFileName, spectrogramFolder);
                     }
@@ -15186,9 +15197,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             string fileName = files[0];
             string ext = Path.GetExtension(fileName).ToLowerInvariant();
-            if (ext != ".wav")
+            if (ext != ".wav" || !IsFileValidForVisualizer(fileName))
             {
-                if (audioVisualizer.WavePeaks == null && (Utilities.GetMovieFileExtensions().Contains(ext) || ext == ".mp3" || ext == ".mka" || ext == ".m4a" || ext == ".wma"))
+                if (audioVisualizer.WavePeaks == null && (Utilities.GetMovieFileExtensions().Contains(ext) || ext == ".wav" || ext == ".mp3" || ext == ".mka" || ext == ".m4a" || ext == ".wma"))
                 {
                     _videoFileName = fileName;
                     AudioWaveform_Click(null, null);

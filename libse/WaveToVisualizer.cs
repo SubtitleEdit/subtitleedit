@@ -10,11 +10,12 @@ using System.Xml;
 namespace Nikse.SubtitleEdit.Core
 {
     /// <summary>
-    /// http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html
+    /// http://soundfile.sapp.org/doc/WaveFormat
     /// </summary>
     public class WaveHeader
     {
         private const int ConstantHeaderSize = 20;
+        public const int AudioFormatPcm = 1;
 
         public string ChunkId { get; private set; }
         public uint ChunkSize { get; private set; }
@@ -182,7 +183,7 @@ namespace Nikse.SubtitleEdit.Core
         }
     }
 
-    public class WavePeakGenerator
+    public class WavePeakGenerator : IDisposable
     {
         private Stream _stream;
         private byte[] _data;
@@ -222,7 +223,7 @@ namespace Nikse.SubtitleEdit.Core
         /// <param name="fileName">Wave file name</param>
         public WavePeakGenerator(string fileName)
         {
-            Initialize(new FileStream(fileName, FileMode.Open, FileAccess.Read));
+            Initialize(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
         }
 
         /// <summary>
@@ -232,6 +233,17 @@ namespace Nikse.SubtitleEdit.Core
         public WavePeakGenerator(Stream stream)
         {
             Initialize(stream);
+        }
+
+        /// <summary>
+        /// Returns true if the current wave file can be processed. Compressed wave files or 32-bit files are not supported
+        /// </summary>
+        public bool IsSupported
+        {
+            get
+            {
+                return Header.AudioFormat == WaveHeader.AudioFormatPcm && Header.Format == "WAVE" && Header.BytesPerSample < 4;
+            }
         }
 
         /// <summary>
