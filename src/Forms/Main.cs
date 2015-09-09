@@ -14819,7 +14819,7 @@ namespace Nikse.SubtitleEdit.Forms
             name = Path.Combine(dir, name);
             return name;
         }
-       
+
         private void AudioWaveform_Click(object sender, EventArgs e)
         {
             if (audioVisualizer.WavePeaks == null)
@@ -14829,7 +14829,7 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonOpenVideo_Click(sender, e);
                     if (string.IsNullOrEmpty(_videoFileName))
                         return;
-                }                
+                }
                 mediaPlayer.Pause();
                 using (var addWaveform = new AddWaveform())
                 {
@@ -14842,7 +14842,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        addWaveform.Initialize(_videoFileName, spectrogramFolder, _videoAudioTrackNumber);                        
+                        addWaveform.Initialize(_videoFileName, spectrogramFolder, _videoAudioTrackNumber);
                     }
                     if (addWaveform.ShowDialog() == DialogResult.OK)
                     {
@@ -18423,10 +18423,11 @@ namespace Nikse.SubtitleEdit.Forms
                 var timeCodeLines = new StringBuilder();
                 var textLines = new StringBuilder();
 
+                const string timeCodeWriteFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
                 foreach (var p in _subtitle.Paragraphs)
                 {
-                    timeCodeLines.AppendLine(string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds)));
-                    timeCodeLines.AppendLine(string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds)));
+                    timeCodeLines.AppendLine(string.Format(timeCodeWriteFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds)));
+                    timeCodeLines.AppendLine(string.Format(timeCodeWriteFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds)));
 
                     textLines.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "|"));
                     textLines.AppendLine();
