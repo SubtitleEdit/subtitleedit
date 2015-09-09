@@ -431,7 +431,7 @@ namespace Nikse.SubtitleEdit.Core
                 var noTagLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
                 if (noTagLines.Length == 2)
                 {
-                    var arr0 = noTagLines[0].Trim().TrimEnd('"').TrimEnd('\'').TrimEnd();
+                    var arr0 = noTagLines[0].Trim().TrimEnd('"', '\'').TrimEnd();
                     if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && ".?!)]".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–'))
                         return text;
                 }
@@ -537,22 +537,24 @@ namespace Nikse.SubtitleEdit.Core
 
             if (splitPos < 0)
             {
+                const string expectedChars1 = ".!?0123456789";
+                const string expectedChars2 = ".!?";
                 for (int j = 0; j < 15; j++)
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
                     {
-                        if (@".!?".Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && CanBreak(s, mid + j + 1, language))
+                        if (expectedChars2.Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && CanBreak(s, mid + j + 1, language))
                         {
                             splitPos = mid + j + 1;
-                            if (@".!?0123456789".Contains(s[splitPos]))
+                            if (expectedChars1.Contains(s[splitPos]))
                             { // do not break double/tripple end lines like "!!!" or "..."
                                 splitPos++;
-                                if (@".!?0123456789".Contains(s[mid + j + 1]))
+                                if (expectedChars1.Contains(s[mid + j + 1]))
                                     splitPos++;
                             }
                             break;
                         }
-                        if (@".!?".Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && CanBreak(s, mid - j, language))
+                        if (expectedChars2.Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && CanBreak(s, mid - j, language))
                         {
                             splitPos = mid - j;
                             splitPos++;
@@ -572,11 +574,11 @@ namespace Nikse.SubtitleEdit.Core
                 splitPos = -1;
             }
 
-            const string expectedChars1 = ".!?, ";
-            const string expectedChars2 = " .!?";
-            const string expectedChars3 = ".!?";
             if (splitPos < 0)
             {
+                const string expectedChars1 = ".!?, ";
+                const string expectedChars2 = " .!?";
+                const string expectedChars3 = ".!?";
                 for (int j = 0; j < 25; j++)
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
@@ -899,7 +901,7 @@ namespace Nikse.SubtitleEdit.Core
 
             try
             {
-                Encoding encoding =DetectEncoding.EncodingTools.DetectInputCodepage(buffer);
+                Encoding encoding = DetectEncoding.EncodingTools.DetectInputCodepage(buffer);
 
                 Encoding greekEncoding = Encoding.GetEncoding(1253); // Greek
                 if (GetCount(greekEncoding.GetString(buffer), AutoDetectWordsGreek) > 5)
@@ -3009,7 +3011,7 @@ namespace Nikse.SubtitleEdit.Core
 
             int lines = 1;
             int idx = text.IndexOf('\n');
-            while (idx != -1)
+            while (idx >= 0)
             {
                 lines++;
                 idx = text.IndexOf('\n', idx + 1);
