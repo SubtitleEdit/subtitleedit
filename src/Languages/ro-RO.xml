@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="română">
   <General>
     <Title>Subtitle Edit</Title>
@@ -128,7 +128,7 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
     <ExtractingAudio>Extragere fișier audio...</ExtractingAudio>
     <Calculating>Calculare...</Calculating>
     <Done>Gata</Done>
-   <Error>Eroare</Error>
+    <Error>Eroare</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Corectarea duratelor</Title>
@@ -307,8 +307,8 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
     <Generate>Generează</Generate>
   </DCinemaProperties>
   <DurationsBridgeGaps>
-	<Title>Șuntarea pauzelor mici din durate</Title>
-        <GapsBridgedX>Numărul pauzelor mici șuntate: {0}</GapsBridgedX>
+    <Title>Șuntarea pauzelor mici din durate</Title>
+    <GapsBridgedX>Numărul pauzelor mici șuntate: {0}</GapsBridgedX>
     <GapToNext>Pauză până la următoarea în secunde</GapToNext>
     <BridgeGapsSmallerThanXPart1>Pauze șuntate mai mici decât</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisecunde</BridgeGapsSmallerThanXPart2>
@@ -361,7 +361,7 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
     <SubtitleListReferenceCode>Codul de ref. al listei subtitrărilor</SubtitleListReferenceCode>
     <CountryOfOrigin>Țara de origine</CountryOfOrigin>
     <TimeCodeStatus>Starea codului de timp</TimeCodeStatus>
-   <TimeCodeStartOfProgramme>Cod de timp: Startul programului</TimeCodeStartOfProgramme>
+    <TimeCodeStartOfProgramme>Cod de timp: Startul programului</TimeCodeStartOfProgramme>
     <RevisionNumber>Numărul reviziei</RevisionNumber>
     <MaxNoOfDisplayableChars>Max# de caractere pe rând</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max# de rânduri</MaxNumberOfDisplayableRows>
@@ -1274,23 +1274,23 @@ Continui?</SubtitleAppendPrompt>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Subtitrarea cu coduri de timp are un număr diferit de linii ({0}) decât subtitrarea curentă ({1}) - continui oricum?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analiza fluxului de transport. Așteaptă, te rog...</ParsingTransportStream>
     <XPercentCompleted>{0}% completat</XPercentCompleted>
-	<ErrorLoadIdx>Nu se pot citi/edita fișiere .idx. Fișierele idx sunt o parte a fișierului perche idx/sub (numit și VobSub), iar SE poate deschide fișierul .sub.</ErrorLoadIdx>
+    <ErrorLoadIdx>Nu se pot citi/edita fișiere .idx. Fișierele idx sunt o parte a fișierului perche idx/sub (numit și VobSub), iar SE poate deschide fișierul .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Pare-se că fișierul este arhivat (rar). SE nu poate deschide fișiere arhivate.</ErrorLoadRar>
     <ErrorLoadZip>Pare-se că fișierul este arhivat (zip). SE nu poate deschide fișiere arhivate.</ErrorLoadZip>
-	<ErrorLoadPng>Pare-se că fișierul e o imagine PNG. SE nu poate deschide fișiere PNG.</ErrorLoadPng>
-    <ErrorLoadJpg>Pare-se că fișierul e o imagine JPG. SE nu poate deschide fișiere JPG.</ErrorLoadJpg>   
+    <ErrorLoadPng>Pare-se că fișierul e o imagine PNG. SE nu poate deschide fișiere PNG.</ErrorLoadPng>
+    <ErrorLoadJpg>Pare-se că fișierul e o imagine JPG. SE nu poate deschide fișiere JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Pare-se că fișierul e un ReScene .srr - nu o subtitrare.</ErrorLoadSrr>
     <ErrorLoadTorrent>Pare-se că fișierul e un BitTorrent - nu o subtitrare.</ErrorLoadTorrent>
-	<ErrorLoadBinaryZeroes>Scuze, acest fișier conține numai zerouri binare!
-	
-Dacă aveți de editat acest fișier cu SE ați putea descoperi un backup realizat prin meniul Fișier -&gt; Restaurare cu auto-backup...</ErrorLoadBinaryZeroes>	
+    <ErrorLoadBinaryZeroes>Scuze, acest fișier conține numai zerouri binare!
+
+Dacă aveți de editat acest fișier cu SE ați putea descoperi un backup realizat prin meniul Fișier -&gt; Restaurare cu auto-backup...</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Lansarea directorului neacceptată.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Conținutul VobSub criptat neacceptat.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Fișierele Blu-ray sup neacceptate.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>Fișierele DVD sup neacceptate.</NoSupportHereDvdSup>
     <NoSupportHereVobSub>Fișierele VobSub neacceptate.</NoSupportHereVobSub>
     <NoSupportHereDivx>Fișierele Divx files neacceptate.</NoSupportHereDivx>
-	</Main>
+  </Main>
   <MatroskaSubtitleChooser>
     <Title>Alegere subtitrare din fișier Matroska</Title>
     <PleaseChoose>Sunt mai multe subtitrări: te rog, alege una</PleaseChoose>
@@ -2041,9 +2041,9 @@ Păstrezi schimbările?</KeepChangesMessage>
     <InspectCompareMatchesForCurrentImage>Inspect. potrivirile comparate ptr. imaginea curentă...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Editează ultimele modificări la imaginea comparată...</EditLastAdditions>
     <SetUnitalicFactor>Corectează factorul ne-italic...</SetUnitalicFactor>
-   <DiscardTitle>Renunți la schimbările făcute în OCR?</DiscardTitle>
+    <DiscardTitle>Renunți la schimbările făcute în OCR?</DiscardTitle>
     <DiscardText>Vrei să renunți la schimbările făcute în sesiunea actuală OCR?</DiscardText>
-	</VobSubOcr>
+  </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Imagine manuală pentru text</Title>
     <ShrinkSelection>Reduce selecția</ShrinkSelection>
