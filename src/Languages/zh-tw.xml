@@ -1424,7 +1424,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <Tools>工具</Tools>
     <WordLists>字彙表</WordLists>
     <SsaStyle>ASS/SSA 樣式</SsaStyle>
-    <Proxy>代理</Proxy>
     <ShowToolBarButtons>顯示工具列按鈕</ShowToolBarButtons>
     <New>新增</New>
     <Open>開啟</Open>

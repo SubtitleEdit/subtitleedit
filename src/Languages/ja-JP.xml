@@ -143,8 +143,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <OverwriteExistingFiles>既存のファイルを上書きする</OverwriteExistingFiles>
     <Style>スタイル...</Style>
     <ConvertOptions>変換オプション</ConvertOptions>
-    <AutoBreakLongLines>長い行を自動改行する</AutoBreakLongLines>
-    <FixItalics>斜体を修正する</FixItalics>
     <RemoveFormatting>整形タグを削除する</RemoveFormatting>
     <RemoveTextForHI>HI 用テキストを削除する</RemoveTextForHI>
     <RedoCasing>大文字と小文字をやり直す</RedoCasing>
@@ -304,7 +302,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <BorderColor>枠の色</BorderColor>
     <BorderWidth>枠の幅</BorderWidth>
     <ImageFormat>イメージ フォーマット</ImageFormat>
-    <AntiAlias>アンチ エイリアス</AntiAlias>
     <SideBySide3D>サイド バイ サイド 3D</SideBySide3D>
     <ExportAllLines>すべての行のエクスポート...</ExportAllLines>
     <XImagesSavedInY>{0} 個のイメージが {1} に保存されました</XImagesSavedInY>
@@ -1179,7 +1176,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <Tools>ツール</Tools>
     <WordLists>単語の一覧</WordLists>
     <SsaStyle>SSA スタイル</SsaStyle>
-    <Proxy>プロキシ</Proxy>
     <ShowToolBarButtons>表示するツール バー ボタン</ShowToolBarButtons>
     <New>新規</New>
     <Open>開く</Open>
@@ -1244,8 +1240,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <ShowStopButton>停止ボタンを表示する</ShowStopButton>
     <ShowMuteButton>ミュート ボタンを表示する</ShowMuteButton>
     <ShowFullscreenButton>全画面表示ボタンを表示する</ShowFullscreenButton>
-    <DefaultVolume>既定の音量</DefaultVolume>
-    <VolumeNotes>0 が無音、100 が最大の音量です</VolumeNotes>
     <PreviewFontSize>字幕プレビューのフォント サイズ</PreviewFontSize>
     <MainWindowVideoControls>メイン ウィンドウのビデオ コントロール</MainWindowVideoControls>
     <CustomSearchTextAndUrl>カスタム検索のテキストと URL</CustomSearchTextAndUrl>
@@ -1267,7 +1261,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <SubStationAlphaStyle>Sub Station Alpha スタイル</SubStationAlphaStyle>
     <ChooseFont>フォントの選択</ChooseFont>
     <ChooseColor>色の選択</ChooseColor>
-    <Example>例</Example>
     <Testing123>テスト中 123...</Testing123>
     <Language>言語</Language>
     <NamesIgnoreLists>names/ignore の一覧 (大小区別)</NamesIgnoreLists>
@@ -1317,7 +1310,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <AdjustStartDownEndUpAndGoToNext>キー↓=開始の設定、キー↑=終了を設定して次へ</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>選択された行を 100 ミリ秒進める</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>選択された行を 100 ミリ秒戻す</AdjustSelected100MsBack>
-    <AdjustSetStartTimeOnly>終了時間を維持して開始時間を設定</AdjustSetStartTimeOnly>
     <MainCreateStartDownEndUp>キー↓で新規作成、キー↑で終了時間の設定</MainCreateStartDownEndUp>
     <MergeDialog>会話の結合 (ダッシュの挿入)</MergeDialog>
     <GoToNext>次の行へ移動</GoToNext>
