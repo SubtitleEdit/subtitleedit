@@ -1488,7 +1488,6 @@ Command line: {1} {2}
     <Tools>工具</Tools>
     <WordLists>词汇表</WordLists>
     <SsaStyle>SSA 样式</SsaStyle>
-    <Proxy>代理</Proxy>
     <ShowToolBarButtons>显示工具栏按钮</ShowToolBarButtons>
     <New>新建</New>
     <Open>打开</Open>

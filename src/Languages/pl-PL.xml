@@ -340,7 +340,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Title>Wybierz języka</Title>
     <ChooseLanguageStreamId>Wybierz język (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Nieznany język</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Obraz napisów</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -1814,8 +1814,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <LineMaximumLength>Maksymalna długość linii</LineMaximumLength>
     <LineContinuationBeginEndStrings>Znak kontynuacji na początku/końcu linii</LineContinuationBeginEndStrings>
     <NumberOfSplits>Ilość podzielonych: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków </LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków </LongestLineIsXAtY>
+    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków</LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Podziel napisy</Title>

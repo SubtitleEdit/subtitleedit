@@ -146,8 +146,6 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <OverwriteExistingFiles>Ghi đè lên tập tin hiện có</OverwriteExistingFiles>
     <Style>Kiểu dáng...</Style>
     <ConvertOptions>Cài đặt cách chuyển đổi</ConvertOptions>
-    <AutoBreakLongLines>Tự động - ngắt các dòng dài</AutoBreakLongLines>
-    <FixItalics>Sữa lỗi chữ in nghiêng</FixItalics>
     <RemoveFormatting>Gỡ định dạng thẻ</RemoveFormatting>
     <RemoveTextForHI>Gỡ bỏ văn bản của HI</RemoveTextForHI>
     <RedoCasing>Quay lại cách hiển thị trước</RedoCasing>
@@ -317,7 +315,6 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <BorderColor>Màu sắc đường biên</BorderColor>
     <BorderWidth>Chiều rộng đường biên</BorderWidth>
     <ImageFormat>Định dạng hình ảnh</ImageFormat>
-    <AntiAlias>Chống bí danh</AntiAlias>
     <SideBySide3D>Nửa bên cạnh nhau</SideBySide3D>
     <ExportAllLines>Xuất tất cả các dòng...</ExportAllLines>
     <XImagesSavedInY>{0} Hình ảnh được lưu trong {1}</XImagesSavedInY>
@@ -1194,7 +1191,6 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <Tools>Công cụ</Tools>
     <WordLists>Danh sách các từ</WordLists>
     <SsaStyle>Kiểu dáng ASS/SSA</SsaStyle>
-    <Proxy>Proxy</Proxy>
     <ShowToolBarButtons>Hiển thị thanh công cụ</ShowToolBarButtons>
     <New>Mới</New>
     <Open>Mở</Open>
@@ -1259,8 +1255,6 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <ShowStopButton>Hiển thị nút dừng</ShowStopButton>
     <ShowMuteButton>Hiển thị nút ngắt</ShowMuteButton>
     <ShowFullscreenButton>Hiển thị nút toàn màn hình</ShowFullscreenButton>
-    <DefaultVolume>Âm lượng mặc định</DefaultVolume>
-    <VolumeNotes>0 là không có âm thanh, 100 là âm lượng cao nhất</VolumeNotes>
     <PreviewFontSize>Xem trước kích thước phông chữ</PreviewFontSize>
     <MainWindowVideoControls>Cửa sổ chính điều khiển video</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Tự chọn để tìm văn bản và URL</CustomSearchTextAndUrl>
@@ -1282,7 +1276,6 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <SubStationAlphaStyle>Kiểu dáng Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Chọn phông chữ</ChooseFont>
     <ChooseColor>Chọn màu sắc</ChooseColor>
-    <Example>Ví dụ</Example>
     <Testing123>Kiểm tra 123...</Testing123>
     <Language>Ngôn ngữ</Language>
     <NamesIgnoreLists>Tên/danh sách bỏ qua(THĐB)</NamesIgnoreLists>
@@ -1332,7 +1325,6 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <AdjustStartDownEndUpAndGoToNext>Khóa bên dưới = thiết lập lúc bắt đầu, Khóa bên trên =thiết lập lúc kết thúc và đi tới</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Di chuyển dòng được lựa chọn tới 100 ms phía trước</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Di chuyển dòng được lựa chọn 100 ms lùi lại</AdjustSelected100MsBack>
-    <AdjustSetStartTimeOnly>Thiết lập thời gian bắt đầu, giữ đến lúc kết thúc</AdjustSetStartTimeOnly>
     <MainCreateStartDownEndUp>Tạo mới khóa bên dưới, thiết lập thời gian kết thúc tại khóa bên trên</MainCreateStartDownEndUp>
     <MergeDialog>Ghép các đối thoại (chèn thêm "-" )</MergeDialog>
     <GoToNext>Tơi dòng tiếp theo</GoToNext>

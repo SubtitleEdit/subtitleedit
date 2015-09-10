@@ -5,6 +5,7 @@
     <Version>3.2</Version>
     <TranslatedBy>Превод: Rancher</TranslatedBy>
     <CultureName>sr-Cyrl-RS</CultureName>
+    <HelpFile />
     <Ok>&amp;У реду</Ok>
     <Cancel>&amp;Откажи</Cancel>
     <Apply>Примена</Apply>
@@ -104,12 +105,8 @@
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Преламање линија</TitleAutoBreak>
     <TitleUnbreak>Уклањање сувишних редова</TitleUnbreak>
-    <LineNumber>Број линије</LineNumber>
-    <Before>Пре</Before>
-    <After>После</After>
     <LinesFoundX>Пронађено линија: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>Преломи линије дуже од:</OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesShorterThan>Споји линије краће од:</OnlyUnbreakLinesShorterThan>
   </AutoBreakUnbreakLines>
   <ChangeCasing>
     <Title>Промена величине слова</Title>
@@ -126,9 +123,6 @@
     <NamesFoundInSubtitleX>Пронађено назива: {0}</NamesFoundInSubtitleX>
     <Enabled>Примена</Enabled>
     <Name>Назив</Name>
-    <LineNumber>Линија</LineNumber>
-    <Before>Пре</Before>
-    <After>После</After>
     <LinesFoundX>Пронађено линија: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
@@ -236,7 +230,6 @@
     <FontColor>Боја &amp;фонта</FontColor>
     <BorderColor>Боја &amp;ивице</BorderColor>
     <BorderWidth>Ширина ивице:</BorderWidth>
-    <AntiAlias>&amp;Умекшавање ивица</AntiAlias>
     <ExportAllLines>И&amp;звези све линије...</ExportAllLines>
     <XImagesSavedInY>Сачувано слика: {0}. Одредиште: {1}</XImagesSavedInY>
   </ExportPngXml>
@@ -264,10 +257,7 @@
     <Step2>Корак 2 од 2: Проверите исправност</Step2>
     <Fixes>Исправке</Fixes>
     <Log>Извештај</Log>
-    <LineNumber>Број линије</LineNumber>
     <Function>Исправка</Function>
-    <Before>Пре</Before>
-    <After>После</After>
     <RemovedEmptyLine>Празна линија је уклоњена.</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Празна линија на врху је уклоњена.</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Празна линија на дну је уклоњена.</RemovedEmptyLineAtBottom>
@@ -420,7 +410,6 @@
     <Auto>С&amp;амоподешено</Auto>
     <Fixed>По&amp;деси:</Fixed>
     <Refresh>&amp;Освежи</Refresh>
-    <Next>&amp;Напред →</Next>
     <TextFiles>Текстуалне датотеке</TextFiles>
     <PreviewLinesModifiedX>Преглед – измењено редова: {0}</PreviewLinesModifiedX>
   </ImportText>
@@ -481,7 +470,6 @@
         <TextSingleLineMaximumLength>највећој дужини линије</TextSingleLineMaximumLength>
         <TextTotalLength>укупној дужини</TextTotalLength>
         <TextNumberOfLines>броју линија</TextNumberOfLines>
-        <ShowOriginalTextInAudioAndVideoPreview>При&amp;кажи изворни текст у прегледима звука и слике</ShowOriginalTextInAudioAndVideoPreview>
         <MakeNewEmptyTranslationFromCurrentSubtitle>&amp;Начини празан превод из текућег титла</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>Раз&amp;двоји титл...</SplitSubtitle>
         <AppendSubtitle>Прик&amp;ачи титл...</AppendSubtitle>
@@ -852,7 +840,6 @@
     <MaximumCharacters>Највише знакова по реду:</MaximumCharacters>
     <MaximumMillisecondsBetween>Највише милисекунди између линија:</MaximumMillisecondsBetween>
     <NumberOfMergesX>Број спајања: {0}</NumberOfMergesX>
-    <LineNumber>Број линије</LineNumber>
     <MergedText>Спојен текст</MergedText>
     <OnlyMergeContinuationLines>&amp;Споји само трајне линије</OnlyMergeContinuationLines>
   </MergedShortLines>
@@ -863,9 +850,6 @@
     <Normal>&amp;Обична</Normal>
     <CaseSensitive>&amp;Подударање</CaseSensitive>
     <RegularExpression>&amp;Регуларан израз</RegularExpression>
-    <LineNumber>Линија</LineNumber>
-    <Before>Пре</Before>
-    <After>После</After>
     <LinesFoundX>Пронађено линија: {0}</LinesFoundX>
     <Delete>Обриши</Delete>
     <Add>&amp;Додај</Add>
@@ -906,9 +890,6 @@
     <RemoveTextBeforeColon>У&amp;клони текст пре двотачке</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>&amp;Само ако је текст великим словима</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>С&amp;амо ако је у одвојеној линији</OnlyIfInSeparateLine>
-    <LineNumber>Број линије</LineNumber>
-    <Before>Пре</Before>
-    <After>После</After>
     <LinesFoundX>Пронађено линија: {0}</LinesFoundX>
     <RemoveTextIfContains>Ук&amp;лони текст ако садржи:</RemoveTextIfContains>
     <RemoveInterjections>Укл&amp;они узвике</RemoveInterjections>
@@ -948,7 +929,6 @@
     <Tools>Алатке</Tools>
     <WordLists>Списак речи</WordLists>
     <SsaStyle>SSA стил</SsaStyle>
-    <Proxy>Посредник</Proxy>
     <ShowToolBarButtons>Приказ икона</ShowToolBarButtons>
     <New>Ново</New>
     <Open>Отвори...</Open>
@@ -1000,8 +980,6 @@
     <VlcMediaPlayer>ВЛЦ медија плејер</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll из ВЛЦ медија плејера 1.1.0 или новијег издања</VlcMediaPlayerDescription>
     <ShowStopButton>&amp;Дугме за заустављање</ShowStopButton>
-    <DefaultVolume>Јачина звука:</DefaultVolume>
-    <VolumeNotes>(0 – искључено, 100 – најгласније)</VolumeNotes>
     <PreviewFontSize>Величина фонта:</PreviewFontSize>
     <MainWindowVideoControls>Главни прозор за управљање видео снимком</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Адреса за претрагу речи:</CustomSearchTextAndUrl>
@@ -1022,7 +1000,6 @@
     <SubStationAlphaStyle>SSA стил</SubStationAlphaStyle>
     <ChooseFont>Изабери фонт...</ChooseFont>
     <ChooseColor>Изабери боју...</ChooseColor>
-    <Example>Пример</Example>
     <Testing123>Провера 123...</Testing123>
     <Language>Језик:</Language>
     <NamesIgnoreLists>Називи/изузеци</NamesIgnoreLists>
