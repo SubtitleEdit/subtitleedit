@@ -423,7 +423,9 @@ namespace Nikse.SubtitleEdit.Controls
                     foreach (int index in selectedIndices)
                         AddParagraph(paragraphs[index], secondsToPosition);
                 }
-                catch { }
+                catch
+                {
+                }
 
                 AddParagraph(additionalSelectedParagraph, secondsToPosition);
             }
