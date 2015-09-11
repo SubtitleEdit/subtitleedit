@@ -708,7 +708,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         interjectionList.Add(upper);
                         var lower = s.ToLower();
                         interjectionList.Add(lower);
-                        interjectionList.Add(upper[0] + lower.Substring(1));
+                        interjectionList.Add(lower.CapitalizeFirstLetter());
                     }
                 }
                 _interjectionList = new List<string>(interjectionList);

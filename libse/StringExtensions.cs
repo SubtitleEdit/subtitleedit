@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core
@@ -183,6 +184,18 @@ namespace Nikse.SubtitleEdit.Core
                     sb.Append(ch);
             }
             return sb.ToString();
+        }
+
+        public static string CapitalizeFirstLetter(this string s, CultureInfo ci = null)
+        {
+            var si = new StringInfo(s);
+            if (ci == null)
+                ci = CultureInfo.CurrentCulture;
+            if (si.LengthInTextElements > 0)
+                s = si.SubstringByTextElements(0, 1).ToUpper(ci);
+            if (si.LengthInTextElements > 1)
+                s += si.SubstringByTextElements(1);
+            return s;
         }
 
     }

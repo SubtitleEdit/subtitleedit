@@ -30,12 +30,11 @@ namespace Nikse.SubtitleEdit.Forms
                 _cultureName = cultureName;
                 try
                 {
-                    var ci = CultureInfo.GetCultureInfo(cultureName);
-                    _displayName = char.ToUpper(displayName[0], ci) + displayName.Substring(1);
+                    _displayName = displayName.CapitalizeFirstLetter(CultureInfo.GetCultureInfo(cultureName));
                 }
                 catch
                 {
-                    _displayName = char.ToUpperInvariant(displayName[0]) + displayName.Substring(1);
+                    _displayName = displayName.CapitalizeFirstLetter(CultureInfo.InvariantCulture);
                 }
             }
 
