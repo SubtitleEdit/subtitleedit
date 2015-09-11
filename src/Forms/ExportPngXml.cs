@@ -376,7 +376,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox)
                 {
-                    parameter.BoxSingleLine = true;
+                    parameter.BoxSingleLine = false;
                     parameter.BackgroundColor = panelBorderColor.BackColor;
                     parameter.BorderWidth = 0;
                 }
@@ -1670,6 +1670,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox)
             {
+                mbp.BoxSingleLine = false;
                 _borderWidth = 0;
                 mbp.BackgroundColor = panelBorderColor.BackColor;
             }
