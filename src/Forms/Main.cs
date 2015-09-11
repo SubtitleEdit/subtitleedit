@@ -6004,9 +6004,7 @@ namespace Nikse.SubtitleEdit.Forms
             string voice = (sender as ToolStripItem).Text;
             if (!string.IsNullOrEmpty(voice))
             {
-                var tb = textBoxListViewText;
-                if (textBoxListViewTextAlternate.Focused)
-                    tb = textBoxListViewTextAlternate;
+                var tb = GetFocusedTextBox();
 
                 if (tb.SelectionLength > 0)
                 {
@@ -6030,9 +6028,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string voice = form.VoiceName;
                     if (!string.IsNullOrEmpty(voice))
                     {
-                        var tb = textBoxListViewText;
-                        if (textBoxListViewTextAlternate.Focused)
-                            tb = textBoxListViewTextAlternate;
+                        var tb = GetFocusedTextBox();
 
                         if (tb.SelectionLength > 0)
                         {
@@ -15319,51 +15315,32 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (textBoxListViewTextAlternate.Focused)
-                textBoxListViewTextAlternate.SelectAll();
-            else
-                textBoxListViewText.SelectAll();
+            GetFocusedTextBox().SelectAll();
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (textBoxListViewTextAlternate.Focused)
-                textBoxListViewTextAlternate.Cut();
-            else
-                textBoxListViewText.Cut();
+            GetFocusedTextBox().Cut();
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (textBoxListViewTextAlternate.Focused)
-                textBoxListViewTextAlternate.Copy();
-            else
-                textBoxListViewText.Copy();
+            GetFocusedTextBox().Copy();
         }
 
         private void PasteToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (textBoxListViewTextAlternate.Focused)
-                textBoxListViewTextAlternate.Paste();
-            else
-                textBoxListViewText.Paste();
+            GetFocusedTextBox().Paste();
         }
 
         private void DeleteToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (textBoxListViewTextAlternate.Focused)
-                textBoxListViewTextAlternate.SelectedText = string.Empty;
-            else
-                textBoxListViewText.SelectedText = string.Empty;
+            GetFocusedTextBox().SelectedText = string.Empty;
         }
 
         private void NormalToolStripMenuItem1Click(object sender, EventArgs e)
         {
-            TextBox tb;
-            if (textBoxListViewTextAlternate.Focused)
-                tb = textBoxListViewTextAlternate;
-            else
-                tb = textBoxListViewText;
+            var tb = GetFocusedTextBox();
 
             string text = tb.SelectedText;
             int selectionStart = tb.SelectionStart;
@@ -15373,13 +15350,14 @@ namespace Nikse.SubtitleEdit.Forms
             tb.SelectionLength = text.Length;
         }
 
+        private TextBox GetFocusedTextBox()
+        {
+            return textBoxListViewTextAlternate.Focused ? textBoxListViewTextAlternate : textBoxListViewText;
+        }
+
         private void TextBoxListViewToggleTag(string tag)
         {
-            TextBox tb;
-            if (textBoxListViewTextAlternate.Focused)
-                tb = textBoxListViewTextAlternate;
-            else
-                tb = textBoxListViewText;
+            var tb = GetFocusedTextBox();
 
             string text = string.Empty;
             int selectionStart = tb.SelectionStart;
@@ -15554,11 +15532,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ColorToolStripMenuItem1Click(object sender, EventArgs e)
         {
-            TextBox tb;
-            if (textBoxListViewTextAlternate.Focused)
-                tb = textBoxListViewTextAlternate;
-            else
-                tb = textBoxListViewText;
+            var tb = GetFocusedTextBox();
 
             //color
             string text = tb.SelectedText;
@@ -15605,11 +15579,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FontNameToolStripMenuItemClick(object sender, EventArgs e)
         {
-            TextBox tb;
-            if (textBoxListViewTextAlternate.Focused)
-                tb = textBoxListViewTextAlternate;
-            else
-                tb = textBoxListViewText;
+            var tb = GetFocusedTextBox();
 
             // font name
             string text = tb.SelectedText;
@@ -17046,9 +17016,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemSplitTextAtCursorClick(object sender, EventArgs e)
         {
-            TextBox tb = textBoxListViewText;
-            if (textBoxListViewTextAlternate.Focused)
-                tb = textBoxListViewTextAlternate;
+            var tb = GetFocusedTextBox();
 
             int? pos = null;
             if (tb.SelectionStart > 2 && tb.SelectionStart < tb.Text.Length - 2)
@@ -17060,9 +17028,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ContextMenuStripTextBoxListViewOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            TextBox tb = textBoxListViewText;
-            if (textBoxListViewTextAlternate.Focused)
-                tb = textBoxListViewTextAlternate;
+            var tb = GetFocusedTextBox();
             toolStripMenuItemSplitTextAtCursor.Visible = tb.Text.Length > 5 && tb.SelectionStart > 2 && tb.SelectionStart < tb.Text.Length - 2;
 
             if (IsUnicode)
@@ -17368,11 +17334,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!string.IsNullOrEmpty(selectedText))
                 {
                     selectedText = selectedText.Trim();
-                    selectedText = selectedText.TrimEnd('.');
-                    selectedText = selectedText.TrimEnd(',');
-                    selectedText = selectedText.TrimEnd('!');
-                    selectedText = selectedText.TrimEnd('?');
-                    selectedText = selectedText.Trim();
+                    selectedText = selectedText.TrimEnd('.', ',', '!', '?').TrimEnd();
                     if (!string.IsNullOrEmpty(selectedText) && selectedText != textBoxSearchWord.Text)
                     {
                         textBoxSearchWord.Text = HtmlUtil.RemoveHtmlTags(selectedText);
@@ -17842,11 +17804,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SuperscriptToolStripMenuItemClick(object sender, EventArgs e)
         {
-            TextBox tb;
-            if (textBoxListViewTextAlternate.Focused)
-                tb = textBoxListViewTextAlternate;
-            else
-                tb = textBoxListViewText;
+            var tb = GetFocusedTextBox();
 
             string text = tb.SelectedText;
             int selectionStart = tb.SelectionStart;
@@ -17858,11 +17816,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubscriptToolStripMenuItemClick(object sender, EventArgs e)
         {
-            TextBox tb;
-            if (textBoxListViewTextAlternate.Focused)
-                tb = textBoxListViewTextAlternate;
-            else
-                tb = textBoxListViewText;
+            var tb = GetFocusedTextBox();
 
             string text = tb.SelectedText;
             int selectionStart = tb.SelectionStart;
