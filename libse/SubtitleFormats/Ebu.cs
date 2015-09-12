@@ -473,7 +473,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (EbuUiHelper == null)
                 return;
 
-            if (subtitle.Header != null && subtitle.Header.Length > 1024 && (subtitle.Header.Contains("STL24") || subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL29") || subtitle.Header.Contains("STL30")))
+            if (subtitle.Header != null && subtitle.Header.Length == 1024 && (subtitle.Header.Contains("STL24") || subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL29") || subtitle.Header.Contains("STL30")))
             {
                 header = ReadHeader(Encoding.UTF8.GetBytes(subtitle.Header));
                 EbuUiHelper.Initialize(header, 0, null, subtitle);
