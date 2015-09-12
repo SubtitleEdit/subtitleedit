@@ -14818,10 +14818,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool IsFileValidForVisualizer(string fileName)
         {
-            if (!_videoFileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+            if (!fileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
                 return false;
 
-            using (var wpg = new WavePeakGenerator(_videoFileName))
+            using (var wpg = new WavePeakGenerator(fileName))
             {
                 return wpg.IsSupported;
             }
