@@ -1029,11 +1029,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             break;
                         }
-                        if (b == textFieldCarriageReturnLineFeed)
-                        {
-                            sb.AppendLine();
-                        }
-                        else if (index + 16 + i + 1 < buffer.Length)
+                        if (index + 16 + i + 1 < buffer.Length)
                         {
                             byte next = buffer[index + 17 + i];
                             if (b == 0 && next == textFieldTerminator)
