@@ -12,6 +12,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class Ebu : SubtitleFormat
     {
 
+        const string LanguageCodeChinese = "75";
+
         public interface IEbuUiHelper
         {
             void Initialize(EbuGeneralSubtitleInformation header, byte justificationCode, string fileName, Subtitle subtitle);
@@ -198,7 +200,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             public byte[] GetBytes(EbuGeneralSubtitleInformation header)
             {
-                byte[] buffer = new byte[128]; // Text and Timing Information (TTI) block consists of 128 bytes
+                var buffer = new byte[128]; // Text and Timing Information (TTI) block consists of 128 bytes
 
                 buffer[0] = SubtitleGroupNumber;
                 byte[] temp = BitConverter.GetBytes(SubtitleNumber);
@@ -626,7 +628,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             byte lastExtensionBlockNumber = 0xff;
             JustificationCodes = new List<int>();
             VerticalPositions = new List<int>();
-            foreach (EbuTextTimingInformation tti in ReadTTI(buffer, header))
+            foreach (EbuTextTimingInformation tti in ReadTextAndTiming(buffer, header))
             {
                 if (tti.ExtensionBlockNumber != 0xfe) // FEh : Reserved for User Data
                 {
@@ -694,6 +696,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string GetCharacter(out bool skipNext, EbuGeneralSubtitleInformation header, byte[] buffer, int index)
         {
             skipNext = false;
+
+            if (header.LanguageCode == LanguageCodeChinese)
+            {
+                skipNext = true;
+                return Encoding.GetEncoding(1200).GetString(buffer, index, 2); // 16-bit Unicode
+            }
+
             if (header.CharacterCodeTableNumber == "00")
             {
                 //note that 0xC1—0xCF combines characters - http://en.wikipedia.org/wiki/ISO/IEC_6937
@@ -941,33 +950,32 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             if (header.CharacterCodeTableNumber == "01") // Latin/Cyrillic alphabet - from ISO 8859/5-1988
             {
-                var encoding = Encoding.GetEncoding("ISO-8859-5");
-                return encoding.GetString(buffer, index, 1);
+                return Encoding.GetEncoding("ISO-8859-5").GetString(buffer, index, 1);
             }
             if (header.CharacterCodeTableNumber == "02") // Latin/Arabic alphabet - from ISO 8859/6-1987
             {
-                var encoding = Encoding.GetEncoding("ISO-8859-6");
-                return encoding.GetString(buffer, index, 1);
+                return Encoding.GetEncoding("ISO-8859-6").GetString(buffer, index, 1);
             }
             if (header.CharacterCodeTableNumber == "03") // Latin/Greek alphabet - from ISO 8859/7-1987
             {
-                var encoding = Encoding.GetEncoding("ISO-8859-7"); // or ISO-8859-1 ?
-                return encoding.GetString(buffer, index, 1);
+                return Encoding.GetEncoding("ISO-8859-7").GetString(buffer, index, 1); // or ISO-8859-1 ?
             }
             if (header.CharacterCodeTableNumber == "04") // Latin/Hebrew alphabet - from ISO 8859/8-1988
             {
-                var encoding = Encoding.GetEncoding("ISO-8859-8");
-                return encoding.GetString(buffer, index, 1);
+                return Encoding.GetEncoding("ISO-8859-8").GetString(buffer, index, 1);
             }
 
             return string.Empty;
         }
 
-        private IEnumerable<EbuTextTimingInformation> ReadTTI(byte[] buffer, EbuGeneralSubtitleInformation header)
+        /// <summary>
+        /// Read TTI block
+        /// </summary>
+        private IEnumerable<EbuTextTimingInformation> ReadTextAndTiming(byte[] buffer, EbuGeneralSubtitleInformation header)
         {
-            const int startOfTTI = 1024;
+            const int startOfTextAndTimingBlock = 1024;
             const int ttiSize = 128;
-            const byte textFieldCRLF = 0x8A;
+            const byte textFieldCarriageReturnLineFeed = 0x8A;
             const byte textFieldTerminator = 0x8F;
             const byte italicsOn = 0x80;
             const byte italicsOff = 0x81;
@@ -975,7 +983,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const byte underlineOff = 0x83;
 
             var list = new List<EbuTextTimingInformation>();
-            int index = startOfTTI;
+            int index = startOfTextAndTimingBlock;
             while (index + ttiSize <= buffer.Length)
             {
                 var tti = new EbuTextTimingInformation();
@@ -1007,16 +1015,35 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string endTags = string.Empty;
                 string color = string.Empty;
                 string lastColor = string.Empty;
+
                 for (int i = 0; i < 112; i++) // skip fist byte (seems to be always 0xd/32/space - thx Iban)
                 {
                     byte b = buffer[index + 16 + i];
-                    if (b <= 0xf && (i == 0 || i == 2 || i == 3))
-                    {
-                        // not used, 0=0xd, 2=0xb, 3=0xb
-                    }
-                    else if (skipNext)
+                    if (skipNext)
                     {
                         skipNext = false;
+                    }
+                    else if (header.LanguageCode == LanguageCodeChinese)
+                    {
+                        if (b == textFieldTerminator)
+                        {
+                            break;
+                        }
+                        if (b == textFieldCarriageReturnLineFeed)
+                        {
+                            sb.AppendLine();
+                        }
+                        else if (index + 16 + i + 1 < buffer.Length)
+                        {
+                            byte next = buffer[index + 17 + i];
+                            if (b == 0 && next == textFieldTerminator)
+                                break;
+                            sb.Append(GetCharacter(out skipNext, header, buffer, index + 16 + i));
+                        }
+                    }
+                    else if (b <= 0xf && (i == 0 || i == 2 || i == 3))
+                    {
+                        // not used, 0=0xd, 2=0xb, 3=0xb
                     }
                     else
                     {
@@ -1058,21 +1085,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     break;
                             }
                         }
-                        if (b == textFieldCRLF)
+                        if (b == textFieldCarriageReturnLineFeed)
                             sb.AppendLine();
-                        else if (b == italicsOn)
+                        else if (b == italicsOn && header.LanguageCode != LanguageCodeChinese)
                             sb.Append("<i>");
-                        else if (b == italicsOff)
+                        else if (b == italicsOff && header.LanguageCode != LanguageCodeChinese)
                             sb.Append("</i>");
-                        else if (b == underlineOn)
+                        else if (b == underlineOn && header.LanguageCode != LanguageCodeChinese)
                             sb.Append("<u>");
-                        else if (b == underlineOff)
+                        else if (b == underlineOff && header.LanguageCode != LanguageCodeChinese)
                             sb.Append("</u>");
-                        //else if (b == 0xD0) // em-dash
-                        //    sb.Append('–');
+                            //else if (b == 0xD0) // em-dash
+                            //    sb.Append('–');
                         else if (b == textFieldTerminator)
                             break;
-                        else if ((b >= 0x20 && b <= 0x7F) || b >= 0xA1)
+                        else if ((b >= 0x20 && b <= 0x7F) || b >= 0xA1 || header.LanguageCode == LanguageCodeChinese)
                         {
                             string ch = GetCharacter(out skipNext, header, buffer, index + 16 + i);
                             if (ch != " ")
