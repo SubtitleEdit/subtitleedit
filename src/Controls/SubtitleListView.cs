@@ -511,7 +511,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SyntaxColorLine(List<Paragraph> paragraphs, int i, Paragraph paragraph)
         {
-            if (UseSyntaxColoring && _settings != null && Items.Count > 0 && i < Items.Count)
+            if (UseSyntaxColoring && _settings != null && IsValidIndex(i))
             {
                 var item = Items[i];
                 if (item.UseItemStyleForSubItems)
@@ -536,7 +536,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 if (_settings.Tools.ListViewSyntaxColorDurationBig)
                 {
-                    //    double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
+                    // double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
                     if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     {
                         item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
@@ -731,7 +731,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public string GetText(int index)
         {
-            if (index >= 0 && index < Items.Count)
+            if (IsValidIndex(index))
                 return Items[index].SubItems[ColumnIndexText].Text.Replace(_lineSeparatorString, Environment.NewLine);
             return null;
         }
@@ -767,7 +767,7 @@ namespace Nikse.SubtitleEdit.Controls
                     else
                         item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
 
-                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Nikse.SubtitleEdit.Core.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
+                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Core.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
                 }
                 else
                 {
