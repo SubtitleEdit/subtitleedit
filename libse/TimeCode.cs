@@ -228,5 +228,27 @@ namespace Nikse.SubtitleEdit.Core
             return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
         }
 
+        public string ToDisplayString()
+        {
+            if (IsMaxTime)
+                return "-";
+
+            if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                return ToHHMMSSFF();
+
+            return ToString(true);
+        }
+
+        public string ToShortDisplayString()
+        {
+            if (IsMaxTime)
+                return "-";
+
+            if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                return ToShortStringHHMMSSFF();
+
+            return ToShortString(true);
+        }
+
     }
 }
