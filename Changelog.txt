@@ -12,6 +12,8 @@
    * Updated Hungarian translation - thx Zityi
    * Updated Dutch translation - thx xylographe
    * Updated German translation - thx xylographe
+   * Updated Romanian translation - thx Mircea
+   * Updated Polish translation - thx admas
    * Updated Croatian OCR fix replace list - thx diomed & xylographe
    * Generating of spectrogram is now *many* times faster - thx jdpurcell
    * FFMPEG audio extraction will now prompt for audio file if more than one
@@ -22,6 +24,8 @@
    * Sync tools now display info about what is applied (factor and -/+ adjustment)
    * Plugins are now allowed to return another format than SubRip
    * Better resizing of list view in "Bridge gaps in durations" - thx Ivandrofly
+   * Audio visualizer: don't generate wav if source is already wav - thx MM
+   * Audio visualizer: zoom with control key + scroll wheel - thx jdpurcell
    * "Fix common errors" only shows English "i to I" fix for English language - Ivandrofly
 * FIXED:
    * Fixed tags accumulating texts in Sami format (regression from 3.4.8 refact) - thx domddol
@@ -38,6 +42,10 @@
    * Possible crash in export to DOST
    * Time codes in export to DOST - thx Christian
    * Fixed crash when cleaning spectrogram temp images
+   * Audio visualizer: Fix crash when using mouse wheel without audio - thx jdpurcell
+   * Audio visualizer: Fix issues with HH:MM:SS:FF time code format - thx jdpurcell
+   * Audio visualizer: Stable end time when using HH:MM:SS:FF time code format - thx ingo
+   * Inline margin is now loaded/saved in SSA/ASS (can only be edited in source view)
    * + Many minor fixes from Ivandrofly and xylographe
 
 

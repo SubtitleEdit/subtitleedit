@@ -87,6 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _autoContinueDelayCount = -1;
         private long _lastTextKeyDownTicks;
         private long _lastHistoryTicks;
+        private long _lastWaveformMenuCloseTicks;
         private double? _audioWaveformRightClickSeconds = null;
         private Timer _timerDoSyntaxColoring = new Timer();
         private Timer _timerAutoSave = new Timer();
@@ -19342,7 +19343,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter && audioVisualizer.WavePeaks != null && !audioVisualizer.Focused && audioVisualizer.CanFocus)
             {
-                audioVisualizer.Focus();
+                if (Math.Abs(_lastWaveformMenuCloseTicks - DateTime.Now.Ticks) > 10000 * 500) // only if last change was longer ago than 500 milliseconds
+                {
+                    audioVisualizer.Focus();
+                }
             }
         }
 
@@ -19481,6 +19485,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripSelected_Click(object sender, EventArgs e)
         {
             labelStatus_Click(sender, e);
+        }
+
+        private void contextMenuStripWaveform_Closing(object sender, ToolStripDropDownClosingEventArgs e)
+        {
+            _lastWaveformMenuCloseTicks = DateTime.Now.Ticks;
         }
 
     }
