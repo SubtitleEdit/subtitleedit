@@ -1392,9 +1392,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ContinueNewOrExit()
         {
-            if (_changeSubtitleToString != SerializeSubtitle(_subtitle))
+            if (_changeSubtitleToString != _subtitle.GetFastHashCode())
             {
-                if (_lastDoNotPrompt != SerializeSubtitle(_subtitle))
+                if (_lastDoNotPrompt != _subtitle.GetFastHashCode())
                 {
                     string promptText = _language.SaveChangesToUntitled;
                     if (!string.IsNullOrEmpty(_fileName))
@@ -1468,7 +1468,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return false;
                 }
             }
-            _lastDoNotPrompt = SerializeSubtitle(_subtitle);
+            _lastDoNotPrompt = _subtitle.GetFastHashCode();
             return true;
         }
 
@@ -1777,7 +1777,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 SetTitle();
                                 ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
                                 _sourceViewChange = false;
-                                _changeSubtitleToString = SerializeSubtitle(_subtitle);
+                                _changeSubtitleToString = _subtitle.GetFastHashCode();
                                 ResetHistory();
                                 SetUndockedWindowsTitle();
                                 _converted = true;
@@ -1824,13 +1824,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_subtitle.HistoryItems.Count > 0 || _subtitle.Paragraphs.Count > 0)
                     MakeHistoryForUndo(string.Format(_language.BeforeLoadOf, Path.GetFileName(fileName)));
 
-                bool change = _changeSubtitleToString != SerializeSubtitle(_subtitle);
+                bool change = _changeSubtitleToString != _subtitle.GetFastHashCode();
                 if (change)
-                    change = _lastDoNotPrompt != SerializeSubtitle(_subtitle);
+                    change = _lastDoNotPrompt != _subtitle.GetFastHashCode();
 
                 SubtitleFormat format = _subtitle.LoadSubtitle(fileName, out encoding, encoding);
                 if (!change)
-                    _changeSubtitleToString = SerializeSubtitle(_subtitle);
+                    _changeSubtitleToString = _subtitle.GetFastHashCode();
 
                 ShowHideTextBasedFeatures(format);
 
@@ -2579,7 +2579,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SetTitle();
                     ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
                     _sourceViewChange = false;
-                    _changeSubtitleToString = SerializeSubtitle(_subtitle);
+                    _changeSubtitleToString = _subtitle.GetFastHashCode();
                     _converted = false;
                     ResetHistory();
 
@@ -3156,7 +3156,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _fileDateTime = File.GetLastWriteTime(_fileName);
                 ShowStatus(string.Format(_language.SavedSubtitleX, _fileName));
-                _changeSubtitleToString = SerializeSubtitle(_subtitle);
+                _changeSubtitleToString = _subtitle.GetFastHashCode();
                 return DialogResult.OK;
             }
             catch (Exception exception)
@@ -3316,7 +3316,7 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.VideoPlayer = null;
             }
 
-            _changeSubtitleToString = SerializeSubtitle(_subtitle);
+            _changeSubtitleToString = _subtitle.GetFastHashCode();
             _converted = false;
 
             SetUndockedWindowsTitle();
@@ -3726,13 +3726,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripButtonSaveClick(object sender, EventArgs e)
         {
             ReloadFromSourceView();
-            bool oldChange = _changeSubtitleToString != SerializeSubtitle(_subtitle);
+            bool oldChange = _changeSubtitleToString != _subtitle.GetFastHashCode();
             SaveSubtitle(GetCurrentSubtitleFormat());
 
             if (_subtitleAlternate != null && _changeAlternateSubtitleToString != _subtitleAlternate.ToText(new SubRip()).Trim() && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate.Paragraphs.Count > 0)
             {
                 SaveOriginalToolStripMenuItemClick(null, null);
-                if (oldChange && _changeSubtitleToString == SerializeSubtitle(_subtitle) && _changeAlternateSubtitleToString == _subtitleAlternate.ToText(new SubRip()).Trim())
+                if (oldChange && _changeSubtitleToString == _subtitle.GetFastHashCode() && _changeAlternateSubtitleToString == _subtitleAlternate.ToText(new SubRip()).Trim())
                     ShowStatus(string.Format(_language.SavedSubtitleX, Path.GetFileName(_fileName)) + " + " +
                                string.Format(_language.SavedOriginalSubtitleX, Path.GetFileName(_subtitleAlternateFileName)));
             }
@@ -10140,19 +10140,7 @@ namespace Nikse.SubtitleEdit.Forms
                 container = control as ContainerControl;
             }
             return control;
-        }
-
-        private static string SerializeSubtitle(Subtitle subtitle)
-        {
-            var sb = new StringBuilder();
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
-            {
-                var p = subtitle.Paragraphs[i];
-                sb.Append(p.StartTime.TotalMilliseconds + (p.EndTime.TotalMilliseconds * 127));
-                sb.Append(p.Text);
-            }
-            return sb.ToString().TrimEnd();
-        }
+        }       
 
         internal void MainKeyDown(object sender, KeyEventArgs e)
         {
@@ -12877,7 +12865,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (string.CompareOrdinal(_changeSubtitleToString, SerializeSubtitle(_subtitle)) != 0)
+            if (string.CompareOrdinal(_changeSubtitleToString, _subtitle.GetFastHashCode()) != 0)
             {
                 if (!Text.EndsWith('*'))
                     Text = Text.TrimEnd() + "*";

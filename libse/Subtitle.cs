@@ -525,5 +525,22 @@ namespace Nikse.SubtitleEdit.Core
             Paragraphs.Add(newParagraph);
         }
 
+        /// <summary>
+        /// Fast hash code for subtitle (only includes start + end + text)
+        /// </summary>
+        /// <returns>Hash value that can be used for quick compare</returns>
+        public string GetFastHashCode()
+        {
+            var sb = new StringBuilder(Paragraphs.Count * 50);
+            for (int i = 0; i < Paragraphs.Count; i++)
+            {
+                var p = Paragraphs[i];
+                sb.Append(p.StartTime.TotalMilliseconds.GetHashCode());
+                sb.Append(p.EndTime.TotalMilliseconds.GetHashCode());
+                sb.Append(p.Text);
+            }
+            return sb.ToString().TrimEnd();
+        }
+
     }
 }
