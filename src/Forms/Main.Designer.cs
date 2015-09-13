@@ -4450,7 +4450,7 @@
             this.audioVisualizer.TextBold = true;
             this.audioVisualizer.TextColor = System.Drawing.Color.Gray;
             this.audioVisualizer.TextSize = 9F;
-            this.audioVisualizer.VerticalZoomFactor = 1D;
+            this.audioVisualizer.VerticalZoomFactor = 2D;
             this.audioVisualizer.WaveformNotLoadedText = "Click to add waveform";
             this.audioVisualizer.WavePeaks = null;
             this.audioVisualizer.ZoomFactor = 1D;

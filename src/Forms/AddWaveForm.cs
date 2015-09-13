@@ -234,28 +234,24 @@ namespace Nikse.SubtitleEdit.Forms
             labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingPeakFile;
             Refresh();
 
-            var waveFile = new WavePeakGenerator(targetFile);
-
-            int sampleRate = Configuration.Settings.VideoControls.WaveformMinimumSampleRate; // Normally 128
-            while (waveFile.Header.SampleRate % sampleRate != 0 && sampleRate < 5000)
-                sampleRate++; // old sample-rate / new sample-rate must have rest = 0
-
-            waveFile.GeneratePeakSamples(sampleRate, delayInMilliseconds); // samples per second - SampleRate
-
-            if (Configuration.Settings.VideoControls.GenerateSpectrogram)
+            using (var waveFile = new WavePeakGenerator(targetFile))
             {
-                labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingSpectrogram;
-                Refresh();
-                Directory.CreateDirectory(_spectrogramDirectory);
-                SpectrogramBitmaps = waveFile.GenerateFourierData(256, _spectrogramDirectory, delayInMilliseconds); // image height = nfft / 2
+                waveFile.GeneratePeakSamples(delayInMilliseconds);
+
+                if (Configuration.Settings.VideoControls.GenerateSpectrogram)
+                {
+                    labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingSpectrogram;
+                    Refresh();
+                    SpectrogramBitmaps = waveFile.GenerateFourierData(256, _spectrogramDirectory, delayInMilliseconds); // image height = nfft / 2
+                }
+
+                WavePeak = waveFile;
             }
-            WavePeak = waveFile;
-            waveFile.Close();
 
             labelPleaseWait.Visible = false;
         }
 
-        private void AddWareForm_Shown(object sender, EventArgs e)
+        private void AddWaveform_Shown(object sender, EventArgs e)
         {
             Refresh();
             var audioTrackNames = new List<string>();
@@ -367,7 +363,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AddWareForm_KeyDown(object sender, KeyEventArgs e)
+        private void AddWaveform_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
