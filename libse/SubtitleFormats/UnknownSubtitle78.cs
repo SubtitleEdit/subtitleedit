@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.SelectSingleNode("TimeCodeIn").InnerText = p.StartTime.ToHHMMSSFF();
                 paragraph.SelectSingleNode("TimeCodeOut").InnerText = p.EndTime.ToHHMMSSFF();
                 var textBlockNodes = paragraph.SelectNodes("TextBlock");
-                textBlockNodes[0].InnerText = p.Text;
+                textBlockNodes[0].SelectSingleNode("String").InnerText = p.Text;
                 paragraphInsertNode.AppendChild(paragraph);
             }
             return ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty);

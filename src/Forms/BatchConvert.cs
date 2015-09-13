@@ -64,6 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _errors;
         private readonly IList<SubtitleFormat> _allFormats;
         private bool _abort;
+        private Ebu.EbuGeneralSubtitleInformation _ebuGeneralInformation;
 
         public BatchConvert(Icon icon)
         {
@@ -978,6 +979,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (p.SourceFormat == null)
                     p.SourceFormat = new SubRip();
+                if (p.ToFormat == Ebu.NameOfFormat)
+                    p.Subtitle.Header = _ebuGeneralInformation.ToString();
+
                 bool success;
                 if (checkBoxOverwriteOriginalFiles.Checked)
                 {
@@ -1005,7 +1009,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (comboBoxSubtitleFormats.Text == AdvancedSubStationAlpha.NameOfFormat || comboBoxSubtitleFormats.Text == SubStationAlpha.NameOfFormat)
             {
+                buttonStyles.Text = Configuration.Settings.Language.BatchConvert.Style;
                 buttonStyles.Visible = true;
+            }
+            else if (comboBoxSubtitleFormats.Text == Ebu.NameOfFormat)
+            {
+                buttonStyles.Text = Configuration.Settings.Language.BatchConvert.Settings;
+                buttonStyles.Visible = true;
+                if (_ebuGeneralInformation == null)
+                    _ebuGeneralInformation = new Ebu.EbuGeneralSubtitleInformation();
             }
             else
             {
@@ -1016,6 +1028,27 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void ButtonStylesClick(object sender, EventArgs e)
+        {
+            if (comboBoxSubtitleFormats.Text == AdvancedSubStationAlpha.NameOfFormat || comboBoxSubtitleFormats.Text == SubStationAlpha.NameOfFormat)
+            {
+                ShowAssSsaStyles();                
+            }
+            else if (comboBoxSubtitleFormats.Text == Ebu.NameOfFormat)
+            {
+                ShowEbuSettings();
+            }
+        }
+
+        private void ShowEbuSettings()
+        {
+            using (var properties = new EbuSaveOptions())
+            {
+                properties.Initialize(_ebuGeneralInformation, 0, null, null);
+                properties.ShowDialog(this);
+            }
+        }
+
+        private void ShowAssSsaStyles()
         {
             SubStationAlphaStyles form = null;
             try

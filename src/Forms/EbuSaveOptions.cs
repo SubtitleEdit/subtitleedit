@@ -68,6 +68,9 @@ namespace Nikse.SubtitleEdit.Forms
             _header = header;
             _subtitle = subtitle;
 
+            if (_subtitle == null)
+                tabControl1.TabPages.Remove(tabPageErrors);            
+
             FillFromHeader(header);
             if (!string.IsNullOrEmpty(fileName))
             {
@@ -89,11 +92,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             Text = Configuration.Settings.Language.EbuSaveOptions.Title;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;            
         }
 
         private void CheckErrors(Subtitle subtitle)
         {
+            if (subtitle == null)
+                return;
+
             textBoxErrors.Text = string.Empty;
             var sb = new StringBuilder();
             int errorCount = 0;
@@ -291,5 +297,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             textBoxCodePageNumber.Text = "865";
         }
+
     }
 }
