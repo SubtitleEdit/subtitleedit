@@ -58,6 +58,12 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 int dataType = buffer[index + 7];
                 int length = TopFieldDataBlockLength;
 
+                if (length + index + 7 > buffer.Length) // check if buffer is large enough
+                {
+                    Image = new Bitmap(1, 1);
+                    return;
+                }
+
                 index += 8;
                 int start = index;
                 int x = 0;

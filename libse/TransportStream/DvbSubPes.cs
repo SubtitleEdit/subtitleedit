@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
         public DvbSubPes(byte[] buffer, int index)
         {
-            if (buffer.Length < 9)
+            if (buffer.Length < index + 9)
                 return;
 
             StartCode = Helper.GetEndian(buffer, index + 0, 3);
@@ -58,6 +58,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             ExtensionFlag = buffer[index + 7] & Helper.B00000010;
 
             HeaderDataLength = buffer[index + 8];
+
+            if (buffer.Length < index + 9 + HeaderDataLength)
+                return;
 
             if (StreamId == 0xBD) // 10111101 binary = 189 decimal = 0xBD hex -> private_stream_1
             {
