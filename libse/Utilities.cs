@@ -1999,7 +1999,7 @@ namespace Nikse.SubtitleEdit.Core
             foreach (Paragraph p in originalParagraphs)
             {
                 if (p.StartTime.TotalMilliseconds > paragraph.StartTime.TotalMilliseconds - 200 &&
-                    p.StartTime.TotalMilliseconds < paragraph.StartTime.TotalMilliseconds + 1000)
+                    p.StartTime.TotalMilliseconds < paragraph.StartTime.TotalMilliseconds + TimeCode.BaseUnit)
                     return p;
             }
             return null;
@@ -2456,10 +2456,8 @@ namespace Nikse.SubtitleEdit.Core
         {
             var parts1 = SplitForChangedCalc(s1, ignoreLineBreaks, breakToLetters);
             var parts2 = SplitForChangedCalc(s2, ignoreLineBreaks, breakToLetters);
-            int t = Math.Max(parts1.Length, parts2.Length);
-            total += t;
-            int c = GetChangesAdvanced(parts1, parts2);
-            change += c;
+            total += Math.Max(parts1.Length, parts2.Length);
+            change += GetChangesAdvanced(parts1, parts2);
         }
 
         private static int GetChangesAdvanced(string[] parts1, string[] parts2)
