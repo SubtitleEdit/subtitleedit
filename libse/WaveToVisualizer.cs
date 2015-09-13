@@ -249,9 +249,8 @@ namespace Nikse.SubtitleEdit.Core
         /// <summary>
         /// Generate peaks (samples with some interval) for an uncompressed wave file
         /// </summary>
-        /// <param name="peaksPerSecond">Sampeles per second / sample rate</param>
         /// <param name="delayInMilliseconds">Delay in milliseconds (normally zero)</param>
-        public void GeneratePeakSamples(int peaksPerSecond, int delayInMilliseconds)
+        public void GeneratePeakSamples(int delayInMilliseconds)
         {
             if (Header.BytesPerSample == 4)
             {
@@ -259,7 +258,11 @@ namespace Nikse.SubtitleEdit.Core
                 throw new Exception("32-bit samples are unsupported.");
             }
 
-            PeaksPerSecond = peaksPerSecond;
+            PeaksPerSecond = Math.Min(Configuration.Settings.VideoControls.WaveformMinimumSampleRate, Header.SampleRate);
+
+            // Ensure that peaks per second is a multiple of the sample rate
+            while (Header.SampleRate % PeaksPerSecond != 0)
+                PeaksPerSecond++;
 
             ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataReader();
             DataMinValue = int.MaxValue;
@@ -268,7 +271,7 @@ namespace Nikse.SubtitleEdit.Core
 
             if (delayInMilliseconds > 0)
             {
-                for (int i = 0; i < peaksPerSecond * delayInMilliseconds / 1000; i++)
+                for (int i = 0; i < PeaksPerSecond * delayInMilliseconds / 1000; i++)
                     PeakSamples.Add(0);
             }
 
@@ -276,9 +279,9 @@ namespace Nikse.SubtitleEdit.Core
             _data = new byte[Header.BytesPerSecond];
             _stream.Position = Header.DataStartPosition;
             int bytesRead = _stream.Read(_data, 0, _data.Length);
-            while (bytesRead == Header.BytesPerSecond)
+            while (bytesRead > 0)
             {
-                for (int i = 0; i < Header.BytesPerSecond; i += bytesInterval)
+                for (int i = 0; i < bytesRead; i += bytesInterval)
                 {
                     int index = i;
                     int value = 0;
@@ -286,7 +289,7 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         value += readSampleDataValue.Invoke(ref index);
                     }
-                    value = value / Header.NumberOfChannels;
+                    value /= Header.NumberOfChannels;
                     if (value < DataMinValue)
                         DataMinValue = value;
                     if (value > DataMaxValue)
@@ -318,14 +321,14 @@ namespace Nikse.SubtitleEdit.Core
             DataMaxValue = int.MinValue;
             AllSamples = new List<int>();
             int index = 0;
-            while (index + Header.NumberOfChannels < Header.DataChunkSize)
+            while (index < Header.DataChunkSize)
             {
                 int value = 0;
                 for (int channelNumber = 0; channelNumber < Header.NumberOfChannels; channelNumber++)
                 {
                     value += readSampleDataValue.Invoke(ref index);
                 }
-                value = value / Header.NumberOfChannels;
+                value /= Header.NumberOfChannels;
                 if (value < DataMinValue)
                     DataMinValue = value;
                 if (value > DataMaxValue)
@@ -508,6 +511,8 @@ namespace Nikse.SubtitleEdit.Core
             int chunkCount = (int)Math.Ceiling((double)(fileSampleCount + delaySampleCount) / chunkSampleCount);
             double[] chunkSamples = new double[chunkSampleCount];
 
+            Directory.CreateDirectory(spectrogramDirectory);
+
             _data = new byte[chunkSampleCount * Header.BlockAlign];
             _stream.Seek(Header.DataStartPosition, SeekOrigin.Begin);
 
@@ -604,8 +609,8 @@ namespace Nikse.SubtitleEdit.Core
 
         private class SpectrogramDrawer
         {
-            private const double raisedCosineWindowScale = 0.5;
-            private const int magnitudeIndexRange = 256;
+            private const double RaisedCosineWindowScale = 0.5;
+            private const int MagnitudeIndexRange = 256;
 
             private readonly int _nfft;
             private readonly MagnitudeToIndexMapper _mapper;
@@ -619,7 +624,7 @@ namespace Nikse.SubtitleEdit.Core
             public SpectrogramDrawer(int nfft)
             {
                 _nfft = nfft;
-                _mapper = new MagnitudeToIndexMapper(100.0, magnitudeIndexRange - 1);
+                _mapper = new MagnitudeToIndexMapper(100.0, MagnitudeIndexRange - 1);
                 _fft = new RealFFT(nfft);
                 _palette = GeneratePalette();
                 _segment = new double[nfft];
@@ -627,7 +632,7 @@ namespace Nikse.SubtitleEdit.Core
                 _magnitude1 = new double[nfft / 2];
                 _magnitude2 = new double[nfft / 2];
 
-                double scaleCorrection = 1.0 / (raisedCosineWindowScale * _fft.ForwardScaleFactor);
+                double scaleCorrection = 1.0 / (RaisedCosineWindowScale * _fft.ForwardScaleFactor);
                 for (int i = 0; i < _window.Length; i++)
                 {
                     _window[i] *= scaleCorrection;
@@ -694,18 +699,18 @@ namespace Nikse.SubtitleEdit.Core
 
             private static FastBitmap.PixelData[] GeneratePalette()
             {
-                var palette = new FastBitmap.PixelData[magnitudeIndexRange];
+                var palette = new FastBitmap.PixelData[MagnitudeIndexRange];
                 if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Classic")
                 {
-                    for (int colorIndex = 0; colorIndex < magnitudeIndexRange; colorIndex++)
-                        palette[colorIndex] = new FastBitmap.PixelData(PaletteValue(colorIndex, magnitudeIndexRange));
+                    for (int colorIndex = 0; colorIndex < MagnitudeIndexRange; colorIndex++)
+                        palette[colorIndex] = new FastBitmap.PixelData(PaletteValue(colorIndex, MagnitudeIndexRange));
                 }
                 else
                 {
                     var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveformColor.R,
                                                      Configuration.Settings.VideoControls.WaveformColor.G,
-                                                     Configuration.Settings.VideoControls.WaveformColor.B, magnitudeIndexRange);
-                    for (int i = 0; i < magnitudeIndexRange; i++)
+                                                     Configuration.Settings.VideoControls.WaveformColor.B, MagnitudeIndexRange);
+                    for (int i = 0; i < MagnitudeIndexRange; i++)
                         palette[i] = new FastBitmap.PixelData(list[i]);
                 }
                 return palette;

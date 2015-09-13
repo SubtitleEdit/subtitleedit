@@ -133,8 +133,8 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         public const double VerticalZoomMinimum = 1.0;
-        public const double VerticalZoomMaximum = 20.0;
-        private double _verticalZoomFactor = 1.0; // 1.0=no zoom
+        public const double VerticalZoomMaximum = 40.0;
+        private double _verticalZoomFactor = 2.0; // 1.0=no zoom
         public double VerticalZoomFactor
         {
             get
@@ -404,7 +404,7 @@ namespace Nikse.SubtitleEdit.Controls
         private static int CalculateHeight(double value, int imageHeight, int maxHeight)
         {
             double percentage = value / maxHeight;
-            var result = (int)Math.Round((percentage * imageHeight) + (imageHeight / 2.0));
+            var result = (int)Math.Round((percentage / 2.0 + 0.5) * imageHeight);
             return imageHeight - result;
         }
 
@@ -1690,16 +1690,26 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void ZoomIn()
         {
-            ZoomFactor = ZoomFactor + 0.1;
+            ZoomFactor += 0.1;
             if (OnZoomedChanged != null)
                 OnZoomedChanged.Invoke(this, null);
         }
 
         public void ZoomOut()
         {
-            ZoomFactor = ZoomFactor - 0.1;
+            ZoomFactor -= 0.1;
             if (OnZoomedChanged != null)
                 OnZoomedChanged.Invoke(this, null);
+        }
+
+        private void VerticalZoomIn()
+        {
+            VerticalZoomFactor *= 1.1;
+        }
+
+        private void VerticalZoomOut()
+        {
+            VerticalZoomFactor /= 1.1;
         }
 
         private void WaveformMouseWheel(object sender, MouseEventArgs e)
@@ -1716,6 +1726,16 @@ namespace Nikse.SubtitleEdit.Controls
                     ZoomIn();
                 else
                     ZoomOut();
+
+                return;
+            }
+
+            if (ModifierKeys == (Keys.Control | Keys.Shift))
+            {
+                if (e.Delta > 0)
+                    VerticalZoomIn();
+                else
+                    VerticalZoomOut();
 
                 return;
             }

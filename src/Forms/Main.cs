@@ -14803,7 +14803,7 @@ namespace Nikse.SubtitleEdit.Forms
             return wavePeakName;
         }
 
-        private static string GetSpectrogramFolder(string videoFileName)
+        public static string GetSpectrogramFolder(string videoFileName)
         {
             var dir = Configuration.SpectrogramsFolder.TrimEnd(Path.DirectorySeparatorChar);
             if (!Directory.Exists(dir))

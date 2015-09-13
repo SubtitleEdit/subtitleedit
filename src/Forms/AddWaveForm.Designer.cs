@@ -138,8 +138,8 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Generate waveform data";
-            this.Shown += new System.EventHandler(this.AddWareForm_Shown);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddWareForm_KeyDown);
+            this.Shown += new System.EventHandler(this.AddWaveform_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddWaveform_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
