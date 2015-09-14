@@ -813,13 +813,13 @@ namespace Nikse.SubtitleEdit.Controls
                         _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
                         NewSelectionParagraph.StartTime.TotalMilliseconds = milliseconds;
                         _mouseMoveStartX = e.X;
-                        _mouseMoveEndX = SecondsToXPosition(NewSelectionParagraph.EndTime.TotalSeconds);
+                        _mouseMoveEndX = SecondsToXPosition(NewSelectionParagraph.EndTime.TotalSeconds - StartPositionSeconds);
                     }
                     else
                     {
                         _mouseDownParagraph.EndTime.TotalMilliseconds = milliseconds;
                         NewSelectionParagraph.EndTime.TotalMilliseconds = milliseconds;
-                        _mouseMoveStartX = SecondsToXPosition(NewSelectionParagraph.StartTime.TotalSeconds);
+                        _mouseMoveStartX = SecondsToXPosition(NewSelectionParagraph.StartTime.TotalSeconds - StartPositionSeconds);
                         _mouseMoveEndX = e.X;
                     }
                     SetMinMaxViaSeconds(seconds);
