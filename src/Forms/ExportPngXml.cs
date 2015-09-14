@@ -3796,7 +3796,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void SubtitleListView1Add(Paragraph paragraph)
         {
-            var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph };
+            var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph, UseItemStyleForSubItems = false };
             ListViewItem.ListViewSubItem subItem;
 
             if (subtitleListView1.CheckBoxes)
@@ -3806,45 +3806,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 item.SubItems.Add(subItem);
             }
 
-            if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
-            {
-                if (paragraph.StartTime.IsMaxTime)
-                    subItem = new ListViewItem.ListViewSubItem(item, "-");
-                else
-                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToHHMMSSFF());
-                item.SubItems.Add(subItem);
+            subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToDisplayString());
+            item.SubItems.Add(subItem);
 
-                if (paragraph.EndTime.IsMaxTime)
-                    subItem = new ListViewItem.ListViewSubItem(item, "-");
-                else
-                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToHHMMSSFF());
-                item.SubItems.Add(subItem);
+            subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToDisplayString());
+            item.SubItems.Add(subItem);
 
-                subItem = new ListViewItem.ListViewSubItem(item, string.Format("{0},{1:00}", paragraph.Duration.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds)));
-                item.SubItems.Add(subItem);
-            }
-            else
-            {
-                if (paragraph.StartTime.IsMaxTime)
-                    subItem = new ListViewItem.ListViewSubItem(item, "-");
-                else
-                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToString());
-                item.SubItems.Add(subItem);
-
-                if (paragraph.EndTime.IsMaxTime)
-                    subItem = new ListViewItem.ListViewSubItem(item, "-");
-                else
-                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToString());
-                item.SubItems.Add(subItem);
-
-                subItem = new ListViewItem.ListViewSubItem(item, string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds));
-                item.SubItems.Add(subItem);
-            }
+            subItem = new ListViewItem.ListViewSubItem(item, paragraph.Duration.ToShortDisplayString());
+            item.SubItems.Add(subItem);
 
             subItem = new ListViewItem.ListViewSubItem(item, paragraph.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             subItem.Font = new Font(_subtitleFontName, Font.Size);
-
-            item.UseItemStyleForSubItems = false;
             item.SubItems.Add(subItem);
 
             subtitleListView1.Items.Add(item);
