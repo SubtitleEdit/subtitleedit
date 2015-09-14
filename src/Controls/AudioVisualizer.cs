@@ -716,12 +716,7 @@ namespace Nikse.SubtitleEdit.Controls
                 pen = new Pen(new SolidBrush(Color.FromArgb(175, 110, 10, 10))) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash, Width = 2 };
                 e.Graphics.DrawLine(pen, currentRegionRight - 1, 0, currentRegionRight - 1, e.Graphics.VisibleClipBounds.Height);
 
-                string durationStr;
-                if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
-                    durationStr = paragraph.Duration.ToShortStringHHMMSSFF();
-                else
-                    durationStr = paragraph.Duration.ToShortString(true);
-
+                string durationStr = paragraph.Duration.ToShortDisplayString();
                 var n = _zoomFactor * _wavePeaks.Header.SampleRate;
                 if (n > 80)
                 {
