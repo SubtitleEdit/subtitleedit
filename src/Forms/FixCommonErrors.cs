@@ -552,11 +552,9 @@ namespace Nikse.SubtitleEdit.Forms
                             var closeIdx = text.IndexOf('>');
                             if (closeIdx <= 2)
                                 break;
-                            else
-                            {
-                                pre += text.Substring(0, closeIdx + 1);
-                                text = text.Remove(0, closeIdx + 1);
-                            }
+
+                            pre += text.Substring(0, closeIdx + 1);
+                            text = text.Remove(0, closeIdx + 1);
                         }
                     }
                     while (text.LineEndsWithHtmlTag(true, true))
@@ -706,10 +704,10 @@ namespace Nikse.SubtitleEdit.Forms
                     canBeEqual = Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart;
 
                 double diff = prev.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds;
-                if (!prev.StartTime.IsMaxTime && !p.StartTime.IsMaxTime && diff >= 0 && !(canBeEqual && diff == 0))
+                if (!prev.StartTime.IsMaxTime && !p.StartTime.IsMaxTime && diff >= 0 && !(canBeEqual && Math.Abs(diff) < 0.001))
                 {
                     int diffHalf = (int)(diff / 2);
-                    if (!Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart && p.StartTime.TotalMilliseconds == prev.EndTime.TotalMilliseconds &&
+                    if (!Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart && Math.Abs(p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds) < 0.001 &&
                         prev.Duration.TotalMilliseconds > 100)
                     {
                         if (AllowFix(target, fixAction))
@@ -2084,7 +2082,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph prev = Subtitle.GetParagraphOrDefault(i - 1);
 
                 string oldText = p.Text;
-                string fixedText = FixStartWithUppercaseLetterAfterParagraph(p, prev, _encoding, Language);
+                string fixedText = FixStartWithUppercaseLetterAfterParagraph(new Paragraph(p), prev, _encoding, Language);
 
                 if (oldText != fixedText && AllowFix(p, fixAction))
                 {
@@ -2284,7 +2282,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (p.Text.Length > 4)
+            if (p.Text != null && p.Text.Length > 4)
             {
                 int len = 0;
                 int indexOfNewLine = p.Text.IndexOf(Environment.NewLine + " -", 1, StringComparison.Ordinal);
@@ -2449,7 +2447,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.BeginUpdate();
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = Subtitle.Paragraphs[i];
+                var p = new Paragraph(Subtitle.Paragraphs[i]);
                 Paragraph last = Subtitle.GetParagraphOrDefault(i - 1);
                 string oldText = p.Text;
                 int skipCount = 0;
@@ -2512,9 +2510,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (oldText != p.Text)
+                if (oldText != p.Text && AllowFix(p, fixAction))
                 {
                     noOfFixes++;
+                    Subtitle.Paragraphs[i].Text = p.Text;
                     AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
