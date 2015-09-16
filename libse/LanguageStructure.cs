@@ -550,6 +550,9 @@
             public string Normal { get; set; }
             public string CaseSensitive { get; set; }
             public string RegularExpression { get; set; }
+            public string WholeWord { get; set; }
+            public string Count { get; set; }
+            public string XNumberOfMatches { get; set; }
         }
 
         public class FindSubtitleLine

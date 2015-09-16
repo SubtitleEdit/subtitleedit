@@ -1268,6 +1268,15 @@ namespace Nikse.SubtitleEdit.Logic
                 case "FindDialog/RegularExpression":
                     language.FindDialog.RegularExpression = reader.Value;
                     break;
+                case "FindDialog/WholeWord":
+                    language.FindDialog.WholeWord = reader.Value;
+                    break;
+                case "FindDialog/Count":
+                    language.FindDialog.Count = reader.Value;
+                    break;
+                case "FindDialog/XNumberOfMatches":
+                    language.FindDialog.XNumberOfMatches = reader.Value;
+                    break;
                 case "FindSubtitleLine/Title":
                     language.FindSubtitleLine.Title = reader.Value;
                     break;
