@@ -493,6 +493,9 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Normal>&amp;Normal</Normal>
     <CaseSensitive>&amp;Case sensitive</CaseSensitive>
     <RegularExpression>Regular e&amp;xpression</RegularExpression>
+    <WholeWord>Whole word</WholeWord>
+    <Count>Count</Count>
+    <XNumberOfMatches>{0} matches</XNumberOfMatches>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Find subtitle line</Title>

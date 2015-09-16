@@ -21,6 +21,8 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonCaseSensitive.Text = Configuration.Settings.Language.FindDialog.CaseSensitive;
             radioButtonRegEx.Text = Configuration.Settings.Language.FindDialog.RegularExpression;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            checkBoxWholeWord.Text = Configuration.Settings.Language.FindDialog.WholeWord;
+            buttonCount.Text = Configuration.Settings.Language.FindDialog.Count;
             labelCount.Text = string.Empty;
             _subtitle = subtitle;
 
@@ -192,7 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
                 count = GetFindDialogHelper(0).FindCount(_subtitle, checkBoxWholeWord.Checked);
             }
             labelCount.ForeColor = count > 0 ? Color.Blue : Color.Red;
-            labelCount.Text = string.Format("Count: {0}", count);
+            labelCount.Text = string.Format(Configuration.Settings.Language.FindDialog.XNumberOfMatches, count);
         }
     }
 }

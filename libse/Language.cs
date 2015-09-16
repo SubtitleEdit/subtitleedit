@@ -671,6 +671,9 @@ namespace Nikse.SubtitleEdit.Core
                 Normal = "&Normal",
                 CaseSensitive = "&Case sensitive",
                 RegularExpression = "Regular e&xpression",
+                WholeWord = "Whole word",
+                Count = "Count",
+                XNumberOfMatches = "{0} matches"
             };
 
             FindSubtitleLine = new LanguageStructure.FindSubtitleLine
