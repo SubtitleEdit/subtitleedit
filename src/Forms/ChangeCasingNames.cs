@@ -73,20 +73,25 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
+
+            // Hack: Will allow using only one instance of list collection
+            var listName = new List<string>(1);
+            listName.Add(string.Empty);
+
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
-                string text = p.Text;
-                foreach (ListViewItem item in listViewNames.Items)
+                var text = p.Text;
+                var textNoTags = HtmlUtil.RemoveHtmlTags(text);
+                if (textNoTags != textNoTags.ToUpper())
                 {
-                    string name = item.SubItems[1].Text;
-
-                    string textNoTags = HtmlUtil.RemoveHtmlTags(text);
-                    if (textNoTags != textNoTags.ToUpper())
+                    foreach (ListViewItem item in listViewNames.Items)
                     {
-                        if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLower())
+                        var name = item.SubItems[1].Text;
+                        if (item.Checked && name.Length > 1 && name != name.ToLower() && text.Contains(name, StringComparison.OrdinalIgnoreCase))
                         {
                             var st = new StripableText(text);
-                            st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
+                            listName[0] = name;
+                            st.FixCasing(listName, true, false, false, string.Empty);
                             text = st.MergedString;
                         }
                     }
