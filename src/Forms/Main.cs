@@ -6105,7 +6105,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         int indexOfEndBracket = _subtitle.Paragraphs[i].Text.IndexOf('}');
-                        if (_subtitle.Paragraphs[i].Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                        if (_subtitle.Paragraphs[i].Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                             _subtitle.Paragraphs[i].Text = string.Format("{2}<{0}>{1}</{0}>", tag, _subtitle.Paragraphs[i].Text.Remove(0, indexOfEndBracket + 1), _subtitle.Paragraphs[i].Text.Substring(0, indexOfEndBracket + 1));
                         else
                             _subtitle.Paragraphs[i].Text = string.Format("<{0}>{1}</{0}>", tag, _subtitle.Paragraphs[i].Text);
@@ -6962,7 +6962,7 @@ namespace Nikse.SubtitleEdit.Forms
                         next.Text = (idx > 0 ? s.Substring(idx + 1).Trim() : string.Empty);
 
                         // If the first subtitle ends with a tag (</i>):
-                        String endTag = "";
+                        String endTag = string.Empty;
                         if (p.Text.EndsWith('>') && p.Text.Contains('<'))
                         {
                             // Save the end tag.
@@ -6980,7 +6980,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle (next) starts with a position tag, like {\an8}:
-                        String positionTag = "";
+                        String positionTag = string.Empty;
                         if (firstWord.StartsWith('{') && firstWord.Contains('}'))
                         {
                             // Save the start tag.
@@ -6990,7 +6990,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle (next) starts with a tag:
-                        String startTag = "";
+                        String startTag = string.Empty;
                         if (firstWord.StartsWith('<') && firstWord.Contains('>'))
                         {
                             // Save the start tag.
@@ -7007,7 +7007,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle (next) starts with a dialog ("-"):
-                        String dialogMarker = "";
+                        String dialogMarker = string.Empty;
                         if (firstWord.StartsWith('-'))
                         {
                             // Save the dialog marker ("-" or "- ").
@@ -7026,10 +7026,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // Add positionTag + startTag + dialogMarker + "..." + text to 'next'.
                         if (idx > 0)
-                            next.Text = positionTag + startTag + dialogMarker + (nextSubtitleStartsWithEllipsis ? "..." : "") + next.Text.Trim();
+                            next.Text = positionTag + startTag + dialogMarker + (nextSubtitleStartsWithEllipsis ? "..." : string.Empty) + next.Text.Trim();
 
                         // Add text + firstWord + "..." + endTag to First line.
-                        p.Text = (idx == 0 ? startTag : "") + p.Text.Trim() + " " + firstWord.Trim() + (idx > 0 && firstSubtitleEndsWithEllipsis ? "..." : "") + endTag;
+                        p.Text = (idx == 0 ? startTag : string.Empty) + p.Text.Trim() + " " + firstWord.Trim() + (idx > 0 && firstSubtitleEndsWithEllipsis ? "..." : string.Empty) + endTag;
 
                         // Now, idx will hold the position of the last line break, if any.
                         idx = p.Text.LastIndexOf(Environment.NewLine, StringComparison.Ordinal);
@@ -7079,7 +7079,7 @@ namespace Nikse.SubtitleEdit.Forms
                         p.Text = (idx > 0 ? s.Substring(0, idx).Trim() : string.Empty);
 
                         // If the first subtitle ends with a tag (</i>):
-                        String endTag = "";
+                        String endTag = string.Empty;
                         if (lastWord.EndsWith('>') && lastWord.Contains('<'))
                         {
                             // Save the end tag.
@@ -7097,7 +7097,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle (next) starts with a position tag, like {\an8}:
-                        String positionTag = "";
+                        String positionTag = string.Empty;
                         if (next.Text.StartsWith('{') && next.Text.Contains('}'))
                         {
                             // Save the start tag.
@@ -7107,7 +7107,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle (next) starts with a tag:
-                        String startTag = "";
+                        String startTag = string.Empty;
                         if (next.Text.StartsWith('<') && next.Text.Contains('>'))
                         {
                             // Save the start tag.
@@ -7117,7 +7117,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle (next) starts with a dialog ("-"):
-                        String dialogMarker = "";
+                        String dialogMarker = string.Empty;
                         if (next.Text.StartsWith('-'))
                         {
                             // Save the dialog marker ("-" or "- ").
@@ -7136,7 +7136,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // Add text + "..." + endTag to first subtitle.
                         if (idx > 0)
-                            p.Text = p.Text + (firstSubtitleEndsWithEllipsis ? "..." : "") + endTag;
+                            p.Text = p.Text + (firstSubtitleEndsWithEllipsis ? "..." : string.Empty) + endTag;
 
                         // Add positionTag + startTag + dialogMarker + "..." + lastWord to 'next'.
                         next.Text = (idx > 0 ? positionTag : string.Empty) +
@@ -7619,9 +7619,9 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         if (originalCurrent != null && originalNew != null)
                         {
-                            if (originalCurrent.Text.StartsWith("<i> "))
+                            if (originalCurrent.Text.StartsWith("<i> ", StringComparison.Ordinal))
                                 originalCurrent.Text = originalCurrent.Text.Remove(3, 1);
-                            if (originalNew.Text.StartsWith("<i> "))
+                            if (originalNew.Text.StartsWith("<i> ", StringComparison.Ordinal))
                                 originalCurrent.Text = originalCurrent.Text.Remove(3, 1);
                         }
                         _subtitleAlternate.InsertParagraphInCorrectTimeOrder(originalNew);
@@ -7946,7 +7946,7 @@ namespace Nikse.SubtitleEdit.Forms
                     s = Utilities.UnbreakLine(nextParagraph.Text);
                     if (s.StartsWith('-') || s.StartsWith("<i>-"))
                         currentParagraph.Text += Environment.NewLine + s;
-                    else if (s.StartsWith("<i>"))
+                    else if (s.StartsWith("<i>", StringComparison.Ordinal))
                         currentParagraph.Text += Environment.NewLine + s.Insert(3, "- ");
                     else
                         currentParagraph.Text += Environment.NewLine + "- " + s;
@@ -9278,7 +9278,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (char_value >> 3 == 0) //0x0..7
                 {
                     ascii = true;
-                    text += ((color == 1) ? colors[char_value] : ""); // + (char)active_set[32];
+                    text += ((color == 1) ? colors[char_value] : string.Empty); // + (char)active_set[32];
                 }
                 else if (char_value >> 4 == 0) //0x8..F
                 {
@@ -10140,7 +10140,7 @@ namespace Nikse.SubtitleEdit.Forms
                 container = control as ContainerControl;
             }
             return control;
-        }       
+        }
 
         internal void MainKeyDown(object sender, KeyEventArgs e)
         {
@@ -13317,7 +13317,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // create and insert
-            var newParagraph = new Paragraph("", videoPositionInMilliseconds, videoPositionInMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs);
+            var newParagraph = new Paragraph(string.Empty, videoPositionInMilliseconds, videoPositionInMilliseconds + Configuration.Settings.General.NewEmptyDefaultMs);
             if (GetCurrentSubtitleFormat().IsFrameBased)
             {
                 newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
