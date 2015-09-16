@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -223,7 +224,31 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 buffer[14] = JustificationCode;
                 buffer[15] = CommentFlag;
 
-                Encoding encoding = Encoding.Default;
+                var encoding = Encoding.Default;
+                if (header.LanguageCode == LanguageCodeChinese)
+                {
+                    var lines = HtmlUtil.RemoveHtmlTags(TextField, true).SplitToLines();
+                    var byteList = new List<byte>();
+                    encoding = Encoding.GetEncoding(1200); // 16-bit Unicode
+                    for (int i = 0; i < lines.Count(); i++)
+                    {
+                        var l = lines[i];
+                        if (i > 0)
+                        { // new line
+                            byteList.Add(0);
+                            byteList.Add(138);
+                        }
+                        byteList.AddRange(encoding.GetBytes(l).ToArray());
+                    }
+                    for (int i = 0; i < 112; i++)
+                    {
+                        if (i < byteList.Count)
+                            buffer[16 + i] = byteList[i];
+                        else
+                            buffer[16 + i] = 0x8f;
+                    }
+                    return buffer;
+                }
                 if (header.CharacterCodeTableNumber == "00")
                 {
                     encoding = Encoding.GetEncoding(20269);
@@ -646,6 +671,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         subtitle.Paragraphs.Add(p);
                         last = p;
                     }
+                    p.Text = HtmlUtil.FixInvalidItalicTags(p.Text);
                     lastExtensionBlockNumber = tti.ExtensionBlockNumber;
                 }
             }
@@ -1034,7 +1060,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             byte next = buffer[index + 17 + i];
                             if (b == 0 && next == textFieldTerminator)
                                 break;
-                            sb.Append(GetCharacter(out skipNext, header, buffer, index + 16 + i));
+                            if (b == 0 && next == 138) // new line
+                            {
+                                sb.AppendLine();
+                                skipNext = true;
+                            }
+                            else
+                            {
+                                sb.Append(GetCharacter(out skipNext, header, buffer, index + 16 + i));
+                            }
                         }
                     }
                     else if (b <= 0xf && (i == 0 || i == 2 || i == 3))
