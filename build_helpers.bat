@@ -18,7 +18,7 @@ IF NOT EXIST "src\UpdateLanguageFiles\bin\%ConfigurationName%\UpdateLanguageFile
   GOTO END
 )
 
-"src\UpdateLanguageFiles\bin\%ConfigurationName%\UpdateLanguageFiles.exe" "LanguageMaster.xml" "src\Logic\LanguageDeserializer.cs"
+"src\UpdateLanguageFiles\bin\%ConfigurationName%\UpdateLanguageFiles.exe" "LanguageMaster.xml" "libse\LanguageDeserializer.cs"
 
 IF %ERRORLEVEL% NEQ 0 (
   ECHO ERROR: Something went wrong when generating the language files...
