@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class ModifySelection : PositionAndSizeForm
     {
-        private SubtitleListView _subtitleListView;
+        private readonly SubtitleListView _subtitleListView;
         private Subtitle _subtitle;
         private bool _loading;
 
