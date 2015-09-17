@@ -492,6 +492,9 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <Normal>&amp;Normal</Normal>
     <CaseSensitive>&amp;Groß-/Kleinschreibung</CaseSensitive>
     <RegularExpression>Regulärer &amp;Ausdruck</RegularExpression>
+    <WholeWord>Nur ganze Wörter</WholeWord>
+    <Count>Zählen</Count>
+    <XNumberOfMatches>{0} Treffer</XNumberOfMatches>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Untertitel Text suchen</Title>
