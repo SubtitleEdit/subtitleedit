@@ -108,11 +108,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddToListView(Paragraph p, int index)
         {
             var item = new ListViewItem(string.Empty) { Tag = index, Checked = true };
-            var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString());
-            item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            item.SubItems.Add(subItem);
-
+            item.SubItems.Add(p.Number.ToString());
+            item.SubItems.Add(p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             listViewFixes.Items.Add(item);
         }
 
