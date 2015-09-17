@@ -10,15 +10,14 @@ namespace Nikse.SubtitleEdit.Logic
         public static string GenerateCSharpXmlDeserializerForLanguage()
         {
             var sb = new StringBuilder(@"using System.IO;
-using System.Xml;
 using System.Text;
-using Nikse.SubtitleEdit.Logic;
+using System.Xml;
 
 // !!! THIS FILE IS AUTO-GENERATED!!!
 // !!! THIS FILE IS AUTO-GENERATED!!!
 // !!! THIS FILE IS AUTO-GENERATED!!!
 
-namespace Nikse.SubtitleEdit.Logic
+namespace Nikse.SubtitleEdit.Core
 {
 
     public class LanguageDeserializer // NOTE: This class is AUTO-GENERATED!!!!
