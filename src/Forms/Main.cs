@@ -4814,12 +4814,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void Renumber()
-        {
-            if (_subtitle != null && _subtitle.Paragraphs != null && _subtitle.Paragraphs.Count > 0)
-                _subtitle.Renumber();
-        }
-
         private void RemoveTextForHearImparedToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (!IsSubtitleLoaded)
@@ -4843,7 +4837,7 @@ namespace Nikse.SubtitleEdit.Forms
                         else
                             ShowStatus(string.Format(_language.TextingForHearingImpairedRemovedXLines, count));
                         _subtitleListViewIndex = -1;
-                        Renumber();
+                        _subtitle.Renumber();
                         ShowSource();
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         if (_subtitle.Paragraphs.Count > 0)
