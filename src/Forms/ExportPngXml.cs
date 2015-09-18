@@ -2589,10 +2589,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     translateMatrix.Translate(1, 1);
                     shadowPath.Transform(translateMatrix);
 
-                    var p1 = new Pen(Color.FromArgb(parameter.ShadowAlpha, parameter.ShadowColor), parameter.BorderWidth);
-                    SetLineJoin(parameter.LineJoin, p1);
-                    g.DrawPath(p1, shadowPath);
-                    p1.Dispose();
+                    using (var p1 = new Pen(Color.FromArgb(parameter.ShadowAlpha, parameter.ShadowColor), parameter.BorderWidth))
+                    {
+                        SetLineJoin(parameter.LineJoin, p1);
+                        g.DrawPath(p1, shadowPath);
+                    }
                 }
             }
 
