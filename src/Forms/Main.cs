@@ -602,7 +602,7 @@ namespace Nikse.SubtitleEdit.Forms
             return Encoding.UTF8;
         }
 
-        private void AudioWaveform_OnNonParagraphRightClicked(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
+        private void AudioWaveform_OnNonParagraphRightClicked(object sender, AudioVisualizer.ParagraphEventArgs e)
         {
             addParagraphHereToolStripMenuItem.Visible = false;
             addParagraphAndPasteToolStripMenuItem.Visible = false;
@@ -617,7 +617,7 @@ namespace Nikse.SubtitleEdit.Forms
             contextMenuStripWaveform.Show(MousePosition.X, MousePosition.Y);
         }
 
-        private void AudioWaveform_OnDoubleClickNonParagraph(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
+        private void AudioWaveform_OnDoubleClickNonParagraph(object sender, AudioVisualizer.ParagraphEventArgs e)
         {
             if (mediaPlayer.VideoPlayer != null)
             {
@@ -639,7 +639,7 @@ namespace Nikse.SubtitleEdit.Forms
             SelectZoomTextInComboBox();
         }
 
-        private void AudioWaveform_OnTimeChangedAndOffsetRest(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
+        private void AudioWaveform_OnTimeChangedAndOffsetRest(object sender, AudioVisualizer.ParagraphEventArgs e)
         {
             if (mediaPlayer.VideoPlayer == null)
                 return;
@@ -680,7 +680,7 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.Pause();
         }
 
-        private void AudioWaveform_OnSingleClick(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
+        private void AudioWaveform_OnSingleClick(object sender, AudioVisualizer.ParagraphEventArgs e)
         {
             timerWaveform.Stop();
             _endSeconds = -1;
@@ -922,7 +922,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AudioWaveform_OnPositionSelected(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
+        private void AudioWaveform_OnPositionSelected(object sender, AudioVisualizer.ParagraphEventArgs e)
         {
             mediaPlayer.CurrentPosition = e.Seconds;
             if (e.Paragraph != null)
@@ -5571,7 +5571,7 @@ namespace Nikse.SubtitleEdit.Forms
             int index = -1;
             for (int i = 0; i < text.Length; i++)
             {
-                if (Nikse.SubtitleEdit.Forms.SpellCheck.SplitChars.Contains(text[i]))
+                if (Forms.SpellCheck.SplitChars.Contains(text[i]))
                 {
                     if (sb.Length > 0)
                     {
@@ -8948,7 +8948,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.Paragraphs.Clear();
 
             List<VobSubMergedPack> mergedVobSubPacks = new List<VobSubMergedPack>();
-            var idx = new Nikse.SubtitleEdit.Core.VobSub.Idx(matroskaSubtitleInfo.CodecPrivate.SplitToLines());
+            var idx = new Core.VobSub.Idx(matroskaSubtitleInfo.CodecPrivate.SplitToLines());
             foreach (var p in sub)
             {
                 if (matroskaSubtitleInfo.ContentEncodingType == 0) // compressed with zlib
