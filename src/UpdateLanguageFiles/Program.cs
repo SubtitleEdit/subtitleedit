@@ -7,7 +7,7 @@ namespace UpdateLanguageFiles
     internal class Program
     {
 
-        private static string workInProgress = "Updating language files...";
+        private const string WorkInProgress = "Updating language files...";
 
         private static int Main(string[] args)
         {
@@ -25,14 +25,13 @@ namespace UpdateLanguageFiles
                 return 1;
             }
 
-            Console.Write(workInProgress);
+            Console.Write(WorkInProgress);
 
             try
             {
                 int noOfChanges = 0;
 
-                var language = new Nikse.SubtitleEdit.Core.Language();
-                language.General.Version = FindVersionNumber();
+                var language = new Nikse.SubtitleEdit.Core.Language { General = { Version = FindVersionNumber() } };
                 var languageAsXml = language.GetCurrentLanguageAsXml();
                 var oldLanguageAsXml = string.Empty;
                 if (File.Exists(args[0]))
@@ -94,7 +93,7 @@ namespace UpdateLanguageFiles
             if (File.Exists(fileName))
             {
                 var text = File.ReadAllText(fileName);
-                var pattern = @"\[assembly: AssemblyVersion\(""(\d+\.\d+\.\d+)\.\[REVNO]""\)]";
+                const string pattern = @"\[assembly: AssemblyVersion\(""(\d+\.\d+\.\d+)\.\[REVNO]""\)]";
                 var version = System.Text.RegularExpressions.Regex.Match(text, pattern);
                 if (version.Success)
                 {
@@ -108,7 +107,7 @@ namespace UpdateLanguageFiles
             }
             Console.WriteLine();
             Console.WriteLine("WARNING: " + warning);
-            Console.Write(workInProgress);
+            Console.Write(WorkInProgress);
 
             return "unknown";
         }

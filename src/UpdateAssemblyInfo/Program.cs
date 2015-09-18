@@ -177,7 +177,6 @@ namespace UpdateAssemblyInfo
                     UpdateAssemblyInfo(seTemplateFileName, newVersionInfo);
                     UpdateAssemblyInfo(libSeTmplateFileName, newVersionInfo);
 
-
                     return 0;
                 }
                 Console.WriteLine("no changes");
