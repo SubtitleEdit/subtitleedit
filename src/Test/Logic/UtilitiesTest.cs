@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Core;
 
@@ -343,8 +344,8 @@ namespace Test.Logic
             sub.Paragraphs.Add(new Paragraph(test1, 0000, 11111));
             sub.Paragraphs.Add(new Paragraph(test2, 0000, 11111));
 
-            string output1 = FixCommonErrorsHelper.FixHyphensAdd(sub, 0, "en");
-            string output2 = FixCommonErrorsHelper.FixHyphensAdd(sub, 1, "en");
+            string output1 = Helper.FixHyphensAdd(sub, 0, "en");
+            string output2 = Helper.FixHyphensAdd(sub, 1, "en");
 
             Assert.AreEqual(output1, expected1);
             Assert.AreEqual(output2, expected2);

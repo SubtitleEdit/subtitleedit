@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 
-namespace Nikse.SubtitleEdit.Core.Forms
+namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
-    public static class FixCommonErrorsHelper
+    public static class Helper
     {
         public static string FixEllipsesStartHelper(string text)
         {

@@ -1,0 +1,170 @@
+﻿namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
+{
+    public class FixShortDisplayTimes : IFixCommonError
+    {
+
+        private IFixCallbacks _callbacks;
+
+        public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
+        {
+            var language = Configuration.Settings.Language.FixCommonErrors;
+            _callbacks = callbacks;
+
+            string fixAction = language.FixShortDisplayTime;
+            int noOfShortDisplayTimes = 0;
+            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            {
+                Paragraph p = subtitle.Paragraphs[i];
+                var skip = p.StartTime.IsMaxTime || p.EndTime.IsMaxTime;
+                double displayTime = p.Duration.TotalMilliseconds;
+                if (!skip && displayTime < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                {
+                    Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
+                    Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
+                    if (next == null || (p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines) < next.StartTime.TotalMilliseconds)
+                    {
+                        var temp = new Paragraph(p) { EndTime = { TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds } };
+                        if (Utilities.GetCharactersPerSecond(temp) <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                        {
+                            if (callbacks.AllowFix(p, fixAction))
+                            {
+                                string oldCurrent = p.ToString();
+                                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+                                noOfShortDisplayTimes++;
+                                callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                            }
+                        }
+                    }
+                    else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
+                             (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines))
+                    {
+                        if (callbacks.AllowFix(p, fixAction))
+                        {
+                            string oldCurrent = p.ToString();
+                            if (next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
+                                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+                            noOfShortDisplayTimes++;
+                            callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                        }
+                    }
+                    else
+                    {
+                        callbacks.LogStatus(language.FixShortDisplayTimes, string.Format(language.UnableToFixTextXY, i + 1, p));
+                        callbacks.AddtoTotalErrors(1);
+                        skip = true;
+                    }
+                }
+
+                double charactersPerSecond = Utilities.GetCharactersPerSecond(p);
+                if (!skip && charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                {
+                    var temp = new Paragraph(p);
+                    while (Utilities.GetCharactersPerSecond(temp) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                    {
+                        temp.EndTime.TotalMilliseconds++;
+                    }
+                    Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
+                    Paragraph nextNext = subtitle.GetParagraphOrDefault(i + 2);
+                    Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
+                    double diffMs = temp.Duration.TotalMilliseconds - p.Duration.TotalMilliseconds;
+
+                    // Normal - just make current subtitle duration longer
+                    if (next == null || temp.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
+                    {
+                        if (callbacks.AllowFix(p, fixAction))
+                        {
+                            string oldCurrent = p.ToString();
+                            p.EndTime.TotalMilliseconds = temp.EndTime.TotalMilliseconds;
+                            noOfShortDisplayTimes++;
+                            callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                        }
+                    }
+                    // Start current subtitle earlier (max 50 ms)
+                    else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
+                             diffMs < 50 && (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines))
+                    {
+                        noOfShortDisplayTimes = MoveStartTime(fixAction, noOfShortDisplayTimes, p, temp, next);
+                    }
+                    // Make current subtitle duration longer + move next subtitle
+                    else if (diffMs < 1000 &&
+                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime &&
+                             p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
+                             (nextNext == null || next.EndTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MinimumMillisecondsBetweenLines * 2 < nextNext.StartTime.TotalMilliseconds))
+                    {
+                        if (callbacks.AllowFix(p, fixAction))
+                        {
+                            string oldCurrent = p.ToString();
+                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds;
+                            var nextDurationMs = next.Duration.TotalMilliseconds;
+                            next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            next.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + nextDurationMs;
+                            noOfShortDisplayTimes++;
+                            callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                        }
+                    }
+                    // Make next subtitle duration shorter +  make current subtitle duration longer
+                    else if (diffMs < 1000 &&
+                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && Utilities.GetCharactersPerSecond(new Paragraph(next.Text, p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines, next.EndTime.TotalMilliseconds)) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                    {
+                        if (callbacks.AllowFix(p, fixAction))
+                        {
+                            string oldCurrent = p.ToString();
+                            next.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            noOfShortDisplayTimes++;
+                            callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                        }
+                    }
+                    // Make next-next subtitle duration shorter + move next + make current subtitle duration longer
+                    else if (diffMs < 500 &&
+                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && nextNext != null &&
+                             Utilities.GetCharactersPerSecond(new Paragraph(nextNext.Text, nextNext.StartTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MinimumMillisecondsBetweenLines, nextNext.EndTime.TotalMilliseconds - (diffMs))) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                    {
+                        if (callbacks.AllowFix(p, fixAction))
+                        {
+                            string oldCurrent = p.ToString();
+                            p.EndTime.TotalMilliseconds += diffMs;
+                            next.StartTime.TotalMilliseconds += diffMs;
+                            next.EndTime.TotalMilliseconds += diffMs;
+                            nextNext.StartTime.TotalMilliseconds += diffMs;
+                            noOfShortDisplayTimes++;
+                            callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                        }
+                    }
+                    // Start current subtitle earlier (max 200 ms)
+                    else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
+                             diffMs < 200 && (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines))
+                    {
+                        noOfShortDisplayTimes = MoveStartTime(fixAction, noOfShortDisplayTimes, p, temp, next);
+                    }
+                    else
+                    {
+                        callbacks.LogStatus(language.FixShortDisplayTimes, string.Format(language.UnableToFixTextXY, i + 1, p));
+                        callbacks.AddtoTotalErrors(1);
+                    }
+                }
+            }
+            if (noOfShortDisplayTimes > 0)
+            {
+                callbacks.AddToTotalFixes(noOfShortDisplayTimes);
+                callbacks.LogStatus(fixAction, string.Format(language.XDisplayTimesProlonged, noOfShortDisplayTimes));
+            }            
+        }
+
+        private int MoveStartTime(string fixAction, int noOfShortDisplayTimes, Paragraph p, Paragraph temp, Paragraph next)
+        {
+            if (_callbacks.AllowFix(p, fixAction))
+            {
+                string oldCurrent = p.ToString();
+                if (next != null && next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
+                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds;
+                noOfShortDisplayTimes++;
+                _callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+            }
+            return noOfShortDisplayTimes;
+        }
+
+    }
+}
