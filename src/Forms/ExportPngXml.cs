@@ -2040,7 +2040,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             string text = parameter.P.Text;
 
-            text = RemoveSubStationAlphaFormatting(text);
+            text = Utilities.RemoveSsaTags(text);
 
             text = text.Replace("<I>", "<i>");
             text = text.Replace("</I>", "</i>");
@@ -2654,18 +2654,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 gr.DrawImage(bmp, new Rectangle(0, 0, bmp.Width, h));
             }
             return newImage;
-        }
-
-        private static string RemoveSubStationAlphaFormatting(string s)
-        {
-            int indexOfBegin = s.IndexOf('{');
-            while (indexOfBegin >= 0 && s.IndexOf('}') > indexOfBegin)
-            {
-                int indexOfEnd = s.IndexOf('}');
-                s = s.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = s.IndexOf('{');
-            }
-            return s;
         }
 
         internal void Initialize(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VideoInfo videoInfo, string videoFileName)
