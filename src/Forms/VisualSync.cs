@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
@@ -421,8 +422,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _originalSubtitle.WasLoadedWithFrameNumbers };
                 foreach (Paragraph p in _paragraphs)
                     tmpSubtitle.Paragraphs.Add(new Paragraph(p));
-                formFix.Initialize(tmpSubtitle, tmpSubtitle.OriginalFormat, System.Text.Encoding.UTF8);
-                formFix.FixOverlappingDisplayTimes();
+
+                new FixOverlappingDisplayTimes().Fix(tmpSubtitle, new EmptyFixCallback());
+
                 _paragraphs.Clear();
                 foreach (Paragraph p in formFix.FixedSubtitle.Paragraphs)
                     _paragraphs.Add(new Paragraph(p));

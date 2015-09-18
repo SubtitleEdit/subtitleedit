@@ -1,6 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Dictionaries;
-using Nikse.SubtitleEdit.Core.Forms;
+using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
@@ -15,7 +15,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class FixCommonErrors : Form
+    public sealed partial class FixCommonErrors : Form, IFixCallbacks
     {
         private const int IndexRemoveEmptyLines = 0;
         private const int IndexOverlappingDisplayTime = 1;
@@ -54,15 +54,6 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly LanguageStructure.FixCommonErrors _language;
         private readonly LanguageStructure.General _languageGeneral;
         private bool _hasFixesBeenMade;
-
-        private static readonly Regex FixMissingSpacesReComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesRePeriod = new Regex(@"[a-z][a-z][.][a-zA-Z]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![a-zA-Z]", RegexOptions.Compiled);
-        private static readonly Regex FixMissingSpacesReColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
-        private static readonly Regex UrlCom = new Regex(@"\w\.com\b", RegexOptions.Compiled);
-        private static readonly Regex UrlNet = new Regex(@"\w\.net\b", RegexOptions.Compiled);
-        private static readonly Regex UrlOrg = new Regex(@"\w\.org\b", RegexOptions.Compiled);
 
         private static readonly Regex ReAfterLowercaseLetter = new Regex(@"[a-zæøåäöéùáàìéóúñüéíóúñü]I", RegexOptions.Compiled);
         private static readonly Regex ReBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöéùáàìéóúñüéíóúñü]", RegexOptions.Compiled);
@@ -111,6 +102,26 @@ namespace Nikse.SubtitleEdit.Forms
         private int _numberOfImportantLogMessages;
         private List<int> _deleteIndices = new List<int>();
         private HashSet<string> _notAllowedFixes;
+
+        public SubtitleFormat Format
+        {
+            get { return _format; }
+        }
+
+        public void AddToTotalFixes(int count)
+        {
+            _totalFixes += count;
+        }
+
+        public void AddtoTotalErrors(int count)
+        {
+            _totalErrors += count;
+        }
+
+        public void AddtoDeleteIndices(int index)
+        {
+            _deleteIndices.Add(index);
+        }
 
         public Subtitle FixedSubtitle
         {
@@ -326,16 +337,17 @@ namespace Nikse.SubtitleEdit.Forms
             FixCommonErrorsSettings ce = Configuration.Settings.CommonErrors;
             _fixActions = new List<FixItem>
             {
-                new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, string.Empty, FixEmptyLines, ce.EmptyLinesTicked),
-                new FixItem(_language.FixOverlappingDisplayTimes, string.Empty, FixOverlappingDisplayTimes, ce.OverlappingDisplayTimeTicked),
-                new FixItem(_language.FixShortDisplayTimes, string.Empty, FixShortDisplayTimes, ce.TooShortDisplayTimeTicked),
-                new FixItem(_language.FixLongDisplayTimes, string.Empty, FixLongDisplayTimes, ce.TooLongDisplayTimeTicked),
-                new FixItem(_language.FixInvalidItalicTags, _language.FixInvalidItalicTagsExample, FixInvalidItalicTags, ce.InvalidItalicTagsTicked),
-                new FixItem(_language.RemoveUnneededSpaces, _language.RemoveUnneededSpacesExample, FixUnneededSpaces, ce.UnneededSpacesTicked),
-                new FixItem(_language.RemoveUnneededPeriods, _language.RemoveUnneededPeriodsExample, FixUnneededPeriods, ce.UnneededPeriodsTicked),
-                new FixItem(_language.FixMissingSpaces, _language.FixMissingSpacesExample, FixMissingSpaces, ce.MissingSpacesTicked),
-                new FixItem(_language.BreakLongLines, string.Empty, FixLongLines, ce.BreakLongLinesTicked),
-                new FixItem(_language.RemoveLineBreaks, string.Empty, FixShortLines, ce.MergeShortLinesTicked),
+                new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, string.Empty, () => new FixEmptyLines().Fix(Subtitle, this), ce.EmptyLinesTicked),               
+                new FixItem(_language.FixOverlappingDisplayTimes, string.Empty, () => new FixOverlappingDisplayTimes().Fix(Subtitle, this), ce.OverlappingDisplayTimeTicked),
+                new FixItem(_language.FixShortDisplayTimes, string.Empty, () => new FixShortDisplayTimes().Fix(Subtitle, this), ce.TooShortDisplayTimeTicked),
+                new FixItem(_language.FixLongDisplayTimes, string.Empty, () => new FixLongDisplayTimes().Fix(Subtitle, this), ce.TooLongDisplayTimeTicked),
+                new FixItem(_language.FixInvalidItalicTags, _language.FixInvalidItalicTagsExample, () => new FixInvalidItalicTags().Fix(Subtitle, this), ce.InvalidItalicTagsTicked),
+                new FixItem(_language.RemoveUnneededSpaces, _language.RemoveUnneededSpacesExample, () => new FixUnneededSpaces().Fix(Subtitle, this), ce.UnneededSpacesTicked),
+                new FixItem(_language.RemoveUnneededPeriods, _language.RemoveUnneededPeriodsExample, () => new FixUnneededPeriods().Fix(Subtitle, this), ce.UnneededPeriodsTicked),
+                new FixItem(_language.FixMissingSpaces, _language.FixMissingSpacesExample, () => new FixMissingSpaces().Fix(Subtitle, this), ce.MissingSpacesTicked),                
+                new FixItem(_language.BreakLongLines, string.Empty, () => new FixLongLines().Fix(Subtitle, this), ce.BreakLongLinesTicked),
+                new FixItem(_language.RemoveLineBreaks, string.Empty, () => new FixShortLines().Fix(Subtitle, this), ce.MergeShortLinesTicked),
+
                 new FixItem(_language.RemoveLineBreaksAll, string.Empty, FixShortLinesAll, ce.MergeShortLinesAllTicked),
                 new FixItem(_language.FixDoubleApostrophes, string.Empty, FixDoubleApostrophes, ce.DoubleApostropheToQuoteTicked),
                 new FixItem(_language.FixMusicNotation, _language.FixMusicNotationExample, FixMusicNotation, ce.FixMusicNotationTicked),
@@ -457,7 +469,7 @@ namespace Nikse.SubtitleEdit.Forms
             listView1.Items.Add(item);
         }
 
-        private void AddFixToListView(Paragraph p, string action, string before, string after)
+        public void AddFixToListView(Paragraph p, string action, string before, string after)
         {
             if (_onlyListFixes)
             {
@@ -504,649 +516,8 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     _appliedLog.AppendLine(string.Format(_language.FixedOkXY, sender, message));
             }
-        }
-
-        public void FixEmptyLines()
-        {
-            string fixAction0 = _language.RemovedEmptyLine;
-            string fixAction1 = _language.RemovedEmptyLineAtTop;
-            string fixAction2 = _language.RemovedEmptyLineAtBottom;
-
-            if (Subtitle.Paragraphs.Count == 0)
-                return;
-
-            int emptyLinesRemoved = 0;
-
-            listViewFixes.BeginUpdate();
-            for (int i = Subtitle.Paragraphs.Count - 1; i >= 0; i--)
-            {
-                Paragraph p = Subtitle.Paragraphs[i];
-                if (!string.IsNullOrEmpty(p.Text))
-                {
-                    string text = p.Text.Trim(' ');
-                    var oldText = text;
-                    var pre = string.Empty;
-                    var post = string.Empty;
-
-                    // Ssa Tags
-                    if (text.StartsWith("{\\", StringComparison.Ordinal))
-                    {
-                        var endIDx = text.IndexOf('}', 2);
-                        if (endIDx > 2)
-                        {
-                            pre = text.Substring(0, endIDx + 1);
-                            text = text.Remove(0, endIDx + 1);
-                        }
-                    }
-
-                    while (text.LineStartsWithHtmlTag(true, true))
-                    {
-                        // Three length tag
-                        if (text[2] == '>')
-                        {
-                            pre += text.Substring(0, 3);
-                            text = text.Remove(0, 3);
-                        }
-                        else // <font ...>
-                        {
-                            var closeIdx = text.IndexOf('>');
-                            if (closeIdx <= 2)
-                                break;
-
-                            pre += text.Substring(0, closeIdx + 1);
-                            text = text.Remove(0, closeIdx + 1);
-                        }
-                    }
-                    while (text.LineEndsWithHtmlTag(true, true))
-                    {
-                        var len = text.Length;
-
-                        // Three length tag
-                        if (text[len - 4] == '<')
-                        {
-                            post = text.Substring(text.Length - 4) + post;
-                            text = text.Remove(text.Length - 4);
-                        }
-                        else // </font>
-                        {
-                            post = text.Substring(text.Length - 7) + post;
-                            text = text.Remove(text.Length - 7);
-                        }
-                    }
-
-                    if (AllowFix(p, fixAction1) && text.StartsWith(Environment.NewLine, StringComparison.Ordinal))
-                    {
-                        if (pre.Length > 0)
-                            text = pre + text.TrimStart(Utilities.NewLineChars);
-                        else
-                            text = text.TrimStart(Utilities.NewLineChars);
-                        p.Text = text;
-                        emptyLinesRemoved++;
-                        AddFixToListView(p, fixAction1, oldText, p.Text);
-                    }
-                    else
-                    {
-                        text = pre + text;
-                    }
-
-                    if (AllowFix(p, fixAction2) && text.EndsWith(Environment.NewLine, StringComparison.Ordinal))
-                    {
-                        if (post.Length > 0)
-                            text = text.TrimEnd(Utilities.NewLineChars) + post;
-                        else
-                            text = text.TrimEnd(Utilities.NewLineChars);
-                        p.Text = text;
-                        emptyLinesRemoved++;
-                        AddFixToListView(p, fixAction2, oldText, p.Text);
-                    }
-                }
-            }
-
-            // this must be the very last action done, or line numbers will be messed up!!!
-            for (int i = Subtitle.Paragraphs.Count - 1; i >= 0; i--)
-            {
-                Paragraph p = Subtitle.Paragraphs[i];
-                var text = HtmlUtil.RemoveHtmlTags(p.Text, true).Trim();
-                if (AllowFix(p, fixAction0) && string.IsNullOrEmpty(text))
-                {
-                    Subtitle.Paragraphs.RemoveAt(i);
-                    emptyLinesRemoved++;
-                    AddFixToListView(p, fixAction0, p.Text, string.Format("[{0}]", _language.RemovedEmptyLine));
-                    _deleteIndices.Add(i);
-                }
-            }
-
-            listViewFixes.EndUpdate();
-            if (emptyLinesRemoved > 0)
-            {
-                LogStatus(_language.RemovedEmptyLinesUnsedLineBreaks, string.Format(_language.EmptyLinesRemovedX, emptyLinesRemoved));
-                _totalFixes += emptyLinesRemoved;
-                Subtitle.Renumber();
-            }
-        }
-
-        public void FixOverlappingDisplayTimes()
-        {
-            // negative display time
-            string fixAction = _language.FixOverlappingDisplayTime;
-            int noOfOverlappingDisplayTimesFixed = 0;
-            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
-            {
-                var p = Subtitle.Paragraphs[i];
-                var oldP = new Paragraph(p);
-                if (p.Duration.TotalMilliseconds < 0) // negative display time...
-                {
-                    bool isFixed = false;
-                    string status = string.Format(_language.StartTimeLaterThanEndTime,
-                                                    i + 1, p.StartTime, p.EndTime, p.Text, Environment.NewLine);
-
-                    var prev = Subtitle.GetParagraphOrDefault(i - 1);
-                    var next = Subtitle.GetParagraphOrDefault(i + 1);
-
-                    double wantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text) * 0.9;
-
-                    if (next == null || next.StartTime.TotalMilliseconds > p.StartTime.TotalMilliseconds + wantedDisplayTime)
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + wantedDisplayTime;
-                            isFixed = true;
-                        }
-                    }
-                    else if (next.StartTime.TotalMilliseconds > p.StartTime.TotalMilliseconds + 500.0)
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 500.0;
-                            isFixed = true;
-                        }
-                    }
-                    else if (prev == null || next.StartTime.TotalMilliseconds - wantedDisplayTime > prev.EndTime.TotalMilliseconds)
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            p.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - wantedDisplayTime;
-                            p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
-                            isFixed = true;
-                        }
-                    }
-                    else
-                    {
-                        LogStatus(_language.FixOverlappingDisplayTimes, string.Format(_language.UnableToFixStartTimeLaterThanEndTime,
-                                                    i + 1, p), true);
-                        _totalErrors++;
-                    }
-
-                    if (isFixed)
-                    {
-                        noOfOverlappingDisplayTimesFixed++;
-                        status = string.Format(_language.XFixedToYZ, status, Environment.NewLine, p);
-                        LogStatus(_language.FixOverlappingDisplayTimes, status);
-                        AddFixToListView(p, fixAction, oldP.ToString(), p.ToString());
-                    }
-                }
-            }
-
-            // overlapping display time
-            for (int i = 1; i < Subtitle.Paragraphs.Count; i++)
-            {
-                Paragraph p = Subtitle.Paragraphs[i];
-                Paragraph prev = Subtitle.GetParagraphOrDefault(i - 1);
-                Paragraph target = prev;
-                string oldCurrent = p.ToString();
-                string oldPrevious = prev.ToString();
-                double prevWantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(prev.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
-                double currentWantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
-                double prevOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(prev.Text);
-                double currentOptimalDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
-                bool canBeEqual = _format != null && (_format.GetType() == typeof(AdvancedSubStationAlpha) || _format.GetType() == typeof(SubStationAlpha));
-                if (!canBeEqual)
-                    canBeEqual = Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart;
-
-                double diff = prev.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds;
-                if (!prev.StartTime.IsMaxTime && !p.StartTime.IsMaxTime && diff >= 0 && !(canBeEqual && Math.Abs(diff) < 0.001))
-                {
-                    int diffHalf = (int)(diff / 2);
-                    if (!Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart && Math.Abs(p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds) < 0.001 &&
-                        prev.Duration.TotalMilliseconds > 100)
-                    {
-                        if (AllowFix(target, fixAction))
-                        {
-                            if (!canBeEqual)
-                            {
-                                bool okEqual = true;
-                                if (prev.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
-                                    prev.EndTime.TotalMilliseconds--;
-                                else if (p.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
-                                    p.StartTime.TotalMilliseconds++;
-                                else
-                                    okEqual = false;
-                                if (okEqual)
-                                {
-                                    noOfOverlappingDisplayTimesFixed++;
-                                    AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
-                                }
-                            }
-                        }
-                        //prev.EndTime.TotalMilliseconds--;
-                    }
-                    else if (prevOptimalDisplayTime <= (p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds))
-                    {
-                        if (AllowFix(target, fixAction))
-                        {
-                            prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;
-                            if (canBeEqual)
-                                prev.EndTime.TotalMilliseconds++;
-                            noOfOverlappingDisplayTimesFixed++;
-                            AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
-                        }
-                    }
-                    else if (diff > 0 && currentOptimalDisplayTime <= p.Duration.TotalMilliseconds - diffHalf &&
-                             prevOptimalDisplayTime <= prev.Duration.TotalMilliseconds - diffHalf)
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            prev.EndTime.TotalMilliseconds -= diffHalf;
-                            p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
-                            noOfOverlappingDisplayTimesFixed++;
-                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                        }
-                    }
-                    else if (currentOptimalDisplayTime <= p.EndTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds)
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
-                            if (canBeEqual)
-                                p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
-                            noOfOverlappingDisplayTimesFixed++;
-                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                        }
-                    }
-                    else if (diff > 0 && currentWantedDisplayTime <= p.Duration.TotalMilliseconds - diffHalf &&
-                             prevWantedDisplayTime <= prev.Duration.TotalMilliseconds - diffHalf)
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            prev.EndTime.TotalMilliseconds -= diffHalf;
-                            p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
-                            noOfOverlappingDisplayTimesFixed++;
-                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                        }
-                    }
-                    else if (prevWantedDisplayTime <= (p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds))
-                    {
-                        if (AllowFix(target, fixAction))
-                        {
-                            prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;
-                            if (canBeEqual)
-                                prev.EndTime.TotalMilliseconds++;
-                            noOfOverlappingDisplayTimesFixed++;
-                            AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
-                        }
-                    }
-                    else if (currentWantedDisplayTime <= p.EndTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds)
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
-                            if (canBeEqual)
-                                p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
-                            noOfOverlappingDisplayTimesFixed++;
-                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                        }
-                    }
-                    else if (Math.Abs(p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds) < 10 && p.Duration.TotalMilliseconds > 1)
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            prev.EndTime.TotalMilliseconds -= 2;
-                            p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
-                            if (canBeEqual)
-                                p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
-                            noOfOverlappingDisplayTimesFixed++;
-                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                        }
-                    }
-                    else if (Math.Abs(p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds) < 10 && Math.Abs(p.EndTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds) < 10)
-                    { // merge lines with same time codes
-                        if (AllowFix(target, fixAction))
-                        {
-                            prev.Text = prev.Text.Replace(Environment.NewLine, " ");
-                            p.Text = p.Text.Replace(Environment.NewLine, " ");
-
-                            string stripped = HtmlUtil.RemoveHtmlTags(prev.Text).TrimStart();
-                            if (!stripped.StartsWith("- ", StringComparison.Ordinal))
-                                prev.Text = "- " + prev.Text.TrimStart();
-
-                            stripped = HtmlUtil.RemoveHtmlTags(p.Text).TrimStart();
-                            if (!stripped.StartsWith("- ", StringComparison.Ordinal))
-                                p.Text = "- " + p.Text.TrimStart();
-
-                            prev.Text = prev.Text.Trim() + Environment.NewLine + p.Text;
-                            p.Text = string.Empty;
-                            noOfOverlappingDisplayTimesFixed++;
-                            AddFixToListView(target, fixAction, oldCurrent, p.ToString());
-
-                            p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
-                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
-                            if (canBeEqual)
-                            {
-                                p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
-                                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            LogStatus(_language.FixOverlappingDisplayTimes, string.Format(_language.UnableToFixTextXY, i + 1, Environment.NewLine + prev.Number + "  " + prev + Environment.NewLine + p.Number + "  " + p), true);
-                            _totalErrors++;
-                        }
-                    }
-                }
-            }
-
-            if (noOfOverlappingDisplayTimesFixed > 0)
-            {
-                _totalFixes += noOfOverlappingDisplayTimesFixed;
-                LogStatus(fixAction, string.Format(_language.XOverlappingTimestampsFixed, noOfOverlappingDisplayTimesFixed));
-            }
-        }
-
-        public void FixShortDisplayTimes()
-        {
-            string fixAction = _language.FixShortDisplayTime;
-            int noOfShortDisplayTimes = 0;
-            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
-            {
-                Paragraph p = Subtitle.Paragraphs[i];
-                var skip = p.StartTime.IsMaxTime || p.EndTime.IsMaxTime;
-                double displayTime = p.Duration.TotalMilliseconds;
-                if (!skip && displayTime < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
-                {
-                    Paragraph next = Subtitle.GetParagraphOrDefault(i + 1);
-                    Paragraph prev = Subtitle.GetParagraphOrDefault(i - 1);
-                    if (next == null || (p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines) < next.StartTime.TotalMilliseconds)
-                    {
-                        var temp = new Paragraph(p) { EndTime = { TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds } };
-                        if (Utilities.GetCharactersPerSecond(temp) <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
-                        {
-                            if (AllowFix(p, fixAction))
-                            {
-                                string oldCurrent = p.ToString();
-                                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
-                                noOfShortDisplayTimes++;
-                                AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                            }
-                        }
-                    }
-                    else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
-                             (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines))
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            string oldCurrent = p.ToString();
-                            if (next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
-                                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                            p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
-                            noOfShortDisplayTimes++;
-                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                        }
-                    }
-                    else
-                    {
-                        LogStatus(_language.FixShortDisplayTimes, string.Format(_language.UnableToFixTextXY, i + 1, p));
-                        _totalErrors++;
-                        skip = true;
-                    }
-                }
-
-                double charactersPerSecond = Utilities.GetCharactersPerSecond(p);
-                if (!skip && charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
-                {
-                    var temp = new Paragraph(p);
-                    while (Utilities.GetCharactersPerSecond(temp) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
-                    {
-                        temp.EndTime.TotalMilliseconds++;
-                    }
-                    Paragraph next = Subtitle.GetParagraphOrDefault(i + 1);
-                    Paragraph nextNext = Subtitle.GetParagraphOrDefault(i + 2);
-                    Paragraph prev = Subtitle.GetParagraphOrDefault(i - 1);
-                    double diffMs = temp.Duration.TotalMilliseconds - p.Duration.TotalMilliseconds;
-
-                    // Normal - just make current subtitle duration longer
-                    if (next == null || temp.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            string oldCurrent = p.ToString();
-                            p.EndTime.TotalMilliseconds = temp.EndTime.TotalMilliseconds;
-                            noOfShortDisplayTimes++;
-                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                        }
-                    }
-                    // Start current subtitle earlier (max 50 ms)
-                    else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
-                             diffMs < 50 && (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines))
-                    {
-                        noOfShortDisplayTimes = MoveStartTime(fixAction, noOfShortDisplayTimes, p, temp, next);
-                    }
-                    // Make current subtitle duration longer + move next subtitle
-                    else if (diffMs < 1000 &&
-                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime &&
-                             p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
-                             (nextNext == null || next.EndTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MinimumMillisecondsBetweenLines * 2 < nextNext.StartTime.TotalMilliseconds))
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            string oldCurrent = p.ToString();
-                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds;
-                            var nextDurationMs = next.Duration.TotalMilliseconds;
-                            next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                            next.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + nextDurationMs;
-                            noOfShortDisplayTimes++;
-                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                        }
-                    }
-                    // Make next subtitle duration shorter +  make current subtitle duration longer
-                    else if (diffMs < 1000 &&
-                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && Utilities.GetCharactersPerSecond(new Paragraph(next.Text, p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines, next.EndTime.TotalMilliseconds)) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            string oldCurrent = p.ToString();
-                            next.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                            p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                            noOfShortDisplayTimes++;
-                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                        }
-                    }
-                    // Make next-next subtitle duration shorter + move next + make current subtitle duration longer
-                    else if (diffMs < 500 &&
-                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && nextNext != null &&
-                             Utilities.GetCharactersPerSecond(new Paragraph(nextNext.Text, nextNext.StartTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MinimumMillisecondsBetweenLines, nextNext.EndTime.TotalMilliseconds - (diffMs))) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            string oldCurrent = p.ToString();
-                            p.EndTime.TotalMilliseconds += diffMs;
-                            next.StartTime.TotalMilliseconds += diffMs;
-                            next.EndTime.TotalMilliseconds += diffMs;
-                            nextNext.StartTime.TotalMilliseconds += diffMs;
-                            noOfShortDisplayTimes++;
-                            AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                        }
-                    }
-                    // Start current subtitle earlier (max 200 ms)
-                    else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
-                             diffMs < 200 && (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines))
-                    {
-                        noOfShortDisplayTimes = MoveStartTime(fixAction, noOfShortDisplayTimes, p, temp, next);
-                    }
-                    else
-                    {
-                        LogStatus(_language.FixShortDisplayTimes, string.Format(_language.UnableToFixTextXY, i + 1, p));
-                        _totalErrors++;
-                    }
-                }
-            }
-            if (noOfShortDisplayTimes > 0)
-            {
-                _totalFixes += noOfShortDisplayTimes;
-                LogStatus(fixAction, string.Format(_language.XDisplayTimesProlonged, noOfShortDisplayTimes));
-            }
-        }
-
-        private int MoveStartTime(string fixAction, int noOfShortDisplayTimes, Paragraph p, Paragraph temp, Paragraph next)
-        {
-            if (AllowFix(p, fixAction))
-            {
-                string oldCurrent = p.ToString();
-                if (next != null && next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
-                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds;
-                noOfShortDisplayTimes++;
-                AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-            }
-            return noOfShortDisplayTimes;
-        }
-
-        public void FixInvalidItalicTags()
-        {
-            const string beginTagUpper = "<I>";
-            const string endTagUpper = "</I>";
-            const string beginTag = "<i>";
-            const string endTag = "</i>";
-            string fixAction = _language.FixInvalidItalicTag;
-            int noOfInvalidHtmlTags = 0;
-            listViewFixes.BeginUpdate();
-            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
-            {
-                if (AllowFix(Subtitle.Paragraphs[i], fixAction))
-                {
-                    var text = Subtitle.Paragraphs[i].Text;
-                    if (text.Contains('<'))
-                    {
-                        text = text.Replace(beginTagUpper, beginTag).Replace(endTagUpper, endTag);
-                        string oldText = text;
-
-                        text = HtmlUtil.FixInvalidItalicTags(text);
-                        if (text != oldText)
-                        {
-                            Subtitle.Paragraphs[i].Text = text;
-                            noOfInvalidHtmlTags++;
-                            AddFixToListView(Subtitle.Paragraphs[i], fixAction, oldText, text);
-                        }
-                    }
-                }
-            }
-            listViewFixes.EndUpdate();
-            listViewFixes.Refresh();
-            if (noOfInvalidHtmlTags > 0)
-            {
-                _totalFixes += noOfInvalidHtmlTags;
-                LogStatus(_language.FixInvalidItalicTags, string.Format(_language.XInvalidHtmlTagsFixed, noOfInvalidHtmlTags));
-            }
-        }
-
-        public void FixLongDisplayTimes()
-        {
-            string fixAction = _language.FixLongDisplayTime;
-            int noOfLongDisplayTimes = 0;
-            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
-            {
-                Paragraph p = Subtitle.Paragraphs[i];
-                double maxDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text) * 8.0;
-                if (maxDisplayTime > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                    maxDisplayTime = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-                double displayTime = p.Duration.TotalMilliseconds;
-
-                bool allowFix = AllowFix(p, fixAction);
-                if (allowFix && displayTime > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                {
-                    string oldCurrent = p.ToString();
-                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-                    noOfLongDisplayTimes++;
-                    AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                }
-                else if (allowFix && maxDisplayTime < displayTime)
-                {
-                    string oldCurrent = p.ToString();
-                    displayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
-                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + displayTime;
-                    noOfLongDisplayTimes++;
-                    AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                }
-            }
-            if (noOfLongDisplayTimes > 0)
-            {
-                _totalFixes += noOfLongDisplayTimes;
-                LogStatus(_language.FixLongDisplayTimes, string.Format(_language.XDisplayTimesShortned, noOfLongDisplayTimes));
-            }
-        }
-
-        public void FixLongLines()
-        {
-            string fixAction = _language.BreakLongLine;
-            int noOfLongLines = 0;
-            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
-            {
-                Paragraph p = Subtitle.Paragraphs[i];
-                var lines = p.Text.SplitToLines();
-                bool tooLong = false;
-                foreach (string line in lines)
-                {
-                    if (HtmlUtil.RemoveHtmlTags(line, true).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                    {
-                        tooLong = true;
-                        break;
-                    }
-                }
-                if (AllowFix(p, fixAction) && tooLong)
-                {
-                    string oldText = p.Text;
-                    p.Text = Utilities.AutoBreakLine(p.Text, Language);
-                    if (oldText != p.Text)
-                    {
-                        noOfLongLines++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                    else
-                    {
-                        LogStatus(fixAction, string.Format(_language.UnableToFixTextXY, i + 1, p));
-                        _totalErrors++;
-                    }
-                }
-            }
-            if (noOfLongLines > 0)
-                LogStatus(_language.BreakLongLines, string.Format(_language.XLineBreaksAdded, noOfLongLines));
-        }
-
-        public void FixShortLines()
-        {
-            string fixAction = _language.MergeShortLine;
-            int noOfShortLines = 0;
-            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
-            {
-                Paragraph p = Subtitle.Paragraphs[i];
-                string oldText = p.Text;
-                var text = FixCommonErrorsHelper.FixShortLines(p.Text);
-                if (AllowFix(p, fixAction) && oldText != text)
-                {
-                    p.Text = text;
-                    noOfShortLines++;
-                    AddFixToListView(p, fixAction, oldText, p.Text);
-                }
-            }
-            if (noOfShortLines > 0)
-            {
-                _totalFixes += noOfShortLines;
-                LogStatus(_language.RemoveLineBreaks, string.Format(_language.XLinesUnbreaked, noOfShortLines));
-            }
-        }
-
+        }      
+     
         public void FixShortLinesAll()
         {
             string fixAction = _language.MergeShortLineAll;
@@ -1175,409 +546,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _totalFixes += noOfShortLines;
                 LogStatus(_language.RemoveLineBreaks, string.Format(_language.XLinesUnbreaked, noOfShortLines));
             }
-        }
-
-        public void FixUnneededSpaces()
-        {
-            string fixAction = _language.UnneededSpace;
-            int doubleSpaces = 0;
-            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
-            {
-                Paragraph p = Subtitle.Paragraphs[i];
-                if (AllowFix(p, fixAction))
-                {
-                    var oldText = p.Text;
-                    var text = Utilities.RemoveUnneededSpaces(p.Text, Language);
-                    if (text.Length != oldText.Length && (Utilities.CountTagInText(text, ' ') + Utilities.CountTagInText(text, '\t')) < (Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, '\u00A0') + Utilities.CountTagInText(oldText, '\t')))
-                    {
-                        doubleSpaces++;
-                        p.Text = text;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                }
-            }
-            if (doubleSpaces > 0)
-            {
-                _totalFixes += doubleSpaces;
-                LogStatus(_language.RemoveUnneededSpaces, string.Format(_language.XUnneededSpacesRemoved, doubleSpaces));
-            }
-        }
-
-        public void FixUnneededPeriods()
-        {
-            string fixAction = _language.UnneededPeriod;
-            int unneededPeriodsFixed = 0;
-            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
-            {
-                Paragraph p = Subtitle.Paragraphs[i];
-                var oldText = p.Text;
-                if (AllowFix(p, fixAction))
-                {
-                    if (p.Text.Contains("!." + Environment.NewLine))
-                    {
-                        p.Text = p.Text.Replace("!." + Environment.NewLine, "!" + Environment.NewLine);
-                        unneededPeriodsFixed++;
-                    }
-                    if (p.Text.Contains("?." + Environment.NewLine))
-                    {
-                        p.Text = p.Text.Replace("?." + Environment.NewLine, "?" + Environment.NewLine);
-                        unneededPeriodsFixed++;
-                    }
-                    if (p.Text.EndsWith("!.", StringComparison.Ordinal))
-                    {
-                        p.Text = p.Text.TrimEnd('.');
-                        unneededPeriodsFixed++;
-                    }
-                    if (p.Text.EndsWith("?.", StringComparison.Ordinal))
-                    {
-                        p.Text = p.Text.TrimEnd('.');
-                        unneededPeriodsFixed++;
-                    }
-                    if (p.Text.Contains("!. "))
-                    {
-                        p.Text = p.Text.Replace("!. ", "! ");
-                        unneededPeriodsFixed++;
-                    }
-                    if (p.Text.Contains("?. "))
-                    {
-                        p.Text = p.Text.Replace("?. ", "? ");
-                        unneededPeriodsFixed++;
-                    }
-
-                    if (p.Text != oldText)
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                }
-            }
-            if (unneededPeriodsFixed > 0)
-            {
-                _totalFixes += unneededPeriodsFixed;
-                LogStatus(_language.RemoveUnneededPeriods, string.Format(_language.XUnneededPeriodsRemoved, unneededPeriodsFixed));
-            }
-        }
-
-        public void FixMissingSpaces()
-        {
-            string languageCode = Language;
-            string fixAction = _language.FixMissingSpace;
-            int missingSpaces = 0;
-            const string expectedChars = @"""”<.";
-            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
-            {
-                Paragraph p = Subtitle.Paragraphs[i];
-
-                // missing space after comma ","
-                Match match = FixMissingSpacesReComma.Match(p.Text);
-                while (match.Success)
-                {
-                    bool doFix = !expectedChars.Contains(p.Text[match.Index + 2]);
-
-                    if (doFix && languageCode == "el" && (p.Text.Substring(match.Index).StartsWith("ό,τι", StringComparison.Ordinal) || p.Text.Substring(match.Index).StartsWith("ο,τι", StringComparison.Ordinal)))
-                        doFix = false;
-
-                    if (doFix && AllowFix(p, fixAction))
-                    {
-                        missingSpaces++;
-                        string oldText = p.Text;
-                        p.Text = p.Text.Replace(match.Value, match.Value[0] + ", " + match.Value[match.Value.Length - 1]);
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                    match = match.NextMatch();
-                }
-
-                bool allowFix = AllowFix(p, fixAction);
-
-                // missing space after "?"
-                match = FixMissingSpacesReQuestionMark.Match(p.Text);
-                while (match.Success)
-                {
-                    if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
-                    {
-                        missingSpaces++;
-                        string oldText = p.Text;
-                        p.Text = p.Text.Replace(match.Value, match.Value[0] + "? " + match.Value[match.Value.Length - 1]);
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                    match = FixMissingSpacesReQuestionMark.Match(p.Text, match.Index + 1);
-                }
-
-                // missing space after "!"
-                match = FixMissingSpacesReExclamation.Match(p.Text);
-                while (match.Success)
-                {
-                    if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
-                    {
-                        missingSpaces++;
-                        string oldText = p.Text;
-                        p.Text = p.Text.Replace(match.Value, match.Value[0] + "! " + match.Value[match.Value.Length - 1]);
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                    match = FixMissingSpacesReExclamation.Match(p.Text, match.Index + 1);
-                }
-
-                // missing space after ":"
-                match = FixMissingSpacesReColon.Match(p.Text);
-                while (match.Success)
-                {
-                    int start = match.Index;
-                    start -= 4;
-                    if (start < 0)
-                        start = 0;
-                    int indexOfStartCodeTag = p.Text.IndexOf('{', start);
-                    int indexOfEndCodeTag = p.Text.IndexOf('}', start);
-                    if (indexOfStartCodeTag >= 0 && indexOfEndCodeTag >= 0 && indexOfStartCodeTag < match.Index)
-                    {
-                        // we are inside a tag: like indexOfEndCodeTag "{y:i}Is this italic?"
-                    }
-                    else if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
-                    {
-                        missingSpaces++;
-                        string oldText = p.Text;
-                        p.Text = p.Text.Replace(match.Value, match.Value[0] + ": " + match.Value[match.Value.Length - 1]);
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                    match = FixMissingSpacesReColon.Match(p.Text, match.Index + 1);
-                }
-
-                // missing space after period "."
-                match = FixMissingSpacesRePeriod.Match(p.Text);
-                while (match.Success)
-                {
-                    if (!p.Text.Contains("www.", StringComparison.OrdinalIgnoreCase) &&
-                        !p.Text.Contains("http://", StringComparison.OrdinalIgnoreCase) &&
-                        !UrlCom.IsMatch(p.Text) &&
-                        !UrlNet.IsMatch(p.Text) &&
-                        !UrlOrg.IsMatch(p.Text)) // urls are skipped
-                    {
-                        bool isMatchAbbreviation = false;
-
-                        string word = GetWordFromIndex(p.Text, match.Index);
-                        if (Utilities.CountTagInText(word, '.') > 1)
-                            isMatchAbbreviation = true;
-
-                        if (!isMatchAbbreviation && word.Contains('@')) // skip emails
-                            isMatchAbbreviation = true;
-
-                        if (match.Value.Equals("h.d", StringComparison.OrdinalIgnoreCase) && match.Index > 0 && p.Text.Substring(match.Index - 1, 4).Equals("ph.d", StringComparison.OrdinalIgnoreCase))
-                            isMatchAbbreviation = true;
-
-                        if (!isMatchAbbreviation && AllowFix(p, fixAction))
-                        {
-                            missingSpaces++;
-                            string oldText = p.Text;
-                            p.Text = p.Text.Replace(match.Value, match.Value.Replace(".", ". "));
-                            AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
-                    }
-                    match = match.NextMatch();
-                }
-
-                if (!p.Text.StartsWith("--", StringComparison.Ordinal))
-                {
-                    var arr = p.Text.SplitToLines();
-                    if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
-                    {
-                        if (arr[0][0] == '-' && arr[0][1] != ' ')
-                            arr[0] = arr[0].Insert(1, " ");
-                        if (arr[0].Length > 6 && arr[0].StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) && arr[0][4] != ' ')
-                            arr[0] = arr[0].Insert(4, " ");
-                        if (arr[1][0] == '-' && arr[1][1] != ' ' && arr[1][1] != '-')
-                            arr[1] = arr[1].Insert(1, " ");
-                        if (arr[1].Length > 6 && arr[1].StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) && arr[1][4] != ' ')
-                            arr[1] = arr[1].Insert(4, " ");
-                        string newText = arr[0] + Environment.NewLine + arr[1];
-                        if (newText != p.Text && AllowFix(p, fixAction))
-                        {
-                            missingSpaces++;
-                            string oldText = p.Text;
-                            p.Text = newText;
-                            AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
-                    }
-                }
-
-                //fix missing spaces before/after quotes - Get a"get out of jail free"card. -> Get a "get out of jail free" card.
-                if (Utilities.CountTagInText(p.Text, '"') == 2)
-                {
-                    int start = p.Text.IndexOf('"');
-                    int end = p.Text.LastIndexOf('"');
-                    string quote = p.Text.Substring(start, end - start + 1);
-                    if (!quote.Contains(Environment.NewLine))
-                    {
-                        string newText = p.Text;
-                        int indexOfFontTag = newText.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
-                        bool isAfterAssTag = newText.Contains("{\\") && start > 0 && newText[start - 1] == '}';
-                        if (!isAfterAssTag && start > 0 && !(Environment.NewLine + @" >[(♪♫¿").Contains(p.Text[start - 1]))
-                        {
-                            if (indexOfFontTag < 0 || start > newText.IndexOf('>', indexOfFontTag)) // font tags can contain "
-                            {
-                                newText = newText.Insert(start, " ");
-                                end++;
-                            }
-                        }
-                        if (end < newText.Length - 2 && !(Environment.NewLine + @" <,.!?:;])♪♫¿").Contains(p.Text[end + 1]))
-                        {
-                            if (indexOfFontTag < 0 || end > newText.IndexOf('>', indexOfFontTag)) // font tags can contain "
-                            {
-                                newText = newText.Insert(end + 1, " ");
-                            }
-                        }
-                        if (newText != p.Text && AllowFix(p, fixAction))
-                        {
-                            missingSpaces++;
-                            string oldText = p.Text;
-                            p.Text = newText;
-                            AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
-                    }
-                }
-
-                //fix missing spaces before/after music quotes - #He's so happy# -> #He's so happy#
-                if (p.Text.Length > 5 && p.Text.Contains(new[] { '#', '♪', '♫' }))
-                {
-                    string newText = p.Text;
-                    if (@"#♪♫".Contains(newText[0]) && !@" <".Contains(newText[1]) && !newText.Substring(1).StartsWith(Environment.NewLine) &&
-                        !newText.Substring(1).StartsWith('♪') && !newText.Substring(1).StartsWith('♫'))
-                        newText = newText.Insert(1, " ");
-                    if (@"#♪♫".Contains(newText[newText.Length - 1]) && !@" >".Contains(newText[newText.Length - 2]) &&
-                        !newText.Substring(0, newText.Length - 1).EndsWith(Environment.NewLine, StringComparison.Ordinal) && !newText.Substring(0, newText.Length - 1).EndsWith('♪') &&
-                        !newText.Substring(0, newText.Length - 1).EndsWith('♫'))
-                        newText = newText.Insert(newText.Length - 1, " ");
-                    if (newText != p.Text && AllowFix(p, fixAction))
-                    {
-                        missingSpaces++;
-                        string oldText = p.Text;
-                        p.Text = newText;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                }
-
-                //fix missing spaces in "Hey...move it!" to "Hey... move it!"
-                int index = p.Text.IndexOf("...", StringComparison.Ordinal);
-                if (index >= 0 && p.Text.Length > 5)
-                {
-                    string newText = p.Text;
-                    while (index != -1)
-                    {
-                        if (newText.Length > index + 4 && index > 1)
-                        {
-                            if (Utilities.AllLettersAndNumbers.Contains(newText[index + 3]) &&
-                                Utilities.AllLettersAndNumbers.Contains(newText[index - 1]))
-                                newText = newText.Insert(index + 3, " ");
-                        }
-                        index = newText.IndexOf("...", index + 2, StringComparison.Ordinal);
-                    }
-                    if (newText != p.Text && AllowFix(p, fixAction))
-                    {
-                        missingSpaces++;
-                        string oldText = p.Text;
-                        p.Text = newText;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                }
-
-                //fix missing spaces in "The<i>Bombshell</i> will gone." to "The <i>Bombshell</i> will gone."
-                index = p.Text.IndexOf("<i>", StringComparison.OrdinalIgnoreCase);
-                if (index >= 0 && p.Text.Length > 5)
-                {
-                    string newText = p.Text;
-                    while (index != -1)
-                    {
-                        if (newText.Length > index + 6 && index > 1)
-                        {
-                            if (Utilities.AllLettersAndNumbers.Contains(newText[index + 3]) &&
-                                Utilities.AllLettersAndNumbers.Contains(newText[index - 1]))
-                                newText = newText.Insert(index, " ");
-                        }
-                        index = newText.IndexOf("<i>", index + 3, StringComparison.OrdinalIgnoreCase);
-                    }
-                    if (newText != p.Text && AllowFix(p, fixAction))
-                    {
-                        missingSpaces++;
-                        string oldText = p.Text;
-                        p.Text = newText;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                }
-
-                //fix missing spaces in "The <i>Bombshell</i>will gone." to "The <i>Bombshell</i> will gone."
-                index = p.Text.IndexOf("</i>", StringComparison.OrdinalIgnoreCase);
-                if (index > 3 && p.Text.Length > 5)
-                {
-                    string newText = p.Text;
-                    while (index != -1)
-                    {
-                        if (newText.Length > index + 6 && index > 1)
-                        {
-                            if (Utilities.AllLettersAndNumbers.Contains(newText[index + 4]) &&
-                                Utilities.AllLettersAndNumbers.Contains(newText[index - 1]))
-                                newText = newText.Insert(index + 4, " ");
-                        }
-                        index = newText.IndexOf("</i>", index + 4, StringComparison.OrdinalIgnoreCase);
-                    }
-                    if (newText != p.Text && AllowFix(p, fixAction))
-                    {
-                        missingSpaces++;
-                        string oldText = p.Text;
-                        p.Text = newText;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                }
-
-                if (Language == "fr") // special rules for French
-                {
-                    string newText = p.Text;
-                    int j = 1;
-                    while (j < newText.Length)
-                    {
-                        if (@"!?:;".Contains(newText[j]))
-                        {
-                            if (Utilities.AllLetters.Contains(newText[j - 1]))
-                            {
-                                newText = newText.Insert(j, " ");
-                                j++;
-                            }
-                        }
-                        j++;
-                    }
-                    if (newText != p.Text && AllowFix(p, fixAction))
-                    {
-                        missingSpaces++;
-                        string oldText = p.Text;
-                        p.Text = newText;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                }
-            }
-            if (missingSpaces > 0)
-            {
-                _totalFixes += missingSpaces;
-                LogStatus(_language.FixMissingSpaces, string.Format(_language.XMissingSpacesAdded, missingSpaces));
-            }
-        }
-
-        private static string GetWordFromIndex(string text, int index)
-        {
-            if (string.IsNullOrEmpty(text) || index < 0 || index >= text.Length)
-                return string.Empty;
-
-            int endIndex = index;
-            for (int i = index; i < text.Length; i++)
-            {
-                if ((@" " + Environment.NewLine).Contains(text[i]))
-                    break;
-                endIndex = i;
-            }
-
-            int startIndex = index;
-            for (int i = index; i >= 0; i--)
-            {
-                if ((@" " + Environment.NewLine).Contains(text[i]))
-                    break;
-                startIndex = i;
-            }
-
-            return text.Substring(startIndex, endIndex - startIndex + 1);
-        }
+        }            
 
         public void AddMissingQuotes()
         {
@@ -2148,7 +1117,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (prev != null)
                     prevText = HtmlUtil.RemoveHtmlTags(prev.Text);
 
-                bool isPrevEndOfLine = FixCommonErrorsHelper.IsPreviousTextEndOfParagraph(prevText);
+                bool isPrevEndOfLine = Helper.IsPreviousTextEndOfParagraph(prevText);
                 if (prevText == " .")
                     isPrevEndOfLine = true;
                 if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
@@ -2225,7 +1194,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     char firstLetter = text[0];
                     string prevText = HtmlUtil.RemoveHtmlTags(arr[0]);
-                    bool isPrevEndOfLine = FixCommonErrorsHelper.IsPreviousTextEndOfParagraph(prevText);
+                    bool isPrevEndOfLine = Helper.IsPreviousTextEndOfParagraph(prevText);
                     if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
                         (char.IsLower(firstLetter) || IsTurkishLittleI(firstLetter, encoding, language)) &&
                         !prevText.EndsWith("...", StringComparison.Ordinal) &&
@@ -2269,7 +1238,7 @@ namespace Nikse.SubtitleEdit.Forms
                         prevText = " .";
                         if (prev != null && p.StartTime.TotalMilliseconds - 10000 < prev.EndTime.TotalMilliseconds)
                             prevText = HtmlUtil.RemoveHtmlTags(prev.Text);
-                        bool isPrevLineEndOfLine = FixCommonErrorsHelper.IsPreviousTextEndOfParagraph(prevText);
+                        bool isPrevLineEndOfLine = Helper.IsPreviousTextEndOfParagraph(prevText);
                         if (isPrevLineEndOfLine && arr[0].StartsWith("<i>- ", StringComparison.Ordinal) && arr[0].Length > 6)
                         {
                             p.Text = "<i>- " + char.ToUpper(arr[0][5]) + arr[0].Remove(0, 6) + Environment.NewLine + arr[1];
@@ -2623,7 +1592,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = Subtitle.Paragraphs[i];
                 string oldText = p.Text;
-                var text = FixCommonErrorsHelper.FixDialogsOnOneLine(oldText, language);
+                var text = Helper.FixDialogsOnOneLine(oldText, language);
                 if (oldText != text && AllowFix(p, fixAction))
                 {
                     p.Text = text;
@@ -2751,7 +1720,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (AllowFix(p, fixAction))
                 {
                     string oldText = p.Text;
-                    string text = FixCommonErrorsHelper.FixHyphensRemove(Subtitle, i);
+                    string text = Helper.FixHyphensRemove(Subtitle, i);
                     if (text != oldText)
                     {
                         p.Text = text;
@@ -2773,7 +1742,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (AllowFix(p, fixAction))
                 {
                     string oldText = p.Text;
-                    string text = FixCommonErrorsHelper.FixHyphensAdd(Subtitle, i, Language);
+                    string text = Helper.FixHyphensAdd(Subtitle, i, Language);
                     if (text != oldText)
                     {
                         p.Text = text;
@@ -2874,12 +1843,12 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             var lines = text.SplitToLines();
                             for (int k = 0; k < lines.Length; k++)
-                                lines[k] = FixCommonErrorsHelper.RemoveSpacesBeginLineAfterEllipses(lines[k]);
+                                lines[k] = Helper.RemoveSpacesBeginLineAfterEllipses(lines[k]);
                             text = string.Join(Environment.NewLine, lines);
                         }
                         else
                         {
-                            text = FixCommonErrorsHelper.RemoveSpacesBeginLineAfterEllipses(text);
+                            text = Helper.RemoveSpacesBeginLineAfterEllipses(text);
                         }
                     }
                     //if (text.EndsWith('-'))
@@ -2929,7 +1898,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var oldText = text;
                     if (!text.Contains(Environment.NewLine))
                     {
-                        text = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(text);
+                        text = Helper.FixDoubleGreaterThanHelper(text);
                         if (oldText != text)
                         {
                             fixCount++;
@@ -2942,7 +1911,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var lines = text.SplitToLines();
                         for (int k = 0; k < lines.Length; k++)
                         {
-                            lines[k] = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(lines[k]);
+                            lines[k] = Helper.FixDoubleGreaterThanHelper(lines[k]);
                         }
                         text = string.Join(Environment.NewLine, lines);
                         if (oldText != text)
@@ -2971,7 +1940,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var oldText = text;
                     if (!text.Contains(Environment.NewLine))
                     {
-                        text = FixCommonErrorsHelper.FixEllipsesStartHelper(text);
+                        text = Helper.FixEllipsesStartHelper(text);
                         if (oldText != text)
                         {
                             p.Text = text;
@@ -2986,7 +1955,7 @@ namespace Nikse.SubtitleEdit.Forms
                         for (int k = 0; k < lines.Length; k++)
                         {
                             var line = lines[k];
-                            fixedParagraph += Environment.NewLine + FixCommonErrorsHelper.FixEllipsesStartHelper(line);
+                            fixedParagraph += Environment.NewLine + Helper.FixEllipsesStartHelper(line);
                             fixedParagraph = fixedParagraph.Trim();
                         }
 
