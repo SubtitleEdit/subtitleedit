@@ -3862,7 +3862,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            using (var findDialog = new FindDialog())
+            using (var findDialog = new FindDialog(_subtitle))
             {
                 findDialog.SetIcon(toolStripButtonFind.Image as Bitmap);
                 findDialog.Initialize(selectedText, _findHelper);

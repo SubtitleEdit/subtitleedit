@@ -10,8 +10,8 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class FindDialog : Form
     {
         private Regex _regEx;
-
-        public FindDialog()
+        private readonly Subtitle _subtitle;
+        public FindDialog(Subtitle subtitle)
         {
             InitializeComponent();
 
@@ -21,6 +21,10 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonCaseSensitive.Text = Configuration.Settings.Language.FindDialog.CaseSensitive;
             radioButtonRegEx.Text = Configuration.Settings.Language.FindDialog.RegularExpression;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            checkBoxWholeWord.Text = Configuration.Settings.Language.FindDialog.WholeWord;
+            buttonCount.Text = Configuration.Settings.Language.FindDialog.Count;
+            labelCount.Text = string.Empty;
+            _subtitle = subtitle;
 
             if (Width < radioButtonRegEx.Right + 5)
                 Width = radioButtonRegEx.Right + 5;
@@ -178,9 +182,19 @@ namespace Nikse.SubtitleEdit.Forms
             if (bitmap != null)
             {
                 IntPtr Hicon = bitmap.GetHicon();
-                this.Icon = Icon.FromHandle(Hicon);
+                Icon = Icon.FromHandle(Hicon);
             }
         }
 
+        private void buttonCount_Click(object sender, EventArgs e)
+        {
+            var count = 0;
+            if (FindText.Length > 0)
+            {
+                count = GetFindDialogHelper(0).FindCount(_subtitle, checkBoxWholeWord.Checked);
+            }
+            labelCount.ForeColor = count > 0 ? Color.Blue : Color.Red;
+            labelCount.Text = string.Format(Configuration.Settings.Language.FindDialog.XNumberOfMatches, count);
+        }
     }
 }
