@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.Enums;
 
@@ -6,9 +7,11 @@ namespace Nikse.SubtitleEdit.Core
 {
     public class FindReplaceDialogHelper
     {
+        private const string StartChars = " >-\"”“['‘`´¶(♪¿¡.…—";
+        private const string EndChars = " -\"”“]'`´¶)♪.!?:…—\r\n";
         private readonly string _findText = string.Empty;
         private readonly string _replaceText = string.Empty;
-        private readonly Regex _regEx;
+        private Regex _regEx;
         private int _findTextLenght;
 
         public bool Success { get; set; }
@@ -227,5 +230,62 @@ namespace Nikse.SubtitleEdit.Core
             return false;
         }
 
+        public int FindCount(Subtitle subtitle, bool wholeWord)
+        {
+            var count = 0;
+            //  validate pattern if find type is regex
+            if (FindType == FindType.RegEx)
+            {
+                if (!Utilities.IsValidRegex(FindText))
+                {
+                    MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
+                    return count;
+                }
+                _regEx = new Regex(_findText);
+            }
+
+            // count matches
+            foreach (var p in subtitle.Paragraphs)
+            {
+                if (p.Text.Length < FindText.Length)
+                    continue;
+
+                switch (FindType)
+                {
+                    case FindType.Normal:
+                        count += GetWordCount(p.Text, _findText, wholeWord, StringComparison.OrdinalIgnoreCase);
+                        break;
+                    case FindType.CaseSensitive:
+                        count += GetWordCount(p.Text, _findText, wholeWord, StringComparison.Ordinal);
+                        break;
+                    case FindType.RegEx:
+                        count += _regEx.Matches(p.Text).Count;
+                        break;
+                }
+            }
+            return count;
+        }
+
+        private int GetWordCount(string text, string pattern, bool matchWholeWord, StringComparison comparison)
+        {
+            var idx = text.IndexOf(pattern, comparison);
+            var count = 0;
+            while (idx >= 0)
+            {
+                if (matchWholeWord)
+                {
+                    var startOk = (idx == 0) || (StartChars.Contains(text[idx - 1]));
+                    var endOk = (idx + pattern.Length == text.Length) || (EndChars.Contains(text[idx + pattern.Length]));
+                    if (startOk && endOk)
+                        count++;
+                }
+                else
+                {
+                    count++;
+                }
+                idx = text.IndexOf(pattern, idx + pattern.Length, comparison);
+            }
+            return count;
+        }
     }
 }

@@ -35,6 +35,9 @@
             this.radioButtonCaseSensitive = new System.Windows.Forms.RadioButton();
             this.radioButtonRegEx = new System.Windows.Forms.RadioButton();
             this.comboBoxFind = new System.Windows.Forms.ComboBox();
+            this.buttonCount = new System.Windows.Forms.Button();
+            this.labelCount = new System.Windows.Forms.Label();
+            this.checkBoxWholeWord = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // textBoxFind
@@ -109,11 +112,43 @@
             this.comboBoxFind.TabIndex = 0;
             this.comboBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ComboBoxFind_KeyDown);
             // 
+            // buttonCount
+            // 
+            this.buttonCount.Location = new System.Drawing.Point(207, 63);
+            this.buttonCount.Name = "buttonCount";
+            this.buttonCount.Size = new System.Drawing.Size(75, 23);
+            this.buttonCount.TabIndex = 10;
+            this.buttonCount.Text = "Count";
+            this.buttonCount.UseVisualStyleBackColor = true;
+            this.buttonCount.Click += new System.EventHandler(this.buttonCount_Click);
+            // 
+            // labelCount
+            // 
+            this.labelCount.AutoSize = true;
+            this.labelCount.Location = new System.Drawing.Point(204, 113);
+            this.labelCount.Name = "labelCount";
+            this.labelCount.Size = new System.Drawing.Size(40, 13);
+            this.labelCount.TabIndex = 11;
+            this.labelCount.Text = "Count:";
+            // 
+            // checkBoxWholeWord
+            // 
+            this.checkBoxWholeWord.AutoSize = true;
+            this.checkBoxWholeWord.Location = new System.Drawing.Point(12, 40);
+            this.checkBoxWholeWord.Name = "checkBoxWholeWord";
+            this.checkBoxWholeWord.Size = new System.Drawing.Size(83, 17);
+            this.checkBoxWholeWord.TabIndex = 12;
+            this.checkBoxWholeWord.Text = "Whole word";
+            this.checkBoxWholeWord.UseVisualStyleBackColor = true;
+            // 
             // FindDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(298, 135);
+            this.Controls.Add(this.checkBoxWholeWord);
+            this.Controls.Add(this.labelCount);
+            this.Controls.Add(this.buttonCount);
             this.Controls.Add(this.comboBoxFind);
             this.Controls.Add(this.radioButtonRegEx);
             this.Controls.Add(this.radioButtonCaseSensitive);
@@ -145,5 +180,8 @@
         private System.Windows.Forms.RadioButton radioButtonCaseSensitive;
         private System.Windows.Forms.RadioButton radioButtonRegEx;
         private System.Windows.Forms.ComboBox comboBoxFind;
+        private System.Windows.Forms.Button buttonCount;
+        private System.Windows.Forms.Label labelCount;
+        private System.Windows.Forms.CheckBox checkBoxWholeWord;
     }
 }

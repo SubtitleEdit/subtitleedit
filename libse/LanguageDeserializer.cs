@@ -1267,6 +1267,15 @@ namespace Nikse.SubtitleEdit.Core
                 case "FindDialog/RegularExpression":
                     language.FindDialog.RegularExpression = reader.Value;
                     break;
+                case "FindDialog/WholeWord":
+                    language.FindDialog.WholeWord = reader.Value;
+                    break;
+                case "FindDialog/Count":
+                    language.FindDialog.Count = reader.Value;
+                    break;
+                case "FindDialog/XNumberOfMatches":
+                    language.FindDialog.XNumberOfMatches = reader.Value;
+                    break;
                 case "FindSubtitleLine/Title":
                     language.FindSubtitleLine.Title = reader.Value;
                     break;
@@ -1758,6 +1767,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "ImportImages/InputDescription":
                     language.ImportImages.InputDescription = reader.Value;
+                    break;
+                case "ImportImages/Remove":
+                    language.ImportImages.Remove = reader.Value;
+                    break;
+                case "ImportImages/RemoveAll":
+                    language.ImportImages.RemoveAll = reader.Value;
                     break;
                 case "ImportSceneChanges/Title":
                     language.ImportSceneChanges.Title = reader.Value;
