@@ -673,7 +673,8 @@ namespace Nikse.SubtitleEdit.Core
                 RegularExpression = "Regular e&xpression",
                 WholeWord = "Whole word",
                 Count = "Count",
-                XNumberOfMatches = "{0} matches"
+                XNumberOfMatches = "{0:#,##0} matches",
+                OneMatch = "One match"
             };
 
             FindSubtitleLine = new LanguageStructure.FindSubtitleLine

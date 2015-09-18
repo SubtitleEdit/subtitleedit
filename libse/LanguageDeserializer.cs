@@ -1276,6 +1276,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "FindDialog/XNumberOfMatches":
                     language.FindDialog.XNumberOfMatches = reader.Value;
                     break;
+                case "FindDialog/OneMatch":
+                    language.FindDialog.OneMatch = reader.Value;
+                    break;
                 case "FindSubtitleLine/Title":
                     language.FindSubtitleLine.Title = reader.Value;
                     break;

@@ -494,7 +494,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <RegularExpression>Regulärer &amp;Ausdruck</RegularExpression>
     <WholeWord>Nur ganze Wörter</WholeWord>
     <Count>Zählen</Count>
-    <XNumberOfMatches>{0} Treffer</XNumberOfMatches>
+    <XNumberOfMatches>{0:#,##0} Treffer</XNumberOfMatches>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Untertitel Text suchen</Title>

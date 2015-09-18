@@ -61,7 +61,7 @@
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(207, 36);
+            this.buttonCancel.Location = new System.Drawing.Point(207, 67);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 3;
@@ -114,10 +114,10 @@
             // 
             // buttonCount
             // 
-            this.buttonCount.Location = new System.Drawing.Point(207, 63);
+            this.buttonCount.Location = new System.Drawing.Point(207, 38);
             this.buttonCount.Name = "buttonCount";
             this.buttonCount.Size = new System.Drawing.Size(75, 23);
-            this.buttonCount.TabIndex = 10;
+            this.buttonCount.TabIndex = 2;
             this.buttonCount.Text = "Count";
             this.buttonCount.UseVisualStyleBackColor = true;
             this.buttonCount.Click += new System.EventHandler(this.buttonCount_Click);
@@ -137,7 +137,7 @@
             this.checkBoxWholeWord.Location = new System.Drawing.Point(12, 40);
             this.checkBoxWholeWord.Name = "checkBoxWholeWord";
             this.checkBoxWholeWord.Size = new System.Drawing.Size(83, 17);
-            this.checkBoxWholeWord.TabIndex = 12;
+            this.checkBoxWholeWord.TabIndex = 4;
             this.checkBoxWholeWord.Text = "Whole word";
             this.checkBoxWholeWord.UseVisualStyleBackColor = true;
             // 
