@@ -494,7 +494,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <RegularExpression>Reguliere e&amp;xpressie</RegularExpression>
     <WholeWord>Losse woorden</WholeWord>
     <Count>Tellen</Count>
-    <XNumberOfMatches>{0} treffers</XNumberOfMatches>
+    <XNumberOfMatches>{0:#,##0} treffers</XNumberOfMatches>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Ondertiteltekst zoeken</Title>

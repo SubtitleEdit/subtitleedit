@@ -495,7 +495,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <RegularExpression>Expression régulière</RegularExpression>
     <WholeWord>Mot entier uniquement</WholeWord>
     <Count>Compter</Count>
-    <XNumberOfMatches>{0} résultats</XNumberOfMatches>
+    <XNumberOfMatches>{0:#,##0} résultats</XNumberOfMatches>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Chercher la ligne de sous-titre</Title>

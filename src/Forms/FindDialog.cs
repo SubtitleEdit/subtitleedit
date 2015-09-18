@@ -1,9 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Enums;
 using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -188,13 +188,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonCount_Click(object sender, EventArgs e)
         {
-            var count = 0;
-            if (FindText.Length > 0)
+            if (FindText.Length == 0)
             {
-                count = GetFindDialogHelper(0).FindCount(_subtitle, checkBoxWholeWord.Checked);
+                labelCount.Text = string.Empty;
+                return;
             }
+            var count = GetFindDialogHelper(0).FindCount(_subtitle, checkBoxWholeWord.Checked);
             labelCount.ForeColor = count > 0 ? Color.Blue : Color.Red;
-            labelCount.Text = string.Format(Configuration.Settings.Language.FindDialog.XNumberOfMatches, count);
+            labelCount.Text = count == 1 ? Configuration.Settings.Language.FindDialog.OneMatch : string.Format(Configuration.Settings.Language.FindDialog.XNumberOfMatches, count);
         }
+
     }
 }

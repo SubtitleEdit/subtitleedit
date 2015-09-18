@@ -553,6 +553,7 @@
             public string WholeWord { get; set; }
             public string Count { get; set; }
             public string XNumberOfMatches { get; set; }
+            public string OneMatch { get; set; }
         }
 
         public class FindSubtitleLine
