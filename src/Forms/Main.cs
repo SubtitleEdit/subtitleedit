@@ -515,7 +515,7 @@ namespace Nikse.SubtitleEdit.Forms
                 for (double zoomCounter = AudioVisualizer.ZoomMinimum; zoomCounter <= AudioVisualizer.ZoomMaximum + (0.001); zoomCounter += 0.1)
                 {
                     int percent = (int)Math.Round((zoomCounter * 100));
-                    ComboBoxZoomItem item = new ComboBoxZoomItem { Text = percent + "%", ZoomFactor = zoomCounter };
+                    var item = new ComboBoxZoomItem { Text = percent + "%", ZoomFactor = zoomCounter };
                     toolStripComboBoxWaveform.Items.Add(item);
                     if (percent == 100)
                         toolStripComboBoxWaveform.SelectedIndex = toolStripComboBoxWaveform.Items.Count - 1;
@@ -576,7 +576,7 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 0;
             foreach (string s in comboBoxEncoding.Items)
             {
-                if (s == encodingName || s.StartsWith(encodingName + ":"))
+                if (s == encodingName || s.StartsWith(encodingName + ":", StringComparison.Ordinal))
                 {
                     comboBoxEncoding.SelectedIndex = i;
                     return;

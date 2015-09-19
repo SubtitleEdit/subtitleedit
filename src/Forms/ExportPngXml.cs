@@ -723,7 +723,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_subtitle.Paragraphs.Count > 0)
                     {
                         var end = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * FrameRate);
-                        end ++;
+                        end++;
                         s = s.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
                     }
 
@@ -1939,7 +1939,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 bool italicOn = false;
                 string fontTag = string.Empty;
-                foreach (string line in parameter.P.Text.Replace(Environment.NewLine, "\n").Split('\n'))
+                foreach (string line in parameter.P.Text.SplitToLines())
                 {
                     parameter.P.Text = line;
                     if (italicOn)
@@ -3138,7 +3138,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             for (int i = 0; i < comboBoxFrameRate.Items.Count; i++)
             {
                 double d;
-                if (double.TryParse(comboBoxFrameRate.Items[i].ToString().Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                if (double.TryParse(comboBoxFrameRate.Items[i].ToString().Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
                 {
                     if (Math.Abs(lastFrameRate - d) < 0.01)
                     {
