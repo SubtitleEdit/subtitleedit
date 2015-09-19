@@ -488,6 +488,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Normal>일반(&amp;N)</Normal>
     <CaseSensitive>대/소문자 구분(&amp;C)</CaseSensitive>
     <RegularExpression>정규 표현식(&amp;X)</RegularExpression>
+    <WholeWord>전체 단어</WholeWord>
+    <Count>개수</Count>
+    <XNumberOfMatches>{0:#,##0} 일치</XNumberOfMatches>
+    <OneMatch>하나 일치</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>자막 줄 찾기</Title>
