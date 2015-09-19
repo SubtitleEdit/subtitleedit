@@ -11,7 +11,6 @@ namespace Nikse.SubtitleEdit.Logic
 {
     internal static class UiUtil
     {
-
         public static VideoInfo GetVideoInfo(string fileName)
         {
             VideoInfo info = Utilities.TryReadVideoInfoViaAviHeader(fileName);
@@ -32,7 +31,6 @@ namespace Nikse.SubtitleEdit.Logic
 
             return new VideoInfo { VideoCodec = "Unknown" };
         }
-
 
         private static VideoInfo TryReadVideoInfoViaDirectShow(string fileName)
         {
@@ -242,7 +240,6 @@ namespace Nikse.SubtitleEdit.Logic
                 videoError.ShowDialog();
             }
         }
-
 
     }
 }

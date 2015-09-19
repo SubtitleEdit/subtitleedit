@@ -399,17 +399,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             SetSyncFactorLabel();
 
-            double subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds/TimeCode.BaseUnit;
-            double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds/TimeCode.BaseUnit;
+            double subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+            double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
 
             double subDiff = subEnd - subStart;
             double realDiff = endPos - startPos;
 
             // speed factor
-            double factor = realDiff/subDiff;
+            double factor = realDiff / subDiff;
 
             // adjust to starting position
-            double adjust = startPos - subStart*factor;
+            double adjust = startPos - subStart * factor;
 
             foreach (Paragraph p in _paragraphs)
             {
