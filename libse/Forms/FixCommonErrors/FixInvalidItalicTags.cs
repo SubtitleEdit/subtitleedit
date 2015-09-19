@@ -31,11 +31,8 @@
                     }
                 }
             }
-            if (noOfInvalidHtmlTags > 0)
-            {
-                callbacks.AddToTotalFixes(noOfInvalidHtmlTags);
-                callbacks.LogStatus(language.FixInvalidItalicTags, string.Format(language.XInvalidHtmlTagsFixed, noOfInvalidHtmlTags));
-            }
+
+            callbacks.UpdateFixStatus(noOfInvalidHtmlTags, language.FixInvalidItalicTags, string.Format(language.XInvalidHtmlTagsFixed, noOfInvalidHtmlTags));
         }
 
     }

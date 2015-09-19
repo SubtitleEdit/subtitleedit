@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
@@ -416,8 +417,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) || _threeLetterIsoLanguageName == "eng")
                 {
                     string oldText = text;
-                    text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(RegexAloneI, oldText, text, 'i');
-                    text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(RegexAloneIasL, oldText, text, 'l');
+                    text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(RegexAloneI, oldText, text, 'i');
+                    text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(RegexAloneIasL, oldText, text, 'l');
                 }
                 else if (_threeLetterIsoLanguageName == "fra")
                 {

@@ -1,10 +1,42 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public static class Helper
     {
+        public static bool IsTurkishLittleI(char firstLetter, Encoding encoding, string language)
+        {
+            if (language != "tr")
+            {
+                return false;
+            }
+
+            return encoding.Equals(Encoding.UTF8)
+                ? firstLetter == 'ı' || firstLetter == 'i'
+                : firstLetter == 'ý' || firstLetter == 'i';
+        }
+
+        public static char GetTurkishUppercaseLetter(char letter, Encoding encoding)
+        {
+            if (encoding.Equals(Encoding.UTF8))
+            {
+                if (letter == 'ı')
+                    return 'I';
+                if (letter == 'i')
+                    return 'İ';
+            }
+            else
+            {
+                if (letter == 'i')
+                    return 'Ý';
+                if (letter == 'ý')
+                    return 'I';
+            }
+            return letter;
+        }
+
         public static string FixEllipsesStartHelper(string text)
         {
             if (string.IsNullOrEmpty(text) || text.Trim().Length < 4 || !(text.Contains("..", StringComparison.Ordinal) || text.Contains(". .", StringComparison.Ordinal)))

@@ -32,11 +32,8 @@
                     callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                 }
             }
-            if (noOfLongDisplayTimes > 0)
-            {
-                callbacks.AddToTotalFixes(noOfLongDisplayTimes);
-                callbacks.LogStatus(language.FixLongDisplayTimes, string.Format(language.XDisplayTimesShortned, noOfLongDisplayTimes));
-            }
+
+            callbacks.UpdateFixStatus(noOfLongDisplayTimes, language.FixLongDisplayTimes, string.Format(language.XDisplayTimesShortned, noOfLongDisplayTimes));
         }
 
     }

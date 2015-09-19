@@ -309,11 +309,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
             }
-            if (missingSpaces > 0)
-            {
-                callbacks.AddToTotalFixes(missingSpaces);
-                callbacks.LogStatus(language.FixMissingSpaces, string.Format(language.XMissingSpacesAdded, missingSpaces));
-            }
+            callbacks.UpdateFixStatus(missingSpaces, language.FixMissingSpaces, string.Format(language.XMissingSpacesAdded, missingSpaces));
         }
 
         private static string GetWordFromIndex(string text, int index)

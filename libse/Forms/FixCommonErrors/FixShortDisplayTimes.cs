@@ -51,7 +51,7 @@
                     else
                     {
                         callbacks.LogStatus(language.FixShortDisplayTimes, string.Format(language.UnableToFixTextXY, i + 1, p));
-                        callbacks.AddtoTotalErrors(1);
+                        callbacks.AddToTotalErrors(1);
                         skip = true;
                     }
                 }
@@ -141,15 +141,11 @@
                     else
                     {
                         callbacks.LogStatus(language.FixShortDisplayTimes, string.Format(language.UnableToFixTextXY, i + 1, p));
-                        callbacks.AddtoTotalErrors(1);
+                        callbacks.AddToTotalErrors(1);
                     }
                 }
             }
-            if (noOfShortDisplayTimes > 0)
-            {
-                callbacks.AddToTotalFixes(noOfShortDisplayTimes);
-                callbacks.LogStatus(fixAction, string.Format(language.XDisplayTimesProlonged, noOfShortDisplayTimes));
-            }            
+            callbacks.UpdateFixStatus(noOfShortDisplayTimes, fixAction, string.Format(language.XDisplayTimesProlonged, noOfShortDisplayTimes));
         }
 
         private int MoveStartTime(string fixAction, int noOfShortDisplayTimes, Paragraph p, Paragraph temp, Paragraph next)

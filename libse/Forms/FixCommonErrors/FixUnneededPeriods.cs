@@ -51,11 +51,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
-            if (unneededPeriodsFixed > 0)
-            {
-                callbacks.AddToTotalFixes(unneededPeriodsFixed);
-                callbacks.LogStatus(language.RemoveUnneededPeriods, string.Format(language.XUnneededPeriodsRemoved, unneededPeriodsFixed));
-            }
+            callbacks.UpdateFixStatus(unneededPeriodsFixed, language.RemoveUnneededPeriods, string.Format(language.XUnneededPeriodsRemoved, unneededPeriodsFixed));
         }
     }
 }

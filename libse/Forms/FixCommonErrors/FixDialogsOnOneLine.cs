@@ -1,25 +1,25 @@
 ﻿namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
-    public class FixShortLines : IFixCommonError
+    public class FixDialogsOnOneLine : IFixCommonError
     {
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
-            string fixAction = language.MergeShortLine;
-            int noOfShortLines = 0;
+            string fixAction = language.FixDialogsOnOneLine;
+            int noOfFixes = 0;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 string oldText = p.Text;
-                var text = Helper.FixShortLines(p.Text);
-                if (callbacks.AllowFix(p, fixAction) && oldText != text)
+                var text = Helper.FixDialogsOnOneLine(oldText, callbacks.Language);
+                if (oldText != text && callbacks.AllowFix(p, fixAction))
                 {
                     p.Text = text;
-                    noOfShortLines++;
+                    noOfFixes++;
                     callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
-            callbacks.UpdateFixStatus(noOfShortLines, language.RemoveLineBreaks, string.Format(language.XLinesUnbreaked, noOfShortLines));
+            callbacks.UpdateFixStatus(noOfFixes, language.FixCommonOcrErrors, language.FixDialogsOneLineExample);
         }
     }
 }
