@@ -111,14 +111,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     subtitle.Paragraphs.RemoveAt(i);
                     emptyLinesRemoved++;
                     callbacks.AddFixToListView(p, fixAction0, p.Text, string.Format("[{0}]", language.RemovedEmptyLine));
-                    callbacks.AddtoDeleteIndices(i);
+                    callbacks.AddToDeleteIndices(i);
                 }
             }
 
             if (emptyLinesRemoved > 0)
             {
-                callbacks.LogStatus(language.RemovedEmptyLinesUnsedLineBreaks, string.Format(language.EmptyLinesRemovedX, emptyLinesRemoved));
-                callbacks.AddToTotalFixes(emptyLinesRemoved);
+                callbacks.UpdateFixStatus(emptyLinesRemoved, language.RemovedEmptyLinesUnsedLineBreaks, string.Format(language.EmptyLinesRemovedX, emptyLinesRemoved));
                 subtitle.Renumber();
             }
         }

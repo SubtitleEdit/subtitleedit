@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     else
                     {
                         callbacks.LogStatus(language.FixOverlappingDisplayTimes, string.Format(language.UnableToFixStartTimeLaterThanEndTime, i + 1, p), true);
-                        callbacks.AddtoTotalErrors(1);
+                        callbacks.AddToTotalErrors(1);
                     }
 
                     if (isFixed)
@@ -223,17 +223,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (callbacks.AllowFix(p, fixAction))
                         {
                             callbacks.LogStatus(language.FixOverlappingDisplayTimes, string.Format(language.UnableToFixTextXY, i + 1, Environment.NewLine + prev.Number + "  " + prev + Environment.NewLine + p.Number + "  " + p), true);
-                            callbacks.AddtoTotalErrors(1);
+                            callbacks.AddToTotalErrors(1);
                         }
                     }
                 }
             }
 
-            if (noOfOverlappingDisplayTimesFixed > 0)
-            {
-                callbacks.AddToTotalFixes(noOfOverlappingDisplayTimesFixed);
-                callbacks.LogStatus(fixAction, string.Format(language.XOverlappingTimestampsFixed, noOfOverlappingDisplayTimesFixed));
-            }
+            callbacks.UpdateFixStatus(noOfOverlappingDisplayTimesFixed, fixAction, string.Format(language.XOverlappingTimestampsFixed, noOfOverlappingDisplayTimesFixed));
         }
 
     }

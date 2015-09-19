@@ -32,12 +32,12 @@
                     else
                     {
                         callbacks.LogStatus(fixAction, string.Format(language.UnableToFixTextXY, i + 1, p));
-                        callbacks.AddtoTotalErrors(1);
+                        callbacks.AddToTotalErrors(1);
                     }
                 }
             }
-            if (noOfLongLines > 0)
-                callbacks.LogStatus(language.BreakLongLines, string.Format(language.XLineBreaksAdded, noOfLongLines));
+            
+            callbacks.UpdateFixStatus(noOfLongLines, language.BreakLongLines, string.Format(language.XLineBreaksAdded, noOfLongLines));
         }
     }
 }

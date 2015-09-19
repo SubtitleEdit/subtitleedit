@@ -371,8 +371,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "This is line one!" + Environment.NewLine + "<i>Boy!</i>", "This is line one!" + Environment.NewLine + "<i>Boy!</i>");
-                target.FixMissingPeriodsAtEndOfLine();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "This is line one!" + Environment.NewLine + "<i>Boy!</i>");
+                new FixMissingPeriodsAtEndOfLine().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "This is line one!" + Environment.NewLine + "<i>Boy!</i>");
             }
         }
 
@@ -383,8 +383,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "This is line one!" + Environment.NewLine + "<i>Boy</i>", "This is line one!" + Environment.NewLine + "<i>Boy!</i>");
-                target.FixMissingPeriodsAtEndOfLine();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "This is line one!" + Environment.NewLine + "<i>Boy.</i>");
+                new FixMissingPeriodsAtEndOfLine().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "This is line one!" + Environment.NewLine + "<i>Boy.</i>");
             }
         }
 
@@ -395,8 +395,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "<i>This is line one!" + Environment.NewLine + "Boy</i>", "This is line one!" + Environment.NewLine + "<i>Boy!</i>");
-                target.FixMissingPeriodsAtEndOfLine();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<i>This is line one!" + Environment.NewLine + "Boy.</i>");
+                new FixMissingPeriodsAtEndOfLine().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>This is line one!" + Environment.NewLine + "Boy.</i>");
             }
         }
 
@@ -407,8 +407,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "”... and gently down I laid her. ”");
-                target.FixMissingPeriodsAtEndOfLine();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "”... and gently down I laid her. ”");
+                new FixMissingPeriodsAtEndOfLine().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "”... and gently down I laid her. ”");
             }
         }
 
@@ -423,8 +423,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "Hi Joe!" + Environment.NewLine + "- Hi Pete!");
-                target.FixHyphensAdd();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
+                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
             }
         }
 
@@ -435,8 +435,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- Hi Joe!" + Environment.NewLine + "Hi Pete!");
-                target.FixHyphensAdd();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
+                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
             }
         }
 
@@ -447,8 +447,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "<i>- Hi Joe!" + Environment.NewLine + "Hi Pete!</i>");
-                target.FixHyphensAdd();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<i>- Hi Joe!" + Environment.NewLine + "- Hi Pete!</i>");
+                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>- Hi Joe!" + Environment.NewLine + "- Hi Pete!</i>");
             }
         }
 
@@ -459,8 +459,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
-                target.FixHyphensAdd();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
+                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- Hi Joe!" + Environment.NewLine + "- Hi Pete!");
             }
         }
 
@@ -471,8 +471,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- Hi!" + Environment.NewLine + "- Hi Pete!");
-                target.FixHyphensAdd();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "- Hi!" + Environment.NewLine + "- Hi Pete!");
+                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- Hi!" + Environment.NewLine + "- Hi Pete!");
             }
         }
 
@@ -483,8 +483,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "Five-Both?" + Environment.NewLine + "- T... T... Ten...");
-                target.FixHyphensAdd();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "- Five-Both?" + Environment.NewLine + "- T... T... Ten...");
+                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- Five-Both?" + Environment.NewLine + "- T... T... Ten...");
             }
         }
 
@@ -713,7 +713,7 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "Aφαίρεσαν ό,τι αντρικό είχες.");
-                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback() { Language = "el" });  // Greek
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "el" });  // Greek
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Aφαίρεσαν ό,τι αντρικό είχες.");
             }
         }
@@ -868,8 +868,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "♪ you like to move it...");
-                target.FixStartWithUppercaseLetterAfterParagraph();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "♪ You like to move it...");
+                new FixStartWithUppercaseLetterAfterParagraph().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "♪ You like to move it...");
             }
         }
 
@@ -877,20 +877,22 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormal1()
         {
-            var prev = new Paragraph("Bye.", 0, 1000);
-            var p = new Paragraph("bye.", 1200, 5000);
-            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
-            Assert.AreEqual(fixedText, "Bye.");
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("Bye.", 0, 1000));
+            s.Paragraphs.Add(new Paragraph("bye.", 1200, 5000));
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(s.Paragraphs[1].Text, "Bye.");
         }
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormal2()
         {
-            var prev = new Paragraph("Bye.", 0, 1000);
-            var p = new Paragraph("<i>bye.</i>", 1200, 5000);
-            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
-            Assert.AreEqual(fixedText, "<i>Bye.</i>");
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("Bye.", 0, 1000));
+            s.Paragraphs.Add(new Paragraph("<i>bye.</i>", 1200, 5000));
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(s.Paragraphs[1].Text, "<i>Bye.</i>");
         }
 
         [TestMethod]
@@ -899,8 +901,11 @@ namespace Test
         {
             var prev = new Paragraph("<i>Bye.</i>", 0, 1000);
             var p = new Paragraph("<i>bye.</i>", 1200, 5000);
-            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
-            Assert.AreEqual(fixedText, "<i>Bye.</i>");
+            var s = new Subtitle();
+            s.Paragraphs.Add((prev));
+            s.Paragraphs.Add((p));
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(p.Text, "<i>Bye.</i>");
         }
 
         [TestMethod]
@@ -909,8 +914,11 @@ namespace Test
         {
             var prev = new Paragraph("Bye.", 0, 1000);
             var p = new Paragraph("bye." + Environment.NewLine + "bye.", 1200, 5000);
-            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
-            Assert.AreEqual(fixedText, "Bye." + Environment.NewLine + "Bye.");
+            var s = new Subtitle();
+            s.Paragraphs.Add((prev));
+            s.Paragraphs.Add((p));
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(p.Text, "Bye." + Environment.NewLine + "Bye.");
         }
 
         [TestMethod]
@@ -919,8 +927,11 @@ namespace Test
         {
             var prev = new Paragraph("Bye,", 0, 1000);
             var p = new Paragraph("bye.", 1200, 5000);
-            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
-            Assert.AreEqual(fixedText, "bye.");
+            var s = new Subtitle();
+            s.Paragraphs.Add((prev));
+            s.Paragraphs.Add((p));
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(p.Text, "bye.");
         }
 
         [TestMethod]
@@ -929,8 +940,11 @@ namespace Test
         {
             var prev = new Paragraph("Bye.", 0, 1000);
             var p = new Paragraph("- Moss! Jesus Christ!" + Environment.NewLine + "- what is it?", 1200, 5000);
-            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
-            Assert.AreEqual(fixedText, "- Moss! Jesus Christ!" + Environment.NewLine + "- What is it?");
+            var s = new Subtitle();
+            s.Paragraphs.Add((prev));
+            s.Paragraphs.Add((p));
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(p.Text, "- Moss! Jesus Christ!" + Environment.NewLine + "- What is it?");
         }
 
         [TestMethod]
@@ -939,8 +953,11 @@ namespace Test
         {
             var prev = new Paragraph("Bye.", 0, 1000);
             var p = new Paragraph("<i>- Moss! Jesus Christ!" + Environment.NewLine + "- what is it?</i>", 1200, 5000);
-            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
-            Assert.AreEqual(fixedText, "<i>- Moss! Jesus Christ!" + Environment.NewLine + "- What is it?</i>");
+            var s = new Subtitle();
+            s.Paragraphs.Add((prev));
+            s.Paragraphs.Add((p));
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(p.Text, "<i>- Moss! Jesus Christ!" + Environment.NewLine + "- What is it?</i>");
         }
 
         [TestMethod]
@@ -949,8 +966,11 @@ namespace Test
         {
             var prev = new Paragraph("Bye.", 0, 1000);
             var p = new Paragraph("<i>- Moss! Jesus Christ!</i>" + Environment.NewLine + "<i>- what is it?</i>", 1200, 5000);
-            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
-            Assert.AreEqual(fixedText, "<i>- Moss! Jesus Christ!</i>" + Environment.NewLine + "<i>- What is it?</i>");
+            var s = new Subtitle();
+            s.Paragraphs.Add((prev));
+            s.Paragraphs.Add((p));
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(p.Text, "<i>- Moss! Jesus Christ!</i>" + Environment.NewLine + "<i>- What is it?</i>");
         }
 
         [TestMethod]
@@ -959,8 +979,11 @@ namespace Test
         {
             var prev = new Paragraph("Bye.", 0, 1000);
             var p = new Paragraph("<i>- moss! Jesus Christ!</i>" + Environment.NewLine + "<i>- what is it?</i>", 1200, 5000);
-            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
-            Assert.AreEqual(fixedText, "<i>- Moss! Jesus Christ!</i>" + Environment.NewLine + "<i>- What is it?</i>");
+            var s = new Subtitle();
+            s.Paragraphs.Add((prev));
+            s.Paragraphs.Add((p));
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(p.Text, "<i>- Moss! Jesus Christ!</i>" + Environment.NewLine + "<i>- What is it?</i>");
         }
 
         [TestMethod]
@@ -969,8 +992,11 @@ namespace Test
         {
             var prev = new Paragraph("Bye", 0, 1000);
             var p = new Paragraph("bye.", 1200, 5000);
-            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
-            Assert.AreEqual(fixedText, "bye.");
+            var s = new Subtitle();
+            s.Paragraphs.Add((prev));
+            s.Paragraphs.Add((p));
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(p.Text, "bye.");
         }
 
         [TestMethod]
@@ -979,8 +1005,11 @@ namespace Test
         {
             var prev = new Paragraph("Bye -", 0, 1000);
             var p = new Paragraph("- moss!", 1200, 5000);
-            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
-            Assert.AreEqual(fixedText, "- moss!");
+            var s = new Subtitle();
+            s.Paragraphs.Add((prev));
+            s.Paragraphs.Add((p));
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(p.Text, "- moss!");
         }
 
         [TestMethod]
@@ -989,8 +1018,11 @@ namespace Test
         {
             var prev = new Paragraph("Bye -", 0, 1000);
             var p = new Paragraph("- moss!" + Environment.NewLine + " - Bye.", 1200, 5000);
-            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
-            Assert.AreEqual(fixedText, "- moss!" + Environment.NewLine + " - Bye.");
+            var s = new Subtitle();
+            s.Paragraphs.Add((prev));
+            s.Paragraphs.Add((p));
+            new FixStartWithUppercaseLetterAfterParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(p.Text, "- moss!" + Environment.NewLine + " - Bye.");
         }
 
         #endregion Start with uppercase after paragraph
@@ -1004,8 +1036,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "Cómo estás?");
-                target.FixSpanishInvertedQuestionAndExclamationMarks();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "¿Cómo estás?");
+                new FixSpanishInvertedQuestionAndExclamationMarks().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "¿Cómo estás?");
             }
         }
 
@@ -1016,8 +1048,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "Cómo estás!");
-                target.FixSpanishInvertedQuestionAndExclamationMarks();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "¡Cómo estás!");
+                new FixSpanishInvertedQuestionAndExclamationMarks().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "¡Cómo estás!");
             }
         }
 
@@ -1028,8 +1060,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "¡¡PARA!!");
-                target.FixSpanishInvertedQuestionAndExclamationMarks();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "¡¡PARA!!");
+                new FixSpanishInvertedQuestionAndExclamationMarks().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "¡¡PARA!!");
             }
         }
 
@@ -1040,8 +1072,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "¡¡¡PARA!!!");
-                target.FixSpanishInvertedQuestionAndExclamationMarks();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "¡¡¡PARA!!!");
+                new FixSpanishInvertedQuestionAndExclamationMarks().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "¡¡¡PARA!!!");
             }
         }
 
@@ -1052,8 +1084,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "¿Cómo estás?!");
-                target.FixSpanishInvertedQuestionAndExclamationMarks();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "¡¿Cómo estás?!");
+                new FixSpanishInvertedQuestionAndExclamationMarks().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "¡¿Cómo estás?!");
             }
         }
 
@@ -1064,8 +1096,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "<i>Chanchita, ¡¿copias?! Chanchita!!</i>");
-                target.FixSpanishInvertedQuestionAndExclamationMarks();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<i>Chanchita, ¡¿copias?! ¡¡Chanchita!!</i>");
+                new FixSpanishInvertedQuestionAndExclamationMarks().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>Chanchita, ¡¿copias?! ¡¡Chanchita!!</i>");
             }
         }
 
@@ -1076,8 +1108,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "¡Cómo estás?");
-                target.FixSpanishInvertedQuestionAndExclamationMarks();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "¿¡Cómo estás!?");
+                new FixSpanishInvertedQuestionAndExclamationMarks().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "¿¡Cómo estás!?");
             }
         }
 
@@ -1092,8 +1124,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "<i>- Mm-hmm.</i>");
-                target.FixHyphensRemove();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<i>Mm-hmm.</i>");
+                new FixHyphensRemove().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>Mm-hmm.</i>");
             }
         }
 
@@ -1104,8 +1136,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "<font color='red'>- Mm-hmm.</font>");
-                target.FixHyphensRemove();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<font color='red'>Mm-hmm.</font>");
+                new FixHyphensRemove().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<font color='red'>Mm-hmm.</font>");
             }
         }
 
@@ -1116,8 +1148,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- Mm-hmm.");
-                target.FixHyphensRemove();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "Mm-hmm.");
+                new FixHyphensRemove().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Mm-hmm.");
             }
         }
 
@@ -1128,8 +1160,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- I-I never thought of that.");
-                target.FixHyphensRemove();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "I-I never thought of that.");
+                new FixHyphensRemove().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "I-I never thought of that.");
             }
         }
 
@@ -1140,8 +1172,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- Uh-huh.");
-                target.FixHyphensRemove();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "Uh-huh.");
+                new FixHyphensRemove().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Uh-huh.");
             }
         }
 
@@ -1369,8 +1401,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "This is no troubIe!");
-                target.FixUppercaseIInsideWords();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "This is no trouble!");
+                new FixUppercaseIInsideWords().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "This is no trouble!");
             }
         }
 
@@ -1381,8 +1413,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- I'll ring her." + Environment.NewLine + "- ...In a lot of trouble.");
-                target.FixUppercaseIInsideWords();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "- I'll ring her." + Environment.NewLine + "- ...In a lot of trouble.");
+                new FixUppercaseIInsideWords().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "- I'll ring her." + Environment.NewLine + "- ...In a lot of trouble.");
             }
         }
 
@@ -1432,8 +1464,8 @@ namespace Test
             {
                 // <font color="#000000"> and <font>
                 InitializeFixCommonErrorsLine(target, "<font color=\"#000000\">-- Mm-hmm.</font>");
-                target.FixDoubleDash();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<font color=\"#000000\">...Mm-hmm.</font>");
+                new FixDoubleDash().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<font color=\"#000000\">...Mm-hmm.</font>");
             }
         }
 
@@ -1445,8 +1477,8 @@ namespace Test
             {
                 // <font color="#000000"> and <font>
                 InitializeFixCommonErrorsLine(target, "<b>Mm-hmm.</b>\r\n<font color=\"#000000\">-- foobar</font>");
-                target.FixDoubleDash();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<b>Mm-hmm.</b>\r\n<font color=\"#000000\">...foobar</font>");
+                new FixDoubleDash().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<b>Mm-hmm.</b>\r\n<font color=\"#000000\">...foobar</font>");
             }
         }
 

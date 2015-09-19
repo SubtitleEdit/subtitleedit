@@ -22,11 +22,7 @@
                     }
                 }
             }
-            if (doubleSpaces > 0)
-            {
-                callbacks.AddToTotalFixes(doubleSpaces);
-                callbacks.LogStatus(language.RemoveUnneededSpaces, string.Format(language.XUnneededSpacesRemoved, doubleSpaces));
-            }
+            callbacks.UpdateFixStatus(doubleSpaces, language.RemoveUnneededSpaces, string.Format(language.XUnneededSpacesRemoved, doubleSpaces));
         }
     }
 }
