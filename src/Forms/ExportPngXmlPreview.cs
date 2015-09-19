@@ -6,7 +6,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ExportPngXmlPreview : Form
     {
-
         private double _zoomFactor = 100;
         private readonly Bitmap _bmp;
 
