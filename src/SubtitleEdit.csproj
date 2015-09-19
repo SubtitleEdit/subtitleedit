@@ -1605,9 +1605,6 @@
 "$(ProjectDir)..\build_helpers.bat" rev $(ConfigurationName)</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>"$(ProjectDir)..\build_helpers.bat" rev $(ConfigurationName)</PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
     <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5554.16953\content\*.dll" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
