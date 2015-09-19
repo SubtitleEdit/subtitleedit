@@ -158,13 +158,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     break;
                 case ExpectingLine.Text:
-                    if (!string.IsNullOrWhiteSpace(line))
-                    {
-                        if (_paragraph.Text.Length > 0)
-                            _paragraph.Text += Environment.NewLine;
-                        _paragraph.Text += RemoveBadChars(line).TrimEnd().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                    }
-                    else if (IsText(next))
+                    if (!string.IsNullOrWhiteSpace(line) || IsText(next))
                     {
                         if (_paragraph.Text.Length > 0)
                             _paragraph.Text += Environment.NewLine;
