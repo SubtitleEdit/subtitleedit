@@ -491,6 +491,10 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Normal>Wyszukiwanie podstawowe</Normal>
     <CaseSensitive>Uwzględniaj wielość liter</CaseSensitive>
     <RegularExpression>Uwzględniaj wyrażenia regularne</RegularExpression>
+    <WholeWord>Cały wyraz</WholeWord>
+    <Count>Liczenie</Count>
+    <XNumberOfMatches>{0:#,##0} dopasowań</XNumberOfMatches>
+    <OneMatch>Jedno dopasowanie</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Znajdź linię napisów</Title>
