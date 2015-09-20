@@ -48,16 +48,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
             this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
-            this.groupBoxNOCR = new System.Windows.Forms.GroupBox();
-            this.buttonLineOcrEditLanguage = new System.Windows.Forms.Button();
-            this.buttonLineOcrNewLanguage = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.comboBoxNOcrLanguage = new System.Windows.Forms.ComboBox();
-            this.checkBoxNOcrItalic = new System.Windows.Forms.CheckBox();
-            this.checkBoxNOcrCorrect = new System.Windows.Forms.CheckBox();
-            this.checkBoxRightToLeftNOCR = new System.Windows.Forms.CheckBox();
-            this.numericUpDownNumberOfPixelsIsSpaceNOCR = new System.Windows.Forms.NumericUpDown();
-            this.labelNumberOfPixelsIsSpaceNOCR = new System.Windows.Forms.Label();
             this.groupBoxImageCompareMethod = new System.Windows.Forms.GroupBox();
             this.labelMaxErrorPercent = new System.Windows.Forms.Label();
             this.numericUpDownMaxErrorPct = new System.Windows.Forms.NumericUpDown();
@@ -78,6 +68,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxModiMethod = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxModiLanguage = new System.Windows.Forms.ComboBox();
+            this.groupBoxNOCR = new System.Windows.Forms.GroupBox();
+            this.buttonLineOcrEditLanguage = new System.Windows.Forms.Button();
+            this.buttonLineOcrNewLanguage = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.comboBoxNOcrLanguage = new System.Windows.Forms.ComboBox();
+            this.checkBoxNOcrItalic = new System.Windows.Forms.CheckBox();
+            this.checkBoxNOcrCorrect = new System.Windows.Forms.CheckBox();
+            this.checkBoxRightToLeftNOCR = new System.Windows.Forms.CheckBox();
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR = new System.Windows.Forms.NumericUpDown();
+            this.labelNumberOfPixelsIsSpaceNOCR = new System.Windows.Forms.Label();
             this.groupBoxOCRControls = new System.Windows.Forms.GroupBox();
             this.labelStartFrom = new System.Windows.Forms.Label();
             this.numericUpDownStartNumber = new System.Windows.Forms.NumericUpDown();
@@ -141,13 +141,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.timerHideStatus = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
-            this.groupBoxNOCR.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumberOfPixelsIsSpaceNOCR)).BeginInit();
             this.groupBoxImageCompareMethod.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxErrorPct)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPixelsIsSpace)).BeginInit();
             this.GroupBoxTesseractMethod.SuspendLayout();
             this.groupBoxModiMethod.SuspendLayout();
+            this.groupBoxNOCR.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumberOfPixelsIsSpaceNOCR)).BeginInit();
             this.groupBoxOCRControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStartNumber)).BeginInit();
             this.groupBoxOcrAutoFix.SuspendLayout();
@@ -401,11 +401,11 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxOcrMethod
             // 
-            this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
             this.groupBoxOcrMethod.Size = new System.Drawing.Size(392, 192);
@@ -427,124 +427,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxOcrMethod.Size = new System.Drawing.Size(366, 21);
             this.comboBoxOcrMethod.TabIndex = 0;
             this.comboBoxOcrMethod.SelectedIndexChanged += new System.EventHandler(this.ComboBoxOcrMethodSelectedIndexChanged);
-            // 
-            // groupBoxNOCR
-            // 
-            this.groupBoxNOCR.Controls.Add(this.buttonLineOcrEditLanguage);
-            this.groupBoxNOCR.Controls.Add(this.buttonLineOcrNewLanguage);
-            this.groupBoxNOCR.Controls.Add(this.label2);
-            this.groupBoxNOCR.Controls.Add(this.comboBoxNOcrLanguage);
-            this.groupBoxNOCR.Controls.Add(this.checkBoxNOcrItalic);
-            this.groupBoxNOCR.Controls.Add(this.checkBoxNOcrCorrect);
-            this.groupBoxNOCR.Controls.Add(this.checkBoxRightToLeftNOCR);
-            this.groupBoxNOCR.Controls.Add(this.numericUpDownNumberOfPixelsIsSpaceNOCR);
-            this.groupBoxNOCR.Controls.Add(this.labelNumberOfPixelsIsSpaceNOCR);
-            this.groupBoxNOCR.Location = new System.Drawing.Point(7, 38);
-            this.groupBoxNOCR.Name = "groupBoxNOCR";
-            this.groupBoxNOCR.Size = new System.Drawing.Size(366, 131);
-            this.groupBoxNOCR.TabIndex = 7;
-            this.groupBoxNOCR.TabStop = false;
-            this.groupBoxNOCR.Text = "nOCR";
-            // 
-            // buttonLineOcrEditLanguage
-            // 
-            this.buttonLineOcrEditLanguage.Location = new System.Drawing.Point(210, 97);
-            this.buttonLineOcrEditLanguage.Name = "buttonLineOcrEditLanguage";
-            this.buttonLineOcrEditLanguage.Size = new System.Drawing.Size(68, 21);
-            this.buttonLineOcrEditLanguage.TabIndex = 41;
-            this.buttonLineOcrEditLanguage.Text = "Edit";
-            this.buttonLineOcrEditLanguage.UseVisualStyleBackColor = true;
-            this.buttonLineOcrEditLanguage.Click += new System.EventHandler(this.buttonLineOcrEditLanguage_Click);
-            // 
-            // buttonLineOcrNewLanguage
-            // 
-            this.buttonLineOcrNewLanguage.Location = new System.Drawing.Point(283, 97);
-            this.buttonLineOcrNewLanguage.Name = "buttonLineOcrNewLanguage";
-            this.buttonLineOcrNewLanguage.Size = new System.Drawing.Size(68, 21);
-            this.buttonLineOcrNewLanguage.TabIndex = 40;
-            this.buttonLineOcrNewLanguage.Text = "New";
-            this.buttonLineOcrNewLanguage.UseVisualStyleBackColor = true;
-            this.buttonLineOcrNewLanguage.Click += new System.EventHandler(this.buttonLineOcrNewLanguage_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 101);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(54, 13);
-            this.label2.TabIndex = 35;
-            this.label2.Text = "Language";
-            // 
-            // comboBoxNOcrLanguage
-            // 
-            this.comboBoxNOcrLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxNOcrLanguage.FormattingEnabled = true;
-            this.comboBoxNOcrLanguage.Location = new System.Drawing.Point(74, 97);
-            this.comboBoxNOcrLanguage.Name = "comboBoxNOcrLanguage";
-            this.comboBoxNOcrLanguage.Size = new System.Drawing.Size(130, 21);
-            this.comboBoxNOcrLanguage.TabIndex = 34;
-            this.comboBoxNOcrLanguage.SelectedIndexChanged += new System.EventHandler(this.comboBoxNOcrLanguage_SelectedIndexChanged);
-            // 
-            // checkBoxNOcrItalic
-            // 
-            this.checkBoxNOcrItalic.AutoSize = true;
-            this.checkBoxNOcrItalic.Location = new System.Drawing.Point(15, 42);
-            this.checkBoxNOcrItalic.Name = "checkBoxNOcrItalic";
-            this.checkBoxNOcrItalic.Size = new System.Drawing.Size(92, 17);
-            this.checkBoxNOcrItalic.TabIndex = 8;
-            this.checkBoxNOcrItalic.Text = "Contains italic";
-            this.checkBoxNOcrItalic.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxNOcrCorrect
-            // 
-            this.checkBoxNOcrCorrect.AutoSize = true;
-            this.checkBoxNOcrCorrect.Location = new System.Drawing.Point(235, 17);
-            this.checkBoxNOcrCorrect.Name = "checkBoxNOcrCorrect";
-            this.checkBoxNOcrCorrect.Size = new System.Drawing.Size(116, 17);
-            this.checkBoxNOcrCorrect.TabIndex = 7;
-            this.checkBoxNOcrCorrect.Text = "Draw missing texts";
-            this.checkBoxNOcrCorrect.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxRightToLeftNOCR
-            // 
-            this.checkBoxRightToLeftNOCR.AutoSize = true;
-            this.checkBoxRightToLeftNOCR.Location = new System.Drawing.Point(235, 40);
-            this.checkBoxRightToLeftNOCR.Name = "checkBoxRightToLeftNOCR";
-            this.checkBoxRightToLeftNOCR.Size = new System.Drawing.Size(83, 17);
-            this.checkBoxRightToLeftNOCR.TabIndex = 6;
-            this.checkBoxRightToLeftNOCR.Text = "Right to left";
-            this.checkBoxRightToLeftNOCR.UseVisualStyleBackColor = true;
-            // 
-            // numericUpDownNumberOfPixelsIsSpaceNOCR
-            // 
-            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Location = new System.Drawing.Point(122, 17);
-            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Maximum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Name = "numericUpDownNumberOfPixelsIsSpaceNOCR";
-            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Size = new System.Drawing.Size(50, 21);
-            this.numericUpDownNumberOfPixelsIsSpaceNOCR.TabIndex = 5;
-            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Value = new decimal(new int[] {
-            12,
-            0,
-            0,
-            0});
-            // 
-            // labelNumberOfPixelsIsSpaceNOCR
-            // 
-            this.labelNumberOfPixelsIsSpaceNOCR.AutoSize = true;
-            this.labelNumberOfPixelsIsSpaceNOCR.Location = new System.Drawing.Point(12, 20);
-            this.labelNumberOfPixelsIsSpaceNOCR.Name = "labelNumberOfPixelsIsSpaceNOCR";
-            this.labelNumberOfPixelsIsSpaceNOCR.Size = new System.Drawing.Size(104, 13);
-            this.labelNumberOfPixelsIsSpaceNOCR.TabIndex = 4;
-            this.labelNumberOfPixelsIsSpaceNOCR.Text = "No of pixels is space";
             // 
             // groupBoxImageCompareMethod
             // 
@@ -600,6 +482,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             65536});
+            this.numericUpDownMaxErrorPct.ValueChanged += new System.EventHandler(this.numericUpDownMaxErrorPct_ValueChanged);
             // 
             // checkBoxRightToLeft
             // 
@@ -632,6 +515,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0,
             0});
+            this.numericUpDownPixelsIsSpace.ValueChanged += new System.EventHandler(this.numericUpDownPixelsIsSpace_ValueChanged);
             // 
             // buttonEditCharacterDatabase
             // 
@@ -791,6 +675,124 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxModiLanguage.Size = new System.Drawing.Size(195, 21);
             this.comboBoxModiLanguage.TabIndex = 0;
             this.comboBoxModiLanguage.SelectedIndexChanged += new System.EventHandler(this.ComboBoxModiLanguageSelectedIndexChanged);
+            // 
+            // groupBoxNOCR
+            // 
+            this.groupBoxNOCR.Controls.Add(this.buttonLineOcrEditLanguage);
+            this.groupBoxNOCR.Controls.Add(this.buttonLineOcrNewLanguage);
+            this.groupBoxNOCR.Controls.Add(this.label2);
+            this.groupBoxNOCR.Controls.Add(this.comboBoxNOcrLanguage);
+            this.groupBoxNOCR.Controls.Add(this.checkBoxNOcrItalic);
+            this.groupBoxNOCR.Controls.Add(this.checkBoxNOcrCorrect);
+            this.groupBoxNOCR.Controls.Add(this.checkBoxRightToLeftNOCR);
+            this.groupBoxNOCR.Controls.Add(this.numericUpDownNumberOfPixelsIsSpaceNOCR);
+            this.groupBoxNOCR.Controls.Add(this.labelNumberOfPixelsIsSpaceNOCR);
+            this.groupBoxNOCR.Location = new System.Drawing.Point(7, 38);
+            this.groupBoxNOCR.Name = "groupBoxNOCR";
+            this.groupBoxNOCR.Size = new System.Drawing.Size(366, 131);
+            this.groupBoxNOCR.TabIndex = 7;
+            this.groupBoxNOCR.TabStop = false;
+            this.groupBoxNOCR.Text = "nOCR";
+            // 
+            // buttonLineOcrEditLanguage
+            // 
+            this.buttonLineOcrEditLanguage.Location = new System.Drawing.Point(210, 97);
+            this.buttonLineOcrEditLanguage.Name = "buttonLineOcrEditLanguage";
+            this.buttonLineOcrEditLanguage.Size = new System.Drawing.Size(68, 21);
+            this.buttonLineOcrEditLanguage.TabIndex = 41;
+            this.buttonLineOcrEditLanguage.Text = "Edit";
+            this.buttonLineOcrEditLanguage.UseVisualStyleBackColor = true;
+            this.buttonLineOcrEditLanguage.Click += new System.EventHandler(this.buttonLineOcrEditLanguage_Click);
+            // 
+            // buttonLineOcrNewLanguage
+            // 
+            this.buttonLineOcrNewLanguage.Location = new System.Drawing.Point(283, 97);
+            this.buttonLineOcrNewLanguage.Name = "buttonLineOcrNewLanguage";
+            this.buttonLineOcrNewLanguage.Size = new System.Drawing.Size(68, 21);
+            this.buttonLineOcrNewLanguage.TabIndex = 40;
+            this.buttonLineOcrNewLanguage.Text = "New";
+            this.buttonLineOcrNewLanguage.UseVisualStyleBackColor = true;
+            this.buttonLineOcrNewLanguage.Click += new System.EventHandler(this.buttonLineOcrNewLanguage_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(11, 101);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(54, 13);
+            this.label2.TabIndex = 35;
+            this.label2.Text = "Language";
+            // 
+            // comboBoxNOcrLanguage
+            // 
+            this.comboBoxNOcrLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxNOcrLanguage.FormattingEnabled = true;
+            this.comboBoxNOcrLanguage.Location = new System.Drawing.Point(74, 97);
+            this.comboBoxNOcrLanguage.Name = "comboBoxNOcrLanguage";
+            this.comboBoxNOcrLanguage.Size = new System.Drawing.Size(130, 21);
+            this.comboBoxNOcrLanguage.TabIndex = 34;
+            this.comboBoxNOcrLanguage.SelectedIndexChanged += new System.EventHandler(this.comboBoxNOcrLanguage_SelectedIndexChanged);
+            // 
+            // checkBoxNOcrItalic
+            // 
+            this.checkBoxNOcrItalic.AutoSize = true;
+            this.checkBoxNOcrItalic.Location = new System.Drawing.Point(15, 42);
+            this.checkBoxNOcrItalic.Name = "checkBoxNOcrItalic";
+            this.checkBoxNOcrItalic.Size = new System.Drawing.Size(92, 17);
+            this.checkBoxNOcrItalic.TabIndex = 8;
+            this.checkBoxNOcrItalic.Text = "Contains italic";
+            this.checkBoxNOcrItalic.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxNOcrCorrect
+            // 
+            this.checkBoxNOcrCorrect.AutoSize = true;
+            this.checkBoxNOcrCorrect.Location = new System.Drawing.Point(235, 17);
+            this.checkBoxNOcrCorrect.Name = "checkBoxNOcrCorrect";
+            this.checkBoxNOcrCorrect.Size = new System.Drawing.Size(116, 17);
+            this.checkBoxNOcrCorrect.TabIndex = 7;
+            this.checkBoxNOcrCorrect.Text = "Draw missing texts";
+            this.checkBoxNOcrCorrect.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxRightToLeftNOCR
+            // 
+            this.checkBoxRightToLeftNOCR.AutoSize = true;
+            this.checkBoxRightToLeftNOCR.Location = new System.Drawing.Point(235, 40);
+            this.checkBoxRightToLeftNOCR.Name = "checkBoxRightToLeftNOCR";
+            this.checkBoxRightToLeftNOCR.Size = new System.Drawing.Size(83, 17);
+            this.checkBoxRightToLeftNOCR.TabIndex = 6;
+            this.checkBoxRightToLeftNOCR.Text = "Right to left";
+            this.checkBoxRightToLeftNOCR.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDownNumberOfPixelsIsSpaceNOCR
+            // 
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Location = new System.Drawing.Point(122, 17);
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Name = "numericUpDownNumberOfPixelsIsSpaceNOCR";
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Size = new System.Drawing.Size(50, 21);
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.TabIndex = 5;
+            this.numericUpDownNumberOfPixelsIsSpaceNOCR.Value = new decimal(new int[] {
+            12,
+            0,
+            0,
+            0});
+            // 
+            // labelNumberOfPixelsIsSpaceNOCR
+            // 
+            this.labelNumberOfPixelsIsSpaceNOCR.AutoSize = true;
+            this.labelNumberOfPixelsIsSpaceNOCR.Location = new System.Drawing.Point(12, 20);
+            this.labelNumberOfPixelsIsSpaceNOCR.Name = "labelNumberOfPixelsIsSpaceNOCR";
+            this.labelNumberOfPixelsIsSpaceNOCR.Size = new System.Drawing.Size(104, 13);
+            this.labelNumberOfPixelsIsSpaceNOCR.TabIndex = 4;
+            this.labelNumberOfPixelsIsSpaceNOCR.Text = "No of pixels is space";
             // 
             // groupBoxOCRControls
             // 
@@ -968,9 +970,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBoxLog.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxLog.FormattingEnabled = true;
+            this.listBoxLog.HorizontalScrollbar = true;
             this.listBoxLog.Location = new System.Drawing.Point(3, 3);
             this.listBoxLog.Name = "listBoxLog";
-            this.listBoxLog.HorizontalScrollbar = true;
             this.listBoxLog.Size = new System.Drawing.Size(369, 149);
             this.listBoxLog.TabIndex = 0;
             this.listBoxLog.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
@@ -993,9 +995,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxLogSuggestions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBoxLogSuggestions.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxLogSuggestions.FormattingEnabled = true;
+            this.listBoxLogSuggestions.HorizontalScrollbar = true;
             this.listBoxLogSuggestions.Location = new System.Drawing.Point(3, 3);
             this.listBoxLogSuggestions.Name = "listBoxLogSuggestions";
-            this.listBoxLogSuggestions.HorizontalScrollbar = true;
             this.listBoxLogSuggestions.Size = new System.Drawing.Size(369, 149);
             this.listBoxLogSuggestions.TabIndex = 40;
             this.listBoxLogSuggestions.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
@@ -1085,9 +1087,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxUnknownWords.ContextMenuStrip = this.contextMenuStripUnknownWords;
             this.listBoxUnknownWords.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxUnknownWords.FormattingEnabled = true;
+            this.listBoxUnknownWords.HorizontalScrollbar = true;
             this.listBoxUnknownWords.Location = new System.Drawing.Point(3, 3);
             this.listBoxUnknownWords.Name = "listBoxUnknownWords";
-            this.listBoxUnknownWords.HorizontalScrollbar = true;
             this.listBoxUnknownWords.Size = new System.Drawing.Size(143, 147);
             this.listBoxUnknownWords.TabIndex = 40;
             this.listBoxUnknownWords.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
@@ -1523,9 +1525,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.Resize += new System.EventHandler(this.VobSubOcr_Resize);
             this.contextMenuStripListview.ResumeLayout(false);
             this.groupBoxOcrMethod.ResumeLayout(false);
-            this.groupBoxNOCR.ResumeLayout(false);
-            this.groupBoxNOCR.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumberOfPixelsIsSpaceNOCR)).EndInit();
             this.groupBoxImageCompareMethod.ResumeLayout(false);
             this.groupBoxImageCompareMethod.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxErrorPct)).EndInit();
@@ -1534,6 +1533,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.GroupBoxTesseractMethod.PerformLayout();
             this.groupBoxModiMethod.ResumeLayout(false);
             this.groupBoxModiMethod.PerformLayout();
+            this.groupBoxNOCR.ResumeLayout(false);
+            this.groupBoxNOCR.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumberOfPixelsIsSpaceNOCR)).EndInit();
             this.groupBoxOCRControls.ResumeLayout(false);
             this.groupBoxOCRControls.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStartNumber)).EndInit();

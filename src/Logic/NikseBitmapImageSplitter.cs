@@ -869,9 +869,9 @@ namespace Nikse.SubtitleEdit.Logic
             int different = 0;
             int maxDiff = bmp1.Width * bmp1.Height / 5;
 
-            for (int x = 1; x < bmp1.Width; x++)
+            for (int x = 0; x < bmp1.Width; x++)
             {
-                for (int y = 1; y < bmp1.Height; y++)
+                for (int y = 0; y < bmp1.Height; y++)
                 {
                     //if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
                     if (bmp1.GetPixel(x, y) > 0 && bmp2.GetAlpha(x, y) < 100)
