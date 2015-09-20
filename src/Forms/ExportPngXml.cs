@@ -1083,7 +1083,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                                 top = param.BottomMargin;
                             if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
-                                top = param.ScreenHeight - (param.Bitmap.Height / 2);
+                                top = (param.ScreenHeight - param.Bitmap.Height) / 2;
                             sb.AppendLine(string.Format("{0} {1} {2} {3} {4} {5} {6}", Path.GetFileName(fileName), FormatFabTime(param.P.StartTime, param), FormatFabTime(param.P.EndTime, param), left, top, left + param.Bitmap.Width, top + param.Bitmap.Height));
                         }
                         param.Saved = true;
