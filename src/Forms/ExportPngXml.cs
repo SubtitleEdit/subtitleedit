@@ -3786,28 +3786,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void SubtitleListView1Add(Paragraph paragraph)
         {
             var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph, UseItemStyleForSubItems = false };
-            ListViewItem.ListViewSubItem subItem;
-
             if (subtitleListView1.CheckBoxes)
             {
                 item.Text = string.Empty;
-                subItem = new ListViewItem.ListViewSubItem(item, paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph };
-                item.SubItems.Add(subItem);
+                item.SubItems.Add(paragraph.Number.ToString(CultureInfo.InvariantCulture));
+                item.SubItems[item.SubItems.Count].Tag = paragraph;
             }
-
-            subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToDisplayString());
-            item.SubItems.Add(subItem);
-
-            subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToDisplayString());
-            item.SubItems.Add(subItem);
-
-            subItem = new ListViewItem.ListViewSubItem(item, paragraph.Duration.ToShortDisplayString());
-            item.SubItems.Add(subItem);
-
-            subItem = new ListViewItem.ListViewSubItem(item, paragraph.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            subItem.Font = new Font(_subtitleFontName, Font.Size);
-            item.SubItems.Add(subItem);
-
+            item.SubItems.Add(paragraph.StartTime.ToDisplayString());
+            item.SubItems.Add(paragraph.EndTime.ToDisplayString());
+            item.SubItems.Add(paragraph.Duration.ToShortDisplayString());
+            item.SubItems.Add(paragraph.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems[item.SubItems.Count].Font = new Font(_subtitleFontName, Font.Size);
             subtitleListView1.Items.Add(item);
         }
 
