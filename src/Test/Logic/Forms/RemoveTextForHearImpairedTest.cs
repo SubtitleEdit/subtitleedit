@@ -146,6 +146,70 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void RemoveColonTest7()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            string text = "Kelly has an eating" + Environment.NewLine + "disorder? Michael: Yes.";
+            string expected = "- Kelly has an eating" + Environment.NewLine + "disorder? - Yes."; ;
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveColonTest7A()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
+            string text = "Kelly has an eating" + Environment.NewLine + "disorder? MICHAEL: Yes.";
+            string expected = "- Kelly has an eating" + Environment.NewLine + "disorder? - Yes."; ;
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveColonTest8()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            string text = "That's really great, you" + Environment.NewLine + "guys. RYAN: Don't vaccinate it.";
+            string expected = "- That's really great, you" + Environment.NewLine + "guys. - Don't vaccinate it."; ;
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveColonTest9()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            string text = "<i>- JOHN: Hvordan går det?</i>" + Environment.NewLine + "<i>-Marry: Det går fint!</i>";
+            string expected = "<i>- Hvordan går det?</i>" + Environment.NewLine + "<i>- Det går fint!</i>"; ;
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
         /// <summary>
         /// A test for RemoveHIInsideLine
         /// </summary>
@@ -825,8 +889,8 @@ namespace Test.Logic.Forms
             target.Settings.ColonSeparateLine = false;
             target.Settings.RemoveTextBetweenParentheses = true;
             target.Settings.RemoveTextBeforeColon = true;
-            const string text = "SKOTT AVFYRADE: 760\r\nFORDON FÖRSTÖRDA: 12";
-            const string expected = "760\r\n12";
+            string text = "SKOTT AVFYRADE: 760." + Environment.NewLine + "FORDON FÖRSTÖRDA: 12.";
+            string expected = "- 760." + Environment.NewLine + "- 12.";
             string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }

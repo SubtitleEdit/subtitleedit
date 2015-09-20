@@ -114,44 +114,71 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     var noTagPre = HtmlUtil.RemoveHtmlTags(pre, true);
                     if (Settings.RemoveTextBeforeColonOnlyUppercase && noTagPre != noTagPre.ToUpper())
                     {
-                        newText = (newText + Environment.NewLine + line).Trim();
+                        string s = line;
+                        string l1Trim = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
+                        if (count == 1 && lines.Length == 2 && !l1Trim.EndsWith('.') &&
+                                                               !l1Trim.EndsWith('!') &&
+                                                               !l1Trim.EndsWith('?'))
+                        {
+                            int indexOf = line.IndexOf(". ", StringComparison.Ordinal);
+                            if (indexOf == -1)
+                                indexOf = line.IndexOf("! ", StringComparison.Ordinal);
+                            if (indexOf == -1)
+                                indexOf = line.IndexOf("? ", StringComparison.Ordinal);
+                            if (indexOf > 0 && indexOf < indexOfColon)
+                            {
+                                var toRemove = s.Substring(indexOf + 1, indexOfColon - indexOf).Trim();
+                                if (toRemove.Length > 1 && toRemove == toRemove.ToUpper())
+                                {
+                                    s = s.Remove(indexOf + 1, indexOfColon - indexOf);
+                                    s = s.Insert(indexOf + 1, " -");
+                                    if (newText.StartsWith("<i>") && !newText.StartsWith("<i>-"))
+                                        newText = "<i>- " + newText.Remove(0, 3);
+                                    else if (!newText.StartsWith("-"))
+                                        newText = "- " + newText;
+                                }
+                            }
+                        }
+
+                        newText = (newText + Environment.NewLine + s).Trim();
                     }
                     else
                     {
+                        var newTextNoHtml = HtmlUtil.RemoveHtmlTags(newText);
                         if (Utilities.CountTagInText(line, ':') == 1)
                         {
                             if (count == 1 && newText.Length > 1 && removedInFirstLine &&
-                                !".?!".Contains(newText[newText.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
+                                !".?!".Contains(newTextNoHtml[newTextNoHtml.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
                                 line != line.ToUpper())
                             {
                                 newText += Environment.NewLine;
-                                if (pre.Contains("<i>") && line.Contains("</i>"))
+                                if (pre.Contains("<i>") && line.Contains("</i>") && !line.Contains("<i>"))
                                     newText += "<i>" + line;
-                                else if (pre.Contains("<b>") && line.Contains("</b>"))
+                                else if (pre.Contains("<b>") && line.Contains("</b>") && !line.Contains("<b>"))
                                     newText += "<b>" + line;
-                                else if (pre.Contains("<u>") && line.Contains("</u>"))
+                                else if (pre.Contains("<u>") && line.Contains("</u>") && !line.Contains("<u>"))
                                     newText += "<u>" + line;
-                                else if (pre.Contains('[') && line.Contains(']'))
+                                else if (pre.Contains('[') && line.Contains(']') && !line.Contains("["))
                                     newText += "[" + line;
-                                else if (pre.Contains('(') && line.EndsWith(')'))
+                                else if (pre.Contains('(') && line.EndsWith(')') && !line.Contains("("))
                                     newText += "(" + line;
                                 else
                                     newText += line;
                             }
                             else if (count == 1 && newText.Length > 1 && indexOfColon > 15 && line.Substring(0, indexOfColon).Contains(' ') &&
-                                !".?!".Contains(newText[newText.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
-                                line != line.ToUpper())
+                                     !".?!".Contains(newTextNoHtml[newTextNoHtml.Length - 1]) && newText.LineEndsWithHtmlTag(true) &&
+                                     line != line.ToUpper())
                             {
                                 newText += Environment.NewLine;
-                                if (pre.Contains("<i>") && line.Contains("</i>"))
+                                if (pre.Contains("<i>") && line.Contains("</i>") && !line.Contains("<i>"))
                                     newText += "<i>" + line;
-                                else if (pre.Contains("<b>") && line.Contains("</b>"))
+                                else if (pre.Contains("<b>") && line.Contains("</b>") && !line.Contains("<b>"))
                                     newText += "<b>" + line;
-                                else if (pre.Contains("<u>") && line.Contains("</u>"))
+                                else if (pre.Contains("<u>") && line.Contains("</u>") && !line.Contains("<u>"))
                                     newText += "<u>" + line;
-                                else if (pre.Contains('[') && line.Contains(']'))
+                                else if (pre.Contains('[') && line.Contains(']') && !line.Contains("["))
                                     newText += "[" + line;
-                                else if (pre.Contains('(') && line.EndsWith(')'))
+                                else if (pre.Contains('(') && line.EndsWith(')') && !line.Contains("("))
                                     newText += "(" + line;
                                 else
                                     newText += line;
@@ -171,6 +198,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                                 if (remove && !DoRemove(pre))
                                     remove = false;
+
+                                string l1Trimmed = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
+                                if (count == 1 && lines.Length == 2 && !l1Trimmed.EndsWith('.') &&
+                                                                       !l1Trimmed.EndsWith('!') &&
+                                                                       !l1Trimmed.EndsWith('?'))
+                                {
+                                    remove = false;
+                                }
 
                                 if (remove)
                                 {
@@ -212,7 +247,28 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 }
                                 else
                                 {
-                                    newText = (newText + Environment.NewLine + line).Trim();
+                                    string s = line;
+                                    string l1Trim = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
+                                    if (count == 1 && lines.Length == 2 && !l1Trim.EndsWith('.') &&
+                                                                           !l1Trim.EndsWith('!') &&
+                                                                           !l1Trim.EndsWith('?'))
+                                    {
+                                        int indexOf = line.IndexOf(". ", StringComparison.Ordinal);
+                                        if (indexOf == -1)
+                                            indexOf = line.IndexOf("! ", StringComparison.Ordinal);
+                                        if (indexOf == -1)
+                                            indexOf = line.IndexOf("? ", StringComparison.Ordinal);
+                                        if (indexOf > 0 && indexOf < indexOfColon)
+                                        {
+                                            s = s.Remove(indexOf + 1, indexOfColon - indexOf);
+                                            s = s.Insert(indexOf + 1, " -");
+                                            if (newText.StartsWith("<i>") && !newText.StartsWith("<i>-"))
+                                                newText = "<i>- " + newText.Remove(0, 3);
+                                            else if (!newText.StartsWith("-"))
+                                                newText = "- " + newText;
+                                        }
+                                    }
+                                    newText = (newText + Environment.NewLine + s).Trim();
                                     if (newText.EndsWith("</i>", StringComparison.Ordinal) && text.StartsWith("<i>", StringComparison.Ordinal) && !newText.StartsWith("<i>", StringComparison.Ordinal))
                                         newText = "<i>" + newText;
                                     else if (newText.EndsWith("</b>", StringComparison.Ordinal) && text.StartsWith("<b>", StringComparison.Ordinal) && !newText.StartsWith("<b>", StringComparison.Ordinal))
