@@ -1050,7 +1050,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                                             top = param.BottomMargin;
                                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
-                                            top = param.ScreenHeight - (param.Bitmap.Height / 2);
+                                            top = (param.ScreenHeight - param.Bitmap.Height) / 2;
 
                                         using (var g = Graphics.FromImage(fullSize))
                                         {
