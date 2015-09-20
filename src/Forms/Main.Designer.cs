@@ -107,6 +107,7 @@
             this.toolStripMenuItemImportText = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportImages = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportTimeCodes = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImport = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemExport = new System.Windows.Forms.ToolStripMenuItem();
             this.adobeEncoreFABImageScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -904,16 +905,7 @@
             this.toolStripMenuItemStatistics,
             this.toolStripMenuItemPlugins,
             this.toolStripSeparator1,
-            this.toolStripMenuItemImportDvdSubtitles,
-            this.toolStripMenuItemSubIdx,
-            this.toolStripMenuItemImportBluRaySup,
-            this.toolStripMenuItemImportXSub,
-            this.toolStripMenuItemImportOcrHardSub,
-            this.matroskaImportStripMenuItem,
-            this.toolStripMenuItemManualAnsi,
-            this.toolStripMenuItemImportText,
-            this.toolStripMenuItemImportImages,
-            this.toolStripMenuItemImportTimeCodes,
+            this.toolStripMenuItemImport,
             this.toolStripSeparator22,
             this.toolStripMenuItemExport,
             this.toolStripSeparator10,
@@ -1156,6 +1148,23 @@
             this.toolStripMenuItemImportTimeCodes.Size = new System.Drawing.Size(337, 22);
             this.toolStripMenuItemImportTimeCodes.Text = "Import time codes into existing subtitle...";
             this.toolStripMenuItemImportTimeCodes.Click += new System.EventHandler(this.toolStripMenuItemImportTimeCodes_Click);
+            // 
+            // toolStripMenuItemImport
+            // 
+            this.toolStripMenuItemImport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemImportDvdSubtitles,
+            this.toolStripMenuItemSubIdx,
+            this.toolStripMenuItemImportBluRaySup,
+            this.toolStripMenuItemImportXSub,
+            this.toolStripMenuItemImportOcrHardSub,
+            this.matroskaImportStripMenuItem,
+            this.toolStripMenuItemManualAnsi,
+            this.toolStripMenuItemImportText,
+            this.toolStripMenuItemImportImages,
+            this.toolStripMenuItemImportTimeCodes});
+            this.toolStripMenuItemImport.Name = "toolStripMenuItemImport";
+            this.toolStripMenuItemImport.Size = new System.Drawing.Size(337, 22);
+            this.toolStripMenuItemImport.Text = "Import";
             // 
             // toolStripSeparator22
             // 
@@ -4987,5 +4996,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddWaveformBatch;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportBdTextSt;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelProgress;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImport;
     }
 }
