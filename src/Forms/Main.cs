@@ -329,8 +329,15 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxEncoding.Items.Add(Encoding.UTF8.EncodingName);
                 foreach (var ei in Encoding.GetEncodings())
                 {
-                    if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= 949 && !ei.DisplayName.Contains("EBCDIC") && ei.CodePage != 1047) //Configuration.Settings.General.EncodingMinimumCodePage)
-                        comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
+                    try
+                    {
+                        if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= 949 && !ei.DisplayName.Contains("EBCDIC") && ei.CodePage != 1047) //Configuration.Settings.General.EncodingMinimumCodePage)
+                            comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
+                    }
+                    catch
+                    {
+                        // Work-around for issue #1285
+                    }
                 }
                 SetEncoding(Configuration.Settings.General.DefaultEncoding);
 
