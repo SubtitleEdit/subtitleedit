@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Subtitle Subtitle;
         private SubtitleFormat _format;
-        public Encoding Encoding { get; set; } 
+        public Encoding Encoding { get; set; }
         private Subtitle _originalSubtitle;
         private int _totalFixes;
         private int _totalErrors;
@@ -324,14 +324,14 @@ namespace Nikse.SubtitleEdit.Forms
             FixCommonErrorsSettings ce = Configuration.Settings.CommonErrors;
             _fixActions = new List<FixItem>
             {
-                new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, string.Empty, () => new FixEmptyLines().Fix(Subtitle, this), ce.EmptyLinesTicked),               
+                new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, string.Empty, () => new FixEmptyLines().Fix(Subtitle, this), ce.EmptyLinesTicked),
                 new FixItem(_language.FixOverlappingDisplayTimes, string.Empty, () => new FixOverlappingDisplayTimes().Fix(Subtitle, this), ce.OverlappingDisplayTimeTicked),
                 new FixItem(_language.FixShortDisplayTimes, string.Empty, () => new FixShortDisplayTimes().Fix(Subtitle, this), ce.TooShortDisplayTimeTicked),
                 new FixItem(_language.FixLongDisplayTimes, string.Empty, () => new FixLongDisplayTimes().Fix(Subtitle, this), ce.TooLongDisplayTimeTicked),
                 new FixItem(_language.FixInvalidItalicTags, _language.FixInvalidItalicTagsExample, () => new FixInvalidItalicTags().Fix(Subtitle, this), ce.InvalidItalicTagsTicked),
                 new FixItem(_language.RemoveUnneededSpaces, _language.RemoveUnneededSpacesExample, () => new FixUnneededSpaces().Fix(Subtitle, this), ce.UnneededSpacesTicked),
                 new FixItem(_language.RemoveUnneededPeriods, _language.RemoveUnneededPeriodsExample, () => new FixUnneededPeriods().Fix(Subtitle, this), ce.UnneededPeriodsTicked),
-                new FixItem(_language.FixMissingSpaces, _language.FixMissingSpacesExample, () => new FixMissingSpaces().Fix(Subtitle, this), ce.MissingSpacesTicked),                
+                new FixItem(_language.FixMissingSpaces, _language.FixMissingSpacesExample, () => new FixMissingSpaces().Fix(Subtitle, this), ce.MissingSpacesTicked),
                 new FixItem(_language.BreakLongLines, string.Empty, () => new FixLongLines().Fix(Subtitle, this), ce.BreakLongLinesTicked),
                 new FixItem(_language.RemoveLineBreaks, string.Empty, () => new FixShortLines().Fix(Subtitle, this), ce.MergeShortLinesTicked),
                 new FixItem(_language.RemoveLineBreaksAll, string.Empty, () => new FixShortLinesAll().Fix(Subtitle, this), ce.MergeShortLinesAllTicked),
@@ -504,8 +504,8 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     _appliedLog.AppendLine(string.Format(_language.FixedOkXY, sender, message));
             }
-        }      
-           
+        }
+
         public bool IsName(string candidate)
         {
             MakeSureNamesListIsLoaded();
@@ -539,7 +539,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             return _abbreviationList;
         }
-       
+
         public void FixOcrErrorsViaReplaceList(string threeLetterIsoLanguageName)
         {
             using (var ocrFixEngine = new OcrFixEngine(threeLetterIsoLanguageName, null, this))
@@ -568,7 +568,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-        
+
         public void UpdateFixStatus(int fixes, string message, string xMessage)
         {
             if (fixes > 0)
@@ -577,7 +577,7 @@ namespace Nikse.SubtitleEdit.Forms
                 LogStatus(message, string.Format(xMessage, fixes));
             }
         }
-      
+
         private void ButtonFixClick(object sender, EventArgs e)
         {
             if (buttonBack.Enabled)

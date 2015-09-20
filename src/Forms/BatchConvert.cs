@@ -1031,7 +1031,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (comboBoxSubtitleFormats.Text == AdvancedSubStationAlpha.NameOfFormat || comboBoxSubtitleFormats.Text == SubStationAlpha.NameOfFormat)
             {
-                ShowAssSsaStyles();                
+                ShowAssSsaStyles();
             }
             else if (comboBoxSubtitleFormats.Text == Ebu.NameOfFormat)
             {
