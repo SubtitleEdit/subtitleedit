@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             sb.AppendLine();
             if (Configuration.Settings.General.VideoPlayer != "VLC")
             {
-                sb.AppendLine("You need to install/update LAV Filters - DirectShow Media Splitter and Decoders: http://code.google.com/p/lavfilters/");
+                sb.AppendLine("You need to install/update LAV Filters - DirectShow Media Splitter and Decoders: https://github.com/Nevcairiel/LAVFilters/releases");
                 sb.AppendLine();
                 sb.AppendLine("NOTE: Subtitle Edit can also use VLC media player as built-in video player. See Options -> Settings -> Video Player");
                 sb.AppendLine("http://www.videolan.org/vlc/");
