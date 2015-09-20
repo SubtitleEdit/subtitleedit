@@ -3233,6 +3233,7 @@ namespace Nikse.SubtitleEdit.Forms
             text = text.Replace("…", "...");
             text = text.Replace('♪', '#');
             text = text.Replace('♫', '#');
+            text = text.Replace("⇒", "=>");
 
             // Spaces
             text = text.Replace('\u00A0', ' '); // No-Break Space
