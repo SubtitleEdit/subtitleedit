@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         }
 
         public void AddFixToListView(Paragraph p, string action, string before, string after)
-        {            
+        {
         }
 
         public void LogStatus(string sender, string message)

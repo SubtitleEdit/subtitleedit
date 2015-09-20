@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
-             
+
             string fixAction0 = language.RemovedEmptyLine;
             string fixAction1 = language.RemovedEmptyLineAtTop;
             string fixAction2 = language.RemovedEmptyLineAtBottom;

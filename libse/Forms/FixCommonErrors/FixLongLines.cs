@@ -36,7 +36,7 @@
                     }
                 }
             }
-            
+
             callbacks.UpdateFixStatus(noOfLongLines, language.BreakLongLines, string.Format(language.XLineBreaksAdded, noOfLongLines));
         }
     }
