@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.Security.Cryptography.X509Certificates;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.TransportStream;
@@ -299,6 +300,11 @@ namespace Nikse.SubtitleEdit.Forms
         private DateTime _windowStartTime = DateTime.Now;
         private int _linesOcred = 0;
         private bool OkClicked = false;
+
+        // optimization vars
+        private int _numericUpDownPixelsIsSpace = 6;
+        private double _numericUpDownMaxErrorPct = 6;
+        private int _ocrMethodIndex = 1;
 
         public static void SetDoubleBuffered(Control c)
         {
@@ -2950,7 +2956,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private CompareMatch GetCompareMatchNew(ImageSplitterItem targetItem, out CompareMatch secondBestGuess, List<ImageSplitterItem> list, int listIndex)
         {
-            double maxDiff = (double)numericUpDownMaxErrorPct.Value;
+            double maxDiff = _numericUpDownMaxErrorPct; 
             secondBestGuess = null;
             int index = 0;
             int smallestDifference = 10000;
@@ -3101,7 +3107,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (target.Width > 5 && smallestDifference > 2) // for other than very narrow letter (like 'i' and 'l' and 'I'), try more sizes
+            if (target.Width > 35 && smallestDifference > 2) // for other than very narrow letter (like 'i' and 'l' and 'I'), try more sizes
             {
                 index = 0;
                 foreach (var compareItem in binOcrDb.CompareImages)
@@ -4004,7 +4010,7 @@ namespace Nikse.SubtitleEdit.Forms
                 minLineHeight = _nocrLastLowercaseHeight;
             if (minLineHeight < 5)
                 minLineHeight = 6;
-            List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+            List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
             int index = 0;
             bool expandSelection = false;
             bool shrinkSelection = false;
@@ -5476,6 +5482,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+//        public List<double> _elapseds = new List<double>();
         private bool MainLoop(int max, int i)
         {
             if (i >= max)
@@ -5511,16 +5518,26 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.Items[j].EnsureVisible();
 
             string text = string.Empty;
-            if (comboBoxOcrMethod.SelectedIndex == 0)
+//            var sw = Stopwatch.StartNew();
+            if (_ocrMethodIndex == 0)
                 text = OcrViaTesseract(bmp, i);
-            else if (comboBoxOcrMethod.SelectedIndex == 1)
+            else if (_ocrMethodIndex == 1)
                 text = SplitAndOcrBitmapNormal(bmp, i);
-            else if (comboBoxOcrMethod.SelectedIndex == 2)
+            else if (_ocrMethodIndex == 2)
                 text = CallModi(i);
-            else if (comboBoxOcrMethod.SelectedIndex == 3)
+            else if (_ocrMethodIndex == 3)
                 text = OcrViaNOCR(bmp, i);
-            else if (comboBoxOcrMethod.SelectedIndex == 4)
+            else if (_ocrMethodIndex == 4)
                 text = SplitAndOcrBitmapNormalNew(bmp, i);
+//            sw.Stop();
+//_elapseds.Add(sw.ElapsedMilliseconds);
+            //double ts = 0;
+            //for (int k = 0; k < _elapseds.Count; k++)
+            //{
+            //    ts += _elapseds[k];
+            //}
+            //Text = (ts / _elapseds.Count).ToString(); // display ms in win title bar
+
 
             _lastLine = text;
 
@@ -6965,6 +6982,7 @@ namespace Nikse.SubtitleEdit.Forms
             _icThreadsStop = true;
             _binaryOcrDb = null;
             _nOcrDb = null;
+            _ocrMethodIndex = comboBoxOcrMethod.SelectedIndex;
             if (comboBoxOcrMethod.SelectedIndex == 0)
             {
                 ShowOcrMethodGroupBox(GroupBoxTesseractMethod);
@@ -8502,6 +8520,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             base.Dispose(disposing);
+        }
+
+        private void numericUpDownPixelsIsSpace_ValueChanged(object sender, EventArgs e)
+        {
+            _numericUpDownPixelsIsSpace = (int)numericUpDownPixelsIsSpace.Value;
+        }
+
+        private void numericUpDownMaxErrorPct_ValueChanged(object sender, EventArgs e)
+        {
+            _numericUpDownMaxErrorPct = (double)numericUpDownMaxErrorPct.Value;
         }
 
     }
