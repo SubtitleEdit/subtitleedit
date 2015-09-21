@@ -260,7 +260,7 @@ namespace Nikse.SubtitleEdit.Core
 
             PeaksPerSecond = Math.Min(Configuration.Settings.VideoControls.WaveformMinimumSampleRate, Header.SampleRate);
 
-            // Ensure that peaks per second is a multiple of the sample rate
+            // Ensure that peaks per second is a factor of the sample rate
             while (Header.SampleRate % PeaksPerSecond != 0)
                 PeaksPerSecond++;
 
