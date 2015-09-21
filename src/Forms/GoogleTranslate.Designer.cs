@@ -30,183 +30,183 @@ namespace Nikse.SubtitleEdit.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBoxFrom = new System.Windows.Forms.ComboBox();
-            this.labelFrom = new System.Windows.Forms.Label();
-            this.labelTo = new System.Windows.Forms.Label();
-            this.comboBoxTo = new System.Windows.Forms.ComboBox();
-            this.buttonTranslate = new System.Windows.Forms.Button();
-            this.buttonOK = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
-            this.linkLabelPoweredByGoogleTranslate = new System.Windows.Forms.LinkLabel();
-            this.labelPleaseWait = new System.Windows.Forms.Label();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.subtitleListViewTo = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.subtitleListViewFrom = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.SuspendLayout();
+            comboBoxFrom = new System.Windows.Forms.ComboBox();
+            labelFrom = new System.Windows.Forms.Label();
+            labelTo = new System.Windows.Forms.Label();
+            comboBoxTo = new System.Windows.Forms.ComboBox();
+            buttonTranslate = new System.Windows.Forms.Button();
+            buttonOK = new System.Windows.Forms.Button();
+            buttonCancel = new System.Windows.Forms.Button();
+            linkLabelPoweredByGoogleTranslate = new System.Windows.Forms.LinkLabel();
+            labelPleaseWait = new System.Windows.Forms.Label();
+            progressBar1 = new System.Windows.Forms.ProgressBar();
+            subtitleListViewTo = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            subtitleListViewFrom = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            SuspendLayout();
             // 
             // comboBoxFrom
             // 
-            this.comboBoxFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxFrom.FormattingEnabled = true;
-            this.comboBoxFrom.Location = new System.Drawing.Point(327, 34);
-            this.comboBoxFrom.Name = "comboBoxFrom";
-            this.comboBoxFrom.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxFrom.TabIndex = 0;
+            comboBoxFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBoxFrom.FormattingEnabled = true;
+            comboBoxFrom.Location = new System.Drawing.Point(327, 34);
+            comboBoxFrom.Name = "comboBoxFrom";
+            comboBoxFrom.Size = new System.Drawing.Size(121, 21);
+            comboBoxFrom.TabIndex = 0;
             // 
             // labelFrom
             // 
-            this.labelFrom.AutoSize = true;
-            this.labelFrom.Location = new System.Drawing.Point(285, 41);
-            this.labelFrom.Name = "labelFrom";
-            this.labelFrom.Size = new System.Drawing.Size(35, 13);
-            this.labelFrom.TabIndex = 1;
-            this.labelFrom.Text = "From:";
+            labelFrom.AutoSize = true;
+            labelFrom.Location = new System.Drawing.Point(285, 41);
+            labelFrom.Name = "labelFrom";
+            labelFrom.Size = new System.Drawing.Size(35, 13);
+            labelFrom.TabIndex = 1;
+            labelFrom.Text = "From:";
             // 
             // labelTo
             // 
-            this.labelTo.AutoSize = true;
-            this.labelTo.Location = new System.Drawing.Point(468, 37);
-            this.labelTo.Name = "labelTo";
-            this.labelTo.Size = new System.Drawing.Size(23, 13);
-            this.labelTo.TabIndex = 4;
-            this.labelTo.Text = "To:";
+            labelTo.AutoSize = true;
+            labelTo.Location = new System.Drawing.Point(468, 37);
+            labelTo.Name = "labelTo";
+            labelTo.Size = new System.Drawing.Size(23, 13);
+            labelTo.TabIndex = 4;
+            labelTo.Text = "To:";
             // 
             // comboBoxTo
             // 
-            this.comboBoxTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTo.FormattingEnabled = true;
-            this.comboBoxTo.Location = new System.Drawing.Point(497, 34);
-            this.comboBoxTo.Name = "comboBoxTo";
-            this.comboBoxTo.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxTo.TabIndex = 3;
+            comboBoxTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBoxTo.FormattingEnabled = true;
+            comboBoxTo.Location = new System.Drawing.Point(497, 34);
+            comboBoxTo.Name = "comboBoxTo";
+            comboBoxTo.Size = new System.Drawing.Size(121, 21);
+            comboBoxTo.TabIndex = 3;
             // 
             // buttonTranslate
             // 
-            this.buttonTranslate.Location = new System.Drawing.Point(624, 34);
-            this.buttonTranslate.Name = "buttonTranslate";
-            this.buttonTranslate.Size = new System.Drawing.Size(75, 21);
-            this.buttonTranslate.TabIndex = 5;
-            this.buttonTranslate.Text = "Translate";
-            this.buttonTranslate.UseVisualStyleBackColor = true;
-            this.buttonTranslate.Click += new System.EventHandler(this.buttonTranslate_Click);
+            buttonTranslate.Location = new System.Drawing.Point(624, 34);
+            buttonTranslate.Name = "buttonTranslate";
+            buttonTranslate.Size = new System.Drawing.Size(75, 21);
+            buttonTranslate.TabIndex = 5;
+            buttonTranslate.Text = "Translate";
+            buttonTranslate.UseVisualStyleBackColor = true;
+            buttonTranslate.Click += new System.EventHandler(buttonTranslate_Click);
             // 
             // buttonOK
             // 
-            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(754, 529);
-            this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 6;
-            this.buttonOK.Text = "&OK";
-            this.buttonOK.UseVisualStyleBackColor = true;
-            this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
+            buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            buttonOK.Location = new System.Drawing.Point(754, 529);
+            buttonOK.Name = "buttonOK";
+            buttonOK.Size = new System.Drawing.Size(75, 21);
+            buttonOK.TabIndex = 6;
+            buttonOK.Text = "&OK";
+            buttonOK.UseVisualStyleBackColor = true;
+            buttonOK.Click += new System.EventHandler(ButtonOkClick);
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(835, 529);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 7;
-            this.buttonCancel.Text = "C&ancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
+            buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            buttonCancel.Location = new System.Drawing.Point(835, 529);
+            buttonCancel.Name = "buttonCancel";
+            buttonCancel.Size = new System.Drawing.Size(75, 21);
+            buttonCancel.TabIndex = 7;
+            buttonCancel.Text = "C&ancel";
+            buttonCancel.UseVisualStyleBackColor = true;
             // 
             // linkLabelPoweredByGoogleTranslate
             // 
-            this.linkLabelPoweredByGoogleTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.linkLabelPoweredByGoogleTranslate.AutoSize = true;
-            this.linkLabelPoweredByGoogleTranslate.Location = new System.Drawing.Point(15, 529);
-            this.linkLabelPoweredByGoogleTranslate.Name = "linkLabelPoweredByGoogleTranslate";
-            this.linkLabelPoweredByGoogleTranslate.Size = new System.Drawing.Size(146, 13);
-            this.linkLabelPoweredByGoogleTranslate.TabIndex = 8;
-            this.linkLabelPoweredByGoogleTranslate.TabStop = true;
-            this.linkLabelPoweredByGoogleTranslate.Text = "Powered by Google translate";
-            this.linkLabelPoweredByGoogleTranslate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel1LinkClicked);
+            linkLabelPoweredByGoogleTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            linkLabelPoweredByGoogleTranslate.AutoSize = true;
+            linkLabelPoweredByGoogleTranslate.Location = new System.Drawing.Point(15, 529);
+            linkLabelPoweredByGoogleTranslate.Name = "linkLabelPoweredByGoogleTranslate";
+            linkLabelPoweredByGoogleTranslate.Size = new System.Drawing.Size(146, 13);
+            linkLabelPoweredByGoogleTranslate.TabIndex = 8;
+            linkLabelPoweredByGoogleTranslate.TabStop = true;
+            linkLabelPoweredByGoogleTranslate.Text = "Powered by Google translate";
+            linkLabelPoweredByGoogleTranslate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(LinkLabel1LinkClicked);
             // 
             // labelPleaseWait
             // 
-            this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(703, 23);
-            this.labelPleaseWait.Name = "labelPleaseWait";
-            this.labelPleaseWait.Size = new System.Drawing.Size(176, 13);
-            this.labelPleaseWait.TabIndex = 10;
-            this.labelPleaseWait.Text = "Please wait... this may take a while";
+            labelPleaseWait.AutoSize = true;
+            labelPleaseWait.Location = new System.Drawing.Point(703, 23);
+            labelPleaseWait.Name = "labelPleaseWait";
+            labelPleaseWait.Size = new System.Drawing.Size(176, 13);
+            labelPleaseWait.TabIndex = 10;
+            labelPleaseWait.Text = "Please wait... this may take a while";
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(705, 39);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(192, 16);
-            this.progressBar1.TabIndex = 11;
+            progressBar1.Location = new System.Drawing.Point(705, 39);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new System.Drawing.Size(192, 16);
+            progressBar1.TabIndex = 11;
             // 
             // subtitleListViewTo
             // 
-            this.subtitleListViewTo.DisplayExtraFromExtra = false;
-            this.subtitleListViewTo.FirstVisibleIndex = -1;
-            this.subtitleListViewTo.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.subtitleListViewTo.FullRowSelect = true;
-            this.subtitleListViewTo.GridLines = true;
-            this.subtitleListViewTo.HideSelection = false;
-            this.subtitleListViewTo.Location = new System.Drawing.Point(471, 64);
-            this.subtitleListViewTo.Name = "subtitleListViewTo";
-            this.subtitleListViewTo.OwnerDraw = true;
-            this.subtitleListViewTo.Size = new System.Drawing.Size(428, 459);
-            this.subtitleListViewTo.TabIndex = 2;
-            this.subtitleListViewTo.UseCompatibleStateImageBehavior = false;
-            this.subtitleListViewTo.View = System.Windows.Forms.View.Details;
-            this.subtitleListViewTo.Click += new System.EventHandler(this.subtitleListViewTo_DoubleClick);
-            this.subtitleListViewTo.DoubleClick += new System.EventHandler(this.subtitleListViewTo_DoubleClick);
+            subtitleListViewTo.DisplayExtraFromExtra = false;
+            subtitleListViewTo.FirstVisibleIndex = -1;
+            subtitleListViewTo.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            subtitleListViewTo.FullRowSelect = true;
+            subtitleListViewTo.GridLines = true;
+            subtitleListViewTo.HideSelection = false;
+            subtitleListViewTo.Location = new System.Drawing.Point(471, 64);
+            subtitleListViewTo.Name = "subtitleListViewTo";
+            subtitleListViewTo.OwnerDraw = true;
+            subtitleListViewTo.Size = new System.Drawing.Size(428, 459);
+            subtitleListViewTo.TabIndex = 2;
+            subtitleListViewTo.UseCompatibleStateImageBehavior = false;
+            subtitleListViewTo.View = System.Windows.Forms.View.Details;
+            subtitleListViewTo.Click += new System.EventHandler(subtitleListViewTo_DoubleClick);
+            subtitleListViewTo.DoubleClick += new System.EventHandler(subtitleListViewTo_DoubleClick);
             // 
             // subtitleListViewFrom
             // 
-            this.subtitleListViewFrom.DisplayExtraFromExtra = false;
-            this.subtitleListViewFrom.FirstVisibleIndex = -1;
-            this.subtitleListViewFrom.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.subtitleListViewFrom.FullRowSelect = true;
-            this.subtitleListViewFrom.GridLines = true;
-            this.subtitleListViewFrom.HideSelection = false;
-            this.subtitleListViewFrom.Location = new System.Drawing.Point(18, 64);
-            this.subtitleListViewFrom.Name = "subtitleListViewFrom";
-            this.subtitleListViewFrom.OwnerDraw = true;
-            this.subtitleListViewFrom.Size = new System.Drawing.Size(430, 459);
-            this.subtitleListViewFrom.TabIndex = 0;
-            this.subtitleListViewFrom.UseCompatibleStateImageBehavior = false;
-            this.subtitleListViewFrom.View = System.Windows.Forms.View.Details;
-            this.subtitleListViewFrom.Click += new System.EventHandler(this.subtitleListViewFrom_DoubleClick);
-            this.subtitleListViewFrom.DoubleClick += new System.EventHandler(this.subtitleListViewFrom_DoubleClick);
+            subtitleListViewFrom.DisplayExtraFromExtra = false;
+            subtitleListViewFrom.FirstVisibleIndex = -1;
+            subtitleListViewFrom.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            subtitleListViewFrom.FullRowSelect = true;
+            subtitleListViewFrom.GridLines = true;
+            subtitleListViewFrom.HideSelection = false;
+            subtitleListViewFrom.Location = new System.Drawing.Point(18, 64);
+            subtitleListViewFrom.Name = "subtitleListViewFrom";
+            subtitleListViewFrom.OwnerDraw = true;
+            subtitleListViewFrom.Size = new System.Drawing.Size(430, 459);
+            subtitleListViewFrom.TabIndex = 0;
+            subtitleListViewFrom.UseCompatibleStateImageBehavior = false;
+            subtitleListViewFrom.View = System.Windows.Forms.View.Details;
+            subtitleListViewFrom.Click += new System.EventHandler(subtitleListViewFrom_DoubleClick);
+            subtitleListViewFrom.DoubleClick += new System.EventHandler(subtitleListViewFrom_DoubleClick);
             // 
             // GoogleTranslate
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(925, 558);
-            this.Controls.Add(this.comboBoxFrom);
-            this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.labelPleaseWait);
-            this.Controls.Add(this.linkLabelPoweredByGoogleTranslate);
-            this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.buttonOK);
-            this.Controls.Add(this.buttonTranslate);
-            this.Controls.Add(this.labelTo);
-            this.Controls.Add(this.comboBoxTo);
-            this.Controls.Add(this.subtitleListViewTo);
-            this.Controls.Add(this.subtitleListViewFrom);
-            this.Controls.Add(this.labelFrom);
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.KeyPreview = true;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(900, 500);
-            this.Name = "GoogleTranslate";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Google translate";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormGoogleTranslate_KeyDown);
-            this.Resize += new System.EventHandler(this.GoogleTranslate_Resize);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(925, 558);
+            Controls.Add(comboBoxFrom);
+            Controls.Add(progressBar1);
+            Controls.Add(labelPleaseWait);
+            Controls.Add(linkLabelPoweredByGoogleTranslate);
+            Controls.Add(buttonCancel);
+            Controls.Add(buttonOK);
+            Controls.Add(buttonTranslate);
+            Controls.Add(labelTo);
+            Controls.Add(comboBoxTo);
+            Controls.Add(subtitleListViewTo);
+            Controls.Add(subtitleListViewFrom);
+            Controls.Add(labelFrom);
+            Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            KeyPreview = true;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            MinimumSize = new System.Drawing.Size(900, 500);
+            Name = "GoogleTranslate";
+            ShowIcon = false;
+            ShowInTaskbar = false;
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            Text = "Google translate";
+            KeyDown += new System.Windows.Forms.KeyEventHandler(FormGoogleTranslate_KeyDown);
+            Resize += new System.EventHandler(GoogleTranslate_Resize);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 

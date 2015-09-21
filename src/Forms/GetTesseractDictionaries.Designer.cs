@@ -28,105 +28,105 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBoxDictionaries = new System.Windows.Forms.ComboBox();
-            this.labelPleaseWait = new System.Windows.Forms.Label();
-            this.labelChooseLanguageAndClickDownload = new System.Windows.Forms.Label();
-            this.buttonDownload = new System.Windows.Forms.Button();
-            this.linkLabelOpenDictionaryFolder = new System.Windows.Forms.LinkLabel();
-            this.buttonOK = new System.Windows.Forms.Button();
-            this.labelDescription1 = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            comboBoxDictionaries = new System.Windows.Forms.ComboBox();
+            labelPleaseWait = new System.Windows.Forms.Label();
+            labelChooseLanguageAndClickDownload = new System.Windows.Forms.Label();
+            buttonDownload = new System.Windows.Forms.Button();
+            linkLabelOpenDictionaryFolder = new System.Windows.Forms.LinkLabel();
+            buttonOK = new System.Windows.Forms.Button();
+            labelDescription1 = new System.Windows.Forms.Label();
+            SuspendLayout();
             // 
             // comboBoxDictionaries
             // 
-            this.comboBoxDictionaries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxDictionaries.FormattingEnabled = true;
-            this.comboBoxDictionaries.Location = new System.Drawing.Point(22, 71);
-            this.comboBoxDictionaries.Name = "comboBoxDictionaries";
-            this.comboBoxDictionaries.Size = new System.Drawing.Size(256, 21);
-            this.comboBoxDictionaries.TabIndex = 21;
+            comboBoxDictionaries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            comboBoxDictionaries.FormattingEnabled = true;
+            comboBoxDictionaries.Location = new System.Drawing.Point(22, 71);
+            comboBoxDictionaries.Name = "comboBoxDictionaries";
+            comboBoxDictionaries.Size = new System.Drawing.Size(256, 21);
+            comboBoxDictionaries.TabIndex = 21;
             // 
             // labelPleaseWait
             // 
-            this.labelPleaseWait.AutoSize = true;
-            this.labelPleaseWait.Location = new System.Drawing.Point(19, 99);
-            this.labelPleaseWait.Name = "labelPleaseWait";
-            this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
-            this.labelPleaseWait.TabIndex = 24;
-            this.labelPleaseWait.Text = "Please wait...";
+            labelPleaseWait.AutoSize = true;
+            labelPleaseWait.Location = new System.Drawing.Point(19, 99);
+            labelPleaseWait.Name = "labelPleaseWait";
+            labelPleaseWait.Size = new System.Drawing.Size(70, 13);
+            labelPleaseWait.TabIndex = 24;
+            labelPleaseWait.Text = "Please wait...";
             // 
             // labelChooseLanguageAndClickDownload
             // 
-            this.labelChooseLanguageAndClickDownload.AutoSize = true;
-            this.labelChooseLanguageAndClickDownload.Location = new System.Drawing.Point(19, 52);
-            this.labelChooseLanguageAndClickDownload.Name = "labelChooseLanguageAndClickDownload";
-            this.labelChooseLanguageAndClickDownload.Size = new System.Drawing.Size(202, 13);
-            this.labelChooseLanguageAndClickDownload.TabIndex = 23;
-            this.labelChooseLanguageAndClickDownload.Text = "Choose your language and click download";
+            labelChooseLanguageAndClickDownload.AutoSize = true;
+            labelChooseLanguageAndClickDownload.Location = new System.Drawing.Point(19, 52);
+            labelChooseLanguageAndClickDownload.Name = "labelChooseLanguageAndClickDownload";
+            labelChooseLanguageAndClickDownload.Size = new System.Drawing.Size(202, 13);
+            labelChooseLanguageAndClickDownload.TabIndex = 23;
+            labelChooseLanguageAndClickDownload.Text = "Choose your language and click download";
             // 
             // buttonDownload
             // 
-            this.buttonDownload.Location = new System.Drawing.Point(284, 70);
-            this.buttonDownload.Name = "buttonDownload";
-            this.buttonDownload.Size = new System.Drawing.Size(104, 25);
-            this.buttonDownload.TabIndex = 22;
-            this.buttonDownload.Text = "&Download";
-            this.buttonDownload.UseVisualStyleBackColor = true;
-            this.buttonDownload.Click += new System.EventHandler(this.buttonDownload_Click);
+            buttonDownload.Location = new System.Drawing.Point(284, 70);
+            buttonDownload.Name = "buttonDownload";
+            buttonDownload.Size = new System.Drawing.Size(104, 25);
+            buttonDownload.TabIndex = 22;
+            buttonDownload.Text = "&Download";
+            buttonDownload.UseVisualStyleBackColor = true;
+            buttonDownload.Click += new System.EventHandler(buttonDownload_Click);
             // 
             // linkLabelOpenDictionaryFolder
             // 
-            this.linkLabelOpenDictionaryFolder.AutoSize = true;
-            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(19, 137);
-            this.linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
-            this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(124, 13);
-            this.linkLabelOpenDictionaryFolder.TabIndex = 25;
-            this.linkLabelOpenDictionaryFolder.TabStop = true;
-            this.linkLabelOpenDictionaryFolder.Text = "Open \'Dictionaries\' folder";
-            this.linkLabelOpenDictionaryFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenDictionaryFolder_LinkClicked);
+            linkLabelOpenDictionaryFolder.AutoSize = true;
+            linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(19, 137);
+            linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
+            linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(124, 13);
+            linkLabelOpenDictionaryFolder.TabIndex = 25;
+            linkLabelOpenDictionaryFolder.TabStop = true;
+            linkLabelOpenDictionaryFolder.Text = "Open \'Dictionaries\' folder";
+            linkLabelOpenDictionaryFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(linkLabelOpenDictionaryFolder_LinkClicked);
             // 
             // buttonOK
             // 
-            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(284, 132);
-            this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(104, 23);
-            this.buttonOK.TabIndex = 26;
-            this.buttonOK.Text = "&OK";
-            this.buttonOK.UseVisualStyleBackColor = true;
+            buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            buttonOK.Location = new System.Drawing.Point(284, 132);
+            buttonOK.Name = "buttonOK";
+            buttonOK.Size = new System.Drawing.Size(104, 23);
+            buttonOK.TabIndex = 26;
+            buttonOK.Text = "&OK";
+            buttonOK.UseVisualStyleBackColor = true;
             // 
             // labelDescription1
             // 
-            this.labelDescription1.AutoSize = true;
-            this.labelDescription1.Location = new System.Drawing.Point(19, 18);
-            this.labelDescription1.Name = "labelDescription1";
-            this.labelDescription1.Size = new System.Drawing.Size(220, 13);
-            this.labelDescription1.TabIndex = 27;
-            this.labelDescription1.Text = "Get Tesseract OCR dictionaries from the web";
+            labelDescription1.AutoSize = true;
+            labelDescription1.Location = new System.Drawing.Point(19, 18);
+            labelDescription1.Name = "labelDescription1";
+            labelDescription1.Size = new System.Drawing.Size(220, 13);
+            labelDescription1.TabIndex = 27;
+            labelDescription1.Text = "Get Tesseract OCR dictionaries from the web";
             // 
             // GetTesseractDictionaries
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(426, 182);
-            this.Controls.Add(this.labelDescription1);
-            this.Controls.Add(this.comboBoxDictionaries);
-            this.Controls.Add(this.labelPleaseWait);
-            this.Controls.Add(this.labelChooseLanguageAndClickDownload);
-            this.Controls.Add(this.buttonDownload);
-            this.Controls.Add(this.linkLabelOpenDictionaryFolder);
-            this.Controls.Add(this.buttonOK);
-            this.KeyPreview = true;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "GetTesseractDictionaries";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "GetTesseractDictionaries";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GetTesseractDictionaries_KeyDown);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(426, 182);
+            Controls.Add(labelDescription1);
+            Controls.Add(comboBoxDictionaries);
+            Controls.Add(labelPleaseWait);
+            Controls.Add(labelChooseLanguageAndClickDownload);
+            Controls.Add(buttonDownload);
+            Controls.Add(linkLabelOpenDictionaryFolder);
+            Controls.Add(buttonOK);
+            KeyPreview = true;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "GetTesseractDictionaries";
+            ShowIcon = false;
+            ShowInTaskbar = false;
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            Text = "GetTesseractDictionaries";
+            KeyDown += new System.Windows.Forms.KeyEventHandler(GetTesseractDictionaries_KeyDown);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
