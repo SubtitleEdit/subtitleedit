@@ -308,80 +308,43 @@ namespace Nikse.SubtitleEdit.Controls
             InsertAtVideoPositionShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
         }
 
-        public void NearestSubtitles(Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex)
+        private void NearestSubtitles(Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex)
         {
-            _previousAndNextParagraphs.Clear();
             _currentParagraph = null;
+            _previousAndNextParagraphs.Clear();
 
-            var positionMilliseconds = (int)Math.Round(currentVideoPositionSeconds * TimeCode.BaseUnit);
-            if (_selectedParagraph != null && _selectedParagraph.StartTime.TotalMilliseconds < positionMilliseconds && _selectedParagraph.EndTime.TotalMilliseconds > positionMilliseconds)
+            if (subtitle.Paragraphs.Count == 0)
+                return;
+
+            // Locate the current paragraph, which is the paragraph ending soonest after the
+            // current video position, or if none such exist, the last paragraph. There's a
+            // good chance this will end up being the selected paragraph, so we'll check it
+            // first as an optimization.
+            bool isPositionInsideSelection = _selectedParagraph != null &&
+                _selectedParagraph.StartTime.TotalSeconds <= currentVideoPositionSeconds &&
+                _selectedParagraph.EndTime.TotalSeconds > currentVideoPositionSeconds;
+            int currentParagraphIndex = isPositionInsideSelection ? subtitleIndex :
+                subtitle.Paragraphs.FindIndex(p => p.EndTime.TotalSeconds > currentVideoPositionSeconds);
+            if (currentParagraphIndex == -1)
+                currentParagraphIndex = subtitle.Paragraphs.Count - 1;
+
+            _currentParagraph = subtitle.Paragraphs[currentParagraphIndex];
+
+            // Locate the other paragraphs inside the visible time range, as well as one extra
+            // on either side (helps when scrolling).
+            for (int i = currentParagraphIndex + 1; i < subtitle.Paragraphs.Count; i++)
             {
-                _currentParagraph = _selectedParagraph;
-                for (int j = 1; j < 12; j++)
-                {
-                    Paragraph nextParagraph = subtitle.GetParagraphOrDefault(subtitleIndex - j);
-                    _previousAndNextParagraphs.Add(nextParagraph);
-                }
-                for (int j = 1; j < 10; j++)
-                {
-                    Paragraph nextParagraph = subtitle.GetParagraphOrDefault(subtitleIndex + j);
-                    _previousAndNextParagraphs.Add(nextParagraph);
-                }
+                Paragraph p = subtitle.Paragraphs[i];
+                _previousAndNextParagraphs.Add(p);
+                if (p.StartTime.TotalSeconds >= EndPositionSeconds)
+                    break;
             }
-            else
+            for (int i = currentParagraphIndex - 1; i >= 0; i--)
             {
-                for (int i = 0; i < subtitle.Paragraphs.Count; i++)
-                {
-                    Paragraph p = subtitle.Paragraphs[i];
-                    if (p.EndTime.TotalMilliseconds > positionMilliseconds)
-                    {
-                        _currentParagraph = p;
-                        for (int j = 1; j < 10; j++)
-                        {
-                            Paragraph nextParagraph = subtitle.GetParagraphOrDefault(i - j);
-                            _previousAndNextParagraphs.Add(nextParagraph);
-                        }
-                        for (int j = 1; j < 10; j++)
-                        {
-                            Paragraph nextParagraph = subtitle.GetParagraphOrDefault(i + j);
-                            _previousAndNextParagraphs.Add(nextParagraph);
-                        }
-
-                        break;
-                    }
-                }
-                if (_previousAndNextParagraphs.Count == 0)
-                {
-                    for (int i = 0; i < subtitle.Paragraphs.Count; i++)
-                    {
-                        Paragraph p = subtitle.Paragraphs[i];
-                        if (p.EndTime.TotalMilliseconds > StartPositionSeconds * 1000)
-                        {
-                            _currentParagraph = p;
-                            for (int j = 1; j < 10; j++)
-                            {
-                                Paragraph nextParagraph = subtitle.GetParagraphOrDefault(i - j);
-                                _previousAndNextParagraphs.Add(nextParagraph);
-                            }
-                            for (int j = 1; j < 10; j++)
-                            {
-                                Paragraph nextParagraph = subtitle.GetParagraphOrDefault(i + j);
-                                _previousAndNextParagraphs.Add(nextParagraph);
-                            }
-
-                            break;
-                        }
-                    }
-                    if (_previousAndNextParagraphs.Count == 0 && _subtitle.Paragraphs.Count > 0)
-                    {
-                        int i = _subtitle.Paragraphs.Count;
-                        for (int j = 1; j < 10; j++)
-                        {
-                            Paragraph nextParagraph = subtitle.GetParagraphOrDefault(i - j);
-                            _previousAndNextParagraphs.Add(nextParagraph);
-                        }
-                    }
-                }
+                Paragraph p = subtitle.Paragraphs[i];
+                _previousAndNextParagraphs.Add(p);
+                if (p.EndTime.TotalSeconds <= StartPositionSeconds)
+                    break;
             }
         }
 
