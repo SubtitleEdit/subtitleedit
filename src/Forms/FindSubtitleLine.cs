@@ -48,7 +48,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(List<Paragraph> paragraphs, string appendTitle)
         {
-            Text += appendTitle;
+            if (!string.IsNullOrWhiteSpace(appendTitle))
+            {
+                Text += appendTitle.StartsWith(' ') ? appendTitle : " " + appendTitle;
+            }
             _paragraphs = paragraphs;
             subtitleListView1.Fill(paragraphs);
             _startFindIndex = -1;
