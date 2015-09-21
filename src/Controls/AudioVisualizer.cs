@@ -1417,24 +1417,7 @@ namespace Nikse.SubtitleEdit.Controls
                 double seconds = XPositionToSeconds(e.X);
                 var milliseconds = (int)(seconds * TimeCode.BaseUnit);
 
-                Paragraph p = null;
-                if (IsParagrapHit(milliseconds, _selectedParagraph))
-                    p = _selectedParagraph;
-                else if (IsParagrapHit(milliseconds, _currentParagraph))
-                    p = _currentParagraph;
-
-                if (p == null)
-                {
-                    foreach (Paragraph p2 in _previousAndNextParagraphs)
-                    {
-                        if (IsParagrapHit(milliseconds, p2))
-                        {
-                            p = p2;
-                            break;
-                        }
-                    }
-                }
-
+                Paragraph p = GetParagraphAtMilliseconds(milliseconds);
                 if (p != null)
                 {
                     seconds = p.StartTime.TotalSeconds;
