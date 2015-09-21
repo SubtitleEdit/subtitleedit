@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="čeština">
+<Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.8</Version>
@@ -493,6 +493,10 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <Normal>&amp;Normálně</Normal>
     <CaseSensitive>Rozlišovat &amp;velikost písmen</CaseSensitive>
     <RegularExpression>&amp;Regulární výraz</RegularExpression>
+    <WholeWord>Celé slovo</WholeWord>
+    <Count>Počet</Count>
+    <XNumberOfMatches>{0:#,##0} shod</XNumberOfMatches>
+    <OneMatch>Jedna shoda</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Najít řádek titulků</Title>
@@ -671,6 +675,8 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <ImageFiles>Soubory obrázků</ImageFiles>
     <Input>Vstup</Input>
     <InputDescription>Vyberte vstupní soubory (procházet nebo přetáhnout)</InputDescription>
+    <Remove>Odebrat</Remove>
+    <RemoveAll>Odebrat vše</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Importovat změny scén</Title>
@@ -1273,6 +1279,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <BeforeMergeLinesWithSameText>Před sloučením řádků se stejným textem</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Titulek se stejnými časovými kódy má jiné číslo řádku ({0}) než aktuální titulek ({1}) - přesto pokračovat?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analýza datového proudu přenosu - čekejte...</ParsingTransportStream>
+    <XPercentCompleted>{0} % dokončeno</XPercentCompleted>
     <ErrorLoadIdx>Nelze přečíst nebo upravit soubory .idx. Soubory .idx jsou součástí páru souborů idx/sub (tzv. VobSub) a Subtitle Edit může otevřít soubor .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Tento soubor se zdá být komprimovaným souborem .rar. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadRar>
     <ErrorLoadZip>Tento soubor se zdá být komprimovaným souborem .zip. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadZip>
@@ -1506,6 +1513,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <Tools>Nástroje</Tools>
     <WordLists>Seznamy slov</WordLists>
     <SsaStyle>Styl SSA</SsaStyle>
+    <Network>Síť</Network>
     <ShowToolBarButtons>Zobrazit tlačítka panelu nástrojů</ShowToolBarButtons>
     <New>Nový</New>
     <Open>Otevřít</Open>
@@ -1631,6 +1639,8 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ProxyUserName>Uživatelské jméno</ProxyUserName>
     <ProxyPassword>Heslo</ProxyPassword>
     <ProxyDomain>Doména</ProxyDomain>
+    <NetworkSessionSettings>Nastavení síťové relace</NetworkSessionSettings>
+    <NetworkSessionNewSound>Přehrát zvukový soubor, když dorazí nová zpráva</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Přehrát X sekund a zpět, X je</PlayXSecondsAndBack>
     <StartSceneIndex>Odstavec začáteční scény je</StartSceneIndex>
     <EndSceneIndex>Odstavec konečné scény je</EndSceneIndex>
@@ -1681,7 +1691,8 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <WaveformSeekSilenceForward>Tiché hledání vpřed</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Tiché hledání zpět</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Přidat text sem (pro nový výběr)</WaveformAddTextHere>
-    <WaveformPlayNewSelection>Přehrát nový výběr</WaveformPlayNewSelection>
+    <WaveformPlayNewSelection>Přehrát výběr</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Přehrát konec výběru</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Přehrát první vybraný titulek</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Zaměření zobrazení seznamu</WaveformFocusListView>
     <GoBack1Frame>Jeden snímek zpět</GoBack1Frame>
