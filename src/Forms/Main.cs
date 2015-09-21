@@ -6680,7 +6680,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p != null)
                     {
                         int indexOfEndBracket = p.Text.IndexOf('}');
-                        if (p.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                        if (p.Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                             p.Text = p.Text.Remove(0, indexOfEndBracket + 1).TrimStart();
                         p.Text = HtmlUtil.RemoveHtmlTags(p.Text);
                         p.Text = RemoveUnicodeCharacters(p.Text);
@@ -7301,7 +7301,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var l0 = string.Empty;
                     if (lines.Length > 0)
-                        l0 = lines[0].Trim().TrimEnd('"').TrimEnd('\'').Trim();
+                        l0 = lines[0].Trim().TrimEnd('"', '\'').TrimEnd();
                     if (lines.Length == 2 && (l0.EndsWith('.') || l0.EndsWith('!') || l0.EndsWith('?')))
                     {
                         currentParagraph.Text = Utilities.AutoBreakLine(lines[0], language);
@@ -7368,12 +7368,12 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         string s = currentParagraph.Text;
-                        var arr = HtmlUtil.RemoveHtmlTags(s, true).Replace(Environment.NewLine, "\n").Split('\n');
+                        var arr = HtmlUtil.RemoveHtmlTags(s, true).SplitToLines();
                         if (arr.Length != 2 || arr[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || arr[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                         {
                             if (arr.Length == 2 && arr[0].StartsWith('-') && arr[1].StartsWith('-'))
                             {
-                                if (lines[0].StartsWith("<i>-"))
+                                if (lines[0].StartsWith("<i>-", StringComparison.Ordinal))
                                 {
                                     lines[0] = "<i>" + lines[0].Remove(0, 4).TrimStart();
                                 }
@@ -7893,17 +7893,17 @@ namespace Nikse.SubtitleEdit.Forms
                             if (insertDash)
                             {
                                 string s = Utilities.UnbreakLine(original.Text);
-                                if (s.StartsWith('-') || s.StartsWith("<i>-"))
+                                if (s.StartsWith('-') || s.StartsWith("<i>-", StringComparison.Ordinal))
                                     original.Text = s;
-                                else if (s.StartsWith("<i>"))
+                                else if (s.StartsWith("<i>", StringComparison.Ordinal))
                                     original.Text = s.Insert(3, "- ");
                                 else
                                     original.Text = "- " + s;
 
                                 s = Utilities.UnbreakLine(originalNext.Text);
-                                if (s.StartsWith('-') || s.StartsWith("<i>-"))
+                                if (s.StartsWith('-') || s.StartsWith("<i>-", StringComparison.Ordinal))
                                     original.Text += Environment.NewLine + s;
-                                else if (s.StartsWith("<i>"))
+                                else if (s.StartsWith("<i>", StringComparison.Ordinal))
                                     original.Text += Environment.NewLine + s.Insert(3, "- ");
                                 else
                                     original.Text += Environment.NewLine + "- " + s;
@@ -7940,13 +7940,13 @@ namespace Nikse.SubtitleEdit.Forms
                     string s = Utilities.UnbreakLine(currentParagraph.Text);
                     if (s.StartsWith('-') || s.StartsWith("<i>-"))
                         currentParagraph.Text = s;
-                    else if (s.StartsWith("<i>"))
+                    else if (s.StartsWith("<i>", StringComparison.Ordinal))
                         currentParagraph.Text = s.Insert(3, "- ");
                     else
                         currentParagraph.Text = "- " + s;
 
                     s = Utilities.UnbreakLine(nextParagraph.Text);
-                    if (s.StartsWith('-') || s.StartsWith("<i>-"))
+                    if (s.StartsWith('-') || s.StartsWith("<i>-", StringComparison.Ordinal))
                         currentParagraph.Text += Environment.NewLine + s;
                     else if (s.StartsWith("<i>", StringComparison.Ordinal))
                         currentParagraph.Text += Environment.NewLine + s.Insert(3, "- ");
@@ -8451,7 +8451,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string s = textBoxSource.Text;
                         if (pos > 0)
                             pos--;
-                        while (pos > 0 && pos + 3 < s.Length && !s.Substring(pos, 3).StartsWith(Environment.NewLine))
+                        while (pos > 0 && pos + 3 < s.Length && !s.Substring(pos, 3).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                             pos--;
                         s = s.Substring(pos).Trim();
                         int lastTimeCode = s.IndexOf("Dialogue:", StringComparison.Ordinal);
@@ -8536,7 +8536,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             string s = p.Text;
-            if (s.StartsWith("<font "))
+            if (s.StartsWith("<font ", StringComparison.Ordinal))
             {
                 int end = s.IndexOf('>');
                 if (end > 0)
@@ -8603,7 +8603,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             string s = p.Text;
-            if (s.StartsWith("<font "))
+            if (s.StartsWith("<font ", StringComparison.Ordinal))
             {
                 var end = s.IndexOf('>');
                 if (end > 0)
@@ -9053,9 +9053,9 @@ namespace Nikse.SubtitleEdit.Forms
                 byte[] buffer = null;
                 if (matroskaSubtitleInfo.ContentEncodingType == 0) // compressed with zlib
                 {
-                    MemoryStream outStream = new MemoryStream();
+                    var outStream = new MemoryStream();
                     var outZStream = new zlib.ZOutputStream(outStream);
-                    MemoryStream inStream = new MemoryStream(p.Data);
+                    var inStream = new MemoryStream(p.Data);
                     try
                     {
                         CopyStream(inStream, outZStream);
@@ -9081,7 +9081,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (buffer != null && buffer.Length > 100)
                 {
-                    MemoryStream ms = new MemoryStream(buffer);
+                    var ms = new MemoryStream(buffer);
                     var list = BluRaySupParser.ParseBluRaySup(ms, log, true);
                     foreach (var sup in list)
                     {
@@ -18155,9 +18155,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void SetAlignTag(Paragraph p, string tag)
         {
-            if (p.Text.StartsWith("{\\a") && p.Text.Length > 5 && p.Text[5] == '}')
+            if (p.Text.StartsWith("{\\a", StringComparison.Ordinal) && p.Text.Length > 5 && p.Text[5] == '}')
                 p.Text = p.Text.Remove(0, 6);
-            else if (p.Text.StartsWith("{\\a") && p.Text.Length > 4 && p.Text[4] == '}')
+            else if (p.Text.StartsWith("{\\a", StringComparison.Ordinal) && p.Text.Length > 4 && p.Text[4] == '}')
                 p.Text = p.Text.Remove(0, 5);
             p.Text = string.Format(@"{0}{1}", tag, p.Text);
         }
