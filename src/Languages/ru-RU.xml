@@ -116,7 +116,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <GeneratingSpectrogram>Создание спектрограммы...</GeneratingSpectrogram>
     <ExtractingSeconds>Извлечение аудио: {0:0.0} с</ExtractingSeconds>
     <ExtractingMinutes>Извлечение аудио: {0}.{1:00} мин</ExtractingMinutes>
-    <WaveFileNotFound>Извлечённая форма сигла не была найдена!
+    <WaveFileNotFound>Извлечённая форма сигнала не была найдена!
 Для этого требуется VLC media player 1.1.x или новее ({0}-bit).
 
 Командная строка: {1} {2}</WaveFileNotFound>
