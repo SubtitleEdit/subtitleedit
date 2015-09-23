@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic
                 var fps = GetArgument(args, "/fps:");
                 if (fps.Length > 6)
                 {
-                    fps = fps.Remove(0, 5).Replace(",", ".").Trim();
+                    fps = fps.Remove(0, 5).Replace(',', '.').Trim();
                     double d;
                     if (double.TryParse(fps, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out d))
                     {
@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Logic
                 double? targetFrameRate = null;
                 if (targetFps.Length > 12)
                 {
-                    targetFps = targetFps.Remove(0, 11).Replace(",", ".").Trim();
+                    targetFps = targetFps.Remove(0, 11).Replace(',', '.').Trim();
                     double d;
                     if (double.TryParse(targetFps, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out d))
                     {
