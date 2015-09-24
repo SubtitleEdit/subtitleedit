@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
         public AdjustDisplayDuration()
         {
             InitializeComponent();
-            Icon = Nikse.SubtitleEdit.Properties.Resources.SubtitleEditFormIcon;
+            Icon = Properties.Resources.SubtitleEditFormIcon;
 
             comboBoxPercent.SelectedIndex = 0;
             comboBoxSeconds.SelectedIndex = 0;
