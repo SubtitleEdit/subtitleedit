@@ -719,9 +719,12 @@ namespace Nikse.SubtitleEdit.Logic
         {
             right = false;
             bool left = false;
+            int leftCount = 0;
+            int rightCount = 0;
             clean = true;
             var points = new List<Point>();
             int y = 0;
+            int maxSlide = bmp.Height / 4;
             while (y < bmp.Height)
             {
                 if (bmp.GetAlpha(x, y) > 100)
@@ -754,7 +757,6 @@ namespace Nikse.SubtitleEdit.Logic
                         if (bmp.GetAlpha(x - 1, y) > 0)
                         {
                             x++; //(requires search for min/max x in points
-                            right = true;
                         }
                         else
                         {
@@ -788,7 +790,13 @@ namespace Nikse.SubtitleEdit.Logic
                         return null;
                     }
 
-                    if (left && right)
+                    if (left)
+                        leftCount++;
+
+                    if (right)
+                        rightCount++;
+
+                    if (leftCount > maxSlide || rightCount > maxSlide)
                         return null;
                 }
                 else

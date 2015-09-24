@@ -313,7 +313,7 @@
             this.groupBoxText.Location = new System.Drawing.Point(12, 170);
             this.groupBoxText.Name = "groupBoxText";
             this.groupBoxText.Size = new System.Drawing.Size(696, 72);
-            this.groupBoxText.TabIndex = 1;
+            this.groupBoxText.TabIndex = 500;
             this.groupBoxText.TabStop = false;
             this.groupBoxText.Text = "Text";
             // 
@@ -325,7 +325,7 @@
             this.richTextBoxParagraph.Name = "richTextBoxParagraph";
             this.richTextBoxParagraph.ReadOnly = true;
             this.richTextBoxParagraph.Size = new System.Drawing.Size(296, 54);
-            this.richTextBoxParagraph.TabIndex = 0;
+            this.richTextBoxParagraph.TabIndex = 400;
             this.richTextBoxParagraph.Text = "";
             // 
             // buttonEditWholeText
@@ -333,7 +333,7 @@
             this.buttonEditWholeText.Location = new System.Drawing.Point(308, 17);
             this.buttonEditWholeText.Name = "buttonEditWholeText";
             this.buttonEditWholeText.Size = new System.Drawing.Size(128, 21);
-            this.buttonEditWholeText.TabIndex = 1;
+            this.buttonEditWholeText.TabIndex = 401;
             this.buttonEditWholeText.Text = "Edit whole text";
             this.buttonEditWholeText.UseVisualStyleBackColor = true;
             this.buttonEditWholeText.Click += new System.EventHandler(this.ButtonEditWholeTextClick);
@@ -343,7 +343,7 @@
             this.buttonEditWord.Location = new System.Drawing.Point(308, 43);
             this.buttonEditWord.Name = "buttonEditWord";
             this.buttonEditWord.Size = new System.Drawing.Size(128, 21);
-            this.buttonEditWord.TabIndex = 2;
+            this.buttonEditWord.TabIndex = 402;
             this.buttonEditWord.Text = "Edit word";
             this.buttonEditWord.UseVisualStyleBackColor = true;
             this.buttonEditWord.Click += new System.EventHandler(this.ButtonEditWordClick);

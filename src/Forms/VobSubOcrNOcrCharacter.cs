@@ -737,5 +737,15 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxCharacters.SelectedText = (sender as ToolStripMenuItem).Text;
         }
 
+        private void toolStripMenuItemMusicSymbol1_Click(object sender, EventArgs e)
+        {
+            textBoxCharacters.SelectedText = (sender as ToolStripMenuItem).Text;
+        }
+
+        private void toolStripMenuItemMusicSymbol2_Click(object sender, EventArgs e)
+        {
+            textBoxCharacters.SelectedText = (sender as ToolStripMenuItem).Text;
+        }
+
     }
 }
