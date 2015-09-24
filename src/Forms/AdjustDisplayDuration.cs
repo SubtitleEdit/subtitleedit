@@ -51,11 +51,14 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxPercent.SelectedIndex = 0;
             comboBoxSeconds.SelectedIndex = 0;
 
-            for (int i = 0; i < comboBoxSeconds.Items.Count; i++)
+            if (string.CompareOrdinal(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator) != 0)
             {
-                string s = comboBoxSeconds.Items[i].ToString();
-                s = s.Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
-                comboBoxSeconds.Items[i] = s;
+                for (int i = 0; i < comboBoxSeconds.Items.Count; i++)
+                {
+                    string s = comboBoxSeconds.Items[i].ToString();
+                    s = s.Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
+                    comboBoxSeconds.Items[i] = s;
+                }
             }
             numericUpDownMaxCharsSec.Value = (decimal)Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
 
