@@ -2071,6 +2071,7 @@ Keep changes?</KeepChangesMessage>
     <Title>Inspect compare matches for current image</Title>
     <InspectItems>Inspect items</InspectItems>
     <AddBetterMatch>Add better match</AddBetterMatch>
+    <Add>Add</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>New folder</Title>

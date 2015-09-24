@@ -17,10 +17,10 @@ namespace Nikse.SubtitleEdit.Forms
         private List<VobSubOcr.CompareMatch> _matches;
         private List<Bitmap> _imageSources;
         private string _directoryPath;
-        private XmlNode _selectedCompareNode = null;
-        private BinaryOcrBitmap _selectedCompareBinaryOcrBitmap = null;
-        private VobSubOcr.CompareMatch _selectedMatch = null;
-        private BinaryOcrDb _binOcrDb = null;
+        private XmlNode _selectedCompareNode;
+        private BinaryOcrBitmap _selectedCompareBinaryOcrBitmap;
+        private VobSubOcr.CompareMatch _selectedMatch;
+        private BinaryOcrDb _binOcrDb;
 
         public VobSubOcrCharacterInspect()
         {
@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     string name = node.InnerText;
                                     int pos = Convert.ToInt32(name);
                                     f.Position = pos;
-                                    ManagedBitmap mbmp = new ManagedBitmap(f);
+                                    var mbmp = new ManagedBitmap(f);
                                     var bitmap = mbmp.ToOldBitmap();
                                     pictureBoxCompareBitmap.Image = bitmap;
                                     pictureBoxCompareBitmapDouble.Width = bitmap.Width * 2;
@@ -181,7 +181,18 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (_selectedCompareNode == null && _selectedCompareBinaryOcrBitmap == null)
+            buttonAddBetterMatch.Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.AddBetterMatch;
+            if (_selectedMatch.Text == Configuration.Settings.Language.VobSubOcr.NoMatch)
+            {
+                buttonUpdate.Enabled = false;
+                buttonDelete.Enabled = false;
+                buttonAddBetterMatch.Enabled = true;
+                buttonAddBetterMatch.Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.Add;
+                textBoxText.Enabled = true;
+                textBoxText.Text = string.Empty;
+                checkBoxItalic.Enabled = true;
+            }
+            else if (_selectedCompareNode == null && _selectedCompareBinaryOcrBitmap == null)
             {
                 buttonUpdate.Enabled = false;
                 buttonDelete.Enabled = false;
@@ -296,6 +307,33 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (_selectedCompareBinaryOcrBitmap != null || (_binOcrDb != null && _selectedMatch.Text == Configuration.Settings.Language.VobSubOcr.NoMatch))
+            {
+                var nbmp = new NikseBitmap((pictureBoxInspectItem.Image as Bitmap));
+                int x = 0;
+                int y = 0;
+                if (_selectedMatch != null && _selectedMatch.ImageSplitterItem != null)
+                {
+                    x = _selectedMatch.X;
+                    y = _selectedMatch.Y;
+                }
+                var bob = new BinaryOcrBitmap(nbmp, checkBoxItalic.Checked, 0, textBoxText.Text, x, y);
+                _binOcrDb.Add(bob);
+
+                int index = listBoxInspectItems.SelectedIndex;
+                _matches[index].Name = bob.Key;
+                _matches[index].ExpandCount = 0;
+                _matches[index].Italic = checkBoxItalic.Checked;
+                _matches[index].Text = textBoxText.Text;
+                listBoxInspectItems.Items.Clear();
+                for (int i = 0; i < _matches.Count; i++)
+                    listBoxInspectItems.Items.Add(_matches[i].Text);
+                listBoxInspectItems.SelectedIndex = index;
+                listBoxInspectItems_SelectedIndexChanged(null, null);
+                ShowCount();
+                return;
+            }
+
             if (_selectedCompareNode != null)
             {
                 XmlNode newNode = ImageCompareDocument.CreateElement("Item");
@@ -305,7 +343,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string databaseName = Path.Combine(_directoryPath, "Images.db");
                 FileStream f;
-                long pos = 0;
+                long pos;
                 if (!File.Exists(databaseName))
                 {
                     using (f = new FileStream(databaseName, FileMode.Create))
@@ -340,39 +378,11 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowCount();
                 listBoxInspectItems_SelectedIndexChanged(null, null);
             }
-            else if (_selectedCompareBinaryOcrBitmap != null)
-            {
-                var nbmp = new NikseBitmap((pictureBoxInspectItem.Image as Bitmap));
-                int x = 0;
-                int y = 0;
-                if (_selectedMatch != null && _selectedMatch.ImageSplitterItem != null)
-                {
-                    x = _selectedMatch.X;
-                    y = _selectedMatch.Y;
-                }
-                var bob = new BinaryOcrBitmap(nbmp, checkBoxItalic.Checked, 0, textBoxText.Text, x, y);
-                _binOcrDb.Add(bob);
-
-                int index = listBoxInspectItems.SelectedIndex;
-                _matches[index].Name = bob.Key;
-                _matches[index].ExpandCount = 0;
-                _matches[index].Italic = checkBoxItalic.Checked;
-                _matches[index].Text = textBoxText.Text;
-                listBoxInspectItems.Items.Clear();
-                for (int i = 0; i < _matches.Count; i++)
-                    listBoxInspectItems.Items.Add(_matches[i].Text);
-                listBoxInspectItems.SelectedIndex = index;
-                listBoxInspectItems_SelectedIndexChanged(null, null);
-                ShowCount();
-            }
         }
 
         private void ShowCount()
         {
-            if (listBoxInspectItems.Items.Count > 1)
-                labelCount.Text = listBoxInspectItems.Items.Count.ToString();
-            else
-                labelCount.Text = string.Empty;
+            labelCount.Text = listBoxInspectItems.Items.Count > 1 ? listBoxInspectItems.Items.Count.ToString(CultureInfo.InvariantCulture) : string.Empty;
         }
 
     }

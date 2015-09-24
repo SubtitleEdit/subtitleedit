@@ -245,7 +245,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxWordKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter && buttonChange.Enabled)
             {
                 ButtonChangeClick(null, null);
                 e.SuppressKeyPress = true;

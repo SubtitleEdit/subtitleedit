@@ -5554,6 +5554,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "VobSubOcrCharacterInspect/AddBetterMatch":
                     language.VobSubOcrCharacterInspect.AddBetterMatch = reader.Value;
                     break;
+                case "VobSubOcrCharacterInspect/Add":
+                    language.VobSubOcrCharacterInspect.Add = reader.Value;
+                    break;
                 case "VobSubOcrNewFolder/Title":
                     language.VobSubOcrNewFolder.Title = reader.Value;
                     break;

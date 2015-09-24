@@ -2266,6 +2266,7 @@
             public string Title { get; set; }
             public string InspectItems { get; set; }
             public string AddBetterMatch { get; set; }
+            public string Add { get; set; }
         }
 
         public class VobSubOcrNewFolder
