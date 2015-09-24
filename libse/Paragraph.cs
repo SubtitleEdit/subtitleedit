@@ -110,15 +110,15 @@ namespace Nikse.SubtitleEdit.Core
             ID = GenerateId();
         }
 
-        public void Adjust(double factor, double adjust)
+        public void Adjust(double factor, double adjustmentInSeconds)
         {
             if (StartTime.IsMaxTime)
                 return;
 
-            double seconds = StartTime.TimeSpan.TotalSeconds * factor + adjust;
+            double seconds = StartTime.TimeSpan.TotalSeconds * factor + adjustmentInSeconds;
             StartTime.TimeSpan = TimeSpan.FromSeconds(seconds);
 
-            seconds = EndTime.TimeSpan.TotalSeconds * factor + adjust;
+            seconds = EndTime.TimeSpan.TotalSeconds * factor + adjustmentInSeconds;
             EndTime.TimeSpan = TimeSpan.FromSeconds(seconds);
         }
 
