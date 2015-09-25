@@ -126,6 +126,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public SubtitleListView()
         {
+            DoubleBuffered = true;
             UseSyntaxColoring = true;
             Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Columns.AddRange(new[]
