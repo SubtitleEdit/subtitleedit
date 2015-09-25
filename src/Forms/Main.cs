@@ -9453,19 +9453,19 @@ namespace Nikse.SubtitleEdit.Forms
                             string timeCode = Encoding.ASCII.GetString(buffer, 0, 25);
 
                             f.Read(buffer, 0, 2);
-                            int width = (int)BitConverter.ToUInt16(buffer, 0);
+                            int width = BitConverter.ToUInt16(buffer, 0);
                             f.Read(buffer, 0, 2);
-                            int height = (int)BitConverter.ToUInt16(buffer, 0);
+                            int height = BitConverter.ToUInt16(buffer, 0);
                             f.Read(buffer, 0, 2);
-                            int x = (int)BitConverter.ToUInt16(buffer, 0);
+                            int x = BitConverter.ToUInt16(buffer, 0);
                             f.Read(buffer, 0, 2);
-                            int y = (int)BitConverter.ToUInt16(buffer, 0);
+                            int y = BitConverter.ToUInt16(buffer, 0);
                             f.Read(buffer, 0, 2);
-                            int xEnd = (int)BitConverter.ToUInt16(buffer, 0);
+                            int xEnd = BitConverter.ToUInt16(buffer, 0);
                             f.Read(buffer, 0, 2);
-                            int yEnd = (int)BitConverter.ToUInt16(buffer, 0);
+                            int yEnd = BitConverter.ToUInt16(buffer, 0);
                             f.Read(buffer, 0, 2);
-                            int RleLength = (int)BitConverter.ToUInt16(buffer, 0);
+                            int RleLength = BitConverter.ToUInt16(buffer, 0);
 
                             var colorBuffer = new byte[4 * 3]; // four colors with rgb (3 bytes)
                             f.Read(colorBuffer, 0, colorBuffer.Length);
