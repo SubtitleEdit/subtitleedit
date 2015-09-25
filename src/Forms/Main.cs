@@ -6082,36 +6082,11 @@ namespace Nikse.SubtitleEdit.Forms
                         var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
                         if (original != null)
                         {
-                            if (original.Text.Contains("<" + tag + ">"))
-                            {
-                                original.Text = original.Text.Replace("<" + tag + ">", string.Empty);
-                                original.Text = original.Text.Replace("</" + tag + ">", string.Empty);
-                            }
-                            else
-                            {
-                                int indexOfEndBracket = original.Text.IndexOf('}');
-                                if (original.Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
-                                    original.Text = string.Format("{2}<{0}>{1}</{0}>", tag, original.Text.Remove(0, indexOfEndBracket + 1), original.Text.Substring(0, indexOfEndBracket + 1));
-                                else
-                                    original.Text = string.Format("<{0}>{1}</{0}>", tag, original.Text);
-                            }
+                            original.Text = HtmlUtil.ToogleTag(original.Text, tag);
                             SubtitleListview1.SetAlternateText(i, original.Text);
                         }
                     }
-
-                    if (_subtitle.Paragraphs[i].Text.Contains("<" + tag + ">"))
-                    {
-                        _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.Replace("<" + tag + ">", string.Empty);
-                        _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.Replace("</" + tag + ">", string.Empty);
-                    }
-                    else
-                    {
-                        int indexOfEndBracket = _subtitle.Paragraphs[i].Text.IndexOf('}');
-                        if (_subtitle.Paragraphs[i].Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
-                            _subtitle.Paragraphs[i].Text = string.Format("{2}<{0}>{1}</{0}>", tag, _subtitle.Paragraphs[i].Text.Remove(0, indexOfEndBracket + 1), _subtitle.Paragraphs[i].Text.Substring(0, indexOfEndBracket + 1));
-                        else
-                            _subtitle.Paragraphs[i].Text = string.Format("<{0}>{1}</{0}>", tag, _subtitle.Paragraphs[i].Text);
-                    }
+                    _subtitle.Paragraphs[i].Text = HtmlUtil.ToogleTag(_subtitle.Paragraphs[i].Text, tag);
                     SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
                 }
                 SubtitleListview1.EndUpdate();

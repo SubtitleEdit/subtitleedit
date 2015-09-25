@@ -1440,7 +1440,7 @@ namespace Nikse.SubtitleEdit.Core
                         MergeSelectedLinesAsDialog = "Merge selected lines as dialog",
                         MergeWithLineBefore = "Merge with line before",
                         MergeWithLineAfter = "Merge with line after",
-                        Normal = "Normal",
+                        Normal = "Normal (remove formatting)",
                         Underline = "Underline",
                         Color = "Color...",
                         FontName = "Font name...",

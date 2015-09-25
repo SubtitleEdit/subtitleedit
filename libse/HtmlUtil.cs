@@ -666,5 +666,27 @@ namespace Nikse.SubtitleEdit.Core
             return text;
         }
 
+        public static string ToogleTag(string text, string tag)
+        {
+            if (text.Contains("<" + tag + ">"))
+            {
+                text = text.Replace("<" + tag + ">", string.Empty);
+                text = text.Replace("</" + tag + ">", string.Empty);
+            }
+            else
+            {
+                int indexOfEndBracket = text.IndexOf('}');
+                if (text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                {
+                    text = string.Format("{2}<{0}>{1}</{0}>", tag, text.Remove(0, indexOfEndBracket + 1), text.Substring(0, indexOfEndBracket + 1));
+                }
+                else
+                {
+                    text = string.Format("<{0}>{1}</{0}>", tag, text);
+                }
+            }
+            return text;
+        }
+
     }
 }
