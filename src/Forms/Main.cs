@@ -10225,6 +10225,12 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.FindDataBelowThresholdBack(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
                 e.SuppressKeyPress = true;
             }
+            else if (_mainInsertAfter == e.KeyData && inListView)
+            {
+                InsertAfter();
+                e.SuppressKeyPress = true;
+                textBoxListViewText.Focus();
+            }
             else if (_mainInsertBefore == e.KeyData && inListView)
             {
                 InsertBefore();
