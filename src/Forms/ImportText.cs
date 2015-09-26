@@ -544,9 +544,10 @@ namespace Nikse.SubtitleEdit.Forms
                 Replace("-", string.Empty).Replace(">", string.Empty)))
                 return false;
 
+            const string expectedChars = "\r\n\t .?\0";
             foreach (char ch in line)
             {
-                if (!("\r\n\t .?\0").Contains(ch))
+                if (!expectedChars.Contains(ch))
                     return true;
             }
             return false;
