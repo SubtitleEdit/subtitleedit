@@ -80,6 +80,7 @@ namespace Nikse.SubtitleEdit.Controls
         private double _currentVideoPositionSeconds = -1;
         private WavePeakGenerator _wavePeaks;
         private Subtitle _subtitle;
+        private string _subtitleHash;
         private IEnumerable<int> _selectedIndices = Enumerable.Empty<int>();
         private bool _noClear;
         private double _gapAtStart = -1;
@@ -166,6 +167,7 @@ namespace Nikse.SubtitleEdit.Controls
             set
             {
                 _sceneChanges = value;
+                Invalidate();
             }
         }
 
@@ -182,11 +184,36 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public bool ShowSpectrogram { get; set; }
+        private bool _showSpectrogram;
+        public bool ShowSpectrogram
+        {
+            get
+            {
+                return _showSpectrogram;
+            }
+            set
+            {
+                _showSpectrogram = value;
+                Invalidate();
+            }
+        }
+
         public bool AllowOverlap { get; set; }
         private bool _tempShowSpectrogram;
 
-        public bool ShowWaveform { get; set; }
+        private bool _showWaveform;
+        public bool ShowWaveform
+        {
+            get
+            {
+                return _showWaveform;
+            }
+            set
+            {
+                _showWaveform = value;
+                Invalidate();
+            }
+        }
 
         private double _startPositionSeconds;
         public double StartPositionSeconds
@@ -350,18 +377,26 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetPosition(double startPositionSeconds, Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex, ListView.SelectedIndexCollection selectedIndexes)
         {
+            string subtitleHash = subtitle.GetFastHashCode();
+            int[] selectedIndexArray = selectedIndexes.Cast<int>().ToArray();
+            bool changed =
+                currentVideoPositionSeconds != _currentVideoPositionSeconds ||
+                !selectedIndexArray.SequenceEqual(_selectedIndices) ||
+                subtitleHash != _subtitleHash;
             StartPositionSeconds = startPositionSeconds;
-            _selectedIndices = selectedIndexes.Cast<int>();
+            _selectedIndices = selectedIndexArray;
             _subtitle.Paragraphs.Clear();
             foreach (var p in subtitle.Paragraphs)
             {
                 if (!p.StartTime.IsMaxTime)
                     _subtitle.Paragraphs.Add(p);
             }
+            _subtitleHash = subtitleHash;
             _currentVideoPositionSeconds = currentVideoPositionSeconds;
             _selectedParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex);
             NearestSubtitles(subtitle, currentVideoPositionSeconds, subtitleIndex);
-            Invalidate();
+            if (changed)
+                Invalidate();
         }
 
         private static int CalculateHeight(double value, int imageHeight, int maxHeight)
