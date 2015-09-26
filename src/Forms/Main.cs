@@ -507,7 +507,7 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.OnTimeChangedAndOffsetRest += AudioWaveform_OnTimeChangedAndOffsetRest;
                 audioVisualizer.OnZoomedChanged += AudioWaveform_OnZoomedChanged;
                 audioVisualizer.InsertAtVideoPosition += audioVisualizer_InsertAtVideoPosition;
-                audioVisualizer.DrawGridLines = Configuration.Settings.VideoControls.WaveformDrawGrid;
+                audioVisualizer.ShowGridLines = Configuration.Settings.VideoControls.WaveformDrawGrid;
                 audioVisualizer.GridColor = Configuration.Settings.VideoControls.WaveformGridColor;
                 audioVisualizer.SelectedColor = Configuration.Settings.VideoControls.WaveformSelectedColor;
                 audioVisualizer.Color = Configuration.Settings.VideoControls.WaveformColor;
@@ -3520,7 +3520,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCustomUrl2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
             buttonCustomUrl2.Visible = Configuration.Settings.VideoControls.CustomSearchUrl2.Length > 1;
 
-            audioVisualizer.DrawGridLines = Configuration.Settings.VideoControls.WaveformDrawGrid;
+            audioVisualizer.ShowGridLines = Configuration.Settings.VideoControls.WaveformDrawGrid;
             audioVisualizer.GridColor = Configuration.Settings.VideoControls.WaveformGridColor;
             audioVisualizer.SelectedColor = Configuration.Settings.VideoControls.WaveformSelectedColor;
             audioVisualizer.Color = Configuration.Settings.VideoControls.WaveformColor;

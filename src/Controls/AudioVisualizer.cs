@@ -127,8 +127,12 @@ namespace Nikse.SubtitleEdit.Controls
                     value = ZoomMinimum;
                 if (value > ZoomMaximum)
                     value = ZoomMaximum;
-                _zoomFactor = Math.Round(value, 2); // round to prevent accumulated rounding errors
-                Invalidate();
+                value = Math.Round(value, 2); // round to prevent accumulated rounding errors
+                if (_zoomFactor != value)
+                {
+                    _zoomFactor = value;
+                    Invalidate();
+                }
             }
         }
 
@@ -147,8 +151,12 @@ namespace Nikse.SubtitleEdit.Controls
                     value = VerticalZoomMinimum;
                 if (value > VerticalZoomMaximum)
                     value = VerticalZoomMaximum;
-                _verticalZoomFactor = Math.Round(value, 2); // round to prevent accumulated rounding errors
-                Invalidate();
+                value = Math.Round(value, 2); // round to prevent accumulated rounding errors
+                if (_verticalZoomFactor != value)
+                {
+                    _verticalZoomFactor = value;
+                    Invalidate();
+                }
             }
         }
 
@@ -166,6 +174,7 @@ namespace Nikse.SubtitleEdit.Controls
             set
             {
                 _sceneChanges = value;
+                Invalidate();
             }
         }
 
@@ -182,11 +191,42 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public bool ShowSpectrogram { get; set; }
+        private bool _showSpectrogram;
+        public bool ShowSpectrogram
+        {
+            get
+            {
+                return _showSpectrogram;
+            }
+            set
+            {
+                if (_showSpectrogram != value)
+                {
+                    _showSpectrogram = value;
+                    Invalidate();
+                }
+            }
+        }
+
         public bool AllowOverlap { get; set; }
         private bool _tempShowSpectrogram;
 
-        public bool ShowWaveform { get; set; }
+        private bool _showWaveform;
+        public bool ShowWaveform
+        {
+            get
+            {
+                return _showWaveform;
+            }
+            set
+            {
+                if (_showWaveform != value)
+                {
+                    _showWaveform = value;
+                    Invalidate();
+                }
+            }
+        }
 
         private double _startPositionSeconds;
         public double StartPositionSeconds
@@ -197,10 +237,19 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
+                if (_wavePeaks != null)
+                {
+                    double endPositionSeconds = value + ((double)Width / _wavePeaks.Header.SampleRate) / _zoomFactor;
+                    if (endPositionSeconds > _wavePeaks.Header.LengthInSeconds)
+                        value -= endPositionSeconds - _wavePeaks.Header.LengthInSeconds;
+                }
                 if (value < 0)
-                    _startPositionSeconds = 0;
-                else
+                    value = 0;
+                if (_startPositionSeconds != value)
+                {
                     _startPositionSeconds = value;
+                    Invalidate();
+                }
             }
         }
 
@@ -218,7 +267,7 @@ namespace Nikse.SubtitleEdit.Controls
         public float TextSize { get; set; }
         public bool TextBold { get; set; }
         public Color GridColor { get; set; }
-        public bool DrawGridLines { get; set; }
+        public bool ShowGridLines { get; set; }
         public bool AllowNewSelection { get; set; }
 
         public bool Locked { get; set; }
@@ -301,7 +350,7 @@ namespace Nikse.SubtitleEdit.Controls
             TextSize = 9;
             TextBold = true;
             GridColor = Color.FromArgb(255, 20, 20, 18);
-            DrawGridLines = true;
+            ShowGridLines = true;
             AllowNewSelection = true;
             ShowSpectrogram = true;
             ShowWaveform = true;
@@ -330,21 +379,27 @@ namespace Nikse.SubtitleEdit.Controls
 
             _currentParagraph = subtitle.Paragraphs[currentParagraphIndex];
 
-            // Locate the other paragraphs inside the visible time range, as well as one extra
-            // on either side (helps when scrolling).
+            // Locate the other paragraphs inside the visible time range. This assumes they're
+            // in sequential order and with no unusual overlapping situations. Since that may
+            // not always be true, we'll load up a minimum of 10 paragraphs on either side of
+            // the current one which will hopefully help at least at normal zoom settings.
+            int nextParagraphCount = 0;
             for (int i = currentParagraphIndex + 1; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                _previousAndNextParagraphs.Add(p);
-                if (p.StartTime.TotalSeconds >= EndPositionSeconds)
+                if (nextParagraphCount >= 10 && p.StartTime.TotalSeconds >= EndPositionSeconds)
                     break;
+                _previousAndNextParagraphs.Add(p);
+                nextParagraphCount++;
             }
+            int previousParagraphCount = 0;
             for (int i = currentParagraphIndex - 1; i >= 0; i--)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                _previousAndNextParagraphs.Add(p);
-                if (p.EndTime.TotalSeconds <= StartPositionSeconds)
+                if (previousParagraphCount >= 10 && p.EndTime.TotalSeconds <= StartPositionSeconds)
                     break;
+                _previousAndNextParagraphs.Add(p);
+                previousParagraphCount++;
             }
         }
 
@@ -436,24 +491,26 @@ namespace Nikse.SubtitleEdit.Controls
 
         internal void WaveformPaint(object sender, PaintEventArgs e)
         {
+            Graphics graphics = e.Graphics;
             if (_wavePeaks != null && _wavePeaks.AllSamples != null)
             {
-                if (StartPositionSeconds < 0)
-                    StartPositionSeconds = 0;
+                bool showSpectrogram = IsSpectrogramAvailable && ShowSpectrogram;
+                bool showSpectrogramOnly = showSpectrogram && !ShowWaveform;
+                int waveformHeight = Height - (showSpectrogram ? SpectrogramDisplayHeight : 0);
 
-                if (XPositionToSeconds(Width) > _wavePeaks.Header.LengthInSeconds)
-                    StartPositionSeconds = _wavePeaks.Header.LengthInSeconds - ((Width / (double)_wavePeaks.Header.SampleRate) / _zoomFactor);
-
-                Graphics graphics = e.Graphics;
-                int imageHeight = Height;
-
+                // background
                 DrawBackground(graphics);
 
-                if (IsSpectrogramAvailable && ShowSpectrogram)
+                // grid lines
+                if (ShowGridLines && !showSpectrogramOnly)
+                {
+                    DrawGridLines(graphics, waveformHeight);
+                }
+
+                // spectrogram
+                if (showSpectrogram)
                 {
                     DrawSpectrogramBitmap(StartPositionSeconds, graphics);
-                    if (ShowWaveform)
-                        imageHeight -= SpectrogramDisplayHeight;
                 }
 
                 // waveform
@@ -474,7 +531,7 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             int n = start + i;
                             x = (float)(_zoomFactor * i);
-                            y = CalculateHeight(_wavePeaks.AllSamples[n], imageHeight, maxHeight);
+                            y = CalculateHeight(_wavePeaks.AllSamples[n], waveformHeight, maxHeight);
                             graphics.DrawLine(pen, xPrev, yPrev, x, y);
                             xPrev = x;
                             yPrev = y;
@@ -484,7 +541,10 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 // time line
-                DrawTimeLine(StartPositionSeconds, e, imageHeight);
+                if (!showSpectrogramOnly)
+                {
+                    DrawTimeLine(graphics, waveformHeight);
+                }
 
                 // scene changes
                 if (_sceneChanges != null)
@@ -518,9 +578,9 @@ namespace Nikse.SubtitleEdit.Controls
                 // paragraphs
                 using (var textBrush = new SolidBrush(TextColor))
                 {
-                    DrawParagraph(_currentParagraph, e, textBrush);
+                    DrawParagraph(_currentParagraph, graphics, textBrush);
                     foreach (Paragraph p in _previousAndNextParagraphs)
-                        DrawParagraph(p, e, textBrush);
+                        DrawParagraph(p, graphics, textBrush);
                 }
 
                 // current selection
@@ -548,7 +608,12 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                DrawBackground(e.Graphics);
+                DrawBackground(graphics);
+
+                if (ShowGridLines)
+                {
+                    DrawGridLines(graphics, Height);
+                }
 
                 using (var textBrush = new SolidBrush(TextColor))
                 {
@@ -556,14 +621,14 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         if (Width > 90)
                         {
-                            e.Graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(Width / 2 - 65, Height / 2 - 10));
+                            graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(Width / 2 - 65, Height / 2 - 10));
                         }
                         else
                         {
                             using (var stringFormat = new StringFormat())
                             {
                                 stringFormat.FormatFlags = StringFormatFlags.DirectionVertical;
-                                e.Graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(1, 10), stringFormat);
+                                graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(1, 10), stringFormat);
                             }
                         }
                     }
@@ -573,7 +638,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 using (var p = new Pen(SelectedColor))
                 {
-                    e.Graphics.DrawRectangle(p, new Rectangle(0, 0, Width - 1, Height - 1));
+                    graphics.DrawRectangle(p, new Rectangle(0, 0, Width - 1, Height - 1));
                 }
             }
         }
@@ -581,43 +646,43 @@ namespace Nikse.SubtitleEdit.Controls
         private void DrawBackground(Graphics graphics)
         {
             graphics.Clear(BackgroundColor);
+        }
 
-            if (DrawGridLines)
+        private void DrawGridLines(Graphics graphics, int imageHeight)
+        {
+            if (_wavePeaks == null)
             {
-                if (_wavePeaks == null)
+                using (var pen = new Pen(new SolidBrush(GridColor)))
                 {
-                    using (var pen = new Pen(new SolidBrush(GridColor)))
+                    for (int i = 0; i < Width; i += 10)
                     {
-                        for (int i = 0; i < Width; i += 10)
-                        {
-                            graphics.DrawLine(pen, i, 0, i, Height);
-                            graphics.DrawLine(pen, 0, i, Width, i);
-                        }
+                        graphics.DrawLine(pen, i, 0, i, imageHeight);
+                        graphics.DrawLine(pen, 0, i, Width, i);
                     }
                 }
-                else
+            }
+            else
+            {
+                double interval = 0.1 * _wavePeaks.Header.SampleRate * _zoomFactor; // pixels that is 0.1 second
+                if (ZoomFactor < 0.4)
+                    interval = 1.0 * _wavePeaks.Header.SampleRate * _zoomFactor; // pixels that is 1 second
+                int start = SecondsToXPosition(StartPositionSeconds) % ((int)Math.Round(interval));
+                using (var pen = new Pen(new SolidBrush(GridColor)))
                 {
-                    double interval = 0.1 * _wavePeaks.Header.SampleRate * _zoomFactor; // pixels that is 0.1 second
-                    if (ZoomFactor < 0.4)
-                        interval = 1.0 * _wavePeaks.Header.SampleRate * _zoomFactor; // pixels that is 1 second
-                    int start = SecondsToXPosition(StartPositionSeconds) % ((int)Math.Round(interval));
-                    using (var pen = new Pen(new SolidBrush(GridColor)))
+                    for (double i = start; i < Width; i += interval)
                     {
-                        for (double i = start; i < Width; i += interval)
-                        {
-                            var j = (int)Math.Round(i);
-                            graphics.DrawLine(pen, j, 0, j, Height);
+                        var j = (int)Math.Round(i);
+                        graphics.DrawLine(pen, j, 0, j, imageHeight);
+                        if (j < imageHeight)
                             graphics.DrawLine(pen, 0, j, Width, j);
-                        }
                     }
                 }
             }
         }
 
-        private void DrawTimeLine(double startPositionSeconds, PaintEventArgs e, int imageHeight)
+        private void DrawTimeLine(Graphics graphics, int imageHeight)
         {
-            var start = (int)Math.Round(startPositionSeconds + 0.5);
-            double seconds = start - StartPositionSeconds;
+            double seconds = Math.Ceiling(StartPositionSeconds) - StartPositionSeconds;
             float position = SecondsToXPosition(seconds);
             using (var pen = new Pen(TextColor))
             {
@@ -630,15 +695,15 @@ namespace Nikse.SubtitleEdit.Controls
                             var n = _zoomFactor * _wavePeaks.Header.SampleRate;
                             if (n > 38 || (int)Math.Round(StartPositionSeconds + seconds) % 5 == 0)
                             {
-                                e.Graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 10);
-                                e.Graphics.DrawString(GetDisplayTime(StartPositionSeconds + seconds), textFont, textBrush, new PointF(position + 2, imageHeight - 13));
+                                graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 10);
+                                graphics.DrawString(GetDisplayTime(StartPositionSeconds + seconds), textFont, textBrush, new PointF(position + 2, imageHeight - 13));
                             }
 
                             seconds += 0.5;
                             position = SecondsToXPosition(seconds);
 
                             if (n > 64)
-                                e.Graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 5);
+                                graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 5);
 
                             seconds += 0.5;
                             position = SecondsToXPosition(seconds);
@@ -658,7 +723,7 @@ namespace Nikse.SubtitleEdit.Controls
             return string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
         }
 
-        private void DrawParagraph(Paragraph paragraph, PaintEventArgs e, SolidBrush textBrush)
+        private void DrawParagraph(Paragraph paragraph, Graphics graphics, SolidBrush textBrush)
         {
             if (paragraph == null)
             {
@@ -671,13 +736,13 @@ namespace Nikse.SubtitleEdit.Controls
             var drawingStyle = TextBold ? FontStyle.Bold : FontStyle.Regular;
             using (var brush = new SolidBrush(Color.FromArgb(42, 255, 255, 255))) // back color for paragraphs
             {
-                e.Graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, e.Graphics.VisibleClipBounds.Height);
+                graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, graphics.VisibleClipBounds.Height);
 
                 var pen = new Pen(new SolidBrush(Color.FromArgb(175, 0, 100, 0))) { DashStyle = System.Drawing.Drawing2D.DashStyle.Solid, Width = 2 };
-                e.Graphics.DrawLine(pen, currentRegionLeft, 0, currentRegionLeft, e.Graphics.VisibleClipBounds.Height);
+                graphics.DrawLine(pen, currentRegionLeft, 0, currentRegionLeft, graphics.VisibleClipBounds.Height);
                 pen.Dispose();
                 pen = new Pen(new SolidBrush(Color.FromArgb(175, 110, 10, 10))) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash, Width = 2 };
-                e.Graphics.DrawLine(pen, currentRegionRight - 1, 0, currentRegionRight - 1, e.Graphics.VisibleClipBounds.Height);
+                graphics.DrawLine(pen, currentRegionRight - 1, 0, currentRegionRight - 1, graphics.VisibleClipBounds.Height);
 
                 string durationStr = paragraph.Duration.ToShortDisplayString();
                 var n = _zoomFactor * _wavePeaks.Header.SampleRate;
@@ -689,12 +754,12 @@ namespace Nikse.SubtitleEdit.Controls
                         var text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
                         text = text.Replace(Environment.NewLine, "  ");
 
-                        int actualWidth = (int)e.Graphics.MeasureString(text, font).Width;
+                        int actualWidth = (int)graphics.MeasureString(text, font).Width;
                         bool shortned = false;
                         while (actualWidth > currentRegionWidth - 12 && text.Length > 1)
                         {
                             text = text.Remove(text.Length - 1);
-                            actualWidth = (int)e.Graphics.MeasureString(text, font).Width;
+                            actualWidth = (int)graphics.MeasureString(text, font).Width;
                             shortned = true;
                         }
                         if (shortned)
@@ -703,29 +768,29 @@ namespace Nikse.SubtitleEdit.Controls
                         }
 
                         // poor mans outline + text
-                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, 11 - 7));
-                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, 9 - 7));
-                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, 10 - 7));
-                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 4, 10 - 7));
-                        e.Graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, 10 - 7));
+                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, 11 - 7));
+                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, 9 - 7));
+                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, 10 - 7));
+                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 4, 10 - 7));
+                        graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, 10 - 7));
 
                         text = "#" + paragraph.Number + "  " + durationStr;
-                        actualWidth = (int)e.Graphics.MeasureString(text, font).Width;
+                        actualWidth = (int)graphics.MeasureString(text, font).Width;
                         if (actualWidth >= currentRegionWidth)
                             text = durationStr;
-                        int top = Height - 14 - (int)e.Graphics.MeasureString("#", font).Height;
+                        int top = Height - 14 - (int)graphics.MeasureString("#", font).Height;
                         // poor mans outline + text
-                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top + 1));
-                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top - 1));
-                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, top));
-                        e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 4, top));
-                        e.Graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, top));
+                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top + 1));
+                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top - 1));
+                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, top));
+                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 4, top));
+                        graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, top));
                     }
                 }
                 else if (n > 51)
-                    e.Graphics.DrawString("#" + paragraph.Number + "  " + durationStr, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
+                    graphics.DrawString("#" + paragraph.Number + "  " + durationStr, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
                 else if (n > 25)
-                    e.Graphics.DrawString("#" + paragraph.Number, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
+                    graphics.DrawString("#" + paragraph.Number, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
                 pen.Dispose();
             }
         }
