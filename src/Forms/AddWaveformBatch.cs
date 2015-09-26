@@ -76,13 +76,13 @@ namespace Nikse.SubtitleEdit.Forms
             buttonInputBrowse.Enabled = true;
         }
 
+        private static readonly ICollection<string> ExcludedExtensions = new List<string> { ".srt", ".txt", ".exe", ".ass", ".sub", ".jpg", ".png", ".zip", ".rar" };
         private void AddInputFile(string fileName)
         {
             try
             {
                 var ext = Path.GetExtension(fileName).ToLowerInvariant();
-                var excludedExtensions = new List<string> { ".srt", ".txt", ".exe", ".ass", ".sub", ".jpg", ".png", ".zip", ".rar" };
-                if (string.IsNullOrEmpty(ext) || excludedExtensions.Contains(ext))
+                if (string.IsNullOrEmpty(ext) || ExcludedExtensions.Contains(ext))
                 {
                     return;
                 }
