@@ -943,7 +943,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Tekstselectie als dialoog samenvoegen</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Met vorige tekst samenvoegen</MergeWithLineBefore>
         <MergeWithLineAfter>Met volgende tekst samenvoegen</MergeWithLineAfter>
-        <Normal>Normaal</Normal>
+        <Normal>Normaal (formateringstekens verwĳderen)</Normal>
         <Underline>Onderstrepen</Underline>
         <Color>Kleur...</Color>
         <FontName>Lettertype...</FontName>
@@ -2069,6 +2069,7 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <Title>Inspecteer vergelĳkingsovereenkomsten voor huidig beeld</Title>
     <InspectItems>Inspecteer artikelen</InspectItems>
     <AddBetterMatch>Betere overeenkomst toevoegen</AddBetterMatch>
+    <Add>Toevoegen</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nieuwe map</Title>
