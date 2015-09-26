@@ -488,10 +488,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Normal>일반(&amp;N)</Normal>
     <CaseSensitive>대/소문자 구분(&amp;C)</CaseSensitive>
     <RegularExpression>정규 표현식(&amp;X)</RegularExpression>
-    <WholeWord>전체 단어</WholeWord>
-    <Count>개수</Count>
-    <XNumberOfMatches>{0:#,##0} 일치</XNumberOfMatches>
-    <OneMatch>하나 일치</OneMatch>
+    <WholeWord>단어 완전 일치</WholeWord>
+    <Count>일치 개수</Count>
+    <XNumberOfMatches>{0:#,##0}개 일치</XNumberOfMatches>
+    <OneMatch>한 개 일치</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>자막 줄 찾기</Title>
@@ -2067,6 +2067,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Title>현재 이미지에 대한 일치 항목 비교 검사</Title>
     <InspectItems>항목 검사</InspectItems>
     <AddBetterMatch>일치 항목 추가</AddBetterMatch>
+    <Add>추가</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>새 폴더</Title>
