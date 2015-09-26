@@ -945,7 +945,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Combinar as linhas seleccionadas como diálogo</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Combinar com a linha anterior</MergeWithLineBefore>
         <MergeWithLineAfter>Combinar com a linha seguinte</MergeWithLineAfter>
-        <Normal>Normal</Normal>
+        <Normal>Normal (remove a formatação)</Normal>
         <Underline>Sublinhado</Underline>
         <Color>Cor</Color>
         <FontName>Tipo de letra</FontName>
@@ -1547,9 +1547,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <StartWithLastFileLoaded>Iniciar com o último ficheiro carregado</StartWithLastFileLoaded>
     <RememberSelectedLine>Lembrar linha seleccionada</RememberSelectedLine>
     <RememberPositionAndSize>Lembrar tamanho e posição da janela principal</RememberPositionAndSize>
-    <StartInSourceView>Iniciar na aba (Original) da janela principal</StartInSourceView>
+    <StartInSourceView>Iniciar no separador (Original) da janela principal</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Eliminar linhas em branco ao abrir a legenda</RemoveBlankLinesWhenOpening>
-    <ShowLineBreaksAs>Ver quebras de linha na aba (Lista) da janela principal como</ShowLineBreaksAs>
+    <ShowLineBreaksAs>Ver quebras de linha no separador (Lista) da janela principal como</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Ao clicar duas vezes na linha de texto na janela principal irá...</MainListViewDoubleClickAction>
     <MainListViewNothing>Não faz nada</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>... para posição do vídeo e pausar</MainListViewVideoGoToPositionAndPause>
@@ -1680,7 +1680,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToPrevious>Ir para a linha anterior</GoToPrevious>
     <GoToCurrentSubtitleStart>Ir para o início da linha actual</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ir para o final da linha actual</GoToCurrentSubtitleEnd>
-    <ToggleFocus>Alternar o realce entre a caixa de texto da legenda e a aba (Lista) na janela principal</ToggleFocus>
+    <ToggleFocus>Alternar o realce entre a caixa de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
     <ToggleDialogDashes>Alternar hífens de diálogo</ToggleDialogDashes>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>
     <CopyTextOnly>Copiar só o texto para a área de transferência (linhas seleccionadas)</CopyTextOnly>
@@ -1714,7 +1714,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <CustomSearch5>Traduzir, pesquisa personalizada 5</CustomSearch5>
     <CustomSearch6>Traduzir, pesquisa personalizada 6</CustomSearch6>
     <SyntaxColoring>Cor da sintaxe</SyntaxColoring>
-    <ListViewSyntaxColoring>Cor da sintaxe na aba (Lista) da janela principal</ListViewSyntaxColoring>
+    <ListViewSyntaxColoring>Cor da sintaxe no separador (Lista) da janela principal</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>Cor duração muito curta</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Cor duração muito longa</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Cor texto muito longo</SyntaxColorTextIfTooLong>
@@ -2072,6 +2072,7 @@ Manter as alterações?</KeepChangesMessage>
     <Title>Inspeccionar correspondências na imagem actual</Title>
     <InspectItems>Inspeccionar itens</InspectItems>
     <AddBetterMatch>Adicionar a melhor coincidência</AddBetterMatch>
+    <Add>Adicionar</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nova pasta</Title>
