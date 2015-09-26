@@ -414,7 +414,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SplitSingle(StringBuilder sb)
         {
             string t = sb.ToString().Trim();
-            string[] tarr = t.Replace("\r\n", "\n").Split('\n');
+            string[] tarr = t.SplitToLines();
             if (checkBoxMergeShortLines.Checked == false && tarr.Length == 3 &&
                 tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
                 tarr[1].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
