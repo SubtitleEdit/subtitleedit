@@ -944,7 +944,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Merge selected lines as dialog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Merge with line before</MergeWithLineBefore>
         <MergeWithLineAfter>Merge with line after</MergeWithLineAfter>
-        <Normal>Normal</Normal>
+        <Normal>Normal (remove formatting)</Normal>
         <Underline>Underline</Underline>
         <Color>Color...</Color>
         <FontName>Font name...</FontName>
