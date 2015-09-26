@@ -277,7 +277,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 int indexOfEnd = s.IndexOf('}');
                 s = s.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = s.IndexOf('{');
+                indexOfBegin = s.IndexOf('{', indexOfBegin);
             }
             return s;
         }
