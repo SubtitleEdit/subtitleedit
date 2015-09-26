@@ -154,7 +154,7 @@ namespace Nikse.SubtitleEdit.Forms
                 frameRate = 25.0;
             }
 
-            long ms = (long)Math.Round(1000 / frameRate);
+            long ms = (long)Math.Round(TimeCode.BaseUnit / frameRate);
             labelOneFrameIsXMS.Text = string.Format(Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.OneFrameXisYMilliseconds, frameRate, ms);
         }
 
