@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -71,16 +70,15 @@ namespace Nikse.SubtitleEdit.Controls
         private Paragraph _oldParagraph;
         private Paragraph _mouseDownParagraph;
         private MouseDownParagraphType _mouseDownParagraphType = MouseDownParagraphType.Start;
+        private List<Paragraph> _displayableParagraphs = new List<Paragraph>();
+        private IsSelectedHelper _isSelectedHelper = new IsSelectedHelper();
         private Paragraph _selectedParagraph;
-        private Paragraph _currentParagraph;
-        private List<Paragraph> _previousAndNextParagraphs = new List<Paragraph>();
         private Paragraph _prevParagraph;
         private Paragraph _nextParagraph;
         private bool _firstMove = true;
         private double _currentVideoPositionSeconds = -1;
         private WavePeakGenerator _wavePeaks;
         private Subtitle _subtitle;
-        private IEnumerable<int> _selectedIndices = Enumerable.Empty<int>();
         private bool _noClear;
         private double _gapAtStart = -1;
 
@@ -289,7 +287,6 @@ namespace Nikse.SubtitleEdit.Controls
             set
             {
                 _zoomFactor = 1.0;
-                _currentParagraph = null;
                 _selectedParagraph = null;
                 _buttonDownTimeTicks = 0;
                 _mouseMoveLastX = -1;
@@ -299,7 +296,6 @@ namespace Nikse.SubtitleEdit.Controls
                 _mouseDown = false;
                 _mouseDownParagraph = null;
                 _mouseDownParagraphType = MouseDownParagraphType.Start;
-                _previousAndNextParagraphs = new List<Paragraph>();
                 _currentVideoPositionSeconds = -1;
                 _subtitle = new Subtitle();
                 _noClear = false;
@@ -357,65 +353,53 @@ namespace Nikse.SubtitleEdit.Controls
             InsertAtVideoPositionShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
         }
 
-        private void NearestSubtitles(Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex)
+        private void LoadParagraphs(Subtitle subtitle, int primarySelectedIndex, ListView.SelectedIndexCollection selectedIndexes)
         {
-            _currentParagraph = null;
-            _previousAndNextParagraphs.Clear();
+            _subtitle.Paragraphs.Clear();
+            _displayableParagraphs.Clear();
+            _selectedParagraph = null;
+            _isSelectedHelper.Clear();
 
-            if (subtitle.Paragraphs.Count == 0)
+            if (_wavePeaks == null)
                 return;
 
-            // Locate the current paragraph, which is the paragraph ending soonest after the
-            // current video position, or if none such exist, the last paragraph. There's a
-            // good chance this will end up being the selected paragraph, so we'll check it
-            // first as an optimization.
-            bool isPositionInsideSelection = _selectedParagraph != null &&
-                _selectedParagraph.StartTime.TotalSeconds <= currentVideoPositionSeconds &&
-                _selectedParagraph.EndTime.TotalSeconds > currentVideoPositionSeconds;
-            int currentParagraphIndex = isPositionInsideSelection ? subtitleIndex :
-                subtitle.Paragraphs.FindIndex(p => p.EndTime.TotalSeconds > currentVideoPositionSeconds);
-            if (currentParagraphIndex == -1)
-                currentParagraphIndex = subtitle.Paragraphs.Count - 1;
+            const double additionalSeconds = 15.0; // Helps when scrolling
+            double startThresholdMilliseconds = (StartPositionSeconds - additionalSeconds) * TimeCode.BaseUnit;
+            double endThresholdMilliseconds = (EndPositionSeconds + additionalSeconds) * TimeCode.BaseUnit;
 
-            _currentParagraph = subtitle.Paragraphs[currentParagraphIndex];
-
-            // Locate the other paragraphs inside the visible time range. This assumes they're
-            // in sequential order and with no unusual overlapping situations. Since that may
-            // not always be true, we'll load up a minimum of 10 paragraphs on either side of
-            // the current one which will hopefully help at least at normal zoom settings.
-            int nextParagraphCount = 0;
-            for (int i = currentParagraphIndex + 1; i < subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                if (nextParagraphCount >= 10 && p.StartTime.TotalSeconds >= EndPositionSeconds)
-                    break;
-                _previousAndNextParagraphs.Add(p);
-                nextParagraphCount++;
+
+                if (p.StartTime.IsMaxTime)
+                    continue;
+
+                _subtitle.Paragraphs.Add(p);
+
+                if (p.EndTime.TotalMilliseconds >= startThresholdMilliseconds && p.StartTime.TotalMilliseconds <= endThresholdMilliseconds)
+                    _displayableParagraphs.Add(p);
             }
-            int previousParagraphCount = 0;
-            for (int i = currentParagraphIndex - 1; i >= 0; i--)
+
+            Action<int, bool> addSelection = (index, isPrimary) =>
             {
-                Paragraph p = subtitle.Paragraphs[i];
-                if (previousParagraphCount >= 10 && p.EndTime.TotalSeconds <= StartPositionSeconds)
-                    break;
-                _previousAndNextParagraphs.Add(p);
-                previousParagraphCount++;
-            }
+                Paragraph p = subtitle.GetParagraphOrDefault(index);
+                if (p == null || p.StartTime.IsMaxTime)
+                    return;
+                if (isPrimary)
+                    _selectedParagraph = p;
+                _isSelectedHelper.Add(SecondsToXPositionNoZoom(p.StartTime.TotalSeconds), SecondsToXPositionNoZoom(p.EndTime.TotalSeconds));
+            };
+
+            addSelection(primarySelectedIndex, true);
+            foreach (int selectedIndex in selectedIndexes)
+                addSelection(selectedIndex, false);
         }
 
         public void SetPosition(double startPositionSeconds, Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex, ListView.SelectedIndexCollection selectedIndexes)
         {
             StartPositionSeconds = startPositionSeconds;
-            _selectedIndices = selectedIndexes.Cast<int>();
-            _subtitle.Paragraphs.Clear();
-            foreach (var p in subtitle.Paragraphs)
-            {
-                if (!p.StartTime.IsMaxTime)
-                    _subtitle.Paragraphs.Add(p);
-            }
             _currentVideoPositionSeconds = currentVideoPositionSeconds;
-            _selectedParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex);
-            NearestSubtitles(subtitle, currentVideoPositionSeconds, subtitleIndex);
+            LoadParagraphs(subtitle, subtitleIndex, selectedIndexes);
             Invalidate();
         }
 
@@ -432,20 +416,15 @@ namespace Nikse.SubtitleEdit.Controls
             private int _lastPosition = int.MaxValue;
             private SelectionRange _nextSelection;
 
-            public IsSelectedHelper(IList<Paragraph> paragraphs, IEnumerable<int> selectedIndices, Paragraph additionalSelectedParagraph, Func<double, int> secondsToPosition)
+            public void Add(int start, int end)
             {
-                // I'm not sure why there's a try/catch, I copied it from the original code. It
-                // seems unnecessary but perhaps there's a thread safety issue.
-                try
-                {
-                    foreach (int index in selectedIndices)
-                        AddParagraph(paragraphs[index], secondsToPosition);
-                }
-                catch
-                {
-                }
+                _ranges.Add(new SelectionRange(start, end));
+            }
 
-                AddParagraph(additionalSelectedParagraph, secondsToPosition);
+            public void Clear()
+            {
+                _ranges.Clear();
+                _lastPosition = int.MaxValue;
             }
 
             public bool IsSelected(int position)
@@ -466,14 +445,6 @@ namespace Nikse.SubtitleEdit.Controls
                     if (range.End >= position && (range.Start < _nextSelection.Start || (range.Start == _nextSelection.Start && range.End > _nextSelection.End)))
                         _nextSelection = range;
                 }
-            }
-
-            private void AddParagraph(Paragraph p, Func<double, int> secondsToPosition)
-            {
-                if (p == null)
-                    return;
-
-                _ranges.Add(new SelectionRange(secondsToPosition(p.StartTime.TotalSeconds), secondsToPosition(p.EndTime.TotalSeconds)));
             }
 
             private struct SelectionRange
@@ -520,7 +491,6 @@ namespace Nikse.SubtitleEdit.Controls
                     using (var penSelected = new Pen(SelectedColor)) // selected paragraph
                     {
                         var pen = penNormal;
-                        var isSelectedHelper = new IsSelectedHelper(_subtitle.Paragraphs, _selectedIndices, _selectedParagraph, SecondsToXPositionNoZoom);
                         int maxHeight = (int)(Math.Max(Math.Abs(_wavePeaks.DataMinValue), Math.Abs(_wavePeaks.DataMaxValue)) / VerticalZoomFactor);
                         int start = SecondsToXPositionNoZoom(StartPositionSeconds);
                         float xPrev = 0;
@@ -535,7 +505,7 @@ namespace Nikse.SubtitleEdit.Controls
                             graphics.DrawLine(pen, xPrev, yPrev, x, y);
                             xPrev = x;
                             yPrev = y;
-                            pen = isSelectedHelper.IsSelected(n) ? penSelected : penNormal;
+                            pen = _isSelectedHelper.IsSelected(n) ? penSelected : penNormal;
                         }
                     }
                 }
@@ -576,11 +546,9 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 // paragraphs
-                using (var textBrush = new SolidBrush(TextColor))
+                foreach (Paragraph p in _displayableParagraphs)
                 {
-                    DrawParagraph(_currentParagraph, graphics, textBrush);
-                    foreach (Paragraph p in _previousAndNextParagraphs)
-                        DrawParagraph(p, graphics, textBrush);
+                    DrawParagraph(p, graphics);
                 }
 
                 // current selection
@@ -663,18 +631,20 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                double interval = 0.1 * _wavePeaks.Header.SampleRate * _zoomFactor; // pixels that is 0.1 second
-                if (ZoomFactor < 0.4)
-                    interval = 1.0 * _wavePeaks.Header.SampleRate * _zoomFactor; // pixels that is 1 second
-                int start = SecondsToXPosition(StartPositionSeconds) % ((int)Math.Round(interval));
+                double interval = ZoomFactor >= 0.4 ?
+                    0.1 * _wavePeaks.Header.SampleRate * _zoomFactor : // a pixel is 0.1 second
+                    1.0 * _wavePeaks.Header.SampleRate * _zoomFactor;  // a pixel is 1.0 second
                 using (var pen = new Pen(new SolidBrush(GridColor)))
                 {
-                    for (double i = start; i < Width; i += interval)
+                    for (double i = SecondsToXPosition(StartPositionSeconds) % ((int)Math.Round(interval)); i < Width; i += interval)
                     {
                         var j = (int)Math.Round(i);
                         graphics.DrawLine(pen, j, 0, j, imageHeight);
-                        if (j < imageHeight)
-                            graphics.DrawLine(pen, 0, j, Width, j);
+                    }
+                    for (double i = 0; i < imageHeight; i += interval)
+                    {
+                        var j = (int)Math.Round(i);
+                        graphics.DrawLine(pen, 0, j, Width, j);
                     }
                 }
             }
@@ -723,7 +693,7 @@ namespace Nikse.SubtitleEdit.Controls
             return string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
         }
 
-        private void DrawParagraph(Paragraph paragraph, Graphics graphics, SolidBrush textBrush)
+        private void DrawParagraph(Paragraph paragraph, Graphics graphics)
         {
             if (paragraph == null)
             {
@@ -734,6 +704,7 @@ namespace Nikse.SubtitleEdit.Controls
             int currentRegionRight = SecondsToXPosition(paragraph.EndTime.TotalSeconds - StartPositionSeconds);
             int currentRegionWidth = currentRegionRight - currentRegionLeft;
             var drawingStyle = TextBold ? FontStyle.Bold : FontStyle.Regular;
+            using (var textBrush = new SolidBrush(TextColor))
             using (var brush = new SolidBrush(Color.FromArgb(42, 255, 255, 255))) // back color for paragraphs
             {
                 graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, graphics.VisibleClipBounds.Height);
@@ -848,8 +819,7 @@ namespace Nikse.SubtitleEdit.Controls
                     SetMinMaxViaSeconds(seconds);
                 }
                 else if (SetParagrapBorderHit(milliseconds, _selectedParagraph) ||
-                    SetParagrapBorderHit(milliseconds, _currentParagraph) ||
-                    SetParagrapBorderHit(milliseconds, _previousAndNextParagraphs))
+                    SetParagrapBorderHit(milliseconds, _displayableParagraphs))
                 {
                     if (_mouseDownParagraph != null)
                         oldMouseDownParagraph = new Paragraph(_mouseDownParagraph);
@@ -1088,12 +1058,10 @@ namespace Nikse.SubtitleEdit.Controls
             Paragraph p = null;
             if (IsParagrapHit(milliseconds, _selectedParagraph))
                 p = _selectedParagraph;
-            else if (IsParagrapHit(milliseconds, _currentParagraph))
-                p = _currentParagraph;
 
             if (p == null)
             {
-                foreach (Paragraph pNext in _previousAndNextParagraphs)
+                foreach (Paragraph pNext in _displayableParagraphs)
                 {
                     if (IsParagrapHit(milliseconds, pNext))
                     {
@@ -1197,8 +1165,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (IsParagrapBorderHit(milliseconds, NewSelectionParagraph))
                     Cursor = Cursors.VSplit;
                 else if (IsParagrapBorderHit(milliseconds, _selectedParagraph) ||
-                         IsParagrapBorderHit(milliseconds, _currentParagraph) ||
-                         IsParagrapBorderHit(milliseconds, _previousAndNextParagraphs))
+                         IsParagrapBorderHit(milliseconds, _displayableParagraphs))
                 {
                     Cursor = Cursors.VSplit;
                 }
