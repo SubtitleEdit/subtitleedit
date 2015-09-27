@@ -2640,7 +2640,7 @@
             this.audioVisualizer.BackColor = System.Drawing.Color.Black;
             this.audioVisualizer.BackgroundColor = System.Drawing.Color.Black;
             this.audioVisualizer.Color = System.Drawing.Color.GreenYellow;
-            this.audioVisualizer.DrawGridLines = true;
+            this.audioVisualizer.ShowGridLines = true;
             this.audioVisualizer.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
             this.audioVisualizer.Location = new System.Drawing.Point(472, 32);
             this.audioVisualizer.Margin = new System.Windows.Forms.Padding(0);
