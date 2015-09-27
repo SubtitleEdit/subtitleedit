@@ -943,7 +943,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Ausgewählte Texte als Dialog verbinden</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Mit vorherigen Text verbinden</MergeWithLineBefore>
         <MergeWithLineAfter>Mit folgenden Text verbinden</MergeWithLineAfter>
-        <Normal>Normal</Normal>
+        <Normal>Normal (Formatierung entfernen)</Normal>
         <Underline>Unterstrichen</Underline>
         <Color>Farbe...</Color>
         <FontName>Schriftart...</FontName>
@@ -2070,6 +2070,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Title>Untersuche Vergleichstreffer für aktuelles Bild</Title>
     <InspectItems>Untersuche Text</InspectItems>
     <AddBetterMatch>Besseren Treffer hinzufügen</AddBetterMatch>
+    <Add>Hinzufügen</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Neuer Ordner</Title>
