@@ -944,7 +944,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Fusionner - style dialogue</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Fusionner ligne précédente</MergeWithLineBefore>
         <MergeWithLineAfter>Fusionner ligne suivante</MergeWithLineAfter>
-        <Normal>Normal</Normal>
+        <Normal>Normal (supprimer les balises de mise en forme)</Normal>
         <Underline>Souligner</Underline>
         <Color>Couleur...</Color>
         <FontName>Police...</FontName>
@@ -2075,6 +2075,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <Title>Comparer les correspondances avec l'image actuelle...</Title>
     <InspectItems>Inspecter éléments</InspectItems>
     <AddBetterMatch>Ajouter une meilleure correspondance</AddBetterMatch>
+    <Add>Ajouter</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nouvelle Base de données</Title>
