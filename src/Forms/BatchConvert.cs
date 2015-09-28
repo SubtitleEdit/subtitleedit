@@ -847,11 +847,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (comboBoxFilter.SelectedIndex == 2)
             {
+                skip = true;
                 foreach (Paragraph p in sub.Paragraphs)
                 {
                     if (p.Text != null && Utilities.GetNumberOfLines(p.Text) > 2)
                     {
-                        skip = true;
+                        skip = false;
                         break;
                     }
                 }
