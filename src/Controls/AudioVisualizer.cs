@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Controls
         private Paragraph _mouseDownParagraph;
         private MouseDownParagraphType _mouseDownParagraphType = MouseDownParagraphType.Start;
         private List<Paragraph> _displayableParagraphs = new List<Paragraph>();
-        private IsSelectedHelper _isSelectedHelper = new IsSelectedHelper();
+        private List<Paragraph> _allSelectedParagraphs = new List<Paragraph>();
         private Paragraph _selectedParagraph;
         private Paragraph _prevParagraph;
         private Paragraph _nextParagraph;
@@ -359,7 +359,7 @@ namespace Nikse.SubtitleEdit.Controls
             _subtitle.Paragraphs.Clear();
             _displayableParagraphs.Clear();
             _selectedParagraph = null;
-            _isSelectedHelper.Clear();
+            _allSelectedParagraphs.Clear();
 
             if (_wavePeaks == null)
                 return;
@@ -388,7 +388,7 @@ namespace Nikse.SubtitleEdit.Controls
                     return;
                 if (isPrimary)
                     _selectedParagraph = p;
-                _isSelectedHelper.Add(SecondsToXPositionNoZoom(p.StartTime.TotalSeconds), SecondsToXPositionNoZoom(p.EndTime.TotalSeconds));
+                _allSelectedParagraphs.Add(p);
             };
 
             addSelection(primarySelectedIndex, true);
@@ -417,15 +417,10 @@ namespace Nikse.SubtitleEdit.Controls
             private int _lastPosition = int.MaxValue;
             private SelectionRange _nextSelection;
 
-            public void Add(int start, int end)
+            public IsSelectedHelper(IEnumerable<Paragraph> paragraphs, Func<double, int> secondsToPosition)
             {
-                _ranges.Add(new SelectionRange(start, end));
-            }
-
-            public void Clear()
-            {
-                _ranges.Clear();
-                _lastPosition = int.MaxValue;
+                foreach (Paragraph p in paragraphs)
+                    _ranges.Add(new SelectionRange(secondsToPosition(p.StartTime.TotalSeconds), secondsToPosition(p.EndTime.TotalSeconds)));
             }
 
             public bool IsSelected(int position)
@@ -492,6 +487,7 @@ namespace Nikse.SubtitleEdit.Controls
                     using (var penSelected = new Pen(SelectedColor)) // selected paragraph
                     {
                         var pen = penNormal;
+                        var isSelectedHelper = new IsSelectedHelper(_allSelectedParagraphs, SecondsToXPositionNoZoom);
                         int maxHeight = (int)(Math.Max(Math.Abs(_wavePeaks.DataMinValue), Math.Abs(_wavePeaks.DataMaxValue)) / VerticalZoomFactor);
                         int start = SecondsToXPositionNoZoom(StartPositionSeconds);
                         float xPrev = 0;
@@ -506,7 +502,7 @@ namespace Nikse.SubtitleEdit.Controls
                             graphics.DrawLine(pen, xPrev, yPrev, x, y);
                             xPrev = x;
                             yPrev = y;
-                            pen = _isSelectedHelper.IsSelected(n) ? penSelected : penNormal;
+                            pen = isSelectedHelper.IsSelected(n) ? penSelected : penNormal;
                         }
                     }
                 }
