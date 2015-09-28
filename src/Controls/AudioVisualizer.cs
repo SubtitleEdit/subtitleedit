@@ -522,9 +522,7 @@ namespace Nikse.SubtitleEdit.Controls
                         if (pos > 0 && pos < Width)
                         {
                             using (var p = new Pen(Color.AntiqueWhite))
-                            {
                                 graphics.DrawLine(p, pos, 0, pos, Height);
-                            }
                         }
                     }
                 }
@@ -536,9 +534,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (pos > 0 && pos < Width)
                     {
                         using (var p = new Pen(Color.Turquoise))
-                        {
                             graphics.DrawLine(p, pos, 0, pos, Height);
-                        }
                     }
                 }
 
@@ -554,19 +550,15 @@ namespace Nikse.SubtitleEdit.Controls
                     int currentRegionLeft = SecondsToXPosition(NewSelectionParagraph.StartTime.TotalSeconds - StartPositionSeconds);
                     int currentRegionRight = SecondsToXPosition(NewSelectionParagraph.EndTime.TotalSeconds - StartPositionSeconds);
                     int currentRegionWidth = currentRegionRight - currentRegionLeft;
-                    using (var brush = new SolidBrush(Color.FromArgb(128, 255, 255, 255)))
+                    if (currentRegionLeft >= 0 && currentRegionLeft <= Width)
                     {
-                        if (currentRegionLeft >= 0 && currentRegionLeft <= Width)
-                        {
+                        using (var brush = new SolidBrush(Color.FromArgb(128, 255, 255, 255)))
                             graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, graphics.VisibleClipBounds.Height);
 
-                            if (currentRegionWidth > 40)
-                            {
-                                using (var tBrush = new SolidBrush(Color.Turquoise))
-                                {
-                                    graphics.DrawString(string.Format("{0:0.###} {1}", ((double)currentRegionWidth / _wavePeaks.Header.SampleRate / _zoomFactor), Configuration.Settings.Language.Waveform.Seconds), Font, tBrush, new PointF(currentRegionLeft + 3, Height - 32));
-                                }
-                            }
+                        if (currentRegionWidth > 40)
+                        {
+                            using (var brush = new SolidBrush(Color.Turquoise))
+                                graphics.DrawString(string.Format("{0:0.###} {1}", ((double)currentRegionWidth / _wavePeaks.Header.SampleRate / _zoomFactor), Configuration.Settings.Language.Waveform.Seconds), Font, brush, new PointF(currentRegionLeft + 3, Height - 32));
                         }
                     }
                 }
@@ -581,30 +573,23 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 using (var textBrush = new SolidBrush(TextColor))
+                using (var textFont = new Font(Font.FontFamily, 8))
                 {
-                    using (var textFont = new Font(Font.FontFamily, 8))
+                    if (Width > 90)
                     {
-                        if (Width > 90)
-                        {
-                            graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(Width / 2 - 65, Height / 2 - 10));
-                        }
-                        else
-                        {
-                            using (var stringFormat = new StringFormat())
-                            {
-                                stringFormat.FormatFlags = StringFormatFlags.DirectionVertical;
-                                graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(1, 10), stringFormat);
-                            }
-                        }
+                        graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(Width / 2 - 65, Height / 2 - 10));
+                    }
+                    else
+                    {
+                        using (var stringFormat = new StringFormat(StringFormatFlags.DirectionVertical))
+                            graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(1, 10), stringFormat);
                     }
                 }
             }
             if (Focused)
             {
                 using (var p = new Pen(SelectedColor))
-                {
                     graphics.DrawRectangle(p, new Rectangle(0, 0, Width - 1, Height - 1));
-                }
             }
         }
 
@@ -652,30 +637,26 @@ namespace Nikse.SubtitleEdit.Controls
             double seconds = Math.Ceiling(StartPositionSeconds) - StartPositionSeconds;
             float position = SecondsToXPosition(seconds);
             using (var pen = new Pen(TextColor))
+            using (var textBrush = new SolidBrush(TextColor))
+            using (var textFont = new Font(Font.FontFamily, 7))
             {
-                using (var textBrush = new SolidBrush(TextColor))
+                while (position < Width)
                 {
-                    using (var textFont = new Font(Font.FontFamily, 7))
+                    var n = _zoomFactor * _wavePeaks.Header.SampleRate;
+                    if (n > 38 || (int)Math.Round(StartPositionSeconds + seconds) % 5 == 0)
                     {
-                        while (position < Width)
-                        {
-                            var n = _zoomFactor * _wavePeaks.Header.SampleRate;
-                            if (n > 38 || (int)Math.Round(StartPositionSeconds + seconds) % 5 == 0)
-                            {
-                                graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 10);
-                                graphics.DrawString(GetDisplayTime(StartPositionSeconds + seconds), textFont, textBrush, new PointF(position + 2, imageHeight - 13));
-                            }
-
-                            seconds += 0.5;
-                            position = SecondsToXPosition(seconds);
-
-                            if (n > 64)
-                                graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 5);
-
-                            seconds += 0.5;
-                            position = SecondsToXPosition(seconds);
-                        }
+                        graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 10);
+                        graphics.DrawString(GetDisplayTime(StartPositionSeconds + seconds), textFont, textBrush, new PointF(position + 2, imageHeight - 13));
                     }
+
+                    seconds += 0.5;
+                    position = SecondsToXPosition(seconds);
+
+                    if (n > 64)
+                        graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 5);
+
+                    seconds += 0.5;
+                    position = SecondsToXPosition(seconds);
                 }
             }
         }
