@@ -1524,6 +1524,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void WaveformKeyDown(object sender, KeyEventArgs e)
         {
+            if (_wavePeaks == null)
+                return;
+
             if (e.Modifiers == Keys.None && e.KeyCode == Keys.Add)
             {
                 ZoomIn();
