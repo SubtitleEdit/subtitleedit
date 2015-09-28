@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
@@ -696,73 +697,62 @@ namespace Nikse.SubtitleEdit.Controls
         private void DrawParagraph(Paragraph paragraph, Graphics graphics)
         {
             if (paragraph == null)
-            {
                 return;
-            }
 
             int currentRegionLeft = SecondsToXPosition(paragraph.StartTime.TotalSeconds - StartPositionSeconds);
             int currentRegionRight = SecondsToXPosition(paragraph.EndTime.TotalSeconds - StartPositionSeconds);
             int currentRegionWidth = currentRegionRight - currentRegionLeft;
-            var drawingStyle = TextBold ? FontStyle.Bold : FontStyle.Regular;
-            using (var textBrush = new SolidBrush(TextColor))
-            using (var brush = new SolidBrush(Color.FromArgb(42, 255, 255, 255))) // back color for paragraphs
-            {
+
+            // background
+            using (var brush = new SolidBrush(Color.FromArgb(42, 255, 255, 255)))
                 graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, graphics.VisibleClipBounds.Height);
 
-                var pen = new Pen(new SolidBrush(Color.FromArgb(175, 0, 100, 0))) { DashStyle = System.Drawing.Drawing2D.DashStyle.Solid, Width = 2 };
+            // left edge
+            using (var pen = new Pen(new SolidBrush(Color.FromArgb(175, 0, 100, 0))) { DashStyle = DashStyle.Solid, Width = 2 })
                 graphics.DrawLine(pen, currentRegionLeft, 0, currentRegionLeft, graphics.VisibleClipBounds.Height);
-                pen.Dispose();
-                pen = new Pen(new SolidBrush(Color.FromArgb(175, 110, 10, 10))) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash, Width = 2 };
+
+            // right edge
+            using (var pen = new Pen(new SolidBrush(Color.FromArgb(175, 110, 10, 10))) { DashStyle = DashStyle.Dash, Width = 2 })
                 graphics.DrawLine(pen, currentRegionRight - 1, 0, currentRegionRight - 1, graphics.VisibleClipBounds.Height);
 
-                string durationStr = paragraph.Duration.ToShortDisplayString();
-                var n = _zoomFactor * _wavePeaks.Header.SampleRate;
+            using (var font = new Font(Configuration.Settings.General.SubtitleFontName, TextSize, TextBold ? FontStyle.Bold : FontStyle.Regular))
+            using (var textBrush = new SolidBrush(TextColor))
+            using (var outlineBrush = new SolidBrush(Color.Black))
+            {
+                Action<string, int, int> drawStringOutlined = (text, x, y) =>
+                {
+                    // poor mans outline + text
+                    graphics.DrawString(text, font, outlineBrush, new PointF(x, y - 1));
+                    graphics.DrawString(text, font, outlineBrush, new PointF(x, y + 1));
+                    graphics.DrawString(text, font, outlineBrush, new PointF(x - 1, y));
+                    graphics.DrawString(text, font, outlineBrush, new PointF(x + 1, y));
+                    graphics.DrawString(text, font, textBrush, new PointF(x, y));
+                };
+
+                const int padding = 3;
+                double n = _zoomFactor * _wavePeaks.Header.SampleRate;
+
+                // paragraph text
                 if (n > 80)
                 {
-                    using (var font = new Font(Configuration.Settings.General.SubtitleFontName, TextSize, drawingStyle))
-                    using (var blackBrush = new SolidBrush(Color.Black))
+                    string text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, "  ");
+                    int removeLength = 1;
+                    while (text.Length > removeLength && graphics.MeasureString(text, font).Width > currentRegionWidth - padding - 1)
                     {
-                        var text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
-                        text = text.Replace(Environment.NewLine, "  ");
-
-                        int actualWidth = (int)graphics.MeasureString(text, font).Width;
-                        bool shortned = false;
-                        while (actualWidth > currentRegionWidth - 12 && text.Length > 1)
-                        {
-                            text = text.Remove(text.Length - 1);
-                            actualWidth = (int)graphics.MeasureString(text, font).Width;
-                            shortned = true;
-                        }
-                        if (shortned)
-                        {
-                            text = text.TrimEnd() + "…";
-                        }
-
-                        // poor mans outline + text
-                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, 11 - 7));
-                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, 9 - 7));
-                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, 10 - 7));
-                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 4, 10 - 7));
-                        graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, 10 - 7));
-
-                        text = "#" + paragraph.Number + "  " + durationStr;
-                        actualWidth = (int)graphics.MeasureString(text, font).Width;
-                        if (actualWidth >= currentRegionWidth)
-                            text = durationStr;
-                        int top = Height - 14 - (int)graphics.MeasureString("#", font).Height;
-                        // poor mans outline + text
-                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top + 1));
-                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top - 1));
-                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, top));
-                        graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 4, top));
-                        graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, top));
+                        text = text.Remove(text.Length - removeLength).TrimEnd() + "…";
+                        removeLength = 2;
                     }
+                    drawStringOutlined(text, currentRegionLeft + padding, padding);
                 }
-                else if (n > 51)
-                    graphics.DrawString("#" + paragraph.Number + "  " + durationStr, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
-                else if (n > 25)
-                    graphics.DrawString("#" + paragraph.Number, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
-                pen.Dispose();
+
+                // paragraph number
+                if (n > 25)
+                {
+                    string text = "#" + paragraph.Number + "  " + paragraph.Duration.ToShortDisplayString();
+                    if (n <= 51 || graphics.MeasureString(text, font).Width >= currentRegionWidth - padding - 1)
+                        text = "#" + paragraph.Number;
+                    drawStringOutlined(text, currentRegionLeft + padding, Height - 14 - (int)graphics.MeasureString("#", font).Height);
+                }
             }
         }
 
