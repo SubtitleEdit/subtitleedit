@@ -696,7 +696,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void DrawParagraph(Paragraph paragraph, Graphics graphics)
         {
-            if (paragraph == null)
+            if (paragraph == null || paragraph.EndTime.TotalSeconds < StartPositionSeconds || paragraph.StartTime.TotalSeconds > EndPositionSeconds)
                 return;
 
             int currentRegionLeft = SecondsToXPosition(paragraph.StartTime.TotalSeconds - StartPositionSeconds);
