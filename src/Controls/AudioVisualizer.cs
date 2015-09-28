@@ -541,7 +541,10 @@ namespace Nikse.SubtitleEdit.Controls
                 // paragraphs
                 foreach (Paragraph p in _displayableParagraphs)
                 {
-                    DrawParagraph(p, graphics);
+                    if (p.EndTime.TotalSeconds >= StartPositionSeconds && p.StartTime.TotalSeconds <= EndPositionSeconds)
+                    {
+                        DrawParagraph(p, graphics);
+                    }
                 }
 
                 // current selection
@@ -550,7 +553,7 @@ namespace Nikse.SubtitleEdit.Controls
                     int currentRegionLeft = SecondsToXPosition(NewSelectionParagraph.StartTime.TotalSeconds - StartPositionSeconds);
                     int currentRegionRight = SecondsToXPosition(NewSelectionParagraph.EndTime.TotalSeconds - StartPositionSeconds);
                     int currentRegionWidth = currentRegionRight - currentRegionLeft;
-                    if (currentRegionLeft >= 0 && currentRegionLeft <= Width)
+                    if (currentRegionRight >= 0 && currentRegionLeft <= Width)
                     {
                         using (var brush = new SolidBrush(Color.FromArgb(128, 255, 255, 255)))
                             graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, graphics.VisibleClipBounds.Height);
@@ -673,9 +676,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void DrawParagraph(Paragraph paragraph, Graphics graphics)
         {
-            if (paragraph == null || paragraph.EndTime.TotalSeconds < StartPositionSeconds || paragraph.StartTime.TotalSeconds > EndPositionSeconds)
-                return;
-
             int currentRegionLeft = SecondsToXPosition(paragraph.StartTime.TotalSeconds - StartPositionSeconds);
             int currentRegionRight = SecondsToXPosition(paragraph.EndTime.TotalSeconds - StartPositionSeconds);
             int currentRegionWidth = currentRegionRight - currentRegionLeft;
