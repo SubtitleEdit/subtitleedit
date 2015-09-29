@@ -1072,7 +1072,7 @@ namespace Nikse.SubtitleEdit.Core
         public static readonly string[] AutoDetectWordsDutch = { "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n" };
         public static readonly string[] AutoDetectWordsPolish = { "Czy", "ale", "ty", "siê", "jest", "mnie" };
         public static readonly string[] AutoDetectWordsItalian = { "Cosa", "sono", "Grazie", "Buongiorno", "bene", "questo", "ragazzi", "propriamente", "numero", "hanno", "giorno", "faccio", "davvero", "negativo", "essere", "vuole", "sensitivo", "venire" };
-        public static readonly string[] AutoDetectWordsPortuguese = { "não", "Não", "Estás", "Então", "isso", "com" };
+        public static readonly string[] AutoDetectWordsPortuguese = { "[Nn]ão", "Então", "Estás", "isso", "com" };
         public static readonly string[] AutoDetectWordsGreek = { "μου", "είναι", "Είναι", "αυτό", "Τόμπυ", "καλά", "Ενταξει", "Ενταξει", "πρεπει", "Λοιπον", "τιποτα", "ξερεις" };
         public static readonly string[] AutoDetectWordsRussian = { "все", "это", "как", "Воробей", "сюда", "Давай" };
         public static readonly string[] AutoDetectWordsBulgarian = { "Какво", "тук", "може", "Как", "Ваше", "какво" };
@@ -1128,19 +1128,31 @@ namespace Nikse.SubtitleEdit.Core
             if (count > bestCount)
             {
                 int frenchCount = GetCount(text, "[Cc]'est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque"); // not spanish words
-                if (frenchCount < 2)
+                int portugueseCount = GetCount(text, "[NnCc]ão", "Então", "h?ouve", "pessoal", "rapariga", "tivesse", "fizeste",
+                                                     "jantar", "conheço", "atenção", "foste", "milhões", "devias", "ganhar", "raios"); // not spanish words
+                if (frenchCount < 2 && portugueseCount < 2)
                     return "es";
+            }
+
+            count = GetCount(text, AutoDetectWordsItalian);
+            if (count > bestCount)
+            {
+                int frenchCount = GetCount(text, "[Cc]'est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque"); // not italian words
+                if (frenchCount < 2)
+                    return "it";
             }
 
             count = GetCount(text, AutoDetectWordsFrench);
             if (count > bestCount)
             {
-                int spanishCount = GetCount(text, "Hola", "nada", "Vamos", "pasa", "los", "como"); // not french words
-                int italianCount = GetCount(text, AutoDetectWordsItalian);
-                int romanianCount = GetCount(text, "sînt", "aici", "Sînt", "domnule", "pentru", "Vreau");
-                if (spanishCount < 2 && italianCount < 2 && romanianCount < 5)
+                int romanianCount = GetCount(text, "[Ss]înt", "aici", "domnule", "pentru", "Vreau");
+                if (romanianCount < 5)
                     return "fr";
             }
+
+            count = GetCount(text, AutoDetectWordsPortuguese);
+            if (count > bestCount)
+                return "pt"; // Portuguese
 
             count = GetCount(text, AutoDetectWordsGerman);
             if (count > bestCount)
@@ -1153,19 +1165,6 @@ namespace Nikse.SubtitleEdit.Core
             count = GetCount(text, AutoDetectWordsPolish);
             if (count > bestCount)
                 return "pl";
-
-            count = GetCount(text, AutoDetectWordsItalian);
-            if (count > bestCount)
-            {
-                int frenchCount = GetCount(text, "[Cc]'est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque"); // not spanish words
-                int spanishCount = GetCount(text, "Hola", "nada", "Vamos", "pasa", "los", "como"); // not french words
-                if (frenchCount < 2 && spanishCount < 2)
-                    return "it";
-            }
-
-            count = GetCount(text, AutoDetectWordsPortuguese);
-            if (count > bestCount)
-                return "pt"; // Portuguese
 
             count = GetCount(text, AutoDetectWordsGreek);
             if (count > bestCount)
