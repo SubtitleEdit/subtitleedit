@@ -47,7 +47,7 @@ IF "%~1" == "" (
 :START
 PUSHD "src"
 
-CALL %VSVARS_BAT% x86
+CALL %VSVARS_BAT%
 TITLE %BUILDTYPE%ing SubtitleEdit - Release^|Any CPU...
 
 "MSBuild.exe" SubtitleEdit.sln /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="Any CPU"^
