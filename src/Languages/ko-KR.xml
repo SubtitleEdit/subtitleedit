@@ -940,7 +940,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <MergeSelectedLinesAsDialog>선택한 대화 라인 병합</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>이전 줄과 병합</MergeWithLineBefore>
         <MergeWithLineAfter>다음 줄과 병합</MergeWithLineAfter>
-        <Normal>기본</Normal>
+        <Normal>기본 (서식 태그 제거)</Normal>
         <Underline>밑줄</Underline>
         <Color>색상</Color>
         <FontName>글꼴</FontName>
