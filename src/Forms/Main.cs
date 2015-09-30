@@ -12678,12 +12678,11 @@ namespace Nikse.SubtitleEdit.Forms
                 string spectrogramFolder = GetSpectrogramFolder(fileName);
                 if (File.Exists(peakWaveFileName))
                 {
-                    audioVisualizer.WavePeaks = new WavePeakGenerator(peakWaveFileName);
+                    using (var peakGenerator = new WavePeakGenerator(peakWaveFileName))
+                        audioVisualizer.WavePeaks = peakGenerator.LoadPeaks();
                     audioVisualizer.ResetSpectrogram();
                     audioVisualizer.InitializeSpectrogram(spectrogramFolder);
                     toolStripComboBoxWaveform_SelectedIndexChanged(null, null);
-                    audioVisualizer.WavePeaks.GenerateAllSamples();
-                    audioVisualizer.WavePeaks.Close();
                     SetWaveformPosition(0, 0, 0);
                     timerWaveform.Start();
                 }
@@ -14818,19 +14817,16 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (IsFileValidForVisualizer(_videoFileName))
                     {
-                        addWaveform.InitializeViaWaveFile(_videoFileName, spectrogramFolder);
+                        addWaveform.InitializeViaWaveFile(_videoFileName, peakWaveFileName, spectrogramFolder);
                     }
                     else
                     {
-                        addWaveform.Initialize(_videoFileName, spectrogramFolder, _videoAudioTrackNumber);
+                        addWaveform.Initialize(_videoFileName, peakWaveFileName, spectrogramFolder, _videoAudioTrackNumber);
                     }
                     if (addWaveform.ShowDialog() == DialogResult.OK)
                     {
-                        addWaveform.WavePeak.WritePeakSamples(peakWaveFileName);
-                        var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
-                        audioPeakWave.GenerateAllSamples();
-                        audioPeakWave.Close();
-                        audioVisualizer.WavePeaks = audioPeakWave;
+                        using (var peakGenerator = new WavePeakGenerator(peakWaveFileName))
+                            audioVisualizer.WavePeaks = peakGenerator.LoadPeaks();
                         if (addWaveform.SpectrogramBitmaps != null)
                             audioVisualizer.InitializeSpectrogram(addWaveform.SpectrogramBitmaps, spectrogramFolder);
                         timerWaveform.Start();
@@ -15208,14 +15204,12 @@ namespace Nikse.SubtitleEdit.Forms
             using (var addWaveform = new AddWaveform())
             {
                 string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
-                addWaveform.InitializeViaWaveFile(fileName, spectrogramFolder);
+                string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
+                addWaveform.InitializeViaWaveFile(fileName, peakWaveFileName, spectrogramFolder);
                 if (addWaveform.ShowDialog() == DialogResult.OK)
                 {
-                    string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
-                    addWaveform.WavePeak.WritePeakSamples(peakWaveFileName);
-                    var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
-                    audioPeakWave.GenerateAllSamples();
-                    audioVisualizer.WavePeaks = audioPeakWave;
+                    using (var peakGenerator = new WavePeakGenerator(peakWaveFileName))
+                        audioVisualizer.WavePeaks = peakGenerator.LoadPeaks();
                     timerWaveform.Start();
                 }
             }
@@ -16539,7 +16533,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (mediaPlayer.VideoPlayer != null && audioVisualizer != null && audioVisualizer.WavePeaks != null && audioVisualizer.WavePeaks.AllSamples.Count > 0)
+            if (mediaPlayer.VideoPlayer != null && audioVisualizer != null && audioVisualizer.WavePeaks != null && audioVisualizer.WavePeaks.Peaks.Count > 0)
             {
                 toolStripMenuItemImportSceneChanges.Visible = true;
                 toolStripMenuItemRemoveSceneChanges.Visible = audioVisualizer.SceneChanges.Count > 0;

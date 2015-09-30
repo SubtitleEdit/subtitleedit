@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Controls
         private Paragraph _nextParagraph;
         private bool _firstMove = true;
         private double _currentVideoPositionSeconds = -1;
-        private WavePeakGenerator _wavePeaks;
+        private WavePeakData _wavePeaks;
         private Subtitle _subtitle;
         private bool _noClear;
         private double _gapAtStart = -1;
@@ -136,8 +136,8 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         public const double VerticalZoomMinimum = 1.0;
-        public const double VerticalZoomMaximum = 40.0;
-        private double _verticalZoomFactor = 2.0; // 1.0=no zoom
+        public const double VerticalZoomMaximum = 20.0;
+        private double _verticalZoomFactor = 1.0; // 1.0=no zoom
         public double VerticalZoomFactor
         {
             get
@@ -238,9 +238,9 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (_wavePeaks != null)
                 {
-                    double endPositionSeconds = value + ((double)Width / _wavePeaks.Header.SampleRate) / _zoomFactor;
-                    if (endPositionSeconds > _wavePeaks.Header.LengthInSeconds)
-                        value -= endPositionSeconds - _wavePeaks.Header.LengthInSeconds;
+                    double endPositionSeconds = value + ((double)Width / _wavePeaks.SampleRate) / _zoomFactor;
+                    if (endPositionSeconds > _wavePeaks.LengthInSeconds)
+                        value -= endPositionSeconds - _wavePeaks.LengthInSeconds;
                 }
                 if (value < 0)
                     value = 0;
@@ -279,7 +279,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public WavePeakGenerator WavePeaks
+        public WavePeakData WavePeaks
         {
             get
             {
@@ -404,23 +404,20 @@ namespace Nikse.SubtitleEdit.Controls
             Invalidate();
         }
 
-        private static int CalculateHeight(double value, int imageHeight, int maxHeight)
-        {
-            double percentage = value / maxHeight;
-            var result = (int)Math.Round((percentage / 2.0 + 0.5) * imageHeight);
-            return imageHeight - result;
-        }
-
         private class IsSelectedHelper
         {
             private readonly List<SelectionRange> _ranges = new List<SelectionRange>();
             private int _lastPosition = int.MaxValue;
             private SelectionRange _nextSelection;
 
-            public IsSelectedHelper(IEnumerable<Paragraph> paragraphs, Func<double, int> secondsToPosition)
+            public IsSelectedHelper(IEnumerable<Paragraph> paragraphs, int sampleRate)
             {
                 foreach (Paragraph p in paragraphs)
-                    _ranges.Add(new SelectionRange(secondsToPosition(p.StartTime.TotalSeconds), secondsToPosition(p.EndTime.TotalSeconds)));
+                {
+                    int start = (int)Math.Round(p.StartTime.TotalSeconds * sampleRate);
+                    int end = (int)Math.Round(p.EndTime.TotalSeconds * sampleRate);
+                    _ranges.Add(new SelectionRange(start, end));
+                }
             }
 
             public bool IsSelected(int position)
@@ -459,7 +456,7 @@ namespace Nikse.SubtitleEdit.Controls
         internal void WaveformPaint(object sender, PaintEventArgs e)
         {
             Graphics graphics = e.Graphics;
-            if (_wavePeaks != null && _wavePeaks.AllSamples != null)
+            if (_wavePeaks != null)
             {
                 bool showSpectrogram = IsSpectrogramAvailable && ShowSpectrogram;
                 bool showSpectrogramOnly = showSpectrogram && !ShowWaveform;
@@ -486,23 +483,35 @@ namespace Nikse.SubtitleEdit.Controls
                     using (var penNormal = new Pen(Color))
                     using (var penSelected = new Pen(SelectedColor)) // selected paragraph
                     {
-                        var pen = penNormal;
-                        var isSelectedHelper = new IsSelectedHelper(_allSelectedParagraphs, SecondsToXPositionNoZoom);
-                        int maxHeight = (int)(Math.Max(Math.Abs(_wavePeaks.DataMinValue), Math.Abs(_wavePeaks.DataMaxValue)) / VerticalZoomFactor);
-                        int start = SecondsToXPositionNoZoom(StartPositionSeconds);
-                        float xPrev = 0;
-                        int yPrev = Height / 2;
-                        float x = 0;
-                        int y;
-                        for (int i = 0; i < _wavePeaks.AllSamples.Count - start && x < Width; i++)
+                        var isSelectedHelper = new IsSelectedHelper(_allSelectedParagraphs, _wavePeaks.SampleRate);
+                        int baseHeight = (int)(_wavePeaks.HighestPeak / VerticalZoomFactor);
+                        int halfWaveformHeight = waveformHeight / 2;
+                        Func<float, float> calculateY = (value) =>
                         {
-                            int n = start + i;
-                            x = (float)(_zoomFactor * i);
-                            y = CalculateHeight(_wavePeaks.AllSamples[n], waveformHeight, maxHeight);
-                            graphics.DrawLine(pen, xPrev, yPrev, x, y);
-                            xPrev = x;
-                            yPrev = y;
-                            pen = isSelectedHelper.IsSelected(n) ? penSelected : penNormal;
+                            float offset = (value / baseHeight) * halfWaveformHeight;
+                            if (offset > halfWaveformHeight)
+                                offset = halfWaveformHeight;
+                            if (offset < -halfWaveformHeight)
+                                offset = -halfWaveformHeight;
+                            return halfWaveformHeight - offset;
+                        };
+                        for (int x = 0; x < Width; x++)
+                        {
+                            float pos = (float)XPositionToSeconds(x) * _wavePeaks.SampleRate;
+                            int pos0 = (int)pos;
+                            int pos1 = pos0 + 1;
+                            if (pos1 >= _wavePeaks.Peaks.Count)
+                                break;
+                            float pos1Weight = pos - pos0;
+                            float pos0Weight = 1 - pos1Weight;
+                            var peak0 = _wavePeaks.Peaks[pos0];
+                            var peak1 = _wavePeaks.Peaks[pos1];
+                            float max = peak0.Max * pos0Weight + peak1.Max * pos1Weight;
+                            float min = peak0.Min * pos0Weight + peak1.Min * pos1Weight;
+                            float yMax = calculateY(max);
+                            float yMin = Math.Max(calculateY(min), yMax + 0.1F);
+                            var pen = isSelectedHelper.IsSelected(pos0) ? penSelected : penNormal;
+                            graphics.DrawLine(pen, x, yMax, x, yMin);
                         }
                     }
                 }
@@ -561,7 +570,7 @@ namespace Nikse.SubtitleEdit.Controls
                         if (currentRegionWidth > 40)
                         {
                             using (var brush = new SolidBrush(Color.Turquoise))
-                                graphics.DrawString(string.Format("{0:0.###} {1}", ((double)currentRegionWidth / _wavePeaks.Header.SampleRate / _zoomFactor), Configuration.Settings.Language.Waveform.Seconds), Font, brush, new PointF(currentRegionLeft + 3, Height - 32));
+                                graphics.DrawString(string.Format("{0:0.###} {1}", ((double)currentRegionWidth / _wavePeaks.SampleRate / _zoomFactor), Configuration.Settings.Language.Waveform.Seconds), Font, brush, new PointF(currentRegionLeft + 3, Height - 32));
                         }
                     }
                 }
@@ -617,8 +626,8 @@ namespace Nikse.SubtitleEdit.Controls
             else
             {
                 double interval = ZoomFactor >= 0.4 ?
-                    0.1 * _wavePeaks.Header.SampleRate * _zoomFactor : // a pixel is 0.1 second
-                    1.0 * _wavePeaks.Header.SampleRate * _zoomFactor;  // a pixel is 1.0 second
+                    0.1 * _wavePeaks.SampleRate * _zoomFactor : // a pixel is 0.1 second
+                    1.0 * _wavePeaks.SampleRate * _zoomFactor;  // a pixel is 1.0 second
                 using (var pen = new Pen(new SolidBrush(GridColor)))
                 {
                     for (double i = SecondsToXPosition(StartPositionSeconds) % ((int)Math.Round(interval)); i < Width; i += interval)
@@ -645,7 +654,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 while (position < Width)
                 {
-                    var n = _zoomFactor * _wavePeaks.Header.SampleRate;
+                    var n = _zoomFactor * _wavePeaks.SampleRate;
                     if (n > 38 || (int)Math.Round(StartPositionSeconds + seconds) % 5 == 0)
                     {
                         graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 10);
@@ -707,7 +716,7 @@ namespace Nikse.SubtitleEdit.Controls
                 };
 
                 const int padding = 3;
-                double n = _zoomFactor * _wavePeaks.Header.SampleRate;
+                double n = _zoomFactor * _wavePeaks.SampleRate;
 
                 // paragraph text
                 if (n > 80)
@@ -735,17 +744,12 @@ namespace Nikse.SubtitleEdit.Controls
 
         private double XPositionToSeconds(double x)
         {
-            return StartPositionSeconds + (x / _wavePeaks.Header.SampleRate) / _zoomFactor;
+            return StartPositionSeconds + (x / _wavePeaks.SampleRate) / _zoomFactor;
         }
 
         private int SecondsToXPosition(double seconds)
         {
-            return (int)Math.Round(seconds * _wavePeaks.Header.SampleRate * _zoomFactor);
-        }
-
-        private int SecondsToXPositionNoZoom(double seconds)
-        {
-            return (int)Math.Round(seconds * _wavePeaks.Header.SampleRate);
+            return (int)Math.Round(seconds * _wavePeaks.SampleRate * _zoomFactor);
         }
 
         private void WaveformMouseDown(object sender, MouseEventArgs e)
@@ -1095,7 +1099,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (_mouseDownParagraph == null)
                     {
                         _mouseMoveEndX = 0;
-                        _mouseMoveStartX += (int)(_wavePeaks.Header.SampleRate * 0.1);
+                        _mouseMoveStartX += (int)(_wavePeaks.SampleRate * 0.1);
                         OnPositionSelected.Invoke(this, new ParagraphEventArgs(StartPositionSeconds, null));
                     }
                 }
@@ -1103,7 +1107,7 @@ namespace Nikse.SubtitleEdit.Controls
                 Invalidate();
                 return;
             }
-            if (e.X > Width && StartPositionSeconds + 0.1 < _wavePeaks.Header.LengthInSeconds && _mouseDown)
+            if (e.X > Width && StartPositionSeconds + 0.1 < _wavePeaks.LengthInSeconds && _mouseDown)
             {
                 //if (e.X > _mouseMoveLastX) // not much room for moving mouse cursor, so just scroll right
                 {
@@ -1111,7 +1115,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (_mouseDownParagraph == null)
                     {
                         _mouseMoveEndX = Width;
-                        _mouseMoveStartX -= (int)(_wavePeaks.Header.SampleRate * 0.1);
+                        _mouseMoveStartX -= (int)(_wavePeaks.SampleRate * 0.1);
                         OnPositionSelected.Invoke(this, new ParagraphEventArgs(StartPositionSeconds, null));
                     }
                 }
@@ -1375,7 +1379,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void WaveformMouseEnter(object sender, EventArgs e)
         {
-            if (_wavePeaks == null || _wavePeaks.Header == null)
+            if (_wavePeaks == null)
                 return;
 
             if (_noClear)
@@ -1547,7 +1551,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.X)
             {
-                if (StartPositionSeconds + 0.1 < _wavePeaks.Header.LengthInSeconds)
+                if (StartPositionSeconds + 0.1 < _wavePeaks.LengthInSeconds)
                 {
                     StartPositionSeconds += 0.1;
                     OnPositionSelected.Invoke(this, new ParagraphEventArgs(StartPositionSeconds, null));
@@ -1577,15 +1581,15 @@ namespace Nikse.SubtitleEdit.Controls
             int length = SecondsToXPosition(durationInSeconds);
 
             int hitCount = 0;
-            for (int i = begin; i < _wavePeaks.AllSamples.Count; i++)
+            for (int i = begin; i < _wavePeaks.Peaks.Count; i++)
             {
-                if (i > 0 && i < _wavePeaks.AllSamples.Count && Math.Abs(_wavePeaks.AllSamples[i]) <= threshold)
+                if (i > 0 && i < _wavePeaks.Peaks.Count && _wavePeaks.Peaks[i].Abs <= threshold)
                     hitCount++;
                 else
                     hitCount = 0;
                 if (hitCount > length)
                 {
-                    double seconds = ((i - (length / 2)) / (double)_wavePeaks.Header.SampleRate) / _zoomFactor;
+                    double seconds = ((i - (length / 2)) / (double)_wavePeaks.SampleRate) / _zoomFactor;
                     if (seconds >= 0)
                     {
                         StartPositionSeconds = seconds;
@@ -1608,13 +1612,13 @@ namespace Nikse.SubtitleEdit.Controls
             int hitCount = 0;
             for (int i = begin; i > 0; i--)
             {
-                if (i > 0 && i < _wavePeaks.AllSamples.Count && Math.Abs(_wavePeaks.AllSamples[i]) <= threshold)
+                if (i > 0 && i < _wavePeaks.Peaks.Count && _wavePeaks.Peaks[i].Abs <= threshold)
                     hitCount++;
                 else
                     hitCount = 0;
                 if (hitCount > length)
                 {
-                    double seconds = (i + (length / 2)) / (double)_wavePeaks.Header.SampleRate / _zoomFactor;
+                    double seconds = (i + (length / 2)) / (double)_wavePeaks.SampleRate / _zoomFactor;
                     if (seconds >= 0)
                     {
                         StartPositionSeconds = seconds;
@@ -1807,9 +1811,9 @@ namespace Nikse.SubtitleEdit.Controls
             int count = 0;
             for (int i = sampleIndex; i < sampleIndex + length; i++)
             {
-                if (i > 0 && i < _wavePeaks.AllSamples.Count)
+                if (i > 0 && i < _wavePeaks.Peaks.Count)
                 {
-                    v += Math.Abs(_wavePeaks.AllSamples[i]);
+                    v += _wavePeaks.Peaks[i].Abs;
                     count++;
                 }
             }
@@ -1823,11 +1827,11 @@ namespace Nikse.SubtitleEdit.Controls
             int begin = SecondsToXPosition(startFromSeconds);
 
             double average = 0;
-            for (int k = begin; k < _wavePeaks.AllSamples.Count; k++)
-                average += Math.Abs(_wavePeaks.AllSamples[k]);
-            average = average / (_wavePeaks.AllSamples.Count - begin);
+            for (int k = begin; k < _wavePeaks.Peaks.Count; k++)
+                average += _wavePeaks.Peaks[k].Abs;
+            average = average / (_wavePeaks.Peaks.Count - begin);
 
-            var maxThreshold = (int)(_wavePeaks.DataMaxValue * (maximumVolumePercent / 100.0));
+            var maxThreshold = (int)(_wavePeaks.HighestPeak * (maximumVolumePercent / 100.0));
             var silenceThreshold = (int)(average * (minimumVolumePercent / 100.0));
 
             int length50Ms = SecondsToXPosition(0.050);
@@ -1835,7 +1839,7 @@ namespace Nikse.SubtitleEdit.Controls
             int minBetween = SecondsToXPosition(Configuration.Settings.General.MinimumMillisecondsBetweenLines / TimeCode.BaseUnit);
             bool subtitleOn = false;
             int i = begin;
-            while (i < _wavePeaks.AllSamples.Count)
+            while (i < _wavePeaks.Peaks.Count)
             {
                 if (subtitleOn)
                 {
