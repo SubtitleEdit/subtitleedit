@@ -141,12 +141,13 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        internal static void WriteHeader(Stream toStream, int sampleRate, int numberOfChannels, int bitsPerSample, int dataSize)
+        internal static void WriteHeader(Stream toStream, int sampleRate, int numberOfChannels, int bitsPerSample, int sampleCount)
         {
             const int headerSize = 44;
             int bytesPerSample = (bitsPerSample + 7) / 8;
             int blockAlign = numberOfChannels * bytesPerSample;
             int byteRate = sampleRate * blockAlign;
+            int dataSize = sampleCount * bytesPerSample * numberOfChannels;
             byte[] header = new byte[headerSize];
             WriteStringToByteArray(header, 0, "RIFF");
             WriteInt32ToByteArray(header, 4, headerSize + dataSize - 8); // size of RIFF chunk's data
@@ -183,47 +184,69 @@ namespace Nikse.SubtitleEdit.Core
         }
     }
 
+    public struct WavePeak
+    {
+        public readonly short Max;
+        public readonly short Min;
+
+        public WavePeak(short max, short min)
+        {
+            Max = max;
+            Min = min;
+        }
+
+        public int Abs
+        {
+            get { return Math.Max(Math.Abs((int)Max), Math.Abs((int)Min)); }
+        }
+    }
+
+    public class WavePeakData
+    {
+        public WavePeakData(int sampleRate, IList<WavePeak> peaks)
+        {
+            SampleRate = sampleRate;
+            LengthInSeconds = (double)peaks.Count / sampleRate;
+            Peaks = peaks;
+            CalculateHighestPeak();
+        }
+
+        public int SampleRate { get; private set; }
+
+        public double LengthInSeconds { get; private set; }
+
+        public IList<WavePeak> Peaks { get; private set; }
+
+        public int HighestPeak { get; private set; }
+
+        private void CalculateHighestPeak()
+        {
+            HighestPeak = 0;
+            foreach (var peak in Peaks)
+            {
+                int abs = peak.Abs;
+                if (abs > HighestPeak)
+                    HighestPeak = abs;
+            }
+        }
+    }
+
     public class WavePeakGenerator : IDisposable
     {
         private Stream _stream;
-        private byte[] _data;
+        private WaveHeader _header;
 
-        private delegate int ReadSampleDataValueDelegate(ref int index);
+        private delegate int ReadSampleDataValue(byte[] data, ref int index);
 
-        public WaveHeader Header { get; private set; }
-
-        /// <summary>
-        /// Lowest data value
-        /// </summary>
-        public int DataMinValue { get; private set; }
-
-        /// <summary>
-        /// Highest data value
-        /// </summary>
-        public int DataMaxValue { get; private set; }
-
-        /// <summary>
-        /// Number of peaks per second (should be divideable by SampleRate)
-        /// </summary>
-        public int PeaksPerSecond { get; private set; }
-
-        /// <summary>
-        /// List of all peak samples (channels are merged)
-        /// </summary>
-        public List<int> PeakSamples { get; private set; }
-
-        /// <summary>
-        /// List of all samples (channels are merged)
-        /// </summary>
-        public List<int> AllSamples { get; private set; }
+        private delegate void WriteSampleDataValue(byte[] buffer, int offset, int value);
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="fileName">Wave file name</param>
         public WavePeakGenerator(string fileName)
+            : this(File.OpenRead(fileName))
         {
-            Initialize(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
         }
 
         /// <summary>
@@ -232,214 +255,250 @@ namespace Nikse.SubtitleEdit.Core
         /// <param name="stream">Stream of a wave file</param>
         public WavePeakGenerator(Stream stream)
         {
-            Initialize(stream);
+            _stream = stream;
+            _header = new WaveHeader(_stream);
         }
 
         /// <summary>
-        /// Returns true if the current wave file can be processed. Compressed wave files or 32-bit files are not supported
+        /// Returns true if the current wave file can be processed. Compressed wave files are not supported.
         /// </summary>
         public bool IsSupported
         {
             get
             {
-                return Header.AudioFormat == WaveHeader.AudioFormatPcm && Header.Format == "WAVE" && Header.BytesPerSample < 4;
+                return _header.AudioFormat == WaveHeader.AudioFormatPcm && _header.Format == "WAVE";
             }
         }
 
         /// <summary>
-        /// Generate peaks (samples with some interval) for an uncompressed wave file
+        /// Generates peaks and saves them to disk.
         /// </summary>
         /// <param name="delayInMilliseconds">Delay in milliseconds (normally zero)</param>
-        public void GeneratePeakSamples(int delayInMilliseconds)
+        /// <param name="peakFileName">Path of the output file</param>
+        public void GeneratePeaks(int delayInMilliseconds, string peakFileName)
         {
-            if (Header.BytesPerSample == 4)
+            int peaksPerSecond = Math.Min(Configuration.Settings.VideoControls.WaveformMinimumSampleRate, _header.SampleRate);
+
+            // ensure that peaks per second is a factor of the sample rate
+            while (_header.SampleRate % peaksPerSecond != 0)
+                peaksPerSecond++;
+
+            int delaySampleCount = (int)(_header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
+
+            // ignore negative delays for now (pretty sure it can't happen in mkv and some places pass in -1 by mistake)
+            delaySampleCount = Math.Max(delaySampleCount, 0);
+
+            var peaks = new List<WavePeak>();
+            var readSampleDataValue = GetSampleDataReader();
+            float sampleAndChannelScale = GetSampleAndChannelScale();
+            long fileSampleCount = _header.LengthInSamples;
+            long fileSampleOffset = -delaySampleCount;
+            int chunkSampleCount = _header.SampleRate / peaksPerSecond;
+            byte[] data = new byte[chunkSampleCount * _header.BlockAlign];
+            float[] chunkSamples = new float[chunkSampleCount];
+
+            _stream.Seek(_header.DataStartPosition, SeekOrigin.Begin);
+
+            // for negative delays, skip samples at the beginning
+            if (fileSampleOffset > 0)
             {
-                // Can't handle 32-bit samples due to the way the channel averaging is done
-                throw new Exception("32-bit samples are unsupported.");
+                _stream.Seek(fileSampleOffset * _header.BlockAlign, SeekOrigin.Current);
             }
 
-            PeaksPerSecond = Math.Min(Configuration.Settings.VideoControls.WaveformMinimumSampleRate, Header.SampleRate);
-
-            // Ensure that peaks per second is a factor of the sample rate
-            while (Header.SampleRate % PeaksPerSecond != 0)
-                PeaksPerSecond++;
-
-            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataReader();
-            DataMinValue = int.MaxValue;
-            DataMaxValue = int.MinValue;
-            PeakSamples = new List<int>();
-
-            if (delayInMilliseconds > 0)
+            while (fileSampleOffset < fileSampleCount)
             {
-                for (int i = 0; i < PeaksPerSecond * delayInMilliseconds / 1000; i++)
-                    PeakSamples.Add(0);
-            }
-
-            int bytesInterval = (int)Header.BytesPerSecond / PeaksPerSecond;
-            _data = new byte[Header.BytesPerSecond];
-            _stream.Position = Header.DataStartPosition;
-            int bytesRead = _stream.Read(_data, 0, _data.Length);
-            while (bytesRead > 0)
-            {
-                for (int i = 0; i < bytesRead; i += bytesInterval)
+                // calculate how many samples to skip at the beginning (for positive delays)
+                int startSkipSampleCount = 0;
+                if (fileSampleOffset < 0)
                 {
-                    int index = i;
-                    int value = 0;
-                    for (int channelNumber = 0; channelNumber < Header.NumberOfChannels; channelNumber++)
-                    {
-                        value += readSampleDataValue.Invoke(ref index);
-                    }
-                    value /= Header.NumberOfChannels;
-                    if (value < DataMinValue)
-                        DataMinValue = value;
-                    if (value > DataMaxValue)
-                        DataMaxValue = value;
-                    PeakSamples.Add(value);
+                    startSkipSampleCount = (int)Math.Min(-fileSampleOffset, chunkSampleCount);
+                    fileSampleOffset += startSkipSampleCount;
                 }
-                bytesRead = _stream.Read(_data, 0, _data.Length);
+
+                // calculate how many samples to read from the file
+                long fileSamplesRemaining = fileSampleCount - Math.Max(fileSampleOffset, 0);
+                int fileReadSampleCount = (int)Math.Min(fileSamplesRemaining, chunkSampleCount - startSkipSampleCount);
+
+                // read samples from the file
+                if (fileReadSampleCount > 0)
+                {
+                    int fileReadByteCount = fileReadSampleCount * _header.BlockAlign;
+                    _stream.Read(data, 0, fileReadByteCount);
+                    fileSampleOffset += fileReadSampleCount;
+
+                    int chunkSampleOffset = 0;
+                    int dataByteOffset = 0;
+                    while (dataByteOffset < fileReadByteCount)
+                    {
+                        float value = 0F;
+                        for (int iChannel = 0; iChannel < _header.NumberOfChannels; iChannel++)
+                        {
+                            value += readSampleDataValue(data, ref dataByteOffset);
+                        }
+                        chunkSamples[chunkSampleOffset] = value * sampleAndChannelScale;
+                        chunkSampleOffset += 1;
+                    }
+                }
+
+                // calculate peaks
+                peaks.Add(CalculatePeak(chunkSamples, fileReadSampleCount));
+            }
+
+            // save results to file
+            using (var stream = File.Create(peakFileName))
+            {
+                WaveHeader.WriteHeader(stream, peaksPerSecond, 2, 16, peaks.Count);
+                byte[] buffer = new byte[4];
+                foreach (var peak in peaks)
+                {
+                    WriteValue16Bit(buffer, 0, peak.Max);
+                    WriteValue16Bit(buffer, 2, peak.Min);
+                    stream.Write(buffer, 0, 4);
+                }
             }
         }
 
-        public void GenerateAllSamples()
+        private static WavePeak CalculatePeak(float[] chunk, int count)
         {
-            if (Header.BytesPerSample == 4)
-            {
-                // Can't handle 32-bit samples due to the way the channel averaging is done
-                throw new Exception("32-bit samples are unsupported.");
-            }
+            if (count == 0)
+                return new WavePeak();
 
-            // determine how to read sample values
-            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataReader();
+            float max = chunk[0];
+            float min = chunk[0];
+            for (int i = 1; i < count; i++)
+            {
+                float value = chunk[i];
+                if (value > max)
+                    max = value;
+                if (value < min)
+                    min = value;
+            }
+            return new WavePeak((short)(short.MaxValue * max), (short)(short.MaxValue * min));
+        }
+
+        /// <summary>
+        /// Loads previously generated peaks from disk.
+        /// </summary>
+        public WavePeakData LoadPeaks()
+        {
+            if (_header.BitsPerSample != 16)
+                throw new Exception("Peaks file must be 16 bits per sample.");
+
+            if (_header.NumberOfChannels != 1 && _header.NumberOfChannels != 2)
+                throw new Exception("Peaks file must have 1 or 2 channels.");
 
             // load data
-            _data = new byte[Header.DataChunkSize];
-            _stream.Position = Header.DataStartPosition;
-            _stream.Read(_data, 0, _data.Length);
+            byte[] data = new byte[_header.DataChunkSize];
+            _stream.Position = _header.DataStartPosition;
+            _stream.Read(data, 0, data.Length);
 
-            // read sample values
-            DataMinValue = int.MaxValue;
-            DataMaxValue = int.MinValue;
-            AllSamples = new List<int>();
-            int index = 0;
-            while (index < Header.DataChunkSize)
+            // read peak values
+            WavePeak[] peaks = new WavePeak[_header.LengthInSamples];
+            int peakIndex = 0;
+            if (_header.NumberOfChannels == 2)
             {
-                int value = 0;
-                for (int channelNumber = 0; channelNumber < Header.NumberOfChannels; channelNumber++)
+                // max value in left channel, min value in right channel
+                int byteIndex = 0;
+                while (byteIndex < data.Length)
                 {
-                    value += readSampleDataValue.Invoke(ref index);
+                    short max = (short)ReadValue16Bit(data, ref byteIndex);
+                    short min = (short)ReadValue16Bit(data, ref byteIndex);
+                    peaks[peakIndex++] = new WavePeak(max, min);
                 }
-                value /= Header.NumberOfChannels;
-                if (value < DataMinValue)
-                    DataMinValue = value;
-                if (value > DataMaxValue)
-                    DataMaxValue = value;
-                AllSamples.Add(value);
             }
-        }
-
-        public void WritePeakSamples(string fileName)
-        {
-            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            else if (_header.NumberOfChannels == 1)
             {
-                WritePeakSamples(fs);
+                // single sample value (for backwards compatibility)
+                int byteIndex = 0;
+                while (byteIndex < data.Length)
+                {
+                    short value = (short)ReadValue16Bit(data, ref byteIndex);
+                    if (value == short.MinValue)
+                        value = -short.MaxValue;
+                    value = Math.Abs(value);
+                    peaks[peakIndex++] = new WavePeak(value, (short)-value);
+                }
             }
+
+            return new WavePeakData(_header.SampleRate, peaks);
         }
 
-        public void WritePeakSamples(Stream stream)
+        private static int ReadValue8Bit(byte[] data, ref int index)
         {
-            WaveHeader.WriteHeader(stream, PeaksPerSecond, 1, Header.BytesPerSample * 8, PeakSamples.Count * Header.BytesPerSample);
-            WritePeakData(stream);
-            stream.Flush();
-        }
-
-        private void WritePeakData(Stream stream)
-        {
-            var writeSample = GetSampleDataWriter();
-            byte[] buffer = new byte[4];
-            int bytesPerSample = Header.BytesPerSample;
-            foreach (var value in PeakSamples)
-            {
-                writeSample(buffer, value);
-                stream.Write(buffer, 0, bytesPerSample);
-            }
-        }
-
-        private void Initialize(Stream stream)
-        {
-            _stream = stream;
-            Header = new WaveHeader(_stream);
-        }
-
-        private int ReadValue8Bit(ref int index)
-        {
-            int result = sbyte.MinValue + _data[index];
+            int result = sbyte.MinValue + data[index];
             index += 1;
             return result;
         }
 
-        private int ReadValue16Bit(ref int index)
+        private static int ReadValue16Bit(byte[] data, ref int index)
         {
             int result = (short)
-                ((_data[index    ]     ) |
-                 (_data[index + 1] << 8));
+                ((data[index    ]     ) |
+                 (data[index + 1] << 8));
             index += 2;
             return result;
         }
 
-        private int ReadValue24Bit(ref int index)
+        private static int ReadValue24Bit(byte[] data, ref int index)
         {
             int result =
-                ((_data[index    ] <<  8) |
-                 (_data[index + 1] << 16) |
-                 (_data[index + 2] << 24)) >> 8;
+                ((data[index    ] <<  8) |
+                 (data[index + 1] << 16) |
+                 (data[index + 2] << 24)) >> 8;
             index += 3;
             return result;
         }
 
-        private int ReadValue32Bit(ref int index)
+        private static int ReadValue32Bit(byte[] data, ref int index)
         {
             int result =
-                (_data[index    ]      ) |
-                (_data[index + 1] <<  8) |
-                (_data[index + 2] << 16) |
-                (_data[index + 3] << 24);
+                (data[index    ]      ) |
+                (data[index + 1] <<  8) |
+                (data[index + 2] << 16) |
+                (data[index + 3] << 24);
             index += 4;
             return result;
         }
 
-        private void WriteValue8Bit(byte[] buffer, int value)
+        private static void WriteValue8Bit(byte[] buffer, int offset, int value)
         {
-            buffer[0] = (byte)(value - sbyte.MinValue);
+            buffer[offset] = (byte)(value - sbyte.MinValue);
         }
 
-        private void WriteValue16Bit(byte[] buffer, int value)
+        private static void WriteValue16Bit(byte[] buffer, int offset, int value)
         {
-            buffer[0] = (byte)value;
-            buffer[1] = (byte)(value >> 8);
+            buffer[offset    ] = (byte)value;
+            buffer[offset + 1] = (byte)(value >> 8);
         }
 
-        private void WriteValue24Bit(byte[] buffer, int value)
+        private static void WriteValue24Bit(byte[] buffer, int offset, int value)
         {
-            buffer[0] = (byte)value;
-            buffer[1] = (byte)(value >> 8);
-            buffer[2] = (byte)(value >> 16);
+            buffer[offset    ] = (byte)value;
+            buffer[offset + 1] = (byte)(value >> 8);
+            buffer[offset + 2] = (byte)(value >> 16);
         }
 
-        private void WriteValue32Bit(byte[] buffer, int value)
+        private static void WriteValue32Bit(byte[] buffer, int offset, int value)
         {
-            buffer[0] = (byte)value;
-            buffer[1] = (byte)(value >> 8);
-            buffer[2] = (byte)(value >> 16);
-            buffer[3] = (byte)(value >> 24);
+            buffer[offset    ] = (byte)value;
+            buffer[offset + 1] = (byte)(value >> 8);
+            buffer[offset + 2] = (byte)(value >> 16);
+            buffer[offset + 3] = (byte)(value >> 24);
         }
 
-        /// <summary>
-        /// Determine how to read sample values
-        /// </summary>
-        /// <returns>Sample data reader that matches bits per sample</returns>
-        private ReadSampleDataValueDelegate GetSampleDataReader()
+        private float GetSampleScale()
         {
-            switch (Header.BytesPerSample)
+            return (float)(1.0 / Math.Pow(2.0, _header.BytesPerSample * 8 - 1));
+        }
+
+        private float GetSampleAndChannelScale()
+        {
+            return GetSampleScale() / _header.NumberOfChannels;
+        }
+
+        private ReadSampleDataValue GetSampleDataReader()
+        {
+            switch (_header.BytesPerSample)
             {
                 case 1:
                     return ReadValue8Bit;
@@ -450,13 +509,13 @@ namespace Nikse.SubtitleEdit.Core
                 case 4:
                     return ReadValue32Bit;
                 default:
-                    throw new InvalidDataException("Cannot read bits per sample of " + Header.BitsPerSample);
+                    throw new InvalidDataException("Cannot read bits per sample of " + _header.BitsPerSample);
             }
         }
 
-        private Action<byte[], int> GetSampleDataWriter()
+        private WriteSampleDataValue GetSampleDataWriter()
         {
-            switch (Header.BytesPerSample)
+            switch (_header.BytesPerSample)
             {
                 case 1:
                     return WriteValue8Bit;
@@ -467,7 +526,7 @@ namespace Nikse.SubtitleEdit.Core
                 case 4:
                     return WriteValue32Bit;
                 default:
-                    throw new InvalidDataException("Cannot write bits per sample of " + Header.BitsPerSample);
+                    throw new InvalidDataException("Cannot write bits per sample of " + _header.BitsPerSample);
             }
         }
 
@@ -486,40 +545,33 @@ namespace Nikse.SubtitleEdit.Core
 
         public List<Bitmap> GenerateFourierData(int nfft, string spectrogramDirectory, int delayInMilliseconds)
         {
-            if (Header.BytesPerSample == 4)
-            {
-                // Can't handle 32-bit samples due to the way the channel averaging is done
-                throw new Exception("32-bit samples are unsupported.");
-            }
-
             const int bitmapWidth = 1024;
 
-            List<Bitmap> bitmaps = new List<Bitmap>();
-            SpectrogramDrawer drawer = new SpectrogramDrawer(nfft);
-            Task saveImageTask = null;
-            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataReader();
-            double sampleScale = 1.0 / (Math.Pow(2.0, Header.BytesPerSample * 8 - 1) * Header.NumberOfChannels);
+            int delaySampleCount = (int)(_header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
 
-            int delaySampleCount = (int)(Header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
-
-            // other code (e.g. generating peaks) doesn't handle negative delays, so we'll do the same for now
+            // ignore negative delays for now (pretty sure it can't happen in mkv and some places pass in -1 by mistake)
             delaySampleCount = Math.Max(delaySampleCount, 0);
 
-            long fileSampleCount = Header.LengthInSamples;
+            var bitmaps = new List<Bitmap>();
+            var drawer = new SpectrogramDrawer(nfft);
+            var readSampleDataValue = GetSampleDataReader();
+            Task saveImageTask = null;
+            float sampleAndChannelScale = GetSampleAndChannelScale();
+            long fileSampleCount = _header.LengthInSamples;
             long fileSampleOffset = -delaySampleCount;
             int chunkSampleCount = nfft * bitmapWidth;
             int chunkCount = (int)Math.Ceiling((double)(fileSampleCount + delaySampleCount) / chunkSampleCount);
+            byte[] data = new byte[chunkSampleCount * _header.BlockAlign];
             double[] chunkSamples = new double[chunkSampleCount];
 
             Directory.CreateDirectory(spectrogramDirectory);
 
-            _data = new byte[chunkSampleCount * Header.BlockAlign];
-            _stream.Seek(Header.DataStartPosition, SeekOrigin.Begin);
+            _stream.Seek(_header.DataStartPosition, SeekOrigin.Begin);
 
             // for negative delays, skip samples at the beginning
             if (fileSampleOffset > 0)
             {
-                _stream.Seek(fileSampleOffset * Header.BlockAlign, SeekOrigin.Current);
+                _stream.Seek(fileSampleOffset * _header.BlockAlign, SeekOrigin.Current);
             }
 
             for (int iChunk = 0; iChunk < chunkCount; iChunk++)
@@ -551,19 +603,19 @@ namespace Nikse.SubtitleEdit.Core
                 // read samples from the file
                 if (fileReadSampleCount > 0)
                 {
-                    int fileReadByteCount = fileReadSampleCount * Header.BlockAlign;
-                    _stream.Read(_data, 0, fileReadByteCount);
+                    int fileReadByteCount = fileReadSampleCount * _header.BlockAlign;
+                    _stream.Read(data, 0, fileReadByteCount);
                     fileSampleOffset += fileReadSampleCount;
 
                     int dataByteOffset = 0;
                     while (dataByteOffset < fileReadByteCount)
                     {
-                        int value = 0;
-                        for (int iChannel = 0; iChannel < Header.NumberOfChannels; iChannel++)
+                        float value = 0F;
+                        for (int iChannel = 0; iChannel < _header.NumberOfChannels; iChannel++)
                         {
-                            value += readSampleDataValue(ref dataByteOffset);
+                            value += readSampleDataValue(data, ref dataByteOffset);
                         }
-                        chunkSamples[chunkSampleOffset] = value * sampleScale;
+                        chunkSamples[chunkSampleOffset] = value * sampleAndChannelScale;
                         chunkSampleOffset += 1;
                     }
                 }
@@ -598,10 +650,10 @@ namespace Nikse.SubtitleEdit.Core
             var doc = new XmlDocument();
             var culture = CultureInfo.InvariantCulture;
             doc.LoadXml("<SpectrogramInfo><SampleDuration/><NFFT/><ImageWidth/><SecondsPerImage/></SpectrogramInfo>");
-            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = ((double)nfft / Header.SampleRate).ToString(culture);
+            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = ((double)nfft / _header.SampleRate).ToString(culture);
             doc.DocumentElement.SelectSingleNode("NFFT").InnerText = nfft.ToString(culture);
             doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = bitmapWidth.ToString(culture);
-            doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)chunkSampleCount / Header.SampleRate).ToString(culture); // currently unused; for backwards compatibility
+            doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)chunkSampleCount / _header.SampleRate).ToString(culture); // currently unused; for backwards compatibility
             doc.Save(Path.Combine(spectrogramDirectory, "Info.xml"));
 
             return bitmaps;

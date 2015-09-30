@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public string SourceVideoFileName { get; private set; }
         private bool _cancel;
+        private string _peakWaveFileName;
         private string _wavFileName;
         private string _spectrogramDirectory;
         public List<Bitmap> SpectrogramBitmaps { get; private set; }
@@ -31,10 +32,9 @@ namespace Nikse.SubtitleEdit.Forms
             labelInfo.Text = string.Empty;
         }
 
-        public WavePeakGenerator WavePeak { get; private set; }
-
-        public void Initialize(string videoFile, string spectrogramDirectory, int audioTrackNumber)
+        public void Initialize(string videoFile, string peakWaveFileName, string spectrogramDirectory, int audioTrackNumber)
         {
+            _peakWaveFileName = peakWaveFileName;
             _audioTrackNumber = audioTrackNumber;
             if (_audioTrackNumber < 0)
                 _audioTrackNumber = 0;
@@ -236,7 +236,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var waveFile = new WavePeakGenerator(targetFile))
             {
-                waveFile.GeneratePeakSamples(delayInMilliseconds);
+                waveFile.GeneratePeaks(delayInMilliseconds, _peakWaveFileName);
 
                 if (Configuration.Settings.VideoControls.GenerateSpectrogram)
                 {
@@ -244,8 +244,6 @@ namespace Nikse.SubtitleEdit.Forms
                     Refresh();
                     SpectrogramBitmaps = waveFile.GenerateFourierData(256, _spectrogramDirectory, delayInMilliseconds); // image height = nfft / 2
                 }
-
-                WavePeak = waveFile;
             }
 
             labelPleaseWait.Visible = false;
@@ -379,8 +377,9 @@ namespace Nikse.SubtitleEdit.Forms
             _cancel = true;
         }
 
-        internal void InitializeViaWaveFile(string fileName, string spectrogramFolder)
+        internal void InitializeViaWaveFile(string fileName, string peakWaveFileName, string spectrogramFolder)
         {
+            _peakWaveFileName = peakWaveFileName;
             _wavFileName = fileName;
             _spectrogramDirectory = spectrogramFolder;
         }
