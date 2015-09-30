@@ -944,7 +944,7 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Sloučit vybrané řádky jako dialog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Sloučit s předchozím řádkem</MergeWithLineBefore>
         <MergeWithLineAfter>Sloučit s následujícím řádkem</MergeWithLineAfter>
-        <Normal>Normální</Normal>
+        <Normal>Normální (odebrat formátování)</Normal>
         <Underline>Podtržené</Underline>
         <Color>Barva...</Color>
         <FontName>Název písma...</FontName>
@@ -2071,6 +2071,7 @@ Zachovat změny?</KeepChangesMessage>
     <Title>Prozkoumat porovnání shod pro aktuální snímek</Title>
     <InspectItems>Prozkoumat položky</InspectItems>
     <AddBetterMatch>Přidat lepší shodu</AddBetterMatch>
+    <Add>Přidat</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nová složka</Title>
