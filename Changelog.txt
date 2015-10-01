@@ -16,6 +16,8 @@
    * Updated Polish translation - thx admas
    * Updated Croatian OCR fix replace list - thx diomed & xylographe
    * Generating of spectrogram is now *many* times faster - thx jdpurcell
+   * SubtitleListView: Enable double buffering to eliminate flickering - thx jdpurcell
+   * Added "Count" to "Find" dialog - thx ivandrofly
    * FFMPEG audio extraction will now prompt for audio file if more than one
    * Format PAC now includes "Chinese simplified" - thx Man
    * Merge lines with same text now ignores casing - thx Michel
@@ -23,12 +25,15 @@
    * Better Croatian/Serbian language detection - thx aaaxx/xylographe
    * Sync tools now display info about what is applied (factor and -/+ adjustment)
    * Plugins are now allowed to return another format than SubRip
-   * Better resizing of list view in "Bridge gaps in durations" - thx Ivandrofly
+   * Better resizing of list view in "Bridge gaps in durations" - thx ivandrofly
    * Audio visualizer: don't generate wav if source is already wav - thx MM
    * Audio visualizer: zoom with control key + scroll wheel - thx jdpurcell
-   * "Fix common errors" only shows English "i to I" fix for English language - Ivandrofly
+   * "Fix common errors" only shows English "i to I" fix for English language - ivandrofly
+   * Allow up to 10 mb subtitles in batch convert - thx Kymophobia
 * FIXED:
    * Fixed tags accumulating texts in Sami format (regression from 3.4.8 refact) - thx domddol
+   * Show all paragraphs in audio visualizer when zoomed out - thx jdpurcell
+   * Fixed bug in "Set end and offset the rest" that degraded performance more and more - thx jdpurcell
    * Fixed several issues with format "Cavena 890" - thx Victor
    * Better handling of some zero width Unicode spaces - thx Krystian
    * Spell check issue with multiple occurrences of same word in one subtitle - thx Krystian
@@ -43,10 +48,17 @@
    * Time codes in export to DOST - thx Christian
    * Fixed crash when cleaning spectrogram temp images
    * Audio visualizer: Fix crash when using mouse wheel without audio - thx jdpurcell
+   * Audio visualizer: Fix crash when using shortcuts without audio
    * Audio visualizer: Fix issues with HH:MM:SS:FF time code format - thx jdpurcell
-   * Audio visualizer: Stable end time when using HH:MM:SS:FF time code format - thx ingo
+   * Audio visualizer: Stable end time when using HH:MM:SS:FF time code format - thx ing
+   * Audio visualizer:  Fix new selection disappearing if scrolled out of theleft - thx jdpurcell
    * Inline margin is now loaded/saved in SSA/ASS (can only be edited in source view)
-   * + Many minor fixes from Ivandrofly and xylographe
+   * Changed LAV Filters link from Google Code to Github - thx suvjunmd
+   * Fixed bug in FAB export regarding center alignment - thx felagund
+   * Some fixes for "Remove text for HI" - thx Rasmus
+   * Fix for added words no "don't break after" list - thx ivandrofly
+   * Fixed bug in batch convert filter (2+ lines)
+   * + Many minor fixes from ivandrofly and xylographe
 
 
 3.4.8 (2nd August 2015)
