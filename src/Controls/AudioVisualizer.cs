@@ -1539,6 +1539,12 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 ZoomOut();
             }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D0)
+            {
+                ZoomFactor = 1.0;
+                if (OnZoomedChanged != null)
+                    OnZoomedChanged.Invoke(this, null);
+            }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Z)
             {
                 if (StartPositionSeconds > 0.1)
