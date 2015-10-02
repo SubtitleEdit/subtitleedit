@@ -214,6 +214,15 @@ namespace UpdateAssemblyInfo
             return new VersionInfo(versionMatch.Groups["version"].Value);
         }
 
+        private const string WorkInProgress = "Updating version number...";
+
+        private static void WriteWarning(string message)
+        {
+            Console.WriteLine();
+            Console.WriteLine("WARNING: " + message);
+            Console.Write(WorkInProgress);
+        }
+
         private static int Main(string[] args)
         {
             var myName = Environment.GetCommandLineArgs()[0];
@@ -224,6 +233,8 @@ namespace UpdateAssemblyInfo
                 return 1;
             }
 
+            Console.Write(WorkInProgress);
+
             try
             {
                 var seTemplateFileName = Environment.GetCommandLineArgs()[1];
@@ -233,14 +244,13 @@ namespace UpdateAssemblyInfo
                 VersionInfo currentVersion;
                 VersionInfo newVersion;
 
-                Console.Write("Updating version number... ");
                 GetRepositoryVersions(out currentRepositoryVersion, out latestRepositoryVersion);
                 currentVersion = GetCurrentVersion(seTemplateFileName);
                 var updateTemplateFile = false;
                 if (latestRepositoryVersion.RevisionGuid.Length > 0 && currentVersion > latestRepositoryVersion && latestRepositoryVersion == currentRepositoryVersion)
                 {
                     // version sequence has been bumped for new release: must update template file too
-                    Console.Write("new release... ");
+                    Console.Write(" new release...");
                     updateTemplateFile = true;
                     // build number and revision guid will be unknown until 'git commit' and 'git tag' have been run
                     newVersion = new VersionInfo(currentVersion.ShortVersion);
@@ -257,21 +267,23 @@ namespace UpdateAssemblyInfo
 
                 if (newVersion != currentVersion)
                 {
-                    Console.WriteLine("updating version number to " + newVersion.FullVersion);
+                    Console.WriteLine(" updating version number to " + newVersion.FullVersion);
                     UpdateAssemblyInfo(libSeTemplateFileName, newVersion, updateTemplateFile);
                     UpdateAssemblyInfo(seTemplateFileName, newVersion, updateTemplateFile);
                 }
                 else
                 {
-                    Console.WriteLine("no changes");
+                    Console.WriteLine(" no changes");
                 }
 
                 return 0;
             }
             catch (Exception exception)
             {
-                Console.WriteLine("A fatal error occurred in " + myName + ": " + exception.Message + Environment.NewLine + exception.StackTrace);
-                return 1;
+                Console.WriteLine();
+                Console.WriteLine("ERROR: " + myName + ": " + exception.Message + Environment.NewLine + exception.StackTrace);
+
+                return 2;
             }
         }
 
@@ -309,7 +321,7 @@ namespace UpdateAssemblyInfo
             var envSystemDrive = Environment.GetEnvironmentVariable("SystemDrive");
             if (string.IsNullOrEmpty(envSystemDrive))
             {
-                throw new Exception("Environment.GetEnvironmentVariable('SystemDrive') returned null!");
+                WriteWarning(@"Environment.GetEnvironmentVariable(""SystemDrive"") returned null!");
             }
             if (!string.IsNullOrWhiteSpace(envSystemDrive))
             {
@@ -346,10 +358,10 @@ namespace UpdateAssemblyInfo
             }
             catch (Exception exception)
             {
-                throw new Exception("UpdateAssemblyInfo - GetGitPath: " + exception.Message);
+                WriteWarning(@"System.IO.DriveInfo(""C"") exception: " + exception.Message);
             }
 
-            Console.WriteLine("WARNING: Might not be able to run Git command line tool!");
+            WriteWarning("Might not be able to run Git command line tool!");
             return "git";
         }
 
