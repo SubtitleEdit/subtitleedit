@@ -1,9 +1,9 @@
 ﻿Subtitle Edit Changelog
 
-3.4.9 (xth September 2015) BETA
+3.4.9 (3rd October 2015)
 * NEW:
    * New subtitle formats (XIF xml, Jetsen, NCI Timed Roll Up Captions and more)
-   * Ukranian translation - thx Maximaximum
+   * Ukrainian translation - thx Maximaximum
    * Option to play a sound when new network message arrives - thx InCogNiTo124
 * IMPROVED:
    * Updated Portuguese translation - thx moob
