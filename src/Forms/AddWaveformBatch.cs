@@ -333,7 +333,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (Configuration.Settings.VideoControls.GenerateSpectrogram)
                 {
-                    waveFile.GenerateFourierData(256, Main.GetSpectrogramFolder(videoFileName), delayInMilliseconds); // image height = nfft / 2
+                    waveFile.GenerateSpectrogram(Main.GetSpectrogramFolder(videoFileName), delayInMilliseconds);
                 }
             }
         }

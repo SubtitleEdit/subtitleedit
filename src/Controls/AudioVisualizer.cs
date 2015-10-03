@@ -503,7 +503,7 @@ namespace Nikse.SubtitleEdit.Controls
                             if (pos1 >= _wavePeaks.Peaks.Count)
                                 break;
                             float pos1Weight = pos - pos0;
-                            float pos0Weight = 1 - pos1Weight;
+                            float pos0Weight = 1F - pos1Weight;
                             var peak0 = _wavePeaks.Peaks[pos0];
                             var peak1 = _wavePeaks.Peaks[pos1];
                             float max = peak0.Max * pos0Weight + peak1.Max * pos1Weight;
