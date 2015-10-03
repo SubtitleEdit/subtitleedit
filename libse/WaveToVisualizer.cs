@@ -290,7 +290,7 @@ namespace Nikse.SubtitleEdit.Core
 
             var peaks = new List<WavePeak>();
             var readSampleDataValue = GetSampleDataReader();
-            float sampleAndChannelScale = GetSampleAndChannelScale();
+            float sampleAndChannelScale = (float)GetSampleAndChannelScale();
             long fileSampleCount = _header.LengthInSamples;
             long fileSampleOffset = -delaySampleCount;
             int chunkSampleCount = _header.SampleRate / peaksPerSecond;
@@ -486,12 +486,12 @@ namespace Nikse.SubtitleEdit.Core
             buffer[offset + 3] = (byte)(value >> 24);
         }
 
-        private float GetSampleScale()
+        private double GetSampleScale()
         {
-            return (float)(1.0 / Math.Pow(2.0, _header.BytesPerSample * 8 - 1));
+            return (1.0 / Math.Pow(2.0, _header.BytesPerSample * 8 - 1));
         }
 
-        private float GetSampleAndChannelScale()
+        private double GetSampleAndChannelScale()
         {
             return GetSampleScale() / _header.NumberOfChannels;
         }
@@ -543,9 +543,10 @@ namespace Nikse.SubtitleEdit.Core
 
         //////////////////////////////////////// SPECTRUM ///////////////////////////////////////////////////////////
 
-        public List<Bitmap> GenerateFourierData(int nfft, string spectrogramDirectory, int delayInMilliseconds)
+        public List<Bitmap> GenerateSpectrogram(string spectrogramDirectory, int delayInMilliseconds)
         {
-            const int bitmapWidth = 1024;
+            const int fftSize = 256; // image height = fft size / 2
+            const int imageWidth = 1024;
 
             int delaySampleCount = (int)(_header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
 
@@ -553,13 +554,13 @@ namespace Nikse.SubtitleEdit.Core
             delaySampleCount = Math.Max(delaySampleCount, 0);
 
             var bitmaps = new List<Bitmap>();
-            var drawer = new SpectrogramDrawer(nfft);
+            var drawer = new SpectrogramDrawer(fftSize);
             var readSampleDataValue = GetSampleDataReader();
             Task saveImageTask = null;
-            float sampleAndChannelScale = GetSampleAndChannelScale();
+            double sampleAndChannelScale = GetSampleAndChannelScale();
             long fileSampleCount = _header.LengthInSamples;
             long fileSampleOffset = -delaySampleCount;
-            int chunkSampleCount = nfft * bitmapWidth;
+            int chunkSampleCount = fftSize * imageWidth;
             int chunkCount = (int)Math.Ceiling((double)(fileSampleCount + delaySampleCount) / chunkSampleCount);
             byte[] data = new byte[chunkSampleCount * _header.BlockAlign];
             double[] chunkSamples = new double[chunkSampleCount];
@@ -610,7 +611,7 @@ namespace Nikse.SubtitleEdit.Core
                     int dataByteOffset = 0;
                     while (dataByteOffset < fileReadByteCount)
                     {
-                        float value = 0F;
+                        double value = 0D;
                         for (int iChannel = 0; iChannel < _header.NumberOfChannels; iChannel++)
                         {
                             value += readSampleDataValue(data, ref dataByteOffset);
@@ -650,9 +651,9 @@ namespace Nikse.SubtitleEdit.Core
             var doc = new XmlDocument();
             var culture = CultureInfo.InvariantCulture;
             doc.LoadXml("<SpectrogramInfo><SampleDuration/><NFFT/><ImageWidth/><SecondsPerImage/></SpectrogramInfo>");
-            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = ((double)nfft / _header.SampleRate).ToString(culture);
-            doc.DocumentElement.SelectSingleNode("NFFT").InnerText = nfft.ToString(culture);
-            doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = bitmapWidth.ToString(culture);
+            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = ((double)fftSize / _header.SampleRate).ToString(culture);
+            doc.DocumentElement.SelectSingleNode("NFFT").InnerText = fftSize.ToString(culture);
+            doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = imageWidth.ToString(culture);
             doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)chunkSampleCount / _header.SampleRate).ToString(culture); // currently unused; for backwards compatibility
             doc.Save(Path.Combine(spectrogramDirectory, "Info.xml"));
 

@@ -242,7 +242,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingSpectrogram;
                     Refresh();
-                    SpectrogramBitmaps = waveFile.GenerateFourierData(256, _spectrogramDirectory, delayInMilliseconds); // image height = nfft / 2
+                    SpectrogramBitmaps = waveFile.GenerateSpectrogram(_spectrogramDirectory, delayInMilliseconds);
                 }
             }
 
