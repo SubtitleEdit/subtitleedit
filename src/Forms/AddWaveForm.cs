@@ -18,7 +18,8 @@ namespace Nikse.SubtitleEdit.Forms
         private string _peakWaveFileName;
         private string _wavFileName;
         private string _spectrogramDirectory;
-        public List<Bitmap> SpectrogramBitmaps { get; private set; }
+        public WavePeakData Peaks { get; private set; }
+        public SpectrogramData Spectrogram { get; private set; }
         private string _encodeParamters;
         private const string RetryEncodeParameters = "acodec=s16l";
         private int _audioTrackNumber = -1;
@@ -236,13 +237,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var waveFile = new WavePeakGenerator(targetFile))
             {
-                waveFile.GeneratePeaks(delayInMilliseconds, _peakWaveFileName);
+                Peaks = waveFile.GeneratePeaks(delayInMilliseconds, _peakWaveFileName);
 
                 if (Configuration.Settings.VideoControls.GenerateSpectrogram)
                 {
                     labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingSpectrogram;
                     Refresh();
-                    SpectrogramBitmaps = waveFile.GenerateSpectrogram(_spectrogramDirectory, delayInMilliseconds);
+                    Spectrogram = waveFile.GenerateSpectrogram(delayInMilliseconds, _spectrogramDirectory);
                 }
             }
 
