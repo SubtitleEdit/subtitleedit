@@ -1,21 +1,32 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace UpdateLanguageFiles
 {
     internal class Program
     {
+        private static readonly Regex TemplateFileVersionRegex; // e.g.: [assembly: AssemblyVersion("3.4.8.[REVNO]")]
+        static Program()
+        {
+            var options = RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant | RegexOptions.Multiline;
+            TemplateFileVersionRegex = new Regex(@"^[ \t]*\[assembly:[ \t]*AssemblyVersion\(""(?<version>[0-9]+\.[0-9]+\.[0-9]+)\.\[REVNO\]""\)\]", options);
+        }
 
         private const string WorkInProgress = "Updating language files...";
+
+        private static void WriteWarning(string message)
+        {
+            Console.WriteLine();
+            Console.WriteLine("WARNING: " + message);
+            Console.Write(WorkInProgress);
+        }
 
         private static int Main(string[] args)
         {
             var myName = Environment.GetCommandLineArgs()[0];
-            myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName)
-                   ? System.Reflection.Assembly.GetEntryAssembly().Location
-                   : myName);
-
+            myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName) ? System.Reflection.Assembly.GetEntryAssembly().Location : myName);
             if (args.Length != 2)
             {
                 Console.Write("Usage: " + myName + @" <LanguageMaster> <LanguageDeserializer>
@@ -65,10 +76,10 @@ namespace UpdateLanguageFiles
 
                 return 0;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 Console.WriteLine();
-                Console.WriteLine(myName + ": " + ex.Message);
+                Console.WriteLine("ERROR: " + myName + ": " + exception.Message + Environment.NewLine + exception.StackTrace);
 
                 return 2;
             }
@@ -76,38 +87,32 @@ namespace UpdateLanguageFiles
 
         private static string FindVersionNumber()
         {
-            var fileName = Path.Combine("src", "Properties", "AssemblyInfo.cs.template");
-            if (!File.Exists(fileName))
-                fileName = Path.Combine("..", fileName);
-            if (!File.Exists(fileName))
-                fileName = Path.Combine("..", fileName);
-            if (!File.Exists(fileName))
-                fileName = Path.Combine("..", fileName);
-            if (!File.Exists(fileName))
-                fileName = Path.Combine("..", fileName);
-            if (!File.Exists(fileName))
-                fileName = Path.Combine("..", fileName);
+            var templateFileName = Path.Combine("src", "Properties", "AssemblyInfo.cs.template");
+            if (!File.Exists(templateFileName))
+                templateFileName = Path.Combine("..", templateFileName);
+            if (!File.Exists(templateFileName))
+                templateFileName = Path.Combine("..", templateFileName);
+            if (!File.Exists(templateFileName))
+                templateFileName = Path.Combine("..", templateFileName);
+            if (!File.Exists(templateFileName))
+                templateFileName = Path.Combine("..", templateFileName);
+            if (!File.Exists(templateFileName))
+                templateFileName = Path.Combine("..", templateFileName);
 
-            string warning;
-
-            if (File.Exists(fileName))
+            if (File.Exists(templateFileName))
             {
-                var text = File.ReadAllText(fileName);
-                const string pattern = @"\[assembly: AssemblyVersion\(""(\d+\.\d+\.\d+)\.\[REVNO]""\)]";
-                var version = System.Text.RegularExpressions.Regex.Match(text, pattern);
-                if (version.Success)
+                var templateText = File.ReadAllText(templateFileName);
+                var versionMatch = TemplateFileVersionRegex.Match(templateText);
+                if (versionMatch.Success)
                 {
-                    return version.Groups[1].Value;
+                    return versionMatch.Groups["version"].Value;
                 }
-                warning = "No valid AssemblyVersion in template file '" + Path.GetFullPath(fileName) + "'.";
+                WriteWarning("No valid AssemblyVersion in template file '" + Path.GetFullPath(templateFileName) + "'.");
             }
             else
             {
-                warning = "Template file '" + Path.GetFileName(fileName) + "' not found.";
+                WriteWarning("Template file '" + Path.GetFileName(templateFileName) + "' not found.");
             }
-            Console.WriteLine();
-            Console.WriteLine("WARNING: " + warning);
-            Console.Write(WorkInProgress);
 
             return "unknown";
         }
