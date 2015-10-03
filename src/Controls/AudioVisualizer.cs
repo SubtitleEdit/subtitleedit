@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
-using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -83,12 +82,8 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _noClear;
         private double _gapAtStart = -1;
 
-        private List<Bitmap> _spectrogramBitmaps = new List<Bitmap>();
-        private string _spectrogramDirectory;
+        private SpectrogramData _spectrogram;
         private const int SpectrogramDisplayHeight = 128;
-        private double _spectrogramSampleDuration;
-        private int _spectrogramImageWidth;
-        private int _spectrogramFftSize;
 
         public delegate void ParagraphEventHandler(object sender, ParagraphEventArgs e);
         public event ParagraphEventHandler OnNewSelectionRightClicked;
@@ -107,7 +102,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         private double _wholeParagraphMinMilliseconds;
         private double _wholeParagraphMaxMilliseconds = double.MaxValue;
-        private System.ComponentModel.BackgroundWorker _spectrogramBackgroundWorker;
         public Keys InsertAtVideoPositionShortcut = Keys.None;
         public bool MouseWheelScrollUpIsForward = true;
 
@@ -186,7 +180,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                return _spectrogramBitmaps != null && _spectrogramBitmaps.Count > 0;
+                return _spectrogram != null && _spectrogram.Images.Count > 0;
             }
         }
 
@@ -208,7 +202,6 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         public bool AllowOverlap { get; set; }
-        private bool _tempShowSpectrogram;
 
         private bool _showWaveform;
         public bool ShowWaveform
@@ -304,23 +297,12 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public void ResetSpectrogram()
+        public SpectrogramData Spectrogram
         {
-            if (_spectrogramBitmaps != null)
+            set
             {
-                for (int i = 0; i < _spectrogramBitmaps.Count; i++)
-                {
-                    try
-                    {
-                        Bitmap bmp = _spectrogramBitmaps[i];
-                        bmp.Dispose();
-                    }
-                    catch
-                    {
-                    }
-                }
+                InitializeSpectrogram(value);
             }
-            _spectrogramBitmaps = new List<Bitmap>();
         }
 
         public void ClearSelection()
@@ -1711,95 +1693,58 @@ namespace Nikse.SubtitleEdit.Controls
 
         /////////////////////////////////////////////////
 
-        public void InitializeSpectrogram(string spectrogramDirectory)
+        private void InitializeSpectrogram(SpectrogramData spectrogram)
         {
-            _spectrogramBitmaps = new List<Bitmap>();
-            _tempShowSpectrogram = ShowSpectrogram;
-            ShowSpectrogram = false;
-            if (Directory.Exists(spectrogramDirectory))
+            if (_spectrogram != null)
             {
-                _spectrogramDirectory = spectrogramDirectory;
-                _spectrogramBackgroundWorker = new System.ComponentModel.BackgroundWorker();
-                _spectrogramBackgroundWorker.DoWork += LoadSpectrogramBitmapsAsync;
-                _spectrogramBackgroundWorker.RunWorkerCompleted += LoadSpectrogramBitmapsCompleted;
-                _spectrogramBackgroundWorker.RunWorkerAsync();
+                _spectrogram.Dispose();
+                _spectrogram = null;
+                Invalidate();
             }
-        }
 
-        private void LoadSpectrogramBitmapsCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
-        {
-            LoadSpectrogramInfo(_spectrogramDirectory);
-            ShowSpectrogram = _tempShowSpectrogram;
-            if (_spectrogramBackgroundWorker != null)
-                _spectrogramBackgroundWorker.Dispose();
-        }
+            if (spectrogram == null)
+                return;
 
-        private void LoadSpectrogramBitmapsAsync(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            try
+            if (spectrogram.IsLoaded)
             {
-                for (var count = 0; ; count++)
+                InitializeSpectrogramInternal(spectrogram);
+            }
+            else
+            {
+                Task.Factory.StartNew(() =>
                 {
-                    var fileName = Path.Combine(_spectrogramDirectory, count + ".gif");
-
-                    // important that this does not lock file (do NOT use Image.FromFile(fileName) or alike!!!)
-                    using (var ms = new MemoryStream(File.ReadAllBytes(fileName)))
+                    spectrogram.Load();
+                    BeginInvoke((Action)(() =>
                     {
-                        _spectrogramBitmaps.Add((Bitmap)Image.FromStream(ms));
-                    }
-                }
-            }
-            catch (FileNotFoundException)
-            {
-                // no more files
+                        InitializeSpectrogramInternal(spectrogram);
+                    }));
+                });
             }
         }
 
-        public void InitializeSpectrogram(List<Bitmap> spectrogramBitmaps, string spectrogramDirectory)
+        private void InitializeSpectrogramInternal(SpectrogramData spectrogram)
         {
-            _spectrogramBitmaps = spectrogramBitmaps;
-            LoadSpectrogramInfo(spectrogramDirectory);
-        }
+            if (_spectrogram != null)
+                return;
 
-        private void LoadSpectrogramInfo(string spectrogramDirectory)
-        {
-            try
-            {
-                var doc = new XmlDocument();
-                string xmlInfoFileName = Path.Combine(spectrogramDirectory, "Info.xml");
-                if (File.Exists(xmlInfoFileName))
-                {
-                    doc.Load(xmlInfoFileName);
-                    _spectrogramSampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText, CultureInfo.InvariantCulture);
-                    _spectrogramFftSize = Convert.ToInt32(doc.DocumentElement.SelectSingleNode("NFFT").InnerText, CultureInfo.InvariantCulture);
-                    _spectrogramImageWidth = Convert.ToInt32(doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText, CultureInfo.InvariantCulture);
-                    ShowSpectrogram = true;
-                }
-                else
-                {
-                    ShowSpectrogram = false;
-                }
-            }
-            catch
-            {
-                ShowSpectrogram = false;
-            }
+            _spectrogram = spectrogram;
+            Invalidate();
         }
 
         private void DrawSpectrogram(Graphics graphics)
         {
-            int width = (int)Math.Round((EndPositionSeconds - StartPositionSeconds) / _spectrogramSampleDuration);
-            using (var bmpCombined = new Bitmap(width, _spectrogramFftSize / 2))
+            int width = (int)Math.Round((EndPositionSeconds - StartPositionSeconds) / _spectrogram.SampleDuration);
+            using (var bmpCombined = new Bitmap(width, _spectrogram.FftSize / 2))
             using (var gfxCombined = Graphics.FromImage(bmpCombined))
             {
-                int left = (int)Math.Round(StartPositionSeconds / _spectrogramSampleDuration);
+                int left = (int)Math.Round(StartPositionSeconds / _spectrogram.SampleDuration);
                 int offset = 0;
-                int imageIndex = left / _spectrogramImageWidth;
-                while (offset < width && imageIndex < _spectrogramBitmaps.Count)
+                int imageIndex = left / _spectrogram.ImageWidth;
+                while (offset < width && imageIndex < _spectrogram.Images.Count)
                 {
-                    int x = (left + offset) % _spectrogramImageWidth;
-                    int w = Math.Min(_spectrogramImageWidth - x, width - offset);
-                    gfxCombined.DrawImage(_spectrogramBitmaps[imageIndex], offset, 0, new Rectangle(x, 0, w, bmpCombined.Height), GraphicsUnit.Pixel);
+                    int x = (left + offset) % _spectrogram.ImageWidth;
+                    int w = Math.Min(_spectrogram.ImageWidth - x, width - offset);
+                    gfxCombined.DrawImage(_spectrogram.Images[imageIndex], offset, 0, new Rectangle(x, 0, w, bmpCombined.Height), GraphicsUnit.Pixel);
                     offset += w;
                     imageIndex++;
                 }

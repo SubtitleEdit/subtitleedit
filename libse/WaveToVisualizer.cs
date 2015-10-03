@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -229,6 +230,105 @@ namespace Nikse.SubtitleEdit.Core
                     HighestPeak = abs;
             }
         }
+
+        public static WavePeakData FromDisk(string peakFileName)
+        {
+            using (var peakGenerator = new WavePeakGenerator(peakFileName))
+            {
+                return peakGenerator.LoadPeaks();
+            }
+        }
+    }
+
+    public class SpectrogramData : IDisposable
+    {
+        private string _loadFromDirectory;
+
+        public SpectrogramData(int fftSize, int imageWidth, double sampleDuration, IList<Bitmap> images)
+        {
+            FftSize = fftSize;
+            ImageWidth = imageWidth;
+            SampleDuration = sampleDuration;
+            Images = images;
+        }
+
+        private SpectrogramData(string loadFromDirectory)
+        {
+            _loadFromDirectory = loadFromDirectory;
+            Images = new Bitmap[0];
+        }
+
+        public int FftSize { get; private set; }
+
+        public int ImageWidth { get; private set; }
+
+        public double SampleDuration { get; private set; }
+
+        public IList<Bitmap> Images { get; private set; }
+
+        public bool IsLoaded
+        {
+            get { return _loadFromDirectory == null; }
+        }
+
+        public void Load()
+        {
+            if (_loadFromDirectory == null)
+                return;
+
+            string directory = _loadFromDirectory;
+            _loadFromDirectory = null;
+
+            try
+            {
+                string xmlInfoFileName = Path.Combine(directory, "Info.xml");
+                if (!File.Exists(xmlInfoFileName))
+                    return;
+                var doc = new XmlDocument();
+                var culture = CultureInfo.InvariantCulture;
+                doc.Load(xmlInfoFileName);
+                FftSize = Convert.ToInt32(doc.DocumentElement.SelectSingleNode("NFFT").InnerText, culture);
+                ImageWidth = Convert.ToInt32(doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText, culture);
+                SampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText, culture);
+
+                var images = new List<Bitmap>();
+                var fileNames = Enumerable.Range(0, int.MaxValue)
+                    .Select(n => Path.Combine(directory, n + ".gif"))
+                    .TakeWhile(p => File.Exists(p));
+                foreach (string fileName in fileNames)
+                {
+                    // important that this does not lock file (do NOT use Image.FromFile(fileName) or alike!!!)
+                    using (var ms = new MemoryStream(File.ReadAllBytes(fileName)))
+                    {
+                        images.Add((Bitmap)Image.FromStream(ms));
+                    }
+                }
+                Images = images;
+            }
+            catch
+            {
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (var image in Images)
+            {
+                try
+                {
+                    image.Dispose();
+                }
+                catch
+                {
+                }
+            }
+            Images = new Bitmap[0];
+        }
+
+        public static SpectrogramData FromDisk(string spectrogramDirectory)
+        {
+            return new SpectrogramData(spectrogramDirectory);
+        }
     }
 
     public class WavePeakGenerator : IDisposable
@@ -275,7 +375,7 @@ namespace Nikse.SubtitleEdit.Core
         /// </summary>
         /// <param name="delayInMilliseconds">Delay in milliseconds (normally zero)</param>
         /// <param name="peakFileName">Path of the output file</param>
-        public void GeneratePeaks(int delayInMilliseconds, string peakFileName)
+        public WavePeakData GeneratePeaks(int delayInMilliseconds, string peakFileName)
         {
             int peaksPerSecond = Math.Min(Configuration.Settings.VideoControls.WaveformMinimumSampleRate, _header.SampleRate);
 
@@ -356,6 +456,8 @@ namespace Nikse.SubtitleEdit.Core
                     stream.Write(buffer, 0, 4);
                 }
             }
+
+            return new WavePeakData(peaksPerSecond, peaks);
         }
 
         private static WavePeak CalculatePeak(float[] chunk, int count)
@@ -379,7 +481,7 @@ namespace Nikse.SubtitleEdit.Core
         /// <summary>
         /// Loads previously generated peaks from disk.
         /// </summary>
-        public WavePeakData LoadPeaks()
+        internal WavePeakData LoadPeaks()
         {
             if (_header.BitsPerSample != 16)
                 throw new Exception("Peaks file must be 16 bits per sample.");
@@ -543,7 +645,7 @@ namespace Nikse.SubtitleEdit.Core
 
         //////////////////////////////////////// SPECTRUM ///////////////////////////////////////////////////////////
 
-        public List<Bitmap> GenerateSpectrogram(string spectrogramDirectory, int delayInMilliseconds)
+        public SpectrogramData GenerateSpectrogram(int delayInMilliseconds, string spectrogramDirectory)
         {
             const int fftSize = 256; // image height = fft size / 2
             const int imageWidth = 1024;
@@ -553,7 +655,7 @@ namespace Nikse.SubtitleEdit.Core
             // ignore negative delays for now (pretty sure it can't happen in mkv and some places pass in -1 by mistake)
             delaySampleCount = Math.Max(delaySampleCount, 0);
 
-            var bitmaps = new List<Bitmap>();
+            var images = new List<Bitmap>();
             var drawer = new SpectrogramDrawer(fftSize);
             var readSampleDataValue = GetSampleDataReader();
             Task saveImageTask = null;
@@ -630,7 +732,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 // generate spectrogram for this chunk
                 Bitmap bmp = drawer.Draw(chunkSamples);
-                bitmaps.Add(bmp);
+                images.Add(bmp);
 
                 // wait for previous image to finish saving
                 if (saveImageTask != null)
@@ -650,14 +752,15 @@ namespace Nikse.SubtitleEdit.Core
 
             var doc = new XmlDocument();
             var culture = CultureInfo.InvariantCulture;
+            double sampleDuration = (double)fftSize / _header.SampleRate;
             doc.LoadXml("<SpectrogramInfo><SampleDuration/><NFFT/><ImageWidth/><SecondsPerImage/></SpectrogramInfo>");
-            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = ((double)fftSize / _header.SampleRate).ToString(culture);
+            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = sampleDuration.ToString(culture);
             doc.DocumentElement.SelectSingleNode("NFFT").InnerText = fftSize.ToString(culture);
             doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = imageWidth.ToString(culture);
             doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)chunkSampleCount / _header.SampleRate).ToString(culture); // currently unused; for backwards compatibility
             doc.Save(Path.Combine(spectrogramDirectory, "Info.xml"));
 
-            return bitmaps;
+            return new SpectrogramData(fftSize, imageWidth, sampleDuration, images);
         }
 
         private class SpectrogramDrawer
