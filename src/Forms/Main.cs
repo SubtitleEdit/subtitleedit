@@ -4760,15 +4760,16 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 for (int index = SubtitleListview1.SelectedIndices.Count - 1; index >= 0; index--)
                                 {
-                                    var pOld = _subtitle.Paragraphs[index];
+                                    var idx = SubtitleListview1.SelectedIndices[index];
+                                    var pOld = _subtitle.Paragraphs[idx];
                                     var p = fixErrors.FixedSubtitle.GetParagraphOrDefaultById(pOld.ID);
                                     if (p == null)
                                     {
-                                        _subtitle.Paragraphs.RemoveAt(index);
+                                        _subtitle.Paragraphs.RemoveAt(idx);
                                     }
                                     else
                                     {
-                                        _subtitle.Paragraphs[index] = p;
+                                        _subtitle.Paragraphs[idx] = p;
                                     }
                                     i++;
                                 }
