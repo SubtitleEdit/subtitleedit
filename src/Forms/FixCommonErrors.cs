@@ -143,8 +143,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             comboBoxLanguage.SelectedIndex = languageIndex;
             AddFixActions(threeLetterIsoLanguageName);
-            _originalSubtitle = new Subtitle(subtitle); // copy constructor
-            Subtitle = new Subtitle(subtitle); // copy constructor
+            _originalSubtitle = new Subtitle(subtitle, false); // copy constructor
+            Subtitle = new Subtitle(subtitle, false); // copy constructor
             _format = format;
             Encoding = encoding;
             _onlyListFixes = false;
@@ -205,8 +205,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             AddFixActions(threeLetterIsoLanguageName);
 
-            _originalSubtitle = new Subtitle(subtitle); // copy constructor
-            Subtitle = new Subtitle(subtitle); // copy constructor
+            _originalSubtitle = new Subtitle(subtitle, false); // copy constructor
+            Subtitle = new Subtitle(subtitle, false); // copy constructor
             _format = format;
             Encoding = encoding;
             _onlyListFixes = true;
@@ -254,8 +254,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             AddFixActions(threeLetterIsoLanguageName);
 
-            _originalSubtitle = new Subtitle(subtitle); // copy constructor
-            Subtitle = new Subtitle(subtitle); // copy constructor
+            _originalSubtitle = new Subtitle(subtitle, false); // copy constructor
+            Subtitle = new Subtitle(subtitle, false); // copy constructor
             _format = format;
             Encoding = encoding;
             InitUserInterface();
@@ -617,7 +617,7 @@ namespace Nikse.SubtitleEdit.Forms
             _newLog = new StringBuilder();
             _deleteIndices = new List<int>();
 
-            Subtitle = new Subtitle(_originalSubtitle);
+            Subtitle = new Subtitle(_originalSubtitle, false);
             foreach (ListViewItem item in listView1.Items)
             {
                 if (item.Checked && item.Index != IndexRemoveEmptyLines)
@@ -1222,7 +1222,7 @@ namespace Nikse.SubtitleEdit.Forms
             _totalFixes = 0;
             _totalErrors = 0;
             RunSelectedActions();
-            _originalSubtitle = new Subtitle(Subtitle);
+            _originalSubtitle = new Subtitle(Subtitle, false);
             subtitleListView1.Fill(_originalSubtitle);
             RefreshFixes();
             if (listViewFixes.Items.Count == 0)

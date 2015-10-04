@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Enums;
+﻿using System.Linq;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core
     public class Subtitle
     {
         private List<Paragraph> _paragraphs;
-        private List<HistoryItem> _history;
+        private readonly List<HistoryItem> _history;
         private SubtitleFormat _format;
         private bool _wasLoadedWithFrameNumbers;
         public string Header { get; set; }
@@ -51,7 +52,8 @@ namespace Nikse.SubtitleEdit.Core
         /// Copy constructor (only paragraphs)
         /// </summary>
         /// <param name="subtitle">Subtitle to copy</param>
-        public Subtitle(Subtitle subtitle)
+        /// <param name="generateNewId">Generate new ID (guid) for paragraphs</param>
+        public Subtitle(Subtitle subtitle, bool generateNewId = true)
             : this()
         {
             if (subtitle == null)
@@ -59,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                _paragraphs.Add(new Paragraph(p, false));
+                _paragraphs.Add(new Paragraph(p, generateNewId));
             }
             _wasLoadedWithFrameNumbers = subtitle.WasLoadedWithFrameNumbers;
             Header = subtitle.Header;
@@ -89,12 +91,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public Paragraph GetParagraphOrDefaultById(string id)
         {
-            foreach (Paragraph p in _paragraphs)
-            {
-                if (p.ID == id)
-                    return p;
-            }
-            return null;
+            return _paragraphs.FirstOrDefault(p => p.ID == id);
         }
 
         public SubtitleFormat ReloadLoadSubtitle(List<string> lines, string fileName)
