@@ -417,18 +417,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // fix overlapping time codes
-            using (var formFix = new FixCommonErrors())
-            {
-                var tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _originalSubtitle.WasLoadedWithFrameNumbers };
-                foreach (Paragraph p in _paragraphs)
-                    tmpSubtitle.Paragraphs.Add(new Paragraph(p));
-
-                new FixOverlappingDisplayTimes().Fix(tmpSubtitle, new EmptyFixCallback());
-
-                _paragraphs.Clear();
-                foreach (Paragraph p in formFix.FixedSubtitle.Paragraphs)
-                    _paragraphs.Add(new Paragraph(p));
-            }
+            var tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _originalSubtitle.WasLoadedWithFrameNumbers };
+            foreach (Paragraph p in _paragraphs)
+                tmpSubtitle.Paragraphs.Add(new Paragraph(p));
+            new FixOverlappingDisplayTimes().Fix(tmpSubtitle, new EmptyFixCallback());
+            _paragraphs = tmpSubtitle.Paragraphs;
 
             // update comboboxes
             int startSaveIdx = comboBoxStartTexts.SelectedIndex;
