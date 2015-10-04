@@ -18438,9 +18438,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.BeforeGuessingTimeCodes));
 
-                    double startFrom = 0;
+                    double startFromSeconds = 0;
                     if (form.StartFromVideoPosition)
-                        startFrom = mediaPlayer.CurrentPosition;
+                        startFromSeconds = mediaPlayer.CurrentPosition;
 
                     if (form.DeleteAll)
                     {
@@ -18450,11 +18450,11 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         for (int i = _subtitle.Paragraphs.Count - 1; i > 0; i--)
                         {
-                            if (_subtitle.Paragraphs[i].EndTime.TotalSeconds + 1 > startFrom)
+                            if (_subtitle.Paragraphs[i].EndTime.TotalSeconds + 1 > startFromSeconds)
                                 _subtitle.Paragraphs.RemoveAt(i);
                         }
                     }
-                    audioVisualizer.GenerateTimeCodes(form.BlockSize, form.VolumeMinimum, form.VolumeMaximum, form.DefaultMilliseconds);
+                    audioVisualizer.GenerateTimeCodes(_subtitle, startFromSeconds, form.BlockSize, form.VolumeMinimum, form.VolumeMaximum, form.DefaultMilliseconds);
                     if (IsFramesRelevant && CurrentFrameRate > 0)
                         _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
