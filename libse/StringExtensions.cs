@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string[] SplitToLines(this string source)
         {
-            return source.Replace("\r\n", "\n").Replace('\r', '\n').Replace(Convert.ToChar(8232), '\n').Split('\n');
+            return source.Replace("\r\n", "\n").Replace('\r', '\n').Replace('\u2028', '\n').Split('\n');
         }
 
         // http://www.codeproject.com/Articles/43726/Optimizing-string-operations-in-C
