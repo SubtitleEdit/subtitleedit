@@ -2552,8 +2552,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _videoAudioTrackNumber = -1;
                         labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
                         audioVisualizer.WavePeaks = null;
-                        audioVisualizer.ResetSpectrogram();
-                        audioVisualizer.Invalidate();
+                        audioVisualizer.Spectrogram = null;
                     }
 
                     if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer)
@@ -2643,8 +2642,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _videoAudioTrackNumber = -1;
                         labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
                         audioVisualizer.WavePeaks = null;
-                        audioVisualizer.ResetSpectrogram();
-                        audioVisualizer.Invalidate();
+                        audioVisualizer.Spectrogram = null;
 
                         Configuration.Settings.RecentFiles.Add(fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
                         Configuration.Settings.Save();
@@ -3301,8 +3299,7 @@ namespace Nikse.SubtitleEdit.Forms
             _videoAudioTrackNumber = -1;
             labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
             audioVisualizer.WavePeaks = null;
-            audioVisualizer.ResetSpectrogram();
-            audioVisualizer.Invalidate();
+            audioVisualizer.Spectrogram = null;
 
             _sourceViewChange = false;
 
@@ -12679,12 +12676,9 @@ namespace Nikse.SubtitleEdit.Forms
                 string spectrogramFolder = GetSpectrogramFolder(fileName);
                 if (File.Exists(peakWaveFileName))
                 {
-                    audioVisualizer.WavePeaks = new WavePeakGenerator(peakWaveFileName);
-                    audioVisualizer.ResetSpectrogram();
-                    audioVisualizer.InitializeSpectrogram(spectrogramFolder);
+                    audioVisualizer.WavePeaks = WavePeakData.FromDisk(peakWaveFileName);
+                    audioVisualizer.Spectrogram = SpectrogramData.FromDisk(spectrogramFolder);
                     toolStripComboBoxWaveform_SelectedIndexChanged(null, null);
-                    audioVisualizer.WavePeaks.GenerateAllSamples();
-                    audioVisualizer.WavePeaks.Close();
                     SetWaveformPosition(0, 0, 0);
                     timerWaveform.Start();
                 }
@@ -13426,8 +13420,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (audioVisualizer.WavePeaks != null)
                 {
                     audioVisualizer.WavePeaks = null;
-                    audioVisualizer.ResetSpectrogram();
-                    audioVisualizer.Invalidate();
+                    audioVisualizer.Spectrogram = null;
                 }
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
                 if (!panelVideoPlayer.Visible)
@@ -14819,21 +14812,16 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (IsFileValidForVisualizer(_videoFileName))
                     {
-                        addWaveform.InitializeViaWaveFile(_videoFileName, spectrogramFolder);
+                        addWaveform.InitializeViaWaveFile(_videoFileName, peakWaveFileName, spectrogramFolder);
                     }
                     else
                     {
-                        addWaveform.Initialize(_videoFileName, spectrogramFolder, _videoAudioTrackNumber);
+                        addWaveform.Initialize(_videoFileName, peakWaveFileName, spectrogramFolder, _videoAudioTrackNumber);
                     }
                     if (addWaveform.ShowDialog() == DialogResult.OK)
                     {
-                        addWaveform.WavePeak.WritePeakSamples(peakWaveFileName);
-                        var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
-                        audioPeakWave.GenerateAllSamples();
-                        audioPeakWave.Close();
-                        audioVisualizer.WavePeaks = audioPeakWave;
-                        if (addWaveform.SpectrogramBitmaps != null)
-                            audioVisualizer.InitializeSpectrogram(addWaveform.SpectrogramBitmaps, spectrogramFolder);
+                        audioVisualizer.WavePeaks = addWaveform.Peaks;
+                        audioVisualizer.Spectrogram = addWaveform.Spectrogram;
                         timerWaveform.Start();
                     }
                 }
@@ -15204,19 +15192,20 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (_videoFileName == null)
+            {
                 OpenVideo(fileName);
+                return;
+            }
 
             using (var addWaveform = new AddWaveform())
             {
+                string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
                 string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
-                addWaveform.InitializeViaWaveFile(fileName, spectrogramFolder);
+                addWaveform.InitializeViaWaveFile(fileName, peakWaveFileName, spectrogramFolder);
                 if (addWaveform.ShowDialog() == DialogResult.OK)
                 {
-                    string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
-                    addWaveform.WavePeak.WritePeakSamples(peakWaveFileName);
-                    var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
-                    audioPeakWave.GenerateAllSamples();
-                    audioVisualizer.WavePeaks = audioPeakWave;
+                    audioVisualizer.WavePeaks = addWaveform.Peaks;
+                    audioVisualizer.Spectrogram = addWaveform.Spectrogram;
                     timerWaveform.Start();
                 }
             }
@@ -16501,8 +16490,7 @@ namespace Nikse.SubtitleEdit.Forms
             _videoAudioTrackNumber = -1;
             labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
             audioVisualizer.WavePeaks = null;
-            audioVisualizer.ResetSpectrogram();
-            audioVisualizer.Invalidate();
+            audioVisualizer.Spectrogram = null;
         }
 
         private void ToolStripMenuItemVideoDropDownOpening(object sender, EventArgs e)
@@ -16540,7 +16528,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (mediaPlayer.VideoPlayer != null && audioVisualizer != null && audioVisualizer.WavePeaks != null && audioVisualizer.WavePeaks.AllSamples.Count > 0)
+            if (mediaPlayer.VideoPlayer != null && audioVisualizer != null && audioVisualizer.WavePeaks != null && audioVisualizer.WavePeaks.Peaks.Count > 0)
             {
                 toolStripMenuItemImportSceneChanges.Visible = true;
                 toolStripMenuItemRemoveSceneChanges.Visible = audioVisualizer.SceneChanges.Count > 0;
@@ -18451,9 +18439,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.BeforeGuessingTimeCodes));
 
-                    double startFrom = 0;
+                    double startFromSeconds = 0;
                     if (form.StartFromVideoPosition)
-                        startFrom = mediaPlayer.CurrentPosition;
+                        startFromSeconds = mediaPlayer.CurrentPosition;
 
                     if (form.DeleteAll)
                     {
@@ -18463,11 +18451,11 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         for (int i = _subtitle.Paragraphs.Count - 1; i > 0; i--)
                         {
-                            if (_subtitle.Paragraphs[i].EndTime.TotalSeconds + 1 > startFrom)
+                            if (_subtitle.Paragraphs[i].EndTime.TotalSeconds + 1 > startFromSeconds)
                                 _subtitle.Paragraphs.RemoveAt(i);
                         }
                     }
-                    audioVisualizer.GenerateTimeCodes(form.BlockSize, form.VolumeMinimum, form.VolumeMaximum, form.DefaultMilliseconds);
+                    audioVisualizer.GenerateTimeCodes(_subtitle, startFromSeconds, form.BlockSize, form.VolumeMinimum, form.VolumeMaximum, form.DefaultMilliseconds);
                     if (IsFramesRelevant && CurrentFrameRate > 0)
                         _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
