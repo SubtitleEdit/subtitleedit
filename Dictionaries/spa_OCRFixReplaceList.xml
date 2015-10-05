@@ -825,7 +825,7 @@
     <!-- Puntos innecesarios (complemento) -->
     <RegEx find="([\w\W]\.{3})([¡¿])" replaceWith="$1 $2" />
     <RegEx find="(\w)\.\.(\s)" replaceWith="$1.$2" />
-    <RegEx find="[\wá-ú\x22»]\.([\?\!])" replaceWith="$1$2" />
+    <RegEx find="([\wá-ú\x22»])\.([\?\!])" replaceWith="$1$2" />
     <RegEx find="([\:\;])\." replaceWith="$1" />
     <RegEx find="\.([\:\;])" replaceWith="$1" />
     <RegEx find="\:+" replaceWith=":" />
