@@ -12,8 +12,8 @@ namespace UpdateAssemblyInfo
         private static readonly Regex LongVersionRegex; // e.g.: 3.4.8.226
         private static readonly Regex ShortVersionRegex; // e.g.: 3.4.8 (w/o build number)
         private static readonly Regex TemplateFileVersionRegex; // e.g.: [assembly: AssemblyVersion("3.4.8.[REVNO]")]
-        private static readonly Regex AssemblyFileVersionRegex; // e.g.: [assembly: AssemblyVersion("3.4.8.226")]
-        private static readonly Regex AssemblyFileRevisionGuidRegex; // e.g.: [assembly: AssemblyDescription("0e82e5769c9b235383991082c0a0bba96d20c69d")]
+        private static readonly Regex AssemblyInfoFileVersionRegex; // e.g.: [assembly: AssemblyVersion("3.4.8.226")]
+        private static readonly Regex AssemblyInfoFileRevisionGuidRegex; // e.g.: [assembly: AssemblyDescription("0e82e5769c9b235383991082c0a0bba96d20c69d")]
         static Program()
         {
             var options = RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant;
@@ -22,8 +22,8 @@ namespace UpdateAssemblyInfo
             ShortVersionRegex = new Regex(@"\A(?<major>[0-9]+)\.(?<minor>[0-9]+)\.(?<maintenance>[0-9]+)\z", options);
             options |= RegexOptions.Multiline;
             TemplateFileVersionRegex = new Regex(@"^[ \t]*\[assembly:[ \t]*AssemblyVersion\(""(?<version>[0-9]+\.[0-9]+\.[0-9]+)\.\[REVNO\]""\)\]", options);
-            AssemblyFileVersionRegex = new Regex(@"^[ \t]*\[assembly:[ \t]*AssemblyVersion\(""(?<version>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)""\)\]", options);
-            AssemblyFileRevisionGuidRegex = new Regex(@"^[ \t]*\[assembly:[ \t]*AssemblyDescription\(""(?<guid>[0-9A-Za-z]*)""\)\]", options);
+            AssemblyInfoFileVersionRegex = new Regex(@"^[ \t]*\[assembly:[ \t]*AssemblyVersion\(""(?<version>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)""\)\]", options);
+            AssemblyInfoFileRevisionGuidRegex = new Regex(@"^[ \t]*\[assembly:[ \t]*AssemblyDescription\(""(?<guid>[0-9A-Za-z]*)""\)\]", options);
         }
 
         private const int UnknownBuild = 9999;
@@ -147,9 +147,9 @@ namespace UpdateAssemblyInfo
                 File.WriteAllText(templateFileName, templateText, Encoding.UTF8);
             }
 
-            var assemblyText = templateText.Replace("[REVNO]", newVersion.Build.ToString(CultureInfo.InvariantCulture)).Replace("[GITHASH]", newVersion.RevisionGuid);
-            var assemblyFileName = templateFileName.Replace(".template", string.Empty);
-            File.WriteAllText(assemblyFileName, assemblyText, Encoding.UTF8);
+            var assemblyInfoText = templateText.Replace("[REVNO]", newVersion.Build.ToString(CultureInfo.InvariantCulture)).Replace("[GITHASH]", newVersion.RevisionGuid);
+            var assemblyInfoFileName = templateFileName.Replace(".template", string.Empty);
+            File.WriteAllText(assemblyInfoFileName, assemblyInfoText, Encoding.UTF8);
         }
 
         private static void GetRepositoryVersions(out VersionInfo currentRepositoryVersion, out VersionInfo latestRepositoryVersion)
@@ -174,7 +174,7 @@ namespace UpdateAssemblyInfo
             {
                 if (!LongGitTagRegex.IsMatch(clrTags.Result))
                 {
-                    throw new Exception("Invalid Git version tag: '" + clrTags.Result + "' (major.minor.maintenance-build-* expected)");
+                    throw new Exception("Invalid Git version tag: '" + clrTags.Result + "' (major.minor.maintenance-build expected)");
                 }
                 latestRepositoryVersion = new VersionInfo(clrTags.Result, clrHash.Result);
             }
@@ -186,12 +186,12 @@ namespace UpdateAssemblyInfo
 
         private static VersionInfo GetCurrentVersion(string templateFileName)
         {
-            var assemblyFileName = templateFileName.Replace(".template", string.Empty);
+            var assemblyInfoFileName = templateFileName.Replace(".template", string.Empty);
             try
             {
-                var assemblyText = File.ReadAllText(assemblyFileName);
-                var versionMatch = AssemblyFileVersionRegex.Match(assemblyText);
-                var revisionMatch = AssemblyFileRevisionGuidRegex.Match(assemblyText);
+                var assemblyInfoText = File.ReadAllText(assemblyInfoFileName);
+                var versionMatch = AssemblyInfoFileVersionRegex.Match(assemblyInfoText);
+                var revisionMatch = AssemblyInfoFileRevisionGuidRegex.Match(assemblyInfoText);
                 if (versionMatch.Success && revisionMatch.Success)
                 {
                     return new VersionInfo(versionMatch.Groups["version"].Value, revisionMatch.Groups["guid"].Value);
@@ -341,7 +341,7 @@ namespace UpdateAssemblyInfo
             try
             {
                 var cRoot = new DriveInfo("C").RootDirectory.FullName;
-                if (!cRoot.StartsWith(envSystemDrive, StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrWhiteSpace(envSystemDrive) || !cRoot.StartsWith(envSystemDrive, StringComparison.OrdinalIgnoreCase))
                 {
                     var path = Path.Combine(cRoot, "Program Files", gitPath);
                     if (File.Exists(path))
