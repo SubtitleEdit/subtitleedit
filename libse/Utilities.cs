@@ -1074,7 +1074,7 @@ namespace Nikse.SubtitleEdit.Core
         public static readonly string[] AutoDetectWordsItalian = { "Cosa", "sono", "Grazie", "Buongiorno", "bene", "questo", "ragazzi", "propriamente", "numero", "hanno", "giorno", "faccio", "davvero", "negativo", "essere", "vuole", "sensitivo", "venire" };
         public static readonly string[] AutoDetectWordsPortuguese = { "não", "Não", "Estás", "Então", "isso", "com" };
         public static readonly string[] AutoDetectWordsGreek = { "μου", "είναι", "Είναι", "αυτό", "Τόμπυ", "καλά", "Ενταξει", "Ενταξει", "πρεπει", "Λοιπον", "τιποτα", "ξερεις" };
-        public static readonly string[] AutoDetectWordsRussian = { "все", "это", "как", "Воробей", "сюда", "Давай" };
+        public static readonly string[] AutoDetectWordsRussian = { "Это", "не", "ты", "что", "это", "Мы", "Да", "Нет", "Ты", "нет", "Он", "его", "тебя", "как", "Не", "вы", "меня", "Но", "то", "всё", "бы", "мы", "мне", "вас", "знаю", "ещё", "за", "нас", "чтобы", "был" };
         public static readonly string[] AutoDetectWordsBulgarian = { "Какво", "тук", "може", "Как", "Ваше", "какво" };
         public static readonly string[] AutoDetectWordsRomanian = { "Какво", "тук", "може", "Как", "Ваше", "какво" };
         public static readonly string[] AutoDetectWordsArabic = { "Какво", "тук", "може", "Как", "Ваше", "какво" };
