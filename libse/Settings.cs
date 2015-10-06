@@ -669,8 +669,8 @@ namespace Nikse.SubtitleEdit.Core
             WaveformAllowOverlap = false;
             WaveformBorderHitMs = 15;
             WaveformGridColor = Color.FromArgb(255, 20, 20, 18);
-            WaveformColor = Color.GreenYellow;
-            WaveformSelectedColor = Color.Red;
+            WaveformColor = Color.FromArgb(255, 160, 240, 30);
+            WaveformSelectedColor = Color.FromArgb(255, 230, 0, 0);
             WaveformBackgroundColor = Color.Black;
             WaveformTextColor = Color.Gray;
             WaveformTextSize = 9;
