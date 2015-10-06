@@ -462,8 +462,7 @@ namespace Nikse.SubtitleEdit.Core
         public int RemoveParagraphsByIndices(IEnumerable<int> indices)
         {
             int count = 0;
-            var list = indices.ToList().OrderBy(p => p).Reverse();
-            foreach (var index in list)
+            foreach (var index in indices.OrderByDescending(p => p))
             {
                 if (index >= 0 && index < _paragraphs.Count)
                 {
