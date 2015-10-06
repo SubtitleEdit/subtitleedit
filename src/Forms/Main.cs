@@ -412,6 +412,35 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                labelAutoDuration.Visible = false;
+                mediaPlayer.SubtitleText = string.Empty;
+                comboBoxAutoContinue.SelectedIndex = 2;
+                timeUpDownVideoPosition.TimeCode = new TimeCode(0, 0, 0, 0);
+                timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(0, 0, 0, 0);
+                timeUpDownVideoPosition.TimeCodeChanged += VideoPositionChanged;
+                timeUpDownVideoPositionAdjust.TimeCodeChanged += VideoPositionChanged;
+                timeUpDownVideoPosition.Enabled = false;
+                timeUpDownVideoPositionAdjust.Enabled = false;
+
+                switch (Configuration.Settings.VideoControls.LastActiveTab)
+                {
+                    case "Translate":
+                        tabControlButtons.SelectedIndex = 0;
+                        break;
+                    case "Create":
+                        tabControlButtons.SelectedIndex = 1;
+                        break;
+                    case "Adjust":
+                        tabControlButtons.SelectedIndex = 2;
+                        break;
+                }
+                tabControl1_SelectedIndexChanged(null, null);
+                buttonCustomUrl1.Text = Configuration.Settings.VideoControls.CustomSearchText1;
+                buttonCustomUrl1.Visible = Configuration.Settings.VideoControls.CustomSearchUrl1.Length > 1;
+                buttonCustomUrl2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
+                buttonCustomUrl2.Visible = Configuration.Settings.VideoControls.CustomSearchUrl2.Length > 1;
+
+
                 if (fileName.Length > 0 && File.Exists(fileName))
                 {
                     OpenSubtitle(fileName, null);
@@ -463,37 +492,6 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
-
-                labelAutoDuration.Visible = false;
-                mediaPlayer.SubtitleText = string.Empty;
-                // comboBoxAutoRepeat.SelectedIndex = 2;
-                comboBoxAutoContinue.SelectedIndex = 2;
-                timeUpDownVideoPosition.TimeCode = new TimeCode(0, 0, 0, 0);
-                timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(0, 0, 0, 0);
-                timeUpDownVideoPosition.TimeCodeChanged += VideoPositionChanged;
-                timeUpDownVideoPositionAdjust.TimeCodeChanged += VideoPositionChanged;
-                timeUpDownVideoPosition.Enabled = false;
-                timeUpDownVideoPositionAdjust.Enabled = false;
-
-                switch (Configuration.Settings.VideoControls.LastActiveTab)
-                {
-                    case "Translate":
-                        tabControlButtons.SelectedIndex = 0;
-                        break;
-                    case "Create":
-                        tabControlButtons.SelectedIndex = 1;
-                        break;
-                    case "Adjust":
-                        tabControlButtons.SelectedIndex = 2;
-                        break;
-                }
-                tabControl1_SelectedIndexChanged(null, null);
-
-                buttonCustomUrl1.Text = Configuration.Settings.VideoControls.CustomSearchText1;
-                buttonCustomUrl1.Visible = Configuration.Settings.VideoControls.CustomSearchUrl1.Length > 1;
-
-                buttonCustomUrl2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
-                buttonCustomUrl2.Visible = Configuration.Settings.VideoControls.CustomSearchUrl2.Length > 1;
 
                 // Initialize events etc. for audio waveform
                 audioVisualizer.OnDoubleClickNonParagraph += AudioWaveform_OnDoubleClickNonParagraph;
@@ -12722,6 +12720,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VideoLoaded(object sender, EventArgs e)
         {
+            if (_loading)
+            {
+                Application.DoEvents();
+            }
+
             mediaPlayer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
             timer1.Start();
 
