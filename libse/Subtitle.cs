@@ -434,17 +434,7 @@ namespace Nikse.SubtitleEdit.Core
                     return item;
             }
             return null;
-        }
-
-        public Paragraph GetFirstParagraphByLineNumber(int number)
-        {
-            foreach (Paragraph p in _paragraphs)
-            {
-                if (p.Number == number)
-                    return p;
-            }
-            return null;
-        }
+        }      
 
         public int RemoveEmptyLines()
         {
@@ -462,6 +452,38 @@ namespace Nikse.SubtitleEdit.Core
                     Renumber(firstNumber);
             }
             return count - _paragraphs.Count;
+        }
+
+        /// <summary>
+        /// Removes paragrahs by a list of indices
+        /// </summary>
+        /// <param name="indices">Indices of pargraphs/lines to delete</param>
+        /// <returns>Number of lines deleted</returns>
+        public int RemoveParagraphsByIndices(IEnumerable<int> indices)
+        {
+            int count = 0;
+            var list = indices.ToList().OrderBy(p => p).Reverse();
+            foreach (var index in list)
+            {
+                if (index >= 0 && index < _paragraphs.Count)
+                {
+                    _paragraphs.RemoveAt(index);
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        /// <summary>
+        /// Removes paragrahs by a list of IDs
+        /// </summary>
+        /// <param name="ids">IDs of pargraphs/lines to delete</param>
+        /// <returns>Number of lines deleted</returns>
+        public int RemoveParagraphsByIds(IEnumerable<string> ids)
+        {
+            int beforeCount = _paragraphs.Count;
+            _paragraphs = _paragraphs.Where(p => !ids.Contains(p.ID)).ToList();
+            return beforeCount - _paragraphs.Count;
         }
 
         /// <summary>
