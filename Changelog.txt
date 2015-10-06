@@ -4,7 +4,7 @@
 * NEW:
    * Audio visualizer waveform filled - thx jdpurcell
 * FIXED:
-   * Fixed crash in "Visual sync" - thx aMvEL / Bolshevik 
+   * Fixed crash in "Visual sync" - thx aMvEL / Bolshevik
    * Fixed "Fix common errors in selected lines" - thx ingo
    * Fixed audio visualizer "Seek silence" - thx jdpurcell
    * Fixed audio visualizer "Guess time codes" - thx jdpurcell
@@ -63,9 +63,9 @@
    * Audio visualizer: Fix crash when using shortcuts without audio
    * Audio visualizer: Fix issues with HH:MM:SS:FF time code format - thx jdpurcell
    * Audio visualizer: Stable end time when using HH:MM:SS:FF time code format - thx ing
-   * Audio visualizer:  Fix new selection disappearing if scrolled out of theleft - thx jdpurcell
+   * Audio visualizer:  Fix new selection disappearing if scrolled out of the left - thx jdpurcell
    * Inline margin is now loaded/saved in SSA/ASS (can only be edited in source view)
-   * Changed LAV Filters link from Google Code to Github - thx suvjunmd
+   * Changed LAV Filters link from Google Code to GitHub - thx suvjunmd
    * Fixed bug in FAB export regarding center alignment - thx felagund
    * Some fixes for "Remove text for HI" - thx Rasmus
    * Fix for added words no "don't break after" list - thx ivandrofly
