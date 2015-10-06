@@ -1,5 +1,16 @@
 ﻿Subtitle Edit Changelog
 
+3.4.10 (xth October 2015) BETA
+* NEW:
+   * Audio visualizer waveform filled - thx jdpurcell
+* FIXED:
+   * Fixed crash in Visual Sync - thx aMvEL / Bolshevik 
+   * Fixed "Fix common errors on selected lines" - thx ingo
+   * Fix audio visualizer "seek silence" - thx jdpurcell
+   * Fix audio visualizer "guess time codes" - thx jdpurcell
+   * Fixed line splitter regarding unicode 8242 char
+
+
 3.4.9 (3rd October 2015)
 * NEW:
    * New subtitle formats (XIF xml, Jetsen, NCI Timed Roll Up Captions and more)
@@ -33,7 +44,7 @@
 * FIXED:
    * Fixed tags accumulating texts in Sami format (regression from 3.4.8 refact) - thx domddol
    * Show all paragraphs in audio visualizer when zoomed out - thx jdpurcell
-   * Fixed bug in "Set end and offset the rest" that degraded performance more and more - thx jdpurcell
+   * Fixed bug in "Set end and offset the rest" that degraded performance more and more - thx jdpurcell/Leon
    * Fixed several issues with format "Cavena 890" - thx Victor
    * Better handling of some zero width Unicode spaces - thx Krystian
    * Spell check issue with multiple occurrences of same word in one subtitle - thx Krystian
