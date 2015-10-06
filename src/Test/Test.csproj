@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\StringExtensionsTest.cs" />
+    <Compile Include="Core\SubtitleTest.cs" />
     <Compile Include="Logic\Ocr\BinaryOcrTest.cs" />
     <Compile Include="Core\HtmlUtilTest.cs" />
     <Compile Include="FixCommonErrorsTest.cs" />
