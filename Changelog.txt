@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.4.10 (xth October 2015) BETA
+3.4.10 (6th October 2015)
 * NEW:
    * Audio visualizer waveform filled - thx jdpurcell
 * FIXED:
