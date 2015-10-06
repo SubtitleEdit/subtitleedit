@@ -4,10 +4,11 @@
 * NEW:
    * Audio visualizer waveform filled - thx jdpurcell
 * FIXED:
-   * Fixed crash in Visual Sync - thx aMvEL / Bolshevik 
-   * Fixed "Fix common errors on selected lines" - thx ingo
-   * Fix audio visualizer "seek silence" - thx jdpurcell
-   * Fix audio visualizer "guess time codes" - thx jdpurcell
+   * Fixed crash in "Visual sync" - thx aMvEL / Bolshevik 
+   * Fixed "Fix common errors in selected lines" - thx ingo
+   * Fixed audio visualizer "Seek silence" - thx jdpurcell
+   * Fixed audio visualizer "Guess time codes" - thx jdpurcell
+   * Fixed possible startup crash with tiny or bad video file - thx ttvd94
    * Fixed line splitter regarding unicode 8242 char
 
 
