@@ -9,6 +9,7 @@
    * Fixed audio visualizer "Seek silence" - thx jdpurcell
    * Fixed audio visualizer "Guess time codes" - thx jdpurcell
    * Fixed possible startup crash with tiny or bad video file - thx ttvd94
+   * Fixed alpha in ASS styles - thx ravi
    * Fixed line splitter regarding unicode 8242 char
 
 

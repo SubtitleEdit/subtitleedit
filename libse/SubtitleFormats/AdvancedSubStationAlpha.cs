@@ -1020,13 +1020,21 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             }
             if (s.StartsWith('h') && s.Length == 9)
             {
+                int alpha;
+                if (Int32.TryParse(s.Substring(1, 2), NumberStyles.HexNumber, null, out alpha))
+                {
+                    alpha = 255 - alpha; // ASS stores alpha in reverse (0=full itentity and 255=fully transparent)
+                }
+                else
+                {
+                    alpha = 255; // full color
+                }
                 s = s.Substring(3);
                 string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
                 try
                 {
                     var c = ColorTranslator.FromHtml(hexColor);
-
-                    return c;
+                    return Color.FromArgb(alpha, c);
                 }
                 catch
                 {
@@ -1044,7 +1052,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
         public static string GetSsaColorString(Color c)
         {
-            return string.Format("&H00{0:X2}{1:X2}{2:X2}", c.B, c.G, c.R);
+            return string.Format("&H{0:X2}{1:X2}{2:X2}{3:X2}", 255 - c.A, c.B, c.G, c.R); // ASS stores alpha in reverse (0=full itentity and 255=fully transparent)
         }
 
         public static string CheckForErrors(string header)
