@@ -2955,7 +2955,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private CompareMatch GetCompareMatchNew(ImageSplitterItem targetItem, out CompareMatch secondBestGuess, List<ImageSplitterItem> list, int listIndex)
         {
-            double maxDiff = _numericUpDownMaxErrorPct; 
+            double maxDiff = _numericUpDownMaxErrorPct;
             secondBestGuess = null;
             int index = 0;
             int smallestDifference = 10000;
