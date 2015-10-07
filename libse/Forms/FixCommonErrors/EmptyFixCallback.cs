@@ -60,9 +60,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             set { _encoding = value; }
         }
 
-        public List<string> GetAbbreviations()
+        public HashSet<string> GetAbbreviations()
         {
-            return new List<string>();
+            return new HashSet<string>();
         }
 
     }
