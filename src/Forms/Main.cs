@@ -5622,6 +5622,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     bool startOk = startIndex == 0 ||
                                    p.Text[startIndex - 1] == ' ' ||
+                                   p.Text[startIndex - 1] == '>' ||
+                                   p.Text[startIndex - 1] == '"' ||
+                                   p.Text[startIndex - 1] == '\'' ||
                                    startIndex == p.Text.Length - oldWord.Length ||
                                    Environment.NewLine.EndsWith(p.Text[startIndex - 1]);
                     if (startOk)
@@ -5629,7 +5632,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int end = startIndex + oldWord.Length;
                         if (end <= p.Text.Length)
                         {
-                            if (end == p.Text.Length || (@" ,.!?:;')" + Environment.NewLine).Contains(p.Text[end]))
+                            if (end == p.Text.Length || (" ,.!?:;')<\"" + Environment.NewLine).Contains(p.Text[end]))
                                 p.Text = p.Text.Remove(startIndex, oldWord.Length).Insert(startIndex, changeWord);
                         }
                     }
