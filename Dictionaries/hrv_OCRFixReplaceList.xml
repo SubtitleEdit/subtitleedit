@@ -896,7 +896,7 @@
     <RegEx find="([oO])bezbj?edi" replaceWith="$1sigura" />
     <RegEx find="([oO])bezbeđenj([aeu]|ima)" replaceWith="$1siguranj$2" />
     <RegEx find="([oO])bezbeđivanj([aeu]|ima)" replaceWith="$1siguravanj$2" />
-    <RegEx find="([oO])bezbeđuje" replaceWith="$1sigurava$2" />
+    <RegEx find="([oO])bezbeđuje" replaceWith="$1sigurava" />
     <RegEx find="([oO])brača" replaceWith="$1braća" />
     <RegEx find="\b([oO])deć([aeiou]|om)" replaceWith="$1djeć$2" />
     <RegEx find="([oO])dj?eljenj([au])" replaceWith="$1djel$2" />
