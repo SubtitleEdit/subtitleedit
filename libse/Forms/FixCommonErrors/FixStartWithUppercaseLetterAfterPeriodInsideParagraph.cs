@@ -8,13 +8,13 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
         private bool IsAbbreviation(string text, int index, IFixCallbacks callbacks)
         {
-            if (text[index] != '.' && text[index] != '!' && text[index] != '?')
+            if (text[index] != '.')
                 return false;
 
             if (index - 3 > 0 && Utilities.AllLettersAndNumbers.Contains(text[index - 1]) && text[index - 2] == '.') // e.g: O.R.
                 return true;
 
-            string word = string.Empty;
+            var word = string.Empty;
             int i = index - 1;
             while (i >= 0 && Utilities.AllLetters.Contains(text[i]))
             {
