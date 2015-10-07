@@ -434,7 +434,7 @@ namespace Nikse.SubtitleEdit.Core
                     return item;
             }
             return null;
-        }      
+        }
 
         public int RemoveEmptyLines()
         {
