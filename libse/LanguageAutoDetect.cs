@@ -113,6 +113,7 @@ namespace Nikse.SubtitleEdit.Core
                                                                     "razumem", "videla", "ceo", "svet", "porodica", "voleo", "srećan", "dođavola", "svetu", "htela",
                                                                     "videli", "negde", "želeo", "ponovo", "devojka", "umreti", "čoveka", "mesta", "deca", "osećam",
                                                                     "uopšte", "decu", "napred", "porodicu", "zaista", "mestu", "lepa", "takođe", "reč", "telo" };
+        private static readonly string[] AutoDetectWordsSerbianCyrillic = { "сам", "али", "није", "само", "ово", "како", "добро", "све", "тако", "ће", "могу", "ћу", "зашто", "нешто", "за", "шта", "овде" };
 
         private static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
@@ -503,6 +504,11 @@ namespace Nikse.SubtitleEdit.Core
                                     languageName = "hr_HR";
                             }
                         }
+                        break;
+                    case "sr": // Serbian (Cyrillic)
+                        count = GetCount(text, AutoDetectWordsSerbianCyrillic);
+                        if (count > bestCount)
+                            languageName = shortName;
                         break;
                     case "pt_PT": // Portuguese
                         count = GetCount(text, AutoDetectWordsPortuguese);
