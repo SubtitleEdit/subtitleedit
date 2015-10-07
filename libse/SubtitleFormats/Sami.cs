@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string language = Utilities.AutoDetectLanguageName("en_US", subtitle);
+            string language = LanguageAutoDetect.AutoDetectLanguageName("en_US", subtitle);
             var ci = CultureInfo.GetCultureInfo(language.Replace("_", "-"));
             string languageTag = string.Format("{0}CC", language.Replace("_", string.Empty).ToUpper());
             string languageName = ci.Parent.EnglishName;

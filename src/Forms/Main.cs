@@ -1934,7 +1934,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (format == null && ext == ".wsb")
                 {
                     var wsb = new Wsb();
-                    var list = new List<string>(File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName)));
+                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
                     if (wsb.IsMine(list, fileName))
                     {
                         wsb.LoadSubtitle(_subtitle, list, fileName);
@@ -2102,7 +2102,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         var bdnXml = new BdnXml();
-                        var list = new List<string>(File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName)));
+                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
                         if (bdnXml.IsMine(list, fileName))
                         {
                             if (ContinueNewOrExit())
@@ -2123,7 +2123,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         var fcpImage = new FinalCutProImage();
-                        var list = new List<string>(File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName)));
+                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
                         if (fcpImage.IsMine(list, fileName))
                         {
                             if (ContinueNewOrExit())
@@ -2204,7 +2204,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         var dost = new Dost();
-                        var list = new List<string>(File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName)));
+                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
                         if (dost.IsMine(list, fileName))
                         {
                             if (ContinueNewOrExit())
@@ -2223,7 +2223,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         var son = new Son();
-                        var list = new List<string>(File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName)));
+                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
                         if (son.IsMine(list, fileName))
                         {
                             if (ContinueNewOrExit())
@@ -2264,7 +2264,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         var satBoxPng = new SatBoxPng();
-                        var list = new List<string>(File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName)));
+                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
                         if (satBoxPng.IsMine(list, fileName))
                         {
                             var subtitle = new Subtitle();
@@ -2285,7 +2285,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         var sst = new SonicScenaristBitmaps();
-                        var list = new List<string>(File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName)));
+                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
                         if (sst.IsMine(list, fileName))
                         {
                             if (ContinueNewOrExit())
@@ -2304,7 +2304,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         var htmlSamiArray = new HtmlSamiArray();
-                        var list = new List<string>(File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName)));
+                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
                         if (htmlSamiArray.IsMine(list, fileName))
                         {
                             htmlSamiArray.LoadSubtitle(_subtitle, list, fileName);
@@ -2429,7 +2429,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (ext == ".xml" || ext == ".dfxp")
                     {
                         var sb = new StringBuilder();
-                        foreach (var line in File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName)))
+                        foreach (var line in File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)))
                             sb.AppendLine(line);
                         var xmlAsString = sb.ToString().Trim();
 
@@ -2453,7 +2453,7 @@ namespace Nikse.SubtitleEdit.Forms
                     // Try to use a generic subtitle format parser (guessing subtitle format)
                     try
                     {
-                        var enc = Utilities.GetEncodingFromFile(fileName);
+                        var enc = LanguageAutoDetect.GetEncodingFromFile(fileName);
                         var s = File.ReadAllText(fileName, enc);
 
                         // check for RTF file
@@ -5119,7 +5119,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            bool isSwedish = Utilities.AutoDetectGoogleLanguage(_subtitle) == "sv";
+            bool isSwedish = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle) == "sv";
             string promptText = _language.TranslateSwedishToDanish;
             if (!isSwedish)
                 promptText = _language.TranslateSwedishToDanishWarning;
@@ -5424,7 +5424,7 @@ namespace Nikse.SubtitleEdit.Forms
             int totalLinesChanged = 0;
             try
             {
-                wordSpellChecker = new WordSpellChecker(this, Utilities.AutoDetectGoogleLanguage(_subtitle));
+                wordSpellChecker = new WordSpellChecker(this, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
                 wordSpellChecker.NewDocument();
                 Application.DoEvents();
             }
@@ -6694,10 +6694,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAutoBreakClick(object sender, EventArgs e)
         {
-            string language = Utilities.AutoDetectGoogleLanguage(_subtitle);
+            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
             string languageOriginal = string.Empty;
             if (_subtitleAlternate != null)
-                languageOriginal = Utilities.AutoDetectGoogleLanguage(_subtitleAlternate);
+                languageOriginal = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
 
             if (SubtitleListview1.SelectedItems.Count > 1)
             {
@@ -7201,7 +7201,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SplitSelectedParagraph(double? splitSeconds, int? textIndex)
         {
-            string language = Utilities.AutoDetectGoogleLanguage(_subtitle);
+            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
 
             int? alternateTextIndex = null;
             if (textBoxListViewTextAlternate.Focused)
@@ -7454,7 +7454,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var originalCurrent = Utilities.GetOriginalParagraph(firstSelectedIndex, currentParagraph, _subtitleAlternate.Paragraphs);
                     if (originalCurrent != null)
                     {
-                        string languageOriginal = Utilities.AutoDetectGoogleLanguage(_subtitleAlternate);
+                        string languageOriginal = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
 
                         originalCurrent.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
                         var originalNew = new Paragraph(newParagraph);
@@ -7639,7 +7639,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeBeforeToolStripMenuItemClick(object sender, EventArgs e)
         {
-            string language = Utilities.AutoDetectGoogleLanguage(_subtitle);
+            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
                 int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
@@ -7746,7 +7746,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = sb.ToString();
                 text = HtmlUtil.FixInvalidItalicTags(text);
                 text = ChangeAllLinesItalictoSingleItalic(text);
-                text = Utilities.AutoBreakLine(text, Utilities.AutoDetectGoogleLanguage(_subtitle));
+                text = Utilities.AutoBreakLine(text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
                 currentParagraph.Text = text;
 
                 //display time
@@ -7894,7 +7894,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 if (old1.Contains(Environment.NewLine) || old2.Contains(Environment.NewLine) ||
                                     old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                                    original.Text = Utilities.AutoBreakLine(original.Text, Utilities.AutoDetectGoogleLanguage(_subtitleAlternate));
+                                    original.Text = Utilities.AutoBreakLine(original.Text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate));
 
                                 if (string.IsNullOrWhiteSpace(old1))
                                     original.Text = original.Text.TrimStart();
@@ -7939,7 +7939,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (old1.Contains(Environment.NewLine) || old2.Contains(Environment.NewLine) ||
                         old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                        currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text, Utilities.AutoDetectGoogleLanguage(_subtitle));
+                        currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
 
                     if (string.IsNullOrWhiteSpace(old1))
                         currentParagraph.Text = currentParagraph.Text.TrimStart();
@@ -9803,7 +9803,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     bool saveChangeCaseChanges = true;
                     var casingNamesLinesChanged = 0;
-                    changeCasing.FixCasing(selectedLines, Utilities.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle));
+                    changeCasing.FixCasing(selectedLines, LanguageAutoDetect.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle));
                     if (changeCasing.ChangeNamesToo)
                     {
                         using (var changeCasingNames = new ChangeCasingNames())
@@ -11572,10 +11572,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
                 MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines);
-                string language = Utilities.AutoDetectGoogleLanguage(_subtitle);
+                string language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
                 string languageOriginal = string.Empty;
                 if (_subtitleAlternate != null)
-                    Utilities.AutoDetectGoogleLanguage(_subtitleAlternate);
+                    LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
                 foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                 {
                     var p = _subtitle.GetParagraphOrDefault(item.Index);
@@ -11779,7 +11779,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (autoBreakUnbreakLines.ShowDialog() == DialogResult.OK && autoBreakUnbreakLines.FixedText.Count > 0)
                 {
                     MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines);
-                    var language = Utilities.AutoDetectGoogleLanguage(_subtitle);
+                    var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
                     SubtitleListview1.BeginUpdate();
                     foreach (int index in SubtitleListview1.SelectedIndices)
                     {
@@ -13744,7 +13744,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonGoogleTranslateIt_Click(object sender, EventArgs e)
         {
-            string languageId = Utilities.AutoDetectGoogleLanguage(_subtitle);
+            string languageId = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
             System.Diagnostics.Process.Start("https://translate.google.com/#auto|" + languageId + "|" + Utilities.UrlEncode(textBoxSearchWord.Text));
         }
 
@@ -17087,7 +17087,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (p != null)
                 {
-                    string defaultFromLanguage = Utilities.AutoDetectGoogleLanguage(_subtitle);
+                    string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
                     string defaultToLanguage = defaultFromLanguage;
                     if (_subtitleAlternate != null)
                     {
@@ -17095,7 +17095,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (o != null)
                         {
                             p = o;
-                            defaultFromLanguage = Utilities.AutoDetectGoogleLanguage(_subtitleAlternate);
+                            defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitleAlternate);
                         }
                     }
                     Cursor = Cursors.WaitCursor;

@@ -773,7 +773,7 @@ namespace Nikse.SubtitleEdit.Forms
                             sub.RemoveEmptyLines();
                             if (checkBoxFixCasing.Checked)
                             {
-                                _changeCasing.FixCasing(sub, Utilities.AutoDetectGoogleLanguage(sub));
+                                _changeCasing.FixCasing(sub, LanguageAutoDetect.AutoDetectGoogleLanguage(sub));
                                 _changeCasingNames.Initialize(sub);
                                 _changeCasingNames.FixCasing();
                             }

@@ -607,7 +607,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                Encoding encoding = Utilities.GetEncodingFromFile(fileName);
+                Encoding encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
                 textBoxText.Text = File.ReadAllText(fileName, encoding);
                 SetVideoFileName(fileName);
             }

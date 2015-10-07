@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (clearFixes)
                 listViewFixes.Items.Clear();
             numberOfSplits = 0;
-            string language = Utilities.AutoDetectGoogleLanguage(subtitle);
+            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             var splittedSubtitle = new Subtitle();
             string[] expectedPunctuations = { ". -", "! -", "? -" };
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)

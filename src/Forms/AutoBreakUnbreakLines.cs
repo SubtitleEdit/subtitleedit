@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
             var sub = new Subtitle();
             foreach (Paragraph p in _paragraphs)
                 sub.Paragraphs.Add(p);
-            var language = Utilities.AutoDetectGoogleLanguage(sub);
+            var language = LanguageAutoDetect.AutoDetectGoogleLanguage(sub);
 
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();

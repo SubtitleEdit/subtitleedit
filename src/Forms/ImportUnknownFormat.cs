@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 SubtitleListview1.Items.Clear();
-                Encoding encoding = Utilities.GetEncodingFromFile(fileName);
+                Encoding encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
                 textBoxText.Text = File.ReadAllText(fileName, encoding);
 
                 // check for RTF file

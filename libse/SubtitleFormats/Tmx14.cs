@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 "  <body />" + Environment.NewLine +
                 "</tmx>";
 
-            string lang = Utilities.AutoDetectLanguageName("en_US", subtitle);
+            string lang = LanguageAutoDetect.AutoDetectLanguageName("en_US", subtitle);
             if (lang.StartsWith("en_"))
                 lang = "EN";
             else if (lang.Length == 5)

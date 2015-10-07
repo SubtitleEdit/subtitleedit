@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FindAllNames()
         {
-            string language = Utilities.AutoDetectLanguageName("en_US", _subtitle);
+            string language = LanguageAutoDetect.AutoDetectLanguageName("en_US", _subtitle);
             if (string.IsNullOrEmpty(language))
                 language = "en_US";
 

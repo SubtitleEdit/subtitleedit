@@ -101,9 +101,9 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
             _translatedSubtitle = new Subtitle(subtitle);
 
-            string defaultFromLanguage = Utilities.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
+            string defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
             if (string.IsNullOrEmpty(defaultFromLanguage))
-                defaultFromLanguage = Utilities.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
+                defaultFromLanguage = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
 
             FillComboWithLanguages(comboBoxFrom);
             int i = 0;

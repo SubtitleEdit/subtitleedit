@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _fileBuffer = new byte[0];
             }
 
-            Encoding encoding = Utilities.DetectAnsiEncoding(_fileBuffer);
+            Encoding encoding = LanguageAutoDetect.DetectAnsiEncoding(_fileBuffer);
             foreach (EncodingInfo ei in Encoding.GetEncodings())
             {
                 var item = new ListViewItem(new[] { ei.CodePage.ToString(), ei.Name, ei.DisplayName });

@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string languageEnglishName;
             try
             {
-                string languageShortName = Utilities.AutoDetectGoogleLanguage(subtitle);
+                string languageShortName = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
                 var ci = CultureInfo.CreateSpecificCulture(languageShortName);
                 languageEnglishName = ci.EnglishName;
                 int indexOfStartP = languageEnglishName.IndexOf('(');
