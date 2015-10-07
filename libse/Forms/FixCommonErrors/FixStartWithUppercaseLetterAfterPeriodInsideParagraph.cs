@@ -4,6 +4,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixStartWithUppercaseLetterAfterPeriodInsideParagraph : IFixCommonError
     {
+        private readonly static char[] ExpectedChars = { '.', '!', '?' };
 
         private bool IsAbbreviation(string text, int index, IFixCallbacks callbacks)
         {
@@ -37,8 +38,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (p.Text.Length > 3)
                 {
                     string text = st.StrippedText.Replace("  ", " ");
-                    int start = text.IndexOfAny(new[] { '.', '!', '?' });
-                    while (start != -1 && start < text.Length)
+                    int start = text.IndexOfAny(ExpectedChars);
+                    while (start >= 0 && start < text.Length)
                     {
                         if (start > 0 && char.IsDigit(text[start - 1]))
                         {
@@ -75,7 +76,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         }
                         start += 4;
                         if (start < text.Length)
-                            start = text.IndexOfAny(new[] { '.', '!', '?' }, start);
+                            start = text.IndexOfAny(ExpectedChars, start);
                     }
                 }
 
