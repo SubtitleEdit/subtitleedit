@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 try
                 {
-                    sr = new StreamReader(fileName, Utilities.GetEncodingFromFile(fileName), true);
+                    sr = new StreamReader(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName), true);
                 }
                 catch
                 {

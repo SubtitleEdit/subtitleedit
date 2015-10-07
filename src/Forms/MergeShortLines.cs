@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (clearFixes)
                 listViewFixes.Items.Clear();
             numberOfMerges = 0;
-            string language = Utilities.AutoDetectGoogleLanguage(subtitle);
+            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             var mergedSubtitle = new Subtitle();
             bool lastMerged = false;
             Paragraph p = null;

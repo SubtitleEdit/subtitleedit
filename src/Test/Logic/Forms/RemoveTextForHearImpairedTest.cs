@@ -1056,7 +1056,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextKeepMusicSymbolsButRemoveHI()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
@@ -1070,7 +1069,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextRemoveEmdash()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
@@ -1085,7 +1083,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextIfUppercaseEmdashRemoveInDialogue()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
@@ -1098,7 +1095,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextIfUppercaseEmdashRemoveInDialogueWithSpaces()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();

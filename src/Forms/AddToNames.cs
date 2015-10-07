@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             comboBoxDictionaries.Items.Clear();
-            string languageName = Utilities.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle);
+            string languageName = LanguageAutoDetect.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle);
             foreach (string name in Utilities.GetDictionaryLanguages())
             {
                 comboBoxDictionaries.Items.Add(name);
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            languageName = Utilities.AutoDetectLanguageName(languageName, _subtitle);
+            languageName = LanguageAutoDetect.AutoDetectLanguageName(languageName, _subtitle);
             if (comboBoxDictionaries.Items.Count > 0)
             {
                 string name = comboBoxDictionaries.SelectedItem.ToString();

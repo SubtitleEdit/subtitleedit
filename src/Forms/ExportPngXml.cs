@@ -2854,7 +2854,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 labelLanguage.Visible = true;
                 comboBoxLanguage.Visible = true;
                 comboBoxLanguage.Items.Clear();
-                string languageCode = Utilities.AutoDetectGoogleLanguageOrNull(subtitle);
+                string languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle);
                 if (languageCode == null)
                     languageCode = Configuration.Settings.Tools.ExportVobSubLanguage;
                 for (int i = 0; i < IfoParser.ArrayOfLanguage.Count; i++)

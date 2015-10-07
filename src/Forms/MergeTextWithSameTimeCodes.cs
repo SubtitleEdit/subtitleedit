@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
             NumberOfMerges = 0;
             _subtitle = subtitle;
             MergeTextWithSameTimeCodes_ResizeEnd(null, null);
-            _language = Utilities.AutoDetectGoogleLanguage(subtitle);
+            _language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
         }
 
         private void previewTimer_Tick(object sender, EventArgs e)

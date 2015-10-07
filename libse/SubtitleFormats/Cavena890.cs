@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                var language = Utilities.AutoDetectGoogleLanguage(subtitle);
+                var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
                 if (language == "he") // Hebrew
                 {
                     _languageIdLine1 = LanguageIdHebrew;

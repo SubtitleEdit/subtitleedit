@@ -173,6 +173,7 @@
     <Compile Include="ImageSplitter.cs" />
     <Compile Include="ImageSplitterItem.cs" />
     <Compile Include="Language.cs" />
+    <Compile Include="LanguageAutoDetect.cs" />
     <Compile Include="LanguageDeserializer.cs" />
     <Compile Include="LanguageStructure.cs" />
     <Compile Include="ManagedBitmap.cs" />
