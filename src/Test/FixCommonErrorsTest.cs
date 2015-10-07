@@ -1483,5 +1483,52 @@ namespace Test
         }
 
         #endregion
+
+        #region Start with upppercase after colon
+
+        [TestMethod]
+        public void StartWithUppercaseAfterColon1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "John: <i>hi!</i>");
+                new FixStartWithUppercaseLetterAfterColon().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("John: <i>Hi!</i>", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void StartWithUppercaseAfterColon2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "John: <i>hi!</i>. Harry: maybe!");
+                new FixStartWithUppercaseLetterAfterColon().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("John: <i>Hi!</i>. Harry: Maybe!", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void StartWithUppercaseAfterColon3()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "John: <b>hi!</b>. Harry: <u>maybe!</u>");
+                new FixStartWithUppercaseLetterAfterColon().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("John: <b>Hi!</b>. Harry: <u>Maybe!</u>", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void StartWithUppercaseAfterColon4()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "John: <font color=\"#ffff80\">hello world.</font>");
+                new FixStartWithUppercaseLetterAfterColon().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("John: <font color=\"#ffff80\">Hello world.</font>", _subtitle.Paragraphs[0].Text);
+            }
+        }
+        #endregion
     }
 }
