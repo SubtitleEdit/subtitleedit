@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 word.Equals("uds", StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            List<string> abbreviations = callbacks.GetAbbreviations();
+            HashSet<string> abbreviations = callbacks.GetAbbreviations();
             return abbreviations.Contains(word + ".");
         }
 

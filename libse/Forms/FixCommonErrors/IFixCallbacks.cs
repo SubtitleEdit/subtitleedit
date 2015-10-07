@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         void LogStatus(string sender, string message, bool isImportant);
         void UpdateFixStatus(int fixes, string message, string xMessage);
         bool IsName(string candidate);
-        List<string> GetAbbreviations();
+        HashSet<string> GetAbbreviations();
         void AddToTotalErrors(int count);
         void AddToDeleteIndices(int index);
         SubtitleFormat Format { get; }
