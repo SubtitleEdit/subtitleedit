@@ -5,7 +5,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixStartWithUppercaseLetterAfterColon : IFixCommonError
     {
-
+        private static readonly char[] ExpectedChars = { ':', ';' };
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                 }
 
-                if (oldText.Contains(new[] { ':', ';' }))
+                if (oldText.Contains(ExpectedChars))
                 {
                     bool lastWasColon = false;
                     for (int j = 0; j < p.Text.Length; j++)
@@ -41,17 +41,21 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         }
                         else if (lastWasColon)
                         {
+                            // skip whitespace index
+                            if (j + 2 < p.Text.Length && p.Text[j] == ' ')
+                            {
+                                s = p.Text[++j];
+                            }
+
                             var startFromJ = p.Text.Substring(j);
-                            if (skipCount > 0)
-                                skipCount--;
-                            else if (startFromJ.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                            if (startFromJ.Length > 3 && startFromJ[0] == '<' && startFromJ[2] == '>' && (startFromJ[1] == 'i' || startFromJ[1] == 'b' || startFromJ[1] == 'u'))
+                            {
                                 skipCount = 2;
-                            else if (startFromJ.StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
-                                skipCount = 2;
-                            else if (startFromJ.StartsWith("<u>", StringComparison.OrdinalIgnoreCase))
-                                skipCount = 2;
+                            }
                             else if (startFromJ.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) && p.Text.Substring(j).Contains('>'))
-                                skipCount = startFromJ.IndexOf('>') - startFromJ.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+                            {
+                                skipCount = (j + startFromJ.IndexOf('>', 6)) - j;
+                            }
                             else if (Helper.IsTurkishLittleI(s, callbacks.Encoding, callbacks.Language))
                             {
                                 p.Text = p.Text.Remove(j, 1).Insert(j, Helper.GetTurkishUppercaseLetter(s, callbacks.Encoding).ToString(CultureInfo.InvariantCulture));
@@ -71,7 +75,16 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 lastWasColon = false;
                             }
                             else if (!(" " + Environment.NewLine).Contains(s))
+                            {
                                 lastWasColon = false;
+                            }
+
+                            // move the: 'j' pointer and reset skipCount to 0
+                            if (skipCount > 0)
+                            {
+                                j += skipCount;
+                                skipCount = 0;
+                            }
                         }
                     }
                 }
