@@ -76,24 +76,28 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public static readonly string[] AutoDetectWordsEnglish = { "we", "are", "and", "you", "your", "what" };
+        public static readonly string[] AutoDetectWordsEnglish = { "we", "are", "and", "your?", "what" };
         public static readonly string[] AutoDetectWordsDanish = { "vi", "han", "og", "jeg", "var", "men", "gider", "bliver", "virkelig", "kommer", "tilbage", "Hej" };
         public static readonly string[] AutoDetectWordsNorwegian = { "vi", "er", "og", "jeg", "var", "men" };
         public static readonly string[] AutoDetectWordsSwedish = { "vi", "är", "och", "Jag", "inte", "för" };
-        public static readonly string[] AutoDetectWordsSpanish = { "el", "bien", "Vamos", "Hola", "casa", "con" };
-        public static readonly string[] AutoDetectWordsFrench = { "un", "vous", "avec", "pas", "ce", "une" };
+        public static readonly string[] AutoDetectWordsSpanish = { "qué", "eso", "muy", "estoy?", "ahora", "hay", "tú", "así", "cuando", "cómo", "él", "sólo", "quiero", "gracias", "puedo", "bueno", "soy", "hacer", "fue", "eres", "usted", "tienes", "puede",
+                                                                   "[Ss]eñor", "ese", "voy", "quién", "creo", "hola", "dónde", "sus", "verdad", "quieres", "mucho", "entonces", "estaba", "tiempo", "esa", "mejor", "hombre", "hace", "dios", "también", "están",
+                                                                   "siempre", "hasta", "ahí", "siento", "puedes" };
+        public static readonly string[] AutoDetectWordsItalian = { "Cosa", "sono", "Grazie", "Buongiorno", "bene", "questo", "ragazzi", "propriamente", "numero", "hanno", "giorno", "faccio", "davvero", "negativo", "essere", "vuole", "sensitivo", "venire" };
+        public static readonly string[] AutoDetectWordsFrench = { "pas", "[vn]ous", "ça", "une", "pour", "[mt]oi", "dans", "elle", "tout", "plus", "[bmt]on", "suis", "avec", "oui", "fait", "ils", "être", "faire", "comme", "était", "quoi", "ici", "veux",
+                                                                  "rien", "dit", "où", "votre", "pourquoi", "sont", "cette", "peux", "alors", "comment", "avez", "très", "même", "merci", "ont", "aussi", "chose", "voir", "allez", "tous", "ces", "deux" };
+        public static readonly string[] AutoDetectWordsPortuguese = { "[Nn]ão", "Então", "Estás", "isso", "com" };
         public static readonly string[] AutoDetectWordsGerman = { "und", "auch", "sich", "bin", "hast", "möchte" };
         public static readonly string[] AutoDetectWordsDutch = { "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n" };
         public static readonly string[] AutoDetectWordsPolish = { "Czy", "ale", "ty", "siê", "jest", "mnie" };
-        public static readonly string[] AutoDetectWordsItalian = { "Cosa", "sono", "Grazie", "Buongiorno", "bene", "questo", "ragazzi", "propriamente", "numero", "hanno", "giorno", "faccio", "davvero", "negativo", "essere", "vuole", "sensitivo", "venire" };
-        public static readonly string[] AutoDetectWordsPortuguese = { "[Nn]ão", "Então", "Estás", "isso", "com" };
-        public static readonly string[] AutoDetectWordsGreek = { "μου", "είναι", "Είναι", "αυτό", "Τόμπυ", "καλά", "Ενταξει", "Ενταξει", "πρεπει", "Λοιπον", "τιποτα", "ξερεις" };
-        public static readonly string[] AutoDetectWordsRussian = { "Это", "не", "ты", "что", "это", "Мы", "Да", "Нет", "Ты", "нет", "Он", "его", "тебя", "как", "Не", "вы", "меня", "Но", "то", "всё", "бы", "мы", "мне", "вас", "знаю", "ещё", "за", "нас", "чтобы", "был" };
-        public static readonly string[] AutoDetectWordsBulgarian = { "Какво", "тук", "може", "Как", "Ваше", "какво" };
-        public static readonly string[] AutoDetectWordsRomanian = { "Какво", "тук", "може", "Как", "Ваше", "какво" };
-        public static readonly string[] AutoDetectWordsArabic = { "Какво", "тук", "може", "Как", "Ваше", "какво" };
+        public static readonly string[] AutoDetectWordsGreek = { "μου", "[Εε]ίναι", "αυτό", "Τόμπυ", "καλά", "Ενταξει", "πρεπει", "Λοιπον", "τιποτα", "ξερεις" };
+        public static readonly string[] AutoDetectWordsRussian = { "[Ээч]?то", "[Нн]е", "[ТтМмбв]ы", "Да", "[Нн]ет", "Он", "его", "тебя", "как", "меня", "Но", "всё", "мне", "вас", "знаю", "ещё", "за", "нас", "чтобы", "был" };
+        public static readonly string[] AutoDetectWordsUkrainian = { "[Нн]і", "[Пп]ривіт", "[Цц]е", "[Щщ]о", "[Йй]ого", "[Вв]ін", "[Яя]к", "[Гг]аразд", "[Яя]кщо", "[Мм]ені", "[Тт]вій", "[Її]х", "[Вв]ітаю", "[Дд]якую", "вже", "було", "був", "цього",
+                                                                     "нічого", "немає", "може", "знову", "бо", "щось", "щоб", "цим", "тобі", "хотів", "твоїх", "мої", "мій", "має", "їм", "йому", "дуже" };
+        public static readonly string[] AutoDetectWordsBulgarian = { "[Кк]акво", "тук", "може", "Как", "Ваше" };
+        public static readonly string[] AutoDetectWordsArabic = { "من", "هل", "لا", "فى", "لقد", "ما" };
         public static readonly string[] AutoDetectWordsHebrew = { "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב" };
-        public static readonly string[] AutoDetectWordsVietnamese = { "không", "tôi", "anh", "đó", "Tôi", "ông" };
+        public static readonly string[] AutoDetectWordsVietnamese = { "không", "[Tt]ôi", "anh", "đó", "ông" };
         public static readonly string[] AutoDetectWordsHungarian = { "hogy", "lesz", "tudom", "vagy", "mondtam", "még" };
         public static readonly string[] AutoDetectWordsTurkish = { "için", "Tamam", "Hayır", "benim", "daha", "deðil", "önce", "lazým", "benim", "çalýþýyor", "burada", "efendim" };
         public static readonly string[] AutoDetectWordsCroatianAndSerbian = { "sam", "ali", "nije", "samo", "ovo", "kako", "dobro", "sve", "tako", "će", "mogu", "ću", "zašto", "nešto", "za" };
@@ -187,6 +191,10 @@ namespace Nikse.SubtitleEdit.Core
             count = GetCount(text, AutoDetectWordsRussian);
             if (count > bestCount)
                 return "ru"; // Russian
+
+            count = GetCount(text, AutoDetectWordsUkrainian);
+            if (count > bestCount)
+                return "uk"; // Ukrainian
 
             count = GetCount(text, AutoDetectWordsBulgarian);
             if (count > bestCount)
