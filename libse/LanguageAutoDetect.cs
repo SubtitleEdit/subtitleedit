@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Core
             if (count > bestCount)
             {
                 int norwegianCount = GetCount(text, "ut", "deg", "meg", "merkelig", "mye", "spørre");
-                int dutchCount = GetCount(text, "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n");
+                int dutchCount = GetCount(text, AutoDetectWordsDutch);
                 if (norwegianCount < 2 && dutchCount < count)
                     return "da";
             }
@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Core
             if (count > bestCount)
             {
                 int danishCount = GetCount(text, "siger", "dig", "mig", "mærkelig", "tilbage", "spørge");
-                int dutchCount = GetCount(text, "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n");
+                int dutchCount = GetCount(text, AutoDetectWordsDutch);
                 if (danishCount < 2 && dutchCount < count)
                     return "no";
             }
@@ -228,7 +228,6 @@ namespace Nikse.SubtitleEdit.Core
                 int serbianCount = GetCount(text, AutoDetectWordsSerbian);
                 if (croatianCount > serbianCount)
                     return "hr"; // Croatian
-
                 return "sr"; // Serbian
             }
 
@@ -261,10 +260,8 @@ namespace Nikse.SubtitleEdit.Core
                 return "fi"; // Finnish
 
             count = GetCount(text, AutoDetectWordsRomanian1);
-            if (count > bestCount)
-                return "ro"; // Romanian
-
-            count = GetCount(text, AutoDetectWordsRomanian2);
+            if (count <= bestCount)
+                count = GetCount(text, AutoDetectWordsRomanian2);
             if (count > bestCount)
                 return "ro"; // Romanian
 
@@ -355,7 +352,7 @@ namespace Nikse.SubtitleEdit.Core
                         if (count > bestCount)
                         {
                             int norwegianCount = GetCount(text, "ut", "deg", "meg", "merkelig", "mye", "spørre");
-                            int dutchCount = GetCount(text, "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n");
+                            int dutchCount = GetCount(text, AutoDetectWordsDutch);
                             if (norwegianCount < 2 && dutchCount < count)
                                 languageName = shortName;
                         }
@@ -365,7 +362,7 @@ namespace Nikse.SubtitleEdit.Core
                         if (count > bestCount)
                         {
                             int danishCount = GetCount(text, "siger", "dig", "mig", "mærkelig", "tilbage", "spørge");
-                            int dutchCount = GetCount(text, "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n");
+                            int dutchCount = GetCount(text, AutoDetectWordsDutch);
                             if (danishCount < 2 && dutchCount < count)
                                 languageName = shortName;
                         }
