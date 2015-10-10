@@ -369,8 +369,8 @@ Type: dirifempty; Name: {app}\Languages;                Check: not IsComponentSe
 
 
 [Run]
-Filename: {code:PowerShellPath}; Parameters: "-NoProfile -NoLogo -Command &""$(join-path (split-path -literalpath ([object].Assembly.Location)) ngen.exe)"" install ""$(join-path '{app}' SubtitleEdit.exe)"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist
-Filename: {code:NGenPath}; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist; Check: not FileExists(ExpandConstant('{code:PowerShellPath}'))
+Filename: {code:PowerShellPath}; Parameters: "-NoProfile -NoLogo -Command &""$(join-path (split-path -literalpath ([object].Assembly.Location)) ngen.exe)"" install ""$(join-path '{app}' SubtitleEdit.exe)"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist; Check: CanRunNGen()
+Filename: {code:NGenPath}; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist; Check: CanRunNGen() and not FileExists(ExpandConstant('{code:PowerShellPath}'))
 Filename: {app}\SubtitleEdit.exe;            Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
 Filename: http://www.nikse.dk/SubtitleEdit/; Description: {cm:run_VisitWebsite};                               Flags: nowait postinstall skipifsilent unchecked shellexec
 
@@ -418,6 +418,13 @@ end;
 function HklmKeyExists(const KeyName: String): Boolean;
 begin
   Result := RegKeyExists(HKEY_LOCAL_MACHINE, KeyName);
+end;
+
+
+// OK to run ngen if Windows version < 10.0
+function CanRunNGen(): Boolean;
+begin
+  Result := (GetWindowsVersion < $0A000000);
 end;
 
 
