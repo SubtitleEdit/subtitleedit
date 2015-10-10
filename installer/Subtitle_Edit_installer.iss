@@ -369,13 +369,15 @@ Type: dirifempty; Name: {app}\Languages;                Check: not IsComponentSe
 
 
 [Run]
-Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist
+Filename: {code:PowerShellPath}; Parameters: "-NoProfile -NoLogo -Command &""$(join-path (split-path -literalpath ([object].Assembly.Location)) ngen.exe)"" install ""$(join-path '{app}' SubtitleEdit.exe)"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist
+Filename: {code:NGenPath}; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist; Check: not FileExists(ExpandConstant('{code:PowerShellPath}'))
 Filename: {app}\SubtitleEdit.exe;            Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
 Filename: http://www.nikse.dk/SubtitleEdit/; Description: {cm:run_VisitWebsite};                               Flags: nowait postinstall skipifsilent unchecked shellexec
 
 
 [UninstallRun]
-Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist
+Filename: {code:PowerShellPath}; Parameters: "-NoProfile -NoLogo -Command &""$(join-path (split-path -literalpath ([object].Assembly.Location)) ngen.exe)"" uninstall ""$(join-path '{app}' SubtitleEdit.exe)"""; Flags: runhidden runascurrentuser skipifdoesntexist
+Filename: {code:NGenPath}; Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist; Check: not FileExists(ExpandConstant('{code:PowerShellPath}'))
 
 
 [Registry]
@@ -401,6 +403,17 @@ Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: "PerceivedTyp
 
 
 [Code]
+// Scripted constants
+function PowerShellPath(Param: String): String;
+begin
+  Result := ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe');
+end;
+function NGenPath(Param: String): String;
+begin
+  Result := ExpandConstant('{win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe');
+end;
+
+
 // Check if subkey exists in HKLM registry hive
 function HklmKeyExists(const KeyName: String): Boolean;
 begin
