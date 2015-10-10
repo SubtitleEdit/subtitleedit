@@ -1,4 +1,4 @@
-;* Subtitle Edit - Installer script
+﻿;* Subtitle Edit - Installer script
 ;*
 ;* Copyright (C) 2010-2014 XhmikosR
 ;* Copyright (C) 2010-2015 all the respective translators
