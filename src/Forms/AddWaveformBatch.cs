@@ -319,7 +319,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelProgress.Text = string.Empty;
             labelInfo.Text = string.Empty;
             progressBar1.Visible = false;
-            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
+            TaskbarList.SetProgressState(Owner.Handle, TaskbarButtonProgressFlags.NoProgress);
             buttonRipWave.Enabled = true;
             buttonInputBrowse.Enabled = true;
             buttonSearchFolder.Enabled = true;
@@ -342,7 +342,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (progressBar1.Value < progressBar1.Maximum)
                 progressBar1.Value++;
-            TaskbarList.SetProgressValue(Handle, progressBar1.Value, progressBar1.Maximum);
+            TaskbarList.SetProgressValue(Owner.Handle, progressBar1.Value, progressBar1.Maximum);
             labelProgress.Text = progressBar1.Value + " / " + progressBar1.Maximum;
         }
 
