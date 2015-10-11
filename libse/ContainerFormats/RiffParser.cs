@@ -149,12 +149,12 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
         /// </summary>
         /// <param name="filename">File to examine</param>
         /// <returns>True if file is a RIFF file</returns>
-        public void OpenFile(string filename)
+        public bool TryOpenFile(string filename)
         {
             // Sanity check
             if (null != m_stream)
             {
-                throw new RiffParserException("RIFF file already open " + FileName);
+                return false;
             }
 
             bool errorOccured = false;
@@ -184,40 +184,28 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
 
                 // Check for a valid RIFF header
                 string riff = FromFourCC(FourCC);
-                if (riff == RIFF4CC || riff == RIFX4CC)
+                if (riff != RIFF4CC && riff != RIFX4CC)
                 {
-                    // Good header. Check size
-                    //Console.WriteLine(ShortName + " has a valid type \"" + riff + "\"");
-                    //Console.WriteLine(ShortName + " has a specific type of \"" + FromFourCC(fileType) + "\"");
+                    // Not a valid RIFF file
+                    errorOccured = true;
+                    return false;
+                }
 
-                    m_datasize = datasize;
-                    if (m_filesize >= m_datasize + TWODWORDSSIZE)
-                    {
-                        //Console.WriteLine(ShortName + " has a valid size");
-                    }
-                    else
-                    {
-                        m_stream.Close(); m_stream = null;
-                        throw new RiffParserException("Error. Truncated file " + FileName);
-                    }
-                }
-                else
+                // Good header. Check size
+                //Console.WriteLine(ShortName + " has a valid type \"" + riff + "\"");
+                //Console.WriteLine(ShortName + " has a specific type of \"" + FromFourCC(fileType) + "\"");
+
+                m_datasize = datasize;
+                if (m_filesize < m_datasize + TWODWORDSSIZE)
                 {
-                    m_stream.Close();
-                    m_stream.Dispose();
-                    m_stream = null;
-                    throw new RiffParserException("Error. Not a valid RIFF file " + FileName);
+                    // Truncated file
+                    errorOccured = true;
+                    return false;
                 }
             }
-            catch (RiffParserException)
+            catch
             {
                 errorOccured = true;
-                throw;
-            }
-            catch (Exception exception)
-            {
-                errorOccured = true;
-                throw new RiffParserException("Error. Problem reading file " + FileName, exception);
             }
             finally
             {
@@ -228,6 +216,8 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
                     m_stream = null;
                 }
             }
+
+            return !errorOccured;
         }
 
         /// <summary>
