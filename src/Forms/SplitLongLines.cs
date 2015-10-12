@@ -154,9 +154,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = subtitle.Paragraphs[i];
                 if (p != null && p.Text != null)
                 {
-                    string oldText = HtmlUtil.RemoveHtmlTags(p.Text);
                     if (SplitLongLinesHelper.QualifiesForSplit(p.Text, singleLineMaxCharacters, totalLineMaxCharacters) && IsFixAllowed(p))
                     {
+                        string oldText = HtmlUtil.RemoveHtmlTags(p.Text);
                         bool isDialog = false;
                         string dialogText = string.Empty;
                         if (p.Text.Contains('-'))
