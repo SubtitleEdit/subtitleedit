@@ -47,12 +47,17 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool IsRunningOnLinux()
         {
-            return Environment.OSVersion.Platform == PlatformID.Unix;
+            return Environment.OSVersion.Platform == PlatformID.Unix && !IsRunningOnMac();
         }
 
         public static bool IsRunningOnMac()
         {
-            return Environment.OSVersion.Platform == PlatformID.MacOSX;
+            // Current versions of Mono report the platform as Unix
+            return Environment.OSVersion.Platform == PlatformID.MacOSX ||
+                (Environment.OSVersion.Platform == PlatformID.Unix &&
+                 Directory.Exists("/Applications") &&
+                 Directory.Exists("/System") &&
+                 Directory.Exists("/Users"));
         }
 
         public static string TesseractDataFolder
