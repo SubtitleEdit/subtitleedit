@@ -208,9 +208,9 @@ namespace Nikse.SubtitleEdit.Forms
                                     newParagraph1.Text = Utilities.AutoBreakLine(arr[0], language);
 
                                     double middle = p.StartTime.TotalMilliseconds + (p.Duration.TotalMilliseconds / 2);
-                                    if (!string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(oldText)))
+                                    if (!string.IsNullOrWhiteSpace(oldText))
                                     {
-                                        var startFactor = (double)HtmlUtil.RemoveHtmlTags(newParagraph1.Text).Length / HtmlUtil.RemoveHtmlTags(oldText).Length;
+                                        var startFactor = (double)HtmlUtil.RemoveHtmlTags(newParagraph1.Text).Length / oldText.Length;
                                         if (startFactor < 0.25)
                                             startFactor = 0.25;
                                         if (startFactor > 0.75)
