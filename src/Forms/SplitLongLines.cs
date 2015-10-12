@@ -193,7 +193,7 @@ namespace Nikse.SubtitleEdit.Forms
                             string text = Utilities.AutoBreakLine(p.Text, language);
                             if (isDialog)
                                 text = dialogText;
-                            if (text.Contains(Environment.NewLine))
+                            if (isDialog || text.Contains(Environment.NewLine))
                             {
                                 var arr = text.SplitToLines();
                                 if (arr.Length == 2)
