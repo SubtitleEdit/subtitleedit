@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 bool added = false;
-                var p = subtitle.GetParagraphOrDefault(i);
+                var p = subtitle.Paragraphs[i];
                 if (p != null && p.Text != null)
                 {
                     string oldText = HtmlUtil.RemoveHtmlTags(p.Text);
