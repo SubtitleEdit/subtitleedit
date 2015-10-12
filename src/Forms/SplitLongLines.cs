@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Forms
                             dialogText = Utilities.AutoBreakLine(p.Text, 5, 1, language);
 
                             var tempText = p.Text.Replace(Environment.NewLine, " ").Replace("  ", " ");
-                            if (Utilities.CountTagInText(tempText, '-') == 2 && (p.Text.StartsWith('-') || p.Text.StartsWith("<i>-")))
+                            if (Utilities.CountTagInText(tempText, '-') == 2 && (p.Text.StartsWith('-') || p.Text.StartsWith("<i>-", StringComparison.Ordinal)))
                             {
                                 int idx = tempText.IndexOfAny(expectedPunctuations, StringComparison.Ordinal);
                                 if (idx > 1)
