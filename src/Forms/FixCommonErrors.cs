@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _batchMode;
         private string _autoDetectGoogleLanguage;
         private List<string> _namesEtcList;
-        private List<string> _abbreviationList;
+        private HashSet<string> _abbreviationList;
         private StringBuilder _newLog = new StringBuilder();
         private readonly StringBuilder _appliedLog = new StringBuilder();
         private int _numberOfImportantLogMessages;
@@ -523,13 +523,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public List<string> GetAbbreviations()
+        public HashSet<string> GetAbbreviations()
         {
             if (_abbreviationList != null)
                 return _abbreviationList;
 
             MakeSureNamesListIsLoaded();
-            _abbreviationList = new List<string>();
+            _abbreviationList = new HashSet<string>();
             foreach (string name in _namesEtcList)
             {
                 if (name.EndsWith('.'))
