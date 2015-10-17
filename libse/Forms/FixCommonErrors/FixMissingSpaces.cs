@@ -160,9 +160,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (Utilities.CountTagInText(p.Text, '"') == 2)
                 {
                     int start = p.Text.IndexOf('"');
-                    int end = p.Text.LastIndexOf('"');
+                    int end = p.Text.IndexOf('"', start + 1);
                     string quote = p.Text.Substring(start, end - start + 1);
-                    if (!quote.Contains(Environment.NewLine))
+                    if (start + 1 != end && !quote.Contains(Environment.NewLine))
                     {
                         string newText = p.Text;
                         int indexOfFontTag = newText.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
@@ -214,10 +214,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 //fix missing spaces in "Hey...move it!" to "Hey... move it!"
                 int index = p.Text.IndexOf("...", StringComparison.Ordinal);
-                if (index >= 0 && p.Text.Length > 5)
+                if (index > 0 && p.Text.Length > 5)
                 {
                     string newText = p.Text;
-                    while (index != -1)
+                    while (index > 0)
                     {
                         if (newText.Length > index + 4 && index > 1)
                         {
