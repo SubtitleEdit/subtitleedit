@@ -4,7 +4,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixMissingPeriodsAtEndOfLine : IFixCommonError
     {
-
         private static readonly char[] WordSplitChars = { ' ', '.', ',', '-', '?', '!', ':', ';', '"', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n' };
 
         private static bool IsOneLineUrl(string s)
@@ -28,21 +27,29 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return false;
         }
 
+        // Cached variables
+        private static readonly char[] ExpectedChars = { '♪', '♫' };
+        private const string ExpectedString1 = ",.!?:;>-])♪♫…";
+        private const string ExpectedString2 = ")]*#¶.!?";
+
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
             string fixAction = language.FixMissingPeriodAtEndOfLine;
             int missigPeriodsAtEndOfLine = 0;
+
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
                 string nextText = string.Empty;
                 if (next != null)
-                    nextText = HtmlUtil.RemoveHtmlTags(next.Text).TrimStart('-', '"', '„').TrimStart();
+                {
+                    nextText = HtmlUtil.RemoveHtmlTags(next.Text, true).TrimStart('-', '"', '„').TrimStart();
+                }
                 string tempNoHtml = HtmlUtil.RemoveHtmlTags(p.Text).TrimEnd();
 
-                if (IsOneLineUrl(p.Text) || p.Text.Contains(new[] { '♪', '♫' }) || p.Text.EndsWith('\''))
+                if (IsOneLineUrl(p.Text) || p.Text.Contains(ExpectedChars) || p.Text.EndsWith('\''))
                 {
                     // ignore urls
                 }
@@ -50,10 +57,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     next.Text.Length > 0 &&
                     Utilities.UppercaseLetters.Contains(nextText[0]) &&
                     tempNoHtml.Length > 0 &&
-                    !@",.!?:;>-])♪♫…".Contains(tempNoHtml[tempNoHtml.Length - 1]))
+                    !ExpectedString1.Contains(tempNoHtml[tempNoHtml.Length - 1]))
                 {
                     string tempTrimmed = tempNoHtml.TrimEnd().TrimEnd('\'', '"', '“', '”').TrimEnd();
-                    if (tempTrimmed.Length > 0 && !@")]*#¶.!?".Contains(tempTrimmed[tempTrimmed.Length - 1]) && p.Text != p.Text.ToUpper())
+                    if (tempTrimmed.Length > 0 && !ExpectedString2.Contains(tempTrimmed[tempTrimmed.Length - 1]) && p.Text != p.Text.ToUpper())
                     {
                         //don't end the sentence if the next word is an I word as they're always capped.
                         if (!next.Text.StartsWith("I ", StringComparison.Ordinal) && !next.Text.StartsWith("I'", StringComparison.Ordinal))
