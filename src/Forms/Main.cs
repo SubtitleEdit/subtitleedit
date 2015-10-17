@@ -8896,17 +8896,6 @@ namespace Nikse.SubtitleEdit.Forms
             return true;
         }
 
-        public static void CopyStream(Stream input, Stream output)
-        {
-            var buffer = new byte[128 * 1024];
-            int len;
-            while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                output.Write(buffer, 0, len);
-            }
-            output.Flush();
-        }
-
         private bool LoadVobSubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
         {
             if (matroskaSubtitleInfo.ContentEncodingType == 1)
@@ -8938,7 +8927,7 @@ namespace Nikse.SubtitleEdit.Forms
                     byte[] buffer = null;
                     try
                     {
-                        CopyStream(inStream, outZStream);
+                        inStream.CopyTo(outZStream);
                         buffer = new byte[outZStream.TotalOut];
                         outStream.Position = 0;
                         outStream.Read(buffer, 0, buffer.Length);
@@ -9034,7 +9023,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var inStream = new MemoryStream(p.Data);
                     try
                     {
-                        CopyStream(inStream, outZStream);
+                        inStream.CopyTo(outZStream);
                         buffer = new byte[outZStream.TotalOut];
                         outStream.Position = 0;
                         outStream.Read(buffer, 0, buffer.Length);
