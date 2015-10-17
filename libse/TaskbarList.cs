@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core
     /// </summary>
     public static class TaskbarList
     {
-        private static readonly Lazy<bool> SupportedLazy = new Lazy<bool>(() => Environment.OSVersion.Version >= new Version(6, 1));
+        private static readonly Lazy<bool> SupportedLazy = new Lazy<bool>(() => Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= new Version(6, 1));
         private static readonly Lazy<ITaskbarList3> TaskbarListLazy = new Lazy<ITaskbarList3>(() => (ITaskbarList3)new CLSID_TaskbarList());
 
         public static bool Supported { get { return SupportedLazy.Value; } }
