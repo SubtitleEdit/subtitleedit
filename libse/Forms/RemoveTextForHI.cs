@@ -68,6 +68,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return newText;
         }
 
+        private static readonly string[] ExpectedStrings = { ". ", "! ", "? " };
         public string RemoveColon(string text)
         {
             if (!(Settings.RemoveTextBeforeColon && text.Contains(':')))
@@ -120,11 +121,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                                                !l1Trim.EndsWith('!') &&
                                                                !l1Trim.EndsWith('?'))
                         {
-                            int indexOf = line.IndexOf(". ", StringComparison.Ordinal);
-                            if (indexOf == -1)
-                                indexOf = line.IndexOf("! ", StringComparison.Ordinal);
-                            if (indexOf == -1)
-                                indexOf = line.IndexOf("? ", StringComparison.Ordinal);
+                            var indexOf = line.IndexOfAny(ExpectedStrings, StringComparison.Ordinal);
                             if (indexOf > 0 && indexOf < indexOfColon)
                             {
                                 var toRemove = s.Substring(indexOf + 1, indexOfColon - indexOf).Trim();
