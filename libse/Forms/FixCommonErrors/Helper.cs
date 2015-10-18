@@ -234,21 +234,28 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         public static string FixHyphensRemove(Subtitle subtitle, int i)
         {
             Paragraph p = subtitle.Paragraphs[i];
-            string text = p.Text;
 
-            if (text.TrimStart().StartsWith('-') ||
-                text.TrimStart().StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) ||
-                text.TrimStart().StartsWith("<i> -", StringComparison.OrdinalIgnoreCase) ||
-                text.Contains(Environment.NewLine + '-') ||
-                text.Contains(Environment.NewLine + " -") ||
-                text.Contains(Environment.NewLine + "<i>-") ||
-                text.Contains(Environment.NewLine + "<i> -") ||
-                text.Contains(Environment.NewLine + "<I>-") ||
-                text.Contains(Environment.NewLine + "<I> -"))
+            // Return if there is no hyphen present
+            if (!p.Text.Contains('-'))
+            {
+                return p.Text;
+            }
+
+            var text = p.Text;
+
+            // Cache the trimmed text
+            var textTrimmed = text.TrimStart();
+
+            // Check for hyphen at beggining of first/second line
+            bool doRemoveHyphen = (textTrimmed.StartsWith('-') || textTrimmed.StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) || textTrimmed.StartsWith("<i> -", StringComparison.OrdinalIgnoreCase) ||
+                textTrimmed.Contains(Environment.NewLine + '-') || textTrimmed.Contains(Environment.NewLine + " -") || textTrimmed.Contains(Environment.NewLine + "<i>-", StringComparison.OrdinalIgnoreCase) || textTrimmed.Contains(Environment.NewLine + "<i> -", StringComparison.OrdinalIgnoreCase));
+
+            // Remove hyphen if 'doRemoveHyphen' is true
+            if (doRemoveHyphen)
             {
                 var prev = subtitle.GetParagraphOrDefault(i - 1);
 
-                if (prev == null || !HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
+                if (IsPrevParagraphNullOrDoesntEndWithSingleDash(prev))
                 {
                     var noTaglines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
                     int startHyphenCount = noTaglines.Count(line => line.TrimStart().StartsWith('-'));
@@ -298,7 +305,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                         if (idx >= 0 && indexOfNewLine + 5 > indexOfNewLine)
                                         {
                                             text = text.Remove(idx, 1).TrimStart();
-
                                             text = RemoveSpacesBeginLine(text);
                                         }
                                     }
@@ -321,6 +327,23 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
             return text;
+        }
+
+        private static bool IsPrevParagraphNullOrDoesntEndWithSingleDash(Paragraph prev)
+        {
+            if (prev == null)
+            {
+                return true;
+            }
+
+            var textPrevTrimmedNoTag = HtmlUtil.RemoveHtmlTags(prev.Text.TrimEnd());
+            if (!textPrevTrimmedNoTag.EndsWith('-') || textPrevTrimmedNoTag.EndsWith("--", StringComparison.Ordinal))
+            {
+                return true;
+            }
+
+            // Will return false if previous paragraph text ends with '-' with indicates that previous line wasn't ended...
+            return false;
         }
 
         private static string RemoveSpacesBeginLine(string text)
@@ -382,7 +405,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
 
-                if (prev == null || !HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
+                if (IsPrevParagraphNullOrDoesntEndWithSingleDash(prev))
                 {
                     var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
                     int startHyphenCount = lines.Count(line => line.TrimStart().StartsWith('-'));
