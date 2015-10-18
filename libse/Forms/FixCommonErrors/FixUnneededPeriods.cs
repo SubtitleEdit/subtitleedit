@@ -36,15 +36,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         p.Text = p.Text.TrimEnd('.');
                         unneededPeriodsFixed++;
                     }
+
+                    var len = p.Text.Length;
                     if (p.Text.Contains("!. "))
                     {
                         p.Text = p.Text.Replace("!. ", "! ");
-                        unneededPeriodsFixed++;
+                        unneededPeriodsFixed += len - p.Text.Length;
+                        len = p.Text.Length;
                     }
                     if (p.Text.Contains("?. "))
                     {
                         p.Text = p.Text.Replace("?. ", "? ");
-                        unneededPeriodsFixed++;
+                        unneededPeriodsFixed += len - p.Text.Length;
                     }
 
                     if (p.Text != oldText)
