@@ -3,6 +3,7 @@
 //W3C Recommendation 18 November 2010
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -513,7 +514,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var pText = new StringBuilder();
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
-                        switch (innerNode.Name)
+                        switch (innerNode.Name.Replace("tt:", string.Empty))
                         {
                             case "br":
                                 pText.AppendLine();
@@ -685,11 +686,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 foreach (XmlNode innerInnerNode in innerNode.ChildNodes)
                 {
-                    if (innerInnerNode.Name == "br")
+                    if (innerInnerNode.Name == "br" || innerInnerNode.Name == "tt:br")
                     {
                         pText.AppendLine();
                     }
-                    else if (innerInnerNode.Name == "span")
+                    else if (innerInnerNode.Name == "span" || innerInnerNode.Name == "tt:span")
                     {
                         ReadSpan(pText, innerInnerNode, styles, header);
                     }

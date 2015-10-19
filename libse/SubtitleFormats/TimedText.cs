@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     styleDic.Add(node.Attributes["xml:id"].Value, node.Attributes["tts:fontStyle"].Value);
                 }
             }
-
+            bool couldBeFrames = true;
             foreach (XmlNode node in div.ChildNodes)
             {
                 try
@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var pText = new StringBuilder();
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
-                        switch (innerNode.Name)
+                        switch (innerNode.Name.Replace("tt:", string.Empty))
                         {
                             case "br":
                                 pText.AppendLine();
@@ -188,7 +188,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 {
                                     foreach (XmlNode innerInnerNode in innerNode.ChildNodes)
                                     {
-                                        if (innerInnerNode.Name == "br")
+                                        if (innerInnerNode.Name == "br" || innerInnerNode.Name == "tt:br")
                                         {
                                             pText.AppendLine();
                                         }
@@ -235,6 +235,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = text.Replace("<i></i>", string.Empty).Trim();
                     if (end != null)
                     {
+                        if (end.Length != 11 || end.Substring(8, 1) != ":" || start == null ||
+                            start.Length != 11 || start.Substring(8, 1) != ":")
+                        {
+                            couldBeFrames = false;
+                        }
+
                         //string end = node.Attributes["end"].InnerText;
                         double dBegin, dEnd;
                         if (!start.Contains(':') && Utilities.CountTagInText(start, '.') == 1 &&
@@ -264,6 +270,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else if (dur != null)
                     {
+                        if (dur.Length != 11 || dur.Substring(8, 1) != ":" || start == null ||
+                           start.Length != 11 || start.Substring(8, 1) != ":")
+                        {
+                            couldBeFrames = false;
+                        }
+
                         TimeCode duration = TimedText10.GetTimeCode(dur, false);
                         TimeCode startTime = TimedText10.GetTimeCode(start, false);
                         var endTime = new TimeCode(startTime.TotalMilliseconds + duration.TotalMilliseconds);
@@ -277,6 +289,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             subtitle.RemoveEmptyLines();
+
+            if (couldBeFrames)
+            {
+                bool all30OrBelow = true;
+                foreach (Paragraph p in subtitle.Paragraphs)
+                {
+                    if (p.StartTime.Milliseconds > 30 || p.EndTime.Milliseconds > 30)
+                        all30OrBelow = false;
+                }
+                if (all30OrBelow)
+                {
+                    foreach (Paragraph p in subtitle.Paragraphs)
+                    {
+                        p.StartTime.Milliseconds = SubtitleFormat.FramesToMillisecondsMax999(p.StartTime.Milliseconds);
+                        p.EndTime.Milliseconds = SubtitleFormat.FramesToMillisecondsMax999(p.EndTime.Milliseconds);
+                    }
+                }
+            }
+
             subtitle.Renumber();
         }
 
