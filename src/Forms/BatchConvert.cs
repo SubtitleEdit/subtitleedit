@@ -664,6 +664,29 @@ namespace Nikse.SubtitleEdit.Forms
                                 format = elr;
                             }
                         }
+
+                        if (format == null)
+                        {
+                            var enc = LanguageAutoDetect.GetEncodingFromFile(fileName);
+                            var s = File.ReadAllText(fileName, enc);
+
+                            // check for RTF file
+                            if (fileName.EndsWith(".rtf", StringComparison.OrdinalIgnoreCase) && s.TrimStart().StartsWith("{\\rtf", StringComparison.Ordinal))
+                            {
+                                using (var rtb = new RichTextBox { Rtf = s })
+                                {
+                                    s = rtb.Text;
+                                }
+                            }
+                            var uknownFormatImporter = new UknownFormatImporter { UseFrames = true };
+                            var genericParseSubtitle = uknownFormatImporter.AutoGuessImport(s.SplitToLines());
+                            if (genericParseSubtitle.Paragraphs.Count > 1)
+                            {
+                                sub = genericParseSubtitle;
+                                format = new SubRip();
+                            }                           
+                        }
+
                         if (format != null && format.GetType() == typeof(MicroDvd))
                         {
                             if (sub != null && sub.Paragraphs.Count > 0 && sub.Paragraphs[0].Duration.TotalMilliseconds < 1001)
@@ -909,11 +932,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         form.RunFromBatch(p.Subtitle);
                         p.Subtitle = form.FixedSubtitle;
-
-                        foreach (int deleteIndex in form.DeleteIndices)
-                        {
-                            p.Subtitle.Paragraphs.RemoveAt(deleteIndex);
-                        }
+                        p.Subtitle.RemoveParagraphsByIndices(form.DeleteIndices);
                     }
                 }
                 catch (Exception exception)
