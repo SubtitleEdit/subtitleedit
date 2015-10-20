@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         if (node.Attributes["RegEx"] != null && node.Attributes["RegEx"].InnerText.Equals("true", StringComparison.OrdinalIgnoreCase))
                         {
-                            Regex r = new Regex(node.InnerText, RegexOptions.Compiled);
+                            var r = new Regex(node.InnerText, RegexOptions.Compiled);
                             _lastNoBreakAfterList.Add(new NoBreakAfterItem(r, node.InnerText));
                         }
                         else
