@@ -1339,11 +1339,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                indexes.Reverse();
-                foreach (int i in indexes)
-                {
-                    _originalSubtitle.Paragraphs.RemoveAt(i);
-                }
+                _originalSubtitle.RemoveParagraphsByIndices(indexes);
                 _originalSubtitle.Renumber();
                 subtitleListView1.Fill(_originalSubtitle);
                 if (subtitleListView1.Items.Count > firstIndex)
