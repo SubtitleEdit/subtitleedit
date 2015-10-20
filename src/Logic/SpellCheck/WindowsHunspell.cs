@@ -19,7 +19,9 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         public override List<string> Suggest(string word)
         {
-            return _hunspell.Suggest(word);
+            var list = _hunspell.Suggest(word);
+            AddIShouldBeLowercaseLSuggestion(list, word);
+            return list;
         }
 
         public override void Dispose()
