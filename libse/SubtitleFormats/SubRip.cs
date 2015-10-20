@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public string Errors { get; private set; }
         private StringBuilder _errors;
         private int _lineNumber;
+        private bool _isMsFrames;
 
         private enum ExpectingLine
         {
@@ -71,6 +72,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             bool doRenum = false;
             _errors = new StringBuilder();
             _lineNumber = 0;
+            _isMsFrames = true;
 
             _paragraph = new Paragraph();
             _expecting = ExpectingLine.Number;
@@ -109,11 +111,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (_paragraph != null && _paragraph.EndTime.TotalMilliseconds > _paragraph.StartTime.TotalMilliseconds)
                 subtitle.Paragraphs.Add(_paragraph);
 
-            //foreach (Paragraph p in subtitle.Paragraphs)
-            //    p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-
             if (doRenum)
                 subtitle.Renumber();
+
+            if (_isMsFrames)
+            {
+                foreach (Paragraph p in subtitle.Paragraphs)
+                {
+                    p.StartTime.Milliseconds = FramesToMillisecondsMax999(p.StartTime.Milliseconds);
+                    p.EndTime.Milliseconds = FramesToMillisecondsMax999(p.EndTime.Milliseconds);
+                }
+            }
 
             Errors = _errors.ToString();
         }
@@ -198,7 +206,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return line.Replace('\0', ' ');
         }
 
-        private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
+        private bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
             line = line.Replace('،', ',');
             line = line.Replace('', ',');
@@ -242,6 +250,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     int endMinutes = int.Parse(parts[5]);
                     int endSeconds = int.Parse(parts[6]);
                     int endMilliseconds = int.Parse(parts[7]);
+
+                    if (_isMsFrames && (parts[3].Length != 2 || startMilliseconds > 30 || parts[7].Length != 2 || endMilliseconds > 30))
+                    {
+                        _isMsFrames = false;
+                    }
 
                     paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
                     if (parts[0].StartsWith('-') && paragraph.StartTime.TotalMilliseconds > 0)
