@@ -98,6 +98,7 @@ SolidCompression=yes
 ShowTasksTreeLines=yes
 DisableReadyPage=yes
 PrivilegesRequired=admin
+ChangesAssociations=yes
 ShowLanguageDialog=yes
 DisableDirPage=auto
 DisableProgramGroupPage=auto
@@ -374,14 +375,39 @@ Filename: http://www.nikse.dk/SubtitleEdit/; Description: {cm:run_VisitWebsite};
 Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist
 
 
+[Registry]
+#define keyCl "Software\Classes"
+#define keyApps "Software\Classes\Applications"
+#define keyAppPaths "Software\Microsoft\Windows\CurrentVersion\App Paths"
+Root: HKLM; Subkey: "{#keyAppPaths}\SubtitleEdit.exe"; ValueType: string; ValueName: ""; ValueData: "{app}\SubtitleEdit.exe"; Flags: deletekey uninsdeletekey; Check: HklmKeyExists('{#keyAppPaths}')
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe"; ValueType: string; ValueName: ""; ValueData: "Subtitle Edit {#app_ver_full}"; Flags: deletekey uninsdeletekey; Check: HklmKeyExists('{#keyApps}')
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\SubtitleEdit.exe"" ""%1"""; Check: HklmKeyExists('{#keyApps}')
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\shell\open"; ValueType: string; ValueName: "FriendlyAppName"; ValueData: "Subtitle Edit"; Check: HklmKeyExists('{#keyApps}')
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe"; ValueType: string; ValueName: "FriendlyAppName"; ValueData: "Subtitle Edit"; Check: HklmKeyExists('{#keyApps}')
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".srt"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
+; Create .srt association
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt"; ValueType: string; ValueName: ""; ValueData: "Subtitle Edit SubRip Text subtitles"; Flags: deletekey uninsdeletekey
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt"; ValueType: dword; ValueName: "EditFlags"; ValueData: $00010000
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\SubtitleEdit.exe,0"
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\SubtitleEdit.exe"" ""%1"""
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt\shell"; ValueType: string; ValueName: ""; ValueData: "open"
+Root: HKLM; Subkey: "{#keyCl}\.srt\OpenWithProgids"; ValueType: string; ValueName: "SubtitleEdit.srt"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: ""; ValueData: "SubtitleEdit.srt"; Flags: createvalueifdoesntexist
+Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: "PerceivedType"; ValueData: "text"
+
+
 [Code]
+// Check if subkey exists in HKLM registry hive
+function HklmKeyExists(const KeyName: String): Boolean;
+begin
+  Result := RegKeyExists(HKEY_LOCAL_MACHINE, KeyName);
+end;
+
+
 // Check if Subtitle Edit's settings exist
 function SettingsExist(): Boolean;
 begin
-  if FileExists(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml')) then
-    Result := True
-  else
-    Result := False;
+  Result := FileExists(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
 end;
 
 
