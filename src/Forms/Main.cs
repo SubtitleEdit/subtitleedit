@@ -4000,7 +4000,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
                 {
-                    if (_findHelper.FindNext(textBoxSource, textBoxSource.SelectionStart))
+                    if (_findHelper.FindNext(textBoxSource.Text, textBoxSource.SelectionStart))
                     {
                         textBoxSource.SelectionStart = _findHelper.SelectedIndex;
                         textBoxSource.SelectionLength = _findHelper.FindTextLength;
@@ -4057,9 +4057,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _findHelper = replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
                 ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
+                if (replaceDialog.ReplaceAll)
+                {
+                    SourceListReplaceAll(replaceDialog, _findHelper);
+                    return;
+                }
                 int replaceCount = 0;
                 bool searchStringFound = true;
-                while (searchStringFound)
+                if (searchStringFound)
                 {
                     searchStringFound = false;
                     int start = textBoxSource.SelectionStart;
@@ -4077,7 +4082,7 @@ namespace Nikse.SubtitleEdit.Forms
                             start--;
                     }
 
-                    if (_findHelper.FindNext(textBoxSource, start))
+                    if (_findHelper.FindNext(textBoxSource.Text, start))
                     {
                         textBoxSource.SelectionStart = _findHelper.SelectedIndex;
                         textBoxSource.SelectionLength = _findHelper.FindTextLength;
@@ -4088,9 +4093,9 @@ namespace Nikse.SubtitleEdit.Forms
                         replaceCount++;
                         searchStringFound = true;
 
-                        if (!replaceDialog.ReplaceAll && !replaceDialog.FindOnly)
+                        if (!replaceDialog.FindOnly)
                         {
-                            if (_findHelper.FindNext(textBoxSource, start))
+                            if (_findHelper.FindNext(textBoxSource.Text, start))
                             {
                                 textBoxSource.SelectionStart = _findHelper.SelectedIndex;
                                 textBoxSource.SelectionLength = _findHelper.FindTextLength;
@@ -4110,11 +4115,6 @@ namespace Nikse.SubtitleEdit.Forms
                         Replace(replaceDialog);
                         return;
                     }
-
-                    if (!replaceDialog.ReplaceAll)
-                    {
-                        break; // out of while loop
-                    }
                 }
                 ReloadFromSourceView();
                 if (replaceCount == 0)
@@ -4122,6 +4122,49 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     ShowStatus(string.Format(_language.ReplaceCountX, replaceCount));
             }
+            if (_makeHistoryPaused)
+                RestartHistory();
+            replaceDialog.Dispose();
+        }
+
+        private void SourceListReplaceAll(ReplaceDialog replaceDialog, FindReplaceDialogHelper findHelper)
+        {
+            int replaceCount = 0;
+            bool searchStringFound = true;
+            int start = textBoxSource.SelectionStart;
+            bool isFirst = true;
+            string text = textBoxSource.Text;
+            while (searchStringFound)
+            {
+                searchStringFound = false;
+                if (isFirst)
+                {
+                    MakeHistoryForUndo(string.Format(_language.BeforeReplace, _findHelper.FindText));
+                    isFirst = false;
+                    _makeHistoryPaused = true;
+                    if (start >= 0)
+                        start--;
+                }
+                else
+                {
+                    start--;
+                }
+
+                if (_findHelper.FindNext(text, start))
+                {
+                    text = text.Remove(findHelper.SelectedIndex, findHelper.FindTextLength).Insert(findHelper.SelectedIndex, findHelper.ReplaceText);
+                    start = findHelper.SelectedIndex + findHelper.FindTextLength;
+                    replaceCount++;
+                    searchStringFound = true;
+                }
+            }
+            textBoxSource.Text = text;
+            ReloadFromSourceView();
+            if (replaceCount == 0)
+                ShowStatus(_language.FoundNothingToReplace);
+            else
+                ShowStatus(string.Format(_language.ReplaceCountX, replaceCount));
+
             if (_makeHistoryPaused)
                 RestartHistory();
             replaceDialog.Dispose();

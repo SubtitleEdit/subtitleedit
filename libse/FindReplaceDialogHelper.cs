@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public bool Find(TextBox textBox, int startIndex)
         {
-            return FindNext(textBox, startIndex);
+            return FindNext(textBox.Text, startIndex);
         }
 
         private int FindPositionInText(string text, int startIndex)
@@ -193,15 +193,15 @@ namespace Nikse.SubtitleEdit.Core
             return cm;
         }
 
-        public bool FindNext(TextBox textBox, int startIndex)
+        public bool FindNext(string text, int startIndex)
         {
             Success = false;
             startIndex++;
-            if (startIndex < textBox.Text.Length)
+            if (startIndex < text.Length)
             {
                 if (FindType == FindType.RegEx)
                 {
-                    Match match = _regEx.Match(textBox.Text, startIndex);
+                    Match match = _regEx.Match(text, startIndex);
                     if (match.Success)
                     {
                         string groupName = Utilities.GetRegExGroup(_findText);
@@ -219,7 +219,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                     return match.Success;
                 }
-                string searchText = textBox.Text.Substring(startIndex);
+                string searchText = text.Substring(startIndex);
                 int pos = FindPositionInText(searchText, 0);
                 if (pos >= 0)
                 {
