@@ -223,6 +223,7 @@ Source: {#bindir}\Icons\SpellCheck.png;            DestDir: {app}\Icons;        
 Source: {#bindir}\Icons\VideoToggle.png;           DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\VisualSync.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\WaveformToggle.png;        DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+Source: {#bindir}\Icons\SubtitleEdit.srt.ico;      DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 
 #ifdef localize
 Source: {#bindir}\Languages\ar-EG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -388,11 +389,12 @@ Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: str
 ; Create .srt association
 Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt"; ValueType: string; ValueName: ""; ValueData: "Subtitle Edit SubRip Text subtitles"; Flags: deletekey uninsdeletekey
 Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt"; ValueType: dword; ValueName: "EditFlags"; ValueData: $00010000
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\SubtitleEdit.exe,0"
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\SubtitleEdit.srt.ico"
 Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\SubtitleEdit.exe"" ""%1"""
 Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt\shell"; ValueType: string; ValueName: ""; ValueData: "open"
 Root: HKLM; Subkey: "{#keyCl}\.srt\OpenWithProgids"; ValueType: string; ValueName: "SubtitleEdit.srt"; ValueData: ""; Flags: uninsdeletevalue
 Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: ""; ValueData: "SubtitleEdit.srt"; Flags: createvalueifdoesntexist
+Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: "Content Type"; ValueData: "application/x-subrip"
 Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: "PerceivedType"; ValueData: "text"
 
 
