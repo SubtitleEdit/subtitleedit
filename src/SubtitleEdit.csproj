@@ -3,7 +3,7 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <ApplicationIcon>Icons\SE.ico</ApplicationIcon>
+    <Win32Resource>Resources\Application.res</Win32Resource>
     <AssemblyName>SubtitleEdit</AssemblyName>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -1245,6 +1245,7 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages\packages.config" />
+    <None Include="Resources\Application.res" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -1307,7 +1308,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Transparent Background.png" />
-    <None Include="Icons\Donate.png" />
     <Content Include="DLLs\Voikkox64.dll" />
     <Content Include="DLLs\Voikkox86.dll" />
     <None Include="Hunspellx64.dll">
@@ -1469,6 +1469,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Icons\connect.png" />
+    <None Include="Icons\Donate.png" />
+    <Content Include="Icons\SE-101.exe.ico" />
+    <Content Include="Icons\SE-102.srt.ico" />
     <Content Include="Icons\Find.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1493,7 +1496,6 @@
     <Content Include="Icons\SaveAs.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Icons\SE.ico" />
     <Content Include="Icons\Settings.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
