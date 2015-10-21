@@ -11840,7 +11840,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.Paragraphs[i].Text = multipleReplace.FixedSubtitle.Paragraphs[i].Text;
                     }
 
-                    _subtitle.RemoveParagraphsByIndices(multipleReplace.DeleteIndices);                    
+                    _subtitle.RemoveParagraphsByIndices(multipleReplace.DeleteIndices);
                     _subtitle.Renumber();
 
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);

@@ -741,7 +741,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
             return s;
-        }     
+        }
 
         public static string DictionaryFolder
         {
@@ -796,7 +796,7 @@ namespace Nikse.SubtitleEdit.Core
                 duration = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
 
             return duration;
-        }     
+        }
 
         public static string ColorToHex(Color c)
         {
