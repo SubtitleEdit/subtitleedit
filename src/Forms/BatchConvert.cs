@@ -684,7 +684,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 sub = genericParseSubtitle;
                                 format = new SubRip();
-                            }                           
+                            }
                         }
 
                         if (format != null && format.GetType() == typeof(MicroDvd))
