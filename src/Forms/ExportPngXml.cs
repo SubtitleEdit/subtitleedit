@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class ExportPngXml : PositionAndSizeForm
     {
 
-        private class MakeBitmapParameter
+        internal class MakeBitmapParameter
         {
             public Bitmap Bitmap { get; set; }
             public Paragraph P { get; set; }
@@ -251,7 +251,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static void MakeBluRaySupImage(MakeBitmapParameter param)
+        internal static void MakeBluRaySupImage(MakeBitmapParameter param)
         {
             var brSub = new BluRaySupPicture
             {
@@ -300,7 +300,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private MakeBitmapParameter MakeMakeBitmapParameter(int index, int screenWidth, int screenHeight)
+        internal MakeBitmapParameter MakeMakeBitmapParameter(int index, int screenWidth, int screenHeight)
         {
             var parameter = new MakeBitmapParameter
             {
@@ -1919,7 +1919,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return nbmp.Width;
         }
 
-        private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
+        internal static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
         {
             Bitmap bmp = null;
             if (!parameter.SimpleRendering && parameter.P.Text.Contains(Environment.NewLine) && (parameter.BoxSingleLine || parameter.P.Text.Contains(BoxSingleLineText)))
@@ -3105,6 +3105,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 SubtitleListView1Fill(_subtitle);
                 SubtitleListView1SelectIndexAndEnsureVisible(0);
+            }
+
+            if (fileName == "?SETTINGS?")
+            {
+                buttonExport.Visible = false;
+                subtitleListView1.CheckBoxes = false;
             }
         }
 

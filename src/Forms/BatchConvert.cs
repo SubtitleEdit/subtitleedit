@@ -65,6 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly IList<SubtitleFormat> _allFormats;
         private bool _abort;
         private Ebu.EbuGeneralSubtitleInformation _ebuGeneralInformation;
+        public const string BluRaySubtitle = "Blu-ray sup";
 
         public BatchConvert(Icon icon)
         {
@@ -140,21 +141,27 @@ namespace Nikse.SubtitleEdit.Forms
 
             _allFormats = new List<SubtitleFormat> { new Pac() };
             int selectedFormatIndex = 0;
-            for (int index = 0; index < SubtitleFormat.AllSubtitleFormats.Count; index++)
+            var formatNames = new List<string>();
+            foreach (var f in SubtitleFormat.AllSubtitleFormats)
             {
-                var f = SubtitleFormat.AllSubtitleFormats[index];
                 if (!f.IsVobSubIndexFile)
                 {
-                    comboBoxSubtitleFormats.Items.Add(f.Name);
+                    formatNames.Add(f.Name);
                     _allFormats.Add(f);
-                    if (Configuration.Settings.Tools.BatchConvertFormat == f.Name)
-                    {
-                        selectedFormatIndex = index;
-                    }
+                }
+            }
+            formatNames.Add(l.PlainText);
+            formatNames.Add(BluRaySubtitle);
+            for (int index = 0; index < formatNames.Count; index++)
+            {
+                var name = formatNames[index];
+                comboBoxSubtitleFormats.Items.Add(name);
+                if (Configuration.Settings.Tools.BatchConvertFormat == name)
+                {
+                    selectedFormatIndex = index;
                 }
             }
             comboBoxSubtitleFormats.SelectedIndex = selectedFormatIndex;
-            comboBoxSubtitleFormats.Items.Add(l.PlainText);
 
             comboBoxEncoding.Items.Clear();
             int encodingSelectedIndex = 0;
@@ -1031,6 +1038,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonStyles.Text = Configuration.Settings.Language.BatchConvert.Style;
                 buttonStyles.Visible = true;
+                comboBoxEncoding.Enabled = true;
             }
             else if (comboBoxSubtitleFormats.Text == Ebu.NameOfFormat)
             {
@@ -1038,10 +1046,18 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonStyles.Visible = true;
                 if (_ebuGeneralInformation == null)
                     _ebuGeneralInformation = new Ebu.EbuGeneralSubtitleInformation();
+                comboBoxEncoding.Enabled = true;
+            }
+            else if (comboBoxSubtitleFormats.Text == BluRaySubtitle)
+            {
+                buttonStyles.Text = Configuration.Settings.Language.BatchConvert.Settings;
+                buttonStyles.Visible = true;
+                comboBoxEncoding.Enabled = false;
             }
             else
             {
                 buttonStyles.Visible = false;
+                comboBoxEncoding.Enabled = true;
             }
             _assStyle = null;
             _ssaStyle = null;
@@ -1056,6 +1072,21 @@ namespace Nikse.SubtitleEdit.Forms
             else if (comboBoxSubtitleFormats.Text == Ebu.NameOfFormat)
             {
                 ShowEbuSettings();
+            }
+            else if (comboBoxSubtitleFormats.Text == BluRaySubtitle)
+            {
+                ShowBluraySettings();
+            }
+        }
+
+        private void ShowBluraySettings()
+        {
+            using (var properties = new ExportPngXml())
+            {
+                var s = new Subtitle();
+                s.Paragraphs.Add(new Paragraph("Test 123." + Environment.NewLine + "Test 456.", 0, 4000));
+                properties.Initialize(s, new SubRip(), "BLURAYSUP", "?SETTINGS?", null, null);
+                properties.ShowDialog(this);
             }
         }
 

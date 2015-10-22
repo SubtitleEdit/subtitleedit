@@ -53,6 +53,7 @@ namespace Nikse.SubtitleEdit.Logic
                     Console.WriteLine("    " + Pac.NameOfFormat);
                     Console.WriteLine("    " + Spt.NameOfFormat);
                     Console.WriteLine("    " + Ultech130.NameOfFormat);
+                    Console.WriteLine("- For Blu-ray .sup output use: '" + BatchConvert.BluRaySubtitle.Replace(" ", string.Empty) + "'");                    
                 }
 
                 Console.WriteLine();
@@ -691,6 +692,38 @@ namespace Nikse.SubtitleEdit.Logic
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
                         Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
                         File.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub, false, false, false, false, false, false, string.Empty, true, false, true, true, false), targetEncoding);
+                        Console.WriteLine(" done.");
+                    }
+                }
+                if (!targetFormatFound)
+                {
+                    if (string.Compare(BatchConvert.BluRaySubtitle, toFormat, StringComparison.OrdinalIgnoreCase) == 0 || string.Compare(BatchConvert.BluRaySubtitle.Replace(" ", string.Empty), toFormat, StringComparison.OrdinalIgnoreCase) == 0)
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".sup", outputFolder, overwrite);
+                        Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
+                        using (var form = new ExportPngXml())
+                        {
+                            form.Initialize(sub, format, "BLURAYSUP", fileName, null, null);
+                            var binarySubtitleFile = new FileStream(outputFileName, FileMode.Create);
+                            int width = 1920;
+                            int height = 1080;
+                            var parts = Configuration.Settings.Tools.ExportBluRayVideoResolution.Split('x');
+                            if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+                            {
+                                width = int.Parse(parts[0]);
+                                height = int.Parse(parts[1]);
+                            }
+                            for (int index = 0; index < sub.Paragraphs.Count; index++)
+                            {
+                                var mp = form.MakeMakeBitmapParameter(index, width, height);
+                                mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
+                                mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
+                                ExportPngXml.MakeBluRaySupImage(mp);
+                                binarySubtitleFile.Write(mp.Buffer, 0, mp.Buffer.Length);
+                            }
+                            binarySubtitleFile.Close();
+                        }
                         Console.WriteLine(" done.");
                     }
                 }
