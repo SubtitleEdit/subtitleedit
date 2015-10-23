@@ -3106,12 +3106,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 SubtitleListView1Fill(_subtitle);
                 SubtitleListView1SelectIndexAndEnsureVisible(0);
             }
-
-            if (fileName == "?SETTINGS?")
-            {
-                buttonExport.Visible = false;
-                subtitleListView1.CheckBoxes = false;
-            }
         }
 
         private void InitBorderStyle()
@@ -4030,6 +4024,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             subtitleListView1_SelectedIndexChanged(null, null);
             panelFullFrameBackground.Visible = checkBoxFullFrameImage.Checked;
+        }
+
+        public void DisableSaveButtonAndCheckBoxes()
+        {
+            buttonExport.Visible = false;
+            subtitleListView1.CheckBoxes = false;
         }
 
     }
