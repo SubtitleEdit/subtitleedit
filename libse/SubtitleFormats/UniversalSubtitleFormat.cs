@@ -77,7 +77,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.Attributes.Append(stop);
 
                 XmlNode text = xml.CreateElement("text");
-                text.InnerText = HtmlUtil.RemoveHtmlTags(p.Text);
+                bool first = true;
+                foreach (string line in HtmlUtil.RemoveHtmlTags(p.Text, true).SplitToLines())
+                {
+                    if (!first)
+                    {
+                        XmlNode br = xml.CreateElement("br");
+                        text.AppendChild(br);
+                    }
+                    first = false;
+                    var t = xml.CreateTextNode(string.Empty);
+                    t.InnerText = line;
+                    text.AppendChild(t);
+                }
                 paragraph.AppendChild(text);
 
                 XmlAttribute style = xml.CreateAttribute("style");
@@ -139,9 +151,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string start = node.Attributes["start"].InnerText;
                     string stop = node.Attributes["stop"].InnerText;
-                    string text = node.SelectSingleNode("text").InnerText;
 
-                    subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start), DecodeTimeCode(stop), text));
+                    var text = new StringBuilder();
+                    foreach (XmlNode innerNode in node.SelectSingleNode("text").ChildNodes)
+                    {
+                        switch (innerNode.Name.Replace("tt:", string.Empty))
+                        {
+                            case "br":
+                                text.AppendLine();
+                                break;
+                            default:
+                                text.Append(innerNode.InnerText);
+                                break;
+                        }
+                    }
+
+                    subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start), DecodeTimeCode(stop), text.ToString().Trim()));
                 }
                 catch (Exception ex)
                 {
