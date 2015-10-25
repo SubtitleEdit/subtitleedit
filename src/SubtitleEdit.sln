@@ -30,6 +30,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibSE", "..\libse\LibSE.csp
 		{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76} = {36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Resources", "Win32Resources\Win32Resources.vcxproj", "{905ACC84-B353-4313-BFE5-CCF460B959AF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{511A5B59-1C35-4719-8536-23B19AF9B21A} = {511A5B59-1C35-4719-8536-23B19AF9B21A}
+		{2CB9698C-F0A8-42FF-8938-DE047292D5FE} = {2CB9698C-F0A8-42FF-8938-DE047292D5FE}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +65,9 @@ Global
 		{3E3CB28F-3A7B-430F-9EB3-0D6C1E53B753}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E3CB28F-3A7B-430F-9EB3-0D6C1E53B753}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E3CB28F-3A7B-430F-9EB3-0D6C1E53B753}.Release|Any CPU.Build.0 = Release|Any CPU
+		{905ACC84-B353-4313-BFE5-CCF460B959AF}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{905ACC84-B353-4313-BFE5-CCF460B959AF}.Release|Any CPU.ActiveCfg = Release|Win32
+		{905ACC84-B353-4313-BFE5-CCF460B959AF}.Release|Any CPU.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

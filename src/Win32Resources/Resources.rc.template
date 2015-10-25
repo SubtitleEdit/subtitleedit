@@ -1,0 +1,31 @@
+﻿#include <windows.h>
+
+#ifndef TargetAssemblyDescription
+#define TargetAssemblyDescription "Subtitle Edit resources"
+#endif
+#ifndef TargetAssemblyFileName
+#define TargetAssemblyFileName "SubtitleEdit.resources.dll"
+#endif
+
+1 VERSIONINFO
+    PRODUCTVERSION  [vi:ProductVersion]
+    FILEVERSION     [vi:FileVersion]
+    FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+    FILEFLAGS       [vi:FileFlags]
+    FILEOS          VOS_NT_WINDOWS32
+    FILETYPE        VFT_DLL
+    FILESUBTYPE     VFT2_UNKNOWN
+{
+    BLOCK "StringFileInfo"
+    {
+        BLOCK "040904B0" // English (1033) + Unicode (1200)
+        {
+            [vi:StringFileInfo]
+        }
+    }
+
+    BLOCK "VarFileInfo"
+    {
+        VALUE "Translation", 0x0409, 0x04B0 // langID=English, charsetID=Unicode
+    }
+}
