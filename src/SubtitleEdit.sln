@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateAssemblyInfo", "Updat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateLanguageFiles", "UpdateLanguageFiles\UpdateLanguageFiles.csproj", "{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateResourceScript", "UpdateResourceScript\UpdateResourceScript.csproj", "{2CB9698C-F0A8-42FF-8938-DE047292D5FE}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E5F70420-EF49-403E-851F-700953769937}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibSE", "..\libse\LibSE.csproj", "{3E3CB28F-3A7B-430F-9EB3-0D6C1E53B753}"
@@ -50,6 +52,9 @@ Global
 		{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36BCA2A7-EE6B-45FD-AF90-D3F76A84DA76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CB9698C-F0A8-42FF-8938-DE047292D5FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CB9698C-F0A8-42FF-8938-DE047292D5FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CB9698C-F0A8-42FF-8938-DE047292D5FE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3E3CB28F-3A7B-430F-9EB3-0D6C1E53B753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3E3CB28F-3A7B-430F-9EB3-0D6C1E53B753}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E3CB28F-3A7B-430F-9EB3-0D6C1E53B753}.Release|Any CPU.ActiveCfg = Release|Any CPU
