@@ -5830,8 +5830,20 @@ namespace Nikse.SubtitleEdit.Forms
                             !psm.Contains('Y') && textWithOutFixes.Contains('Y') ||
                             !psm.Contains('\'') && textWithOutFixes.Contains('\'') ||
                             !psm.Contains('€') && textWithOutFixes.Contains('€'))
-
+                        {
                             textWithOutFixes = psm;
+                        }
+                        else if (_ocrFixEngine != null && !psm.Contains('$') && !psm.Contains('•') && !psm.Contains('€'))
+                        {
+                            int correctWordsNoFixes;
+                            int wordsNotFoundNoFixes = _ocrFixEngine.CountUnknownWordsViaDictionary(textWithOutFixes, out correctWordsNoFixes);
+                            int correctWordsPsm7;
+                            int wordsNotFoundPsm7 = _ocrFixEngine.CountUnknownWordsViaDictionary(psm, out correctWordsPsm7);
+                            if (wordsNotFoundPsm7 <= wordsNotFoundNoFixes && correctWordsPsm7 > correctWordsNoFixes)
+                            {
+                                textWithOutFixes = psm;
+                            }
+                        }
                     }
                     else if (psm.Length == textWithOutFixes.Length &&
                              (!psm.Contains('0') && textWithOutFixes.Contains('0') ||  // these chars are often mistaken
