@@ -175,7 +175,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (item.Checked)
                 {
                     string findWhat = item.SubItems[1].Text;
-                    if (!string.IsNullOrWhiteSpace(findWhat))
+                    if (!string.IsNullOrEmpty(findWhat)) // allow space or spaces
                     {
                         string replaceWith = item.SubItems[2].Text.Replace(@"\n", Environment.NewLine);
                         string searchType = item.SubItems[3].Text;
