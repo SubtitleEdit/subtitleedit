@@ -1800,6 +1800,12 @@
     <Word from="Ifour" to="If our" />
     <Word from="lron" to="Iron" />
     <Word from="It'syour" to="It's your" />
+    <Word from="lfstill" to="if still"/>
+    <Word from="internationaljudges" to="international judges"/>
+    <Word from="YQu" to="You" />
+    <Word from="onJanuaw" to="on January"/>
+    <Word from="Shdsjust" to="She's just"/>
+    <Word from="HeyJennifer" to="Hey Jennifer"/>
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
