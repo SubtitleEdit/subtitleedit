@@ -223,7 +223,6 @@ Source: {#bindir}\Icons\SpellCheck.png;            DestDir: {app}\Icons;        
 Source: {#bindir}\Icons\VideoToggle.png;           DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\VisualSync.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\WaveformToggle.png;        DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\SubtitleEdit.srt.ico;      DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 
 #ifdef localize
 Source: {#bindir}\Languages\ar-EG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -264,6 +263,7 @@ Source: {#bindir}\Languages\zh-tw.xml;             DestDir: {app}\Languages;    
 #endif
 
 Source: {#bindir}\SubtitleEdit.exe;                DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: {#bindir}\SubtitleEdit.resources.dll;      DestDir: {app};                                    Flags: ignoreversion; Components: main;
 Source: ..\Changelog.txt;                          DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\gpl.txt;                                DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\Tesseract\msvcp90.dll;                  DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
@@ -308,6 +308,7 @@ Type: files;      Name: {app}\Dictionaries\en_US_user.xml;            Check: IsU
 Type: files;      Name: {app}\Dictionaries\eng_OCRFixReplaceList.xml; Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\names_etc.xml;             Check: IsUpgrade()
 Type: dirifempty; Name: {app}\Dictionaries;                           Check: IsUpgrade()
+Type: files;      Name: {app}\Icons\SubtitleEdit.srt.ico;             Check: IsUpgrade()
 Type: files;      Name: {app}\TessData\eng.DangAmbigs;                Check: IsUpgrade()
 Type: files;      Name: {app}\TessData\eng.freq-dawg;                 Check: IsUpgrade()
 Type: files;      Name: {app}\TessData\eng.inttemp;                   Check: IsUpgrade()
@@ -379,25 +380,36 @@ Filename: {win}\Microsoft.NET\Framework\v4.0.30319\ngen.exe; Parameters: "uninst
 
 
 [Registry]
+#include bindir + "\Resources.h"
+#define rcicon(id) "{app}\SubtitleEdit.resources.dll,-" + Str(id)
+#define rctext(id) "@{app}\SubtitleEdit.resources.dll,-" + Str(id)
+#define keySE "Software\Nikse\SubtitleEdit"
 #define keyCl "Software\Classes"
 #define keyApps "Software\Classes\Applications"
+#define keyRegApps "Software\RegisteredApplications"
 #define keyAppPaths "Software\Microsoft\Windows\CurrentVersion\App Paths"
 Root: HKLM; Subkey: "{#keyAppPaths}\SubtitleEdit.exe"; ValueType: string; ValueName: ""; ValueData: "{app}\SubtitleEdit.exe"; Flags: deletekey uninsdeletekey; Check: HklmKeyExists('{#keyAppPaths}')
-Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe"; ValueType: string; ValueName: ""; ValueData: "Subtitle Edit {#app_ver_full}"; Flags: deletekey uninsdeletekey; Check: HklmKeyExists('{#keyApps}')
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe"; ValueType: string; ValueName: ""; ValueData: "{#SetupSetting('AppName')} {#app_ver_full}"; Flags: deletekey uninsdeletekey; Check: HklmKeyExists('{#keyApps}')
 Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\SubtitleEdit.exe"" ""%1"""; Check: HklmKeyExists('{#keyApps}')
-Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\shell\open"; ValueType: string; ValueName: "FriendlyAppName"; ValueData: "Subtitle Edit"; Check: HklmKeyExists('{#keyApps}')
-Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe"; ValueType: string; ValueName: "FriendlyAppName"; ValueData: "Subtitle Edit"; Check: HklmKeyExists('{#keyApps}')
-Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".srt"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\shell\open"; ValueType: string; ValueName: "FriendlyAppName"; ValueData: "{#rctext(RC_APPNAME)}"; Check: HklmKeyExists('{#keyApps}')
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe"; ValueType: string; ValueName: "FriendlyAppName"; ValueData: "{#rctext(RC_APPNAME)}"; Check: HklmKeyExists('{#keyApps}')
+Root: HKLM; Subkey: "{#keySE}"; ValueType: string; ValueName: ""; ValueData: "{#SetupSetting('AppName')}"; Flags: deletekey uninsdeletekey
+Root: HKLM; Subkey: "{#keySE}\Capabilities"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "{#rctext(RC_APPDESC)}"
+Root: HKLM; Subkey: "{#keySE}\Capabilities"; ValueType: string; ValueName: "ApplicationName"; ValueData: "{#rctext(RC_APPNAME)}"
+Root: HKLM; Subkey: "{#keyRegApps}"; ValueType: string; ValueName: "SubtitleEdit"; ValueData: "{#keySE}\Capabilities"; Flags: uninsdeletevalue; Check: HklmKeyExists('{#keyRegApps}')
 ; Create .srt association
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt"; ValueType: string; ValueName: ""; ValueData: "Subtitle Edit SubRip Text subtitles"; Flags: deletekey uninsdeletekey
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt"; ValueType: string; ValueName: ""; ValueData: "{#RCDESC_SRT_DEFAULT}"; Flags: deletekey uninsdeletekey
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt"; ValueType: string; ValueName: "FriendlyTypeName"; ValueData: "{#rctext(RCDESC_SRT)}"
 Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt"; ValueType: dword; ValueName: "EditFlags"; ValueData: $00010000
-Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\Icons\SubtitleEdit.srt.ico"
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{#rcicon(RCICON_SRT)}"
 Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\SubtitleEdit.exe"" ""%1"""
 Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt\shell"; ValueType: string; ValueName: ""; ValueData: "open"
 Root: HKLM; Subkey: "{#keyCl}\.srt\OpenWithProgids"; ValueType: string; ValueName: "SubtitleEdit.srt"; ValueData: ""; Flags: uninsdeletevalue
 Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: ""; ValueData: "SubtitleEdit.srt"; Flags: createvalueifdoesntexist
 Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: "Content Type"; ValueData: "application/x-subrip"
 Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: "PerceivedType"; ValueData: "text"
+Root: HKLM; Subkey: "{#keySE}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".srt"; ValueData: "SubtitleEdit.srt"
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".srt"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
 
 
 [Code]

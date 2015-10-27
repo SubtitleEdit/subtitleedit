@@ -1470,9 +1470,6 @@
     <None Include="Icons\connect.png" />
     <None Include="Icons\Donate.png" />
     <Content Include="Icons\SE.ico" />
-    <Content Include="Icons\SubtitleEdit.srt.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Icons\Find.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

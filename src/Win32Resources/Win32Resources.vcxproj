@@ -88,14 +88,23 @@
     <PreBuildEvent>
       <Command>"$(SolutionDir)..\build_helpers.bat" rsrc $(ConfigurationName)</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>COPY /Y /V "$(ProjectDir)Resources.h" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
+    <ClInclude Include="Resources.h" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources.rc.template" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="SubtitleEdit.srt.ico" />
   </ItemGroup>
 </Project>
