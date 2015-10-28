@@ -2049,12 +2049,14 @@ namespace Nikse.SubtitleEdit.Core
             // Open tags
             var open1 = openTag + " ";
             var open2 = Environment.NewLine + openTag + " ";
+            var open3 = openTag + Environment.NewLine;
 
             // Closing tags
             var close1 = "! " + closeTag + Environment.NewLine;
             var close2 = "? " + closeTag + Environment.NewLine;
             var close3 = " " + closeTag;
             var close4 = " " + closeTag + Environment.NewLine;
+            var close5 = Environment.NewLine + closeTag;
 
             if (text.Contains(close1, StringComparison.Ordinal))
                 text = text.Replace(close1, "!" + closeTag + Environment.NewLine);
@@ -2071,6 +2073,14 @@ namespace Nikse.SubtitleEdit.Core
             // e.g: ! </i><br>Foobar
             if (text.StartsWith(open1, StringComparison.Ordinal))
                 text = openTag + text.Substring(open1.Length);
+
+            // e.g.: <i>\r\n
+            if (text.StartsWith(open3, StringComparison.Ordinal))
+                text = text.Remove(openTag.Length, Environment.NewLine.Length);
+
+            // e.g.: \r\n</i>
+            if (text.EndsWith(close5, StringComparison.Ordinal))
+                text = text.Remove(text.Length - openTag.Length - Environment.NewLine.Length - 1, Environment.NewLine.Length);
 
             if (text.Contains(open2, StringComparison.Ordinal))
                 text = text.Replace(open2, Environment.NewLine + openTag);

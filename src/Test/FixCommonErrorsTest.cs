@@ -488,6 +488,23 @@ namespace Test
             }
         }
 
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixHyphensDontCrash()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                string input = "<i>" + Environment.NewLine + "- So far we don't know</i> <i>much about anything.</i>";
+                InitializeFixCommonErrorsLine(target, input);
+                new FixHyphensAdd().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, input);
+            }
+        }
+
+        
+
+
         #endregion Fix Hyphens (add dash)
 
         #region Fix OCR errors
@@ -827,6 +844,33 @@ namespace Test
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, expected);
             }
         }
+
+        [TestMethod]
+        public void FixUnneededSpacesNewLineAfterItalicAtStart()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                string input = "<i>" + Environment.NewLine + "- So far we don't know much about anything.</i>";
+                const string expected = "<i>- So far we don't know much about anything.</i>";
+                InitializeFixCommonErrorsLine(target, input);
+                new FixUnneededSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
+        [TestMethod]
+        public void FixUnneededSpacesNewLineBeforeEndItalicAtEnd()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                string input = "<i>- So far we don't</i> <i>know much about anything." + Environment.NewLine + "</i>";
+                const string expected = "<i>- So far we don't</i> <i>know much about anything.</i>";
+                InitializeFixCommonErrorsLine(target, input);
+                new FixUnneededSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
 
         #endregion Fix unneeded spaces
 
