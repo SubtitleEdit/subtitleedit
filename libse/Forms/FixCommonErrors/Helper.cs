@@ -389,7 +389,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     int totalSpaceHyphen = Utilities.CountTagInText(text, " -");
                     if (startHyphenCount == 1 && totalSpaceHyphen == 0)
                     {
-                        var parts = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
+                        var parts = HtmlUtil.RemoveHtmlTags(text).Trim().SplitToLines();
                         if (parts.Length == 2)
                         {
                             var part0 = parts[0].TrimEnd();
