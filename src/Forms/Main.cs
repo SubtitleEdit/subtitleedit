@@ -294,7 +294,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                Font = SystemFonts.MessageBoxFont;
                 InitializeComponent();
                 Icon = Properties.Resources.SubtitleEditFormIcon;
 
