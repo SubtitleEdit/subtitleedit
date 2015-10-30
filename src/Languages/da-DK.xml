@@ -2,7 +2,7 @@
 <Language Name="dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <HelpFile />
@@ -555,7 +555,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <FixesFoundX>Rettelser fundet: {0}</FixesFoundX>
     <XFixesApplied>Rettelser udført: {0}</XFixesApplied>
     <NothingToFixBut>Intet at rette, men nogle ting kan forbedres - se log for detailjer</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Fix alene små bogstaver 'i' til 'I' (engelsk)" er markeret, men aktuelt er indlæst undertekst ser ikke ud til at være engelsk.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Fortsæt</Continue>
     <ContinueAnyway>Fortsæt alligevel?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"Ret alene små bogstaver 'i' til 'I' (engelsk)" er ikke længere valgt</UncheckedFixLowercaseIToUppercaseI>
@@ -1502,7 +1501,6 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Tools>Værktøj</Tools>
     <WordLists>Ordlister</WordLists>
     <SsaStyle>ASS/SSA Style</SsaStyle>
-    <Proxy>Proxy</Proxy>
     <ShowToolBarButtons>Vis Værktøjslinjeknapperne</ShowToolBarButtons>
     <New>Ny</New>
     <Open>Åben</Open>

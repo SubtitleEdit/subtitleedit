@@ -2,7 +2,7 @@
 <Language Name="magyar">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Fordító: Zityi's Translator Team (http://szoftverforditasok.hu)</TranslatedBy>
     <CultureName>hu-HU</CultureName>
     <HelpFile />
@@ -558,7 +558,6 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <FixesFoundX>Talált javítások: {0}</FixesFoundX>
     <XFixesApplied>Alkalmazott javítások: {0}</XFixesApplied>
     <NothingToFixBut>Nincs javítandó, de néhány dolgot lehetne javítani - részletekért, tekintse meg a naplót</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Az egyedülálló 'i' javítása nagy 'I' betűsre (Angol)" opció ki van jelölve, de a jelenleg betöltött felirat nem tűnik Angol nyelvűnek.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Folytatás</Continue>
     <ContinueAnyway>Folytatja mindenképp?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"Az egyedülálló 'i' javítása nagy 'I' betűsre (Angol)" opció kijelöletlen</UncheckedFixLowercaseIToUppercaseI>
@@ -1507,7 +1506,6 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <Tools>Eszközök</Tools>
     <WordLists>Szólisták</WordLists>
     <SsaStyle>ASS/SSA stílus</SsaStyle>
-    <Proxy>Hálózat</Proxy>
     <ShowToolBarButtons>Eszköztár gombok megjelenítése</ShowToolBarButtons>
     <New>Új</New>
     <Open>Megnyitás</Open>

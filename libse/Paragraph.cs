@@ -32,6 +32,10 @@ namespace Nikse.SubtitleEdit.Core
 
         public string Actor { get; set; }
 
+        public string MarginL { get; set; }
+        public string MarginR { get; set; }
+        public string MarginV { get; set; }
+
         public string Effect { get; set; }
 
         public int Layer { get; set; }
@@ -77,6 +81,9 @@ namespace Nikse.SubtitleEdit.Core
             Extra = paragraph.Extra;
             IsComment = paragraph.IsComment;
             Actor = paragraph.Actor;
+            MarginL = paragraph.MarginL;
+            MarginR = paragraph.MarginR;
+            MarginV = paragraph.MarginV;
             Effect = paragraph.Effect;
             Layer = paragraph.Layer;
             ID = generateNewId ? GenerateId() : paragraph.ID;
@@ -103,15 +110,15 @@ namespace Nikse.SubtitleEdit.Core
             ID = GenerateId();
         }
 
-        public void Adjust(double factor, double adjust)
+        public void Adjust(double factor, double adjustmentInSeconds)
         {
             if (StartTime.IsMaxTime)
                 return;
 
-            double seconds = StartTime.TimeSpan.TotalSeconds * factor + adjust;
+            double seconds = StartTime.TimeSpan.TotalSeconds * factor + adjustmentInSeconds;
             StartTime.TimeSpan = TimeSpan.FromSeconds(seconds);
 
-            seconds = EndTime.TimeSpan.TotalSeconds * factor + adjust;
+            seconds = EndTime.TimeSpan.TotalSeconds * factor + adjustmentInSeconds;
             EndTime.TimeSpan = TimeSpan.FromSeconds(seconds);
         }
 

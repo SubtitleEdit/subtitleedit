@@ -555,58 +555,116 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
         private void buttonPrimaryColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelPrimaryColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            string name = listViewStyles.SelectedItems[0].Text;
+            if (_isSubStationAlpha)
             {
-                listViewStyles.SelectedItems[0].SubItems[4].BackColor = colorDialogSSAStyle.Color;
-                listViewStyles.SelectedItems[0].SubItems[5].ForeColor = colorDialogSSAStyle.Color;
-                panelPrimaryColor.BackColor = colorDialogSSAStyle.Color;
-                string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "primarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
-                GeneratePreview();
+                colorDialogSSAStyle.Color = panelPrimaryColor.BackColor;
+                if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+                {
+                    listViewStyles.SelectedItems[0].SubItems[4].BackColor = colorDialogSSAStyle.Color;
+                    listViewStyles.SelectedItems[0].SubItems[5].ForeColor = colorDialogSSAStyle.Color;
+                    panelPrimaryColor.BackColor = colorDialogSSAStyle.Color;
+                    SetSsaStyle(name, "primarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
+                    GeneratePreview();
+                }
+            }
+            else
+            {
+                using (var colorChooser = new ColorChooser { Color = panelPrimaryColor.BackColor })
+                {
+                    if (colorChooser.ShowDialog() == DialogResult.OK)
+                    {
+                        listViewStyles.SelectedItems[0].SubItems[4].BackColor = panelPrimaryColor.BackColor;
+                        listViewStyles.SelectedItems[0].SubItems[5].ForeColor = panelPrimaryColor.BackColor;
+                        panelPrimaryColor.BackColor = colorChooser.Color;
+                        listViewStyles.SelectedItems[0].SubItems[4].BackColor = panelPrimaryColor.BackColor;
+                        SetSsaStyle(name, "primarycolour", GetSsaColorString(panelPrimaryColor.BackColor));
+                        GeneratePreview();
+                    }
+                }
             }
         }
 
         private void buttonSecondaryColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelSecondaryColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            string name = listViewStyles.SelectedItems[0].Text;
+            if (_isSubStationAlpha)
             {
-                panelSecondaryColor.BackColor = colorDialogSSAStyle.Color;
-                string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "secondarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
-                GeneratePreview();
+                colorDialogSSAStyle.Color = panelSecondaryColor.BackColor;
+                if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+                {
+                    panelSecondaryColor.BackColor = colorDialogSSAStyle.Color;
+                    SetSsaStyle(name, "secondarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
+                    GeneratePreview();
+                }
+            }
+            else
+            {
+                using (var colorChooser = new ColorChooser { Color = panelSecondaryColor.BackColor })
+                {
+                    if (colorChooser.ShowDialog() == DialogResult.OK)
+                    {
+                        panelSecondaryColor.BackColor = colorChooser.Color;
+                        SetSsaStyle(name, "secondarycolour", GetSsaColorString(panelSecondaryColor.BackColor));
+                        GeneratePreview();
+                    }
+                }
             }
         }
 
         private void buttonOutlineColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelOutlineColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            string name = listViewStyles.SelectedItems[0].Text;
+            if (_isSubStationAlpha)
             {
-                if (!_isSubStationAlpha)
-                    listViewStyles.SelectedItems[0].SubItems[4].BackColor = colorDialogSSAStyle.Color;
-                panelOutlineColor.BackColor = colorDialogSSAStyle.Color;
-                string name = listViewStyles.SelectedItems[0].Text;
-                if (_isSubStationAlpha)
+                colorDialogSSAStyle.Color = panelOutlineColor.BackColor;
+                if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+                {
+                    panelOutlineColor.BackColor = colorDialogSSAStyle.Color;
                     SetSsaStyle(name, "tertiarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
-                else
-                    SetSsaStyle(name, "outlinecolour", GetSsaColorString(colorDialogSSAStyle.Color));
-                GeneratePreview();
+                    GeneratePreview();
+                }
+            }
+            else
+            {
+                using (var colorChooser = new ColorChooser { Color = panelOutlineColor.BackColor })
+                {
+                    if (colorChooser.ShowDialog() == DialogResult.OK)
+                    {
+                        panelOutlineColor.BackColor = colorChooser.Color;
+                        listViewStyles.SelectedItems[0].SubItems[4].BackColor = panelOutlineColor.BackColor;
+                        SetSsaStyle(name, "outlinecolour", GetSsaColorString(panelOutlineColor.BackColor));
+                        GeneratePreview();
+                    }
+                }
             }
         }
 
         private void buttonShadowColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelBackColor.BackColor;
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            string name = listViewStyles.SelectedItems[0].Text;
+            if (_isSubStationAlpha)
             {
-                if (_isSubStationAlpha)
+                colorDialogSSAStyle.Color = panelBackColor.BackColor;
+                if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+                {
                     listViewStyles.SelectedItems[0].SubItems[4].BackColor = colorDialogSSAStyle.Color;
-                panelBackColor.BackColor = colorDialogSSAStyle.Color;
-                string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "backcolour", GetSsaColorString(colorDialogSSAStyle.Color));
-                GeneratePreview();
+                    panelBackColor.BackColor = colorDialogSSAStyle.Color;
+                    SetSsaStyle(name, "backcolour", GetSsaColorString(colorDialogSSAStyle.Color));
+                    GeneratePreview();
+                }
+            }
+            else
+            {
+                using (var colorChooser = new ColorChooser { Color = panelBackColor.BackColor })
+                {
+                    if (colorChooser.ShowDialog() == DialogResult.OK)
+                    {
+                        panelBackColor.BackColor = colorChooser.Color;
+                        SetSsaStyle(name, "backcolour", GetSsaColorString(panelBackColor.BackColor));
+                        GeneratePreview();
+                    }
+                }
             }
         }
 
@@ -614,7 +672,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
         {
             if (_isSubStationAlpha)
                 return Color.FromArgb(0, c.B, c.G, c.R).ToArgb().ToString();
-            return string.Format("&H00{0:X2}{1:X2}{2:X2}", c.B, c.G, c.R);
+            return AdvancedSubStationAlpha.GetSsaColorString(c);
         }
 
         private void buttonCopy_Click(object sender, EventArgs e)

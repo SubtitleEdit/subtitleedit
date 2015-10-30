@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                Encoding encoding = Utilities.GetEncodingFromFile(fileName);
+                Encoding encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
                 string s = File.ReadAllText(fileName, encoding).Trim();
                 if (s.Contains('.'))
                     radioButtonSeconds.Checked = true;

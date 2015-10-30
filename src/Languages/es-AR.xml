@@ -2,7 +2,7 @@
 <Language Name="Español (Argentina)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Traducido por Marcelo1ar, correcciones por walterh78</TranslatedBy>
     <CultureName>es-AR</CultureName>
     <HelpFile>http://www.nikse.dk/SubtitleEdit/HelpEs</HelpFile>
@@ -484,7 +484,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Correcciones encontradas: {0}</FixesFoundX>
     <XFixesApplied>Correcciones aplicadas: {0}</XFixesApplied>
     <NothingToFixBut>Nada que corregir, pero algunas cosas por mejorar - ver detalles en archivo de registro</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Fijar "i" minúscula sola a "I" mayúscula (Inglés)" está marcado pero el subtítulo cargado no parece ser en inglés.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continuar</Continue>
     <ContinueAnyway>¿Continuar de todas formas?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Desmarcar "Fijar "i" minúscula sola a "I" mayúscula (Inglés)"</UncheckedFixLowercaseIToUppercaseI>
@@ -1369,7 +1368,6 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <Tools>Herramientas</Tools>
     <WordLists>Listas de palabras</WordLists>
     <SsaStyle>Estilo SSA</SsaStyle>
-    <Proxy>Proxy</Proxy>
     <ShowToolBarButtons>Mostrar botones barra herramientas</ShowToolBarButtons>
     <New>Nuevo</New>
     <Open>Abrir</Open>

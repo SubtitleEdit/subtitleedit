@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core.Enums;
+﻿using System.Linq;
+using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core
     public class Subtitle
     {
         private List<Paragraph> _paragraphs;
-        private List<HistoryItem> _history;
+        private readonly List<HistoryItem> _history;
         private SubtitleFormat _format;
         private bool _wasLoadedWithFrameNumbers;
         public string Header { get; set; }
@@ -51,7 +52,8 @@ namespace Nikse.SubtitleEdit.Core
         /// Copy constructor (only paragraphs)
         /// </summary>
         /// <param name="subtitle">Subtitle to copy</param>
-        public Subtitle(Subtitle subtitle)
+        /// <param name="generateNewId">Generate new ID (guid) for paragraphs</param>
+        public Subtitle(Subtitle subtitle, bool generateNewId = true)
             : this()
         {
             if (subtitle == null)
@@ -59,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                _paragraphs.Add(new Paragraph(p, false));
+                _paragraphs.Add(new Paragraph(p, generateNewId));
             }
             _wasLoadedWithFrameNumbers = subtitle.WasLoadedWithFrameNumbers;
             Header = subtitle.Header;
@@ -89,12 +91,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public Paragraph GetParagraphOrDefaultById(string id)
         {
-            foreach (Paragraph p in _paragraphs)
-            {
-                if (p.ID == id)
-                    return p;
-            }
-            return null;
+            return _paragraphs.FirstOrDefault(p => p.ID == id);
         }
 
         public SubtitleFormat ReloadLoadSubtitle(List<string> lines, string fileName)
@@ -142,7 +139,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 try
                 {
-                    sr = new StreamReader(fileName, Utilities.GetEncodingFromFile(fileName), true);
+                    sr = new StreamReader(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName), true);
                 }
                 catch
                 {
@@ -439,16 +436,6 @@ namespace Nikse.SubtitleEdit.Core
             return null;
         }
 
-        public Paragraph GetFirstParagraphByLineNumber(int number)
-        {
-            foreach (Paragraph p in _paragraphs)
-            {
-                if (p.Number == number)
-                    return p;
-            }
-            return null;
-        }
-
         public int RemoveEmptyLines()
         {
             int count = _paragraphs.Count;
@@ -465,6 +452,37 @@ namespace Nikse.SubtitleEdit.Core
                     Renumber(firstNumber);
             }
             return count - _paragraphs.Count;
+        }
+
+        /// <summary>
+        /// Removes paragrahs by a list of indices
+        /// </summary>
+        /// <param name="indices">Indices of pargraphs/lines to delete</param>
+        /// <returns>Number of lines deleted</returns>
+        public int RemoveParagraphsByIndices(IEnumerable<int> indices)
+        {
+            int count = 0;
+            foreach (var index in indices.OrderByDescending(p => p))
+            {
+                if (index >= 0 && index < _paragraphs.Count)
+                {
+                    _paragraphs.RemoveAt(index);
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        /// <summary>
+        /// Removes paragrahs by a list of IDs
+        /// </summary>
+        /// <param name="ids">IDs of pargraphs/lines to delete</param>
+        /// <returns>Number of lines deleted</returns>
+        public int RemoveParagraphsByIds(IEnumerable<string> ids)
+        {
+            int beforeCount = _paragraphs.Count;
+            _paragraphs = _paragraphs.Where(p => !ids.Contains(p.ID)).ToList();
+            return beforeCount - _paragraphs.Count;
         }
 
         /// <summary>
@@ -523,6 +541,23 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
             Paragraphs.Add(newParagraph);
+        }
+
+        /// <summary>
+        /// Fast hash code for subtitle (only includes start + end + text)
+        /// </summary>
+        /// <returns>Hash value that can be used for quick compare</returns>
+        public string GetFastHashCode()
+        {
+            var sb = new StringBuilder(Paragraphs.Count * 50);
+            for (int i = 0; i < Paragraphs.Count; i++)
+            {
+                var p = Paragraphs[i];
+                sb.Append(p.StartTime.TotalMilliseconds.GetHashCode());
+                sb.Append(p.EndTime.TotalMilliseconds.GetHashCode());
+                sb.Append(p.Text);
+            }
+            return sb.ToString().TrimEnd();
         }
 
     }

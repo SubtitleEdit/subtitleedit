@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    string ext = Path.GetExtension(openFileDialog1.FileName).ToLower();
+                    string ext = Path.GetExtension(openFileDialog1.FileName).ToLowerInvariant();
                     if (ext == ".astx")
                         LoadAdobeStory(openFileDialog1.FileName);
                     else
@@ -414,7 +414,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SplitSingle(StringBuilder sb)
         {
             string t = sb.ToString().Trim();
-            string[] tarr = t.Replace("\r\n", "\n").Split('\n');
+            string[] tarr = t.SplitToLines();
             if (checkBoxMergeShortLines.Checked == false && tarr.Length == 3 &&
                 tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
                 tarr[1].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
@@ -544,9 +544,10 @@ namespace Nikse.SubtitleEdit.Forms
                 Replace("-", string.Empty).Replace(">", string.Empty)))
                 return false;
 
+            const string expectedChars = "\r\n\t .?\0";
             foreach (char ch in line)
             {
-                if (!("\r\n\t .?\0").Contains(ch))
+                if (!expectedChars.Contains(ch))
                     return true;
             }
             return false;
@@ -607,7 +608,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                Encoding encoding = Utilities.GetEncodingFromFile(fileName);
+                Encoding encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
                 textBoxText.Text = File.ReadAllText(fileName, encoding);
                 SetVideoFileName(fileName);
             }
@@ -646,7 +647,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetVideoFileName(string fileName)
         {
             _videoFileName = fileName.Substring(0, fileName.Length - Path.GetExtension(fileName).Length);
-            if (_videoFileName.EndsWith(".en"))
+            if (_videoFileName.EndsWith(".en", StringComparison.Ordinal))
                 _videoFileName = _videoFileName.Remove(_videoFileName.Length - 3);
             if (File.Exists(_videoFileName + ".avi"))
             {

@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (NoBreakAfterItem nbai in _noBreakAfterList)
             {
-                if ((nbai.Regex == null && item.Regex == null) || (nbai.Regex != null && item.Regex != null) && nbai.Text == item.Text)
+                if ((nbai.Regex == null && item.Regex == null || nbai.Regex != null && item.Regex != null) && nbai.Text == item.Text)
                 {
                     MessageBox.Show("Text already defined");
                     textBoxNoBreakAfter.Focus();

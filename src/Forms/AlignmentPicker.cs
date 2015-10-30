@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class AlignmentPicker : Form
     {
-        public ContentAlignment Alignment { get; set; }
+        public ContentAlignment Alignment { get; private set; }
 
         public AlignmentPicker()
         {

@@ -671,6 +671,10 @@ namespace Nikse.SubtitleEdit.Core
                 Normal = "&Normal",
                 CaseSensitive = "&Case sensitive",
                 RegularExpression = "Regular e&xpression",
+                WholeWord = "Whole word",
+                Count = "Count",
+                XNumberOfMatches = "{0:#,##0} matches",
+                OneMatch = "One match"
             };
 
             FindSubtitleLine = new LanguageStructure.FindSubtitleLine
@@ -739,7 +743,6 @@ namespace Nikse.SubtitleEdit.Core
                 FixesFoundX = "Fixes found: {0}",
                 XFixesApplied = "Fixes applied: {0}",
                 NothingToFixBut = "Nothing to fix but a few things could be improved - see log for details",
-                FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish = "\"Fix alone lowercase 'i' to 'I' (English)\" is checked but currently loaded subtitle seems not be English.",
                 Continue = "Continue",
                 ContinueAnyway = "Continue anyway?",
                 UncheckedFixLowercaseIToUppercaseI = "Unchecked \"Fix alone lowercase 'i' to 'I' (English)\"",
@@ -866,6 +869,8 @@ namespace Nikse.SubtitleEdit.Core
                 Input = "Input",
                 InputDescription = "Choose input files (browse or drag-n-drop)",
                 ImageFiles = "Image files",
+                Remove = "Remove",
+                RemoveAll = "Remove all"
             };
 
             ImportSceneChanges = new LanguageStructure.ImportSceneChanges
@@ -1435,7 +1440,7 @@ namespace Nikse.SubtitleEdit.Core
                         MergeSelectedLinesAsDialog = "Merge selected lines as dialog",
                         MergeWithLineBefore = "Merge with line before",
                         MergeWithLineAfter = "Merge with line after",
-                        Normal = "Normal",
+                        Normal = "Normal (remove formatting)",
                         Underline = "Underline",
                         Color = "Color...",
                         FontName = "Font name...",
@@ -1963,7 +1968,8 @@ can edit in same subtitle file (collaboration)",
                 WaveformSeekSilenceForward = "Seek silence forward",
                 WaveformSeekSilenceBack = "Seek silence back",
                 WaveformAddTextHere = "Add text here (for new selection)",
-                WaveformPlayNewSelection = "Play new selection",
+                WaveformPlayNewSelection = "Play selection",
+                WaveformPlayNewSelectionEnd = "Play end of selection",
                 WaveformPlayFirstSelectedSubtitle = "Play first selected subtitle",
                 WaveformFocusListView = "Focus list view",
                 GoBack1Frame = "One frame back",
@@ -2380,6 +2386,7 @@ Keep changes?",
                 Title = "Inspect compare matches for current image",
                 InspectItems = "Inspect items",
                 AddBetterMatch = "Add better match",
+                Add = "Add",
             };
 
             VobSubOcrNewFolder = new LanguageStructure.VobSubOcrNewFolder

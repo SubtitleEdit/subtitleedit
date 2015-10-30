@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            NewWord = textBoxAddName.Text.Trim().ToLower();
+            NewWord = textBoxAddName.Text.RemoveControlCharacters().Trim().ToLower();
             if (NewWord.Length == 0)
             {
                 DialogResult = DialogResult.Cancel;

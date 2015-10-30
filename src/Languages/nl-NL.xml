@@ -2,7 +2,7 @@
 <Language Name="Nederlands">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Vertaald door Quetsbeek en minouhse 11082014</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile />
@@ -492,6 +492,10 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <Normal>&amp;Normaal</Normal>
     <CaseSensitive>&amp;Hoofdlettergevoelig</CaseSensitive>
     <RegularExpression>Reguliere e&amp;xpressie</RegularExpression>
+    <WholeWord>Losse woorden</WholeWord>
+    <Count>Tellen</Count>
+    <XNumberOfMatches>{0:#,##0} treffers</XNumberOfMatches>
+    <OneMatch>1 treffer</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Ondertiteltekst zoeken</Title>
@@ -557,7 +561,6 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <FixesFoundX>Gevonden correcties: {0}</FixesFoundX>
     <XFixesApplied>Toegepaste correcties: {0}</XFixesApplied>
     <NothingToFixBut>Niets te corrigeren, maar een paar dingen kunnen worden verbeterd - zie log voor details</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Alleenstaande 'i' door 'I' vervangen (Engels)" is aangevinkt, maar de nu geladen ondertitel lĳkt niet Engels te zĳn.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Doorgaan</Continue>
     <ContinueAnyway>Toch doorgaan?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"Alleenstaande 'i' door 'I' vervangen (Engels)" uitgeschakeld</UncheckedFixLowercaseIToUppercaseI>
@@ -671,6 +674,8 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <ImageFiles>Beeldbestanden</ImageFiles>
     <Input>Invoer</Input>
     <InputDescription>Kies invoerbestanden (blader of sleep-en-plaats)</InputDescription>
+    <Remove>Verwĳderen</Remove>
+    <RemoveAll>Alle verwĳderen</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Scènewisselingen importeren</Title>
@@ -938,7 +943,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Tekstselectie als dialoog samenvoegen</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Met vorige tekst samenvoegen</MergeWithLineBefore>
         <MergeWithLineAfter>Met volgende tekst samenvoegen</MergeWithLineAfter>
-        <Normal>Normaal</Normal>
+        <Normal>Normaal (formateringstekens verwĳderen)</Normal>
         <Underline>Onderstrepen</Underline>
         <Color>Kleur...</Color>
         <FontName>Lettertype...</FontName>
@@ -1684,7 +1689,8 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WaveformSeekSilenceForward>Zoek stilte vooruit</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Zoek stilte terug</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Voeg hier tekst toe (voor nieuwe selectie)</WaveformAddTextHere>
-    <WaveformPlayNewSelection>Speel nieuwe selectie</WaveformPlayNewSelection>
+    <WaveformPlayNewSelection>Speel selectie</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Speel selectie-einde</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Speel eerste geselecteerde ondertitel</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus lĳstweergave</WaveformFocusListView>
     <GoBack1Frame>Eén frame terug</GoBack1Frame>
@@ -2063,6 +2069,7 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <Title>Inspecteer vergelĳkingsovereenkomsten voor huidig beeld</Title>
     <InspectItems>Inspecteer artikelen</InspectItems>
     <AddBetterMatch>Betere overeenkomst toevoegen</AddBetterMatch>
+    <Add>Toevoegen</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nieuwe map</Title>

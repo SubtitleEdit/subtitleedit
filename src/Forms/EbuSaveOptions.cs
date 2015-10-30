@@ -68,6 +68,9 @@ namespace Nikse.SubtitleEdit.Forms
             _header = header;
             _subtitle = subtitle;
 
+            if (_subtitle == null)
+                tabControl1.TabPages.Remove(tabPageErrors);
+
             FillFromHeader(header);
             if (!string.IsNullOrEmpty(fileName))
             {
@@ -94,6 +97,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void CheckErrors(Subtitle subtitle)
         {
+            if (subtitle == null)
+                return;
+
             textBoxErrors.Text = string.Empty;
             var sb = new StringBuilder();
             int errorCount = 0;
@@ -291,5 +297,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             textBoxCodePageNumber.Text = "865";
         }
+
     }
 }

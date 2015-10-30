@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -493,6 +493,10 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Normal>&amp;Normal</Normal>
     <CaseSensitive>&amp;Case sensitive</CaseSensitive>
     <RegularExpression>Regular e&amp;xpression</RegularExpression>
+    <WholeWord>Whole word</WholeWord>
+    <Count>Count</Count>
+    <XNumberOfMatches>{0:#,##0} matches</XNumberOfMatches>
+    <OneMatch>One match</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Find subtitle line</Title>
@@ -558,7 +562,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <FixesFoundX>Fixes found: {0}</FixesFoundX>
     <XFixesApplied>Fixes applied: {0}</XFixesApplied>
     <NothingToFixBut>Nothing to fix but a few things could be improved - see log for details</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Fix alone lowercase 'i' to 'I' (English)" is checked but currently loaded subtitle seems not be English.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continue</Continue>
     <ContinueAnyway>Continue anyway?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Unchecked "Fix alone lowercase 'i' to 'I' (English)"</UncheckedFixLowercaseIToUppercaseI>
@@ -672,6 +675,8 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ImageFiles>Image files</ImageFiles>
     <Input>Input</Input>
     <InputDescription>Choose input files (browse or drag-n-drop)</InputDescription>
+    <Remove>Remove</Remove>
+    <RemoveAll>Remove all</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Import scene changes</Title>
@@ -939,7 +944,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Merge selected lines as dialog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Merge with line before</MergeWithLineBefore>
         <MergeWithLineAfter>Merge with line after</MergeWithLineAfter>
-        <Normal>Normal</Normal>
+        <Normal>Normal (remove formatting)</Normal>
         <Underline>Underline</Underline>
         <Color>Color...</Color>
         <FontName>Font name...</FontName>
@@ -1686,7 +1691,8 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformSeekSilenceForward>Seek silence forward</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Seek silence back</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Add text here (for new selection)</WaveformAddTextHere>
-    <WaveformPlayNewSelection>Play new selection</WaveformPlayNewSelection>
+    <WaveformPlayNewSelection>Play selection</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Play end of selection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Play first selected subtitle</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus list view</WaveformFocusListView>
     <GoBack1Frame>One frame back</GoBack1Frame>
@@ -2065,6 +2071,7 @@ Keep changes?</KeepChangesMessage>
     <Title>Inspect compare matches for current image</Title>
     <InspectItems>Inspect items</InspectItems>
     <AddBetterMatch>Add better match</AddBetterMatch>
+    <Add>Add</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>New folder</Title>

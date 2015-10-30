@@ -277,7 +277,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 int indexOfEnd = s.IndexOf('}');
                 s = s.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = s.IndexOf('{');
+                indexOfBegin = s.IndexOf('{', indexOfBegin);
             }
             return s;
         }
@@ -1217,10 +1217,7 @@ namespace Nikse.SubtitleEdit.Controls
                 var span = TimeCode.FromSeconds(pos);
                 var dur = TimeCode.FromSeconds(Duration);
 
-                if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
-                    _labelTimeCode.Text = string.Format("{0} / {1}", span.ToHHMMSSFF(), dur.ToHHMMSSFF());
-                else
-                    _labelTimeCode.Text = string.Format("{0:00}:{1:00}:{2:00},{3:000} / {4:00}:{5:00}:{6:00},{7:000}", span.Hours, span.Minutes, span.Seconds, span.Milliseconds, dur.Hours, dur.Minutes, dur.Seconds, dur.Milliseconds);
+                _labelTimeCode.Text = string.Format("{0} / {1}", span.ToDisplayString(), dur.ToDisplayString());
 
                 RefreshPlayPauseButtons();
             }

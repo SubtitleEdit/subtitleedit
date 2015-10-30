@@ -105,12 +105,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Autoajustar líneas seleccionadas</TitleAutoBreak>
     <TitleUnbreak>Eliminar saltos de línea de las líneas seleccionadas</TitleUnbreak>
-    <LineNumber>Línea#</LineNumber>
-    <Before>Antes</Before>
-    <After>Después</After>
     <LinesFoundX>Líneas encontradas: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>Dividir solo líneas más largas de</OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesShorterThan>Combinar solo líneas mas cortas de</OnlyUnbreakLinesShorterThan>
   </AutoBreakUnbreakLines>
   <ChangeCasing>
     <Title>Cambiar mayúsculas</Title>
@@ -127,9 +123,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NamesFoundInSubtitleX>Nombres encontrados en subtítulo: {0}</NamesFoundInSubtitleX>
     <Enabled>Habilitado</Enabled>
     <Name>Nombre</Name>
-    <LineNumber>Línea#</LineNumber>
-    <Before>Antes</Before>
-    <After>Después</After>
     <LinesFoundX>Líneas encontradas: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
@@ -237,7 +230,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Color de fuente</FontColor>
     <BorderColor>Color de borde</BorderColor>
     <BorderWidth>Ancho de borde</BorderWidth>
-    <AntiAlias>Anti alias</AntiAlias>
     <ExportAllLines>Exportar todas las líneas...</ExportAllLines>
     <XImagesSavedInY>{0} imágenes guardadas en {1}</XImagesSavedInY>
   </ExportPngXml>
@@ -265,10 +257,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Step2>Paso 2/2 - Verificar correcciones</Step2>
     <Fixes>Correcciones</Fixes>
     <Log>Registro</Log>
-    <LineNumber>línea#</LineNumber>
     <Function>Función</Function>
-    <Before>Antes</Before>
-    <After>Después</After>
     <RemovedEmptyLine>Eliminar línea en blanco</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Eliminar línea inicial en blanco</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Eliminar línea final en blanco</RemovedEmptyLineAtBottom>
@@ -312,7 +301,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Correcciones encontradas: {0}</FixesFoundX>
     <XFixesApplied>Correcciones aplicadas: {0}</XFixesApplied>
     <NothingToFixBut>Nada que corregir, pero algunas cosas por mejorar - ver detalles en archivo de registro</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Fijar "i" minúscula sola a "I" mayúscula (Inglés)" está marcado pero el subtítulo cargado no parece ser en inglés.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continuar</Continue>
     <ContinueAnyway>¿Continuar de todas formas?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Desmarcar "Fijar "i" minúscula sola a "I" mayúscula (Inglés)"</UncheckedFixLowercaseIToUppercaseI>
@@ -422,7 +410,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Auto>Auto</Auto>
     <Fixed>Corregido</Fixed>
     <Refresh>&amp;Refrescar</Refresh>
-    <Next>Siguie&amp;nte &gt;&gt;</Next>
     <TextFiles>Archivos de texto</TextFiles>
     <PreviewLinesModifiedX>Vista previa - párrafos modificados: {0}</PreviewLinesModifiedX>
   </ImportText>
@@ -456,7 +443,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Exportar texto plano...</ExportPlainText>
-        <ExportPlainTextWithoutLineBreaks>Exportar texto plano sin saltos de línea...</ExportPlainTextWithoutLineBreaks>
         <Exit>Salir</Exit>
       </File>
       <Edit>
@@ -490,7 +476,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TextTotalLength>Texto - longitud total</TextTotalLength>
         <TextNumberOfLines>Texto - número de líneas</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Texto - número de caracteres/sec</TextNumberOfCharactersPerSeconds>
-        <ShowOriginalTextInAudioAndVideoPreview>Mostrar texto original en vista previa de audio/video</ShowOriginalTextInAudioAndVideoPreview>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Hacer nueva traducción desde 0 del subtítulo actual</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>Dividir subtítulo...</SplitSubtitle>
         <AppendSubtitle>Anexar subtítulo...</AppendSubtitle>
@@ -864,7 +849,6 @@ con el archivo de vídeo, al subtítulo actual cargado.
     <MaximumCharacters>Número máximo de caracteres en un párrafo</MaximumCharacters>
     <MaximumMillisecondsBetween>Máximo de milisegundos entre líneas</MaximumMillisecondsBetween>
     <NumberOfMergesX>Número de combinaciones: {0}</NumberOfMergesX>
-    <LineNumber>Línea#</LineNumber>
     <MergedText>Texto combinado</MergedText>
     <OnlyMergeContinuationLines>Combinar solo líneas que continúan</OnlyMergeContinuationLines>
   </MergedShortLines>
@@ -875,9 +859,6 @@ con el archivo de vídeo, al subtítulo actual cargado.
     <Normal>Normal</Normal>
     <CaseSensitive>Sensible a mayúsculas</CaseSensitive>
     <RegularExpression>Expresión regular</RegularExpression>
-    <LineNumber>Línea#</LineNumber>
-    <Before>Antes</Before>
-    <After>Después</After>
     <LinesFoundX>Líneas encontradas: {0}</LinesFoundX>
     <Delete>Eliminar</Delete>
     <Add>Añadir</Add>
@@ -918,9 +899,6 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <RemoveTextBeforeColon>Eliminar texto antes de dos puntos (':')</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>Sólo si el texto está en MAYÚSCULAS</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>Sólo si está en una línea separada</OnlyIfInSeparateLine>
-    <LineNumber>Línea#</LineNumber>
-    <Before>Antes</Before>
-    <After>Después</After>
     <LinesFoundX>Líneas encontradas: {0}</LinesFoundX>
     <RemoveTextIfContains>Eliminar el texto si contiene:</RemoveTextIfContains>
     <RemoveInterjections>Eliminar interjecciones (shh, hmm, etc.)</RemoveInterjections>
@@ -960,7 +938,6 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <Tools>Herramientas</Tools>
     <WordLists>Listas de palabras</WordLists>
     <SsaStyle>Estilo SSA</SsaStyle>
-    <Proxy>Proxy</Proxy>
     <ShowToolBarButtons>Mostrar botones barra herramientas</ShowToolBarButtons>
     <New>Nuevo</New>
     <Open>Abrir</Open>
@@ -1012,8 +989,6 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll de VLC media player 1.1.0 o superior</VlcMediaPlayerDescription>
     <ShowStopButton>Mostrar el botón stop</ShowStopButton>
-    <DefaultVolume>Volumen por defecto</DefaultVolume>
-    <VolumeNotes>0 silencio, 100 máximo volumen</VolumeNotes>
     <PreviewFontSize>Tamaño de fuente en vista previa del subtítulo</PreviewFontSize>
     <MainWindowVideoControls>Controles de vídeo en la ventana principal</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Búsqueda de texto y URL personalizada</CustomSearchTextAndUrl>
@@ -1035,7 +1010,6 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <SubStationAlphaStyle>Estilo Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Elegir fuente</ChooseFont>
     <ChooseColor>Elegir color</ChooseColor>
-    <Example>Ejemplo</Example>
     <Testing123>Probando 123...</Testing123>
     <Language>Idioma</Language>
     <NamesIgnoreLists>Nombres a ignorar (sens. mayúsc.)</NamesIgnoreLists>

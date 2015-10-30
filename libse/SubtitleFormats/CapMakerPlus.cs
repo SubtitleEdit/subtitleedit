@@ -255,11 +255,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     deletes.Add(i + 1);
                 }
             }
-            deletes.Reverse();
-            foreach (int index in deletes)
-            {
-                subtitle.Paragraphs.RemoveAt(index);
-            }
+            subtitle.RemoveParagraphsByIndices(deletes);
 
             for (i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {

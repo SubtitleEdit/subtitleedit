@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core
 {
     /// <summary>
-    /// http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html
+    /// http://soundfile.sapp.org/doc/WaveFormat
     /// </summary>
     public class WaveHeader
     {
         private const int ConstantHeaderSize = 20;
-        private readonly byte[] _headerData;
+        public const int AudioFormatPcm = 1;
 
         public string ChunkId { get; private set; }
         public uint ChunkSize { get; private set; }
@@ -103,16 +105,24 @@ namespace Nikse.SubtitleEdit.Core
                 DataStartPosition = (int)oldPos + 8;
             }
 
-            _headerData = new byte[DataStartPosition];
-            stream.Position = 0;
-            stream.Read(_headerData, 0, _headerData.Length);
+            // recalculate BlockAlign (older versions wrote incorrect values)
+            BlockAlign = BytesPerSample * NumberOfChannels;
+        }
+
+        public int BytesPerSample
+        {
+            get
+            {
+                // round up to the next byte (20 bit WAVs are like 24 bit WAVs with the 4 least significant bits unused)
+                return (BitsPerSample + 7) / 8;
+            }
         }
 
         public long BytesPerSecond
         {
             get
             {
-                return (long)SampleRate * (BitsPerSample / 8) * NumberOfChannels;
+                return (long)SampleRate * BlockAlign;
             }
         }
 
@@ -124,81 +134,219 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        internal void WriteHeader(Stream toStream, int sampleRate, int numberOfChannels, int bitsPerSample, int dataSize)
+        public long LengthInSamples
         {
-            const int fmtChunckSize = 16;
+            get
+            {
+                return DataChunkSize / BlockAlign;
+            }
+        }
+
+        internal static void WriteHeader(Stream toStream, int sampleRate, int numberOfChannels, int bitsPerSample, int sampleCount)
+        {
             const int headerSize = 44;
-            int byteRate = sampleRate * (bitsPerSample / 8) * numberOfChannels;
-            WriteInt32ToByteArray(_headerData, 4, dataSize + headerSize - 8);
-            WriteInt16ToByteArray(_headerData, 16, fmtChunckSize); //
-            WriteInt16ToByteArray(_headerData, ConstantHeaderSize + 2, numberOfChannels);
-            WriteInt32ToByteArray(_headerData, ConstantHeaderSize + 4, sampleRate);
-            WriteInt32ToByteArray(_headerData, ConstantHeaderSize + 8, byteRate);
-            WriteInt16ToByteArray(_headerData, ConstantHeaderSize + 14, bitsPerSample);
-            _headerData[ConstantHeaderSize + fmtChunckSize + 0] = Convert.ToByte('d');
-            _headerData[ConstantHeaderSize + fmtChunckSize + 1] = Convert.ToByte('a');
-            _headerData[ConstantHeaderSize + fmtChunckSize + 2] = Convert.ToByte('t');
-            _headerData[ConstantHeaderSize + fmtChunckSize + 3] = Convert.ToByte('a');
-            WriteInt32ToByteArray(_headerData, ConstantHeaderSize + fmtChunckSize + 4, dataSize);
-            toStream.Write(_headerData, 0, headerSize);
+            int bytesPerSample = (bitsPerSample + 7) / 8;
+            int blockAlign = numberOfChannels * bytesPerSample;
+            int byteRate = sampleRate * blockAlign;
+            int dataSize = sampleCount * bytesPerSample * numberOfChannels;
+            byte[] header = new byte[headerSize];
+            WriteStringToByteArray(header, 0, "RIFF");
+            WriteInt32ToByteArray(header, 4, headerSize + dataSize - 8); // size of RIFF chunk's data
+            WriteStringToByteArray(header, 8, "WAVE");
+            WriteStringToByteArray(header, 12, "fmt ");
+            WriteInt32ToByteArray(header, 16, 16); // size of fmt chunk's data
+            WriteInt16ToByteArray(header, 20, 1); // format, 1 = PCM
+            WriteInt16ToByteArray(header, 22, numberOfChannels);
+            WriteInt32ToByteArray(header, 24, sampleRate);
+            WriteInt32ToByteArray(header, 28, byteRate);
+            WriteInt16ToByteArray(header, 32, blockAlign);
+            WriteInt16ToByteArray(header, 34, bitsPerSample);
+            WriteStringToByteArray(header, 36, "data");
+            WriteInt32ToByteArray(header, 40, dataSize);
+            toStream.Write(header, 0, headerSize);
         }
 
         private static void WriteInt16ToByteArray(byte[] headerData, int index, int value)
         {
             byte[] buffer = BitConverter.GetBytes((short)value);
-            for (int i = 0; i < buffer.Length; i++)
-                headerData[index + i] = buffer[i];
+            Buffer.BlockCopy(buffer, 0, headerData, index, buffer.Length);
         }
 
         private static void WriteInt32ToByteArray(byte[] headerData, int index, int value)
         {
             byte[] buffer = BitConverter.GetBytes(value);
-            for (int i = 0; i < buffer.Length; i++)
-                headerData[index + i] = buffer[i];
+            Buffer.BlockCopy(buffer, 0, headerData, index, buffer.Length);
+        }
+
+        private static void WriteStringToByteArray(byte[] headerData, int index, string value)
+        {
+            byte[] buffer = Encoding.ASCII.GetBytes(value);
+            Buffer.BlockCopy(buffer, 0, headerData, index, buffer.Length);
         }
     }
 
-    public class WavePeakGenerator
+    public struct WavePeak
+    {
+        public readonly short Max;
+        public readonly short Min;
+
+        public WavePeak(short max, short min)
+        {
+            Max = max;
+            Min = min;
+        }
+
+        public int Abs
+        {
+            get { return Math.Max(Math.Abs((int)Max), Math.Abs((int)Min)); }
+        }
+    }
+
+    public class WavePeakData
+    {
+        public WavePeakData(int sampleRate, IList<WavePeak> peaks)
+        {
+            SampleRate = sampleRate;
+            LengthInSeconds = (double)peaks.Count / sampleRate;
+            Peaks = peaks;
+            CalculateHighestPeak();
+        }
+
+        public int SampleRate { get; private set; }
+
+        public double LengthInSeconds { get; private set; }
+
+        public IList<WavePeak> Peaks { get; private set; }
+
+        public int HighestPeak { get; private set; }
+
+        private void CalculateHighestPeak()
+        {
+            HighestPeak = 0;
+            foreach (var peak in Peaks)
+            {
+                int abs = peak.Abs;
+                if (abs > HighestPeak)
+                    HighestPeak = abs;
+            }
+        }
+
+        public static WavePeakData FromDisk(string peakFileName)
+        {
+            using (var peakGenerator = new WavePeakGenerator(peakFileName))
+            {
+                return peakGenerator.LoadPeaks();
+            }
+        }
+    }
+
+    public class SpectrogramData : IDisposable
+    {
+        private string _loadFromDirectory;
+
+        public SpectrogramData(int fftSize, int imageWidth, double sampleDuration, IList<Bitmap> images)
+        {
+            FftSize = fftSize;
+            ImageWidth = imageWidth;
+            SampleDuration = sampleDuration;
+            Images = images;
+        }
+
+        private SpectrogramData(string loadFromDirectory)
+        {
+            _loadFromDirectory = loadFromDirectory;
+            Images = new Bitmap[0];
+        }
+
+        public int FftSize { get; private set; }
+
+        public int ImageWidth { get; private set; }
+
+        public double SampleDuration { get; private set; }
+
+        public IList<Bitmap> Images { get; private set; }
+
+        public bool IsLoaded
+        {
+            get { return _loadFromDirectory == null; }
+        }
+
+        public void Load()
+        {
+            if (_loadFromDirectory == null)
+                return;
+
+            string directory = _loadFromDirectory;
+            _loadFromDirectory = null;
+
+            try
+            {
+                string xmlInfoFileName = Path.Combine(directory, "Info.xml");
+                if (!File.Exists(xmlInfoFileName))
+                    return;
+                var doc = new XmlDocument();
+                var culture = CultureInfo.InvariantCulture;
+                doc.Load(xmlInfoFileName);
+                FftSize = Convert.ToInt32(doc.DocumentElement.SelectSingleNode("NFFT").InnerText, culture);
+                ImageWidth = Convert.ToInt32(doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText, culture);
+                SampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText, culture);
+
+                var images = new List<Bitmap>();
+                var fileNames = Enumerable.Range(0, int.MaxValue)
+                    .Select(n => Path.Combine(directory, n + ".gif"))
+                    .TakeWhile(p => File.Exists(p));
+                foreach (string fileName in fileNames)
+                {
+                    // important that this does not lock file (do NOT use Image.FromFile(fileName) or alike!!!)
+                    using (var ms = new MemoryStream(File.ReadAllBytes(fileName)))
+                    {
+                        images.Add((Bitmap)Image.FromStream(ms));
+                    }
+                }
+                Images = images;
+            }
+            catch
+            {
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (var image in Images)
+            {
+                try
+                {
+                    image.Dispose();
+                }
+                catch
+                {
+                }
+            }
+            Images = new Bitmap[0];
+        }
+
+        public static SpectrogramData FromDisk(string spectrogramDirectory)
+        {
+            return new SpectrogramData(spectrogramDirectory);
+        }
+    }
+
+    public class WavePeakGenerator : IDisposable
     {
         private Stream _stream;
-        private byte[] _data;
+        private WaveHeader _header;
 
-        private delegate int ReadSampleDataValueDelegate(ref int index);
+        private delegate int ReadSampleDataValue(byte[] data, ref int index);
 
-        public WaveHeader Header { get; private set; }
-
-        /// <summary>
-        /// Lowest data value
-        /// </summary>
-        public int DataMinValue { get; private set; }
-
-        /// <summary>
-        /// Highest data value
-        /// </summary>
-        public int DataMaxValue { get; private set; }
-
-        /// <summary>
-        /// Number of peaks per second (should be divideable by SampleRate)
-        /// </summary>
-        public int PeaksPerSecond { get; private set; }
-
-        /// <summary>
-        /// List of all peak samples (channels are merged)
-        /// </summary>
-        public List<int> PeakSamples { get; private set; }
-
-        /// <summary>
-        /// List of all samples (channels are merged)
-        /// </summary>
-        public List<int> AllSamples { get; private set; }
+        private delegate void WriteSampleDataValue(byte[] buffer, int offset, int value);
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="fileName">Wave file name</param>
         public WavePeakGenerator(string fileName)
+            : this(File.OpenRead(fileName))
         {
-            Initialize(new FileStream(fileName, FileMode.Open, FileAccess.Read));
         }
 
         /// <summary>
@@ -207,173 +355,281 @@ namespace Nikse.SubtitleEdit.Core
         /// <param name="stream">Stream of a wave file</param>
         public WavePeakGenerator(Stream stream)
         {
-            Initialize(stream);
+            _stream = stream;
+            _header = new WaveHeader(_stream);
         }
 
         /// <summary>
-        /// Generate peaks (samples with some interval) for an uncompressed wave file
+        /// Returns true if the current wave file can be processed. Compressed wave files are not supported.
         /// </summary>
-        /// <param name="peaksPerSecond">Sampeles per second / sample rate</param>
-        /// <param name="delayInMilliseconds">Delay in milliseconds (normally zero)</param>
-        public void GeneratePeakSamples(int peaksPerSecond, int delayInMilliseconds)
+        public bool IsSupported
         {
-            PeaksPerSecond = peaksPerSecond;
-
-            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataRerader();
-            DataMinValue = int.MaxValue;
-            DataMaxValue = int.MinValue;
-            PeakSamples = new List<int>();
-
-            if (delayInMilliseconds > 0)
+            get
             {
-                for (int i = 0; i < peaksPerSecond * delayInMilliseconds / 1000; i++)
-                    PeakSamples.Add(0);
-            }
-
-            int bytesInterval = (int)Header.BytesPerSecond / PeaksPerSecond;
-            _data = new byte[Header.BytesPerSecond];
-            _stream.Position = Header.DataStartPosition;
-            int bytesRead = _stream.Read(_data, 0, _data.Length);
-            while (bytesRead == Header.BytesPerSecond)
-            {
-                for (int i = 0; i < Header.BytesPerSecond; i += bytesInterval)
-                {
-                    int index = i;
-                    int value = 0;
-                    for (int channelNumber = 0; channelNumber < Header.NumberOfChannels; channelNumber++)
-                    {
-                        value += readSampleDataValue.Invoke(ref index);
-                    }
-                    value = value / Header.NumberOfChannels;
-                    if (value < DataMinValue)
-                        DataMinValue = value;
-                    if (value > DataMaxValue)
-                        DataMaxValue = value;
-                    PeakSamples.Add(value);
-                }
-                bytesRead = _stream.Read(_data, 0, _data.Length);
+                return _header.AudioFormat == WaveHeader.AudioFormatPcm && _header.Format == "WAVE";
             }
         }
 
-        public void GenerateAllSamples()
+        /// <summary>
+        /// Generates peaks and saves them to disk.
+        /// </summary>
+        /// <param name="delayInMilliseconds">Delay in milliseconds (normally zero)</param>
+        /// <param name="peakFileName">Path of the output file</param>
+        public WavePeakData GeneratePeaks(int delayInMilliseconds, string peakFileName)
         {
-            // determine how to read sample values
-            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataRerader();
+            int peaksPerSecond = Math.Min(Configuration.Settings.VideoControls.WaveformMinimumSampleRate, _header.SampleRate);
+
+            // ensure that peaks per second is a factor of the sample rate
+            while (_header.SampleRate % peaksPerSecond != 0)
+                peaksPerSecond++;
+
+            int delaySampleCount = (int)(_header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
+
+            // ignore negative delays for now (pretty sure it can't happen in mkv and some places pass in -1 by mistake)
+            delaySampleCount = Math.Max(delaySampleCount, 0);
+
+            var peaks = new List<WavePeak>();
+            var readSampleDataValue = GetSampleDataReader();
+            float sampleAndChannelScale = (float)GetSampleAndChannelScale();
+            long fileSampleCount = _header.LengthInSamples;
+            long fileSampleOffset = -delaySampleCount;
+            int chunkSampleCount = _header.SampleRate / peaksPerSecond;
+            byte[] data = new byte[chunkSampleCount * _header.BlockAlign];
+            float[] chunkSamples = new float[chunkSampleCount];
+
+            _stream.Seek(_header.DataStartPosition, SeekOrigin.Begin);
+
+            // for negative delays, skip samples at the beginning
+            if (fileSampleOffset > 0)
+            {
+                _stream.Seek(fileSampleOffset * _header.BlockAlign, SeekOrigin.Current);
+            }
+
+            while (fileSampleOffset < fileSampleCount)
+            {
+                // calculate how many samples to skip at the beginning (for positive delays)
+                int startSkipSampleCount = 0;
+                if (fileSampleOffset < 0)
+                {
+                    startSkipSampleCount = (int)Math.Min(-fileSampleOffset, chunkSampleCount);
+                    fileSampleOffset += startSkipSampleCount;
+                }
+
+                // calculate how many samples to read from the file
+                long fileSamplesRemaining = fileSampleCount - Math.Max(fileSampleOffset, 0);
+                int fileReadSampleCount = (int)Math.Min(fileSamplesRemaining, chunkSampleCount - startSkipSampleCount);
+
+                // read samples from the file
+                if (fileReadSampleCount > 0)
+                {
+                    int fileReadByteCount = fileReadSampleCount * _header.BlockAlign;
+                    _stream.Read(data, 0, fileReadByteCount);
+                    fileSampleOffset += fileReadSampleCount;
+
+                    int chunkSampleOffset = 0;
+                    int dataByteOffset = 0;
+                    while (dataByteOffset < fileReadByteCount)
+                    {
+                        float value = 0F;
+                        for (int iChannel = 0; iChannel < _header.NumberOfChannels; iChannel++)
+                        {
+                            value += readSampleDataValue(data, ref dataByteOffset);
+                        }
+                        chunkSamples[chunkSampleOffset] = value * sampleAndChannelScale;
+                        chunkSampleOffset += 1;
+                    }
+                }
+
+                // calculate peaks
+                peaks.Add(CalculatePeak(chunkSamples, fileReadSampleCount));
+            }
+
+            // save results to file
+            using (var stream = File.Create(peakFileName))
+            {
+                WaveHeader.WriteHeader(stream, peaksPerSecond, 2, 16, peaks.Count);
+                byte[] buffer = new byte[4];
+                foreach (var peak in peaks)
+                {
+                    WriteValue16Bit(buffer, 0, peak.Max);
+                    WriteValue16Bit(buffer, 2, peak.Min);
+                    stream.Write(buffer, 0, 4);
+                }
+            }
+
+            return new WavePeakData(peaksPerSecond, peaks);
+        }
+
+        private static WavePeak CalculatePeak(float[] chunk, int count)
+        {
+            if (count == 0)
+                return new WavePeak();
+
+            float max = chunk[0];
+            float min = chunk[0];
+            for (int i = 1; i < count; i++)
+            {
+                float value = chunk[i];
+                if (value > max)
+                    max = value;
+                if (value < min)
+                    min = value;
+            }
+            return new WavePeak((short)(short.MaxValue * max), (short)(short.MaxValue * min));
+        }
+
+        /// <summary>
+        /// Loads previously generated peaks from disk.
+        /// </summary>
+        internal WavePeakData LoadPeaks()
+        {
+            if (_header.BitsPerSample != 16)
+                throw new Exception("Peaks file must be 16 bits per sample.");
+
+            if (_header.NumberOfChannels != 1 && _header.NumberOfChannels != 2)
+                throw new Exception("Peaks file must have 1 or 2 channels.");
 
             // load data
-            _data = new byte[Header.DataChunkSize];
-            _stream.Position = Header.DataStartPosition;
-            _stream.Read(_data, 0, _data.Length);
+            byte[] data = new byte[_header.DataChunkSize];
+            _stream.Position = _header.DataStartPosition;
+            _stream.Read(data, 0, data.Length);
 
-            // read sample values
-            DataMinValue = int.MaxValue;
-            DataMaxValue = int.MinValue;
-            AllSamples = new List<int>();
-            int index = 0;
-            while (index + Header.NumberOfChannels < Header.DataChunkSize)
+            // read peak values
+            WavePeak[] peaks = new WavePeak[_header.LengthInSamples];
+            int peakIndex = 0;
+            if (_header.NumberOfChannels == 2)
             {
-                int value = 0;
-                for (int channelNumber = 0; channelNumber < Header.NumberOfChannels; channelNumber++)
+                // max value in left channel, min value in right channel
+                int byteIndex = 0;
+                while (byteIndex < data.Length)
                 {
-                    value += readSampleDataValue.Invoke(ref index);
+                    short max = (short)ReadValue16Bit(data, ref byteIndex);
+                    short min = (short)ReadValue16Bit(data, ref byteIndex);
+                    peaks[peakIndex++] = new WavePeak(max, min);
                 }
-                value = value / Header.NumberOfChannels;
-                if (value < DataMinValue)
-                    DataMinValue = value;
-                if (value > DataMaxValue)
-                    DataMaxValue = value;
-                AllSamples.Add(value);
             }
-        }
-
-        public void WritePeakSamples(string fileName)
-        {
-            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            else if (_header.NumberOfChannels == 1)
             {
-                WritePeakSamples(fs);
+                // single sample value (for backwards compatibility)
+                int byteIndex = 0;
+                while (byteIndex < data.Length)
+                {
+                    short value = (short)ReadValue16Bit(data, ref byteIndex);
+                    if (value == short.MinValue)
+                        value = -short.MaxValue;
+                    value = Math.Abs(value);
+                    peaks[peakIndex++] = new WavePeak(value, (short)-value);
+                }
             }
+
+            return new WavePeakData(_header.SampleRate, peaks);
         }
 
-        public void WritePeakSamples(Stream stream)
+        private static int ReadValue8Bit(byte[] data, ref int index)
         {
-            Header.WriteHeader(stream, PeaksPerSecond, 1, 16, PeakSamples.Count * 2);
-            WritePeakData(stream);
-            stream.Flush();
+            int result = sbyte.MinValue + data[index];
+            index += 1;
+            return result;
         }
 
-        private void WritePeakData(Stream stream)
+        private static int ReadValue16Bit(byte[] data, ref int index)
         {
-            foreach (var value in PeakSamples)
-            {
-                byte[] buffer = BitConverter.GetBytes((short)(value));
-                stream.Write(buffer, 0, buffer.Length);
-            }
-        }
-
-        private void Initialize(Stream stream)
-        {
-            _stream = stream;
-            Header = new WaveHeader(_stream);
-        }
-
-        private int ReadValue8Bit(ref int index)
-        {
-            int result = _data[index];
+            int result = (short)
+                ((data[index    ]     ) |
+                 (data[index + 1] << 8));
             index += 2;
             return result;
         }
 
-        private int ReadValue16Bit(ref int index)
+        private static int ReadValue24Bit(byte[] data, ref int index)
         {
-            int result = BitConverter.ToInt16(_data, index);
-            index += 2;
-            return result;
-        }
-
-        private int ReadValue24Bit(ref int index)
-        {
-            var buffer = new byte[4];
-            buffer[0] = 0;
-            buffer[1] = _data[index];
-            buffer[2] = _data[index + 1];
-            buffer[3] = _data[index + 2];
-            int result = BitConverter.ToInt32(buffer, 0);
+            int result =
+                ((data[index    ] <<  8) |
+                 (data[index + 1] << 16) |
+                 (data[index + 2] << 24)) >> 8;
             index += 3;
             return result;
         }
 
-        private int ReadValue32Bit(ref int index)
+        private static int ReadValue32Bit(byte[] data, ref int index)
         {
-            int result = BitConverter.ToInt32(_data, index);
+            int result =
+                (data[index    ]      ) |
+                (data[index + 1] <<  8) |
+                (data[index + 2] << 16) |
+                (data[index + 3] << 24);
             index += 4;
             return result;
         }
 
-        /// <summary>
-        /// Determine how to read sample values
-        /// </summary>
-        /// <returns>Sample data reader that matches bits per sample</returns>
-        private ReadSampleDataValueDelegate GetSampleDataRerader()
+        private static void WriteValue8Bit(byte[] buffer, int offset, int value)
         {
-            ReadSampleDataValueDelegate readSampleDataValue;
-            switch (Header.BitsPerSample)
+            buffer[offset] = (byte)(value - sbyte.MinValue);
+        }
+
+        private static void WriteValue16Bit(byte[] buffer, int offset, int value)
+        {
+            buffer[offset    ] = (byte)value;
+            buffer[offset + 1] = (byte)(value >> 8);
+        }
+
+        private static void WriteValue24Bit(byte[] buffer, int offset, int value)
+        {
+            buffer[offset    ] = (byte)value;
+            buffer[offset + 1] = (byte)(value >> 8);
+            buffer[offset + 2] = (byte)(value >> 16);
+        }
+
+        private static void WriteValue32Bit(byte[] buffer, int offset, int value)
+        {
+            buffer[offset    ] = (byte)value;
+            buffer[offset + 1] = (byte)(value >> 8);
+            buffer[offset + 2] = (byte)(value >> 16);
+            buffer[offset + 3] = (byte)(value >> 24);
+        }
+
+        private double GetSampleScale()
+        {
+            return (1.0 / Math.Pow(2.0, _header.BytesPerSample * 8 - 1));
+        }
+
+        private double GetSampleAndChannelScale()
+        {
+            return GetSampleScale() / _header.NumberOfChannels;
+        }
+
+        private ReadSampleDataValue GetSampleDataReader()
+        {
+            switch (_header.BytesPerSample)
             {
-                case 8:
-                    readSampleDataValue = ReadValue8Bit;
-                    break;
-                case 16:
-                    readSampleDataValue = ReadValue16Bit;
-                    break;
-                case 24:
-                    readSampleDataValue = ReadValue24Bit;
-                    break;
-                case 32:
-                    readSampleDataValue = ReadValue32Bit;
-                    break;
+                case 1:
+                    return ReadValue8Bit;
+                case 2:
+                    return ReadValue16Bit;
+                case 3:
+                    return ReadValue24Bit;
+                case 4:
+                    return ReadValue32Bit;
                 default:
-                    throw new InvalidDataException("Cannot read bits per sample of " + Header.BitsPerSample);
+                    throw new InvalidDataException("Cannot read bits per sample of " + _header.BitsPerSample);
             }
-            return readSampleDataValue;
+        }
+
+        private WriteSampleDataValue GetSampleDataWriter()
+        {
+            switch (_header.BytesPerSample)
+            {
+                case 1:
+                    return WriteValue8Bit;
+                case 2:
+                    return WriteValue16Bit;
+                case 3:
+                    return WriteValue24Bit;
+                case 4:
+                    return WriteValue32Bit;
+                default:
+                    throw new InvalidDataException("Cannot write bits per sample of " + _header.BitsPerSample);
+            }
         }
 
         public void Dispose()
@@ -389,250 +645,329 @@ namespace Nikse.SubtitleEdit.Core
 
         //////////////////////////////////////// SPECTRUM ///////////////////////////////////////////////////////////
 
-        public List<Bitmap> GenerateFourierData(int nfft, string spectrogramDirectory, int delayInMilliseconds)
+        public SpectrogramData GenerateSpectrogram(int delayInMilliseconds, string spectrogramDirectory)
         {
-            const int bitmapWidth = 1024;
-            var bitmaps = new List<Bitmap>();
+            const int fftSize = 256; // image height = fft size / 2
+            const int imageWidth = 1024;
 
-            // setup fourier transformation
-            var f = new Fourier(nfft, true);
-            double divider = 2.0;
-            for (int k = 0; k < Header.BitsPerSample - 2; k++)
-                divider *= 2;
+            int delaySampleCount = (int)(_header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
 
-            // determine how to read sample values
-            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataRerader();
+            // ignore negative delays for now (pretty sure it can't happen in mkv and some places pass in -1 by mistake)
+            delaySampleCount = Math.Max(delaySampleCount, 0);
 
-            // set up one column of the spectrogram
-            var palette = new Color[nfft];
-            if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Classic")
+            var images = new List<Bitmap>();
+            var drawer = new SpectrogramDrawer(fftSize);
+            var readSampleDataValue = GetSampleDataReader();
+            Task saveImageTask = null;
+            double sampleAndChannelScale = GetSampleAndChannelScale();
+            long fileSampleCount = _header.LengthInSamples;
+            long fileSampleOffset = -delaySampleCount;
+            int chunkSampleCount = fftSize * imageWidth;
+            int chunkCount = (int)Math.Ceiling((double)(fileSampleCount + delaySampleCount) / chunkSampleCount);
+            byte[] data = new byte[chunkSampleCount * _header.BlockAlign];
+            double[] chunkSamples = new double[chunkSampleCount];
+
+            Directory.CreateDirectory(spectrogramDirectory);
+
+            _stream.Seek(_header.DataStartPosition, SeekOrigin.Begin);
+
+            // for negative delays, skip samples at the beginning
+            if (fileSampleOffset > 0)
             {
-                for (int colorIndex = 0; colorIndex < nfft; colorIndex++)
-                    palette[colorIndex] = PaletteValue(colorIndex, nfft);
+                _stream.Seek(fileSampleOffset * _header.BlockAlign, SeekOrigin.Current);
             }
-            else
-            {
-                var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveformColor.R,
-                                                 Configuration.Settings.VideoControls.WaveformColor.G,
-                                                 Configuration.Settings.VideoControls.WaveformColor.B, nfft);
-                for (int i = 0; i < nfft; i++)
-                    palette[i] = list[i];
-            }
 
-            // read sample values
-            DataMinValue = int.MaxValue;
-            DataMaxValue = int.MinValue;
-            var samples = new List<int>();
-            int index = 0;
-            int sampleSize = nfft * bitmapWidth;
-            int count = 0;
-            long totalSamples = 0;
-
-            // write delay (if any)
-            int delaySampleCount = (int)(Header.SampleRate * (delayInMilliseconds / TimeCode.BaseUnit));
-            for (int i = 0; i < delaySampleCount; i++)
+            for (int iChunk = 0; iChunk < chunkCount; iChunk++)
             {
-                samples.Add(0);
-                if (samples.Count == sampleSize)
+                // calculate padding at the beginning (for positive delays)
+                int startPaddingSampleCount = 0;
+                if (fileSampleOffset < 0)
                 {
-                    var samplesAsReal = new double[sampleSize];
-                    for (int k = 0; k < sampleSize; k++)
-                        samplesAsReal[k] = 0;
-                    var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
-                    bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
-                    bitmaps.Add(bmp);
-                    samples = new List<int>();
-                    count++;
+                    startPaddingSampleCount = (int)Math.Min(-fileSampleOffset, chunkSampleCount);
+                    fileSampleOffset += startPaddingSampleCount;
                 }
-            }
 
-            // load data in smaller parts
-            _data = new byte[Header.BytesPerSecond];
-            _stream.Position = Header.DataStartPosition;
-            int bytesRead = _stream.Read(_data, 0, _data.Length);
-            while (bytesRead == Header.BytesPerSecond)
-            {
-                while (index < Header.BytesPerSecond)
+                // calculate how many samples to read from the file
+                long fileSamplesRemaining = fileSampleCount - Math.Max(fileSampleOffset, 0);
+                int fileReadSampleCount = (int)Math.Min(fileSamplesRemaining, chunkSampleCount - startPaddingSampleCount);
+
+                // calculate padding at the end (when the data isn't an even multiple of our chunk size)
+                int endPaddingSampleCount = chunkSampleCount - startPaddingSampleCount - fileReadSampleCount;
+
+                int chunkSampleOffset = 0;
+
+                // add padding at the beginning
+                if (startPaddingSampleCount > 0)
                 {
-                    int value = 0;
-                    for (int channelNumber = 0; channelNumber < Header.NumberOfChannels; channelNumber++)
-                    {
-                        value += readSampleDataValue.Invoke(ref index);
-                    }
-                    value = value / Header.NumberOfChannels;
-                    if (value < DataMinValue)
-                        DataMinValue = value;
-                    if (value > DataMaxValue)
-                        DataMaxValue = value;
-                    samples.Add(value);
-                    totalSamples++;
+                    Array.Clear(chunkSamples, chunkSampleOffset, startPaddingSampleCount);
+                    chunkSampleOffset += startPaddingSampleCount;
+                }
 
-                    if (samples.Count == sampleSize)
+                // read samples from the file
+                if (fileReadSampleCount > 0)
+                {
+                    int fileReadByteCount = fileReadSampleCount * _header.BlockAlign;
+                    _stream.Read(data, 0, fileReadByteCount);
+                    fileSampleOffset += fileReadSampleCount;
+
+                    int dataByteOffset = 0;
+                    while (dataByteOffset < fileReadByteCount)
                     {
-                        var samplesAsReal = new double[sampleSize];
-                        for (int k = 0; k < sampleSize; k++)
-                            samplesAsReal[k] = samples[k] / divider;
-                        var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
-                        bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
-                        bitmaps.Add(bmp);
-                        samples = new List<int>();
-                        count++;
+                        double value = 0D;
+                        for (int iChannel = 0; iChannel < _header.NumberOfChannels; iChannel++)
+                        {
+                            value += readSampleDataValue(data, ref dataByteOffset);
+                        }
+                        chunkSamples[chunkSampleOffset] = value * sampleAndChannelScale;
+                        chunkSampleOffset += 1;
                     }
                 }
-                bytesRead = _stream.Read(_data, 0, _data.Length);
-                index = 0;
+
+                // add padding at the end
+                if (endPaddingSampleCount > 0)
+                {
+                    Array.Clear(chunkSamples, chunkSampleOffset, endPaddingSampleCount);
+                    chunkSampleOffset += endPaddingSampleCount;
+                }
+
+                // generate spectrogram for this chunk
+                Bitmap bmp = drawer.Draw(chunkSamples);
+                images.Add(bmp);
+
+                // wait for previous image to finish saving
+                if (saveImageTask != null)
+                    saveImageTask.Wait();
+
+                // save image
+                string imagePath = Path.Combine(spectrogramDirectory, iChunk + ".gif");
+                saveImageTask = Task.Factory.StartNew(() =>
+                {
+                    bmp.Save(imagePath, System.Drawing.Imaging.ImageFormat.Gif);
+                });
             }
 
-            if (samples.Count > 0)
-            {
-                var samplesAsReal = new double[sampleSize];
-                for (int k = 0; k < sampleSize && k < samples.Count; k++)
-                    samplesAsReal[k] = samples[k] / divider;
-                var bmp = DrawSpectrogram(nfft, samplesAsReal, f, palette);
-                bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
-                bitmaps.Add(bmp);
-            }
+            // wait for last image to finish saving
+            if (saveImageTask != null)
+                saveImageTask.Wait();
 
             var doc = new XmlDocument();
-            doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/><AudioFormat /><AudioFormat /><ChunkId /><SecondsPerImage /><ImageWidth /><NFFT /></SpectrogramInfo>");
-            double sampleDuration = Header.LengthInSeconds / (totalSamples / Convert.ToDouble(nfft));
-            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = sampleDuration.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText = Header.LengthInSeconds.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("AudioFormat").InnerText = Header.AudioFormat.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("ChunkId").InnerText = Header.ChunkId.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)(sampleSize / (double)Header.SampleRate)).ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = bitmapWidth.ToString(CultureInfo.InvariantCulture);
-            doc.DocumentElement.SelectSingleNode("NFFT").InnerText = nfft.ToString(CultureInfo.InvariantCulture);
+            var culture = CultureInfo.InvariantCulture;
+            double sampleDuration = (double)fftSize / _header.SampleRate;
+            doc.LoadXml("<SpectrogramInfo><SampleDuration/><NFFT/><ImageWidth/><SecondsPerImage/></SpectrogramInfo>");
+            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = sampleDuration.ToString(culture);
+            doc.DocumentElement.SelectSingleNode("NFFT").InnerText = fftSize.ToString(culture);
+            doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText = imageWidth.ToString(culture);
+            doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText = ((double)chunkSampleCount / _header.SampleRate).ToString(culture); // currently unused; for backwards compatibility
             doc.Save(Path.Combine(spectrogramDirectory, "Info.xml"));
 
-            return bitmaps;
+            return new SpectrogramData(fftSize, imageWidth, sampleDuration, images);
         }
 
-        private static Bitmap DrawSpectrogram(int nfft, double[] samples, Fourier f, Color[] palette)
+        private class SpectrogramDrawer
         {
-            const int overlap = 0;
-            int numSamples = samples.Length;
-            int colIncrement = nfft * (1 - overlap);
+            private const double RaisedCosineWindowScale = 0.5;
+            private const int MagnitudeIndexRange = 256;
 
-            int numcols = numSamples / colIncrement;
-            // make sure we don't step beyond the end of the recording
-            while ((numcols - 1) * colIncrement + nfft > numSamples)
-                numcols--;
+            private readonly int _nfft;
+            private readonly MagnitudeToIndexMapper _mapper;
+            private readonly RealFFT _fft;
+            private readonly FastBitmap.PixelData[] _palette;
+            private readonly double[] _segment;
+            private readonly double[] _window;
+            private readonly double[] _magnitude1;
+            private readonly double[] _magnitude2;
 
-            double[] real = new double[nfft];
-            double[] imag = new double[nfft];
-            double[] magnitude = new double[nfft / 2];
-            var bmp = new Bitmap(numcols, nfft / 2);
-            for (int col = 0; col <= numcols - 1; col++)
+            public SpectrogramDrawer(int nfft)
+            {
+                _nfft = nfft;
+                _mapper = new MagnitudeToIndexMapper(100.0, MagnitudeIndexRange - 1);
+                _fft = new RealFFT(nfft);
+                _palette = GeneratePalette();
+                _segment = new double[nfft];
+                _window = CreateRaisedCosineWindow(nfft);
+                _magnitude1 = new double[nfft / 2];
+                _magnitude2 = new double[nfft / 2];
+
+                double scaleCorrection = 1.0 / (RaisedCosineWindowScale * _fft.ForwardScaleFactor);
+                for (int i = 0; i < _window.Length; i++)
+                {
+                    _window[i] *= scaleCorrection;
+                }
+            }
+
+            public Bitmap Draw(double[] samples)
+            {
+                int width = samples.Length / _nfft;
+                int height = _nfft / 2;
+                var bmp = new FastBitmap(new Bitmap(width, height));
+                bmp.LockImage();
+                for (int x = 0; x < width; x++)
+                {
+                    // process 2 segments offset by -1/4 and 1/4 fft size, resulting in 1/2 fft size
+                    // window spacing (the minimum overlap to avoid discarding parts of the signal)
+                    ProcessSegment(samples, (x * _nfft) - (x > 0 ? _nfft / 4 : 0), _magnitude1);
+                    ProcessSegment(samples, (x * _nfft) + (x < width - 1 ? _nfft / 4 : 0), _magnitude2);
+
+                    // draw
+                    for (int y = 0; y < height; y++)
+                    {
+                        int colorIndex = _mapper.Map((_magnitude1[y] + _magnitude2[y]) / 2.0);
+                        bmp.SetPixel(x, height - y - 1, _palette[colorIndex]);
+                    }
+                }
+                bmp.UnlockImage();
+                return bmp.GetBitmap();
+            }
+
+            private void ProcessSegment(double[] samples, int offset, double[] magnitude)
             {
                 // read a segment of the recorded signal
-                for (int c = 0; c <= nfft - 1; c++)
-                {
-                    imag[c] = 0;
-                    real[c] = samples[col * colIncrement + c] * Fourier.Hanning(nfft, c);
-                }
+                for (int i = 0; i < _nfft; i++)
+                    _segment[i] = samples[offset + i] * _window[i];
 
                 // transform to the frequency domain
-                f.FourierTransform(real, imag);
+                _fft.ComputeForward(_segment);
 
-                // and compute the magnitude spectrum
-                f.MagnitudeSpectrum(real, imag, Fourier.W0Hanning, magnitude);
+                // compute the magnitude of the spectrum
+                MagnitudeSpectrum(_segment, magnitude);
+            }
 
-                // Draw
-                for (int newY = 0; newY < nfft / 2 - 1; newY++)
+            private static double[] CreateRaisedCosineWindow(int n)
+            {
+                double twoPiOverN = Math.PI * 2.0 / n;
+                double[] dst = new double[n];
+                for (int i = 0; i < n; i++)
+                    dst[i] = 0.5 * (1.0 - Math.Cos(twoPiOverN * i));
+                return dst;
+            }
+
+            private static void MagnitudeSpectrum(double[] segment, double[] magnitude)
+            {
+                magnitude[0] = Math.Sqrt(SquareSum(segment[0], segment[1]));
+                for (int i = 2; i < segment.Length; i += 2)
+                    magnitude[i / 2] = Math.Sqrt(SquareSum(segment[i], segment[i + 1]) * 2.0);
+            }
+
+            private static double SquareSum(double a, double b)
+            {
+                return a * a + b * b;
+            }
+
+            private static FastBitmap.PixelData[] GeneratePalette()
+            {
+                var palette = new FastBitmap.PixelData[MagnitudeIndexRange];
+                if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Classic")
                 {
-                    int colorIndex = MapToPixelIndex(magnitude[newY], 100, 255);
-                    bmp.SetPixel(col, (nfft / 2 - 1) - newY, palette[colorIndex]);
+                    for (int colorIndex = 0; colorIndex < MagnitudeIndexRange; colorIndex++)
+                        palette[colorIndex] = new FastBitmap.PixelData(PaletteValue(colorIndex, MagnitudeIndexRange));
+                }
+                else
+                {
+                    var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveformColor.R,
+                                                     Configuration.Settings.VideoControls.WaveformColor.G,
+                                                     Configuration.Settings.VideoControls.WaveformColor.B, MagnitudeIndexRange);
+                    for (int i = 0; i < MagnitudeIndexRange; i++)
+                        palette[i] = new FastBitmap.PixelData(list[i]);
+                }
+                return palette;
+            }
+
+            private static Color PaletteValue(int x, int range)
+            {
+                double g;
+                double r;
+                double b;
+
+                double r4 = range / 4.0;
+                const double u = 255;
+
+                if (x < r4)
+                {
+                    b = x / r4;
+                    g = 0;
+                    r = 0;
+                }
+                else if (x < 2 * r4)
+                {
+                    b = (1 - (x - r4) / r4);
+                    g = 1 - b;
+                    r = 0;
+                }
+                else if (x < 3 * r4)
+                {
+                    b = 0;
+                    g = (2 - (x - r4) / r4);
+                    r = 1 - g;
+                }
+                else
+                {
+                    b = (x - 3 * r4) / r4;
+                    g = 0;
+                    r = 1 - b;
+                }
+
+                r = ((int)(Math.Sqrt(r) * u)) & 0xff;
+                g = ((int)(Math.Sqrt(g) * u)) & 0xff;
+                b = ((int)(Math.Sqrt(b) * u)) & 0xff;
+
+                return Color.FromArgb((int)r, (int)g, (int)b);
+            }
+
+            private static List<Color> SmoothColors(int fromR, int fromG, int fromB, int toR, int toG, int toB, int count)
+            {
+                while (toR < 255 && toG < 255 && toB < 255)
+                {
+                    toR++;
+                    toG++;
+                    toB++;
+                }
+
+                var list = new List<Color>();
+                double r = fromR;
+                double g = fromG;
+                double b = fromB;
+                double diffR = (toR - fromR) / (double)count;
+                double diffG = (toG - fromG) / (double)count;
+                double diffB = (toB - fromB) / (double)count;
+
+                for (int i = 0; i < count; i++)
+                {
+                    list.Add(Color.FromArgb((int)r, (int)g, (int)b));
+                    r += diffR;
+                    g += diffG;
+                    b += diffB;
+                }
+                return list;
+            }
+
+            /// Maps magnitudes in the range [-decibelRange .. 0] dB to palette index values in the range [0 .. indexMax]
+            private class MagnitudeToIndexMapper
+            {
+                private readonly double _minMagnitude;
+                private readonly double _multiplier;
+                private readonly double _addend;
+
+                public MagnitudeToIndexMapper(double decibelRange, int indexMax)
+                {
+                    double mappingScale = indexMax / decibelRange;
+                    _minMagnitude = Math.Pow(10.0, -decibelRange / 20.0);
+                    _multiplier = 20.0 * mappingScale;
+                    _addend = decibelRange * mappingScale;
+                }
+
+                public int Map(double magnitude)
+                {
+                    return magnitude >= _minMagnitude ? (int)(Math.Log10(magnitude) * _multiplier + _addend) : 0;
+                }
+
+                // Less optimized but readable version of the above
+                public static int Map(double magnitude, double decibelRange, int indexMax)
+                {
+                    if (magnitude == 0) return 0;
+                    double decibelLevel = 20.0 * Math.Log10(magnitude);
+                    return decibelLevel >= -decibelRange ? (int)(indexMax * (decibelLevel + decibelRange) / decibelRange) : 0;
                 }
             }
-            return bmp;
         }
-
-        public static Color PaletteValue(int x, int range)
-        {
-            double g;
-            double r;
-            double b;
-
-            double r4 = range / 4.0;
-            const double u = 255;
-
-            if (x < r4)
-            {
-                b = x / r4;
-                g = 0;
-                r = 0;
-            }
-            else if (x < 2 * r4)
-            {
-                b = (1 - (x - r4) / r4);
-                g = 1 - b;
-                r = 0;
-            }
-            else if (x < 3 * r4)
-            {
-                b = 0;
-                g = (2 - (x - r4) / r4);
-                r = 1 - g;
-            }
-            else
-            {
-                b = (x - 3 * r4) / r4;
-                g = 0;
-                r = 1 - b;
-            }
-
-            r = ((int)(Math.Sqrt(r) * u)) & 0xff;
-            g = ((int)(Math.Sqrt(g) * u)) & 0xff;
-            b = ((int)(Math.Sqrt(b) * u)) & 0xff;
-
-            return Color.FromArgb((int)r, (int)g, (int)b);
-        }
-
-        /// <summary>
-        /// Maps magnitudes in the range [-rangedB .. 0] dB to palette index values in the range [0 .. rangeIndex-1]
-        /// and computes and returns the index value which corresponds to passed-in magnitude
-        /// </summary>
-        private static int MapToPixelIndex(double magnitude, double rangedB, int rangeIndex)
-        {
-            const double log10 = 2.30258509299405;
-
-            if (magnitude == 0)
-                return 0;
-
-            double levelIndB = 20 * Math.Log(magnitude) / log10;
-            if (levelIndB < -rangedB)
-                return 0;
-
-            return (int)(rangeIndex * (levelIndB + rangedB) / rangedB);
-        }
-
-        private static List<Color> SmoothColors(int fromR, int fromG, int fromB, int toR, int toG, int toB, int count)
-        {
-            while (toR < 255 && toG < 255 && toB < 255)
-            {
-                toR++;
-                toG++;
-                toB++;
-            }
-
-            var list = new List<Color>();
-            double r = fromR;
-            double g = fromG;
-            double b = fromB;
-            double diffR = (toR - fromR) / (double)count;
-            double diffG = (toG - fromG) / (double)count;
-            double diffB = (toB - fromB) / (double)count;
-
-            for (int i = 0; i < count; i++)
-            {
-                list.Add(Color.FromArgb((int)r, (int)g, (int)b));
-                r += diffR;
-                g += diffG;
-                b += diffB;
-            }
-            return list;
-        }
-
     }
 }

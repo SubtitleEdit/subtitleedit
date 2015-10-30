@@ -2,7 +2,7 @@
 <Language Name="português (Portugal)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>------------------------------------------------------------------------------------------------
 Traduzido para Português de Portugal, por moob
 Email: mailto:imhotepimhotep8@gmail.com</TranslatedBy>
@@ -494,6 +494,10 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Normal>&amp;Normal</Normal>
     <CaseSensitive>&amp;Diferenciar maiúsculas/minúsculas</CaseSensitive>
     <RegularExpression>E&amp;xpressão regular</RegularExpression>
+    <WholeWord>Palavra completa</WholeWord>
+    <Count>Contagem</Count>
+    <XNumberOfMatches>{0:#,##0} correspondências</XNumberOfMatches>
+    <OneMatch>Uma correspondência</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Localizar linha da legenda</Title>
@@ -559,7 +563,6 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FixesFoundX>Correcções encontradas: {0}</FixesFoundX>
     <XFixesApplied>Correcções aplicadas: {0}</XFixesApplied>
     <NothingToFixBut>Nada a corrigir, mas algumas coisas podem ser melhoradas - veja o registo para mais detalhes</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Corrigir "i" minúscula sozinha por "I" maiúscula (Inglês)" está marcada mas a legenda carregada não parece ser em Inglês.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continuar</Continue>
     <ContinueAnyway>Continuar mesmo assim?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Desmarcar "Corrigir "i" minúscula sozinha por "I" maiúscula (Inglês)"</UncheckedFixLowercaseIToUppercaseI>
@@ -673,6 +676,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <ImageFiles>Ficheiros de imagens</ImageFiles>
     <Input>Entrada</Input>
     <InputDescription>Escolha os ficheiros de entrada (Selecionar ou arrastar-e-soltar)</InputDescription>
+    <Remove>Remover</Remove>
+    <RemoveAll>Remover todas</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Importar mudanças de cena</Title>
@@ -940,7 +945,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Combinar as linhas seleccionadas como diálogo</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Combinar com a linha anterior</MergeWithLineBefore>
         <MergeWithLineAfter>Combinar com a linha seguinte</MergeWithLineAfter>
-        <Normal>Normal</Normal>
+        <Normal>Normal (remove a formatação)</Normal>
         <Underline>Sublinhado</Underline>
         <Color>Cor</Color>
         <FontName>Tipo de letra</FontName>
@@ -1073,11 +1078,11 @@ Gostaria de começar do início do documento a localizar e substituir?</ReplaceX
     <XFoundAtLineNumberY>'{0}' encontrado na linha número {1}</XFoundAtLineNumberY>
     <XNotFound>'{0}' não encontrado</XNotFound>
     <BeforeReplace>Antes de substituir: {0}</BeforeReplace>
-    <MatchFoundX>Coincidências encontradas: {0}</MatchFoundX>
-    <NoMatchFoundX>Não foram encontradas coincidências: {0}</NoMatchFoundX>
+    <MatchFoundX>Correspondências encontradas: {0}</MatchFoundX>
+    <NoMatchFoundX>Não foram encontradas correspondências: {0}</NoMatchFoundX>
     <FoundNothingToReplace>Não foi encontrado nada para substituir</FoundNothingToReplace>
     <ReplaceCountX>Número de substituições: {0}</ReplaceCountX>
-    <NoXFoundAtLineY>Coincidências encontradas na linha {0}: {1}</NoXFoundAtLineY>
+    <NoXFoundAtLineY>Correspondências encontradas na linha {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>Uma substituição concluída.</OneReplacementMade>
     <BeforeChangesMadeInSourceView>Antes de concluir alterações na visualização de origem</BeforeChangesMadeInSourceView>
     <UnableToParseSourceView>Não foi possível analisar no texto original!</UnableToParseSourceView>
@@ -1542,9 +1547,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <StartWithLastFileLoaded>Iniciar com o último ficheiro carregado</StartWithLastFileLoaded>
     <RememberSelectedLine>Lembrar linha seleccionada</RememberSelectedLine>
     <RememberPositionAndSize>Lembrar tamanho e posição da janela principal</RememberPositionAndSize>
-    <StartInSourceView>Iniciar na aba (Original) da janela principal</StartInSourceView>
+    <StartInSourceView>Iniciar no separador (Original) da janela principal</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Eliminar linhas em branco ao abrir a legenda</RemoveBlankLinesWhenOpening>
-    <ShowLineBreaksAs>Ver quebras de linha na aba (Lista) da janela principal como</ShowLineBreaksAs>
+    <ShowLineBreaksAs>Ver quebras de linha no separador (Lista) da janela principal como</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Ao clicar duas vezes na linha de texto na janela principal irá...</MainListViewDoubleClickAction>
     <MainListViewNothing>Não faz nada</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>... para posição do vídeo e pausar</MainListViewVideoGoToPositionAndPause>
@@ -1675,7 +1680,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToPrevious>Ir para a linha anterior</GoToPrevious>
     <GoToCurrentSubtitleStart>Ir para o início da linha actual</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ir para o final da linha actual</GoToCurrentSubtitleEnd>
-    <ToggleFocus>Alternar o realce entre a caixa de texto da legenda e a aba (Lista) na janela principal</ToggleFocus>
+    <ToggleFocus>Alternar o realce entre a caixa de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
     <ToggleDialogDashes>Alternar hífens de diálogo</ToggleDialogDashes>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>
     <CopyTextOnly>Copiar só o texto para a área de transferência (linhas seleccionadas)</CopyTextOnly>
@@ -1687,7 +1692,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformSeekSilenceForward>Localizar silêncio no áudio adiante</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Localizar silêncio no áudio atrás</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Adicionar texto aqui (para nova selecção)</WaveformAddTextHere>
-    <WaveformPlayNewSelection>Reproduzir a nova selecção</WaveformPlayNewSelection>
+    <WaveformPlayNewSelection>Reproduzir selecção</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Reproduzir a partir do fim da selecção</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Destacar a lista de visualização</WaveformFocusListView>
     <GoBack1Frame>Um fotograma para atrás</GoBack1Frame>
@@ -1708,7 +1714,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <CustomSearch5>Traduzir, pesquisa personalizada 5</CustomSearch5>
     <CustomSearch6>Traduzir, pesquisa personalizada 6</CustomSearch6>
     <SyntaxColoring>Cor da sintaxe</SyntaxColoring>
-    <ListViewSyntaxColoring>Cor da sintaxe na aba (Lista) da janela principal</ListViewSyntaxColoring>
+    <ListViewSyntaxColoring>Cor da sintaxe no separador (Lista) da janela principal</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>Cor duração muito curta</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Cor duração muito longa</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Cor texto muito longo</SyntaxColorTextIfTooLong>
@@ -2038,9 +2044,9 @@ Manter as alterações?</KeepChangesMessage>
     <RightToLeft>Direita para esquerda</RightToLeft>
     <ShowOnlyForcedSubtitles>Mostrar somente legendas forçadas</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Usar os tempos do ficheiro (.idx)</UseTimeCodesFromIdx>
-    <NoMatch>&lt;Sem coincidências&gt;</NoMatch>
+    <NoMatch>&lt;Sem correspondências&gt;</NoMatch>
     <AutoTransparentBackground>Fundo auto transparente</AutoTransparentBackground>
-    <InspectCompareMatchesForCurrentImage>Inspeccionar coincidências para a imagem actual...</InspectCompareMatchesForCurrentImage>
+    <InspectCompareMatchesForCurrentImage>Inspeccionar correspondências na imagem actual...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Editar última imagem comparando com as adicionadas...</EditLastAdditions>
     <SetUnitalicFactor>Definir um factor itálico...</SetUnitalicFactor>
     <DiscardTitle>Rejeitar as alterações feitas no OCR?</DiscardTitle>
@@ -2063,9 +2069,10 @@ Manter as alterações?</KeepChangesMessage>
     <EditLastX>Editar último: {0}</EditLastX>
   </VobSubOcrCharacter>
   <VobSubOcrCharacterInspect>
-    <Title>Inspeccionar coincidências para a imagem actual</Title>
+    <Title>Inspeccionar correspondências na imagem actual</Title>
     <InspectItems>Inspeccionar itens</InspectItems>
     <AddBetterMatch>Adicionar a melhor coincidência</AddBetterMatch>
+    <Add>Adicionar</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nova pasta</Title>

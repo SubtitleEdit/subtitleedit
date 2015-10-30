@@ -90,7 +90,7 @@
             // buttonAddBetterMatch
             // 
             this.buttonAddBetterMatch.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAddBetterMatch.Location = new System.Drawing.Point(120, 98);
+            this.buttonAddBetterMatch.Location = new System.Drawing.Point(120, 89);
             this.buttonAddBetterMatch.Name = "buttonAddBetterMatch";
             this.buttonAddBetterMatch.Size = new System.Drawing.Size(140, 21);
             this.buttonAddBetterMatch.TabIndex = 28;

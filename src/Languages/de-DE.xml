@@ -2,7 +2,7 @@
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Nobody.</TranslatedBy>
     <CultureName>de-DE</CultureName>
     <HelpFile />
@@ -492,6 +492,10 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <Normal>&amp;Normal</Normal>
     <CaseSensitive>&amp;Groß-/Kleinschreibung</CaseSensitive>
     <RegularExpression>Regulärer &amp;Ausdruck</RegularExpression>
+    <WholeWord>Nur ganze Wörter</WholeWord>
+    <Count>Zählen</Count>
+    <XNumberOfMatches>{0:#,##0} Treffer</XNumberOfMatches>
+    <OneMatch>1 Treffer</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Untertitel Text suchen</Title>
@@ -557,7 +561,6 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <FixesFoundX>Korrekturen gefunden: {0}</FixesFoundX>
     <XFixesApplied>Korrekturen angewendet: {0}</XFixesApplied>
     <NothingToFixBut>Nichts zu korrigieren, aber ein paar Dinge könnten verbessert werden - siehe Log für Details</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Allein stehendes 'i' zu 'I' korrigieren (Englisch)" ist ausgewählt, aber der geladene Untertitel scheint nicht Englisch zu sein.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Fortsetzen</Continue>
     <ContinueAnyway>Trotzdem fortsetzen?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"Allein stehendes 'i' zu 'I' (Englisch) korrigieren" deaktiviert</UncheckedFixLowercaseIToUppercaseI>
@@ -671,6 +674,8 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <ImageFiles>Bilddateien</ImageFiles>
     <Input>Eingabe</Input>
     <InputDescription>Eingabedateien auswählen (Suchen oder Ziehen)</InputDescription>
+    <Remove>Löschen</Remove>
+    <RemoveAll>Alle löschen</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Szenenwechsel importieren</Title>
@@ -938,7 +943,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Ausgewählte Texte als Dialog verbinden</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Mit vorherigen Text verbinden</MergeWithLineBefore>
         <MergeWithLineAfter>Mit folgenden Text verbinden</MergeWithLineAfter>
-        <Normal>Normal</Normal>
+        <Normal>Normal (Formatierung entfernen)</Normal>
         <Underline>Unterstrichen</Underline>
         <Color>Farbe...</Color>
         <FontName>Schriftart...</FontName>
@@ -1685,7 +1690,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformSeekSilenceForward>Suche stumm vor</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Suche stumm zurück</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Text hier ergänzen (für neue Auswahl)</WaveformAddTextHere>
-    <WaveformPlayNewSelection>Neue Auswahl abspielen</WaveformPlayNewSelection>
+    <WaveformPlayNewSelection>Auswahl abspielen</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Ende der Auswahl abspielen</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Ersten gewählten Untertitel abspielen</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Listenansicht fokussieren</WaveformFocusListView>
     <GoBack1Frame>Ein Bild zurück</GoBack1Frame>
@@ -2064,6 +2070,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Title>Untersuche Vergleichstreffer für aktuelles Bild</Title>
     <InspectItems>Untersuche Text</InspectItems>
     <AddBetterMatch>Besseren Treffer hinzufügen</AddBetterMatch>
+    <Add>Hinzufügen</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Neuer Ordner</Title>

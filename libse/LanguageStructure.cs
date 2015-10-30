@@ -550,6 +550,10 @@
             public string Normal { get; set; }
             public string CaseSensitive { get; set; }
             public string RegularExpression { get; set; }
+            public string WholeWord { get; set; }
+            public string Count { get; set; }
+            public string XNumberOfMatches { get; set; }
+            public string OneMatch { get; set; }
         }
 
         public class FindSubtitleLine
@@ -619,7 +623,6 @@
             public string FixesFoundX { get; set; }
             public string XFixesApplied { get; set; }
             public string NothingToFixBut { get; set; }
-            public string FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish { get; set; }
             public string Continue { get; set; }
             public string ContinueAnyway { get; set; }
             public string UncheckedFixLowercaseIToUppercaseI { get; set; }
@@ -747,6 +750,8 @@
             public string ImageFiles { get; set; }
             public string Input { get; set; }
             public string InputDescription { get; set; }
+            public string Remove { get; set; }
+            public string RemoveAll { get; set; }
         }
 
         public class ImportSceneChanges
@@ -1053,7 +1058,7 @@
             public string BeforeMergeLinesWithSameText { get; set; }
             public string ImportTimeCodesDifferentNumberOfLinesWarning { get; set; }
             public string ParsingTransportStream { get; set; }
-            public string XPercentCompleted { get; set; }            
+            public string XPercentCompleted { get; set; }
             public string ErrorLoadIdx { get; set; }
             public string ErrorLoadRar { get; set; }
             public string ErrorLoadZip { get; set; }
@@ -1846,6 +1851,7 @@
             public string WaveformSeekSilenceBack { get; set; }
             public string WaveformAddTextHere { get; set; }
             public string WaveformPlayNewSelection { get; set; }
+            public string WaveformPlayNewSelectionEnd { get; set; }
             public string WaveformPlayFirstSelectedSubtitle { get; set; }
             public string WaveformFocusListView { get; set; }
             public string GoBack1Frame { get; set; }
@@ -2260,6 +2266,7 @@
             public string Title { get; set; }
             public string InspectItems { get; set; }
             public string AddBetterMatch { get; set; }
+            public string Add { get; set; }
         }
 
         public class VobSubOcrNewFolder

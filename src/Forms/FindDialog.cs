@@ -1,17 +1,17 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Enums;
 using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Enums;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class FindDialog : Form
     {
         private Regex _regEx;
-
-        public FindDialog()
+        private readonly Subtitle _subtitle;
+        public FindDialog(Subtitle subtitle)
         {
             InitializeComponent();
 
@@ -21,6 +21,10 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonCaseSensitive.Text = Configuration.Settings.Language.FindDialog.CaseSensitive;
             radioButtonRegEx.Text = Configuration.Settings.Language.FindDialog.RegularExpression;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            checkBoxWholeWord.Text = Configuration.Settings.Language.FindDialog.WholeWord;
+            buttonCount.Text = Configuration.Settings.Language.FindDialog.Count;
+            labelCount.Text = string.Empty;
+            _subtitle = subtitle;
 
             if (Width < radioButtonRegEx.Right + 5)
                 Width = radioButtonRegEx.Right + 5;
@@ -178,8 +182,20 @@ namespace Nikse.SubtitleEdit.Forms
             if (bitmap != null)
             {
                 IntPtr Hicon = bitmap.GetHicon();
-                this.Icon = Icon.FromHandle(Hicon);
+                Icon = Icon.FromHandle(Hicon);
             }
+        }
+
+        private void buttonCount_Click(object sender, EventArgs e)
+        {
+            if (FindText.Length == 0)
+            {
+                labelCount.Text = string.Empty;
+                return;
+            }
+            var count = GetFindDialogHelper(0).FindCount(_subtitle, checkBoxWholeWord.Checked);
+            labelCount.ForeColor = count > 0 ? Color.Blue : Color.Red;
+            labelCount.Text = count == 1 ? Configuration.Settings.Language.FindDialog.OneMatch : string.Format(Configuration.Settings.Language.FindDialog.XNumberOfMatches, count);
         }
 
     }

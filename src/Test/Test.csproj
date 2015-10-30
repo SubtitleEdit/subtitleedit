@@ -43,7 +43,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\LanguageAutoDetectTest.cs" />
     <Compile Include="Core\StringExtensionsTest.cs" />
+    <Compile Include="Core\SubtitleTest.cs" />
     <Compile Include="Logic\Ocr\BinaryOcrTest.cs" />
     <Compile Include="Core\HtmlUtilTest.cs" />
     <Compile Include="FixCommonErrorsTest.cs" />
@@ -110,6 +112,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Files\sample_BDSUP_multi_image.sup">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Files\auto_detect_Danish.srt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Files\auto_detect_Russian.srt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

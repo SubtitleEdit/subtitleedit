@@ -11,7 +11,6 @@ namespace Nikse.SubtitleEdit.Logic
 {
     internal static class UiUtil
     {
-
         public static VideoInfo GetVideoInfo(string fileName)
         {
             VideoInfo info = Utilities.TryReadVideoInfoViaAviHeader(fileName);
@@ -32,7 +31,6 @@ namespace Nikse.SubtitleEdit.Logic
 
             return new VideoInfo { VideoCodec = "Unknown" };
         }
-
 
         private static VideoInfo TryReadVideoInfoViaDirectShow(string fileName)
         {
@@ -191,11 +189,15 @@ namespace Nikse.SubtitleEdit.Logic
         {
             GeneralSettings gs = Configuration.Settings.General;
 
-            if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+            if (Configuration.IsRunningOnLinux())
                 return new MPlayer();
 
-            //if (Utilities.IsRunningOnMac())
-            //    return new LibVlcMono();
+            // Mono on OS X is 32 bit and thus requires 32 bit VLC. Place VLC in the same
+            // folder as Subtitle Edit and add this to the app.config inside the
+            // "configuration" element:
+            // <dllmap dll="libvlc" target="VLC.app/Contents/MacOS/lib/libvlc.dylib" />
+            if (Configuration.IsRunningOnMac())
+                return new LibVlcMono();
 
             if (gs.VideoPlayer == "VLC" && LibVlcDynamic.IsInstalled)
                 return new LibVlcDynamic();
@@ -242,7 +244,6 @@ namespace Nikse.SubtitleEdit.Logic
                 videoError.ShowDialog();
             }
         }
-
 
     }
 }

@@ -2,7 +2,7 @@
 <Language Name="hrvatski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Prijevod: Jozo Marić</TranslatedBy>
     <CultureName>hr-HR</CultureName>
     <HelpFile />
@@ -232,7 +232,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <CheckingForUpdates>Provjeravam ažuriranja...</CheckingForUpdates>
     <CheckingForUpdatesFailedX>Provjera ažuriranja nije uspjela: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Koristite najnoviju verziju Subtitle Edit-a :)</CheckingForUpdatesNoneAvailable>
-    <CheckingForUpdatesNewVersion>Nova verzija dostupna!</CheckingForUpdatesNewVersion>
+    <CheckingForUpdatesNewVersion>Nova verzija je dostupna!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Idi na stranicu za preuzimanje</InstallUpdate>
     <NoUpdates>Nemoj ažurirati</NoUpdates>
   </CheckForUpdates>
@@ -555,7 +555,6 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <FixesFoundX>Pronađeno ispravki: {0}</FixesFoundX>
     <XFixesApplied>Primijenjeno ispravki: {0}</XFixesApplied>
     <NothingToFixBut>Nema ništa za ispravljanje, ali se neke stvari mogu poboljšati. Pogledajte izvještaj za više informacija.</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>„Promijeni malo latinično I u veliko kada se nalazi sâmo“ je označeno, ali učitani podnaslov nije na engleskom.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Nastavi</Continue>
     <ContinueAnyway>Ipak nastaviti?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>„Promijeni malo latinično I u veliko kada se nalazi sâmo“ nije označeno.</UncheckedFixLowercaseIToUppercaseI>
@@ -570,7 +569,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <FixShortDisplayTime>Ispravi kratko vrijeme prikaza</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Ispravi preklapanja vremena</FixOverlappingDisplayTime>
     <FixInvalidItalicTagsExample>&lt;i&gt;Primjer.&lt;i&gt; → &lt;i&gt;Primjer.&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>Zdravo ,  Anice. → Zdravo, Anice.</RemoveUnneededSpacesExample>
+    <RemoveUnneededSpacesExample>Zdravo ,  Amélie. → Zdravo, Amélie.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Zdravo!. → Zdravo!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Zdravo.Što radiš? → Zdravo. Što radiš?</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>VrIina. → Vrlina.</FixUppercaseIInsindeLowercaseWordsExample>
@@ -624,10 +623,10 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <Title>Preuzimanje rječnika</Title>
     <DescriptionLine1>Provjera pisanja zasnovana je na dodatku NHunspell</DescriptionLine1>
     <DescriptionLine2>koji koristi rječnike iz paketa Open office.</DescriptionLine2>
-    <GetDictionariesHere>Preuzmite rječnike ovdje:</GetDictionariesHere>
+    <GetDictionariesHere>Preuzmi rječnike ovdje:</GetDictionariesHere>
     <OpenOpenOfficeWiki>Open office wiki popis rječnika</OpenOpenOfficeWiki>
     <GetAllDictionaries>Preuzmi sve rječnike</GetAllDictionaries>
-    <ChooseLanguageAndClickDownload>Izaberite jezik i kliknite na gumb za preuzimanje.</ChooseLanguageAndClickDownload>
+    <ChooseLanguageAndClickDownload>Izaberi jezik i klikni na gumb za preuzimanje.</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Otvori mapu sa rječnicima</OpenDictionariesFolder>
     <Download>&amp;Preuzmi</Download>
     <XDownloaded>{0} je preuzet i instaliran.</XDownloaded>
@@ -637,7 +636,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <DescriptionLine1>Dohvati Tesseract OCR rječnike s weba</DescriptionLine1>
     <DownloadFailed>Preuzimanje nije uspjelo!</DownloadFailed>
     <GetDictionariesHere>Dohvati rječnike ovdje:</GetDictionariesHere>
-    <ChooseLanguageAndClickDownload>Odaberite svoj jezik i kliknite na Preuzimanje</ChooseLanguageAndClickDownload>
+    <ChooseLanguageAndClickDownload>Odaberi svoj jezik i klikni na Preuzimanje</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Otvoriti mapu 'rječnika'</OpenDictionariesFolder>
     <Download>Preuzimanje</Download>
     <XDownloaded>{0} skinuto i instalirano</XDownloaded>
@@ -668,7 +667,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <Title>Uvoz slike</Title>
     <ImageFiles>Slikovne datoteke</ImageFiles>
     <Input>Ulaz</Input>
-    <InputDescription>Odaberite ulaznu datoteku (pregledavanje ili povuci i spusti)</InputDescription>
+    <InputDescription>Odaberi ulaznu datoteku (pregledavanje ili povuci i spusti)</InputDescription>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Uvozi promijenjene scene</Title>
@@ -926,8 +925,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
         <Column>Stup</Column>
         <ColumnDeleteText>Brisanje teksta</ColumnDeleteText>
         <ColumnDeleteTextAndShiftCellsUp>Brisanje teksta i pomak stanice do</ColumnDeleteTextAndShiftCellsUp>
-        <ColumnInsertEmptyTextAndShiftCellsDown>Umetnite prazan tekst i pomak prema dolje stanice</ColumnInsertEmptyTextAndShiftCellsDown>
-        <ColumnInsertTextFromSubtitle>Ubacite tekst iz podnaslova...</ColumnInsertTextFromSubtitle>
+        <ColumnInsertEmptyTextAndShiftCellsDown>Umetni prazan tekst i pomak prema dolje stanice</ColumnInsertEmptyTextAndShiftCellsDown>
+        <ColumnInsertTextFromSubtitle>Ubaci tekst iz podnaslova...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Uvoz tekst i pomak prema dolje stanice</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Zalijepi iz međuspremnika...</ColumnPasteFromClipboard>
         <ColumnCopyOriginalTextToCurrent>Kopiraj tekst iz originala u trenutnu</ColumnCopyOriginalTextToCurrent>
@@ -1018,8 +1017,8 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
       <Fast>brza</Fast>
       <VeryFast>vrlo brza</VeryFast>
     </VideoControls>
-    <SaveChangesToUntitled>Želite li spremiti izmjene?</SaveChangesToUntitled>
-    <SaveChangesToX>Želite li spremiti izmjene za {0}?</SaveChangesToX>
+    <SaveChangesToUntitled>Želiš li spremiti izmjene?</SaveChangesToUntitled>
+    <SaveChangesToX>Želiš li spremiti izmjene za {0}?</SaveChangesToX>
     <SaveChangesToUntitledOriginal>Spremiti izmjene za neimenovani izvorni podnaslov?</SaveChangesToUntitledOriginal>
     <SaveChangesToOriginalX>Spremiti izmjene za izvorni podnaslov{0}?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Spremanje podnaslova</SaveSubtitleAs>
@@ -1057,12 +1056,12 @@ Datoteka samo za čitanje!</FileXIsReadOnly>
     <NewFrameRateUsedToCalculateTimeCodes>Novi broj sličica ({0}) je korišten za računanje početka/kraja.</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Novi broj sličica ({0}) je korišten za računanje početnog/završnog broja sličica.</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>Nijedna stavka nije pronađena.
-Želite li da krenem s vrha stranice?</FindContinue>
+Želiš li krenuti s vrha stranice?</FindContinue>
     <FindContinueTitle>Nastavljanje pretrage</FindContinueTitle>
     <ReplaceContinueNotFound>Traženi predmet nije pronađen.
-Želite li početi od vrha dokumenta i nastaviti pretraživanje i zamjenu?</ReplaceContinueNotFound>
-    <ReplaceXContinue>Traženi predmet je zamijenjen {0} vrijeme (s).
-Želite li početi od vrha dokumenta i nastaviti pretraživanje i zamjenu?</ReplaceXContinue>
+Želiš li početi od vrha dokumenta i nastaviti pretraživanje i zamjenu?</ReplaceContinueNotFound>
+    <ReplaceXContinue>Traženi predmet je zamijenjen {0} puta.
+Želiš li početi od vrha dokumenta i nastaviti pretraživanje i zamjenu?</ReplaceXContinue>
     <ReplaceContinueTitle>Nastavi 'Zamijeni'?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Potraži za '{0}' s linije broj {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>{0} su pronađene na liniji broj {1}.</XFoundAtLineNumberY>
@@ -1088,14 +1087,14 @@ Datoteka samo za čitanje!</FileXIsReadOnly>
     <CommonErrorsFixed>Česte pogreške su ispravljene.</CommonErrorsFixed>
     <BeforeRenumbering>Izvršeno brojanje</BeforeRenumbering>
     <RenumberedStartingFromX>Brojanje počinje od broja {0}.</RenumberedStartingFromX>
-    <BeforeRemovalOfTextingForHearingImpaired>Uklonjen tekst za gluhe</BeforeRemovalOfTextingForHearingImpaired>
+    <BeforeRemovalOfTextingForHearingImpaired>Tekst za gluhe je uklonjen.</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Tekst za gluhe je uklonjen u jednoj liniji.</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Tekst za gluhe je uklonjen u {0} linija.</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Podnaslov je razdvojen.</SubtitleSplitted>
     <SubtitleAppendPrompt>Ova radnja će pridodati trenutni podnaslov na učitani
 koji bi trebao biti usklađen s video datotekom.
 
-Želite li nastaviti?</SubtitleAppendPrompt>
+Želiš li nastaviti?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Pridodavanje podnaslova</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Otvaranje pridodanog podnaslova</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Vizualno usklađivanje – dodavanje drugog dijela podnaslova</AppendViaVisualSyncTitle>
@@ -1135,7 +1134,7 @@ koji bi trebao biti usklađen s video datotekom.
     <XLinesSavedAsY>{0} linija spremljeno kao {1}</XLinesSavedAsY>
     <XLinesDeleted>Obrisano linija: {0}</XLinesDeleted>
     <BeforeDeletingXLines>Obrisano linija: {0}</BeforeDeletingXLines>
-    <DeleteXLinesPrompt>Želite li obrisati odabrane linije?</DeleteXLinesPrompt>
+    <DeleteXLinesPrompt>Želiš li obrisati odabrane linije?</DeleteXLinesPrompt>
     <OneLineDeleted>Linija je obrisana.</OneLineDeleted>
     <BeforeDeletingOneLine>Prije brisanja jedne linije</BeforeDeletingOneLine>
     <DeleteOneLinePrompt>Obrisati jednu liniju?</DeleteOneLinePrompt>
@@ -1207,9 +1206,9 @@ koji bi trebao biti usklađen s video datotekom.
     <OcrReplacePairXAdded>Popis OCR zamijeniti par '{0} -&gt; {1}' je dodan na popis OCR zamijeniti</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>Popis OCR zamijeniti par '{0} -&gt; {1}' nije dodan na popis OCR zamijeniti</OcrReplacePairXNotAdded>
     <XLinesSelected>Izabrano linija: {0}</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Podnaslov sadrži unicode glazbene note. Ako ih spremite u kodnom rasporedu ASCII, izgubit ćete ih. Želite li nastaviti?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeMusicSymbolsAnsiWarning>Podnaslov sadrži unicode glazbene note. Ako ih spremiš u kodnom rasporedu ASCII, izgubit ćete ih. Želiš li nastaviti?</UnicodeMusicSymbolsAnsiWarning>
     <UnicodeCharactersAnsiWarning>Podnaslovi sadrže Unicode znakove. Spremanje pomoću kodiranja ANSI datoteka će izgubiti njih. Nastaviti sa spremanjem?</UnicodeCharactersAnsiWarning>
-    <NegativeTimeWarning>Podnaslov sadrži negativne vremenske odrednice. Želite li nastaviti?</NegativeTimeWarning>
+    <NegativeTimeWarning>Podnaslov sadrži negativne vremenske odrednice. Želiš li nastaviti?</NegativeTimeWarning>
     <BeforeMergeShortLines>Spojene kratke linije</BeforeMergeShortLines>
     <BeforeSplitLongLines>Razdvojene duge linije</BeforeSplitLongLines>
     <MergedShortLinesX>Spojeno linija: {0}</MergedShortLinesX>
@@ -1284,7 +1283,7 @@ koji bi trebao biti usklađen s video datotekom.
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Odabir podnaslova iz matroške</Title>
-    <PleaseChoose>Pronađeno je više od jednog podnaslova. Izaberite koji želite.</PleaseChoose>
+    <PleaseChoose>Pronađeno je više od jednog podnaslova. Izaberi koji želiš.</PleaseChoose>
     <TrackXLanguageYTypeZ>Zapis {0} – jezik: {1} – vrsta: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1354,7 +1353,7 @@ koji bi trebao biti usklađen s video datotekom.
     <Update>&amp;Ažuriraj</Update>
     <Enabled>Omogućeno</Enabled>
     <SearchType>Vrsta pretrage</SearchType>
-    <RemoveAll>Uklonite sve</RemoveAll>
+    <RemoveAll>Ukloni sve</RemoveAll>
     <Import>Uvoz...</Import>
     <Export>Izvoz...</Export>
     <ImportRulesTitle>Promjena pravila uvoza (i) iz...</ImportRulesTitle>
@@ -1402,7 +1401,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <Type>Tip</Type>
     <OpenPluginsFolder>Otvoriti mapu dodataka</OpenPluginsFolder>
     <GetPluginsInfo1>Subtitle Editor dodaci moraju biti u mapi dodataka</GetPluginsInfo1>
-    <GetPluginsInfo2>Odaberite dodatak i kliknite za preuzimanje</GetPluginsInfo2>
+    <GetPluginsInfo2>Odaberi dodatak i klikni za preuzimanje</GetPluginsInfo2>
     <PluginXDownloaded>Dodatak {0} preuzet</PluginXDownloaded>
     <Download>&amp;Preuzimanja</Download>
     <Remove>&amp;Ukloni</Remove>
@@ -1440,7 +1439,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <OnlyIfInSeparateLine>S&amp;amo ako je u odvojenoj liniji</OnlyIfInSeparateLine>
     <LinesFoundX>Pronađeno linija: {0}</LinesFoundX>
     <RemoveTextIfContains>Uk&amp;loni tekst ako sadrži:</RemoveTextIfContains>
-    <RemoveTextIfAllUppercase>Uklonite liniju velikih slova</RemoveTextIfAllUppercase>
+    <RemoveTextIfAllUppercase>Ukloni liniju velikih slova</RemoveTextIfAllUppercase>
     <RemoveInterjections>Ukl&amp;oni uzvike</RemoveInterjections>
     <EditInterjections>U&amp;redi…</EditInterjections>
   </RemoveTextFromHearImpaired>
@@ -1496,7 +1495,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <Tools>Alati</Tools>
     <WordLists>Popis riječi</WordLists>
     <SsaStyle>SSA stil</SsaStyle>
-    <Proxy>Posrednik</Proxy>
     <ShowToolBarButtons>Prikaz ikona</ShowToolBarButtons>
     <New>Novi</New>
     <Open>Otvori…</Open>
@@ -1590,10 +1588,10 @@ određeni podnaslov s drugim ljudima.</Information>
     <SpectrogramAppearance>Izgled spektrograma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Jednobojni</SpectrogramOneColorGradient>
     <SpectrogramClassic>Uobičajeno</SpectrogramClassic>
-    <WaveformUseFFmpeg>Koristite FFmpeg za valno vađenje</WaveformUseFFmpeg>
+    <WaveformUseFFmpeg>Koristi FFmpeg za valno vađenje</WaveformUseFFmpeg>
     <WaveformFFmpegPath>Put do FFmpeg</WaveformFFmpegPath>
-    <WaveformBrowseToFFmpeg>Potražite FFmpeg</WaveformBrowseToFFmpeg>
-    <WaveformBrowseToVLC>Potražite prijenosni VLC</WaveformBrowseToVLC>
+    <WaveformBrowseToFFmpeg>Potraži FFmpeg</WaveformBrowseToFFmpeg>
+    <WaveformBrowseToVLC>Potraži prijenosni VLC</WaveformBrowseToVLC>
     <SubStationAlphaStyle>SSA stil</SubStationAlphaStyle>
     <ChooseFont>Izaberi font…</ChooseFont>
     <ChooseColor>Izaberi boju…</ChooseColor>
@@ -1630,7 +1628,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <FixCommonerrors>Ispravljanje čestih pogrešaka</FixCommonerrors>
     <MergeLinesShorterThan>Spoji linije kraće od:</MergeLinesShorterThan>
     <MusicSymbol>Glazbeni simboli:</MusicSymbol>
-    <MusicSymbolsToReplace>Glazbeni simboli za zamjenu (odmaknite razmakom):</MusicSymbolsToReplace>
+    <MusicSymbolsToReplace>Glazbeni simboli za zamjenu (odmakni razmakom):</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>I&amp;spravi česte pogreške u prepoznavanju znakova</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraviti kratko vrijeme prikaza - omogućuju pomicanje startnog vremena</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Prečaci</Shortcuts>
@@ -1643,18 +1641,18 @@ određeni podnaslov s drugim ljudima.</Information>
     <UpdateShortcut>Ažuriraj prečac</UpdateShortcut>
     <ShortcutIsNotValid>Prečac nije ispravan: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Zakači/otkači video kontrole</ToggleDockUndockOfVideoControls>
-    <CreateSetEndAddNewAndGoToNew>Postavite kraj, dodajte novi i idi na novi</CreateSetEndAddNewAndGoToNew>
+    <CreateSetEndAddNewAndGoToNew>Postavi kraj, dodaj novi i idi na novi</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Prilagodi preko završnog položaja i prijeđi na sljedeći</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Postaviti kraj i idi na sljedeću</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Postavit početak, auto trajanje i idi na sljedeći</AdjustSetStartAutoDurationAndGoToNext>
-    <AdjustSetEndNextStartAndGoToNext>Kraj, započeti i idite na sljedeći</AdjustSetEndNextStartAndGoToNext>
+    <AdjustSetEndNextStartAndGoToNext>Kraj, započeti i idi na sljedeći</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Tipka dolje = Start, Tipka gore = postavi kraj i idi na sljedeći</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Premještanje odabrane linije 100 ms naprijed</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Premjesti odabrane linije 100 ms nazad</AdjustSelected100MsBack>
     <AdjustSetStartTimeKeepDuration>Postavi početno vrijeme. Zadrži trajanje</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Postaviti kraj, nadoknaditi ostatak</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Postaviti kraj, nadoknaditi ostatak i prelazak na sljedeći</AdjustSetEndAndOffsetTheRestAndGoToNext>
-    <MainCreateStartDownEndUp>Stvori novi na tipka-dolje, postavite vrijeme završetka na tipka-gore</MainCreateStartDownEndUp>
+    <MainCreateStartDownEndUp>Stvori novi na tipka-dolje, postavi vrijeme završetka na tipka-gore</MainCreateStartDownEndUp>
     <MergeDialog>Spoji dijalog (upisati crtice)</MergeDialog>
     <GoToNext>Idi na sljedeću liniju</GoToNext>
     <GoToPrevious>Idi na prethodnu liniju</GoToPrevious>
@@ -1725,7 +1723,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <MainTextBoxUnbreak>Neprekinuti tekst</MainTextBoxUnbreak>
     <MainFileSaveAll>Spremi sve</MainFileSaveAll>
     <Miscellaneous>Razno.</Miscellaneous>
-    <UseDoNotBreakAfterList>Koristite ne-neprekinuti nakon popisa (za auto-Br)</UseDoNotBreakAfterList>
+    <UseDoNotBreakAfterList>Koristi ne-neprekinuti nakon popisa (za auto-Br)</UseDoNotBreakAfterList>
   </Settings>
   <SetVideoOffset>
     <Title>Izjednači video</Title>
@@ -1744,7 +1742,7 @@ određeni podnaslov s drugim ljudima.</Information>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Povijest</Title>
-    <SelectRollbackPoint>Izaberite vrijeme ili opis za vraćanje na prethodno stanje.</SelectRollbackPoint>
+    <SelectRollbackPoint>Izaberi vrijeme ili opis za vraćanje na prethodno stanje.</SelectRollbackPoint>
     <Time>Vrijeme</Time>
     <Description>Opis</Description>
     <CompareHistoryItems>&amp;Usporedi povijesne stavke</CompareHistoryItems>
@@ -1805,8 +1803,8 @@ određeni podnaslov s drugim ljudima.</Information>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Razdvajanje podnaslova</Title>
-    <Description1>Unesite trajanje prvog dijela videa</Description1>
-    <Description2>ili dobavite iz datoteke.</Description2>
+    <Description1>Unesi trajanje prvog dijela videa</Description1>
+    <Description2>ili dobavi iz datoteke.</Description2>
     <Split>&amp;Razdvoji</Split>
     <Done>&amp;Završi</Done>
     <NothingToSplit>Ne mogu razdvojiti podnaslov.</NothingToSplit>
@@ -1822,7 +1820,7 @@ određeni podnaslov s drugim ljudima.</Information>
   <StartNumberingFrom>
     <Title>Nabrajanje</Title>
     <StartFromNumber>Započni od broja:</StartFromNumber>
-    <PleaseEnterAValidNumber>Unesite željeni broj.</PleaseEnterAValidNumber>
+    <PleaseEnterAValidNumber>Unesi željeni broj.</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <Statistics>
     <Title>Statistika</Title>
@@ -1916,10 +1914,10 @@ određeni podnaslov s drugim ljudima.</Information>
     <CopyXOfY>Kopiraj {0} od {1}</CopyXOfY>
     <New>Novi</New>
     <Remove>Ukloni</Remove>
-    <RemoveAll>Uklonite sve</RemoveAll>
+    <RemoveAll>Ukloni sve</RemoveAll>
     <ImportStyleFromFile>Uvezi stil iz datoteke...</ImportStyleFromFile>
     <ExportStyleToFile>Izvezi stil u datoteku (dodat će stil iako već postoji</ExportStyleToFile>
-    <ChooseStyle>Odaberite stil za uvoz</ChooseStyle>
+    <ChooseStyle>Odaberi stil za uvoz</ChooseStyle>
     <StyleAlreadyExits>Stil već postoji: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>Stil '{0}' izvezen u datoteku '{1}'</StyleXExportedToFileY>
     <StyleXImportedFromFileY>Stil '{0}' uvezen iz datoteke '{1}'</StyleXImportedFromFileY>
@@ -1941,7 +1939,7 @@ određeni podnaslov s drugim ljudima.</Information>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Nepoznata vrsta podnaslova.</Title>
-    <Message>Ako želite da ovo ispravimo, pošaljite nam poruku na email niksedk@gmail.com i priložite sporni podnaslov.</Message>
+    <Message>Ako želiš da ovo ispravimo, pošalji nam poruku na email niksedk@gmail.com i priloži sporni podnaslov.</Message>
   </UnknownSubtitle>
   <VisualSync>
     <Title>Vizualno usklađivanje</Title>
@@ -1956,14 +1954,14 @@ određeni podnaslov s drugim ljudima.</Information>
     <KeepChangesTitle>Spremanje izmjena</KeepChangesTitle>
     <KeepChangesMessage>Izmijenili ste podnaslov koristeći Vizualno usklađivanje.
 
-Želite li spremiti izmjene?</KeepChangesMessage>
+Želiš li spremiti izmjene?</KeepChangesMessage>
     <SynchronizationDone>Usklađivanje je završeno.</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Početna scena mora biti prije završne!</StartSceneMustComeBeforeEndScene>
-    <Tip>Koristite Ctrl i lijevu ili desnu strelicu da pomjerite 100 ms unazad ili unaprijed.</Tip>
+    <Tip>Koristite Ctrl i lijevu ili desnu strelicu da pomaknete 100 ms unatrag ili unaprijed.</Tip>
   </VisualSync>
   <VobSubEditCharacters>
     <Title>Uređivanje slika za uspoređivanje znakova</Title>
-    <ChooseCharacter>Izaberite znak ispod:</ChooseCharacter>
+    <ChooseCharacter>Izaberi znak ispod:</ChooseCharacter>
     <ImageCompareFiles>Datoteke za uspoređivanje</ImageCompareFiles>
     <CurrentCompareImage>Trenutna slika za usporedbu</CurrentCompareImage>
     <TextAssociatedWithImage>Tekst povezan sa slikom</TextAssociatedWithImage>
@@ -2028,7 +2026,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <AutoTransparentBackground>P&amp;rovidna pozadina</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Usporedi trenutnu sliku…</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Uredi dopune usporedbi za zadnju sliku…</EditLastAdditions>
-    <SetUnitalicFactor>Postavite de-kurziv faktor...</SetUnitalicFactor>
+    <SetUnitalicFactor>Postavi de-kurziv faktor...</SetUnitalicFactor>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>Uredi sliku usporedbi baze podataka</Title>
@@ -2056,12 +2054,12 @@ određeni podnaslov s drugim ljudima.</Information>
     <Message>Naziv nove mape za bazu znakova:</Message>
   </VobSubOcrNewFolder>
   <VobSubOcrSetItalicFactor>
-    <Title>Postavite de-kurziv faktor...</Title>
-    <Description>Podesite vrijednost dok je stil teksta normalno i ne kurziv. Imajte na umu da bi izvorna slika trebala biti kurziv.</Description>
+    <Title>Postavi de-kurziv faktor...</Title>
+    <Description>Podesi vrijednost dok je stil teksta normalno i ne kurziv. Imaj na umu da bi izvorna slika trebala biti kurziv.</Description>
   </VobSubOcrSetItalicFactor>
   <Waveform>
-    <ClickToAddWaveform>Kliknite za dodavanje valnih oblika</ClickToAddWaveform>
-    <ClickToAddWaveformAndSpectrogram>Kliknite za dodavanje valnog oblika/spektrograma</ClickToAddWaveformAndSpectrogram>
+    <ClickToAddWaveform>Klikni za dodavanje valnih oblika</ClickToAddWaveform>
+    <ClickToAddWaveformAndSpectrogram>Klikni za dodavanje valnog oblika/spektrograma</ClickToAddWaveformAndSpectrogram>
     <Seconds>Sekundi</Seconds>
     <ZoomIn>Povećavanje</ZoomIn>
     <ZoomOut>Smanjivanje</ZoomOut>
@@ -2078,7 +2076,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <ShowWaveformOnly>Pokaži samo valni oblik</ShowWaveformOnly>
     <ShowSpectrogramOnly>Pokaži samo spektrogram</ShowSpectrogramOnly>
     <GuessTimeCodes>Pogodi vremenske kodove...</GuessTimeCodes>
-    <SeekSilence>Tražiti tišinu...</SeekSilence>
+    <SeekSilence>Traži tišinu...</SeekSilence>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Pogodi vremenske kodove...</Title>

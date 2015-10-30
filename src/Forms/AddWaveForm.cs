@@ -15,9 +15,11 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public string SourceVideoFileName { get; private set; }
         private bool _cancel;
+        private string _peakWaveFileName;
         private string _wavFileName;
         private string _spectrogramDirectory;
-        public List<Bitmap> SpectrogramBitmaps { get; private set; }
+        public WavePeakData Peaks { get; private set; }
+        public SpectrogramData Spectrogram { get; private set; }
         private string _encodeParamters;
         private const string RetryEncodeParameters = "acodec=s16l";
         private int _audioTrackNumber = -1;
@@ -31,10 +33,9 @@ namespace Nikse.SubtitleEdit.Forms
             labelInfo.Text = string.Empty;
         }
 
-        public WavePeakGenerator WavePeak { get; private set; }
-
-        public void Initialize(string videoFile, string spectrogramDirectory, int audioTrackNumber)
+        public void Initialize(string videoFile, string peakWaveFileName, string spectrogramDirectory, int audioTrackNumber)
         {
+            _peakWaveFileName = peakWaveFileName;
             _audioTrackNumber = audioTrackNumber;
             if (_audioTrackNumber < 0)
                 _audioTrackNumber = 0;
@@ -53,10 +54,14 @@ namespace Nikse.SubtitleEdit.Forms
             encoderName = "VLC";
             string parameters = "\"" + inputVideoFile + "\" -I dummy -vvv --no-sout-video --audio-track=" + audioTrackNumber + " --sout=\"#transcode{acodec=s16l,channels=1,ab=128}:std{access=file,mux=wav,dst=" + outWaveFile + "}\" vlc://quit";
             string exeFilePath;
-            if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+            if (Configuration.IsRunningOnLinux())
             {
                 exeFilePath = "cvlc";
                 parameters = "-vvv --no-sout-video --audio-track=" + audioTrackNumber + " --sout '#transcode{" + encodeParamters + "}:std{mux=wav,access=file,dst=" + outWaveFile + "}' \"" + inputVideoFile + "\" vlc://quit";
+            }
+            else if (Configuration.IsRunningOnMac())
+            {
+                exeFilePath = "VLC.app/Contents/MacOS/VLC";
             }
             else // windows
             {
@@ -234,28 +239,22 @@ namespace Nikse.SubtitleEdit.Forms
             labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingPeakFile;
             Refresh();
 
-            var waveFile = new WavePeakGenerator(targetFile);
-
-            int sampleRate = Configuration.Settings.VideoControls.WaveformMinimumSampleRate; // Normally 128
-            while (waveFile.Header.SampleRate % sampleRate != 0 && sampleRate < 5000)
-                sampleRate++; // old sample-rate / new sample-rate must have rest = 0
-
-            waveFile.GeneratePeakSamples(sampleRate, delayInMilliseconds); // samples per second - SampleRate
-
-            if (Configuration.Settings.VideoControls.GenerateSpectrogram)
+            using (var waveFile = new WavePeakGenerator(targetFile))
             {
-                labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingSpectrogram;
-                Refresh();
-                Directory.CreateDirectory(_spectrogramDirectory);
-                SpectrogramBitmaps = waveFile.GenerateFourierData(256, _spectrogramDirectory, delayInMilliseconds); // image height = nfft / 2
+                Peaks = waveFile.GeneratePeaks(delayInMilliseconds, _peakWaveFileName);
+
+                if (Configuration.Settings.VideoControls.GenerateSpectrogram)
+                {
+                    labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingSpectrogram;
+                    Refresh();
+                    Spectrogram = waveFile.GenerateSpectrogram(delayInMilliseconds, _spectrogramDirectory);
+                }
             }
-            WavePeak = waveFile;
-            waveFile.Close();
 
             labelPleaseWait.Visible = false;
         }
 
-        private void AddWareForm_Shown(object sender, EventArgs e)
+        private void AddWaveform_Shown(object sender, EventArgs e)
         {
             Refresh();
             var audioTrackNames = new List<string>();
@@ -367,7 +366,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AddWareForm_KeyDown(object sender, KeyEventArgs e)
+        private void AddWaveform_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
@@ -383,8 +382,9 @@ namespace Nikse.SubtitleEdit.Forms
             _cancel = true;
         }
 
-        internal void InitializeViaWaveFile(string fileName, string spectrogramFolder)
+        internal void InitializeViaWaveFile(string fileName, string peakWaveFileName, string spectrogramFolder)
         {
+            _peakWaveFileName = peakWaveFileName;
             _wavFileName = fileName;
             _spectrogramDirectory = spectrogramFolder;
         }

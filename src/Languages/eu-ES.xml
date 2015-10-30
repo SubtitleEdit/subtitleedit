@@ -2,7 +2,7 @@
 <Language Name="euskara">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Itzultzailea: Xabier Aramendi</TranslatedBy>
     <CultureName>eu-ES</CultureName>
     <HelpFile>http://www.nikse.dk/SubtitleEdit/HelpEU</HelpFile>
@@ -535,7 +535,6 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Aurkitutako zuzenketak: {0}</FixesFoundX>
     <XFixesApplied>Zuzenketak ezarrita: {0}</XFixesApplied>
     <NothingToFixBut>Ezer ez zuzentzeko baina gauza gutxi batzuk hobetu daitezke</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Zuzendu 'i' hizki xehe bakuna 'I'-ra (Ingelera)" egiaztatuta dago baina orain igota dagoen azpidatzia ez dirudi ingelerazkoa denik.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Jarraitu</Continue>
     <ContinueAnyway>Jarraitu edonola?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Egiaztatu gabe "Zuzendu 'i' hizki xehea 'I' -ra (Ingelera)"</UncheckedFixLowercaseIToUppercaseI>
@@ -1470,7 +1469,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <Tools>Tresnak</Tools>
     <WordLists>Hitz zerrendak</WordLists>
     <SsaStyle>ASS/SSA Estiloa</SsaStyle>
-    <Proxy>Proxya</Proxy>
     <ShowToolBarButtons>Erakutsi tresnabarra botoiak</ShowToolBarButtons>
     <New>Berria</New>
     <Open>Ireki</Open>

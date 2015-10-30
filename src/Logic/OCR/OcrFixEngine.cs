@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
@@ -120,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
                     {
                         string name = Path.GetFileNameWithoutExtension(dic);
-                        if (!name.StartsWith("hyph", StringComparison.Ordinal))
+                        if (name != null && !name.StartsWith("hyph", StringComparison.Ordinal))
                         {
                             try
                             {
@@ -157,7 +158,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
                     {
                         string name = Path.GetFileNameWithoutExtension(dic);
-                        if (!name.StartsWith("hyph", StringComparison.Ordinal))
+                        if (name != null && !name.StartsWith("hyph", StringComparison.Ordinal))
                         {
                             try
                             {
@@ -190,7 +191,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private void LoadSpellingDictionariesViaDictionaryFileName(string threeLetterIsoLanguageName, CultureInfo culture, string dictionaryFileName, bool resetSkipList)
         {
             _fiveLetterWordListLanguageName = Path.GetFileNameWithoutExtension(dictionaryFileName);
-            if (_fiveLetterWordListLanguageName.Length > 5)
+            if (_fiveLetterWordListLanguageName != null && _fiveLetterWordListLanguageName.Length > 5)
                 _fiveLetterWordListLanguageName = _fiveLetterWordListLanguageName.Substring(0, 5);
             string dictionary = Utilities.DictionaryFolder + _fiveLetterWordListLanguageName;
             if (resetSkipList)
@@ -346,6 +347,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         public string FixOcrErrors(string text, int index, string lastLine, bool logSuggestions, AutoGuessLevel autoGuess)
         {
+            while (text.Contains(Environment.NewLine + " "))
+                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+            while (text.Contains(" " + Environment.NewLine))
+                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+            while (text.Contains(Environment.NewLine + Environment.NewLine))
+                text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            text = text.Trim();
+
             var sb = new StringBuilder();
             var word = new StringBuilder();
 
@@ -416,8 +425,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) || _threeLetterIsoLanguageName == "eng")
                 {
                     string oldText = text;
-                    text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(RegexAloneI, oldText, text, 'i');
-                    text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(RegexAloneIasL, oldText, text, 'l');
+                    text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(RegexAloneI, oldText, text, 'i');
+                    text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(RegexAloneIasL, oldText, text, 'l');
                 }
                 else if (_threeLetterIsoLanguageName == "fra")
                 {
@@ -1407,19 +1416,22 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];
-                if (!IsWordKnownOrNumber(word, line))
+                if (word.Length > 1)
                 {
-                    bool correct = _hunspell.Spell(word);
-                    if (!correct)
-                        correct = _hunspell.Spell(word.Trim('\''));
+                    if (!IsWordKnownOrNumber(word, line))
+                    {
+                        bool correct = _hunspell.Spell(word);
+                        if (!correct)
+                            correct = _hunspell.Spell(word.Trim('\''));
 
-                    if (correct)
+                        if (correct)
+                            numberOfCorrectWords++;
+                        else
+                            wordsNotFound++;
+                    }
+                    else if (word.Length > 3)
                         numberOfCorrectWords++;
-                    else
-                        wordsNotFound++;
                 }
-                else if (word.Length > 3)
-                    numberOfCorrectWords++;
             }
             return wordsNotFound;
         }

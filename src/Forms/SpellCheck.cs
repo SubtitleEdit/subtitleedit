@@ -967,7 +967,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             if (autoDetect || string.IsNullOrEmpty(_languageName))
-                _languageName = Utilities.AutoDetectLanguageName(_languageName, subtitle);
+                _languageName = LanguageAutoDetect.AutoDetectLanguageName(_languageName, subtitle);
             string dictionary = Utilities.DictionaryFolder + _languageName;
 
             LoadDictionaries(dictionaryFolder, dictionary);
@@ -1128,7 +1128,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 gd.ShowDialog(this);
             }
-            FillSpellCheckDictionaries(Utilities.AutoDetectLanguageName(null, _subtitle));
+            FillSpellCheckDictionaries(LanguageAutoDetect.AutoDetectLanguageName(null, _subtitle));
             if (comboBoxDictionaries.Items.Count > 0 && comboBoxDictionaries.SelectedIndex == -1)
                 comboBoxDictionaries.SelectedIndex = 0;
             ComboBoxDictionariesSelectedIndexChanged(null, null);

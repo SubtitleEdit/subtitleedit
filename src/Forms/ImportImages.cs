@@ -2,13 +2,14 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ImportImages : PositionAndSizeForm
     {
         public Subtitle Subtitle { get; private set; }
-
+        private readonly HashSet<string> FilesAlreadyInList;
         public ImportImages()
         {
             InitializeComponent();
@@ -16,6 +17,8 @@ namespace Nikse.SubtitleEdit.Forms
             Text = Configuration.Settings.Language.ImportImages.Title;
             groupBoxInput.Text = Configuration.Settings.Language.ImportImages.Input;
             labelChooseInputFiles.Text = Configuration.Settings.Language.ImportImages.InputDescription;
+            removeToolStripMenuItem.Text = Configuration.Settings.Language.ImportImages.Remove;
+            removeAllToolStripMenuItem.Text = Configuration.Settings.Language.ImportImages.RemoveAll;
             columnHeaderFName.Text = Configuration.Settings.Language.JoinSubtitles.FileName;
             columnHeaderSize.Text = Configuration.Settings.Language.General.Size;
             columnHeaderStartTime.Text = Configuration.Settings.Language.General.StartTime;
@@ -23,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderDuration.Text = Configuration.Settings.Language.General.Duration;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            FilesAlreadyInList = new HashSet<string>();
         }
 
         private void buttonInputBrowse_Click(object sender, EventArgs e)
@@ -35,7 +39,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (string fileName in openFileDialog1.FileNames)
                 {
-                    AddInputFile(fileName);
+                    if (!FilesAlreadyInList.Contains(fileName))
+                        AddInputFile(fileName);
                 }
             }
             buttonInputBrowse.Enabled = true;
@@ -51,6 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var ext = fi.Extension.ToLowerInvariant();
                 if (ext == ".png" || ext == ".jpg" || ext == ".bmp" || ext == ".gif" || ext == ".tif" || ext == ".tiff")
                 {
+                    FilesAlreadyInList.Add(fileName);
                     SetTimeCodes(fileName, item);
                     listViewInputFiles.Items.Add(item);
                 }
@@ -132,5 +138,44 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (listViewInputFiles.Items.Count == 0)
+                e.Cancel = true;
+            else
+                removeToolStripMenuItem.Visible = listViewInputFiles.SelectedItems.Count > 0;
+        }
+
+        private void RemoveSelection(bool removeAll = false)
+        {
+            if (listViewInputFiles.Items.Count == 0)
+                return;
+            if (removeAll)
+            {
+                foreach (ListViewItem item in listViewInputFiles.Items)
+                {
+                    item.Remove();
+                    FilesAlreadyInList.Remove(item.Text);
+                }
+            }
+            else if (listViewInputFiles.SelectedItems.Count > 0)
+            {
+                foreach (ListViewItem item in listViewInputFiles.SelectedItems)
+                {
+                    item.Remove();
+                    FilesAlreadyInList.Remove(item.Text);
+                }
+            }
+        }
+
+        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RemoveSelection();
+        }
+
+        private void removeAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RemoveSelection(true);
+        }
     }
 }

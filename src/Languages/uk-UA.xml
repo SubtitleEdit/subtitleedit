@@ -2,7 +2,7 @@
 <Language Name="українська">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Переклад: Максим Кобєлєв http://mazepa-studio.com</TranslatedBy>
     <CultureName>uk-UA</CultureName>
     <HelpFile />
@@ -559,7 +559,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Знайдено виправлень: {0}</FixesFoundX>
     <XFixesApplied>Виправлень застосовано: {0}</XFixesApplied>
     <NothingToFixBut>Виправляти нічого, проте декілька речей можна було би покращити - огляньте журнал, щоб дізнатися деталі</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>Вибрано "Замінити одиноку малу 'i' на 'I'", але поточні субтитри не видаються англійськими.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Продовжити</Continue>
     <ContinueAnyway>Продовжити в будь-якому разі?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Знято пташку навпроти "Замінити одиноку малу 'i' на 'I' (англійська)"</UncheckedFixLowercaseIToUppercaseI>

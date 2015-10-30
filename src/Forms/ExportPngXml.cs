@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class ExportPngXml : PositionAndSizeForm
     {
 
-        private class MakeBitmapParameter
+        internal class MakeBitmapParameter
         {
             public Bitmap Bitmap { get; set; }
             public Paragraph P { get; set; }
@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return d;
                 return 25;
             }
-        }       
+        }
 
         private int MillisecondsToFramesMaxFrameRate(double milliseconds)
         {
@@ -251,7 +251,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static void MakeBluRaySupImage(MakeBitmapParameter param)
+        internal static void MakeBluRaySupImage(MakeBitmapParameter param)
         {
             var brSub = new BluRaySupPicture
             {
@@ -300,7 +300,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private MakeBitmapParameter MakeMakeBitmapParameter(int index, int screenWidth, int screenHeight)
+        internal MakeBitmapParameter MakeMakeBitmapParameter(int index, int screenWidth, int screenHeight)
         {
             var parameter = new MakeBitmapParameter
             {
@@ -376,7 +376,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox)
                 {
-                    parameter.BoxSingleLine = true;
+                    parameter.BoxSingleLine = false;
                     parameter.BackgroundColor = panelBorderColor.BackColor;
                     parameter.BorderWidth = 0;
                 }
@@ -723,7 +723,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_subtitle.Paragraphs.Count > 0)
                     {
                         var end = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * FrameRate);
-                        end ++;
+                        end++;
                         s = s.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
                     }
 
@@ -1050,7 +1050,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                                             top = param.BottomMargin;
                                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
-                                            top = param.ScreenHeight - (param.Bitmap.Height / 2);
+                                            top = (param.ScreenHeight - param.Bitmap.Height) / 2;
 
                                         using (var g = Graphics.FromImage(fullSize))
                                         {
@@ -1083,7 +1083,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                                 top = param.BottomMargin;
                             if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
-                                top = param.ScreenHeight - (param.Bitmap.Height / 2);
+                                top = (param.ScreenHeight - param.Bitmap.Height) / 2;
                             sb.AppendLine(string.Format("{0} {1} {2} {3} {4} {5} {6}", Path.GetFileName(fileName), FormatFabTime(param.P.StartTime, param), FormatFabTime(param.P.EndTime, param), left, top, left + param.Bitmap.Width, top + param.Bitmap.Height));
                         }
                         param.Saved = true;
@@ -1670,6 +1670,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox)
             {
+                mbp.BoxSingleLine = false;
                 _borderWidth = 0;
                 mbp.BackgroundColor = panelBorderColor.BackColor;
             }
@@ -1918,7 +1919,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return nbmp.Width;
         }
 
-        private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
+        internal static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
         {
             Bitmap bmp = null;
             if (!parameter.SimpleRendering && parameter.P.Text.Contains(Environment.NewLine) && (parameter.BoxSingleLine || parameter.P.Text.Contains(BoxSingleLineText)))
@@ -1938,7 +1939,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 bool italicOn = false;
                 string fontTag = string.Empty;
-                foreach (string line in parameter.P.Text.Replace(Environment.NewLine, "\n").Split('\n'))
+                foreach (string line in parameter.P.Text.SplitToLines())
                 {
                     parameter.P.Text = line;
                     if (italicOn)
@@ -2039,7 +2040,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             string text = parameter.P.Text;
 
-            text = RemoveSubStationAlphaFormatting(text);
+            text = Utilities.RemoveSsaTags(text);
 
             text = text.Replace("<I>", "<i>");
             text = text.Replace("</I>", "</i>");
@@ -2588,10 +2589,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     translateMatrix.Translate(1, 1);
                     shadowPath.Transform(translateMatrix);
 
-                    var p1 = new Pen(Color.FromArgb(parameter.ShadowAlpha, parameter.ShadowColor), parameter.BorderWidth);
-                    SetLineJoin(parameter.LineJoin, p1);
-                    g.DrawPath(p1, shadowPath);
-                    p1.Dispose();
+                    using (var p1 = new Pen(Color.FromArgb(parameter.ShadowAlpha, parameter.ShadowColor), parameter.BorderWidth))
+                    {
+                        SetLineJoin(parameter.LineJoin, p1);
+                        g.DrawPath(p1, shadowPath);
+                    }
                 }
             }
 
@@ -2653,18 +2655,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 gr.DrawImage(bmp, new Rectangle(0, 0, bmp.Width, h));
             }
             return newImage;
-        }
-
-        private static string RemoveSubStationAlphaFormatting(string s)
-        {
-            int indexOfBegin = s.IndexOf('{');
-            while (indexOfBegin >= 0 && s.IndexOf('}') > indexOfBegin)
-            {
-                int indexOfEnd = s.IndexOf('}');
-                s = s.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = s.IndexOf('{');
-            }
-            return s;
         }
 
         internal void Initialize(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VideoInfo videoInfo, string videoFileName)
@@ -2864,7 +2854,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 labelLanguage.Visible = true;
                 comboBoxLanguage.Visible = true;
                 comboBoxLanguage.Items.Clear();
-                string languageCode = Utilities.AutoDetectGoogleLanguageOrNull(subtitle);
+                string languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle);
                 if (languageCode == null)
                     languageCode = Configuration.Settings.Tools.ExportVobSubLanguage;
                 for (int i = 0; i < IfoParser.ArrayOfLanguage.Count; i++)
@@ -3137,7 +3127,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             for (int i = 0; i < comboBoxFrameRate.Items.Count; i++)
             {
                 double d;
-                if (double.TryParse(comboBoxFrameRate.Items[i].ToString().Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                if (double.TryParse(comboBoxFrameRate.Items[i].ToString().Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
                 {
                     if (Math.Abs(lastFrameRate - d) < 0.01)
                     {
@@ -3795,7 +3785,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void SubtitleListView1Add(Paragraph paragraph)
         {
-            var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph };
+            var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph, UseItemStyleForSubItems = false };
             ListViewItem.ListViewSubItem subItem;
 
             if (subtitleListView1.CheckBoxes)
@@ -3805,45 +3795,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 item.SubItems.Add(subItem);
             }
 
-            if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
-            {
-                if (paragraph.StartTime.IsMaxTime)
-                    subItem = new ListViewItem.ListViewSubItem(item, "-");
-                else
-                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToHHMMSSFF());
-                item.SubItems.Add(subItem);
+            subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToDisplayString());
+            item.SubItems.Add(subItem);
 
-                if (paragraph.EndTime.IsMaxTime)
-                    subItem = new ListViewItem.ListViewSubItem(item, "-");
-                else
-                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToHHMMSSFF());
-                item.SubItems.Add(subItem);
+            subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToDisplayString());
+            item.SubItems.Add(subItem);
 
-                subItem = new ListViewItem.ListViewSubItem(item, string.Format("{0},{1:00}", paragraph.Duration.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds)));
-                item.SubItems.Add(subItem);
-            }
-            else
-            {
-                if (paragraph.StartTime.IsMaxTime)
-                    subItem = new ListViewItem.ListViewSubItem(item, "-");
-                else
-                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToString());
-                item.SubItems.Add(subItem);
-
-                if (paragraph.EndTime.IsMaxTime)
-                    subItem = new ListViewItem.ListViewSubItem(item, "-");
-                else
-                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToString());
-                item.SubItems.Add(subItem);
-
-                subItem = new ListViewItem.ListViewSubItem(item, string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds));
-                item.SubItems.Add(subItem);
-            }
+            subItem = new ListViewItem.ListViewSubItem(item, paragraph.Duration.ToShortDisplayString());
+            item.SubItems.Add(subItem);
 
             subItem = new ListViewItem.ListViewSubItem(item, paragraph.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             subItem.Font = new Font(_subtitleFontName, Font.Size);
-
-            item.UseItemStyleForSubItems = false;
             item.SubItems.Add(subItem);
 
             subtitleListView1.Items.Add(item);
@@ -4062,6 +4024,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             subtitleListView1_SelectedIndexChanged(null, null);
             panelFullFrameBackground.Visible = checkBoxFullFrameImage.Checked;
+        }
+
+        public void DisableSaveButtonAndCheckBoxes()
+        {
+            buttonExport.Visible = false;
+            subtitleListView1.CheckBoxes = false;
         }
 
     }

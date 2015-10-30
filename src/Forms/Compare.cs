@@ -68,8 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             subtitleListView1.SelectIndexAndEnsureVisible(0);
-            subtitleListView2.SelectIndexAndEnsureVisible(0);
-            _language1 = Utilities.AutoDetectGoogleLanguage(_subtitle1);
+            _language1 = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
         }
 
         public void Initialize(Subtitle subtitle1, string subtitleFileName1, Subtitle subtitle2, string subtitleFileName2)
@@ -82,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle2 = subtitle2;
             labelSubtitle2.Text = subtitleFileName2;
 
-            _language1 = Utilities.AutoDetectGoogleLanguage(_subtitle1);
+            _language1 = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
             CompareSubtitles();
 
             if (string.IsNullOrEmpty(subtitleFileName1))
@@ -168,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
                 labelSubtitle1.Text = openFileDialog1.FileName;
-                _language1 = Utilities.AutoDetectGoogleLanguage(_subtitle1);
+                _language1 = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
                 if (_subtitle1.Paragraphs.Count > 0)
                     CompareSubtitles();
             }
@@ -225,9 +224,7 @@ namespace Nikse.SubtitleEdit.Forms
             int index = 0;
             Paragraph p1 = sub1.GetParagraphOrDefault(index);
             Paragraph p2 = sub2.GetParagraphOrDefault(index);
-            int max = sub1.Paragraphs.Count;
-            if (max < sub2.Paragraphs.Count)
-                max = sub2.Paragraphs.Count;
+            int max = Math.Max(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
             while (index < max)
             {
                 if (p1 != null && p2 != null)
@@ -343,21 +340,23 @@ namespace Nikse.SubtitleEdit.Forms
                             int columnsAlike = GetColumnsEqualExceptNumber(p1, p2);
                             if (columnsAlike > 0)
                             {
-                                if (p1.StartTime.TotalMilliseconds != p2.StartTime.TotalMilliseconds)
+                                const double tolerance = 0.1;
+
+                                if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) > tolerance)
                                 {
                                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen,
                                                                          SubtitleListView.ColumnIndexStart);
                                     subtitleListView2.SetBackgroundColor(index, Color.LightGreen,
                                                                          SubtitleListView.ColumnIndexStart);
                                 }
-                                if (p1.EndTime.TotalMilliseconds != p2.EndTime.TotalMilliseconds)
+                                if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) > tolerance)
                                 {
                                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen,
                                                                          SubtitleListView.ColumnIndexEnd);
                                     subtitleListView2.SetBackgroundColor(index, Color.LightGreen,
                                                                          SubtitleListView.ColumnIndexEnd);
                                 }
-                                if (p1.Duration.TotalMilliseconds != p2.Duration.TotalMilliseconds)
+                                if (Math.Abs(p1.Duration.TotalMilliseconds - p2.Duration.TotalMilliseconds) > tolerance)
                                 {
                                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen,
                                                                          SubtitleListView.ColumnIndexDuration);
@@ -470,14 +469,16 @@ namespace Nikse.SubtitleEdit.Forms
             if (p1 == null || p2 == null)
                 return 0;
 
+            const double tolerance = 0.1;
+
             int columnsEqual = 0;
-            if (p1.StartTime.TotalMilliseconds == p2.StartTime.TotalMilliseconds)
+            if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) < tolerance)
                 columnsEqual++;
 
-            if (p1.EndTime.TotalMilliseconds == p2.EndTime.TotalMilliseconds)
+            if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) < tolerance)
                 columnsEqual++;
 
-            if (p1.Duration.TotalMilliseconds == p2.Duration.TotalMilliseconds)
+            if (Math.Abs(p1.Duration.TotalMilliseconds - p2.Duration.TotalMilliseconds) < tolerance)
                 columnsEqual++;
 
             if (p1.Text.Trim() == p2.Text.Trim())
@@ -757,6 +758,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Timer1Tick(object sender, EventArgs e)
         {
+            if (subtitleListView1.TopItem == null || subtitleListView2.TopItem == null)
+                return;
+
             char activeListView;
             var p = PointToClient(MousePosition);
             if (p.X >= subtitleListView1.Left && p.X <= subtitleListView1.Left + subtitleListView1.Width + 2)
@@ -778,7 +782,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 subtitleListView2.SelectedIndexChanged -= SubtitleListView2SelectedIndexChanged;
                 subtitleListView2.SelectIndexAndEnsureVisible(subtitleListView1.SelectedItems[0].Index);
-                if (subtitleListView2.TopItem != null && subtitleListView1.TopItem.Index != subtitleListView2.TopItem.Index &&
+                if (subtitleListView1.TopItem.Index != subtitleListView2.TopItem.Index &&
                     subtitleListView2.Items.Count > subtitleListView1.TopItem.Index)
                     subtitleListView2.TopItem = subtitleListView2.Items[subtitleListView1.TopItem.Index];
                 subtitleListView2.SelectedIndexChanged += SubtitleListView2SelectedIndexChanged;
@@ -870,6 +874,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void VerifyDragDrop(ListView listView, DragEventArgs e)
         {
             var files = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (files == null)
+            {
+                return;
+            }
             if (files.Length > 1)
             {
                 MessageBox.Show(Configuration.Settings.Language.Main.DropOnlyOneFile,
@@ -900,7 +908,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
                 labelSubtitle1.Text = filePath;
-                _language1 = Utilities.AutoDetectGoogleLanguage(_subtitle1);
+                _language1 = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
                 if (_subtitle1.Paragraphs.Count > 0)
                     CompareSubtitles();
             }

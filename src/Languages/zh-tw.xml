@@ -2,7 +2,7 @@
 <Language Name="中文(繁體)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>翻譯: BAWAN【增補：風逸蘭】</TranslatedBy>
     <CultureName>zh-TW</CultureName>
     <HelpFile />
@@ -513,7 +513,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <FixesFoundX>已找到修復: {0}</FixesFoundX>
     <XFixesApplied>已套用修復: {0}</XFixesApplied>
     <NothingToFixBut>沒有需要修復的內容，但有幾個問題可以改進 - 詳見記錄</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>「修復單獨的小寫 'i' 為 'I' (英語)」已勾選，但目前的載入的字幕似乎不是英語。</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>繼續</Continue>
     <ContinueAnyway>仍要繼續嗎？</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>已取消勾選「修復單獨的小寫 'i' 為 'I' (英語)」</UncheckedFixLowercaseIToUppercaseI>
@@ -1425,7 +1424,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <Tools>工具</Tools>
     <WordLists>字彙表</WordLists>
     <SsaStyle>ASS/SSA 樣式</SsaStyle>
-    <Proxy>代理</Proxy>
     <ShowToolBarButtons>顯示工具列按鈕</ShowToolBarButtons>
     <New>新增</New>
     <Open>開啟</Open>

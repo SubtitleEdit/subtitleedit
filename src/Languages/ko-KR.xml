@@ -2,7 +2,7 @@
 <Language Name="한국어">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>☞ 한글화: 도움돌 (domddol@gmail.com)</TranslatedBy>
     <CultureName>ko-KR</CultureName>
     <HelpFile />
@@ -331,7 +331,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Abort>중지</Abort>
     <AbortedByUser>사용자에 의해 중단 되었습니다!</AbortedByUser>
     <ReadingSubtitleData>자막 데이터를 읽는 중...</ReadingSubtitleData>
-    <RippingVobFileXofYZ>{2}개의 Vob 중 {1}번째 추출 중.../ 현재 파일: {0}</RippingVobFileXofYZ>
+    <RippingVobFileXofYZ>{2}개 중 {1}번째 Vob 추출 중... / 현재 파일: {0}</RippingVobFileXofYZ>
     <WrongIfoType>이 IFO의 형식은 '{0}'입니다. 'DVDVideo-VTS'가 아닙니다. {2}가 아닌 다른 파일로 {1}시도해 주십시오!</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
@@ -488,6 +488,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Normal>일반(&amp;N)</Normal>
     <CaseSensitive>대/소문자 구분(&amp;C)</CaseSensitive>
     <RegularExpression>정규 표현식(&amp;X)</RegularExpression>
+    <WholeWord>단어 완전 일치</WholeWord>
+    <Count>일치 개수</Count>
+    <XNumberOfMatches>{0:#,##0}개 일치</XNumberOfMatches>
+    <OneMatch>한 개 일치</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>자막 줄 찾기</Title>
@@ -553,7 +557,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixesFoundX>수정할 곳: {0}</FixesFoundX>
     <XFixesApplied>수정된 곳: {0}</XFixesApplied>
     <NothingToFixBut>수정하는 것은 아니지만 향상시킬 수 있습니다. - 자세한 내용은 로그를 참조하십시오.</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"소문자 'i'를 대문자 'I'로 수정하기(영어)"가 선택되어 있지만 현재 자막은 영어가 아닌 것 같습니다.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>계속</Continue>
     <ContinueAnyway>계속하시겠습니까?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"소문자 'i'를 대문자 'I'로 수정하기(영어)" 실행을 취소합니다.</UncheckedFixLowercaseIToUppercaseI>
@@ -668,6 +671,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ImageFiles>이미지 파일</ImageFiles>
     <Input>입력</Input>
     <InputDescription>입력 파일 선택... (찾아보기 또는 드래그 앤 드롭)</InputDescription>
+    <Remove>제거</Remove>
+    <RemoveAll>모두 제거</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>장면 전환 가져오기</Title>
@@ -935,7 +940,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <MergeSelectedLinesAsDialog>선택한 대화 라인 병합</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>이전 줄과 병합</MergeWithLineBefore>
         <MergeWithLineAfter>다음 줄과 병합</MergeWithLineAfter>
-        <Normal>기본</Normal>
+        <Normal>기본 (서식 태그 제거)</Normal>
         <Underline>밑줄</Underline>
         <Color>색상</Color>
         <FontName>글꼴</FontName>
@@ -1074,8 +1079,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ReplaceCountX>총 '{0}'개를 교체했습니다!</ReplaceCountX>
     <NoXFoundAtLineY>{0}번 줄에서 '{1}'을(를) 찾았습니다!</NoXFoundAtLineY>
     <OneReplacementMade>1개를 교체한 후,</OneReplacementMade>
-    <BeforeChangesMadeInSourceView>소스 보기로 변경하기 전</BeforeChangesMadeInSourceView>
-    <UnableToParseSourceView>소스 보기의 문자를 분석할 수 없습니다!</UnableToParseSourceView>
+    <BeforeChangesMadeInSourceView>「소스 보기」로 바꾸기 전</BeforeChangesMadeInSourceView>
+    <UnableToParseSourceView>「소스 보기」의 문자를 분석할 수 없습니다!</UnableToParseSourceView>
     <GoToLineNumberX>'{0}'번 줄로 이동했습니다!</GoToLineNumberX>
     <CreateAdjustChangesApplied>줄 만들기/조정등의 변경 사항이 적용되었습니다!</CreateAdjustChangesApplied>
     <SelectedLines>선택한 줄</SelectedLines>
@@ -1271,6 +1276,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ImportTimeCodesDifferentNumberOfLinesWarning>현재 자막과 타임코드 수가 일치하지 않습니다! 그래도 계속하시겠습니까?
 - 타임코드 수: ({0})개 | 현재 자막 줄 수: ({1})개</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>전송 스트림을 분석하는 중... 잠시 기다려 주십시오!</ParsingTransportStream>
+    <XPercentCompleted>{0}% 완료</XPercentCompleted>
     <ErrorLoadIdx>Idx 파일은 읽거나 편집할 수 없습니다. Idx 파일은 한 쌍으로 이루어진 VobSub(sub/idx) 파일의 서브 파일일 뿐입니다. .sub 파일로 여시기 바랍니다.</ErrorLoadIdx>
     <ErrorLoadRar>이 파일은 압축된 .rar 파일 같습니다. Subtitle Edit는 압축된 파일을 열 수 없습니다.</ErrorLoadRar>
     <ErrorLoadZip>이 파일은 압축된 .zip 파일 같습니다. Subtitle Edit는 압축된 파일을 열 수 없습니다.</ErrorLoadZip>
@@ -1537,10 +1543,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <StartWithLastFileLoaded>최근 사용한 파일 불러오기</StartWithLastFileLoaded>
     <RememberSelectedLine>선택한 줄 기억</RememberSelectedLine>
     <RememberPositionAndSize>메인 창의 위치 및 크기 기억</RememberPositionAndSize>
-    <StartInSourceView>소스 보기로 시작</StartInSourceView>
+    <StartInSourceView>「소스 보기」로 시작</StartInSourceView>
     <RemoveBlankLinesWhenOpening>자막 열 때, 빈 줄 제거</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>다음 기호로 줄바꿈 표시</ShowLineBreaksAs>
-    <MainListViewDoubleClickAction>자막 보기 창에서 줄을 더블 클릭하면 다음 실행:</MainListViewDoubleClickAction>
+    <MainListViewDoubleClickAction>「자막 보기」에서 줄을 더블 클릭하면 다음 실행:</MainListViewDoubleClickAction>
     <MainListViewNothing>아무것도 안 함</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>비디오를 선택 지점으로 이동하고 일시 중지</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>비디오를 선택 지점으로 이동하고 재생</MainListViewVideoGoToPositionAndPlay>
@@ -1583,7 +1589,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ReverseMouseWheelScrollDirection>마우스 휠 스크롤 방향 반전</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>중복 허용 (이동 및 크기 조정시)</WaveformAllowOverlap>
     <WaveformFocusMouseEnter>마우스 입력에 초점 놓기</WaveformFocusMouseEnter>
-    <WaveformListViewFocusMouseEnter>자막 보기에서 마우스 입력에 초점 놓기</WaveformListViewFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>「자막 보기」에서 마우스 입력에 초점 놓기</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>다음 시간 이하로 테두리 표시:</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>밀리초</WaveformBorderHitMs2>
     <WaveformColor>색상</WaveformColor>
@@ -1632,7 +1638,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ProxyDomain>도메인:</ProxyDomain>
     <NetworkSessionSettings>네트워크 세션 설정</NetworkSessionSettings>
     <NetworkSessionNewSound>새로운 메시지가 도착할 때 사운드 파일을 재생합니다</NetworkSessionNewSound>
-    <PlayXSecondsAndBack>X 초 재생하고 돌아가기</PlayXSecondsAndBack>
+    <PlayXSecondsAndBack>X초 재생하고 돌아가기</PlayXSecondsAndBack>
     <StartSceneIndex>시작 장면의 단락</StartSceneIndex>
     <EndSceneIndex>종료 장면의 단락</EndSceneIndex>
     <FirstPlusX>시작 +{0}</FirstPlusX>
@@ -1673,7 +1679,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ToggleFocus>목록 보기와 자막 텍스트 상자 간의 포커스 전환</ToggleFocus>
     <ToggleDialogDashes>대화의 대시('-') 전환</ToggleDialogDashes>
     <Alignment>정렬 (선택한 줄)</Alignment>
-    <CopyTextOnly>클립 보드에 텍스트 복사 (선택한 줄)</CopyTextOnly>
+    <CopyTextOnly>클립보드에 텍스트 복사 (선택한 줄)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>원본 텍스트를 현재 줄에 복사</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>자동 표시시간 (선택한 줄)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>줄의 좌우 처음/끝 문자를 반대로</ReverseStartAndEndingForRTL>
@@ -1682,9 +1688,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <WaveformSeekSilenceForward>이후 무음 탐색</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>이전 무음 탐색</WaveformSeekSilenceBack>
     <WaveformAddTextHere>여기에 텍스트 추가 (새로운 선택용)</WaveformAddTextHere>
-    <WaveformPlayNewSelection>새 자막 재생</WaveformPlayNewSelection>
+    <WaveformPlayNewSelection>선택을 재생</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>선택의 끝을 재생</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>처음 선택한 자막 재생</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>자막 보기로 이동</WaveformFocusListView>
+    <WaveformFocusListView>「자막 보기」로 이동</WaveformFocusListView>
     <GoBack1Frame>1프레임 뒤로</GoBack1Frame>
     <GoForward1Frame>1프레임 앞으로</GoForward1Frame>
     <GoBack100Milliseconds>0.1초 뒤로</GoBack100Milliseconds>
@@ -2060,6 +2067,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Title>현재 이미지에 대한 일치 항목 비교 검사</Title>
     <InspectItems>항목 검사</InspectItems>
     <AddBetterMatch>일치 항목 추가</AddBetterMatch>
+    <Add>추가</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>새 폴더</Title>

@@ -77,7 +77,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.Attributes.Append(stop);
 
                 XmlNode text = xml.CreateElement("text");
-                text.InnerText = HtmlUtil.RemoveHtmlTags(p.Text);
+                bool first = true;
+                foreach (string line in HtmlUtil.RemoveHtmlTags(p.Text, true).SplitToLines())
+                {
+                    if (!first)
+                    {
+                        XmlNode br = xml.CreateElement("br");
+                        text.AppendChild(br);
+                    }
+                    first = false;
+                    var t = xml.CreateTextNode(string.Empty);
+                    t.InnerText = line;
+                    text.AppendChild(t);
+                }
                 paragraph.AppendChild(text);
 
                 XmlAttribute style = xml.CreateAttribute("style");
@@ -94,13 +106,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             string[] parts = code.Split(new[] { ':', '.', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-            //00:00:07:12
+            if (parts.Length == 1)
+            {
+                return new TimeCode(0, 0, int.Parse(code), 0); // seconds only
+            }
+            if (parts.Length == 2)
+            {
+                return new TimeCode(0, 0, int.Parse(parts[0]), int.Parse(parts[1])); // seconds + ms
+            }
+
+            //00:00:07:120
             string hour = parts[0];
             string minutes = parts[1];
             string seconds = parts[2];
-            string frames = parts[3];
-
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
+            string ms = parts[3];
+            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), int.Parse(ms));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -131,9 +151,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string start = node.Attributes["start"].InnerText;
                     string stop = node.Attributes["stop"].InnerText;
-                    string text = node.SelectSingleNode("text").InnerText;
 
-                    subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start), DecodeTimeCode(stop), text));
+                    var text = new StringBuilder();
+                    foreach (XmlNode innerNode in node.SelectSingleNode("text").ChildNodes)
+                    {
+                        switch (innerNode.Name.Replace("tt:", string.Empty))
+                        {
+                            case "br":
+                                text.AppendLine();
+                                break;
+                            default:
+                                text.Append(innerNode.InnerText);
+                                break;
+                        }
+                    }
+
+                    subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start), DecodeTimeCode(stop), text.ToString().Trim()));
                 }
                 catch (Exception ex)
                 {

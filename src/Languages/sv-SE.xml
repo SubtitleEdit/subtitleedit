@@ -2,7 +2,7 @@
 <Language Name="svenska">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Översätt av Ted</TranslatedBy>
     <CultureName>sv-SE</CultureName>
     <HelpFile />
@@ -512,7 +512,6 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Korrigeringar hittades: {0}</FixesFoundX>
     <XFixesApplied>Korrigeringar som tillämpas: {0}</XFixesApplied>
     <NothingToFixBut>Inget att fixa men några saker kan förbättras - se logg för detaljer</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Fixa ensam små 'i' till 'I' (engelska)" är markerad, men laddad text verkar inte vara engelska.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Fortsätt</Continue>
     <ContinueAnyway>Fortsätt ändå?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Avmarkera "Fixa ensam små 'i' till 'I' (engelska)"</UncheckedFixLowercaseIToUppercaseI>
@@ -1421,7 +1420,6 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <Tools>Verktyg</Tools>
     <WordLists>Ordlistor</WordLists>
     <SsaStyle>SSA Stil</SsaStyle>
-    <Proxy>Proxy</Proxy>
     <ShowToolBarButtons>Visa Knapparna i verktygsfältet</ShowToolBarButtons>
     <New>Ny</New>
     <Open>Öppna</Open>

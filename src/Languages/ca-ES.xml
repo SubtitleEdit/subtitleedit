@@ -2,7 +2,7 @@
 <Language Name="català">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Traduït per Juansa</TranslatedBy>
     <CultureName>ca-ES</CultureName>
     <HelpFile />
@@ -512,7 +512,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Correccions trobades: {0}</FixesFoundX>
     <XFixesApplied>Correccions aplicades: {0}</XFixesApplied>
     <NothingToFixBut>Res per corregir però algunes coses per millorar - veure log pels detalls</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Fixa minúscules solitàries 'i' a 'I' (Anglés)" està comprovat però sembla que el subtítol carregat no és Anglés.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continua</Continue>
     <ContinueAnyway>Continua de tota manera?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Desmarcat "Fixa minúscula 'i' solitària a 'I' (Anglés)"</UncheckedFixLowercaseIToUppercaseI>
@@ -1415,7 +1414,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Tools>Eines</Tools>
     <WordLists>Llistes mots</WordLists>
     <SsaStyle>Estil SSA</SsaStyle>
-    <Proxy>Proxi</Proxy>
     <ShowToolBarButtons>Mostra botons barra d'eines</ShowToolBarButtons>
     <New>Nou</New>
     <Open>Obre</Open>

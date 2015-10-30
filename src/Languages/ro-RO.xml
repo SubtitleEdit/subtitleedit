@@ -2,7 +2,7 @@
 <Language Name="română">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Tradus de Mircea Voiculescu</TranslatedBy>
     <CultureName>ro-RO</CultureName>
     <HelpFile />
@@ -79,14 +79,11 @@
     <AboutText1>Subtitle Edit este un program gratuit, sub licență GNU Public.
 Poți să-l distribui, să-l modifici și să-l utilizezi gratis.
 
-
 Codul sursă C# este disponibil pe https://github.com/SubtitleEdit/subtitleedit
 
 Vizitează www.nikse.dk pentru cea mai recentă versiune.
 
-
 Orice sugestii sunt binevenite.
-
 
 E-mail la: nikse.dk @gmail.com</AboutText1>
   </About>
@@ -114,12 +111,24 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <GeneratingSpectrogram>Generarea spectrogramei...</GeneratingSpectrogram>
     <ExtractingSeconds>Extragere audio: {0:0.0} secunde</ExtractingSeconds>
     <ExtractingMinutes>Extragere audio: {0}.{1:00} minute</ExtractingMinutes>
+    <WaveFileNotFound>Nu se poate găsi fișierul wave extras!
+Această funcție e disponibilă pentru player-ul media VLC 1.1.x sau unul mai recent ({0}-bit).
+
+Linia de comandă: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} was unable to extract audio data to wave file!
+
+Linia de comandă: {1} {2}
+
+Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
+    <LowDiskSpace>SPAȚIUL DISCULUI REDUS!</LowDiskSpace>
+    <FreeDiskSpace>{0} liber</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Date grup audio generat</Title>
     <ExtractingAudio>Extragere fișier audio...</ExtractingAudio>
     <Calculating>Calculare...</Calculating>
     <Done>Gata</Done>
+    <Error>Eroare</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Corectarea duratelor</Title>
@@ -351,6 +360,8 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <TranslatorsName>Numele traducătorilor</TranslatorsName>
     <SubtitleListReferenceCode>Codul de ref. al listei subtitrărilor</SubtitleListReferenceCode>
     <CountryOfOrigin>Țara de origine</CountryOfOrigin>
+    <TimeCodeStatus>Starea codului de timp</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Cod de timp: Startul programului</TimeCodeStartOfProgramme>
     <RevisionNumber>Numărul reviziei</RevisionNumber>
     <MaxNoOfDisplayableChars>Max# de caractere pe rând</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max# de rânduri</MaxNumberOfDisplayableRows>
@@ -414,6 +425,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <ShadowWidth>Grosime umbră</ShadowWidth>
     <Transparency>Transparență Alpha</Transparency>
     <ImageFormat>Formatul imaginii</ImageFormat>
+    <FullFrameImage>Imagine cadru complet</FullFrameImage>
     <SimpleRendering>Redare simplă</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-alias cu transparență</AntiAliasingWithTransparency>
     <Text3D>Text 3D</Text3D>
@@ -442,7 +454,9 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <LineHeight>Înălțimea liniei</LineHeight>
     <BoxSingleLine>Casetă: linie unică</BoxSingleLine>
     <BoxMultiLine>Casetă: multi-linie</BoxMultiLine>
-    <Forced>Silit</Forced>
+    <Forced>Silită</Forced>
+    <ChooseBackgroundColor>Alege culoarea fundalului</ChooseBackgroundColor>
+    <SaveImageAs>Salvează imaginea ca...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Exportare text</Title>
@@ -544,7 +558,6 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <FixesFoundX>Corecturi găsite: {0}</FixesFoundX>
     <XFixesApplied>Corecturi făcute: {0}</XFixesApplied>
     <NothingToFixBut>Nimic de corectat, dar o serie de lucruri ar putea fi îmbunătățite - a se vedea jurnalul de detalii</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Corectarea doar a lui 'i' la 'I' (în Engleză)" este bifată, dar subtitrarea încărcată nu pare să fie în engleză.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continuă</Continue>
     <ContinueAnyway>Continui oricum?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"Corectarea doar a lui 'i' la 'I' (în Engleză" debifată</UncheckedFixLowercaseIToUppercaseI>
@@ -984,11 +997,11 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
       <PlayFromJustBeforeText>Redă exact înaintea &amp;textului</PlayFromJustBeforeText>
       <Pause>Pauză</Pause>
       <GoToSubtitlePositionAndPause>Mergi la sub-poziție și pauză</GoToSubtitlePositionAndPause>
-      <SetStartTime>Stabilește &amp;timpul de start</SetStartTime>
-      <SetEndTimeAndGoToNext>Stabilește &amp;încheierea &amp;&amp; mergi mai departe</SetEndTimeAndGoToNext>
+      <SetStartTime>Stab. &amp;timpul de start</SetStartTime>
+      <SetEndTimeAndGoToNext>Stab. &amp;încheierea &amp;&amp; continuă</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Corectează prin timp de încheiere {0}</AdjustedViaEndTime>
-      <SetEndTime>Stabilește t&amp;impul de încheiere</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Stabilește sta&amp;rtul și decalează restul</SetstartTimeAndOffsetOfRest>
+      <SetEndTime>Stab. t&amp;impul de încheiere</SetEndTime>
+      <SetstartTimeAndOffsetOfRest>Stab. sta&amp;rtul și decalează restul</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Caută online textul</SearchTextOnline>
       <GoogleTranslate>Traducere Google</GoogleTranslate>
       <GoogleIt>Caută cu Google</GoogleIt>
@@ -1084,8 +1097,6 @@ Vrei să continui căutarea și înlocuirea de la începutul documentului?</Repl
     <SubtitleSplitted>Subtitrarea a fost scindată</SubtitleSplitted>
     <SubtitleAppendPrompt>Aceasta va adăuga o subtitrare existentă la subtitrarea deja încărcată,
 care e deja sincronizată cu fișierul video.
-
-
 
 Continui?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Adaugă subtitrare</SubtitleAppendPromptTitle>
@@ -1262,12 +1273,18 @@ Continui?</SubtitleAppendPrompt>
     <BeforeMergeLinesWithSameText>Înaintea îmbinării liniilor cu același text</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Subtitrarea cu coduri de timp are un număr diferit de linii ({0}) decât subtitrarea curentă ({1}) - continui oricum?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analiza fluxului de transport. Așteaptă, te rog...</ParsingTransportStream>
+    <XPercentCompleted>{0}% completat</XPercentCompleted>
     <ErrorLoadIdx>Nu se pot citi/edita fișiere .idx. Fișierele idx sunt o parte a fișierului perche idx/sub (numit și VobSub), iar SE poate deschide fișierul .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Pare-se că fișierul este arhivat (rar). SE nu poate deschide fișiere arhivate.</ErrorLoadRar>
     <ErrorLoadZip>Pare-se că fișierul este arhivat (zip). SE nu poate deschide fișiere arhivate.</ErrorLoadZip>
     <ErrorLoadPng>Pare-se că fișierul e o imagine PNG. SE nu poate deschide fișiere PNG.</ErrorLoadPng>
+    <ErrorLoadJpg>Pare-se că fișierul e o imagine JPG. SE nu poate deschide fișiere JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Pare-se că fișierul e un ReScene .srr - nu o subtitrare.</ErrorLoadSrr>
     <ErrorLoadTorrent>Pare-se că fișierul e un BitTorrent - nu o subtitrare.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Scuze, acest fișier conține numai zerouri binare!
+
+Dacă aveți de editat acest fișier cu SE ați putea descoperi un backup realizat prin meniul Fișier -&gt; Restaurare cu auto-backup...</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>Lansarea directorului neacceptată.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Conținutul VobSub criptat neacceptat.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Fișierele Blu-ray sup neacceptate.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>Fișierele DVD sup neacceptate.</NoSupportHereDvdSup>
@@ -1411,8 +1428,10 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <NewLine>Linie nouă (\r\n)</NewLine>
     <NewLineShort>Linie nouă (\n)</NewLineShort>
     <AnyDigit>Orice cifră (\d)</AnyDigit>
+    <NonDigit>Nicio cifră (\D)</NonDigit>
     <AnyCharacter>Orice caracter (.)</AnyCharacter>
     <AnyWhitespace>Orice spațiu-gol (\s)</AnyWhitespace>
+    <NonSpaceCharacter>Niciun caracter de spațiere (\S)</NonSpaceCharacter>
     <ZeroOrMore>Zero sau mai mult (*)</ZeroOrMore>
     <OneOrMore>Unul sau mai mult (+)</OneOrMore>
     <InCharacterGroup>În grupul caracterelor ([test])</InCharacterGroup>
@@ -1488,7 +1507,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <Tools>Unelte</Tools>
     <WordLists>Liste cuvinte</WordLists>
     <SsaStyle>Stil ASS/SSA</SsaStyle>
-    <Proxy>Proxy</Proxy>
+    <Network>Rețea</Network>
     <ShowToolBarButtons>Arată butoanele barei de unelte</ShowToolBarButtons>
     <New>Nou</New>
     <Open>Deschide</Open>
@@ -1614,6 +1633,8 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <ProxyUserName>Nume de utilizator</ProxyUserName>
     <ProxyPassword>Parola</ProxyPassword>
     <ProxyDomain>Domeniu</ProxyDomain>
+    <NetworkSessionSettings>Setările sesiunii de rețea</NetworkSessionSettings>
+    <NetworkSessionNewSound>Redă fișeierul audio când noul mesaj apare</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Redă X secunde și revino, X este</PlayXSecondsAndBack>
     <StartSceneIndex>Startul paragrafului de scenă este</StartSceneIndex>
     <EndSceneIndex>Sfârșitul paragrafului de scenă este</EndSceneIndex>
@@ -1981,7 +2002,7 @@ Păstrezi schimbările?</KeepChangesMessage>
     <Edit>Editare</Edit>
     <StartOcr>Start OCR</StartOcr>
     <Stop>Stop</Stop>
-    <StartOcrFrom>Start OCR de la subtitr. nr.:</StartOcrFrom>
+    <StartOcrFrom>Start OCR de la subtitrarea nr.:</StartOcrFrom>
     <LoadingVobSubImages>Încărcare imagini VobSub...</LoadingVobSubImages>
     <LoadingImageCompareDatabase>Încărcare baza de date comparare imagine...</LoadingImageCompareDatabase>
     <ConvertingImageCompareDatabase>Conversia imaginii comparate din baza de date la noul format (images.db/images.xml)...</ConvertingImageCompareDatabase>
@@ -2020,6 +2041,8 @@ Păstrezi schimbările?</KeepChangesMessage>
     <InspectCompareMatchesForCurrentImage>Inspect. potrivirile comparate ptr. imaginea curentă...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Editează ultimele modificări la imaginea comparată...</EditLastAdditions>
     <SetUnitalicFactor>Corectează factorul ne-italic...</SetUnitalicFactor>
+    <DiscardTitle>Renunți la schimbările făcute în OCR?</DiscardTitle>
+    <DiscardText>Vrei să renunți la schimbările făcute în sesiunea actuală OCR?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Imagine manuală pentru text</Title>

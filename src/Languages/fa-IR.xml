@@ -106,9 +106,6 @@ http://soft98.ir
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>متعادل کردن اتوماتیک خطوط انتخاب شده</TitleAutoBreak>
     <TitleUnbreak>گزارش پرش به خط از خطوط انتخاب شده</TitleUnbreak>
-    <LineNumber>خط #</LineNumber>
-    <Before>قبل از</Before>
-    <After>پس از</After>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>بشکن فقط خطوط بزرگتر از</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>نشکن فقط خط های بزرگتر از</OnlyUnbreakLinesLongerThan>
@@ -128,9 +125,6 @@ http://soft98.ir
     <NamesFoundInSubtitleX>Names found in subtitle: {0}</NamesFoundInSubtitleX>
     <Enabled>توانا</Enabled>
     <Name>نام</Name>
-    <LineNumber>خط #</LineNumber>
-    <Before>قبل از</Before>
-    <After>پس از</After>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
@@ -238,7 +232,6 @@ http://soft98.ir
     <FontColor>رنگ فونت</FontColor>
     <BorderColor>رنگ حاشیه</BorderColor>
     <BorderWidth>عرض حاشیه</BorderWidth>
-    <AntiAlias>ضد نام مستعار</AntiAlias>
     <ExportAllLines>خروجی گرفتن تمامی خط ها</ExportAllLines>
     <XImagesSavedInY>{0} images saved in {1}</XImagesSavedInY>
     <VideoResolution>دقت ویدئو</VideoResolution>
@@ -271,10 +264,7 @@ http://soft98.ir
     <Step2>گام دوم -- تائید تغییرات</Step2>
     <Fixes>اصلاح شده ها</Fixes>
     <Log>Log</Log>
-    <LineNumber>خط #</LineNumber>
     <Function>تابع</Function>
-    <Before>قبل از</Before>
-    <After>پس از</After>
     <RemovedEmptyLine>خط خالی حذف شده</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>خط خالی حذف شده از بالا</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>خط خالی حذف شده از پایین</RemovedEmptyLineAtBottom>
@@ -318,7 +308,6 @@ http://soft98.ir
     <FixesFoundX>Fixes found: {0}</FixesFoundX>
     <XFixesApplied>Fixes applied: {0}</XFixesApplied>
     <NothingToFixBut>چیزی برای تصحیح پیدا نشد اما چند چیز می تواند بهبود یابد - نوشته (log) را برای جزییات ببینید.</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"حروف کوچک ثابت به تنهایی« من »به« من »(به انگلیسی)" انتخاب شده است اما در حال حاضر لود زیرنویس به نظر می رسد نمی شود انگلیسی.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>ادامه</Continue>
     <ContinueAnyway>در هر صورت ادامه میدهید؟</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>بدون کنترل "ثابت به تنهایی کوچک« من »به« من »/به انگلیسی"</UncheckedFixLowercaseIToUppercaseI>
@@ -463,7 +452,6 @@ http://soft98.ir
         <ExportEbu>EBU STL</ExportEbu>
         <ExportPac>PAC</ExportPac>
         <ExportPlainText>متن آشکار</ExportPlainText>
-        <ExportPlainTextWithoutLineBreaks>متن آشکار بدون خط های شکسته</ExportPlainTextWithoutLineBreaks>
         <Exit>خروج</Exit>
       </File>
       <Edit>
@@ -497,7 +485,6 @@ http://soft98.ir
         <TextTotalLength>متن -- مجموع طول</TextTotalLength>
         <TextNumberOfLines>متن -- تعداد خطوط</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Text - number of chars/Sec</TextNumberOfCharactersPerSeconds>
-        <ShowOriginalTextInAudioAndVideoPreview>نمایش متن اصلی در صدا/تصویر پیش نمایش</ShowOriginalTextInAudioAndVideoPreview>
         <MakeNewEmptyTranslationFromCurrentSubtitle>ساخت ترجمه خالی جدید از زیرنویس جاری</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>نام اسپلیت</SplitSubtitle>
         <AppendSubtitle>نام افزودن پرونده</AppendSubtitle>
@@ -872,7 +859,6 @@ http://soft98.ir
     <MaximumCharacters>حداکثر تعداد کاراکتر در یک پاراگراف</MaximumCharacters>
     <MaximumMillisecondsBetween>حداکثر میلی ثانیه بین خطوط</MaximumMillisecondsBetween>
     <NumberOfMergesX>Number of merges: {0}</NumberOfMergesX>
-    <LineNumber>خط #</LineNumber>
     <MergedText>متن ادغام</MergedText>
     <OnlyMergeContinuationLines>فقط ادامه خط ها را ترکیب کن</OnlyMergeContinuationLines>
   </MergedShortLines>
@@ -883,9 +869,6 @@ http://soft98.ir
     <Normal>عادی</Normal>
     <CaseSensitive>مورد حقوقی حساس</CaseSensitive>
     <RegularExpression>بیان منظم</RegularExpression>
-    <LineNumber>خط #</LineNumber>
-    <Before>قبل از</Before>
-    <After>پس از</After>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
     <Delete>حذف</Delete>
     <Add>اضافه کردن</Add>
@@ -924,9 +907,6 @@ http://soft98.ir
     <RemoveTextBeforeColon>گزارش متن قبل از (':')روده بزرگ</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>فقط اگر متن بزرگ است</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>فقط اگر در خط جدا از هم</OnlyIfInSeparateLine>
-    <LineNumber>خط #</LineNumber>
-    <Before>قبل از</Before>
-    <After>پس از</After>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
     <RemoveTextIfContains>گزارش متن اگر در آن وجود دارد :</RemoveTextIfContains>
     <RemoveInterjections>گزارش interjections (shh ، hmm ، و غیره)</RemoveInterjections>
@@ -966,7 +946,6 @@ http://soft98.ir
     <Tools>ابزار</Tools>
     <WordLists>لیست کلمات</WordLists>
     <SsaStyle>حالات نوشتار سبک</SsaStyle>
-    <Proxy>پروکسی</Proxy>
     <ShowToolBarButtons>نمایش دکمه های نوار ابزار</ShowToolBarButtons>
     <New>جدید</New>
     <Open>باز</Open>
@@ -1020,8 +999,6 @@ http://soft98.ir
     <VlcMediaPlayer>وی ال سی مدیا پلیر</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll از وی ال سی مدیا پلیر 1.1.0 و نسخه های جدیدتر</VlcMediaPlayerDescription>
     <ShowStopButton>نمایش توقف را فشار دهید</ShowStopButton>
-    <DefaultVolume>حجم پیش فرض</DefaultVolume>
-    <VolumeNotes>0 بدون صدا است ، 100 است که بالاترین حجم</VolumeNotes>
     <PreviewFontSize>پیش نمایش سایز فونت زیرنویس</PreviewFontSize>
     <MainWindowVideoControls>صفحه اصلی ویدیو پنجره کنترل</MainWindowVideoControls>
     <CustomSearchTextAndUrl>سفارشی متن جستجو و آدرس</CustomSearchTextAndUrl>
@@ -1043,7 +1020,6 @@ http://soft98.ir
     <SubStationAlphaStyle>زیر ایستگاه سبک آلفا</SubStationAlphaStyle>
     <ChooseFont>انتخاب فونت</ChooseFont>
     <ChooseColor>انتخاب رنگ</ChooseColor>
-    <Example>مثال</Example>
     <Testing123>123 تست...</Testing123>
     <Language>زبان</Language>
     <NamesIgnoreLists>نام/لیست چشم پوشی -حساس به حروف کوچک</NamesIgnoreLists>
@@ -1092,7 +1068,6 @@ http://soft98.ir
     <AdjustStartDownEndUpAndGoToNext>key down=start start,key up=set end and go to next</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>حرکت خط های انتخاب شده 100 میلی ثانیه به جلو</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>حرکت خط های انتخاب شده 100 میلی ثانیه به عقب</AdjustSelected100MsBack>
-    <AdjustSetStartTimeOnly>تنظیم کردن زمان شروع،نگه داشتن زمان پایان</AdjustSetStartTimeOnly>
     <MainCreateStartDownEndUp>create new at key-down,set end time at key up</MainCreateStartDownEndUp>
     <MergeDialog>ادغام کردن گفتگو ها/جاگذاری خط ها</MergeDialog>
     <GoToNext>برو به خط بعدی</GoToNext>

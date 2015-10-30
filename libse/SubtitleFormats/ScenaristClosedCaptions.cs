@@ -699,7 +699,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             sb.AppendLine("Scenarist_SCC V1.0");
             sb.AppendLine();
-            string language = Utilities.AutoDetectGoogleLanguage(subtitle);
+            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];

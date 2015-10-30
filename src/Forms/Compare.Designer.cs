@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelSubtitle2
             // 
             this.labelSubtitle2.AutoSize = true;
-            this.labelSubtitle2.Location = new System.Drawing.Point(491, 32);
+            this.labelSubtitle2.Location = new System.Drawing.Point(491, 36);
             this.labelSubtitle2.Name = "labelSubtitle2";
             this.labelSubtitle2.Size = new System.Drawing.Size(30, 13);
             this.labelSubtitle2.TabIndex = 3;
@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelSubtitle1
             // 
             this.labelSubtitle1.AutoSize = true;
-            this.labelSubtitle1.Location = new System.Drawing.Point(9, 32);
+            this.labelSubtitle1.Location = new System.Drawing.Point(9, 36);
             this.labelSubtitle1.Name = "labelSubtitle1";
             this.labelSubtitle1.Size = new System.Drawing.Size(30, 13);
             this.labelSubtitle1.TabIndex = 2;
@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonOpenSubtitle1.Location = new System.Drawing.Point(9, 8);
             this.buttonOpenSubtitle1.Name = "buttonOpenSubtitle1";
-            this.buttonOpenSubtitle1.Size = new System.Drawing.Size(24, 21);
+            this.buttonOpenSubtitle1.Size = new System.Drawing.Size(28, 22);
             this.buttonOpenSubtitle1.TabIndex = 0;
             this.buttonOpenSubtitle1.Text = "...";
             this.buttonOpenSubtitle1.UseVisualStyleBackColor = true;
@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonOpenSubtitle2.Location = new System.Drawing.Point(491, 8);
             this.buttonOpenSubtitle2.Name = "buttonOpenSubtitle2";
-            this.buttonOpenSubtitle2.Size = new System.Drawing.Size(24, 21);
+            this.buttonOpenSubtitle2.Size = new System.Drawing.Size(28, 22);
             this.buttonOpenSubtitle2.TabIndex = 1;
             this.buttonOpenSubtitle2.Text = "...";
             this.buttonOpenSubtitle2.UseVisualStyleBackColor = true;
@@ -254,10 +254,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView2.FullRowSelect = true;
             this.subtitleListView2.GridLines = true;
             this.subtitleListView2.HideSelection = false;
-            this.subtitleListView2.Location = new System.Drawing.Point(490, 48);
+            this.subtitleListView2.Location = new System.Drawing.Point(490, 56);
             this.subtitleListView2.Name = "subtitleListView2";
             this.subtitleListView2.OwnerDraw = true;
-            this.subtitleListView2.Size = new System.Drawing.Size(478, 430);
+            this.subtitleListView2.Size = new System.Drawing.Size(478, 422);
             this.subtitleListView2.SubtitleFontBold = false;
             this.subtitleListView2.SubtitleFontName = "Tahoma";
             this.subtitleListView2.SubtitleFontSize = 8;
@@ -278,10 +278,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.FullRowSelect = true;
             this.subtitleListView1.GridLines = true;
             this.subtitleListView1.HideSelection = false;
-            this.subtitleListView1.Location = new System.Drawing.Point(8, 48);
+            this.subtitleListView1.Location = new System.Drawing.Point(8, 56);
             this.subtitleListView1.Name = "subtitleListView1";
             this.subtitleListView1.OwnerDraw = true;
-            this.subtitleListView1.Size = new System.Drawing.Size(476, 430);
+            this.subtitleListView1.Size = new System.Drawing.Size(476, 422);
             this.subtitleListView1.SubtitleFontBold = false;
             this.subtitleListView1.SubtitleFontName = "Tahoma";
             this.subtitleListView1.SubtitleFontSize = 8;

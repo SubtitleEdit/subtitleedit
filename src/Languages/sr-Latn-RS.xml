@@ -2,7 +2,7 @@
 <Language Name="srpski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Prevod: Misa Forger</TranslatedBy>
     <CultureName>sr-Latn-RS</CultureName>
     <HelpFile />
@@ -143,8 +143,6 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <OverwriteExistingFiles>Prepiši preko postojeće datoteke</OverwriteExistingFiles>
     <Style>Stil...</Style>
     <ConvertOptions>Opcije pretvaranja</ConvertOptions>
-    <AutoBreakLongLines>Auto-prelamanje dugih linija</AutoBreakLongLines>
-    <FixItalics>Popravite Iskošeni tekst</FixItalics>
     <RemoveFormatting>Uklonite oblikovanja oznake</RemoveFormatting>
     <RemoveTextForHI>Uklonite tekst za HI</RemoveTextForHI>
     <RedoCasing>Ponoviti (velika mala slova)</RedoCasing>
@@ -304,7 +302,6 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <BorderColor>Boja ivice:</BorderColor>
     <BorderWidth>Širina ivice:</BorderWidth>
     <ImageFormat>Format slike</ImageFormat>
-    <AntiAlias>&amp;Omekšavanje ivica</AntiAlias>
     <SideBySide3D>Usporedni 3D</SideBySide3D>
     <ExportAllLines>I&amp;zvezi sve linije...</ExportAllLines>
     <XImagesSavedInY>Sačuvano slika: {0}. Odredište: {1}</XImagesSavedInY>
@@ -411,7 +408,6 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Pronađeno ispravki: {0}</FixesFoundX>
     <XFixesApplied>Primijenjeno ispravki: {0}</XFixesApplied>
     <NothingToFixBut>Nema ništa za ispravljanje, ali se neke stvari mogu poboljšati. Pogledajte izvještaj za više informacija.</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>„Promeni malo latinično I u veliko kada se nalazi sâmo“ je označeno, ali učitani prevod nije na engleskom.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Nastavi</Continue>
     <ContinueAnyway>Želite li da nastavite?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>„Promeni malo latinično I u veliko kada se nalazi sâmo“ nije označeno.</UncheckedFixLowercaseIToUppercaseI>
@@ -1180,7 +1176,6 @@ određeni prevod s drugim ljudima.</Information>
     <Tools>Alati</Tools>
     <WordLists>Popis reči</WordLists>
     <SsaStyle>SSA stil</SsaStyle>
-    <Proxy>Posrednik</Proxy>
     <ShowToolBarButtons>Prikaz ikona</ShowToolBarButtons>
     <New>Novo</New>
     <Open>Otvori...</Open>
@@ -1245,8 +1240,6 @@ određeni prevod s drugim ljudima.</Information>
     <ShowStopButton>&amp;Dugme za zaustavljanje</ShowStopButton>
     <ShowMuteButton>Pokaži dugme za isključivanje zvuka</ShowMuteButton>
     <ShowFullscreenButton>Prikaži dugme za puni ekran</ShowFullscreenButton>
-    <DefaultVolume>Jačina zvuka:</DefaultVolume>
-    <VolumeNotes>(0 – isključeno, 100 – najglasnije)</VolumeNotes>
     <PreviewFontSize>Veličina fonta:</PreviewFontSize>
     <MainWindowVideoControls>Glavni prozor za upravljanje Video datotekom</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Adresa za pretragu reči:</CustomSearchTextAndUrl>
@@ -1268,7 +1261,6 @@ određeni prevod s drugim ljudima.</Information>
     <SubStationAlphaStyle>SSA stil</SubStationAlphaStyle>
     <ChooseFont>Izaberite font...</ChooseFont>
     <ChooseColor>Izaberite boju...</ChooseColor>
-    <Example>Primer</Example>
     <Testing123>Provera 123...</Testing123>
     <Language>Jezik:</Language>
     <NamesIgnoreLists>Nazivi/izuzeci</NamesIgnoreLists>
@@ -1318,7 +1310,6 @@ određeni prevod s drugim ljudima.</Information>
     <AdjustStartDownEndUpAndGoToNext>Tipka dole = Start, Tipka gore = postavi kraj i idi na sledeći</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Premeštanje odabrane linije 100 ms napred</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Premesti odabrane linije 100 ms nazad</AdjustSelected100MsBack>
-    <AdjustSetStartTimeOnly>Postavite vreme početka, zadržite vreme završetka</AdjustSetStartTimeOnly>
     <MainCreateStartDownEndUp>Kreirajte novi na tipka-dole, postavite vreme završetka na tipka-gore</MainCreateStartDownEndUp>
     <MergeDialog>Spoji dijalog (ubaci crtice)</MergeDialog>
     <GoToNext>Idi na sledeću liniju</GoToNext>

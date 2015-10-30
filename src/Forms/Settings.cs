@@ -757,6 +757,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizerNode.Nodes.Add(language.WaveformSeekSilenceBack + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack));
             audioVisualizerNode.Nodes.Add(language.WaveformAddTextHere + GetShortcutText(Configuration.Settings.Shortcuts.WaveformAddTextHere));
             audioVisualizerNode.Nodes.Add(language.WaveformPlayNewSelection + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlaySelection));
+            audioVisualizerNode.Nodes.Add(language.WaveformPlayNewSelectionEnd + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition + GetShortcutText(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition));
             audioVisualizerNode.Nodes.Add(language.WaveformFocusListView + GetShortcutText(Configuration.Settings.Shortcuts.WaveformFocusListView));
             treeViewShortcuts.Nodes.Add(audioVisualizerNode);
@@ -1535,6 +1536,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.WaveformZoomOut = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.WaveformPlayNewSelection).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformPlaySelection = GetShortcut(node.Text);
+                    else if (text == (Configuration.Settings.Language.Settings.WaveformPlayNewSelectionEnd).Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.VerticalZoom).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformVerticalZoom = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.VerticalZoomOut).Replace("&", string.Empty))
@@ -1797,7 +1800,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonAddNamesEtcClick(object sender, EventArgs e)
         {
             string language = GetCurrentWordListLanguage();
-            string text = textBoxNameEtc.Text.Trim();
+            string text = textBoxNameEtc.Text.RemoveControlCharacters().Trim();
             if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNamesEtc.Contains(text))
             {
                 var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
@@ -1897,7 +1900,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonAddUserWordClick(object sender, EventArgs e)
         {
             string language = GetCurrentWordListLanguage();
-            string text = textBoxUserWord.Text.Trim().ToLower();
+            string text = textBoxUserWord.Text.RemoveControlCharacters().Trim().ToLower();
             if (!string.IsNullOrEmpty(language) && text.Length > 0 && !_userWordList.Contains(text))
             {
                 Utilities.AddToUserDictionary(text, language);
@@ -2006,8 +2009,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAddOcrFixClick(object sender, EventArgs e)
         {
-            string key = textBoxOcrFixKey.Text.Trim();
-            string value = textBoxOcrFixValue.Text.Trim();
+            string key = textBoxOcrFixKey.Text.RemoveControlCharacters().Trim();
+            string value = textBoxOcrFixValue.Text.RemoveControlCharacters().Trim();
             if (key.Length == 0 || value.Length == 0 || key == value || Utilities.IsInteger(key))
                 return;
 

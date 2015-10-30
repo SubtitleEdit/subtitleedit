@@ -2,7 +2,7 @@
 <Language Name="български">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Превод на български: Ivo Ivanov и JJD</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
@@ -512,7 +512,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Намерени грешки: {0}</FixesFoundX>
     <XFixesApplied>Направени поправки: {0}</XFixesApplied>
     <NothingToFixBut>Няма нищо за поправяне, но някои неща могат да се подобрят – вижте отчета...</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Поправяне на единична малка буква 'i' към 'I' (англ.)" е маркирано, но текущите заредени субтитри изглежда не са английски.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Продължаване</Continue>
     <ContinueAnyway>Искате ли да продължите?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Де маркиране на “Единична малка буква 'i' към 'I' (англ.)"</UncheckedFixLowercaseIToUppercaseI>
@@ -1419,7 +1418,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Tools>Инструменти</Tools>
     <WordLists>Списък с думи</WordLists>
     <SsaStyle>Стил на SSA</SsaStyle>
-    <Proxy>Прокси</Proxy>
     <ShowToolBarButtons>Показване на бутони в лентата с инструменти</ShowToolBarButtons>
     <New>Нов</New>
     <Open>Отваряне</Open>

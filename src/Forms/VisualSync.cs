@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
@@ -398,17 +399,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             SetSyncFactorLabel();
 
-            double subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds/TimeCode.BaseUnit;
-            double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds/TimeCode.BaseUnit;
+            double subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+            double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
 
             double subDiff = subEnd - subStart;
             double realDiff = endPos - startPos;
 
             // speed factor
-            double factor = realDiff/subDiff;
+            double factor = realDiff / subDiff;
 
             // adjust to starting position
-            double adjust = startPos - subStart*factor;
+            double adjust = startPos - subStart * factor;
 
             foreach (Paragraph p in _paragraphs)
             {
@@ -416,17 +417,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // fix overlapping time codes
-            using (var formFix = new FixCommonErrors())
-            {
-                var tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _originalSubtitle.WasLoadedWithFrameNumbers };
-                foreach (Paragraph p in _paragraphs)
-                    tmpSubtitle.Paragraphs.Add(new Paragraph(p));
-                formFix.Initialize(tmpSubtitle, tmpSubtitle.OriginalFormat, System.Text.Encoding.UTF8);
-                formFix.FixOverlappingDisplayTimes();
-                _paragraphs.Clear();
-                foreach (Paragraph p in formFix.FixedSubtitle.Paragraphs)
-                    _paragraphs.Add(new Paragraph(p));
-            }
+            var tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _originalSubtitle.WasLoadedWithFrameNumbers };
+            foreach (Paragraph p in _paragraphs)
+                tmpSubtitle.Paragraphs.Add(new Paragraph(p));
+            new FixOverlappingDisplayTimes().Fix(tmpSubtitle, new EmptyFixCallback());
+            _paragraphs = tmpSubtitle.Paragraphs;
 
             // update comboboxes
             int startSaveIdx = comboBoxStartTexts.SelectedIndex;

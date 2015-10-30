@@ -70,6 +70,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            bool allTwoCifferMs = true;
 
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
@@ -96,6 +97,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string start = node.Attributes["start"].InnerText;
                     string end = node.Attributes["end"].InnerText;
                     string text = node.InnerText;
+
+                    if (allTwoCifferMs && (start.Length != 11 || end.Length != 11 || start.Substring(8, 1) != ":" || end.Substring(8, 1) != ":"))
+                    {
+                        allTwoCifferMs = false;
+                    }
+
                     text = text.Replace("|", Environment.NewLine);
                     subtitle.Paragraphs.Add(new Paragraph(text, ParseTimeCode(start), ParseTimeCode(end)));
                 }
@@ -105,6 +112,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount++;
                 }
             }
+
+            if (allTwoCifferMs)
+            {
+                foreach (var p in subtitle.Paragraphs)
+                {
+                    p.StartTime.Milliseconds = p.StartTime.Milliseconds * 10;
+                    p.EndTime.Milliseconds = p.EndTime.Milliseconds * 10;
+                }
+            }
+
             subtitle.Renumber();
         }
 

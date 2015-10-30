@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core
@@ -86,7 +87,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string[] SplitToLines(this string source)
         {
-            return source.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
+            return source.Replace("\r\n", "\n").Replace('\r', '\n').Replace('\u2028', '\n').Split('\n');
         }
 
         // http://www.codeproject.com/Articles/43726/Optimizing-string-operations-in-C
@@ -162,5 +163,40 @@ namespace Nikse.SubtitleEdit.Core
             }
             return false;
         }
+
+        public static string RemoveControlCharacters(this string s)
+        {
+            var sb = new StringBuilder(s.Length);
+            foreach (var ch in s)
+            {
+                if (!Char.IsControl(ch))
+                    sb.Append(ch);
+            }
+            return sb.ToString();
+        }
+
+        public static string RemoveControlCharactersButWhiteSpace(this string s)
+        {
+            var sb = new StringBuilder(s.Length);
+            foreach (var ch in s)
+            {
+                if (!Char.IsControl(ch) || ch == '\u000d' || ch == '\u000a' || ch == '\u0009')
+                    sb.Append(ch);
+            }
+            return sb.ToString();
+        }
+
+        public static string CapitalizeFirstLetter(this string s, CultureInfo ci = null)
+        {
+            var si = new StringInfo(s);
+            if (ci == null)
+                ci = CultureInfo.CurrentCulture;
+            if (si.LengthInTextElements > 0)
+                s = si.SubstringByTextElements(0, 1).ToUpper(ci);
+            if (si.LengthInTextElements > 1)
+                s += si.SubstringByTextElements(1);
+            return s;
+        }
+
     }
 }

@@ -805,6 +805,7 @@
     <Compile Include="Logic\CommandLineConvert.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Logic\ListViewSorter.cs" />
     <Compile Include="Logic\NativeMethods.cs" />
     <Compile Include="Logic\NikseBitmapImageSplitter.cs" />
     <Compile Include="Logic\Networking\NikseWebServiceSession.cs">
@@ -1306,7 +1307,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Transparent Background.png" />
-    <None Include="Icons\Donate.png" />
     <Content Include="DLLs\Voikkox64.dll" />
     <Content Include="DLLs\Voikkox86.dll" />
     <None Include="Hunspellx64.dll">
@@ -1468,6 +1468,11 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Icons\connect.png" />
+    <None Include="Icons\Donate.png" />
+    <Content Include="Icons\SE.ico" />
+    <Content Include="Icons\SubtitleEdit.srt.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Icons\Find.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1492,7 +1497,6 @@
     <Content Include="Icons\SaveAs.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Icons\SE.ico" />
     <Content Include="Icons\Settings.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1600,14 +1604,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>"$(ProjectDir)..\build_helpers.bat" rev $(ConfigurationName) &amp;&amp; "$(ProjectDir)..\build_helpers.bat" lang $(ConfigurationName)</PreBuildEvent>
+    <PreBuildEvent>"$(ProjectDir)..\build_helpers.bat" rev $(ConfigurationName)</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5554.16953\content\*.dll" "$(TargetDir)"
-IF NOT EXIST "$(ProjectDir)Properties\AssemblyInfo.cs" (COPY "$(ProjectDir)Properties\AssemblyInfo.cs.template" "$(ProjectDir)Properties\AssemblyInfo.cs")
-REM "$(ProjectDir)packages\ILRepack.2.0.1\tools\ILRepack.exe" /out:"$(TargetDir)$(TargetName).exe" "$(TargetDir)$(TargetName).exe" "$(ProjectDir)packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll" "$(ProjectDir)packages\zlib.net.1.0.4.0\lib\zlib.net.dll" "$(ProjectDir)DLLs\Interop.QuartzTypeLib.dll" /targetplatform:v4 /internalize /parallel
-
-</PostBuildEvent>
+    <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5554.16953\content\*.dll" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

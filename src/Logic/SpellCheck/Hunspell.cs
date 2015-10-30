@@ -27,5 +27,19 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         {
         }
 
+        protected void AddIShouldBeLowercaseLSuggestion(List<string> suggestions, string word)
+        {
+            if (suggestions == null)
+            {
+                return;
+            }
+
+            // "I" can often be an ocr bug - should really be "l"
+            if (word.Length > 1 && word.StartsWith('I') && !suggestions.Contains("l" + word.Substring(1)) && Spell("l" + word.Substring(1)))
+            {
+                suggestions.Add("l" + word.Substring(1));
+            }
+        }
+
     }
 }

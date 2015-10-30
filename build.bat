@@ -10,10 +10,18 @@ IF /I "%~1" == "-help"  GOTO SHOWHELP
 IF /I "%~1" == "--help" GOTO SHOWHELP
 IF /I "%~1" == "/?"     GOTO SHOWHELP
 
-IF NOT DEFINED VS120COMNTOOLS (
-  ECHO Visual Studio 2013 wasn't found
+IF DEFINED VS140COMNTOOLS (
+  SET VSVARS_BAT="%VS140COMNTOOLS%vsvars32.bat"
+) ELSE (
+IF DEFINED VS130COMNTOOLS (
+  SET VSVARS_BAT="%VS130COMNTOOLS%vsvars32.bat"
+) ELSE (
+IF DEFINED VS120COMNTOOLS (
+  SET VSVARS_BAT="%VS120COMNTOOLS%vsvars32.bat"
+) ELSE (
+  ECHO Cannot find Visual Studio
   GOTO EndWithError
-)
+)))
 
 IF "%~1" == "" (
   SET "BUILDTYPE=Build"
@@ -39,7 +47,7 @@ IF "%~1" == "" (
 :START
 PUSHD "src"
 
-CALL "%VS120COMNTOOLS%vsvars32.bat" x86
+CALL %VSVARS_BAT%
 TITLE %BUILDTYPE%ing SubtitleEdit - Release^|Any CPU...
 
 "MSBuild.exe" SubtitleEdit.sln /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="Any CPU"^

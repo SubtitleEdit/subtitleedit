@@ -2,7 +2,7 @@
 <Language Name="italiano">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Traduzione Italiana SilverDrake (giurdi@katamail.com)</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
@@ -555,7 +555,6 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
     <FixesFoundX>Correzioni da applicare trovate: {0}</FixesFoundX>
     <XFixesApplied>Correzioni applicate: {0}</XFixesApplied>
     <NothingToFixBut>Nessuna correzione da applicare, ma qualcosa può essere migliorato. Guarda il rapporto per i dettagli.</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Correggi la 'i' minuscola da sola in 'I' (Inglese)" è spuntato ma il sottotitolo attualmente caricato non sembra essere inglese.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continua</Continue>
     <ContinueAnyway>Continuare comunque?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>"Correggi la 'i' minuscola da sola in 'I' (Inglese)" non è spuntato</UncheckedFixLowercaseIToUppercaseI>
@@ -1492,7 +1491,6 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <Tools>Strumenti</Tools>
     <WordLists>Liste parole</WordLists>
     <SsaStyle>Stile SSA</SsaStyle>
-    <Proxy>Proxy</Proxy>
     <ShowToolBarButtons>Pulsanti da visualizzare nella barra degli strumenti</ShowToolBarButtons>
     <New>Nuovo</New>
     <Open>Apri</Open>

@@ -2,7 +2,7 @@
 <Language Name="français">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Traduction française par JM GBT</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
@@ -493,6 +493,10 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <Normal>Normal</Normal>
     <CaseSensitive>Sensible à la casse</CaseSensitive>
     <RegularExpression>Expression régulière</RegularExpression>
+    <WholeWord>Mot entier uniquement</WholeWord>
+    <Count>Compter</Count>
+    <XNumberOfMatches>{0:#,##0} résultats</XNumberOfMatches>
+    <OneMatch>Un seul résultat</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Chercher la ligne de sous-titre</Title>
@@ -558,7 +562,6 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <FixesFoundX>Corrections trouvées: {0}</FixesFoundX>
     <XFixesApplied>Corrections effectuées: {0}</XFixesApplied>
     <NothingToFixBut>Rien à corriger mais quelques points peuvent être améliorés - voir le rapport</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Le remplacement du 'i' minuscule isolé en 'I' (Anglais)" est activé mais le sous-titre actuel ne semble pas être de l'anglais.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continuer</Continue>
     <ContinueAnyway>Continuer quand même ?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Décocher "Remplacer minuscules 'i' isolé par 'I' (anglais uniquement)"</UncheckedFixLowercaseIToUppercaseI>
@@ -672,6 +675,8 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <ImageFiles>Fichier image</ImageFiles>
     <Input>Entrée</Input>
     <InputDescription>Entrer fichiers (naviguer ou glisser-déposer)</InputDescription>
+    <Remove>Effacer</Remove>
+    <RemoveAll>Enlever tous</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Importer les changements de scène</Title>
@@ -939,7 +944,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Fusionner - style dialogue</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Fusionner ligne précédente</MergeWithLineBefore>
         <MergeWithLineAfter>Fusionner ligne suivante</MergeWithLineAfter>
-        <Normal>Normal</Normal>
+        <Normal>Normal (supprimer les balises de mise en forme)</Normal>
         <Underline>Souligner</Underline>
         <Color>Couleur...</Color>
         <FontName>Police...</FontName>
@@ -1692,6 +1697,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <WaveformSeekSilenceBack>Recherche après le silence</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Ajouter le texte ici (Pour la nouvelle sélection)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Lecture de la nouvelle sélection</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Lecture de la fin de la sélection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Lecture du premier sous-titre sélectionné</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus du mode liste</WaveformFocusListView>
     <GoBack1Frame>Une image arrière</GoBack1Frame>
@@ -2069,6 +2075,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <Title>Comparer les correspondances avec l'image actuelle...</Title>
     <InspectItems>Inspecter éléments</InspectItems>
     <AddBetterMatch>Ajouter une meilleure correspondance</AddBetterMatch>
+    <Add>Ajouter</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nouvelle Base de données</Title>

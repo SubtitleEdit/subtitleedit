@@ -145,18 +145,18 @@ namespace Nikse.SubtitleEdit.Forms
             if (clearFixes)
                 listViewFixes.Items.Clear();
             numberOfSplits = 0;
-            string language = Utilities.AutoDetectGoogleLanguage(subtitle);
+            string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             var splittedSubtitle = new Subtitle();
             string[] expectedPunctuations = { ". -", "! -", "? -" };
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 bool added = false;
-                var p = subtitle.GetParagraphOrDefault(i);
+                var p = subtitle.Paragraphs[i];
                 if (p != null && p.Text != null)
                 {
-                    string oldText = HtmlUtil.RemoveHtmlTags(p.Text);
                     if (SplitLongLinesHelper.QualifiesForSplit(p.Text, singleLineMaxCharacters, totalLineMaxCharacters) && IsFixAllowed(p))
                     {
+                        string oldText = HtmlUtil.RemoveHtmlTags(p.Text);
                         bool isDialog = false;
                         string dialogText = string.Empty;
                         if (p.Text.Contains('-'))
@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Forms
                             dialogText = Utilities.AutoBreakLine(p.Text, 5, 1, language);
 
                             var tempText = p.Text.Replace(Environment.NewLine, " ").Replace("  ", " ");
-                            if (Utilities.CountTagInText(tempText, '-') == 2 && (p.Text.StartsWith('-') || p.Text.StartsWith("<i>-")))
+                            if (Utilities.CountTagInText(tempText, '-') == 2 && (p.Text.StartsWith('-') || p.Text.StartsWith("<i>-", StringComparison.Ordinal)))
                             {
                                 int idx = tempText.IndexOfAny(expectedPunctuations, StringComparison.Ordinal);
                                 if (idx > 1)
@@ -193,7 +193,7 @@ namespace Nikse.SubtitleEdit.Forms
                             string text = Utilities.AutoBreakLine(p.Text, language);
                             if (isDialog)
                                 text = dialogText;
-                            if (text.Contains(Environment.NewLine))
+                            if (isDialog || text.Contains(Environment.NewLine))
                             {
                                 var arr = text.SplitToLines();
                                 if (arr.Length == 2)
@@ -208,9 +208,9 @@ namespace Nikse.SubtitleEdit.Forms
                                     newParagraph1.Text = Utilities.AutoBreakLine(arr[0], language);
 
                                     double middle = p.StartTime.TotalMilliseconds + (p.Duration.TotalMilliseconds / 2);
-                                    if (!string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(oldText)))
+                                    if (!string.IsNullOrWhiteSpace(oldText))
                                     {
-                                        var startFactor = (double)HtmlUtil.RemoveHtmlTags(newParagraph1.Text).Length / HtmlUtil.RemoveHtmlTags(oldText).Length;
+                                        var startFactor = (double)HtmlUtil.RemoveHtmlTags(newParagraph1.Text).Length / oldText.Length;
                                         if (startFactor < 0.25)
                                             startFactor = 0.25;
                                         if (startFactor > 0.75)

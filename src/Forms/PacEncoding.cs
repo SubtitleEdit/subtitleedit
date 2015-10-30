@@ -9,6 +9,7 @@ namespace Nikse.SubtitleEdit.Forms
 
     public sealed partial class PacEncoding : Form
     {
+        private const string PreviewChars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         public int CodePageIndex { get; set; }
 
         private readonly byte[] _previewBuffer;
@@ -72,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
                         index++;
                     }
                     if (CodePageIndex == Pac.CodePageArabic)
-                        textBoxPreview.Text = Utilities.FixEnglishTextInRightToLeftLanguage(sb.ToString(), "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+                        textBoxPreview.Text = Utilities.FixEnglishTextInRightToLeftLanguage(sb.ToString(), PreviewChars);
                     else
                         textBoxPreview.Text = sb.ToString();
                 }

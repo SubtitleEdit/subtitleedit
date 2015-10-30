@@ -128,17 +128,52 @@
     <Compile Include="FileUtil.cs" />
     <Compile Include="FindReplaceDialogHelper.cs" />
     <Compile Include="Forms\CheckForUpdatesHelper.cs" />
-    <Compile Include="Forms\FixCommonErrorsHelper.cs" />
+    <Compile Include="Forms\FixCommonErrors\AddMissingQuotes.cs" />
+    <Compile Include="Forms\FixCommonErrors\EmptyFixCallback.cs" />
+    <Compile Include="Forms\FixCommonErrors\Fix3PlusLines.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixAloneLowercaseIToUppercaseI.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixDanishLetterI.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixDialogsOnOneLine.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixDoubleApostrophes.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixDoubleDash.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixDoubleGreaterThan.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixEllipsesStart.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixEmptyLines.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixHyphensAdd.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixHyphensRemove.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixInvalidItalicTags.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixLongDisplayTimes.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixLongLines.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixMissingOpenBracket.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixMissingPeriodsAtEndOfLine.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixMissingSpaces.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixMusicNotation.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixOverlappingDisplayTimes.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixShortDisplayTimes.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixShortLines.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixShortLinesAll.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixSpanishInvertedQuestionAndExclamationMarks.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixStartWithUppercaseLetterAfterColon.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixStartWithUppercaseLetterAfterParagraph.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixStartWithUppercaseLetterAfterPeriodInsideParagraph.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixTurkishAnsiToUnicode.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixUnneededPeriods.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixUnneededSpaces.cs" />
+    <Compile Include="Forms\FixCommonErrors\FixUppercaseIInsideWords.cs" />
+    <Compile Include="Forms\FixCommonErrors\Helper.cs" />
+    <Compile Include="Forms\FixCommonErrors\IFixCallbacks.cs" />
+    <Compile Include="Forms\FixCommonErrors\IFixCommonError.cs" />
+    <Compile Include="Forms\FixCommonErrors\RemoveSpaceBetweenNumbers.cs" />
     <Compile Include="Forms\RemoveTextForHI.cs" />
     <Compile Include="Forms\RemoveTextForHISettings.cs" />
     <Compile Include="Forms\SplitLongLinesHelper.cs" />
-    <Compile Include="Fourier.cs" />
     <Compile Include="HistoryItem.cs" />
     <Compile Include="HtmlUtil.cs" />
     <Compile Include="IfoParser.cs" />
     <Compile Include="ImageSplitter.cs" />
     <Compile Include="ImageSplitterItem.cs" />
     <Compile Include="Language.cs" />
+    <Compile Include="LanguageAutoDetect.cs" />
     <Compile Include="LanguageDeserializer.cs" />
     <Compile Include="LanguageStructure.cs" />
     <Compile Include="ManagedBitmap.cs" />
@@ -148,6 +183,7 @@
     <Compile Include="NoBreakAfterItem.cs" />
     <Compile Include="Paragraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RealFFT.cs" />
     <Compile Include="RegistryUtil.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SpellCheckWord.cs" />
@@ -439,9 +475,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>IF NOT EXIST "$(ProjectDir)Properties\AssemblyInfo.cs" (
-  COPY "$(ProjectDir)Properties\AssemblyInfo.cs.template" "$(ProjectDir)Properties\AssemblyInfo.cs"
-)</PreBuildEvent>
+    <PreBuildEvent>"$(ProjectDir)..\build_helpers.bat" rev $(ConfigurationName) &amp;&amp; "$(ProjectDir)..\build_helpers.bat" lang $(ConfigurationName)</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -2,7 +2,7 @@
 <Language Name="português (Brasil)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.8</Version>
+    <Version>3.4.10</Version>
     <TranslatedBy>Tradução (Português do Brasil): Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
     <HelpFile />
@@ -555,7 +555,6 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <FixesFoundX>Correções encontradas: {0}</FixesFoundX>
     <XFixesApplied>Correções aplicadas: {0}</XFixesApplied>
     <NothingToFixBut>Nada para corrigir, mas algumas coisas podem ser melhoradas - veja o log para mais detalhes</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Corrigir "i" minúscula sozinha por "I" maiúscula (Inglês)" está marcada mas a legenda carregada não parece ser em Inglês.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continuar</Continue>
     <ContinueAnyway>Continuar assim mesmo?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Desmarcar "Corrigir "i" minúscula sozinha por "I" maiúscula (Inglês)"</UncheckedFixLowercaseIToUppercaseI>
@@ -1502,7 +1501,6 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <Tools>Ferramentas</Tools>
     <WordLists>Listas de palavras</WordLists>
     <SsaStyle>Estilo SSA</SsaStyle>
-    <Proxy>Proxy</Proxy>
     <ShowToolBarButtons>Mostrar botões da barra de ferramentas</ShowToolBarButtons>
     <New>Novo</New>
     <Open>Abrir</Open>

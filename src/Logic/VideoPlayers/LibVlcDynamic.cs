@@ -265,10 +265,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                using (var vlc = new LibVlcDynamic())
+                try
                 {
-                    vlc.Initialize(null, null, null, null);
-                    return vlc.IsAllMethodsLoaded();
+                    using (var vlc = new LibVlcDynamic())
+                    {
+                        vlc.Initialize(null, null, null, null);
+                        return vlc.IsAllMethodsLoaded();
+                    }
+                }
+                catch
+                {
+                    return false;
                 }
             }
         }

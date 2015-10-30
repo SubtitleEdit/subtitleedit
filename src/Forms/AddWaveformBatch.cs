@@ -76,13 +76,13 @@ namespace Nikse.SubtitleEdit.Forms
             buttonInputBrowse.Enabled = true;
         }
 
+        private static readonly ICollection<string> ExcludedExtensions = new List<string> { ".srt", ".txt", ".exe", ".ass", ".sub", ".jpg", ".png", ".zip", ".rar" };
         private void AddInputFile(string fileName)
         {
             try
             {
                 var ext = Path.GetExtension(fileName).ToLowerInvariant();
-                var excludedExtensions = new List<string> { ".srt", ".txt", ".exe", ".ass", ".sub", ".jpg", ".png", ".zip", ".rar" };
-                if (string.IsNullOrEmpty(ext) || excludedExtensions.Contains(ext))
+                if (string.IsNullOrEmpty(ext) || ExcludedExtensions.Contains(ext))
                 {
                     return;
                 }
@@ -211,7 +211,12 @@ namespace Nikse.SubtitleEdit.Forms
             while (index < listViewInputFiles.Items.Count && _abort == false)
             {
                 var item = listViewInputFiles.Items[index];
-                item.SubItems[3].Text = Configuration.Settings.Language.AddWaveformBatch.ExtractingAudio;
+                Action<string> updateStatus = status =>
+                {
+                    item.SubItems[3].Text = status;
+                    Refresh();
+                };
+                updateStatus(Configuration.Settings.Language.AddWaveformBatch.ExtractingAudio);
                 string fileName = item.Text;
                 try
                 {
@@ -285,7 +290,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    item.SubItems[3].Text = Configuration.Settings.Language.AddWaveformBatch.Calculating;
+                    updateStatus(Configuration.Settings.Language.AddWaveformBatch.Calculating);
                     MakeWaveformAndSpectrogram(fileName, targetFile, _delayInMilliseconds);
 
                     // cleanup
@@ -300,13 +305,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                     IncrementAndShowProgress();
 
-                    item.SubItems[3].Text = Configuration.Settings.Language.AddWaveformBatch.Done;
+                    updateStatus(Configuration.Settings.Language.AddWaveformBatch.Done);
                 }
                 catch
                 {
                     IncrementAndShowProgress();
 
-                    item.SubItems[3].Text = Configuration.Settings.Language.AddWaveformBatch.Error;
+                    updateStatus(Configuration.Settings.Language.AddWaveformBatch.Error);
                 }
                 index++;
             }
@@ -314,7 +319,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelProgress.Text = string.Empty;
             labelInfo.Text = string.Empty;
             progressBar1.Visible = false;
-            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
+            TaskbarList.SetProgressState(Owner.Handle, TaskbarButtonProgressFlags.NoProgress);
             buttonRipWave.Enabled = true;
             buttonInputBrowse.Enabled = true;
             buttonSearchFolder.Enabled = true;
@@ -322,28 +327,22 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MakeWaveformAndSpectrogram(string videoFileName, string targetFile, int delayInMilliseconds)
         {
-            var waveFile = new WavePeakGenerator(targetFile);
+            using (var waveFile = new WavePeakGenerator(targetFile))
+            {
+                waveFile.GeneratePeaks(delayInMilliseconds, Main.GetPeakWaveFileName(videoFileName));
 
-            int sampleRate = Configuration.Settings.VideoControls.WaveformMinimumSampleRate; // Normally 128
-            while (waveFile.Header.SampleRate % sampleRate != 0 && sampleRate < 5000)
-                sampleRate++; // old sample-rate / new sample-rate must have rest = 0
-
-            waveFile.GeneratePeakSamples(sampleRate, delayInMilliseconds); // samples per second - SampleRate
-
-            //if (Configuration.Settings.VideoControls.GenerateSpectrogram)
-            //{
-            //    //Directory.CreateDirectory(_spectrogramDirectory);
-            //    //SpectrogramBitmaps = waveFile.GenerateFourierData(256, _spectrogramDirectory, delayInMilliseconds); // image height = nfft / 2
-            //}
-            waveFile.WritePeakSamples(Main.GetPeakWaveFileName(videoFileName));
-            waveFile.Close();
+                if (Configuration.Settings.VideoControls.GenerateSpectrogram)
+                {
+                    waveFile.GenerateSpectrogram(delayInMilliseconds, Main.GetSpectrogramFolder(videoFileName));
+                }
+            }
         }
 
         private void IncrementAndShowProgress()
         {
             if (progressBar1.Value < progressBar1.Maximum)
                 progressBar1.Value++;
-            TaskbarList.SetProgressValue(Handle, progressBar1.Value, progressBar1.Maximum);
+            TaskbarList.SetProgressValue(Owner.Handle, progressBar1.Value, progressBar1.Maximum);
             labelProgress.Text = progressBar1.Value + " / " + progressBar1.Maximum;
         }
 

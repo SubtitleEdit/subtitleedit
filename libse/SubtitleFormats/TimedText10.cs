@@ -3,6 +3,7 @@
 //W3C Recommendation 18 November 2010
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -38,6 +39,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (xmlAsString.Contains("http://www.w3.org/ns/ttml"))
             {
+                xmlAsString = xmlAsString.RemoveControlCharactersButWhiteSpace();
                 var xml = new XmlDocument { XmlResolver = null };
                 try
                 {
@@ -465,11 +467,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xml = new XmlDocument { XmlResolver = null };
             try
             {
-                xml.LoadXml(sb.ToString().Trim());
+                xml.LoadXml(sb.ToString().RemoveControlCharactersButWhiteSpace().Trim());
             }
             catch
             {
-                xml.LoadXml(sb.ToString().Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A").Trim());
+                xml.LoadXml(sb.ToString().Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A").RemoveControlCharactersButWhiteSpace().Trim());
             }
 
             const string ns = "http://www.w3.org/ns/ttml";
@@ -512,7 +514,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var pText = new StringBuilder();
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
-                        switch (innerNode.Name)
+                        switch (innerNode.Name.Replace("tt:", string.Empty))
                         {
                             case "br":
                                 pText.AppendLine();
@@ -684,11 +686,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 foreach (XmlNode innerInnerNode in innerNode.ChildNodes)
                 {
-                    if (innerInnerNode.Name == "br")
+                    if (innerInnerNode.Name == "br" || innerInnerNode.Name == "tt:br")
                     {
                         pText.AppendLine();
                     }
-                    else if (innerInnerNode.Name == "span")
+                    else if (innerInnerNode.Name == "span" || innerInnerNode.Name == "tt:span")
                     {
                         ReadSpan(pText, innerInnerNode, styles, header);
                     }
