@@ -3,7 +3,6 @@
 //W3C Recommendation 18 November 2010
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -507,6 +506,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (body.Attributes["style"] != null)
                 defaultStyle = body.Attributes["style"].InnerText;
             XmlNode lastDiv = null;
+
+            var headerStyleNodes = new List<XmlNode>();
+            try
+            {
+                XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
+                foreach (XmlNode node in head.SelectNodes("//ttml:style", nsmgr))
+                {
+                    headerStyleNodes.Add(node);
+                }
+            }
+            catch
+            {
+            }
+
             foreach (XmlNode node in body.SelectNodes("//ttml:p", nsmgr))
             {
                 try
@@ -520,7 +533,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 pText.AppendLine();
                                 break;
                             case "span":
-                                ReadSpan(pText, innerNode, styles, subtitle.Header);
+                                ReadSpan(pText, innerNode, styles, headerStyleNodes);
                                 break;
                             default:
                                 pText.Append(innerNode.InnerText);
@@ -639,7 +652,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return string.Format("{0} / {1}", style, lang);
         }
 
-        private static void ReadSpan(StringBuilder pText, XmlNode innerNode, List<string> styles, string header)
+        private static void ReadSpan(StringBuilder pText, XmlNode innerNode, List<string> styles, List<XmlNode> headerStyleNodes)
         {
             bool italic = false;
             bool font = false;
@@ -670,12 +683,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var style = innerNode.Attributes.GetNamedItem("style");
                 if (fc == null && fw == null && fs == null && style != null && styles.Contains(style.Value)) // && styles.Contains(fs.Value))
                 {
-                    if (IsStyleItalic(style.Value, header))
+                    if (IsStyleItalic(style.Value, headerStyleNodes))
                     {
                         italic = true;
                         pText.Append("<i>");
                     }
-                    else if (IsStyleBold(style.Value, header))
+                    else if (IsStyleBold(style.Value, headerStyleNodes))
                     {
                         pText.Append("<b>");
                         bold = true;
@@ -692,7 +705,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else if (innerInnerNode.Name == "span" || innerInnerNode.Name == "tt:span")
                     {
-                        ReadSpan(pText, innerInnerNode, styles, header);
+                        ReadSpan(pText, innerInnerNode, styles, headerStyleNodes);
                     }
                     else
                     {
@@ -785,16 +798,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return list;
         }
 
-        private static bool IsStyleItalic(string styleName, string xmlAsString)
+        private static bool IsStyleItalic(string styleName, IEnumerable<XmlNode> headerStyleNodes)
         {
-            var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(xmlAsString);
-                var nsmgr = new XmlNamespaceManager(xml.NameTable);
-                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
-                foreach (XmlNode node in head.SelectNodes("//ttml:style", nsmgr))
+                foreach (XmlNode node in headerStyleNodes)
                 {
                     string id = string.Empty;
                     if (node.Attributes["xml:id"] != null)
@@ -816,16 +824,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        private static bool IsStyleBold(string styleName, string xmlAsString)
+        private static bool IsStyleBold(string styleName, IEnumerable<XmlNode> headerStyleNodes)
         {
-            var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(xmlAsString);
-                var nsmgr = new XmlNamespaceManager(xml.NameTable);
-                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
-                foreach (XmlNode node in head.SelectNodes("//ttml:style", nsmgr))
+                foreach (XmlNode node in headerStyleNodes)
                 {
                     string id = string.Empty;
                     if (node.Attributes["xml:id"] != null)
