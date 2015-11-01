@@ -3,6 +3,7 @@ SETLOCAL
 PUSHD %~dp0
 SET "ConfigurationName=%~2"
 
+IF /I "%~1" == "rsrc" GOTO UpdateResourceScript
 IF /I "%~1" == "lang" GOTO UpdateLanguageFiles
 IF /I "%~1" == "rev"  GOTO UpdateAssemblyInfo
 
@@ -12,13 +13,29 @@ ENDLOCAL
 EXIT /B
 
 
-:UpdateLanguageFiles
-IF NOT EXIST "src\UpdateLanguageFiles\bin\%ConfigurationName%\UpdateLanguageFiles.exe" (
+:UpdateResourceScript
+SET "ToolPath=src\UpdateResourceScript\bin\%ConfigurationName%\UpdateResourceScript.exe"
+IF NOT EXIST "%ToolPath%" (
   ECHO Compile Subtitle Edit first!
   GOTO END
 )
 
-"src\UpdateLanguageFiles\bin\%ConfigurationName%\UpdateLanguageFiles.exe" "LanguageMaster.xml" "libse\LanguageDeserializer.cs"
+"%ToolPath%" "src\Win32Resources\Resources.rc.template" "src\bin\%ConfigurationName%\SubtitleEdit.exe"
+
+IF %ERRORLEVEL% NEQ 0 (
+  ECHO ERROR: Something went wrong when generating the resource script...
+)
+GOTO END
+
+
+:UpdateLanguageFiles
+SET "ToolPath=src\UpdateLanguageFiles\bin\%ConfigurationName%\UpdateLanguageFiles.exe"
+IF NOT EXIST "%ToolPath%" (
+  ECHO Compile Subtitle Edit first!
+  GOTO END
+)
+
+"%ToolPath%" "LanguageMaster.xml" "libse\LanguageDeserializer.cs"
 
 IF %ERRORLEVEL% NEQ 0 (
   ECHO ERROR: Something went wrong when generating the language files...
@@ -27,12 +44,13 @@ GOTO END
 
 
 :UpdateAssemblyInfo
-IF NOT EXIST "src\UpdateAssemblyInfo\bin\%ConfigurationName%\UpdateAssemblyInfo.exe" (
+SET "ToolPath=src\UpdateAssemblyInfo\bin\%ConfigurationName%\UpdateAssemblyInfo.exe"
+IF NOT EXIST "%ToolPath%" (
   ECHO Compile Subtitle Edit first!
   GOTO END
 )
 
-"src\UpdateAssemblyInfo\bin\%ConfigurationName%\UpdateAssemblyInfo.exe" "src\Properties\AssemblyInfo.cs.template" "libse\Properties\AssemblyInfo.cs.template"
+"%ToolPath%" "src\Properties\AssemblyInfo.cs.template" "libse\Properties\AssemblyInfo.cs.template"
 
 IF %ERRORLEVEL% NEQ 0 (
   ECHO ERROR: Something went wrong when generating the revision number...

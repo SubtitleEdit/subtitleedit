@@ -1,0 +1,326 @@
+﻿#include <windows.h>
+#include "Resources.h"
+
+#ifndef TargetAssemblyDescription
+#define TargetAssemblyDescription "Subtitle Edit resources"
+#endif
+#ifndef TargetAssemblyFileName
+#define TargetAssemblyFileName "SubtitleEdit.resources.dll"
+#endif
+
+1 VERSIONINFO
+    PRODUCTVERSION  [vi:ProductVersion]
+    FILEVERSION     [vi:FileVersion]
+    FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+    FILEFLAGS       [vi:FileFlags]
+    FILEOS          VOS_NT_WINDOWS32
+    FILETYPE        VFT_DLL
+    FILESUBTYPE     VFT2_UNKNOWN
+{
+    BLOCK "StringFileInfo"
+    {
+        BLOCK "040904B0" // English (1033) + Unicode (1200)
+        {
+            [vi:StringFileInfo]
+        }
+    }
+
+    BLOCK "VarFileInfo"
+    {
+        VALUE "Translation", 0x0409, 0x04B0 // langID=English, charsetID=Unicode
+    }
+}
+
+// Document type icons
+RCICON_SRT ICON "SubtitleEdit.srt.ico"
+
+STRINGTABLE // en-US
+    LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+{
+     // "ApplicationName" and "FriendlyAppName"
+    RC_APPNAME  "Subtitle Edit"
+     // "ApplicationDescription"
+    RC_APPDESC  "Subtitle Edit - The subtitle Swiss Knife"
+    // Document type descriptions
+    RCDESC_SRT  RCDESC_SRT_DEFAULT
+}
+
+//STRINGTABLE // ar-EG
+//    LANGUAGE LANG_ARABIC, SUBLANG_ARABIC_EGYPT
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // bg-BG
+//    LANGUAGE LANG_BULGARIAN, SUBLANG_BULGARIAN_BULGARIA
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // ca-ES
+//    LANGUAGE LANG_CATALAN, SUBLANG_CATALAN_CATALAN
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // cs-CZ
+//    LANGUAGE LANG_CZECH, SUBLANG_CZECH_CZECH_REPUBLIC
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // da-DK
+//    LANGUAGE LANG_DANISH, SUBLANG_DANISH_DENMARK
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // de-DE
+//    LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // el-GR
+//    LANGUAGE LANG_GREEK, SUBLANG_GREEK_GREECE
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // es-AR
+//    LANGUAGE LANG_SPANISH, SUBLANG_SPANISH_ARGENTINA
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // es-ES
+//    LANGUAGE LANG_SPANISH, SUBLANG_SPANISH
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // es-MX
+//    LANGUAGE LANG_SPANISH, SUBLANG_SPANISH_MEXICAN
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // eu-ES
+//    LANGUAGE LANG_BASQUE, SUBLANG_BASQUE_BASQUE
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // fa-IR
+//    LANGUAGE LANG_PERSIAN, SUBLANG_PERSIAN_IRAN
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // fi-FI
+//    LANGUAGE LANG_FINNISH, SUBLANG_FINNISH_FINLAND
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // fr-FR
+//    LANGUAGE LANG_FRENCH, SUBLANG_FRENCH
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // hr-HR
+//    LANGUAGE LANG_CROATIAN, SUBLANG_CROATIAN_CROATIA
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // hu-HU
+//    LANGUAGE LANG_HUNGARIAN, SUBLANG_HUNGARIAN_HUNGARY
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // it-IT
+//    LANGUAGE LANG_ITALIAN, SUBLANG_ITALIAN
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // ja-JP
+//    LANGUAGE LANG_JAPANESE, SUBLANG_JAPANESE_JAPAN
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // ko-KR
+//    LANGUAGE LANG_KOREAN, SUBLANG_KOREAN
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+STRINGTABLE // nl-NL
+    LANGUAGE LANG_DUTCH, SUBLANG_DUTCH
+{
+    RC_APPNAME  "Subtitle Edit"
+    RC_APPDESC  "Subtitle Edit - De ondertitel duizendpoot"
+    RCDESC_SRT  "SubRip Text ondertiteling"
+}
+
+//STRINGTABLE // pl-PL
+//    LANGUAGE LANG_POLISH, SUBLANG_POLISH_POLAND
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // pt-BR
+//    LANGUAGE LANG_PORTUGUESE, SUBLANG_PORTUGUESE_BRAZILIAN
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // pt-PT
+//    LANGUAGE LANG_PORTUGUESE, SUBLANG_PORTUGUESE_PORTUGAL
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // ro-RO
+//    LANGUAGE LANG_ROMANIAN, SUBLANG_ROMANIAN_ROMANIA
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // ru-RU
+//    LANGUAGE LANG_RUSSIAN, SUBLANG_RUSSIAN_RUSSIA
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // sl-SI
+//    LANGUAGE LANG_SLOVENIAN, SUBLANG_SLOVENIAN_SLOVENIA
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // sr-Cyrl-RS
+//    LANGUAGE LANG_SERBIAN, SUBLANG_SERBIAN_CYRILLIC
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // sr-Latn-RS
+//    LANGUAGE LANG_SERBIAN, SUBLANG_SERBIAN_LATIN
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // sv-SE
+//    LANGUAGE LANG_SWEDISH, SUBLANG_SWEDISH_SWEDEN
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // th-TH
+//    LANGUAGE LANG_THAI, SUBLANG_THAI_THAILAND
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // tr-TR
+//    LANGUAGE LANG_TURKISH, SUBLANG_TURKISH_TURKEY
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // uk-UA
+//    LANGUAGE LANG_UKRAINIAN, SUBLANG_UKRAINIAN_UKRAINE
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // vi-VN
+//    LANGUAGE LANG_VIETNAMESE, SUBLANG_VIETNAMESE_VIETNAM
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // zh-Hans
+//    LANGUAGE LANG_CHINESE_SIMPLIFIED, SUBLANG_CHINESE_SIMPLIFIED
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
+
+//STRINGTABLE // zh-Hant
+//    LANGUAGE LANG_CHINESE_TRADITIONAL, SUBLANG_CHINESE_TRADITIONAL
+//{
+//    RC_APPNAME  ""
+//    RC_APPDESC  ""
+//    RCDESC_SRT  ""
+//}
