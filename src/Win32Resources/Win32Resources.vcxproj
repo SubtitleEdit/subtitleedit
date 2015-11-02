@@ -107,4 +107,7 @@
   <ItemGroup>
     <Image Include="SubtitleEdit.srt.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="SubtitleEdit.sup.ico" />
+  </ItemGroup>
 </Project>
