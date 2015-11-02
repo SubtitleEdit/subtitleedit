@@ -110,4 +110,7 @@
   <ItemGroup>
     <Image Include="SubtitleEdit.sup.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="SubtitleEdit.sub.ico" />
+  </ItemGroup>
 </Project>

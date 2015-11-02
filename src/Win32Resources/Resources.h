@@ -14,3 +14,7 @@
 #define RCICON_SUP          102
 #define RCDESC_SUP          10102
 #define RCDESC_SUP_DEFAULT  "Blu-ray PGS subtitles"
+
+#define RCICON_SUB          103
+#define RCDESC_SUB          10103
+#define RCDESC_SUB_DEFAULT  "VobSub/MicroDVD subtitles"
