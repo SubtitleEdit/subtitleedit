@@ -33,6 +33,8 @@
 
 // Document type icons
 RCICON_SRT ICON "SubtitleEdit.srt.ico"
+RCICON_SUP ICON "SubtitleEdit.sup.ico"
+RCICON_SUB ICON "SubtitleEdit.sub.ico"
 
 STRINGTABLE // en-US
     LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
@@ -43,6 +45,8 @@ STRINGTABLE // en-US
     RC_APPDESC  "Subtitle Edit - The subtitle Swiss Knife"
     // Document type descriptions
     RCDESC_SRT  RCDESC_SRT_DEFAULT
+    RCDESC_SUP  RCDESC_SUP_DEFAULT
+    RCDESC_SUB  RCDESC_SUB_DEFAULT
 }
 
 //STRINGTABLE // ar-EG
@@ -51,6 +55,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // bg-BG
@@ -59,6 +65,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // ca-ES
@@ -67,6 +75,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // cs-CZ
@@ -75,6 +85,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // da-DK
@@ -83,6 +95,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // de-DE
@@ -91,6 +105,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // el-GR
@@ -99,6 +115,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // es-AR
@@ -107,6 +125,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // es-ES
@@ -115,6 +135,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // es-MX
@@ -123,6 +145,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // eu-ES
@@ -131,6 +155,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // fa-IR
@@ -139,6 +165,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // fi-FI
@@ -147,6 +175,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // fr-FR
@@ -155,6 +185,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // hr-HR
@@ -163,6 +195,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // hu-HU
@@ -171,6 +205,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // it-IT
@@ -179,6 +215,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // ja-JP
@@ -187,6 +225,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // ko-KR
@@ -195,6 +235,8 @@ STRINGTABLE // en-US
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 STRINGTABLE // nl-NL
@@ -203,6 +245,8 @@ STRINGTABLE // nl-NL
     RC_APPNAME  "Subtitle Edit"
     RC_APPDESC  "Subtitle Edit - De ondertitel duizendpoot"
     RCDESC_SRT  "SubRip Text ondertiteling"
+    RCDESC_SUP  "Blu-ray PGS ondertiteling"
+    RCDESC_SUB  "VobSub/MicroDVD ondertiteling"
 }
 
 //STRINGTABLE // pl-PL
@@ -211,6 +255,8 @@ STRINGTABLE // nl-NL
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // pt-BR
@@ -219,6 +265,8 @@ STRINGTABLE // nl-NL
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // pt-PT
@@ -227,6 +275,8 @@ STRINGTABLE // nl-NL
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // ro-RO
@@ -235,6 +285,8 @@ STRINGTABLE // nl-NL
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // ru-RU
@@ -243,6 +295,8 @@ STRINGTABLE // nl-NL
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // sl-SI
@@ -251,6 +305,8 @@ STRINGTABLE // nl-NL
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // sr-Cyrl-RS
@@ -259,6 +315,8 @@ STRINGTABLE // nl-NL
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // sr-Latn-RS
@@ -267,6 +325,8 @@ STRINGTABLE // nl-NL
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // sv-SE
@@ -275,6 +335,8 @@ STRINGTABLE // nl-NL
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // th-TH
@@ -283,6 +345,8 @@ STRINGTABLE // nl-NL
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // tr-TR
@@ -291,6 +355,8 @@ STRINGTABLE // nl-NL
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // uk-UA
@@ -299,6 +365,8 @@ STRINGTABLE // nl-NL
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // vi-VN
@@ -307,6 +375,8 @@ STRINGTABLE // nl-NL
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // zh-Hans
@@ -315,6 +385,8 @@ STRINGTABLE // nl-NL
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}
 
 //STRINGTABLE // zh-Hant
@@ -323,4 +395,6 @@ STRINGTABLE // nl-NL
 //    RC_APPNAME  ""
 //    RC_APPDESC  ""
 //    RCDESC_SRT  ""
+//    RCDESC_SUP  ""
+//    RCDESC_SUB  ""
 //}

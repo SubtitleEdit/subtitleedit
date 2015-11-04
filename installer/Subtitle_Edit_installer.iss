@@ -399,7 +399,7 @@ Root: HKLM; Subkey: "{#keySE}"; ValueType: string; ValueName: ""; ValueData: "{#
 Root: HKLM; Subkey: "{#keySE}\Capabilities"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "{#rctext(RC_APPDESC)}"
 Root: HKLM; Subkey: "{#keySE}\Capabilities"; ValueType: string; ValueName: "ApplicationName"; ValueData: "{#rctext(RC_APPNAME)}"
 Root: HKLM; Subkey: "{#keyRegApps}"; ValueType: string; ValueName: "SubtitleEdit"; ValueData: "{#keySE}\Capabilities"; Flags: uninsdeletevalue; Check: HklmKeyExists('{#keyRegApps}')
-; Create .srt association
+; Add .srt to the SE-supported file types
 Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt"; ValueType: string; ValueName: ""; ValueData: "{#RCDESC_SRT_DEFAULT}"; Flags: deletekey uninsdeletekey
 Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt"; ValueType: string; ValueName: "FriendlyTypeName"; ValueData: "{#rctext(RCDESC_SRT)}"
 Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.srt"; ValueType: dword; ValueName: "EditFlags"; ValueData: $00010000
@@ -411,7 +411,28 @@ Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: "Content Type
 Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: "PerceivedType"; ValueData: "text"
 Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".srt"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
 Root: HKLM; Subkey: "{#keySE}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".srt"; ValueData: "SubtitleEdit.srt"
+; Associate .srt file type with SE (only if requested by user)
 Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: ""; ValueData: "SubtitleEdit.srt"; Tasks: associate_srt
+; Add .sup to the SE-supported file types
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sup"; ValueType: string; ValueName: ""; ValueData: "{#RCDESC_SUP_DEFAULT}"; Flags: deletekey uninsdeletekey
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sup"; ValueType: string; ValueName: "FriendlyTypeName"; ValueData: "{#rctext(RCDESC_SUP)}"
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sup"; ValueType: dword; ValueName: "EditFlags"; ValueData: $00010000
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sup\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{#rcicon(RCICON_SUP)}"
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sup\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\SubtitleEdit.exe"" ""%1"""
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sup\shell"; ValueType: string; ValueName: ""; ValueData: "open"
+Root: HKLM; Subkey: "{#keyCl}\.sup\OpenWithProgids"; ValueType: string; ValueName: "SubtitleEdit.sup"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".sup"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
+Root: HKLM; Subkey: "{#keySE}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".sup"; ValueData: "SubtitleEdit.sup"
+; Add .sub to the SE-supported file types
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sub"; ValueType: string; ValueName: ""; ValueData: "{#RCDESC_SUB_DEFAULT}"; Flags: deletekey uninsdeletekey
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sub"; ValueType: string; ValueName: "FriendlyTypeName"; ValueData: "{#rctext(RCDESC_SUB)}"
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sub"; ValueType: dword; ValueName: "EditFlags"; ValueData: $00010000
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sub\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{#rcicon(RCICON_SUB)}"
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sub\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\SubtitleEdit.exe"" ""%1"""
+Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sub\shell"; ValueType: string; ValueName: ""; ValueData: "open"
+Root: HKLM; Subkey: "{#keyCl}\.sub\OpenWithProgids"; ValueType: string; ValueName: "SubtitleEdit.sub"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".sub"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
+Root: HKLM; Subkey: "{#keySE}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".sub"; ValueData: "SubtitleEdit.sub"
 
 
 [Code]
