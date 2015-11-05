@@ -6699,8 +6699,13 @@ namespace Nikse.SubtitleEdit.Forms
                         int indexOfEndBracket = p.Text.IndexOf('}');
                         if (p.Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                             p.Text = p.Text.Remove(0, indexOfEndBracket + 1).TrimStart();
+
+                        // remove music symbols
+                        p.Text = p.Text.Replace("♪", string.Empty);
+                        p.Text = p.Text.Replace("♫", string.Empty);
+
                         p.Text = HtmlUtil.RemoveHtmlTags(p.Text);
-                        p.Text = RemoveUnicodeCharacters(p.Text);
+
                         if (isSsa)
                             p.Text = Utilities.RemoveSsaTags(p.Text);
                         SubtitleListview1.SetText(item.Index, p.Text);
