@@ -871,6 +871,21 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixUnneededSpacesBeforePeriod()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string input = "He's English . He is 21 years of age.";
+                const string expected = "He's English. He is 21 years of age.";
+                InitializeFixCommonErrorsLine(target, input);
+                new FixUnneededSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
+        
+
 
         #endregion Fix unneeded spaces
 

@@ -1915,6 +1915,17 @@ namespace Nikse.SubtitleEdit.Core
                     text = text.Replace(" ?", "?");
             }
 
+            if (text.Contains(" . "))
+            {
+                var regex = new Regex(@"[a-z] \. [A-Z]");
+                var match = regex.Match(text);
+                while (match.Success)
+                {
+                    text = text.Remove(match.Index + 1, 1);
+                    match = regex.Match(text);
+                }
+            }
+
             while (text.Contains("¿ "))
                 text = text.Replace("¿ ", "¿");
 
