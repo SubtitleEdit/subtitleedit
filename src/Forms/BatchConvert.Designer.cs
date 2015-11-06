@@ -85,14 +85,22 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.numericUpDownPercent = new System.Windows.Forms.NumericUpDown();
+            this.labelPercent = new System.Windows.Forms.Label();
+            this.radioButtonToDropFrame = new System.Windows.Forms.RadioButton();
+            this.radioButtonSpeedFromDropFrame = new System.Windows.Forms.RadioButton();
+            this.radioButtonSpeedCustom = new System.Windows.Forms.RadioButton();
             this.groupBoxConvertOptions.SuspendLayout();
             this.groupBoxChangeFrameRate.SuspendLayout();
             this.groupBoxOffsetTimeCodes.SuspendLayout();
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // buttonConvert
             // 
             this.buttonConvert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -118,9 +126,10 @@
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // groupBoxConvertOptions
-            // 
-            this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxConvertOptions.Controls.Add(this.groupBox1);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxSplitLongLines);
             this.groupBoxConvertOptions.Controls.Add(this.buttonRemoveTextForHiSettings);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxSetMinimumDisplayTimeBetweenSubs);
@@ -279,16 +288,16 @@
             this.groupBoxOffsetTimeCodes.Controls.Add(this.labelHourMinSecMilliSecond);
             this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(280, 89);
             this.groupBoxOffsetTimeCodes.Name = "groupBoxOffsetTimeCodes";
-            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(239, 115);
+            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(122, 115);
             this.groupBoxOffsetTimeCodes.TabIndex = 11;
             this.groupBoxOffsetTimeCodes.TabStop = false;
             this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
             // 
             // radioButtonShowLater
-            // 
+            //
             this.radioButtonShowLater.AutoSize = true;
             this.radioButtonShowLater.Checked = true;
-            this.radioButtonShowLater.Location = new System.Drawing.Point(108, 61);
+            this.radioButtonShowLater.Location = new System.Drawing.Point(9, 89);
             this.radioButtonShowLater.Name = "radioButtonShowLater";
             this.radioButtonShowLater.Size = new System.Drawing.Size(75, 17);
             this.radioButtonShowLater.TabIndex = 3;
@@ -297,9 +306,9 @@
             this.radioButtonShowLater.UseVisualStyleBackColor = true;
             // 
             // radioButtonShowEarlier
-            // 
+            //
             this.radioButtonShowEarlier.AutoSize = true;
-            this.radioButtonShowEarlier.Location = new System.Drawing.Point(108, 38);
+            this.radioButtonShowEarlier.Location = new System.Drawing.Point(9, 66);
             this.radioButtonShowEarlier.Name = "radioButtonShowEarlier";
             this.radioButtonShowEarlier.Size = new System.Drawing.Size(83, 17);
             this.radioButtonShowEarlier.TabIndex = 2;
@@ -671,9 +680,88 @@
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
-            // 
+            //
+            // groupBox1
+            //
+            this.groupBox1.Controls.Add(this.radioButtonToDropFrame);
+            this.groupBox1.Controls.Add(this.radioButtonSpeedFromDropFrame);
+            this.groupBox1.Controls.Add(this.radioButtonSpeedCustom);
+            this.groupBox1.Controls.Add(this.numericUpDownPercent);
+            this.groupBox1.Controls.Add(this.labelPercent);
+            this.groupBox1.Location = new System.Drawing.Point(408, 89);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(106, 115);
+            this.groupBox1.TabIndex = 12;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Change speed";
+            //
+            // numericUpDownPercent
+            //
+            this.numericUpDownPercent.DecimalPlaces = 5;
+            this.numericUpDownPercent.Location = new System.Drawing.Point(6, 19);
+            this.numericUpDownPercent.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDownPercent.Minimum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownPercent.Name = "numericUpDownPercent";
+            this.numericUpDownPercent.Size = new System.Drawing.Size(81, 20);
+            this.numericUpDownPercent.TabIndex = 0;
+            this.numericUpDownPercent.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            //
+            // labelPercent
+            //
+            this.labelPercent.AutoSize = true;
+            this.labelPercent.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelPercent.Location = new System.Drawing.Point(87, 22);
+            this.labelPercent.Name = "labelPercent";
+            this.labelPercent.Size = new System.Drawing.Size(15, 13);
+            this.labelPercent.TabIndex = 12;
+            this.labelPercent.Text = "%";
+            //
+            // radioButtonToDropFrame
+            //
+            this.radioButtonToDropFrame.AutoSize = true;
+            this.radioButtonToDropFrame.Location = new System.Drawing.Point(6, 91);
+            this.radioButtonToDropFrame.Name = "radioButtonToDropFrame";
+            this.radioButtonToDropFrame.Size = new System.Drawing.Size(91, 17);
+            this.radioButtonToDropFrame.TabIndex = 3;
+            this.radioButtonToDropFrame.Text = "To drop frame";
+            this.radioButtonToDropFrame.UseVisualStyleBackColor = true;
+            //
+            // radioButtonSpeedFromDropFrame
+            //
+            this.radioButtonSpeedFromDropFrame.AutoSize = true;
+            this.radioButtonSpeedFromDropFrame.Location = new System.Drawing.Point(6, 68);
+            this.radioButtonSpeedFromDropFrame.Name = "radioButtonSpeedFromDropFrame";
+            this.radioButtonSpeedFromDropFrame.Size = new System.Drawing.Size(101, 17);
+            this.radioButtonSpeedFromDropFrame.TabIndex = 2;
+            this.radioButtonSpeedFromDropFrame.Text = "From drop frame";
+            this.radioButtonSpeedFromDropFrame.UseVisualStyleBackColor = true;
+            //
+            // radioButtonSpeedCustom
+            //
+            this.radioButtonSpeedCustom.AutoSize = true;
+            this.radioButtonSpeedCustom.Checked = true;
+            this.radioButtonSpeedCustom.Location = new System.Drawing.Point(6, 45);
+            this.radioButtonSpeedCustom.Name = "radioButtonSpeedCustom";
+            this.radioButtonSpeedCustom.Size = new System.Drawing.Size(60, 17);
+            this.radioButtonSpeedCustom.TabIndex = 1;
+            this.radioButtonSpeedCustom.TabStop = true;
+            this.radioButtonSpeedCustom.Text = "Custom";
+            this.radioButtonSpeedCustom.UseVisualStyleBackColor = true;
+            //
             // BatchConvert
-            // 
+            //
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -702,6 +790,9 @@
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.contextMenuStripFiles.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -765,6 +856,11 @@
         private System.Windows.Forms.Label labelFilter;
         private System.Windows.Forms.ComboBox comboBoxFilter;
         private System.Windows.Forms.TextBox textBoxFilter;
-
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.NumericUpDown numericUpDownPercent;
+        private System.Windows.Forms.Label labelPercent;
+        private System.Windows.Forms.RadioButton radioButtonToDropFrame;
+        private System.Windows.Forms.RadioButton radioButtonSpeedFromDropFrame;
+        private System.Windows.Forms.RadioButton radioButtonSpeedCustom;
     }
 }
