@@ -32,6 +32,12 @@
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioButtonToDropFrame = new System.Windows.Forms.RadioButton();
+            this.radioButtonSpeedFromDropFrame = new System.Windows.Forms.RadioButton();
+            this.radioButtonSpeedCustom = new System.Windows.Forms.RadioButton();
+            this.numericUpDownPercent = new System.Windows.Forms.NumericUpDown();
+            this.labelPercent = new System.Windows.Forms.Label();
             this.checkBoxSplitLongLines = new System.Windows.Forms.CheckBox();
             this.buttonRemoveTextForHiSettings = new System.Windows.Forms.Button();
             this.checkBoxSetMinimumDisplayTimeBetweenSubs = new System.Windows.Forms.CheckBox();
@@ -85,20 +91,14 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.numericUpDownPercent = new System.Windows.Forms.NumericUpDown();
-            this.labelPercent = new System.Windows.Forms.Label();
-            this.radioButtonToDropFrame = new System.Windows.Forms.RadioButton();
-            this.radioButtonSpeedFromDropFrame = new System.Windows.Forms.RadioButton();
-            this.radioButtonSpeedCustom = new System.Windows.Forms.RadioButton();
             this.groupBoxConvertOptions.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).BeginInit();
             this.groupBoxChangeFrameRate.SuspendLayout();
             this.groupBoxOffsetTimeCodes.SuspendLayout();
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).BeginInit();
             this.SuspendLayout();
             //
             // buttonConvert
@@ -143,15 +143,94 @@
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxFixCasing);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxRemoveTextForHI);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxRemoveFormatting);
-            this.groupBoxConvertOptions.Location = new System.Drawing.Point(498, 19);
+            this.groupBoxConvertOptions.Location = new System.Drawing.Point(473, 19);
             this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
-            this.groupBoxConvertOptions.Size = new System.Drawing.Size(520, 210);
+            this.groupBoxConvertOptions.Size = new System.Drawing.Size(545, 210);
             this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
-            // 
+            //
+            // groupBox1
+            //
+            this.groupBox1.Controls.Add(this.radioButtonToDropFrame);
+            this.groupBox1.Controls.Add(this.radioButtonSpeedFromDropFrame);
+            this.groupBox1.Controls.Add(this.radioButtonSpeedCustom);
+            this.groupBox1.Controls.Add(this.numericUpDownPercent);
+            this.groupBox1.Controls.Add(this.labelPercent);
+            this.groupBox1.Location = new System.Drawing.Point(429, 89);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(110, 115);
+            this.groupBox1.TabIndex = 12;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Change speed";
+            //
+            // radioButtonToDropFrame
+            //
+            this.radioButtonToDropFrame.AutoSize = true;
+            this.radioButtonToDropFrame.Location = new System.Drawing.Point(6, 91);
+            this.radioButtonToDropFrame.Name = "radioButtonToDropFrame";
+            this.radioButtonToDropFrame.Size = new System.Drawing.Size(91, 17);
+            this.radioButtonToDropFrame.TabIndex = 3;
+            this.radioButtonToDropFrame.Text = "To drop frame";
+            this.radioButtonToDropFrame.UseVisualStyleBackColor = true;
+            //
+            // radioButtonSpeedFromDropFrame
+            //
+            this.radioButtonSpeedFromDropFrame.AutoSize = true;
+            this.radioButtonSpeedFromDropFrame.Location = new System.Drawing.Point(6, 68);
+            this.radioButtonSpeedFromDropFrame.Name = "radioButtonSpeedFromDropFrame";
+            this.radioButtonSpeedFromDropFrame.Size = new System.Drawing.Size(101, 17);
+            this.radioButtonSpeedFromDropFrame.TabIndex = 2;
+            this.radioButtonSpeedFromDropFrame.Text = "From drop frame";
+            this.radioButtonSpeedFromDropFrame.UseVisualStyleBackColor = true;
+            //
+            // radioButtonSpeedCustom
+            //
+            this.radioButtonSpeedCustom.AutoSize = true;
+            this.radioButtonSpeedCustom.Checked = true;
+            this.radioButtonSpeedCustom.Location = new System.Drawing.Point(6, 45);
+            this.radioButtonSpeedCustom.Name = "radioButtonSpeedCustom";
+            this.radioButtonSpeedCustom.Size = new System.Drawing.Size(60, 17);
+            this.radioButtonSpeedCustom.TabIndex = 1;
+            this.radioButtonSpeedCustom.TabStop = true;
+            this.radioButtonSpeedCustom.Text = "Custom";
+            this.radioButtonSpeedCustom.UseVisualStyleBackColor = true;
+            //
+            // numericUpDownPercent
+            //
+            this.numericUpDownPercent.DecimalPlaces = 5;
+            this.numericUpDownPercent.Location = new System.Drawing.Point(6, 19);
+            this.numericUpDownPercent.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDownPercent.Minimum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownPercent.Name = "numericUpDownPercent";
+            this.numericUpDownPercent.Size = new System.Drawing.Size(81, 20);
+            this.numericUpDownPercent.TabIndex = 0;
+            this.numericUpDownPercent.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            //
+            // labelPercent
+            //
+            this.labelPercent.AutoSize = true;
+            this.labelPercent.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelPercent.Location = new System.Drawing.Point(87, 22);
+            this.labelPercent.Name = "labelPercent";
+            this.labelPercent.Size = new System.Drawing.Size(15, 13);
+            this.labelPercent.TabIndex = 12;
+            this.labelPercent.Text = "%";
+            //
             // checkBoxSplitLongLines
-            // 
+            //
             this.checkBoxSplitLongLines.AutoSize = true;
             this.checkBoxSplitLongLines.Location = new System.Drawing.Point(15, 145);
             this.checkBoxSplitLongLines.Name = "checkBoxSplitLongLines";
@@ -241,15 +320,15 @@
             this.groupBoxChangeFrameRate.Controls.Add(this.labelFromFrameRate);
             this.groupBoxChangeFrameRate.Location = new System.Drawing.Point(280, 12);
             this.groupBoxChangeFrameRate.Name = "groupBoxChangeFrameRate";
-            this.groupBoxChangeFrameRate.Size = new System.Drawing.Size(239, 73);
+            this.groupBoxChangeFrameRate.Size = new System.Drawing.Size(259, 73);
             this.groupBoxChangeFrameRate.TabIndex = 10;
             this.groupBoxChangeFrameRate.TabStop = false;
             this.groupBoxChangeFrameRate.Text = "Change frame rate";
             // 
             // comboBoxFrameRateTo
-            // 
+            //
             this.comboBoxFrameRateTo.FormattingEnabled = true;
-            this.comboBoxFrameRateTo.Location = new System.Drawing.Point(106, 47);
+            this.comboBoxFrameRateTo.Location = new System.Drawing.Point(132, 46);
             this.comboBoxFrameRateTo.Name = "comboBoxFrameRateTo";
             this.comboBoxFrameRateTo.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrameRateTo.TabIndex = 3;
@@ -264,9 +343,9 @@
             this.labelToFrameRate.Text = "To frame rate";
             // 
             // comboBoxFrameRateFrom
-            // 
+            //
             this.comboBoxFrameRateFrom.FormattingEnabled = true;
-            this.comboBoxFrameRateFrom.Location = new System.Drawing.Point(106, 18);
+            this.comboBoxFrameRateFrom.Location = new System.Drawing.Point(132, 17);
             this.comboBoxFrameRateFrom.Name = "comboBoxFrameRateFrom";
             this.comboBoxFrameRateFrom.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrameRateFrom.TabIndex = 1;
@@ -288,7 +367,7 @@
             this.groupBoxOffsetTimeCodes.Controls.Add(this.labelHourMinSecMilliSecond);
             this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(280, 89);
             this.groupBoxOffsetTimeCodes.Name = "groupBoxOffsetTimeCodes";
-            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(122, 115);
+            this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(143, 115);
             this.groupBoxOffsetTimeCodes.TabIndex = 11;
             this.groupBoxOffsetTimeCodes.TabStop = false;
             this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
@@ -681,85 +760,6 @@
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
             //
-            // groupBox1
-            //
-            this.groupBox1.Controls.Add(this.radioButtonToDropFrame);
-            this.groupBox1.Controls.Add(this.radioButtonSpeedFromDropFrame);
-            this.groupBox1.Controls.Add(this.radioButtonSpeedCustom);
-            this.groupBox1.Controls.Add(this.numericUpDownPercent);
-            this.groupBox1.Controls.Add(this.labelPercent);
-            this.groupBox1.Location = new System.Drawing.Point(408, 89);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(106, 115);
-            this.groupBox1.TabIndex = 12;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Change speed";
-            //
-            // numericUpDownPercent
-            //
-            this.numericUpDownPercent.DecimalPlaces = 5;
-            this.numericUpDownPercent.Location = new System.Drawing.Point(6, 19);
-            this.numericUpDownPercent.Maximum = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            this.numericUpDownPercent.Minimum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numericUpDownPercent.Name = "numericUpDownPercent";
-            this.numericUpDownPercent.Size = new System.Drawing.Size(81, 20);
-            this.numericUpDownPercent.TabIndex = 0;
-            this.numericUpDownPercent.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            //
-            // labelPercent
-            //
-            this.labelPercent.AutoSize = true;
-            this.labelPercent.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelPercent.Location = new System.Drawing.Point(87, 22);
-            this.labelPercent.Name = "labelPercent";
-            this.labelPercent.Size = new System.Drawing.Size(15, 13);
-            this.labelPercent.TabIndex = 12;
-            this.labelPercent.Text = "%";
-            //
-            // radioButtonToDropFrame
-            //
-            this.radioButtonToDropFrame.AutoSize = true;
-            this.radioButtonToDropFrame.Location = new System.Drawing.Point(6, 91);
-            this.radioButtonToDropFrame.Name = "radioButtonToDropFrame";
-            this.radioButtonToDropFrame.Size = new System.Drawing.Size(91, 17);
-            this.radioButtonToDropFrame.TabIndex = 3;
-            this.radioButtonToDropFrame.Text = "To drop frame";
-            this.radioButtonToDropFrame.UseVisualStyleBackColor = true;
-            //
-            // radioButtonSpeedFromDropFrame
-            //
-            this.radioButtonSpeedFromDropFrame.AutoSize = true;
-            this.radioButtonSpeedFromDropFrame.Location = new System.Drawing.Point(6, 68);
-            this.radioButtonSpeedFromDropFrame.Name = "radioButtonSpeedFromDropFrame";
-            this.radioButtonSpeedFromDropFrame.Size = new System.Drawing.Size(101, 17);
-            this.radioButtonSpeedFromDropFrame.TabIndex = 2;
-            this.radioButtonSpeedFromDropFrame.Text = "From drop frame";
-            this.radioButtonSpeedFromDropFrame.UseVisualStyleBackColor = true;
-            //
-            // radioButtonSpeedCustom
-            //
-            this.radioButtonSpeedCustom.AutoSize = true;
-            this.radioButtonSpeedCustom.Checked = true;
-            this.radioButtonSpeedCustom.Location = new System.Drawing.Point(6, 45);
-            this.radioButtonSpeedCustom.Name = "radioButtonSpeedCustom";
-            this.radioButtonSpeedCustom.Size = new System.Drawing.Size(60, 17);
-            this.radioButtonSpeedCustom.TabIndex = 1;
-            this.radioButtonSpeedCustom.TabStop = true;
-            this.radioButtonSpeedCustom.Text = "Custom";
-            this.radioButtonSpeedCustom.UseVisualStyleBackColor = true;
-            //
             // BatchConvert
             //
             this.AllowDrop = true;
@@ -781,6 +781,9 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
             this.groupBoxConvertOptions.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).EndInit();
             this.groupBoxChangeFrameRate.ResumeLayout(false);
             this.groupBoxChangeFrameRate.PerformLayout();
             this.groupBoxOffsetTimeCodes.ResumeLayout(false);
@@ -790,9 +793,6 @@
             this.groupBoxInput.ResumeLayout(false);
             this.groupBoxInput.PerformLayout();
             this.contextMenuStripFiles.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
