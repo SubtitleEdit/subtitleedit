@@ -13,7 +13,6 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -811,6 +810,8 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
+                            Paragraph prev = sub.Paragraphs[0];
+                            bool first = true;
                             foreach (Paragraph p in sub.Paragraphs)
                             {
                                 if (checkBoxRemoveTextForHI.Checked)
@@ -822,31 +823,23 @@ namespace Nikse.SubtitleEdit.Forms
                                     p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                                 }
 
-
                                 if (!numericUpDownPercent.Value.Equals(100))
                                 {
                                     double toSpeedPercentage = Convert.ToDouble(numericUpDownPercent.Value) / 100.0;
                                     p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds * toSpeedPercentage;
                                     p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds * toSpeedPercentage;
+
+                                    if (first)
+                                    {
+                                        first = false;
+                                    } else
+                                    {
+                                        if (prev.EndTime.TotalMilliseconds >= p.StartTime.TotalMilliseconds)
+                                            prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;
+                                    }
                                 }
-
-
+                                prev = p;
                             }
-
-
-
-                            for (int i = 0; i < sub.Paragraphs.Count; i++)
-                            {
-                                Paragraph p = sub.Paragraphs[i];
-                                Paragraph next = sub.GetParagraphOrDefault(i + 1);
-                                if (next != null)
-                                {
-                                    if (p.EndTime.TotalMilliseconds >= next.StartTime.TotalMilliseconds)
-                                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
-                                }
-                            }
-
-
                             sub.RemoveEmptyLines();
                             if (checkBoxFixCasing.Checked)
                             {
