@@ -102,6 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxChangeFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.Title;
             groupBoxOffsetTimeCodes.Text = Configuration.Settings.Language.ShowEarlierLater.TitleAll;
+            groupBoxSpeed.Text = Configuration.Settings.Language.ChangeSpeedInPercent.TitleShort;
             labelFromFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.FromFrameRate;
             labelToFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.ToFrameRate;
             labelHourMinSecMilliSecond.Text = Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
@@ -200,6 +201,9 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSplitLongLines.Text = l.SplitLongLines;
             radioButtonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
             radioButtonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
+            radioButtonSpeedCustom.Text = Configuration.Settings.Language.ChangeSpeedInPercent.Custom;
+            radioButtonSpeedFromDropFrame.Text = Configuration.Settings.Language.ChangeSpeedInPercent.FromDropFrame;
+            radioButtonToDropFrame.Text = Configuration.Settings.Language.ChangeSpeedInPercent.ToDropFrame;
             checkBoxSetMinimumDisplayTimeBetweenSubs.Text = l.SetMinMsBetweenSubtitles;
 
             _removeTextForHearingImpaired = new RemoveTextForHI(new RemoveTextForHISettings());
@@ -469,6 +473,23 @@ namespace Nikse.SubtitleEdit.Forms
                     AddInputFile(fileName);
                 }
             }
+        }
+
+        private void radioButtonSpeedCustom_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDownPercent.Enabled = true;
+        }
+
+        private void radioButtonSpeedFromDropFrame_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDownPercent.Value = Convert.ToDecimal(099.98887);
+            numericUpDownPercent.Enabled = false;
+        }
+
+        private void radioButtonToDropFrame_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDownPercent.Value = Convert.ToDecimal(100.1001001);
+            numericUpDownPercent.Enabled = false;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
