@@ -577,6 +577,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "ChangeSpeedInPercent/Title":
                     language.ChangeSpeedInPercent.Title = reader.Value;
                     break;
+                case "ChangeSpeedInPercent/TitleShort":
+                    language.ChangeSpeedInPercent.TitleShort = reader.Value;
+                    break;
                 case "ChangeSpeedInPercent/Info":
                     language.ChangeSpeedInPercent.Info = reader.Value;
                     break;

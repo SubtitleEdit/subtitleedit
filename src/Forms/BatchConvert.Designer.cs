@@ -32,7 +32,7 @@
             this.buttonConvert = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxConvertOptions = new System.Windows.Forms.GroupBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBoxSpeed = new System.Windows.Forms.GroupBox();
             this.radioButtonToDropFrame = new System.Windows.Forms.RadioButton();
             this.radioButtonSpeedFromDropFrame = new System.Windows.Forms.RadioButton();
             this.radioButtonSpeedCustom = new System.Windows.Forms.RadioButton();
@@ -92,7 +92,7 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
             this.groupBoxConvertOptions.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.groupBoxSpeed.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).BeginInit();
             this.groupBoxChangeFrameRate.SuspendLayout();
             this.groupBoxOffsetTimeCodes.SuspendLayout();
@@ -129,7 +129,7 @@
             //
             this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxConvertOptions.Controls.Add(this.groupBox1);
+            this.groupBoxConvertOptions.Controls.Add(this.groupBoxSpeed);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxSplitLongLines);
             this.groupBoxConvertOptions.Controls.Add(this.buttonRemoveTextForHiSettings);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxSetMinimumDisplayTimeBetweenSubs);
@@ -150,19 +150,19 @@
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
             //
-            // groupBox1
+            // groupBoxSpeed
             //
-            this.groupBox1.Controls.Add(this.radioButtonToDropFrame);
-            this.groupBox1.Controls.Add(this.radioButtonSpeedFromDropFrame);
-            this.groupBox1.Controls.Add(this.radioButtonSpeedCustom);
-            this.groupBox1.Controls.Add(this.numericUpDownPercent);
-            this.groupBox1.Controls.Add(this.labelPercent);
-            this.groupBox1.Location = new System.Drawing.Point(429, 89);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(110, 115);
-            this.groupBox1.TabIndex = 12;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Change speed";
+            this.groupBoxSpeed.Controls.Add(this.radioButtonToDropFrame);
+            this.groupBoxSpeed.Controls.Add(this.radioButtonSpeedFromDropFrame);
+            this.groupBoxSpeed.Controls.Add(this.radioButtonSpeedCustom);
+            this.groupBoxSpeed.Controls.Add(this.numericUpDownPercent);
+            this.groupBoxSpeed.Controls.Add(this.labelPercent);
+            this.groupBoxSpeed.Location = new System.Drawing.Point(429, 89);
+            this.groupBoxSpeed.Name = "groupBoxSpeed";
+            this.groupBoxSpeed.Size = new System.Drawing.Size(110, 115);
+            this.groupBoxSpeed.TabIndex = 12;
+            this.groupBoxSpeed.TabStop = false;
+            this.groupBoxSpeed.Text = "Change speed";
             //
             // radioButtonToDropFrame
             //
@@ -173,6 +173,7 @@
             this.radioButtonToDropFrame.TabIndex = 3;
             this.radioButtonToDropFrame.Text = "To drop frame";
             this.radioButtonToDropFrame.UseVisualStyleBackColor = true;
+            this.radioButtonToDropFrame.CheckedChanged += new System.EventHandler(this.radioButtonToDropFrame_CheckedChanged);
             //
             // radioButtonSpeedFromDropFrame
             //
@@ -183,6 +184,7 @@
             this.radioButtonSpeedFromDropFrame.TabIndex = 2;
             this.radioButtonSpeedFromDropFrame.Text = "From drop frame";
             this.radioButtonSpeedFromDropFrame.UseVisualStyleBackColor = true;
+            this.radioButtonSpeedFromDropFrame.CheckedChanged += new System.EventHandler(this.radioButtonSpeedFromDropFrame_CheckedChanged);
             //
             // radioButtonSpeedCustom
             //
@@ -195,6 +197,7 @@
             this.radioButtonSpeedCustom.TabStop = true;
             this.radioButtonSpeedCustom.Text = "Custom";
             this.radioButtonSpeedCustom.UseVisualStyleBackColor = true;
+            this.radioButtonSpeedCustom.CheckedChanged += new System.EventHandler(this.radioButtonSpeedCustom_CheckedChanged);
             //
             // numericUpDownPercent
             //
@@ -781,8 +784,8 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchConvert_KeyDown);
             this.groupBoxConvertOptions.ResumeLayout(false);
             this.groupBoxConvertOptions.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupBoxSpeed.ResumeLayout(false);
+            this.groupBoxSpeed.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPercent)).EndInit();
             this.groupBoxChangeFrameRate.ResumeLayout(false);
             this.groupBoxChangeFrameRate.PerformLayout();
@@ -856,7 +859,7 @@
         private System.Windows.Forms.Label labelFilter;
         private System.Windows.Forms.ComboBox comboBoxFilter;
         private System.Windows.Forms.TextBox textBoxFilter;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBoxSpeed;
         private System.Windows.Forms.NumericUpDown numericUpDownPercent;
         private System.Windows.Forms.Label labelPercent;
         private System.Windows.Forms.RadioButton radioButtonToDropFrame;
