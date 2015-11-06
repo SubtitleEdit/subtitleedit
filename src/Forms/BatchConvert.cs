@@ -13,6 +13,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -820,7 +821,32 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                                 }
+
+
+                                if (!numericUpDownPercent.Value.Equals(100))
+                                {
+                                    double toSpeedPercentage = Convert.ToDouble(numericUpDownPercent.Value) / 100.0;
+                                    p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds * toSpeedPercentage;
+                                    p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds * toSpeedPercentage;
+                                }
+
+
                             }
+
+
+
+                            for (int i = 0; i < sub.Paragraphs.Count; i++)
+                            {
+                                Paragraph p = sub.Paragraphs[i];
+                                Paragraph next = sub.GetParagraphOrDefault(i + 1);
+                                if (next != null)
+                                {
+                                    if (p.EndTime.TotalMilliseconds >= next.StartTime.TotalMilliseconds)
+                                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
+                                }
+                            }
+
+
                             sub.RemoveEmptyLines();
                             if (checkBoxFixCasing.Checked)
                             {
