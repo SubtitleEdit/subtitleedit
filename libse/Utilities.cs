@@ -620,9 +620,19 @@ namespace Nikse.SubtitleEdit.Core
                 s = s.Substring(0, splitPos) + Environment.NewLine + s.Substring(splitPos);
 
             s = ReInsertHtmlTags(s, htmlTags);
+            var idx = s.IndexOf(Environment.NewLine + "</");
+            if (idx > 2)
+            {
+                var endIdx = s.IndexOf('>', idx + 2);
+                if (endIdx > idx)
+                {
+                    var tag = s.Substring(idx + Environment.NewLine.Length, endIdx - (idx + Environment.NewLine.Length) + 1);
+                    s = s.Insert(idx, tag);
+                    s = s.Remove(idx + tag.Length + Environment.NewLine.Length, tag.Length);
+                }
+            }
             s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
             s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
-
             return s.TrimEnd();
         }
 
