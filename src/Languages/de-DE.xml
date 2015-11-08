@@ -222,6 +222,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Geschwindigkeit prozentual ändern</Title>
+    <TitleShort>Geschwindigkeit ändern</TitleShort>
     <Info>Geschwindigeit der Untertitel prozentual ändern</Info>
     <Custom>Benutzerdefiniert</Custom>
     <ToDropFrame>Bis ausgewählten Bild</ToDropFrame>
