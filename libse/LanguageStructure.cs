@@ -240,6 +240,7 @@
         public class ChangeSpeedInPercent
         {
             public string Title { get; set; }
+            public string TitleShort { get; set; }
             public string Info { get; set; }
             public string Custom { get; set; }
             public string ToDropFrame { get; set; }
