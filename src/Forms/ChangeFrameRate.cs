@@ -71,15 +71,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            double d;
-            if (double.TryParse(comboBoxFrameRateFrom.Text, out d) &&
-                double.TryParse(comboBoxFrameRateTo.Text, out d))
-            {
-                DialogResult = DialogResult.OK;
-            }
-            else if (comboBoxFrameRateFrom.Text.Trim() == comboBoxFrameRateTo.Text.Trim())
+            if (comboBoxFrameRateFrom.Text.Trim() == comboBoxFrameRateTo.Text.Trim())
             {
                 MessageBox.Show(Configuration.Settings.Language.ChangeFrameRate.FrameRateNotChanged);
+                return;
+            }
+
+            double d;
+            if (double.TryParse(comboBoxFrameRateFrom.Text, out d) && double.TryParse(comboBoxFrameRateTo.Text, out d))
+            {
+                DialogResult = DialogResult.OK;
             }
             else
             {
