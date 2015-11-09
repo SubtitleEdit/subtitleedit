@@ -218,6 +218,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>* 비율로 속도 조정</Title>
+    <TitleShort>속도 조정</TitleShort>
     <Info>비율로 자막 속도를 변경합니다</Info>
     <Custom>사용자 지정</Custom>
     <ToDropFrame>드롭 프레임까지</ToDropFrame>
