@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic
                     Console.WriteLine("    " + Pac.NameOfFormat);
                     Console.WriteLine("    " + Spt.NameOfFormat);
                     Console.WriteLine("    " + Ultech130.NameOfFormat);
-                    Console.WriteLine("- For Blu-ray .sup output use: '" + BatchConvert.BluRaySubtitle.Replace(" ", string.Empty) + "'");                    
+                    Console.WriteLine("- For Blu-ray .sup output use: '" + BatchConvert.BluRaySubtitle.Replace(" ", string.Empty) + "'");
                 }
 
                 Console.WriteLine();

@@ -222,6 +222,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Ajuster la vitesse en pourcentage</Title>
+    <TitleShort>Ajuster la vitesse</TitleShort>
     <Info>Modifier la vitesse des sous-titres en pourcentage</Info>
     <Custom>Custom</Custom>
     <ToDropFrame>A drop-frame</ToDropFrame>
