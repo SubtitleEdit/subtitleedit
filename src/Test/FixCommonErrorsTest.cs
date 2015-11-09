@@ -502,7 +502,7 @@ namespace Test
             }
         }
 
-        
+
 
 
         #endregion Fix Hyphens (add dash)
@@ -884,7 +884,7 @@ namespace Test
             }
         }
 
-        
+
 
 
         #endregion Fix unneeded spaces

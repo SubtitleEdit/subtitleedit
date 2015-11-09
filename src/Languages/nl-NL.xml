@@ -222,6 +222,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Snelheid procentueel aanpassen</Title>
+    <TitleShort>Snelheid aanpassen</TitleShort>
     <Info>Ondertitelsnelheid procentueel wĳzigen</Info>
     <Custom>Aangepast</Custom>
     <ToDropFrame>Naar drop-frame</ToDropFrame>
