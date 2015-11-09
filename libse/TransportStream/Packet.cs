@@ -110,6 +110,9 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
         public Packet(byte[] packetBuffer)
         {
+            if (packetBuffer == null || packetBuffer.Length < 30)
+                return;
+
             TransportErrorIndicator = 1 == packetBuffer[1] >> 7; // Set by demodulator if can't correct errors in the stream, to tell the demultiplexer that the packet has an uncorrectable error
             PayloadUnitStartIndicator = 1 == ((packetBuffer[1] & 64) >> 6); // and with 01000000 to get second byte - 1 means start of PES data or PSI otherwise zero
             TransportPriority = 1 == ((packetBuffer[1] & 32) >> 5); // and with 00100000 to get third byte - 1 means higher priority than other packets with the same PID
@@ -134,7 +137,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 }
 
                 // Save payload
-                Payload = new byte[packetBuffer.Length - payloadStart];
+                int payloadLength = packetBuffer.Length - payloadStart;
+                if (payloadLength < 0)
+                    return;
+                Payload = new byte[payloadLength];
                 Buffer.BlockCopy(packetBuffer, payloadStart, Payload, 0, Payload.Length);
             }
         }

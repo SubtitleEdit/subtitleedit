@@ -285,6 +285,7 @@
             this.Controls.Add(this.SubtitleListview1);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
+            this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(780, 500);
             this.Name = "SplitLongLines";
             this.ShowIcon = false;

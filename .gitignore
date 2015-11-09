@@ -1,11 +1,15 @@
 *.csproj.DotSettings
 *.psess
+*.sdf
 *.suo
 *.user
 *.vsp
 *.vspx
 /cov-int/
+/libse/Properties/AssemblyInfo.cs
 /SE*.zip
+/src/Win32Resources/Resources.aps
+/src/Win32Resources/Resources.rc
 /src/Languages/LanguageMaster.xml
 /src/Languages/XmlContentTranslator.exe
 /src/Properties/AssemblyInfo.cs
@@ -25,4 +29,3 @@ SubtitleEdit-*-setup.exe
 /src/.nuget/NuGet.exe
 /src/.nuget/NuGet.Config
 /src/packages/
-/libse/Properties/AssemblyInfo.cs

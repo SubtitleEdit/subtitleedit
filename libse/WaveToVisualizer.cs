@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Core
         /// </summary>
         /// <param name="fileName">Wave file name</param>
         public WavePeakGenerator(string fileName)
-            : this(File.OpenRead(fileName))
+            : this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
         {
         }
 
