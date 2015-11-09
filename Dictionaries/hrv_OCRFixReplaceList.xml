@@ -596,7 +596,7 @@
     <RegEx find="\b([dD])i?j?etet([au]|o[mv]|ov[aeiou]|ovo[mjg])\b" replaceWith="$1jetet$2" />
     <RegEx find="\b([dD])ec([aeiou]|om)\b" replaceWith="$1jec$2" />
     <RegEx find="\b([dD])e[čć]ic([aeiou]|om)\b" replaceWith="$1ječic$2" />
-    <RegEx find="([dD])efinisan" replaceWith="$1efiniran" />
+    <RegEx find="([dD])efinisa([nolt])" replaceWith="$1efinira$2" />
     <RegEx find="\b([dD])j?elov([aei]|ima)\b" replaceWith="$1ijelov$2" />
     <RegEx find="\b([dD])evoj" replaceWith="$1jevoj" />
     <RegEx find="([dD])eča([čkc])" replaceWith="$1ječa$2" />
@@ -953,7 +953,7 @@
     <RegEx find="\b([pP])lj?en([au]|om)\b" replaceWith="$1lijen$2" />
     <RegEx find="\b([pP])obed([aeioun]|om|ama)" replaceWith="$1objed$2" />
     <RegEx find="\b([pP])obj?edi([mštol])" replaceWith="$1obijedi$2" />
-    <RegEx find="([pP])obe([gć])" replaceWith="$1obje$2" />
+    <RegEx find="([pP])obe([đgć])" replaceWith="$1obje$2" />
     <RegEx find="([pP])o[dt]cj?enjen" replaceWith="$1odcijenjen" />
     <RegEx find="([pP])odstica" replaceWith="$1otica" />
     <RegEx find="([pP])o[dt]stič" replaceWith="$1otič" />
@@ -1326,6 +1326,7 @@
     <RegEx find="([nN])aj(maksimaln)ij([aeiou])" replaceWith="$2$3" />
     <!-- experimental -->
     <RegEx find="đž" replaceWith="dž" />
+    <RegEx find="(?&lt;!gl|[Nn])avić" replaceWith="avit ć" />
     <RegEx find="\bdral" replaceWith="deral" />
     <RegEx find="dsek" replaceWith="dsjek" />
     <RegEx find="efinišu" replaceWith="efiniraju" />
@@ -1351,6 +1352,7 @@
     <RegEx find="oćeju" replaceWith="oće" />
     <RegEx find="odpisa" replaceWith="otpisa" />
     <RegEx find="par nedj?elja" replaceWith="par tjedana" />
+    <RegEx find="redić" replaceWith="redit ć" />
     <!-- preduzeti / preduzetnik -->
     <RegEx find="reduz" replaceWith="oduz" />
     <RegEx find="relj?ep" replaceWith="relijep" />
@@ -1416,6 +1418,7 @@
     <RegEx find="Filadelfij" replaceWith="Philadelphi" />
     <RegEx find="\bFrojd" replaceWith="Freud" />
     <RegEx find="\bĐovani" replaceWith="Giovanni" />
+    <RegEx find="Holandij" replaceWith="Nizozemsk" />
     <RegEx find="Holivud" replaceWith="Hollywood" />
     <RegEx find="Hitrou" replaceWith="Heathrow" />
     <RegEx find="Iraq" replaceWith="Irak" />
@@ -1427,7 +1430,11 @@
     <RegEx find="Kembridž" replaceWith="Cambridge" />
     <RegEx find="Korejan" replaceWith="Korej" />
     <RegEx find="Lusi" replaceWith="Lucy" />
+    <RegEx find="Losanđeles" replaceWith="Los Angeles" />
+    <RegEx find="Los Anđeles" replaceWith="Los Angeles" />
+    <RegEx find="Majami" replaceWith="Miami" />
     <RegEx find="Majkl" replaceWith="Michael" />
+    <RegEx find="Memfis" replaceWith="Memphis" />
     <RegEx find="Mejn(u|om)?\b" replaceWith="Maine$1" />
     <RegEx find="Metju" replaceWith="Matthew" />
     <RegEx find="Mexico" replaceWith="Meksiko" />
@@ -1435,6 +1442,10 @@
     <RegEx find="Mocart" replaceWith="Mozart" />
     <RegEx find="Nensi" replaceWith="Nancy" />
     <RegEx find="Njutn" replaceWith="Newton" />
+    <RegEx find="N[jJ]u Džersi" replaceWith="New Jersey" />
+    <RegEx find="N[jJ]u Jork" replaceWith="New York" />
+    <RegEx find="Njujork" replaceWith="New York" />
+    <RegEx find="Njuton" replaceWith="Newton" />
     <RegEx find="Rajan" replaceWith="Ryan" />
     <RegEx find="Rejčel" replaceWith="Rachel" />
     <RegEx find="Ričard" replaceWith="Richard" />
@@ -1446,17 +1457,9 @@
     <RegEx find="Stjuart" replaceWith="Stuart" />
     <RegEx find="Sančez" replaceWith="Sanchez" />
     <RegEx find="Španiji" replaceWith="Španjolskoj" />
-    <RegEx find="Švetsk" replaceWith="Švedsk" />
+    <RegEx find="([šŠ])vetsk" replaceWith="$1vedsk" />
     <RegEx find="([šŠ])vajcarsk" replaceWith="$1vicarsk" />
-    <RegEx find="Holandij" replaceWith="Nizozemsk" />
-    <RegEx find="Losanđeles" replaceWith="Los Angeles" />
-    <RegEx find="Los Anđeles" replaceWith="Los Angeles" />
-    <RegEx find="Majami" replaceWith="Miami" />
-    <RegEx find="Memfis" replaceWith="Memphis" />
-    <RegEx find="N[jJ]u Džersi" replaceWith="New Jersey" />
-    <RegEx find="N[jJ]u Jork" replaceWith="New York" />
-    <RegEx find="Njujork" replaceWith="New York" />
-    <RegEx find="Njuton" replaceWith="Newton" />
+    <RegEx find="Tajms" replaceWith="Times" />
     <RegEx find="Vašington" replaceWith="Washington" />
     <RegEx find="Vejn" replaceWith="Wayne" />
     <RegEx find="Vinsent" replaceWith="Vincent" />
