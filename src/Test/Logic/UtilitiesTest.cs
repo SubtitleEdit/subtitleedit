@@ -50,6 +50,17 @@ namespace Test.Logic
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void AutoBreakLine5()
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = 43;
+            const string s1 = "<i>30 years ago I'd found</i> The Book of the Dead.";
+            var s2 = Utilities.AutoBreakLine(s1);
+            var Expected = "<i>30 years ago I'd found</i>" + Environment.NewLine + "The Book of the Dead.";
+            Assert.AreEqual(Expected, s2);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void AutoBreakLine5DoNoBreakAtPeriod()
         {
             Configuration.Settings.General.SubtitleLineMaximumLength = 43;
