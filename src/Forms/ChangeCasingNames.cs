@@ -177,12 +177,9 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             string name = listViewNames.SelectedItems[0].SubItems[1].Text;
+            string nameLowerCase; // store/cache name with lowercase
 
-            // store/cache name with lowercase
-            var nameLowerCase = name.ToLower();
-
-            // return if name's length is <= 1 or name if all lowercase
-            if (name.Length <= 1 || name == nameLowerCase)
+            if (name.Length <= 1 || (nameLowerCase = name.ToLower()) == name)
                 return;
 
             listViewFixes.BeginUpdate();
@@ -191,25 +188,19 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 item.Selected = false;
                 string text = item.SubItems[2].Text.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
-                string lower = text.ToLower();
-
-                if (text.Contains(nameLowerCase, StringComparison.OrdinalIgnoreCase))
+                int start = text.IndexOf(nameLowerCase, StringComparison.OrdinalIgnoreCase);
+                if (start >= 0)
                 {
-                    int start = lower.IndexOf(nameLowerCase, StringComparison.Ordinal);
-                    if (start >= 0)
+                    bool startOk = (start == 0) || (text[start - 1] == ' ') || (text[start - 1] == '-') || (text[start - 1] == '"') ||
+                                   text[start - 1] == '\'' || text[start - 1] == '>' || Environment.NewLine.EndsWith(text[start - 1]);
+                    if (startOk)
                     {
-                        bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') || (lower[start - 1] == '"') ||
-                                       lower[start - 1] == '\'' || lower[start - 1] == '>' || Environment.NewLine.EndsWith(lower[start - 1]);
+                        int end = start + name.Length;
+                        bool endOk = end <= text.Length;
+                        if (endOk)
+                            endOk = end == text.Length || ExpectedEndChars.Contains(text[end]);
 
-                        if (startOk)
-                        {
-                            int end = start + name.Length;
-                            bool endOk = end <= lower.Length;
-                            if (endOk)
-                                endOk = end == lower.Length || ExpectedEndChars.Contains(lower[end]);
-
-                            item.Selected = endOk;
-                        }
+                        item.Selected = endOk;
                     }
                 }
             }
