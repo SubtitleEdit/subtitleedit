@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
             {
                 Paragraph cur = _fixedSubtitle.Paragraphs[i];
-                if (_dic != null && _dic.ContainsKey(cur.ID))
+                if (_dic.ContainsKey(cur.ID))
                     SubtitleListview1.SetExtraText(i, _dic[cur.ID], SubtitleListview1.ForeColor);
                 SubtitleListview1.SetBackgroundColor(i, SubtitleListview1.BackColor);
             }
@@ -198,7 +198,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubtitleListView1_Resize(object sender, EventArgs e)
         {
-            // Store last column with 'cause it won't be changed
+            // Store last column width 'cause it won't be changed
             var columnsCount = SubtitleListview1.Columns.Count - 1;
             var lastColumnWidth = SubtitleListview1.Columns[columnsCount].Width;
             var width = 0;
