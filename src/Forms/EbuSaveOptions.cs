@@ -39,6 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelCountryOfOrigin.Text = language.CountryOfOrigin;
             labelTimeCodeStatus.Text = language.TimeCodeStatus;
             labelTimeCodeStartOfProgramme.Text = language.TimeCodeStartOfProgramme;
+            labelFrameRate.Text = Configuration.Settings.Language.General.FrameRate;
 
             labelRevisionNumber.Text = language.RevisionNumber;
             labelMaxNoOfDisplayableChars.Text = language.MaxNoOfDisplayableChars;
@@ -126,10 +127,43 @@ namespace Nikse.SubtitleEdit.Forms
         {
             textBoxCodePageNumber.Text = header.CodePageNumber;
 
+            comboBoxFrameRate.Items.Clear();
+            comboBoxFrameRate.Items.Add(23.976);
+            comboBoxFrameRate.Items.Add(24.0);
+            comboBoxFrameRate.Items.Add(25.0);
+            comboBoxFrameRate.Items.Add(29.97);
+            comboBoxFrameRate.Items.Add(30.0);
+
             if (header.DiskFormatCode == "STL30.01")
-                comboBoxDiscFormatCode.SelectedIndex = 1;
-            else
+            {
+                comboBoxDiscFormatCode.SelectedIndex = 4;
+                comboBoxFrameRate.Text = (30).ToString(CultureInfo.CurrentUICulture);
+            }
+            else if (header.DiskFormatCode == "STL23.01")
+            {
                 comboBoxDiscFormatCode.SelectedIndex = 0;
+                comboBoxFrameRate.Text = (23.976).ToString(CultureInfo.CurrentUICulture);
+            }
+            else if (header.DiskFormatCode == "STL24.01")
+            {
+                comboBoxDiscFormatCode.SelectedIndex = 1;
+                comboBoxFrameRate.Text = (24).ToString(CultureInfo.CurrentUICulture);
+            }
+            else if (header.DiskFormatCode == "STL29.01")
+            {
+                comboBoxDiscFormatCode.SelectedIndex = 3;
+                comboBoxFrameRate.Text = (25).ToString(CultureInfo.CurrentUICulture);
+            }
+            else
+            {
+                comboBoxDiscFormatCode.SelectedIndex = 2;
+                comboBoxFrameRate.Text = (25).ToString(CultureInfo.CurrentUICulture);
+            }
+
+            if (header.FrameRateFromSaveDialog > 20 && header.FrameRateFromSaveDialog < 200)
+            {
+                comboBoxFrameRate.Text = header.FrameRateFromSaveDialog.ToString();
+            }
 
             if (header.DisplayStandardCode == "0")
                 comboBoxDisplayStandardCode.SelectedIndex = 0;
@@ -198,10 +232,22 @@ namespace Nikse.SubtitleEdit.Forms
                 _header.CodePageNumber = "865";
             }
 
-            if (comboBoxDiscFormatCode.SelectedIndex == 1)
-                _header.DiskFormatCode = "STL30.01";
-            else
+            if (comboBoxDiscFormatCode.SelectedIndex == 0)
+                _header.DiskFormatCode = "STL23.01";
+            else if (comboBoxDiscFormatCode.SelectedIndex == 1)
+                _header.DiskFormatCode = "STL24.01";
+            else if (comboBoxDiscFormatCode.SelectedIndex == 2)
                 _header.DiskFormatCode = "STL25.01";
+            else if (comboBoxDiscFormatCode.SelectedIndex == 3)
+                _header.DiskFormatCode = "STL29.01";
+            else
+                _header.DiskFormatCode = "STL30.01";
+
+            double d;
+            if (double.TryParse(comboBoxFrameRate.Text, out d) && d > 20 && d < 200)
+            {
+                _header.FrameRateFromSaveDialog = d;
+            }
 
             if (comboBoxDisplayStandardCode.SelectedIndex == 0)
                 _header.DisplayStandardCode = "0";
@@ -296,6 +342,18 @@ namespace Nikse.SubtitleEdit.Forms
         private void nordicToolStripMenuItem_Click(object sender, EventArgs e)
         {
             textBoxCodePageNumber.Text = "865";
+        }
+
+        private void comboBoxDiscFormatCode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBoxDiscFormatCode.SelectedIndex == 2)
+            {
+                comboBoxFrameRate.Text = (25).ToString(CultureInfo.CurrentUICulture);
+            }
+            else if (comboBoxDiscFormatCode.SelectedIndex == 4)
+            {
+                comboBoxFrameRate.Text = (30).ToString(CultureInfo.CurrentUICulture);
+            }
         }
 
     }
