@@ -1716,7 +1716,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <ListViewFocusWaveform>Fokusiraj valni/spektrogram</ListViewFocusWaveform>
     <ListViewGoToNextError>Idi na sljedeću pogrešku</ListViewGoToNextError>
     <ShowBeamer>Započni pregled podnaslova preko cijelog zaslona</ShowBeamer>
-    <MainTextBoxMoveLastWordDown>Pomakni zadnju riječ dole u novi redak podnaslova</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveLastWordDown>Pomakni zadnju riječ dolje u novi redak podnaslova</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Pomakni prvu riječ u novi redak gore</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Izbor u mala slova</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Izbor za velika slova</MainTextBoxSelectionToUpper>
