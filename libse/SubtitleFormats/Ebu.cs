@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             public string CodePageNumber { get; set; } // 0..2
             public string DiskFormatCode { get; set; } // 3..10
+            public double FrameRateFromSaveDialog { get; set; } 
             public string DisplayStandardCode { get; set; } // 11
             public string CharacterCodeTableNumber { get; set; } // 12..13
             public string LanguageCode { get; set; } // 14..15
@@ -72,6 +73,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 get
                 {
+                    if (FrameRateFromSaveDialog > 20)
+                        return FrameRateFromSaveDialog;
                     if (DiskFormatCode.StartsWith("STL23", StringComparison.Ordinal))
                         return 23.0;
                     if (DiskFormatCode.StartsWith("STL24", StringComparison.Ordinal))
@@ -299,6 +302,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 TextField = TextField.Replace("<U>", underlineOn);
                 TextField = TextField.Replace("</u>", underlineOff);
                 TextField = TextField.Replace("</U>", underlineOff);
+                if (header.CharacterCodeTableNumber == "00")
+                {
+                    TextField = TextField.Replace("©", encoding.GetString(new byte[] { 0xd3 }));
+                    TextField = TextField.Replace("™", encoding.GetString(new byte[] { 0xd4 }));
+                    TextField = TextField.Replace("♪", encoding.GetString(new byte[] { 0xd5 }));
+                }
 
                 //em-dash (–) tags
                 // TextField = TextField.Replace("–", "Ð");
@@ -1125,6 +1134,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             sb.Append("<u>");
                         else if (b == underlineOff && header.LanguageCode != LanguageCodeChinese)
                             sb.Append("</u>");
+
+                        else if (b == 0xd3 && header.CharacterCodeTableNumber == "00") // Latin
+                        {
+                                sb.Append("©");
+                        }
+                        else if (b == 0xd4 && header.CharacterCodeTableNumber == "00") // Latin
+                        {
+                                sb.Append("™");
+                        }
+                        else if (b == 0xd5 && header.CharacterCodeTableNumber == "00") // Latin
+                        {
+                                sb.Append("♪");
+                        }
+
                             //else if (b == 0xD0) // em-dash
                             //    sb.Append('–');
                         else if (b == textFieldTerminator)
