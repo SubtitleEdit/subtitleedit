@@ -126,7 +126,6 @@
     <Compile Include="FastBitmap.cs" />
     <Compile Include="FastFileStream.cs" />
     <Compile Include="FileUtil.cs" />
-    <Compile Include="FindReplaceDialogHelper.cs" />
     <Compile Include="Forms\CheckForUpdatesHelper.cs" />
     <Compile Include="Forms\FixCommonErrors\AddMissingQuotes.cs" />
     <Compile Include="Forms\FixCommonErrors\EmptyFixCallback.cs" />
@@ -185,6 +184,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RealFFT.cs" />
     <Compile Include="RegistryUtil.cs" />
+    <Compile Include="RichTextToPlainText.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SpellCheckWord.cs" />
     <Compile Include="SsaStyle.cs" />
