@@ -508,7 +508,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <Step2>Korak 2 od 2: Provjeri ispravnost</Step2>
     <Fixes>Ispravke</Fixes>
     <Log>Izvještaj</Log>
-    <Function>Ispravka</Function>
+    <Function>Ispravak</Function>
     <RemovedEmptyLine>Prazna linija je uklonjena.</RemovedEmptyLine>
     <RemovedEmptyLineAtTop>Prazna linija na vrhu je uklonjena.</RemovedEmptyLineAtTop>
     <RemovedEmptyLineAtBottom>Prazna linija na dnu je uklonjena.</RemovedEmptyLineAtBottom>
@@ -1519,7 +1519,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <SubtitleFont>Tip fonta:</SubtitleFont>
     <SubtitleFontSize>Veličina:</SubtitleFontSize>
     <SubtitleBold>pod&amp;ebljano</SubtitleBold>
-    <SubtitleCenter>Centar</SubtitleCenter>
+    <SubtitleCenter>centrirano</SubtitleCenter>
     <SubtitleFontColor>Boja fonta:</SubtitleFontColor>
     <SubtitleBackgroundColor>Boja pozadine:</SubtitleBackgroundColor>
     <SpellChecker>Provjera pravopisa:</SpellChecker>
@@ -1560,7 +1560,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <MPlayerDescription>MPlayer 2/MPlayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll iz VLC media player-a 1.1.0 ili novijeg izdanja</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC put (potrebno samo ako se koristi prijenosna verzija VLC)</VlcBrowseToLabel>
+    <VlcBrowseToLabel>VLC putanja (potrebno samo ako se koristi prijenosna verzija VLC)</VlcBrowseToLabel>
     <ShowStopButton>&amp;Gumb za zaustavljanje</ShowStopButton>
     <ShowMuteButton>Pokaži gumb za isključivanje zvuka</ShowMuteButton>
     <ShowFullscreenButton>Prikaži gumb za puni ekran</ShowFullscreenButton>
@@ -1573,7 +1573,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <ReverseMouseWheelScrollDirection>Obrnuti smjer kotačića na mišu</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Dopusti preklapanje (kad se kreće/i veličine)</WaveformAllowOverlap>
     <WaveformFocusMouseEnter>Fokusiraj na pokazivač miša</WaveformFocusMouseEnter>
-    <WaveformListViewFocusMouseEnter>Također postaviti prikaz popisa fokus na miša prilikom ulaska miša na listu popisa</WaveformListViewFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Također postavi prikaz popisa fokus na miša prilikom ulaska miša na listu popisa</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Granični marker mora biti s...</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milisekundi</WaveformBorderHitMs2>
     <WaveformColor>Boja</WaveformColor>
@@ -1620,6 +1620,8 @@ određeni podnaslov s drugim ljudima.</Information>
     <ProxyUserName>Korisničko ime:</ProxyUserName>
     <ProxyPassword>Lozinka:</ProxyPassword>
     <ProxyDomain>Domena:</ProxyDomain>
+    <NetworkSessionSettings>Postavke mrežne sesije</NetworkSessionSettings>
+    <NetworkSessionNewSound>Sviraj zvuk kada stigne nova poruka</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Pusti x sekundi pa vrati. x je:</PlayXSecondsAndBack>
     <StartSceneIndex>Index početne scene:</StartSceneIndex>
     <EndSceneIndex>Index završne scene:</EndSceneIndex>
@@ -1694,10 +1696,10 @@ određeni podnaslov s drugim ljudima.</Information>
     <ListViewSyntaxColoring>Pregled liste/bojanje sintakse</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>Trajanje boje ako je prekratko</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Trajanje boje ako je predugo</SyntaxColorDurationIfTooLarge>
-    <SyntaxColorTextIfTooLong>Boja teksta ako je predugo</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextIfTooLong>Boja teksta ako je predug</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanXLines>Boja teksta ako je više linija:</SyntaxColorTextMoreThanXLines>
     <SyntaxColorOverlap>Preklapanje boje vremenskog koda</SyntaxColorOverlap>
-    <SyntaxErrorColor>Pogreška boje</SyntaxErrorColor>
+    <SyntaxErrorColor>Pogreška je ove boje</SyntaxErrorColor>
     <GoToFirstSelectedLine>Idi na prvu odabranu liniju</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Idi na sljedeći prazni redak</GoToNextEmptyLine>
     <MergeSelectedLines>Spoji odabrane linije</MergeSelectedLines>
@@ -1714,7 +1716,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <ListViewFocusWaveform>Fokusiraj valni/spektrogram</ListViewFocusWaveform>
     <ListViewGoToNextError>Idi na sljedeću pogrešku</ListViewGoToNextError>
     <ShowBeamer>Započni pregled podnaslova preko cijelog zaslona</ShowBeamer>
-    <MainTextBoxMoveLastWordDown>Pomakni zadnju riječ dole u novi redak podnaslova</MainTextBoxMoveLastWordDown>
+    <MainTextBoxMoveLastWordDown>Pomakni zadnju riječ dolje u novi redak podnaslova</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Pomakni prvu riječ u novi redak gore</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Izbor u mala slova</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Izbor za velika slova</MainTextBoxSelectionToUpper>
