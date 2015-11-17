@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelToFrameRate.Text = language.ToFrameRate;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void FormChangeFrameRate_KeyDown(object sender, KeyEventArgs e)

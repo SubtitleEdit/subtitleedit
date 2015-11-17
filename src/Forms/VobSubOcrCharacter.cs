@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -37,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             dataGridView1.Rows.Add("♪", "á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű");
             dataGridView1.Rows.Add("♫", "Á", "É", "Í", "Ó", "Ö", "Ő", "Ú", "Ü", "Ű");
 
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
         public string ManualRecognizedCharacters

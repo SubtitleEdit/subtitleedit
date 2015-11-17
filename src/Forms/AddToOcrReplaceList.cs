@@ -1,8 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Globalization;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Dictionaries;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -17,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelDescription.Text = Configuration.Settings.Language.AddToOcrReplaceList.Description;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

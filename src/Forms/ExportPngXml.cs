@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Core.VobSub;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
@@ -2823,7 +2824,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             saveImageAsToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.SaveImageAs;
 
             SubtitleListView1InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            Utilities.InitializeSubtitleFont(subtitleListView1);
+            UiUtil.InitializeSubtitleFont(subtitleListView1);
             SubtitleListView1AutoSizeAllColumns();
 
             _subtitle = new Subtitle(subtitle);
@@ -3702,7 +3703,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void subtitleListView1_KeyDown(object sender, KeyEventArgs e)
         {
-            var italicShortCut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+            var italicShortCut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
             if (e.KeyData == italicShortCut)
             {
                 ListViewToggleTag("i");

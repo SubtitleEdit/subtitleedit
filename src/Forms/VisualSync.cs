@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = _languageGeneral.Ok;
             buttonCancel.Text = _languageGeneral.Cancel;
             labelTip.Text = _language.Tip;
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
             _timerHideSyncLabel.Tick += timerHideSyncLabel_Tick;
             _timerHideSyncLabel.Interval = 1000;
         }

@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
         public VobSubOcrNOcrCharacter()
         {
             InitializeComponent();
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
             labelItalicOn.Visible = false;
         }
 

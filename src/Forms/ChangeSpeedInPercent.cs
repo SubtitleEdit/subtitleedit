@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Windows.Forms;
 
@@ -30,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonToDropFrame.Visible = false;
             }
 
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
 
             if (numberOfSelectedLines > 1)
                 radioButtonSelectedLinesOnly.Checked = true;

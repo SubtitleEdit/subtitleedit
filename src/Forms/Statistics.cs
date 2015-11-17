@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -43,7 +44,7 @@ https://github.com/SubtitleEdit/subtitleedit
             labelMostUsedLines.Text = _l.MostUsedLines;
             buttonExport.Text = _l.Export;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
 
             CalculateGeneralStatistics();
             {

@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4.Boxes;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -17,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelChoose.Text = Configuration.Settings.Language.MatroskaSubtitleChooser.PleaseChoose;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         public int SelectedIndex

@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
                 else
                     numericUpDownZPosition.Value = 0;
             }
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
         private void buttonGenerateID_Click(object sender, EventArgs e)

@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Net;
 using System.Windows.Forms;
@@ -22,7 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelWebServiceUrl.Text = Configuration.Settings.Language.General.WebServiceUrl;
             buttonStart.Text = Configuration.Settings.Language.NetworkStart.Start;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
         internal void Initialize(Logic.Networking.NikseWebServiceSession networkSession, string fileName)

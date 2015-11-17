@@ -1,8 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Dictionaries;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -28,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (labelDescription.Left + labelDescription.Width + 5 > Width)
                 Width = labelDescription.Left + labelDescription.Width + 5;
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         public void Initialize(Subtitle subtitle, string text)

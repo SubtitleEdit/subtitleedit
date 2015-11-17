@@ -1,12 +1,13 @@
-﻿using System.Globalization;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.VobSub;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.VobSub;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -61,7 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 radioButtonPal.Checked = true;
 
-            Utilities.FixLargeFonts(this, buttonAddVobFile);
+            UiUtil.FixLargeFonts(this, buttonAddVobFile);
         }
 
         private void ButtonOpenIfoClick(object sender, EventArgs e)

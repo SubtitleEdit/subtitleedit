@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
             listView1.Columns[2].Text = language.DisplayName;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         public void Initialize(string fileName)

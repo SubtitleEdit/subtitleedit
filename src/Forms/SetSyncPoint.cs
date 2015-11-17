@@ -15,8 +15,8 @@ namespace Nikse.SubtitleEdit.Forms
         private double _stopPosition = -1.0;
         private Subtitle _subtitle;
         private int _audioTrackNumber = -1;
-        private readonly Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        private readonly Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
         private string _subtitleFileName;
         public string VideoFileName { get; private set; }
 
@@ -34,10 +34,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSetSyncPoint.Text = Configuration.Settings.Language.PointSync.SetSyncPoint;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            Utilities.InitializeSubtitleFont(subtitleListView1);
+            UiUtil.InitializeSubtitleFont(subtitleListView1);
             subtitleListView1.AutoSizeAllColumns(this);
             buttonFindTextEnd.Text = Configuration.Settings.Language.VisualSync.FindText;
-            Utilities.FixLargeFonts(this, buttonSetSyncPoint);
+            UiUtil.FixLargeFonts(this, buttonSetSyncPoint);
         }
 
         public TimeSpan SynchronizationPoint

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -28,8 +29,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _originalSubtitle;
         private Subtitle _otherSubtitle;
         private SortedDictionary<int, TimeSpan> _synchronizationPoints = new SortedDictionary<int, TimeSpan>();
-        private readonly Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        private readonly Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         public string VideoFileName
         {
@@ -58,11 +59,11 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView2.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             SubtitleListview1.InitializeTimestampColumnWidths(this);
             subtitleListView2.InitializeTimestampColumnWidths(this);
-            Utilities.InitializeSubtitleFont(SubtitleListview1);
-            Utilities.InitializeSubtitleFont(subtitleListView2);
+            UiUtil.InitializeSubtitleFont(SubtitleListview1);
+            UiUtil.InitializeSubtitleFont(subtitleListView2);
             SubtitleListview1.AutoSizeAllColumns(this);
             subtitleListView2.AutoSizeAllColumns(this);
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
             labelAdjustFactor.Text = string.Empty;
         }
 

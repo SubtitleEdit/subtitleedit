@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
 using System.Collections.Generic;
@@ -136,7 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSuggestions.Text = Configuration.Settings.Language.SpellCheck.Suggestions;
             buttonAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
             buttonGoogleIt.Text = Configuration.Settings.Language.Main.VideoControls.GoogleIt;
-            Utilities.FixLargeFonts(this, buttonAbort);
+            UiUtil.FixLargeFonts(this, buttonAbort);
         }
 
         public void Initialize(string languageName, SpellCheckWord word, List<string> suggestions, string paragraph, string progress)

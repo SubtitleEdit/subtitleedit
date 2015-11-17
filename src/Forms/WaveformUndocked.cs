@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -22,7 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             _mainForm = mainForm;
             this.Icon = (Icon)mainForm.Icon.Clone();
-            _redockKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
+            _redockKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
         }
 
         public WaveformUndocked()

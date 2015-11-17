@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
         public Watermark()
         {
             InitializeComponent();
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         internal void Initialize(Subtitle subtitle, int firstSelectedIndex)

@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Width < radioButtonRegEx.Right + 5)
                 Width = radioButtonRegEx.Right + 5;
 
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
         private FindType FindType

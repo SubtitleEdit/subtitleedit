@@ -1,8 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Dictionaries;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.Dictionaries;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -53,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (radioButtonNormal.Left + radioButtonNormal.Width + 40 > Width)
                 Width = radioButtonNormal.Left + radioButtonNormal.Width + 40;
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         internal void FixCasing(Subtitle subtitle, string language)

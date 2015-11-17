@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFrameRateTo.Items.Add(25.0);
             comboBoxFrameRateTo.Items.Add(29.97);
 
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
 
             _allFormats = new List<SubtitleFormat> { new Pac() };
             int selectedFormatIndex = 0;

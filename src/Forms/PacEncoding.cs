@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Text;
 using System.Windows.Forms;
@@ -29,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxPreview.Visible = false;
                 Height -= textBoxPreview.Height;
             }
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void PacEncoding_KeyDown(object sender, KeyEventArgs e)

@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -27,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainForm = main;
             this.Icon = (Icon)_mainForm.Icon.Clone();
             _videoPlayerContainer = videoPlayerContainer;
-            _redockKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
+            _redockKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             RedockOnFullscreenEnd = false;
             videoPlayerContainer.TextBox.MouseMove += VideoPlayerUndocked_MouseMove;
         }

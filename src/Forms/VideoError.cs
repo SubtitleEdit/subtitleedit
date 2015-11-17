@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -12,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
         public VideoError()
         {
             InitializeComponent();
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
         public static bool Is64BitOS

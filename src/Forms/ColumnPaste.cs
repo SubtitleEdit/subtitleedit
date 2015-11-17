@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Windows.Forms;
 
@@ -16,7 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
         public ColumnPaste(bool isOriginalAvailable, bool onlyText)
         {
             InitializeComponent();
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
 
             radioButtonAll.Enabled = !onlyText;
             radioButtonTimeCodes.Enabled = !onlyText;
