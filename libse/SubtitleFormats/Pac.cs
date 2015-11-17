@@ -933,7 +933,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private static string MakePacItalicsAndRemoveOtherTags(string text)
+        internal static string MakePacItalicsAndRemoveOtherTags(string text)
         {
             text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagFont, HtmlUtil.TagUnderline).Trim();
             if (!text.Contains("<i>", StringComparison.OrdinalIgnoreCase))
@@ -967,7 +967,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private static void WriteTimeCode(FileStream fs, TimeCode timeCode)
+        internal static void WriteTimeCode(FileStream fs, TimeCode timeCode)
         {
             // write four bytes time code
             string highPart = string.Format("{0:00}", timeCode.Hours) + string.Format("{0:00}", timeCode.Minutes);

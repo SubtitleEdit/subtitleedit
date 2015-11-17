@@ -17422,7 +17422,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void PAcScreenElectronicsToolStripMenuItemClick(object sender, EventArgs e)
+        private void PacScreenElectronicsToolStripMenuItemClick(object sender, EventArgs e)
         {
             var pac = new Pac();
             saveFileDialog1.Filter = pac.Name + "|*" + pac.Extension;
@@ -17452,6 +17452,39 @@ namespace Nikse.SubtitleEdit.Forms
                     fileName += pac.Extension;
                 }
                 pac.Save(fileName, _subtitle);
+            }
+        }
+
+        private void uniPacExportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var uniPac = new PacUnicode();
+            saveFileDialog1.Filter = uniPac.Name + "|*" + uniPac.Extension;
+            saveFileDialog1.Title = _language.SaveSubtitleAs;
+            saveFileDialog1.DefaultExt = "*" + uniPac.Extension;
+            saveFileDialog1.AddExtension = true;
+
+            if (!string.IsNullOrEmpty(_videoFileName))
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
+            else
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+
+            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+
+            DialogResult result = saveFileDialog1.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
+                string fileName = saveFileDialog1.FileName;
+                string ext = Path.GetExtension(fileName);
+                bool extOk = ext.Equals(uniPac.Extension, StringComparison.OrdinalIgnoreCase);
+                if (!extOk)
+                {
+                    if (fileName.EndsWith('.'))
+                        fileName = fileName.Substring(0, fileName.Length - 1);
+                    fileName += uniPac.Extension;
+                }
+                uniPac.Save(fileName, _subtitle);
             }
         }
 
