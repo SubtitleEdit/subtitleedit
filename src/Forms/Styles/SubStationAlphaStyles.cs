@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -97,7 +98,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             InitializeListView();
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
 
             comboBoxFontName.Left = labelFontName.Left + labelFontName.Width + 10;
             numericUpDownFontSize.Left = labelFontSize.Left + labelFontSize.Width + 10;

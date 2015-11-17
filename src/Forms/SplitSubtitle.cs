@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Width < label1.Right + 5)
                 Width = label1.Right + 5;
 
-            Utilities.FixLargeFonts(this, buttonSplit);
+            UiUtil.FixLargeFonts(this, buttonSplit);
         }
 
         public void Initialize(Subtitle subtitle, string fileName, SubtitleFormat format, Encoding encoding, double lengthInSeconds)
@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             saveFileDialog1.Title = title;
             saveFileDialog1.FileName = name;
-            Utilities.SetSaveDialogFilter(saveFileDialog1, _format);
+            UiUtil.SetSaveDialogFilter(saveFileDialog1, _format);
             saveFileDialog1.DefaultExt = "*" + _format.Extension;
             saveFileDialog1.AddExtension = true;
 

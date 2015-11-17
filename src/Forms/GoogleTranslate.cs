@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
 using System.Net;
@@ -78,11 +79,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             subtitleListViewFrom.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListViewTo.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            Utilities.InitializeSubtitleFont(subtitleListViewFrom);
-            Utilities.InitializeSubtitleFont(subtitleListViewTo);
+            UiUtil.InitializeSubtitleFont(subtitleListViewFrom);
+            UiUtil.InitializeSubtitleFont(subtitleListViewTo);
             subtitleListViewFrom.AutoSizeAllColumns(this);
             subtitleListViewTo.AutoSizeAllColumns(this);
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         internal void Initialize(Subtitle subtitle, string title, bool googleTranslate, Encoding encoding)

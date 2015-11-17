@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -7,7 +8,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class MeasurementConverter : Form
     {
-        private Color _defaultBackColor = Color.White;
+        private readonly Color _defaultBackColor = Color.White;
         public MeasurementConverter()
         {
             InitializeComponent();
@@ -37,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxFrom.SelectedIndex = 0;
 
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void comboBoxFrom_SelectedIndexChanged(object sender, EventArgs e)

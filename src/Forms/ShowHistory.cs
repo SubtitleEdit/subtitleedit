@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -23,7 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCompareHistory.Text = Configuration.Settings.Language.ShowHistory.CompareHistoryItems;
             buttonRollback.Text = Configuration.Settings.Language.ShowHistory.Rollback;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            Utilities.FixLargeFonts(this, buttonRollback);
+            UiUtil.FixLargeFonts(this, buttonRollback);
         }
 
         public int SelectedIndex

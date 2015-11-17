@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -20,7 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             Text = title;
             labelText.Text = text;
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
 
             int width = Math.Max(checkBoxDoNotDisplayAgain.Width, labelText.Width);
             Width = width + buttonOK.Width + 75;

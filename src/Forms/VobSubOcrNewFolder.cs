@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -19,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
             label1.Text = Configuration.Settings.Language.VobSubOcrNewFolder.Message;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
         private void FormVobSubOcrNewFolder_KeyDown(object sender, KeyEventArgs e)

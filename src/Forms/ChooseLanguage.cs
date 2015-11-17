@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -128,7 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void ChangeLanguage_KeyDown(object sender, KeyEventArgs e)

@@ -796,7 +796,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxOverlap.Text = language.SyntaxColorOverlap;
             buttonListViewSyntaxColorError.Text = language.SyntaxErrorColor;
 
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
 
             checkBoxShortcutsControl.Left = labelShortcut.Left + labelShortcut.Width + 9;
             checkBoxShortcutsAlt.Left = checkBoxShortcutsControl.Left + checkBoxShortcutsControl.Width + 9;

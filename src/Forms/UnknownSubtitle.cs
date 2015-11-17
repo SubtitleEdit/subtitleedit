@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -13,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelTitle.Text = Configuration.Settings.Language.UnknownSubtitle.Title;
             richTextBoxMessage.Text = Configuration.Settings.Language.UnknownSubtitle.Message;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         public void Initialize(string title)

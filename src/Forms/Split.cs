@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,7 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSubtitleFormats.Left = labelOutputFormat.Left + labelOutputFormat.Width + 3;
             comboBoxEncoding.Left = labelEncoding.Left + labelEncoding.Width + 3;
 
-            Utilities.FixLargeFonts(this, buttonSplit);
+            UiUtil.FixLargeFonts(this, buttonSplit);
         }
 
         public void Initialize(Subtitle subtitle, string fileName, SubtitleFormat format)

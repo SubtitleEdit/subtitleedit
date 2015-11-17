@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -83,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (labelDescription1.Left + labelDescription1.Width + 5 > Width)
                 Width = labelDescription1.Left + labelDescription1.Width + 5;
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void FormGetDictionaries_KeyDown(object sender, KeyEventArgs e)

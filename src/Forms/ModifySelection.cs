@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderLine.Text = Configuration.Settings.Language.General.LineNumber;
             columnHeaderText.Text = Configuration.Settings.Language.General.Text;
 
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
 
             comboBoxRule.Items.Clear();
             comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.Contains);

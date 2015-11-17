@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,8 +16,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle1;
         private Subtitle _subtitle2;
         private List<int> _differences;
-        private readonly Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        private readonly Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
         private string _language1;
         private readonly Color _backDifferenceColor = Color.FromArgb(255, 90, 90);
         private readonly Color _foregroundDifferenceColor = Color.FromArgb(225, 0, 0);
@@ -37,9 +38,9 @@ namespace Nikse.SubtitleEdit.Forms
             copyTextToolStripMenuItem1.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Copy;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListView2.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            Utilities.InitializeSubtitleFont(subtitleListView1);
-            Utilities.InitializeSubtitleFont(subtitleListView2);
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.InitializeSubtitleFont(subtitleListView1);
+            UiUtil.InitializeSubtitleFont(subtitleListView2);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         public void Initialize(Subtitle subtitle1, string subtitleFileName1, string title)

@@ -355,10 +355,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 UpdateRecentFilesUI();
                 InitializeToolbar();
-                Utilities.InitializeSubtitleFont(textBoxSource);
-                Utilities.InitializeSubtitleFont(textBoxListViewText);
-                Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
-                Utilities.InitializeSubtitleFont(SubtitleListview1);
+                UiUtil.InitializeSubtitleFont(textBoxSource);
+                UiUtil.InitializeSubtitleFont(textBoxListViewText);
+                UiUtil.InitializeSubtitleFont(textBoxListViewTextAlternate);
+                UiUtil.InitializeSubtitleFont(SubtitleListview1);
 
                 if (Configuration.Settings.General.CenterSubtitleInTextBox)
                 {
@@ -1014,7 +1014,7 @@ namespace Nikse.SubtitleEdit.Forms
                 //SubtitleListview1.Font = new Font(unicodeFontName, fontSize);
                 //toolStripWaveControls.RenderMode = ToolStripRenderMode.System;
                 //toolStripMenuItemSurroundWithMusicSymbols.Font = new Font(unicodeFontName, fontSize);
-                Utilities.InitializeSubtitleFont(SubtitleListview1);
+                UiUtil.InitializeSubtitleFont(SubtitleListview1);
                 Refresh();
             }
         }
@@ -2989,7 +2989,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (currentFormat == null)
                 currentFormat = GetCurrentSubtitleFormat();
 
-            Utilities.SetSaveDialogFilter(saveFileDialog1, currentFormat);
+            UiUtil.SetSaveDialogFilter(saveFileDialog1, currentFormat);
 
             saveFileDialog1.Title = _language.SaveSubtitleAs;
             saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
@@ -3499,10 +3499,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             try
             { // can have some problems with fonts...
-                Utilities.InitializeSubtitleFont(textBoxSource);
-                Utilities.InitializeSubtitleFont(textBoxListViewText);
-                Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
-                Utilities.InitializeSubtitleFont(SubtitleListview1);
+                UiUtil.InitializeSubtitleFont(textBoxSource);
+                UiUtil.InitializeSubtitleFont(textBoxListViewText);
+                UiUtil.InitializeSubtitleFont(textBoxListViewTextAlternate);
+                UiUtil.InitializeSubtitleFont(SubtitleListview1);
                 InitializeToolbar();
             }
             catch (Exception exception)
@@ -3545,9 +3545,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 { // can have some problems with fonts...
-                    Utilities.InitializeSubtitleFont(textBoxListViewText);
-                    Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
-                    Utilities.InitializeSubtitleFont(textBoxSource);
+                    UiUtil.InitializeSubtitleFont(textBoxListViewText);
+                    UiUtil.InitializeSubtitleFont(textBoxListViewTextAlternate);
+                    UiUtil.InitializeSubtitleFont(textBoxSource);
                     SubtitleListview1.SubtitleFontName = Configuration.Settings.General.SubtitleFontName;
                     SubtitleListview1.SubtitleFontBold = Configuration.Settings.General.SubtitleFontBold;
                     SubtitleListview1.SubtitleFontSize = Configuration.Settings.General.SubtitleFontSize;
@@ -3571,7 +3571,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 SaveSubtitleListviewIndices();
-                Utilities.InitializeSubtitleFont(SubtitleListview1);
+                UiUtil.InitializeSubtitleFont(SubtitleListview1);
                 SubtitleListview1.AutoSizeAllColumns(this);
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndices();
@@ -6581,7 +6581,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds + 7)
                     charsPerSecond.ForeColor = Color.Red;
                 else if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
-                    charsPerSecond.ForeColor = Utilities.ColorDarkOrange;
+                    charsPerSecond.ForeColor = UiUtil.ColorDarkOrange;
                 else
                     charsPerSecond.ForeColor = Color.Black;
                 charsPerSecond.Text = string.Format(_language.CharactersPerSecond, charactersPerSecond);
@@ -6601,7 +6601,7 @@ namespace Nikse.SubtitleEdit.Forms
             string text = paragraph.Text;
             lineLengths.Text = _languageGeneral.SingleLineLengths.Trim();
             singleLine.Left = lineLengths.Left + lineLengths.Width - 3;
-            Utilities.GetLineLengths(singleLine, text);
+            UiUtil.GetLineLengths(singleLine, text);
 
             buttonSplitLine.Visible = false;
             text = HtmlUtil.RemoveHtmlTags(text, true);
@@ -6795,7 +6795,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitleListViewIndex >= 0)
             {
                 int numberOfNewLines = Utilities.GetNumberOfLines(textBoxListViewText.Text);
-                Utilities.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), numberOfNewLines);
+                UiUtil.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), numberOfNewLines);
 
                 // update _subtitle + listview
                 string text = textBoxListViewText.Text.TrimEnd();
@@ -6823,7 +6823,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (original != null)
                 {
                     int numberOfNewLines = Utilities.GetNumberOfLines(textBoxListViewTextAlternate.Text);
-                    Utilities.CheckAutoWrap(textBoxListViewTextAlternate, new KeyEventArgs(Keys.None), numberOfNewLines);
+                    UiUtil.CheckAutoWrap(textBoxListViewTextAlternate, new KeyEventArgs(Keys.None), numberOfNewLines);
 
                     // update _subtitle + listview
                     string text = textBoxListViewTextAlternate.Text.TrimEnd();
@@ -13051,7 +13051,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (textSize.Height > buttonPlayPrevious.Height - 4)
                 {
                     int newButtonHeight = 22; //(int)(textSize.Height + 7 + 0.5);
-                    Utilities.SetButtonHeight(this, newButtonHeight, 1);
+                    UiUtil.SetButtonHeight(this, newButtonHeight, 1);
 
                     // List view
                     SubtitleListview1.InitializeTimestampColumnWidths(this);
@@ -14248,140 +14248,140 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetShortcuts()
         {
-            _mainGeneralGoToFirstSelectedLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine);
-            _mainGeneralGoToFirstEmptyLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextEmptyLine);
-            _mainGeneralMergeSelectedLines = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines);
-            _mainGeneralMergeSelectedLinesOnlyFirstText = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
-            _mainGeneralToggleTranslationMode = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode);
-            _mainGeneralSwitchTranslationAndOriginal = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
-            _mainGeneralMergeTranslationAndOriginal = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation);
-            _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-            _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
-            _mainGeneralGoToStartOfCurrentSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
-            _mainGeneralGoToEndOfCurrentSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle);
+            _mainGeneralGoToFirstSelectedLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine);
+            _mainGeneralGoToFirstEmptyLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextEmptyLine);
+            _mainGeneralMergeSelectedLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines);
+            _mainGeneralMergeSelectedLinesOnlyFirstText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
+            _mainGeneralToggleTranslationMode = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode);
+            _mainGeneralSwitchTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
+            _mainGeneralMergeTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation);
+            _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+            _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+            _mainGeneralGoToStartOfCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
+            _mainGeneralGoToEndOfCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle);
 
-            newToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileNew);
-            openToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
-            toolStripMenuItemOpenKeepVideo.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileOpenKeepVideo);
-            saveToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSave);
-            saveOriginalToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveOriginal);
-            saveOriginalAstoolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveOriginalAs);
-            saveAsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
-            _mainGeneralFileSaveAll = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAll);
-            eBUSTLToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEbu);
+            newToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileNew);
+            openToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
+            toolStripMenuItemOpenKeepVideo.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileOpenKeepVideo);
+            saveToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSave);
+            saveOriginalToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveOriginal);
+            saveOriginalAstoolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveOriginalAs);
+            saveAsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
+            _mainGeneralFileSaveAll = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAll);
+            eBUSTLToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEbu);
 
-            toolStripMenuItemUndo.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditUndo);
-            toolStripMenuItemRedo.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditRedo);
-            findToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditFind);
-            findNextToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditFindNext);
-            replaceToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditReplace);
-            multipleReplaceToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditMultipleReplace);
-            gotoLineNumberToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
-            toolStripMenuItemRightToLeftMode.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditRightToLeft);
-            toolStripMenuItemShowOriginalInPreview.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
-            toolStripMenuItemInverseSelection.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditInverseSelection);
-            toolStripMenuItemModifySelection.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditModifySelection);
+            toolStripMenuItemUndo.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditUndo);
+            toolStripMenuItemRedo.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditRedo);
+            findToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditFind);
+            findNextToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditFindNext);
+            replaceToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReplace);
+            multipleReplaceToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditMultipleReplace);
+            gotoLineNumberToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
+            toolStripMenuItemRightToLeftMode.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditRightToLeft);
+            toolStripMenuItemShowOriginalInPreview.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
+            toolStripMenuItemInverseSelection.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditInverseSelection);
+            toolStripMenuItemModifySelection.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditModifySelection);
 
-            fixToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors);
-            toolStripMenuItemAutoMergeShortLines.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsMergeShortLines);
-            toolStripMenuItemAutoSplitLongLines.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsSplitLongLines);
-            startNumberingFromToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsRenumber);
-            removeTextForHearImparedToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI);
-            ChangeCasingToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsChangeCasing);
-            toolStripMenuItemShowOriginalInPreview.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
-            toolStripMenuItemBatchConvert.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsBatchConvert);
+            fixToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors);
+            toolStripMenuItemAutoMergeShortLines.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMergeShortLines);
+            toolStripMenuItemAutoSplitLongLines.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsSplitLongLines);
+            startNumberingFromToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsRenumber);
+            removeTextForHearImparedToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI);
+            ChangeCasingToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsChangeCasing);
+            toolStripMenuItemShowOriginalInPreview.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
+            toolStripMenuItemBatchConvert.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsBatchConvert);
 
-            showhideVideoToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
-            _toggleVideoDockUndock = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
-            _videoPause = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);
-            _videoPlayPauseToggle = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle);
-            _video1FrameLeft = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameLeft);
-            _video1FrameRight = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameRight);
-            _video100MsLeft = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo100MsLeft);
-            _video100MsRight = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo100MsRight);
-            _video500MsLeft = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo500MsLeft);
-            _video500MsRight = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo500MsRight);
-            _video1000MsLeft = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsLeft);
-            _video1000MsRight = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsRight);
-            _videoPlayFirstSelected = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralPlayFirstSelected);
-            _mainVideoFullscreen = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
+            showhideVideoToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
+            _toggleVideoDockUndock = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
+            _videoPause = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);
+            _videoPlayPauseToggle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle);
+            _video1FrameLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameLeft);
+            _video1FrameRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameRight);
+            _video100MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo100MsLeft);
+            _video100MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo100MsRight);
+            _video500MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo500MsLeft);
+            _video500MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo500MsRight);
+            _video1000MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsLeft);
+            _video1000MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsRight);
+            _videoPlayFirstSelected = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralPlayFirstSelected);
+            _mainVideoFullscreen = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
 
-            spellCheckToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);
-            findDoubleWordsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords);
-            addWordToNamesetcListToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames);
+            spellCheckToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);
+            findDoubleWordsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords);
+            addWordToNamesetcListToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames);
 
-            toolStripMenuItemAdjustAllTimes.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
-            visualSyncToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationVisualSync);
-            toolStripMenuItemPointSync.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationPointSync);
-            toolStripMenuItemChangeFrameRate2.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationChangeFrameRate);
-            italicToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
-            _mainToolsAutoDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsAutoDuration);
-            _mainToolsBeamer = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsBeamer);
-            _mainListViewToggleDashes = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleDashes);
-            toolStripMenuItemAlignment.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignment);
-            _mainListViewAutoDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewAutoDuration);
-            _mainListViewFocusWaveform = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewFocusWaveform);
-            _mainListViewGoToNextError = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
-            _mainEditReverseStartAndEndingForRTL = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
-            _mainListViewCopyText = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
-            copyOriginalTextToCurrentToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent);
-            toolStripMenuItemColumnDeleteText.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText);
-            ShiftTextCellsDownToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnInsertText);
-            toolStripMenuItemPasteSpecial.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnPaste);
+            toolStripMenuItemAdjustAllTimes.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
+            visualSyncToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationVisualSync);
+            toolStripMenuItemPointSync.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationPointSync);
+            toolStripMenuItemChangeFrameRate2.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationChangeFrameRate);
+            italicToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
+            _mainToolsAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsAutoDuration);
+            _mainToolsBeamer = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsBeamer);
+            _mainListViewToggleDashes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleDashes);
+            toolStripMenuItemAlignment.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignment);
+            _mainListViewAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAutoDuration);
+            _mainListViewFocusWaveform = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewFocusWaveform);
+            _mainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
+            _mainEditReverseStartAndEndingForRTL = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
+            _mainListViewCopyText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
+            copyOriginalTextToCurrentToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent);
+            toolStripMenuItemColumnDeleteText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText);
+            ShiftTextCellsDownToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnInsertText);
+            toolStripMenuItemPasteSpecial.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnPaste);
             toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = _mainEditReverseStartAndEndingForRTL;
-            italicToolStripMenuItem1.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
-            _mainTextBoxSplitAtCursor = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
-            _mainTextBoxMoveLastWordDown = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown);
-            _mainTextBoxMoveFirstWordFromNextUp = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
-            _mainTextBoxSelectionToLower = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower);
-            _mainTextBoxSelectionToUpper = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper);
-            _mainTextBoxToggleAutoDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxToggleAutoDuration);
-            _mainCreateInsertSubAtVideoPos = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
-            _mainCreatePlayFromJustBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore);
-            _mainCreateSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
-            _mainCreateSetEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEnd);
-            _mainCreateStartDownEndUp = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp);
-            _mainCreateSetEndAddNewAndGoToNew = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
-            _mainAdjustSetStartAndOffsetTheRest = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
-            _mainAdjustSetEndAndOffsetTheRest = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest);
-            _mainAdjustSetEndAndOffsetTheRestAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
-            _mainAdjustSetEndAndGotoNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
-            _mainAdjustInsertViaEndAutoStartAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
-            _mainAdjustSetStartAutoDurationAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
-            _mainAdjustSetEndNextStartAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
-            _mainAdjustStartDownEndUpAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);
-            _mainAdjustSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStart);
-            _mainAdjustSetStartKeepDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration);
-            _mainAdjustSetEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEnd);
-            _mainAdjustSelected100MsForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward);
-            _mainAdjustSelected100MsBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack);
-            _mainInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
-            _mainInsertBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
-            _mainTextBoxInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxInsertAfter);
-            _mainTextBoxAutoBreak = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak);
-            _mainTextBoxUnbreak = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreak);
-            _mainMergeDialog = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialog);
-            _mainToggleFocus = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocus);
-            _waveformVerticalZoom = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
-            _waveformVerticalZoomOut = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoomOut);
-            _waveformZoomIn = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomIn);
-            _waveformZoomOut = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomOut);
-            _waveformPlaySelection = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelection);
-            _waveformPlaySelectionEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd);
-            _waveformSearchSilenceForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward);
-            _waveformSearchSilenceBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack);
-            _waveformAddTextAtHere = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHere);
-            _waveformFocusListView = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformFocusListView);
-            _mainTranslateCustomSearch1 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1);
-            _mainTranslateCustomSearch2 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2);
-            _mainTranslateCustomSearch3 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3);
-            _mainTranslateCustomSearch4 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch4);
-            _mainTranslateCustomSearch5 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch5);
-            _mainTranslateCustomSearch6 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch6);
+            italicToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+            _mainTextBoxSplitAtCursor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
+            _mainTextBoxMoveLastWordDown = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown);
+            _mainTextBoxMoveFirstWordFromNextUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
+            _mainTextBoxSelectionToLower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower);
+            _mainTextBoxSelectionToUpper = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper);
+            _mainTextBoxToggleAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxToggleAutoDuration);
+            _mainCreateInsertSubAtVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
+            _mainCreatePlayFromJustBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore);
+            _mainCreateSetStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
+            _mainCreateSetEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEnd);
+            _mainCreateStartDownEndUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp);
+            _mainCreateSetEndAddNewAndGoToNew = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
+            _mainAdjustSetStartAndOffsetTheRest = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
+            _mainAdjustSetEndAndOffsetTheRest = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest);
+            _mainAdjustSetEndAndOffsetTheRestAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
+            _mainAdjustSetEndAndGotoNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
+            _mainAdjustInsertViaEndAutoStartAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
+            _mainAdjustSetStartAutoDurationAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
+            _mainAdjustSetEndNextStartAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
+            _mainAdjustStartDownEndUpAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);
+            _mainAdjustSetStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStart);
+            _mainAdjustSetStartKeepDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration);
+            _mainAdjustSetEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEnd);
+            _mainAdjustSelected100MsForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward);
+            _mainAdjustSelected100MsBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack);
+            _mainInsertAfter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
+            _mainInsertBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
+            _mainTextBoxInsertAfter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxInsertAfter);
+            _mainTextBoxAutoBreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak);
+            _mainTextBoxUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreak);
+            _mainMergeDialog = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialog);
+            _mainToggleFocus = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocus);
+            _waveformVerticalZoom = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
+            _waveformVerticalZoomOut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoomOut);
+            _waveformZoomIn = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomIn);
+            _waveformZoomOut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomOut);
+            _waveformPlaySelection = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelection);
+            _waveformPlaySelectionEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd);
+            _waveformSearchSilenceForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward);
+            _waveformSearchSilenceBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack);
+            _waveformAddTextAtHere = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHere);
+            _waveformFocusListView = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformFocusListView);
+            _mainTranslateCustomSearch1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1);
+            _mainTranslateCustomSearch2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2);
+            _mainTranslateCustomSearch3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3);
+            _mainTranslateCustomSearch4 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch4);
+            _mainTranslateCustomSearch5 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch5);
+            _mainTranslateCustomSearch6 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch6);
 
             if (audioVisualizer != null)
             {
-                audioVisualizer.InsertAtVideoPositionShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
+                audioVisualizer.InsertAtVideoPositionShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
             }
         }
 
@@ -14505,7 +14505,7 @@ namespace Nikse.SubtitleEdit.Forms
                         item.Tag = pluginFileName;
 
                         if (!string.IsNullOrEmpty(shortcut))
-                            item.ShortcutKeys = Utilities.GetKeys(shortcut);
+                            item.ShortcutKeys = UiUtil.GetKeys(shortcut);
 
                         if (actionType.Equals("File", StringComparison.OrdinalIgnoreCase))
                         {
@@ -16548,12 +16548,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_isVideoControlsUndocked)
             {
-                redockVideoControlsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
+                redockVideoControlsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
                 undockVideoControlsToolStripMenuItem.ShortcutKeys = Keys.None;
             }
             else
             {
-                undockVideoControlsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
+                undockVideoControlsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
                 redockVideoControlsToolStripMenuItem.ShortcutKeys = Keys.None;
             }
 
@@ -16712,7 +16712,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SaveOriginalAstoolStripMenuItemClick(object sender, EventArgs e)
         {
             SubtitleFormat currentFormat = GetCurrentSubtitleFormat();
-            Utilities.SetSaveDialogFilter(saveFileDialog1, currentFormat);
+            UiUtil.SetSaveDialogFilter(saveFileDialog1, currentFormat);
 
             saveFileDialog1.Title = _language.SaveOriginalSubtitleAs;
             saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
@@ -18477,7 +18477,7 @@ namespace Nikse.SubtitleEdit.Forms
                 newSub.Paragraphs.Add(_subtitle.Paragraphs[index]);
 
             SubtitleFormat currentFormat = GetCurrentSubtitleFormat();
-            Utilities.SetSaveDialogFilter(saveFileDialog1, currentFormat);
+            UiUtil.SetSaveDialogFilter(saveFileDialog1, currentFormat);
             saveFileDialog1.Title = _language.SaveSubtitleAs;
             saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
             saveFileDialog1.AddExtension = true;
