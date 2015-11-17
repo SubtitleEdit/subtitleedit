@@ -463,6 +463,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.uniPacExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1183,6 +1184,7 @@
             this.toolStripMenuItemImagePerFrame,
             this.toolStripMenuItemTextTimeCodePair,
             this.pACScreenElectronicsToolStripMenuItem,
+            this.uniPacExportToolStripMenuItem,
             this.plainTextToolStripMenuItem,
             this.toolStripMenuItem2,
             this.toolStripMenuItemExportUltech130,
@@ -1318,7 +1320,7 @@
             this.pACScreenElectronicsToolStripMenuItem.Name = "pACScreenElectronicsToolStripMenuItem";
             this.pACScreenElectronicsToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.pACScreenElectronicsToolStripMenuItem.Text = "PAC (Screen Electronics)...";
-            this.pACScreenElectronicsToolStripMenuItem.Click += new System.EventHandler(this.PAcScreenElectronicsToolStripMenuItemClick);
+            this.pACScreenElectronicsToolStripMenuItem.Click += new System.EventHandler(this.PacScreenElectronicsToolStripMenuItemClick);
             // 
             // plainTextToolStripMenuItem
             // 
@@ -2640,7 +2642,6 @@
             this.audioVisualizer.BackColor = System.Drawing.Color.Black;
             this.audioVisualizer.BackgroundColor = System.Drawing.Color.Black;
             this.audioVisualizer.Color = System.Drawing.Color.GreenYellow;
-            this.audioVisualizer.ShowGridLines = true;
             this.audioVisualizer.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
             this.audioVisualizer.Location = new System.Drawing.Point(472, 32);
             this.audioVisualizer.Margin = new System.Windows.Forms.Padding(0);
@@ -2650,6 +2651,7 @@
             this.audioVisualizer.ParagraphColor = System.Drawing.Color.LimeGreen;
             this.audioVisualizer.SceneChanges = ((System.Collections.Generic.List<double>)(resources.GetObject("audioVisualizer.SceneChanges")));
             this.audioVisualizer.SelectedColor = System.Drawing.Color.Red;
+            this.audioVisualizer.ShowGridLines = true;
             this.audioVisualizer.ShowSpectrogram = false;
             this.audioVisualizer.ShowWaveform = true;
             this.audioVisualizer.Size = new System.Drawing.Size(499, 229);
@@ -3626,7 +3628,7 @@
             this.guessTimeCodesToolStripMenuItem,
             this.seekSilenceToolStripMenuItem});
             this.contextMenuStripWaveform.Name = "contextMenuStripWaveform";
-            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 330);
+            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 308);
             this.contextMenuStripWaveform.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.contextMenuStripWaveform_Closing);
             this.contextMenuStripWaveform.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveformOpening);
             // 
@@ -4480,6 +4482,13 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
+            // uniPacExportToolStripMenuItem
+            // 
+            this.uniPacExportToolStripMenuItem.Name = "uniPacExportToolStripMenuItem";
+            this.uniPacExportToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.uniPacExportToolStripMenuItem.Text = "PAC Unicode (UniPac)...";
+            this.uniPacExportToolStripMenuItem.Click += new System.EventHandler(this.uniPacExportToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4987,5 +4996,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddWaveformBatch;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportBdTextSt;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelProgress;
+        private System.Windows.Forms.ToolStripMenuItem uniPacExportToolStripMenuItem;
     }
 }
