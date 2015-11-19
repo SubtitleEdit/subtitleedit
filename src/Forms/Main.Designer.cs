@@ -127,6 +127,7 @@
             this.toolStripMenuItemImagePerFrame = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemTextTimeCodePair = new System.Windows.Forms.ToolStripMenuItem();
             this.pACScreenElectronicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uniPacExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plainTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportUltech130 = new System.Windows.Forms.ToolStripMenuItem();
@@ -463,7 +464,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.uniPacExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportAyato = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1168,6 +1169,7 @@
             this.toolStripMenuItemExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.adobeEncoreFABImageScriptToolStripMenuItem,
             this.toolStripMenuItemAvidStl,
+            this.toolStripMenuItemExportAyato,
             this.toolStripMenuItemExportPngXml,
             this.bluraySupToolStripMenuItem,
             this.toolStripMenuItemExportBdTextSt,
@@ -1321,6 +1323,13 @@
             this.pACScreenElectronicsToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.pACScreenElectronicsToolStripMenuItem.Text = "PAC (Screen Electronics)...";
             this.pACScreenElectronicsToolStripMenuItem.Click += new System.EventHandler(this.PacScreenElectronicsToolStripMenuItemClick);
+            // 
+            // uniPacExportToolStripMenuItem
+            // 
+            this.uniPacExportToolStripMenuItem.Name = "uniPacExportToolStripMenuItem";
+            this.uniPacExportToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.uniPacExportToolStripMenuItem.Text = "PAC Unicode (UniPac)...";
+            this.uniPacExportToolStripMenuItem.Click += new System.EventHandler(this.uniPacExportToolStripMenuItem_Click);
             // 
             // plainTextToolStripMenuItem
             // 
@@ -4482,12 +4491,12 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // uniPacExportToolStripMenuItem
+            // toolStripMenuItemExportAyato
             // 
-            this.uniPacExportToolStripMenuItem.Name = "uniPacExportToolStripMenuItem";
-            this.uniPacExportToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.uniPacExportToolStripMenuItem.Text = "PAC Unicode (UniPac)...";
-            this.uniPacExportToolStripMenuItem.Click += new System.EventHandler(this.uniPacExportToolStripMenuItem_Click);
+            this.toolStripMenuItemExportAyato.Name = "toolStripMenuItemExportAyato";
+            this.toolStripMenuItemExportAyato.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemExportAyato.Text = "Ayato...";
+            this.toolStripMenuItemExportAyato.Click += new System.EventHandler(this.toolStripMenuItemExportAyato_Click);
             // 
             // Main
             // 
@@ -4997,5 +5006,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportBdTextSt;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelProgress;
         private System.Windows.Forms.ToolStripMenuItem uniPacExportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportAyato;
     }
 }

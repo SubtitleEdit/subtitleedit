@@ -17488,6 +17488,39 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void toolStripMenuItemExportAyato_Click(object sender, EventArgs e)
+        {
+            var ayato = new Ayato();
+            saveFileDialog1.Filter = ayato.Name + "|*" + ayato.Extension;
+            saveFileDialog1.Title = _language.SaveSubtitleAs;
+            saveFileDialog1.DefaultExt = "*" + ayato.Extension;
+            saveFileDialog1.AddExtension = true;
+
+            if (!string.IsNullOrEmpty(_videoFileName))
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
+            else
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+
+            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+
+            DialogResult result = saveFileDialog1.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
+                string fileName = saveFileDialog1.FileName;
+                string ext = Path.GetExtension(fileName);
+                bool extOk = ext.Equals(ayato.Extension, StringComparison.OrdinalIgnoreCase);
+                if (!extOk)
+                {
+                    if (fileName.EndsWith('.'))
+                        fileName = fileName.Substring(0, fileName.Length - 1);
+                    fileName += ayato.Extension;
+                }
+                ayato.Save(fileName, _videoFileName, _subtitle);
+            }
+        }
+
         private void TextBoxListViewTextEnter(object sender, EventArgs e)
         {
             if (_findHelper != null)
@@ -19535,7 +19568,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void contextMenuStripWaveform_Closing(object sender, ToolStripDropDownClosingEventArgs e)
         {
             _lastWaveformMenuCloseTicks = DateTime.Now.Ticks;
-        }
+        }        
 
     }
 }

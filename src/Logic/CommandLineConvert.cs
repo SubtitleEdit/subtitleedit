@@ -674,6 +674,18 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 if (!targetFormatFound)
                 {
+                    var ayato = new Ayato();
+                    if (ayato.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ayato.Extension, outputFolder, overwrite);
+                        Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
+                        ayato.Save(outputFileName, null, sub);
+                        Console.WriteLine(" done.");
+                    }
+                }
+                if (!targetFormatFound)
+                {
                     var capMakerPlus = new CapMakerPlus();
                     if (capMakerPlus.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase))
                     {
