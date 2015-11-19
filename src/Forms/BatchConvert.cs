@@ -151,6 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _allFormats.Add(f);
                 }
             }
+            formatNames.Add(new Ayato().Name);
             formatNames.Add(l.PlainText);
             formatNames.Add(BluRaySubtitle);
             for (int index = 0; index < formatNames.Count; index++)
@@ -636,6 +637,24 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 cheetahCaption.LoadSubtitle(sub, null, fileName);
                                 format = cheetahCaption;
+                            }
+                        }
+                        if (format == null)
+                        {
+                            var chk = new Chk();
+                            if (chk.IsMine(null, fileName))
+                            {
+                                chk.LoadSubtitle(sub, null, fileName);
+                                format = chk;
+                            }
+                        }
+                        if (format == null)
+                        {
+                            var ayato = new Ayato();
+                            if (ayato.IsMine(null, fileName))
+                            {
+                                ayato.LoadSubtitle(sub, null, fileName);
+                                format = ayato;
                             }
                         }
                         if (format == null)
@@ -1357,6 +1376,18 @@ namespace Nikse.SubtitleEdit.Forms
                                     var cheetahCaption = new CheetahCaption();
                                     if (cheetahCaption.IsMine(null, fileName))
                                         format = cheetahCaption;
+                                }
+                                if (format == null)
+                                {
+                                    var chk = new Chk();
+                                    if (chk.IsMine(null, fileName))
+                                        format = chk;
+                                }
+                                if (format == null)
+                                {
+                                    var ayato = new Ayato();
+                                    if (ayato.IsMine(null, fileName))
+                                        format = ayato;
                                 }
                                 if (format == null)
                                 {
