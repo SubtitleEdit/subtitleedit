@@ -71,7 +71,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             groupBoxMargins.Text = l.Margins;
             labelMarginLeft.Text = l.MarginLeft;
             labelMarginRight.Text = l.MarginRight;
-            labelMarginRight.Text = l.MarginRight;
             labelMarginVertical.Text = l.MarginVertical;
             groupBoxBorder.Text = l.Border;
             radioButtonOutline.Text = l.Outline;
