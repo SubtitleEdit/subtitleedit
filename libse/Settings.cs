@@ -246,6 +246,10 @@ namespace Nikse.SubtitleEdit.Core
         public int SsaOutline { get; set; }
         public int SsaShadow { get; set; }
         public bool SsaOpaqueBox { get; set; }
+        public int SsaMarginLeft { get; set; }
+        public int SsaMarginRight { get; set; }
+        public int SsaMarginTopBottom { get; set; }
+        
         public string DCinemaFontFile { get; set; }
         public string DCinemaLoadFontResource { get; set; }
         public int DCinemaFontSize { get; set; }
@@ -293,6 +297,9 @@ namespace Nikse.SubtitleEdit.Core
             SsaOutline = 2;
             SsaShadow = 1;
             SsaOpaqueBox = false;
+            SsaMarginLeft = 10;
+            SsaMarginRight = 10;
+            SsaMarginTopBottom = 10;
 
             DCinemaFontFile = "Arial.ttf";
             DCinemaLoadFontResource = "urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391";
@@ -1806,6 +1813,15 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("SsaOpaqueBox");
                 if (subNode != null)
                     settings.SubtitleSettings.SsaOpaqueBox = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("SsaMarginLeft");
+                if (subNode != null)
+                    settings.SubtitleSettings.SsaMarginLeft = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("SsaMarginRight");
+                if (subNode != null)
+                    settings.SubtitleSettings.SsaMarginRight = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("SsaMarginTopBottom");
+                if (subNode != null)
+                    settings.SubtitleSettings.SsaMarginTopBottom= Convert.ToInt32(subNode.InnerText);
                 subNode = node.SelectSingleNode("DCinemaFontFile");
                 if (subNode != null)
                     settings.SubtitleSettings.DCinemaFontFile = subNode.InnerText;
@@ -2900,6 +2916,9 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("SsaOutline", settings.SubtitleSettings.SsaOutline.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SsaShadow", settings.SubtitleSettings.SsaShadow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SsaOpaqueBox", settings.SubtitleSettings.SsaOpaqueBox.ToString());
+                textWriter.WriteElementString("SsaMarginLeft", settings.SubtitleSettings.SsaMarginLeft.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SsaMarginRight", settings.SubtitleSettings.SsaMarginRight.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SsaMarginTopBottom", settings.SubtitleSettings.SsaMarginTopBottom.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DCinemaFontFile", settings.SubtitleSettings.DCinemaFontFile);
                 textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("DCinemaBottomMargin", settings.SubtitleSettings.DCinemaBottomMargin.ToString(CultureInfo.InvariantCulture));
