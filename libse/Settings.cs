@@ -243,6 +243,7 @@ namespace Nikse.SubtitleEdit.Core
         public string SsaFontName { get; set; }
         public double SsaFontSize { get; set; }
         public int SsaFontColorArgb { get; set; }
+        public bool SsaFontBold { get; set; }
         public int SsaOutline { get; set; }
         public int SsaShadow { get; set; }
         public bool SsaOpaqueBox { get; set; }
@@ -283,6 +284,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public string TimedText10TimeCodeFormat { get; set; }
         public string TimedText10TimeCodeFormatSource { get; set; }
+        public bool TimedText10ShowStyleAndLanguage { get; set; }
 
         public int FcpFontSize { get; set; }
         public string FcpFontName { get; set; }
@@ -313,6 +315,7 @@ namespace Nikse.SubtitleEdit.Core
             SamiHtmlEncodeMode = 0;
 
             TimedText10TimeCodeFormat = "Source";
+            TimedText10ShowStyleAndLanguage = true;
 
             FcpFontSize = 18;
             FcpFontName = "Lucida Grande";
@@ -1804,6 +1807,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("SsaFontColorArgb");
                 if (subNode != null)
                     settings.SubtitleSettings.SsaFontColorArgb = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("SsaFontBold");
+                if (subNode != null)
+                    settings.SubtitleSettings.SsaFontBold = Convert.ToBoolean(subNode.InnerText);
                 subNode = node.SelectSingleNode("SsaOutline");
                 if (subNode != null)
                     settings.SubtitleSettings.SsaOutline = Convert.ToInt32(subNode.InnerText);
@@ -1849,6 +1855,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("TimedText10TimeCodeFormat");
                 if (subNode != null)
                     settings.SubtitleSettings.TimedText10TimeCodeFormat = subNode.InnerText;
+                subNode = node.SelectSingleNode("TimedText10ShowStyleAndLanguage");
+                if (subNode != null)
+                    settings.SubtitleSettings.TimedText10ShowStyleAndLanguage = Convert.ToBoolean(subNode.InnerText);
                 subNode = node.SelectSingleNode("FcpFontSize");
                 if (subNode != null)
                     settings.SubtitleSettings.FcpFontSize = Convert.ToInt32(subNode.InnerText);
@@ -2913,6 +2922,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("SsaFontName", settings.SubtitleSettings.SsaFontName);
                 textWriter.WriteElementString("SsaFontSize", settings.SubtitleSettings.SsaFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SsaFontColorArgb", settings.SubtitleSettings.SsaFontColorArgb.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("SsaFontBold", settings.SubtitleSettings.SsaFontBold.ToString());
                 textWriter.WriteElementString("SsaOutline", settings.SubtitleSettings.SsaOutline.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SsaShadow", settings.SubtitleSettings.SsaShadow.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SsaOpaqueBox", settings.SubtitleSettings.SsaOpaqueBox.ToString());
@@ -2928,6 +2938,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("SamiDisplayTwoClassesAsTwoSubtitles", settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles.ToString());
                 textWriter.WriteElementString("SamiFullHtmlEncode", settings.SubtitleSettings.SamiHtmlEncodeMode.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("TimedText10TimeCodeFormat", settings.SubtitleSettings.TimedText10TimeCodeFormat);
+                textWriter.WriteElementString("TimedText10ShowStyleAndLanguage", settings.SubtitleSettings.TimedText10ShowStyleAndLanguage.ToString());                
                 textWriter.WriteElementString("FcpFontSize", settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FcpFontName", settings.SubtitleSettings.FcpFontName);
                 textWriter.WriteElementString("CheetahCaptionAlwayWriteEndTime", settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime.ToString(CultureInfo.InvariantCulture));

@@ -249,6 +249,8 @@
             this.checkBoxSsaOpaqueBox = new System.Windows.Forms.CheckBox();
             this.labelSsaOutline = new System.Windows.Forms.Label();
             this.groupSsaBoxFont = new System.Windows.Forms.GroupBox();
+            this.checkBoxSsaFontBold = new System.Windows.Forms.CheckBox();
+            this.buttonSsaColor = new System.Windows.Forms.Button();
             this.panelPrimaryColor = new System.Windows.Forms.Panel();
             this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
             this.comboBoxFontName = new System.Windows.Forms.ComboBox();
@@ -301,7 +303,6 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
-            this.buttonSsaColor = new System.Windows.Forms.Button();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -2862,6 +2863,7 @@
             // 
             this.groupSsaBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupSsaBoxFont.Controls.Add(this.checkBoxSsaFontBold);
             this.groupSsaBoxFont.Controls.Add(this.buttonSsaColor);
             this.groupSsaBoxFont.Controls.Add(this.panelPrimaryColor);
             this.groupSsaBoxFont.Controls.Add(this.numericUpDownFontSize);
@@ -2874,6 +2876,28 @@
             this.groupSsaBoxFont.TabIndex = 7;
             this.groupSsaBoxFont.TabStop = false;
             this.groupSsaBoxFont.Text = "Font";
+            // 
+            // checkBoxSsaFontBold
+            // 
+            this.checkBoxSsaFontBold.AutoSize = true;
+            this.checkBoxSsaFontBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxSsaFontBold.Location = new System.Drawing.Point(184, 45);
+            this.checkBoxSsaFontBold.Name = "checkBoxSsaFontBold";
+            this.checkBoxSsaFontBold.Size = new System.Drawing.Size(51, 17);
+            this.checkBoxSsaFontBold.TabIndex = 7;
+            this.checkBoxSsaFontBold.Text = "Bold";
+            this.checkBoxSsaFontBold.UseVisualStyleBackColor = true;
+            this.checkBoxSsaFontBold.CheckedChanged += new System.EventHandler(this.checkBoxSsaFontBold_CheckedChanged);
+            // 
+            // buttonSsaColor
+            // 
+            this.buttonSsaColor.Location = new System.Drawing.Point(6, 66);
+            this.buttonSsaColor.Name = "buttonSsaColor";
+            this.buttonSsaColor.Size = new System.Drawing.Size(109, 23);
+            this.buttonSsaColor.TabIndex = 6;
+            this.buttonSsaColor.Text = "Choose color";
+            this.buttonSsaColor.UseVisualStyleBackColor = true;
+            this.buttonSsaColor.Click += new System.EventHandler(this.buttonSsaColor_Click);
             // 
             // panelPrimaryColor
             // 
@@ -3543,16 +3567,6 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
-            // buttonSsaColor
-            // 
-            this.buttonSsaColor.Location = new System.Drawing.Point(6, 66);
-            this.buttonSsaColor.Name = "buttonSsaColor";
-            this.buttonSsaColor.Size = new System.Drawing.Size(109, 23);
-            this.buttonSsaColor.TabIndex = 6;
-            this.buttonSsaColor.Text = "Choose color";
-            this.buttonSsaColor.UseVisualStyleBackColor = true;
-            this.buttonSsaColor.Click += new System.EventHandler(this.buttonSsaColor_Click);
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3945,5 +3959,6 @@
         private System.Windows.Forms.Label labelFontName;
         private System.Windows.Forms.Panel panelPrimaryColor;
         private System.Windows.Forms.Button buttonSsaColor;
+        private System.Windows.Forms.CheckBox checkBoxSsaFontBold;
     }
 }

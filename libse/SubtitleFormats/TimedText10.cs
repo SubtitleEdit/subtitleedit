@@ -770,7 +770,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             get
             {
-                return true;
+                return Configuration.Settings.SubtitleSettings.TimedText10ShowStyleAndLanguage;
             }
         }
 
