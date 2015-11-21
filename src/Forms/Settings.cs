@@ -199,6 +199,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownSsaMarginLeft.Value = ssa.SsaMarginLeft;
             numericUpDownSsaMarginRight.Value = ssa.SsaMarginRight;
             numericUpDownSsaMarginVertical.Value = ssa.SsaMarginTopBottom;
+            checkBoxSsaFontBold.Checked = ssa.SsaFontBold;
             checkBoxSsaOpaqueBox.Checked = ssa.SsaOpaqueBox;
             numericUpDownFontSize.Value = (decimal)ssa.SsaFontSize;
             comboBoxFontName.Text = ssa.SsaFontName;
@@ -396,13 +397,11 @@ namespace Nikse.SubtitleEdit.Forms
             labelMarginLeft.Text = ssaStyles.MarginLeft;
             labelMarginRight.Text = ssaStyles.MarginRight;
             labelMarginVertical.Text = ssaStyles.MarginVertical;
-
-            //buttonSSAChooseFont.Text = language.ChooseFont;
-            //buttonSSAChooseColor.Text = language.ChooseColor;
-
             labelSsaOutline.Text = language.SsaOutline;
             labelSsaShadow.Text = language.SsaShadow;
             checkBoxSsaOpaqueBox.Text = language.SsaOpaqueBox;
+            checkBoxSsaFontBold.Text = Configuration.Settings.Language.General.Bold;
+
             groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
 
             numericUpDownSsaOutline.Left = labelSsaOutline.Left + labelSsaOutline.Width + 4;
@@ -1170,6 +1169,7 @@ namespace Nikse.SubtitleEdit.Forms
             ssa.SsaFontName = _ssaFontName;
             ssa.SsaFontSize = _ssaFontSize;
             ssa.SsaFontColorArgb = _ssaFontColor;
+            ssa.SsaFontBold = checkBoxSsaFontBold.Checked;
             ssa.SsaOutline = (int)numericUpDownSsaOutline.Value;
             ssa.SsaShadow = (int)numericUpDownSsaShadow.Value;
             ssa.SsaOpaqueBox = checkBoxSsaOpaqueBox.Checked;
@@ -1631,11 +1631,17 @@ namespace Nikse.SubtitleEdit.Forms
                 Font font;
                 try
                 {
-                    font = new Font(_ssaFontName, (float)_ssaFontSize);
+                    if (checkBoxSsaFontBold.Checked)
+                        font = new Font(_ssaFontName, (float)_ssaFontSize, FontStyle.Bold);
+                    else
+                        font = new Font(_ssaFontName, (float)_ssaFontSize);
                 }
                 catch
                 {
-                    font = new Font(Font, FontStyle.Regular);
+                    if (checkBoxSsaFontBold.Checked)
+                        font = new Font(Font, FontStyle.Bold);
+                    else
+                        font = new Font(Font, FontStyle.Regular);
                 }
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
                 g.SmoothingMode = SmoothingMode.AntiAlias;
@@ -1646,8 +1652,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 sb.Append("This is a test!");
 
-                var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), false) + 1;
-                var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), false) + 1;
+                var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), checkBoxSsaFontBold.Checked) + 1;
+                var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), checkBoxSsaFontBold.Checked) + 1;
 
                 float left = ((float)(bmp.Width - measuredWidth * 0.8 + 15) / 2);
 
@@ -1661,7 +1667,7 @@ namespace Nikse.SubtitleEdit.Forms
                     g.FillRectangle(new SolidBrush(Color.Black), left, top, measuredWidth + 3, measuredHeight + 3);
                 }
 
-                TextDraw.DrawText(font, sf, path, sb, false, false, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
+                TextDraw.DrawText(font, sf, path, sb, false, checkBoxSsaFontBold.Checked, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
 
                 int outline = (int)numericUpDownSsaOutline.Value;
 
@@ -1674,7 +1680,7 @@ namespace Nikse.SubtitleEdit.Forms
                         sb = new StringBuilder();
                         sb.Append("This is a test!");
                         int pathPointsStart2 = -1;
-                        TextDraw.DrawText(font, sf, shadowPath, sb, false, false, false, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
+                        TextDraw.DrawText(font, sf, shadowPath, sb, false, checkBoxSsaFontBold.Checked, false, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
                         g.FillPath(new SolidBrush(Color.FromArgb(200, Color.Black)), shadowPath);
                     }
                 }
@@ -2613,6 +2619,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonSsaColor_Click(object sender, EventArgs e)
         {
             panelPrimaryColor_MouseClick(sender, null);
+        }
+
+        private void checkBoxSsaFontBold_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateSsaExample();
         }
 
     }

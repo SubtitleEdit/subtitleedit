@@ -19,11 +19,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (Configuration.Settings.SubtitleSettings.SsaOpaqueBox)
                     borderStyle = "3";
 
+                string boldStyle = "0"; // 0=regular
+                if (Configuration.Settings.SubtitleSettings.SsaFontBold)
+                    boldStyle = "1";
+
                 var ssa = Configuration.Settings.SubtitleSettings;
                 return "Style: Default," + ssa.SsaFontName + "," +
                     ((int)ssa.SsaFontSize) + "," +
                     GetSsaColorString(Color.FromArgb(ssa.SsaFontColorArgb)) + "," +
-                    "&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0," + borderStyle + "," + ssa.SsaOutline.ToString(CultureInfo.InvariantCulture) + "," +
+                    "&H0300FFFF,&H00000000,&H02000000," + boldStyle + ",0,0,0,100,100,0,0," + borderStyle + "," + ssa.SsaOutline.ToString(CultureInfo.InvariantCulture) + "," +
                     Configuration.Settings.SubtitleSettings.SsaShadow.ToString(CultureInfo.InvariantCulture) + ",2," + ssa.SsaMarginLeft + "," + ssa.SsaMarginRight + "," + ssa.SsaMarginTopBottom + ",1";
             }
         }

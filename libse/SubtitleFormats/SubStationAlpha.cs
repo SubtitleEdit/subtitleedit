@@ -48,7 +48,7 @@ PlayDepth: 0
 
 [V4 Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
-Style: Default,{1},{2},{3},65535,65535,-2147483640,-1,0,1,{4},{5},2,{6},{7},{8},0,1
+Style: Default,{1},{2},{3},65535,65535,-2147483640,-1,{9},1,{4},{5},2,{6},{7},{8},0,1
 
 [Events]
 Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
@@ -95,6 +95,9 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             else
             {
                 var ssa = Configuration.Settings.SubtitleSettings;
+                string boldStyle = "0"; // 0=regular
+                if (ssa.SsaFontBold)
+                    boldStyle = "1";
                 sb.AppendLine(string.Format(header,
                                             title,
                                             ssa.SsaFontName,
@@ -104,7 +107,8 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                             ssa.SsaShadow,
                                             ssa.SsaMarginLeft,
                                             ssa.SsaMarginRight,
-                                            ssa.SsaMarginTopBottom
+                                            ssa.SsaMarginTopBottom,
+                                            boldStyle
                                             ));
             }
             foreach (Paragraph p in subtitle.Paragraphs)
