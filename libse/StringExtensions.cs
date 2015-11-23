@@ -127,13 +127,13 @@ namespace Nikse.SubtitleEdit.Core
             return -1;
         }
 
-        public static int IndexOfAny(this string s, string[] words, StringComparison comparionType)
+        public static int IndexOfAny(this string s, string[] words, StringComparison comparisonType)
         {
             if (words == null || string.IsNullOrEmpty(s))
                 return -1;
             for (int i = 0; i < words.Length; i++)
             {
-                var idx = s.IndexOf(words[i], comparionType);
+                var idx = s.IndexOf(words[i], comparisonType);
                 if (idx >= 0)
                     return idx;
             }
