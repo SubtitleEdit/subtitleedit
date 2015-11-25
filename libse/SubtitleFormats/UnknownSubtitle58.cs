@@ -46,12 +46,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 sb.AppendLine(string.Format(format, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), p.Text, Environment.NewLine));
             }
-
-            System.Windows.Forms.RichTextBox rtBox = new System.Windows.Forms.RichTextBox();
-            rtBox.Text = sb.ToString();
-            string rtf = rtBox.Rtf;
-            rtBox.Dispose();
-            return rtf;
+            return sb.ToString().ToRtf();
         }
 
         private static string EncodeTimeCode(TimeCode time)
@@ -70,23 +65,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!rtf.StartsWith("{\\rtf"))
                 return;
 
-            string[] arr = null;
-            var rtBox = new System.Windows.Forms.RichTextBox();
-            try
-            {
-                rtBox.Rtf = rtf;
-                arr = rtBox.Text.SplitToLines();
-            }
-            catch (Exception exception)
-            {
-                System.Diagnostics.Debug.WriteLine(exception.Message);
-                return;
-            }
-            finally
-            {
-                rtBox.Dispose();
-            }
-
+            string[] arr = rtf.FromRtf().SplitToLines();
             var p = new Paragraph();
             subtitle.Paragraphs.Clear();
             foreach (string line in arr)

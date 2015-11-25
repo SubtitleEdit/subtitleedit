@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
@@ -30,10 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var u52 = new UnknownSubtitle52();
-            using (var rtBox = new System.Windows.Forms.RichTextBox { Text = u52.ToText(subtitle, title) })
-            {
-                return rtBox.Rtf;
-            }
+            return u52.ToText(subtitle, title).ToRtf();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -47,16 +46,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var text = new StringBuilder();
             foreach (string s in lines)
                 text.AppendLine(s);
-            using (var rtBox = new System.Windows.Forms.RichTextBox())
-            {
-                rtBox.Rtf = text.ToString();
-                var lines2 = new List<string>();
-                foreach (string line in rtBox.Lines)
-                    lines2.Add(line);
-                var u52 = new UnknownSubtitle52();
-                u52.LoadSubtitle(subtitle, lines2, fileName);
-                _errorCount = u52.ErrorCount;
-            }
+            
+            var lines2 = text.ToString().FromRtf().SplitToLines().ToList();
+            var u52 = new UnknownSubtitle52();
+            u52.LoadSubtitle(subtitle, lines2, fileName);
+            _errorCount = u52.ErrorCount;
         }
     }
 }

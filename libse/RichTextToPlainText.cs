@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -14,6 +16,9 @@ namespace Nikse.SubtitleEdit.Core
     /// </remarks>
     public static class RichTextToPlainText
     {
+
+        public static IRtfTextConverter NativeRtfTextConverter { get; set; }
+
         private class StackEntry
         {
             public int NumberOfCharactersToSkip { get; private set; }
@@ -96,11 +101,17 @@ namespace Nikse.SubtitleEdit.Core
         /// </summary>
         /// <param name="inputRtf">RTF formatted text</param>
         /// <returns>Plain text from RTF</returns>
-        public static string StripRichTextFormat(string inputRtf)
+        public static string ConvertToText(string inputRtf)
         {
             if (inputRtf == null)
             {
                 return null;
+            }
+
+            // use interface converter if available
+            if (NativeRtfTextConverter != null)
+            {
+                NativeRtfTextConverter.RtfToText(inputRtf);
             }
 
             var stack = new Stack<StackEntry>();
@@ -215,6 +226,39 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
             return String.Join(String.Empty, outList.ToArray());
+        }
+
+        public static string ConvertToRtf(this string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return string.Empty;
+            }
+
+            // use interface converter if available
+            if (NativeRtfTextConverter != null)
+            {
+                NativeRtfTextConverter.TextToRtf(value);
+            }
+
+            // special RTF chars
+            var backslashed = new StringBuilder(value);
+            backslashed.Replace(@"\", @"\\");
+            backslashed.Replace(@"{", @"\{");
+            backslashed.Replace(@"}", @"\}");
+            backslashed.Replace(Environment.NewLine, @"\par" + Environment.NewLine);
+
+            // convert string char by char
+            var sb = new StringBuilder();
+            foreach (char character in backslashed.ToString())
+            {
+                if (character <= 0x7f)
+                    sb.Append(character);
+                else
+                    sb.Append("\\u" + Convert.ToUInt32(character) + "?");
+            }
+
+            return @"{\rtf1\ansi\ansicpg1252\deff0{\fonttbl\f0\fswiss Helvetica;}\f0\pard " + sb + @"\par" + Environment.NewLine + "}";
         }
 
     }

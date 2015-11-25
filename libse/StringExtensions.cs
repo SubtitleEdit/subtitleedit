@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string FromRtf(this string value)
         {
-            return RichTextToPlainText.StripRichTextFormat(value);
+            return RichTextToPlainText.ConvertToText(value);
         }
 
     }
