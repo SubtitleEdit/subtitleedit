@@ -1,5 +1,39 @@
 ﻿Subtitle Edit Changelog
 
+3.4.11 (xth December 2015) BETA
+* NEW:
+   * New subtitle formats
+   * Export to Pac-Unicode and Ayato 3
+   * Installer can now set icons for SE - thx xylographe
+* IMPROVED:
+   * Updated Basque translation - thx Xabier Aramendi
+   * Updated Korean translation updated - thx domddol
+   * Fixes for Croatian OCR fix replace list - thx xylographe/diomed
+   * Batch convert - use generic sub importer if unknown format
+   * Improved spell check suggestions (I -> l) - thx Espen
+   * Source view "replace all" much faster - thx adem0x
+   * Added "change speed" option in "Batch convert" - thx TomONeill
+   * Added "Bluray sup" output to "Batch convert" - thx Dan
+   * Some improvements for default ASS/SSA style - thx Michael
+* FIXED:
+   * "Normal (remove formatting)" don't remove unicode chars - thx Fotis
+   * Fixed bug in spell check "word replace" - thx Sami
+   * Fixed post OCR correction regarding dashes in dialog - thx Rudde
+   * Fixed bug in OCR regarding scrambled line - thx jpsdr
+   * Fixed minor bug in auto-break - thx Ivandrofly
+   * Some fixes for Timed Text 1.0 - thx Stephan / btsix
+   * Fixed time code reading in format "USF" - thx Thomas
+   * Fix for line breaks in format "USF" - thx Thomas
+   * Allow 2 bytes ms in format "ABC iViewer" - thx btsix
+   * Minor fix for PAC loading - thx Michael
+   * Allow only spaces as "find value" in "Multiple replace" - thx dandomi
+   * Fixed crash in TS parsing (due to invalid TS packets) - thx scope73
+   * Ebu stl - save/load music symbol "♪"
+   * Ebu stl - allow custom frame rate
+   * Fix Esc key in "Split long lines" - thx Ivandrofly
+   * + Many minor fixes from ivandrofly and xylographe
+
+
 3.4.10 (6th October 2015)
 * NEW:
    * Audio visualizer waveform filled - thx jdpurcell
