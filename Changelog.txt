@@ -15,6 +15,7 @@
    * Added "change speed" option in "Batch convert" - thx TomONeill
    * Added "Bluray sup" output to "Batch convert" - thx Dan
    * Some improvements for default ASS/SSA style - thx Michael
+   * Can now read TTML with time code format hh:mm:ss,ms - thx Krystian
 * FIXED:
    * "Normal (remove formatting)" don't remove unicode chars - thx Fotis
    * Fixed bug in spell check "word replace" - thx Sami
