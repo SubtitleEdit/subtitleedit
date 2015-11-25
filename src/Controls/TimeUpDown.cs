@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.Collections.Generic;
+using Nikse.SubtitleEdit.Core;
 using System;
 using System.Globalization;
 using System.Windows.Forms;
@@ -18,6 +19,8 @@ namespace Nikse.SubtitleEdit.Controls
         public EventHandler TimeCodeChanged;
 
         private bool _forceHHMMSSFF;
+
+        private static char[] _splitChars;
 
         internal void ForceHHMMSSFF()
         {
@@ -46,6 +49,16 @@ namespace Nikse.SubtitleEdit.Controls
             numericUpDown1.ValueChanged += NumericUpDownValueChanged;
             numericUpDown1.Value = NumericUpDownValue;
             maskedTextBox1.InsertKeyMode = InsertKeyMode.Overwrite;
+
+            if (_splitChars == null)
+            {
+                var splitChars = new List<char> { ':', ',', '.' };
+                if (CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.Length == 1)
+                {
+                    splitChars.Add(Convert.ToChar(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator));
+                }
+                _splitChars = splitChars.ToArray();
+            }
         }
 
         private void NumericUpDownValueChanged(object sender, EventArgs e)
@@ -125,18 +138,17 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(maskedTextBox1.Text.Replace(".", string.Empty).Replace(",", string.Empty).Replace(":", string.Empty)))
+                if (string.IsNullOrWhiteSpace(maskedTextBox1.Text.Replace(".", string.Empty).Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty).Replace(",", string.Empty).Replace(":", string.Empty)))
                     return TimeCode.MaxTime;
 
                 string startTime = maskedTextBox1.Text;
                 startTime = startTime.Replace(' ', '0');
-                char[] splitChars = { ':', ',', '.' };
                 if (Mode == TimeMode.HHMMSSMS)
                 {
                     if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
                         startTime += "000";
 
-                    string[] times = startTime.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
+                    string[] times = startTime.Split(_splitChars, StringSplitOptions.RemoveEmptyEntries);
 
                     if (times.Length == 4)
                     {
@@ -167,7 +179,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator) || startTime.EndsWith(':'))
                         startTime += "00";
 
-                    string[] times = startTime.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
+                    string[] times = startTime.Split(_splitChars, StringSplitOptions.RemoveEmptyEntries);
 
                     if (times.Length == 4)
                     {

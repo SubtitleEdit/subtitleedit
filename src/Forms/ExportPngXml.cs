@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return 25;
 
                 string s = comboBoxFrameRate.SelectedItem.ToString();
-                s = s.Replace(",", ".").Trim();
+                s = s.Replace(",", ".").Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, ".").Trim();
                 double d;
                 if (double.TryParse(s, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
                     return d;
@@ -751,7 +751,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     string dropValue = "30000";
                     if (comboBoxFrameRate.SelectedIndex == -1)
                     {
-                        var numberAsString = comboBoxFrameRate.Text.Trim().Replace(".", string.Empty).Replace(",", string.Empty);
+                        var numberAsString = comboBoxFrameRate.Text.Trim().Replace(".", string.Empty).Replace(",", string.Empty).Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, string.Empty);
                         if (numberAsString.Length > 0 && Utilities.IsInteger(numberAsString))
                             dropValue = numberAsString;
                     }
@@ -3128,7 +3128,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             for (int i = 0; i < comboBoxFrameRate.Items.Count; i++)
             {
                 double d;
-                if (double.TryParse(comboBoxFrameRate.Items[i].ToString().Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                if (double.TryParse(comboBoxFrameRate.Items[i].ToString().Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
                 {
                     if (Math.Abs(lastFrameRate - d) < 0.01)
                     {

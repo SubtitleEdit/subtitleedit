@@ -1039,7 +1039,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             gs.ShowFrameRate = checkBoxShowFrameRate.Checked;
             double outFrameRate;
-            if (double.TryParse(comboBoxFrameRate.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out outFrameRate))
+            if (double.TryParse(comboBoxFrameRate.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out outFrameRate))
                 gs.DefaultFrameRate = outFrameRate;
 
             gs.DefaultEncoding = Encoding.UTF8.BodyName;

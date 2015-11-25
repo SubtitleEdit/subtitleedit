@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.Globalization;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms;
@@ -75,9 +76,9 @@ namespace Nikse.SubtitleEdit.Logic
                 var fps = GetArgument(args, "/fps:");
                 if (fps.Length > 6)
                 {
-                    fps = fps.Remove(0, 5).Replace(',', '.').Trim();
+                    fps = fps.Remove(0, 5).Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, ".").Trim();
                     double d;
-                    if (double.TryParse(fps, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out d))
+                    if (double.TryParse(fps, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
                     {
                         Configuration.Settings.General.CurrentFrameRate = d;
                     }
@@ -87,9 +88,9 @@ namespace Nikse.SubtitleEdit.Logic
                 double? targetFrameRate = null;
                 if (targetFps.Length > 12)
                 {
-                    targetFps = targetFps.Remove(0, 11).Replace(',', '.').Trim();
+                    targetFps = targetFps.Remove(0, 11).Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, ".").Trim();
                     double d;
-                    if (double.TryParse(targetFps, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out d))
+                    if (double.TryParse(targetFps, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
                     {
                         targetFrameRate = d;
                     }

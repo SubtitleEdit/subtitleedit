@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void comboBoxFrameRate_SelectedIndexChanged(object sender, EventArgs e)
         {
             double frameRate;
-            if (!double.TryParse(comboBoxFrameRate.Text.Trim().Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out frameRate))
+            if (!double.TryParse(comboBoxFrameRate.Text.Trim().Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out frameRate))
             {
                 frameRate = 25.0;
             }
