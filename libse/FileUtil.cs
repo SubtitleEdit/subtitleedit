@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 return bytes;
             }
-        }      
+        }
 
         public static bool IsZip(string fileName)
         {
