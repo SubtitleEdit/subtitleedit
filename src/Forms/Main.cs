@@ -341,10 +341,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 SetEncoding(Configuration.Settings.General.DefaultEncoding);
 
-                // set up UI interfaces in subtitle formats
+                // set up UI interfaces / injections
                 YouTubeAnnotations.GetYouTubeAnnotationStyles = new UiGetYouTubeAnnotationStyles();
                 Ebu.EbuUiHelper = new UiEbuSaveHelper();
                 Pac.GetPacEncodingImplementation = new UiGetPacEncoding();
+                RichTextToPlainText.NativeRtfTextConverter = new RtfTextConverterRichTextBox();
 
                 toolStripComboBoxFrameRate.Items.Add((23.976).ToString());
                 toolStripComboBoxFrameRate.Items.Add((24.0).ToString());

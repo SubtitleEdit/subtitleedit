@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -57,11 +58,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 count++;
             }
 
-            var rtBox = new System.Windows.Forms.RichTextBox();
-            rtBox.Text = sb.ToString();
-            string rtf = rtBox.Rtf;
-            rtBox.Dispose();
-            return rtf;
+            return sb.ToString().ToRtf();
         }
 
         private static TimeCode DecodeTimeCode(string timeCode)
@@ -81,29 +78,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!rtf.StartsWith("{\\rtf"))
                 return;
 
-            System.Windows.Forms.RichTextBox rtBox = null;
-            try
-            {
-                rtBox = new System.Windows.Forms.RichTextBox
-                {
-                    Rtf = rtf
-                };
-
-                lines = new List<string>(rtBox.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None));
-            }
-            catch (ArgumentException)
-            {
-                // Invalid format
-                return;
-            }
-            finally
-            {
-                if (rtBox != null)
-                {
-                    rtBox.Dispose();
-                }
-            }
-
+            lines = rtf.FromRtf().SplitToLines().ToList();
             _errorCount = 0;
             Paragraph p = null;
             foreach (string line in lines)

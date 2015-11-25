@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -60,10 +61,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 count++;
             }
 
-            using (var rtBox = new System.Windows.Forms.RichTextBox { Text = sb.ToString().Trim() })
-            {
-                return rtBox.Rtf;
-            }
+            return sb.ToString().Trim().ToRtf();
         }
 
         private static string MakeTimeCode(TimeCode timeCode)
@@ -88,27 +86,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!rtf.StartsWith("{\\rtf"))
                 return;
 
-            string text = string.Empty;
-            var rtBox = new System.Windows.Forms.RichTextBox();
-            try
-            {
-                rtBox.Rtf = rtf;
-                text = rtBox.Text.Replace("\r\n", "\n");
-            }
-            catch (Exception exception)
-            {
-                System.Diagnostics.Debug.WriteLine(exception.Message);
-                return;
-            }
-            finally
-            {
-                rtBox.Dispose();
-            }
-
-            lines = new List<string>();
-            foreach (string line in text.Split('\n'))
-                lines.Add(line);
-
+            lines = rtf.FromRtf().SplitToLines().ToList();
             _errorCount = 0;
             Paragraph p = null;
             sb = new StringBuilder();

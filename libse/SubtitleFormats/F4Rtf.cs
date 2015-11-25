@@ -33,11 +33,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            System.Windows.Forms.RichTextBox rtBox = new System.Windows.Forms.RichTextBox();
-            rtBox.Text = ToF4Text(subtitle);
-            string rtf = rtBox.Rtf;
-            rtBox.Dispose();
-            return rtf;
+            return ToF4Text(subtitle).ToRtf();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -51,19 +47,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!rtf.StartsWith("{\\rtf"))
                 return;
 
-            var rtBox = new System.Windows.Forms.RichTextBox();
-            try
-            {
-                rtBox.Rtf = rtf;
-            }
-            catch (Exception exception)
-            {
-                System.Diagnostics.Debug.WriteLine(exception.Message);
-                return;
-            }
-            string text = rtBox.Text;
-            rtBox.Dispose();
-            LoadF4TextSubtitle(subtitle, text);
+            LoadF4TextSubtitle(subtitle, rtf.FromRtf());
         }
+
     }
 }

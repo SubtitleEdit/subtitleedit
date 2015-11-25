@@ -53,11 +53,7 @@ ST 0 EB 3.10
                 index++;
                 sb.AppendLine(string.Format("*         {0}-{1} 00.00 00.0 1 {2} 00 16-090-090{3}{4}{3}@", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), index.ToString().PadLeft(4, '0'), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text)));
             }
-            System.Windows.Forms.RichTextBox rtBox = new System.Windows.Forms.RichTextBox();
-            rtBox.Text = sb.ToString();
-            string rtf = rtBox.Rtf;
-            rtBox.Dispose();
-            return rtf;
+            return sb.ToString().ToRtf();
         }
 
         private static string EncodeTimeCode(TimeCode time)
@@ -80,23 +76,7 @@ ST 0 EB 3.10
             if (!rtf.StartsWith("{\\rtf"))
                 return;
 
-            string[] arr = null;
-            var rtBox = new System.Windows.Forms.RichTextBox();
-            try
-            {
-                rtBox.Rtf = rtf;
-                arr = rtBox.Text.Replace("\r\n", "\n").Split('\n');
-            }
-            catch (Exception exception)
-            {
-                System.Diagnostics.Debug.WriteLine(exception.Message);
-                return;
-            }
-            finally
-            {
-                rtBox.Dispose();
-            }
-
+            string[] arr = rtf.FromRtf().SplitToLines();
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             foreach (string line in arr)
