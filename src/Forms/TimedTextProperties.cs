@@ -92,26 +92,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLowerInvariant();
-            switch (timeCodeFormat)
+            comboBoxTimeCodeFormat.SelectedIndex = 0;
+            for (int index = 0; index < comboBoxTimeCodeFormat.Items.Count; index++)
             {
-                case "seconds":
-                    comboBoxTimeCodeFormat.SelectedIndex = 2;
-                    break;
-                case "milliseconds":
-                    comboBoxTimeCodeFormat.SelectedIndex = 3;
-                    break;
-                case "ticks":
-                    comboBoxTimeCodeFormat.SelectedIndex = 4;
-                    break;
-                case "hh:mm:ss.ms":
-                    comboBoxTimeCodeFormat.SelectedIndex = 1;
-                    break;
-                case "default":
-                    comboBoxTimeCodeFormat.SelectedIndex = 5;
-                    break;
-                default: // hh:mm:ss:ff
-                    comboBoxTimeCodeFormat.SelectedIndex = 0;
-                    break;
+                var item = comboBoxTimeCodeFormat.Items[index];
+                if (item.ToString().ToLowerInvariant() == timeCodeFormat)
+                {
+                    comboBoxTimeCodeFormat.SelectedIndex = index;
+                    return;
+                }
             }
         }
 
