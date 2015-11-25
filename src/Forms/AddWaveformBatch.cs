@@ -329,11 +329,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var waveFile = new WavePeakGenerator(targetFile))
             {
-                waveFile.GeneratePeaks(delayInMilliseconds, Main.GetPeakWaveFileName(videoFileName));
+                waveFile.GeneratePeaks(delayInMilliseconds, WavePeakGenerator.GetPeakWaveFileName(videoFileName));
 
                 if (Configuration.Settings.VideoControls.GenerateSpectrogram)
                 {
-                    waveFile.GenerateSpectrogram(delayInMilliseconds, Main.GetSpectrogramFolder(videoFileName));
+                    waveFile.GenerateSpectrogram(delayInMilliseconds, WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(videoFileName));
                 }
             }
         }

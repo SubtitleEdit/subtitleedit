@@ -333,6 +333,30 @@ namespace Nikse.SubtitleEdit.Core
 
     public class WavePeakGenerator : IDisposable
     {
+        public static string GetPeakWaveFileName(string videoFileName)
+        {
+            var dir = Configuration.WaveformsFolder.TrimEnd(Path.DirectorySeparatorChar);
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            var file = new FileInfo(videoFileName);
+            var wavePeakName = Utilities.Sha256Hash(file.Name + file.Length + file.CreationTimeUtc.ToShortDateString()) + ".wav";
+            wavePeakName = wavePeakName.Replace("=", string.Empty).Replace("/", string.Empty).Replace(",", string.Empty).Replace("?", string.Empty).Replace("*", string.Empty).Replace("+", string.Empty).Replace("\\", string.Empty);
+            wavePeakName = Path.Combine(dir, wavePeakName);
+            return wavePeakName;
+        }
+
+        public static bool IsFileValidForVisualizer(string fileName)
+        {
+            if (!fileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            using (var wpg = new WavePeakGenerator(fileName))
+            {
+                return wpg.IsSupported;
+            }
+        }
+
         private Stream _stream;
         private WaveHeader _header;
 
@@ -763,7 +787,7 @@ namespace Nikse.SubtitleEdit.Core
             return new SpectrogramData(fftSize, imageWidth, sampleDuration, images);
         }
 
-        private class SpectrogramDrawer
+        public class SpectrogramDrawer
         {
             private const double RaisedCosineWindowScale = 0.5;
             private const int MagnitudeIndexRange = 256;
@@ -776,6 +800,19 @@ namespace Nikse.SubtitleEdit.Core
             private readonly double[] _window;
             private readonly double[] _magnitude1;
             private readonly double[] _magnitude2;
+
+            public static string GetSpectrogramFolder(string videoFileName)
+            {
+                var dir = Configuration.SpectrogramsFolder.TrimEnd(Path.DirectorySeparatorChar);
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                var file = new FileInfo(videoFileName);
+                var name = Utilities.Sha256Hash(file.Name + file.Length + file.CreationTimeUtc.ToShortDateString());
+                name = name.Replace("=", string.Empty).Replace("/", string.Empty).Replace(",", string.Empty).Replace("?", string.Empty).Replace("*", string.Empty).Replace("+", string.Empty).Replace("\\", string.Empty);
+                name = Path.Combine(dir, name);
+                return name;
+            }
 
             public SpectrogramDrawer(int nfft)
             {
