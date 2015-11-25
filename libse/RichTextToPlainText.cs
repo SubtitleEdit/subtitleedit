@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core
         /// </summary>
         /// <param name="inputRtf">RTF formatted text</param>
         /// <returns>Plain text from RTF</returns>
-        public static string ConvertToText(string inputRtf)
+        internal static string ConvertToText(string inputRtf)
         {
             if (inputRtf == null)
             {
@@ -228,7 +228,7 @@ namespace Nikse.SubtitleEdit.Core
             return String.Join(String.Empty, outList.ToArray());
         }
 
-        public static string ConvertToRtf(this string value)
+        internal static string ConvertToRtf(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
