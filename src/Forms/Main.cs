@@ -4695,11 +4695,15 @@ namespace Nikse.SubtitleEdit.Forms
             ReloadFromSourceView();
             using (var adjustDisplayTime = new AdjustDisplayDuration())
             {
-                ListView.SelectedIndexCollection selectedIndices = null;
+                List<int> selectedIndices = null;
                 if (onlySelectedLines)
                 {
                     adjustDisplayTime.Text += " - " + _language.SelectedLines;
-                    selectedIndices = SubtitleListview1.SelectedIndices;
+                    selectedIndices = new List<int>();
+                    foreach (int item in  SubtitleListview1.SelectedIndices)
+                    {
+                        selectedIndices.Add(item);
+                    }
                 }
 
                 if (adjustDisplayTime.ShowDialog(this) == DialogResult.OK)

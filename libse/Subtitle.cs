@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using Nikse.SubtitleEdit.Core.Enums;
+﻿using Nikse.SubtitleEdit.Core.Enums;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -314,7 +314,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public void AdjustDisplayTimeUsingPercent(double percent, ListView.SelectedIndexCollection selectedIndexes)
+        public void AdjustDisplayTimeUsingPercent(double percent, List<int> selectedIndexes)
         {
             for (int i = 0; i < _paragraphs.Count; i++)
             {
@@ -333,7 +333,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public void AdjustDisplayTimeUsingSeconds(double seconds, ListView.SelectedIndexCollection selectedIndexes)
+        public void AdjustDisplayTimeUsingSeconds(double seconds, List<int> selectedIndexes)
         {
             for (int i = 0; i < _paragraphs.Count; i++)
             {
@@ -362,7 +362,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public void RecalculateDisplayTimes(double maxCharactersPerSecond, ListView.SelectedIndexCollection selectedIndexes)
+        public void RecalculateDisplayTimes(double maxCharactersPerSecond, List<int> selectedIndexes)
         {
             for (int i = 0; i < _paragraphs.Count; i++)
             {
@@ -411,14 +411,14 @@ namespace Nikse.SubtitleEdit.Core
                     return i;
                 if (i < _paragraphs.Count - 1 && p.ID == _paragraphs[i + 1].ID)
                     return i + 1;
-                if (p.StartTime.TotalMilliseconds == _paragraphs[i].StartTime.TotalMilliseconds &&
-                    p.EndTime.TotalMilliseconds == _paragraphs[i].EndTime.TotalMilliseconds)
+                if (Math.Abs(p.StartTime.TotalMilliseconds - _paragraphs[i].StartTime.TotalMilliseconds) < 0.1 &&
+                    Math.Abs(p.EndTime.TotalMilliseconds - _paragraphs[i].EndTime.TotalMilliseconds) < 0.1)
                     return i;
-                if (p.Number == _paragraphs[i].Number && (p.StartTime.TotalMilliseconds == _paragraphs[i].StartTime.TotalMilliseconds ||
-                    p.EndTime.TotalMilliseconds == _paragraphs[i].EndTime.TotalMilliseconds))
+                if (p.Number == _paragraphs[i].Number && (Math.Abs(p.StartTime.TotalMilliseconds - _paragraphs[i].StartTime.TotalMilliseconds) < 0.1 ||
+                    Math.Abs(p.EndTime.TotalMilliseconds - _paragraphs[i].EndTime.TotalMilliseconds) < 0.1))
                     return i;
-                if (p.Text == _paragraphs[i].Text && (p.StartTime.TotalMilliseconds == _paragraphs[i].StartTime.TotalMilliseconds ||
-                    p.EndTime.TotalMilliseconds == _paragraphs[i].EndTime.TotalMilliseconds))
+                if (p.Text == _paragraphs[i].Text && (Math.Abs(p.StartTime.TotalMilliseconds - _paragraphs[i].StartTime.TotalMilliseconds) < 0.1 ||
+                    Math.Abs(p.EndTime.TotalMilliseconds - _paragraphs[i].EndTime.TotalMilliseconds) < 0.1))
                     return i;
             }
             return -1;
@@ -428,8 +428,8 @@ namespace Nikse.SubtitleEdit.Core
         {
             foreach (Paragraph item in _paragraphs)
             {
-                if (p.StartTime.TotalMilliseconds == item.StartTime.TotalMilliseconds &&
-                    p.EndTime.TotalMilliseconds == item.EndTime.TotalMilliseconds &&
+                if (Math.Abs(p.StartTime.TotalMilliseconds - item.StartTime.TotalMilliseconds) < 0.1 &&
+                    Math.Abs(p.EndTime.TotalMilliseconds - item.EndTime.TotalMilliseconds) < 0.1 &&
                     p.Text == item.Text)
                     return item;
             }

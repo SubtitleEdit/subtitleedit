@@ -201,11 +201,37 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
+        /// <summary>
+        /// Opens an existing file for reading, and allow the user to retry if it fails.
+        /// </summary>
+        /// <param name="path">The file to be opened for reading. </param>
+        /// <returns>A read-only <see cref="FileStream"/> on the specified path.</returns>
+        public static FileStream RetryOpenRead(string path)
+        {
+            FileStream fs = null;
+            while (fs == null)
+            {
+                try
+                {
+                    fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                }
+                catch (IOException ex)
+                {
+                    var result = MessageBox.Show(string.Format("An error occured while opening file: {0}", ex.Message), string.Empty, MessageBoxButtons.RetryCancel);
+                    if (result == DialogResult.Cancel)
+                    {
+                        return null;
+                    }
+                }
+            }
+            return fs;
+        }
+
         private void RipSubtitles(string vobFileName, MemoryStream stream, int vobNumber)
         {
             long firstNavStartPts = 0;
 
-            using (var fs = FileUtil.RetryOpenRead(vobFileName))
+            using (var fs = RetryOpenRead(vobFileName))
             {
                 var buffer = new byte[0x800];
                 long position = 0;

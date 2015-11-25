@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core
     /// </summary>
     public class Configuration
     {
-        private static readonly Lazy<Configuration> _instance = new Lazy<Configuration>(() => new Configuration());
+        private static readonly Lazy<Configuration> Instance = new Lazy<Configuration>(() => new Configuration());
 
         private readonly string _baseDir;
         private readonly string _dataDir;
@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             get
             {
-                return _instance.Value._dataDir;
+                return Instance.Value._dataDir;
             }
         }
 
@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             get
             {
-                return _instance.Value._baseDir;
+                return Instance.Value._baseDir;
             }
         }
 
@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             get
             {
-                return _instance.Value._settings.Value;
+                return Instance.Value._settings.Value;
             }
         }
 
@@ -226,10 +226,9 @@ namespace Nikse.SubtitleEdit.Core
             }
             catch
             {
-                System.Windows.Forms.MessageBox.Show("Please re-install Subtitle Edit (installer version)");
-                System.Windows.Forms.Application.ExitThread();
-                return _baseDir;
+                throw new Exception("Please re-install Subtitle Edit (installer version)");
             }
         }
+
     }
 }
