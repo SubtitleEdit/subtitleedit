@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.TransportStream;
+using Nikse.SubtitleEdit.Core.VobSub;
+using System;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core.TransportStream;
-using Nikse.SubtitleEdit.Core.VobSub;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -38,33 +37,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 return bytes;
             }
-        }
-
-        /// <summary>
-        /// Opens an existing file for reading, and allow the user to retry if it fails.
-        /// </summary>
-        /// <param name="path">The file to be opened for reading. </param>
-        /// <returns>A read-only <see cref="FileStream"/> on the specified path.</returns>
-        public static FileStream RetryOpenRead(string path)
-        {
-            FileStream fs = null;
-            while (fs == null)
-            {
-                try
-                {
-                    fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                }
-                catch (IOException ex)
-                {
-                    var result = MessageBox.Show(string.Format("An error occured while opening file: {0}", ex.Message), string.Empty, MessageBoxButtons.RetryCancel);
-                    if (result == DialogResult.Cancel)
-                    {
-                        return null;
-                    }
-                }
-            }
-            return fs;
-        }
+        }      
 
         public static bool IsZip(string fileName)
         {

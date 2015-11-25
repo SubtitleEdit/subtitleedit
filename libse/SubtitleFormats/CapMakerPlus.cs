@@ -205,17 +205,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             int rtIndex = p.Text.IndexOf("{\\rtf1", StringComparison.Ordinal);
                             if (rtIndex >= 0 && rtIndex < 10)
                             {
-                                var rtBox = new System.Windows.Forms.RichTextBox();
-                                try
-                                {
-                                    rtBox.Rtf = p.Text.Substring(rtIndex);
-                                    p.Text = rtBox.Text;
-                                }
-                                catch (Exception exception)
-                                {
-                                    System.Diagnostics.Debug.WriteLine(exception.Message);
-                                }
-                                rtBox.Dispose();
+                                p.Text = p.Text.Substring(rtIndex).FromRtf();
                             }
                             else if (italic)
                             {
