@@ -2189,7 +2189,15 @@ namespace Nikse.SubtitleEdit.Core
             return lines;
         }
 
-      
+        public static string Sha256Hash(string value)
+        {
+            using (var hasher = new System.Security.Cryptography.SHA256Managed())
+            {
+                var bytes = Encoding.UTF8.GetBytes(value);
+                var hash = hasher.ComputeHash(bytes);
+                return Convert.ToBase64String(hash, 0, hash.Length);
+            }
+        }     
 
     }
 }
