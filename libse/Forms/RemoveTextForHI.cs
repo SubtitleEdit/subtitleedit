@@ -626,6 +626,31 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 text = text.TrimStart().TrimStart('-').TrimStart();
             }
 
+            string removeText = "<i>- </i>" + Environment.NewLine + "-";
+            if (text.StartsWith(removeText))
+            {
+                text = text.Remove(0, removeText.Length).TrimStart(' ');
+            }
+
+            removeText = "<i>-</i>" + Environment.NewLine + "-";
+            if (text.StartsWith(removeText))
+            {
+                text = text.Remove(0, removeText.Length).TrimStart(' ');
+            }
+
+            removeText = "<i>-</i>" + Environment.NewLine + "<i>-";
+            if (text.StartsWith(removeText))
+            {
+                text = "<i>" + text.Remove(0, removeText.Length).TrimStart(' ');
+            }
+
+            removeText = "<i>- </i>" + Environment.NewLine + "<i>-";
+            if (text.StartsWith(removeText))
+            {
+                text = "<i>" + text.Remove(0, removeText.Length).TrimStart(' ');
+            }
+
+
             if (oldText != text)
             {
                 // insert spaces before "-"
@@ -1065,6 +1090,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 preAssTag = text.Substring(0, indexOfEndBracketSuccessor);
                 text = text.Remove(0, indexOfEndBracketSuccessor).TrimStart();
             }
+            string preNewLine = string.Empty;
+            if (text.StartsWith(Environment.NewLine))
+                preNewLine = Environment.NewLine;
             if (Settings.RemoveTextBetweenSquares)
             {
                 text = RemoveTextBetweenTags("[", "]:", text);
@@ -1091,7 +1119,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
             if (string.IsNullOrWhiteSpace(text))
                 return string.Empty;
-            return preAssTag + text.TrimStart();
+            return preAssTag + preNewLine + text.TrimStart();
         }
 
         private bool HasHearImpairedText(string text)

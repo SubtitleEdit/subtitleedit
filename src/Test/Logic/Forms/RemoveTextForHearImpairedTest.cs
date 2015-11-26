@@ -1331,6 +1331,21 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void RemoveTextForHiRemoveFirstLine()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenCustomTags = true;
+            target.Settings.CustomStart = "♪";
+            target.Settings.CustomEnd = "♪";
+            target.Settings.RemoveTextBetweenBrackets = true;
+            string text = "<i>- ♪♪[Continues ]</i>" + Environment.NewLine + "- It's pretty strong stuff.";
+            const string expected = "It's pretty strong stuff.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
         #region Additional test attributes
 
         //
