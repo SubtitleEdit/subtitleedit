@@ -21,6 +21,7 @@
    * Fixed bug in spell check "word replace" - thx Sami
    * Fixed post OCR correction regarding dashes in dialog - thx Rudde
    * Fixed bug in OCR regarding scrambled line - thx jpsdr
+   * Several fixes in remove text for HI - thx Thunderbolt8
    * Fixed minor bug in auto-break - thx Ivandrofly
    * Some fixes for Timed Text 1.0 - thx Stephan / btsix
    * Fixed time code reading in format "USF" - thx Thomas
@@ -32,6 +33,7 @@
    * Ebu stl - save/load music symbol "♪"
    * Ebu stl - allow custom frame rate
    * Fix Esc key in "Split long lines" - thx Ivandrofly
+   * Fixed crash with excotic decimal separator like "/" - thx jafar
    * + Many minor fixes from ivandrofly and xylographe
 
 
