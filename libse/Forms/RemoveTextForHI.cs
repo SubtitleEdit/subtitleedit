@@ -434,6 +434,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public string RemoveTextFromHearImpaired(string text)
         {
+            if (StartsAndEndsWithHearImpariedTags(HtmlUtil.RemoveHtmlTags(text, true)))
+            {
+                return string.Empty;
+            }
+
             if (Settings.RemoveWhereContains)
             {
                 foreach (var removeIfTextContain in Settings.RemoveIfTextContains)
@@ -486,7 +491,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 noOfNamesRemovedNotInLineOne++;
                         }
                     }
-                    sb.AppendLine(stSub.Pre + newText + stSub.Post);
+
+                    if (stSub.Pre == "<i>- " && newText.StartsWith("</i>"))
+                        sb.AppendLine("- " + newText.Remove(0, 4).Trim() + stSub.Post);
+                    else
+                        sb.AppendLine(stSub.Pre + newText + stSub.Post);
                 }
                 else
                 {
@@ -572,7 +581,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     {
                         if (noOfNamesRemovedNotInLineOne > 0)
                         {
-                            if (!st.Pre.Contains('-'))
+                            if (!st.Pre.Contains('-') && !text.Contains(Environment.NewLine + "-"))
                                 text = "- " + text.Replace(Environment.NewLine, Environment.NewLine + "- ");
                             if (!text.Contains(Environment.NewLine + "-") && !text.Contains(Environment.NewLine + "<i>-"))
                                 text = text.Replace(Environment.NewLine, Environment.NewLine + "- ");
