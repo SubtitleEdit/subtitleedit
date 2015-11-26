@@ -850,6 +850,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             {
                                 temp = temp.Remove(0, 1);
                             }
+                            else if (index > 3 && (temp.Substring(index - 2) == ".  —" || temp.Substring(index - 2) == "!  —" || temp.Substring(index - 2) == "?  —"))
+                            {
+                                temp = temp.Remove(index - 2, 1).Replace("  ", " ");
+                            }
                             string pre = string.Empty;
                             if (index > 0)
                                 doRepeat = true;
