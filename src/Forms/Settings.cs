@@ -72,13 +72,13 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSpellCheck.Checked = gs.ShowToolbarSpellCheck;
             checkBoxHelp.Checked = gs.ShowToolbarHelp;
 
-            comboBoxFrameRate.Items.Add((23.976).ToString(CultureInfo.CurrentUICulture));
-            comboBoxFrameRate.Items.Add((24.0).ToString(CultureInfo.CurrentUICulture));
-            comboBoxFrameRate.Items.Add((25.0).ToString(CultureInfo.CurrentUICulture));
-            comboBoxFrameRate.Items.Add((29.97).ToString(CultureInfo.CurrentUICulture));
+            comboBoxFrameRate.Items.Add((23.976).ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add((24.0).ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add((25.0).ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add((29.97).ToString(CultureInfo.CurrentCulture));
 
             checkBoxShowFrameRate.Checked = gs.ShowFrameRate;
-            comboBoxFrameRate.Text = gs.DefaultFrameRate.ToString(CultureInfo.CurrentUICulture);
+            comboBoxFrameRate.Text = gs.DefaultFrameRate.ToString(CultureInfo.CurrentCulture);
 
             comboBoxEncoding.Items.Clear();
             int encodingSelectedIndex = 0;

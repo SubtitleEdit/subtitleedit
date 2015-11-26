@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             public string CodePageNumber { get; set; } // 0..2
             public string DiskFormatCode { get; set; } // 3..10
-            public double FrameRateFromSaveDialog { get; set; } 
+            public double FrameRateFromSaveDialog { get; set; }
             public string DisplayStandardCode { get; set; } // 11
             public string CharacterCodeTableNumber { get; set; } // 12..13
             public string LanguageCode { get; set; } // 14..15

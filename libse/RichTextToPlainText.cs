@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Core
             { "lquote", "\u2018" },
             { "rquote", "\u2019" },
             { "ldblquote", "\u201C" },
-            { "rdblquote", "\u201D" }, 
+            { "rdblquote", "\u201D" },
         };
 
         /// <summary>
