@@ -137,27 +137,27 @@ namespace Nikse.SubtitleEdit.Forms
             if (header.DiskFormatCode == "STL30.01")
             {
                 comboBoxDiscFormatCode.SelectedIndex = 4;
-                comboBoxFrameRate.Text = (30).ToString(CultureInfo.CurrentUICulture);
+                comboBoxFrameRate.Text = (30).ToString(CultureInfo.CurrentCulture);
             }
             else if (header.DiskFormatCode == "STL23.01")
             {
                 comboBoxDiscFormatCode.SelectedIndex = 0;
-                comboBoxFrameRate.Text = (23.976).ToString(CultureInfo.CurrentUICulture);
+                comboBoxFrameRate.Text = (23.976).ToString(CultureInfo.CurrentCulture);
             }
             else if (header.DiskFormatCode == "STL24.01")
             {
                 comboBoxDiscFormatCode.SelectedIndex = 1;
-                comboBoxFrameRate.Text = (24).ToString(CultureInfo.CurrentUICulture);
+                comboBoxFrameRate.Text = (24).ToString(CultureInfo.CurrentCulture);
             }
             else if (header.DiskFormatCode == "STL29.01")
             {
                 comboBoxDiscFormatCode.SelectedIndex = 3;
-                comboBoxFrameRate.Text = (25).ToString(CultureInfo.CurrentUICulture);
+                comboBoxFrameRate.Text = (25).ToString(CultureInfo.CurrentCulture);
             }
             else
             {
                 comboBoxDiscFormatCode.SelectedIndex = 2;
-                comboBoxFrameRate.Text = (25).ToString(CultureInfo.CurrentUICulture);
+                comboBoxFrameRate.Text = (25).ToString(CultureInfo.CurrentCulture);
             }
 
             if (header.FrameRateFromSaveDialog > 20 && header.FrameRateFromSaveDialog < 200)
@@ -348,11 +348,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (comboBoxDiscFormatCode.SelectedIndex == 2)
             {
-                comboBoxFrameRate.Text = (25).ToString(CultureInfo.CurrentUICulture);
+                comboBoxFrameRate.Text = (25).ToString(CultureInfo.CurrentCulture);
             }
             else if (comboBoxDiscFormatCode.SelectedIndex == 4)
             {
-                comboBoxFrameRate.Text = (30).ToString(CultureInfo.CurrentUICulture);
+                comboBoxFrameRate.Text = (30).ToString(CultureInfo.CurrentCulture);
             }
         }
 

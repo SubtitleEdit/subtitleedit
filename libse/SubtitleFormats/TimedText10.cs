@@ -639,7 +639,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static bool IsFrames(string timeCode)
         {
-            if (timeCode.Length == 12 && (timeCode[8] == '.' || timeCode[8] == ',')) // 00:00:08.292 or 00:00:08.292
+            if (timeCode.Length == 12 && (timeCode[8] == '.' || timeCode[8] == ',')) // 00:00:08.292 or 00:00:08,292
                 return false;
             return true;
         }

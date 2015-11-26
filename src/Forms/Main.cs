@@ -14801,7 +14801,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void translatepoweredByMicrosoftToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TranslateViaGoogle(false, false);
-        }       
+        }
 
         private void AudioWaveform_Click(object sender, EventArgs e)
         {
@@ -19526,7 +19526,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void contextMenuStripWaveform_Closing(object sender, ToolStripDropDownClosingEventArgs e)
         {
             _lastWaveformMenuCloseTicks = DateTime.Now.Ticks;
-        }        
+        }
 
     }
 }

@@ -908,7 +908,7 @@ namespace Nikse.SubtitleEdit.Core
             return sb.ToString();
         }
 
-  
+
         public static bool IsValidRegex(string testPattern)
         {
             if (string.IsNullOrEmpty(testPattern))
@@ -1137,7 +1137,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 return "aeiouyæøåéóáôèòæøåäöïɤəɛʊʉɨ";
             }
-        }       
+        }
 
         public static int CountTagInText(string text, string tag)
         {
@@ -1240,7 +1240,7 @@ namespace Nikse.SubtitleEdit.Core
             return Uri.UnescapeDataString(text);
         }
 
-      
+
 
         public static string FixEnglishTextInRightToLeftLanguage(string text, string reverseChars)
         {
@@ -2197,7 +2197,7 @@ namespace Nikse.SubtitleEdit.Core
                 var hash = hasher.ComputeHash(bytes);
                 return Convert.ToBase64String(hash, 0, hash.Length);
             }
-        }     
+        }
 
     }
 }
