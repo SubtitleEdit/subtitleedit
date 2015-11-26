@@ -969,7 +969,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     if (lines[0].Length > 1 && lines[0][0] == '-')
                         return lines[0].Remove(0, 1).Trim();
                     if (lines[0].Length > 4 && lines[0].StartsWith("<i>-", StringComparison.Ordinal))
+                    {
+                        if (!lines[0].Contains("</i>") && lines[1].Contains("</i>"))
+                            return "<i>" + lines[0].Remove(0, 4).Trim() + "</i>";
                         return "<i>" + lines[0].Remove(0, 4).Trim();
+                    }
                     return lines[0];
                 }
             }
