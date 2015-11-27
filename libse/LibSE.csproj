@@ -248,6 +248,7 @@
     <Compile Include="SubtitleFormats\Footage.cs" />
     <Compile Include="SubtitleFormats\GpacTtxt.cs" />
     <Compile Include="SubtitleFormats\HtmlSamiArray.cs" />
+    <Compile Include="SubtitleFormats\IaiSub.cs" />
     <Compile Include="SubtitleFormats\Idx.cs" />
     <Compile Include="SubtitleFormats\ImageLogicAutocaption.cs" />
     <Compile Include="SubtitleFormats\IssXml.cs" />
