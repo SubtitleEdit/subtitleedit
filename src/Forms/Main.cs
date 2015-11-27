@@ -2100,6 +2100,21 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
+                    var iai = new IaiSub();
+                    if (iai.IsMine(null, fileName))
+                    {
+                        iai.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = iai;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+                if (format == null)
+                {
                     try
                     {
                         var bdnXml = new BdnXml();
