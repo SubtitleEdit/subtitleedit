@@ -150,6 +150,7 @@ namespace Nikse.SubtitleEdit.Core
         public double ExportLastFrameRate { get; set; }
         public string ExportPenLineJoin { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
+        public bool FixCommonErrorsSkipStepOne { get; set; }
         public string ImportTextSplitting { get; set; }
         public bool ImportTextMergeShortLines { get; set; }
         public string ImportTextLineBreak { get; set; }
@@ -1752,6 +1753,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("FixCommonErrorsFixOverlapAllowEqualEndStart");
             if (subNode != null)
                 settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("FixCommonErrorsSkipStepOne");
+            if (subNode != null)
+                settings.Tools.FixCommonErrorsSkipStepOne = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ImportTextSplitting");
             if (subNode != null)
                 settings.Tools.ImportTextSplitting = subNode.InnerText;
@@ -2892,6 +2896,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ExportLastFrameRate", settings.Tools.ExportLastFrameRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportPenLineJoin", settings.Tools.ExportPenLineJoin);
                 textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
+                textWriter.WriteElementString("FixCommonErrorsSkipStepOne", settings.Tools.FixCommonErrorsSkipStepOne.ToString());
                 textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
                 textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
                 textWriter.WriteElementString("ImportTextLineBreak", settings.Tools.ImportTextLineBreak);

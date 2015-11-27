@@ -311,6 +311,10 @@ namespace Nikse.SubtitleEdit.Forms
                 Width = MinimumSize.Width;
                 Height = MinimumSize.Height;
             }
+            if (Configuration.Settings.Tools.FixCommonErrorsSkipStepOne)
+            {
+                Next();
+            }
             Activate();
         }
 
