@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="português (Portugal)">
+<Language Name="Portuguese - Portugal">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.10</Version>
@@ -224,6 +224,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Ajustar a velocidade em percentagem</Title>
+    <TitleShort>Ajustar a velocidade</TitleShort>
     <Info>Alterar a velocidade da legenda em percentagem</Info>
     <Custom>Personalizado</Custom>
     <ToDropFrame>Para descer fotograma</ToDropFrame>
@@ -506,14 +507,14 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
   </FindSubtitleLine>
   <FixCommonErrors>
     <Title>Corrigir erros comuns</Title>
-    <Step1>Passo 1/2 - Seleccione quais os erros a corrigir</Step1>
+    <Step1>Fase 1/2 - Seleccione quais os erros a corrigir</Step1>
     <WhatToFix>O que corrigir</WhatToFix>
     <Example>Exemplo</Example>
     <SelectAll>Selec. tudo</SelectAll>
     <InverseSelection>Inverter selecção</InverseSelection>
     <Back>&lt; &amp;Anterior</Back>
     <Next>&amp;Próximo &gt;</Next>
-    <Step2>Passo 2/2 - Verificar correcções</Step2>
+    <Step2>Fase 2/2 - Verificar correcções</Step2>
     <Fixes>Correcções</Fixes>
     <Log>Registo</Log>
     <Function>Função</Function>
@@ -1653,6 +1654,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MusicSymbolsToReplace>Símbolos musicais para substituir (separados por espaços)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros comuns de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Corrigir o tempo curto de exibição - permitir o movimento do tempo inicial</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Ignorar a fase um (escolher regras de correcção)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Atalhos</Shortcuts>
     <Shortcut>Atalho</Shortcut>
     <Control>Ctrl</Control>
