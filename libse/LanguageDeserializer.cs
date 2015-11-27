@@ -4420,6 +4420,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime":
                     language.Settings.FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime = reader.Value;
                     break;
+                case "Settings/FixCommonErrorsSkipStepOne":
+                    language.Settings.FixCommonErrorsSkipStepOne = reader.Value;
+                    break;
                 case "Settings/Shortcuts":
                     language.Settings.Shortcuts = reader.Value;
                     break;

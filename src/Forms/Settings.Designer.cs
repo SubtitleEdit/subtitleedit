@@ -303,6 +303,7 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
+            this.checkBoxFceSkipStep1 = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -2285,9 +2286,9 @@
             // 
             this.groupBoxToolsMisc.Controls.Add(this.buttonEditDoNotBreakAfterList);
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
-            this.groupBoxToolsMisc.Location = new System.Drawing.Point(374, 129);
+            this.groupBoxToolsMisc.Location = new System.Drawing.Point(374, 259);
             this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
-            this.groupBoxToolsMisc.Size = new System.Drawing.Size(445, 309);
+            this.groupBoxToolsMisc.Size = new System.Drawing.Size(445, 179);
             this.groupBoxToolsMisc.TabIndex = 5;
             this.groupBoxToolsMisc.TabStop = false;
             this.groupBoxToolsMisc.Text = "Misc";
@@ -2317,9 +2318,9 @@
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxTreatINQuoteAsING);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckOneLetterWords);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
-            this.groupBoxSpellCheck.Location = new System.Drawing.Point(6, 314);
+            this.groupBoxSpellCheck.Location = new System.Drawing.Point(374, 129);
             this.groupBoxSpellCheck.Name = "groupBoxSpellCheck";
-            this.groupBoxSpellCheck.Size = new System.Drawing.Size(362, 124);
+            this.groupBoxSpellCheck.Size = new System.Drawing.Size(448, 124);
             this.groupBoxSpellCheck.TabIndex = 4;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
@@ -2356,6 +2357,7 @@
             // 
             // groupBoxFixCommonErrors
             // 
+            this.groupBoxFixCommonErrors.Controls.Add(this.checkBoxFceSkipStep1);
             this.groupBoxFixCommonErrors.Controls.Add(this.checkBoxFixShortDisplayTimesAllowMoveStartTime);
             this.groupBoxFixCommonErrors.Controls.Add(this.checkBoxFixCommonOcrErrorsUsingHardcodedRules);
             this.groupBoxFixCommonErrors.Controls.Add(this.comboBoxToolsMusicSymbol);
@@ -2364,7 +2366,7 @@
             this.groupBoxFixCommonErrors.Controls.Add(this.labelToolsMusicSymbol);
             this.groupBoxFixCommonErrors.Location = new System.Drawing.Point(7, 129);
             this.groupBoxFixCommonErrors.Name = "groupBoxFixCommonErrors";
-            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(361, 179);
+            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(361, 309);
             this.groupBoxFixCommonErrors.TabIndex = 3;
             this.groupBoxFixCommonErrors.TabStop = false;
             this.groupBoxFixCommonErrors.Text = "Fix common errors";
@@ -3567,6 +3569,16 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
+            // checkBoxFceSkipStep1
+            // 
+            this.checkBoxFceSkipStep1.AutoSize = true;
+            this.checkBoxFceSkipStep1.Location = new System.Drawing.Point(15, 161);
+            this.checkBoxFceSkipStep1.Name = "checkBoxFceSkipStep1";
+            this.checkBoxFceSkipStep1.Size = new System.Drawing.Size(176, 17);
+            this.checkBoxFceSkipStep1.TabIndex = 36;
+            this.checkBoxFceSkipStep1.Text = "Skip step one (choose fix rules)";
+            this.checkBoxFceSkipStep1.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3960,5 +3972,6 @@
         private System.Windows.Forms.Panel panelPrimaryColor;
         private System.Windows.Forms.Button buttonSsaColor;
         private System.Windows.Forms.CheckBox checkBoxSsaFontBold;
+        private System.Windows.Forms.CheckBox checkBoxFceSkipStep1;
     }
 }
