@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Header = null;
             byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
 
-            int index = 0;
+            int index = 32;
             while (index < buffer.Length)
             {
                 Paragraph p = GetParagraph(ref index, buffer);
@@ -76,20 +76,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private Paragraph GetParagraph(ref int index, byte[] buffer)
         {
-            var paragraphFound = false;
-            while (index < buffer.Length && !paragraphFound)
+            var paragraphFound1 = false;
+            var paragraphFound2 = false;
+            while (index < buffer.Length && !(paragraphFound1 || paragraphFound2))
             {
                 if (index > buffer.Length - 15)
                 {
                     index += 20;
                     return null;
                 }
-                paragraphFound = buffer[index + 0] == 0xff && buffer[index + 1] == 0xff && buffer[index + 2] == 0xff && buffer[index + 3] == 0xff &&
+                paragraphFound1 = buffer[index + 0] == 0xff && buffer[index + 1] == 0xff && buffer[index + 2] == 0xff && buffer[index + 3] == 0xff &&
                                  buffer[index + 4] == 0xff && buffer[index + 5] == 0xff && buffer[index + 6] == 0xff && buffer[index + 7] == 0xff;
+                paragraphFound2 = buffer[index + 0] == 0x1a && buffer[index + 1] == 0x00 && buffer[index + 4] == 0x00 && buffer[index + 5] == 0x00;
+
                 index++;
             }
+            if (paragraphFound1)
+                index += 7;
+            else
+                index += 9;
 
-            index += 7;
             if (index + 5 >= buffer.Length)
                 return null;
             var startTime = DecodeTimeCode(buffer, index);
@@ -101,16 +107,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             var text = new StringBuilder();
             index += 12;
-            while (index < buffer.Length + 5 && buffer[index] > 0 && !(buffer[index] == 0x1a && buffer[index + 2] == 0xff))
+            int startText = index;
+            int max = index + 100; // safety - don't read more than 100 chars
+            while (index < buffer.Length - 5 && buffer[index] > 0 &&
+                  !(index > startText && buffer[index - 1] == 0 && buffer[index] == 0x1a && buffer[index + 1] == 0 && ((buffer[index + 4] == 00 && buffer[index + 5] == 0) || (buffer[index + 4] == 0xff && buffer[index + 5] == 0xff))) &&
+                  index < max)
             {
                 if (index + 5 >= buffer.Length)
                     return null;
                 int length = buffer[index];
-                if (index + length + 5 > buffer.Length)
+                if (index + length > buffer.Length)
+                {
+                    if (text.ToString().Trim().Length > 0)
+                        return new Paragraph(startTime, endTime, text.ToString().Trim());
                     return null;
+                }
                 for (int i = 7; i < length; i++)
                 {
-                    if (buffer[index + i] >= 32)
+                    if (index < buffer.Length && buffer[index + i] >= 32)
                     {
                         text.Append(Encoding.Default.GetString(buffer, index + i, 1));
                     }
@@ -118,6 +132,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text.AppendLine();
                 index += length;
             }
+            index--;
             return new Paragraph(startTime, endTime, text.ToString().Trim());
         }
 
