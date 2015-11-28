@@ -432,9 +432,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return true;
         }
 
+        private static readonly char[] TrimStartNoiseChar = new[] { '-', ' ' };
+
         public string RemoveTextFromHearImpaired(string text)
         {
-            if (StartsAndEndsWithHearImpariedTags(HtmlUtil.RemoveHtmlTags(text, true)))
+            if (StartsAndEndsWithHearImpariedTags(HtmlUtil.RemoveHtmlTags(text, true).TrimStart(TrimStartNoiseChar)))
             {
                 return string.Empty;
             }

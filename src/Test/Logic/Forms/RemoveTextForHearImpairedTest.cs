@@ -1377,6 +1377,21 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
+        public void RemoveTextForHiMultiLineCustomTagsInDialoque()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenCustomTags = true;
+            target.Settings.CustomStart = "♪";
+            target.Settings.CustomEnd = "♪";
+            target.Settings.RemoveTextBetweenBrackets = true;
+            string text = "- ♪ Honey, honey, yeah ♪" + Environment.NewLine + "- ♪ Heard it through|the grapevine ♪";
+            string expected = string.Empty;
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void RemoveTextForHiSecondLineItalicAdvanced()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
