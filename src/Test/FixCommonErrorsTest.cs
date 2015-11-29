@@ -918,6 +918,31 @@ namespace Test
 
         #endregion
 
+        #region Fix missing periods at end of line
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void AddPeriodWhereNextLineStartsWithUppercaseLetter()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("The house seemed desolate to me", 0, 1000));
+            s.Paragraphs.Add(new Paragraph("I wasn't sure if somebody lived in there...", 3200, 5000));
+            new FixMissingPeriodsAtEndOfLine().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(s.Paragraphs[0].Text, "The house seemed desolate to me.");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void AddPeriodWhereNextLineStartsWithUppercaseLetter2()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("The house seemed desolate to me and", 0, 1000));
+            s.Paragraphs.Add(new Paragraph("I wasn't sure if somebody lived in there...", 1000, 3000));
+            new FixMissingPeriodsAtEndOfLine().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(s.Paragraphs[0].Text, "The house seemed desolate to me and");
+        }
+        #endregion
+
         #region Start with uppercase after paragraph
 
         [TestMethod]
