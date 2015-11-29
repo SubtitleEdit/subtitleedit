@@ -47,6 +47,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     nextText = HtmlUtil.RemoveHtmlTags(next.Text, true).TrimStart('-', '"', '„').TrimStart();
                 }
+                bool isNextClose = next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < 400;
                 string tempNoHtml = HtmlUtil.RemoveHtmlTags(p.Text).TrimEnd();
 
                 if (IsOneLineUrl(p.Text) || p.Text.Contains(ExpectedChars) || p.Text.EndsWith('\''))
@@ -62,8 +63,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     string tempTrimmed = tempNoHtml.TrimEnd().TrimEnd('\'', '"', '“', '”').TrimEnd();
                     if (tempTrimmed.Length > 0 && !ExpectedString2.Contains(tempTrimmed[tempTrimmed.Length - 1]) && p.Text != p.Text.ToUpper())
                     {
+
                         //don't end the sentence if the next word is an I word as they're always capped.
-                        if (!next.Text.StartsWith("I ", StringComparison.Ordinal) && !next.Text.StartsWith("I'", StringComparison.Ordinal))
+                        bool isNextCloseAndStartsWithI = isNextClose && (nextText.StartsWith("I ", StringComparison.Ordinal) ||
+                                                                         nextText.StartsWith("I'", StringComparison.Ordinal));
+
+                        if (!isNextCloseAndStartsWithI)
                         {
                             //test to see if the first word of the next line is a name
                             if (!callbacks.IsName(next.Text.Split(WordSplitChars)[0]) && callbacks.AllowFix(p, fixAction))
