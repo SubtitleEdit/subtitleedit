@@ -345,39 +345,29 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) > tolerance)
                                 {
-                                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen,
-                                                                         SubtitleListView.ColumnIndexStart);
-                                    subtitleListView2.SetBackgroundColor(index, Color.LightGreen,
-                                                                         SubtitleListView.ColumnIndexStart);
+                                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexStart);
+                                    subtitleListView2.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexStart);
                                 }
                                 if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) > tolerance)
                                 {
-                                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen,
-                                                                         SubtitleListView.ColumnIndexEnd);
-                                    subtitleListView2.SetBackgroundColor(index, Color.LightGreen,
-                                                                         SubtitleListView.ColumnIndexEnd);
+                                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexEnd);
+                                    subtitleListView2.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexEnd);
                                 }
                                 if (Math.Abs(p1.Duration.TotalMilliseconds - p2.Duration.TotalMilliseconds) > tolerance)
                                 {
-                                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen,
-                                                                         SubtitleListView.ColumnIndexDuration);
-                                    subtitleListView2.SetBackgroundColor(index, Color.LightGreen,
-                                                                         SubtitleListView.ColumnIndexDuration);
+                                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexDuration);
+                                    subtitleListView2.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexDuration);
                                 }
                                 if (FixWhitespace(p1.Text.Trim()) != FixWhitespace(p2.Text.Trim()))
                                 {
-                                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen,
-                                                                         SubtitleListView.ColumnIndexText);
-                                    subtitleListView2.SetBackgroundColor(index, Color.LightGreen,
-                                                                         SubtitleListView.ColumnIndexText);
+                                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexText);
+                                    subtitleListView2.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexText);
                                 }
 
                                 if (p1.Number != p2.Number)
                                 {
-                                    subtitleListView1.SetBackgroundColor(index, Color.LightYellow,
-                                                                         SubtitleListView.ColumnIndexNumber);
-                                    subtitleListView2.SetBackgroundColor(index, Color.LightYellow,
-                                                                         SubtitleListView.ColumnIndexNumber);
+                                    subtitleListView1.SetBackgroundColor(index, Color.FromArgb(255, 200, 100), SubtitleListView.ColumnIndexNumber);
+                                    subtitleListView2.SetBackgroundColor(index, Color.FromArgb(255, 200, 100), SubtitleListView.ColumnIndexNumber);
                                 }
                             }
                         }
