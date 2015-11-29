@@ -17,11 +17,30 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     var oldText = p.Text;
                     var newText = oldText;
-
+                    bool containsFontTag = oldText.Contains("<font ", StringComparison.OrdinalIgnoreCase);
                     foreach (string musicSymbol in musicSymbols)
                     {
-                        newText = newText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
-                        newText = newText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
+                        if (containsFontTag && musicSymbol == "#")
+                        {
+                            var idx = newText.IndexOf('#');
+                            while (idx >= 0)
+                            {
+                                // <font color="#808080">NATIVE HAWAIIAN CHANTING</font>
+                                var isInsideFontTag = (idx < 13) ? true : (newText[idx - 1] == '"' && (newText.Length > idx + 2 && char.IsDigit(newText[idx + 1]) && char.IsDigit(newText[idx + 2])));
+                                if (!isInsideFontTag)
+                                {
+                                    newText = newText.Remove(idx, 1);
+                                    newText = newText.Insert(idx, musicSymbol);
+                                }
+
+                                idx = newText.IndexOf('#', idx + 1);
+                            }
+                        }
+                        else
+                        {
+                            newText = newText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
+                            newText = newText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
+                        }
                     }
                     var noTagsText = HtmlUtil.RemoveHtmlTags(newText);
                     if (newText != oldText && noTagsText != HtmlUtil.RemoveHtmlTags(oldText))
