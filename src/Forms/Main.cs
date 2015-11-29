@@ -8905,6 +8905,12 @@ namespace Nikse.SubtitleEdit.Forms
                     return false;
                 return LoadBluRaySubFromMatroska(matroskaSubtitleInfo, matroska);
             }
+            if (matroskaSubtitleInfo.CodecId.Equals("S_HDMV/TEXTST", StringComparison.OrdinalIgnoreCase))
+            {
+                if (batchMode)
+                    return false;
+                return LoadTextSTFromMatroska(matroskaSubtitleInfo, matroska, batchMode);
+            }
 
             ShowStatus(_language.ParsingMatroskaFile);
             Refresh();
@@ -8953,6 +8959,72 @@ namespace Nikse.SubtitleEdit.Forms
 
             _converted = true;
 
+            if (batchMode)
+                return true;
+
+            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+            if (_subtitle.Paragraphs.Count > 0)
+                SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
+            ShowSource();
+            return true;
+        }
+
+        private bool LoadTextSTFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, bool batchMode)
+        {
+            ShowStatus(_language.ParsingMatroskaFile);
+            Refresh();
+            Cursor.Current = Cursors.WaitCursor;
+            var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, MatroskaProgress);
+            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
+            Cursor.Current = Cursors.Default;
+
+            MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
+            _subtitleListViewIndex = -1;
+            if (!batchMode)
+                ResetSubtitle();
+            _subtitle.Paragraphs.Clear();
+
+            Utilities.LoadMatroskaTextSubtitle(matroskaSubtitleInfo, matroska, sub, _subtitle);
+            for (int index = 0; index < sub.Count; index++)
+            {
+                try
+                {
+                    var msub = sub[index];
+                    int idx = -6; // MakeMKV starts at DialogPresentationSegment
+                    if (VobSubParser.IsPrivateStream2(msub.Data, 0))
+                        idx = 0; //  starts with MPEG2 private stream 2 (just to be sure)
+                    var dps = new Nikse.SubtitleEdit.Core.SubtitleFormats.TextST.DialogPresentationSegment(msub.Data, idx);
+                    _subtitle.Paragraphs[index].Text = dps.Text;
+                }
+                catch (Exception exception)
+                {
+                    _subtitle.Paragraphs[index].Text = exception.Message;
+                }
+            }
+
+            if (_networkSession == null && SubtitleListview1.IsExtraColumnVisible)
+            {
+                SubtitleListview1.HideExtraColumn();
+            }
+            comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
+            SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+            comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
+            SetEncoding(Encoding.UTF8);
+            ShowStatus(_language.SubtitleImportedFromMatroskaFile);
+            _subtitle.Renumber();
+            _subtitle.WasLoadedWithFrameNumbers = false;
+            if (matroska.Path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || matroska.Path.EndsWith(".mks", StringComparison.OrdinalIgnoreCase))
+            {
+                _fileName = matroska.Path.Remove(matroska.Path.Length - 4);
+                Text = Title + " - " + _fileName;
+            }
+            else
+            {
+                Text = Title;
+            }
+            _fileDateTime = new DateTime();
+            _converted = true;
             if (batchMode)
                 return true;
 
