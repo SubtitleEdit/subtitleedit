@@ -666,7 +666,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxCustomFourColors.Checked = true;
 
             _importLanguageString = languageString;
-            if (_importLanguageString.Contains('(') && !_importLanguageString.StartsWith('('))
+            if (_importLanguageString != null && _importLanguageString.Contains('(') && !_importLanguageString.StartsWith('('))
                 _importLanguageString = _importLanguageString.Substring(0, languageString.IndexOf('(') - 1).Trim();
         }
 
