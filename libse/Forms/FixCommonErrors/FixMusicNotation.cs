@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             while (idx >= 0)
                             {
                                 // <font color="#808080">NATIVE HAWAIIAN CHANTING</font>
-                                var isInsideFontTag = (idx < 13) ? true : (newText[idx - 1] == '"' && (newText.Length > idx + 2 && char.IsDigit(newText[idx + 1]) && char.IsDigit(newText[idx + 2])));
+                                var isInsideFontTag = (idx < 13) ? false : (newText[idx - 1] == '"' && (newText.Length > idx + 2 && Uri.IsHexDigit(newText[idx + 1]) && Uri.IsHexDigit(newText[idx + 2])));
                                 if (!isInsideFontTag)
                                 {
                                     newText = newText.Remove(idx, 1);
