@@ -7,7 +7,7 @@
    * Installer can now set icons for SE - thx xylographe
    * Can now import TextST from Matroska (.mkv) files - thx Rudde
    * Added "change speed" option in "Batch convert" - thx TomONeill
-   * Added "Bluray sup" output to "Batch convert" - thx Dan
+   * Added "Blu-ray sup" output to "Batch convert" - thx Dan
 * IMPROVED:
    * Updated Basque translation - thx Xabier Aramendi
    * Updated Korean translation updated - thx domddol
@@ -18,7 +18,7 @@
    * Some improvements for default ASS/SSA style - thx Michael
    * Can now read TTML with time code format hh:mm:ss,ms - thx Krystian
 * FIXED:
-   * "Normal (remove formatting)" don't remove unicode chars - thx Fotis
+   * "Normal (remove formatting)" don't remove Unicode chars - thx Fotis
    * Fixed bug in spell check "word replace" - thx Sami
    * Fixed post OCR correction regarding dashes in dialog - thx Rudde
    * Fixed bug in OCR regarding scrambled line - thx jpsdr
@@ -34,8 +34,9 @@
    * Ebu stl - save/load music symbol "♪"
    * Ebu stl - allow custom frame rate
    * Fix Esc key in "Split long lines" - thx Ivandrofly
-   * Fixed crash with excotic decimal separator like "/" - thx jafar
+   * Fixed crash with exotic decimal separator like "/" - thx jafar
    * Fixed issue in "Add period at end of line" - thx Nhoise
+   * Fixed crash in save of unknown language track in VobSub - thx Charlie
    * + Many minor fixes from ivandrofly and xylographe
 
 
