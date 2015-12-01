@@ -1614,5 +1614,29 @@ namespace Test
             }
         }
         #endregion
+
+        #region Fix Music Notation
+        [TestMethod]
+        public void FixMusicNotation1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "John: <font color=\"#ffff80\">Hello world.</font>");
+                new FixMusicNotation().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("John: <font color=\"#ffff80\">Hello world.</font>", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixMusicNotation2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "# Hello world. #");
+                new FixMusicNotation().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("♪ Hello world. ♪", _subtitle.Paragraphs[0].Text);
+            }
+        }
+        #endregion
     }
 }
