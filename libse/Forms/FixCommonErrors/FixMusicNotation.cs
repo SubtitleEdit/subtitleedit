@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 if (!isInsideFontTag)
                                 {
                                     newText = newText.Remove(idx, 1);
-                                    newText = newText.Insert(idx, musicSymbol);
+                                    newText = newText.Insert(idx, Configuration.Settings.Tools.MusicSymbol);
                                 }
 
                                 idx = newText.IndexOf('#', idx + 1);
