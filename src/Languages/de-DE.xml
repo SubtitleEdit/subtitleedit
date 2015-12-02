@@ -1652,6 +1652,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MusicSymbolsToReplace>Zu ersetzende Musik Symbole (durch Leerzeichen trennen)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>OCR Fehler korrigieren - auch Hardcoded Regeln anwenden</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Kurze Anzeigezeit korrigieren - Startzeitanpassung zulassen</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Erster Schritt (zu korrigierende Fehler auswählen) überspringen</FixCommonErrorsSkipStepOne>
     <Shortcuts>Kurzbefehle</Shortcuts>
     <Shortcut>Kurzbefehl</Shortcut>
     <Control>Steuerung</Control>
