@@ -1651,6 +1651,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <MusicSymbolsToReplace>Te vervangen muzieksymbolen (gescheiden door spatie)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Gangbare OCR-fouten corrigeren - ook hardgecodeerde regels</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Korte weergavetĳd corrigeren - sta verplaatsen starttĳd toe</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Stap één (te corrigeren fouten selecteren) overslaan</FixCommonErrorsSkipStepOne>
     <Shortcuts>Sneltoetsen</Shortcuts>
     <Shortcut>Sneltoets</Shortcut>
     <Control>Ctrl</Control>

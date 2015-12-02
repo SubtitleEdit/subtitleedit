@@ -1658,6 +1658,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <MusicSymbolsToReplace>Symboles musicaux à remplacer (séparer par des espaces)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Erreurs OCR courantes - utilise aussi les règles codées en dur</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Durées d'affichage courtes - permet de déplacer le temps initial</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Passer la première étape (choix des erreurs à corriger)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Raccourcis</Shortcuts>
     <Shortcut>Raccourci</Shortcut>
     <Control>Contrôle</Control>
