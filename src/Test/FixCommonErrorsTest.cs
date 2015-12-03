@@ -1634,7 +1634,19 @@ namespace Test
             {
                 InitializeFixCommonErrorsLine(target, "# Hello world. #");
                 new FixMusicNotation().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual("♪ Hello world. ♪", _subtitle.Paragraphs[0].Text);
+                Assert.AreEqual(string.Format("{0} Hello world. {0}", Configuration.Settings.Tools.MusicSymbol), _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixMusicNotation3()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "# Hello world. #");
+                Configuration.Settings.Tools.MusicSymbol = "♫";
+                new FixMusicNotation().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(string.Format("{0} Hello world. {0}", Configuration.Settings.Tools.MusicSymbol), _subtitle.Paragraphs[0].Text);
             }
         }
         #endregion
