@@ -1416,6 +1416,16 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void RemoveTextForHiRemoveFirstBlankLineAlsoItalics()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            string text = "<i>Ow. Ow." + Environment.NewLine + "Ow, my head.</i>";
+            const string expected = "<i>My head.</i>";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
         #region Additional test attributes
 
         //

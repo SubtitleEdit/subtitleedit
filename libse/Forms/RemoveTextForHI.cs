@@ -1053,6 +1053,21 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         text = text.TrimStart('-').TrimStart();
                 }
             }
+
+            if (oldText != text)
+            {
+                text = text.Replace(Environment.NewLine + "<i>" + Environment.NewLine, Environment.NewLine + "<i>");
+                text = text.Replace(Environment.NewLine + "</i>" + Environment.NewLine, "</i>" + Environment.NewLine);
+                if (text.StartsWith("<i>" + Environment.NewLine))
+                {
+                    text = text.Remove(3, Environment.NewLine.Length);
+                }
+                if (text.EndsWith(Environment.NewLine + "</i>"))
+                {
+                    text = text.Remove(text.Length - (Environment.NewLine.Length + 4), Environment.NewLine.Length);
+                }
+                text = text.Replace(Environment.NewLine + "</i>" + Environment.NewLine, "</i>" + Environment.NewLine);
+            }
             return text;
         }
 
