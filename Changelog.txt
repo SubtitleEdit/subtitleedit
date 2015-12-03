@@ -7,7 +7,7 @@
    * Installer can now set icons for SE - thx xylographe
    * Can now import TextST from Matroska (.mkv) files - thx Rudde
    * Added "change speed" option in "Batch convert" - thx TomONeill
-   * Added "Blu-ray sup" output to "Batch convert" - thx Dan
+   * Added "Blu-ray sup" output in "Batch convert" - thx Dan
 * IMPROVED:
    * Updated Basque translation - thx Xabier Aramendi
    * Updated Korean translation updated - thx domddol
@@ -23,7 +23,7 @@
    * Fixed post OCR correction regarding dashes in dialog - thx Rudde
    * Fixed bug in OCR regarding scrambled line - thx jpsdr
    * Several fixes in remove text for HI - thx Thunderbolt8
-   * Fixed minor bug in auto-break - thx Ivandrofly
+   * Fixed minor bug in auto-break - thx ivandrofly
    * Some fixes for Timed Text 1.0 - thx Stephan / btsix
    * Fixed time code reading in format "USF" - thx Thomas
    * Fix for line breaks in format "USF" - thx Thomas
@@ -37,6 +37,7 @@
    * Fixed crash with exotic decimal separator like "/" - thx jafar
    * Fixed issue in "Add period at end of line" - thx Nhoise
    * Fixed crash in save of unknown language track in VobSub - thx Charlie
+   * Fix music notation from # now ignores font tags - thx ivandrofly
    * + Many minor fixes from ivandrofly and xylographe
 
 
