@@ -192,6 +192,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _waveformSearchSilenceForward = Keys.None;
         private Keys _waveformSearchSilenceBack = Keys.None;
         private Keys _waveformAddTextAtHere = Keys.None;
+        private Keys _waveformAddTextAtHereFromClipboard = Keys.None;
         private Keys _waveformFocusListView = Keys.None;
         private Keys _mainTranslateCustomSearch1 = Keys.None;
         private Keys _mainTranslateCustomSearch2 = Keys.None;
@@ -1739,7 +1740,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if ((ext == ".m2ts" && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName)) ||
+                if (((ext == ".m2ts" || ext == ".ts") && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName)) ||
                     (ext == ".textst" && FileUtil.IsMpeg2PrivateStream2(fileName)))
                 {
                     bool isTextSt = false;
@@ -10784,6 +10785,11 @@ namespace Nikse.SubtitleEdit.Forms
                 addParagraphHereToolStripMenuItem_Click(null, null);
                 e.SuppressKeyPress = true;
             }
+            else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _waveformAddTextAtHereFromClipboard)
+            {
+                addParagraphAndPasteToolStripMenuItem_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
             else if (audioVisualizer.Focused && e.KeyData == _waveformFocusListView)
             {
                 SubtitleListview1.Focus();
@@ -14463,6 +14469,7 @@ namespace Nikse.SubtitleEdit.Forms
             _waveformSearchSilenceForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward);
             _waveformSearchSilenceBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack);
             _waveformAddTextAtHere = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHere);
+            _waveformAddTextAtHereFromClipboard = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHereFromClipboard);
             _waveformFocusListView = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformFocusListView);
             _mainTranslateCustomSearch1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1);
             _mainTranslateCustomSearch2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2);

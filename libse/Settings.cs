@@ -887,6 +887,7 @@ namespace Nikse.SubtitleEdit.Core
         public string WaveformSearchSilenceForward { get; set; }
         public string WaveformSearchSilenceBack { get; set; }
         public string WaveformAddTextHere { get; set; }
+        public string WaveformAddTextHereFromClipboard { get; set; }
         public string WaveformFocusListView { get; set; }
         public string MainTranslateCustomSearch1 { get; set; }
         public string MainTranslateCustomSearch2 { get; set; }
@@ -2587,6 +2588,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("WaveformAddTextHere");
                 if (subNode != null)
                     settings.Shortcuts.WaveformAddTextHere = subNode.InnerText;
+                subNode = node.SelectSingleNode("WaveformAddTextHereFromClipboard");
+                if (subNode != null)
+                    settings.Shortcuts.WaveformAddTextHereFromClipboard = subNode.InnerText;
                 subNode = node.SelectSingleNode("WaveformFocusListView");
                 if (subNode != null)
                     settings.Shortcuts.WaveformFocusListView = subNode.InnerText;
@@ -3202,6 +3206,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("WaveformSearchSilenceForward", settings.Shortcuts.WaveformSearchSilenceForward);
                 textWriter.WriteElementString("WaveformSearchSilenceBack", settings.Shortcuts.WaveformSearchSilenceBack);
                 textWriter.WriteElementString("WaveformAddTextHere", settings.Shortcuts.WaveformAddTextHere);
+                textWriter.WriteElementString("WaveformAddTextHereFromClipboard", settings.Shortcuts.WaveformAddTextHereFromClipboard);                
                 textWriter.WriteElementString("WaveformFocusListView", settings.Shortcuts.WaveformFocusListView);
                 textWriter.WriteElementString("MainTranslateCustomSearch1", settings.Shortcuts.MainTranslateCustomSearch1);
                 textWriter.WriteElementString("MainTranslateCustomSearch2", settings.Shortcuts.MainTranslateCustomSearch2);

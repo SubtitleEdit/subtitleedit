@@ -775,6 +775,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizerNode.Nodes.Add(language.WaveformSeekSilenceForward + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward));
             audioVisualizerNode.Nodes.Add(language.WaveformSeekSilenceBack + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack));
             audioVisualizerNode.Nodes.Add(language.WaveformAddTextHere + GetShortcutText(Configuration.Settings.Shortcuts.WaveformAddTextHere));
+            audioVisualizerNode.Nodes.Add(language.WaveformAddTextHereFromClipboard + GetShortcutText(Configuration.Settings.Shortcuts.WaveformAddTextHereFromClipboard));
             audioVisualizerNode.Nodes.Add(language.WaveformPlayNewSelection + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlaySelection));
             audioVisualizerNode.Nodes.Add(language.WaveformPlayNewSelectionEnd + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition + GetShortcutText(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition));
@@ -1572,6 +1573,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.WaveformSearchSilenceBack = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.WaveformAddTextHere).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformAddTextHere = GetShortcut(node.Text);
+                    else if (text == (Configuration.Settings.Language.Settings.WaveformAddTextHereFromClipboard).Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.WaveformAddTextHereFromClipboard = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.WaveformFocusListView.Replace("&", string.Empty))

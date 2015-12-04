@@ -1852,6 +1852,7 @@
             public string WaveformSeekSilenceForward { get; set; }
             public string WaveformSeekSilenceBack { get; set; }
             public string WaveformAddTextHere { get; set; }
+            public string WaveformAddTextHereFromClipboard { get; set; }
             public string WaveformPlayNewSelection { get; set; }
             public string WaveformPlayNewSelectionEnd { get; set; }
             public string WaveformPlayFirstSelectedSubtitle { get; set; }
