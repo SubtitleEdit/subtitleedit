@@ -424,6 +424,23 @@ namespace Nikse.SubtitleEdit.Core
             return -1;
         }
 
+        /// <summary>
+        /// Get paragraph index by time in seconds
+        /// </summary>
+        public int GetIndex(double seconds)
+        {
+            var totalMilliseconds = seconds * 1000.0;
+            for (int i = 0; i < Paragraphs.Count; i++)
+            {
+                var p = Paragraphs[i];
+                if (totalMilliseconds >= p.StartTime.TotalMilliseconds && totalMilliseconds <= p.EndTime.TotalMilliseconds)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
         public Paragraph GetFirstAlike(Paragraph p)
         {
             foreach (Paragraph item in _paragraphs)

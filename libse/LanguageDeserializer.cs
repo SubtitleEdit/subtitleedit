@@ -4540,6 +4540,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformAddTextHere":
                     language.Settings.WaveformAddTextHere = reader.Value;
                     break;
+                case "Settings/WaveformAddTextHereFromClipboard":
+                    language.Settings.WaveformAddTextHereFromClipboard = reader.Value;
+                    break;
                 case "Settings/WaveformPlayNewSelection":
                     language.Settings.WaveformPlayNewSelection = reader.Value;
                     break;
