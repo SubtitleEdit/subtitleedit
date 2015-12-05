@@ -278,6 +278,9 @@ namespace Nikse.SubtitleEdit.Core
         public int CurrentCavena890LanguageIdLine1 { get; set; }
         public int CurrentCavena890LanguageIdLine2 { get; set; }
 
+        public bool EbuStlTeletextUseBox { get; set; }
+        public bool EbuStlTeletextUseDoubleHeight { get; set; }
+
         public bool CheetahCaptionAlwayWriteEndTime { get; set; }
 
         public bool SamiDisplayTwoClassesAsTwoSubtitles { get; set; }
@@ -311,6 +314,9 @@ namespace Nikse.SubtitleEdit.Core
             DCinemaZPosition = 0;
             DCinemaFadeUpTime = 5;
             DCinemaFadeDownTime = 5;
+
+            EbuStlTeletextUseBox = true;
+            EbuStlTeletextUseDoubleHeight = true;
 
             SamiDisplayTwoClassesAsTwoSubtitles = true;
             SamiHtmlEncodeMode = 0;
@@ -1869,6 +1875,12 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("FcpFontName");
                 if (subNode != null)
                     settings.SubtitleSettings.FcpFontName = subNode.InnerText;
+                subNode = node.SelectSingleNode("EbuStlTeletextUseBox");
+                if (subNode != null)
+                    settings.SubtitleSettings.EbuStlTeletextUseBox = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("EbuStlTeletextUseDoubleHeight");
+                if (subNode != null)
+                    settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = Convert.ToBoolean(subNode.InnerText);
                 subNode = node.SelectSingleNode("CheetahCaptionAlwayWriteEndTime");
                 if (subNode != null)
                     settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime = Convert.ToBoolean(subNode.InnerText);
@@ -2950,6 +2962,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("TimedText10ShowStyleAndLanguage", settings.SubtitleSettings.TimedText10ShowStyleAndLanguage.ToString());
                 textWriter.WriteElementString("FcpFontSize", settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FcpFontName", settings.SubtitleSettings.FcpFontName);
+                textWriter.WriteElementString("EbuStlTeletextUseBox", settings.SubtitleSettings.EbuStlTeletextUseBox.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("EbuStlTeletextUseDoubleHeight", settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("CheetahCaptionAlwayWriteEndTime", settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NuendoCharacterListFile", settings.SubtitleSettings.NuendoCharacterListFile);
                 textWriter.WriteEndElement();

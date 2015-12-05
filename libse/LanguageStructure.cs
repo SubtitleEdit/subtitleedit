@@ -413,6 +413,9 @@
             public string Import { get; set; }
             public string TextAndTimingInformation { get; set; }
             public string JustificationCode { get; set; }
+            public string Teletext { get; set; }
+            public string UseBox { get; set; }
+            public string DoubleHeight { get; set; }            
             public string Errors { get; set; }
             public string ErrorsX { get; set; }
             public string MaxLengthError { get; set; }

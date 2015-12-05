@@ -82,6 +82,9 @@
             this.textBoxOriginalProgramTitle = new System.Windows.Forms.TextBox();
             this.labelOriginalProgramTitle = new System.Windows.Forms.Label();
             this.tabPageTextAndTiming = new System.Windows.Forms.TabPage();
+            this.groupBoxTeletext = new System.Windows.Forms.GroupBox();
+            this.checkBoxTeletextDoubleHeight = new System.Windows.Forms.CheckBox();
+            this.checkBoxTeletextBox = new System.Windows.Forms.CheckBox();
             this.comboBoxJustificationCode = new System.Windows.Forms.ComboBox();
             this.labelJustificationCode = new System.Windows.Forms.Label();
             this.tabPageErrors = new System.Windows.Forms.TabPage();
@@ -96,6 +99,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalNumberOfDiscs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRevisionNumber)).BeginInit();
             this.tabPageTextAndTiming.SuspendLayout();
+            this.groupBoxTeletext.SuspendLayout();
             this.tabPageErrors.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -642,6 +646,7 @@
             // 
             // tabPageTextAndTiming
             // 
+            this.tabPageTextAndTiming.Controls.Add(this.groupBoxTeletext);
             this.tabPageTextAndTiming.Controls.Add(this.comboBoxJustificationCode);
             this.tabPageTextAndTiming.Controls.Add(this.labelJustificationCode);
             this.tabPageTextAndTiming.Location = new System.Drawing.Point(4, 22);
@@ -650,6 +655,40 @@
             this.tabPageTextAndTiming.TabIndex = 2;
             this.tabPageTextAndTiming.Text = "Text and timing information";
             this.tabPageTextAndTiming.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxTeletext
+            // 
+            this.groupBoxTeletext.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxTeletext.Controls.Add(this.checkBoxTeletextDoubleHeight);
+            this.groupBoxTeletext.Controls.Add(this.checkBoxTeletextBox);
+            this.groupBoxTeletext.Location = new System.Drawing.Point(9, 54);
+            this.groupBoxTeletext.Name = "groupBoxTeletext";
+            this.groupBoxTeletext.Size = new System.Drawing.Size(727, 392);
+            this.groupBoxTeletext.TabIndex = 45;
+            this.groupBoxTeletext.TabStop = false;
+            this.groupBoxTeletext.Text = "Teletext";
+            // 
+            // checkBoxTeletextDoubleHeight
+            // 
+            this.checkBoxTeletextDoubleHeight.AutoSize = true;
+            this.checkBoxTeletextDoubleHeight.Location = new System.Drawing.Point(16, 57);
+            this.checkBoxTeletextDoubleHeight.Name = "checkBoxTeletextDoubleHeight";
+            this.checkBoxTeletextDoubleHeight.Size = new System.Drawing.Size(124, 17);
+            this.checkBoxTeletextDoubleHeight.TabIndex = 1;
+            this.checkBoxTeletextDoubleHeight.Text = "Text is double height";
+            this.checkBoxTeletextDoubleHeight.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxTeletextBox
+            // 
+            this.checkBoxTeletextBox.AutoSize = true;
+            this.checkBoxTeletextBox.Location = new System.Drawing.Point(16, 34);
+            this.checkBoxTeletextBox.Name = "checkBoxTeletextBox";
+            this.checkBoxTeletextBox.Size = new System.Drawing.Size(121, 17);
+            this.checkBoxTeletextBox.TabIndex = 0;
+            this.checkBoxTeletextBox.Text = "Use box around text";
+            this.checkBoxTeletextBox.UseVisualStyleBackColor = true;
             // 
             // comboBoxJustificationCode
             // 
@@ -715,7 +754,7 @@
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
-            this.MinimumSize = new System.Drawing.Size(648, 462);
+            this.MinimumSize = new System.Drawing.Size(785, 570);
             this.Name = "EbuSaveOptions";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -732,6 +771,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRevisionNumber)).EndInit();
             this.tabPageTextAndTiming.ResumeLayout(false);
             this.tabPageTextAndTiming.PerformLayout();
+            this.groupBoxTeletext.ResumeLayout(false);
+            this.groupBoxTeletext.PerformLayout();
             this.tabPageErrors.ResumeLayout(false);
             this.tabPageErrors.PerformLayout();
             this.ResumeLayout(false);
@@ -798,5 +839,8 @@
         private Controls.TimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.Label labelFrameRate;
         private System.Windows.Forms.ComboBox comboBoxFrameRate;
+        private System.Windows.Forms.GroupBox groupBoxTeletext;
+        private System.Windows.Forms.CheckBox checkBoxTeletextDoubleHeight;
+        private System.Windows.Forms.CheckBox checkBoxTeletextBox;
     }
 }

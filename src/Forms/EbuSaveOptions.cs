@@ -55,6 +55,9 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxJustificationCode.Items.Add(language.TextLeftJustifiedText);
             comboBoxJustificationCode.Items.Add(language.TextCenteredText);
             comboBoxJustificationCode.Items.Add(language.TextRightJustifiedText);
+            groupBoxTeletext.Text = language.Teletext;
+            checkBoxTeletextBox.Text = language.UseBox;
+            checkBoxTeletextDoubleHeight.Text = language.DoubleHeight;
 
             labelErrors.Text = language.Errors;
 
@@ -90,6 +93,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             comboBoxJustificationCode.SelectedIndex = justificationCode;
+            checkBoxTeletextBox.Checked = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox;
+            checkBoxTeletextDoubleHeight.Checked = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight;
 
             Text = Configuration.Settings.Language.EbuSaveOptions.Title;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
@@ -162,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (header.FrameRateFromSaveDialog > 20 && header.FrameRateFromSaveDialog < 200)
             {
-                comboBoxFrameRate.Text = header.FrameRateFromSaveDialog.ToString();
+                comboBoxFrameRate.Text = header.FrameRateFromSaveDialog.ToString(CultureInfo.CurrentCulture);
             }
 
             if (header.DisplayStandardCode == "0")
@@ -244,7 +249,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _header.DiskFormatCode = "STL30.01";
 
             double d;
-            if (double.TryParse(comboBoxFrameRate.Text, out d) && d > 20 && d < 200)
+            if (double.TryParse(comboBoxFrameRate.Text.Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), out d) && d > 20 && d < 200)
             {
                 _header.FrameRateFromSaveDialog = d;
             }
@@ -279,7 +284,11 @@ namespace Nikse.SubtitleEdit.Forms
             _header.MaximumNumberOfDisplayableRows = numericUpDownMaxRows.Value.ToString("00");
             _header.DiskSequenceNumber = numericUpDownDiskSequenceNumber.Value.ToString(CultureInfo.InvariantCulture);
             _header.TotalNumberOfDisks = numericUpDownTotalNumberOfDiscs.Value.ToString(CultureInfo.InvariantCulture);
+
             JustificationCode = (byte)comboBoxJustificationCode.SelectedIndex;
+            Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox = checkBoxTeletextBox.Checked;
+            Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = checkBoxTeletextDoubleHeight.Checked;
+
             DialogResult = DialogResult.OK;
         }
 
