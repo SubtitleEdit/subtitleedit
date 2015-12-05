@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 CodePageNumber = "437";
                 DiskFormatCode = "STL25.01";
-                DisplayStandardCode = "0";
+                DisplayStandardCode = "0"; // 0=Open subtitling
                 CharacterCodeTableNumber = "00";
                 LanguageCode = "0A";
                 OriginalProgrammeTitle = "No Title                        ";
@@ -371,17 +371,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 // newline
-                string newline = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a, 0x8a });
-
-                if (header.DisplayStandardCode == "0")
+                string newline = encoding.GetString(new byte[] { 0x8a, 0x8a });
+                if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
+                {
+                    newline = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a, 0x8a, 0x0d, 0x0b, 0x0b }); // 0a==end box, 0d==double height, 0b==start box
+                }
+                else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
+                {
+                    newline = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a, 0x8a, 0x0b, 0x0b }); // 0a==end box, 0b==start box
+                }
+                else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
+                {
+                    newline = encoding.GetString(new byte[] {0x8a, 0x8a, 0x0d, 0x0d }); // 0d==double height
+                }
+                if (header.DisplayStandardCode == "0") // 0=Open subtitling
+                {
                     newline = encoding.GetString(new byte[] { 0x8A }); //8Ah=CR/LF
-                // newline = encoding.GetString(new byte[] { 0x85, 0x8A, 0x0D, 0x84, 0x80 }); //85h=boxing off, 8Ah=CR/LF, 84h=boxing on, 80h, Italics on
+                }
 
                 TextField = TextField.Replace(Environment.NewLine, newline);
 
-                string endOfLine = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a });
-
-                if (header.DisplayStandardCode == "0")
+                string endOfLine = encoding.GetString(new byte[] { 0x0a, 0x0a }); //a=end box
+                if (!Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox || header.DisplayStandardCode == "0") // DisplayStandardCode 0==Open subtitling
                 {
                     endOfLine = string.Empty;
                 }
@@ -393,6 +404,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (TextField[j] == '–')
                         indexOfEmdash.Add(j);
+                }
+
+                if (header.DisplayStandardCode != "0") // 0=Open subtitling
+                {
+                    if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
+                    {
+                        TextField = encoding.GetString(new byte[] { 0x0d, 0x0b, 0x0b }) + TextField; // d=double height, b=start box
+                    }
+                    else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
+                    {
+                        TextField = encoding.GetString(new byte[] { 0x0b, 0x0b }) + TextField; // b=start box
+                    }
+                    else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
+                    {
+                        TextField = encoding.GetString(new byte[] { 0x0d }) + TextField; // d=double height
+                    }
                 }
 
                 // convert text to bytes

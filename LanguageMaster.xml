@@ -371,6 +371,9 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Import>Import...</Import>
     <TextAndTimingInformation>Text and timing information</TextAndTimingInformation>
     <JustificationCode>Justification code</JustificationCode>
+    <Teletext>Teletext</Teletext>
+    <UseBox>Use box around text</UseBox>
+    <DoubleHeight>Use double height for text</DoubleHeight>
     <Errors>Errors</Errors>
     <ErrorsX>Errors: {0}</ErrorsX>
     <MaxLengthError>Line {0} exceeds max length ({1}) by {2}: {3}</MaxLengthError>
