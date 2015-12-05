@@ -17,6 +17,7 @@
    * Source view "replace all" much faster - thx adem0x
    * Some improvements for default ASS/SSA style - thx Michael
    * Can now read TTML with time code format hh:mm:ss,ms - thx Krystian
+   * Save subtitle through cache to avoid issues with power failure
 * FIXED:
    * "Normal (remove formatting)" don't remove Unicode chars - thx Fotis
    * Fixed bug in spell check "word replace" - thx Sami
@@ -37,7 +38,8 @@
    * Fixed crash with exotic decimal separator like "/" - thx jafar
    * Fixed issue in "Add period at end of line" - thx Nhoise
    * Fixed crash in save of unknown language track in VobSub - thx Charlie
-   * Fix music notation from # now ignores font tags - thx ivandrofly
+   * Fix music notation from "#" now ignores font tags - thx ivandrofly
+   * Some fixes for the "Advanced Sub Station Alpha" properties window
    * + Many minor fixes from ivandrofly and xylographe
 
 
