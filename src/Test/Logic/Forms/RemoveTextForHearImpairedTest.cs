@@ -1426,6 +1426,31 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void RemoveTextForHiDialogAddDashFirstLine()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            string text = "RECORDING: <i>Have you lost someone?</i>" + Environment.NewLine + "- What?";
+            string expected = "<i>- Have you lost someone?</i>" + Environment.NewLine + "- What?";
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionKeepDotDotDot()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            string text = "She uh..." + Environment.NewLine + "she disappeared.";
+            string expected = "She..." + Environment.NewLine + "she disappeared.";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+
+        
+
+
+
         #region Additional test attributes
 
         //

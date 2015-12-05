@@ -313,7 +313,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 count++;
             }
             newText = newText.Trim();
-            if (noOfNames > 0 && Utilities.GetNumberOfLines(newText) == 2)
+            if ((noOfNames > 0 || removedInFirstLine) && Utilities.GetNumberOfLines(newText) == 2)
             {
                 int indexOfDialogChar = newText.IndexOf('-');
                 bool insertDash = true;
@@ -432,7 +432,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return true;
         }
 
-        private static readonly char[] TrimStartNoiseChar = new[] { '-', ' ' };
+        private static readonly char[] TrimStartNoiseChar = { '-', ' ' };
 
         public string RemoveTextFromHearImpaired(string text)
         {
@@ -749,13 +749,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
             "trumpets",
             "whisper",
             "whispers",
-            "whistles",
+            "whistles"
         });
         private bool IsHIDescription(string text)
         {
             text = text.Trim(' ', '(', ')', '[', ']', '?', '{', '}');
             text = text.ToLower();
 
+            text = text.ToLower();
             if (text.Trim().Replace("mr. ", string.Empty).Replace("mrs. ", string.Empty).Replace("dr. ", string.Empty).Contains(' '))
                 AddWarning();
 
@@ -941,10 +942,17 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                         temp = temp.Remove(0, 1);
                                 }
 
-                                while (temp.Length > 0 && " ,.?!".Contains(temp[0]))
+                                if (temp.StartsWith("..."))
                                 {
-                                    temp = temp.Remove(0, 1);
-                                    doRepeat = true;
+                                    pre = pre.Trim();
+                                }
+                                else
+                                {
+                                    while (temp.Length > 0 && " ,.?!".Contains(temp[0]))
+                                    {
+                                        temp = temp.Remove(0, 1);
+                                        doRepeat = true;
+                                    }
                                 }
                                 if (temp.Length > 0 && s[0].ToString(CultureInfo.InvariantCulture) != s[0].ToString(CultureInfo.InvariantCulture).ToLower())
                                 {
@@ -992,8 +1000,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         lines[0] = lines[0].Remove(0, 1);
                     return lines[0].Trim();
                 }
-                var noTags0 = HtmlUtil.RemoveHtmlTags(lines[0], false).Trim();
-                var noTags1 = HtmlUtil.RemoveHtmlTags(lines[1], false).Trim();
+                var noTags0 = HtmlUtil.RemoveHtmlTags(lines[0]).Trim();
+                var noTags1 = HtmlUtil.RemoveHtmlTags(lines[1]).Trim();
                 if (noTags0 == "-")
                 {
                     if (noTags1 == noTags0)
