@@ -217,6 +217,9 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFilter.SelectedIndex = 0;
             comboBoxFilter.Left = labelFilter.Left + labelFilter.Width + 4;
             textBoxFilter.Left = comboBoxFilter.Left + comboBoxFilter.Width + 4;
+
+            _assStyle = Configuration.Settings.Tools.BatchConvertAssStyles;
+            _ssaStyle = Configuration.Settings.Tools.BatchConvertSsaStyles;
         }
 
         private void buttonChooseFolder_Click(object sender, EventArgs e)
@@ -1165,9 +1168,14 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 var assa = new AdvancedSubStationAlpha();
+                var sub = new Subtitle();
                 if (comboBoxSubtitleFormats.Text == assa.Name)
                 {
-                    form = new SubStationAlphaStyles(new Subtitle(), assa);
+                    if (!string.IsNullOrEmpty(_assStyle))
+                    {
+                        sub.Header = _assStyle;
+                    }
+                    form = new SubStationAlphaStyles(sub, assa);
                     form.MakeOnlyOneStyle();
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
@@ -1176,10 +1184,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
+                    if (!string.IsNullOrEmpty(_ssaStyle))
+                    {
+                        sub.Header = _ssaStyle;
+                    }
                     var ssa = new SubStationAlpha();
                     if (comboBoxSubtitleFormats.Text == ssa.Name)
                     {
-                        form = new SubStationAlphaStyles(new Subtitle(), ssa);
+                        form = new SubStationAlphaStyles(sub, ssa);
                         if (form.ShowDialog(this) == DialogResult.OK)
                         {
                             _ssaStyle = form.Header;
@@ -1271,6 +1283,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertOverwriteExisting = checkBoxOverwrite.Checked;
             Configuration.Settings.Tools.BatchConvertOverwriteOriginal = checkBoxOverwriteOriginalFiles.Checked;
             Configuration.Settings.Tools.BatchConvertFormat = comboBoxSubtitleFormats.SelectedItem.ToString();
+            Configuration.Settings.Tools.BatchConvertAssStyles = _assStyle;
+            Configuration.Settings.Tools.BatchConvertSsaStyles = _ssaStyle;
         }
 
         private void buttonMultipleReplaceSettings_Click(object sender, EventArgs e)

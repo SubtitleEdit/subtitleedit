@@ -116,6 +116,8 @@ namespace Nikse.SubtitleEdit.Core
         public bool BatchConvertSetMinDisplayTimeBetweenSubtitles { get; set; }
         public string BatchConvertLanguage { get; set; }
         public string BatchConvertFormat { get; set; }
+        public string BatchConvertAssStyles { get; set; }
+        public string BatchConvertSsaStyles { get; set; }
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
         public bool ModifySelectionCaseSensitive { get; set; }
@@ -1658,6 +1660,12 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("BatchConvertFormat");
             if (subNode != null)
                 settings.Tools.BatchConvertFormat = subNode.InnerText;
+            subNode = node.SelectSingleNode("BatchConvertAssStyles");
+            if (subNode != null)
+                settings.Tools.BatchConvertAssStyles = subNode.InnerText;
+            subNode = node.SelectSingleNode("BatchConvertSsaStyles");
+            if (subNode != null)
+                settings.Tools.BatchConvertSsaStyles = subNode.InnerText;
             subNode = node.SelectSingleNode("ModifySelectionRule");
             if (subNode != null)
                 settings.Tools.ModifySelectionRule = subNode.InnerText;
