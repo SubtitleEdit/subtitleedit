@@ -63,7 +63,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     string tempTrimmed = tempNoHtml.TrimEnd().TrimEnd('\'', '"', '“', '”').TrimEnd();
                     if (tempTrimmed.Length > 0 && !ExpectedString2.Contains(tempTrimmed[tempTrimmed.Length - 1]) && p.Text != p.Text.ToUpper())
                     {
-
                         //don't end the sentence if the next word is an I word as they're always capped.
                         bool isNextCloseAndStartsWithI = isNextClose && (nextText.StartsWith("I ", StringComparison.Ordinal) ||
                                                                          nextText.StartsWith("I'", StringComparison.Ordinal));

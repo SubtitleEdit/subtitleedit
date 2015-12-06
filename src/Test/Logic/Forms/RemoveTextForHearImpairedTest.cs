@@ -1401,7 +1401,7 @@ namespace Test.Logic.Forms
             target.Settings.CustomEnd = "♪";
             target.Settings.RemoveTextBetweenBrackets = true;
             string text = "The meal is ready. Let's go!" + Environment.NewLine + "<i>- [Nick]</i> J. T. Lancer!";
-            string expected = "The meal is ready. Let's go!" + Environment.NewLine + "- J. T. Lancer!"; 
+            string expected = "The meal is ready. Let's go!" + Environment.NewLine + "- J. T. Lancer!";
             string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
@@ -1411,7 +1411,7 @@ namespace Test.Logic.Forms
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
             const string text = "Oh. Oh, yeah. Ahh —";
-            const string expected = "Yeah —"; 
+            const string expected = "Yeah —";
             string actual = target.RemoveInterjections(text);
             Assert.AreEqual(expected, actual);
         }
@@ -1447,7 +1447,7 @@ namespace Test.Logic.Forms
         }
 
 
-        
+
 
 
 

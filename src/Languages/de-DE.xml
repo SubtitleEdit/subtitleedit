@@ -371,6 +371,9 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <Import>Importiere...</Import>
     <TextAndTimingInformation>Text- und Zeitstempel Info</TextAndTimingInformation>
     <JustificationCode>Textformatierung</JustificationCode>
+    <Teletext>Teletext</Teletext>
+    <UseBox>Text in einer Box darstellen</UseBox>
+    <DoubleHeight>Text in doppelter Höhe darstellen</DoubleHeight>
     <Errors>Fehler</Errors>
     <ErrorsX>Fehler: {0}</ErrorsX>
     <MaxLengthError>Text {0} überschreitet maximale Länge ({1}) um {2}: {3}</MaxLengthError>
@@ -1692,6 +1695,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformSeekSilenceForward>Suche stumm vor</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Suche stumm zurück</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Text hier ergänzen (für neue Auswahl)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>Text hier ergänzen (für neue Auswahl aus Zwischenablage)</WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>Auswahl abspielen</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Ende der Auswahl abspielen</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Ersten gewählten Untertitel abspielen</WaveformPlayFirstSelectedSubtitle>
