@@ -93,13 +93,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (!value && ShowAlpha)
                 {
-                    this.Height -= 40;
+                    Height -= 40;
                     buttonOK.Top -= 40;
                     buttonCancel.Top -= 40;
                 }
                 else if (value && !ShowAlpha)
                 {
-                    this.Height += 40;
+                    Height += 40;
                     buttonOK.Top += 40;
                     buttonCancel.Top += 40;
                 }
@@ -114,8 +114,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             // Get or set the color to be
             // displayed in the color wheel.
-            get { return myColorWheel.Color; }
-
+            get
+            {
+                return Color.FromArgb(tbAlpha.Value, tbRed.Value, tbGreen.Value, tbBlue.Value);
+            }
             set
             {
                 // Indicate the color change type. Either RGB or HSV
