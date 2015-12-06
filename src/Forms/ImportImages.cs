@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -8,8 +9,12 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ImportImages : PositionAndSizeForm
     {
+        // 0_00_01_042__0_00_03_919_01.jpeg
+        private static readonly Regex TimeCodeFormat1 = new Regex(@"^\d+_\d+_\d+_\d+__\d+_\d+_\d+_\d+_\d+$", RegexOptions.Compiled);
+        private static readonly Regex TimeCodeFormat2 = new Regex(@"^\d+_\d+_\d+_\d+__\d+_\d+_\d+_\d+$", RegexOptions.Compiled);
+
         public Subtitle Subtitle { get; private set; }
-        private readonly HashSet<string> FilesAlreadyInList;
+        private readonly HashSet<string> _filesAlreadyInList;
         public ImportImages()
         {
             InitializeComponent();
@@ -26,20 +31,20 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderDuration.Text = Configuration.Settings.Language.General.Duration;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            FilesAlreadyInList = new HashSet<string>();
+            _filesAlreadyInList = new HashSet<string>();
         }
 
         private void buttonInputBrowse_Click(object sender, EventArgs e)
         {
             buttonInputBrowse.Enabled = false;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Configuration.Settings.Language.ImportImages.ImageFiles + "|*.png;*.jpg;*.bmp;*.gif;*.tif;*.tiff";
+            openFileDialog1.Filter = Configuration.Settings.Language.ImportImages.ImageFiles + "|*.png;*.jpg;*.jpeg;*.bmp;*.gif;*.tif;*.tiff";
             openFileDialog1.Multiselect = true;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 foreach (string fileName in openFileDialog1.FileNames)
                 {
-                    if (!FilesAlreadyInList.Contains(fileName))
+                    if (!_filesAlreadyInList.Contains(fileName))
                         AddInputFile(fileName);
                 }
             }
@@ -54,9 +59,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var item = new ListViewItem(fileName);
                 item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
                 var ext = fi.Extension.ToLowerInvariant();
-                if (ext == ".png" || ext == ".jpg" || ext == ".bmp" || ext == ".gif" || ext == ".tif" || ext == ".tiff")
+                if (ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".bmp" || ext == ".gif" || ext == ".tif" || ext == ".tiff")
                 {
-                    FilesAlreadyInList.Add(fileName);
+                    _filesAlreadyInList.Add(fileName);
                     SetTimeCodes(fileName, item);
                     listViewInputFiles.Items.Add(item);
                 }
@@ -91,14 +96,28 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            else if (TimeCodeFormat1.IsMatch(name) || TimeCodeFormat2.IsMatch(name))
+            {
+                var arr = name.Replace("__", "_").Split('_');
+                if (arr.Length >= 8)
+                {
+                    try
+                    {
+                        p.StartTime = new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3]));
+                        p.EndTime = new TimeCode(int.Parse(arr[4]), int.Parse(arr[5]), int.Parse(arr[6]), int.Parse(arr[7]));
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem item in listViewInputFiles.Items)
             {
-                var p = new Paragraph();
-                p.Text = item.Text;
+                var p = new Paragraph { Text = item.Text };
                 string name = Path.GetFileNameWithoutExtension(p.Text);
                 SetEndTimeAndStartTime(name, p);
                 Subtitle.Paragraphs.Add(p);
@@ -155,7 +174,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (ListViewItem item in listViewInputFiles.Items)
                 {
                     item.Remove();
-                    FilesAlreadyInList.Remove(item.Text);
+                    _filesAlreadyInList.Remove(item.Text);
                 }
             }
             else if (listViewInputFiles.SelectedItems.Count > 0)
@@ -163,7 +182,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (ListViewItem item in listViewInputFiles.SelectedItems)
                 {
                     item.Remove();
-                    FilesAlreadyInList.Remove(item.Text);
+                    _filesAlreadyInList.Remove(item.Text);
                 }
             }
         }
@@ -177,5 +196,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             RemoveSelection(true);
         }
+
     }
 }
