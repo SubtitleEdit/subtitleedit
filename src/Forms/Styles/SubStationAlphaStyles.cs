@@ -574,9 +574,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 {
                     if (colorChooser.ShowDialog() == DialogResult.OK)
                     {
+                        panelPrimaryColor.BackColor = colorChooser.Color;
                         listViewStyles.SelectedItems[0].SubItems[4].BackColor = panelPrimaryColor.BackColor;
                         listViewStyles.SelectedItems[0].SubItems[5].ForeColor = panelPrimaryColor.BackColor;
-                        panelPrimaryColor.BackColor = colorChooser.Color;
                         listViewStyles.SelectedItems[0].SubItems[4].BackColor = panelPrimaryColor.BackColor;
                         SetSsaStyle(name, "primarycolour", GetSsaColorString(panelPrimaryColor.BackColor));
                         GeneratePreview();
