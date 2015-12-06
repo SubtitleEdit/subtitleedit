@@ -372,7 +372,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <TextAndTimingInformation>Texte et informations de synchronisation</TextAndTimingInformation>
     <JustificationCode>Justification</JustificationCode>
     <Teletext>Télétexte</Teletext>
-    <UseBox>Afficher le texte texte en boîte</UseBox>
+    <UseBox>Afficher le texte en boîte</UseBox>
     <DoubleHeight>Afficher le texte à double hauteur</DoubleHeight>
     <Errors>Erreurs</Errors>
     <ErrorsX>Erreurs: {0}</ErrorsX>
