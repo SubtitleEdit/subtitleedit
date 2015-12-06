@@ -751,12 +751,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
             "whispers",
             "whistles"
         });
+
         private bool IsHIDescription(string text)
         {
-            text = text.Trim(' ', '(', ')', '[', ']', '?', '{', '}');
-            text = text.ToLower();
-
-            text = text.ToLower();
+            text = text.Trim(' ', '(', ')', '[', ']', '?', '{', '}').ToLower();
             if (text.Trim().Replace("mr. ", string.Empty).Replace("mrs. ", string.Empty).Replace("dr. ", string.Empty).Contains(' '))
                 AddWarning();
 
