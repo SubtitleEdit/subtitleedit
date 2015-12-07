@@ -111,11 +111,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generowanie spektrogramu...</GeneratingSpectrogram>
     <ExtractingSeconds>Wyodrębnione audio: {0:0.0} sek.</ExtractingSeconds>
     <ExtractingMinutes>Wyodrębnione audio: {0:0.0} min.</ExtractingMinutes>
-    <WaveFileNotFound>Nie można znaleźć wyodrębnionego pliku wave!
+    <WaveFileNotFound>Nie można znaleźć wyodrębnionego pliku wave! 
 Ta funkcja wymaga VLC media player 1.1.x lub nowszego ({0}-bit). Wiersz poleceń: {1} {2}</WaveFileNotFound>
-    <WaveFileMalformed>{0} nie był w stanie wyodrębnić danych audio do pliku wave!
+    <WaveFileMalformed>{0} nie był w stanie wyodrębnić danych audio do pliku wave! 
 
-Wiersz poleceń: {1} {2}
+Wiersz poleceń: {1} {2} 
 
 Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <LowDiskSpace>MAŁO MIEJSCA NA DYSKU!</LowDiskSpace>
@@ -220,6 +220,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Dostosuj szybkość w procentach</Title>
+    <TitleShort>Dostosuj szybkość</TitleShort>
     <Info>Zmień szybkość napisów w procentach</Info>
     <Custom>Niestandardowo</Custom>
     <ToDropFrame>Do upuszczonej klatki</ToDropFrame>
@@ -340,7 +341,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Title>Wybierz języka</Title>
     <ChooseLanguageStreamId>Wybierz język (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Nieznany język</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Obraz napisów</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -368,6 +369,9 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Import>Importuj...</Import>
     <TextAndTimingInformation>Tekst i informacje o synchronizacji</TextAndTimingInformation>
     <JustificationCode>Kod justowania</JustificationCode>
+    <Teletext>Teletekst</Teletext>
+    <UseBox>Użyj pola wokół tekstu</UseBox>
+    <DoubleHeight>Użyj podwójnej wysokości tekstu</DoubleHeight>
     <Errors>Błędy</Errors>
     <ErrorsX>Błędów</ErrorsX>
     <MaxLengthError>Linia {0} przekracza maksymalną długość ({1}) o {2}: {3}</MaxLengthError>
@@ -942,7 +946,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Połącz zaznaczone linie jako dialog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Połącz z linią przed</MergeWithLineBefore>
         <MergeWithLineAfter>Połącz z linią po</MergeWithLineAfter>
-        <Normal>Zwykły</Normal>
+        <Normal>Normalny (usunięcie formatowania)</Normal>
         <Underline>Podkreślenie</Underline>
         <Color>Kolor...</Color>
         <FontName>Czcionka...</FontName>
@@ -1285,7 +1289,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <ErrorLoadJpg>Ten plik wydaje się być plikiem JPG. W Subtitle Edit nie można otworzyć plików JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Ten plik wydaje się być plikiem ReScene .srr - to nie jest plik z napisami.</ErrorLoadSrr>
     <ErrorLoadTorrent>Ten plik wydaje się być plikiem BitTorrent - to nie jest plik z napisami.</ErrorLoadTorrent>
-    <ErrorLoadBinaryZeroes>Przepraszamy, ten plik zawiera tylko zera binarne!
+    <ErrorLoadBinaryZeroes>Przepraszamy, ten plik zawiera tylko zera binarne! 
 
 Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapasową poprzez pozycję menu Plik -&gt; Przywróć automatycznie zapisaną kopię zapasową...</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Upuszczanie katalogu nie jest tutaj obsługiwane.</ErrorDirectoryDropNotAllowed>
@@ -1383,7 +1387,7 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
   <NetworkJoin>
     <Title>Dołącz do sesji sieciowej</Title>
     <Information>Dołącz do istniejącej sesji, w której wiele osób
-może edytować ten sam plik z napisami (współpracować)</Information>
+ może edytować ten sam plik z napisami (współpracować)</Information>
     <Join>Dołącz</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1394,7 +1398,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <Title>Uruchom sesję sieciową</Title>
     <ConnectionTo>Łączenie się z {0}...</ConnectionTo>
     <Information>Rozpocznij nową sesję, w której wiele osób
-może edytować ten sam plik z napisami (współpracować)</Information>
+ może edytować ten sam plik z napisami (współpracować)</Information>
     <Start>Start</Start>
   </NetworkStart>
   <OpenVideoDvd>
@@ -1650,7 +1654,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <MusicSymbolsToReplace>Symbole muzyczne do zastąpienia (oddzielone spacją)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw częste błędy OCR - także z użyciem sztywnych reguł</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania
-(z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+	(z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Pomiń pierwszy krok (wybór zasad poprawy)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Skróty klawiszowe</Shortcuts>
     <Shortcut>Skrót</Shortcut>
     <Control>Ctrl</Control>
@@ -1690,6 +1695,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <WaveformSeekSilenceForward>Szukaj ciszy do przodu</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Szukaj ciszy wstecz</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Dodaj tutaj tekst (dla nowego zaznaczenia)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>Dodaj tutaj tekst (dla nowego zaznaczenia ze schowka)</WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>Odtwarzaj zaznaczenie</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Odtwarzaj koniec zaznaczenia</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Odtwarzaj pierwsze zaznaczone napisy</WaveformPlayFirstSelectedSubtitle>
@@ -1818,8 +1824,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <LineMaximumLength>Maksymalna długość linii</LineMaximumLength>
     <LineContinuationBeginEndStrings>Znak kontynuacji na początku/końcu linii</LineContinuationBeginEndStrings>
     <NumberOfSplits>Ilość podzielonych: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków</LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków</LongestLineIsXAtY>
+    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków </LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków </LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Podziel napisy</Title>
@@ -2070,6 +2076,7 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <Title>Sprawdź porównanie zgodności dla bieżącego obrazu</Title>
     <InspectItems>Sprawdź elementy</InspectItems>
     <AddBetterMatch>Dodaj lepsze dopasowanie</AddBetterMatch>
+    <Add>Dodaj</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nowy folder</Title>
