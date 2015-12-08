@@ -1446,10 +1446,25 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void RemoveInterjectionKeepEndingQuestionMark()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            const string text = "So you mean that oh?";
+            const string expected = "So you mean that?";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
 
-
-
-
+        [TestMethod]
+        public void RemoveInterjectionKeepEndingEx()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            const string text = "So you mean that oh!";
+            const string expected = "So you mean that!";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
 
         #region Additional test attributes
 
