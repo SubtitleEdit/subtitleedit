@@ -906,6 +906,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                         temp = temp.Remove(subIndex, 1);
                                         removeAfter = false;
                                     }
+                                    subTemp = temp.Substring(subIndex);
+                                    if (subTemp == " !" || subTemp == " ?" || subTemp == " .")
+                                    {
+                                        temp = temp.Remove(subIndex, 1);
+                                        removeAfter = false;
+                                    }
                                 }
                             }
 
