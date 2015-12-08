@@ -76,12 +76,11 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Items.Clear();
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
-                string text = p.Text;
+                var text = p.Text;
+                var textNoTags = HtmlUtil.RemoveHtmlTags(text);
                 foreach (ListViewItem item in listViewNames.Items)
                 {
-                    string name = item.SubItems[1].Text;
-
-                    string textNoTags = HtmlUtil.RemoveHtmlTags(text);
+                    var name = item.SubItems[1].Text;
                     if (textNoTags != textNoTags.ToUpper())
                     {
                         if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLower())
@@ -93,18 +92,18 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 if (text != p.Text)
-                    AddToPreviewListView(p, text);
+                    AddToPreviewListView(p, textNoTags, HtmlUtil.RemoveHtmlTags(text, true));
             }
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.ChangeCasingNames.LinesFoundX, listViewFixes.Items.Count);
             Cursor = Cursors.Default;
         }
 
-        private void AddToPreviewListView(Paragraph p, string newText)
+        private void AddToPreviewListView(Paragraph p, string noTagBefore, string newText)
         {
             var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
             item.SubItems.Add(p.Number.ToString(CultureInfo.InvariantCulture));
-            item.SubItems.Add(p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            item.SubItems.Add(noTagBefore.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             item.SubItems.Add(newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             listViewFixes.Items.Add(item);
         }
