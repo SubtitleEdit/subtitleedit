@@ -553,7 +553,7 @@
     <RegEx find="([bB])lj?ed([aeiouj])" replaceWith="$1lijed$2" />
     <RegEx find="([bB])ole(l[aieo]|ti)\b" replaceWith="$1olje$2" />
     <RegEx find="([bB])oleo\b" replaceWith="$1olio" />
-    <RegEx find="([bB])ožij([aeiu]|om|ima)?\b" replaceWith="$1ožj$2" />
+    <RegEx find="([bB])ožij([aeiu]|e[mg]|om|ima)?\b" replaceWith="$1ožj$2" />
     <RegEx find="boži[čć]([aeiu]|em|ima)?\b" replaceWith="Božić$1" />
     <RegEx find="(?&lt;!\A|[.!?][&quot;”’]?\s+)\bBoži[čć]n([aeiou]|om|im)\b" replaceWith="božićn$1" />
     <RegEx find="bukval(a?)n" replaceWith="doslov$1n" />
@@ -917,7 +917,7 @@
     <RegEx find="([oO])ružij([aeu])" replaceWith="$1ružj$2" />
     <RegEx find="([oO])seti([lošmt])?" replaceWith="$1sjeti$2" />
     <RegEx find="([oO])setljiv" replaceWith="$1sjetljiv" />
-    <RegEx find="([oO])sj?e[ćč]a" replaceWith="$1sjeća" />
+    <RegEx find="(?&lt;![Dd]rv)([oO])sj?e[ćč]a" replaceWith="$1sjeća" />
     <RegEx find="([oO])slobodić([eu])" replaceWith="$1slobodit ć$2" />
     <RegEx find="([oO])sta[čć]([eu])" replaceWith="$1stat ć$2" />
     <RegEx find="([oO])strv([au]|om)" replaceWith="$1tok$2" />
@@ -1227,6 +1227,7 @@
     <RegEx find="\b([uUcC])vet([aeiu]|om|ima|n[aeiou]|nima?|no[mgj])?\b" replaceWith="$1vjet$2" />
     <RegEx find="\b([uU])v([oau]|om)\b" replaceWith="$1h$2" />
     <RegEx find="\b([uU])zeć([eu])" replaceWith="$1zet ć$2" />
+    <RegEx find="uveče" replaceWith="navečer" />
     <RegEx find="([uU])zok" replaceWith="$1zrok" />
     <RegEx find="(?&lt;!z)vanred" replaceWith="izvanred" />
     <RegEx find="(?&lt;!z)Vanred" replaceWith="Izvanred" />
@@ -1296,6 +1297,7 @@
     <RegEx find="\bZavis([ni])" replaceWith="Ovis$1" />
     <RegEx find="zvaničn" replaceWith="služben" />
     <RegEx find="Zvaničn" replaceWith="Služben" />
+    <RegEx find="([zZ])([nv])ać" replaceWith="$1$2at ć" />
     <RegEx find="([zZ])vj?er(i|ima)?" replaceWith="$1vijer$2" />
     <RegEx find="\b([zZ])vj?ezd([aeiou]|ama)\b" replaceWith="$1vijezd$2" />
     <RegEx find="([zZ])vezd([ai])" replaceWith="$1vjezd$2" />
@@ -1306,6 +1308,7 @@
     <RegEx find="([žŽ])iveć([eu])" replaceWith="$1ivjet ć$2" />
     <RegEx find="([žŽ])iveo" replaceWith="$1ivio" />
     <RegEx find="([žŽ])lj?ezd([aeiou])" replaceWith="$1lijezd$2" />
+    <RegEx find="([žŽ])muri" replaceWith="$1miri" />
     <RegEx find="žur[ck]" replaceWith="zabav" />
     <RegEx find="Žur[ck]" replaceWith="Zabav" />
     <RegEx find="([sSzZ])amnom" replaceWith="$1a mnom" />
@@ -1366,6 +1369,7 @@
     <RegEx find="tćeš" replaceWith="t ćeš" />
     <RegEx find="tede([lt])" replaceWith="tedje$1" />
     <RegEx find="tešn" replaceWith="tješn" />
+    <RegEx find="tisanj" replaceWith="tiranj" />
     <RegEx find="tiviše" replaceWith="tivira" />
     <RegEx find="triše" replaceWith="trira" />
     <RegEx find="triši" replaceWith="triraj" />
@@ -1383,6 +1387,7 @@
     <!-- osobna imena/prezimena i imena gradova/država itd. -->
     <RegEx find="Afghanistan" replaceWith="Afganistan" />
     <RegEx find="Ajdah" replaceWith="Idah" />
+    <RegEx find="Ajland" replaceWith="Island" />
     <RegEx find="([Aa])lzh[ae]jmer" replaceWith="$1lzheimer" />
     <RegEx find="Avgani" replaceWith="Afgani" />
     <RegEx find="Belgijan" replaceWith="Belgij" />
@@ -1422,6 +1427,7 @@
     <RegEx find="Filadelfij" replaceWith="Philadelphi" />
     <RegEx find="\bFrojd" replaceWith="Freud" />
     <RegEx find="\bĐovani" replaceWith="Giovanni" />
+    <RegEx find="Hauard" replaceWith="Howard" />
     <RegEx find="Holandij" replaceWith="Nizozemsk" />
     <RegEx find="Holivud" replaceWith="Hollywood" />
     <RegEx find="Hitrou" replaceWith="Heathrow" />
@@ -1465,7 +1471,7 @@
     <RegEx find="([šŠ])vetsk" replaceWith="$1vedsk" />
     <RegEx find="([šŠ])vajcarsk" replaceWith="$1vicarsk" />
     <RegEx find="Tajms" replaceWith="Times" />
-    <RegEx find="Vašington" replaceWith="Washington" />
+    <RegEx find="V[ao]šington" replaceWith="Washington" />
     <RegEx find="Vejn" replaceWith="Wayne" />
     <RegEx find="Vinsent" replaceWith="Vincent" />
     <RegEx find="Viskonsin" replaceWith="Wisconsin" />
