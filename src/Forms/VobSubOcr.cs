@@ -1245,36 +1245,42 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_mp4List != null)
             {
-                if (checkBoxCustomFourColors.Checked)
+                if (index >= 0 && index < _mp4List.Count)
                 {
-                    GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
+                    if (checkBoxCustomFourColors.Checked)
+                    {
+                        GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
 
-                    returnBmp = _mp4List[index].Picture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
-                    if (checkBoxAutoTransparentBackground.Checked)
-                        returnBmp.MakeTransparent();
-                }
-                else
-                {
-                    returnBmp = _mp4List[index].Picture.GetBitmap(null, Color.Transparent, Color.Black, Color.White, Color.Black, false);
-                    if (checkBoxAutoTransparentBackground.Checked)
-                        returnBmp.MakeTransparent();
+                        returnBmp = _mp4List[index].Picture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
+                        if (checkBoxAutoTransparentBackground.Checked)
+                            returnBmp.MakeTransparent();
+                    }
+                    else
+                    {
+                        returnBmp = _mp4List[index].Picture.GetBitmap(null, Color.Transparent, Color.Black, Color.White, Color.Black, false);
+                        if (checkBoxAutoTransparentBackground.Checked)
+                            returnBmp.MakeTransparent();
+                    }
                 }
             }
             else if (_spList != null)
             {
-                if (checkBoxCustomFourColors.Checked)
+                if (index >= 0 && index < _spList.Count)
                 {
-                    GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
+                    if (checkBoxCustomFourColors.Checked)
+                    {
+                        GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
 
-                    returnBmp = _spList[index].Picture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
-                    if (checkBoxAutoTransparentBackground.Checked)
-                        returnBmp.MakeTransparent();
-                }
-                else
-                {
-                    returnBmp = _spList[index].Picture.GetBitmap(null, Color.Transparent, Color.Black, Color.White, Color.Black, false);
-                    if (checkBoxAutoTransparentBackground.Checked)
-                        returnBmp.MakeTransparent();
+                        returnBmp = _spList[index].Picture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
+                        if (checkBoxAutoTransparentBackground.Checked)
+                            returnBmp.MakeTransparent();
+                    }
+                    else
+                    {
+                        returnBmp = _spList[index].Picture.GetBitmap(null, Color.Transparent, Color.Black, Color.White, Color.Black, false);
+                        if (checkBoxAutoTransparentBackground.Checked)
+                            returnBmp.MakeTransparent();
+                    }
                 }
             }
             else if (_bdnXmlSubtitle != null)
@@ -1376,48 +1382,60 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_xSubList != null)
             {
-                if (checkBoxCustomFourColors.Checked)
+                if (index >= 0 && index < _xSubList.Count)
                 {
-                    GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
-                    returnBmp = _xSubList[index].GetImage(background, pattern, emphasis1, emphasis2);
-                }
-                else
-                {
-                    returnBmp = _xSubList[index].GetImage();
+                    if (checkBoxCustomFourColors.Checked)
+                    {
+                        GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
+                        returnBmp = _xSubList[index].GetImage(background, pattern, emphasis1, emphasis2);
+                    }
+                    else
+                    {
+                        returnBmp = _xSubList[index].GetImage();
+                    }
                 }
             }
             else if (_dvbSubtitles != null)
             {
-                var dvbBmp = _dvbSubtitles[index].GetActiveImage();
-                var nDvbBmp = new NikseBitmap(dvbBmp);
-                nDvbBmp.CropTopTransparent(2);
-                nDvbBmp.CropTransparentSidesAndBottom(2, true);
-                if (checkBoxTransportStreamGetColorAndSplit.Checked)
-                    _dvbSubColor = nDvbBmp.GetBrightestColor();
-                if (checkBoxAutoTransparentBackground.Checked)
-                    nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
-                if (checkBoxTransportStreamGrayscale.Checked)
-                    nDvbBmp.GrayScale();
-                dvbBmp.Dispose();
-                returnBmp = nDvbBmp.GetBitmap();
+                if (index >= 0 && index < _dvbSubtitles.Count)
+                {
+                    var dvbBmp = _dvbSubtitles[index].GetActiveImage();
+                    var nDvbBmp = new NikseBitmap(dvbBmp);
+                    nDvbBmp.CropTopTransparent(2);
+                    nDvbBmp.CropTransparentSidesAndBottom(2, true);
+                    if (checkBoxTransportStreamGetColorAndSplit.Checked)
+                        _dvbSubColor = nDvbBmp.GetBrightestColor();
+                    if (checkBoxAutoTransparentBackground.Checked)
+                        nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
+                    if (checkBoxTransportStreamGrayscale.Checked)
+                        nDvbBmp.GrayScale();
+                    dvbBmp.Dispose();
+                    returnBmp = nDvbBmp.GetBitmap();
+                }
             }
             else if (_bluRaySubtitlesOriginal != null)
             {
-                returnBmp = _bluRaySubtitles[index].GetBitmap();
+                if (index >= 0 && index < _bluRaySubtitles.Count)
+                {
+                    returnBmp = _bluRaySubtitles[index].GetBitmap();
+                }
             }
-            else if (checkBoxCustomFourColors.Checked)
+            else if (index >= 0 && index < _vobSubMergedPackist.Count)
             {
-                GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
+                if (checkBoxCustomFourColors.Checked)
+                {
+                    GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
 
-                returnBmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
-                if (checkBoxAutoTransparentBackground.Checked)
-                    returnBmp.MakeTransparent();
-            }
-            else
-            {
-                returnBmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black, false);
-                if (checkBoxAutoTransparentBackground.Checked)
-                    returnBmp.MakeTransparent();
+                    returnBmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
+                    if (checkBoxAutoTransparentBackground.Checked)
+                        returnBmp.MakeTransparent();
+                }
+                else
+                {
+                    returnBmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black, false);
+                    if (checkBoxAutoTransparentBackground.Checked)
+                        returnBmp.MakeTransparent();
+                }
             }
 
             if (returnBmp == null)
