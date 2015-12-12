@@ -44,10 +44,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
         private static readonly Regex RegexAloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
         private static readonly Regex RegexAloneIasL = new Regex(@"\bl\b", RegexOptions.Compiled);
-        private static readonly Regex RegexSpaceBetweenNumbers = new Regex(@"\d \d", RegexOptions.Compiled);
-        private static readonly Regex RegExLowercaseL = new Regex("[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]l[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]", RegexOptions.Compiled);
-        private static readonly Regex RegExUppercaseI = new Regex("[a-zæøåöääöéèàùâêîôûëï]I.", RegexOptions.Compiled);
-        private static readonly Regex RegExNumber1 = new Regex(@"\d\ 1", RegexOptions.Compiled);
+        private static readonly Regex RegexLowercaseL = new Regex("[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]l[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]", RegexOptions.Compiled);
+        private static readonly Regex RegexUppercaseI = new Regex("[a-zæøåöääöéèàùâêîôûëï]I.", RegexOptions.Compiled);
+        private static readonly Regex RegexNumber1 = new Regex(@"\d\ 1", RegexOptions.Compiled);
 
         public bool Abort { get; set; }
         public List<string> AutoGuessesUsed { get; set; }
@@ -438,7 +437,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     text = FixFrenchLApostrophe(text, " l’", lastLine);
                 }
 
-                text = RemoveSpaceBetweenNumbers(text);
+                text = Utilities.RemoveSpaceBetweenNumbers(text);
             }
             return text;
         }
@@ -568,29 +567,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 sb.Append(fixedWord);
             }
             return sb.ToString();
-        }
-
-        private static string RemoveSpaceBetweenNumbers(string text)
-        {
-            Match match = RegexSpaceBetweenNumbers.Match(text);
-            while (match.Success)
-            {
-                bool doFix = true;
-
-                if (match.Index + 4 < text.Length && text[match.Index + 3] == '/' && char.IsDigit(text[match.Index + 4]))
-                    doFix = false;
-
-                if (doFix)
-                {
-                    text = text.Remove(match.Index + 1, 1);
-                    match = RegexSpaceBetweenNumbers.Match(text);
-                }
-                else
-                {
-                    match = RegexSpaceBetweenNumbers.Match(text, match.Index + 1);
-                }
-            }
-            return text;
         }
 
         public static string FixLowerCaseLInsideUpperCaseWord(string word)
@@ -879,7 +855,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             // change '<number><space>1' to '<number>1'
             if (input.Contains('1'))
             {
-                Match match = RegExNumber1.Match(input);
+                Match match = RegexNumber1.Match(input);
                 while (match.Success)
                 {
                     bool doFix = true;
@@ -890,11 +866,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     if (doFix)
                     {
                         input = input.Substring(0, match.Index + 1) + input.Substring(match.Index + 2);
-                        match = RegExNumber1.Match(input);
+                        match = RegexNumber1.Match(input);
                     }
                     else
                     {
-                        match = RegExNumber1.Match(input, match.Index + 1);
+                        match = RegexNumber1.Match(input, match.Index + 1);
                     }
                 }
             }
@@ -905,7 +881,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             // change 'sequeI of' to 'sequel of'
             if (input.Contains('I'))
             {
-                var match = RegExUppercaseI.Match(input);
+                var match = RegexUppercaseI.Match(input);
                 while (match.Success)
                 {
                     bool doFix = true;
@@ -918,7 +894,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         input = input.Substring(0, match.Index + 1) + "l" + input.Substring(match.Index + 2);
 
                     if (match.Index + 1 < input.Length)
-                        match = RegExUppercaseI.Match(input, match.Index + 1);
+                        match = RegexUppercaseI.Match(input, match.Index + 1);
                     else
                         break; // end while
                 }
@@ -927,11 +903,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             // change 'NlCE' to 'NICE'
             if (input.Contains('l'))
             {
-                var match = RegExLowercaseL.Match(input);
+                var match = RegexLowercaseL.Match(input);
                 while (match.Success)
                 {
                     input = input.Substring(0, match.Index + 1) + "I" + input.Substring(match.Index + 2);
-                    match = RegExLowercaseL.Match(input);
+                    match = RegexLowercaseL.Match(input);
                 }
             }
 

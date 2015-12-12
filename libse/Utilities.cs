@@ -1679,6 +1679,22 @@ namespace Nikse.SubtitleEdit.Core
             return sb.ToString();
         }
 
+        private static readonly Regex RemoveSpaceBetweenNumbersRegex = new Regex(@"(?<=\b\d+) \d(?!/\d)", RegexOptions.Compiled);
+
+        public static string RemoveSpaceBetweenNumbers(string text)
+        {
+            if (!string.IsNullOrEmpty(text))
+            {
+                var match = RemoveSpaceBetweenNumbersRegex.Match(text);
+                while (match.Success)
+                {
+                    text = text.Remove(match.Index, 1);
+                    match = RemoveSpaceBetweenNumbersRegex.Match(text, match.Index);
+                }
+            }
+            return text;
+        }
+
         /// <summary>
         /// Remove unneeded spaces
         /// </summary>
