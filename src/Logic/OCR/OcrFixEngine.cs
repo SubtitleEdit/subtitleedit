@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private static readonly Regex RegexAloneIasL = new Regex(@"\bl\b", RegexOptions.Compiled);
         private static readonly Regex RegexLowercaseL = new Regex("[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]l[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]", RegexOptions.Compiled);
         private static readonly Regex RegexUppercaseI = new Regex("[a-zæøåöääöéèàùâêîôûëï]I.", RegexOptions.Compiled);
-        private static readonly Regex RegexNumber1 = new Regex(@"\d\ 1", RegexOptions.Compiled);
+        private static readonly Regex RegexNumber1 = new Regex(@"(?<=\d) 1(?!/\d)", RegexOptions.Compiled);
 
         public bool Abort { get; set; }
         public List<string> AutoGuessesUsed { get; set; }
@@ -445,7 +445,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private static string FixFrenchLApostrophe(string text, string tag, string lastLine)
         {
             bool endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') ||
-                                    lastLine.EndsWith(".</i>") || lastLine.EndsWith("!</i>", StringComparison.Ordinal) || lastLine.EndsWith("?</i>", StringComparison.Ordinal) ||
+                                    lastLine.EndsWith(".</i>", StringComparison.Ordinal) || lastLine.EndsWith("!</i>", StringComparison.Ordinal) || lastLine.EndsWith("?</i>", StringComparison.Ordinal) ||
                                     lastLine.EndsWith(".</font>", StringComparison.Ordinal) || lastLine.EndsWith("!</font>", StringComparison.Ordinal) || lastLine.EndsWith("?</font>", StringComparison.Ordinal);
             if (text.StartsWith(tag.TrimStart(), StringComparison.Ordinal) && text.Length > 3)
             {
@@ -855,23 +855,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             // change '<number><space>1' to '<number>1'
             if (input.Contains('1'))
             {
-                Match match = RegexNumber1.Match(input);
+                var match = RegexNumber1.Match(input);
                 while (match.Success)
                 {
-                    bool doFix = true;
-
-                    if (match.Index + 4 < input.Length && input[match.Index + 3] == '/' && char.IsDigit(input[match.Index + 4]))
-                        doFix = false;
-
-                    if (doFix)
-                    {
-                        input = input.Substring(0, match.Index + 1) + input.Substring(match.Index + 2);
-                        match = RegexNumber1.Match(input);
-                    }
-                    else
-                    {
-                        match = RegexNumber1.Match(input, match.Index + 1);
-                    }
+                    input = input.Remove(match.Index, 1);
+                    match = RegexNumber1.Match(input, match.Index);
                 }
             }
 
