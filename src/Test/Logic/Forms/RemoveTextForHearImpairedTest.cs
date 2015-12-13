@@ -1466,6 +1466,40 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void RemoveRemoveUppercaseLineNegativeOnlyNumbers()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.RemoveIfAllUppercase = true;
+
+            string text = "Let's count!" + Environment.NewLine + "1.. 2... 3!";
+            string expected = "Let's count!" + Environment.NewLine + "1.. 2... 3!";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveRemoveUppercase()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.RemoveIfAllUppercase = true;
+
+            const string text = "ENGINE STARTING";
+            const string expected = "";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
         #region Additional test attributes
 
         //
