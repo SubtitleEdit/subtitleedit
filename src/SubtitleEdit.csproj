@@ -59,6 +59,7 @@
       <HintPath>packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
@@ -642,6 +643,12 @@
     <Compile Include="Forms\Styles\StylesForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Styles\SubStationAlphaStylesBatchConvert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Styles\SubStationAlphaStylesBatchConvert.Designer.cs">
+      <DependentUpon>SubStationAlphaStylesBatchConvert.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SubStationAlphaProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1146,6 +1153,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StatusLog.resx">
       <DependentUpon>StatusLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Styles\SubStationAlphaStylesBatchConvert.resx">
+      <DependentUpon>SubStationAlphaStylesBatchConvert.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SubStationAlphaProperties.resx">
       <DependentUpon>SubStationAlphaProperties.cs</DependentUpon>
