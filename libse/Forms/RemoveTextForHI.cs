@@ -1239,7 +1239,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             foreach (var line in lines)
             {
                 var lineNoHtml = HtmlUtil.RemoveHtmlTags(line, true);
-                if (lineNoHtml == lineNoHtml.ToUpper() && lineNoHtml.ToUpper() != lineNoHtml.ToLower())
+                if (lineNoHtml == lineNoHtml.ToUpper() && lineNoHtml != lineNoHtml.ToLower())
                 {
                     var temp = lineNoHtml.TrimEnd('.', '!', '?', ':').Trim().Trim(' ', '-', '—');
                     if (temp.Length == 1 || temp == "YES" || temp == "NO" || temp == "WHY" || temp == "HI")
