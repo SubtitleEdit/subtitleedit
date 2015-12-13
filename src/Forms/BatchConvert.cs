@@ -1164,7 +1164,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowAssSsaStyles()
         {
-            SubStationAlphaStyles form = null;
+            SubStationAlphaStylesBatchConvert form = null;
             try
             {
                 var assa = new AdvancedSubStationAlpha();
@@ -1175,8 +1175,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         sub.Header = _assStyle;
                     }
-                    form = new SubStationAlphaStyles(sub, assa);
-                    form.MakeOnlyOneStyle();
+                    form = new SubStationAlphaStylesBatchConvert(sub, assa);
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
                         _assStyle = form.Header;
@@ -1191,7 +1190,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var ssa = new SubStationAlpha();
                     if (comboBoxSubtitleFormats.Text == ssa.Name)
                     {
-                        form = new SubStationAlphaStyles(sub, ssa);
+                        form = new SubStationAlphaStylesBatchConvert(sub, ssa);
                         if (form.ShowDialog(this) == DialogResult.OK)
                         {
                             _ssaStyle = form.Header;

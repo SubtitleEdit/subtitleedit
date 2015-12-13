@@ -1230,14 +1230,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     }
                 }
             }
-        }
-
-        internal void MakeOnlyOneStyle()
-        {
-            groupBoxPreview.Top = groupBoxStyles.Top;
-            groupBoxPreview.Height = groupBoxProperties.Height;
-            groupBoxStyles.SendToBack();
-        }
+        }        
 
         private void buttonExport_Click(object sender, EventArgs e)
         {
