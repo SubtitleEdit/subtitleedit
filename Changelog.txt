@@ -9,8 +9,11 @@
    * Added "change speed" option in "Batch convert" - thx TomONeill
    * Added "Blu-ray sup" output in "Batch convert" - thx Dan
 * IMPROVED:
+   * Updated French/Dutch/German translation - thx xylographe
    * Updated Basque translation - thx Xabier Aramendi
    * Updated Korean translation updated - thx domddol
+   * Updated Portuguese translation - thx moob
+   * Updated Polish translation - thx admas
    * Fixes for Croatian OCR fix replace list - thx xylographe/diomed
    * Batch convert - use generic sub importer if unknown format
    * Improved spell check suggestions (I -> l) - thx Espen
@@ -18,6 +21,8 @@
    * Some improvements for default ASS/SSA style - thx Michael
    * Can now read TTML with time code format hh:mm:ss,ms - thx Krystian
    * Save subtitle through cache to avoid issues with power failure
+   * New options for teletext in "EBU STL"
+   * Batch convert now remembers ASS/SSA style - thx Thunderbolt8
 * FIXED:
    * "Normal (remove formatting)" don't remove Unicode chars - thx Fotis
    * Fixed bug in spell check "word replace" - thx Sami
@@ -40,6 +45,11 @@
    * Fixed crash in save of unknown language track in VobSub - thx Charlie
    * Fix music notation from "#" now ignores font tags - thx ivandrofly
    * Some fixes for the "Advanced Sub Station Alpha" properties window
+   * Fixed bug in color chooser - thx Thunderbolt8
+   * Voikko spell check upgraded to 3.8 (fixes Win 8/10 issues) - thx Jari
+   * Bug in "remove uppercase lines" for hearing impaired - thx Krzysiu
+   * Fixed bug in "Remove interjections" - thx Leinad4Mind
+   * Fixed some crashes in OCR window - xylographe/heforfree
    * + Many minor fixes from ivandrofly and xylographe
 
 
