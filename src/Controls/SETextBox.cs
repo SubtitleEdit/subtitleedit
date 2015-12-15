@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -30,7 +30,12 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SETextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Back)
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
+            {
+                SelectAll();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Back)
             {
                 int index = SelectionStart;
                 if (SelectionLength == 0)
@@ -265,5 +270,6 @@ namespace Nikse.SubtitleEdit.Controls
             }
             SelectionLength = selectionLength;
         }
+
     }
 }
