@@ -6872,13 +6872,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             //Utilities.CheckAutoWrap(textBoxListViewText, e, numberOfNewLines);
 
-            if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
+            if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
             {
-                e.SuppressKeyPress = true;
-            }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
-            {
-                textBoxListViewText.SelectAll();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _mainTextBoxAutoBreak)
@@ -16687,7 +16682,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             //Utilities.CheckAutoWrap(textBoxListViewTextAlternate, e, numberOfNewLines);
 
-            if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
+            if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
             {
                 e.SuppressKeyPress = true;
             }
