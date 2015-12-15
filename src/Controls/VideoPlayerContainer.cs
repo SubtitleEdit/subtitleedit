@@ -698,8 +698,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _pictureBoxReverseOver = new PictureBox
             {
-                Image =
-                                                 (Image)_resources.GetObject("pictureBoxReverseMouseOver.Image"),
+                Image = (Image)_resources.GetObject("pictureBoxReverseMouseOver.Image"),
                 Location = _pictureBoxReverse.Location,
                 Name = "_pictureBoxReverseOver",
                 Size = _pictureBoxReverse.Size,
