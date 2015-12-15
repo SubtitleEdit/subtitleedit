@@ -659,9 +659,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             header.DiskFormatCode.StartsWith("STL35", StringComparison.Ordinal) ||
                             header.DiskFormatCode.StartsWith("STL48", StringComparison.Ordinal) ||
                             header.DiskFormatCode.StartsWith("STL50", StringComparison.Ordinal) ||
-                            header.DiskFormatCode.StartsWith("STL60", StringComparison.Ordinal))
+                            header.DiskFormatCode.StartsWith("STL60", StringComparison.Ordinal) ||
+                            ("012 ".Contains(header.DisplayStandardCode) && "437|850|860|863|865".Contains(header.CodePageNumber)))
                         {
-                            return Utilities.IsInteger(header.CodePageNumber) || fileName.EndsWith("stl", StringComparison.OrdinalIgnoreCase);
+                            return Utilities.IsInteger(header.CodePageNumber) || fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase);
                         }
                     }
                     catch
