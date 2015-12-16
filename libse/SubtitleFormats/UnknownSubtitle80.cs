@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class UnknownSubtitle80 : SubtitleFormat
     {
 
-        // 1	01033902/01034028	xxx
+        // 1<HT>01033902/01034028<HT>xxx
         private static readonly Regex RegexTimeCode = new Regex(@"^\d+\t\d+\/\d+\t", RegexOptions.Compiled);
 
         public override string Extension
@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             const string paragraphWriteFormat = "{0}\t{1}/{2}\t{3}";
             var sb = new StringBuilder();
-            sb.AppendLine("Lambda字幕V4	DF1+1	SCENE\"和文標準\"");
+            sb.AppendLine("Lambda字幕V4\tDF1+1\tSCENE\"和文標準\"");
             sb.AppendLine();
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
