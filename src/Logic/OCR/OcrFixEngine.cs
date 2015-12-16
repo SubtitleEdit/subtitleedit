@@ -366,7 +366,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             text = ReplaceWordsBeforeLineFixes(text);
 
-            text = FixCommenOcrLineErrors(text, lastLine);
+            text = FixCommonOcrLineErrors(text, lastLine);
 
             string lastWord = null;
             for (int i = 0; i < text.Length; i++)
@@ -415,7 +415,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 sb.Append(fixedWord);
             }
 
-            text = FixCommenOcrLineErrors(sb.ToString(), lastLine);
+            text = FixCommonOcrLineErrors(sb.ToString(), lastLine);
             int wordsNotFound;
             text = FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, text, index, null, true, false, logSuggestions, autoGuess);
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
@@ -581,7 +581,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return word;
         }
 
-        private string FixCommenOcrLineErrors(string input, string lastLine)
+        private string FixCommonOcrLineErrors(string input, string lastLine)
         {
             input = FixOcrErrorViaLineReplaceList(input);
             input = FixOcrErrorsViaHardcodedRules(input, lastLine, _abbreviationList);
