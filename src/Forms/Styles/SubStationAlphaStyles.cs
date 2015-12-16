@@ -1230,7 +1230,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     }
                 }
             }
-        }        
+        }
 
         private void buttonExport_Click(object sender, EventArgs e)
         {
