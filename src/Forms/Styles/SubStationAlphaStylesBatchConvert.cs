@@ -219,7 +219,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             numericUpDownVideoWidth.Value = 0;
             numericUpDownVideoHeight.Value = 0;
             checkBoxScaleBorderAndShadow.Checked = false;
-            
+
             ResetHeader();
             textBoxRawHeader_Validated(sender, e);
         }
