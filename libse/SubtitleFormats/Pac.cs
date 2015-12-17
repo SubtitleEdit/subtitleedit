@@ -29,10 +29,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const int CodePageChineseTraditional = 7;
         public const int CodePageChineseSimplified = 8;
         public const int CodePageKorean = 9;
-
+        public const int CodePageJapanese = 10;
         private const int EncodingChineseSimplified = 936;
         private const int EncodingChineseTraditional = 950;
         private const int EncodingKorean = 949;
+        private const int EncodingJapanese = 932;
 
         /// <summary>
         /// Contains Swedish, Danish, German, Spanish, and French letters
@@ -907,6 +908,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 textBuffer = GetW16Bytes(text, alignment, EncodingChineseSimplified);
             else if (_codePage == CodePageKorean)
                 textBuffer = GetW16Bytes(text, alignment, EncodingKorean);
+            else if (_codePage == CodePageJapanese)
+                textBuffer = GetW16Bytes(text, alignment, EncodingJapanese);
             else if (_codePage == CodePageThai)
                 textBuffer = encoding.GetBytes(text.Replace("ต", "€"));
             else
@@ -1155,6 +1158,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             else if (_codePage == CodePageKorean)
                             {
                                 sb.Append(Encoding.GetEncoding(EncodingKorean).GetString(buffer, index, 2));
+                            }
+                            else if (_codePage == CodePageJapanese)
+                            {
+                                sb.Append(Encoding.GetEncoding(EncodingJapanese).GetString(buffer, index, 2));
                             }
                             else
                             {
