@@ -1206,8 +1206,8 @@ koji bi trebao biti usklađen s video datotekom.
     <OcrReplacePairXAdded>Popis OCR zamijeniti par '{0} -&gt; {1}' je dodan na popis OCR zamijeniti</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>Popis OCR zamijeniti par '{0} -&gt; {1}' nije dodan na popis OCR zamijeniti</OcrReplacePairXNotAdded>
     <XLinesSelected>Izabrano linija: {0}</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Podnaslov sadrži unicode glazbene note. Ako ih spremiš u kodnom rasporedu ASCII, izgubit ćete ih. Želiš li nastaviti?</UnicodeMusicSymbolsAnsiWarning>
-    <UnicodeCharactersAnsiWarning>Podnaslovi sadrže Unicode znakove. Spremanje pomoću kodiranja ANSI datoteka će izgubiti njih. Nastaviti sa spremanjem?</UnicodeCharactersAnsiWarning>
+    <UnicodeMusicSymbolsAnsiWarning>Podnaslov sadrži unicode glazbene note. Ako ih spremiš u kodnom rasporedu ASCII, bit će izgubljene. Želiš li nastaviti?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeCharactersAnsiWarning>Podnaslovi sadrže Unicode znakove. Spremanje pomoću kodiranja ANSI datoteka će izgubiti njih. Da nastavim sa spremanjem?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Podnaslov sadrži negativne vremenske odrednice. Želiš li nastaviti?</NegativeTimeWarning>
     <BeforeMergeShortLines>Spojene kratke linije</BeforeMergeShortLines>
     <BeforeSplitLongLines>Razdvojene duge linije</BeforeSplitLongLines>
@@ -2025,7 +2025,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <ShowOnlyForcedSubtitles>Pr&amp;ikaži samo forsirane podnaslove</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Koristi vremenske odrednice iz IDX datoteke</UseTimeCodesFromIdx>
     <NoMatch>&lt;Nema poklapanja&gt;</NoMatch>
-    <AutoTransparentBackground>P&amp;rovidna pozadina</AutoTransparentBackground>
+    <AutoTransparentBackground>P&amp;rozirna pozadina</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Usporedi trenutnu sliku…</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Uredi dopune usporedbi za zadnju sliku…</EditLastAdditions>
     <SetUnitalicFactor>Postavi de-kurziv faktor...</SetUnitalicFactor>
