@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Controls
     /// </summary>
     public class SETextBox : TextBox
     {
-        private const string BreakChars = " \".!?,)([]<>:;♪♫{}-/#*|¿¡\r\n\t";
+        private const string BreakChars = " \".!?,:;¿¡()[]{}<>♪♫-/#*|\t\r\n";
         private string _dragText = string.Empty;
         private int _dragStartFrom = 0;
         private long _dragStartTicks = 0;
@@ -30,13 +30,18 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SETextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Back)
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
             {
-                int index = SelectionStart;
+                SelectAll();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Back)
+            {
                 if (SelectionLength == 0)
                 {
-                    string s = Text;
-                    int deleteFrom = index - 1;
+                    var s = Text;
+                    var index = SelectionStart;
+                    var deleteFrom = index - 1;
 
                     if (deleteFrom > 0 && deleteFrom < s.Length)
                     {
@@ -56,8 +61,8 @@ namespace Nikse.SubtitleEdit.Controls
                         }
                         if (s[deleteFrom] == ' ')
                             deleteFrom++;
-                        Text = s.Remove(deleteFrom, index - deleteFrom);
-                        SelectionStart = deleteFrom;
+                        Select(deleteFrom, index - deleteFrom);
+                        Paste(string.Empty);
                     }
                 }
                 e.SuppressKeyPress = true;
@@ -265,5 +270,6 @@ namespace Nikse.SubtitleEdit.Controls
             }
             SelectionLength = selectionLength;
         }
+
     }
 }
