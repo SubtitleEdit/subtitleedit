@@ -827,10 +827,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowTip(Control control)
         {
-            string sub1Path = control.Text;
-            if (!string.IsNullOrEmpty(sub1Path))
+            var text = control.Text;
+            if (!string.IsNullOrEmpty(text))
             {
-                toolTip1.Show(Path.GetFileName(sub1Path), control);
+                try
+                {
+                    text = Path.GetFileName(text);
+                }
+                catch
+                {
+                    // not a path
+                }
+                toolTip1.Show(text, control);
             }
         }
 
