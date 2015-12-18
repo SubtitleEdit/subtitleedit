@@ -93,23 +93,26 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonRemoveNameEtc_Click(object sender, EventArgs e)
         {
-            int first = 0;
-            var list = new List<int>();
-            foreach (int i in listBoxNoBreakAfter.SelectedIndices)
-                list.Add(i);
-            if (list.Count > 0)
-                first = list[0];
-            list.Sort();
-            for (int i = list.Count - 1; i >= 0; i--)
+            // Exit if listbox is empty
+            if (listBoxNoBreakAfter.SelectedIndices.Count == 0)
+                return;
+
+            // Store first index from selected indices
+            var firstSelected = listBoxNoBreakAfter.SelectedIndices[0];
+
+            // Remove selected indces from list collection
+            for (int i = listBoxNoBreakAfter.SelectedIndices.Count - 1; i >= 0; i--)
             {
-                _noBreakAfterList.RemoveAt(list[i]);
+                _noBreakAfterList.RemoveAt(listBoxNoBreakAfter.SelectedIndices[i]);
             }
+
+            // Update listbox / Remove selected index from listbox
             ShowBreakAfterList(_noBreakAfterList);
-            if (first >= _noBreakAfterList.Count)
-                first = _noBreakAfterList.Count - 1;
-            if (first >= 0)
+
+            if (_noBreakAfterList.Count > 0)
             {
-                listBoxNoBreakAfter.SelectedIndex = first;
+                // Restore selection start index
+                listBoxNoBreakAfter.SelectedIndex = (firstSelected < _noBreakAfterList.Count) ? firstSelected : firstSelected - 1;
             }
             comboBoxDictionaries.Enabled = false;
         }
