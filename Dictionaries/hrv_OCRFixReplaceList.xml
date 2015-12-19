@@ -1102,6 +1102,7 @@
     <RegEx find="Sopstven" replaceWith="Vlastit" />
     <RegEx find="\b([sS]?)([PphH])akova" replaceWith="$1$2akira" />
     <RegEx find="([sS])pakuje" replaceWith="$1pakira" />
+    <RegEx find="([sS])pakuju" replaceWith="$1pakiraju" />
     <RegEx find="([sS])pasava" replaceWith="$1pašava" />
     <RegEx find="([sS])pase(\b|[mšt])" replaceWith="$1pasi$2" />
     <RegEx find="([sS])pasen([aeiou])" replaceWith="$1pašen$2" />
