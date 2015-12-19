@@ -1434,6 +1434,8 @@
     <RegEx find="Iraq" replaceWith="Irak" />
     <RegEx find="in Iraq" replaceWith="u Iraku" />
     <RegEx find="Jejl" replaceWith="Yale" />
+    <RegEx find="Jevrej" replaceWith="Židov" />
+    <RegEx find="jevrej" replaceWith="židov" />
     <RegEx find="Kajl" replaceWith="Kyle" />
     <RegEx find="Kavendiš" replaceWith="Cavendish" />
     <RegEx find="Kejsi" replaceWith="Casey" />
