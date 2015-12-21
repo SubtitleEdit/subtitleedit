@@ -1102,6 +1102,7 @@
     <RegEx find="Sopstven" replaceWith="Vlastit" />
     <RegEx find="\b([sS]?)([PphH])akova" replaceWith="$1$2akira" />
     <RegEx find="([sS])pakuje" replaceWith="$1pakira" />
+    <RegEx find="([sS])pakuju" replaceWith="$1pakiraju" />
     <RegEx find="([sS])pasava" replaceWith="$1pašava" />
     <RegEx find="([sS])pase(\b|[mšt])" replaceWith="$1pasi$2" />
     <RegEx find="([sS])pasen([aeiou])" replaceWith="$1pašen$2" />
@@ -1434,6 +1435,8 @@
     <RegEx find="Iraq" replaceWith="Irak" />
     <RegEx find="in Iraq" replaceWith="u Iraku" />
     <RegEx find="Jejl" replaceWith="Yale" />
+    <RegEx find="Jevrej" replaceWith="Židov" />
+    <RegEx find="jevrej" replaceWith="židov" />
     <RegEx find="Kajl" replaceWith="Kyle" />
     <RegEx find="Kavendiš" replaceWith="Cavendish" />
     <RegEx find="Kejsi" replaceWith="Casey" />
