@@ -72,6 +72,7 @@
             this.listViewTemplates.UseCompatibleStateImageBehavior = false;
             this.listViewTemplates.View = System.Windows.Forms.View.Details;
             this.listViewTemplates.SelectedIndexChanged += new System.EventHandler(this.listViewTemplates_SelectedIndexChanged);
+            this.listViewTemplates.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listViewTemplates_MouseDoubleClick);
             // 
             // columnHeader1
             // 

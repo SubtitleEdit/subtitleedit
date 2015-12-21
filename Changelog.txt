@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.4.11 (xth December 2015) BETA
+3.4.11 (xth January 2016) BETA
 * NEW:
    * New subtitle formats
    * Export to Pac-Unicode and Ayato 3
@@ -23,6 +23,7 @@
    * Save subtitle through cache to avoid issues with power failure
    * New options for teletext in "EBU STL"
    * Batch convert now remembers ASS/SSA style - thx Thunderbolt8
+   * Added Japanese encoding for PAC files
 * FIXED:
    * "Normal (remove formatting)" don't remove Unicode chars - thx Fotis
    * Fixed bug in spell check "word replace" - thx Sami
@@ -50,6 +51,8 @@
    * Bug in "remove uppercase lines" for hearing impaired - thx Krzysiu
    * Fixed bug in "Remove interjections" - thx Leinad4Mind
    * Fixed some crashes in OCR window - xylographe/heforfree
+   * Display fix for frame mode - thx Moritz
+   * Some fixes for updating/deleting custom output templates - thx Wolfgang
    * + Many minor fixes from ivandrofly and xylographe
 
 
