@@ -217,16 +217,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 backgroundColor = Configuration.Settings.Tools.ListViewUnfocusedSelectedColor;
                             else
                             {
-                                int r = backgroundColor.R - 39;
-                                int g = backgroundColor.G - 39;
-                                int b = backgroundColor.B - 39;
-                                if (r < 0)
-                                    r = 0;
-                                if (g < 0)
-                                    g = 0;
-                                if (b < 0)
-                                    b = 0;
-                                backgroundColor = Color.FromArgb(backgroundColor.A, r, g, b);
+                                backgroundColor = GetCustomColor(backgroundColor);
                             }
                             var sb = new SolidBrush(backgroundColor);
                             e.Graphics.FillRectangle(sb, rect);
@@ -248,16 +239,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 backgroundColor = Configuration.Settings.Tools.ListViewUnfocusedSelectedColor;
                             else
                             {
-                                int r = backgroundColor.R - 39;
-                                int g = backgroundColor.G - 39;
-                                int b = backgroundColor.B - 39;
-                                if (r < 0)
-                                    r = 0;
-                                if (g < 0)
-                                    g = 0;
-                                if (b < 0)
-                                    b = 0;
-                                backgroundColor = Color.FromArgb(backgroundColor.A, r, g, b);
+                                backgroundColor = GetCustomColor(backgroundColor);
                             }
                             var sb = new SolidBrush(backgroundColor);
                             e.Graphics.FillRectangle(sb, rect);
@@ -274,6 +256,20 @@ namespace Nikse.SubtitleEdit.Controls
                     e.DrawDefault = true;
                 }
             }
+        }
+
+        private static Color GetCustomColor(Color color)
+        {
+            int r = color.R - 39;
+            int g = color.G - 39;
+            int b = color.B - 39;
+            if (r < 0)
+                r = 0;
+            if (g < 0)
+                g = 0;
+            if (b < 0)
+                b = 0;
+            return Color.FromArgb(color.A, r, g, b);
         }
 
         private void SubtitleListView_DrawItem(object sender, DrawListViewItemEventArgs e)
