@@ -534,7 +534,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 if (italicBeginTagCount == 0 && italicEndTagCount == 1)
                 {
-                    var cleanText = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagCyrillicI);
+                    var cleanText = RemoveOpenCloseTags(text, TagItalic, TagBold, TagUnderline, TagCyrillicI);
                     bool isFixed = false;
 
                     // Foo.</i>
