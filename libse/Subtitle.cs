@@ -429,7 +429,7 @@ namespace Nikse.SubtitleEdit.Core
         /// </summary>
         public int GetIndex(double seconds)
         {
-            var totalMilliseconds = seconds * 1000.0;
+            var totalMilliseconds = seconds * TimeCode.BaseUnit;
             for (int i = 0; i < Paragraphs.Count; i++)
             {
                 var p = Paragraphs[i];
