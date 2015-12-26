@@ -4716,7 +4716,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     adjustDisplayTime.Text += " - " + _language.SelectedLines;
                     selectedIndices = new List<int>();
-                    foreach (int item in  SubtitleListview1.SelectedIndices)
+                    foreach (int item in SubtitleListview1.SelectedIndices)
                     {
                         selectedIndices.Add(item);
                     }
@@ -13859,7 +13859,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     selectedText = selectedText.Trim();
                     selectedText = selectedText.TrimEnd('.', ',', '!', '?');
-                    selectedText = selectedText.Trim();
+                    selectedText = selectedText.TrimEnd();
                     if (!string.IsNullOrEmpty(selectedText) && selectedText != textBoxSearchWord.Text)
                     {
                         textBoxSearchWord.Text = HtmlUtil.RemoveHtmlTags(selectedText);
@@ -14245,11 +14245,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.IsRunningOnLinux())
             {
                 numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 10;
-                numericUpDownDuration.Width = numericUpDownDuration.Width + 10;
-                numericUpDownSec1.Width = numericUpDownSec1.Width + 10;
-                numericUpDownSec2.Width = numericUpDownSec2.Width + 10;
-                numericUpDownSecAdjust1.Width = numericUpDownSecAdjust1.Width + 10;
-                numericUpDownSecAdjust2.Width = numericUpDownSecAdjust2.Width + 10;
+                numericUpDownDuration.Width += 10;
+                numericUpDownSec1.Width += 10;
+                numericUpDownSec2.Width += 10;
+                numericUpDownSecAdjust1.Width += 10;
+                numericUpDownSecAdjust2.Width += 10;
                 labelDuration.Left = numericUpDownDuration.Left;
             }
 
