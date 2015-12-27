@@ -1240,8 +1240,6 @@ namespace Nikse.SubtitleEdit.Core
             return Uri.UnescapeDataString(text);
         }
 
-
-
         public static string FixEnglishTextInRightToLeftLanguage(string text, string reverseChars)
         {
             var sb = new StringBuilder();
@@ -1657,10 +1655,10 @@ namespace Nikse.SubtitleEdit.Core
 
         private static int FindNext(string s, string[] parts, int startIndex)
         {
-            for (int i = startIndex; i < parts.Length; i++)
+            for (; startIndex < parts.Length; startIndex++)
             {
-                if (s == parts[i])
-                    return i;
+                if (s == parts[startIndex])
+                    return startIndex;
             }
             return int.MaxValue;
         }
