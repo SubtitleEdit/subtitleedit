@@ -616,7 +616,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             italic = true;
                             if (content.Count > 0 && content[content.Count - 1] is SubtitleRegionContentChangeFontStyle)
                             {
-                                content.RemoveAt(content.Count - 1); // Remove last style tag (italic/bold will be  combined)
+                                content.RemoveAt(content.Count - 1); // Remove last style tag (italic/bold will be combined)
                             }
                             content.Add(new SubtitleRegionContentChangeFontStyle
                             {
@@ -642,7 +642,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             bold = true;
                             if (content.Count > 0 && content[content.Count - 1] is SubtitleRegionContentChangeFontStyle)
                             {
-                                content.RemoveAt(content.Count - 1); // Remove last style tag (italic/bold will be  combined)
+                                content.RemoveAt(content.Count - 1); // Remove last style tag (italic/bold will be combined)
                             }
                             content.Add(new SubtitleRegionContentChangeFontStyle
                             {

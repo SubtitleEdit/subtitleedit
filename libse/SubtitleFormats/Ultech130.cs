@@ -348,7 +348,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             //}
                             //else if ((codeBytes[14] == '0' && codeBytes[13] == '0' && codeBytes[9] == '0' && codeBytes[6] == '0' && codeBytes[4] == '0' &&
                             //         codeBytes[12] == '1' && codeBytes[10] == '1' && codeBytes[5] == '1') || b == 0x11)
-                            //{ // codeBytes[10]  == 0 ???
+                            //{ // codeBytes[10] == 0 ???
                             //    //control codes
                             //    if (code.Substring(11, 4) == "0111" && buffer[k] == 0x11)
                             //    {

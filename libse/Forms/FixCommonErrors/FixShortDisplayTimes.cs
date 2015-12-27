@@ -103,7 +103,7 @@
                             callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
-                    // Make next subtitle duration shorter +  make current subtitle duration longer
+                    // Make next subtitle duration shorter + make current subtitle duration longer
                     else if (diffMs < 1000 &&
                              Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && Utilities.GetCharactersPerSecond(new Paragraph(next.Text, p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines, next.EndTime.TotalMilliseconds)) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {

@@ -1084,8 +1084,8 @@ namespace Nikse.SubtitleEdit.Core
                  0, // ID length (1 bytes)
                  0, // no color map (1 bytes)
                  2, // uncompressed, true color (1 bytes)
-                 0, 0,  // Color map First Entry Index
-                 0, 0, //  Color map Length
+                 0, 0, // Color map First Entry Index
+                 0, 0, // Color map Length
                  0, // Color map Entry Size
                  0, 0, 0, 0, // x and y origin
                  (byte)(Width & 0x00FF),
@@ -1093,7 +1093,7 @@ namespace Nikse.SubtitleEdit.Core
                  (byte)(Height & 0x00FF),
                  (byte)((Height & 0xFF00) >> 8),
                  32, // pixel depth - 32=32 bit bitmap
-                 0 //  Image Descriptor
+                 0 // Image Descriptor
              };
 
             var pixels = new byte[_bitmapData.Length];

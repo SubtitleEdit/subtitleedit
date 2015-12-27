@@ -485,12 +485,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         string beforeThis = HtmlUtil.RemoveHtmlTags(text.Substring(0, start));
                         endingBeforeThis = beforeThis.EndsWith('.') || beforeThis.EndsWith('!') || beforeThis.EndsWith('?');
                     }
-                  
+
                     if (endingBeforeThis)
                     {
                         text = text.Remove(start + 1, 1).Insert(start + 1, "L");
                     }
-                    else 
+                    else
                     {
                         text = text.Remove(start + 1, 1).Insert(start + 1, "l");
                     }
@@ -516,7 +516,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     {
                         text = text.Remove(start + Environment.NewLine.Length, 1).Insert(start + Environment.NewLine.Length, "L");
                     }
-                    else 
+                    else
                     {
                         text = text.Remove(start + Environment.NewLine.Length, 1).Insert(start + Environment.NewLine.Length, "l");
                     }

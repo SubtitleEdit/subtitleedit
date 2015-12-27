@@ -125,7 +125,7 @@
    * Audio visualizer: Fix crash when using shortcuts without audio
    * Audio visualizer: Fix issues with HH:MM:SS:FF time code format - thx jdpurcell
    * Audio visualizer: Stable end time when using HH:MM:SS:FF time code format - thx ing
-   * Audio visualizer:  Fix new selection disappearing if scrolled out of the left - thx jdpurcell
+   * Audio visualizer: Fix new selection disappearing if scrolled out of the left - thx jdpurcell
    * Inline margin is now loaded/saved in SSA/ASS (can only be edited in source view)
    * Changed LAV Filters link from Google Code to GitHub - thx suvjunmd
    * Fixed bug in FAB export regarding center alignment - thx felagund
@@ -236,7 +236,7 @@
    * Improved speed for "Multiple replace"
 * FIXED:
    * Fixed bugs in ASS/SSA loading - thx kotuwa
-   * Fixed bug in spell check with auto change casing of http -  thx Ivandrofly
+   * Fixed bug in spell check with auto change casing of http - thx Ivandrofly
    * Change language in "Spell check" dialog now loads correct language lists - thx Sami
    * Fixed missing rule for "Fix invalid italic tags" - thx Ivandrofly
    * Fixed possible freeze in video player text - thx Mafu
@@ -605,7 +605,7 @@
    * Added initial support for importing DVB subtitles from transport streams
    * Added "File -> Import images"
    * Added "Tools -> Merge lines with same text"
-   * Importing from plain text file,  "One line is one subtitle" now has a 
+   * Importing from plain text file, "One line is one subtitle" now has a 
      "Line break" option - thx Adrian
    * Added XML subtitle format "FLVCoreCuePoints" - thx Jon
    * Added some support for fxpxml 1.3
