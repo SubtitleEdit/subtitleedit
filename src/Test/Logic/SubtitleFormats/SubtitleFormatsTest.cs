@@ -775,7 +775,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         //                 {
         //                     if (innerFormat.IsMine(list, null))
         //                     {
-        //                         if (format.FriendlyName != innerFormat.FriendlyName  &&
+        //                         if (format.FriendlyName != innerFormat.FriendlyName &&
         //                             !format.FriendlyName.Contains("Final Cut"))
         //                         {
         ////                             Assert.AreEqual(format.FriendlyName, innerFormat.FriendlyName, text);
