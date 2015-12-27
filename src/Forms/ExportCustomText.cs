@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             for (int i = 0; i < _templates.Count; i++)
             {
-                if (_templates[i].StartsWith(name + "Æ", StringComparison.InvariantCultureIgnoreCase))
+                if (_templates[i].StartsWith(name + "Æ", StringComparison.InvariantCulture))
                 {
                     return true;
                 }
@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
                         while (NameExists(name))
                         {
                             form.FormatOk = form.FormatOk.Remove(0, name.Length);
-                            name = name = arr[0] + " (" + i + ")";
+                            name = arr[0] + " (" + i + ")";
                             form.FormatOk = name +  form.FormatOk;
                             i++;
                         }
