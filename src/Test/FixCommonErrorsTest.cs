@@ -1650,5 +1650,39 @@ namespace Test
             }
         }
         #endregion
+
+        #region FixFrenchLApostrophe
+        [TestMethod]
+        public void FixFrenchLApostrophe1()
+        {
+            var res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe("L'Axxxx and l'axxxx", " L'", "Bye.");
+            res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe(res, " l'", "Bye.");
+            Assert.AreEqual("L'Axxxx and l'axxxx", res);
+        }
+
+        [TestMethod]
+        public void FixFrenchLApostrophe2()
+        {
+            var res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe("l'Axxxx and L'axxxx", " L'", "Bye.");
+            res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe(res, " l'", "Bye.");
+            Assert.AreEqual("L'Axxxx and l'axxxx", res);
+        }
+
+        [TestMethod]
+        public void FixFrenchLApostrophe3()
+        {
+            var res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe("l'Axxxx." + Environment.NewLine + "l'axxxx", " L'", "Bye.");
+            res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe(res, " l'", "Bye.");
+            Assert.AreEqual("L'Axxxx." + Environment.NewLine + "L'axxxx", res);
+        }
+
+        [TestMethod]
+        public void FixFrenchLApostrophe4()
+        {
+            var res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe("l'Axxxx and" + Environment.NewLine + "L'axxxx", " L'", "Bye.");
+            res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe(res, " l'", "Bye.");
+            Assert.AreEqual("L'Axxxx and" + Environment.NewLine + "l'axxxx", res);
+        }
+        #endregion
     }
 }
