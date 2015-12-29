@@ -569,18 +569,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return sb.ToString();
         }
 
-        public static string FixLowerCaseLInsideUpperCaseWord(string word)
-        {
-            if (word.Length > 3 && word.Replace("l", string.Empty).ToUpper() == word.Replace("l", string.Empty))
-            {
-                if (!word.Contains(new[] { '<', '>', '\'' }))
-                {
-                    word = word.Replace('l', 'I');
-                }
-            }
-            return word;
-        }
-
         private string FixCommonOcrLineErrors(string input, string lastLine)
         {
             input = FixOcrErrorViaLineReplaceList(input);
