@@ -52,7 +52,13 @@ namespace Nikse.SubtitleEdit.Logic
         {
             FindType = findType;
             _findText = findText;
+
             _replaceText = replaceText;
+            if (_replaceText != null)
+            {
+                _replaceText = _replaceText.Replace("\\n", Environment.NewLine);
+            }
+
             _regEx = regEx;
             _findTextLenght = findText.Length;
             WindowPositionLeft = left;
