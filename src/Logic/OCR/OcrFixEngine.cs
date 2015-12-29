@@ -442,7 +442,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return text;
         }
 
-        private static string FixFrenchLApostrophe(string text, string tag, string lastLine)
+        internal static string FixFrenchLApostrophe(string text, string tag, string lastLine)
         {
             bool endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') ||
                                     lastLine.EndsWith(".</i>", StringComparison.Ordinal) || lastLine.EndsWith("!</i>", StringComparison.Ordinal) || lastLine.EndsWith("?</i>", StringComparison.Ordinal) ||
@@ -480,11 +480,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     if (start == 1 && text.StartsWith('-'))
                         endingBeforeThis = true;
 
-                    if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text[start + 3]))
+                    if (start > 1)
+                    {
+                        string beforeThis = HtmlUtil.RemoveHtmlTags(text.Substring(0, start));
+                        endingBeforeThis = beforeThis.EndsWith('.') || beforeThis.EndsWith('!') || beforeThis.EndsWith('?');
+                    }
+                  
+                    if (endingBeforeThis)
                     {
                         text = text.Remove(start + 1, 1).Insert(start + 1, "L");
                     }
-                    else if (Utilities.LowercaseLetters.Contains(text[start + 3]))
+                    else 
                     {
                         text = text.Remove(start + 1, 1).Insert(start + 1, "l");
                     }
@@ -500,11 +506,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>");
                 if (start < text.Length - 5)
                 {
-                    if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text[start + 2 + Environment.NewLine.Length]))
+                    if (start > 1)
+                    {
+                        string beforeThis = HtmlUtil.RemoveHtmlTags(text.Substring(0, start));
+                        endingBeforeThis = beforeThis.EndsWith('.') || beforeThis.EndsWith('!') || beforeThis.EndsWith('?');
+                    }
+
+                    if (endingBeforeThis)
                     {
                         text = text.Remove(start + Environment.NewLine.Length, 1).Insert(start + Environment.NewLine.Length, "L");
                     }
-                    else if (Utilities.LowercaseLetters.Contains(text[start + 2 + Environment.NewLine.Length]))
+                    else 
                     {
                         text = text.Remove(start + Environment.NewLine.Length, 1).Insert(start + Environment.NewLine.Length, "l");
                     }
