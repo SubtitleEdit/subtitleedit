@@ -7874,18 +7874,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string ChangeAllLinesItalictoSingleItalic(string text)
         {
-            bool allLinesStartAndEndsWithItalic = text.Contains("<i>");
+            if (!text.Contains("<i>"))
+                return text;
             foreach (var line in text.SplitToLines())
             {
                 if (!line.TrimStart().StartsWith("<i>", StringComparison.Ordinal) || !line.TrimEnd().EndsWith("</i>", StringComparison.Ordinal))
-                    allLinesStartAndEndsWithItalic = false;
+                    return text;
             }
-            if (allLinesStartAndEndsWithItalic)
-            {
-                text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic).Trim();
-                text = "<i>" + text + "</i>";
-            }
-            return text;
+            return "<i>" + HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic).Trim() + "</i>";
         }
 
         private void MergeAfterToolStripMenuItemClick(object sender, EventArgs e)
