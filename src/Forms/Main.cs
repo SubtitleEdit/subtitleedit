@@ -7787,6 +7787,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         firstIndex = index;
                         next = index + 1;
+                        first = !first;
                     }
                     else
                     {
@@ -7795,7 +7796,6 @@ namespace Nikse.SubtitleEdit.Forms
                             return;
                         next++;
                     }
-                    first = false;
                     sb.AppendLine(_subtitle.Paragraphs[index].Text);
                     durationMilliseconds += _subtitle.Paragraphs[index].Duration.TotalMilliseconds;
                 }
