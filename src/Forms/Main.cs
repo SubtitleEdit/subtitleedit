@@ -7320,7 +7320,7 @@ namespace Nikse.SubtitleEdit.Forms
                         b = b.Remove(3, 1).Replace("  ", " ");
                     }
                     else if (a.StartsWith('-') && (aTrimmed.EndsWith('.') || aTrimmed.EndsWith('!') || aTrimmed.EndsWith('?')) &&
-                        b.StartsWith("<i>-") && (bTrimmed.EndsWith(".</i>") || bTrimmed.EndsWith("!</i>") || bTrimmed.EndsWith("?</i>")))
+                        b.StartsWith("<i>-", StringComparison.Ordinal) && (bTrimmed.EndsWith(".</i>", StringComparison.Ordinal) || bTrimmed.EndsWith("!</i>", StringComparison.Ordinal) || bTrimmed.EndsWith("?</i>", StringComparison.Ordinal)))
                     {
                         a = a.TrimStart('-').TrimStart();
                         b = b.Remove(3, 1).Replace("  ", " ").Trim();
