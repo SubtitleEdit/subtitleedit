@@ -265,6 +265,7 @@
     <Word from="sedi" to="sjedi" />
     <Word from="Sedi" to="Sjedi" />
     <Word from="sedite" to="sjedite" />
+    <Word from="sesti" to="sjesti" />
     <Word from="sekiraj" to="brini" />
     <Word from="sekiramo" to="brinemo" />
     <Word from="sekirate" to="brinete" />
@@ -1036,6 +1037,7 @@
     <RegEx find="put[ae]?r" replaceWith="maslac" />
     <RegEx find="Put[ae]?r" replaceWith="Maslac" />
     <RegEx find="([rR])azmen" replaceWith="$1azmjen" />
+    <RegEx find="([rR])azočaren" replaceWith="$1azočaran" />
     <RegEx find="([rR])azumi?j?eć([eu])" replaceWith="$1azumjet ć$2" />
     <RegEx find="([rR])azume([lt])" replaceWith="$1azumje$2" />
     <RegEx find="([rR])azumi?j?eo" replaceWith="$1azumio" />
@@ -1403,7 +1405,7 @@
     <RegEx find="Darvin([aeiou]|om)?" replaceWith="Darwin$1" />
     <RegEx find="Dejl" replaceWith="Dale" />
     <RegEx find="Dejv([au]|om)\b" replaceWith="Dave$1" />
-    <RegEx find="Dejvid" replaceWith="David" />
+    <RegEx find="Dejvi([ds])" replaceWith="Davi$1" />
     <RegEx find="Dru\b" replaceWith="Drew" />
     <RegEx find="Đošua" replaceWith="Joshua" />
     <RegEx find="Džastin" replaceWith="Justin" />
