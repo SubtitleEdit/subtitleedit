@@ -356,29 +356,29 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 else if (eventsStarted && !string.IsNullOrWhiteSpace(line))
                 {
                     string s = line.Trim().ToLower();
-                    if (s.StartsWith("format:", StringComparison.Ordinal) && line.Length > 10)
+                    if (line.Length > 10 && s.StartsWith("format:", StringComparison.Ordinal))
                     {
-                        var format = line.ToLower().Substring(8).Split(',');
+                        var format = s.Substring(8).Split(',');
                         for (int i = 0; i < format.Length; i++)
                         {
                             var formatTrimmed = format[i].Trim();
-                            if (formatTrimmed.Equals("layer", StringComparison.OrdinalIgnoreCase))
+                            if (formatTrimmed.Equals("layer", StringComparison.Ordinal))
                                 indexLayer = i;
-                            else if (formatTrimmed.Equals("start", StringComparison.OrdinalIgnoreCase))
+                            else if (formatTrimmed.Equals("start", StringComparison.Ordinal))
                                 indexStart = i;
-                            else if (formatTrimmed.Equals("end", StringComparison.OrdinalIgnoreCase))
+                            else if (formatTrimmed.Equals("end", StringComparison.Ordinal))
                                 indexEnd = i;
-                            else if (formatTrimmed.Equals("text", StringComparison.OrdinalIgnoreCase))
+                            else if (formatTrimmed.Equals("text", StringComparison.Ordinal))
                                 indexText = i;
-                            else if (formatTrimmed.Equals("effect", StringComparison.OrdinalIgnoreCase))
+                            else if (formatTrimmed.Equals("effect", StringComparison.Ordinal))
                                 indexEffect = i;
-                            else if (formatTrimmed.Equals("style", StringComparison.OrdinalIgnoreCase))
+                            else if (formatTrimmed.Equals("style", StringComparison.Ordinal))
                                 indexStyle = i;
-                            else if (formatTrimmed.Equals("marginl", StringComparison.OrdinalIgnoreCase))
+                            else if (formatTrimmed.Equals("marginl", StringComparison.Ordinal))
                                 indexMarginL = i;
-                            else if (formatTrimmed.Equals("marginr", StringComparison.OrdinalIgnoreCase))
+                            else if (formatTrimmed.Equals("marginr", StringComparison.Ordinal))
                                 indexMarginR = i;
-                            else if (formatTrimmed.Equals("marginv", StringComparison.OrdinalIgnoreCase))
+                            else if (formatTrimmed.Equals("marginv", StringComparison.Ordinal))
                                 indexMarginV = i;
                         }
                     }

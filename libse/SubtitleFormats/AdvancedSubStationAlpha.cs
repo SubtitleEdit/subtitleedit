@@ -765,34 +765,32 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 else if (eventsStarted)
                 {
                     string s = line.Trim().ToLower();
-                    if (s.StartsWith("format:", StringComparison.Ordinal))
+                    if (line.Length > 10 && s.StartsWith("format:", StringComparison.Ordinal))
                     {
-                        if (line.Length > 10)
+                        var format = s.Substring(8).Split(',');
+                        for (int i = 0; i < format.Length; i++)
                         {
-                            var format = line.ToLower().Substring(8).Split(',');
-                            for (int i = 0; i < format.Length; i++)
-                            {
-                                if (format[i].Trim().Equals("start", StringComparison.OrdinalIgnoreCase))
-                                    indexStart = i;
-                                else if (format[i].Trim().Equals("end", StringComparison.OrdinalIgnoreCase))
-                                    indexEnd = i;
-                                else if (format[i].Trim().Equals("text", StringComparison.OrdinalIgnoreCase))
-                                    indexText = i;
-                                else if (format[i].Trim().Equals("style", StringComparison.OrdinalIgnoreCase))
-                                    indexStyle = i;
-                                else if (format[i].Trim().Equals("actor", StringComparison.OrdinalIgnoreCase))
-                                    indexActor = i;
-                                else if (format[i].Trim().Equals("marginl", StringComparison.OrdinalIgnoreCase))
-                                    indexMarginL = i;
-                                else if (format[i].Trim().Equals("marginr", StringComparison.OrdinalIgnoreCase))
-                                    indexMarginR = i;
-                                else if (format[i].Trim().Equals("marginv", StringComparison.OrdinalIgnoreCase))
-                                    indexMarginV = i;
-                                else if (format[i].Trim().Equals("effect", StringComparison.OrdinalIgnoreCase))
-                                    indexEffect = i;
-                                else if (format[i].Trim().Equals("layer", StringComparison.OrdinalIgnoreCase))
-                                    indexLayer = i;
-                            }
+                            var formatTrimmed = format[i].Trim();
+                            if (formatTrimmed.Equals("start", StringComparison.Ordinal))
+                                indexStart = i;
+                            else if (formatTrimmed.Equals("end", StringComparison.Ordinal))
+                                indexEnd = i;
+                            else if (formatTrimmed.Equals("text", StringComparison.Ordinal))
+                                indexText = i;
+                            else if (formatTrimmed.Equals("style", StringComparison.Ordinal))
+                                indexStyle = i;
+                            else if (formatTrimmed.Equals("actor", StringComparison.Ordinal))
+                                indexActor = i;
+                            else if (formatTrimmed.Equals("marginl", StringComparison.Ordinal))
+                                indexMarginL = i;
+                            else if (formatTrimmed.Equals("marginr", StringComparison.Ordinal))
+                                indexMarginR = i;
+                            else if (formatTrimmed.Equals("marginv", StringComparison.Ordinal))
+                                indexMarginV = i;
+                            else if (formatTrimmed.Equals("effect", StringComparison.Ordinal))
+                                indexEffect = i;
+                            else if (formatTrimmed.Equals("layer", StringComparison.Ordinal))
+                                indexLayer = i;
                         }
                     }
                     else if (!string.IsNullOrEmpty(s))
