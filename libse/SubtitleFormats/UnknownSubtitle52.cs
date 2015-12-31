@@ -11,24 +11,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //#00001    10:00:02.00 10:00:04.13 00:00:02.13 #F CC00000D0    #C
         private static readonly Regex RegexTimeCodes = new Regex(@"^\#\d\d\d\d\d\t\d\d:\d\d:\d\d\.\d\d\t\d\d:\d\d:\d\d\.\d\d\t\d\d:\d\d:\d\d\.\d\d\t.*$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 52"; }
-        }
+        public override string Name => "Unknown 52";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (lines.Count > 0 && lines[0] != null && lines[0].StartsWith("{\\rtf1"))
+            if (lines.Count > 0 && lines[0] != null && lines[0].StartsWith("{\\rtf1", StringComparison.Ordinal))
                 return false;
 
             var subtitle = new Subtitle();
@@ -105,7 +96,7 @@ FILE_INFO_END";
                         started = true;
                         if (p != null)
                             p.Text = text.ToString().Trim();
-                        text = new StringBuilder();
+                        text.Clear();
                         string start = line.Substring(7, 11);
                         string end = line.Substring(19, 11);
                         p = new Paragraph(GetTimeCode(start), GetTimeCode(end), string.Empty);
@@ -140,8 +131,7 @@ FILE_INFO_END";
         {
             string[] timeParts = timeString.Split(new[] { ':', ',', '.' });
             int milliseconds = FramesToMillisecondsMax999(int.Parse(timeParts[3]));
-            var timeCode = new TimeCode(int.Parse(timeParts[0]), int.Parse(timeParts[1]), int.Parse(timeParts[2]), milliseconds);
-            return timeCode;
+            return new TimeCode(int.Parse(timeParts[0]), int.Parse(timeParts[1]), int.Parse(timeParts[2]), milliseconds);
         }
 
     }

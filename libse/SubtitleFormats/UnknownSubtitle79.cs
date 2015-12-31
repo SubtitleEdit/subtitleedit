@@ -50,11 +50,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var text = p.Text.Trim();
 
                 string verticalAlignment = "0";
-                if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an8}") || text.StartsWith("{\\an9}"))
+                if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
                 {
                     verticalAlignment = "9";
                 }
-                else if (text.StartsWith("{\\an4}") || text.StartsWith("{\\an5}") || text.StartsWith("{\\an6}"))
+                else if (text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal))
                 {
                     verticalAlignment = "5";
                 }

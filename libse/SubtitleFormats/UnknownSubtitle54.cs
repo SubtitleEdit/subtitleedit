@@ -16,20 +16,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //This is the place,
         private static readonly Regex RegexTimeCodes1 = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
+        public override string Extension => ".txt";
 
-        public override string Name
-        {
-            get { return "Unknown 54"; }
-        }
+        public override string Name => "Unknown 54";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -58,7 +49,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}:{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -126,7 +117,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 if (subtitle.Paragraphs[i].EndTime.TotalMilliseconds != 0)
+                {
                     allNullEndTime = false;
+                    break;
+                }
             }
             if (allNullEndTime)
                 subtitle.Paragraphs.Clear();

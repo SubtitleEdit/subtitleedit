@@ -11,20 +11,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         // 1<HT>01033902/01034028<HT>xxx
         private static readonly Regex RegexTimeCode = new Regex(@"^\d+\t\d+\/\d+\t", RegexOptions.Compiled);
 
-        public override string Extension
-        {
-            get { return ".cap"; }
-        }
+        public override string Extension => ".cap";
 
-        public override string Name
-        {
-            get { return "Unknown 80"; }
-        }
+        public override string Name => "Unknown 80";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override bool IsTimeBased => true;
+
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -123,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static TimeCode DecodeTimeCode(string part)
         {
             part = part.Trim();
-            string hour = part.Substring(0,2);
+            string hour = part.Substring(0, 2);
             string minutes = part.Substring(2, 2);
             string seconds = part.Substring(4, 2);
             string frames = part.Substring(6, 2);

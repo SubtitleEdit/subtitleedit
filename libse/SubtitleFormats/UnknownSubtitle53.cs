@@ -6,22 +6,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class UnknownSubtitle53 : SubtitleFormat
     {
-
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\:\d\d\:\d\d\:\d\d [^ ]+", RegexOptions.Compiled);
-        public override string Extension
-        {
-            get { return ".txt"; }
-        }
 
-        public override string Name
-        {
-            get { return "Unknown 53"; }
-        }
+        public override string Extension => ".txt";
 
-        public override bool IsTimeBased
-        {
-            get { return true; }
-        }
+        public override string Name => "Unknown 53";
+
+        public override bool IsTimeBased => true;
 
         public override bool IsMine(List<string> lines, string fileName)
         {
@@ -49,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode timeCode)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds));
+            return $"{timeCode.Hours:00}:{ timeCode.Minutes:00}:{timeCode.Seconds:00}:{MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds):00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
