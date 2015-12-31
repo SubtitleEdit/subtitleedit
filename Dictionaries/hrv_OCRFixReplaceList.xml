@@ -279,6 +279,7 @@
     <Word from="smao" to="samo" />
     <Word from="sme" to="smije" />
     <Word from="Sme" to="Smije" />
+    <Word from="smesta" to="smjesta" />
     <Word from="smešak" to="smješak" />
     <Word from="smjeo" to="smio" />
     <Word from="sem" to="osim" />
@@ -761,6 +762,7 @@
     <RegEx find="\b([kK])olen([aiou])" replaceWith="$1oljen$2" />
     <RegEx find="([kK])olj?evk" replaceWith="$1olijevk" />
     <RegEx find="([kK])olj?evc" replaceWith="$1olijevc" />
+    <RegEx find="komanduj([eu])" replaceWith="naređuj$1" />
     <RegEx find="([kK])ombinuje([mšt])" replaceWith="$1ombinira$2" />
     <RegEx find="([kK])ombinuju" replaceWith="$1ombiniraju" />
     <RegEx find="([kK])ombinovanj" replaceWith="$1ombiniranj" />
