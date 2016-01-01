@@ -626,9 +626,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SelectIndexAndEnsureVisible(int index, bool focus)
         {
-            if (!IsValidIndex(index))
-                return;
-            if (TopItem == null)
+            if (!IsValidIndex(index) || TopItem == null)
                 return;
 
             int bottomIndex = TopItem.Index + ((Height - 25) / 16);
