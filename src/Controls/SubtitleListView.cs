@@ -598,23 +598,11 @@ namespace Nikse.SubtitleEdit.Controls
         private void Add(Paragraph paragraph)
         {
             var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph, UseItemStyleForSubItems = false };
-            ListViewItem.ListViewSubItem subItem;
-
-            subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToDisplayString());
-            item.SubItems.Add(subItem);
-
-            subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToDisplayString());
-            item.SubItems.Add(subItem);
-
-            subItem = new ListViewItem.ListViewSubItem(item, paragraph.Duration.ToShortDisplayString());
-            item.SubItems.Add(subItem);
-
-            subItem = new ListViewItem.ListViewSubItem(item, paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString));
-            subItem.Font = SubtitleFontBold ?
-                new Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold) :
-                new Font(_subtitleFontName, SubtitleFontSize);
-            item.SubItems.Add(subItem);
-
+            item.SubItems.Add(paragraph.StartTime.ToDisplayString());
+            item.SubItems.Add(paragraph.EndTime.ToDisplayString());
+            item.SubItems.Add(paragraph.Duration.ToShortDisplayString());
+            item.SubItems.Add(paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString));
+            item.Font = SubtitleFontBold ? new Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold) : new Font(_subtitleFontName, SubtitleFontSize);
             Items.Add(item);
         }
 
