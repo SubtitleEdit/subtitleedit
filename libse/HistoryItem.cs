@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public string ToHHMMSS()
         {
-            return string.Format("{0:00}:{1:00}:{2:00}", Timestamp.Hour, Timestamp.Minute, Timestamp.Second);
+            return $"{Timestamp.Hour:00}, {Timestamp.Minute:00}, {Timestamp.Second:00}";
         }
     }
 }
