@@ -108,8 +108,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SETextBox_DragDrop(object sender, DragEventArgs e)
         {
-            Point pt = new Point(e.X, e.Y);
-            pt = PointToClient(pt);
+            var pt = PointToClient(new Point(e.X, e.Y));
             int index = GetCharIndexFromPosition(pt);
 
             string newText = string.Empty;
