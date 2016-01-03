@@ -51,7 +51,7 @@
                     h1 ^= k1;
                     break;
                 case 1:
-                    k1 = (uint)(arr[arr.Length - 1]);
+                    k1 = arr[arr.Length - 1];
                     k1 *= c1;
                     k1 = rotl32(k1, 15);
                     k1 *= c2;
