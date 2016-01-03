@@ -775,7 +775,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             if (languageId == LanguageIdRussian)
             {
-                var encoding = Encoding.Default; // which encoding?? Encoding.GetEncoding("ISO-8859-5")
+                var encoding = Encoding.GetEncoding(1252);
                 var sb = new StringBuilder();
                 for (int i = 0; i < textLength; i++)
                 {
@@ -791,6 +791,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
                 text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
+                text = FixColors(text);
 
                 if (text.Contains("<i></i>"))
                     text = text.Replace("<i></i>", "<i>");
@@ -799,7 +800,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             else if (languageId == LanguageIdHebrew) // (_language == "HEBNOA")
             {
-                var encoding = Encoding.Default; // which encoding?? Encoding.GetEncoding("ISO-8859-5")
+                var encoding = Encoding.GetEncoding(1252);
                 var sb = new StringBuilder();
                 for (int i = 0; i < textLength; i++)
                 {
@@ -815,6 +816,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
                 text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
+                text = FixColors(text);
 
                 text = Utilities.FixEnglishTextInRightToLeftLanguage(text, ",.?-'/\"0123456789abcdefghijklmnopqrstuvwxyz");
             }
@@ -836,7 +838,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var encoding = Encoding.Default; // which encoding?? Encoding.GetEncoding("ISO-8859-5")
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
                 text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
-
+                text = FixColors(text);
                 text = text.Replace(encoding.GetString(new byte[] { 0x88 }), "<i>");
                 text = text.Replace(encoding.GetString(new byte[] { 0x98 }), "</i>");
 
@@ -847,11 +849,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             else
             {
-                var encoding = Encoding.Default; // which encoding?? Encoding.GetEncoding("ISO-8859-5")
+                var encoding = Encoding.GetEncoding(1252);
                 text = encoding.GetString(buffer, start, textLength).Replace("\0", string.Empty);
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
                 text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
+                text = FixColors(text);
+
                 text = text.Replace(encoding.GetString(new byte[] { 0x1B }), "æ");
                 text = text.Replace(encoding.GetString(new byte[] { 0x1C }), "ø");
                 text = text.Replace(encoding.GetString(new byte[] { 0x1D }), "å");
@@ -897,6 +901,93 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text += "</i>";
             }
             return text;
+        }
+
+        private static string FixColors(string text)
+        {
+            Encoding encoding = Encoding.GetEncoding(1252);
+            bool fontColorOn = false;
+            var sb = new StringBuilder();
+            for (int i = 0; i < text.Length; i++)
+            {
+                var s = text.Substring(i, 1);
+                if (s == encoding.GetString(new byte[] { 0xf1 }))
+                {
+                    if (fontColorOn)
+                    {
+                        sb.Append("</font>"); // white
+                    }
+                    sb.Append("<font color=\"#FF797D\">"); // red
+                    fontColorOn = true;
+                }
+                else if (s == encoding.GetString(new byte[] { 0xf2 }))
+                {
+                    if (fontColorOn)
+                    {
+                        sb.Append("</font>"); // white
+                    }
+                    sb.Append("<font color=\"#AAEF9E\">"); // green
+                    fontColorOn = true;
+                }
+                else if (s == encoding.GetString(new byte[] { 0xf3 }))
+                {
+                    if (fontColorOn)
+                    {
+                        sb.Append("</font>"); // white
+                    }
+                    sb.Append("<font color=\"#FAFAA8\">"); // yellow
+                    fontColorOn = true;
+                }
+                else if (s == encoding.GetString(new byte[] { 0xf4 }))
+                {
+                    if (fontColorOn)
+                    {
+                        sb.Append("</font>"); // white
+                    }
+                    sb.Append("<font color=\"#9999FF\">"); // purple
+                    fontColorOn = true;
+                }
+                else if (s == encoding.GetString(new byte[] { 0xf5 }))
+                {
+                    if (fontColorOn)
+                    {
+                        sb.Append("</font>"); // white
+                    }
+                    sb.Append("<font color=\"#FFABFB\">"); // magenta
+                    fontColorOn = true;
+                }
+                else if (s == encoding.GetString(new byte[] { 0xf6 }))
+                {
+                    if (fontColorOn)
+                    {
+                        sb.Append("</font>"); // white
+                    }
+                    sb.Append("<font color=\"#A2FEFE\">"); // cyan
+                    fontColorOn = true;
+                }
+                else if (s == encoding.GetString(new byte[] { 0xf7 }))
+                {
+                    if (fontColorOn)
+                    {
+                        sb.Append("</font>"); // white
+                        fontColorOn = false;
+                    }
+                }
+                else if (s == encoding.GetString(new byte[] { 0xf8 }))
+                {
+                    sb.Append("<font color=\"#FCC786\">"); // orange
+                    fontColorOn = true;
+                }
+                else
+                {
+                    sb.Append(s);
+                }
+            }
+            if (fontColorOn)
+            {
+                sb.Append("</font>"); // white
+            }
+            return sb.ToString();
         }
 
     }
