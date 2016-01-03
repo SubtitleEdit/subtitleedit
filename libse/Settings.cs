@@ -674,7 +674,7 @@ namespace Nikse.SubtitleEdit.Core
         public string SpectrogramAppearance { get; set; }
         public int WaveformMinimumSampleRate { get; set; }
         public double WaveformSeeksSilenceDurationSeconds { get; set; }
-        public int WaveformSeeksSilenceMaxVolume { get; set; }
+        public double WaveformSeeksSilenceMaxVolume { get; set; }
 
         public VideoControlsSettings()
         {
@@ -700,7 +700,7 @@ namespace Nikse.SubtitleEdit.Core
             SpectrogramAppearance = "OneColorGradient";
             WaveformMinimumSampleRate = 126;
             WaveformSeeksSilenceDurationSeconds = 0.3;
-            WaveformSeeksSilenceMaxVolume = 10;
+            WaveformSeeksSilenceMaxVolume = 0.1;
         }
     }
 
@@ -2137,7 +2137,13 @@ namespace Nikse.SubtitleEdit.Core
                 settings.VideoControls.WaveformSeeksSilenceDurationSeconds = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
             subNode = node.SelectSingleNode("WaveformSeeksSilenceMaxVolume");
             if (subNode != null)
-                settings.VideoControls.WaveformSeeksSilenceMaxVolume = Convert.ToInt32(subNode.InnerText);
+            {
+                settings.VideoControls.WaveformSeeksSilenceMaxVolume = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+                if (settings.VideoControls.WaveformSeeksSilenceMaxVolume == 10)
+                {
+                    settings.VideoControls.WaveformSeeksSilenceMaxVolume = 0.1; //TODO: Remove in 2017... 10 was old default value
+                }
+            }
 
             settings.NetworkSettings = new NetworkSettings();
             node = doc.DocumentElement.SelectSingleNode("NetworkSettings");

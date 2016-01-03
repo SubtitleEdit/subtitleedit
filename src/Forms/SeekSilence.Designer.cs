@@ -131,15 +131,21 @@
             // 
             // numericUpDownVolume
             // 
+            this.numericUpDownVolume.DecimalPlaces = 2;
+            this.numericUpDownVolume.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             this.numericUpDownVolume.Location = new System.Drawing.Point(247, 117);
             this.numericUpDownVolume.Name = "numericUpDownVolume";
             this.numericUpDownVolume.Size = new System.Drawing.Size(75, 20);
             this.numericUpDownVolume.TabIndex = 7;
             this.numericUpDownVolume.Value = new decimal(new int[] {
-            10,
+            3,
             0,
             0,
-            0});
+            65536});
             // 
             // labelDuration
             // 
