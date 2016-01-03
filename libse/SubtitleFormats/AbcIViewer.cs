@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string ToTimeCode(double totalMilliseconds)
         {
             var ts = TimeSpan.FromMilliseconds(totalMilliseconds);
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+            return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}:{ts.Milliseconds:00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

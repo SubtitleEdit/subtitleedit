@@ -40,7 +40,6 @@ namespace Nikse.SubtitleEdit.Logic
             return QuartsPlayer.GetVideoInfo(fileName);
         }
 
-
         public static int GetSubtitleIndex(List<Paragraph> paragraphs, VideoPlayerContainer videoPlayerContainer)
         {
             if (videoPlayerContainer.VideoPlayer != null)
@@ -356,7 +355,6 @@ namespace Nikse.SubtitleEdit.Logic
             {
             }
         }
-
 
         public static void FixLargeFonts(Control mainCtrl, Control ctrl)
         {

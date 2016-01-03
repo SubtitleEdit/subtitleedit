@@ -678,11 +678,11 @@ namespace Nikse.SubtitleEdit.Core
                 int indexOfEndBracket = text.IndexOf('}');
                 if (text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                 {
-                    text = string.Format("{2}<{0}>{1}</{0}>", tag, text.Remove(0, indexOfEndBracket + 1), text.Substring(0, indexOfEndBracket + 1));
+                    text = $"{text.Substring(0, indexOfEndBracket + 1)}<{tag}>{text.Remove(0, indexOfEndBracket + 1)}</{tag}>";
                 }
                 else
                 {
-                    text = string.Format("<{0}>{1}</{0}>", tag, text);
+                    text = $"<{tag}>{text}</{tag}>";
                 }
             }
             return text;
