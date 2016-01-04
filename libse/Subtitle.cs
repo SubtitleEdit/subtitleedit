@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -130,7 +129,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
                 catch (Exception exception)
                 {
-                    MessageBox.Show(exception.Message);
+                    System.Diagnostics.Debug.WriteLine(exception.Message);
                     encoding = Encoding.UTF8;
                     return null;
                 }
@@ -150,7 +149,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                     catch (Exception exception)
                     {
-                        MessageBox.Show(exception.Message);
+                        System.Diagnostics.Debug.WriteLine(exception.Message);
                         encoding = Encoding.UTF8;
                         return null;
                     }
