@@ -2615,7 +2615,8 @@ namespace Nikse.SubtitleEdit.Forms
                         encoding = Encoding.UTF8;
                     SetEncoding(encoding);
 
-                    if (format.GetType() == typeof(SubStationAlpha))
+                    var formatType = format.GetType();
+                    if (formatType == typeof(SubStationAlpha))
                     {
                         string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
                         if (!string.IsNullOrEmpty(errors))
@@ -2624,7 +2625,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-                    else if (format.GetType() == typeof(AdvancedSubStationAlpha))
+                    else if (formatType == typeof(AdvancedSubStationAlpha))
                     {
                         string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
                         if (!string.IsNullOrEmpty(errors))
@@ -2633,17 +2634,31 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-                    else if (format.GetType() == typeof(SubRip))
+                    else if (formatType == typeof(SubRip))
                     {
                         string errors = (format as SubRip).Errors;
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-                    else if (format.GetType() == typeof(MicroDvd))
+                    else if (formatType == typeof(MicroDvd))
                     {
                         string errors = (format as MicroDvd).Errors;
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else if (formatType == typeof(DCinemaSmpte2007))
+                    {
+                        format.ToText(_subtitle, string.Empty);
+                        string errors = (format as DCinemaSmpte2007).Errors;
+                        if (!string.IsNullOrEmpty(errors))
+                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else if (formatType == typeof(DCinemaSmpte2010))
+                    {
+                        format.ToText(_subtitle, string.Empty);
+                        string errors = (format as DCinemaSmpte2010).Errors;
+                        if (!string.IsNullOrEmpty(errors))
+                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 else
@@ -3406,11 +3421,12 @@ namespace Nikse.SubtitleEdit.Forms
                 if (format.HasStyleSupport && _networkSession == null)
                 {
                     var styles = new List<string>();
-                    if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
+                    var formatType = format.GetType();
+                    if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
                         styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-                    else if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
+                    else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
                         styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
-                    else if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
+                    else if (formatType == typeof(Sami) || formatType == typeof(SamiModern))
                         styles = Sami.GetStylesFromHeader(_subtitle.Header);
                     else if (format.Name == "Nuendo")
                         styles = GetNuendoStyles();
@@ -3421,9 +3437,9 @@ namespace Nikse.SubtitleEdit.Forms
                             p.Extra = styles[0];
                     }
 
-                    if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
+                    if (formatType == typeof(Sami) || formatType == typeof(SamiModern))
                         SubtitleListview1.ShowExtraColumn(_languageGeneral.Class);
-                    else if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
+                    else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
                         SubtitleListview1.ShowExtraColumn(_languageGeneral.StyleLanguage);
                     else if (format.Name == "Nuendo")
                         SubtitleListview1.ShowExtraColumn(_languageGeneral.Character);
@@ -4576,21 +4592,36 @@ namespace Nikse.SubtitleEdit.Forms
                         index++;
                     }
 
-                    if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
+                    var formatType = format.GetType();
+                    if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
                     {
                         string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-                    else if (format.GetType() == typeof(SubRip))
+                    else if (formatType == typeof(SubRip))
                     {
                         string errors = (format as SubRip).Errors;
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-                    else if (format.GetType() == typeof(MicroDvd))
+                    else if (formatType == typeof(MicroDvd))
                     {
                         string errors = (format as MicroDvd).Errors;
+                        if (!string.IsNullOrEmpty(errors))
+                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else if (formatType == typeof(DCinemaSmpte2007))
+                    {
+                        format.ToText(_subtitle, string.Empty);
+                        string errors = (format as DCinemaSmpte2007).Errors;
+                        if (!string.IsNullOrEmpty(errors))
+                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else if (formatType == typeof(DCinemaSmpte2010))
+                    {
+                        format.ToText(_subtitle, string.Empty);
+                        string errors = (format as DCinemaSmpte2010).Errors;
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }

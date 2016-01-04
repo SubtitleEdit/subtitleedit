@@ -30,6 +30,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //  </SubtitleList
         //</dcst:SubtitleReel>
 
+        public string Errors { get; private set; }
+
         private double _frameRate = 24;
 
         public int Version { get; set; }
@@ -95,6 +97,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
+            Errors = null;
             var ss = Configuration.Settings.SubtitleSettings;
 
             if (!string.IsNullOrEmpty(ss.CurrentDCinemaEditRate))
@@ -469,8 +472,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 catch (Exception exception)
                 {
-                    if (!BatchMode)
-                        System.Windows.Forms.MessageBox.Show("SMPTE-428-7-2007-DCST.xsd: " + exception.Message);
+                    Errors = "Error validating xml via SMPTE - 428 - 7 - 2007 - DCST.xsd: " + exception.Message;
                 }
             }
             return result;
