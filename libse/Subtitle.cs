@@ -93,9 +93,15 @@ namespace Nikse.SubtitleEdit.Core
             return _paragraphs.FirstOrDefault(p => p.ID == id);
         }
 
-        public SubtitleFormat ReloadLoadSubtitle(List<string> lines, string fileName)
+        public SubtitleFormat ReloadLoadSubtitle(List<string> lines, string fileName, SubtitleFormat format)
         {
             Paragraphs.Clear();
+            if (format != null && format.IsMine(lines, fileName))
+            {
+                format.LoadSubtitle(this, lines, fileName);
+                _format = format;
+                return format;
+            }
             foreach (SubtitleFormat subtitleFormat in SubtitleFormat.AllSubtitleFormats)
             {
                 if (subtitleFormat.IsMine(lines, fileName))
