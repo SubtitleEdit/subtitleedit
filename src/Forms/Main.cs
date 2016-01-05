@@ -1778,7 +1778,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 encoding = GetCurrentEncoding();
                                 var list = new List<string>(subtitles[0].SplitToLines());
                                 _subtitle = new Subtitle();
-                                var mxfFormat = _subtitle.ReloadLoadSubtitle(list, null);
+                                var mxfFormat = _subtitle.ReloadLoadSubtitle(list, null, null);
                                 SetCurrentFormat(mxfFormat);
                                 _fileName = Path.GetFileNameWithoutExtension(fileName);
                                 SetTitle();
@@ -4566,14 +4566,9 @@ namespace Nikse.SubtitleEdit.Forms
                 SaveSubtitleListviewIndices();
                 if (!string.IsNullOrWhiteSpace(textBoxSource.Text))
                 {
-                    var temp = new Subtitle(_subtitle);
                     SubtitleFormat format = GetCurrentSubtitleFormat();
-                    var list = new List<string>(textBoxSource.Lines);
-                    if (format != null && format.IsMine(list, null))
-                        format.LoadSubtitle(temp, list, null);
-                    else
-                        format = temp.ReloadLoadSubtitle(new List<string>(textBoxSource.Lines), null);
-
+                    var list = textBoxSource.Lines.ToList();
+                    format = new Subtitle().ReloadLoadSubtitle(list, null, format);
                     if (format == null)
                     {
                         MessageBox.Show(_language.UnableToParseSourceView);
@@ -4581,7 +4576,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     _sourceViewChange = false;
                     MakeHistoryForUndo(_language.BeforeChangesMadeInSourceView);
-                    _subtitle.ReloadLoadSubtitle(new List<string>(textBoxSource.Lines), null);
+                    _subtitle.ReloadLoadSubtitle(list, null, format);
                     if (format.IsFrameBased)
                         _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                     int index = 0;
@@ -17182,8 +17177,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (currentFormat != null && !currentFormat.IsTextBased)
                     return;
 
-                var temp = new Subtitle(_subtitle);
-                SubtitleFormat format = temp.ReloadLoadSubtitle(new List<string>(textBoxSource.Lines), null);
+                SubtitleFormat format = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
                 if (format == null)
                     e.Cancel = true;
             }

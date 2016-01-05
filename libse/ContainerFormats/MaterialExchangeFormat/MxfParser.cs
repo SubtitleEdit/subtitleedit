@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat
 
             var list = new List<string>(s.SplitToLines());
             var subtitle = new Subtitle();
-            return subtitle.ReloadLoadSubtitle(list, null) != null;
+            return subtitle.ReloadLoadSubtitle(list, null, null) != null;
         }
 
         private void ReadHeaderPartitionPack(Stream stream)
