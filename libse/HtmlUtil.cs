@@ -363,10 +363,6 @@ namespace Nikse.SubtitleEdit.Core
 
             if (!s.Contains('<'))
                 return s;
-
-            if (s.Contains("< "))
-                s = FixInvalidItalicTags(s);
-
             return RemoveOpenCloseTags(s, TagItalic, TagBold, TagUnderline, TagParagraph, TagFont, TagCyrillicI);
         }
 
