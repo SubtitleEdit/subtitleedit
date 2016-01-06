@@ -106,8 +106,7 @@ namespace Nikse.SubtitleEdit.Core
                     line = line.Replace(matches[1].ToString(), string.Empty);
                     line = line.Trim();
                     if (line.StartsWith("}{}", StringComparison.Ordinal) || line.StartsWith("][]", StringComparison.Ordinal))
-                        line = line.Remove(0, 3);
-                    line = line.Trim();
+                        line = line.Remove(0, 3).TrimStart();
                 }
                 if (p != null && line.Length > 1)
                 {
@@ -138,7 +137,10 @@ namespace Nikse.SubtitleEdit.Core
                 foreach (char c in lineWithPerhapsOnlyNumbers)
                 {
                     if (!char.IsDigit(c))
+                    {
                         allNumbers = false;
+                        break;
+                    }
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 2)
                 {
@@ -222,8 +224,8 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     line = line.Trim();
                     if (line.StartsWith("}{}", StringComparison.Ordinal) || line.StartsWith("][]", StringComparison.Ordinal))
-                        line = line.Remove(0, 3);
-                    sb.AppendLine(line.Trim());
+                        line = line.Remove(0, 3).TrimStart();
+                    sb.AppendLine(line);
                 }
             }
             if (p != null)
@@ -249,7 +251,10 @@ namespace Nikse.SubtitleEdit.Core
                 foreach (char c in lineWithPerhapsOnlyNumbers)
                 {
                     if (!char.IsDigit(c))
+                    {
                         allNumbers = false;
+                        break;
+                    }
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)
                 {
@@ -277,8 +282,8 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     line = line.Trim();
                     if (line.StartsWith("}{}", StringComparison.Ordinal) || line.StartsWith("][]", StringComparison.Ordinal))
-                        line = line.Remove(0, 3);
-                    sb.AppendLine(line.Trim());
+                        line = line.Remove(0, 3).TrimStart();
+                    sb.AppendLine(line);
                 }
             }
             if (p != null)
@@ -477,7 +482,10 @@ namespace Nikse.SubtitleEdit.Core
                 foreach (char c in lineWithPerhapsOnlyNumbers)
                 {
                     if (!char.IsDigit(c))
+                    {
                         allNumbers = false;
+                        break;
+                    }
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)
                 {
@@ -529,8 +537,8 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     line = line.Trim();
                     if (line.StartsWith("}{}", StringComparison.Ordinal) || line.StartsWith("][]", StringComparison.Ordinal))
-                        line = line.Remove(0, 3);
-                    sb.AppendLine(line.Trim());
+                        line = line.Remove(0, 3).TrimStart();
+                    sb.AppendLine(line);
                 }
             }
             if (p != null)
@@ -547,7 +555,7 @@ namespace Nikse.SubtitleEdit.Core
                     d = 8;
                 averateDuration += d;
             }
-            averateDuration = averateDuration / subtitle.Paragraphs.Count;
+            averateDuration /= subtitle.Paragraphs.Count;
             if (averateDuration < 0.2 || (averateDuration < 0.5 && subtitle.Paragraphs.Count > 100 && subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].StartTime.TotalSeconds < 140 && subtitle.Paragraphs[subtitle.Paragraphs.Count - 2].StartTime.TotalSeconds < 140))
             {
                 subtitle = ImportTimeCodesOnSameSeperateLineNoMilliseconds(lines);
@@ -582,7 +590,10 @@ namespace Nikse.SubtitleEdit.Core
                 foreach (char c in lineWithPerhapsOnlyNumbers)
                 {
                     if (!char.IsDigit(c))
+                    {
                         allNumbers = false;
+                        break;
+                    }
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)
                 {
@@ -646,8 +657,8 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     line = line.Trim();
                     if (line.StartsWith("}{}", StringComparison.Ordinal) || line.StartsWith("][]", StringComparison.Ordinal))
-                        line = line.Remove(0, 3);
-                    sb.AppendLine(line.Trim());
+                        line = line.Remove(0, 3).TrimStart();
+                    sb.AppendLine(line);
                 }
             }
             if (p != null)
