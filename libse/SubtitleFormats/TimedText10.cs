@@ -87,6 +87,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return string.Format(CultureInfo.InvariantCulture, "{0}t", TimeSpan.FromMilliseconds(time.TotalMilliseconds).Ticks);
                 case "hh:mm:ss.ms":
                     return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}.{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+                case "hh:mm:ss.ms-two-digits":
+                    return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, (int)Math.Round(time.Milliseconds / 10.0));
                 case "hh:mm:ss,ms":
                     return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00},{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
                 default:
@@ -641,6 +643,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             if (timeCode.Length == 12 && (timeCode[8] == '.' || timeCode[8] == ',')) // 00:00:08.292 or 00:00:08,292
                 return false;
+            if (timeCode.Length == 11 && timeCode[8] == '.') // 00:00:08.12 (last part is milliseconds / 10)
+                return false;
             return true;
         }
 
@@ -750,6 +754,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var ts = TimeSpan.FromTicks(long.Parse(s, CultureInfo.InvariantCulture));
                 return new TimeCode(ts.TotalMilliseconds);
             }
+
+            var parts = s.Split(new[] { ':', '.', ',' });
             if (s.Length == 12 && s[2] == ':' && s[5] == ':' && s[8] == '.') // 00:01:39.946
             {
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "hh:mm:ss.ms";
@@ -758,8 +764,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "hh:mm:ss,ms";
             }
+            else if (!frames && s.Length == 11 && s[2] == ':' && s[5] == ':' && s[8] == '.') // 00:01:39.96
+            {
+                Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "hh:mm:ss.ms-two-digits";
+                return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]) * 10);
+            }
 
-            var parts = s.Split(new[] { ':', '.', ',' });
             if (frames)
                 return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
             return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));

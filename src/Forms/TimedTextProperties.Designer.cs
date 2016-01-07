@@ -119,6 +119,7 @@
             "Ticks",
             "hh:mm:ss:ff",
             "hh:mm:ss.ms",
+            "hh:mm:ss.ms-two-digits",
             "hh:mm:ss,ms"});
             this.comboBoxTimeCodeFormat.Location = new System.Drawing.Point(191, 309);
             this.comboBoxTimeCodeFormat.Name = "comboBoxTimeCodeFormat";
