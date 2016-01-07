@@ -103,6 +103,14 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             numericUpDownShadowWidth.Left = labelShadow.Left + labelShadow.Width + 5;
             checkBoxFontItalic.Left = checkBoxFontBold.Left + checkBoxFontBold.Width + 12;
             checkBoxFontUnderline.Left = checkBoxFontItalic.Left + checkBoxFontItalic.Width + 12;
+
+            var l2 = Configuration.Settings.Language.SubStationAlphaProperties;
+            groupBoxResolution.Text = l2.Resolution;
+            labelVideoResolution.Text = l2.VideoResolution;
+            groupBoxOptions.Text = l2.Options;
+            labelCollision.Text = l2.Collision;
+            labelWrapStyle.Text = l2.WrapStyle;
+            checkBoxScaleBorderAndShadow.Text = l2.ScaleBorderAndShadow;
         }
 
         private SsaStyle GetSsaStyle(string styleName)
