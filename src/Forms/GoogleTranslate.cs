@@ -152,6 +152,8 @@ namespace Nikse.SubtitleEdit.Forms
             GoogleTranslate_Resize(null, null);
 
             _googleApiNotWorking = !Configuration.Settings.Tools.UseGooleApiPaidService; // google has closed their free api service :(
+
+            this._formattingTypes = new FormattingType[this._subtitle.Paragraphs.Count];
         }
 
         private void buttonTranslate_Click(object sender, EventArgs e)
@@ -176,8 +178,6 @@ namespace Nikse.SubtitleEdit.Forms
                 DoMicrosoftTranslate(from, to);
                 return;
             }
-
-            _formattingTypes = new FormattingType[_subtitle.Paragraphs.Count];
 
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
