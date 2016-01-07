@@ -868,8 +868,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = SetFormattingType(index, p.Text);
-                    text = string.Format("{1}{0}|", Text, SplitterString);
+                    string text = string.Format("{1}{0}|", SetFormattingType(index, p.Text), SplitterString);
                     if (!overQuota)
                     {
                         if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
