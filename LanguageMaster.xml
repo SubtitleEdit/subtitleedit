@@ -222,7 +222,7 @@ Note: Do check free disk space.</WaveFileMalformed>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Adjust speed in percent</Title>
-    <TitleShort>Ajust speed</TitleShort>
+    <TitleShort>Adjust speed</TitleShort>
     <Info>Change speed of subtitle in percent</Info>
     <Custom>Custom</Custom>
     <ToDropFrame>To drop frame</ToDropFrame>
