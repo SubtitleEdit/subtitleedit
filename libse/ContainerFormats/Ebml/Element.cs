@@ -47,7 +47,7 @@
 
         public override string ToString()
         {
-            return string.Format(@"{0} ({1})", _id, _dataSize);
+            return $"{_id} ({_dataSize})";
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Core
 
             public override string ToString()
             {
-                return "(" + Alpha + ", " + Red + ", " + Green + ", " + Blue + ")";
+                return $"({Alpha}, {Red}, {Green}, {Blue})";
             }
         }
 
