@@ -14,6 +14,7 @@
    * Updated Korean translation updated - thx domddol
    * Updated Portuguese translation - thx moob
    * Updated Polish translation - thx admas
+   * Updated Hungarian translation - thx diomed
    * Fixes for Croatian OCR fix replace list - thx xylographe/diomed
    * Batch convert - use generic sub importer if unknown format
    * Improved spell check suggestions (I -> l) - thx Espen
@@ -24,6 +25,8 @@
    * New options for teletext in "EBU STL"
    * Batch convert now remembers ASS/SSA style - thx Thunderbolt8
    * Added Japanese encoding for PAC files
+   * Faster switching from source view to list view in main window
+   * Added read support for Cavena 890 and colors - thx Tiina
 * FIXED:
    * "Normal (remove formatting)" don't remove Unicode chars - thx Fotis
    * Fixed bug in spell check "word replace" - thx Sami
@@ -53,6 +56,8 @@
    * Fixed some crashes in OCR window - xylographe/heforfree
    * Display fix for frame mode - thx Moritz
    * Some fixes for updating/deleting custom output templates - thx Wolfgang
+   * Fixed Google vs Ms translate - thx marb99/ItsJustSean/xylographe
+   * Fixed waveform seek silence - thx colemar
    * + Many minor fixes from ivandrofly and xylographe
 
 

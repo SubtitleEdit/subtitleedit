@@ -426,21 +426,26 @@ namespace Nikse.SubtitleEdit.Core
             text = text.Replace("< i >", beginTag);
             text = text.Replace("< i>", beginTag);
             text = text.Replace("<i >", beginTag);
+            text = text.Replace("<I>", beginTag);
+            text = text.Replace("< I >", beginTag);
             text = text.Replace("< I>", beginTag);
             text = text.Replace("<I >", beginTag);
 
             text = text.Replace("< / i >", endTag);
             text = text.Replace("< /i>", endTag);
             text = text.Replace("</ i>", endTag);
-            text = text.Replace("< /i>", endTag);
             text = text.Replace("< /i >", endTag);
             text = text.Replace("</i >", endTag);
             text = text.Replace("</ i >", endTag);
             text = text.Replace("< / i>", endTag);
+            text = text.Replace("</I>", endTag);
+            text = text.Replace("< / I >", endTag);
             text = text.Replace("< /I>", endTag);
             text = text.Replace("</ I>", endTag);
-            text = text.Replace("< /I>", endTag);
-            text = text.Replace("< / I >", endTag);
+            text = text.Replace("< /I >", endTag);
+            text = text.Replace("</I >", endTag);
+            text = text.Replace("</ I >", endTag);
+            text = text.Replace("< / I>", endTag);
 
             text = text.Replace("</i> <i>", "_@_");
             text = text.Replace(" _@_", "_@_");
@@ -448,9 +453,15 @@ namespace Nikse.SubtitleEdit.Core
             text = text.Replace("_@_", " ");
 
             if (text.Contains(beginTag))
+            {
                 text = text.Replace("<i/>", endTag);
+                text = text.Replace("<I/>", endTag);
+            }
             else
+            {
                 text = text.Replace("<i/>", string.Empty);
+                text = text.Replace("<I/>", string.Empty);
+            }
 
             text = text.Replace(beginTag + beginTag, beginTag);
             text = text.Replace(endTag + endTag, endTag);
