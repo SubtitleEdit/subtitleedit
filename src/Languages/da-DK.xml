@@ -219,6 +219,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Juster hastighed i procent</Title>
+    <TitleShort>Juster hastighed</TitleShort>
     <Info>Skift hastighed for undertekst i procent</Info>
     <Custom>Brugerdefineret</Custom>
     <ToDropFrame>Til drop-frame</ToDropFrame>
@@ -367,6 +368,9 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Import>Import...</Import>
     <TextAndTimingInformation>Text and timing information</TextAndTimingInformation>
     <JustificationCode>Justification code</JustificationCode>
+    <Teletext>Teletext</Teletext>
+    <UseBox>Brug boks omkring tekst</UseBox>
+    <DoubleHeight>Brug dobbelt højde til tekst</DoubleHeight>
     <Errors>Fejl</Errors>
     <ErrorsX>Fejl: {0}</ErrorsX>
     <MaxLengthError>Linie {0} overstiger max længde ({1}) af {2}: {3}</MaxLengthError>
@@ -490,6 +494,10 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Normal>Normal</Normal>
     <CaseSensitive>Versalfølsom</CaseSensitive>
     <RegularExpression>Regulært udtryk</RegularExpression>
+    <WholeWord>Hele ord</WholeWord>
+    <Count>Antal</Count>
+    <XNumberOfMatches>{0:#,##0} forekomst(er)</XNumberOfMatches>
+    <OneMatch>En forekomst</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Find Undertekst</Title>
@@ -668,6 +676,8 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <ImageFiles>Billedfiler</ImageFiles>
     <Input>Input</Input>
     <InputDescription>Vælg input filer (gennemse eller drag-n-drop)</InputDescription>
+    <Remove>Fjern</Remove>
+    <RemoveAll>Fjern alt</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Importer sceneskift</Title>
@@ -1269,6 +1279,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeMergeLinesWithSameText>Før fusioner linjer med samme tekst</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Undertekst med tidskoder har et forskelligt antal linier ({0}) end nuværende undertekst ({1}) - fortsæt alligevel?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Læser transport stream - vent venligst...</ParsingTransportStream>
+    <XPercentCompleted>{0}% gennemført</XPercentCompleted>
     <ErrorLoadIdx>Subtitle Edit kan ikke læse/redigere .idx filer. Idx filer er en del af et idx/sub fil par (også kaldet VobSub), og Subtitle Edit kan kun åbne .sub filen.</ErrorLoadIdx>
     <ErrorLoadRar>Denne fil er sandsynligvis en komprimeret .rar fil. Subtitle Edit kan ikke åbne komprimerede filer.</ErrorLoadRar>
     <ErrorLoadZip>Denne fil er sandsynligvis en komprimeret .zip fil. Subtitle Edit kan ikke åbne komprimerede filer.</ErrorLoadZip>
@@ -1501,6 +1512,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Tools>Værktøj</Tools>
     <WordLists>Ordlister</WordLists>
     <SsaStyle>ASS/SSA Style</SsaStyle>
+    <Network>Netværk</Network>
     <ShowToolBarButtons>Vis Værktøjslinjeknapperne</ShowToolBarButtons>
     <New>Ny</New>
     <Open>Åben</Open>
@@ -1626,6 +1638,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ProxyUserName>Bruger-navn</ProxyUserName>
     <ProxyPassword>Password</ProxyPassword>
     <ProxyDomain>Domæne</ProxyDomain>
+    <NetworkSessionSettings>Netværk session indstillinger</NetworkSessionSettings>
+    <NetworkSessionNewSound>Afspil lydfil ved ny meddelelse</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Spil X sekunder og tilbage, X</PlayXSecondsAndBack>
     <StartSceneIndex>Start scene</StartSceneIndex>
     <EndSceneIndex>Slut scene</EndSceneIndex>
@@ -1637,6 +1651,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MusicSymbolsToReplace>Musik symboler der skal erstattes (adskilt af mellemrum)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Ret normale OCR fejl - Inkluder hardcodede regler</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Fix kort visningstid - tillad flytning af starttidspunkt</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Spring trin 1 over (vælg fix regler)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Genveje</Shortcuts>
     <Shortcut>Genvej</Shortcut>
     <Control>Control</Control>
@@ -1676,7 +1691,9 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformSeekSilenceForward>Søg stilhed frem</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Søg stilhed tilbage</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Tilføj tekst her (for ny selektion)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>Tilføj tekst her (fra klippebordet)</WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>Spil ny markering</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Afspil slutningen af markering</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Spil første valgte undertekst</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Fokuser listevisning</WaveformFocusListView>
     <GoBack1Frame>En frame tilbage</GoBack1Frame>
@@ -2054,6 +2071,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Title>Undersøg resultater for aktuelle billede</Title>
     <InspectItems>Undersøg elementer</InspectItems>
     <AddBetterMatch>Tilføj bedre match</AddBetterMatch>
+    <Add>Tilføj</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Ny mappe</Title>
