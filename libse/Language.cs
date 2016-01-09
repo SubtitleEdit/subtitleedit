@@ -361,7 +361,7 @@ namespace Nikse.SubtitleEdit.Core
             ChangeSpeedInPercent = new LanguageStructure.ChangeSpeedInPercent
             {
                 Title = "Adjust speed in percent",
-                TitleShort = "Ajust speed",
+                TitleShort = "Adjust speed",
                 Info = "Change speed of subtitle in percent",
                 Custom = "Custom",
                 ToDropFrame = "To drop frame",
