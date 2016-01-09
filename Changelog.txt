@@ -11,10 +11,10 @@
 * IMPROVED:
    * Updated French/Dutch/German translation - thx xylographe
    * Updated Basque translation - thx Xabier Aramendi
-   * Updated Korean translation updated - thx domddol
+   * Updated Korean translation - thx domddol
    * Updated Portuguese translation - thx moob
    * Updated Polish translation - thx admas
-   * Updated Hungarian translation - thx diomed
+   * Updated Croatian translation - thx diomed
    * Fixes for Croatian OCR fix replace list - thx xylographe/diomed
    * Batch convert - use generic sub importer if unknown format
    * Improved spell check suggestions (I -> l) - thx Espen
