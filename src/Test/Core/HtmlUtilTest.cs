@@ -19,5 +19,41 @@ namespace Test.Core
             const string source = "<font color=\"#000\">SubtitleEdit</font>";
             Assert.AreEqual("SubtitleEdit", HtmlUtil.RemoveOpenCloseTags(source, HtmlUtil.TagFont));
         }
+
+        [TestMethod]
+        public void RemoveHtmlTags1()
+        {
+            const string source = "<font color=\"#000\"><i>SubtitleEdit</i></font>";
+            Assert.AreEqual("SubtitleEdit", HtmlUtil.RemoveHtmlTags(source));
+        }
+
+        [TestMethod]
+        public void RemoveHtmlTags2()
+        {
+            const string source = "<font size=\"12\" color=\"#000\">Hi <font color=\"#000\"><i>SubtitleEdit</i></font></font>";
+            Assert.AreEqual("Hi SubtitleEdit", HtmlUtil.RemoveHtmlTags(source));
+        }
+
+        [TestMethod]
+        public void RemoveHtmlTagsKeepAss()
+        {
+            const string source = "{\\an2}<i>SubtitleEdit</i>";
+            Assert.AreEqual("{\\an2}SubtitleEdit", HtmlUtil.RemoveHtmlTags(source));
+        }
+
+        [TestMethod]
+        public void RemoveHtmlTagsRemoveAss()
+        {
+            const string source = "{\\an2}<i>SubtitleEdit</i>";
+            Assert.AreEqual("SubtitleEdit", HtmlUtil.RemoveHtmlTags(source, true));
+        }
+
+        [TestMethod]
+        public void RemoveHtmlTagsBadItalic()
+        {
+            const string source = "<i>SubtitleEdit<i/>";
+            Assert.AreEqual("SubtitleEdit", HtmlUtil.RemoveHtmlTags(source));
+        }
+
     }
 }

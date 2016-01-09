@@ -172,6 +172,33 @@ namespace Test.Logic
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void FixInvalidItalicTags10()
+        {
+            const string s1 = "< I>Hallo!</I>";
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
+            Assert.AreEqual(s2, "<i>Hallo!</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixInvalidItalicTags11()
+        {
+            const string s1 = "< I >Hallo!< /I>";
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
+            Assert.AreEqual(s2, "<i>Hallo!</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixInvalidItalicTags12()
+        {
+            const string s1 = "< I >Hallo!<I/>";
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
+            Assert.AreEqual(s2, "<i>Hallo!</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesDoubleSpace1()
         {
             const string s1 = "This is  a test";
