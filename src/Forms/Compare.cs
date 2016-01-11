@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
             _language1 = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
             CompareSubtitles();
 
-            if (string.IsNullOrEmpty(subtitleFileName1))
+            if (!string.IsNullOrEmpty(subtitleFileName1))
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(subtitleFileName1);
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             subtitleListView1.SelectIndexAndEnsureVisible(0);
