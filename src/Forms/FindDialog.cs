@@ -4,6 +4,7 @@ using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -29,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Width < radioButtonRegEx.Right + 5)
                 Width = radioButtonRegEx.Right + 5;
 
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
         private FindType FindType

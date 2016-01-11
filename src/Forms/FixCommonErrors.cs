@@ -54,11 +54,11 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly LanguageStructure.General _languageGeneral;
         private bool _hasFixesBeenMade;
 
-        private readonly Keys _goToLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
-        private readonly Keys _preview = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrorsPreview);
-        private readonly Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        private readonly Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
-        private readonly Keys _mainListViewGoToNextError = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
+        private readonly Keys _goToLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
+        private readonly Keys _preview = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrorsPreview);
+        private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private readonly Keys _mainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
 
         private class FixItem
         {
@@ -273,8 +273,8 @@ namespace Nikse.SubtitleEdit.Forms
             listView1.Columns[1].Width = 310;
             listView1.Columns[2].Width = 400;
 
-            Utilities.InitializeSubtitleFont(textBoxListViewText);
-            Utilities.InitializeSubtitleFont(subtitleListView1);
+            UiUtil.InitializeSubtitleFont(textBoxListViewText);
+            UiUtil.InitializeSubtitleFont(subtitleListView1);
             listViewFixes.ListViewItemSorter = new ListViewSorter { ColumnNumber = 1, IsNumber = true };
 
             if (!string.IsNullOrEmpty(Configuration.Settings.CommonErrors.StartSize))
@@ -310,6 +310,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Width = MinimumSize.Width;
                 Height = MinimumSize.Height;
+            }
+            if (Configuration.Settings.Tools.FixCommonErrorsSkipStepOne)
+            {
+                Next();
             }
             Activate();
         }
@@ -442,7 +446,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     subtitleListView1.InitializeTimestampColumnWidths(this);
                     var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                    Utilities.SetButtonHeight(this, newButtonHeight, 1);
+                    UiUtil.SetButtonHeight(this, newButtonHeight, 1);
                 }
             }
         }
@@ -1163,7 +1167,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelTextLineLengths.Text = _languageGeneral.SingleLineLengths;
             labelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
-            Utilities.GetLineLengths(labelSingleLine, text);
+            UiUtil.GetLineLengths(labelSingleLine, text);
 
             string s = HtmlUtil.RemoveHtmlTags(text).Replace(Environment.NewLine, " ");
             buttonSplitLine.Visible = false;
@@ -1567,7 +1571,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxListViewTextKeyDown(object sender, KeyEventArgs e)
         {
-            Utilities.CheckAutoWrap(textBoxListViewText, e, Utilities.GetNumberOfLines(textBoxListViewText.Text));
+            UiUtil.CheckAutoWrap(textBoxListViewText, e, Utilities.GetNumberOfLines(textBoxListViewText.Text));
         }
 
         private void FixCommonErrorsFormClosing(object sender, FormClosingEventArgs e)

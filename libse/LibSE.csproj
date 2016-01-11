@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -33,13 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -126,7 +120,6 @@
     <Compile Include="FastBitmap.cs" />
     <Compile Include="FastFileStream.cs" />
     <Compile Include="FileUtil.cs" />
-    <Compile Include="FindReplaceDialogHelper.cs" />
     <Compile Include="Forms\CheckForUpdatesHelper.cs" />
     <Compile Include="Forms\FixCommonErrors\AddMissingQuotes.cs" />
     <Compile Include="Forms\FixCommonErrors\EmptyFixCallback.cs" />
@@ -172,6 +165,7 @@
     <Compile Include="IfoParser.cs" />
     <Compile Include="ImageSplitter.cs" />
     <Compile Include="ImageSplitterItem.cs" />
+    <Compile Include="Interfaces\IRtfTextConverter.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="LanguageAutoDetect.cs" />
     <Compile Include="LanguageDeserializer.cs" />
@@ -185,6 +179,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RealFFT.cs" />
     <Compile Include="RegistryUtil.cs" />
+    <Compile Include="RichTextToPlainText.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SpellCheckWord.cs" />
     <Compile Include="SsaStyle.cs" />
@@ -252,6 +247,7 @@
     <Compile Include="SubtitleFormats\Footage.cs" />
     <Compile Include="SubtitleFormats\GpacTtxt.cs" />
     <Compile Include="SubtitleFormats\HtmlSamiArray.cs" />
+    <Compile Include="SubtitleFormats\IaiSub.cs" />
     <Compile Include="SubtitleFormats\Idx.cs" />
     <Compile Include="SubtitleFormats\ImageLogicAutocaption.cs" />
     <Compile Include="SubtitleFormats\IssXml.cs" />
@@ -361,6 +357,8 @@
     <Compile Include="SubtitleFormats\UnknownSubtitle29.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle3.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle30.cs" />
+    <Compile Include="SubtitleFormats\UnknownSubtitle80.cs" />
+    <Compile Include="SubtitleFormats\UnknownSubtitle79.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle31.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle32.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle33.cs" />

@@ -192,6 +192,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _waveformSearchSilenceForward = Keys.None;
         private Keys _waveformSearchSilenceBack = Keys.None;
         private Keys _waveformAddTextAtHere = Keys.None;
+        private Keys _waveformAddTextAtHereFromClipboard = Keys.None;
         private Keys _waveformFocusListView = Keys.None;
         private Keys _mainTranslateCustomSearch1 = Keys.None;
         private Keys _mainTranslateCustomSearch2 = Keys.None;
@@ -341,10 +342,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 SetEncoding(Configuration.Settings.General.DefaultEncoding);
 
-                // set up UI interfaces in subtitle formats
+                // set up UI interfaces / injections
                 YouTubeAnnotations.GetYouTubeAnnotationStyles = new UiGetYouTubeAnnotationStyles();
                 Ebu.EbuUiHelper = new UiEbuSaveHelper();
                 Pac.GetPacEncodingImplementation = new UiGetPacEncoding();
+                RichTextToPlainText.NativeRtfTextConverter = new RtfTextConverterRichTextBox();
 
                 toolStripComboBoxFrameRate.Items.Add((23.976).ToString());
                 toolStripComboBoxFrameRate.Items.Add((24.0).ToString());
@@ -355,10 +357,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 UpdateRecentFilesUI();
                 InitializeToolbar();
-                Utilities.InitializeSubtitleFont(textBoxSource);
-                Utilities.InitializeSubtitleFont(textBoxListViewText);
-                Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
-                Utilities.InitializeSubtitleFont(SubtitleListview1);
+                UiUtil.InitializeSubtitleFont(textBoxSource);
+                UiUtil.InitializeSubtitleFont(textBoxListViewText);
+                UiUtil.InitializeSubtitleFont(textBoxListViewTextAlternate);
+                UiUtil.InitializeSubtitleFont(SubtitleListview1);
 
                 if (Configuration.Settings.General.CenterSubtitleInTextBox)
                 {
@@ -1014,7 +1016,7 @@ namespace Nikse.SubtitleEdit.Forms
                 //SubtitleListview1.Font = new Font(unicodeFontName, fontSize);
                 //toolStripWaveControls.RenderMode = ToolStripRenderMode.System;
                 //toolStripMenuItemSurroundWithMusicSymbols.Font = new Font(unicodeFontName, fontSize);
-                Utilities.InitializeSubtitleFont(SubtitleListview1);
+                UiUtil.InitializeSubtitleFont(SubtitleListview1);
                 Refresh();
             }
         }
@@ -1738,7 +1740,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if ((ext == ".m2ts" && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName)) ||
+                if (((ext == ".m2ts" || ext == ".ts") && file.Length > 10000 && FileUtil.IsM2TransportStream(fileName)) ||
                     (ext == ".textst" && FileUtil.IsMpeg2PrivateStream2(fileName)))
                 {
                     bool isTextSt = false;
@@ -1776,7 +1778,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 encoding = GetCurrentEncoding();
                                 var list = new List<string>(subtitles[0].SplitToLines());
                                 _subtitle = new Subtitle();
-                                var mxfFormat = _subtitle.ReloadLoadSubtitle(list, null);
+                                var mxfFormat = _subtitle.ReloadLoadSubtitle(list, null, null);
                                 SetCurrentFormat(mxfFormat);
                                 _fileName = Path.GetFileNameWithoutExtension(fileName);
                                 SetTitle();
@@ -2089,6 +2091,21 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         pacUnicode.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = pacUnicode;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+                if (format == null)
+                {
+                    var iai = new IaiSub();
+                    if (iai.IsMine(null, fileName))
+                    {
+                        iai.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = iai;
                         SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
@@ -2598,7 +2615,8 @@ namespace Nikse.SubtitleEdit.Forms
                         encoding = Encoding.UTF8;
                     SetEncoding(encoding);
 
-                    if (format.GetType() == typeof(SubStationAlpha))
+                    var formatType = format.GetType();
+                    if (formatType == typeof(SubStationAlpha))
                     {
                         string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
                         if (!string.IsNullOrEmpty(errors))
@@ -2607,7 +2625,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-                    else if (format.GetType() == typeof(AdvancedSubStationAlpha))
+                    else if (formatType == typeof(AdvancedSubStationAlpha))
                     {
                         string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
                         if (!string.IsNullOrEmpty(errors))
@@ -2616,17 +2634,31 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-                    else if (format.GetType() == typeof(SubRip))
+                    else if (formatType == typeof(SubRip))
                     {
                         string errors = (format as SubRip).Errors;
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-                    else if (format.GetType() == typeof(MicroDvd))
+                    else if (formatType == typeof(MicroDvd))
                     {
                         string errors = (format as MicroDvd).Errors;
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(this, errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else if (formatType == typeof(DCinemaSmpte2007))
+                    {
+                        format.ToText(_subtitle, string.Empty);
+                        string errors = (format as DCinemaSmpte2007).Errors;
+                        if (!string.IsNullOrEmpty(errors))
+                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else if (formatType == typeof(DCinemaSmpte2010))
+                    {
+                        format.ToText(_subtitle, string.Empty);
+                        string errors = (format as DCinemaSmpte2010).Errors;
+                        if (!string.IsNullOrEmpty(errors))
+                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 else
@@ -2989,7 +3021,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (currentFormat == null)
                 currentFormat = GetCurrentSubtitleFormat();
 
-            Utilities.SetSaveDialogFilter(saveFileDialog1, currentFormat);
+            UiUtil.SetSaveDialogFilter(saveFileDialog1, currentFormat);
 
             saveFileDialog1.Title = _language.SaveSubtitleAs;
             saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
@@ -3150,7 +3182,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return DialogResult.Cancel;
                     }
 
-                    using (var fs = File.Open(_fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
+                    using (var fs = File.Create(_fileName, 1024, FileOptions.WriteThrough)) // use 'WriteThough' in order to try to avoid issue with power failure
                     using (var sw = new StreamWriter(fs, currentEncoding))
                     {
                         sw.Write(allText);
@@ -3389,11 +3421,12 @@ namespace Nikse.SubtitleEdit.Forms
                 if (format.HasStyleSupport && _networkSession == null)
                 {
                     var styles = new List<string>();
-                    if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
+                    var formatType = format.GetType();
+                    if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
                         styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-                    else if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
+                    else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
                         styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
-                    else if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
+                    else if (formatType == typeof(Sami) || formatType == typeof(SamiModern))
                         styles = Sami.GetStylesFromHeader(_subtitle.Header);
                     else if (format.Name == "Nuendo")
                         styles = GetNuendoStyles();
@@ -3404,9 +3437,9 @@ namespace Nikse.SubtitleEdit.Forms
                             p.Extra = styles[0];
                     }
 
-                    if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
+                    if (formatType == typeof(Sami) || formatType == typeof(SamiModern))
                         SubtitleListview1.ShowExtraColumn(_languageGeneral.Class);
-                    else if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
+                    else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
                         SubtitleListview1.ShowExtraColumn(_languageGeneral.StyleLanguage);
                     else if (format.Name == "Nuendo")
                         SubtitleListview1.ShowExtraColumn(_languageGeneral.Character);
@@ -3499,10 +3532,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             try
             { // can have some problems with fonts...
-                Utilities.InitializeSubtitleFont(textBoxSource);
-                Utilities.InitializeSubtitleFont(textBoxListViewText);
-                Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
-                Utilities.InitializeSubtitleFont(SubtitleListview1);
+                UiUtil.InitializeSubtitleFont(textBoxSource);
+                UiUtil.InitializeSubtitleFont(textBoxListViewText);
+                UiUtil.InitializeSubtitleFont(textBoxListViewTextAlternate);
+                UiUtil.InitializeSubtitleFont(SubtitleListview1);
                 InitializeToolbar();
             }
             catch (Exception exception)
@@ -3545,9 +3578,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 { // can have some problems with fonts...
-                    Utilities.InitializeSubtitleFont(textBoxListViewText);
-                    Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
-                    Utilities.InitializeSubtitleFont(textBoxSource);
+                    UiUtil.InitializeSubtitleFont(textBoxListViewText);
+                    UiUtil.InitializeSubtitleFont(textBoxListViewTextAlternate);
+                    UiUtil.InitializeSubtitleFont(textBoxSource);
                     SubtitleListview1.SubtitleFontName = Configuration.Settings.General.SubtitleFontName;
                     SubtitleListview1.SubtitleFontBold = Configuration.Settings.General.SubtitleFontBold;
                     SubtitleListview1.SubtitleFontSize = Configuration.Settings.General.SubtitleFontSize;
@@ -3571,7 +3604,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 SaveSubtitleListviewIndices();
-                Utilities.InitializeSubtitleFont(SubtitleListview1);
+                UiUtil.InitializeSubtitleFont(SubtitleListview1);
                 SubtitleListview1.AutoSizeAllColumns(this);
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndices();
@@ -4533,14 +4566,9 @@ namespace Nikse.SubtitleEdit.Forms
                 SaveSubtitleListviewIndices();
                 if (!string.IsNullOrWhiteSpace(textBoxSource.Text))
                 {
-                    var temp = new Subtitle(_subtitle);
                     SubtitleFormat format = GetCurrentSubtitleFormat();
-                    var list = new List<string>(textBoxSource.Lines);
-                    if (format != null && format.IsMine(list, null))
-                        format.LoadSubtitle(temp, list, null);
-                    else
-                        format = temp.ReloadLoadSubtitle(new List<string>(textBoxSource.Lines), null);
-
+                    var list = textBoxSource.Lines.ToList();
+                    format = new Subtitle().ReloadLoadSubtitle(list, null, format);
                     if (format == null)
                     {
                         MessageBox.Show(_language.UnableToParseSourceView);
@@ -4548,7 +4576,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     _sourceViewChange = false;
                     MakeHistoryForUndo(_language.BeforeChangesMadeInSourceView);
-                    _subtitle.ReloadLoadSubtitle(new List<string>(textBoxSource.Lines), null);
+                    _subtitle.ReloadLoadSubtitle(list, null, format);
                     if (format.IsFrameBased)
                         _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                     int index = 0;
@@ -4559,21 +4587,36 @@ namespace Nikse.SubtitleEdit.Forms
                         index++;
                     }
 
-                    if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
+                    var formatType = format.GetType();
+                    if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
                     {
                         string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-                    else if (format.GetType() == typeof(SubRip))
+                    else if (formatType == typeof(SubRip))
                     {
                         string errors = (format as SubRip).Errors;
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-                    else if (format.GetType() == typeof(MicroDvd))
+                    else if (formatType == typeof(MicroDvd))
                     {
                         string errors = (format as MicroDvd).Errors;
+                        if (!string.IsNullOrEmpty(errors))
+                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else if (formatType == typeof(DCinemaSmpte2007))
+                    {
+                        format.ToText(_subtitle, string.Empty);
+                        string errors = (format as DCinemaSmpte2007).Errors;
+                        if (!string.IsNullOrEmpty(errors))
+                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else if (formatType == typeof(DCinemaSmpte2010))
+                    {
+                        format.ToText(_subtitle, string.Empty);
+                        string errors = (format as DCinemaSmpte2010).Errors;
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
@@ -4694,11 +4737,15 @@ namespace Nikse.SubtitleEdit.Forms
             ReloadFromSourceView();
             using (var adjustDisplayTime = new AdjustDisplayDuration())
             {
-                ListView.SelectedIndexCollection selectedIndices = null;
+                List<int> selectedIndices = null;
                 if (onlySelectedLines)
                 {
                     adjustDisplayTime.Text += " - " + _language.SelectedLines;
-                    selectedIndices = SubtitleListview1.SelectedIndices;
+                    selectedIndices = new List<int>();
+                    foreach (int item in SubtitleListview1.SelectedIndices)
+                    {
+                        selectedIndices.Add(item);
+                    }
                 }
 
                 if (adjustDisplayTime.ShowDialog(this) == DialogResult.OK)
@@ -5742,7 +5789,7 @@ namespace Nikse.SubtitleEdit.Forms
                     setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
                 }
             }
-            else if ((formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText)) && SubtitleListview1.SelectedItems.Count > 0)
+            else if (((formatType == typeof(TimedText10) && Configuration.Settings.SubtitleSettings.TimedText10ShowStyleAndLanguage) || formatType == typeof(ItunesTimedText)) && SubtitleListview1.SelectedItems.Count > 0)
             {
                 toolStripMenuItemWebVTT.Visible = false;
                 toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.TimedTextStyles;
@@ -6581,7 +6628,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds + 7)
                     charsPerSecond.ForeColor = Color.Red;
                 else if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
-                    charsPerSecond.ForeColor = Utilities.ColorDarkOrange;
+                    charsPerSecond.ForeColor = UiUtil.ColorDarkOrange;
                 else
                     charsPerSecond.ForeColor = Color.Black;
                 charsPerSecond.Text = string.Format(_language.CharactersPerSecond, charactersPerSecond);
@@ -6601,7 +6648,7 @@ namespace Nikse.SubtitleEdit.Forms
             string text = paragraph.Text;
             lineLengths.Text = _languageGeneral.SingleLineLengths.Trim();
             singleLine.Left = lineLengths.Left + lineLengths.Width - 3;
-            Utilities.GetLineLengths(singleLine, text);
+            UiUtil.GetLineLengths(singleLine, text);
 
             buttonSplitLine.Visible = false;
             text = HtmlUtil.RemoveHtmlTags(text, true);
@@ -6795,7 +6842,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitleListViewIndex >= 0)
             {
                 int numberOfNewLines = Utilities.GetNumberOfLines(textBoxListViewText.Text);
-                Utilities.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), numberOfNewLines);
+                UiUtil.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), numberOfNewLines);
 
                 // update _subtitle + listview
                 string text = textBoxListViewText.Text.TrimEnd();
@@ -6823,7 +6870,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (original != null)
                 {
                     int numberOfNewLines = Utilities.GetNumberOfLines(textBoxListViewTextAlternate.Text);
-                    Utilities.CheckAutoWrap(textBoxListViewTextAlternate, new KeyEventArgs(Keys.None), numberOfNewLines);
+                    UiUtil.CheckAutoWrap(textBoxListViewTextAlternate, new KeyEventArgs(Keys.None), numberOfNewLines);
 
                     // update _subtitle + listview
                     string text = textBoxListViewTextAlternate.Text.TrimEnd();
@@ -6851,13 +6898,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             //Utilities.CheckAutoWrap(textBoxListViewText, e, numberOfNewLines);
 
-            if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
+            if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
             {
-                e.SuppressKeyPress = true;
-            }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
-            {
-                textBoxListViewText.SelectAll();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _mainTextBoxAutoBreak)
@@ -7304,7 +7346,7 @@ namespace Nikse.SubtitleEdit.Forms
                         b = b.Remove(3, 1).Replace("  ", " ");
                     }
                     else if (a.StartsWith('-') && (aTrimmed.EndsWith('.') || aTrimmed.EndsWith('!') || aTrimmed.EndsWith('?')) &&
-                        b.StartsWith("<i>-") && (bTrimmed.EndsWith(".</i>") || bTrimmed.EndsWith("!</i>") || bTrimmed.EndsWith("?</i>")))
+                        b.StartsWith("<i>-", StringComparison.Ordinal) && (bTrimmed.EndsWith(".</i>", StringComparison.Ordinal) || bTrimmed.EndsWith("!</i>", StringComparison.Ordinal) || bTrimmed.EndsWith("?</i>", StringComparison.Ordinal)))
                     {
                         a = a.TrimStart('-').TrimStart();
                         b = b.Remove(3, 1).Replace("  ", " ").Trim();
@@ -7771,6 +7813,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         firstIndex = index;
                         next = index + 1;
+                        first = !first;
                     }
                     else
                     {
@@ -7779,7 +7822,6 @@ namespace Nikse.SubtitleEdit.Forms
                             return;
                         next++;
                     }
-                    first = false;
                     sb.AppendLine(_subtitle.Paragraphs[index].Text);
                     durationMilliseconds += _subtitle.Paragraphs[index].Duration.TotalMilliseconds;
                 }
@@ -7858,18 +7900,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string ChangeAllLinesItalictoSingleItalic(string text)
         {
-            bool allLinesStartAndEndsWithItalic = text.Contains("<i>");
+            if (!text.Contains("<i>"))
+                return text;
             foreach (var line in text.SplitToLines())
             {
                 if (!line.TrimStart().StartsWith("<i>", StringComparison.Ordinal) || !line.TrimEnd().EndsWith("</i>", StringComparison.Ordinal))
-                    allLinesStartAndEndsWithItalic = false;
+                    return text;
             }
-            if (allLinesStartAndEndsWithItalic)
-            {
-                text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic).Trim();
-                text = "<i>" + text + "</i>";
-            }
-            return text;
+            return "<i>" + HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic).Trim() + "</i>";
         }
 
         private void MergeAfterToolStripMenuItemClick(object sender, EventArgs e)
@@ -8885,6 +8923,12 @@ namespace Nikse.SubtitleEdit.Forms
                     return false;
                 return LoadBluRaySubFromMatroska(matroskaSubtitleInfo, matroska);
             }
+            if (matroskaSubtitleInfo.CodecId.Equals("S_HDMV/TEXTST", StringComparison.OrdinalIgnoreCase))
+            {
+                if (batchMode)
+                    return false;
+                return LoadTextSTFromMatroska(matroskaSubtitleInfo, matroska, batchMode);
+            }
 
             ShowStatus(_language.ParsingMatroskaFile);
             Refresh();
@@ -8933,6 +8977,72 @@ namespace Nikse.SubtitleEdit.Forms
 
             _converted = true;
 
+            if (batchMode)
+                return true;
+
+            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+            if (_subtitle.Paragraphs.Count > 0)
+                SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
+            ShowSource();
+            return true;
+        }
+
+        private bool LoadTextSTFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, bool batchMode)
+        {
+            ShowStatus(_language.ParsingMatroskaFile);
+            Refresh();
+            Cursor.Current = Cursors.WaitCursor;
+            var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, MatroskaProgress);
+            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
+            Cursor.Current = Cursors.Default;
+
+            MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
+            _subtitleListViewIndex = -1;
+            if (!batchMode)
+                ResetSubtitle();
+            _subtitle.Paragraphs.Clear();
+
+            Utilities.LoadMatroskaTextSubtitle(matroskaSubtitleInfo, matroska, sub, _subtitle);
+            for (int index = 0; index < sub.Count; index++)
+            {
+                try
+                {
+                    var msub = sub[index];
+                    int idx = -6; // MakeMKV starts at DialogPresentationSegment
+                    if (VobSubParser.IsPrivateStream2(msub.Data, 0))
+                        idx = 0; //  starts with MPEG2 private stream 2 (just to be sure)
+                    var dps = new Nikse.SubtitleEdit.Core.SubtitleFormats.TextST.DialogPresentationSegment(msub.Data, idx);
+                    _subtitle.Paragraphs[index].Text = dps.Text;
+                }
+                catch (Exception exception)
+                {
+                    _subtitle.Paragraphs[index].Text = exception.Message;
+                }
+            }
+
+            if (_networkSession == null && SubtitleListview1.IsExtraColumnVisible)
+            {
+                SubtitleListview1.HideExtraColumn();
+            }
+            comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
+            SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+            comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
+            SetEncoding(Encoding.UTF8);
+            ShowStatus(_language.SubtitleImportedFromMatroskaFile);
+            _subtitle.Renumber();
+            _subtitle.WasLoadedWithFrameNumbers = false;
+            if (matroska.Path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || matroska.Path.EndsWith(".mks", StringComparison.OrdinalIgnoreCase))
+            {
+                _fileName = matroska.Path.Remove(matroska.Path.Length - 4);
+                Text = Title + " - " + _fileName;
+            }
+            else
+            {
+                Text = Title;
+            }
+            _fileDateTime = new DateTime();
+            _converted = true;
             if (batchMode)
                 return true;
 
@@ -10690,6 +10800,11 @@ namespace Nikse.SubtitleEdit.Forms
             else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _waveformAddTextAtHere)
             {
                 addParagraphHereToolStripMenuItem_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _waveformAddTextAtHereFromClipboard)
+            {
+                addParagraphAndPasteToolStripMenuItem_Click(null, null);
                 e.SuppressKeyPress = true;
             }
             else if (audioVisualizer.Focused && e.KeyData == _waveformFocusListView)
@@ -12718,8 +12833,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_videoInfo.FramesPerSecond > 0)
                     labelVideoInfo.Text = labelVideoInfo.Text + " " + string.Format("{0:0.0##}", _videoInfo.FramesPerSecond);
 
-                string peakWaveFileName = GetPeakWaveFileName(fileName);
-                string spectrogramFolder = GetSpectrogramFolder(fileName);
+                string peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(fileName);
+                string spectrogramFolder = Nikse.SubtitleEdit.Core.WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(fileName);
                 if (File.Exists(peakWaveFileName))
                 {
                     audioVisualizer.WavePeaks = WavePeakData.FromDisk(peakWaveFileName);
@@ -13051,7 +13166,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (textSize.Height > buttonPlayPrevious.Height - 4)
                 {
                     int newButtonHeight = 22; //(int)(textSize.Height + 7 + 0.5);
-                    Utilities.SetButtonHeight(this, newButtonHeight, 1);
+                    UiUtil.SetButtonHeight(this, newButtonHeight, 1);
 
                     // List view
                     SubtitleListview1.InitializeTimestampColumnWidths(this);
@@ -13766,7 +13881,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     selectedText = selectedText.Trim();
                     selectedText = selectedText.TrimEnd('.', ',', '!', '?');
-                    selectedText = selectedText.Trim();
+                    selectedText = selectedText.TrimEnd();
                     if (!string.IsNullOrEmpty(selectedText) && selectedText != textBoxSearchWord.Text)
                     {
                         textBoxSearchWord.Text = HtmlUtil.RemoveHtmlTags(selectedText);
@@ -14152,11 +14267,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.IsRunningOnLinux())
             {
                 numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 10;
-                numericUpDownDuration.Width = numericUpDownDuration.Width + 10;
-                numericUpDownSec1.Width = numericUpDownSec1.Width + 10;
-                numericUpDownSec2.Width = numericUpDownSec2.Width + 10;
-                numericUpDownSecAdjust1.Width = numericUpDownSecAdjust1.Width + 10;
-                numericUpDownSecAdjust2.Width = numericUpDownSecAdjust2.Width + 10;
+                numericUpDownDuration.Width += 10;
+                numericUpDownSec1.Width += 10;
+                numericUpDownSec2.Width += 10;
+                numericUpDownSecAdjust1.Width += 10;
+                numericUpDownSecAdjust2.Width += 10;
                 labelDuration.Left = numericUpDownDuration.Left;
             }
 
@@ -14248,140 +14363,141 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetShortcuts()
         {
-            _mainGeneralGoToFirstSelectedLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine);
-            _mainGeneralGoToFirstEmptyLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextEmptyLine);
-            _mainGeneralMergeSelectedLines = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines);
-            _mainGeneralMergeSelectedLinesOnlyFirstText = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
-            _mainGeneralToggleTranslationMode = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode);
-            _mainGeneralSwitchTranslationAndOriginal = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
-            _mainGeneralMergeTranslationAndOriginal = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation);
-            _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-            _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
-            _mainGeneralGoToStartOfCurrentSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
-            _mainGeneralGoToEndOfCurrentSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle);
+            _mainGeneralGoToFirstSelectedLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine);
+            _mainGeneralGoToFirstEmptyLine = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextEmptyLine);
+            _mainGeneralMergeSelectedLines = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines);
+            _mainGeneralMergeSelectedLinesOnlyFirstText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
+            _mainGeneralToggleTranslationMode = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode);
+            _mainGeneralSwitchTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
+            _mainGeneralMergeTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation);
+            _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+            _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+            _mainGeneralGoToStartOfCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
+            _mainGeneralGoToEndOfCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle);
 
-            newToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileNew);
-            openToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
-            toolStripMenuItemOpenKeepVideo.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileOpenKeepVideo);
-            saveToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSave);
-            saveOriginalToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveOriginal);
-            saveOriginalAstoolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveOriginalAs);
-            saveAsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
-            _mainGeneralFileSaveAll = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAll);
-            eBUSTLToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEbu);
+            newToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileNew);
+            openToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
+            toolStripMenuItemOpenKeepVideo.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileOpenKeepVideo);
+            saveToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSave);
+            saveOriginalToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveOriginal);
+            saveOriginalAstoolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveOriginalAs);
+            saveAsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
+            _mainGeneralFileSaveAll = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAll);
+            eBUSTLToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEbu);
 
-            toolStripMenuItemUndo.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditUndo);
-            toolStripMenuItemRedo.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditRedo);
-            findToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditFind);
-            findNextToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditFindNext);
-            replaceToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditReplace);
-            multipleReplaceToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditMultipleReplace);
-            gotoLineNumberToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
-            toolStripMenuItemRightToLeftMode.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditRightToLeft);
-            toolStripMenuItemShowOriginalInPreview.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
-            toolStripMenuItemInverseSelection.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditInverseSelection);
-            toolStripMenuItemModifySelection.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditModifySelection);
+            toolStripMenuItemUndo.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditUndo);
+            toolStripMenuItemRedo.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditRedo);
+            findToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditFind);
+            findNextToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditFindNext);
+            replaceToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReplace);
+            multipleReplaceToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditMultipleReplace);
+            gotoLineNumberToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
+            toolStripMenuItemRightToLeftMode.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditRightToLeft);
+            toolStripMenuItemShowOriginalInPreview.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
+            toolStripMenuItemInverseSelection.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditInverseSelection);
+            toolStripMenuItemModifySelection.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditModifySelection);
 
-            fixToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors);
-            toolStripMenuItemAutoMergeShortLines.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsMergeShortLines);
-            toolStripMenuItemAutoSplitLongLines.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsSplitLongLines);
-            startNumberingFromToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsRenumber);
-            removeTextForHearImparedToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI);
-            ChangeCasingToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsChangeCasing);
-            toolStripMenuItemShowOriginalInPreview.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
-            toolStripMenuItemBatchConvert.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsBatchConvert);
+            fixToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors);
+            toolStripMenuItemAutoMergeShortLines.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsMergeShortLines);
+            toolStripMenuItemAutoSplitLongLines.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsSplitLongLines);
+            startNumberingFromToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsRenumber);
+            removeTextForHearImparedToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI);
+            ChangeCasingToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsChangeCasing);
+            toolStripMenuItemShowOriginalInPreview.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
+            toolStripMenuItemBatchConvert.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsBatchConvert);
 
-            showhideVideoToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
-            _toggleVideoDockUndock = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
-            _videoPause = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);
-            _videoPlayPauseToggle = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle);
-            _video1FrameLeft = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameLeft);
-            _video1FrameRight = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameRight);
-            _video100MsLeft = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo100MsLeft);
-            _video100MsRight = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo100MsRight);
-            _video500MsLeft = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo500MsLeft);
-            _video500MsRight = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo500MsRight);
-            _video1000MsLeft = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsLeft);
-            _video1000MsRight = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsRight);
-            _videoPlayFirstSelected = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralPlayFirstSelected);
-            _mainVideoFullscreen = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
+            showhideVideoToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
+            _toggleVideoDockUndock = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
+            _videoPause = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);
+            _videoPlayPauseToggle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle);
+            _video1FrameLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameLeft);
+            _video1FrameRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1FrameRight);
+            _video100MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo100MsLeft);
+            _video100MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo100MsRight);
+            _video500MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo500MsLeft);
+            _video500MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo500MsRight);
+            _video1000MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsLeft);
+            _video1000MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsRight);
+            _videoPlayFirstSelected = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralPlayFirstSelected);
+            _mainVideoFullscreen = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
 
-            spellCheckToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);
-            findDoubleWordsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords);
-            addWordToNamesetcListToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames);
+            spellCheckToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);
+            findDoubleWordsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords);
+            addWordToNamesetcListToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames);
 
-            toolStripMenuItemAdjustAllTimes.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
-            visualSyncToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationVisualSync);
-            toolStripMenuItemPointSync.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationPointSync);
-            toolStripMenuItemChangeFrameRate2.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationChangeFrameRate);
-            italicToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
-            _mainToolsAutoDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsAutoDuration);
-            _mainToolsBeamer = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsBeamer);
-            _mainListViewToggleDashes = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleDashes);
-            toolStripMenuItemAlignment.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignment);
-            _mainListViewAutoDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewAutoDuration);
-            _mainListViewFocusWaveform = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewFocusWaveform);
-            _mainListViewGoToNextError = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
-            _mainEditReverseStartAndEndingForRTL = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
-            _mainListViewCopyText = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
-            copyOriginalTextToCurrentToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent);
-            toolStripMenuItemColumnDeleteText.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText);
-            ShiftTextCellsDownToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnInsertText);
-            toolStripMenuItemPasteSpecial.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnPaste);
+            toolStripMenuItemAdjustAllTimes.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
+            visualSyncToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationVisualSync);
+            toolStripMenuItemPointSync.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationPointSync);
+            toolStripMenuItemChangeFrameRate2.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationChangeFrameRate);
+            italicToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
+            _mainToolsAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsAutoDuration);
+            _mainToolsBeamer = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToolsBeamer);
+            _mainListViewToggleDashes = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleDashes);
+            toolStripMenuItemAlignment.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignment);
+            _mainListViewAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewAutoDuration);
+            _mainListViewFocusWaveform = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewFocusWaveform);
+            _mainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
+            _mainEditReverseStartAndEndingForRTL = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
+            _mainListViewCopyText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
+            copyOriginalTextToCurrentToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent);
+            toolStripMenuItemColumnDeleteText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText);
+            ShiftTextCellsDownToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnInsertText);
+            toolStripMenuItemPasteSpecial.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnPaste);
             toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = _mainEditReverseStartAndEndingForRTL;
-            italicToolStripMenuItem1.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
-            _mainTextBoxSplitAtCursor = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
-            _mainTextBoxMoveLastWordDown = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown);
-            _mainTextBoxMoveFirstWordFromNextUp = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
-            _mainTextBoxSelectionToLower = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower);
-            _mainTextBoxSelectionToUpper = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper);
-            _mainTextBoxToggleAutoDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxToggleAutoDuration);
-            _mainCreateInsertSubAtVideoPos = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
-            _mainCreatePlayFromJustBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore);
-            _mainCreateSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
-            _mainCreateSetEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEnd);
-            _mainCreateStartDownEndUp = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp);
-            _mainCreateSetEndAddNewAndGoToNew = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
-            _mainAdjustSetStartAndOffsetTheRest = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
-            _mainAdjustSetEndAndOffsetTheRest = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest);
-            _mainAdjustSetEndAndOffsetTheRestAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
-            _mainAdjustSetEndAndGotoNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
-            _mainAdjustInsertViaEndAutoStartAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
-            _mainAdjustSetStartAutoDurationAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
-            _mainAdjustSetEndNextStartAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
-            _mainAdjustStartDownEndUpAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);
-            _mainAdjustSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStart);
-            _mainAdjustSetStartKeepDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration);
-            _mainAdjustSetEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEnd);
-            _mainAdjustSelected100MsForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward);
-            _mainAdjustSelected100MsBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack);
-            _mainInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
-            _mainInsertBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
-            _mainTextBoxInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxInsertAfter);
-            _mainTextBoxAutoBreak = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak);
-            _mainTextBoxUnbreak = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreak);
-            _mainMergeDialog = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialog);
-            _mainToggleFocus = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocus);
-            _waveformVerticalZoom = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
-            _waveformVerticalZoomOut = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoomOut);
-            _waveformZoomIn = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomIn);
-            _waveformZoomOut = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomOut);
-            _waveformPlaySelection = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelection);
-            _waveformPlaySelectionEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd);
-            _waveformSearchSilenceForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward);
-            _waveformSearchSilenceBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack);
-            _waveformAddTextAtHere = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHere);
-            _waveformFocusListView = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformFocusListView);
-            _mainTranslateCustomSearch1 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1);
-            _mainTranslateCustomSearch2 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2);
-            _mainTranslateCustomSearch3 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3);
-            _mainTranslateCustomSearch4 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch4);
-            _mainTranslateCustomSearch5 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch5);
-            _mainTranslateCustomSearch6 = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch6);
+            italicToolStripMenuItem1.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+            _mainTextBoxSplitAtCursor = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
+            _mainTextBoxMoveLastWordDown = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown);
+            _mainTextBoxMoveFirstWordFromNextUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
+            _mainTextBoxSelectionToLower = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower);
+            _mainTextBoxSelectionToUpper = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper);
+            _mainTextBoxToggleAutoDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxToggleAutoDuration);
+            _mainCreateInsertSubAtVideoPos = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
+            _mainCreatePlayFromJustBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore);
+            _mainCreateSetStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
+            _mainCreateSetEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEnd);
+            _mainCreateStartDownEndUp = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp);
+            _mainCreateSetEndAddNewAndGoToNew = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
+            _mainAdjustSetStartAndOffsetTheRest = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
+            _mainAdjustSetEndAndOffsetTheRest = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest);
+            _mainAdjustSetEndAndOffsetTheRestAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext);
+            _mainAdjustSetEndAndGotoNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
+            _mainAdjustInsertViaEndAutoStartAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
+            _mainAdjustSetStartAutoDurationAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
+            _mainAdjustSetEndNextStartAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
+            _mainAdjustStartDownEndUpAndGoToNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);
+            _mainAdjustSetStart = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStart);
+            _mainAdjustSetStartKeepDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration);
+            _mainAdjustSetEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEnd);
+            _mainAdjustSelected100MsForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward);
+            _mainAdjustSelected100MsBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack);
+            _mainInsertAfter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
+            _mainInsertBefore = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
+            _mainTextBoxInsertAfter = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxInsertAfter);
+            _mainTextBoxAutoBreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak);
+            _mainTextBoxUnbreak = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreak);
+            _mainMergeDialog = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialog);
+            _mainToggleFocus = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocus);
+            _waveformVerticalZoom = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
+            _waveformVerticalZoomOut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoomOut);
+            _waveformZoomIn = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomIn);
+            _waveformZoomOut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomOut);
+            _waveformPlaySelection = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelection);
+            _waveformPlaySelectionEnd = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd);
+            _waveformSearchSilenceForward = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward);
+            _waveformSearchSilenceBack = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack);
+            _waveformAddTextAtHere = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHere);
+            _waveformAddTextAtHereFromClipboard = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHereFromClipboard);
+            _waveformFocusListView = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformFocusListView);
+            _mainTranslateCustomSearch1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1);
+            _mainTranslateCustomSearch2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2);
+            _mainTranslateCustomSearch3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3);
+            _mainTranslateCustomSearch4 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch4);
+            _mainTranslateCustomSearch5 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch5);
+            _mainTranslateCustomSearch6 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch6);
 
             if (audioVisualizer != null)
             {
-                audioVisualizer.InsertAtVideoPositionShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
+                audioVisualizer.InsertAtVideoPositionShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
             }
         }
 
@@ -14505,7 +14621,7 @@ namespace Nikse.SubtitleEdit.Forms
                         item.Tag = pluginFileName;
 
                         if (!string.IsNullOrEmpty(shortcut))
-                            item.ShortcutKeys = Utilities.GetKeys(shortcut);
+                            item.ShortcutKeys = UiUtil.GetKeys(shortcut);
 
                         if (actionType.Equals("File", StringComparison.OrdinalIgnoreCase))
                         {
@@ -14798,53 +14914,6 @@ namespace Nikse.SubtitleEdit.Forms
             TranslateViaGoogle(false, false);
         }
 
-        public static string Sha256Hash(string value)
-        {
-            using (var hasher = new System.Security.Cryptography.SHA256Managed())
-            {
-                var bytes = Encoding.UTF8.GetBytes(value);
-                var hash = hasher.ComputeHash(bytes);
-                return Convert.ToBase64String(hash, 0, hash.Length);
-            }
-        }
-
-        public static string GetPeakWaveFileName(string videoFileName)
-        {
-            var dir = Configuration.WaveformsFolder.TrimEnd(Path.DirectorySeparatorChar);
-            if (!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
-
-            var file = new FileInfo(videoFileName);
-            var wavePeakName = Sha256Hash(file.Name + file.Length + file.CreationTimeUtc.ToShortDateString()) + ".wav";
-            wavePeakName = wavePeakName.Replace("=", string.Empty).Replace("/", string.Empty).Replace(",", string.Empty).Replace("?", string.Empty).Replace("*", string.Empty).Replace("+", string.Empty).Replace("\\", string.Empty);
-            wavePeakName = Path.Combine(dir, wavePeakName);
-            return wavePeakName;
-        }
-
-        public static string GetSpectrogramFolder(string videoFileName)
-        {
-            var dir = Configuration.SpectrogramsFolder.TrimEnd(Path.DirectorySeparatorChar);
-            if (!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
-
-            var file = new FileInfo(videoFileName);
-            var name = Sha256Hash(file.Name + file.Length + file.CreationTimeUtc.ToShortDateString());
-            name = name.Replace("=", string.Empty).Replace("/", string.Empty).Replace(",", string.Empty).Replace("?", string.Empty).Replace("*", string.Empty).Replace("+", string.Empty).Replace("\\", string.Empty);
-            name = Path.Combine(dir, name);
-            return name;
-        }
-
-        private bool IsFileValidForVisualizer(string fileName)
-        {
-            if (!fileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
-                return false;
-
-            using (var wpg = new WavePeakGenerator(fileName))
-            {
-                return wpg.IsSupported;
-            }
-        }
-
         private void AudioWaveform_Click(object sender, EventArgs e)
         {
             if (audioVisualizer.WavePeaks == null)
@@ -14858,10 +14927,10 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.Pause();
                 using (var addWaveform = new AddWaveform())
                 {
-                    var peakWaveFileName = GetPeakWaveFileName(_videoFileName);
-                    var spectrogramFolder = GetSpectrogramFolder(_videoFileName);
+                    var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(_videoFileName);
+                    var spectrogramFolder = Nikse.SubtitleEdit.Core.WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(_videoFileName);
 
-                    if (IsFileValidForVisualizer(_videoFileName))
+                    if (WavePeakGenerator.IsFileValidForVisualizer(_videoFileName))
                     {
                         addWaveform.InitializeViaWaveFile(_videoFileName, peakWaveFileName, spectrogramFolder);
                     }
@@ -15206,7 +15275,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             string fileName = files[0];
             string ext = Path.GetExtension(fileName).ToLowerInvariant();
-            if (ext != ".wav" || !IsFileValidForVisualizer(fileName))
+            if (ext != ".wav" || !WavePeakGenerator.IsFileValidForVisualizer(fileName))
             {
                 if (audioVisualizer.WavePeaks == null && (Utilities.GetMovieFileExtensions().Contains(ext) || ext == ".wav" || ext == ".mp3" || ext == ".mka" || ext == ".m4a" || ext == ".wma"))
                 {
@@ -15250,8 +15319,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var addWaveform = new AddWaveform())
             {
-                string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
-                string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
+                string peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(_videoFileName);
+                string spectrogramFolder = Nikse.SubtitleEdit.Core.WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(_videoFileName);
                 addWaveform.InitializeViaWaveFile(fileName, peakWaveFileName, spectrogramFolder);
                 if (addWaveform.ShowDialog() == DialogResult.OK)
                 {
@@ -16548,12 +16617,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_isVideoControlsUndocked)
             {
-                redockVideoControlsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
+                redockVideoControlsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
                 undockVideoControlsToolStripMenuItem.ShortcutKeys = Keys.None;
             }
             else
             {
-                undockVideoControlsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
+                undockVideoControlsToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
                 redockVideoControlsToolStripMenuItem.ShortcutKeys = Keys.None;
             }
 
@@ -16635,7 +16704,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             //Utilities.CheckAutoWrap(textBoxListViewTextAlternate, e, numberOfNewLines);
 
-            if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
+            if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter && numberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
             {
                 e.SuppressKeyPress = true;
             }
@@ -16712,7 +16781,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SaveOriginalAstoolStripMenuItemClick(object sender, EventArgs e)
         {
             SubtitleFormat currentFormat = GetCurrentSubtitleFormat();
-            Utilities.SetSaveDialogFilter(saveFileDialog1, currentFormat);
+            UiUtil.SetSaveDialogFilter(saveFileDialog1, currentFormat);
 
             saveFileDialog1.Title = _language.SaveOriginalSubtitleAs;
             saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
@@ -17108,8 +17177,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (currentFormat != null && !currentFormat.IsTextBased)
                     return;
 
-                var temp = new Subtitle(_subtitle);
-                SubtitleFormat format = temp.ReloadLoadSubtitle(new List<string>(textBoxSource.Lines), null);
+                SubtitleFormat format = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
                 if (format == null)
                     e.Cancel = true;
             }
@@ -17422,7 +17490,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void PAcScreenElectronicsToolStripMenuItemClick(object sender, EventArgs e)
+        private void PacScreenElectronicsToolStripMenuItemClick(object sender, EventArgs e)
         {
             var pac = new Pac();
             saveFileDialog1.Filter = pac.Name + "|*" + pac.Extension;
@@ -17452,6 +17520,72 @@ namespace Nikse.SubtitleEdit.Forms
                     fileName += pac.Extension;
                 }
                 pac.Save(fileName, _subtitle);
+            }
+        }
+
+        private void uniPacExportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var uniPac = new PacUnicode();
+            saveFileDialog1.Filter = uniPac.Name + "|*" + uniPac.Extension;
+            saveFileDialog1.Title = _language.SaveSubtitleAs;
+            saveFileDialog1.DefaultExt = "*" + uniPac.Extension;
+            saveFileDialog1.AddExtension = true;
+
+            if (!string.IsNullOrEmpty(_videoFileName))
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
+            else
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+
+            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+
+            DialogResult result = saveFileDialog1.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
+                string fileName = saveFileDialog1.FileName;
+                string ext = Path.GetExtension(fileName);
+                bool extOk = ext.Equals(uniPac.Extension, StringComparison.OrdinalIgnoreCase);
+                if (!extOk)
+                {
+                    if (fileName.EndsWith('.'))
+                        fileName = fileName.Substring(0, fileName.Length - 1);
+                    fileName += uniPac.Extension;
+                }
+                uniPac.Save(fileName, _subtitle);
+            }
+        }
+
+        private void toolStripMenuItemExportAyato_Click(object sender, EventArgs e)
+        {
+            var ayato = new Ayato();
+            saveFileDialog1.Filter = ayato.Name + "|*" + ayato.Extension;
+            saveFileDialog1.Title = _language.SaveSubtitleAs;
+            saveFileDialog1.DefaultExt = "*" + ayato.Extension;
+            saveFileDialog1.AddExtension = true;
+
+            if (!string.IsNullOrEmpty(_videoFileName))
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
+            else
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+
+            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+
+            DialogResult result = saveFileDialog1.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
+                string fileName = saveFileDialog1.FileName;
+                string ext = Path.GetExtension(fileName);
+                bool extOk = ext.Equals(ayato.Extension, StringComparison.OrdinalIgnoreCase);
+                if (!extOk)
+                {
+                    if (fileName.EndsWith('.'))
+                        fileName = fileName.Substring(0, fileName.Length - 1);
+                    fileName += ayato.Extension;
+                }
+                ayato.Save(fileName, _videoFileName, _subtitle);
             }
         }
 
@@ -18444,7 +18578,7 @@ namespace Nikse.SubtitleEdit.Forms
                 newSub.Paragraphs.Add(_subtitle.Paragraphs[index]);
 
             SubtitleFormat currentFormat = GetCurrentSubtitleFormat();
-            Utilities.SetSaveDialogFilter(saveFileDialog1, currentFormat);
+            UiUtil.SetSaveDialogFilter(saveFileDialog1, currentFormat);
             saveFileDialog1.Title = _language.SaveSubtitleAs;
             saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
             saveFileDialog1.AddExtension = true;

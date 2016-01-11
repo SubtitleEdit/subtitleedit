@@ -37,6 +37,9 @@
             this.columnHeaderLine = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderBefore = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderAfter = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemSelAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemInvertSel = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxRemoveTextBeforeColon = new System.Windows.Forms.CheckBox();
             this.groupBoxRemoveTextConditions = new System.Windows.Forms.GroupBox();
             this.checkBoxRemoveIfAllUppercase = new System.Windows.Forms.CheckBox();
@@ -56,18 +59,15 @@
             this.checkBoxRemoveTextBetweenBrackets = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveTextBetweenSquares = new System.Windows.Forms.CheckBox();
             this.labelAnd = new System.Windows.Forms.Label();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItemSelAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemInvertSel = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxLinesFound.SuspendLayout();
-            this.groupBoxRemoveTextConditions.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            this.groupBoxRemoveTextConditions.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(523, 480);
+            this.buttonOK.Location = new System.Drawing.Point(791, 523);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 2;
@@ -79,7 +79,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(604, 480);
+            this.buttonCancel.Location = new System.Drawing.Point(872, 523);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 3;
@@ -94,7 +94,7 @@
             this.groupBoxLinesFound.Controls.Add(this.listViewFixes);
             this.groupBoxLinesFound.Location = new System.Drawing.Point(12, 222);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
-            this.groupBoxLinesFound.Size = new System.Drawing.Size(673, 253);
+            this.groupBoxLinesFound.Size = new System.Drawing.Size(941, 296);
             this.groupBoxLinesFound.TabIndex = 1;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines found";
@@ -114,7 +114,7 @@
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.Location = new System.Drawing.Point(6, 17);
             this.listViewFixes.Name = "listViewFixes";
-            this.listViewFixes.Size = new System.Drawing.Size(661, 230);
+            this.listViewFixes.Size = new System.Drawing.Size(929, 273);
             this.listViewFixes.TabIndex = 0;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
@@ -132,12 +132,34 @@
             // columnHeaderBefore
             // 
             this.columnHeaderBefore.Text = "Before";
-            this.columnHeaderBefore.Width = 251;
+            this.columnHeaderBefore.Width = 401;
             // 
             // columnHeaderAfter
             // 
             this.columnHeaderAfter.Text = "After";
-            this.columnHeaderAfter.Width = 266;
+            this.columnHeaderAfter.Width = 395;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSelAll,
+            this.toolStripMenuItemInvertSel});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(155, 48);
+            // 
+            // toolStripMenuItemSelAll
+            // 
+            this.toolStripMenuItemSelAll.Name = "toolStripMenuItemSelAll";
+            this.toolStripMenuItemSelAll.Size = new System.Drawing.Size(154, 22);
+            this.toolStripMenuItemSelAll.Text = "Select all";
+            this.toolStripMenuItemSelAll.Click += new System.EventHandler(this.toolStripMenuItemSelAll_Click);
+            // 
+            // toolStripMenuItemInvertSel
+            // 
+            this.toolStripMenuItemInvertSel.Name = "toolStripMenuItemInvertSel";
+            this.toolStripMenuItemInvertSel.Size = new System.Drawing.Size(154, 22);
+            this.toolStripMenuItemInvertSel.Text = "Invert selection";
+            this.toolStripMenuItemInvertSel.Click += new System.EventHandler(this.toolStripMenuItemInvertSel_Click);
             // 
             // checkBoxRemoveTextBeforeColon
             // 
@@ -176,7 +198,7 @@
             this.groupBoxRemoveTextConditions.Controls.Add(this.labelAnd);
             this.groupBoxRemoveTextConditions.Location = new System.Drawing.Point(12, 12);
             this.groupBoxRemoveTextConditions.Name = "groupBoxRemoveTextConditions";
-            this.groupBoxRemoveTextConditions.Size = new System.Drawing.Size(673, 204);
+            this.groupBoxRemoveTextConditions.Size = new System.Drawing.Size(941, 204);
             this.groupBoxRemoveTextConditions.TabIndex = 0;
             this.groupBoxRemoveTextConditions.TabStop = false;
             this.groupBoxRemoveTextConditions.Text = "Remove text conditions";
@@ -387,33 +409,11 @@
             this.labelAnd.TabIndex = 7;
             this.labelAnd.Text = "and";
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemSelAll,
-            this.toolStripMenuItemInvertSel});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(155, 48);
-            // 
-            // toolStripMenuItemSelAll
-            // 
-            this.toolStripMenuItemSelAll.Name = "toolStripMenuItemSelAll";
-            this.toolStripMenuItemSelAll.Size = new System.Drawing.Size(154, 22);
-            this.toolStripMenuItemSelAll.Text = "Select all";
-            this.toolStripMenuItemSelAll.Click += new System.EventHandler(this.toolStripMenuItemSelAll_Click);
-            // 
-            // toolStripMenuItemInvertSel
-            // 
-            this.toolStripMenuItemInvertSel.Name = "toolStripMenuItemInvertSel";
-            this.toolStripMenuItemInvertSel.Size = new System.Drawing.Size(154, 22);
-            this.toolStripMenuItemInvertSel.Text = "Invert selection";
-            this.toolStripMenuItemInvertSel.Click += new System.EventHandler(this.toolStripMenuItemInvertSel_Click);
-            // 
             // FormRemoveTextForHearImpaired
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(697, 507);
+            this.ClientSize = new System.Drawing.Size(965, 550);
             this.Controls.Add(this.groupBoxRemoveTextConditions);
             this.Controls.Add(this.groupBoxLinesFound);
             this.Controls.Add(this.buttonOK);
@@ -432,9 +432,9 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormRemoveTextForHearImpaired_KeyDown);
             this.Resize += new System.EventHandler(this.FormRemoveTextForHearImpaired_Resize);
             this.groupBoxLinesFound.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.groupBoxRemoveTextConditions.ResumeLayout(false);
             this.groupBoxRemoveTextConditions.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

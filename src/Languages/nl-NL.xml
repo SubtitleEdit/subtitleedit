@@ -222,6 +222,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Snelheid procentueel aanpassen</Title>
+    <TitleShort>Snelheid aanpassen</TitleShort>
     <Info>Ondertitelsnelheid procentueel wĳzigen</Info>
     <Custom>Aangepast</Custom>
     <ToDropFrame>Naar drop-frame</ToDropFrame>
@@ -336,7 +337,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <AbortedByUser>Afgebroken door gebruiker</AbortedByUser>
     <ReadingSubtitleData>Ondertiteldata lezen...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Bezig met vob-bestand {1} van {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>Ifo-type is '{0}' en niet 'DVDVIDEO-VTS'. {1}Probeer een ander bestand dan {2}</WrongIfoType>
+    <WrongIfoType>Ifo-type is '{0}' en niet 'DVDVIDEO-VTS'.{1}Probeer een ander bestand dan {2}</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Taal kiezen</Title>
@@ -370,6 +371,9 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <Import>Importeren...</Import>
     <TextAndTimingInformation>Tekst en timing informatie</TextAndTimingInformation>
     <JustificationCode>Tekstuitlĳning (JC)</JustificationCode>
+    <Teletext>Teletekst</Teletext>
+    <UseBox>Tekst in kader weergeven</UseBox>
+    <DoubleHeight>Tekst in dubbele hoogte weergeven</DoubleHeight>
     <Errors>Fouten</Errors>
     <ErrorsX>Fouten: {0}</ErrorsX>
     <MaxLengthError>Regel {0} overschrĳdt max. lengte ({1}) met {2}: {3}</MaxLengthError>
@@ -1650,6 +1654,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <MusicSymbolsToReplace>Te vervangen muzieksymbolen (gescheiden door spatie)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Gangbare OCR-fouten corrigeren - ook hardgecodeerde regels</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Korte weergavetĳd corrigeren - sta verplaatsen starttĳd toe</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Stap één (te corrigeren fouten selecteren) overslaan</FixCommonErrorsSkipStepOne>
     <Shortcuts>Sneltoetsen</Shortcuts>
     <Shortcut>Sneltoets</Shortcut>
     <Control>Ctrl</Control>
@@ -1689,6 +1694,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WaveformSeekSilenceForward>Zoek stilte vooruit</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Zoek stilte terug</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Voeg hier tekst toe (voor nieuwe selectie)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>Voeg hier tekst toe (voor nieuwe selectie vanuit klembord)</WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>Speel selectie</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Speel selectie-einde</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Speel eerste geselecteerde ondertitel</WaveformPlayFirstSelectedSubtitle>

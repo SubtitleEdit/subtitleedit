@@ -50,6 +50,17 @@ namespace Test.Logic
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void AutoBreakLine5()
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = 43;
+            const string s1 = "<i>30 years ago I'd found</i> The Book of the Dead.";
+            var s2 = Utilities.AutoBreakLine(s1);
+            var Expected = "<i>30 years ago I'd found</i>" + Environment.NewLine + "The Book of the Dead.";
+            Assert.AreEqual(Expected, s2);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void AutoBreakLine5DoNoBreakAtPeriod()
         {
             Configuration.Settings.General.SubtitleLineMaximumLength = 43;
@@ -157,6 +168,33 @@ namespace Test.Logic
             const string s1 = "FALCONE:<i> I didn't think</i>\r\n<i>it was going to be you,</i>";
             string s2 = HtmlUtil.FixInvalidItalicTags(s1);
             Assert.AreEqual(s2, "FALCONE: <i>I didn't think\r\nit was going to be you,</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixInvalidItalicTags10()
+        {
+            const string s1 = "< I>Hallo!</I>";
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
+            Assert.AreEqual(s2, "<i>Hallo!</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixInvalidItalicTags11()
+        {
+            const string s1 = "< I >Hallo!< /I>";
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
+            Assert.AreEqual(s2, "<i>Hallo!</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixInvalidItalicTags12()
+        {
+            const string s1 = "< I >Hallo!<I/>";
+            string s2 = HtmlUtil.FixInvalidItalicTags(s1);
+            Assert.AreEqual(s2, "<i>Hallo!</i>");
         }
 
         [TestMethod]

@@ -691,26 +691,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            public DialogPresentationSegment(byte[] buffer)
+            public DialogPresentationSegment(byte[] buffer, int idx)
             {
-                StartPts = buffer[13];
-                StartPts += (ulong)buffer[12] << 8;
-                StartPts += (ulong)buffer[11] << 16;
-                StartPts += (ulong)buffer[10] << 24;
-                StartPts += (ulong)(buffer[9] & Helper.B00000001) << 32;
+                StartPts = buffer[idx + 13];
+                StartPts += (ulong)buffer[idx + 12] << 8;
+                StartPts += (ulong)buffer[idx + 11] << 16;
+                StartPts += (ulong)buffer[idx + 10] << 24;
+                StartPts += (ulong)(buffer[idx + 9] & Helper.B00000001) << 32;
 
-                EndPts = buffer[18];
-                EndPts += (ulong)buffer[17] << 8;
-                EndPts += (ulong)buffer[16] << 16;
-                EndPts += (ulong)buffer[15] << 24;
-                EndPts += (ulong)(buffer[14] & Helper.B00000001) << 32;
+                EndPts = buffer[idx + 18];
+                EndPts += (ulong)buffer[idx + 17] << 8;
+                EndPts += (ulong)buffer[idx + 16] << 16;
+                EndPts += (ulong)buffer[idx + 15] << 24;
+                EndPts += (ulong)(buffer[idx + 14] & Helper.B00000001) << 32;
 
-                PaletteUpdate = (buffer[19] & Helper.B10000000) > 0;
-                int idx = 20;
+                PaletteUpdate = (buffer[idx + 19] & Helper.B10000000) > 0;
+                idx += 20;
                 PaletteUpdates = new List<Palette>();
                 if (PaletteUpdate)
                 {
-                    int numberOfPaletteEntries = buffer[21] + (buffer[20] << 8);
+                    int numberOfPaletteEntries = buffer[idx + 21] + (buffer[idx + 20] << 8);
                     for (int i = 0; i < numberOfPaletteEntries; i++)
                     {
                         PaletteUpdates.Add(new Palette
@@ -1034,7 +1034,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (buffer[6] == SegmentTypeDialogPresentation)
                     {
-                        var dps = new DialogPresentationSegment(buffer);
+                        var dps = new DialogPresentationSegment(buffer, 0);
                         PresentationSegments.Add(dps);
                         subtitle.Paragraphs.Add(new Paragraph(dps.Text.Trim(), dps.StartPtsMilliseconds, dps.EndPtsMilliseconds));
                     }
@@ -1103,7 +1103,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (item.Payload[6] == SegmentTypeDialogPresentation)
                     {
-                        var dps = new DialogPresentationSegment(item.Payload);
+                        var dps = new DialogPresentationSegment(item.Payload, 0);
                         PresentationSegments.Add(dps);
                         subtitle.Paragraphs.Add(new Paragraph(dps.Text.Trim(), dps.StartPtsMilliseconds, dps.EndPtsMilliseconds));
                     }

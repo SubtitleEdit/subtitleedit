@@ -196,9 +196,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static bool IsText(string text)
         {
-            if (string.IsNullOrWhiteSpace(text) || Utilities.IsInteger(text) || RegexTimeCodes.IsMatch(text))
-                return false;
-            return true;
+            return !(string.IsNullOrWhiteSpace(text) || Utilities.IsInteger(text) || RegexTimeCodes.IsMatch(text));
         }
 
         private static string RemoveBadChars(string line)

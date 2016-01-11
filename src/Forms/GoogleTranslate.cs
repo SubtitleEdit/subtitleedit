@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
 using System.Net;
@@ -78,11 +79,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             subtitleListViewFrom.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListViewTo.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            Utilities.InitializeSubtitleFont(subtitleListViewFrom);
-            Utilities.InitializeSubtitleFont(subtitleListViewTo);
+            UiUtil.InitializeSubtitleFont(subtitleListViewFrom);
+            UiUtil.InitializeSubtitleFont(subtitleListViewTo);
             subtitleListViewFrom.AutoSizeAllColumns(this);
             subtitleListViewTo.AutoSizeAllColumns(this);
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         internal void Initialize(Subtitle subtitle, string title, bool googleTranslate, Encoding encoding)
@@ -152,6 +153,8 @@ namespace Nikse.SubtitleEdit.Forms
             GoogleTranslate_Resize(null, null);
 
             _googleApiNotWorking = !Configuration.Settings.Tools.UseGooleApiPaidService; // google has closed their free api service :(
+
+            _formattingTypes = new FormattingType[_subtitle.Paragraphs.Count];
         }
 
         private void buttonTranslate_Click(object sender, EventArgs e)
@@ -177,8 +180,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            _formattingTypes = new FormattingType[_subtitle.Paragraphs.Count];
-
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
             _breakTranslation = false;
@@ -197,22 +198,7 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
                     Paragraph p = _subtitle.Paragraphs[i];
-                    string text = p.Text.Trim();
-                    if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && text.Contains("</i>" + Environment.NewLine + "<i>") && Utilities.GetNumberOfLines(text) == 2 && Utilities.CountTagInText(text, "<i>") == 1)
-                    {
-                        _formattingTypes[i] = FormattingType.ItalicTwoLines;
-                        text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic);
-                    }
-                    else if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1)
-                    {
-                        _formattingTypes[i] = FormattingType.Italic;
-                        text = text.Substring(3, text.Length - 7);
-                    }
-                    else
-                    {
-                        _formattingTypes[i] = FormattingType.None;
-                    }
-
+                    string text = SetFormattingType(i, p.Text);
                     text = string.Format("{1} {0} |", text, SplitterString);
                     if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
                     {
@@ -247,6 +233,26 @@ namespace Nikse.SubtitleEdit.Forms
 
                 Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = (comboBoxTo.SelectedItem as ComboBoxItem).Value;
             }
+        }
+
+        private string SetFormattingType(int i, string text)
+        {
+            text = text.Trim();
+            if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && text.Contains("</i>" + Environment.NewLine + "<i>") && Utilities.GetNumberOfLines(text) == 2 && Utilities.CountTagInText(text, "<i>") == 1)
+            {
+                _formattingTypes[i] = FormattingType.ItalicTwoLines;
+                text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic);
+            }
+            else if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1)
+            {
+                _formattingTypes[i] = FormattingType.Italic;
+                text = text.Substring(3, text.Length - 7);
+            }
+            else
+            {
+                _formattingTypes[i] = FormattingType.None;
+            }
+            return text;
         }
 
         private void FillTranslatedText(string translatedText, int start, int end)
@@ -855,13 +861,14 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Visible = true;
             int start = 0;
             bool overQuota = false;
+           
             try
             {
                 var sb = new StringBuilder();
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = string.Format("{1}{0}|", p.Text, SplitterString);
+                    string text = string.Format("{1}{0}|", SetFormattingType(index, p.Text), SplitterString);
                     if (!overQuota)
                     {
                         if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)

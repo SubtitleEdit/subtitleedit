@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -57,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            Utilities.InitializeSubtitleFont(SubtitleListview1);
+            UiUtil.InitializeSubtitleFont(SubtitleListview1);
             SubtitleListview1.AutoSizeAllColumns(this);
 
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.ImportTextSplitting))
@@ -70,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxLineBreak.Text = Configuration.Settings.Tools.ImportTextLineBreak;
 
             numericUpDownDurationFixed.Enabled = radioButtonDurationFixed.Checked;
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
             _refreshTimer.Interval = 400;
             _refreshTimer.Tick += RefreshTimerTick;
         }
@@ -541,7 +542,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (string.IsNullOrWhiteSpace(line.Replace("0", string.Empty).Replace("1", string.Empty).Replace("2", string.Empty).Replace("3", string.Empty).Replace("4", string.Empty).Replace("5", string.Empty).Replace("6", string.Empty)
                 .Replace("7", string.Empty).Replace("8", string.Empty).Replace("9", string.Empty).Replace(":", string.Empty).Replace(".", string.Empty).Replace(",", string.Empty).
-                Replace("-", string.Empty).Replace(">", string.Empty)))
+                Replace("-", string.Empty).Replace(">", string.Empty).Replace("/", string.Empty)))
                 return false;
 
             const string expectedChars = "\r\n\t .?\0";

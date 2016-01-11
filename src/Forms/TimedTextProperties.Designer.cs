@@ -113,12 +113,14 @@
             this.comboBoxTimeCodeFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTimeCodeFormat.FormattingEnabled = true;
             this.comboBoxTimeCodeFormat.Items.AddRange(new object[] {
-            "hh:mm:ss:ff",
-            "hh:mm:ss.ms",
+            "Source",
             "Seconds",
             "Milliseconds",
             "Ticks",
-            "Default"});
+            "hh:mm:ss:ff",
+            "hh:mm:ss.ms",
+            "hh:mm:ss.ms-two-digits",
+            "hh:mm:ss,ms"});
             this.comboBoxTimeCodeFormat.Location = new System.Drawing.Point(191, 309);
             this.comboBoxTimeCodeFormat.Name = "comboBoxTimeCodeFormat";
             this.comboBoxTimeCodeFormat.Size = new System.Drawing.Size(263, 21);

@@ -13,15 +13,9 @@ IF /I "%~1" == "/?"     GOTO SHOWHELP
 IF DEFINED VS140COMNTOOLS (
   SET VSVARS_BAT="%VS140COMNTOOLS%vsvars32.bat"
 ) ELSE (
-IF DEFINED VS130COMNTOOLS (
-  SET VSVARS_BAT="%VS130COMNTOOLS%vsvars32.bat"
-) ELSE (
-IF DEFINED VS120COMNTOOLS (
-  SET VSVARS_BAT="%VS120COMNTOOLS%vsvars32.bat"
-) ELSE (
-  ECHO Cannot find Visual Studio
+  ECHO Cannot find Visual Studio 2015
   GOTO EndWithError
-)))
+)
 
 IF "%~1" == "" (
   SET "BUILDTYPE=Build"

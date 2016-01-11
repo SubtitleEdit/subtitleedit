@@ -1320,6 +1320,186 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void RemoveTextForHiRemoveInterjections()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = true;
+            string text = "<i>- Here it is." + Environment.NewLine + "- Ahh!</i>";
+            const string expected = "<i>Here it is.</i>";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiRemoveFirstLine()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenCustomTags = true;
+            target.Settings.CustomStart = "♪";
+            target.Settings.CustomEnd = "♪";
+            target.Settings.RemoveTextBetweenBrackets = true;
+            string text = "<i>- ♪♪[Continues ]</i>" + Environment.NewLine + "- It's pretty strong stuff.";
+            const string expected = "It's pretty strong stuff.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiMultiLineCustomTags()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenCustomTags = true;
+            target.Settings.CustomStart = "♪";
+            target.Settings.CustomEnd = "♪";
+            target.Settings.RemoveTextBetweenBrackets = true;
+            string text = "♪ Trotting down the paddock" + Environment.NewLine + "on a bright, sunny day ♪♪";
+            string expected = string.Empty;
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiMultiLineCustomTagsItalic()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenCustomTags = true;
+            target.Settings.CustomStart = "♪";
+            target.Settings.CustomEnd = "♪";
+            target.Settings.RemoveTextBetweenBrackets = true;
+            string text = "<i>♪ Trotting down the paddock" + Environment.NewLine + "on a bright, sunny day ♪♪</i>";
+            string expected = string.Empty;
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiMultiLineCustomTagsInDialoque()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenCustomTags = true;
+            target.Settings.CustomStart = "♪";
+            target.Settings.CustomEnd = "♪";
+            target.Settings.RemoveTextBetweenBrackets = true;
+            string text = "- ♪ Honey, honey, yeah ♪" + Environment.NewLine + "- ♪ Heard it through|the grapevine ♪";
+            string expected = string.Empty;
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiSecondLineItalicAdvanced()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBetweenCustomTags = true;
+            target.Settings.CustomStart = "♪";
+            target.Settings.CustomEnd = "♪";
+            target.Settings.RemoveTextBetweenBrackets = true;
+            string text = "The meal is ready. Let's go!" + Environment.NewLine + "<i>- [Nick]</i> J. T. Lancer!";
+            string expected = "The meal is ready. Let's go!" + Environment.NewLine + "- J. T. Lancer!";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiInterjectionsEndDash()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            const string text = "Oh. Oh, yeah. Ahh —";
+            const string expected = "Yeah —";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiRemoveFirstBlankLineAlsoItalics()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            string text = "<i>Ow. Ow." + Environment.NewLine + "Ow, my head.</i>";
+            const string expected = "<i>My head.</i>";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextForHiDialogAddDashFirstLine()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            string text = "RECORDING: <i>Have you lost someone?</i>" + Environment.NewLine + "- What?";
+            string expected = "<i>- Have you lost someone?</i>" + Environment.NewLine + "- What?";
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionKeepDotDotDot()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            string text = "She uh..." + Environment.NewLine + "she disappeared.";
+            string expected = "She..." + Environment.NewLine + "she disappeared.";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionKeepEndingQuestionMark()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            const string text = "So you mean that oh?";
+            const string expected = "So you mean that?";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionKeepEndingEx()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            const string text = "So you mean that oh!";
+            const string expected = "So you mean that!";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveRemoveUppercaseLineNegativeOnlyNumbers()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.RemoveIfAllUppercase = true;
+
+            string text = "Let's count!" + Environment.NewLine + "1.. 2... 3!";
+            string expected = "Let's count!" + Environment.NewLine + "1.. 2... 3!";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveRemoveUppercase()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.RemoveIfAllUppercase = true;
+
+            const string text = "ENGINE STARTING";
+            const string expected = "";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
         #region Additional test attributes
 
         //

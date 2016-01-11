@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Windows.Forms;
 
@@ -29,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonMicrosoft.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.MicrosoftTranslate;
             buttonTranslate.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.Translate;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
         private static void RemovedLanguagesNotInMicrosoftTranslate(ComboBox comboBox)
@@ -88,12 +89,18 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             try
             {
-                string from = (comboBoxFrom.SelectedItem as Nikse.SubtitleEdit.Forms.GoogleTranslate.ComboBoxItem).Value;
-                string to = (comboBoxTo.SelectedItem as Nikse.SubtitleEdit.Forms.GoogleTranslate.ComboBoxItem).Value;
+                string from = (comboBoxFrom.SelectedItem as GoogleTranslate.ComboBoxItem).Value;
+                string to = (comboBoxTo.SelectedItem as GoogleTranslate.ComboBoxItem).Value;
                 string languagePair = from + "|" + to;
 
                 buttonGoogle.Text = string.Empty;
-                buttonGoogle.Text = Forms.GoogleTranslate.TranslateTextViaApi(textBoxSourceText.Text, languagePair);
+
+                // google translate
+                bool romanji = languagePair.EndsWith("|romanji", StringComparison.InvariantCulture);
+                if (romanji)
+                    languagePair = from + "|ja";
+                var screenScrapingEncoding = GoogleTranslate.GetScreenScrapingEncoding(languagePair);
+                buttonGoogle.Text = GoogleTranslate.TranslateTextViaScreenScraping(textBoxSourceText.Text, languagePair, screenScrapingEncoding, romanji);
 
                 using (var gt = new GoogleTranslate())
                 {

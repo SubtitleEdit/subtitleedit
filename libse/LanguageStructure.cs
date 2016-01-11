@@ -413,6 +413,9 @@
             public string Import { get; set; }
             public string TextAndTimingInformation { get; set; }
             public string JustificationCode { get; set; }
+            public string Teletext { get; set; }
+            public string UseBox { get; set; }
+            public string DoubleHeight { get; set; }
             public string Errors { get; set; }
             public string ErrorsX { get; set; }
             public string MaxLengthError { get; set; }
@@ -1812,6 +1815,7 @@
             public string MusicSymbolsToReplace { get; set; }
             public string FixCommonOcrErrorsUseHardcodedRules { get; set; }
             public string FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime { get; set; }
+            public string FixCommonErrorsSkipStepOne { get; set; }
             public string Shortcuts { get; set; }
             public string Shortcut { get; set; }
             public string Control { get; set; }
@@ -1851,6 +1855,7 @@
             public string WaveformSeekSilenceForward { get; set; }
             public string WaveformSeekSilenceBack { get; set; }
             public string WaveformAddTextHere { get; set; }
+            public string WaveformAddTextHereFromClipboard { get; set; }
             public string WaveformPlayNewSelection { get; set; }
             public string WaveformPlayNewSelectionEnd { get; set; }
             public string WaveformPlayFirstSelectedSubtitle { get; set; }

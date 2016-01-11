@@ -217,16 +217,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 backgroundColor = Configuration.Settings.Tools.ListViewUnfocusedSelectedColor;
                             else
                             {
-                                int r = backgroundColor.R - 39;
-                                int g = backgroundColor.G - 39;
-                                int b = backgroundColor.B - 39;
-                                if (r < 0)
-                                    r = 0;
-                                if (g < 0)
-                                    g = 0;
-                                if (b < 0)
-                                    b = 0;
-                                backgroundColor = Color.FromArgb(backgroundColor.A, r, g, b);
+                                backgroundColor = GetCustomColor(backgroundColor);
                             }
                             var sb = new SolidBrush(backgroundColor);
                             e.Graphics.FillRectangle(sb, rect);
@@ -248,16 +239,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 backgroundColor = Configuration.Settings.Tools.ListViewUnfocusedSelectedColor;
                             else
                             {
-                                int r = backgroundColor.R - 39;
-                                int g = backgroundColor.G - 39;
-                                int b = backgroundColor.B - 39;
-                                if (r < 0)
-                                    r = 0;
-                                if (g < 0)
-                                    g = 0;
-                                if (b < 0)
-                                    b = 0;
-                                backgroundColor = Color.FromArgb(backgroundColor.A, r, g, b);
+                                backgroundColor = GetCustomColor(backgroundColor);
                             }
                             var sb = new SolidBrush(backgroundColor);
                             e.Graphics.FillRectangle(sb, rect);
@@ -274,6 +256,20 @@ namespace Nikse.SubtitleEdit.Controls
                     e.DrawDefault = true;
                 }
             }
+        }
+
+        private static Color GetCustomColor(Color color)
+        {
+            int r = color.R - 39;
+            int g = color.G - 39;
+            int b = color.B - 39;
+            if (r < 0)
+                r = 0;
+            if (g < 0)
+                g = 0;
+            if (b < 0)
+                b = 0;
+            return Color.FromArgb(color.A, r, g, b);
         }
 
         private void SubtitleListView_DrawItem(object sender, DrawListViewItemEventArgs e)
@@ -602,23 +598,11 @@ namespace Nikse.SubtitleEdit.Controls
         private void Add(Paragraph paragraph)
         {
             var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph, UseItemStyleForSubItems = false };
-            ListViewItem.ListViewSubItem subItem;
-
-            subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToDisplayString());
-            item.SubItems.Add(subItem);
-
-            subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToDisplayString());
-            item.SubItems.Add(subItem);
-
-            subItem = new ListViewItem.ListViewSubItem(item, paragraph.Duration.ToShortDisplayString());
-            item.SubItems.Add(subItem);
-
-            subItem = new ListViewItem.ListViewSubItem(item, paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString));
-            subItem.Font = SubtitleFontBold ?
-                new Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold) :
-                new Font(_subtitleFontName, SubtitleFontSize);
-            item.SubItems.Add(subItem);
-
+            item.SubItems.Add(paragraph.StartTime.ToDisplayString());
+            item.SubItems.Add(paragraph.EndTime.ToDisplayString());
+            item.SubItems.Add(paragraph.Duration.ToShortDisplayString());
+            item.SubItems.Add(paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString));
+            item.Font = SubtitleFontBold ? new Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold) : new Font(_subtitleFontName, SubtitleFontSize);
             Items.Add(item);
         }
 
@@ -630,9 +614,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SelectIndexAndEnsureVisible(int index, bool focus)
         {
-            if (!IsValidIndex(index))
-                return;
-            if (TopItem == null)
+            if (!IsValidIndex(index) || TopItem == null)
                 return;
 
             int bottomIndex = TopItem.Index + ((Height - 25) / 16);

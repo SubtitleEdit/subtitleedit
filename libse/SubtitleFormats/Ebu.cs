@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             public string CodePageNumber { get; set; } // 0..2
             public string DiskFormatCode { get; set; } // 3..10
+            public double FrameRateFromSaveDialog { get; set; }
             public string DisplayStandardCode { get; set; } // 11
             public string CharacterCodeTableNumber { get; set; } // 12..13
             public string LanguageCode { get; set; } // 14..15
@@ -72,6 +73,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 get
                 {
+                    if (FrameRateFromSaveDialog > 20)
+                        return FrameRateFromSaveDialog;
                     if (DiskFormatCode.StartsWith("STL23", StringComparison.Ordinal))
                         return 23.0;
                     if (DiskFormatCode.StartsWith("STL24", StringComparison.Ordinal))
@@ -96,7 +99,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 CodePageNumber = "437";
                 DiskFormatCode = "STL25.01";
-                DisplayStandardCode = "0";
+                DisplayStandardCode = "0"; // 0=Open subtitling
                 CharacterCodeTableNumber = "00";
                 LanguageCode = "0A";
                 OriginalProgrammeTitle = "No Title                        ";
@@ -299,6 +302,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 TextField = TextField.Replace("<U>", underlineOn);
                 TextField = TextField.Replace("</u>", underlineOff);
                 TextField = TextField.Replace("</U>", underlineOff);
+                if (header.CharacterCodeTableNumber == "00")
+                {
+                    TextField = TextField.Replace("©", encoding.GetString(new byte[] { 0xd3 }));
+                    TextField = TextField.Replace("™", encoding.GetString(new byte[] { 0xd4 }));
+                    TextField = TextField.Replace("♪", encoding.GetString(new byte[] { 0xd5 }));
+                }
 
                 //em-dash (–) tags
                 // TextField = TextField.Replace("–", "Ð");
@@ -362,17 +371,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 // newline
-                string newline = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a, 0x8a });
-
-                if (header.DisplayStandardCode == "0")
+                string newline = encoding.GetString(new byte[] { 0x8a, 0x8a });
+                if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
+                {
+                    newline = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a, 0x8a, 0x0d, 0x0b, 0x0b }); // 0a==end box, 0d==double height, 0b==start box
+                }
+                else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
+                {
+                    newline = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a, 0x8a, 0x0b, 0x0b }); // 0a==end box, 0b==start box
+                }
+                else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
+                {
+                    newline = encoding.GetString(new byte[] {0x8a, 0x8a, 0x0d, 0x0d }); // 0d==double height
+                }
+                if (header.DisplayStandardCode == "0") // 0=Open subtitling
+                {
                     newline = encoding.GetString(new byte[] { 0x8A }); //8Ah=CR/LF
-                // newline = encoding.GetString(new byte[] { 0x85, 0x8A, 0x0D, 0x84, 0x80 }); //85h=boxing off, 8Ah=CR/LF, 84h=boxing on, 80h, Italics on
+                }
 
                 TextField = TextField.Replace(Environment.NewLine, newline);
 
-                string endOfLine = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a });
-
-                if (header.DisplayStandardCode == "0")
+                string endOfLine = encoding.GetString(new byte[] { 0x0a, 0x0a }); //a=end box
+                if (!Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox || header.DisplayStandardCode == "0") // DisplayStandardCode 0==Open subtitling
                 {
                     endOfLine = string.Empty;
                 }
@@ -384,6 +404,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (TextField[j] == '–')
                         indexOfEmdash.Add(j);
+                }
+
+                if (header.DisplayStandardCode != "0") // 0=Open subtitling
+                {
+                    if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
+                    {
+                        TextField = encoding.GetString(new byte[] { 0x0d, 0x0b, 0x0b }) + TextField; // d=double height, b=start box
+                    }
+                    else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox)
+                    {
+                        TextField = encoding.GetString(new byte[] { 0x0b, 0x0b }) + TextField; // b=start box
+                    }
+                    else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox && Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
+                    {
+                        TextField = encoding.GetString(new byte[] { 0x0d }) + TextField; // d=double height
+                    }
                 }
 
                 // convert text to bytes
@@ -623,9 +659,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             header.DiskFormatCode.StartsWith("STL35", StringComparison.Ordinal) ||
                             header.DiskFormatCode.StartsWith("STL48", StringComparison.Ordinal) ||
                             header.DiskFormatCode.StartsWith("STL50", StringComparison.Ordinal) ||
-                            header.DiskFormatCode.StartsWith("STL60", StringComparison.Ordinal))
+                            header.DiskFormatCode.StartsWith("STL60", StringComparison.Ordinal) ||
+                            ("012 ".Contains(header.DisplayStandardCode) && "437|850|860|863|865".Contains(header.CodePageNumber)))
                         {
-                            return Utilities.IsInteger(header.CodePageNumber) || fileName.EndsWith("stl", StringComparison.OrdinalIgnoreCase);
+                            return Utilities.IsInteger(header.CodePageNumber) || fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase);
                         }
                     }
                     catch
@@ -1125,6 +1162,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             sb.Append("<u>");
                         else if (b == underlineOff && header.LanguageCode != LanguageCodeChinese)
                             sb.Append("</u>");
+
+                        else if (b == 0xd3 && header.CharacterCodeTableNumber == "00") // Latin
+                        {
+                                sb.Append("©");
+                        }
+                        else if (b == 0xd4 && header.CharacterCodeTableNumber == "00") // Latin
+                        {
+                                sb.Append("™");
+                        }
+                        else if (b == 0xd5 && header.CharacterCodeTableNumber == "00") // Latin
+                        {
+                                sb.Append("♪");
+                        }
+
                             //else if (b == 0xD0) // em-dash
                             //    sb.Append('–');
                         else if (b == textFieldTerminator)

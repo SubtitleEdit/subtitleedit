@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Enums;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
 using System.Collections.Generic;
@@ -78,6 +79,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public const string SplitChars = " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“";
 
+        private static readonly char[] ExpectedChars = new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '%', '&', '@', '$', '*', '=', '£', '#', '_', '½', '^' };
+        private static readonly char[] SplitChars2 = new[] { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '“' };
+
         public class SuggestionParameter
         {
             public string InputWord { get; set; }
@@ -136,7 +140,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSuggestions.Text = Configuration.Settings.Language.SpellCheck.Suggestions;
             buttonAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
             buttonGoogleIt.Text = Configuration.Settings.Language.Main.VideoControls.GoogleIt;
-            Utilities.FixLargeFonts(this, buttonAbort);
+            UiUtil.FixLargeFonts(this, buttonAbort);
         }
 
         public void Initialize(string languageName, SpellCheckWord word, List<string> suggestions, string paragraph, string progress)
@@ -456,7 +460,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _namesEtcList.Add(ChangeWord);
                         _namesEtcListUppercase.Add(ChangeWord.ToUpper());
-                        if (_languageName.StartsWith("en_") && !ChangeWord.EndsWith('s'))
+                        if (_languageName.StartsWith("en_", StringComparison.Ordinal) && !ChangeWord.EndsWith('s'))
                         {
                             _namesEtcList.Add(ChangeWord + "s");
                             _namesEtcListUppercase.Add(ChangeWord.ToUpper() + "S");
@@ -558,7 +562,7 @@ namespace Nikse.SubtitleEdit.Forms
                     minLength = 1;
 
                 if (_currentWord.Trim().Length >= minLength &&
-                    !_currentWord.Contains(new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '%', '&', '@', '$', '*', '=', '£', '#', '_', '½', '^' }))
+                    !_currentWord.Contains(ExpectedChars))
                 {
                     _prefix = string.Empty;
                     _postfix = string.Empty;
@@ -691,13 +695,10 @@ namespace Nikse.SubtitleEdit.Forms
                             }
 
                             suggestions.Remove(_currentWord);
-                            if (_currentWord.Length == 1)
+                            if (_currentWord.Length == 1 && _currentWord == "L" && _languageName.StartsWith("en_", StringComparison.Ordinal))
                             {
-                                if ((_currentWord == "L") && _languageName.StartsWith("en_", StringComparison.Ordinal))
-                                {
-                                    suggestions.Remove("I");
-                                    suggestions.Insert(0, "I");
-                                }
+                                suggestions.Remove("I");
+                                suggestions.Insert(0, "I");
                             }
 
                             if (AutoFixNames && _currentWord.Length > 1 && suggestions.Contains(char.ToUpper(_currentWord[0]) + _currentWord.Substring(1)))
@@ -830,7 +831,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// </summary>
         private void GetTextWithoutUserWordsAndNames(List<string> replaceIds, List<string> replaceNames, string text)
         {
-            string[] wordsWithDash = text.Split(new[] { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '“' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] wordsWithDash = text.Split(SplitChars2, StringSplitOptions.RemoveEmptyEntries);
             foreach (string w in wordsWithDash)
             {
                 if (w.Contains('-') && DoSpell(w) && !_wordsWithDashesOrPeriods.Contains(w))

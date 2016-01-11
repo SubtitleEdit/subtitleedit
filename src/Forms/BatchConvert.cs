@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFrameRateTo.Items.Add(25.0);
             comboBoxFrameRateTo.Items.Add(29.97);
 
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
 
             _allFormats = new List<SubtitleFormat> { new Pac() };
             int selectedFormatIndex = 0;
@@ -151,6 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _allFormats.Add(f);
                 }
             }
+            formatNames.Add(new Ayato().Name);
             formatNames.Add(l.PlainText);
             formatNames.Add(BluRaySubtitle);
             for (int index = 0; index < formatNames.Count; index++)
@@ -216,6 +217,9 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFilter.SelectedIndex = 0;
             comboBoxFilter.Left = labelFilter.Left + labelFilter.Width + 4;
             textBoxFilter.Left = comboBoxFilter.Left + comboBoxFilter.Width + 4;
+
+            _assStyle = Configuration.Settings.Tools.BatchConvertAssStyles;
+            _ssaStyle = Configuration.Settings.Tools.BatchConvertSsaStyles;
         }
 
         private void buttonChooseFolder_Click(object sender, EventArgs e)
@@ -640,6 +644,24 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         if (format == null)
                         {
+                            var chk = new Chk();
+                            if (chk.IsMine(null, fileName))
+                            {
+                                chk.LoadSubtitle(sub, null, fileName);
+                                format = chk;
+                            }
+                        }
+                        if (format == null)
+                        {
+                            var ayato = new Ayato();
+                            if (ayato.IsMine(null, fileName))
+                            {
+                                ayato.LoadSubtitle(sub, null, fileName);
+                                format = ayato;
+                            }
+                        }
+                        if (format == null)
+                        {
                             var capMakerPlus = new CapMakerPlus();
                             if (capMakerPlus.IsMine(null, fileName))
                             {
@@ -849,8 +871,8 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             double fromFrameRate;
                             double toFrameRate;
-                            if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out fromFrameRate) &&
-                            double.TryParse(comboBoxFrameRateTo.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out toFrameRate))
+                            if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out fromFrameRate) &&
+                            double.TryParse(comboBoxFrameRateTo.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out toFrameRate))
                             {
                                 sub.ChangeFrameRate(fromFrameRate, toFrameRate);
                             }
@@ -1052,11 +1074,11 @@ namespace Nikse.SubtitleEdit.Forms
                 bool success;
                 if (checkBoxOverwriteOriginalFiles.Checked)
                 {
-                    success = CommandLineConvert.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), Path.GetDirectoryName(p.FileName), _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, true, string.Empty, null);
+                    success = CommandLineConvert.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), Path.GetDirectoryName(p.FileName), _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, true, string.Empty, null, false, false, false);
                 }
                 else
                 {
-                    success = CommandLineConvert.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), textBoxOutputFolder.Text, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, checkBoxOverwrite.Checked, string.Empty, null);
+                    success = CommandLineConvert.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), textBoxOutputFolder.Text, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, checkBoxOverwrite.Checked, string.Empty, null, false, false, false);
                 }
                 if (success)
                 {
@@ -1142,14 +1164,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowAssSsaStyles()
         {
-            SubStationAlphaStyles form = null;
+            SubStationAlphaStylesBatchConvert form = null;
             try
             {
                 var assa = new AdvancedSubStationAlpha();
+                var sub = new Subtitle();
                 if (comboBoxSubtitleFormats.Text == assa.Name)
                 {
-                    form = new SubStationAlphaStyles(new Subtitle(), assa);
-                    form.MakeOnlyOneStyle();
+                    if (!string.IsNullOrEmpty(_assStyle))
+                    {
+                        sub.Header = _assStyle;
+                    }
+                    form = new SubStationAlphaStylesBatchConvert(sub, assa);
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
                         _assStyle = form.Header;
@@ -1157,10 +1183,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
+                    if (!string.IsNullOrEmpty(_ssaStyle))
+                    {
+                        sub.Header = _ssaStyle;
+                    }
                     var ssa = new SubStationAlpha();
                     if (comboBoxSubtitleFormats.Text == ssa.Name)
                     {
-                        form = new SubStationAlphaStyles(new Subtitle(), ssa);
+                        form = new SubStationAlphaStylesBatchConvert(sub, ssa);
                         if (form.ShowDialog(this) == DialogResult.OK)
                         {
                             _ssaStyle = form.Header;
@@ -1252,6 +1282,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertOverwriteExisting = checkBoxOverwrite.Checked;
             Configuration.Settings.Tools.BatchConvertOverwriteOriginal = checkBoxOverwriteOriginalFiles.Checked;
             Configuration.Settings.Tools.BatchConvertFormat = comboBoxSubtitleFormats.SelectedItem.ToString();
+            Configuration.Settings.Tools.BatchConvertAssStyles = _assStyle;
+            Configuration.Settings.Tools.BatchConvertSsaStyles = _ssaStyle;
         }
 
         private void buttonMultipleReplaceSettings_Click(object sender, EventArgs e)
@@ -1357,6 +1389,18 @@ namespace Nikse.SubtitleEdit.Forms
                                     var cheetahCaption = new CheetahCaption();
                                     if (cheetahCaption.IsMine(null, fileName))
                                         format = cheetahCaption;
+                                }
+                                if (format == null)
+                                {
+                                    var chk = new Chk();
+                                    if (chk.IsMine(null, fileName))
+                                        format = chk;
+                                }
+                                if (format == null)
+                                {
+                                    var ayato = new Ayato();
+                                    if (ayato.IsMine(null, fileName))
+                                        format = ayato;
                                 }
                                 if (format == null)
                                 {

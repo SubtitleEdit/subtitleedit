@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -20,7 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelChooseDrive.Text = Configuration.Settings.Language.OpenVideoDvd.ChooseDrive;
             labelChooseFolder.Text = Configuration.Settings.Language.OpenVideoDvd.ChooseFolder;
             PanelDrive.Enabled = false;
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
             radioButtonDisc_CheckedChanged(null, null);
 
             PanelFolder.Left = PanelDrive.Left;

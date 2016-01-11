@@ -220,6 +220,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Dostosuj szybkość w procentach</Title>
+    <TitleShort>Dostosuj szybkość</TitleShort>
     <Info>Zmień szybkość napisów w procentach</Info>
     <Custom>Niestandardowo</Custom>
     <ToDropFrame>Do upuszczonej klatki</ToDropFrame>
@@ -368,6 +369,9 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Import>Importuj...</Import>
     <TextAndTimingInformation>Tekst i informacje o synchronizacji</TextAndTimingInformation>
     <JustificationCode>Kod justowania</JustificationCode>
+    <Teletext>Teletekst</Teletext>
+    <UseBox>Użyj pola wokół tekstu</UseBox>
+    <DoubleHeight>Użyj podwójnej wysokości tekstu</DoubleHeight>
     <Errors>Błędy</Errors>
     <ErrorsX>Błędów</ErrorsX>
     <MaxLengthError>Linia {0} przekracza maksymalną długość ({1}) o {2}: {3}</MaxLengthError>
@@ -942,7 +946,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Połącz zaznaczone linie jako dialog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Połącz z linią przed</MergeWithLineBefore>
         <MergeWithLineAfter>Połącz z linią po</MergeWithLineAfter>
-        <Normal>Zwykły</Normal>
+        <Normal>Normalny (usunięcie formatowania)</Normal>
         <Underline>Podkreślenie</Underline>
         <Color>Kolor...</Color>
         <FontName>Czcionka...</FontName>
@@ -1651,6 +1655,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw częste błędy OCR - także z użyciem sztywnych reguł</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania
 (z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Pomiń pierwszy krok (wybór zasad poprawy)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Skróty klawiszowe</Shortcuts>
     <Shortcut>Skrót</Shortcut>
     <Control>Ctrl</Control>
@@ -1690,6 +1695,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <WaveformSeekSilenceForward>Szukaj ciszy do przodu</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Szukaj ciszy wstecz</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Dodaj tutaj tekst (dla nowego zaznaczenia)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>Dodaj tutaj tekst (dla nowego zaznaczenia ze schowka)</WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>Odtwarzaj zaznaczenie</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Odtwarzaj koniec zaznaczenia</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Odtwarzaj pierwsze zaznaczone napisy</WaveformPlayFirstSelectedSubtitle>
@@ -2070,6 +2076,7 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <Title>Sprawdź porównanie zgodności dla bieżącego obrazu</Title>
     <InspectItems>Sprawdź elementy</InspectItems>
     <AddBetterMatch>Dodaj lepsze dopasowanie</AddBetterMatch>
+    <Add>Dodaj</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nowy folder</Title>

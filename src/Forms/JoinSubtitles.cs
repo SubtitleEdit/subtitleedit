@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -33,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxPreview.Text = Configuration.Settings.Language.JoinSubtitles.Information;
             buttonJoin.Text = Configuration.Settings.Language.JoinSubtitles.Join;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)

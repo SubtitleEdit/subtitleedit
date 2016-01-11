@@ -34,6 +34,8 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageHeader = new System.Windows.Forms.TabPage();
+            this.labelFrameRate = new System.Windows.Forms.Label();
+            this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
             this.labelTimeCodeStartOfProgramme = new System.Windows.Forms.Label();
             this.labelTimeCodeStatus = new System.Windows.Forms.Label();
             this.comboBoxTimeCodeStatus = new System.Windows.Forms.ComboBox();
@@ -80,6 +82,9 @@
             this.textBoxOriginalProgramTitle = new System.Windows.Forms.TextBox();
             this.labelOriginalProgramTitle = new System.Windows.Forms.Label();
             this.tabPageTextAndTiming = new System.Windows.Forms.TabPage();
+            this.groupBoxTeletext = new System.Windows.Forms.GroupBox();
+            this.checkBoxTeletextDoubleHeight = new System.Windows.Forms.CheckBox();
+            this.checkBoxTeletextBox = new System.Windows.Forms.CheckBox();
             this.comboBoxJustificationCode = new System.Windows.Forms.ComboBox();
             this.labelJustificationCode = new System.Windows.Forms.Label();
             this.tabPageErrors = new System.Windows.Forms.TabPage();
@@ -94,6 +99,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalNumberOfDiscs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRevisionNumber)).BeginInit();
             this.tabPageTextAndTiming.SuspendLayout();
+            this.groupBoxTeletext.SuspendLayout();
             this.tabPageErrors.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -101,7 +107,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(607, 467);
+            this.buttonOK.Location = new System.Drawing.Point(607, 510);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 1;
@@ -114,7 +120,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(688, 467);
+            this.buttonCancel.Location = new System.Drawing.Point(688, 510);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 2;
@@ -137,11 +143,13 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(758, 444);
+            this.tabControl1.Size = new System.Drawing.Size(758, 487);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPageHeader
             // 
+            this.tabPageHeader.Controls.Add(this.labelFrameRate);
+            this.tabPageHeader.Controls.Add(this.comboBoxFrameRate);
             this.tabPageHeader.Controls.Add(this.labelTimeCodeStartOfProgramme);
             this.tabPageHeader.Controls.Add(this.labelTimeCodeStatus);
             this.tabPageHeader.Controls.Add(this.comboBoxTimeCodeStatus);
@@ -184,15 +192,32 @@
             this.tabPageHeader.Location = new System.Drawing.Point(4, 22);
             this.tabPageHeader.Name = "tabPageHeader";
             this.tabPageHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageHeader.Size = new System.Drawing.Size(750, 418);
+            this.tabPageHeader.Size = new System.Drawing.Size(750, 461);
             this.tabPageHeader.TabIndex = 0;
             this.tabPageHeader.Text = "General subtitle information";
             this.tabPageHeader.UseVisualStyleBackColor = true;
             // 
+            // labelFrameRate
+            // 
+            this.labelFrameRate.AutoSize = true;
+            this.labelFrameRate.Location = new System.Drawing.Point(6, 72);
+            this.labelFrameRate.Name = "labelFrameRate";
+            this.labelFrameRate.Size = new System.Drawing.Size(57, 13);
+            this.labelFrameRate.TabIndex = 71;
+            this.labelFrameRate.Text = "Frame rate";
+            // 
+            // comboBoxFrameRate
+            // 
+            this.comboBoxFrameRate.FormattingEnabled = true;
+            this.comboBoxFrameRate.Location = new System.Drawing.Point(163, 69);
+            this.comboBoxFrameRate.Name = "comboBoxFrameRate";
+            this.comboBoxFrameRate.Size = new System.Drawing.Size(219, 21);
+            this.comboBoxFrameRate.TabIndex = 2;
+            // 
             // labelTimeCodeStartOfProgramme
             // 
             this.labelTimeCodeStartOfProgramme.AutoSize = true;
-            this.labelTimeCodeStartOfProgramme.Location = new System.Drawing.Point(5, 383);
+            this.labelTimeCodeStartOfProgramme.Location = new System.Drawing.Point(5, 416);
             this.labelTimeCodeStartOfProgramme.Name = "labelTimeCodeStartOfProgramme";
             this.labelTimeCodeStartOfProgramme.Size = new System.Drawing.Size(152, 13);
             this.labelTimeCodeStartOfProgramme.TabIndex = 69;
@@ -201,7 +226,7 @@
             // labelTimeCodeStatus
             // 
             this.labelTimeCodeStatus.AutoSize = true;
-            this.labelTimeCodeStatus.Location = new System.Drawing.Point(6, 353);
+            this.labelTimeCodeStatus.Location = new System.Drawing.Point(6, 386);
             this.labelTimeCodeStatus.Name = "labelTimeCodeStatus";
             this.labelTimeCodeStatus.Size = new System.Drawing.Size(88, 13);
             this.labelTimeCodeStatus.TabIndex = 68;
@@ -214,20 +239,20 @@
             this.comboBoxTimeCodeStatus.Items.AddRange(new object[] {
             "Intended for use",
             "Not intended for use"});
-            this.comboBoxTimeCodeStatus.Location = new System.Drawing.Point(163, 350);
+            this.comboBoxTimeCodeStatus.Location = new System.Drawing.Point(163, 383);
             this.comboBoxTimeCodeStatus.Name = "comboBoxTimeCodeStatus";
             this.comboBoxTimeCodeStatus.Size = new System.Drawing.Size(219, 21);
-            this.comboBoxTimeCodeStatus.TabIndex = 12;
+            this.comboBoxTimeCodeStatus.TabIndex = 13;
             // 
             // timeUpDownStartTime
             // 
             this.timeUpDownStartTime.AutoSize = true;
             this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(163, 378);
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(163, 411);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 24);
-            this.timeUpDownStartTime.TabIndex = 13;
+            this.timeUpDownStartTime.TabIndex = 14;
             // 
             // comboBoxDisplayStandardCode
             // 
@@ -238,15 +263,15 @@
             "1 Level-1 teletext",
             "2 Level-2 teletext",
             "Undefined"});
-            this.comboBoxDisplayStandardCode.Location = new System.Drawing.Point(163, 66);
+            this.comboBoxDisplayStandardCode.Location = new System.Drawing.Point(163, 99);
             this.comboBoxDisplayStandardCode.Name = "comboBoxDisplayStandardCode";
             this.comboBoxDisplayStandardCode.Size = new System.Drawing.Size(219, 21);
-            this.comboBoxDisplayStandardCode.TabIndex = 2;
+            this.comboBoxDisplayStandardCode.TabIndex = 3;
             // 
             // labelDisplayStandardCode
             // 
             this.labelDisplayStandardCode.AutoSize = true;
-            this.labelDisplayStandardCode.Location = new System.Drawing.Point(6, 69);
+            this.labelDisplayStandardCode.Location = new System.Drawing.Point(6, 102);
             this.labelDisplayStandardCode.Name = "labelDisplayStandardCode";
             this.labelDisplayStandardCode.Size = new System.Drawing.Size(112, 13);
             this.labelDisplayStandardCode.TabIndex = 65;
@@ -254,16 +279,16 @@
             // 
             // textBoxCountryOfOrigin
             // 
-            this.textBoxCountryOfOrigin.Location = new System.Drawing.Point(163, 307);
+            this.textBoxCountryOfOrigin.Location = new System.Drawing.Point(163, 340);
             this.textBoxCountryOfOrigin.MaxLength = 3;
             this.textBoxCountryOfOrigin.Name = "textBoxCountryOfOrigin";
             this.textBoxCountryOfOrigin.Size = new System.Drawing.Size(219, 20);
-            this.textBoxCountryOfOrigin.TabIndex = 11;
+            this.textBoxCountryOfOrigin.TabIndex = 12;
             // 
             // labelCountryOfOrigin
             // 
             this.labelCountryOfOrigin.AutoSize = true;
-            this.labelCountryOfOrigin.Location = new System.Drawing.Point(6, 310);
+            this.labelCountryOfOrigin.Location = new System.Drawing.Point(6, 343);
             this.labelCountryOfOrigin.Name = "labelCountryOfOrigin";
             this.labelCountryOfOrigin.Size = new System.Drawing.Size(83, 13);
             this.labelCountryOfOrigin.TabIndex = 63;
@@ -334,7 +359,7 @@
             0});
             this.numericUpDownMaxRows.Name = "numericUpDownMaxRows";
             this.numericUpDownMaxRows.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownMaxRows.TabIndex = 16;
+            this.numericUpDownMaxRows.TabIndex = 17;
             // 
             // labelMaxNumberOfDisplayableRows
             // 
@@ -350,12 +375,16 @@
             this.comboBoxDiscFormatCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDiscFormatCode.FormattingEnabled = true;
             this.comboBoxDiscFormatCode.Items.AddRange(new object[] {
+            "STL23.01 (non-standard)",
+            "STL24.01 (non-standard)",
             "STL25.01",
+            "STL29.01 (non-standard)",
             "STL30.01"});
             this.comboBoxDiscFormatCode.Location = new System.Drawing.Point(163, 39);
             this.comboBoxDiscFormatCode.Name = "comboBoxDiscFormatCode";
             this.comboBoxDiscFormatCode.Size = new System.Drawing.Size(219, 21);
             this.comboBoxDiscFormatCode.TabIndex = 1;
+            this.comboBoxDiscFormatCode.SelectedIndexChanged += new System.EventHandler(this.comboBoxDiscFormatCode_SelectedIndexChanged);
             // 
             // labelDiskFormatCode
             // 
@@ -377,16 +406,16 @@
             // 
             // textBoxLanguageCode
             // 
-            this.textBoxLanguageCode.Location = new System.Drawing.Point(163, 121);
+            this.textBoxLanguageCode.Location = new System.Drawing.Point(163, 154);
             this.textBoxLanguageCode.MaxLength = 32;
             this.textBoxLanguageCode.Name = "textBoxLanguageCode";
             this.textBoxLanguageCode.Size = new System.Drawing.Size(219, 20);
-            this.textBoxLanguageCode.TabIndex = 4;
+            this.textBoxLanguageCode.TabIndex = 5;
             // 
             // labelLanguageCode
             // 
             this.labelLanguageCode.AutoSize = true;
-            this.labelLanguageCode.Location = new System.Drawing.Point(6, 124);
+            this.labelLanguageCode.Location = new System.Drawing.Point(6, 157);
             this.labelLanguageCode.Name = "labelLanguageCode";
             this.labelLanguageCode.Size = new System.Drawing.Size(82, 13);
             this.labelLanguageCode.TabIndex = 54;
@@ -402,7 +431,7 @@
             0});
             this.numericUpDownMaxCharacters.Name = "numericUpDownMaxCharacters";
             this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownMaxCharacters.TabIndex = 15;
+            this.numericUpDownMaxCharacters.TabIndex = 16;
             this.numericUpDownMaxCharacters.ValueChanged += new System.EventHandler(this.numericUpDownMaxCharacters_ValueChanged);
             // 
             // labelMaxNoOfDisplayableChars
@@ -424,7 +453,7 @@
             0});
             this.numericUpDownDiskSequenceNumber.Name = "numericUpDownDiskSequenceNumber";
             this.numericUpDownDiskSequenceNumber.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownDiskSequenceNumber.TabIndex = 17;
+            this.numericUpDownDiskSequenceNumber.TabIndex = 18;
             // 
             // numericUpDownTotalNumberOfDiscs
             // 
@@ -436,7 +465,7 @@
             0});
             this.numericUpDownTotalNumberOfDiscs.Name = "numericUpDownTotalNumberOfDiscs";
             this.numericUpDownTotalNumberOfDiscs.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownTotalNumberOfDiscs.TabIndex = 18;
+            this.numericUpDownTotalNumberOfDiscs.TabIndex = 19;
             // 
             // numericUpDownRevisionNumber
             // 
@@ -448,7 +477,7 @@
             0});
             this.numericUpDownRevisionNumber.Name = "numericUpDownRevisionNumber";
             this.numericUpDownRevisionNumber.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownRevisionNumber.TabIndex = 14;
+            this.numericUpDownRevisionNumber.TabIndex = 15;
             // 
             // labelDiskSequenceNumber
             // 
@@ -479,16 +508,16 @@
             // 
             // textBoxTranslatorsName
             // 
-            this.textBoxTranslatorsName.Location = new System.Drawing.Point(163, 251);
+            this.textBoxTranslatorsName.Location = new System.Drawing.Point(163, 284);
             this.textBoxTranslatorsName.MaxLength = 32;
             this.textBoxTranslatorsName.Name = "textBoxTranslatorsName";
             this.textBoxTranslatorsName.Size = new System.Drawing.Size(219, 20);
-            this.textBoxTranslatorsName.TabIndex = 9;
+            this.textBoxTranslatorsName.TabIndex = 10;
             // 
             // labelTranslatorsName
             // 
             this.labelTranslatorsName.AutoSize = true;
-            this.labelTranslatorsName.Location = new System.Drawing.Point(6, 254);
+            this.labelTranslatorsName.Location = new System.Drawing.Point(6, 287);
             this.labelTranslatorsName.Name = "labelTranslatorsName";
             this.labelTranslatorsName.Size = new System.Drawing.Size(90, 13);
             this.labelTranslatorsName.TabIndex = 45;
@@ -496,16 +525,16 @@
             // 
             // textBoxSubtitleListReferenceCode
             // 
-            this.textBoxSubtitleListReferenceCode.Location = new System.Drawing.Point(163, 281);
+            this.textBoxSubtitleListReferenceCode.Location = new System.Drawing.Point(163, 314);
             this.textBoxSubtitleListReferenceCode.MaxLength = 16;
             this.textBoxSubtitleListReferenceCode.Name = "textBoxSubtitleListReferenceCode";
             this.textBoxSubtitleListReferenceCode.Size = new System.Drawing.Size(219, 20);
-            this.textBoxSubtitleListReferenceCode.TabIndex = 10;
+            this.textBoxSubtitleListReferenceCode.TabIndex = 11;
             // 
             // labelSubtitleListReferenceCode
             // 
             this.labelSubtitleListReferenceCode.AutoSize = true;
-            this.labelSubtitleListReferenceCode.Location = new System.Drawing.Point(6, 284);
+            this.labelSubtitleListReferenceCode.Location = new System.Drawing.Point(6, 317);
             this.labelSubtitleListReferenceCode.Name = "labelSubtitleListReferenceCode";
             this.labelSubtitleListReferenceCode.Size = new System.Drawing.Size(132, 13);
             this.labelSubtitleListReferenceCode.TabIndex = 43;
@@ -521,10 +550,10 @@
             "Latin/Arabic",
             "Latin/Greek",
             "Latin/Hebrew"});
-            this.comboBoxCharacterCodeTable.Location = new System.Drawing.Point(163, 93);
+            this.comboBoxCharacterCodeTable.Location = new System.Drawing.Point(163, 126);
             this.comboBoxCharacterCodeTable.Name = "comboBoxCharacterCodeTable";
             this.comboBoxCharacterCodeTable.Size = new System.Drawing.Size(219, 21);
-            this.comboBoxCharacterCodeTable.TabIndex = 3;
+            this.comboBoxCharacterCodeTable.TabIndex = 4;
             // 
             // buttonImport
             // 
@@ -533,7 +562,7 @@
             this.buttonImport.Location = new System.Drawing.Point(613, 6);
             this.buttonImport.Name = "buttonImport";
             this.buttonImport.Size = new System.Drawing.Size(134, 21);
-            this.buttonImport.TabIndex = 19;
+            this.buttonImport.TabIndex = 20;
             this.buttonImport.Text = "Import...";
             this.buttonImport.UseVisualStyleBackColor = true;
             this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
@@ -541,7 +570,7 @@
             // labelCharacterCodeTable
             // 
             this.labelCharacterCodeTable.AutoSize = true;
-            this.labelCharacterCodeTable.Location = new System.Drawing.Point(6, 96);
+            this.labelCharacterCodeTable.Location = new System.Drawing.Point(6, 129);
             this.labelCharacterCodeTable.Name = "labelCharacterCodeTable";
             this.labelCharacterCodeTable.Size = new System.Drawing.Size(106, 13);
             this.labelCharacterCodeTable.TabIndex = 40;
@@ -549,32 +578,32 @@
             // 
             // textBoxTranslatedProgramTitle
             // 
-            this.textBoxTranslatedProgramTitle.Location = new System.Drawing.Point(163, 199);
+            this.textBoxTranslatedProgramTitle.Location = new System.Drawing.Point(163, 232);
             this.textBoxTranslatedProgramTitle.MaxLength = 32;
             this.textBoxTranslatedProgramTitle.Name = "textBoxTranslatedProgramTitle";
             this.textBoxTranslatedProgramTitle.Size = new System.Drawing.Size(219, 20);
-            this.textBoxTranslatedProgramTitle.TabIndex = 7;
+            this.textBoxTranslatedProgramTitle.TabIndex = 8;
             // 
             // textBoxTranslatedEpisodeTitle
             // 
-            this.textBoxTranslatedEpisodeTitle.Location = new System.Drawing.Point(163, 225);
+            this.textBoxTranslatedEpisodeTitle.Location = new System.Drawing.Point(163, 258);
             this.textBoxTranslatedEpisodeTitle.MaxLength = 32;
             this.textBoxTranslatedEpisodeTitle.Name = "textBoxTranslatedEpisodeTitle";
             this.textBoxTranslatedEpisodeTitle.Size = new System.Drawing.Size(219, 20);
-            this.textBoxTranslatedEpisodeTitle.TabIndex = 8;
+            this.textBoxTranslatedEpisodeTitle.TabIndex = 9;
             // 
             // textBoxOriginalEpisodeTitle
             // 
-            this.textBoxOriginalEpisodeTitle.Location = new System.Drawing.Point(163, 173);
+            this.textBoxOriginalEpisodeTitle.Location = new System.Drawing.Point(163, 206);
             this.textBoxOriginalEpisodeTitle.MaxLength = 32;
             this.textBoxOriginalEpisodeTitle.Name = "textBoxOriginalEpisodeTitle";
             this.textBoxOriginalEpisodeTitle.Size = new System.Drawing.Size(219, 20);
-            this.textBoxOriginalEpisodeTitle.TabIndex = 6;
+            this.textBoxOriginalEpisodeTitle.TabIndex = 7;
             // 
             // labelTranslatedEpisodeTitle
             // 
             this.labelTranslatedEpisodeTitle.AutoSize = true;
-            this.labelTranslatedEpisodeTitle.Location = new System.Drawing.Point(6, 228);
+            this.labelTranslatedEpisodeTitle.Location = new System.Drawing.Point(6, 261);
             this.labelTranslatedEpisodeTitle.Name = "labelTranslatedEpisodeTitle";
             this.labelTranslatedEpisodeTitle.Size = new System.Drawing.Size(116, 13);
             this.labelTranslatedEpisodeTitle.TabIndex = 36;
@@ -583,7 +612,7 @@
             // labelTranslatedProgramTitle
             // 
             this.labelTranslatedProgramTitle.AutoSize = true;
-            this.labelTranslatedProgramTitle.Location = new System.Drawing.Point(6, 202);
+            this.labelTranslatedProgramTitle.Location = new System.Drawing.Point(6, 235);
             this.labelTranslatedProgramTitle.Name = "labelTranslatedProgramTitle";
             this.labelTranslatedProgramTitle.Size = new System.Drawing.Size(117, 13);
             this.labelTranslatedProgramTitle.TabIndex = 35;
@@ -592,7 +621,7 @@
             // labelOriginalEpisodeTitle
             // 
             this.labelOriginalEpisodeTitle.AutoSize = true;
-            this.labelOriginalEpisodeTitle.Location = new System.Drawing.Point(6, 176);
+            this.labelOriginalEpisodeTitle.Location = new System.Drawing.Point(6, 209);
             this.labelOriginalEpisodeTitle.Name = "labelOriginalEpisodeTitle";
             this.labelOriginalEpisodeTitle.Size = new System.Drawing.Size(101, 13);
             this.labelOriginalEpisodeTitle.TabIndex = 34;
@@ -600,16 +629,16 @@
             // 
             // textBoxOriginalProgramTitle
             // 
-            this.textBoxOriginalProgramTitle.Location = new System.Drawing.Point(163, 147);
+            this.textBoxOriginalProgramTitle.Location = new System.Drawing.Point(163, 180);
             this.textBoxOriginalProgramTitle.MaxLength = 32;
             this.textBoxOriginalProgramTitle.Name = "textBoxOriginalProgramTitle";
             this.textBoxOriginalProgramTitle.Size = new System.Drawing.Size(219, 20);
-            this.textBoxOriginalProgramTitle.TabIndex = 5;
+            this.textBoxOriginalProgramTitle.TabIndex = 6;
             // 
             // labelOriginalProgramTitle
             // 
             this.labelOriginalProgramTitle.AutoSize = true;
-            this.labelOriginalProgramTitle.Location = new System.Drawing.Point(6, 150);
+            this.labelOriginalProgramTitle.Location = new System.Drawing.Point(6, 183);
             this.labelOriginalProgramTitle.Name = "labelOriginalProgramTitle";
             this.labelOriginalProgramTitle.Size = new System.Drawing.Size(102, 13);
             this.labelOriginalProgramTitle.TabIndex = 32;
@@ -617,14 +646,49 @@
             // 
             // tabPageTextAndTiming
             // 
+            this.tabPageTextAndTiming.Controls.Add(this.groupBoxTeletext);
             this.tabPageTextAndTiming.Controls.Add(this.comboBoxJustificationCode);
             this.tabPageTextAndTiming.Controls.Add(this.labelJustificationCode);
             this.tabPageTextAndTiming.Location = new System.Drawing.Point(4, 22);
             this.tabPageTextAndTiming.Name = "tabPageTextAndTiming";
-            this.tabPageTextAndTiming.Size = new System.Drawing.Size(750, 418);
+            this.tabPageTextAndTiming.Size = new System.Drawing.Size(750, 461);
             this.tabPageTextAndTiming.TabIndex = 2;
             this.tabPageTextAndTiming.Text = "Text and timing information";
             this.tabPageTextAndTiming.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxTeletext
+            // 
+            this.groupBoxTeletext.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxTeletext.Controls.Add(this.checkBoxTeletextDoubleHeight);
+            this.groupBoxTeletext.Controls.Add(this.checkBoxTeletextBox);
+            this.groupBoxTeletext.Location = new System.Drawing.Point(9, 54);
+            this.groupBoxTeletext.Name = "groupBoxTeletext";
+            this.groupBoxTeletext.Size = new System.Drawing.Size(727, 392);
+            this.groupBoxTeletext.TabIndex = 45;
+            this.groupBoxTeletext.TabStop = false;
+            this.groupBoxTeletext.Text = "Teletext";
+            // 
+            // checkBoxTeletextDoubleHeight
+            // 
+            this.checkBoxTeletextDoubleHeight.AutoSize = true;
+            this.checkBoxTeletextDoubleHeight.Location = new System.Drawing.Point(16, 57);
+            this.checkBoxTeletextDoubleHeight.Name = "checkBoxTeletextDoubleHeight";
+            this.checkBoxTeletextDoubleHeight.Size = new System.Drawing.Size(124, 17);
+            this.checkBoxTeletextDoubleHeight.TabIndex = 1;
+            this.checkBoxTeletextDoubleHeight.Text = "Text is double height";
+            this.checkBoxTeletextDoubleHeight.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxTeletextBox
+            // 
+            this.checkBoxTeletextBox.AutoSize = true;
+            this.checkBoxTeletextBox.Location = new System.Drawing.Point(16, 34);
+            this.checkBoxTeletextBox.Name = "checkBoxTeletextBox";
+            this.checkBoxTeletextBox.Size = new System.Drawing.Size(121, 17);
+            this.checkBoxTeletextBox.TabIndex = 0;
+            this.checkBoxTeletextBox.Text = "Use box around text";
+            this.checkBoxTeletextBox.UseVisualStyleBackColor = true;
             // 
             // comboBoxJustificationCode
             // 
@@ -656,7 +720,7 @@
             this.tabPageErrors.Location = new System.Drawing.Point(4, 22);
             this.tabPageErrors.Name = "tabPageErrors";
             this.tabPageErrors.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageErrors.Size = new System.Drawing.Size(750, 418);
+            this.tabPageErrors.Size = new System.Drawing.Size(750, 461);
             this.tabPageErrors.TabIndex = 1;
             this.tabPageErrors.Text = "Errors";
             this.tabPageErrors.UseVisualStyleBackColor = true;
@@ -686,11 +750,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(775, 499);
+            this.ClientSize = new System.Drawing.Size(775, 542);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
-            this.MinimumSize = new System.Drawing.Size(648, 462);
+            this.MinimumSize = new System.Drawing.Size(785, 570);
             this.Name = "EbuSaveOptions";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -707,6 +771,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRevisionNumber)).EndInit();
             this.tabPageTextAndTiming.ResumeLayout(false);
             this.tabPageTextAndTiming.PerformLayout();
+            this.groupBoxTeletext.ResumeLayout(false);
+            this.groupBoxTeletext.PerformLayout();
             this.tabPageErrors.ResumeLayout(false);
             this.tabPageErrors.PerformLayout();
             this.ResumeLayout(false);
@@ -771,5 +837,10 @@
         private System.Windows.Forms.Label labelTimeCodeStatus;
         private System.Windows.Forms.ComboBox comboBoxTimeCodeStatus;
         private Controls.TimeUpDown timeUpDownStartTime;
+        private System.Windows.Forms.Label labelFrameRate;
+        private System.Windows.Forms.ComboBox comboBoxFrameRate;
+        private System.Windows.Forms.GroupBox groupBoxTeletext;
+        private System.Windows.Forms.CheckBox checkBoxTeletextDoubleHeight;
+        private System.Windows.Forms.CheckBox checkBoxTeletextBox;
     }
 }

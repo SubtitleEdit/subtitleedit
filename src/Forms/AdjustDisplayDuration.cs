@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Globalization;
 using System.Windows.Forms;
@@ -80,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (labelNote.Left + labelNote.Width + 5 > Width)
                 Width = labelNote.Left + labelNote.Width + 5;
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         private void FormAdjustDisplayTime_KeyDown(object sender, KeyEventArgs e)

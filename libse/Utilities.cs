@@ -12,7 +12,6 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core
@@ -53,9 +52,9 @@ namespace Nikse.SubtitleEdit.Core
                     info.VideoCodec = videoCodec;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(ex.Message);
+                throw;
             }
             finally
             {
@@ -620,9 +619,19 @@ namespace Nikse.SubtitleEdit.Core
                 s = s.Substring(0, splitPos) + Environment.NewLine + s.Substring(splitPos);
 
             s = ReInsertHtmlTags(s, htmlTags);
+            var idx = s.IndexOf(Environment.NewLine + "</");
+            if (idx > 2)
+            {
+                var endIdx = s.IndexOf('>', idx + 2);
+                if (endIdx > idx)
+                {
+                    var tag = s.Substring(idx + Environment.NewLine.Length, endIdx - (idx + Environment.NewLine.Length) + 1);
+                    s = s.Insert(idx, tag);
+                    s = s.Remove(idx + tag.Length + Environment.NewLine.Length, tag.Length);
+                }
+            }
             s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
             s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
-
             return s.TrimEnd();
         }
 
@@ -697,28 +706,6 @@ namespace Nikse.SubtitleEdit.Core
                 singleLine = singleLine.Replace("</u><u>", " ");
             }
             return singleLine;
-        }
-
-        public static void InitializeSubtitleFont(Control control)
-        {
-            var gs = Configuration.Settings.General;
-
-            if (string.IsNullOrEmpty(gs.SubtitleFontName))
-                gs.SubtitleFontName = "Tahoma";
-
-            try
-            {
-                if (gs.SubtitleFontBold)
-                    control.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize, FontStyle.Bold);
-                else
-                    control.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize);
-
-                control.BackColor = gs.SubtitleBackgroundColor;
-                control.ForeColor = gs.SubtitleFontColor;
-            }
-            catch
-            {
-            }
         }
 
         public static string RemoveSsaTags(string s)
@@ -920,54 +907,6 @@ namespace Nikse.SubtitleEdit.Core
             return sb.ToString();
         }
 
-        public static void SetSaveDialogFilter(SaveFileDialog saveFileDialog, SubtitleFormat currentFormat)
-        {
-            var sb = new StringBuilder();
-            int index = 0;
-            foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
-            {
-                sb.Append(format.Name + "|*" + format.Extension + "|");
-                if (currentFormat.Name == format.Name)
-                    saveFileDialog.FilterIndex = index + 1;
-                index++;
-            }
-            saveFileDialog.Filter = sb.ToString().TrimEnd('|');
-        }
-
-        public static Color ColorDarkOrange = Color.FromArgb(220, 90, 10);
-
-        public static void GetLineLengths(Label label, string text)
-        {
-            label.ForeColor = Color.Black;
-            var lines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
-
-            const int max = 3;
-
-            var sb = new StringBuilder();
-            for (int i = 0; i < lines.Length; i++)
-            {
-                string line = lines[i];
-                if (i > 0)
-                {
-                    sb.Append('/');
-                }
-
-                if (i > max)
-                {
-                    label.ForeColor = Color.Red;
-                    sb.Append("...");
-                    label.Text = sb.ToString();
-                    return;
-                }
-
-                sb.Append(line.Length);
-                if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                    label.ForeColor = Color.Red;
-                else if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength - 5)
-                    label.ForeColor = ColorDarkOrange;
-            }
-            label.Text = sb.ToString();
-        }
 
         public static bool IsValidRegex(string testPattern)
         {
@@ -1199,25 +1138,6 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public static void SetButtonHeight(Control control, int newHeight, int level)
-        {
-            if (level > 6)
-                return;
-
-            if (control.HasChildren)
-            {
-                foreach (Control subControl in control.Controls)
-                {
-                    if (subControl.HasChildren)
-                        SetButtonHeight(subControl, newHeight, level + 1);
-                    else if (subControl is Button)
-                        subControl.Height = newHeight;
-                }
-            }
-            else if (control is Button)
-                control.Height = newHeight;
-        }
-
         public static int CountTagInText(string text, string tag)
         {
             int count = 0;
@@ -1317,73 +1237,6 @@ namespace Nikse.SubtitleEdit.Core
             // plus literals are encoded as %2b normally so this should be safe
             text = text.Replace('+', ' ');
             return Uri.UnescapeDataString(text);
-        }
-
-        public static void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
-        {
-            int length = HtmlUtil.RemoveHtmlTags(textBox.Text).Length;
-            if (e.Modifiers == Keys.None && e.KeyCode != Keys.Enter && numberOfNewLines < 1 && length > Configuration.Settings.General.SubtitleLineMaximumLength)
-            {
-                if (Configuration.Settings.General.AutoWrapLineWhileTyping) // only if auto-break-setting is true
-                {
-                    string newText;
-                    if (length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
-                    {
-                        newText = AutoBreakLine(textBox.Text);
-                    }
-                    else
-                    {
-                        int lastSpace = textBox.Text.LastIndexOf(' ');
-                        if (lastSpace > 0)
-                            newText = textBox.Text.Remove(lastSpace, 1).Insert(lastSpace, Environment.NewLine);
-                        else
-                            newText = textBox.Text;
-                    }
-
-                    int autobreakIndex = newText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-                    if (autobreakIndex > 0)
-                    {
-                        int selectionStart = textBox.SelectionStart;
-                        textBox.Text = newText;
-                        if (selectionStart > autobreakIndex)
-                            selectionStart += Environment.NewLine.Length - 1;
-                        if (selectionStart >= 0)
-                            textBox.SelectionStart = selectionStart;
-                    }
-                }
-            }
-        }
-
-        private static readonly Dictionary<string, Keys> AllKeys = new Dictionary<string, Keys>();
-        public static Keys GetKeys(string keysInString)
-        {
-            if (string.IsNullOrEmpty(keysInString))
-                return Keys.None;
-
-            if (AllKeys.Count == 0)
-            {
-                foreach (Keys val in Enum.GetValues(typeof(Keys)))
-                {
-                    string k = val.ToString().ToLower();
-                    if (!AllKeys.ContainsKey(k))
-                        AllKeys.Add(k, val);
-                }
-                if (!AllKeys.ContainsKey("pagedown"))
-                    AllKeys.Add("pagedown", Keys.RButton | Keys.Space);
-                if (!AllKeys.ContainsKey("home"))
-                    AllKeys.Add("home", Keys.MButton | Keys.Space);
-                if (!AllKeys.ContainsKey("capslock"))
-                    AllKeys.Add("capslock", Keys.CapsLock);
-            }
-
-            string[] parts = keysInString.ToLower().Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
-            var resultKeys = Keys.None;
-            foreach (string k in parts)
-            {
-                if (AllKeys.ContainsKey(k))
-                    resultKeys = resultKeys | AllKeys[k];
-            }
-            return resultKeys;
         }
 
         public static string FixEnglishTextInRightToLeftLanguage(string text, string reverseChars)
@@ -1801,10 +1654,10 @@ namespace Nikse.SubtitleEdit.Core
 
         private static int FindNext(string s, string[] parts, int startIndex)
         {
-            for (int i = startIndex; i < parts.Length; i++)
+            for (; startIndex < parts.Length; startIndex++)
             {
-                if (s == parts[i])
-                    return i;
+                if (s == parts[startIndex])
+                    return startIndex;
             }
             return int.MaxValue;
         }
@@ -1821,6 +1674,22 @@ namespace Nikse.SubtitleEdit.Core
                     sb.Append(c);
             }
             return sb.ToString();
+        }
+
+        private static readonly Regex RemoveSpaceBetweenNumbersRegex = new Regex(@"(?<=\b\d+) \d(?!/\d)", RegexOptions.Compiled);
+
+        public static string RemoveSpaceBetweenNumbers(string text)
+        {
+            if (!string.IsNullOrEmpty(text))
+            {
+                var match = RemoveSpaceBetweenNumbersRegex.Match(text);
+                while (match.Success)
+                {
+                    text = text.Remove(match.Index, 1);
+                    match = RemoveSpaceBetweenNumbersRegex.Match(text, match.Index);
+                }
+            }
+            return text;
         }
 
         /// <summary>
@@ -2333,16 +2202,13 @@ namespace Nikse.SubtitleEdit.Core
             return lines;
         }
 
-        public static void FixLargeFonts(Control mainCtrl, Control ctrl)
+        public static string Sha256Hash(string value)
         {
-            using (Graphics graphics = mainCtrl.CreateGraphics())
+            using (var hasher = new System.Security.Cryptography.SHA256Managed())
             {
-                SizeF textSize = graphics.MeasureString(ctrl.Text, mainCtrl.Font);
-                if (textSize.Height > ctrl.Height - 4)
-                {
-                    int newButtonHeight = (int)(textSize.Height + 7.5);
-                    SetButtonHeight(mainCtrl, newButtonHeight, 1);
-                }
+                var bytes = Encoding.UTF8.GetBytes(value);
+                var hash = hasher.ComputeHash(bytes);
+                return Convert.ToBase64String(hash, 0, hash.Length);
             }
         }
 

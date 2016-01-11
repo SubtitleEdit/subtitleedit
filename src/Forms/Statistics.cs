@@ -1,8 +1,8 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 
@@ -25,6 +25,9 @@ https://github.com/SubtitleEdit/subtitleedit
 {1}
 ============================= Most Used Lines =============================
 {2}";
+
+        private static readonly char[] ExpectedChars = new[] { '♪', '(', ')', '[', ']', ' ', ',', '!', '?', '.', ':', ';', '-', '_', '@', '<', '>', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+
         public Statistics(Subtitle subtitle, string fileName, SubtitleFormat format)
         {
             InitializeComponent();
@@ -43,7 +46,7 @@ https://github.com/SubtitleEdit/subtitleedit
             labelMostUsedLines.Text = _l.MostUsedLines;
             buttonExport.Text = _l.Export;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
 
             CalculateGeneralStatistics();
             {
@@ -89,33 +92,25 @@ https://github.com/SubtitleEdit/subtitleedit
                 allText.Append(p.Text);
 
                 int len = p.Text.Length;
-                if (len < minimumLineLength)
-                    minimumLineLength = len;
-                if (len > maximumLineLength)
-                    maximumLineLength = len;
+                minimumLineLength = Math.Min(minimumLineLength, len);
+                maximumLineLength = Math.Max(len, maximumLineLength);
                 totalLineLength += len;
 
                 double duration = p.Duration.TotalMilliseconds;
-                if (duration < minimumDuration)
-                    minimumDuration = duration;
-                if (duration > maximumDuration)
-                    maximumDuration = duration;
+                minimumDuration = Math.Min(duration, minimumDuration);
+                maximumDuration = Math.Max(duration, maximumDuration);
                 totalDuration += duration;
 
                 var charsSec = Utilities.GetCharactersPerSecond(p);
-                if (charsSec < minimumCharsSec)
-                    minimumCharsSec = charsSec;
-                if (charsSec > maximumCharsSec)
-                    maximumCharsSec = charsSec;
+                minimumCharsSec = Math.Min(charsSec, minimumCharsSec);
+                maximumCharsSec = Math.Max(charsSec, maximumCharsSec);
                 totalCharsSec += charsSec;
 
                 foreach (string line in p.Text.SplitToLines())
                 {
                     len = line.Length;
-                    if (len < minimumSingleLineLength)
-                        minimumSingleLineLength = len;
-                    if (len > maximumSingleLineLength)
-                        maximumSingleLineLength = len;
+                    minimumSingleLineLength = Math.Min(len, minimumSingleLineLength);
+                    maximumSingleLineLength = Math.Max(len, maximumSingleLineLength);
                     totalSingleLineLength += len;
                     totalSingleLines++;
                 }
@@ -123,15 +118,17 @@ https://github.com/SubtitleEdit/subtitleedit
 
             var sb = new StringBuilder();
             int sourceLength = _subtitle.ToText(_format).Length;
+            var allTextToLower = allText.ToString().ToLower();
+
             sb.AppendLine(string.Format(_l.NumberOfLinesX, _subtitle.Paragraphs.Count));
             sb.AppendLine(string.Format(_l.LengthInFormatXinCharactersY, _format.FriendlyName, sourceLength));
             sb.AppendLine(string.Format(_l.NumberOfCharactersInTextOnly, allText.Length));
             sb.AppendLine(string.Format(_l.TotalCharsPerSecond, HtmlUtil.RemoveHtmlTags(allText.ToString()).Length / (totalDuration / TimeCode.BaseUnit)));
-            sb.AppendLine(string.Format(_l.NumberOfItalicTags, Utilities.CountTagInText(allText.ToString().ToLower(), "<i>")));
-            sb.AppendLine(string.Format(_l.NumberOfBoldTags, Utilities.CountTagInText(allText.ToString().ToLower(), "<b>")));
-            sb.AppendLine(string.Format(_l.NumberOfUnderlineTags, Utilities.CountTagInText(allText.ToString().ToLower(), "<u>")));
-            sb.AppendLine(string.Format(_l.NumberOfFontTags, Utilities.CountTagInText(allText.ToString().ToLower(), "<font ")));
-            sb.AppendLine(string.Format(_l.NumberOfAlignmentTags, Utilities.CountTagInText(allText.ToString().ToLower(), "{\\a")));
+            sb.AppendLine(string.Format(_l.NumberOfItalicTags, Utilities.CountTagInText(allTextToLower, "<i>")));
+            sb.AppendLine(string.Format(_l.NumberOfBoldTags, Utilities.CountTagInText(allTextToLower, "<b>")));
+            sb.AppendLine(string.Format(_l.NumberOfUnderlineTags, Utilities.CountTagInText(allTextToLower, "<u>")));
+            sb.AppendLine(string.Format(_l.NumberOfFontTags, Utilities.CountTagInText(allTextToLower, "<font ")));
+            sb.AppendLine(string.Format(_l.NumberOfAlignmentTags, Utilities.CountTagInText(allTextToLower, "{\\a")));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.LineLengthMinimum, minimumLineLength));
             sb.AppendLine(string.Format(_l.LineLengthMaximum, maximumLineLength));
@@ -161,125 +158,111 @@ https://github.com/SubtitleEdit/subtitleedit
                 Clipboard.SetText(string.Format(WriteFormat, _general, _mostUsedWords, _mostUsedLines), TextDataFormat.UnicodeText);
         }
 
-        private static void MostUsedWordsAdd(Dictionary<string, string> hashtable, string lastLine)
+        private static void MostUsedWordsAdd(Dictionary<string, int> hashtable, string text)
         {
-            if (lastLine.Contains("< "))
-                lastLine = HtmlUtil.FixInvalidItalicTags(lastLine);
-            lastLine = lastLine.Trim('\'');
-            lastLine = lastLine.Replace("\"", "");
-            lastLine = lastLine.Replace("<i>", "");
-            lastLine = lastLine.Replace("</i>", ".");
-            lastLine = lastLine.Replace("<I>", "");
-            lastLine = lastLine.Replace("</I>", ".");
-            lastLine = lastLine.Replace("<b>", "");
-            lastLine = lastLine.Replace("</b>", ".");
-            lastLine = lastLine.Replace("<B>", "");
-            lastLine = lastLine.Replace("</B>", ".");
-            lastLine = lastLine.Replace("<u>", "");
-            lastLine = lastLine.Replace("</u>", ".");
-            lastLine = lastLine.Replace("<U>", "");
-            lastLine = lastLine.Replace("</U>", ".");
+            if (text.Contains("< "))
+                text = HtmlUtil.FixInvalidItalicTags(text);
 
-            var idx = lastLine.IndexOf("<font", StringComparison.OrdinalIgnoreCase);
+            text = StripHtmlTags(text);
+
+            var idx = text.IndexOf("<font", StringComparison.OrdinalIgnoreCase);
             var error = false;
             while (idx >= 0)
             {
-                var endIdx = lastLine.IndexOf('>', idx + 5);
+                var endIdx = text.IndexOf('>', idx + 5);
                 if (endIdx < idx)
                 {
                     error = !error;
                     break;
                 }
                 endIdx++;
-                lastLine = lastLine.Remove(idx, (endIdx - idx));
-                idx = lastLine.IndexOf("<font", StringComparison.OrdinalIgnoreCase);
+                text = text.Remove(idx, endIdx - idx);
+                idx = text.IndexOf("<font", idx, StringComparison.OrdinalIgnoreCase);
             }
             if (!error)
-                lastLine = lastLine.Replace("</font>", ".");
+                text = text.Replace("</font>", ".");
 
-            string[] words = lastLine.Split(new[] { ' ', ',', '!', '?', '.', ':', ';', '-', '_', '@', '<', '>', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (string word in words)
+            foreach (string word in text.Split(ExpectedChars, StringSplitOptions.RemoveEmptyEntries))
             {
-                string s = word.Trim();
-
+                var s = word.Trim();
                 if (s.Length > 1 && hashtable.ContainsKey(s))
                 {
-                    int hits = int.Parse(hashtable[s]);
-                    hits++;
-                    hashtable[s] = hits.ToString(CultureInfo.InvariantCulture);
+                    hashtable[s]++;
                 }
                 else if (s.Length > 1)
                 {
-                    hashtable.Add(s, "1");
+                    hashtable.Add(s, 1);
                 }
             }
         }
 
-        private static void MostUsedLinesAdd(Dictionary<string, string> hashtable, string lastLine)
+        private static void MostUsedLinesAdd(Dictionary<string, int> hashtable, string text)
         {
-            lastLine = lastLine.Trim('\'');
-            lastLine = lastLine.Replace("\"", "");
-            lastLine = lastLine.Replace("<i>", "");
-            lastLine = lastLine.Replace("</i>", ".");
-            lastLine = lastLine.Replace("<I>", "");
-            lastLine = lastLine.Replace("</I>", ".");
-            lastLine = lastLine.Replace("<b>", "");
-            lastLine = lastLine.Replace("</b>", ".");
-            lastLine = lastLine.Replace("<B>", "");
-            lastLine = lastLine.Replace("</B>", ".");
-            lastLine = lastLine.Replace("<u>", "");
-            lastLine = lastLine.Replace("</u>", ".");
-            lastLine = lastLine.Replace("<U>", "");
-            lastLine = lastLine.Replace("</U>", ".");
-            lastLine = lastLine.Replace('!', '.');
-            lastLine = lastLine.Replace('?', '.');
-            lastLine = lastLine.Replace("...", ".");
-            lastLine = lastLine.Replace("..", ".");
-            lastLine = lastLine.Replace('-', ' ');
-            lastLine = lastLine.FixExtraSpaces();
-            string[] lines = lastLine.Split('.');
+            text = StripHtmlTags(text);
+            text = text.Replace('!', '.');
+            text = text.Replace('?', '.');
+            text = text.Replace("...", ".");
+            text = text.Replace("..", ".");
+            text = text.Replace('-', ' ');
+            text = text.FixExtraSpaces();
 
-            foreach (string line in lines)
+            foreach (string line in text.Split('.'))
             {
-                string s = line.Trim();
-
+                var s = line.Trim();
                 if (hashtable.ContainsKey(s))
                 {
-                    int hits = int.Parse(hashtable[s]);
-                    hits++;
-                    hashtable[s] = hits.ToString(CultureInfo.InvariantCulture);
+                    hashtable[s]++;
                 }
                 else if (s.Length > 0 && s.Contains(' '))
                 {
-                    hashtable.Add(s, "1");
+                    hashtable.Add(s, 1);
                 }
             }
+        }
+
+        private static string StripHtmlTags(string text)
+        {
+            text = text.Trim('\'');
+            text = text.Replace("\"", string.Empty);
+
+            if (text.Length < 8)
+                return text;
+
+            text = text.Replace("<i>", string.Empty);
+            text = text.Replace("</i>", ".");
+            text = text.Replace("<I>", string.Empty);
+            text = text.Replace("</I>", ".");
+            text = text.Replace("<b>", string.Empty);
+            text = text.Replace("</b>", ".");
+            text = text.Replace("<B>", string.Empty);
+            text = text.Replace("</B>", ".");
+            text = text.Replace("<u>", string.Empty);
+            text = text.Replace("</u>", ".");
+            text = text.Replace("<U>", string.Empty);
+            text = text.Replace("</U>", ".");
+            return text;
         }
 
         private void CalculateMostUsedWords()
         {
-            var hashtable = new Dictionary<string, string>();
+            var hashtable = new Dictionary<string, int>();
 
             foreach (Paragraph p in _subtitle.Paragraphs)
                 MostUsedWordsAdd(hashtable, p.Text);
 
             var sortedTable = new SortedDictionary<string, string>();
-            foreach (KeyValuePair<string, string> item in hashtable)
+            foreach (KeyValuePair<string, int> item in hashtable)
             {
-                if (int.Parse(item.Value) > 1)
+                if (item.Value > 1)
                 {
-                    string s = item.Value;
-                    while (s.Length < 4)
-                        s = "0" + s;
-                    sortedTable.Add(s + "_" + item.Key, item.Value + ": " + item.Key);
+                    sortedTable.Add($"{item.Value:0000}" + "_" + item.Key, item.Value + ": " + item.Key);
                 }
             }
 
             var sb = new StringBuilder();
             if (sortedTable.Count > 0)
             {
-                string temp = "";
+                var temp = string.Empty;
                 foreach (KeyValuePair<string, string> item in sortedTable)
                 {
                     temp = item.Value + Environment.NewLine + temp;
@@ -295,27 +278,24 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private void CalculateMostUsedLines()
         {
-            var hashtable = new Dictionary<string, string>();
+            var hashtable = new Dictionary<string, int>();
 
             foreach (Paragraph p in _subtitle.Paragraphs)
                 MostUsedLinesAdd(hashtable, p.Text.Replace(Environment.NewLine, " ").Replace("  ", " "));
 
-            SortedDictionary<string, string> sortedTable = new SortedDictionary<string, string>();
-            foreach (KeyValuePair<string, string> item in hashtable)
+            var sortedTable = new SortedDictionary<string, string>();
+            foreach (KeyValuePair<string, int> item in hashtable)
             {
-                if (int.Parse(item.Value) > 1)
+                if (item.Value > 1)
                 {
-                    string s = item.Value;
-                    while (s.Length < 4)
-                        s = "0" + s;
-                    sortedTable.Add(s + "_" + item.Key, item.Value + ": " + item.Key);
+                    sortedTable.Add($"{item.Value:0000}" + "_" + item.Key, item.Value + ": " + item.Key);
                 }
             }
 
             var sb = new StringBuilder();
             if (sortedTable.Count > 0)
             {
-                string temp = "";
+                var temp = string.Empty;
                 foreach (KeyValuePair<string, string> item in sortedTable)
                 {
                     temp = item.Value + Environment.NewLine + temp;

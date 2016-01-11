@@ -99,15 +99,43 @@ namespace Nikse.SubtitleEdit.Forms
             New();
         }
 
+        private bool NameExists(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return true;
+
+            for (int i = 0; i < _templates.Count; i++)
+            {
+                if (_templates[i].StartsWith(name + "Æ", StringComparison.InvariantCulture))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void New()
         {
             using (var form = new ExportCustomTextFormat("NewÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]Æ"))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    _templates.Add(form.FormatOk);
-                    ShowTemplates(_templates);
-                    listViewTemplates.Items[listViewTemplates.Items.Count - 1].Selected = true;
+                    var arr = form.FormatOk.Split('Æ');
+                    if (arr.Length == 6)
+                    {
+                        string name = arr[0];
+                        int i = 1;
+                        while (NameExists(name))
+                        {
+                            form.FormatOk = form.FormatOk.Remove(0, name.Length);
+                            name = arr[0] + " (" + i + ")";
+                            form.FormatOk = name +  form.FormatOk;
+                            i++;
+                        }
+                        _templates.Add(form.FormatOk);
+                        ShowTemplates(_templates);
+                        listViewTemplates.Items[listViewTemplates.Items.Count - 1].Selected = true;
+                    }
                 }
             }
             SaveTemplates();
@@ -138,6 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
                         _templates[idx] = form.FormatOk;
+                        SaveTemplates();
                         ShowTemplates(_templates);
                         if (idx < listViewTemplates.Items.Count)
                             listViewTemplates.Items[idx].Selected = true;
@@ -259,7 +288,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string name = item.Text;
                     for (int j = _templates.Count - 1; j > 0; j--)
                     {
-                        if (_templates[j].StartsWith(name + "ÆÆ"))
+                        if (_templates[j].StartsWith(name + "Æ", StringComparison.InvariantCultureIgnoreCase))
                             _templates.RemoveAt(j);
                     }
                     item.Remove();
@@ -300,6 +329,11 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItem2.Visible = enableVisibility;
             editToolStripMenuItem.Visible = enableVisibility;
             deleteToolStripMenuItem.Visible = enableVisibility;
+        }
+
+        private void listViewTemplates_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Edit();
         }
 
     }

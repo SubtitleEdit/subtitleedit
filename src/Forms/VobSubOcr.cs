@@ -288,9 +288,9 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _icThreadsStop;
         private string[] _icThreadResults;
 
-        private readonly Keys _italicShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
-        private readonly Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        private readonly Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private readonly Keys _italicShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+        private readonly Keys _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private readonly Keys _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         private string[] _tesseractAsyncStrings;
         private int _tesseractAsyncIndex;
@@ -449,12 +449,12 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
             buttonGetTesseractDictionaries.Left = comboBoxTesseractLanguages.Left + comboBoxTesseractLanguages.Width + 5;
 
-            Utilities.InitializeSubtitleFont(subtitleListView1);
+            UiUtil.InitializeSubtitleFont(subtitleListView1);
             subtitleListView1.AutoSizeAllColumns(this);
 
-            Utilities.InitializeSubtitleFont(textBoxCurrentText);
+            UiUtil.InitializeSubtitleFont(textBoxCurrentText);
 
-            italicToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
+            italicToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
 
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width + 3;
             comboBoxModiLanguage.Left = label1.Left + label1.Width + 3;
@@ -465,7 +465,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownPixelsIsSpace.Left = labelNoOfPixelsIsSpace.Left + labelNoOfPixelsIsSpace.Width + 3;
             checkBoxRightToLeft.Left = numericUpDownPixelsIsSpace.Left;
 
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
             buttonEditCharacterDatabase.Top = buttonNewCharacterDatabase.Top + buttonNewCharacterDatabase.Height + 3;
 
             splitContainerBottom.Panel1MinSize = 400;
@@ -666,7 +666,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxCustomFourColors.Checked = true;
 
             _importLanguageString = languageString;
-            if (_importLanguageString.Contains('(') && !_importLanguageString.StartsWith('('))
+            if (_importLanguageString != null && _importLanguageString.Contains('(') && !_importLanguageString.StartsWith('('))
                 _importLanguageString = _importLanguageString.Substring(0, languageString.IndexOf('(') - 1).Trim();
         }
 
@@ -1245,36 +1245,42 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_mp4List != null)
             {
-                if (checkBoxCustomFourColors.Checked)
+                if (index >= 0 && index < _mp4List.Count)
                 {
-                    GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
+                    if (checkBoxCustomFourColors.Checked)
+                    {
+                        GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
 
-                    returnBmp = _mp4List[index].Picture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
-                    if (checkBoxAutoTransparentBackground.Checked)
-                        returnBmp.MakeTransparent();
-                }
-                else
-                {
-                    returnBmp = _mp4List[index].Picture.GetBitmap(null, Color.Transparent, Color.Black, Color.White, Color.Black, false);
-                    if (checkBoxAutoTransparentBackground.Checked)
-                        returnBmp.MakeTransparent();
+                        returnBmp = _mp4List[index].Picture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
+                        if (checkBoxAutoTransparentBackground.Checked)
+                            returnBmp.MakeTransparent();
+                    }
+                    else
+                    {
+                        returnBmp = _mp4List[index].Picture.GetBitmap(null, Color.Transparent, Color.Black, Color.White, Color.Black, false);
+                        if (checkBoxAutoTransparentBackground.Checked)
+                            returnBmp.MakeTransparent();
+                    }
                 }
             }
             else if (_spList != null)
             {
-                if (checkBoxCustomFourColors.Checked)
+                if (index >= 0 && index < _spList.Count)
                 {
-                    GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
+                    if (checkBoxCustomFourColors.Checked)
+                    {
+                        GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
 
-                    returnBmp = _spList[index].Picture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
-                    if (checkBoxAutoTransparentBackground.Checked)
-                        returnBmp.MakeTransparent();
-                }
-                else
-                {
-                    returnBmp = _spList[index].Picture.GetBitmap(null, Color.Transparent, Color.Black, Color.White, Color.Black, false);
-                    if (checkBoxAutoTransparentBackground.Checked)
-                        returnBmp.MakeTransparent();
+                        returnBmp = _spList[index].Picture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
+                        if (checkBoxAutoTransparentBackground.Checked)
+                            returnBmp.MakeTransparent();
+                    }
+                    else
+                    {
+                        returnBmp = _spList[index].Picture.GetBitmap(null, Color.Transparent, Color.Black, Color.White, Color.Black, false);
+                        if (checkBoxAutoTransparentBackground.Checked)
+                            returnBmp.MakeTransparent();
+                    }
                 }
             }
             else if (_bdnXmlSubtitle != null)
@@ -1376,48 +1382,60 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_xSubList != null)
             {
-                if (checkBoxCustomFourColors.Checked)
+                if (index >= 0 && index < _xSubList.Count)
                 {
-                    GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
-                    returnBmp = _xSubList[index].GetImage(background, pattern, emphasis1, emphasis2);
-                }
-                else
-                {
-                    returnBmp = _xSubList[index].GetImage();
+                    if (checkBoxCustomFourColors.Checked)
+                    {
+                        GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
+                        returnBmp = _xSubList[index].GetImage(background, pattern, emphasis1, emphasis2);
+                    }
+                    else
+                    {
+                        returnBmp = _xSubList[index].GetImage();
+                    }
                 }
             }
             else if (_dvbSubtitles != null)
             {
-                var dvbBmp = _dvbSubtitles[index].GetActiveImage();
-                var nDvbBmp = new NikseBitmap(dvbBmp);
-                nDvbBmp.CropTopTransparent(2);
-                nDvbBmp.CropTransparentSidesAndBottom(2, true);
-                if (checkBoxTransportStreamGetColorAndSplit.Checked)
-                    _dvbSubColor = nDvbBmp.GetBrightestColor();
-                if (checkBoxAutoTransparentBackground.Checked)
-                    nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
-                if (checkBoxTransportStreamGrayscale.Checked)
-                    nDvbBmp.GrayScale();
-                dvbBmp.Dispose();
-                returnBmp = nDvbBmp.GetBitmap();
+                if (index >= 0 && index < _dvbSubtitles.Count)
+                {
+                    var dvbBmp = _dvbSubtitles[index].GetActiveImage();
+                    var nDvbBmp = new NikseBitmap(dvbBmp);
+                    nDvbBmp.CropTopTransparent(2);
+                    nDvbBmp.CropTransparentSidesAndBottom(2, true);
+                    if (checkBoxTransportStreamGetColorAndSplit.Checked)
+                        _dvbSubColor = nDvbBmp.GetBrightestColor();
+                    if (checkBoxAutoTransparentBackground.Checked)
+                        nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
+                    if (checkBoxTransportStreamGrayscale.Checked)
+                        nDvbBmp.GrayScale();
+                    dvbBmp.Dispose();
+                    returnBmp = nDvbBmp.GetBitmap();
+                }
             }
             else if (_bluRaySubtitlesOriginal != null)
             {
-                returnBmp = _bluRaySubtitles[index].GetBitmap();
+                if (index >= 0 && index < _bluRaySubtitles.Count)
+                {
+                    returnBmp = _bluRaySubtitles[index].GetBitmap();
+                }
             }
-            else if (checkBoxCustomFourColors.Checked)
+            else if (index >= 0 && index < _vobSubMergedPackist.Count)
             {
-                GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
+                if (checkBoxCustomFourColors.Checked)
+                {
+                    GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
 
-                returnBmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
-                if (checkBoxAutoTransparentBackground.Checked)
-                    returnBmp.MakeTransparent();
-            }
-            else
-            {
-                returnBmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black, false);
-                if (checkBoxAutoTransparentBackground.Checked)
-                    returnBmp.MakeTransparent();
+                    returnBmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
+                    if (checkBoxAutoTransparentBackground.Checked)
+                        returnBmp.MakeTransparent();
+                }
+                else
+                {
+                    returnBmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black, false);
+                    if (checkBoxAutoTransparentBackground.Checked)
+                        returnBmp.MakeTransparent();
+                }
             }
 
             if (returnBmp == null)
@@ -7524,34 +7542,35 @@ namespace Nikse.SubtitleEdit.Forms
                 progressBar1.Value = 0;
                 progressBar1.Visible = true;
                 int imagesSavedCount = 0;
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 sb.AppendLine("<html>");
                 sb.AppendLine("<head><title>Subtitle images</title></head>");
                 sb.AppendLine("<body>");
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
                     progressBar1.Value = i;
-                    Bitmap bmp = GetSubtitleBitmap(i);
-                    string numberString = string.Format("{0:0000}", i + 1);
+                    var bmp = GetSubtitleBitmap(i);
                     if (bmp != null)
                     {
-                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + ".png");
-                        bmp.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+                        var fileName = string.Format(CultureInfo.InvariantCulture, "{0:0000}.png", i + 1);
+                        var filePath = Path.Combine(folderBrowserDialog1.SelectedPath, fileName);
+                        bmp.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
                         imagesSavedCount++;
-                        Paragraph p = _subtitle.Paragraphs[i];
-                        string text = string.Empty;
+                        var p = _subtitle.Paragraphs[i];
+                        sb.AppendFormat(CultureInfo.InvariantCulture, "#{3}:{0}->{1}<div style='text-align:center'><img src='{2}' />", p.StartTime.ToShortString(), p.EndTime.ToShortString(), fileName, i + 1);
                         if (!string.IsNullOrEmpty(p.Text))
                         {
-                            string backgroundColor = System.Drawing.ColorTranslator.ToHtml(subtitleListView1.GetBackgroundColor(i));
-                            text = "<br /><div style='font-size:22px; background-color:" + backgroundColor + "'>" + WebUtility.HtmlEncode(p.Text.Replace("<i>", "@1__").Replace("</i>", "@2__")).Replace("@1__", "<i>").Replace("@2__", "</i>").Replace(Environment.NewLine, "<br />") + "</div>";
+                            var backgroundColor = System.Drawing.ColorTranslator.ToHtml(subtitleListView1.GetBackgroundColor(i));
+                            var text = WebUtility.HtmlEncode(p.Text.Replace("<i>", "@1__").Replace("</i>", "@2__")).Replace("@1__", "<i>").Replace("@2__", "</i>").Replace(Environment.NewLine, "<br />");
+                            sb.Append("<br /><div style='font-size:22px; background-color:").Append(backgroundColor).Append("'>").Append(text).Append("</div>");
                         }
-                        sb.AppendLine(string.Format("#{3}:{0}->{1}<div style='text-align:center'><img src='{2}.png' />" + text + "</div><br /><hr />", p.StartTime.ToShortString(), p.EndTime.ToShortString(), numberString, i + 1));
+                        sb.AppendLine("</div><br /><hr />");
                         bmp.Dispose();
                     }
                 }
                 sb.AppendLine("</body>");
                 sb.AppendLine("</html>");
-                string htmlFileName = Path.Combine(folderBrowserDialog1.SelectedPath, "index.html");
+                var htmlFileName = Path.Combine(folderBrowserDialog1.SelectedPath, "index.html");
                 File.WriteAllText(htmlFileName, sb.ToString());
                 progressBar1.Visible = false;
                 MessageBox.Show(string.Format("{0} images saved in {1}", imagesSavedCount, folderBrowserDialog1.SelectedPath));

@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -17,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
         public DurationsBridgeGaps(Subtitle subtitle)
         {
             InitializeComponent();
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
 
             // Remove SE's built-in ListView resize logic
             SubtitleListview1.SetCustomResize(SubtitleListView1_Resize);
@@ -26,7 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            Utilities.InitializeSubtitleFont(SubtitleListview1);
+            UiUtil.InitializeSubtitleFont(SubtitleListview1);
             SubtitleListview1.ShowExtraColumn(Configuration.Settings.Language.DurationsBridgeGaps.GapToNext);
             SubtitleListview1.DisplayExtraFromExtra = true;
             SubtitleListview1.AutoSizeAllColumns(this);
@@ -142,7 +143,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
             {
                 Paragraph cur = _fixedSubtitle.Paragraphs[i];
-                if (_dic != null && _dic.ContainsKey(cur.ID))
+                if (_dic.ContainsKey(cur.ID))
                     SubtitleListview1.SetExtraText(i, _dic[cur.ID], SubtitleListview1.ForeColor);
                 SubtitleListview1.SetBackgroundColor(i, SubtitleListview1.BackColor);
             }
@@ -198,7 +199,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubtitleListView1_Resize(object sender, EventArgs e)
         {
-            // Store last column with 'cause it won't be changed
+            // Store last column width 'cause it won't be changed
             var columnsCount = SubtitleListview1.Columns.Count - 1;
             var lastColumnWidth = SubtitleListview1.Columns[columnsCount].Width;
             var width = 0;

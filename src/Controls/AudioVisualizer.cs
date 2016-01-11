@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -333,7 +334,7 @@ namespace Nikse.SubtitleEdit.Controls
             AllowNewSelection = true;
             ShowSpectrogram = true;
             ShowWaveform = true;
-            InsertAtVideoPositionShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
+            InsertAtVideoPositionShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
         }
 
         private void LoadParagraphs(Subtitle subtitle, int primarySelectedIndex, ListView.SelectedIndexCollection selectedIndexes)
@@ -1571,11 +1572,11 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public double FindDataBelowThreshold(int thresholdPercent, double durationInSeconds)
+        public double FindDataBelowThreshold(double thresholdPercent, double durationInSeconds)
         {
             int begin = SecondsToSampleIndex(_currentVideoPositionSeconds + 1);
             int length = SecondsToSampleIndex(durationInSeconds);
-            int threshold = (int)(thresholdPercent / 100.0 * _wavePeaks.HighestPeak);
+            var threshold = thresholdPercent / 100.0 * _wavePeaks.HighestPeak;
 
             int hitCount = 0;
             for (int i = begin; i < _wavePeaks.Peaks.Count; i++)
@@ -1601,11 +1602,11 @@ namespace Nikse.SubtitleEdit.Controls
             return -1;
         }
 
-        public double FindDataBelowThresholdBack(int thresholdPercent, double durationInSeconds)
+        public double FindDataBelowThresholdBack(double thresholdPercent, double durationInSeconds)
         {
             int begin = SecondsToSampleIndex(_currentVideoPositionSeconds - 1);
             int length = SecondsToSampleIndex(durationInSeconds);
-            int threshold = (int)(thresholdPercent / 100.0 * _wavePeaks.HighestPeak);
+            var threshold = thresholdPercent / 100.0 * _wavePeaks.HighestPeak;
 
             int hitCount = 0;
             for (int i = begin; i > 0; i--)

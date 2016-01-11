@@ -153,6 +153,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             bool couldBeFrames = true;
+            bool couldBeMillisecondsWithMissingLastDigit = true;
             foreach (XmlNode node in div.ChildNodes)
             {
                 try
@@ -241,6 +242,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             couldBeFrames = false;
                         }
 
+                        if (couldBeMillisecondsWithMissingLastDigit && (end.Length != 11 || start == null || start.Length != 11 || end.Substring(8, 1) != "." | start.Substring(8, 1) != "."))
+                        {
+                            couldBeMillisecondsWithMissingLastDigit = false;
+                        }
+
                         //string end = node.Attributes["end"].InnerText;
                         double dBegin, dEnd;
                         if (!start.Contains(':') && Utilities.CountTagInText(start, '.') == 1 &&
@@ -276,6 +282,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             couldBeFrames = false;
                         }
 
+                        if (couldBeMillisecondsWithMissingLastDigit && (dur.Length != 11 || start == null || start.Length != 11 || dur.Substring(8, 1) != "." | start.Substring(8, 1) != "."))
+                        {
+                            couldBeMillisecondsWithMissingLastDigit = false;
+                        }
+
                         TimeCode duration = TimedText10.GetTimeCode(dur, false);
                         TimeCode startTime = TimedText10.GetTimeCode(start, false);
                         var endTime = new TimeCode(startTime.TotalMilliseconds + duration.TotalMilliseconds);
@@ -305,6 +316,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         p.StartTime.Milliseconds = SubtitleFormat.FramesToMillisecondsMax999(p.StartTime.Milliseconds);
                         p.EndTime.Milliseconds = SubtitleFormat.FramesToMillisecondsMax999(p.EndTime.Milliseconds);
                     }
+                }
+            }
+            else if (couldBeMillisecondsWithMissingLastDigit)
+            {
+                foreach (Paragraph p in subtitle.Paragraphs)
+                {
+                    p.StartTime.Milliseconds *= 10;
+                    p.EndTime.Milliseconds *= 10;
                 }
             }
 

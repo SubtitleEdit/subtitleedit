@@ -222,6 +222,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Geschwindigkeit prozentual ändern</Title>
+    <TitleShort>Geschwindigkeit ändern</TitleShort>
     <Info>Geschwindigeit der Untertitel prozentual ändern</Info>
     <Custom>Benutzerdefiniert</Custom>
     <ToDropFrame>Bis ausgewählten Bild</ToDropFrame>
@@ -370,6 +371,9 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <Import>Importiere...</Import>
     <TextAndTimingInformation>Text- und Zeitstempel Info</TextAndTimingInformation>
     <JustificationCode>Textformatierung</JustificationCode>
+    <Teletext>Teletext</Teletext>
+    <UseBox>Text in einer Box darstellen</UseBox>
+    <DoubleHeight>Text in doppelter Höhe darstellen</DoubleHeight>
     <Errors>Fehler</Errors>
     <ErrorsX>Fehler: {0}</ErrorsX>
     <MaxLengthError>Text {0} überschreitet maximale Länge ({1}) um {2}: {3}</MaxLengthError>
@@ -1651,6 +1655,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MusicSymbolsToReplace>Zu ersetzende Musik Symbole (durch Leerzeichen trennen)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>OCR Fehler korrigieren - auch Hardcoded Regeln anwenden</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Kurze Anzeigezeit korrigieren - Startzeitanpassung zulassen</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Erster Schritt (zu korrigierende Fehler auswählen) überspringen</FixCommonErrorsSkipStepOne>
     <Shortcuts>Kurzbefehle</Shortcuts>
     <Shortcut>Kurzbefehl</Shortcut>
     <Control>Steuerung</Control>
@@ -1690,6 +1695,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformSeekSilenceForward>Suche stumm vor</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Suche stumm zurück</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Text hier ergänzen (für neue Auswahl)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>Text hier ergänzen (für neue Auswahl aus Zwischenablage)</WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>Auswahl abspielen</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Ende der Auswahl abspielen</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Ersten gewählten Untertitel abspielen</WaveformPlayFirstSelectedSubtitle>

@@ -224,6 +224,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Ajustar a velocidade em percentagem</Title>
+    <TitleShort>Ajustar a velocidade</TitleShort>
     <Info>Alterar a velocidade da legenda em percentagem</Info>
     <Custom>Personalizado</Custom>
     <ToDropFrame>Para descer fotograma</ToDropFrame>
@@ -372,6 +373,9 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Import>Importar...</Import>
     <TextAndTimingInformation>Informação de tempo e texto</TextAndTimingInformation>
     <JustificationCode>Código de justificação</JustificationCode>
+    <Teletext>Teletexto</Teletext>
+    <UseBox>Usar caixa à volta do texto</UseBox>
+    <DoubleHeight>Usar o dobro da altura para o texto</DoubleHeight>
     <Errors>Erros</Errors>
     <ErrorsX>Erros: {0}</ErrorsX>
     <MaxLengthError>Linha {0} excede ao comprimento máximo ({1}) em {2}: {3}</MaxLengthError>
@@ -506,14 +510,14 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
   </FindSubtitleLine>
   <FixCommonErrors>
     <Title>Corrigir erros comuns</Title>
-    <Step1>Passo 1/2 - Seleccione quais os erros a corrigir</Step1>
+    <Step1>Fase 1/2 - Seleccione quais os erros a corrigir</Step1>
     <WhatToFix>O que corrigir</WhatToFix>
     <Example>Exemplo</Example>
     <SelectAll>Selec. tudo</SelectAll>
     <InverseSelection>Inverter selecção</InverseSelection>
     <Back>&lt; &amp;Anterior</Back>
     <Next>&amp;Próximo &gt;</Next>
-    <Step2>Passo 2/2 - Verificar correcções</Step2>
+    <Step2>Fase 2/2 - Verificar correcções</Step2>
     <Fixes>Correcções</Fixes>
     <Log>Registo</Log>
     <Function>Função</Function>
@@ -1653,6 +1657,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MusicSymbolsToReplace>Símbolos musicais para substituir (separados por espaços)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros comuns de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Corrigir o tempo curto de exibição - permitir o movimento do tempo inicial</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Ignorar a fase um (escolher regras de correcção)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Atalhos</Shortcuts>
     <Shortcut>Atalho</Shortcut>
     <Control>Ctrl</Control>
@@ -1691,7 +1696,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <VerticalZoomOut>Zoom vertical saída</VerticalZoomOut>
     <WaveformSeekSilenceForward>Localizar silêncio no áudio adiante</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Localizar silêncio no áudio atrás</WaveformSeekSilenceBack>
-    <WaveformAddTextHere>Adicionar texto aqui (para nova selecção)</WaveformAddTextHere>
+    <WaveformAddTextHere>Adicionar texto aqui (para uma selecção nova)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>Adicionar texto aqui (para uma selecção nova a partir da área de transferência)</WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>Reproduzir selecção</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Reproduzir a partir do fim da selecção</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>

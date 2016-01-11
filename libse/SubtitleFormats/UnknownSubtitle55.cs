@@ -51,16 +51,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 count++;
             }
 
-            System.Windows.Forms.RichTextBox rtBox = new System.Windows.Forms.RichTextBox();
-            rtBox.Text = sb.ToString();
-            string rtf = rtBox.Rtf;
-            rtBox.Dispose();
-            return rtf;
+            return sb.ToString().ToRtf();
         }
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            return $"{time.Hours:00}:{time.Minutes:00}:{time.Seconds:00}.{MillisecondsToFramesMaxFrameRate(time.Milliseconds):00}";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -71,26 +67,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine(line);
 
             string rtf = sb.ToString().Trim();
-            if (!rtf.StartsWith("{\\rtf"))
+            if (!rtf.StartsWith("{\\rtf", StringComparison.Ordinal))
                 return;
 
-            string[] arr = null;
-            var rtBox = new System.Windows.Forms.RichTextBox();
-            try
-            {
-                rtBox.Rtf = rtf;
-                arr = rtBox.Text.SplitToLines();
-            }
-            catch (Exception exception)
-            {
-                System.Diagnostics.Debug.WriteLine(exception.Message);
-                return;
-            }
-            finally
-            {
-                rtBox.Dispose();
-            }
-
+            string[] arr = rtf.FromRtf().SplitToLines();
             bool expectStartTime = true;
             var p = new Paragraph();
             subtitle.Paragraphs.Clear();

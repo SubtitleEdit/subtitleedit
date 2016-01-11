@@ -1,5 +1,66 @@
 ﻿Subtitle Edit Changelog
 
+3.4.11 (xth January 2016) BETA
+* NEW:
+   * New subtitle formats
+   * Export to Pac-Unicode and Ayato 3
+   * Installer can now set icons for SE - thx xylographe
+   * Can now import TextST from Matroska (.mkv) files - thx Rudde
+   * Added "change speed" option in "Batch convert" - thx TomONeill
+   * Added "Blu-ray sup" output in "Batch convert" - thx Dan
+* IMPROVED:
+   * Updated French/Dutch/German translation - thx xylographe
+   * Updated Basque translation - thx Xabier Aramendi
+   * Updated Korean translation updated - thx domddol
+   * Updated Portuguese translation - thx moob
+   * Updated Polish translation - thx admas
+   * Updated Hungarian translation - thx diomed
+   * Fixes for Croatian OCR fix replace list - thx xylographe/diomed
+   * Batch convert - use generic sub importer if unknown format
+   * Improved spell check suggestions (I -> l) - thx Espen
+   * Source view "replace all" much faster - thx adem0x
+   * Some improvements for default ASS/SSA style - thx Michael
+   * Can now read TTML with time code format hh:mm:ss,ms - thx Krystian
+   * Save subtitle through cache to avoid issues with power failure
+   * New options for teletext in "EBU STL"
+   * Batch convert now remembers ASS/SSA style - thx Thunderbolt8
+   * Added Japanese encoding for PAC files
+   * Faster switching from source view to list view in main window
+   * Added read support for Cavena 890 and colors - thx Tiina
+* FIXED:
+   * "Normal (remove formatting)" don't remove Unicode chars - thx Fotis
+   * Fixed bug in spell check "word replace" - thx Sami
+   * Fixed post OCR correction regarding dashes in dialog - thx Rudde
+   * Fixed bug in OCR regarding scrambled line - thx jpsdr
+   * Several fixes in remove text for HI - thx Thunderbolt8
+   * Fixed minor bug in auto-break - thx ivandrofly
+   * Some fixes for Timed Text 1.0 - thx Stephan / btsix
+   * Fixed time code reading in format "USF" - thx Thomas
+   * Fix for line breaks in format "USF" - thx Thomas
+   * Allow 2 bytes ms in format "ABC iViewer" - thx btsix
+   * Minor fix for PAC loading - thx Michael
+   * Allow only spaces as "find value" in "Multiple replace" - thx dandomi
+   * Fixed crash in TS parsing (due to invalid TS packets) - thx scope73
+   * Ebu stl - save/load music symbol "♪"
+   * Ebu stl - allow custom frame rate
+   * Fix Esc key in "Split long lines" - thx Ivandrofly
+   * Fixed crash with exotic decimal separator like "/" - thx jafar
+   * Fixed issue in "Add period at end of line" - thx Nhoise
+   * Fixed crash in save of unknown language track in VobSub - thx Charlie
+   * Fix music notation from "#" now ignores font tags - thx ivandrofly
+   * Some fixes for the "Advanced Sub Station Alpha" properties window
+   * Fixed bug in color chooser - thx Thunderbolt8
+   * Voikko spell check upgraded to 3.8 (fixes Win 8/10 issues) - thx Jari
+   * Bug in "remove uppercase lines" for hearing impaired - thx Krzysiu
+   * Fixed bug in "Remove interjections" - thx Leinad4Mind
+   * Fixed some crashes in OCR window - xylographe/heforfree
+   * Display fix for frame mode - thx Moritz
+   * Some fixes for updating/deleting custom output templates - thx Wolfgang
+   * Fixed Google vs Ms translate - thx marb99/ItsJustSean/xylographe
+   * Fixed waveform seek silence - thx colemar
+   * + Many minor fixes from ivandrofly and xylographe
+
+
 3.4.10 (6th October 2015)
 * NEW:
    * Audio visualizer waveform filled - thx jdpurcell

@@ -48,7 +48,7 @@ PlayDepth: 0
 
 [V4 Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
-Style: Default,{1},{2},{3},65535,65535,-2147483640,-1,0,1,{4},{5},2,10,10,10,0,1
+Style: Default,{1},{2},{3},65535,65535,-2147483640,-1,{9},1,{4},{5},2,{6},{7},{8},0,1
 
 [Events]
 Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
@@ -94,13 +94,21 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             }
             else
             {
+                var ssa = Configuration.Settings.SubtitleSettings;
+                string boldStyle = "0"; // 0=regular
+                if (ssa.SsaFontBold)
+                    boldStyle = "1";
                 sb.AppendLine(string.Format(header,
                                             title,
-                                            Configuration.Settings.SubtitleSettings.SsaFontName,
-                                            (int)Configuration.Settings.SubtitleSettings.SsaFontSize,
+                                            ssa.SsaFontName,
+                                            (int)ssa.SsaFontSize,
                                             ColorTranslator.ToWin32(fontColor),
-                                            Configuration.Settings.SubtitleSettings.SsaOutline,
-                                            Configuration.Settings.SubtitleSettings.SsaShadow
+                                            ssa.SsaOutline,
+                                            ssa.SsaShadow,
+                                            ssa.SsaMarginLeft,
+                                            ssa.SsaMarginRight,
+                                            ssa.SsaMarginTopBottom,
+                                            boldStyle
                                             ));
             }
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -348,46 +356,44 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 else if (eventsStarted && !string.IsNullOrWhiteSpace(line))
                 {
                     string s = line.Trim().ToLower();
-                    if (s.StartsWith("format:", StringComparison.Ordinal))
+                    if (line.Length > 10 && s.StartsWith("format:", StringComparison.Ordinal))
                     {
-                        if (line.Length > 10)
+                        var format = s.Substring(8).Split(',');
+                        for (int i = 0; i < format.Length; i++)
                         {
-                            var format = line.ToLower().Substring(8).Split(',');
-                            for (int i = 0; i < format.Length; i++)
-                            {
-                                if (format[i].Trim().Equals("layer", StringComparison.OrdinalIgnoreCase))
-                                    indexLayer = i;
-                                else if (format[i].Trim().Equals("start", StringComparison.OrdinalIgnoreCase))
-                                    indexStart = i;
-                                else if (format[i].Trim().Equals("end", StringComparison.OrdinalIgnoreCase))
-                                    indexEnd = i;
-                                else if (format[i].Trim().Equals("text", StringComparison.OrdinalIgnoreCase))
-                                    indexText = i;
-                                else if (format[i].Trim().Equals("effect", StringComparison.OrdinalIgnoreCase))
-                                    indexEffect = i;
-                                else if (format[i].Trim().Equals("style", StringComparison.OrdinalIgnoreCase))
-                                    indexStyle = i;
-                                else if (format[i].Trim().Equals("marginl", StringComparison.OrdinalIgnoreCase))
-                                    indexMarginL = i;
-                                else if (format[i].Trim().Equals("marginr", StringComparison.OrdinalIgnoreCase))
-                                    indexMarginR = i;
-                                else if (format[i].Trim().Equals("marginv", StringComparison.OrdinalIgnoreCase))
-                                    indexMarginV = i;
-                            }
+                            var formatTrimmed = format[i].Trim();
+                            if (formatTrimmed.Equals("layer", StringComparison.Ordinal))
+                                indexLayer = i;
+                            else if (formatTrimmed.Equals("start", StringComparison.Ordinal))
+                                indexStart = i;
+                            else if (formatTrimmed.Equals("end", StringComparison.Ordinal))
+                                indexEnd = i;
+                            else if (formatTrimmed.Equals("text", StringComparison.Ordinal))
+                                indexText = i;
+                            else if (formatTrimmed.Equals("effect", StringComparison.Ordinal))
+                                indexEffect = i;
+                            else if (formatTrimmed.Equals("style", StringComparison.Ordinal))
+                                indexStyle = i;
+                            else if (formatTrimmed.Equals("marginl", StringComparison.Ordinal))
+                                indexMarginL = i;
+                            else if (formatTrimmed.Equals("marginr", StringComparison.Ordinal))
+                                indexMarginR = i;
+                            else if (formatTrimmed.Equals("marginv", StringComparison.Ordinal))
+                                indexMarginV = i;
                         }
                     }
                     else if (!string.IsNullOrEmpty(s))
                     {
-                        string text = string.Empty;
-                        string start = string.Empty;
-                        string end = string.Empty;
-                        string style = string.Empty;
+                        var text = string.Empty;
+                        var start = string.Empty;
+                        var end = string.Empty;
+                        var style = string.Empty;
                         var marginL = string.Empty;
                         var marginR = string.Empty;
                         var marginV = string.Empty;
                         var layer = 0;
-                        string effect = string.Empty;
-                        string name = string.Empty;
+                        var effect = string.Empty;
+                        var name = string.Empty;
 
                         string[] splittedLine;
                         if (s.StartsWith("dialog:", StringComparison.Ordinal))

@@ -127,13 +127,13 @@ namespace Nikse.SubtitleEdit.Core
             return -1;
         }
 
-        public static int IndexOfAny(this string s, string[] words, StringComparison comparionType)
+        public static int IndexOfAny(this string s, string[] words, StringComparison comparisonType)
         {
             if (words == null || string.IsNullOrEmpty(s))
                 return -1;
             for (int i = 0; i < words.Length; i++)
             {
-                var idx = s.IndexOf(words[i], comparionType);
+                var idx = s.IndexOf(words[i], comparisonType);
                 if (idx >= 0)
                     return idx;
             }
@@ -196,6 +196,33 @@ namespace Nikse.SubtitleEdit.Core
             if (si.LengthInTextElements > 1)
                 s += si.SubstringByTextElements(1);
             return s;
+        }
+
+        public static string ToRtf(this string value)
+        {
+            // special RTF chars
+            var backslashed = new StringBuilder(value);
+            backslashed.Replace(@"\", @"\\");
+            backslashed.Replace(@"{", @"\{");
+            backslashed.Replace(@"}", @"\}");
+            backslashed.Replace(Environment.NewLine, @"\par" + Environment.NewLine);
+
+            // convert string char by char
+            var sb = new StringBuilder();
+            foreach (char character in backslashed.ToString())
+            {
+                if (character <= 0x7f)
+                    sb.Append(character);
+                else
+                    sb.Append("\\u" + Convert.ToUInt32(character) + "?");
+            }
+
+            return @"{\rtf1\ansi\ansicpg1252\deff0{\fonttbl\f0\fswiss Helvetica;}\f0\pard " + sb + @"\par" + Environment.NewLine + "}";
+        }
+
+        public static string FromRtf(this string value)
+        {
+            return RichTextToPlainText.ConvertToText(value);
         }
 
     }

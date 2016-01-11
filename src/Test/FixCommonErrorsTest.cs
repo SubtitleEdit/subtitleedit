@@ -502,7 +502,7 @@ namespace Test
             }
         }
 
-        
+
 
 
         #endregion Fix Hyphens (add dash)
@@ -884,7 +884,7 @@ namespace Test
             }
         }
 
-        
+
 
 
         #endregion Fix unneeded spaces
@@ -916,6 +916,31 @@ namespace Test
         }
 
 
+        #endregion
+
+        #region Fix missing periods at end of line
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void AddPeriodWhereNextLineStartsWithUppercaseLetter()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("The house seemed desolate to me", 0, 1000));
+            s.Paragraphs.Add(new Paragraph("I wasn't sure if somebody lived in there...", 3200, 5000));
+            new FixMissingPeriodsAtEndOfLine().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(s.Paragraphs[0].Text, "The house seemed desolate to me.");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void AddPeriodWhereNextLineStartsWithUppercaseLetter2()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("The house seemed desolate to me and", 0, 1000));
+            s.Paragraphs.Add(new Paragraph("I wasn't sure if somebody lived in there...", 1000, 3000));
+            new FixMissingPeriodsAtEndOfLine().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(s.Paragraphs[0].Text, "The house seemed desolate to me and");
+        }
         #endregion
 
         #region Start with uppercase after paragraph
@@ -1587,6 +1612,76 @@ namespace Test
                 new FixStartWithUppercaseLetterAfterColon().Fix(_subtitle, new EmptyFixCallback());
                 Assert.AreEqual("John: <font color=\"#ffff80\">Hello world.</font>", _subtitle.Paragraphs[0].Text);
             }
+        }
+        #endregion
+
+        #region Fix Music Notation
+        [TestMethod]
+        public void FixMusicNotation1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "John: <font color=\"#ffff80\">Hello world.</font>");
+                new FixMusicNotation().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("John: <font color=\"#ffff80\">Hello world.</font>", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixMusicNotation2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "# Hello world. #");
+                new FixMusicNotation().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(string.Format("{0} Hello world. {0}", Configuration.Settings.Tools.MusicSymbol), _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixMusicNotation3()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "# Hello world. #");
+                Configuration.Settings.Tools.MusicSymbol = "♫";
+                new FixMusicNotation().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(string.Format("{0} Hello world. {0}", Configuration.Settings.Tools.MusicSymbol), _subtitle.Paragraphs[0].Text);
+            }
+        }
+        #endregion
+
+        #region FixFrenchLApostrophe
+        [TestMethod]
+        public void FixFrenchLApostrophe1()
+        {
+            var res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe("L'Axxxx and l'axxxx", " L'", "Bye.");
+            res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe(res, " l'", "Bye.");
+            Assert.AreEqual("L'Axxxx and l'axxxx", res);
+        }
+
+        [TestMethod]
+        public void FixFrenchLApostrophe2()
+        {
+            var res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe("l'Axxxx and L'axxxx", " L'", "Bye.");
+            res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe(res, " l'", "Bye.");
+            Assert.AreEqual("L'Axxxx and l'axxxx", res);
+        }
+
+        [TestMethod]
+        public void FixFrenchLApostrophe3()
+        {
+            var res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe("l'Axxxx." + Environment.NewLine + "l'axxxx", " L'", "Bye.");
+            res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe(res, " l'", "Bye.");
+            Assert.AreEqual("L'Axxxx." + Environment.NewLine + "L'axxxx", res);
+        }
+
+        [TestMethod]
+        public void FixFrenchLApostrophe4()
+        {
+            var res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe("l'Axxxx and" + Environment.NewLine + "L'axxxx", " L'", "Bye.");
+            res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe(res, " l'", "Bye.");
+            Assert.AreEqual("L'Axxxx and" + Environment.NewLine + "l'axxxx", res);
         }
         #endregion
     }

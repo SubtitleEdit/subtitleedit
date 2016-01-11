@@ -426,21 +426,26 @@ namespace Nikse.SubtitleEdit.Core
             text = text.Replace("< i >", beginTag);
             text = text.Replace("< i>", beginTag);
             text = text.Replace("<i >", beginTag);
+            text = text.Replace("<I>", beginTag);
+            text = text.Replace("< I >", beginTag);
             text = text.Replace("< I>", beginTag);
             text = text.Replace("<I >", beginTag);
 
             text = text.Replace("< / i >", endTag);
             text = text.Replace("< /i>", endTag);
             text = text.Replace("</ i>", endTag);
-            text = text.Replace("< /i>", endTag);
             text = text.Replace("< /i >", endTag);
             text = text.Replace("</i >", endTag);
             text = text.Replace("</ i >", endTag);
             text = text.Replace("< / i>", endTag);
+            text = text.Replace("</I>", endTag);
+            text = text.Replace("< / I >", endTag);
             text = text.Replace("< /I>", endTag);
             text = text.Replace("</ I>", endTag);
-            text = text.Replace("< /I>", endTag);
-            text = text.Replace("< / I >", endTag);
+            text = text.Replace("< /I >", endTag);
+            text = text.Replace("</I >", endTag);
+            text = text.Replace("</ I >", endTag);
+            text = text.Replace("< / I>", endTag);
 
             text = text.Replace("</i> <i>", "_@_");
             text = text.Replace(" _@_", "_@_");
@@ -448,9 +453,15 @@ namespace Nikse.SubtitleEdit.Core
             text = text.Replace("_@_", " ");
 
             if (text.Contains(beginTag))
+            {
                 text = text.Replace("<i/>", endTag);
+                text = text.Replace("<I/>", endTag);
+            }
             else
+            {
                 text = text.Replace("<i/>", string.Empty);
+                text = text.Replace("<I/>", string.Empty);
+            }
 
             text = text.Replace(beginTag + beginTag, beginTag);
             text = text.Replace(endTag + endTag, endTag);
@@ -534,7 +545,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 if (italicBeginTagCount == 0 && italicEndTagCount == 1)
                 {
-                    var cleanText = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagCyrillicI);
+                    var cleanText = RemoveOpenCloseTags(text, TagItalic, TagBold, TagUnderline, TagCyrillicI);
                     bool isFixed = false;
 
                     // Foo.</i>
@@ -678,11 +689,11 @@ namespace Nikse.SubtitleEdit.Core
                 int indexOfEndBracket = text.IndexOf('}');
                 if (text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                 {
-                    text = string.Format("{2}<{0}>{1}</{0}>", tag, text.Remove(0, indexOfEndBracket + 1), text.Substring(0, indexOfEndBracket + 1));
+                    text = $"{text.Substring(0, indexOfEndBracket + 1)}<{tag}>{text.Remove(0, indexOfEndBracket + 1)}</{tag}>";
                 }
                 else
                 {
-                    text = string.Format("<{0}>{1}</{0}>", tag, text);
+                    text = $"<{tag}>{text}</{tag}>";
                 }
             }
             return text;

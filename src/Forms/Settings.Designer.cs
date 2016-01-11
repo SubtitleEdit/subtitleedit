@@ -242,16 +242,29 @@
             this.comboBoxWordListLanguage = new System.Windows.Forms.ComboBox();
             this.tabPageSsaStyle = new System.Windows.Forms.TabPage();
             this.groupBoxSsaStyle = new System.Windows.Forms.GroupBox();
-            this.checkBoxSsaOpaqueBox = new System.Windows.Forms.CheckBox();
-            this.groupBoxPreview = new System.Windows.Forms.GroupBox();
-            this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
-            this.labelSsaOutline = new System.Windows.Forms.Label();
-            this.numericUpDownSsaShadow = new System.Windows.Forms.NumericUpDown();
+            this.groupBoxSsaBorder = new System.Windows.Forms.GroupBox();
             this.numericUpDownSsaOutline = new System.Windows.Forms.NumericUpDown();
             this.labelSsaShadow = new System.Windows.Forms.Label();
-            this.labelSSAFont = new System.Windows.Forms.Label();
-            this.buttonSSAChooseColor = new System.Windows.Forms.Button();
-            this.buttonSSAChooseFont = new System.Windows.Forms.Button();
+            this.numericUpDownSsaShadow = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxSsaOpaqueBox = new System.Windows.Forms.CheckBox();
+            this.labelSsaOutline = new System.Windows.Forms.Label();
+            this.groupSsaBoxFont = new System.Windows.Forms.GroupBox();
+            this.checkBoxSsaFontBold = new System.Windows.Forms.CheckBox();
+            this.buttonSsaColor = new System.Windows.Forms.Button();
+            this.panelPrimaryColor = new System.Windows.Forms.Panel();
+            this.numericUpDownFontSize = new System.Windows.Forms.NumericUpDown();
+            this.comboBoxFontName = new System.Windows.Forms.ComboBox();
+            this.labelSsaFontSize = new System.Windows.Forms.Label();
+            this.labelFontName = new System.Windows.Forms.Label();
+            this.groupBoxMargins = new System.Windows.Forms.GroupBox();
+            this.numericUpDownSsaMarginVertical = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSsaMarginRight = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownSsaMarginLeft = new System.Windows.Forms.NumericUpDown();
+            this.labelMarginVertical = new System.Windows.Forms.Label();
+            this.labelMarginRight = new System.Windows.Forms.Label();
+            this.labelMarginLeft = new System.Windows.Forms.Label();
+            this.groupBoxPreview = new System.Windows.Forms.GroupBox();
+            this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.tabPageNetwork = new System.Windows.Forms.TabPage();
             this.groupBoxNetworkSession = new System.Windows.Forms.GroupBox();
             this.buttonNetworkSessionNewMessageSound = new System.Windows.Forms.Button();
@@ -288,9 +301,9 @@
             this.checkBoxSyntaxColorDurationTooLarge = new System.Windows.Forms.CheckBox();
             this.panelListViewSyntaxColorError = new System.Windows.Forms.Panel();
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
-            this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
+            this.checkBoxFceSkipStep1 = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -336,10 +349,17 @@
             this.groupBoxNamesIgonoreLists.SuspendLayout();
             this.tabPageSsaStyle.SuspendLayout();
             this.groupBoxSsaStyle.SuspendLayout();
+            this.groupBoxSsaBorder.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaOutline)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaShadow)).BeginInit();
+            this.groupSsaBoxFont.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
+            this.groupBoxMargins.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaMarginVertical)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaMarginRight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaMarginLeft)).BeginInit();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaShadow)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaOutline)).BeginInit();
             this.tabPageNetwork.SuspendLayout();
             this.groupBoxNetworkSession.SuspendLayout();
             this.groupBoxProxySettings.SuspendLayout();
@@ -2266,9 +2286,9 @@
             // 
             this.groupBoxToolsMisc.Controls.Add(this.buttonEditDoNotBreakAfterList);
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
-            this.groupBoxToolsMisc.Location = new System.Drawing.Point(374, 129);
+            this.groupBoxToolsMisc.Location = new System.Drawing.Point(374, 259);
             this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
-            this.groupBoxToolsMisc.Size = new System.Drawing.Size(445, 309);
+            this.groupBoxToolsMisc.Size = new System.Drawing.Size(445, 179);
             this.groupBoxToolsMisc.TabIndex = 5;
             this.groupBoxToolsMisc.TabStop = false;
             this.groupBoxToolsMisc.Text = "Misc";
@@ -2298,9 +2318,9 @@
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxTreatINQuoteAsING);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckOneLetterWords);
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
-            this.groupBoxSpellCheck.Location = new System.Drawing.Point(6, 314);
+            this.groupBoxSpellCheck.Location = new System.Drawing.Point(374, 129);
             this.groupBoxSpellCheck.Name = "groupBoxSpellCheck";
-            this.groupBoxSpellCheck.Size = new System.Drawing.Size(362, 124);
+            this.groupBoxSpellCheck.Size = new System.Drawing.Size(448, 124);
             this.groupBoxSpellCheck.TabIndex = 4;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
@@ -2337,6 +2357,7 @@
             // 
             // groupBoxFixCommonErrors
             // 
+            this.groupBoxFixCommonErrors.Controls.Add(this.checkBoxFceSkipStep1);
             this.groupBoxFixCommonErrors.Controls.Add(this.checkBoxFixShortDisplayTimesAllowMoveStartTime);
             this.groupBoxFixCommonErrors.Controls.Add(this.checkBoxFixCommonOcrErrorsUsingHardcodedRules);
             this.groupBoxFixCommonErrors.Controls.Add(this.comboBoxToolsMusicSymbol);
@@ -2345,7 +2366,7 @@
             this.groupBoxFixCommonErrors.Controls.Add(this.labelToolsMusicSymbol);
             this.groupBoxFixCommonErrors.Location = new System.Drawing.Point(7, 129);
             this.groupBoxFixCommonErrors.Name = "groupBoxFixCommonErrors";
-            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(361, 179);
+            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(361, 309);
             this.groupBoxFixCommonErrors.TabIndex = 3;
             this.groupBoxFixCommonErrors.TabStop = false;
             this.groupBoxFixCommonErrors.Text = "Fix common errors";
@@ -2760,15 +2781,10 @@
             // 
             // groupBoxSsaStyle
             // 
-            this.groupBoxSsaStyle.Controls.Add(this.checkBoxSsaOpaqueBox);
+            this.groupBoxSsaStyle.Controls.Add(this.groupBoxSsaBorder);
+            this.groupBoxSsaStyle.Controls.Add(this.groupSsaBoxFont);
+            this.groupBoxSsaStyle.Controls.Add(this.groupBoxMargins);
             this.groupBoxSsaStyle.Controls.Add(this.groupBoxPreview);
-            this.groupBoxSsaStyle.Controls.Add(this.labelSsaOutline);
-            this.groupBoxSsaStyle.Controls.Add(this.numericUpDownSsaShadow);
-            this.groupBoxSsaStyle.Controls.Add(this.numericUpDownSsaOutline);
-            this.groupBoxSsaStyle.Controls.Add(this.labelSsaShadow);
-            this.groupBoxSsaStyle.Controls.Add(this.labelSSAFont);
-            this.groupBoxSsaStyle.Controls.Add(this.buttonSSAChooseColor);
-            this.groupBoxSsaStyle.Controls.Add(this.buttonSSAChooseFont);
             this.groupBoxSsaStyle.Location = new System.Drawing.Point(6, 6);
             this.groupBoxSsaStyle.Name = "groupBoxSsaStyle";
             this.groupBoxSsaStyle.Size = new System.Drawing.Size(813, 432);
@@ -2776,64 +2792,23 @@
             this.groupBoxSsaStyle.TabStop = false;
             this.groupBoxSsaStyle.Text = "Sub Station Alpha style";
             // 
-            // checkBoxSsaOpaqueBox
+            // groupBoxSsaBorder
             // 
-            this.checkBoxSsaOpaqueBox.AutoSize = true;
-            this.checkBoxSsaOpaqueBox.Location = new System.Drawing.Point(275, 91);
-            this.checkBoxSsaOpaqueBox.Name = "checkBoxSsaOpaqueBox";
-            this.checkBoxSsaOpaqueBox.Size = new System.Drawing.Size(85, 17);
-            this.checkBoxSsaOpaqueBox.TabIndex = 8;
-            this.checkBoxSsaOpaqueBox.Text = "Opaque box";
-            this.checkBoxSsaOpaqueBox.UseVisualStyleBackColor = true;
-            this.checkBoxSsaOpaqueBox.CheckedChanged += new System.EventHandler(this.checkBoxSsaOpaqueBox_CheckedChanged);
-            // 
-            // groupBoxPreview
-            // 
-            this.groupBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
-            this.groupBoxPreview.Location = new System.Drawing.Point(17, 114);
-            this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(790, 312);
-            this.groupBoxPreview.TabIndex = 10;
-            this.groupBoxPreview.TabStop = false;
-            this.groupBoxPreview.Text = "Preview";
-            // 
-            // pictureBoxPreview
-            // 
-            this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBoxPreview.Location = new System.Drawing.Point(3, 17);
-            this.pictureBoxPreview.Name = "pictureBoxPreview";
-            this.pictureBoxPreview.Size = new System.Drawing.Size(784, 292);
-            this.pictureBoxPreview.TabIndex = 0;
-            this.pictureBoxPreview.TabStop = false;
-            // 
-            // labelSsaOutline
-            // 
-            this.labelSsaOutline.AutoSize = true;
-            this.labelSsaOutline.Location = new System.Drawing.Point(272, 40);
-            this.labelSsaOutline.Name = "labelSsaOutline";
-            this.labelSsaOutline.Size = new System.Drawing.Size(41, 13);
-            this.labelSsaOutline.TabIndex = 4;
-            this.labelSsaOutline.Text = "Outline";
-            // 
-            // numericUpDownSsaShadow
-            // 
-            this.numericUpDownSsaShadow.Location = new System.Drawing.Point(319, 63);
-            this.numericUpDownSsaShadow.Maximum = new decimal(new int[] {
-            9,
-            0,
-            0,
-            0});
-            this.numericUpDownSsaShadow.Name = "numericUpDownSsaShadow";
-            this.numericUpDownSsaShadow.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownSsaShadow.TabIndex = 7;
-            this.numericUpDownSsaShadow.ValueChanged += new System.EventHandler(this.numericUpDownSsaShadow_ValueChanged);
+            this.groupBoxSsaBorder.Controls.Add(this.numericUpDownSsaOutline);
+            this.groupBoxSsaBorder.Controls.Add(this.labelSsaShadow);
+            this.groupBoxSsaBorder.Controls.Add(this.numericUpDownSsaShadow);
+            this.groupBoxSsaBorder.Controls.Add(this.checkBoxSsaOpaqueBox);
+            this.groupBoxSsaBorder.Controls.Add(this.labelSsaOutline);
+            this.groupBoxSsaBorder.Location = new System.Drawing.Point(329, 21);
+            this.groupBoxSsaBorder.Name = "groupBoxSsaBorder";
+            this.groupBoxSsaBorder.Size = new System.Drawing.Size(185, 96);
+            this.groupBoxSsaBorder.TabIndex = 8;
+            this.groupBoxSsaBorder.TabStop = false;
+            this.groupBoxSsaBorder.Text = "Border";
             // 
             // numericUpDownSsaOutline
             // 
-            this.numericUpDownSsaOutline.Location = new System.Drawing.Point(319, 36);
+            this.numericUpDownSsaOutline.Location = new System.Drawing.Point(64, 16);
             this.numericUpDownSsaOutline.Maximum = new decimal(new int[] {
             9,
             0,
@@ -2847,40 +2822,234 @@
             // labelSsaShadow
             // 
             this.labelSsaShadow.AutoSize = true;
-            this.labelSsaShadow.Location = new System.Drawing.Point(272, 65);
+            this.labelSsaShadow.Location = new System.Drawing.Point(10, 45);
             this.labelSsaShadow.Name = "labelSsaShadow";
             this.labelSsaShadow.Size = new System.Drawing.Size(45, 13);
             this.labelSsaShadow.TabIndex = 6;
             this.labelSsaShadow.Text = "Shadow";
             // 
-            // labelSSAFont
+            // numericUpDownSsaShadow
             // 
-            this.labelSSAFont.AutoSize = true;
-            this.labelSSAFont.Location = new System.Drawing.Point(146, 38);
-            this.labelSSAFont.Name = "labelSSAFont";
-            this.labelSSAFont.Size = new System.Drawing.Size(41, 13);
-            this.labelSSAFont.TabIndex = 1;
-            this.labelSSAFont.Text = "label16";
+            this.numericUpDownSsaShadow.Location = new System.Drawing.Point(64, 43);
+            this.numericUpDownSsaShadow.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.numericUpDownSsaShadow.Name = "numericUpDownSsaShadow";
+            this.numericUpDownSsaShadow.Size = new System.Drawing.Size(44, 21);
+            this.numericUpDownSsaShadow.TabIndex = 7;
+            this.numericUpDownSsaShadow.ValueChanged += new System.EventHandler(this.numericUpDownSsaShadow_ValueChanged);
             // 
-            // buttonSSAChooseColor
+            // checkBoxSsaOpaqueBox
             // 
-            this.buttonSSAChooseColor.Location = new System.Drawing.Point(26, 73);
-            this.buttonSSAChooseColor.Name = "buttonSSAChooseColor";
-            this.buttonSSAChooseColor.Size = new System.Drawing.Size(114, 21);
-            this.buttonSSAChooseColor.TabIndex = 3;
-            this.buttonSSAChooseColor.Text = "Choose font color";
-            this.buttonSSAChooseColor.UseVisualStyleBackColor = true;
-            this.buttonSSAChooseColor.Click += new System.EventHandler(this.ButtonSsaChooseColorClick);
+            this.checkBoxSsaOpaqueBox.AutoSize = true;
+            this.checkBoxSsaOpaqueBox.Location = new System.Drawing.Point(13, 71);
+            this.checkBoxSsaOpaqueBox.Name = "checkBoxSsaOpaqueBox";
+            this.checkBoxSsaOpaqueBox.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxSsaOpaqueBox.TabIndex = 8;
+            this.checkBoxSsaOpaqueBox.Text = "Opaque box";
+            this.checkBoxSsaOpaqueBox.UseVisualStyleBackColor = true;
+            this.checkBoxSsaOpaqueBox.CheckedChanged += new System.EventHandler(this.checkBoxSsaOpaqueBox_CheckedChanged);
             // 
-            // buttonSSAChooseFont
+            // labelSsaOutline
             // 
-            this.buttonSSAChooseFont.Location = new System.Drawing.Point(26, 34);
-            this.buttonSSAChooseFont.Name = "buttonSSAChooseFont";
-            this.buttonSSAChooseFont.Size = new System.Drawing.Size(114, 21);
-            this.buttonSSAChooseFont.TabIndex = 0;
-            this.buttonSSAChooseFont.Text = "Choose font";
-            this.buttonSSAChooseFont.UseVisualStyleBackColor = true;
-            this.buttonSSAChooseFont.Click += new System.EventHandler(this.ButtonSsaChooseFontClick);
+            this.labelSsaOutline.AutoSize = true;
+            this.labelSsaOutline.Location = new System.Drawing.Point(10, 20);
+            this.labelSsaOutline.Name = "labelSsaOutline";
+            this.labelSsaOutline.Size = new System.Drawing.Size(41, 13);
+            this.labelSsaOutline.TabIndex = 4;
+            this.labelSsaOutline.Text = "Outline";
+            // 
+            // groupSsaBoxFont
+            // 
+            this.groupSsaBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupSsaBoxFont.Controls.Add(this.checkBoxSsaFontBold);
+            this.groupSsaBoxFont.Controls.Add(this.buttonSsaColor);
+            this.groupSsaBoxFont.Controls.Add(this.panelPrimaryColor);
+            this.groupSsaBoxFont.Controls.Add(this.numericUpDownFontSize);
+            this.groupSsaBoxFont.Controls.Add(this.comboBoxFontName);
+            this.groupSsaBoxFont.Controls.Add(this.labelSsaFontSize);
+            this.groupSsaBoxFont.Controls.Add(this.labelFontName);
+            this.groupSsaBoxFont.Location = new System.Drawing.Point(6, 20);
+            this.groupSsaBoxFont.Name = "groupSsaBoxFont";
+            this.groupSsaBoxFont.Size = new System.Drawing.Size(317, 97);
+            this.groupSsaBoxFont.TabIndex = 7;
+            this.groupSsaBoxFont.TabStop = false;
+            this.groupSsaBoxFont.Text = "Font";
+            // 
+            // checkBoxSsaFontBold
+            // 
+            this.checkBoxSsaFontBold.AutoSize = true;
+            this.checkBoxSsaFontBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxSsaFontBold.Location = new System.Drawing.Point(184, 45);
+            this.checkBoxSsaFontBold.Name = "checkBoxSsaFontBold";
+            this.checkBoxSsaFontBold.Size = new System.Drawing.Size(51, 17);
+            this.checkBoxSsaFontBold.TabIndex = 7;
+            this.checkBoxSsaFontBold.Text = "Bold";
+            this.checkBoxSsaFontBold.UseVisualStyleBackColor = true;
+            this.checkBoxSsaFontBold.CheckedChanged += new System.EventHandler(this.checkBoxSsaFontBold_CheckedChanged);
+            // 
+            // buttonSsaColor
+            // 
+            this.buttonSsaColor.Location = new System.Drawing.Point(6, 66);
+            this.buttonSsaColor.Name = "buttonSsaColor";
+            this.buttonSsaColor.Size = new System.Drawing.Size(109, 23);
+            this.buttonSsaColor.TabIndex = 6;
+            this.buttonSsaColor.Text = "Choose color";
+            this.buttonSsaColor.UseVisualStyleBackColor = true;
+            this.buttonSsaColor.Click += new System.EventHandler(this.buttonSsaColor_Click);
+            // 
+            // panelPrimaryColor
+            // 
+            this.panelPrimaryColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelPrimaryColor.Location = new System.Drawing.Point(121, 68);
+            this.panelPrimaryColor.Name = "panelPrimaryColor";
+            this.panelPrimaryColor.Size = new System.Drawing.Size(21, 20);
+            this.panelPrimaryColor.TabIndex = 4;
+            this.panelPrimaryColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelPrimaryColor_MouseClick);
+            // 
+            // numericUpDownFontSize
+            // 
+            this.numericUpDownFontSize.Location = new System.Drawing.Point(121, 44);
+            this.numericUpDownFontSize.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDownFontSize.Name = "numericUpDownFontSize";
+            this.numericUpDownFontSize.Size = new System.Drawing.Size(51, 21);
+            this.numericUpDownFontSize.TabIndex = 3;
+            this.numericUpDownFontSize.ValueChanged += new System.EventHandler(this.numericUpDownFontSize_ValueChanged);
+            // 
+            // comboBoxFontName
+            // 
+            this.comboBoxFontName.FormattingEnabled = true;
+            this.comboBoxFontName.Location = new System.Drawing.Point(121, 17);
+            this.comboBoxFontName.Name = "comboBoxFontName";
+            this.comboBoxFontName.Size = new System.Drawing.Size(188, 21);
+            this.comboBoxFontName.TabIndex = 1;
+            this.comboBoxFontName.TextChanged += new System.EventHandler(this.comboBoxFontName_TextChanged);
+            // 
+            // labelSsaFontSize
+            // 
+            this.labelSsaFontSize.AutoSize = true;
+            this.labelSsaFontSize.Location = new System.Drawing.Point(10, 46);
+            this.labelSsaFontSize.Name = "labelSsaFontSize";
+            this.labelSsaFontSize.Size = new System.Drawing.Size(50, 13);
+            this.labelSsaFontSize.TabIndex = 2;
+            this.labelSsaFontSize.Text = "Font size";
+            // 
+            // labelFontName
+            // 
+            this.labelFontName.AutoSize = true;
+            this.labelFontName.Location = new System.Drawing.Point(10, 20);
+            this.labelFontName.Name = "labelFontName";
+            this.labelFontName.Size = new System.Drawing.Size(58, 13);
+            this.labelFontName.TabIndex = 0;
+            this.labelFontName.Text = "Font name";
+            // 
+            // groupBoxMargins
+            // 
+            this.groupBoxMargins.Controls.Add(this.numericUpDownSsaMarginVertical);
+            this.groupBoxMargins.Controls.Add(this.numericUpDownSsaMarginRight);
+            this.groupBoxMargins.Controls.Add(this.numericUpDownSsaMarginLeft);
+            this.groupBoxMargins.Controls.Add(this.labelMarginVertical);
+            this.groupBoxMargins.Controls.Add(this.labelMarginRight);
+            this.groupBoxMargins.Controls.Add(this.labelMarginLeft);
+            this.groupBoxMargins.Location = new System.Drawing.Point(520, 20);
+            this.groupBoxMargins.Name = "groupBoxMargins";
+            this.groupBoxMargins.Size = new System.Drawing.Size(281, 97);
+            this.groupBoxMargins.TabIndex = 9;
+            this.groupBoxMargins.TabStop = false;
+            this.groupBoxMargins.Text = "Margins";
+            // 
+            // numericUpDownSsaMarginVertical
+            // 
+            this.numericUpDownSsaMarginVertical.Location = new System.Drawing.Point(168, 33);
+            this.numericUpDownSsaMarginVertical.Maximum = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
+            this.numericUpDownSsaMarginVertical.Name = "numericUpDownSsaMarginVertical";
+            this.numericUpDownSsaMarginVertical.Size = new System.Drawing.Size(44, 21);
+            this.numericUpDownSsaMarginVertical.TabIndex = 5;
+            this.numericUpDownSsaMarginVertical.ValueChanged += new System.EventHandler(this.numericUpDownSsaMarginVertical_ValueChanged);
+            // 
+            // numericUpDownSsaMarginRight
+            // 
+            this.numericUpDownSsaMarginRight.Location = new System.Drawing.Point(93, 33);
+            this.numericUpDownSsaMarginRight.Maximum = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
+            this.numericUpDownSsaMarginRight.Name = "numericUpDownSsaMarginRight";
+            this.numericUpDownSsaMarginRight.Size = new System.Drawing.Size(44, 21);
+            this.numericUpDownSsaMarginRight.TabIndex = 3;
+            // 
+            // numericUpDownSsaMarginLeft
+            // 
+            this.numericUpDownSsaMarginLeft.Location = new System.Drawing.Point(16, 33);
+            this.numericUpDownSsaMarginLeft.Maximum = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
+            this.numericUpDownSsaMarginLeft.Name = "numericUpDownSsaMarginLeft";
+            this.numericUpDownSsaMarginLeft.Size = new System.Drawing.Size(44, 21);
+            this.numericUpDownSsaMarginLeft.TabIndex = 1;
+            // 
+            // labelMarginVertical
+            // 
+            this.labelMarginVertical.AutoSize = true;
+            this.labelMarginVertical.Location = new System.Drawing.Point(165, 17);
+            this.labelMarginVertical.Name = "labelMarginVertical";
+            this.labelMarginVertical.Size = new System.Drawing.Size(42, 13);
+            this.labelMarginVertical.TabIndex = 4;
+            this.labelMarginVertical.Text = "Vertical";
+            // 
+            // labelMarginRight
+            // 
+            this.labelMarginRight.AutoSize = true;
+            this.labelMarginRight.Location = new System.Drawing.Point(90, 16);
+            this.labelMarginRight.Name = "labelMarginRight";
+            this.labelMarginRight.Size = new System.Drawing.Size(32, 13);
+            this.labelMarginRight.TabIndex = 2;
+            this.labelMarginRight.Text = "Right";
+            // 
+            // labelMarginLeft
+            // 
+            this.labelMarginLeft.AutoSize = true;
+            this.labelMarginLeft.Location = new System.Drawing.Point(13, 16);
+            this.labelMarginLeft.Name = "labelMarginLeft";
+            this.labelMarginLeft.Size = new System.Drawing.Size(26, 13);
+            this.labelMarginLeft.TabIndex = 0;
+            this.labelMarginLeft.Text = "Left";
+            // 
+            // groupBoxPreview
+            // 
+            this.groupBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
+            this.groupBoxPreview.Location = new System.Drawing.Point(6, 114);
+            this.groupBoxPreview.Name = "groupBoxPreview";
+            this.groupBoxPreview.Size = new System.Drawing.Size(801, 312);
+            this.groupBoxPreview.TabIndex = 10;
+            this.groupBoxPreview.TabStop = false;
+            this.groupBoxPreview.Text = "Preview";
+            // 
+            // pictureBoxPreview
+            // 
+            this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxPreview.Location = new System.Drawing.Point(3, 17);
+            this.pictureBoxPreview.Name = "pictureBoxPreview";
+            this.pictureBoxPreview.Size = new System.Drawing.Size(795, 292);
+            this.pictureBoxPreview.TabIndex = 0;
+            this.pictureBoxPreview.TabStop = false;
             // 
             // tabPageNetwork
             // 
@@ -3387,10 +3556,6 @@
             this.panelListViewSyntaxColorError.TabIndex = 7;
             this.panelListViewSyntaxColorError.Click += new System.EventHandler(this.buttonListViewSyntaxColorError_Click);
             // 
-            // fontDialogSSAStyle
-            // 
-            this.fontDialogSSAStyle.Color = System.Drawing.SystemColors.ControlText;
-            // 
             // labelStatus
             // 
             this.labelStatus.AutoSize = true;
@@ -3403,6 +3568,16 @@
             // openFileDialogFFmpeg
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
+            // 
+            // checkBoxFceSkipStep1
+            // 
+            this.checkBoxFceSkipStep1.AutoSize = true;
+            this.checkBoxFceSkipStep1.Location = new System.Drawing.Point(15, 161);
+            this.checkBoxFceSkipStep1.Name = "checkBoxFceSkipStep1";
+            this.checkBoxFceSkipStep1.Size = new System.Drawing.Size(176, 17);
+            this.checkBoxFceSkipStep1.TabIndex = 36;
+            this.checkBoxFceSkipStep1.Text = "Skip step one (choose fix rules)";
+            this.checkBoxFceSkipStep1.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
@@ -3487,11 +3662,20 @@
             this.groupBoxNamesIgonoreLists.PerformLayout();
             this.tabPageSsaStyle.ResumeLayout(false);
             this.groupBoxSsaStyle.ResumeLayout(false);
-            this.groupBoxSsaStyle.PerformLayout();
+            this.groupBoxSsaBorder.ResumeLayout(false);
+            this.groupBoxSsaBorder.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaOutline)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaShadow)).EndInit();
+            this.groupSsaBoxFont.ResumeLayout(false);
+            this.groupSsaBoxFont.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
+            this.groupBoxMargins.ResumeLayout(false);
+            this.groupBoxMargins.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaMarginVertical)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaMarginRight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaMarginLeft)).EndInit();
             this.groupBoxPreview.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaShadow)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSsaOutline)).EndInit();
             this.tabPageNetwork.ResumeLayout(false);
             this.groupBoxNetworkSession.ResumeLayout(false);
             this.groupBoxNetworkSession.PerformLayout();
@@ -3559,11 +3743,7 @@
         private System.Windows.Forms.ComboBox comboBoxEncoding;
         private System.Windows.Forms.CheckBox checkBoxRememberRecentFiles;
         private System.Windows.Forms.GroupBox groupBoxSsaStyle;
-        private System.Windows.Forms.Label labelSSAFont;
-        private System.Windows.Forms.Button buttonSSAChooseColor;
-        private System.Windows.Forms.Button buttonSSAChooseFont;
         private System.Windows.Forms.ColorDialog colorDialogSSAStyle;
-        private System.Windows.Forms.FontDialog fontDialogSSAStyle;
         private System.Windows.Forms.CheckBox checkBoxStartInSourceView;
         private System.Windows.Forms.CheckBox checkBoxReopenLastOpened;
         private System.Windows.Forms.Label labelSubtitleFontSize;
@@ -3776,5 +3956,22 @@
         private System.Windows.Forms.Button buttonNetworkSessionNewMessageSound;
         private System.Windows.Forms.TextBox textBoxNetworkSessionNewMessageSound;
         private System.Windows.Forms.Label labelNetworkSessionNewMessageSound;
+        private System.Windows.Forms.GroupBox groupBoxMargins;
+        private System.Windows.Forms.NumericUpDown numericUpDownSsaMarginVertical;
+        private System.Windows.Forms.NumericUpDown numericUpDownSsaMarginRight;
+        private System.Windows.Forms.NumericUpDown numericUpDownSsaMarginLeft;
+        private System.Windows.Forms.Label labelMarginVertical;
+        private System.Windows.Forms.Label labelMarginRight;
+        private System.Windows.Forms.Label labelMarginLeft;
+        private System.Windows.Forms.GroupBox groupBoxSsaBorder;
+        private System.Windows.Forms.GroupBox groupSsaBoxFont;
+        private System.Windows.Forms.NumericUpDown numericUpDownFontSize;
+        private System.Windows.Forms.ComboBox comboBoxFontName;
+        private System.Windows.Forms.Label labelSsaFontSize;
+        private System.Windows.Forms.Label labelFontName;
+        private System.Windows.Forms.Panel panelPrimaryColor;
+        private System.Windows.Forms.Button buttonSsaColor;
+        private System.Windows.Forms.CheckBox checkBoxSsaFontBold;
+        private System.Windows.Forms.CheckBox checkBoxFceSkipStep1;
     }
 }

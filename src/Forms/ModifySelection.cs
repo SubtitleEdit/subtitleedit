@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -43,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderLine.Text = Configuration.Settings.Language.General.LineNumber;
             columnHeaderText.Text = Configuration.Settings.Language.General.Text;
 
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
 
             comboBoxRule.Items.Clear();
             comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.Contains);

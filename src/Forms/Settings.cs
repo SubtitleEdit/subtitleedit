@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelStatus.Text = string.Empty;
 
-            GeneralSettings gs = Configuration.Settings.General;
+            var gs = Configuration.Settings.General;
 
             checkBoxToolbarNew.Checked = gs.ShowToolbarNew;
             checkBoxToolbarOpen.Checked = gs.ShowToolbarOpen;
@@ -72,13 +72,13 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSpellCheck.Checked = gs.ShowToolbarSpellCheck;
             checkBoxHelp.Checked = gs.ShowToolbarHelp;
 
-            comboBoxFrameRate.Items.Add((23.976).ToString());
-            comboBoxFrameRate.Items.Add((24.0).ToString());
-            comboBoxFrameRate.Items.Add((25.0).ToString());
-            comboBoxFrameRate.Items.Add((29.97).ToString());
+            comboBoxFrameRate.Items.Add((23.976).ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add((24.0).ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add((25.0).ToString(CultureInfo.CurrentCulture));
+            comboBoxFrameRate.Items.Add((29.97).ToString(CultureInfo.CurrentCulture));
 
             checkBoxShowFrameRate.Checked = gs.ShowFrameRate;
-            comboBoxFrameRate.Text = gs.DefaultFrameRate.ToString();
+            comboBoxFrameRate.Text = gs.DefaultFrameRate.ToString(CultureInfo.CurrentCulture);
 
             comboBoxEncoding.Items.Clear();
             int encodingSelectedIndex = 0;
@@ -185,17 +185,25 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxNamesEtcOnline.Checked = wordListSettings.UseOnlineNamesEtc;
             textBoxNamesEtcOnline.Text = wordListSettings.NamesEtcUrl;
 
-            SubtitleSettings ssa = Configuration.Settings.SubtitleSettings;
+            comboBoxFontName.Items.Clear();
+            foreach (var x in FontFamily.Families)
+                comboBoxFontName.Items.Add(x.Name);
+            var ssa = Configuration.Settings.SubtitleSettings;
             _ssaFontName = ssa.SsaFontName;
             _ssaFontSize = ssa.SsaFontSize;
             _ssaFontColor = ssa.SsaFontColorArgb;
-            fontDialogSSAStyle.Font = new Font(ssa.SsaFontName, (float)ssa.SsaFontSize);
-            fontDialogSSAStyle.Color = Color.FromArgb(_ssaFontColor);
             if (ssa.SsaOutline >= numericUpDownSsaOutline.Minimum && ssa.SsaOutline <= numericUpDownSsaOutline.Maximum)
                 numericUpDownSsaOutline.Value = ssa.SsaOutline;
             if (ssa.SsaShadow >= numericUpDownSsaShadow.Minimum && ssa.SsaShadow <= numericUpDownSsaShadow.Maximum)
                 numericUpDownSsaShadow.Value = ssa.SsaShadow;
+            numericUpDownSsaMarginLeft.Value = ssa.SsaMarginLeft;
+            numericUpDownSsaMarginRight.Value = ssa.SsaMarginRight;
+            numericUpDownSsaMarginVertical.Value = ssa.SsaMarginTopBottom;
+            checkBoxSsaFontBold.Checked = ssa.SsaFontBold;
             checkBoxSsaOpaqueBox.Checked = ssa.SsaOpaqueBox;
+            numericUpDownFontSize.Value = (decimal)ssa.SsaFontSize;
+            comboBoxFontName.Text = ssa.SsaFontName;
+            panelPrimaryColor.BackColor = Color.FromArgb(_ssaFontColor);
             UpdateSsaExample();
 
             var proxy = Configuration.Settings.Proxy;
@@ -379,12 +387,21 @@ namespace Nikse.SubtitleEdit.Forms
             labelFFmpegPath.Text = language.WaveformFFmpegPath;
 
             groupBoxSsaStyle.Text = language.SubStationAlphaStyle;
-            buttonSSAChooseFont.Text = language.ChooseFont;
-            buttonSSAChooseColor.Text = language.ChooseColor;
 
+            var ssaStyles = Configuration.Settings.Language.SubStationAlphaStyles;
+            labelSsaFontSize.Text = ssaStyles.FontSize;
+            buttonSsaColor.Text = Configuration.Settings.Language.Settings.ChooseColor;
+            groupSsaBoxFont.Text = ssaStyles.Font;
+            groupBoxSsaBorder.Text = ssaStyles.Border;
+            groupBoxMargins.Text = ssaStyles.Margins;
+            labelMarginLeft.Text = ssaStyles.MarginLeft;
+            labelMarginRight.Text = ssaStyles.MarginRight;
+            labelMarginVertical.Text = ssaStyles.MarginVertical;
             labelSsaOutline.Text = language.SsaOutline;
             labelSsaShadow.Text = language.SsaShadow;
             checkBoxSsaOpaqueBox.Text = language.SsaOpaqueBox;
+            checkBoxSsaFontBold.Text = Configuration.Settings.Language.General.Bold;
+
             groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
 
             numericUpDownSsaOutline.Left = labelSsaOutline.Left + labelSsaOutline.Width + 4;
@@ -449,6 +466,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelToolsMusicSymbolsToReplace.Text = language.MusicSymbolsToReplace;
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = language.FixCommonOcrErrorsUseHardcodedRules;
             checkBoxFixShortDisplayTimesAllowMoveStartTime.Text = language.FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime;
+            checkBoxFceSkipStep1.Text = language.FixCommonErrorsSkipStepOne;
             groupBoxSpellCheck.Text = language.SpellCheck;
             checkBoxSpellCheckAutoChangeNames.Text = Configuration.Settings.Language.SpellCheck.AutoFixNames;
             checkBoxSpellCheckOneLetterWords.Text = Configuration.Settings.Language.SpellCheck.CheckOneLetterWords;
@@ -570,6 +588,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxMusicSymbolsToReplace.Text = toolsSettings.MusicSymbolToReplace;
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked = toolsSettings.OcrFixUseHardcodedRules;
             checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked = toolsSettings.FixShortDisplayTimesAllowMoveStartTime;
+            checkBoxFceSkipStep1.Checked = toolsSettings.FixCommonErrorsSkipStepOne;
             checkBoxSpellCheckAutoChangeNames.Checked = toolsSettings.SpellCheckAutoChangeNames;
             checkBoxSpellCheckOneLetterWords.Checked = toolsSettings.SpellCheckOneLetterWords;
             checkBoxTreatINQuoteAsING.Checked = toolsSettings.SpellCheckEnglishAllowInQuoteAsIng;
@@ -756,6 +775,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizerNode.Nodes.Add(language.WaveformSeekSilenceForward + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward));
             audioVisualizerNode.Nodes.Add(language.WaveformSeekSilenceBack + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack));
             audioVisualizerNode.Nodes.Add(language.WaveformAddTextHere + GetShortcutText(Configuration.Settings.Shortcuts.WaveformAddTextHere));
+            audioVisualizerNode.Nodes.Add(language.WaveformAddTextHereFromClipboard + GetShortcutText(Configuration.Settings.Shortcuts.WaveformAddTextHereFromClipboard));
             audioVisualizerNode.Nodes.Add(language.WaveformPlayNewSelection + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlaySelection));
             audioVisualizerNode.Nodes.Add(language.WaveformPlayNewSelectionEnd + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition + GetShortcutText(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition));
@@ -796,7 +816,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxOverlap.Text = language.SyntaxColorOverlap;
             buttonListViewSyntaxColorError.Text = language.SyntaxErrorColor;
 
-            Utilities.FixLargeFonts(this, buttonOK);
+            UiUtil.FixLargeFonts(this, buttonOK);
 
             checkBoxShortcutsControl.Left = labelShortcut.Left + labelShortcut.Width + 9;
             checkBoxShortcutsAlt.Left = checkBoxShortcutsControl.Left + checkBoxShortcutsControl.Width + 9;
@@ -1022,7 +1042,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             gs.ShowFrameRate = checkBoxShowFrameRate.Checked;
             double outFrameRate;
-            if (double.TryParse(comboBoxFrameRate.Text.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out outFrameRate))
+            if (double.TryParse(comboBoxFrameRate.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out outFrameRate))
                 gs.DefaultFrameRate = outFrameRate;
 
             gs.DefaultEncoding = Encoding.UTF8.BodyName;
@@ -1137,6 +1157,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.UseNoLineBreakAfter = checkBoxUseDoNotBreakAfterList.Checked;
             toolsSettings.OcrFixUseHardcodedRules = checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked;
             toolsSettings.FixShortDisplayTimesAllowMoveStartTime = checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked;
+            toolsSettings.FixCommonErrorsSkipStepOne = checkBoxFceSkipStep1.Checked;
 
             WordListSettings wordListSettings = Configuration.Settings.WordLists;
             wordListSettings.UseOnlineNamesEtc = checkBoxNamesEtcOnline.Checked;
@@ -1152,9 +1173,13 @@ namespace Nikse.SubtitleEdit.Forms
             ssa.SsaFontName = _ssaFontName;
             ssa.SsaFontSize = _ssaFontSize;
             ssa.SsaFontColorArgb = _ssaFontColor;
+            ssa.SsaFontBold = checkBoxSsaFontBold.Checked;
             ssa.SsaOutline = (int)numericUpDownSsaOutline.Value;
             ssa.SsaShadow = (int)numericUpDownSsaShadow.Value;
             ssa.SsaOpaqueBox = checkBoxSsaOpaqueBox.Checked;
+            ssa.SsaMarginLeft = (int)numericUpDownSsaMarginLeft.Value;
+            ssa.SsaMarginRight = (int)numericUpDownSsaMarginRight.Value;
+            ssa.SsaMarginTopBottom = (int)numericUpDownSsaMarginVertical.Value;
 
             ProxySettings proxy = Configuration.Settings.Proxy;
             proxy.ProxyAddress = textBoxProxyAddress.Text;
@@ -1548,6 +1573,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.WaveformSearchSilenceBack = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.WaveformAddTextHere).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformAddTextHere = GetShortcut(node.Text);
+                    else if (text == (Configuration.Settings.Language.Settings.WaveformAddTextHereFromClipboard).Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.WaveformAddTextHereFromClipboard = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.WaveformFocusListView.Replace("&", string.Empty))
@@ -1572,19 +1599,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ButtonSsaChooseFontClick(object sender, EventArgs e)
-        {
-            if (fontDialogSSAStyle.ShowDialog() == DialogResult.OK)
-            {
-                _ssaFontName = fontDialogSSAStyle.Font.Name;
-                _ssaFontSize = fontDialogSSAStyle.Font.Size;
-                UpdateSsaExample();
-            }
-        }
-
         private void UpdateSsaExample()
         {
-            labelSSAFont.Text = string.Format("{0}, size {1}", fontDialogSSAStyle.Font.Name, fontDialogSSAStyle.Font.Size);
             GeneratePreviewReal();
         }
 
@@ -1621,11 +1637,17 @@ namespace Nikse.SubtitleEdit.Forms
                 Font font;
                 try
                 {
-                    font = new Font(_ssaFontName, (float)_ssaFontSize);
+                    if (checkBoxSsaFontBold.Checked)
+                        font = new Font(_ssaFontName, (float)_ssaFontSize, FontStyle.Bold);
+                    else
+                        font = new Font(_ssaFontName, (float)_ssaFontSize);
                 }
                 catch
                 {
-                    font = new Font(Font, FontStyle.Regular);
+                    if (checkBoxSsaFontBold.Checked)
+                        font = new Font(Font, FontStyle.Bold);
+                    else
+                        font = new Font(Font, FontStyle.Regular);
                 }
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
                 g.SmoothingMode = SmoothingMode.AntiAlias;
@@ -1636,12 +1658,12 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 sb.Append("This is a test!");
 
-                var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), false) + 1;
-                var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), false) + 1;
+                var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), checkBoxSsaFontBold.Checked) + 1;
+                var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), checkBoxSsaFontBold.Checked) + 1;
 
                 float left = ((float)(bmp.Width - measuredWidth * 0.8 + 15) / 2);
 
-                float top = bmp.Height - measuredHeight - 10;
+                float top = bmp.Height - measuredHeight - (int)numericUpDownSsaMarginVertical.Value;
 
                 const int leftMargin = 0;
                 int pathPointsStart = -1;
@@ -1651,7 +1673,7 @@ namespace Nikse.SubtitleEdit.Forms
                     g.FillRectangle(new SolidBrush(Color.Black), left, top, measuredWidth + 3, measuredHeight + 3);
                 }
 
-                TextDraw.DrawText(font, sf, path, sb, false, false, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
+                TextDraw.DrawText(font, sf, path, sb, false, checkBoxSsaFontBold.Checked, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
 
                 int outline = (int)numericUpDownSsaOutline.Value;
 
@@ -1664,7 +1686,7 @@ namespace Nikse.SubtitleEdit.Forms
                         sb = new StringBuilder();
                         sb.Append("This is a test!");
                         int pathPointsStart2 = -1;
-                        TextDraw.DrawText(font, sf, shadowPath, sb, false, false, false, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
+                        TextDraw.DrawText(font, sf, shadowPath, sb, false, checkBoxSsaFontBold.Checked, false, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
                         g.FillPath(new SolidBrush(Color.FromArgb(200, Color.Black)), shadowPath);
                     }
                 }
@@ -1676,16 +1698,6 @@ namespace Nikse.SubtitleEdit.Forms
                 g.FillPath(new SolidBrush(Color.FromArgb(_ssaFontColor)), path);
             }
             pictureBoxPreview.Image = bmp;
-        }
-
-        private void ButtonSsaChooseColorClick(object sender, EventArgs e)
-        {
-            colorDialogSSAStyle.Color = Color.FromArgb(_ssaFontColor);
-            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
-            {
-                _ssaFontColor = colorDialogSSAStyle.Color.ToArgb();
-                UpdateSsaExample();
-            }
         }
 
         private void ComboBoxWordListLanguageSelectedIndexChanged(object sender, EventArgs e)
@@ -2580,6 +2592,44 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialogFFmpeg.Filter = Configuration.Settings.Language.General.AudioFiles + "|*.wav";
             if (openFileDialogFFmpeg.ShowDialog(this) == DialogResult.OK)
                 textBoxNetworkSessionNewMessageSound.Text = openFileDialogFFmpeg.FileName;
+        }
+
+        private void panelPrimaryColor_MouseClick(object sender, MouseEventArgs e)
+        {
+            colorDialogSSAStyle.Color = Color.FromArgb(_ssaFontColor);
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                _ssaFontColor = colorDialogSSAStyle.Color.ToArgb();
+                panelPrimaryColor.BackColor = colorDialogSSAStyle.Color;
+                UpdateSsaExample();
+            }
+        }
+
+        private void numericUpDownSsaMarginVertical_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateSsaExample();
+        }
+
+        private void comboBoxFontName_TextChanged(object sender, EventArgs e)
+        {
+            _ssaFontName = comboBoxFontName.Text;
+            UpdateSsaExample();
+        }
+
+        private void numericUpDownFontSize_ValueChanged(object sender, EventArgs e)
+        {
+            _ssaFontSize = (int)numericUpDownFontSize.Value;
+            UpdateSsaExample();
+        }
+
+        private void buttonSsaColor_Click(object sender, EventArgs e)
+        {
+            panelPrimaryColor_MouseClick(sender, null);
+        }
+
+        private void checkBoxSsaFontBold_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateSsaExample();
         }
 
     }

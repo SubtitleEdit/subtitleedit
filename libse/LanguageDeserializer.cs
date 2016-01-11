@@ -952,6 +952,15 @@ namespace Nikse.SubtitleEdit.Core
                 case "EbuSaveOptions/JustificationCode":
                     language.EbuSaveOptions.JustificationCode = reader.Value;
                     break;
+                case "EbuSaveOptions/Teletext":
+                    language.EbuSaveOptions.Teletext = reader.Value;
+                    break;
+                case "EbuSaveOptions/UseBox":
+                    language.EbuSaveOptions.UseBox = reader.Value;
+                    break;
+                case "EbuSaveOptions/DoubleHeight":
+                    language.EbuSaveOptions.DoubleHeight = reader.Value;
+                    break;
                 case "EbuSaveOptions/Errors":
                     language.EbuSaveOptions.Errors = reader.Value;
                     break;
@@ -4420,6 +4429,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime":
                     language.Settings.FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime = reader.Value;
                     break;
+                case "Settings/FixCommonErrorsSkipStepOne":
+                    language.Settings.FixCommonErrorsSkipStepOne = reader.Value;
+                    break;
                 case "Settings/Shortcuts":
                     language.Settings.Shortcuts = reader.Value;
                     break;
@@ -4536,6 +4548,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/WaveformAddTextHere":
                     language.Settings.WaveformAddTextHere = reader.Value;
+                    break;
+                case "Settings/WaveformAddTextHereFromClipboard":
+                    language.Settings.WaveformAddTextHereFromClipboard = reader.Value;
                     break;
                 case "Settings/WaveformPlayNewSelection":
                     language.Settings.WaveformPlayNewSelection = reader.Value;

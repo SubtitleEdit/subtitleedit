@@ -222,6 +222,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Ajuster la vitesse en pourcentage</Title>
+    <TitleShort>Ajuster la vitesse</TitleShort>
     <Info>Modifier la vitesse des sous-titres en pourcentage</Info>
     <Custom>Custom</Custom>
     <ToDropFrame>A drop-frame</ToDropFrame>
@@ -370,6 +371,9 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <Import>Importer...</Import>
     <TextAndTimingInformation>Texte et informations de synchronisation</TextAndTimingInformation>
     <JustificationCode>Justification</JustificationCode>
+    <Teletext>Télétexte</Teletext>
+    <UseBox>Afficher le texte en boîte</UseBox>
+    <DoubleHeight>Afficher le texte à double hauteur</DoubleHeight>
     <Errors>Erreurs</Errors>
     <ErrorsX>Erreurs: {0}</ErrorsX>
     <MaxLengthError>Ligne {0} dépasse longueur max ({1}) à {2}: {3}</MaxLengthError>
@@ -1657,6 +1661,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <MusicSymbolsToReplace>Symboles musicaux à remplacer (séparer par des espaces)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Erreurs OCR courantes - utilise aussi les règles codées en dur</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Durées d'affichage courtes - permet de déplacer le temps initial</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Passer la première étape (choix des erreurs à corriger)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Raccourcis</Shortcuts>
     <Shortcut>Raccourci</Shortcut>
     <Control>Contrôle</Control>
@@ -1687,7 +1692,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <ToggleFocus>Naviguer entre mode liste et zone de texte</ToggleFocus>
     <ToggleDialogDashes>Activer/Désactiver le son</ToggleDialogDashes>
     <Alignment>Aligner (lignes sélectionnées)</Alignment>
-    <CopyTextOnly>Copier du texte dans le presse-papier (lignes sélectionnées)</CopyTextOnly>
+    <CopyTextOnly>Copier du texte dans le presse-papiers (lignes sélectionnées)</CopyTextOnly>
     <CopyTextOnlyFromOriginalToCurrent>Copier le texte original dans le sous-titre courant</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Durée automatique (lignes sélectionnées)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Rétablir RTL Start/Stop</ReverseStartAndEndingForRTL>
@@ -1696,6 +1701,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <WaveformSeekSilenceForward>Recherche avant le silence</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Recherche après le silence</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Ajouter le texte ici (Pour la nouvelle sélection)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>Ajouter le texte ici (Pour la nouvelle sélection à partir du presse-papiers)</WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>Lecture de la nouvelle sélection</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Lecture de la fin de la sélection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Lecture du premier sous-titre sélectionné</WaveformPlayFirstSelectedSubtitle>

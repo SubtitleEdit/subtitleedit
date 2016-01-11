@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -643,6 +643,12 @@
     <Compile Include="Forms\Styles\StylesForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\Styles\SubStationAlphaStylesBatchConvert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Styles\SubStationAlphaStylesBatchConvert.Designer.cs">
+      <DependentUpon>SubStationAlphaStylesBatchConvert.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SubStationAlphaProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -805,6 +811,7 @@
     <Compile Include="Logic\CommandLineConvert.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Logic\FindReplaceDialogHelper.cs" />
     <Compile Include="Logic\ListViewSorter.cs" />
     <Compile Include="Logic\NativeMethods.cs" />
     <Compile Include="Logic\NikseBitmapImageSplitter.cs" />
@@ -825,6 +832,7 @@
     <Compile Include="Logic\Ocr\OcrImage.cs" />
     <Compile Include="Logic\Ocr\NOcrPoint.cs" />
     <Compile Include="Logic\Ocr\SpellCheckOcrTextResult.cs" />
+    <Compile Include="Logic\RtfTextConverterRichTextBox.cs" />
     <Compile Include="Logic\SpellCheck\Hunspell.cs" />
     <Compile Include="Logic\SpellCheck\LinuxHunspell.cs" />
     <Compile Include="Logic\SpellCheck\MacHunspell.cs" />
@@ -1145,6 +1153,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StatusLog.resx">
       <DependentUpon>StatusLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Styles\SubStationAlphaStylesBatchConvert.resx">
+      <DependentUpon>SubStationAlphaStylesBatchConvert.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SubStationAlphaProperties.resx">
       <DependentUpon>SubStationAlphaProperties.cs</DependentUpon>

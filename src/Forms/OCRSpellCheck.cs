@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -56,7 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
             buttonChangeAllWholeText.Text = Configuration.Settings.Language.SpellCheck.ChangeAll;
             buttonGoogleIt.Text = Configuration.Settings.Language.Main.VideoControls.GoogleIt;
-            Utilities.FixLargeFonts(this, buttonAddToNames);
+            UiUtil.FixLargeFonts(this, buttonAddToNames);
         }
 
         private void ButtonAbortClick(object sender, EventArgs e)

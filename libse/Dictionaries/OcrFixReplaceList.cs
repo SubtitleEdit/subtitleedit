@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.Dictionaries
@@ -486,14 +485,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             if (StartEndEndsWithNumber.IsMatch(word))
                 return word;
 
-            if (word.Contains('2') ||
-                word.Contains('3') ||
-                word.Contains('4') ||
-                word.Contains('5') ||
-                word.Contains('6') ||
-                word.Contains('7') ||
-                word.Contains('8') ||
-                word.Contains('9'))
+            if (word.Contains(new[] { '2', '3', '4', '5', '6', '7', '8', '9' }))
                 return word;
 
             if (HexNumber.IsMatch(word))
@@ -529,15 +521,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             if (StartEndEndsWithNumber.IsMatch(word))
                 return word;
 
-            if (word.Contains('1') ||
-                word.Contains('2') ||
-                word.Contains('3') ||
-                word.Contains('4') ||
-                word.Contains('5') ||
-                word.Contains('6') ||
-                word.Contains('7') ||
-                word.Contains('8') ||
-                word.Contains('9') ||
+            if (word.Contains(new[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' }) ||
                 word.EndsWith("a.m", StringComparison.Ordinal) ||
                 word.EndsWith("p.m", StringComparison.Ordinal) ||
                 word.EndsWith("am", StringComparison.Ordinal) ||
@@ -914,28 +898,21 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         public void AddToWholeLineList(string fromLine, string toLine)
         {
-            try
+            var userDocument = LoadXmlReplaceListUserDocument();
+            if (!_wholeLineReplaceList.ContainsKey(fromLine))
+                _wholeLineReplaceList.Add(fromLine, toLine);
+            XmlNode wholeWordsNode = userDocument.DocumentElement.SelectSingleNode("WholeLines");
+            if (wholeWordsNode != null)
             {
-                var userDocument = LoadXmlReplaceListUserDocument();
-                if (!_wholeLineReplaceList.ContainsKey(fromLine))
-                    _wholeLineReplaceList.Add(fromLine, toLine);
-                XmlNode wholeWordsNode = userDocument.DocumentElement.SelectSingleNode("WholeLines");
-                if (wholeWordsNode != null)
-                {
-                    XmlNode newNode = userDocument.CreateNode(XmlNodeType.Element, "Line", null);
-                    XmlAttribute aFrom = userDocument.CreateAttribute("from");
-                    XmlAttribute aTo = userDocument.CreateAttribute("to");
-                    aTo.InnerText = toLine;
-                    aFrom.InnerText = fromLine;
-                    newNode.Attributes.Append(aFrom);
-                    newNode.Attributes.Append(aTo);
-                    wholeWordsNode.AppendChild(newNode);
-                    userDocument.Save(_replaceListXmlFileName);
-                }
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception + Environment.NewLine + exception.StackTrace);
+                XmlNode newNode = userDocument.CreateNode(XmlNodeType.Element, "Line", null);
+                XmlAttribute aFrom = userDocument.CreateAttribute("from");
+                XmlAttribute aTo = userDocument.CreateAttribute("to");
+                aTo.InnerText = toLine;
+                aFrom.InnerText = fromLine;
+                newNode.Attributes.Append(aFrom);
+                newNode.Attributes.Append(aTo);
+                wholeWordsNode.AppendChild(newNode);
+                userDocument.Save(_replaceListXmlFileName);
             }
         }
 

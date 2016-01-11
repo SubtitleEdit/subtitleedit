@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -70,7 +71,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             groupBoxMargins.Text = l.Margins;
             labelMarginLeft.Text = l.MarginLeft;
             labelMarginRight.Text = l.MarginRight;
-            labelMarginRight.Text = l.MarginRight;
             labelMarginVertical.Text = l.MarginVertical;
             groupBoxBorder.Text = l.Border;
             radioButtonOutline.Text = l.Outline;
@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             InitializeListView();
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
 
             comboBoxFontName.Left = labelFontName.Left + labelFontName.Width + 10;
             numericUpDownFontSize.Left = labelFontSize.Left + labelFontSize.Width + 10;
@@ -574,9 +574,9 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 {
                     if (colorChooser.ShowDialog() == DialogResult.OK)
                     {
+                        panelPrimaryColor.BackColor = colorChooser.Color;
                         listViewStyles.SelectedItems[0].SubItems[4].BackColor = panelPrimaryColor.BackColor;
                         listViewStyles.SelectedItems[0].SubItems[5].ForeColor = panelPrimaryColor.BackColor;
-                        panelPrimaryColor.BackColor = colorChooser.Color;
                         listViewStyles.SelectedItems[0].SubItems[4].BackColor = panelPrimaryColor.BackColor;
                         SetSsaStyle(name, "primarycolour", GetSsaColorString(panelPrimaryColor.BackColor));
                         GeneratePreview();
@@ -1230,13 +1230,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     }
                 }
             }
-        }
-
-        internal void MakeOnlyOneStyle()
-        {
-            groupBoxPreview.Top = groupBoxStyles.Top;
-            groupBoxPreview.Height = groupBoxProperties.Height;
-            groupBoxStyles.SendToBack();
         }
 
         private void buttonExport_Click(object sender, EventArgs e)

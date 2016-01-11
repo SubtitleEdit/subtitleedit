@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.Globalization;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic;
 using System;
@@ -112,7 +113,18 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (s.StartsWith("scaledborderandshadow:"))
                     {
-                        checkBoxScaleBorderAndShadow.Checked = s.Remove(0, 22).Trim().Equals("yes");
+                        checkBoxScaleBorderAndShadow.Checked = s.Remove(0, 22).Trim().ToLowerInvariant().Equals("yes");
+                    }
+                    else if (s.StartsWith("wrapstyle:"))
+                    {
+                        var wrapStyle = s.Remove(0, 10).Trim();
+                        for (int i = 0; i < comboBoxWrapStyle.Items.Count; i++)
+                        {
+                            if (i.ToString(CultureInfo.InvariantCulture) == wrapStyle)
+                            {
+                                comboBoxWrapStyle.SelectedIndex = i;
+                            }
+                        }
                     }
                 }
             }
@@ -136,7 +148,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
-            Utilities.FixLargeFonts(this, buttonCancel);
+            UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -176,8 +188,8 @@ namespace Nikse.SubtitleEdit.Forms
             UpdateTag("Synch Point", textBoxSyncPoint.Text, string.IsNullOrWhiteSpace(textBoxSyncPoint.Text));
             UpdateTag("Script Updated By", textBoxUpdatedBy.Text, string.IsNullOrWhiteSpace(textBoxUpdatedBy.Text));
             UpdateTag("Update Details", textBoxUpdateDetails.Text, string.IsNullOrWhiteSpace(textBoxUpdateDetails.Text));
-            UpdateTag("PlayResX", numericUpDownVideoWidth.Value.ToString(), numericUpDownVideoWidth.Value == 0);
-            UpdateTag("PlayResY", numericUpDownVideoHeight.Value.ToString(), numericUpDownVideoHeight.Value == 0);
+            UpdateTag("PlayResX", numericUpDownVideoWidth.Value.ToString(CultureInfo.InvariantCulture), numericUpDownVideoWidth.Value == 0);
+            UpdateTag("PlayResY", numericUpDownVideoHeight.Value.ToString(CultureInfo.InvariantCulture), numericUpDownVideoHeight.Value == 0);
             if (comboBoxCollision.SelectedIndex == 0)
                 UpdateTag("collisions", "Normal", false); // normal
             else
@@ -185,11 +197,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!_isSubStationAlpha)
             {
-                UpdateTag("wrapstyle", comboBoxWrapStyle.SelectedIndex.ToString(), false);
+                UpdateTag("WrapStyle", comboBoxWrapStyle.SelectedIndex.ToString(CultureInfo.InvariantCulture), false);
                 if (checkBoxScaleBorderAndShadow.Checked)
-                    UpdateTag("ScaledBorderAndShadow", "yes", false);
+                    UpdateTag("ScaledBorderAndShadow", "Yes", false);
                 else
-                    UpdateTag("ScaledBorderAndShadow", "no", false);
+                    UpdateTag("ScaledBorderAndShadow", "No", false);
             }
 
             DialogResult = DialogResult.OK;
@@ -209,7 +221,10 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (line.StartsWith('['))
                 {
                     if (!found && scriptInfoOn && !remove)
+                    {
+                        sb = new StringBuilder(sb.ToString().Trim() + Environment.NewLine);
                         sb.AppendLine(tag + ": " + text);
+                    }
                     sb = new StringBuilder(sb.ToString().TrimEnd());
                     sb.AppendLine();
                     sb.AppendLine();
