@@ -861,7 +861,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Visible = true;
             int start = 0;
             bool overQuota = false;
-           
+
             try
             {
                 var sb = new StringBuilder();

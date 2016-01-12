@@ -117,7 +117,7 @@ namespace Test.Logic
             var tc = new TimeCode(1, 2, 3, 4);
 
             Assert.AreEqual(tc.TotalMilliseconds, 3723004);
-            Assert.IsTrue(Math.Abs(tc.TotalMilliseconds -  (tc.TotalSeconds * 1000.0)) < 0.001);
+            Assert.IsTrue(Math.Abs(tc.TotalMilliseconds - (tc.TotalSeconds * 1000.0)) < 0.001);
         }
 
     }
