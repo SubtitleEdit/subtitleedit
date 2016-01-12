@@ -311,6 +311,7 @@
     <Compile Include="SubtitleFormats\SwiftTextLineNumber.cs" />
     <Compile Include="SubtitleFormats\Tek.cs" />
     <Compile Include="SubtitleFormats\TextST.cs" />
+    <Compile Include="SubtitleFormats\TimedTextImage.cs" />
     <Compile Include="SubtitleFormats\TimedText.cs" />
     <Compile Include="SubtitleFormats\TimedText10.cs" />
     <Compile Include="SubtitleFormats\TimedText200604.cs" />

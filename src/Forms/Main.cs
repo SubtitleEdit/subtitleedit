@@ -2235,6 +2235,25 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (format == null)
+                {
+                    try
+                    {
+                        var timedtextImage = new TimedTextImage();
+                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                        if (timedtextImage.IsMine(list, fileName))
+                        {
+                            if (ContinueNewOrExit())
+                                ImportAndOcrDost(fileName, timedtextImage, list);
+                            return;
+                        }
+                    }
+                    catch
+                    {
+                        format = null;
+                    }
+                }
+
                 if (format == null || format.Name == Scenarist.NameOfFormat)
                 {
                     try
