@@ -402,10 +402,10 @@ namespace Nikse.SubtitleEdit.Forms
             // groupBoxOcrMethod
             // 
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
             this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
             this.groupBoxOcrMethod.Size = new System.Drawing.Size(392, 192);
