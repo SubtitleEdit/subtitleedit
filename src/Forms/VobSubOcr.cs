@@ -7460,15 +7460,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BitmapCompare" && comboBoxOcrMethod.Items.Count > 1)
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodImageCompare;
+            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BinaryImageCompare" && comboBoxOcrMethod.Items.Count > 2)
+                comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
             else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "MODI" && comboBoxOcrMethod.Items.Count > 2)
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodModi;
             else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "nOCR" && comboBoxOcrMethod.Items.Count > 3)
                 comboBoxOcrMethod.SelectedIndex = _ocrMethodNocr;
-            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BinaryImageCompare" && comboBoxOcrMethod.Items.Count > 2)
-                comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
             else
                 comboBoxOcrMethod.SelectedIndex = 0;
-
         }
 
         internal void StartOcrFromDelayed()
@@ -8385,8 +8384,6 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxTransportStream.Top = groupBoxImagePalette.Top;
             groupBoxTransportStream.Visible = true;
             checkBoxTransportStreamGetColorAndSplit.Visible = subtitles.Count > 0 && subtitles[0].IsDvbSub;
-            //SetTesseractLanguageFromLanguageString(languageString);
-            //_importLanguageString = languageString;
         }
 
         private void checkBoxTransportStreamGrayscale_CheckedChanged(object sender, EventArgs e)
