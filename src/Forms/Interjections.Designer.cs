@@ -52,6 +52,7 @@
             // 
             // buttonRemove
             // 
+            this.buttonRemove.Enabled = false;
             this.buttonRemove.Location = new System.Drawing.Point(159, 16);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(75, 21);
@@ -75,10 +76,12 @@
             this.textBoxInterjection.Name = "textBoxInterjection";
             this.textBoxInterjection.Size = new System.Drawing.Size(151, 20);
             this.textBoxInterjection.TabIndex = 24;
+            this.textBoxInterjection.TextChanged += new System.EventHandler(this.textBoxInterjection_TextChanged);
             this.textBoxInterjection.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxInterjection_KeyDown);
             // 
             // buttonAdd
             // 
+            this.buttonAdd.Enabled = false;
             this.buttonAdd.Location = new System.Drawing.Point(159, 219);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(75, 21);
