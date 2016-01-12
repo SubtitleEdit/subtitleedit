@@ -43,11 +43,25 @@ namespace Nikse.SubtitleEdit.Core
         {
             foreach (Paragraph p in subtitle.Paragraphs)
             {
+                p.Text = p.Text.Replace("<html>", string.Empty);
+                p.Text = p.Text.Replace("</html>", string.Empty);
                 p.Text = p.Text.Replace("<div>", string.Empty);
                 p.Text = p.Text.Replace("</div>", string.Empty);
                 p.Text = p.Text.Replace("<body>", string.Empty);
                 p.Text = p.Text.Replace("</body>", string.Empty);
+                p.Text = p.Text.Replace("<tt>", string.Empty);
                 p.Text = p.Text.Replace("</tt>", string.Empty);
+                p.Text = p.Text.Replace("<tr>", string.Empty);
+                p.Text = p.Text.Replace("</tr>", string.Empty);
+                p.Text = p.Text.Replace("<td>", string.Empty);
+                p.Text = p.Text.Replace("</td>", string.Empty);
+                p.Text = p.Text.Replace("<table>", string.Empty);
+                p.Text = p.Text.Replace("</table>", string.Empty);
+                p.Text = p.Text.Replace("<br>", Environment.NewLine);
+                p.Text = p.Text.Replace("<br/>", Environment.NewLine);
+                p.Text = p.Text.Replace("<br />", Environment.NewLine);
+                p.Text = p.Text.Replace("&lt;", "<");
+                p.Text = p.Text.Replace("&gt;", ">");
                 p.Text = p.Text.Replace("  ", " ");
                 p.Text = p.Text.Replace("  ", " ");
                 p.Text = p.Text.Replace("  ", " ");
