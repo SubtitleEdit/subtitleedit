@@ -303,7 +303,13 @@ namespace Nikse.SubtitleEdit.Forms
         // optimization vars
         private int _numericUpDownPixelsIsSpace = 6;
         private double _numericUpDownMaxErrorPct = 6;
-        private int _ocrMethodIndex = 1;
+        private int _ocrMethodIndex = 0;
+
+        private int _ocrMethodTesseract = 0;
+        private int _ocrMethodImageCompare = 1;
+        private int _ocrMethodModi = 2;
+        private int _ocrMethodBinaryImageCompare = 3;
+        private int _ocrMethodNocr = 4;
 
         public static void SetDoubleBuffered(Control c)
         {
@@ -401,11 +407,10 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxOcrMethod.Items.Add(language.OcrViaTesseract);
             comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
             comboBoxOcrMethod.Items.Add(language.OcrViaModi);
+            comboBoxOcrMethod.Items.Add("Binary image compare");
             if (Configuration.Settings.General.ShowBetaStuff)
             {
                 comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
-                comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare + " NEW! ");
-                comboBoxOcrMethod.SelectedIndex = 4;
             }
 
             checkBoxUseModiInTesseractForUnknownWords.Text = language.TryModiForUnknownWords;
@@ -509,7 +514,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxPromptForUnknownWords.Checked = false;
 
             int max = GetSubtitleCount();
-            if (comboBoxOcrMethod.SelectedIndex == 0 && _tesseractAsyncStrings == null)
+            if (_ocrMethodIndex == _ocrMethodTesseract && _tesseractAsyncStrings == null)
             {
                 _tesseractAsyncStrings = new string[max];
                 _tesseractAsyncIndex = (int)numericUpDownStartNumber.Value + 5;
@@ -677,7 +682,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxPromptForUnknownWords.Checked = false;
 
             int max = GetSubtitleCount();
-            if (comboBoxOcrMethod.SelectedIndex == 0 && _tesseractAsyncStrings == null)
+            if (_ocrMethodIndex == _ocrMethodTesseract && _tesseractAsyncStrings == null)
             {
                 _tesseractAsyncStrings = new string[max];
                 _tesseractAsyncIndex = (int)numericUpDownStartNumber.Value + 5;
@@ -790,7 +795,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                if (comboBoxOcrMethod.SelectedIndex == 4)
+                if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
                 {
                     string characterDatabasePath = Configuration.OcrFolder.TrimEnd(Path.DirectorySeparatorChar);
                     if (!Directory.Exists(characterDatabasePath))
@@ -811,7 +816,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (comboBoxCharacterDatabase.SelectedIndex < 0 && comboBoxCharacterDatabase.Items.Count > 0)
                         comboBoxCharacterDatabase.SelectedIndex = 0;
                 }
-                else if (comboBoxOcrMethod.SelectedIndex == 1)
+                else if (_ocrMethodIndex == _ocrMethodImageCompare)
                 {
                     comboBoxCharacterDatabase.SelectedIndexChanged -= ComboBoxCharacterDatabaseSelectedIndexChanged;
                     string characterDatabasePath = Configuration.VobSubCompareFolder.TrimEnd(Path.DirectorySeparatorChar);
@@ -850,11 +855,11 @@ namespace Nikse.SubtitleEdit.Forms
             DisposeImageCompareBitmaps();
             _binaryOcrDb = null;
 
-            if (comboBoxOcrMethod.SelectedIndex == 1)
+            if (_ocrMethodIndex == _ocrMethodImageCompare)
             {
                 LoadOldCompareImages();
             }
-            else if (comboBoxOcrMethod.SelectedIndex == 4)
+            else if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
                 string db = Configuration.OcrFolder + comboBoxCharacterDatabase.SelectedItem + ".db";
                 _binaryOcrDb = new BinaryOcrDb(db, true);
@@ -5391,7 +5396,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             int max = GetSubtitleCount();
 
-            if (comboBoxOcrMethod.SelectedIndex == 0 && _tesseractAsyncStrings == null)
+            if (_ocrMethodIndex == _ocrMethodTesseract && _tesseractAsyncStrings == null)
             {
                 _nOcrDb = null;
                 _tesseractAsyncStrings = new string[max];
@@ -5403,12 +5408,12 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_tesseractAsyncIndex >= 0 && _tesseractAsyncIndex < max)
                     _tesseractThread.RunWorkerAsync(GetSubtitleBitmap(_tesseractAsyncIndex));
             }
-            else if (comboBoxOcrMethod.SelectedIndex == 1)
+            else if (_ocrMethodIndex == _ocrMethodImageCompare)
             {
                 if (_compareBitmaps == null)
                     LoadImageCompareBitmaps();
             }
-            else if (comboBoxOcrMethod.SelectedIndex == 3)
+            else if (_ocrMethodIndex == _ocrMethodNocr)
             {
                 if (_nOcrDb == null)
                     LoadNOcrWithCurrentLanguage();
@@ -5451,7 +5456,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (comboBoxOcrMethod.SelectedIndex == 4)
+            else if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
                 if (_binaryOcrDb == null)
                 {
@@ -5459,6 +5464,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _binaryOcrDb = new BinaryOcrDb(_binaryOcrDbFileName, true);
                 }
                 _nOcrDb = new NOcrDb(_binaryOcrDb.FileName.Replace(".db", ".nocr"));
+                checkBoxNOcrCorrect.Checked = true;
             }
 
             progressBar1.Maximum = max;
@@ -5474,7 +5480,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.MultiSelect = false;
             mainOcrTimer_Tick(null, null);
 
-            if (comboBoxOcrMethod.SelectedIndex == 1)
+            if (_ocrMethodIndex == _ocrMethodImageCompare)
             {
                 _icThreadsStop = false;
                 _icThreadResults = new string[_subtitle.Paragraphs.Count];
@@ -5536,18 +5542,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             string text = string.Empty;
 //            var sw = Stopwatch.StartNew();
-            if (_ocrMethodIndex == 0)
+            if (_ocrMethodIndex == _ocrMethodTesseract)
                 text = OcrViaTesseract(bmp, i);
-            else if (_ocrMethodIndex == 1)
+            else if (_ocrMethodIndex == _ocrMethodImageCompare)
                 text = SplitAndOcrBitmapNormal(bmp, i);
-            else if (_ocrMethodIndex == 2)
-                text = CallModi(i);
-            else if (_ocrMethodIndex == 3)
-                text = OcrViaNOCR(bmp, i);
-            else if (_ocrMethodIndex == 4)
+            else if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
                 text = SplitAndOcrBitmapNormalNew(bmp, i);
-//            sw.Stop();
-//_elapseds.Add(sw.ElapsedMilliseconds);
+            else if (_ocrMethodIndex == _ocrMethodNocr)
+                text = OcrViaNOCR(bmp, i);
+            else if (_ocrMethodIndex == _ocrMethodModi)
+                text = CallModi(i);
+            //            sw.Stop();
+            //_elapseds.Add(sw.ElapsedMilliseconds);
             //double ts = 0;
             //for (int k = 0; k < _elapseds.Count; k++)
             //{
@@ -6655,8 +6661,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _modiEnabled = false;
             }
-            if (!_modiEnabled && comboBoxOcrMethod.Items.Count == 3)
+            if (!_modiEnabled)
+            {
                 comboBoxOcrMethod.Items.RemoveAt(2);
+                _ocrMethodBinaryImageCompare--;
+                _ocrMethodNocr--;
+            }
         }
 
         private void InitializeTesseract()
@@ -6800,11 +6810,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonNewCharacterDatabaseClick(object sender, EventArgs e)
         {
-            using (var newFolder = new VobSubOcrNewFolder(comboBoxOcrMethod.SelectedIndex == 1))
+            using (var newFolder = new VobSubOcrNewFolder(_ocrMethodIndex == _ocrMethodImageCompare))
             {
                 if (newFolder.ShowDialog(this) == DialogResult.OK)
                 {
-                    if (comboBoxOcrMethod.SelectedIndex == 4)
+                    if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
                     {
                         try
                         {
@@ -6836,7 +6846,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ComboBoxCharacterDatabaseSelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxOcrMethod.SelectedIndex == 4)
+            if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
                 _binaryOcrDbFileName = Configuration.OcrFolder + comboBoxCharacterDatabase.SelectedItem + ".db";
             }
@@ -7013,24 +7023,19 @@ namespace Nikse.SubtitleEdit.Forms
             _binaryOcrDb = null;
             _nOcrDb = null;
             _ocrMethodIndex = comboBoxOcrMethod.SelectedIndex;
-            if (comboBoxOcrMethod.SelectedIndex == 0)
+            if (_ocrMethodIndex == _ocrMethodTesseract)
             {
                 ShowOcrMethodGroupBox(GroupBoxTesseractMethod);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "Tesseract";
             }
-            else if (comboBoxOcrMethod.SelectedIndex == 1)
+            else if (_ocrMethodIndex == _ocrMethodImageCompare)
             {
                 ShowOcrMethodGroupBox(groupBoxImageCompareMethod);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "BitmapCompare";
                 checkBoxPromptForUnknownWords.Checked = false;
                 LoadImageCompareCharacterDatabaseList();
             }
-            else if (comboBoxOcrMethod.SelectedIndex == 2)
-            {
-                ShowOcrMethodGroupBox(groupBoxModiMethod);
-                Configuration.Settings.VobSubOcr.LastOcrMethod = "MODI";
-            }
-            else if (comboBoxOcrMethod.SelectedIndex == 3)
+            else if (_ocrMethodIndex == _ocrMethodNocr)
             {
                 ShowOcrMethodGroupBox(groupBoxNOCR);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "nOCR";
@@ -7050,14 +7055,19 @@ namespace Nikse.SubtitleEdit.Forms
                 if (comboBoxNOcrLanguage.Items.Count > 0)
                     comboBoxNOcrLanguage.SelectedIndex = selIndex;
             }
-            else
+            else if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
                 ShowOcrMethodGroupBox(groupBoxImageCompareMethod);
-                Configuration.Settings.VobSubOcr.LastOcrMethod = "BitmapCompare";
+                Configuration.Settings.VobSubOcr.LastOcrMethod = "BinaryImageCompare";
                 checkBoxPromptForUnknownWords.Checked = false;
                 numericUpDownMaxErrorPct.Minimum = 0;
                 _binaryOcrDb = new BinaryOcrDb(_binaryOcrDbFileName, true);
                 LoadImageCompareCharacterDatabaseList();
+            }
+            else if (_ocrMethodIndex == _ocrMethodModi)
+            {
+                ShowOcrMethodGroupBox(groupBoxModiMethod);
+                Configuration.Settings.VobSubOcr.LastOcrMethod = "MODI";
             }
             SubtitleListView1SelectedIndexChanged(null, null);
         }
@@ -7118,7 +7128,7 @@ namespace Nikse.SubtitleEdit.Forms
                 saveImageAsToolStripMenuItem.Visible = true;
             }
 
-            if (comboBoxOcrMethod.SelectedIndex == 1 || comboBoxOcrMethod.SelectedIndex == 4) // image compare
+            if (_ocrMethodIndex == _ocrMethodImageCompare || _ocrMethodIndex == _ocrMethodBinaryImageCompare) // image compare
             {
                 toolStripSeparatorImageCompare.Visible = true;
                 inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Visible = true;
@@ -7131,7 +7141,7 @@ namespace Nikse.SubtitleEdit.Forms
                 EditLastAdditionsToolStripMenuItem.Visible = false;
             }
 
-            if (comboBoxOcrMethod.SelectedIndex == 3) // nocr compare
+            if (_ocrMethodIndex == _ocrMethodNocr) // nocr compare
             {
                 toolStripMenuItemInspectNOcrMatches.Visible = true;
                 toolStripSeparatorImageCompare.Visible = true;
@@ -7449,16 +7459,16 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetOcrMethod()
         {
             if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BitmapCompare" && comboBoxOcrMethod.Items.Count > 1)
-                comboBoxOcrMethod.SelectedIndex = 1;
+                comboBoxOcrMethod.SelectedIndex = _ocrMethodImageCompare;
             else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "MODI" && comboBoxOcrMethod.Items.Count > 2)
-                comboBoxOcrMethod.SelectedIndex = 2;
+                comboBoxOcrMethod.SelectedIndex = _ocrMethodModi;
             else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "nOCR" && comboBoxOcrMethod.Items.Count > 3)
-                comboBoxOcrMethod.SelectedIndex = 3;
+                comboBoxOcrMethod.SelectedIndex = _ocrMethodNocr;
+            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BinaryImageCompare" && comboBoxOcrMethod.Items.Count > 2)
+                comboBoxOcrMethod.SelectedIndex = _ocrMethodBinaryImageCompare;
             else
                 comboBoxOcrMethod.SelectedIndex = 0;
 
-            if (comboBoxOcrMethod.Items.Count > 4)
-                comboBoxOcrMethod.SelectedIndex = 4;
         }
 
         internal void StartOcrFromDelayed()
@@ -7911,7 +7921,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 Configuration.Settings.VobSubOcr.AllowDifferenceInPercent = (double)numericUpDownMaxErrorPct.Value;
 
-            if (comboBoxOcrMethod.SelectedIndex == 3) // line OCR
+            if (_ocrMethodIndex == _ocrMethodNocr) 
             {
                 Configuration.Settings.VobSubOcr.LineOcrLastSpellCheck = LanguageString;
                 if (comboBoxNOcrLanguage.Items.Count > 0 && comboBoxNOcrLanguage.SelectedIndex >= 0)
@@ -8280,7 +8290,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonLineOcrNewLanguage_Click(object sender, EventArgs e)
         {
-            using (var newFolder = new VobSubOcrNewFolder(comboBoxOcrMethod.SelectedIndex == 1))
+            using (var newFolder = new VobSubOcrNewFolder(_ocrMethodIndex == _ocrMethodImageCompare))
             {
                 if (newFolder.ShowDialog(this) == DialogResult.OK)
                 {
