@@ -1791,7 +1791,7 @@ namespace Nikse.SubtitleEdit.Controls
             double average = 0;
             for (int k = begin; k < _wavePeaks.Peaks.Count; k++)
                 average += _wavePeaks.Peaks[k].Abs;
-            average /=  _wavePeaks.Peaks.Count - begin;
+            average /= _wavePeaks.Peaks.Count - begin;
 
             var maxThreshold = (int)(_wavePeaks.HighestPeak * (maximumVolumePercent / 100.0));
             var silenceThreshold = (int)(average * (minimumVolumePercent / 100.0));

@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             form.FormatOk = form.FormatOk.Remove(0, name.Length);
                             name = arr[0] + " (" + i + ")";
-                            form.FormatOk = name +  form.FormatOk;
+                            form.FormatOk = name + form.FormatOk;
                             i++;
                         }
                         _templates.Add(form.FormatOk);
