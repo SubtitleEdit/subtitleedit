@@ -618,6 +618,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         contextMenuStripAddSubtitleContent.Show(treeView1, p);
                     }
+                    else if (node.Tag is TextST.RegionStyle)
+                    {
+                        contextMenuStripRegionStyle.Show(treeView1, p);
+                    }
                 }
             }
         }
@@ -789,6 +793,27 @@ namespace Nikse.SubtitleEdit.Forms
         private void numericUpDownFontSetFontId_ValueChanged(object sender, EventArgs e)
         {
             _currentSubtitleFontSet.FontId = GetIntFromNumericUpDown(sender);
+        }
+
+        private void toolStripMenuItemDuplicateRegionStyle_Click(object sender, EventArgs e)
+        {
+            var regionStyle = _currentNode.Tag as TextST.RegionStyle;
+            if (regionStyle != null)
+            {
+                int regionStyleId = 0;
+                foreach (var rs in _textST.StyleSegment.RegionStyles)
+                {
+                    regionStyleId = Math.Max(regionStyleId, rs.RegionStyleId);
+                }
+                regionStyleId++;
+
+                var newRegionStyle = new TextST.RegionStyle(regionStyle) { RegionStyleId = regionStyleId };
+                _textST.StyleSegment.RegionStyles.Add(newRegionStyle);
+                var newNode = new TreeNode("Region style") { Tag = newRegionStyle };
+                _currentNode.Parent.Nodes.Add(newNode);
+                _currentNode.Parent.Text = "Region styles (" + _textST.StyleSegment.RegionStyles.Count + ")";
+                treeView1.SelectedNode = newNode;
+            }
         }
 
     }

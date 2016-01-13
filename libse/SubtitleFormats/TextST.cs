@@ -85,6 +85,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public class RegionStyle
         {
+            public RegionStyle()
+            {
+            }
+
+            public RegionStyle(RegionStyle regionStyle)
+            {
+                RegionStyleId = regionStyle.RegionStyleId;
+                RegionHorizontalPosition = regionStyle.RegionHorizontalPosition;
+                RegionVerticalPosition = regionStyle.RegionVerticalPosition;
+                RegionWidth = regionStyle.RegionWidth;
+                RegionHeight = regionStyle.RegionHeight;
+                RegionBgPaletteEntryIdRef = regionStyle.RegionBgPaletteEntryIdRef;
+                TextBoxHorizontalPosition = regionStyle.TextBoxHorizontalPosition;
+                TextBoxVerticalPosition = regionStyle.TextBoxVerticalPosition;
+                TextBoxWidth = regionStyle.TextBoxWidth;
+                TextBoxHeight = regionStyle.TextBoxHeight;
+                TextFlow = regionStyle.TextFlow;
+                TextHorizontalAlignment = regionStyle.TextHorizontalAlignment;
+                TextVerticalAlignment = regionStyle.TextVerticalAlignment;
+                LineSpace = regionStyle.LineSpace;
+                FontIdRef = regionStyle.FontIdRef;
+                FontStyle = regionStyle.FontStyle;
+                FontSize = regionStyle.FontSize;
+                FontPaletteEntryIdRef = regionStyle.FontPaletteEntryIdRef;
+                FontOutlinePaletteEntryIdRef = regionStyle.FontOutlinePaletteEntryIdRef;
+                FontOutlineThickness = regionStyle.FontOutlineThickness;
+            }
+
             public int RegionStyleId { get; set; }
             public int RegionHorizontalPosition { get; set; }
             public int RegionVerticalPosition { get; set; }
@@ -231,6 +259,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             public void WriteToStream(Stream stream, int numberOfSubtitles)
             {
+                NumberOfRegionStyles = RegionStyles.Count;
+                NumberOfUserStyles = UserStyles.Count;
+
                 byte[] regionStyle = MakeRegionStyle();
                 stream.Write(new byte[] { 0, 0, 1, 0xbf }, 0, 4); // MPEG-2 Private stream 2
                 var size = regionStyle.Length + 5;
