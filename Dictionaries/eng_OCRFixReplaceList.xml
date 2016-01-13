@@ -502,6 +502,7 @@
     <Word from="HerrSchmidt" to="Herr Schmidt" />
     <Word from="herwith" to="her with" />
     <Word from="HeY·" to="Hey." />
+    <Word from="HeyJennifer" to="Hey Jennifer" />
     <Word from="hiddsn" to="hidden" />
     <Word from="hisjunk" to="his junk" />
     <Word from="Hitlershare" to="Hitler share" />
@@ -639,6 +640,7 @@
     <Word from="inscﬁpﬁons" to="inscriptions" />
     <Word from="insolencel" to="insolence!" />
     <Word from="intc" to="into" />
+    <Word from="internationaljudges" to="international judges" />
     <Word from="inthe" to="in the" />
     <Word from="Iockdown" to="lockdown" />
     <Word from="Iong" to="long" />
@@ -1003,9 +1005,12 @@
     <Word from="ofa" to="of a" />
     <Word from="ofajudge" to="of a judge" />
     <Word from="ofall" to="of all" />
+    <Word from="ofBedford" to="of Bedford" />
     <Word from="ofcourse" to="of course" />
+    <Word from="ofeach" to="of each" />
     <Word from="ofeither" to="of either" />
     <Word from="Offioer's" to="Officer's" />
+    <Word from="ofFrance" to="of France" />
     <Word from="offreedom" to="of freedom" />
     <Word from="offthe" to="off the" />
     <Word from="offthis" to="off this" />
@@ -1018,6 +1023,7 @@
     <Word from="ofhoneybees" to="of honeybees" />
     <Word from="ofit" to="of it" />
     <Word from="ofjam" to="of jam" />
+    <Word from="OFJOAN" to="OF JOAN" />
     <Word from="ofjoy" to="of joy" />
     <Word from="ofjunior" to="of junior" />
     <Word from="ofme" to="of me" />
@@ -1058,6 +1064,7 @@
     <Word from="onboard" to="on board" />
     <Word from="onIy" to="only" />
     <Word from="onIything" to="only thing" />
+    <Word from="onJanuaw" to="on January" />
     <Word from="onlyjust" to="only just" />
     <Word from="Onyinal" to="Original" />
     <Word from="oomprise" to="comprise" />
@@ -1172,6 +1179,7 @@
     <Word from="shallrise" to="shall rise" />
     <Word from="sHATTERING" to="SHATTERING" />
     <Word from="shcws" to="shows" />
+    <Word from="Shdsjust" to="She's just" />
     <Word from="She`s" to="She's" />
     <Word from="She‘II" to="She'll" />
     <Word from="she'II" to="she'll" />
@@ -1255,6 +1263,7 @@
     <Word from="tellyou" to="tell you" />
     <Word from="terriers_" to="terriers." />
     <Word from="th/nk" to="think" />
+    <Word from="THEPASSION" to="THE PASSION" />
     <Word from="thafs" to="that's" />
     <Word from="Thafs" to="That's" />
     <Word from="Thai's" to="That's" />
@@ -1549,6 +1558,7 @@
     <Word from="You'va" to="You've" />
     <Word from="youWlneversee" to="you'll never see" />
     <Word from="yQu" to="you" />
+    <Word from="YQu" to="You" />
     <Word from="yQu'_7" to="you?" />
     <Word from="yummY" to="yummy" />
     <Word from="yuu" to="you" />
@@ -1649,10 +1659,12 @@
     <Word from="oryour" to="or your" />
     <Word from="forArthur" to="for Arthur" />
     <Word from="CIamp" to="Clamp" />
+    <Word from="CIass" to="Class" />
     <Word from="CIose" to="Close" />
     <Word from="GIove" to="Glove" />
     <Word from="EIIen" to="Ellen" />
     <Word from="PIay" to="Play" />
+    <Word from="PIace" to="Place" />
     <Word from="EIgyn" to="Elgyn" />
     <Word from="AIert" to="Alert" />
     <Word from="CIaus" to="Claus" />
