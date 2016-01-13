@@ -729,7 +729,7 @@
     <RegEx find="interesantn" replaceWith="zanimljiv" />
     <RegEx find="Interesantn" replaceWith="Zanimljiv" />
     <RegEx find="([iI])nteresova" replaceWith="$1nteresira" />
-    <RegEx find="([iI])ntervjuis" replaceWith="$1ntervjuir" />    
+    <RegEx find="([iI])ntervjuis" replaceWith="$1ntervjuir" />
     <RegEx find="([iI])ntezivn" replaceWith="$1ntenzivn" />
     <RegEx find="([iI])seče" replaceWith="$1zreže" />
     <RegEx find="([iI])spoljava" replaceWith="$1zražava" />
@@ -806,8 +806,8 @@
     <RegEx find="([kK])oristić" replaceWith="$1oristit ć" />
     <RegEx find="([kK])oriš[ćč]en" replaceWith="$1orišten" />
     <RegEx find="([kK])orj?en" replaceWith="$1orijen" />
-    <RegEx find="([kK])ritikuje" replaceWith="$1ritizira" /> 
-    <RegEx find="([kK])rofn" replaceWith="$1rafn" /> 
+    <RegEx find="([kK])ritikuje" replaceWith="$1ritizira" />
+    <RegEx find="([kK])rofn" replaceWith="$1rafn" />
     <RegEx find="([kK])rompir" replaceWith="$1rumpir" />
     <RegEx find="\b([kK])rst([au]|ića?)?\b" replaceWith="$1riž$2" />
     <RegEx find="\b([kK])rstov(e|ima)\b" replaceWith="$1rižev$2" />
@@ -1471,7 +1471,7 @@
     <RegEx find="Džulij" replaceWith="Juli" />
     <RegEx find="Ejmi" replaceWith="Amy" />
     <RegEx find="Ejpril" replaceWith="April" />
-    <RegEx find="([EA])jnštajn" replaceWith="Einstein" />
+    <RegEx find="[EA]jnštajn" replaceWith="Einstein" />
     <RegEx find="Endi" replaceWith="Andy" />
     <RegEx find="Ešli" replaceWith="Ashley" />
     <RegEx find="Filadelfij" replaceWith="Philadelphi" />
