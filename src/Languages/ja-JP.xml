@@ -20,7 +20,6 @@
     <OpenVideoFileTitle>ビデオ ファイルを開く...</OpenVideoFileTitle>
     <NoVideoLoaded>ビデオが読み込まれていません</NoVideoLoaded>
     <VideoInformation>ビデオ情報</VideoInformation>
-    <PositionX>位置 / 表示時間: {0}</PositionX>
     <StartTime>開始時間</StartTime>
     <EndTime>終了時間</EndTime>
     <Duration>表示時間</Duration>
@@ -150,7 +149,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <NothingToConvert>変換するものがありません!</NothingToConvert>
     <PleaseChooseOutputFolder>出力フォルダーを選択してください</PleaseChooseOutputFolder>
     <Converted>変換されました</Converted>
-    <ConvertedX>変換されました ({0})</ConvertedX>
   </BatchConvert>
   <Beamer>
     <Title>ビーマー</Title>
@@ -474,8 +472,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <DescriptionLine1>Subtitle Edit のスペル チェックは Open Office からの</DescriptionLine1>
     <DescriptionLine2>スペル チェック辞書を使用する NHunspell エンジンに基づいています。</DescriptionLine2>
     <GetDictionariesHere>ここから辞書を取得します:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Open Office Wiki 辞書の一覧</OpenOpenOfficeWiki>
-    <GetAllDictionaries>すべての辞書を取得</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>言語を選択してダウンロードをクリックします</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>'Dictionaries' フォルダーを開く</OpenDictionariesFolder>
     <Download>ダウンロード</Download>
@@ -1231,8 +1227,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <VideoEngine>ビデオ エンジン</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>system32 フォルダーの quartz.dll</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - DirectX の .NET Managed コード</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
@@ -1259,7 +1253,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <SpectrogramOneColorGradient>単色グラデーション</SpectrogramOneColorGradient>
     <SpectrogramClassic>クラシック</SpectrogramClassic>
     <SubStationAlphaStyle>Sub Station Alpha スタイル</SubStationAlphaStyle>
-    <ChooseFont>フォントの選択</ChooseFont>
     <ChooseColor>色の選択</ChooseColor>
     <Testing123>テスト中 123...</Testing123>
     <Language>言語</Language>

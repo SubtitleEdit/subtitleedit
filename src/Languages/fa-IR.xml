@@ -19,7 +19,6 @@
     <OpenVideoFileTitle>باز کردن فایل های ویدئویی</OpenVideoFileTitle>
     <NoVideoLoaded>هیچ فایل ویدئویی باز نشد</NoVideoLoaded>
     <VideoInformation>اطلاعات ویدئو</VideoInformation>
-    <PositionX>موقعیت / مدت زمان : {0}</PositionX>
     <StartTime>زمان شروع</StartTime>
     <EndTime>زمان پایان</EndTime>
     <Duration>مدت زمان</Duration>
@@ -374,8 +373,6 @@ http://soft98.ir
     <DescriptionLine1>NHunspell ویرایش نام در طلسم بررسی در موتور بر اساس</DescriptionLine1>
     <DescriptionLine2>با استفاده از طلسم چک کردن فرهنگ از باز کردن دفتر.</DescriptionLine2>
     <GetDictionariesHere>دریافت واژه نامه اینجا هست : :</GetDictionariesHere>
-    <OpenOpenOfficeWiki>باز کردن دفتر ویکی فهرست واژه نامه ها</OpenOpenOfficeWiki>
-    <GetAllDictionaries>گرفتن همه واژه نامه ها</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>انتخاب زبان دانلود و کلیک</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>پوشه 'واژه نامه ها' باز</OpenDictionariesFolder>
     <Download>دانلود</Download>
@@ -992,8 +989,6 @@ http://soft98.ir
     <VideoEngine>موتور ویدئو</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll در پوشه system32</DirectShowDescription>
-    <ManagedDirectX>مدیریت DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -- کد مدیریت شده دات نت از DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>وی ال سی مدیا پلیر</VlcMediaPlayer>
@@ -1018,7 +1013,6 @@ http://soft98.ir
     <SpectrogramOneColorGradient>یک رنگ متحرک</SpectrogramOneColorGradient>
     <SpectrogramClassic>کلاسیک</SpectrogramClassic>
     <SubStationAlphaStyle>زیر ایستگاه سبک آلفا</SubStationAlphaStyle>
-    <ChooseFont>انتخاب فونت</ChooseFont>
     <ChooseColor>انتخاب رنگ</ChooseColor>
     <Testing123>123 تست...</Testing123>
     <Language>زبان</Language>

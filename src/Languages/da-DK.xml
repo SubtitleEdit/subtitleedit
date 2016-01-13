@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Åbn video fil...</OpenVideoFileTitle>
     <NoVideoLoaded>Ingen video indlæst</NoVideoLoaded>
     <VideoInformation>Video info</VideoInformation>
-    <PositionX>Position: {0}</PositionX>
     <StartTime>Starttid</StartTime>
     <EndTime>Sluttid</EndTime>
     <Duration>Varighed</Duration>
@@ -170,7 +169,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <PleaseChooseOutputFolder>Vælg output mappe</PleaseChooseOutputFolder>
     <NotConverted>Fejl</NotConverted>
     <Converted>Konverteret</Converted>
-    <ConvertedX>Konverteret ({0})</ConvertedX>
     <Settings>Indstillinger</Settings>
     <SplitLongLines>Split lange linjer</SplitLongLines>
     <AutoBalance>Auto-balancer linjer</AutoBalance>
@@ -632,8 +630,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <DescriptionLine1>Subtitle Edit's stavekontrol er baseret på NHunspell, der</DescriptionLine1>
     <DescriptionLine2>bruger ordbøger fra Open Office.</DescriptionLine2>
     <GetDictionariesHere>Hent ordbøger her:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Open Office Wiki Ordbog liste</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Hent alle ordbøger</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Vælg sprog og klik på download</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Åbn 'Dictionaries' mappen</OpenDictionariesFolder>
     <Download>Download</Download>
@@ -1570,8 +1566,6 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <VideoEngine>Video afspiller</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>Quartz.dll i system32 mappen</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed kode fra DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1611,7 +1605,6 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformBrowseToFFmpeg>Vælg sti stil FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Gå til VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha Style</SubStationAlphaStyle>
-    <ChooseFont>Vælg skrifttype</ChooseFont>
     <ChooseColor>Vælg farve</ChooseColor>
     <SsaOutline>Orids</SsaOutline>
     <SsaShadow>Skygge</SsaShadow>

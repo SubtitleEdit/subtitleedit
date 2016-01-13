@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>打开视频文件...</OpenVideoFileTitle>
     <NoVideoLoaded>未加载视频</NoVideoLoaded>
     <VideoInformation>视频信息</VideoInformation>
-    <PositionX>位置/时长: {0}</PositionX>
     <StartTime>起始时间</StartTime>
     <EndTime>结束时间</EndTime>
     <Duration>时长</Duration>
@@ -172,7 +171,6 @@ Command line: {1} {2}
     <PleaseChooseOutputFolder>请选择输出文件夹</PleaseChooseOutputFolder>
     <NotConverted>失败</NotConverted>
     <Converted>已转换</Converted>
-    <ConvertedX>已转换 ({0})</ConvertedX>
     <Settings>设置</Settings>
     <SplitLongLines>分割长行</SplitLongLines>
     <AutoBalance>自动均排各行</AutoBalance>
@@ -626,8 +624,6 @@ Command line: {1} {2}
     <DescriptionLine1>Subtitle Edit 的拼写检查基于 NHunspell 引擎，它</DescriptionLine1>
     <DescriptionLine2>使用的是 Open Office 的拼写检查词典。</DescriptionLine2>
     <GetDictionariesHere>到此处获取词典:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Open Office 维基词典列表</OpenOpenOfficeWiki>
-    <GetAllDictionaries>获取所有字典</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>选择您的语言并点击「下载」</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>打开 'Dictionaries' 文件夹</OpenDictionariesFolder>
     <Download>下载</Download>
@@ -1545,8 +1541,6 @@ Command line: {1} {2}
     <VideoEngine>视频引擎</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>使用 System32 文件夹中的 quartz.dll</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed 代码来自 DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1586,7 +1580,6 @@ Command line: {1} {2}
     <WaveformBrowseToFFmpeg>浏览 FFmpeg 文件</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>浏览至VLC便携版安装路径</WaveformBrowseToVLC>
     <SubStationAlphaStyle>(高级) Sub Station Alpha 样式</SubStationAlphaStyle>
-    <ChooseFont>选择字体</ChooseFont>
     <ChooseColor>选择颜色</ChooseColor>
     <SsaOutline>轮廓线</SsaOutline>
     <SsaShadow>阴影</SsaShadow>

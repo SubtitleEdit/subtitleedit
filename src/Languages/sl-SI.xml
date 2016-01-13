@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Naloži video datoteko...</OpenVideoFileTitle>
     <NoVideoLoaded>Video ni naložen</NoVideoLoaded>
     <VideoInformation>Video informacije</VideoInformation>
-    <PositionX>Pozicija / Trajanje: {0}</PositionX>
     <StartTime>Začetek</StartTime>
     <EndTime>Konec</EndTime>
     <Duration>Trajanje</Duration>
@@ -158,7 +157,6 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <NothingToConvert>Ni kaj pretvarjat!</NothingToConvert>
     <PleaseChooseOutputFolder>Prosim, izberi izhodno mapo</PleaseChooseOutputFolder>
     <Converted>Pretvorjeno</Converted>
-    <ConvertedX>Pretvorjeno ({0})</ConvertedX>
     <Settings>Nastavitve</Settings>
     <SplitLongLines>Razpolovi dolge vrstice</SplitLongLines>
     <AutoBalance>Poravnaj vrstice</AutoBalance>
@@ -557,8 +555,6 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <DescriptionLine1>Slovar v Subtitle Edit sloni na NHunspell pogonu, kateri</DescriptionLine1>
     <DescriptionLine2>uporablja slovarje iz Open Office.</DescriptionLine2>
     <GetDictionariesHere>Tukaj dobiš slovarje:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Open Office Wiki lista slovarjev</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Vzemi vse slovarje</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Izberi svoj jezik in klikni Prenesi (Download)</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Odpri mapo "Slovarji"</OpenDictionariesFolder>
     <Download>Prenesi</Download>
@@ -1443,8 +1439,6 @@ popravlja en podnapis (sodelovanje)</Information>
     <VideoEngine>Video pogon</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll v sistem32 mapi</DirectShowDescription>
-    <ManagedDirectX>Upravljanje DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideo predvajanje - .NET Vodena koda iz DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC medijski predvajalnik</VlcMediaPlayer>
@@ -1479,7 +1473,6 @@ popravlja en podnapis (sodelovanje)</Information>
     <WaveformFFmpegPath>Pot do FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Brskaj do FFmpeg</WaveformBrowseToFFmpeg>
     <SubStationAlphaStyle>(Napredno) Stil Sub postaje Alpha</SubStationAlphaStyle>
-    <ChooseFont>Izberi pisavo</ChooseFont>
     <ChooseColor>Izberi barvo</ChooseColor>
     <SsaOutline>Oris</SsaOutline>
     <SsaShadow>Senca</SsaShadow>

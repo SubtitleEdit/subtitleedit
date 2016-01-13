@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>เปิดไฟล์วิดีโอ...</OpenVideoFileTitle>
     <NoVideoLoaded>ไม่มีวิดีโอโหลดอยู่</NoVideoLoaded>
     <VideoInformation>ข้อมูลวิดีโอ</VideoInformation>
-    <PositionX>ตำแหน่ง / ระยะเวลา: {0}</PositionX>
     <StartTime>เวลาเริ่มต้น</StartTime>
     <EndTime>เวลาสิ้นสุด</EndTime>
     <Duration>ระยะเวลา</Duration>
@@ -152,7 +151,6 @@
     <NothingToConvert>ไม่มีข้อมูลที่ต้องแปลง!</NothingToConvert>
     <PleaseChooseOutputFolder>โปรดเลือกโฟลเดอร์เอาท์พุต</PleaseChooseOutputFolder>
     <Converted>แปลงแล้ว</Converted>
-    <ConvertedX>แปลงแล้ว ({0})</ConvertedX>
     <Settings>การตั้งค่า</Settings>
     <SplitLongLines>แยกบรรทัดยาว</SplitLongLines>
     <AutoBalance>ปรับสมดุลบรรทัด</AutoBalance>
@@ -583,8 +581,6 @@
     <DescriptionLine1>ระบบตรวจคำของ Subtitle Edit มาจากกลไกของ NHunspell ซึ่ง</DescriptionLine1>
     <DescriptionLine2>ใช้พจนานุกรมตรวจคำจาก Open Office</DescriptionLine2>
     <GetDictionariesHere>โหลดพจนานุกรมที่นี่:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>รายการของ Open Office Wiki Dictionaries</OpenOpenOfficeWiki>
-    <GetAllDictionaries>โหลดพจนานุกรมทั้งหมด</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>เลือกภาษาของคุณและคลิกดาวน์โหลด</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>เปิดโฟลเดอร์ 'Dictionaries'</OpenDictionariesFolder>
     <Download>ดาวน์โหลด</Download>
@@ -1481,8 +1477,6 @@
     <VideoEngine>เอนจิ้นของวิดีโอ</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll ในโฟลเดอร์ system32</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
@@ -1519,7 +1513,6 @@
     <WaveformBrowseToFFmpeg>เบราซ์หา FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>เบราซ์ไปยัง VLC พอร์ตเอเบิ้ล</WaveformBrowseToVLC>
     <SubStationAlphaStyle>รูปแบบ (Advanced) Sub Station Alpha</SubStationAlphaStyle>
-    <ChooseFont>เลือกฟอนต์</ChooseFont>
     <ChooseColor>เลือกสี</ChooseColor>
     <SsaOutline>กรอบ</SsaOutline>
     <SsaShadow>เงา</SsaShadow>

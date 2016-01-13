@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Deschide fișier video...</OpenVideoFileTitle>
     <NoVideoLoaded>Niciun video încărcat</NoVideoLoaded>
     <VideoInformation>Informații video</VideoInformation>
-    <PositionX>Poziția / durata: {0}</PositionX>
     <StartTime>Timpul de pornire</StartTime>
     <EndTime>Timpul de terminare</EndTime>
     <Duration>Durata</Duration>
@@ -173,7 +172,6 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
     <PleaseChooseOutputFolder>Alege, te rog, dosarul de ieșire</PleaseChooseOutputFolder>
     <NotConverted>Ratat</NotConverted>
     <Converted>Convertit</Converted>
-    <ConvertedX>Convertit ({0})</ConvertedX>
     <Settings>Setări</Settings>
     <SplitLongLines>Scindează liniile lungi</SplitLongLines>
     <AutoBalance>Auto-echilibrează liniile</AutoBalance>
@@ -627,8 +625,6 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
     <DescriptionLine1>Verif. ortografiei în SE este bazată pe motorul NHunspell</DescriptionLine1>
     <DescriptionLine2>care folosește ortografierea din dicționarele Open Office.</DescriptionLine2>
     <GetDictionariesHere>Obține dicționare de aici:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Lista Dicționarelor Open Office Wiki</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Obține toate dicționarele</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Alege-ți limba și clic pe Descărcare</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Deschide directorul 'Dicționare'</OpenDictionariesFolder>
     <Download>Descărcare</Download>
@@ -1565,8 +1561,6 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <VideoEngine>Dispozitiv video</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll în directorul system32</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1606,7 +1600,6 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <WaveformBrowseToFFmpeg>Navigarea ptr. FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Navigarea ptr. VLC portabil</WaveformBrowseToVLC>
     <SubStationAlphaStyle>(Avansat) stilul Sub Station Alpha</SubStationAlphaStyle>
-    <ChooseFont>Alege fontul</ChooseFont>
     <ChooseColor>Alege culoarea</ChooseColor>
     <SsaOutline>Contur</SsaOutline>
     <SsaShadow>Umbră</SsaShadow>

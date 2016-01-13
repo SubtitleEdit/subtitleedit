@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Video dosyası aç...</OpenVideoFileTitle>
     <NoVideoLoaded>Yüklü video yok</NoVideoLoaded>
     <VideoInformation>Video bilgisi</VideoInformation>
-    <PositionX>Süre: {0}</PositionX>
     <StartTime>Başlangıç</StartTime>
     <EndTime>Bitiş</EndTime>
     <Duration>Süre</Duration>
@@ -152,7 +151,6 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <NothingToConvert>Dönüştürmek için bir şey yok!</NothingToConvert>
     <PleaseChooseOutputFolder>Lütfen çıktı klasörünü seçin</PleaseChooseOutputFolder>
     <Converted>Dönüştürüldü</Converted>
-    <ConvertedX>({0}) dönüştürüldü</ConvertedX>
     <Settings>Ayarlar</Settings>
     <SplitLongLines>Uzun satırları böl</SplitLongLines>
     <AutoBalance>Satırları otomatik dengele</AutoBalance>
@@ -585,8 +583,6 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <DescriptionLine1>Subtitle Edit's spell check is based on the NHunspell engine which</DescriptionLine1>
     <DescriptionLine2>uses the spell checking dictionaries from Open Office.</DescriptionLine2>
     <GetDictionariesHere>Sözlükler edin</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Open Office Wiki Dictionaries listesi</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Tüm sözlükleri edin</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Dilinizi seçin ve indirin</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>'Dictionaries' klasörünü aç</OpenDictionariesFolder>
     <Download>İndir</Download>
@@ -1490,8 +1486,6 @@ Yeni oturum başlatın.</Information>
     <VideoEngine>Video motoru</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>system32 klasöründe quartz.dll</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
     <MpcHc>Media Player Home Cinema</MpcHc>
     <MpcHcDescription>Media Player Classic</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1530,7 +1524,6 @@ Yeni oturum başlatın.</Information>
     <WaveformBrowseToFFmpeg>FFmpeg göster</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>VLC partable göster</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha stili</SubStationAlphaStyle>
-    <ChooseFont>Yazı tipi seç</ChooseFont>
     <ChooseColor>Renk seç</ChooseColor>
     <SsaOutline>Dış hat</SsaOutline>
     <SsaShadow>Gölge</SsaShadow>

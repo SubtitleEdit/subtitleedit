@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Videófájl megnyitása...</OpenVideoFileTitle>
     <NoVideoLoaded>Nincs betöltött videó</NoVideoLoaded>
     <VideoInformation>Videó információk</VideoInformation>
-    <PositionX>Pozíció / időtartam: {0}</PositionX>
     <StartTime>Indítási idő</StartTime>
     <EndTime>Befejezési idő</EndTime>
     <Duration>Időtartam</Duration>
@@ -173,7 +172,6 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <PleaseChooseOutputFolder>Kérjük, válasszon kimeneti mappát</PleaseChooseOutputFolder>
     <NotConverted>Sikertelen</NotConverted>
     <Converted>Konvertálva</Converted>
-    <ConvertedX>Konvertálva ({0})</ConvertedX>
     <Settings>Beállítások</Settings>
     <SplitLongLines>Hosszú sorok felosztása</SplitLongLines>
     <AutoBalance>Sorok automatikus kiegyenlítése</AutoBalance>
@@ -627,8 +625,6 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <DescriptionLine1>A Subtitle Edit helyesírás-ellenőrzése a NHunspell modulon alapul,</DescriptionLine1>
     <DescriptionLine2>amely az Open Office helyesírás-ellenőrző szótárait használja.</DescriptionLine2>
     <GetDictionariesHere>Szótárak letöltése ide:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Az Office Wiki szótár lista megnyitása</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Az összes szótár letöltése</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Válasszon nyelvet és kattintson a letöltésre</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>A 'Szótár' mappa megnyitása</OpenDictionariesFolder>
     <Download>Letöltés</Download>
@@ -1563,8 +1559,6 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <VideoEngine>Videó modul</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll a system32 mappában</DirectShowDescription>
-    <ManagedDirectX>Kezelt DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET felügyelt-kód a DirectX-ből</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1604,7 +1598,6 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <WaveformBrowseToFFmpeg>FFmpeg keresése</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>VLC hordozható keresése</WaveformBrowseToVLC>
     <SubStationAlphaStyle>(Speciális) Sub Station Alpha stílus</SubStationAlphaStyle>
-    <ChooseFont>Válasszon betűtípust</ChooseFont>
     <ChooseColor>Válasszon színt</ChooseColor>
     <SsaOutline>Körvonal</SsaOutline>
     <SsaShadow>Árnyék</SsaShadow>

@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Avaa videotiedosto</OpenVideoFileTitle>
     <NoVideoLoaded>Videota ei ole ladattu</NoVideoLoaded>
     <VideoInformation>Videon tiedot</VideoInformation>
-    <PositionX>Sijainti / kesto: {0}</PositionX>
     <StartTime>Aloitusaika</StartTime>
     <EndTime>Päättymisaika</EndTime>
     <Duration>Kesto</Duration>
@@ -159,7 +158,6 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <PleaseChooseOutputFolder>Valitse kohdekansio</PleaseChooseOutputFolder>
     <NotConverted>Virhe</NotConverted>
     <Converted>Muunnettu</Converted>
-    <ConvertedX>Muunnetut ({0})</ConvertedX>
     <Settings>Asetukset</Settings>
     <SplitLongLines>Jaa pitkät rivit</SplitLongLines>
     <AutoBalance>Tasoita rivit automaattisesti</AutoBalance>
@@ -604,8 +602,6 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <DescriptionLine1>Oikeinkirjoituksen tarkistus perustuu NHunspell-moottoriin,</DescriptionLine1>
     <DescriptionLine2>joka käyttää Open Office:n oikeinkirjoitussanastoja.</DescriptionLine2>
     <GetDictionariesHere>Lataa sanastot täältä:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Open Office Wiki sanastoluettelo.</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Lataa kaikki sanastot</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Valitse kieli ja napsauta 'Lataa'</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Avaa sanastokansio</OpenDictionariesFolder>
     <Download>Lataa</Download>
@@ -1523,8 +1519,6 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <VideoEngine>Videomoottori</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>Quartz.dll Kansiossa 'System32'</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback- .NET Managed code from DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1564,7 +1558,6 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <WaveformBrowseToFFmpeg>Selaa FFmpeg-sovelluksen sijainti</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Selaa VLC-sovelluksen sijainti</WaveformBrowseToVLC>
     <SubStationAlphaStyle>SSA-tekstityksen ulkoasu</SubStationAlphaStyle>
-    <ChooseFont>Fontti</ChooseFont>
     <ChooseColor>Väri</ChooseColor>
     <SsaOutline>Ääriviivan leveys</SsaOutline>
     <SsaShadow>Varjon leveys</SsaShadow>

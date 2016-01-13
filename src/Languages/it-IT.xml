@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Apri file video...</OpenVideoFileTitle>
     <NoVideoLoaded>Nessun video caricato</NoVideoLoaded>
     <VideoInformation>Informazioni video</VideoInformation>
-    <PositionX>Posizione / durata: {0}</PositionX>
     <StartTime>Tempo Iniziale</StartTime>
     <EndTime>Tempo Finale</EndTime>
     <Duration>Durata</Duration>
@@ -173,7 +172,6 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
     <PleaseChooseOutputFolder>Scegli cartella di destinazione</PleaseChooseOutputFolder>
     <NotConverted>Fallito</NotConverted>
     <Converted>Convertito</Converted>
-    <ConvertedX>Convertito ({0})</ConvertedX>
     <Settings>Impostazioni</Settings>
     <SplitLongLines>Dividi linee lunghe</SplitLongLines>
     <AutoBalance>Blianciamento automatico linee</AutoBalance>
@@ -624,8 +622,6 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
     <DescriptionLine1>Il controllo ortografico di Subtitle Edit è basato sul motore NHunspell</DescriptionLine1>
     <DescriptionLine2>che utilizza i dizionari di controllo ortografico di Open Office.</DescriptionLine2>
     <GetDictionariesHere>Scarica i dizionari qui:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Lista Dizionari Wiki di Open Office</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Scarica tutti i dizionari</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Scegli la tua lingua e clicca su scarica</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Apri cartella 'Dizionari'</OpenDictionariesFolder>
     <Download>Scarica</Download>
@@ -1548,8 +1544,6 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <VideoEngine>Motore video</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll nella cartella system32</DirectShowDescription>
-    <ManagedDirectX>Gestito da DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code da DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1589,7 +1583,6 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <WaveformBrowseToFFmpeg>Sfoglia per FFMPEG</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Sfoglia per VLC portatile</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Stile Sub Station Alpha</SubStationAlphaStyle>
-    <ChooseFont>Scegli font</ChooseFont>
     <ChooseColor>Scegli colore</ChooseColor>
     <SsaOutline>Contorno</SsaOutline>
     <SsaShadow>Ombra</SsaShadow>

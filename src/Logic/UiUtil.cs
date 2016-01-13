@@ -136,28 +136,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static bool IsManagedDirectXInstalled
-        {
-            get
-            {
-                if (Utilities.IsRunningOnMono())
-                    return false;
-
-                try
-                {
-                    //Check if this folder exists: C:\WINDOWS\Microsoft.NET\DirectX for Managed Code
-                    string folderName = Environment.SystemDirectory.TrimEnd('\\');
-                    folderName = folderName.Substring(0, folderName.LastIndexOf('\\'));
-                    folderName = folderName + @"\\Microsoft.NET\DirectX for Managed Code";
-                    return Directory.Exists(folderName);
-                }
-                catch (FileNotFoundException)
-                {
-                    return false;
-                }
-            }
-        }
-
         public static bool IsMPlayerAvailable
         {
             get
@@ -206,8 +184,6 @@ namespace Nikse.SubtitleEdit.Logic
 
             //if (gs.VideoPlayer == "WindowsMediaPlayer" && IsWmpAvailable)
             //    return new WmpPlayer();
-            //if (gs.VideoPlayer == "ManagedDirectX" && IsManagedDirectXInstalled)
-            //    return new ManagedDirectXPlayer();
 
             if (gs.VideoPlayer == "MPlayer" && MPlayer.IsInstalled)
                 return new MPlayer();

@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Obre vídeo...</OpenVideoFileTitle>
     <NoVideoLoaded>Cap vídeo carregat</NoVideoLoaded>
     <VideoInformation>Info de vídeo</VideoInformation>
-    <PositionX>Possició/Durada: {0}</PositionX>
     <StartTime>Temps d'inici</StartTime>
     <EndTime>Temps final</EndTime>
     <Duration>Durada</Duration>
@@ -152,7 +151,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NothingToConvert>Res a convertir</NothingToConvert>
     <PleaseChooseOutputFolder>Trieu carpeta sortida</PleaseChooseOutputFolder>
     <Converted>Convertit</Converted>
-    <ConvertedX>Convertit ({0})</ConvertedX>
     <Settings>Configuració</Settings>
     <SplitLongLines>Divideix línies llargues</SplitLongLines>
     <AutoBalance>Balanç automàtic línies</AutoBalance>
@@ -578,8 +576,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DescriptionLine1>El corrector ortogràfic de Subtitle Edit es basa en el motor de NHunspell què</DescriptionLine1>
     <DescriptionLine2>empra corrector ortogràfic amb diccionaris de OpenOffice</DescriptionLine2>
     <GetDictionariesHere>Obten diccionaris aquí:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Obre llista diccionaris Wiki OpenOffice</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Obten tots els diccionaris</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Escolliu idioma i clic descàrrega</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Obre carpeta 'Diccionaris'</OpenDictionariesFolder>
     <Download>Descàrrega</Download>
@@ -1471,8 +1467,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VideoEngine>Motor de Video</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll en carpeta system32</DirectShowDescription>
-    <ManagedDirectX>Gestió DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET codi gestionat per DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
@@ -1509,7 +1503,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformBrowseToFFmpeg>Navega a FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Navega a VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Estil subtítol Station Alpha</SubStationAlphaStyle>
-    <ChooseFont>Escolliu font</ChooseFont>
     <ChooseColor>Escolliu color</ChooseColor>
     <SsaOutline>Contorn</SsaOutline>
     <SsaShadow>Ombra</SsaShadow>

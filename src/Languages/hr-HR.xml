@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Otvaranje video datoteke</OpenVideoFileTitle>
     <NoVideoLoaded>Video datoteka nije učitana</NoVideoLoaded>
     <VideoInformation>Podaci o video datoteci</VideoInformation>
-    <PositionX>Pozicija/trajanje: {0}</PositionX>
     <StartTime>Početak</StartTime>
     <EndTime>Kraj</EndTime>
     <Duration>Trajanje</Duration>
@@ -173,7 +172,6 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <PleaseChooseOutputFolder>Odaberi izlaznu mapu</PleaseChooseOutputFolder>
     <NotConverted>Nije uspjelo</NotConverted>
     <Converted>Pretvoreno</Converted>
-    <ConvertedX>Pretvoreno ({0})</ConvertedX>
     <Settings>Postavke</Settings>
     <SplitLongLines>Razdvoji duge linije</SplitLongLines>
     <AutoBalance>Automatska ravnoteža linija</AutoBalance>
@@ -624,8 +622,6 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <DescriptionLine1>Provjera pisanja zasnovana je na dodatku NHunspell</DescriptionLine1>
     <DescriptionLine2>koji koristi rječnike iz paketa Open office.</DescriptionLine2>
     <GetDictionariesHere>Preuzmi rječnike ovdje:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Open office wiki popis rječnika</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Preuzmi sve rječnike</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Izaberi jezik i klikni na gumb za preuzimanje.</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Otvori mapu sa rječnicima</OpenDictionariesFolder>
     <Download>&amp;Preuzmi</Download>
@@ -1552,8 +1548,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <VideoEngine>Dobavljač slike</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll u mapi „System32“</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback — .NET Managed code from DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1593,7 +1587,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <WaveformBrowseToFFmpeg>Potraži FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Potraži prijenosni VLC</WaveformBrowseToVLC>
     <SubStationAlphaStyle>SSA stil</SubStationAlphaStyle>
-    <ChooseFont>Izaberi font…</ChooseFont>
     <ChooseColor>Izaberi boju…</ChooseColor>
     <SsaOutline>Obris</SsaOutline>
     <SsaShadow>Sjena</SsaShadow>

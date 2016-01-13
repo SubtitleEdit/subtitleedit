@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>비디오 파일 열기</OpenVideoFileTitle>
     <NoVideoLoaded>로드된 비디오가 없습니다!</NoVideoLoaded>
     <VideoInformation>비디오 정보</VideoInformation>
-    <PositionX>위치 / 시간: {0}</PositionX>
     <StartTime>시작</StartTime>
     <EndTime>종료</EndTime>
     <Duration>길이</Duration>
@@ -169,7 +168,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <PleaseChooseOutputFolder>출력 폴더를 선택하십시오!</PleaseChooseOutputFolder>
     <NotConverted>실패함</NotConverted>
     <Converted>변환됨</Converted>
-    <ConvertedX>({0}) 변환 완료!</ConvertedX>
     <Settings>설정</Settings>
     <SplitLongLines>긴 줄 분할</SplitLongLines>
     <AutoBalance>자동 줄맞춤</AutoBalance>
@@ -627,8 +625,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <DescriptionLine1>Subtitle Edit 맞춤법 검사는 Open Office의 맞춤법 검사용 엔진인</DescriptionLine1>
     <DescriptionLine2>"NHunspell" 엔진을 기반으로 하고 있습니다.</DescriptionLine2>
     <GetDictionariesHere>사전 가져올 곳:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>'Open Office Wiki' 사전 열기</OpenOpenOfficeWiki>
-    <GetAllDictionaries>모든 사전 가져오기</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>언어를 선택하고 다운로드를 클릭하십시오!</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>'Dictionaries' 폴더 열기</OpenDictionariesFolder>
     <Download>다운로드</Download>
@@ -1569,8 +1565,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <VideoEngine>비디오 장치</VideoEngine>
     <DirectShow>다이렉트쇼</DirectShow>
     <DirectShowDescription>system32\quartz.dll</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - DirectX의 .NET Managed 코드</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>미디어 플레이어 클래식 - 홈 시네마</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1610,7 +1604,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <WaveformBrowseToFFmpeg>FFmpeg 찾기...</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>VLC 포터블 찾기...</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha의 스타일</SubStationAlphaStyle>
-    <ChooseFont>글꼴 선택</ChooseFont>
     <ChooseColor>색상 선택</ChooseColor>
     <SsaOutline>윤곽선</SsaOutline>
     <SsaShadow>그림자</SsaShadow>

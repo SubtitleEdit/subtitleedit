@@ -20,7 +20,6 @@
     <OpenVideoFileTitle>Otvorite Video datoteku prevoda</OpenVideoFileTitle>
     <NoVideoLoaded>Video datoteka Nije Učitana</NoVideoLoaded>
     <VideoInformation>Podaci o Video datoteci</VideoInformation>
-    <PositionX>Pozicija/Trajanje: {0}</PositionX>
     <StartTime>Početak</StartTime>
     <EndTime>Kraj</EndTime>
     <Duration>Trajanje</Duration>
@@ -150,7 +149,6 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <NothingToConvert>Ništa za pretvaranje!</NothingToConvert>
     <PleaseChooseOutputFolder>Odaberite izlaznu folder</PleaseChooseOutputFolder>
     <Converted>Pretvoreno</Converted>
-    <ConvertedX>Pretvoreno ({0})</ConvertedX>
   </BatchConvert>
   <Beamer>
     <Title>Beamer (Video projekcija)</Title>
@@ -474,8 +472,6 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <DescriptionLine1>Provera pisanja zasnovana je na dodatku NHunspell</DescriptionLine1>
     <DescriptionLine2>koji koristi rečnike iz paketa Open office.</DescriptionLine2>
     <GetDictionariesHere>Preuzmite rečnike ovde:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Open Office Wiki popis rečnika</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Preuzmi sve rečnike</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Izaberite jezik i kliknite na dugme za preuzimanje.</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Otvori folder sa rečnicima</OpenDictionariesFolder>
     <Download>&amp;Preuzmi</Download>
@@ -1231,8 +1227,6 @@ određeni prevod s drugim ljudima.</Information>
     <VideoEngine>Dobavljač slike</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll u mapi „System32“</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback —  .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer 2/MPlayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
@@ -1259,7 +1253,6 @@ određeni prevod s drugim ljudima.</Information>
     <SpectrogramOneColorGradient>Jednobojni</SpectrogramOneColorGradient>
     <SpectrogramClassic>Uobičajeno</SpectrogramClassic>
     <SubStationAlphaStyle>SSA stil</SubStationAlphaStyle>
-    <ChooseFont>Izaberite font...</ChooseFont>
     <ChooseColor>Izaberite boju...</ChooseColor>
     <Testing123>Provera 123...</Testing123>
     <Language>Jezik:</Language>

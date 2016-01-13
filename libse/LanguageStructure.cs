@@ -25,7 +25,6 @@
             public string OpenVideoFileTitle { get; set; }
             public string NoVideoLoaded { get; set; }
             public string VideoInformation { get; set; }
-            public string PositionX { get; set; }
             public string StartTime { get; set; }
             public string EndTime { get; set; }
             public string Duration { get; set; }
@@ -181,7 +180,6 @@
             public string PleaseChooseOutputFolder { get; set; }
             public string NotConverted { get; set; }
             public string Converted { get; set; }
-            public string ConvertedX { get; set; }
             public string Settings { get; set; }
             public string SplitLongLines { get; set; }
             public string AutoBalance { get; set; }
@@ -698,8 +696,6 @@
             public string DescriptionLine1 { get; set; }
             public string DescriptionLine2 { get; set; }
             public string GetDictionariesHere { get; set; }
-            public string OpenOpenOfficeWiki { get; set; }
-            public string GetAllDictionaries { get; set; }
             public string ChooseLanguageAndClickDownload { get; set; }
             public string OpenDictionariesFolder { get; set; }
             public string Download { get; set; }
@@ -712,8 +708,6 @@
             public string DescriptionLine1 { get; set; }
             public string DownloadFailed { get; set; }
             public string GetDictionariesHere { get; set; }
-            public string OpenOpenOfficeWiki { get; set; }
-            public string GetAllDictionaries { get; set; }
             public string ChooseLanguageAndClickDownload { get; set; }
             public string OpenDictionariesFolder { get; set; }
             public string Download { get; set; }
@@ -1734,8 +1728,6 @@
             public string VideoEngine { get; set; }
             public string DirectShow { get; set; }
             public string DirectShowDescription { get; set; }
-            public string ManagedDirectX { get; set; }
-            public string ManagedDirectXDescription { get; set; }
             public string MpcHc { get; set; }
             public string MpcHcDescription { get; set; }
             public string MPlayer { get; set; }
@@ -1775,7 +1767,6 @@
             public string WaveformBrowseToFFmpeg { get; set; }
             public string WaveformBrowseToVLC { get; set; }
             public string SubStationAlphaStyle { get; set; }
-            public string ChooseFont { get; set; }
             public string ChooseColor { get; set; }
             public string SsaOutline { get; set; }
             public string SsaShadow { get; set; }

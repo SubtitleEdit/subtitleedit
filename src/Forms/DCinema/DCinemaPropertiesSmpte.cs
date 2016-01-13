@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             labelEffectColor.Text = l.FontEffectColor;
             buttonFontEffectColor.Text = l.ChooseColor;
             labelFontSize.Text = l.FontSize;
-            buttonGenerateID.Text = l.Generate;
+            buttonGenerateID.Text = l.GenerateId;
             buttonGenFontUri.Text = l.Generate;
 
             foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))

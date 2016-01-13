@@ -22,7 +22,6 @@
     <OpenVideoFileTitle>Открыть файл видео...</OpenVideoFileTitle>
     <NoVideoLoaded>Видео не загружено</NoVideoLoaded>
     <VideoInformation>Информация о видео</VideoInformation>
-    <PositionX>Позиция / Длительность: {0}</PositionX>
     <StartTime>Начало</StartTime>
     <EndTime>Конец</EndTime>
     <Duration>Длина</Duration>
@@ -177,7 +176,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <PleaseChooseOutputFolder>Пожалуйста, выберите папку вывода</PleaseChooseOutputFolder>
     <NotConverted>Прервано</NotConverted>
     <Converted>Преобразовано</Converted>
-    <ConvertedX>Преобразовано ({0})</ConvertedX>
     <Settings>Настройки</Settings>
     <SplitLongLines>Разделение длинных строк</SplitLongLines>
     <AutoBalance>Автовыравнивание строк</AutoBalance>
@@ -636,8 +634,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <DescriptionLine1>Subtitle Edit's для проверки орфографии использует движок NHunspell,</DescriptionLine1>
     <DescriptionLine2>который применяется в проектах Open Office.</DescriptionLine2>
     <GetDictionariesHere>Получите словари здесь:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Открыть список словарей Office Wiki</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Получить все словари</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Выберите ваш язык и нажмите кнопку "Загрузить":</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Открыть папку со словарями</OpenDictionariesFolder>
     <Download>Загрузить</Download>
@@ -1587,8 +1583,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <VideoEngine>Видеодекодер</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll в папке system32</DirectShowDescription>
-    <ManagedDirectX>Управляемый DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1628,7 +1622,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformBrowseToFFmpeg>Обзор FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Обзор VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>(Дополнительно) Sub Station Alpha стиль</SubStationAlphaStyle>
-    <ChooseFont>Выбрать шрифт</ChooseFont>
     <ChooseColor>Выбрать цвет</ChooseColor>
     <SsaOutline>Контур</SsaOutline>
     <SsaShadow>Тень</SsaShadow>

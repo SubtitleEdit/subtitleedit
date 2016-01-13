@@ -23,6 +23,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             labelFontUri.Text = l.FontUri;
             labelFontColor.Text = l.FontColor;
             buttonFontColor.Text = l.ChooseColor;
+            buttonGenerateID.Text = l.GenerateId;
             labelEffect.Text = l.FontEffect;
             labelEffectColor.Text = l.FontEffectColor;
             buttonFontEffectColor.Text = l.ChooseColor;
