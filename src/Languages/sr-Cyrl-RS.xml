@@ -19,7 +19,6 @@
     <OpenVideoFileTitle>Отварање видео снимка...</OpenVideoFileTitle>
     <NoVideoLoaded>Видео снимак није учитан.</NoVideoLoaded>
     <VideoInformation>Подаци о видео снимку</VideoInformation>
-    <PositionX>Положај/трајање: {0}</PositionX>
     <StartTime>Почетак</StartTime>
     <EndTime>Крај</EndTime>
     <Duration>Трајање</Duration>
@@ -367,8 +366,6 @@
     <DescriptionLine1>Провера писања заснована је на додатку NHunspell</DescriptionLine1>
     <DescriptionLine2>који користи речнике из пакета Опенофис.</DescriptionLine2>
     <GetDictionariesHere>Преузмите речнике овде:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Опенофис вики списак речника</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Преузми све речнике</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Изаберите језик и кликните на дугме за преузимање.</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Отвори фасциклу с речницима</OpenDictionariesFolder>
     <Download>&amp;Преузми</Download>
@@ -973,8 +970,6 @@
     <VideoEngine>Добављач слике</VideoEngine>
     <DirectShow>Директшоу</DirectShow>
     <DirectShowDescription>quartz.dll у фасцикли „System32“</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback — .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>Ем плејер</MPlayer>
     <MPlayerDescription>Ем плејер 2/Ем плејер</MPlayerDescription>
     <VlcMediaPlayer>ВЛЦ медија плејер</VlcMediaPlayer>
@@ -998,7 +993,6 @@
     <SpectrogramOneColorGradient>Једнобојни прелив</SpectrogramOneColorGradient>
     <SpectrogramClassic>Уобичајено</SpectrogramClassic>
     <SubStationAlphaStyle>SSA стил</SubStationAlphaStyle>
-    <ChooseFont>Изабери фонт...</ChooseFont>
     <ChooseColor>Изабери боју...</ChooseColor>
     <Testing123>Провера 123...</Testing123>
     <Language>Језик:</Language>

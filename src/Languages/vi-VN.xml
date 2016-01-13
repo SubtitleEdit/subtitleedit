@@ -22,7 +22,6 @@ Cảm ơn rất nhiều</TranslatedBy>
     <OpenVideoFileTitle>Mở tiêu đề tập tin video...</OpenVideoFileTitle>
     <NoVideoLoaded>Không có video để tải</NoVideoLoaded>
     <VideoInformation>Thông tin Video</VideoInformation>
-    <PositionX>Vị trí/Độ dài: {0}</PositionX>
     <StartTime>Thời gian bắt đầu</StartTime>
     <EndTime>Thời gian kết thúc</EndTime>
     <Duration>Giới hạn</Duration>
@@ -153,7 +152,6 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <NothingToConvert>Không thể chuyển đổi!</NothingToConvert>
     <PleaseChooseOutputFolder>Vui lòng chọn đường dẫn đầu ra thư mục</PleaseChooseOutputFolder>
     <Converted>Chuyển đổi</Converted>
-    <ConvertedX>Chuyển đổi ({0})</ConvertedX>
   </BatchConvert>
   <Beamer>
     <Title>Chuẩn xác</Title>
@@ -487,8 +485,6 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <DescriptionLine1>Kiểm tra chính tả của Subtitle Edit được dựa trên các công cụ NHunspell</DescriptionLine1>
     <DescriptionLine2>Sử dụng từ điển để kiểm tra chính tả từ Open Office.</DescriptionLine2>
     <GetDictionariesHere>Lấy từ điển ở đây:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Danh sách từ điển Office Open Wiki</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Lấy tất cả các từ điển</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Chọn ngôn ngữ của bạn và bấm vào nút tải về</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Mở thư mục chứa 'Từ điển'</OpenDictionariesFolder>
     <Download>Tải về</Download>
@@ -1246,8 +1242,6 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <VideoEngine>Phương tiện video</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll trong thư mục system32</DirectShowDescription>
-    <ManagedDirectX>Quản lý DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback-.NET quản lý từ DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
@@ -1274,7 +1268,6 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <SpectrogramOneColorGradient>Độ dốc của màu sắc</SpectrogramOneColorGradient>
     <SpectrogramClassic>Cổ điển</SpectrogramClassic>
     <SubStationAlphaStyle>Kiểu dáng Sub Station Alpha</SubStationAlphaStyle>
-    <ChooseFont>Chọn phông chữ</ChooseFont>
     <ChooseColor>Chọn màu sắc</ChooseColor>
     <Testing123>Kiểm tra 123...</Testing123>
     <Language>Ngôn ngữ</Language>

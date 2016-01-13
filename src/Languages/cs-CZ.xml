@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Otevřít soubor videa...</OpenVideoFileTitle>
     <NoVideoLoaded>Nenačteno žádné video</NoVideoLoaded>
     <VideoInformation>Informace o videu</VideoInformation>
-    <PositionX>Pozice / trvání: {0}</PositionX>
     <StartTime>Záčátek</StartTime>
     <EndTime>Konec</EndTime>
     <Duration>Trvání</Duration>
@@ -173,7 +172,6 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <PleaseChooseOutputFolder>Vyberte výstupní složku</PleaseChooseOutputFolder>
     <NotConverted>Nezdařilo se</NotConverted>
     <Converted>Převedeno</Converted>
-    <ConvertedX>Převedeno ({0})</ConvertedX>
     <Settings>Nastavení</Settings>
     <SplitLongLines>Rozdělit dlouhé řádky</SplitLongLines>
     <AutoBalance>Automaticky vyvážit řádky</AutoBalance>
@@ -631,8 +629,6 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <DescriptionLine1>Kontrola pravopisu programu Subtitle Edit je založena na jádru programu NHunspell,</DescriptionLine1>
     <DescriptionLine2>který používá slovníky kontroly pravopisu z programu Open Office.</DescriptionLine2>
     <GetDictionariesHere>ZTískat slovníky zde:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Seznam slovníků programu Open Office</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Získat všechny slovníky</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Vyberte svůj jazyk a klepněte na Stáhnout</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Otevřít složku 'Dictionaries'</OpenDictionariesFolder>
     <Download>Stáhnout</Download>
@@ -1571,8 +1567,6 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <VideoEngine>Modul videa</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll ve složce system32</DirectShowDescription>
-    <ManagedDirectX>Spravované DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET spravovaný kód z DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1612,7 +1606,6 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <WaveformBrowseToFFmpeg>Najít FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Najít přenosné VLC</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Styl (Advanced) Sub Station Alpha</SubStationAlphaStyle>
-    <ChooseFont>Vyberte písmo</ChooseFont>
     <ChooseColor>Vyberte barvu</ChooseColor>
     <SsaOutline>Obrys</SsaOutline>
     <SsaShadow>Stín</SsaShadow>

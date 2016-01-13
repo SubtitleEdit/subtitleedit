@@ -24,7 +24,6 @@ http://www.alghaamdi.com/vb/index.php</TranslatedBy>
     <OpenVideoFileTitle>افتح ملف فيديو معنون</OpenVideoFileTitle>
     <NoVideoLoaded>لايوجد فيديو محمل</NoVideoLoaded>
     <VideoInformation>معلومات الفيديو</VideoInformation>
-    <PositionX>{0} : تنظيم / المدة</PositionX>
     <StartTime>بداية الوقت</StartTime>
     <EndTime>نهاية الوقت</EndTime>
     <Duration>المدة</Duration>
@@ -372,8 +371,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DescriptionLine1>NHunspell تستند الترجمة لتحرير التدقيق الإملائي على المحرك</DescriptionLine1>
     <DescriptionLine2>إستخدم قواميس التدقيق الإملائي من المكتب المفتوح</DescriptionLine2>
     <GetDictionariesHere>الحصول على القواميس هنا :</GetDictionariesHere>
-    <OpenOpenOfficeWiki>قائمة قواميس Wiki افتح مكتب</OpenOpenOfficeWiki>
-    <GetAllDictionaries>الحصول على كل القواميس</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>اختر اللغة الخاصة بك وإضغط فوق تحميل</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>"فتح مجلد "القواميس</OpenDictionariesFolder>
     <Download>تحميل</Download>
@@ -983,8 +980,6 @@ Continue?</SubtitleAppendPrompt>
     <VideoEngine>محرك فيديو</VideoEngine>
     <DirectShow>عرض مباشر</DirectShow>
     <DirectShowDescription>quartz.dll in system32 folder</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX الصوت والفيديو التشغيل مرة أخرى -- NET رمز المدارة من دايركت</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC ميديا ​​بلاير</VlcMediaPlayer>
@@ -1008,7 +1003,6 @@ Continue?</SubtitleAppendPrompt>
     <SpectrogramOneColorGradient>تدرج لون واحد</SpectrogramOneColorGradient>
     <SpectrogramClassic>كلاسيكي</SpectrogramClassic>
     <SubStationAlphaStyle>Sub مركز ألفا نمط</SubStationAlphaStyle>
-    <ChooseFont>اختيار الخط</ChooseFont>
     <ChooseColor>اختيار اللون</ChooseColor>
     <Testing123>...الاختبار 123</Testing123>
     <Language>لغة</Language>

@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Videobestand openen</OpenVideoFileTitle>
     <NoVideoLoaded>Geen video geladen</NoVideoLoaded>
     <VideoInformation>Videoinformatie</VideoInformation>
-    <PositionX>Positie / tĳdsduur: {0}</PositionX>
     <StartTime>Starttĳd</StartTime>
     <EndTime>Eindtĳd</EndTime>
     <Duration>Tĳdsduur</Duration>
@@ -173,7 +172,6 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <PleaseChooseOutputFolder>Doelmap kiezen a.u.b.</PleaseChooseOutputFolder>
     <NotConverted>Mislukt</NotConverted>
     <Converted>Geconverteerd</Converted>
-    <ConvertedX>Geconverteerd ({0})</ConvertedX>
     <Settings>Instellingen</Settings>
     <SplitLongLines>Lange regels opdelen</SplitLongLines>
     <AutoBalance>Tekst automatisch uitlĳnen</AutoBalance>
@@ -634,8 +632,6 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <DescriptionLine1>De spellingcontrole in Subtitle Edit is gebaseerd op de NHunspell engine,</DescriptionLine1>
     <DescriptionLine2>die gebruik maakt van de spellingcontrole-woordenboeken van Open Office.</DescriptionLine2>
     <GetDictionariesHere>Haal hier woordenboeken:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Open Office Wiki Woordenboeken-lĳst</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Haal alle woordenboeken</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Kies uw taal en klik op Download</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Open woordenboekenmap</OpenDictionariesFolder>
     <Download>Download</Download>
@@ -1573,8 +1569,6 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <VideoEngine>Videospeler</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll in System32 map</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET managed code van DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1614,7 +1608,6 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WaveformBrowseToFFmpeg>Blader naar FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Blader naar VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>SubStation Alpha stĳl</SubStationAlphaStyle>
-    <ChooseFont>Lettertype kiezen</ChooseFont>
     <ChooseColor>Kleur kiezen</ChooseColor>
     <SsaOutline>Omlĳsting</SsaOutline>
     <SsaShadow>Schaduw</SsaShadow>

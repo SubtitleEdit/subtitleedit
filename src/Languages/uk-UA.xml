@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Відкрити відеофайл...</OpenVideoFileTitle>
     <NoVideoLoaded>Відео не завантажено</NoVideoLoaded>
     <VideoInformation>Інформація про відео</VideoInformation>
-    <PositionX>Позиція / тривалість: {0}</PositionX>
     <StartTime>Початок</StartTime>
     <EndTime>Кінець</EndTime>
     <Duration>Тривалість</Duration>
@@ -174,7 +173,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PleaseChooseOutputFolder>Будь ласка, оберіть вихідну теку</PleaseChooseOutputFolder>
     <NotConverted>Невдача</NotConverted>
     <Converted>Оброблено</Converted>
-    <ConvertedX>Оброблено ({0})</ConvertedX>
     <Settings>Налаштування</Settings>
     <SplitLongLines>Розділити довгі рядки</SplitLongLines>
     <AutoBalance>Автобалансування рядків</AutoBalance>
@@ -628,8 +626,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DescriptionLine1>Перевірка правопису Subtitle Edit базується на рушії NHunspell, який</DescriptionLine1>
     <DescriptionLine2>використовує правописні словники від Open Office.</DescriptionLine2>
     <GetDictionariesHere>Отримати словники тут:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Список словників Open Office Wiki</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Отримати всі словники</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Оберіть мову і натисніть "Звантажити"</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Відкрити теку зі словниками</OpenDictionariesFolder>
     <Download>Звантажити</Download>
@@ -1565,8 +1561,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VideoEngine>Відеорушій</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll у теці system32</DirectShowDescription>
-    <ManagedDirectX>Керований DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - Керований код .NET з DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1606,7 +1600,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformBrowseToFFmpeg>Вкажіть розташування FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Вкажіть розташування VLC</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Стиль (Advanced) Sub Station Alpha</SubStationAlphaStyle>
-    <ChooseFont>Обрати шрифт</ChooseFont>
     <ChooseColor>Обрати колір</ChooseColor>
     <SsaOutline>Облямівка</SsaOutline>
     <SsaShadow>Тінь</SsaShadow>

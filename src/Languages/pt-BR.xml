@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Abrir arquivo de vídeo...</OpenVideoFileTitle>
     <NoVideoLoaded>Nenhum vídeo carregado</NoVideoLoaded>
     <VideoInformation>Informações do vídeo</VideoInformation>
-    <PositionX>Posição / duração: {0}</PositionX>
     <StartTime>Início</StartTime>
     <EndTime>Final</EndTime>
     <Duration>Duração</Duration>
@@ -171,7 +170,6 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <PleaseChooseOutputFolder>Por favor, escolha a pasta de saída</PleaseChooseOutputFolder>
     <NotConverted>Falha</NotConverted>
     <Converted>Convertido</Converted>
-    <ConvertedX>Convertido ({0})</ConvertedX>
     <Settings>Configurações</Settings>
     <SplitLongLines>Dividir linhas longas</SplitLongLines>
     <AutoBalance>Ajuste automático de linhas</AutoBalance>
@@ -624,8 +622,6 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <DescriptionLine1>A revisão ortográfica do Subtitle Edit é baseada no mecanismo NHunspell</DescriptionLine1>
     <DescriptionLine2>que usa os dicionários do Open Office.</DescriptionLine2>
     <GetDictionariesHere>Obtenha dicionários aqui:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Lista de Dicionários do Open Office Wiki</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Obter todos os dicionários</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Selecione o idioma e clique em baixar</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Pasta de Dicionários</OpenDictionariesFolder>
     <Download>Baixar</Download>
@@ -1558,8 +1554,6 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <VideoEngine>Mecanismo de vídeo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll na pasta system32</DirectShowDescription>
-    <ManagedDirectX>Gerenc. DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - Código .NET gerenc. pelo DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1599,7 +1593,6 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <WaveformBrowseToFFmpeg>Procurar FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Procurar VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Estilo Sub Station Alpha</SubStationAlphaStyle>
-    <ChooseFont>Escolher fonte</ChooseFont>
     <ChooseColor>Escolher cor</ChooseColor>
     <SsaOutline>Borda</SsaOutline>
     <SsaShadow>Sombra</SsaShadow>

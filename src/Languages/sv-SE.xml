@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Öppna videofil</OpenVideoFileTitle>
     <NoVideoLoaded>Ingen video laddad</NoVideoLoaded>
     <VideoInformation>Video info</VideoInformation>
-    <PositionX>Position / Längd: {0}</PositionX>
     <StartTime>Starttid</StartTime>
     <EndTime>Sluttid</EndTime>
     <Duration>Längd</Duration>
@@ -152,7 +151,6 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <NothingToConvert>Inget att konvertera!</NothingToConvert>
     <PleaseChooseOutputFolder>Välj output mapp</PleaseChooseOutputFolder>
     <Converted>Konverterat</Converted>
-    <ConvertedX>Konverterad ({0})</ConvertedX>
     <Settings>Inställningar</Settings>
     <SplitLongLines>Split långa rader</SplitLongLines>
     <AutoBalance>Automatisk balanslinje</AutoBalance>
@@ -578,8 +576,6 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <DescriptionLine1>Subtitle Edit´s stavningskontroll är baserad på NHunspell motorn som</DescriptionLine1>
     <DescriptionLine2>använder ordböcker från Open Office.</DescriptionLine2>
     <GetDictionariesHere>Hämta ordböcker här:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Open Office Wiki Ordlistor</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Hämta alla ordböcker</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Välj språk och klicka på ladda ner</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Öppna 'Dictionaries' mapp</OpenDictionariesFolder>
     <Download>Ladda ner</Download>
@@ -1477,8 +1473,6 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <VideoEngine>Video motor</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>Quartz.dll i system32-mappen</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -. NET hanterad kod från DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
@@ -1515,7 +1509,6 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <WaveformBrowseToFFmpeg>Bläddra till FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Bläddra till VLC bärbar</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha style</SubStationAlphaStyle>
-    <ChooseFont>Välj teckensnitt</ChooseFont>
     <ChooseColor>Välj färg</ChooseColor>
     <SsaOutline>Outline</SsaOutline>
     <SsaShadow>Shadow</SsaShadow>

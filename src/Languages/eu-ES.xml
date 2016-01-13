@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Ireki bideo agiria...</OpenVideoFileTitle>
     <NoVideoLoaded>Ez dago bideorik gertaturik</NoVideoLoaded>
     <VideoInformation>Bideoaren argibideak</VideoInformation>
-    <PositionX>Kokapena / iraupena: {0}</PositionX>
     <StartTime>Hasiera denbora</StartTime>
     <EndTime>Amaiera denbora</EndTime>
     <Duration>Iraupena</Duration>
@@ -170,7 +169,6 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <PleaseChooseOutputFolder>Mesedez hautatu irteera agiritegia</PleaseChooseOutputFolder>
     <NotConverted>Hutsegitea</NotConverted>
     <Converted>Bihurtuta</Converted>
-    <ConvertedX>({0}) bihurtuta</ConvertedX>
     <Settings>Ezarpenak</Settings>
     <SplitLongLines>Banandu lerro luzeak</SplitLongLines>
     <AutoBalance>Berez orekatu lerroak</AutoBalance>
@@ -627,8 +625,6 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <DescriptionLine1>Subtitle Edit-en idaz-egiaztapena NHunspell motorean ohinarriturik dago.</DescriptionLine1>
     <DescriptionLine2>Erabili idaz egiaztapen hiztegiak Open Officetik.</DescriptionLine2>
     <GetDictionariesHere>Lortu hiztegiak hemen:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Ireki Open Office Wiki Hiztegi zerrenda</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Lortu hiztegi guztiak</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Hautatu zure hizkuntza eta klikatu jeitsi</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Ireki 'Hiztegi' agiritegia</OpenDictionariesFolder>
     <Download>&amp;Jeitsi</Download>
@@ -1558,8 +1554,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <VideoEngine>Bideo gailua</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll - system32 agiritegian</DirectShowDescription>
-    <ManagedDirectX>DirectX-ek kudeatuta</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioBideoIrakurketa - .NET Kode kudeaketa DirectX-tik</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1599,7 +1593,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <WaveformBrowseToFFmpeg>Bilatu FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Bilatu VLC eramangarria</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha Estiloa</SubStationAlphaStyle>
-    <ChooseFont>Hautatu hizkia</ChooseFont>
     <ChooseColor>Hautatu margoa</ChooseColor>
     <SsaOutline>Ingurua</SsaOutline>
     <SsaShadow>Itzala</SsaShadow>

@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Otwórz plik wideo...</OpenVideoFileTitle>
     <NoVideoLoaded>Nie wczytano wideo</NoVideoLoaded>
     <VideoInformation>Informacje o wideo</VideoInformation>
-    <PositionX>Pozycja / Czas trwania: {0}</PositionX>
     <StartTime>Czas rozpoczęcia</StartTime>
     <EndTime>Czas zakończenia</EndTime>
     <Duration>Czas trwania</Duration>
@@ -171,7 +170,6 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <PleaseChooseOutputFolder>Proszę wybrać folder wyjściowy</PleaseChooseOutputFolder>
     <NotConverted>Nie powiodło się</NotConverted>
     <Converted>Przekonwertowano</Converted>
-    <ConvertedX>Przekonwertowano ({0})</ConvertedX>
     <Settings>Ustawienia</Settings>
     <SplitLongLines>Podziel długie linie</SplitLongLines>
     <AutoBalance>Automatycznie zrównoważ linie</AutoBalance>
@@ -633,8 +631,6 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <DescriptionLine1>Subtitle Edit sprawdza pisownię w oparciu o silnik NHunspell,</DescriptionLine1>
     <DescriptionLine2>który korzysta ze słowników sprawdzania pisowni Open Office.</DescriptionLine2>
     <GetDictionariesHere>Tutaj pobierzesz słowniki:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Lista słowników na Wiki Open Office</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Pobierz wszystkie słowniki</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Wybierz swój język i kliknij "Pobierz"</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Otwórz folder "Dictionaries"</OpenDictionariesFolder>
     <Download>Pobierz</Download>
@@ -1573,8 +1569,6 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <VideoEngine>Silnik wideo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll z folderu system32</DirectShowDescription>
-    <ManagedDirectX>Zarządzanie DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET Managed code from DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1614,7 +1608,6 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <WaveformBrowseToFFmpeg>Przejdź do FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Przejdź do VLC Portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Styl (Advanced) Sub Station Alpha</SubStationAlphaStyle>
-    <ChooseFont>Wybierz czcionkę</ChooseFont>
     <ChooseColor>Wybierz kolor</ChooseColor>
     <SsaOutline>Obrys</SsaOutline>
     <SsaShadow>Cień</SsaShadow>

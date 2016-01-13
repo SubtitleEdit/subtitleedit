@@ -22,7 +22,6 @@
     <OpenVideoFileTitle>Άνοιγμα αρχείου βίντεο...</OpenVideoFileTitle>
     <NoVideoLoaded>Δεν έχει επιλεγεί βίντεο</NoVideoLoaded>
     <VideoInformation>Πληροφορίες για το βίντεο</VideoInformation>
-    <PositionX>Θέση / διάρκεια: {0}</PositionX>
     <StartTime>Ώρα έναρξης</StartTime>
     <EndTime>Ώρα λήξης</EndTime>
     <Duration>Διάρκεια</Duration>
@@ -155,7 +154,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NothingToConvert>Δεν υπάρχει κάτι για μετατροπή!</NothingToConvert>
     <PleaseChooseOutputFolder>Παρακαλώ επιλέξτε τον φάκελο εξαγωγής</PleaseChooseOutputFolder>
     <Converted>Μετατράπηκαν</Converted>
-    <ConvertedX>Μετατράπηκαν ({0})</ConvertedX>
     <Settings>Ρυθμίσεις</Settings>
     <SplitLongLines>Διαχωρισμός μεγάλων γραμμών</SplitLongLines>
     <AutoBalance>Αυτόματη ισορροπία των γραμμών</AutoBalance>
@@ -582,8 +580,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DescriptionLine1>Ο ορθογραφικός έλεγχος του Subtitle Edit βασίζεται στον κινητήρα NHunspell</DescriptionLine1>
     <DescriptionLine2>που χρησιμοποιεί τα λεξικά ορθογραφικού ελέγχου του Open Office.</DescriptionLine2>
     <GetDictionariesHere>Αποκτήστε λεξικά εδώ:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>λίστα λεξικών του Open Office Wiki</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Αποκτήστε όλα τα λεξικά</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Επιλέξτε τη γλώσσα σας και κάντε κλικ στο κουμπί Λήψη</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Ανοίξτε το φάκελο 'Dictionaries' (Λεξικά)</OpenDictionariesFolder>
     <Download>Λήψη</Download>
@@ -1482,8 +1478,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VideoEngine>Μηχανισμός απόδοσης βίντεο</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll στο φάκελο system32</DirectShowDescription>
-    <ManagedDirectX>Διαχείριση DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - διαχείριση κώδικα .NET από DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
@@ -1520,7 +1514,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <WaveformBrowseToFFmpeg>Περιήγηση στο FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Περιηγηθείτε στον φορητό VLC</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Στυλ Sub Station Alpha</SubStationAlphaStyle>
-    <ChooseFont>Επιλέξτε γραμματοσειρά</ChooseFont>
     <ChooseColor>Επιλέξτε χρώμα</ChooseColor>
     <SsaOutline>Περίγραμμα</SsaOutline>
     <SsaShadow>Σκιά</SsaShadow>

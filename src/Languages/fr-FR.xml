@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Ouvrir fichier vidéo...</OpenVideoFileTitle>
     <NoVideoLoaded>Pas de vidéo chargée</NoVideoLoaded>
     <VideoInformation>Info. vidéo</VideoInformation>
-    <PositionX>Position/Durée: {0}</PositionX>
     <StartTime>Temps initial</StartTime>
     <EndTime>Temps final</EndTime>
     <Duration>Durée</Duration>
@@ -173,7 +172,6 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <PleaseChooseOutputFolder>Sélectionner le dossier de sortie</PleaseChooseOutputFolder>
     <NotConverted>Echoué</NotConverted>
     <Converted>Converti</Converted>
-    <ConvertedX>Converti ({0})</ConvertedX>
     <Settings>Configuration</Settings>
     <SplitLongLines>Diviser les longues lignes</SplitLongLines>
     <AutoBalance>Equilibrer les lignes automatiquement</AutoBalance>
@@ -635,8 +633,6 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <DescriptionLine1>Le correcteur d'orthographe de Subtitle Edit est basé sur le moteur</DescriptionLine1>
     <DescriptionLine2>NHunspell qui utilise les dictionnaires d'Open Office.</DescriptionLine2>
     <GetDictionariesHere>Récupérez les dictionnaires ici :</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Liste de dictionnaires du Wiki d'Open Office</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Récupérer tous les dictionnaires</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Choisir sa langue et cliquer sur télécharger</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Ouvrir le dossier 'Dictionaries'</OpenDictionariesFolder>
     <Download>Télécharger</Download>
@@ -1580,8 +1576,6 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <VideoEngine>Moteur de rendu vidéo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll du dossier system32/</DirectShowDescription>
-    <ManagedDirectX>DirectX géré</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code de DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1621,7 +1615,6 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <WaveformBrowseToFFmpeg>Rechercher FFmpeg.exe...</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Rechercher VLC portable...</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Style du SSA (SubStation Alpha)</SubStationAlphaStyle>
-    <ChooseFont>Choisir fonte</ChooseFont>
     <ChooseColor>Choisir couleur</ChooseColor>
     <SsaOutline>Contour</SsaOutline>
     <SsaShadow>Ombre</SsaShadow>

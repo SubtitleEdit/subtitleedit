@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Videodatei öffnen...</OpenVideoFileTitle>
     <NoVideoLoaded>Kein Video gefunden</NoVideoLoaded>
     <VideoInformation>Video Info</VideoInformation>
-    <PositionX>Position / Länge: {0}</PositionX>
     <StartTime>Startzeit</StartTime>
     <EndTime>Endzeit</EndTime>
     <Duration>Länge</Duration>
@@ -173,7 +172,6 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <PleaseChooseOutputFolder>Bitte Ausgabeordner wählen</PleaseChooseOutputFolder>
     <NotConverted>Fehlgeschlagen</NotConverted>
     <Converted>Umgewandelt</Converted>
-    <ConvertedX>Umgewandelt ({0})</ConvertedX>
     <Settings>Einstellungen</Settings>
     <SplitLongLines>Lange Zeilen trennen</SplitLongLines>
     <AutoBalance>Zeilen automatisch ausbalancieren</AutoBalance>
@@ -634,8 +632,6 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <DescriptionLine1>Die Rechtschreibprüfung von Subtitle Edit basiert auf der NHunspell Engine,</DescriptionLine1>
     <DescriptionLine2>die Bibliotheken werden von Open Office verwendet.</DescriptionLine2>
     <GetDictionariesHere>Hier gibt es Wörterbücher:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Wörterbuchliste im Open Office Wiki</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Hier gibt es alle Wörterbücher</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Sprache auswählen und auf herunterladen klicken</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Öffne Wörterbuch Ordner</OpenDictionariesFolder>
     <Download>Herunterladen</Download>
@@ -1574,8 +1570,6 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <VideoEngine>Video Engine</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll im system32 Ordner</DirectShowDescription>
-    <ManagedDirectX>Verwaltetes DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - von .NET verwalteter Code aus DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1615,7 +1609,6 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformBrowseToFFmpeg>FFmpeg suchen</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>VLC Portable suchen</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Substation Alpha Formatierung</SubStationAlphaStyle>
-    <ChooseFont>Schriftart wählen</ChooseFont>
     <ChooseColor>Farbe wählen</ChooseColor>
     <SsaOutline>Kontur</SsaOutline>
     <SsaShadow>Schatten</SsaShadow>

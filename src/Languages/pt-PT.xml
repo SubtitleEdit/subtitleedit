@@ -23,7 +23,6 @@ Email: mailto:imhotepimhotep8@gmail.com</TranslatedBy>
     <OpenVideoFileTitle>Abrir ficheiro de vídeo...</OpenVideoFileTitle>
     <NoVideoLoaded>Nenhum vídeo carregado</NoVideoLoaded>
     <VideoInformation>Informações do vídeo</VideoInformation>
-    <PositionX>Posição / duração: {0}</PositionX>
     <StartTime>Tempo inicial</StartTime>
     <EndTime>Tempo final</EndTime>
     <Duration>Duração</Duration>
@@ -175,7 +174,6 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <PleaseChooseOutputFolder>Por favor, seleccione a pasta de saída</PleaseChooseOutputFolder>
     <NotConverted>Sem sucesso</NotConverted>
     <Converted>Convertido</Converted>
-    <ConvertedX>Convertido ({0})</ConvertedX>
     <Settings>Configurações</Settings>
     <SplitLongLines>Dividir linhas longas</SplitLongLines>
     <AutoBalance>Igualar automaticamente as linhas</AutoBalance>
@@ -636,8 +634,6 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <DescriptionLine1>A revisão ortográfica do Subtitle Edit é baseada no mecanismo NHunspell</DescriptionLine1>
     <DescriptionLine2>que usa os dicionários do Open Office.</DescriptionLine2>
     <GetDictionariesHere>Obtenha dicionários aqui:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Lista de Dicionários do Open Office Wiki</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Obter todos os dicionários</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Seleccione o idioma e clique em transferir</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Abrir a pasta dos 'Dicionários'</OpenDictionariesFolder>
     <Download>Transferir</Download>
@@ -1576,8 +1572,6 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <VideoEngine>Mecanismo de vídeo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll na pasta system32</DirectShowDescription>
-    <ManagedDirectX>Gerado pelo DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - Código .NET gerado pelo DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1617,7 +1611,6 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformBrowseToFFmpeg>Procurar por FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Procurar por VLC portátil</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha estilo (Avançado)</SubStationAlphaStyle>
-    <ChooseFont>Tipo de letra</ChooseFont>
     <ChooseColor>Escolha a cor</ChooseColor>
     <SsaOutline>Contorno</SsaOutline>
     <SsaShadow>Sombra</SsaShadow>

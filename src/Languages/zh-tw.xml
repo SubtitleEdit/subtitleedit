@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>開啟視訊檔案...</OpenVideoFileTitle>
     <NoVideoLoaded>未載入視訊</NoVideoLoaded>
     <VideoInformation>視訊訊息</VideoInformation>
-    <PositionX>位置/持續時間: {0}</PositionX>
     <StartTime>起始時間</StartTime>
     <EndTime>結束時間</EndTime>
     <Duration>持續時間</Duration>
@@ -152,7 +151,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <NothingToConvert>無可轉換的內容！</NothingToConvert>
     <PleaseChooseOutputFolder>請選擇輸出資料夾</PleaseChooseOutputFolder>
     <Converted>已轉換</Converted>
-    <ConvertedX>已轉換 ({0})</ConvertedX>
     <Settings>設定</Settings>
     <SplitLongLines>分割長行</SplitLongLines>
     <AutoBalance>自動均排各行</AutoBalance>
@@ -579,8 +577,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <DescriptionLine1>Subtitle Edit 的拼寫檢查基於 NHunspell 引擎，它</DescriptionLine1>
     <DescriptionLine2>使用的是 Open Office 的拼寫檢查字典。</DescriptionLine2>
     <GetDictionariesHere>在此處取得字典:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Open Office 維基字典清單</OpenOpenOfficeWiki>
-    <GetAllDictionaries>取得所有字典</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>選擇您的語言並點選「下載」</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>開啟 'Dictionaries' 資料夾</OpenDictionariesFolder>
     <Download>下載</Download>
@@ -1481,8 +1477,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <VideoEngine>視訊引擎</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll 在 System32 資料夾中</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed 代碼來自 DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/MPlayer</MPlayerDescription>
     <VlcMediaPlayer>VLC 媒體播放器</VlcMediaPlayer>
@@ -1519,7 +1513,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <WaveformBrowseToFFmpeg>瀏覽 FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>瀏覽 VLC 便攜式版本</WaveformBrowseToVLC>
     <SubStationAlphaStyle>(Advanced) Sub Station Alpha 樣式</SubStationAlphaStyle>
-    <ChooseFont>選擇字型</ChooseFont>
     <ChooseColor>選擇色彩</ChooseColor>
     <SsaOutline>外框</SsaOutline>
     <SsaShadow>陰影</SsaShadow>

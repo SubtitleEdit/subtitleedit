@@ -21,7 +21,6 @@
     <OpenVideoFileTitle>Abrir video...</OpenVideoFileTitle>
     <NoVideoLoaded>Ningún video cargado</NoVideoLoaded>
     <VideoInformation>Info del Video</VideoInformation>
-    <PositionX>Posición / Duración: {0}</PositionX>
     <StartTime>Tiempo de Inicio</StartTime>
     <EndTime>Tiempo de Fin</EndTime>
     <Duration>Duración</Duration>
@@ -152,7 +151,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NothingToConvert>Nada para convertir!</NothingToConvert>
     <PleaseChooseOutputFolder>Por favor, elija la carpeta de salida</PleaseChooseOutputFolder>
     <Converted>Convertido</Converted>
-    <ConvertedX>Modificada ({0})</ConvertedX>
     <Settings>Configuraciones</Settings>
     <SplitLongLines>Dividir líneas largas</SplitLongLines>
     <AutoBalance>Auto balancear líneas</AutoBalance>
@@ -550,8 +548,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DescriptionLine1>La revisión ortográfica de Subtitle Edit está basada en al motor NHunspell</DescriptionLine1>
     <DescriptionLine2>que usa los diccionarios de Open Office.</DescriptionLine2>
     <GetDictionariesHere>Consiga diccionarios aquí:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Lista de Diccionarios de Open Office Wiki</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Conseguir todos los diccionarios</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Seleccione idioma y haga clic descargar</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Carpeta de Open 'Diccionarios'</OpenDictionariesFolder>
     <Download>Descarga</Download>
@@ -1424,8 +1420,6 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <VideoEngine>Motor de vídeo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll en la carpeta system32</DirectShowDescription>
-    <ManagedDirectX>Gestión de DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Código gestionado desde DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
@@ -1460,7 +1454,6 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <WaveformFFmpegPath>Ruta hacia FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Buscar FFmpeg</WaveformBrowseToFFmpeg>
     <SubStationAlphaStyle>Estilo Sub Station Alpha</SubStationAlphaStyle>
-    <ChooseFont>Elegir fuente</ChooseFont>
     <ChooseColor>Elegir color</ChooseColor>
     <SsaOutline>Contorno</SsaOutline>
     <SsaShadow>Sombra</SsaShadow>

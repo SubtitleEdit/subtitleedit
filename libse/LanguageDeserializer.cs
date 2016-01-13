@@ -112,9 +112,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "General/VideoInformation":
                     language.General.VideoInformation = reader.Value;
                     break;
-                case "General/PositionX":
-                    language.General.PositionX = reader.Value;
-                    break;
                 case "General/StartTime":
                     language.General.StartTime = reader.Value;
                     break;
@@ -459,9 +456,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "BatchConvert/Converted":
                     language.BatchConvert.Converted = reader.Value;
-                    break;
-                case "BatchConvert/ConvertedX":
-                    language.BatchConvert.ConvertedX = reader.Value;
                     break;
                 case "BatchConvert/Settings":
                     language.BatchConvert.Settings = reader.Value;
@@ -1675,12 +1669,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "GetDictionaries/GetDictionariesHere":
                     language.GetDictionaries.GetDictionariesHere = reader.Value;
                     break;
-                case "GetDictionaries/OpenOpenOfficeWiki":
-                    language.GetDictionaries.OpenOpenOfficeWiki = reader.Value;
-                    break;
-                case "GetDictionaries/GetAllDictionaries":
-                    language.GetDictionaries.GetAllDictionaries = reader.Value;
-                    break;
                 case "GetDictionaries/ChooseLanguageAndClickDownload":
                     language.GetDictionaries.ChooseLanguageAndClickDownload = reader.Value;
                     break;
@@ -1704,12 +1692,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "GetTesseractDictionaries/GetDictionariesHere":
                     language.GetTesseractDictionaries.GetDictionariesHere = reader.Value;
-                    break;
-                case "GetTesseractDictionaries/OpenOpenOfficeWiki":
-                    language.GetTesseractDictionaries.OpenOpenOfficeWiki = reader.Value;
-                    break;
-                case "GetTesseractDictionaries/GetAllDictionaries":
-                    language.GetTesseractDictionaries.GetAllDictionaries = reader.Value;
                     break;
                 case "GetTesseractDictionaries/ChooseLanguageAndClickDownload":
                     language.GetTesseractDictionaries.ChooseLanguageAndClickDownload = reader.Value;
@@ -4186,12 +4168,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/DirectShowDescription":
                     language.Settings.DirectShowDescription = reader.Value;
                     break;
-                case "Settings/ManagedDirectX":
-                    language.Settings.ManagedDirectX = reader.Value;
-                    break;
-                case "Settings/ManagedDirectXDescription":
-                    language.Settings.ManagedDirectXDescription = reader.Value;
-                    break;
                 case "Settings/MpcHc":
                     language.Settings.MpcHc = reader.Value;
                     break;
@@ -4308,9 +4284,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/SubStationAlphaStyle":
                     language.Settings.SubStationAlphaStyle = reader.Value;
-                    break;
-                case "Settings/ChooseFont":
-                    language.Settings.ChooseFont = reader.Value;
                     break;
                 case "Settings/ChooseColor":
                     language.Settings.ChooseColor = reader.Value;
