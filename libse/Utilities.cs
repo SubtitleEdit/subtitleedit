@@ -1553,19 +1553,13 @@ namespace Nikse.SubtitleEdit.Core
                 int i = 0;
                 while (i < s.Length)
                 {
-                    if (ignoreLineBreaks && s.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
+                    if (s.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
                         if (word.Length > 0)
                             list.Add(word.ToString());
                         word.Clear();
-                        i += Environment.NewLine.Length;
-                    }
-                    else if (s.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
-                    {
-                        if (word.Length > 0)
-                            list.Add(word.ToString());
-                        word.Clear();
-                        list.Add(Environment.NewLine);
+                        if (!ignoreLineBreaks)
+                            list.Add(Environment.NewLine);
                         i += Environment.NewLine.Length;
                     }
                     else if (s[i] == ' ')
@@ -1614,7 +1608,8 @@ namespace Nikse.SubtitleEdit.Core
             int i2 = 0;
             int i = 0;
             int c = 0;
-            while (i < Math.Max(parts1.Length, parts2.Length) && i1 < parts1.Length && i2 < parts2.Length)
+            int max = Math.Max(parts1.Length, parts2.Length);
+            while (i < max && i1 < parts1.Length && i2 < parts2.Length)
             {
                 if (parts1[i1] == parts2[i2])
                 {
@@ -1654,6 +1649,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static int FindNext(string s, string[] parts, int startIndex)
         {
+            startIndex++;
             for (; startIndex < parts.Length; startIndex++)
             {
                 if (s == parts[startIndex])
