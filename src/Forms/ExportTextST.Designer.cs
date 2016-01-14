@@ -1460,7 +1460,7 @@
             this.groupBoxPresentationSegmentRegion.Controls.Add(this.checkBoxSubRegionContinuous);
             this.groupBoxPresentationSegmentRegion.Location = new System.Drawing.Point(404, 4);
             this.groupBoxPresentationSegmentRegion.Name = "groupBoxPresentationSegmentRegion";
-            this.groupBoxPresentationSegmentRegion.Size = new System.Drawing.Size(208, 133);
+            this.groupBoxPresentationSegmentRegion.Size = new System.Drawing.Size(213, 129);
             this.groupBoxPresentationSegmentRegion.TabIndex = 15;
             this.groupBoxPresentationSegmentRegion.TabStop = false;
             this.groupBoxPresentationSegmentRegion.Text = "Properties: Subtitle region";
@@ -1468,7 +1468,7 @@
             // 
             // numericUpDownSubRegionStyleIdRef
             // 
-            this.numericUpDownSubRegionStyleIdRef.Location = new System.Drawing.Point(83, 74);
+            this.numericUpDownSubRegionStyleIdRef.Location = new System.Drawing.Point(106, 74);
             this.numericUpDownSubRegionStyleIdRef.Maximum = new decimal(new int[] {
             4319,
             0,
@@ -1484,14 +1484,14 @@
             this.label40.AutoSize = true;
             this.label40.Location = new System.Drawing.Point(8, 76);
             this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(56, 13);
+            this.label40.Size = new System.Drawing.Size(91, 13);
             this.label40.TabIndex = 34;
-            this.label40.Text = "Style id ref";
+            this.label40.Text = "Region style id ref";
             // 
             // checkBoxSubRegionForced
             // 
             this.checkBoxSubRegionForced.AutoSize = true;
-            this.checkBoxSubRegionForced.Location = new System.Drawing.Point(83, 50);
+            this.checkBoxSubRegionForced.Location = new System.Drawing.Point(106, 50);
             this.checkBoxSubRegionForced.Name = "checkBoxSubRegionForced";
             this.checkBoxSubRegionForced.Size = new System.Drawing.Size(59, 17);
             this.checkBoxSubRegionForced.TabIndex = 11;
@@ -1502,7 +1502,7 @@
             // checkBoxSubRegionContinuous
             // 
             this.checkBoxSubRegionContinuous.AutoSize = true;
-            this.checkBoxSubRegionContinuous.Location = new System.Drawing.Point(83, 27);
+            this.checkBoxSubRegionContinuous.Location = new System.Drawing.Point(106, 27);
             this.checkBoxSubRegionContinuous.Name = "checkBoxSubRegionContinuous";
             this.checkBoxSubRegionContinuous.Size = new System.Drawing.Size(126, 17);
             this.checkBoxSubRegionContinuous.TabIndex = 10;
@@ -1879,12 +1879,12 @@
             this.contextMenuStripRegionStyle.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemDuplicateRegionStyle});
             this.contextMenuStripRegionStyle.Name = "contextMenuStripAddPalette";
-            this.contextMenuStripRegionStyle.Size = new System.Drawing.Size(153, 48);
+            this.contextMenuStripRegionStyle.Size = new System.Drawing.Size(125, 26);
             // 
             // toolStripMenuItemDuplicateRegionStyle
             // 
             this.toolStripMenuItemDuplicateRegionStyle.Name = "toolStripMenuItemDuplicateRegionStyle";
-            this.toolStripMenuItemDuplicateRegionStyle.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemDuplicateRegionStyle.Size = new System.Drawing.Size(124, 22);
             this.toolStripMenuItemDuplicateRegionStyle.Text = "Duplicate";
             this.toolStripMenuItemDuplicateRegionStyle.Click += new System.EventHandler(this.toolStripMenuItemDuplicateRegionStyle_Click);
             // 
@@ -1893,13 +1893,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(871, 610);
+            this.Controls.Add(this.groupBoxPresentationSegmentRegion);
             this.Controls.Add(this.groupBoxFontSet);
             this.Controls.Add(this.groupBoxPropertiesPalette);
             this.Controls.Add(this.groupBoxChangeFontSize);
             this.Controls.Add(this.buttonImport);
             this.Controls.Add(this.groupBoxSubtitleText);
             this.Controls.Add(this.groupBoxFontStyle);
-            this.Controls.Add(this.groupBoxPresentationSegmentRegion);
             this.Controls.Add(this.groupBoxPropertiesUserStyle);
             this.Controls.Add(this.groupBoxPropertiesRegionStyle);
             this.Controls.Add(this.buttonSaveAsM2ts);
