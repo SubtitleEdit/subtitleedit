@@ -365,6 +365,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Import>가져오기...</Import>
     <TextAndTimingInformation>텍스트 및 타이밍 정보</TextAndTimingInformation>
     <JustificationCode>배치 코드</JustificationCode>
+    <Teletext>Teletext</Teletext>
+    <UseBox>텍스트 주위에 상자 사용</UseBox>
+    <DoubleHeight>더블 높이 사용</DoubleHeight>
     <Errors>오류</Errors>
     <ErrorsX>오류: {0}</ErrorsX>
     <MaxLengthError>행 {0}이(가) {2}에서 최대 길이 ({1})을 초과함: {3}</MaxLengthError>
@@ -1643,6 +1646,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MusicSymbolsToReplace>대체 음표 (공백으로 구분)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>일반적인 OCR 오류 해결 - 하드 코딩 규칙 포함</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>짧은 표시시간 수정 - 시작 시간 이동을 허용</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>1 단계 건너뛰기 (수정 규칙 선택)</FixCommonErrorsSkipStepOne>
     <Shortcuts>단축키</Shortcuts>
     <Shortcut>단축키</Shortcut>
     <Control>Ctrl</Control>
@@ -1681,7 +1685,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <VerticalZoomOut>세로 축소</VerticalZoomOut>
     <WaveformSeekSilenceForward>이후 무음 탐색</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>이전 무음 탐색</WaveformSeekSilenceBack>
-    <WaveformAddTextHere>여기에 텍스트 추가 (새로운 선택용)</WaveformAddTextHere>
+    <WaveformAddTextHere>여기에 텍스트 추가 (새로운 선택)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>여기에 텍스트 추가 (클립보드에서 새로운 선택)</WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>선택을 재생</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>선택의 끝을 재생</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>처음 선택한 자막 재생</WaveformPlayFirstSelectedSubtitle>
