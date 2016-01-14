@@ -138,10 +138,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
-            else if (e.Shift && e.Control && e.Alt && e.KeyCode == Keys.L)
-            {
-                Configuration.Settings.Language.Save(Path.Combine(Configuration.BaseDirectory, "LanguageMaster.xml"));
-            }
             else if (e.KeyCode == Keys.F1)
             {
                 Utilities.ShowHelp("#translate");
