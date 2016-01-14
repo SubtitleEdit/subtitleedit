@@ -2,10 +2,12 @@
 
 3.4.11 (xth January 2016) BETA
 * NEW:
+   * New "Binary Image Compare" OCR
    * New subtitle formats
    * Export to Pac-Unicode and Ayato 3
    * Installer can now set icons for SE - thx xylographe
    * Can now import TextST from Matroska (.mkv) files - thx Rudde
+   * Can now import "Timed Text image" files - thx Mouna
    * Added "change speed" option in "Batch convert" - thx TomONeill
    * Added "Blu-ray sup" output in "Batch convert" - thx Dan
 * IMPROVED:
@@ -27,6 +29,7 @@
    * Added Japanese encoding for PAC files
    * Faster switching from source view to list view in main window
    * Added read support for Cavena 890 and colors - thx Tiina
+   * TextST: Can now duplicate a "Region style"
 * FIXED:
    * "Normal (remove formatting)" don't remove Unicode chars - thx Fotis
    * Fixed bug in spell check "word replace" - thx Sami
