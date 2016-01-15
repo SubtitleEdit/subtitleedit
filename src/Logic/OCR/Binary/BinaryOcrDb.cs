@@ -27,12 +27,26 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             using (Stream gz = new GZipStream(File.OpenWrite(FileName), CompressionMode.Compress))
             {
                 foreach (var bob in CompareImages)
+                {
+                    if (bob.ExpandCount > 0)
+                        System.Windows.Forms.MessageBox.Show("Ups, expand image in CompareImages!");
                     bob.Save(gz);
+                }
                 foreach (var bob in CompareImagesExpanded)
                 {
+                    if (bob.ExpandCount == 0)
+                        System.Windows.Forms.MessageBox.Show("Ups, not expanded image in CompareImagesExpanded!");
                     bob.Save(gz);
+                    if (bob.ExpandedList.Count != bob.ExpandCount -1)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Ups, bad sub image count!");
+                    }
                     foreach (var expandedBob in bob.ExpandedList)
+                    {
+                        if (expandedBob.Text != null)
+                            System.Windows.Forms.MessageBox.Show("Ups, wrong sub image!");
                         expandedBob.Save(gz);
+                    }
                 }
             }
         }
@@ -64,7 +78,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                             {
                                 var expandedBob = new BinaryOcrBitmap(gz);
                                 if (expandedBob.LoadedOk)
+                                {
+                                    if (expandedBob.Text != null)
+                                        System.Windows.Forms.MessageBox.Show("Ups, wrong sub image!");
                                     bob.ExpandedList.Add(expandedBob);
+                                }
                                 else
                                     break;
                             }
@@ -111,6 +129,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             int index;
             if (bob.ExpandCount > 0)
             {
+                if (bob.ExpandedList[0].Text != null)
+                    System.Windows.Forms.MessageBox.Show("Ups, wrong sub image!");
                 index = FindExactMatchExpanded(bob);
                 if (index == -1 || CompareImagesExpanded[index].ExpandCount != bob.ExpandCount)
                 {
@@ -123,9 +143,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                     {
                         if (bob.ExpandedList[i].Hash != CompareImagesExpanded[index].ExpandedList[i].Hash)
                             allAlike = false;
+                        if (bob.ExpandedList[i].Text != null)
+                            System.Windows.Forms.MessageBox.Show("Ups, wrong sub image!");
                     }
                     if (!allAlike)
-                        CompareImages.Add(bob);
+                        CompareImagesExpanded.Add(bob);
                     else
                         System.Windows.Forms.MessageBox.Show("Expanded image already in db!");
                 }
