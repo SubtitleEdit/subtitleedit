@@ -805,7 +805,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                     foreach (string dir in Directory.GetFiles(characterDatabasePath, "*.db"))
                     {
-                        comboBoxCharacterDatabase.Items.Add(Path.GetFileNameWithoutExtension(dir));
+                        string s = Path.GetFileNameWithoutExtension(dir);
+                        comboBoxCharacterDatabase.Items.Add(s);
+                        if (s == Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb)
+                        {
+                            comboBoxCharacterDatabase.SelectedIndex = comboBoxCharacterDatabase.Items.Count - 1;
+                        }
                     }
 
                     if (comboBoxCharacterDatabase.Items.Count == 0)
@@ -5497,7 +5502,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-//        public List<double> _elapseds = new List<double>();
+        //        public List<double> _elapseds = new List<double>();
         private bool MainLoop(int max, int i)
         {
             if (i >= max)
@@ -5533,7 +5538,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.Items[j].EnsureVisible();
 
             string text = string.Empty;
-//            var sw = Stopwatch.StartNew();
+            //            var sw = Stopwatch.StartNew();
             if (_ocrMethodIndex == _ocrMethodTesseract)
                 text = OcrViaTesseract(bmp, i);
             else if (_ocrMethodIndex == _ocrMethodImageCompare)
@@ -7906,13 +7911,18 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines = checkBoxAutoBreakLines.Checked;
             Configuration.Settings.VobSubOcr.LineOcrDraw = checkBoxNOcrCorrect.Checked;
             Configuration.Settings.VobSubOcr.LineOcrAdvancedItalic = checkBoxNOcrItalic.Checked;
+            if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
+            {
+                Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb = comboBoxCharacterDatabase.SelectedItem.ToString();
+            }
+
 
             if (_bluRaySubtitlesOriginal != null)
                 Configuration.Settings.VobSubOcr.BlurayAllowDifferenceInPercent = (double)numericUpDownMaxErrorPct.Value;
             else
                 Configuration.Settings.VobSubOcr.AllowDifferenceInPercent = (double)numericUpDownMaxErrorPct.Value;
 
-            if (_ocrMethodIndex == _ocrMethodNocr) 
+            if (_ocrMethodIndex == _ocrMethodNocr)
             {
                 Configuration.Settings.VobSubOcr.LineOcrLastSpellCheck = LanguageString;
                 if (comboBoxNOcrLanguage.Items.Count > 0 && comboBoxNOcrLanguage.SelectedIndex >= 0)

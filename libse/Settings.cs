@@ -730,6 +730,7 @@ namespace Nikse.SubtitleEdit.Core
         public int LineOcrXOrMorePixelsMakesSpace { get; set; }
         public int LineOcrMinLineHeight { get; set; }
         public int LineOcrMaxLineHeight { get; set; }
+        public string LastBinaryImageCompareDb { get; set; }
 
         public VobSubOcrSettings()
         {
@@ -2239,7 +2240,10 @@ namespace Nikse.SubtitleEdit.Core
                 settings.VobSubOcr.LineOcrMinLineHeight = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("LineOcrMaxLineHeight");
             if (subNode != null)
-                settings.VobSubOcr.LineOcrMaxLineHeight = Convert.ToInt32(subNode.InnerText);
+                settings.VobSubOcr.LineOcrMaxLineHeight = Convert.ToInt32(subNode.InnerText);            
+            subNode = node.SelectSingleNode("LastBinaryImageCompareDb");
+            if (subNode != null)
+                settings.VobSubOcr.LastBinaryImageCompareDb = subNode.InnerText;
 
             foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
             {
@@ -3104,6 +3108,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("LineOcrXOrMorePixelsMakesSpace", settings.VobSubOcr.LineOcrXOrMorePixelsMakesSpace.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LineOcrMinLineHeight", settings.VobSubOcr.LineOcrMinLineHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LineOcrMaxLineHeight", settings.VobSubOcr.LineOcrMaxLineHeight.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("LastBinaryImageCompareDb", settings.VobSubOcr.LastBinaryImageCompareDb);                
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("MultipleSearchAndReplaceList", string.Empty);

@@ -91,12 +91,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabControlLogs = new System.Windows.Forms.TabControl();
             this.contextMenuStripAllFixes = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemClearFixes = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabPageAllFixes = new System.Windows.Forms.TabPage();
-            this.listBoxLog = new System.Windows.Forms.ListBox();
-            this.tabPageSuggestions = new System.Windows.Forms.TabPage();
-            this.listBoxLogSuggestions = new System.Windows.Forms.ListBox();
-            this.contextMenuStripGuessesUsed = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItemClearGuesses = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPageUnknownWords = new System.Windows.Forms.TabPage();
             this.buttonGoogleIt = new System.Windows.Forms.Button();
             this.buttonAddToOcrReplaceList = new System.Windows.Forms.Button();
@@ -105,6 +99,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxUnknownWords = new System.Windows.Forms.ListBox();
             this.contextMenuStripUnknownWords = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabPageAllFixes = new System.Windows.Forms.TabPage();
+            this.listBoxLog = new System.Windows.Forms.ListBox();
+            this.tabPageSuggestions = new System.Windows.Forms.TabPage();
+            this.listBoxLogSuggestions = new System.Windows.Forms.ListBox();
+            this.contextMenuStripGuessesUsed = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemClearGuesses = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxPromptForUnknownWords = new System.Windows.Forms.CheckBox();
             this.checkBoxAutoBreakLines = new System.Windows.Forms.CheckBox();
             this.labelDictionaryLoaded = new System.Windows.Forms.Label();
@@ -153,11 +153,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOcrAutoFix.SuspendLayout();
             this.tabControlLogs.SuspendLayout();
             this.contextMenuStripAllFixes.SuspendLayout();
+            this.tabPageUnknownWords.SuspendLayout();
+            this.contextMenuStripUnknownWords.SuspendLayout();
             this.tabPageAllFixes.SuspendLayout();
             this.tabPageSuggestions.SuspendLayout();
             this.contextMenuStripGuessesUsed.SuspendLayout();
-            this.tabPageUnknownWords.SuspendLayout();
-            this.contextMenuStripUnknownWords.SuspendLayout();
             this.groupBoxImagePalette.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBackground)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEmphasis2)).BeginInit();
@@ -402,10 +402,10 @@ namespace Nikse.SubtitleEdit.Forms
             // groupBoxOcrMethod
             // 
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
             this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxNOCR);
             this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
             this.groupBoxOcrMethod.Size = new System.Drawing.Size(392, 192);
@@ -954,69 +954,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripMenuItemClearFixes.Text = "Clear";
             this.toolStripMenuItemClearFixes.Click += new System.EventHandler(this.toolStripMenuItemClearFixes_Click);
             // 
-            // tabPageAllFixes
-            // 
-            this.tabPageAllFixes.Controls.Add(this.listBoxLog);
-            this.tabPageAllFixes.Location = new System.Drawing.Point(4, 22);
-            this.tabPageAllFixes.Name = "tabPageAllFixes";
-            this.tabPageAllFixes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAllFixes.Size = new System.Drawing.Size(375, 155);
-            this.tabPageAllFixes.TabIndex = 0;
-            this.tabPageAllFixes.Text = "All fixes";
-            this.tabPageAllFixes.UseVisualStyleBackColor = true;
-            // 
-            // listBoxLog
-            // 
-            this.listBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBoxLog.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.listBoxLog.FormattingEnabled = true;
-            this.listBoxLog.HorizontalScrollbar = true;
-            this.listBoxLog.Location = new System.Drawing.Point(3, 3);
-            this.listBoxLog.Name = "listBoxLog";
-            this.listBoxLog.Size = new System.Drawing.Size(369, 149);
-            this.listBoxLog.TabIndex = 0;
-            this.listBoxLog.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
-            this.listBoxLog.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxCopyToClipboard_KeyDown);
-            // 
-            // tabPageSuggestions
-            // 
-            this.tabPageSuggestions.Controls.Add(this.listBoxLogSuggestions);
-            this.tabPageSuggestions.Location = new System.Drawing.Point(4, 22);
-            this.tabPageSuggestions.Name = "tabPageSuggestions";
-            this.tabPageSuggestions.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSuggestions.Size = new System.Drawing.Size(375, 155);
-            this.tabPageSuggestions.TabIndex = 1;
-            this.tabPageSuggestions.Text = "Guesses used";
-            this.tabPageSuggestions.UseVisualStyleBackColor = true;
-            // 
-            // listBoxLogSuggestions
-            // 
-            this.listBoxLogSuggestions.ContextMenuStrip = this.contextMenuStripGuessesUsed;
-            this.listBoxLogSuggestions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBoxLogSuggestions.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.listBoxLogSuggestions.FormattingEnabled = true;
-            this.listBoxLogSuggestions.HorizontalScrollbar = true;
-            this.listBoxLogSuggestions.Location = new System.Drawing.Point(3, 3);
-            this.listBoxLogSuggestions.Name = "listBoxLogSuggestions";
-            this.listBoxLogSuggestions.Size = new System.Drawing.Size(369, 149);
-            this.listBoxLogSuggestions.TabIndex = 40;
-            this.listBoxLogSuggestions.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
-            this.listBoxLogSuggestions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxCopyToClipboard_KeyDown);
-            // 
-            // contextMenuStripGuessesUsed
-            // 
-            this.contextMenuStripGuessesUsed.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemClearGuesses});
-            this.contextMenuStripGuessesUsed.Name = "contextMenuStripUnknownWords";
-            this.contextMenuStripGuessesUsed.Size = new System.Drawing.Size(102, 26);
-            // 
-            // toolStripMenuItemClearGuesses
-            // 
-            this.toolStripMenuItemClearGuesses.Name = "toolStripMenuItemClearGuesses";
-            this.toolStripMenuItemClearGuesses.Size = new System.Drawing.Size(101, 22);
-            this.toolStripMenuItemClearGuesses.Text = "Clear";
-            this.toolStripMenuItemClearGuesses.Click += new System.EventHandler(this.toolStripMenuItemClearGuesses_Click);
-            // 
             // tabPageUnknownWords
             // 
             this.tabPageUnknownWords.Controls.Add(this.buttonGoogleIt);
@@ -1108,6 +1045,69 @@ namespace Nikse.SubtitleEdit.Forms
             this.clearToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            // 
+            // tabPageAllFixes
+            // 
+            this.tabPageAllFixes.Controls.Add(this.listBoxLog);
+            this.tabPageAllFixes.Location = new System.Drawing.Point(4, 22);
+            this.tabPageAllFixes.Name = "tabPageAllFixes";
+            this.tabPageAllFixes.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageAllFixes.Size = new System.Drawing.Size(375, 155);
+            this.tabPageAllFixes.TabIndex = 0;
+            this.tabPageAllFixes.Text = "All fixes";
+            this.tabPageAllFixes.UseVisualStyleBackColor = true;
+            // 
+            // listBoxLog
+            // 
+            this.listBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listBoxLog.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBoxLog.FormattingEnabled = true;
+            this.listBoxLog.HorizontalScrollbar = true;
+            this.listBoxLog.Location = new System.Drawing.Point(3, 3);
+            this.listBoxLog.Name = "listBoxLog";
+            this.listBoxLog.Size = new System.Drawing.Size(369, 149);
+            this.listBoxLog.TabIndex = 0;
+            this.listBoxLog.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
+            this.listBoxLog.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxCopyToClipboard_KeyDown);
+            // 
+            // tabPageSuggestions
+            // 
+            this.tabPageSuggestions.Controls.Add(this.listBoxLogSuggestions);
+            this.tabPageSuggestions.Location = new System.Drawing.Point(4, 22);
+            this.tabPageSuggestions.Name = "tabPageSuggestions";
+            this.tabPageSuggestions.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageSuggestions.Size = new System.Drawing.Size(375, 155);
+            this.tabPageSuggestions.TabIndex = 1;
+            this.tabPageSuggestions.Text = "Guesses used";
+            this.tabPageSuggestions.UseVisualStyleBackColor = true;
+            // 
+            // listBoxLogSuggestions
+            // 
+            this.listBoxLogSuggestions.ContextMenuStrip = this.contextMenuStripGuessesUsed;
+            this.listBoxLogSuggestions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listBoxLogSuggestions.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBoxLogSuggestions.FormattingEnabled = true;
+            this.listBoxLogSuggestions.HorizontalScrollbar = true;
+            this.listBoxLogSuggestions.Location = new System.Drawing.Point(3, 3);
+            this.listBoxLogSuggestions.Name = "listBoxLogSuggestions";
+            this.listBoxLogSuggestions.Size = new System.Drawing.Size(369, 149);
+            this.listBoxLogSuggestions.TabIndex = 40;
+            this.listBoxLogSuggestions.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
+            this.listBoxLogSuggestions.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBoxCopyToClipboard_KeyDown);
+            // 
+            // contextMenuStripGuessesUsed
+            // 
+            this.contextMenuStripGuessesUsed.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemClearGuesses});
+            this.contextMenuStripGuessesUsed.Name = "contextMenuStripUnknownWords";
+            this.contextMenuStripGuessesUsed.Size = new System.Drawing.Size(102, 26);
+            // 
+            // toolStripMenuItemClearGuesses
+            // 
+            this.toolStripMenuItemClearGuesses.Name = "toolStripMenuItemClearGuesses";
+            this.toolStripMenuItemClearGuesses.Size = new System.Drawing.Size(101, 22);
+            this.toolStripMenuItemClearGuesses.Text = "Clear";
+            this.toolStripMenuItemClearGuesses.Click += new System.EventHandler(this.toolStripMenuItemClearGuesses_Click);
             // 
             // checkBoxPromptForUnknownWords
             // 
@@ -1543,11 +1543,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOcrAutoFix.PerformLayout();
             this.tabControlLogs.ResumeLayout(false);
             this.contextMenuStripAllFixes.ResumeLayout(false);
+            this.tabPageUnknownWords.ResumeLayout(false);
+            this.contextMenuStripUnknownWords.ResumeLayout(false);
             this.tabPageAllFixes.ResumeLayout(false);
             this.tabPageSuggestions.ResumeLayout(false);
             this.contextMenuStripGuessesUsed.ResumeLayout(false);
-            this.tabPageUnknownWords.ResumeLayout(false);
-            this.contextMenuStripUnknownWords.ResumeLayout(false);
             this.groupBoxImagePalette.ResumeLayout(false);
             this.groupBoxImagePalette.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBackground)).EndInit();
