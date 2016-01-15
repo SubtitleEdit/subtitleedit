@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Core
                         if (list[i].X > width)
                             width = list[i].X;
                     }
-                    int max = System.Math.Max(52, list.Length);
+                    int max = System.Math.Min(52, list.Length);
                     for (int i = 0; i < max; i += 2)
                     {
                         if (list[i].X > width)
