@@ -28,7 +28,7 @@ namespace Test.Logic.Ocr
             var bob2 = new BinaryOcrBitmap(nbmp);
             bob2.X = 2;
             bob2.Y = 4;
-            bob2.Text = "tt";
+            bob2.Text = null;
             bob2.Italic = true;
             bob2.ExpandCount = 2;
             bob2.ExpandedList = new System.Collections.Generic.List<BinaryOcrBitmap>();
@@ -57,6 +57,49 @@ namespace Test.Logic.Ocr
             Assert.IsTrue(bob2.Text == db.CompareImagesExpanded[0].Text);
             Assert.IsTrue(bob2.X == db.CompareImagesExpanded[0].X);
             Assert.IsTrue(bob2.Y == db.CompareImagesExpanded[0].Y);
+
+            try
+            {
+                File.Delete(tempFileName);
+            }
+            catch
+            {
+            }
+        }
+
+        [TestMethod]
+        public void TestMethodBinOcrSaveLoadTestExceptions()
+        {
+            string tempFileName = Path.GetTempFileName();
+            var db = new BinaryOcrDb(tempFileName);
+            var nbmp = new NikseBitmap(2, 2);
+            nbmp.SetPixel(0, 0, Color.Transparent);
+            nbmp.SetPixel(1, 0, Color.Transparent);
+            nbmp.SetPixel(1, 0, Color.Transparent);
+            nbmp.SetPixel(1, 1, Color.White);
+
+            var bob = new BinaryOcrBitmap(nbmp);
+            bob.Text = "S";
+            db.Add(bob);
+
+            nbmp.SetPixel(0, 0, Color.White);
+            var bob2 = new BinaryOcrBitmap(nbmp);
+            bob2.X = 2;
+            bob2.Y = 4;
+            bob2.Text = null;
+            bob2.Italic = true;
+            bob2.ExpandCount = 3;
+            bob2.ExpandedList = new System.Collections.Generic.List<BinaryOcrBitmap>();
+            bob2.ExpandedList.Add(bob2);
+            try
+            {
+                db.Add(bob2);
+            }
+            catch
+            {
+                return;
+            }
+            Assert.Fail();
 
             try
             {
