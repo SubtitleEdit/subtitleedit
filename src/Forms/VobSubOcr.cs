@@ -374,9 +374,9 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxGuessUnknownWords.Text = language.TryToGuessUnkownWords;
             checkBoxAutoBreakLines.Text = language.AutoBreakSubtitleIfMoreThanTwoLines;
             checkBoxAutoBreakLines.Checked = Configuration.Settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines;
-            tabControlLogs.TabPages[0].Text = language.AllFixes;
-            tabControlLogs.TabPages[1].Text = language.GuessesUsed;
-            tabControlLogs.TabPages[2].Text = language.UnknownWords;
+            tabControlLogs.TabPages[0].Text = language.UnknownWords;
+            tabControlLogs.TabPages[1].Text = language.AllFixes;
+            tabControlLogs.TabPages[2].Text = language.GuessesUsed;
 
             buttonUknownToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
             buttonUknownToUserDic.Text = Configuration.Settings.Language.SpellCheck.AddToUserDictionary;
