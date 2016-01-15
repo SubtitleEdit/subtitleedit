@@ -11,7 +11,6 @@
         public string CodecPrivate { get; set; }
         public int DefaultDuration { get; set; }
         public string Language { get; set; }
-
         public string Name { get; set; }
         public int ContentCompressionAlgorithm { get; set; }
         public int ContentEncodingType { get; set; }
