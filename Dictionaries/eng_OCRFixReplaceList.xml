@@ -1551,6 +1551,8 @@
     <Word from="yourjockey" to="your jockey" />
     <Word from="yourjury" to="your jury" />
     <Word from="yourname" to="your name" />
+    <Word from="Yourpackage" to="Your package" />
+    <Word from="yourpackage" to="your package" />
     <Word from="you'ro" to="you're" />
     <Word from="yourpoorleg" to="your poor leg" />
     <Word from="yourvveak" to="your weak" />
@@ -1577,6 +1579,7 @@
     <Word from="besttoday" to="best today" />
     <Word from="NiCe" to="Nice" />
     <Word from="oftravelling" to="of travelling" />
+    <Word from="oftwo" to="of two" />
     <Word from="ALl" to="ALI" />
     <Word from="afterparty" to="after-party" />
     <Word from="welL" to="well." />
