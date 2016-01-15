@@ -3018,6 +3018,21 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, target, _binaryOcrDb, bob, maxDiff);
+            if (target.Width > 16 && target.Height > 16 && (smallestIndex == -1 || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
+            {
+                var t2 = target.CopyRectangle(new Rectangle(0, 1, target.Width, target.Height - 1));
+                FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, t2, _binaryOcrDb, bob, maxDiff);
+            }
+            if (target.Width > 16 && target.Height > 16 && (smallestIndex == -1 || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
+            {
+                var t2 = target.CopyRectangle(new Rectangle(1, 0, target.Width - 1, target.Height));
+                FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, t2, _binaryOcrDb, bob, maxDiff);
+            }
+            if (target.Width > 16 && target.Height > 16 && (smallestIndex == -1 || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
+            {
+                var t2 = target.CopyRectangle(new Rectangle(0, 0, target.Width - 1, target.Height));
+                FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, t2, _binaryOcrDb, bob, maxDiff);
+            }
 
             if (smallestIndex >= 0)
             {
@@ -3129,7 +3144,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (target.Width > 35 && smallestDifference > 2) // for other than very narrow letter (like 'i' and 'l' and 'I'), try more sizes
+            if (target.Width > 16 && target.Height > 16 && smallestDifference > 2) // for other than very narrow letter (like 'i' and 'l' and 'I'), try more sizes
             {
                 index = 0;
                 foreach (var compareItem in binOcrDb.CompareImages)
@@ -3184,29 +3199,6 @@ namespace Nikse.SubtitleEdit.Forms
                             if (Math.Abs(compareItem.NumberOfColoredPixels - numberOfForegroundColors) < minForeColorMatch)
                             {
                                 int dif = NikseBitmapImageSplitter.IsBitmapsAlike(target, compareItem);
-                                if (dif < smallestDifference)
-                                {
-                                    smallestDifference = dif;
-                                    smallestIndex = index;
-                                    if (dif == 0)
-                                        break; // foreach ending
-                                }
-                            }
-                        }
-                        index++;
-                    }
-                }
-
-                if (smallestDifference > 5)
-                {
-                    index = 0;
-                    foreach (var compareItem in binOcrDb.CompareImages)
-                    {
-                        if (compareItem.Width == target.Width - 1 && compareItem.Height == target.Height)
-                        {
-                            if (Math.Abs(compareItem.NumberOfColoredPixels - numberOfForegroundColors) < minForeColorMatch)
-                            {
-                                int dif = NikseBitmapImageSplitter.IsBitmapsAlike(compareItem, target);
                                 if (dif < smallestDifference)
                                 {
                                     smallestDifference = dif;
@@ -4019,7 +4011,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// <summary>
         /// Ocr via image compare
         /// </summary>
-        private string SplitAndOcrBitmapNormalNew(Bitmap bitmap, int listViewIndex)
+        private string SplitAndOcrBinaryImageCompare(Bitmap bitmap, int listViewIndex)
         {
             if (_ocrFixEngine == null)
                 LoadOcrFixEngine(null, LanguageString);
@@ -5547,7 +5539,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_ocrMethodIndex == _ocrMethodImageCompare)
                 text = SplitAndOcrBitmapNormal(bmp, i);
             else if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
-                text = SplitAndOcrBitmapNormalNew(bmp, i);
+                text = SplitAndOcrBinaryImageCompare(bmp, i);
             else if (_ocrMethodIndex == _ocrMethodNocr)
                 text = OcrViaNOCR(bmp, i);
             else if (_ocrMethodIndex == _ocrMethodModi)
