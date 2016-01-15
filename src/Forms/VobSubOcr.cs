@@ -238,6 +238,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Object _modiDoc;
         private bool _modiEnabled;
 
+        private bool _fromMenuItem = false;
+
         // DVD rip/vobsub
         private List<VobSubMergedPack> _vobSubMergedPackistOriginal;
         private List<VobSubMergedPack> _vobSubMergedPackist;
@@ -1451,7 +1453,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (returnBmp == null)
                 return null;
 
-            if (_binaryOcrDb == null && _nOcrDb == null)
+            if ((_binaryOcrDb == null && _nOcrDb == null) || _fromMenuItem)
                 return returnBmp;
 
             var n = new NikseBitmap(returnBmp);
@@ -5388,7 +5390,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonStop.Enabled = true;
             buttonNewCharacterDatabase.Enabled = false;
             buttonEditCharacterDatabase.Enabled = false;
-
+            _fromMenuItem = false;
             _abort = false;
 
             int max = GetSubtitleCount();
@@ -7163,7 +7165,9 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult result = saveFileDialog1.ShowDialog(this);
             if (result == DialogResult.OK)
             {
+                _fromMenuItem = true;
                 Bitmap bmp = GetSubtitleBitmap(_selectedIndex);
+                _fromMenuItem = false;
                 if (bmp == null)
                 {
                     MessageBox.Show("No image!");
@@ -7552,6 +7556,7 @@ namespace Nikse.SubtitleEdit.Forms
                 sb.AppendLine("<html>");
                 sb.AppendLine("<head><title>Subtitle images</title></head>");
                 sb.AppendLine("<body>");
+                _fromMenuItem = true;
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
                     progressBar1.Value = i;
@@ -7574,6 +7579,7 @@ namespace Nikse.SubtitleEdit.Forms
                         bmp.Dispose();
                     }
                 }
+                _fromMenuItem = false;
                 sb.AppendLine("</body>");
                 sb.AppendLine("</html>");
                 var htmlFileName = Path.Combine(folderBrowserDialog1.SelectedPath, "index.html");
@@ -8181,8 +8187,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
+                _fromMenuItem = true;
                 exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "VOBSUB", FileName, this, _importLanguageString);
                 exportBdnXmlPng.ShowDialog(this);
+                _fromMenuItem = false;
             }
         }
 
@@ -8190,8 +8198,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
+                _fromMenuItem = true;
                 exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BLURAYSUP", FileName, this, _importLanguageString);
                 exportBdnXmlPng.ShowDialog(this);
+                _fromMenuItem = false;
             }
         }
 
@@ -8199,8 +8209,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
+                _fromMenuItem = true;
                 exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BDNXML", FileName, this, _importLanguageString);
                 exportBdnXmlPng.ShowDialog(this);
+                _fromMenuItem = false;
             }
         }
 
@@ -8346,8 +8358,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
+                _fromMenuItem = true;
                 exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "DOST", FileName, this, _importLanguageString);
                 exportBdnXmlPng.ShowDialog(this);
+                _fromMenuItem = false;
             }
         }
 
