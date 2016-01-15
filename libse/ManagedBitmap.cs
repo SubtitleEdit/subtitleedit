@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public ManagedBitmap(Bitmap oldBitmap)
         {
-            NikseBitmap nbmp = new NikseBitmap(oldBitmap);
+            var nbmp = new NikseBitmap(oldBitmap);
             Width = nbmp.Width;
             Height = nbmp.Height;
             _colors = new Color[Width * Height];
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    this.SetPixel(x, y, nbmp.GetPixel(x, y));
+                    SetPixel(x, y, nbmp.GetPixel(x, y));
                 }
             }
         }
@@ -81,14 +81,14 @@ namespace Nikse.SubtitleEdit.Core
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    this.SetPixel(x, y, nbmp.GetPixel(x, y));
+                    SetPixel(x, y, nbmp.GetPixel(x, y));
                 }
             }
         }
 
         public void Save(string fileName)
         {
-            using (MemoryStream outFile = new MemoryStream())
+            using (var outFile = new MemoryStream())
             {
                 byte[] buffer = System.Text.Encoding.UTF8.GetBytes("MBMP");
                 outFile.Write(buffer, 0, buffer.Length);
@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Core
                     WriteColor(outFile, c);
                 }
                 buffer = outFile.ToArray();
-                using (GZipStream gz = new GZipStream(new FileStream(fileName, FileMode.Create), CompressionMode.Compress, false))
+                using (var gz = new GZipStream(new FileStream(fileName, FileMode.Create), CompressionMode.Compress, false))
                 {
                     gz.Write(buffer, 0, buffer.Length);
                 }
@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public void AppendToStream(Stream targetStream)
         {
-            using (MemoryStream outFile = new MemoryStream())
+            using (var outFile = new MemoryStream())
             {
                 byte[] buffer = System.Text.Encoding.UTF8.GetBytes("MBMP");
                 outFile.Write(buffer, 0, buffer.Length);
@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Core
         /// <returns>Rectangle from current image as new bitmap</returns>
         public ManagedBitmap GetRectangle(Rectangle section)
         {
-            ManagedBitmap newRectangle = new ManagedBitmap(section.Width, section.Height);
+            var newRectangle = new ManagedBitmap(section.Width, section.Height);
 
             int recty = 0;
             for (int y = section.Top; y < section.Top + section.Height; y++)
@@ -190,7 +190,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public Bitmap ToOldBitmap()
         {
-            NikseBitmap nbmp = new NikseBitmap(Width, Height);
+            var nbmp = new NikseBitmap(Width, Height);
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
