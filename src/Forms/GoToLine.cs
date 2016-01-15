@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
         public GoToLine()
         {
             InitializeComponent();
-            Icon = SubtitleEdit.Properties.Resources.SubtitleEditFormIcon;
+            Icon = Properties.Resources.SubtitleEditFormIcon;
             Text = Configuration.Settings.Language.GoToLine.Title;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
