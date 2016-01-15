@@ -631,7 +631,7 @@ namespace Nikse.SubtitleEdit.Core
 
                     //FALCONE:<i> I didn't think</i><br /><i>it was going to be you,</i>
                     var colIdx = text.IndexOf(':');
-                    if (colIdx > -1 && Utilities.CountTagInText(text, beginTag) + Utilities.CountTagInText(text, endTag) == 4 && text.Length > colIdx + 1 && !char.IsDigit(text[colIdx + 1]))
+                    if (colIdx >= 0 && Utilities.CountTagInText(text, beginTag) + Utilities.CountTagInText(text, endTag) == 4 && text.Length > colIdx + 1 && !char.IsDigit(text[colIdx + 1]))
                     {
                         var firstLine = text.Substring(0, index);
                         var secondLine = text.Substring(index).TrimStart();

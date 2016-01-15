@@ -260,15 +260,9 @@ namespace Nikse.SubtitleEdit.Controls
 
         private static Color GetCustomColor(Color color)
         {
-            int r = color.R - 39;
-            int g = color.G - 39;
-            int b = color.B - 39;
-            if (r < 0)
-                r = 0;
-            if (g < 0)
-                g = 0;
-            if (b < 0)
-                b = 0;
+            int r = Math.Max(color.R - 39, 0);
+            int g = Math.Max(color.G - 39, 0);
+            int b = Math.Max(color.B - 39, 0);
             return Color.FromArgb(color.A, r, g, b);
         }
 

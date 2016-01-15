@@ -62,60 +62,60 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (string line in header.SplitToLines())
                 {
                     string s = line.ToLowerInvariant().Trim();
-                    if (s.StartsWith("title:"))
+                    if (s.StartsWith("title:", StringComparison.Ordinal))
                     {
                         textBoxTitle.Text = s.Remove(0, 6).Trim();
                     }
-                    else if (s.StartsWith("original script:"))
+                    else if (s.StartsWith("original script:", StringComparison.Ordinal))
                     {
                         textBoxOriginalScript.Text = s.Remove(0, 16).Trim();
                     }
-                    else if (s.StartsWith("original translation:"))
+                    else if (s.StartsWith("original translation:", StringComparison.Ordinal))
                     {
                         textBoxTranslation.Text = s.Remove(0, 21).Trim();
                     }
-                    else if (s.StartsWith("original editing:"))
+                    else if (s.StartsWith("original editing:", StringComparison.Ordinal))
                     {
                         textBoxEditing.Text = s.Remove(0, 17).Trim();
                     }
-                    else if (s.StartsWith("original timing:"))
+                    else if (s.StartsWith("original timing:", StringComparison.Ordinal))
                     {
                         textBoxTiming.Text = s.Remove(0, 16).Trim();
                     }
-                    else if (s.StartsWith("synch point:"))
+                    else if (s.StartsWith("synch point:", StringComparison.Ordinal))
                     {
                         textBoxSyncPoint.Text = s.Remove(0, 12).Trim();
                     }
-                    else if (s.StartsWith("script updated by:"))
+                    else if (s.StartsWith("script updated by:", StringComparison.Ordinal))
                     {
                         textBoxUpdatedBy.Text = s.Remove(0, 18).Trim();
                     }
-                    else if (s.StartsWith("update details:"))
+                    else if (s.StartsWith("update details:", StringComparison.Ordinal))
                     {
                         textBoxUpdateDetails.Text = s.Remove(0, 15).Trim();
                     }
-                    else if (s.StartsWith("collisions:"))
+                    else if (s.StartsWith("collisions:", StringComparison.Ordinal))
                     {
                         if (s.Remove(0, 11).Trim() == "reverse")
                             comboBoxCollision.SelectedIndex = 1;
                     }
-                    else if (s.StartsWith("playresx:"))
+                    else if (s.StartsWith("playresx:", StringComparison.Ordinal))
                     {
                         int number;
                         if (int.TryParse(s.Remove(0, 9).Trim(), out number))
                             numericUpDownVideoWidth.Value = number;
                     }
-                    else if (s.StartsWith("playresy:"))
+                    else if (s.StartsWith("playresy:", StringComparison.Ordinal))
                     {
                         int number;
                         if (int.TryParse(s.Remove(0, 9).Trim(), out number))
                             numericUpDownVideoHeight.Value = number;
                     }
-                    else if (s.StartsWith("scaledborderandshadow:"))
+                    else if (s.StartsWith("scaledborderandshadow:", StringComparison.Ordinal))
                     {
                         checkBoxScaleBorderAndShadow.Checked = s.Remove(0, 22).Trim().ToLowerInvariant().Equals("yes");
                     }
-                    else if (s.StartsWith("wrapstyle:"))
+                    else if (s.StartsWith("wrapstyle:", StringComparison.Ordinal))
                     {
                         var wrapStyle = s.Remove(0, 10).Trim();
                         for (int i = 0; i < comboBoxWrapStyle.Items.Count; i++)
@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 string s = line.ToLower();
-                if (s.StartsWith(tag.ToLower() + ":"))
+                if (s.StartsWith(tag.ToLower() + ":", StringComparison.Ordinal))
                 {
                     if (!remove)
                         sb.AppendLine(line.Substring(0, tag.Length) + ": " + text);

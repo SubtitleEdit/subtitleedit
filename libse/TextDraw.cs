@@ -13,16 +13,13 @@ namespace Nikse.SubtitleEdit.Core
             if (path.PointCount > 0)
             {
                 int k = 0;
-
                 var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
                 for (int i = list.Length - 1; i >= 0; i--)
                 {
                     if (list[i].X > next.X)
                         next.X = list[i].X;
                     k++;
-                    if (k > 60)
-                        break;
-                    if (i <= pathPointsStart && pathPointsStart != -1)
+                    if ((k > 60) || (i <= pathPointsStart && pathPointsStart != -1))
                         break;
                 }
             }
@@ -79,17 +76,13 @@ namespace Nikse.SubtitleEdit.Core
 
                     float width = 0;
                     var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                    int index = list.Length - 42;
-                    if (index < 0)
-                        index = 0;
+                    int index = System.Math.Max(list.Length - 42, 0);
                     for (int i = index; i < list.Length; i += 2)
                     {
                         if (list[i].X > width)
                             width = list[i].X;
                     }
-                    int max = 52;
-                    if (max > list.Length)
-                        max = list.Length;
+                    int max = System.Math.Max(52, list.Length);
                     for (int i = 0; i < max; i += 2)
                     {
                         if (list[i].X > width)
@@ -115,9 +108,7 @@ namespace Nikse.SubtitleEdit.Core
 
                     float height = 0;
                     var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                    int index = list.Length - 80;
-                    if (index < 0)
-                        index = 0;
+                    int index = System.Math.Max(list.Length - 80, 0);
                     for (int i = index; i < list.Length; i += 2)
                     {
                         if (list[i].Y > height)

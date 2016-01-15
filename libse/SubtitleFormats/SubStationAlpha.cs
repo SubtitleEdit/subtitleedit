@@ -8,7 +8,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class SubStationAlpha : SubtitleFormat
     {
-
         public string Errors { get; private set; }
 
         public override string Extension
