@@ -731,6 +731,7 @@ namespace Nikse.SubtitleEdit.Core
         public int LineOcrMinLineHeight { get; set; }
         public int LineOcrMaxLineHeight { get; set; }
         public string LastBinaryImageCompareDb { get; set; }
+        public string LastBinaryImageSpellCheck { get; set; }        
 
         public VobSubOcrSettings()
         {
@@ -2243,7 +2244,10 @@ namespace Nikse.SubtitleEdit.Core
                 settings.VobSubOcr.LineOcrMaxLineHeight = Convert.ToInt32(subNode.InnerText);            
             subNode = node.SelectSingleNode("LastBinaryImageCompareDb");
             if (subNode != null)
-                settings.VobSubOcr.LastBinaryImageCompareDb = subNode.InnerText;
+                settings.VobSubOcr.LastBinaryImageCompareDb = subNode.InnerText;            
+            subNode = node.SelectSingleNode("LastBinaryImageSpellCheck");
+            if (subNode != null)
+                settings.VobSubOcr.LastBinaryImageSpellCheck = subNode.InnerText;
 
             foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
             {
@@ -3108,7 +3112,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("LineOcrXOrMorePixelsMakesSpace", settings.VobSubOcr.LineOcrXOrMorePixelsMakesSpace.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LineOcrMinLineHeight", settings.VobSubOcr.LineOcrMinLineHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LineOcrMaxLineHeight", settings.VobSubOcr.LineOcrMaxLineHeight.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("LastBinaryImageCompareDb", settings.VobSubOcr.LastBinaryImageCompareDb);                
+                textWriter.WriteElementString("LastBinaryImageCompareDb", settings.VobSubOcr.LastBinaryImageCompareDb);
+                textWriter.WriteElementString("LastBinaryImageSpellCheck", settings.VobSubOcr.LastBinaryImageSpellCheck);
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("MultipleSearchAndReplaceList", string.Empty);

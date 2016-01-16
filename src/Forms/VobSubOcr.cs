@@ -822,6 +822,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (comboBoxCharacterDatabase.SelectedIndex < 0 && comboBoxCharacterDatabase.Items.Count > 0)
                         comboBoxCharacterDatabase.SelectedIndex = 0;
+
+                    for (int i = 0; i < comboBoxDictionaries.Items.Count; i++)
+                    {
+                        if (comboBoxDictionaries.Items[i].ToString() == Configuration.Settings.VobSubOcr.LastBinaryImageSpellCheck)
+                        {
+                            comboBoxDictionaries.SelectedIndex = i;
+                            break;
+                        }
+                    }
                 }
                 else if (_ocrMethodIndex == _ocrMethodImageCompare)
                 {
@@ -3025,20 +3034,23 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, target, _binaryOcrDb, bob, maxDiff);
-            if (target.Width > 16 && target.Height > 16 && (smallestIndex == -1 || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
+            if (maxDiff > 0)
             {
-                var t2 = target.CopyRectangle(new Rectangle(0, 1, target.Width, target.Height - 1));
-                FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, t2, _binaryOcrDb, bob, maxDiff);
-            }
-            if (target.Width > 16 && target.Height > 16 && (smallestIndex == -1 || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
-            {
-                var t2 = target.CopyRectangle(new Rectangle(1, 0, target.Width - 1, target.Height));
-                FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, t2, _binaryOcrDb, bob, maxDiff);
-            }
-            if (target.Width > 16 && target.Height > 16 && (smallestIndex == -1 || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
-            {
-                var t2 = target.CopyRectangle(new Rectangle(0, 0, target.Width - 1, target.Height));
-                FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, t2, _binaryOcrDb, bob, maxDiff);
+                if (target.Width > 16 && target.Height > 16 && (smallestIndex == -1 || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
+                {
+                    var t2 = target.CopyRectangle(new Rectangle(0, 1, target.Width, target.Height - 1));
+                    FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, t2, _binaryOcrDb, bob, maxDiff);
+                }
+                if (target.Width > 16 && target.Height > 16 && (smallestIndex == -1 || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
+                {
+                    var t2 = target.CopyRectangle(new Rectangle(1, 0, target.Width - 1, target.Height));
+                    FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, t2, _binaryOcrDb, bob, maxDiff);
+                }
+                if (target.Width > 16 && target.Height > 16 && (smallestIndex == -1 || smallestDifference * 100.0 / (target.Width * target.Height) > maxDiff))
+                {
+                    var t2 = target.CopyRectangle(new Rectangle(0, 0, target.Width - 1, target.Height));
+                    FindBestMatchNew(ref index, ref smallestDifference, ref smallestIndex, t2, _binaryOcrDb, bob, maxDiff);
+                }
             }
 
             if (smallestIndex >= 0)
@@ -4016,7 +4028,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         /// <summary>
-        /// Ocr via image compare
+        /// Ocr via binary (two color) image compare
         /// </summary>
         private string SplitAndOcrBinaryImageCompare(Bitmap bitmap, int listViewIndex)
         {
@@ -5392,7 +5404,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonEditCharacterDatabase.Enabled = false;
             _fromMenuItem = false;
             _abort = false;
-
+            listBoxUnknownWords.Items.Clear();
             int max = GetSubtitleCount();
 
             if (_ocrMethodIndex == _ocrMethodTesseract && _tesseractAsyncStrings == null)
@@ -7920,6 +7932,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
                 Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb = comboBoxCharacterDatabase.SelectedItem.ToString();
+                Configuration.Settings.VobSubOcr.LastBinaryImageSpellCheck = comboBoxDictionaries.SelectedItem.ToString();
             }
 
 
