@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (word != null && richTextBoxParagraph.Text.Contains(word))
             {
-                const string ExpectedWordBoundaryChars = @" <>-""”“[]'‘`´¶()♪¿¡.…—!?,:;/\r\n";
+                const string ExpectedWordBoundaryChars = " <>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/\r\n";
                 for (int i = 0; i < richTextBoxParagraph.Text.Length; i++)
                 {
                     if (richTextBoxParagraph.Text.Substring(i).StartsWith(word))
