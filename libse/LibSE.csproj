@@ -228,6 +228,7 @@
     <Compile Include="SubtitleFormats\Eeg708.cs" />
     <Compile Include="SubtitleFormats\ELRStudioClosedCaption.cs" />
     <Compile Include="SubtitleFormats\F4Rtf.cs" />
+    <Compile Include="SubtitleFormats\SeImageHtmlIndex.cs" />
     <Compile Include="SubtitleFormats\F4Text.cs" />
     <Compile Include="SubtitleFormats\F4Xml.cs" />
     <Compile Include="SubtitleFormats\FabSubtitler.cs" />
