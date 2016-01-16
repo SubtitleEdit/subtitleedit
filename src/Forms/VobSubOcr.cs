@@ -8137,7 +8137,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = listBoxUnknownWords.SelectedItems[0].ToString();
                 if (text.Contains(':'))
                 {
-                    text = text.Substring(text.IndexOf(':') + 1).Trim().ToLower();
+                    text = text.Substring(text.IndexOf(':') + 1).Trim();
                     using (var form = new AddToOcrReplaceList())
                     {
                         form.Initialize(_languageId, comboBoxDictionaries.Text, text);
