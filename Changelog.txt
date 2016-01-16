@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.4.11 (xth January 2016) BETA
+3.4.11 (16th January 2016) BETA
 * NEW:
    * New "Binary Image Compare" OCR
    * New subtitle formats
@@ -30,6 +30,7 @@
    * Faster switching from source view to list view in main window
    * Added read support for Cavena 890 and colors - thx Tiina
    * TextST: Can now duplicate a "Region style"
+   * OCR Window: "Unknown words" is now tab one in the "log tab control"
 * FIXED:
    * "Normal (remove formatting)" don't remove Unicode chars - thx Fotis
    * Fixed bug in spell check "word replace" - thx Sami
