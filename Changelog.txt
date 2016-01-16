@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.4.11 (16th January 2016) BETA
+3.4.11 (16th January 2016)
 * NEW:
    * New "Binary Image Compare" OCR
    * New subtitle formats
