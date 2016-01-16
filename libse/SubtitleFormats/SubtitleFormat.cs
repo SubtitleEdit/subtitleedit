@@ -398,5 +398,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
+        protected static TimeCode DecodeTimeCode(string[] parts)
+        {
+            if (parts == null || parts.Length < 4)
+                return null;
+
+            var hour = int.Parse(parts[0]);
+            var minutes = int.Parse(parts[1]);
+            var seconds = int.Parse(parts[2]);
+            var frames = int.Parse(parts[3]);
+            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
+        }
+
+        protected static TimeCode DecodeTimeCode(string part, char[] splitChars)
+        {
+            return DecodeTimeCode(part.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
+        }
     }
 }
