@@ -65,6 +65,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
+            char[] splitChars = { '.', ':' };
             foreach (string line in lines)
             {
                 string s = line.Trim();
@@ -74,7 +75,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var p = new Paragraph();
                     try
                     {
-                        p.StartTime = DecodeTimeCode(s.Substring(0, 11), new[] {'.', ':' });
+                        p.StartTime = DecodeTimeCode(s.Substring(0, 11), splitChars);
                         p.Text = GetText(line.Remove(0, 11));
                         subtitle.Paragraphs.Add(p);
                     }

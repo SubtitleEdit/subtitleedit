@@ -228,6 +228,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             xml.LoadXml(sb.ToString().Trim());
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            char[] splitChar = { ':' };
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//w:tr", nsmgr))
             {
                 try
@@ -236,7 +237,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     XmlNode t = node.SelectSingleNode("w:tc/w:p/w:r/w:t", nsmgr);
                     if (t != null)
                     {
-                        p.StartTime = GetTimeCode(t.InnerText);
+                        p.StartTime = DecodeTimeCode(t.InnerText.Trim(), splitChar);
                         sb = new StringBuilder();
                         foreach (XmlNode wrNode in node.SelectNodes("w:tc/w:p/w:r", nsmgr))
                         {
@@ -276,12 +277,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - 1;
             }
             subtitle.Renumber();
-        }
-
-        private static TimeCode GetTimeCode(string s)
-        {
-            var parts = s.Trim().Split(':');
-            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
         }
 
     }
