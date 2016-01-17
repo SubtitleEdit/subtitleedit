@@ -358,9 +358,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public static int FramesToMillisecondsMax999(double frames)
         {
             int ms = (int)Math.Round(frames * (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
-            if (ms > 999)
-                ms = 999;
-            return ms;
+            return Math.Min(ms, 999);
         }
 
         public virtual bool HasStyleSupport
@@ -398,16 +396,39 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        protected static TimeCode DecodeTimeCode(string[] parts)
+        protected static TimeCode DecodeTimeCode(string[] parts, bool msToMaxFrame = false)
         {
-            if (parts == null || parts.Length < 4)
-                return null;
+            if (parts == null)
+                return new TimeCode(0, 0, 0, 0);
 
-            var hour = int.Parse(parts[0]);
-            var minutes = int.Parse(parts[1]);
-            var seconds = int.Parse(parts[2]);
-            var frames = int.Parse(parts[3]);
-            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
+            int hour = 0;
+            int minutes = 0;
+            int seconds = 0;
+            int millisecondsFrames = 0;
+
+            if (parts.Length == 4)
+            {
+                hour = int.Parse(parts[0]);
+                minutes = int.Parse(parts[1]);
+                seconds = int.Parse(parts[2]);
+                millisecondsFrames = int.Parse(parts[3]);
+            }
+            else if (parts.Length == 3)
+            {
+                minutes = int.Parse(parts[0]);
+                seconds = int.Parse(parts[1]);
+                millisecondsFrames = int.Parse(parts[2]);
+            }
+            else if (parts.Length == 2)
+            {
+                seconds = int.Parse(parts[0]);
+                millisecondsFrames = int.Parse(parts[1]);
+            }
+
+            if (!msToMaxFrame)
+                return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(millisecondsFrames));
+
+            return new TimeCode(hour, minutes, seconds, MillisecondsToFramesMaxFrameRate(millisecondsFrames));
         }
 
         protected static TimeCode DecodeTimeCode(string part, char[] splitChars)

@@ -123,8 +123,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static double ParseTimeCode(string start)
         {
             string[] arr = start.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
-            var ts = new TimeSpan(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3]));
-            return ts.TotalMilliseconds;
+            return new TimeSpan(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3])).TotalMilliseconds;
         }
 
     }

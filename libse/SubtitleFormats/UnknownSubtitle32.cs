@@ -84,6 +84,7 @@ Sony,Sony DVD/UMD,1:85,16x9
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
+            char[] splitChars = { ':', ';', ',', '.' };
             foreach (string line in lines)
             {
                 string s = line.Trim();
@@ -97,8 +98,8 @@ Sony,Sony DVD/UMD,1:85,16x9
                     paragraph = new Paragraph();
                     try
                     {
-                        paragraph.StartTime = DecodeTimeCode(parts[1]);
-                        paragraph.EndTime = DecodeTimeCode(parts[2]);
+                        paragraph.StartTime = DecodeTimeCode(parts[1], splitChars);
+                        paragraph.EndTime = DecodeTimeCode(parts[2], splitChars);
                     }
                     catch
                     {
@@ -149,12 +150,6 @@ Sony,Sony DVD/UMD,1:85,16x9
         {
             //00:03:15.22 (last is frame)
             return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
-        }
-
-        private static TimeCode DecodeTimeCode(string timeCode)
-        {
-            string[] arr = timeCode.Split(new[] { ':', ';', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
         }
 
     }

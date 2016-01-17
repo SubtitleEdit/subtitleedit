@@ -103,6 +103,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var text = new StringBuilder();
             var header = new StringBuilder();
             Paragraph p = null;
+            char[] splitChars = { ':', 'F' };
             for (int i = 0; i < lines.Count; i++)
             {
                 string line = lines[i].Trim();
@@ -117,7 +118,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         try
                         {
-                            TimeCode start = DecodeTimeCode(timeParts[0]);
+                            TimeCode start = DecodeTimeCode(timeParts[0].Substring(0, 11), splitChars);
                             if (p != null && p.EndTime.TotalMilliseconds == 0)
                                 p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                             TimeCode end = new TimeCode(0, 0, 0, 0);
@@ -134,10 +135,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         try
                         {
-                            TimeCode start = DecodeTimeCode(timeParts[0]);
+                            TimeCode start = DecodeTimeCode(timeParts[0].Substring(0, 11), splitChars);
                             if (p != null && p.EndTime.TotalMilliseconds == 0)
                                 p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                            TimeCode end = DecodeTimeCode(timeParts[1]);
+                            TimeCode end = DecodeTimeCode(timeParts[1].Substring(0, 11), splitChars);
                             p = MakeTextParagraph(text, p, start, end);
                             subtitle.Paragraphs.Add(p);
                             text = new StringBuilder();
@@ -178,13 +179,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string EncodeTimeCode(TimeCode time)
         {
             return string.Format("{0:00}:{1:00}:{2:00}F{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
-        }
-
-        private static TimeCode DecodeTimeCode(string timePart)
-        {
-            string s = timePart.Substring(0, 11);
-            var parts = s.Split(new[] { ':', 'F' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
         }
 
     }

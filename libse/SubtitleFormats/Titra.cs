@@ -9,7 +9,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         //* 1 : 01:01:31:19 01:01:33:04 22c
         private static readonly Regex RegexTimeCodes = new Regex(@"^\* \d+ :\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t\d+c", RegexOptions.Compiled);
-        private int _maxMsDiv10;
 
         public override string Extension
         {
@@ -80,9 +79,9 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
             //00:03:15:22 00:03:23:10 This is line one.
             //This is line two.
             Paragraph p = null;
-            _maxMsDiv10 = 0;
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
+            char[] splitChar = { ':' };
             foreach (string line in lines)
             {
                 if (RegexTimeCodes.IsMatch(line))
@@ -93,8 +92,8 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
                         string start = arr[1];
                         string end = arr[2];
 
-                        string[] startParts = start.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                        string[] endParts = end.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] startParts = start.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
                         if (startParts.Length == 4 && endParts.Length == 4)
                         {
                             p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), string.Empty);
@@ -124,20 +123,6 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
             }
 
             subtitle.Renumber();
-        }
-
-        private TimeCode DecodeTimeCode(string[] parts)
-        {
-            //00:00:07:12
-            var hour = int.Parse(parts[0]);
-            var minutes = int.Parse(parts[1]);
-            var seconds = int.Parse(parts[2]);
-            var frames = int.Parse(parts[3]);
-
-            if (frames > _maxMsDiv10)
-                _maxMsDiv10 = frames;
-
-            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
     }

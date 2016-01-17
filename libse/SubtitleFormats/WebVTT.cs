@@ -137,8 +137,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     text = RemoveTag("rt", text);
                     text = RemoveTag("ruby", text);
                     text = RemoveTag("c", text);
-                    text = RemoveTag("span", text);
-                    p.Text = text;
+                    p.Text = RemoveTag("span", text);
                 }
             }
         }
