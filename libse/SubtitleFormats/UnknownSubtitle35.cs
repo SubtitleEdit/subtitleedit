@@ -56,17 +56,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString();
         }
 
-        private static TimeCode DecodeTimeCode(string timeCode)
-        {
-            string[] arr = timeCode.Split(new[] { ':', ';', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(0, 0, int.Parse(arr[0]), FramesToMillisecondsMax999(int.Parse(arr[1])));
-        }
-
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
             Paragraph p = null;
             var sb = new StringBuilder();
+            char[] splitChars = { ':', ';', ',', '.' };
             foreach (string line in lines)
             {
                 string s = line.Trim();
@@ -82,7 +77,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         sb = new StringBuilder();
                         string[] arr = s.Split('-');
                         if (arr.Length == 2)
-                            p = new Paragraph(DecodeTimeCode(arr[0]), DecodeTimeCode(arr[1]), string.Empty);
+                        {
+                            var parts1 = arr[0].Split(splitChars);
+                            var parts2 = arr[1].Split(splitChars);
+
+                            // parts1/2 most have length of 2
+                            if (parts1.Length + parts2.Length == 4)
+                            {
+                                p = new Paragraph(DecodeTimeCode(parts1), DecodeTimeCode(parts2), string.Empty);
+                            }
+                            else
+                            {
+                                p = new Paragraph(DecodeTimeCode(new[] { parts1[0], parts1[1] }), DecodeTimeCode(new[] { parts2[0], parts2[1] }), string.Empty);
+                            }
+                        }
                     }
                     catch
                     {

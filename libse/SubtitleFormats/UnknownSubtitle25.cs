@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class UnknownSubtitle25 : SubtitleFormat
     {
-
         //79.29 1.63
         private static readonly Regex RegexTimeCode1 = new Regex(@"^\d+.[0-9]{1,2} \d+.[0-9]{1,2}$", RegexOptions.Compiled);
         private static readonly Regex RegexTimeCode2 = new Regex(@"^\d+ \d+.[0-9]{1,2}$", RegexOptions.Compiled);
@@ -105,8 +104,8 @@ NOTE=
                 }
                 else if (!string.IsNullOrWhiteSpace(s))
                 {
-                    if (subtitle.Paragraphs.Count == 0 && (s.StartsWith("TITLE=") || s.StartsWith("TITLE=") || s.StartsWith("FILE=") || s.StartsWith("AUTHOR=") ||
-                                                            s.StartsWith("TYPE=VIDEO") || s.StartsWith("FORMAT=") || s.StartsWith("NOTE=")))
+                    if (subtitle.Paragraphs.Count == 0 && (s.StartsWith("TITLE=", StringComparison.Ordinal) || s.StartsWith("TITLE=", StringComparison.Ordinal) || s.StartsWith("FILE=", StringComparison.Ordinal) || s.StartsWith("AUTHOR=", StringComparison.Ordinal) ||
+                                                            s.StartsWith("TYPE=VIDEO") || s.StartsWith("FORMAT=", StringComparison.Ordinal) || s.StartsWith("NOTE=", StringComparison.Ordinal)))
                     {
                     }
                     else

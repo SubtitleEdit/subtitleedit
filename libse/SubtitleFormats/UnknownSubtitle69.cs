@@ -64,6 +64,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Paragraphs.Clear();
             var text = new StringBuilder();
             Paragraph p = null;
+            char[] splitChars = { ':', 'F' };
             for (int i = 0; i < lines.Count; i++)
             {
                 string line = lines[i].Trim();
@@ -82,8 +83,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             string start = timeParts[1];
                             string end = timeParts[2];
                             p = new Paragraph();
-                            p.StartTime = DecodeTimeCode(start);
-                            p.EndTime = DecodeTimeCode(end);
+                            p.StartTime = DecodeTimeCode(start.Substring(0, 11), splitChars);
+                            p.EndTime = DecodeTimeCode(end.Substring(0, 11), splitChars);
                             subtitle.Paragraphs.Add(p);
                             text = new StringBuilder();
                         }
@@ -103,13 +104,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (p != null)
                 p.Text = text.ToString().Trim();
             subtitle.Renumber();
-        }
-
-        private static TimeCode DecodeTimeCode(string timePart)
-        {
-            string s = timePart.Substring(0, 11);
-            var parts = s.Split(new[] { ':', 'F' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
         }
 
     }

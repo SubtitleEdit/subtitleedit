@@ -80,12 +80,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString();
         }
 
-        private static TimeCode DecodeTimeCode(string timeCode)
-        {
-            string[] arr = timeCode.Split(new[] { ':', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
-        }
-
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
@@ -116,8 +110,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (italic)
                                 text = "<i>" + text + "</i>";
                             sb.AppendLine(text);
-
-                            p = new Paragraph(DecodeTimeCode(arr[1]), DecodeTimeCode(arr[2]), string.Empty);
+                            char[] splitChars = { ',', '.', ':' };
+                            p = new Paragraph(DecodeTimeCode(arr[1], splitChars), DecodeTimeCode(arr[2], splitChars), string.Empty);
                         }
                     }
                     catch

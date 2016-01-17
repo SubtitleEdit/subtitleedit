@@ -99,20 +99,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private static TimeCode DecodeTimeCode(string[] parts)
-        {
-            //00:00:07:12
-            var hour = int.Parse(parts[0]);
-            var minutes = int.Parse(parts[1]);
-            var seconds = int.Parse(parts[2]);
-            var frames = int.Parse(parts[3]);
-
-            int milliseconds = (int)((1000 / Configuration.Settings.General.CurrentFrameRate) * frames);
-            if (milliseconds > 999)
-                milliseconds = 999;
-
-            return new TimeCode(hour, minutes, seconds, milliseconds);
-        }
-
     }
 }
