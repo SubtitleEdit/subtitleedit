@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public FindReplaceDialogHelper GetFindDialogHelper(int startLineIndex)
         {
-            return new FindReplaceDialogHelper(FindType, FindText, _regEx, string.Empty, 200, 300, startLineIndex);
+            return new FindReplaceDialogHelper(FindType, checkBoxWholeWord.Checked, FindText, _regEx, string.Empty, 200, 300, startLineIndex);
         }
 
         private void FormFindDialog_KeyDown(object sender, KeyEventArgs e)
@@ -147,6 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxFind.ContextMenu = null;
                 comboBoxFind.ContextMenu = null;
             }
+            checkBoxWholeWord.Enabled = !radioButtonRegEx.Checked;
         }
 
         internal void Initialize(string selectedText, FindReplaceDialogHelper findHelper)
@@ -175,6 +176,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (findHelper != null)
             {
                 FindType = findHelper.FindType;
+                checkBoxWholeWord.Checked = findHelper.MatchWholeWord;
+                checkBoxWholeWord.Enabled = FindType != FindType.RegEx;
             }
         }
 

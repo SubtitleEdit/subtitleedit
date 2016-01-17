@@ -3948,7 +3948,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _findHelper = findDialog.GetFindDialogHelper(_subtitleListViewIndex);
                 if (!string.IsNullOrWhiteSpace(_findHelper.FindText))
                 {
-                    Configuration.Settings.Tools.FindHistory.Insert(0, _findHelper.FindText);
+                    if (Configuration.Settings.Tools.FindHistory.Count == 0 || Configuration.Settings.Tools.FindHistory[0] != _findHelper.FindText)
+                        Configuration.Settings.Tools.FindHistory.Insert(0, _findHelper.FindText);
                 }
                 ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
                 if (tabControlSubtitle.SelectedIndex == TabControlListView)
@@ -11827,7 +11828,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _clearLastFindType = _findHelper.FindType;
                 _clearLastFindText = _findHelper.FindText;
             }
-            _findHelper = new FindReplaceDialogHelper(FindType.RegEx, string.Format(_language.DoubleWordsViaRegEx, regex), regex, string.Empty, 0, 0, _subtitleListViewIndex);
+            _findHelper = new FindReplaceDialogHelper(FindType.RegEx, false, string.Format(_language.DoubleWordsViaRegEx, regex), regex, string.Empty, 0, 0, _subtitleListViewIndex);
 
             ReloadFromSourceView();
             FindNext();
