@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Csv2 : SubtitleFormat
     {
-
         private const string Separator = ",";
 
         //1,01:00:10:03,01:00:15:25,I thought I should let my sister-in-law know.

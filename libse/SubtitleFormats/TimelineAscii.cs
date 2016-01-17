@@ -190,15 +190,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return list;
         }
 
-        private static TimeCode DecodeTimeCode(string[] parts)
-        {
-            int hours = int.Parse(parts[0]);
-            int minutes = int.Parse(parts[1]);
-            int seconds = int.Parse(parts[2]);
-            int frames = int.Parse(parts[3]);
-            return new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
-        }
-
         private Encoding GetEncodingFromLanguage(byte language)
         {
             if (language == 179) // Russian

@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class MacCaption : SubtitleFormat
     {
-
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
 
         public override string Extension
@@ -105,13 +104,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             Paragraph p = null;
             var header = new StringBuilder();
+            char[] splitChars = { ':', ';', ',' };
             foreach (string line in lines)
             {
                 string s = line.Trim();
 
-                if (s.StartsWith("//") || s.StartsWith("File Format=MacCaption_MCC") || s.StartsWith("UUID=") ||
+                if (s.StartsWith("//", StringComparison.Ordinal) || s.StartsWith("File Format=MacCaption_MCC", StringComparison.Ordinal) || s.StartsWith("UUID=", StringComparison.Ordinal) ||
                     s.StartsWith("Creation Program=") || s.StartsWith("Creation Date=") || s.StartsWith("Creation Time=") ||
-                    s.StartsWith("Code Rate=") || s.StartsWith("Time Code Rate=") || string.IsNullOrEmpty(s))
+                    s.StartsWith("Code Rate=", StringComparison.Ordinal) || s.StartsWith("Time Code Rate=", StringComparison.Ordinal) || string.IsNullOrEmpty(s))
                 {
                     header.AppendLine(line);
                 }
@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var match = RegexTimeCodes.Match(s);
                     if (match.Success)
                     {
-                        TimeCode startTime = ParseTimeCode(s.Substring(0, match.Length - 1));
+                        TimeCode startTime = DecodeTimeCode(s.Substring(0, match.Length - 1), splitChars);
                         string text = GetSccText(s.Substring(match.Index));
 
                         if (text == "942c 942c" || text == "942c")
@@ -211,17 +211,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     list.Add(sub.Substring(0, 2));
             }
             return list;
-        }
-
-        private static TimeCode ParseTimeCode(string start)
-        {
-            string[] arr = start.Split(new[] { ':', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-            int milliseconds = (int)((1000 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(arr[3]));
-            if (milliseconds > 999)
-                milliseconds = 999;
-
-            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), milliseconds);
         }
 
     }

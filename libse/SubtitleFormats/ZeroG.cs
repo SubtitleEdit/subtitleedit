@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class ZeroG : SubtitleFormat
     {
-
         public override string Extension
         {
             get { return ".zeg"; }

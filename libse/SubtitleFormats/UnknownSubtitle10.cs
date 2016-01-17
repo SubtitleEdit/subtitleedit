@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class UnknownSubtitle10 : SubtitleFormat
     {
-
         public override string Extension
         {
             get { return ".txt"; }

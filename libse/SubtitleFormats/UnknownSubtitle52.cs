@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-
     public class UnknownSubtitle52 : SubtitleFormat
     {
         //#00001    10:00:02.00 10:00:04.13 00:00:02.13 #F CC00000D0    #C
@@ -96,6 +95,7 @@ FILE_INFO_END";
             bool started = false;
             var header = new StringBuilder();
             var text = new StringBuilder();
+            char[] splitChar = { ':', ',', '.' };
             foreach (string line in lines)
             {
                 try
@@ -108,7 +108,7 @@ FILE_INFO_END";
                         text = new StringBuilder();
                         string start = line.Substring(7, 11);
                         string end = line.Substring(19, 11);
-                        p = new Paragraph(GetTimeCode(start), GetTimeCode(end), string.Empty);
+                        p = new Paragraph(DecodeTimeCode(start, splitChar), DecodeTimeCode(end, splitChar), string.Empty);
                         subtitle.Paragraphs.Add(p);
                     }
                     else if (!started)
@@ -134,14 +134,6 @@ FILE_INFO_END";
             subtitle.Header = header.ToString();
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
-        }
-
-        private static TimeCode GetTimeCode(string timeString)
-        {
-            string[] timeParts = timeString.Split(new[] { ':', ',', '.' });
-            int milliseconds = FramesToMillisecondsMax999(int.Parse(timeParts[3]));
-            var timeCode = new TimeCode(int.Parse(timeParts[0]), int.Parse(timeParts[1]), int.Parse(timeParts[2]), milliseconds);
-            return timeCode;
         }
 
     }

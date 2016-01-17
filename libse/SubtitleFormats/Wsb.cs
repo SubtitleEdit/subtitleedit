@@ -77,7 +77,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         string text = line.Substring(0, indexOfTen).Trim();
                         string time = line.Substring(indexOf7001 - 16, 16);
-                        p = new Paragraph(DecodeTimeCode(time.Substring(0, 8)), DecodeTimeCode(time.Substring(8)), text);
+
+                        var starTime = time.Substring(0, 8);
+                        var endTime = time.Substring(8);
+
+                        string[] startTimeParts = { starTime.Substring(0, 2), starTime.Substring(2, 2), starTime.Substring(4, 2), starTime.Substring(6, 2) };
+                        string[] endTimeParts = { starTime.Substring(0, 2), starTime.Substring(2, 2), starTime.Substring(4, 2), starTime.Substring(6, 2) };
+
+                        p = new Paragraph(DecodeTimeCode(startTimeParts), DecodeTimeCode(endTimeParts), text);
                         subtitle.Paragraphs.Add(p);
                     }
                     catch (Exception exception)
@@ -95,17 +102,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.Paragraphs.Add(p);
 
             subtitle.Renumber();
-        }
-
-        private static TimeCode DecodeTimeCode(string time)
-        {
-            //00:00:07:12
-            string hour = time.Substring(0, 2);
-            string minutes = time.Substring(2, 2);
-            string seconds = time.Substring(4, 2);
-            string frames = time.Substring(6, 2);
-
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
         }
 
     }

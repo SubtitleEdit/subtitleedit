@@ -129,6 +129,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(sb.ToString().Trim());
             string lastKey = string.Empty;
+            char[] splitChar = { ':' };
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("subtitle"))
             {
                 try
@@ -142,10 +143,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 p.Text = innerNode.InnerText.Replace("\\N", Environment.NewLine);
                                 break;
                             case "in":
-                                p.StartTime = DecodeTime(innerNode.InnerText);
+                                p.StartTime = DecodeTimeCode(innerNode.InnerText, splitChar);
                                 break;
                             case "out":
-                                p.EndTime = DecodeTime(innerNode.InnerText);
+                                p.EndTime = DecodeTimeCode(innerNode.InnerText, splitChar);
                                 break;
                         }
                     }
@@ -160,16 +161,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             subtitle.Renumber();
         }
-
-        private static TimeCode DecodeTime(string s)
-        {
-            var arr = s.Split(':');
-            if (arr.Length == 4)
-            {
-                return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
-            }
-            return new TimeCode(0, 0, 0, 0);
-        }
-
     }
 }

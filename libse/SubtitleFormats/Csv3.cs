@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Csv3 : SubtitleFormat
     {
-
         private const string Separator = ",";
 
         //01:00:10:03,01:00:15:25,"I thought I should let my sister-in-law know.", ""
@@ -94,6 +93,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            char[] splitChars = { '.', ':' };
             foreach (string line in lines)
             {
                 Match m = CsvLine.Match(line);
@@ -103,8 +103,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (parts.Length == 2)
                         try
                         {
-                            var start = DecodeTimeCode(parts[0]);
-                            var end = DecodeTimeCode(parts[1]);
+                            var start = DecodeTimeCode(parts[0], splitChars);
+                            var end = DecodeTimeCode(parts[1], splitChars);
                             string text = ReadText(line.Remove(0, m.Length));
                             var p = new Paragraph(start, end, text);
                             subtitle.Paragraphs.Add(p);
@@ -175,19 +175,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return sb.ToString().Trim();
-        }
-
-        private static TimeCode DecodeTimeCode(string part)
-        {
-            string[] parts = part.Split(new[] { '.', ':' }, StringSplitOptions.RemoveEmptyEntries);
-
-            //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
         }
 
     }

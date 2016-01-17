@@ -80,16 +80,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString();
         }
 
-        private static TimeCode DecodeTimeCode(string timeCode)
-        {
-            string[] arr = timeCode.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
-        }
-
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
             Paragraph p = null;
+            char[] splitChar = { ':' };
             foreach (string line in lines)
             {
                 string s = line.TrimEnd();
@@ -99,7 +94,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (p != null)
                             subtitle.Paragraphs.Add(p);
-                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11)), new TimeCode(0, 0, 0, 0), s.Remove(0, 37).Trim());
+                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11), splitChar), new TimeCode(0, 0, 0, 0), s.Remove(0, 37).Trim());
                     }
                     catch
                     {
@@ -113,7 +108,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (p != null)
                             subtitle.Paragraphs.Add(p);
-                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11)), new TimeCode(0, 0, 0, 0), string.Empty);
+                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11), splitChar), new TimeCode(0, 0, 0, 0), string.Empty);
                     }
                     catch
                     {
@@ -127,7 +122,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (p != null)
                         {
-                            p.EndTime = DecodeTimeCode(s.Substring(5, 11));
+                            p.EndTime = DecodeTimeCode(s.Substring(5, 11), splitChar);
                             if (string.IsNullOrWhiteSpace(p.Text))
                                 p.Text = s.Remove(0, 37).Trim();
                             else

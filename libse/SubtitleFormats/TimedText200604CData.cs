@@ -2,7 +2,6 @@
 {
     public class TimedText200604CData : TimedText200604
     {
-
         public TimedText200604CData()
         {
             UseCDataForParagraphText = true;
