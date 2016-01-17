@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public FindReplaceDialogHelper GetFindDialogHelper(int startLineIndex)
         {
-            return new FindReplaceDialogHelper(GetFindType(), textBoxFind.Text, _regEx, textBoxReplace.Text, _left, _top, startLineIndex);
+            return new FindReplaceDialogHelper(GetFindType(), false, textBoxFind.Text, _regEx, textBoxReplace.Text, _left, _top, startLineIndex);
         }
 
         private void FormReplaceDialog_KeyDown(object sender, KeyEventArgs e)
