@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (positionTop)
                     text = "}" + text;
 
-                sb.AppendLine(string.Format(writeFormat, text, Environment.NewLine, p.StartTime.ToHHMMSSPeriodFF(), p.EndTime.ToHHMMSSPeriodFF()));
+                sb.AppendLine(string.Format(writeFormat, text, Environment.NewLine, p.StartTime.ToHHMMSSFF(TimeCodeOutFormat.Period), p.EndTime.ToHHMMSSFF(TimeCodeOutFormat.Period)));
             }
             sb.AppendLine(@"*END*");
             sb.AppendLine(@"...........\...........");
