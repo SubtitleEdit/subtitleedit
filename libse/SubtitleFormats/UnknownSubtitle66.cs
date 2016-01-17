@@ -8,7 +8,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class UnknownSubtitle66 : SubtitleFormat
     {
-
         //   24       10:08:57:17   10:08:59:15       01:23
         //The question is,
         //
@@ -78,6 +77,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             bool expectStartTime = true;
             var p = new Paragraph();
             subtitle.Paragraphs.Clear();
+            char[] splitChar = { ':' };
             foreach (string line in lines)
             {
                 string s = line.Trim().Replace("*", string.Empty);
@@ -94,8 +94,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 subtitle.Paragraphs.Add(p);
                                 p = new Paragraph();
                             }
-                            p.StartTime = DecodeTimeCode(parts[1]);
-                            p.EndTime = DecodeTimeCode(parts[2]);
+                            p.StartTime = DecodeTimeCode(parts[1], splitChar);
+                            p.EndTime = DecodeTimeCode(parts[2], splitChar);
                             expectStartTime = false;
                         }
                         catch (Exception exception)
@@ -130,18 +130,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
-        }
-
-        private static TimeCode DecodeTimeCode(string part)
-        {
-            string[] parts = part.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
         }
 
     }

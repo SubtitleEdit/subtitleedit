@@ -124,8 +124,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string minutes = parts[1];
             string seconds = parts[2];
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), 0);
-            return tc;
+            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), 0);
         }
 
     }

@@ -61,12 +61,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString().ToRtf();
         }
 
-        private static TimeCode DecodeTimeCode(string timeCode)
-        {
-            string[] arr = timeCode.Split(new[] { ':', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
-        }
-
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
@@ -82,6 +76,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             lines = rtf.FromRtf().SplitToLines().ToList();
             _errorCount = 0;
             Paragraph p = null;
+            char[] splitChar = { ':', ';', ',' };
             foreach (string line in lines)
             {
                 string s = line.TrimEnd();
@@ -93,9 +88,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             subtitle.Paragraphs.Add(p);
                         string[] arr = s.Split('\t');
                         if (arr.Length > 2)
-                            p = new Paragraph(DecodeTimeCode(arr[1]), new TimeCode(0, 0, 0, 0), arr[2].Trim());
+                            p = new Paragraph(DecodeTimeCode(arr[1], splitChar), new TimeCode(0, 0, 0, 0), arr[2].Trim());
                         else
-                            p = new Paragraph(DecodeTimeCode(arr[1]), new TimeCode(0, 0, 0, 0), string.Empty);
+                            p = new Paragraph(DecodeTimeCode(arr[1], splitChar), new TimeCode(0, 0, 0, 0), string.Empty);
                     }
                     catch
                     {
@@ -103,7 +98,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         p = null;
                     }
                 }
-                else if (s.StartsWith("\t\t"))
+                else if (s.StartsWith("\t\t", StringComparison.Ordinal))
                 {
                     if (p != null)
                         p.Text = p.Text + Environment.NewLine + s.Trim();

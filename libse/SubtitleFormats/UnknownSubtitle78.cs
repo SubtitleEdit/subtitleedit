@@ -185,13 +185,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var xml = new XmlDocument { XmlResolver = null };
                 xml.LoadXml(xmlAsText);
-
+                char[] splitChar = { ':' };
                 foreach (XmlNode node in xml.DocumentElement.SelectNodes("TextSection/TextScreen"))
                 {
                     try
                     {
-                        var timeCodeIn = DecodeTimeCode(node.SelectSingleNode("TimeCodeIn").InnerText);
-                        var timeCodeOut = DecodeTimeCode(node.SelectSingleNode("TimeCodeOut").InnerText);
+                        var timeCodeIn = DecodeTimeCode(node.SelectSingleNode("TimeCodeIn").InnerText, splitChar);
+                        var timeCodeOut = DecodeTimeCode(node.SelectSingleNode("TimeCodeOut").InnerText, splitChar);
                         sb.Clear();
                         foreach (XmlNode textBlockNode in node.SelectNodes("TextBlock"))
                         {
@@ -213,17 +213,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 _errorCount++;
             }
         }
-
-        private static TimeCode DecodeTimeCode(string timeCode)
-        {
-            //00:00:07:12
-            var parts = timeCode.Split(':');
-            var hour = int.Parse(parts[0]);
-            var minutes = int.Parse(parts[1]);
-            var seconds = int.Parse(parts[2]);
-            var frames = int.Parse(parts[3]);
-            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
-        }
-
     }
 }

@@ -6,7 +6,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class UtxFrames : SubtitleFormat
     {
-
         public override string Extension
         {
             get { return ".utx"; }
