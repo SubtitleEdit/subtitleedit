@@ -344,7 +344,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static int MillisecondsToFramesMaxFrameRate(double milliseconds)
         {
-            int frames = (int)Math.Round(milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            int frames = MillisecondsToFrames(milliseconds);
             if (frames >= Configuration.Settings.General.CurrentFrameRate)
                 frames = (int)(Configuration.Settings.General.CurrentFrameRate - 0.01);
             return frames;
@@ -357,8 +357,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static int FramesToMillisecondsMax999(double frames)
         {
-            int ms = (int)Math.Round(frames * (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
-            return Math.Min(ms, 999);
+            return Math.Min(FramesToMilliseconds(frames), 999);
         }
 
         public virtual bool HasStyleSupport
