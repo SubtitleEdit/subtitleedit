@@ -381,7 +381,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             if (textCache.StartsWith('-') || textCache.Contains(Environment.NewLine + "-"))
             {
                 Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
-
                 if (prev == null || !HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
                 {
                     var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
@@ -452,12 +451,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         public static string FixDoubleGreaterThanHelper(string text)
         {
             string post = string.Empty;
-            if (text.Length > 3 && text[0] == '<' && text[2] == '>' && (text[1] == 'i' || text[1] == 'b' || text[1] == 'u'))
+            if (text.LineStartsWithHtmlTag(true, false))
             {
                 post += "<" + text[1] + ">";
                 text = text.Remove(0, 3).TrimStart();
             }
-            if (text.StartsWith("<font", StringComparison.OrdinalIgnoreCase))
+            if (text.LineStartsWithHtmlTag(false, true))
             {
                 var endIdx = text.IndexOf('>', 5);
                 if (endIdx >= 5 && endIdx < text.Length - 7)
