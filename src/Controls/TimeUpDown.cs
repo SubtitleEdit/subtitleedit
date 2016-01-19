@@ -157,13 +157,11 @@ namespace Nikse.SubtitleEdit.Controls
 
                         int minutes;
                         int.TryParse(times[1], out minutes);
-                        if (minutes > 59)
-                            minutes = 59;
+                        minutes = Math.Min(minutes, 59);
 
                         int seconds;
                         int.TryParse(times[2], out seconds);
-                        if (seconds > 59)
-                            seconds = 59;
+                        seconds = Math.Min(seconds, 59);
 
                         int milliSeconds;
                         int.TryParse(times[3].PadRight(3, '0'), out milliSeconds);
