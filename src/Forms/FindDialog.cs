@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
-                if (textBoxFind.Visible)
+                if (textBoxFind.Visible || !comboBoxFind.Visible)
                     return textBoxFind.Text;
                 return comboBoxFind.Text;
             }
