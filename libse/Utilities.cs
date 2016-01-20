@@ -774,14 +774,10 @@ namespace Nikse.SubtitleEdit.Core
         {
             if (optimalCharactersPerSecond < 2 || optimalCharactersPerSecond > 100)
                 optimalCharactersPerSecond = 14.7;
-            double duration = (HtmlUtil.RemoveHtmlTags(text, true).Length / optimalCharactersPerSecond) * TimeCode.BaseUnit;
 
-            if (duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
-                duration = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
-
-            if (duration > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                duration = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-
+            double duration = (RemoveNonDisplayChars(text).Length / optimalCharactersPerSecond) * TimeCode.BaseUnit;
+            duration = Math.Max(duration, Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds);
+            duration = Math.Min(duration, Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds);
             return duration;
         }
 
@@ -806,12 +802,14 @@ namespace Nikse.SubtitleEdit.Core
         {
             if (paragraph.Duration.TotalMilliseconds < 1)
                 return 999;
+            return RemoveNonDisplayChars(paragraph.Text).Length / paragraph.Duration.TotalSeconds;
+        }
 
+        public static string RemoveNonDisplayChars(string text)
+        {
             const string zeroWidthSpace = "\u200B";
             const string zeroWidthNoBreakSpace = "\uFEFF";
-
-            string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(zeroWidthSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
-            return s.Length / paragraph.Duration.TotalSeconds;
+            return HtmlUtil.RemoveHtmlTags(text, true).Replace(Environment.NewLine, string.Empty).Replace(zeroWidthSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
         }
 
         public static bool IsRunningOnMono()
