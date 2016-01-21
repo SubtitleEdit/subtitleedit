@@ -1792,14 +1792,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 int hours = int.Parse(highPart.Substring(0, 4));
                 int minutes = int.Parse(highPart.Substring(4, 2));
-                int second = int.Parse(lowPart.Substring(2, 2));
+                int seconds = int.Parse(lowPart.Substring(2, 2));
                 int frames = int.Parse(lowPart.Substring(4, 2));
 
-                int milliseconds = (int)((TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * frames);
-                if (milliseconds > 999)
-                    milliseconds = 999;
-
-                return new TimeCode(hours, minutes, second, milliseconds);
+                return new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
             }
             return new TimeCode(0, 0, 0, 0);
         }
