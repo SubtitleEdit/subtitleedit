@@ -316,6 +316,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelSingleLine.Text = string.Empty;
                 Text = Title;
                 timeUpDownStartTime.TimeCode = new TimeCode(0, 0, 0, 0);
+                timeUpDownStartTime.UseVideoOffset = true;
                 checkBoxAutoRepeatOn.Checked = Configuration.Settings.General.AutoRepeatOn;
                 comboBoxAutoRepeat.SelectedIndex = Configuration.Settings.General.AutoRepeatCount;
                 checkBoxAutoContinue.Checked = Configuration.Settings.General.AutoContinueOn;
@@ -2558,6 +2559,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     _subtitleListViewIndex = -1;
+                    Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
                     SetCurrentFormat(format);
                     _subtitleAlternateFileName = null;
                     if (LoadAlternateSubtitleFile(originalFileName))
@@ -3336,6 +3338,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelStartTimeWarning.Text = string.Empty;
             labelDurationWarning.Text = string.Empty;
 
+            Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
             _subtitle = new Subtitle(_subtitle.HistoryItems);
             _changeAlternateSubtitleToString = string.Empty;
             _changeSubtitleToString = string.Empty;

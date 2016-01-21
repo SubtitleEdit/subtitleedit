@@ -653,7 +653,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private static string GetDisplayTime(double seconds)
         {
-            TimeSpan ts = TimeSpan.FromSeconds(seconds);
+            TimeSpan ts = TimeSpan.FromSeconds(seconds + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
             if (ts.Minutes == 0 && ts.Hours == 0)
                 return ts.Seconds.ToString(CultureInfo.InvariantCulture);
             if (ts.Hours == 0)

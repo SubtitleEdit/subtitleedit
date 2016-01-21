@@ -1212,8 +1212,8 @@ namespace Nikse.SubtitleEdit.Controls
                 var pos = CurrentPosition;
                 if (pos > 1000000)
                     pos = 0;
-                var span = TimeCode.FromSeconds(pos);
-                var dur = TimeCode.FromSeconds(Duration);
+                var span = TimeCode.FromSeconds(pos + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
+                var dur = TimeCode.FromSeconds(Duration + Configuration.Settings.General.CurrentVideoOffsetInMs / TimeCode.BaseUnit);
 
                 _labelTimeCode.Text = string.Format("{0} / {1}", span.ToDisplayString(), dur.ToDisplayString());
 
