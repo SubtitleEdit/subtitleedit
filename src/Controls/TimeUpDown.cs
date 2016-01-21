@@ -20,6 +20,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         private bool _forceHHMMSSFF;
 
+        public bool UseVideoOffset { get; set; }
+
         private static char[] _splitChars;
 
         internal void ForceHHMMSSFF()
@@ -111,6 +113,10 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetTotalMilliseconds(double milliseconds)
         {
+            if (UseVideoOffset)
+            {
+                milliseconds += Configuration.Settings.General.CurrentVideoOffsetInMs;
+            }
             if (Mode == TimeMode.HHMMSSMS)
             {
                 if (milliseconds < 0)
@@ -167,8 +173,13 @@ namespace Nikse.SubtitleEdit.Controls
 
                         int milliSeconds;
                         int.TryParse(times[3].PadRight(3, '0'), out milliSeconds);
-
                         var tc = new TimeCode(hours, minutes, seconds, milliSeconds);
+
+                        if (UseVideoOffset)
+                        {
+                            tc.AddTime(-Configuration.Settings.General.CurrentVideoOffsetInMs);
+                        }
+
                         if (hours < 0 && tc.TotalMilliseconds > 0)
                             tc.TotalMilliseconds *= -1;
                         return tc;
@@ -198,7 +209,14 @@ namespace Nikse.SubtitleEdit.Controls
                             milliSeconds = Core.SubtitleFormats.SubtitleFormat.FramesToMillisecondsMax999(milliSeconds);
                         }
 
-                        return new TimeCode(hours, minutes, seconds, milliSeconds);
+                        var tc = new TimeCode(hours, minutes, seconds, milliSeconds);
+
+                        if (UseVideoOffset)
+                        {
+                            tc.AddTime(-Configuration.Settings.General.CurrentVideoOffsetInMs);
+                        }
+
+                        return tc;
                     }
                 }
                 return null;
@@ -211,19 +229,25 @@ namespace Nikse.SubtitleEdit.Controls
                     return;
                 }
 
+                var v = new TimeCode(value.TotalMilliseconds);
+                if (UseVideoOffset)
+                {
+                    v.AddTime(Configuration.Settings.General.CurrentVideoOffsetInMs);
+                }
+
                 if (Mode == TimeMode.HHMMSSMS)
                 {
-                    if (value.TotalMilliseconds < 0)
+                    if (v.TotalMilliseconds < 0)
                         maskedTextBox1.Mask = "-00:00:00.000";
                     else
                         maskedTextBox1.Mask = "00:00:00.000";
 
-                    maskedTextBox1.Text = value.ToString();
+                    maskedTextBox1.Text = v.ToString();
                 }
                 else
                 {
                     maskedTextBox1.Mask = "00:00:00:00";
-                    maskedTextBox1.Text = value.ToHHMMSSFF();
+                    maskedTextBox1.Text = v.ToHHMMSSFF();
                 }
             }
         }
