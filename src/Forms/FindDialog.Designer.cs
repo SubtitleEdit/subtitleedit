@@ -46,6 +46,7 @@
             this.textBoxFind.Name = "textBoxFind";
             this.textBoxFind.Size = new System.Drawing.Size(189, 21);
             this.textBoxFind.TabIndex = 0;
+            this.textBoxFind.TextChanged += new System.EventHandler(this.textBoxFind_TextChanged);
             this.textBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFind_KeyDown);
             // 
             // buttonFind
@@ -106,10 +107,11 @@
             // comboBoxFind
             // 
             this.comboBoxFind.FormattingEnabled = true;
-            this.comboBoxFind.Location = new System.Drawing.Point(12, 12);
+            this.comboBoxFind.Location = new System.Drawing.Point(12, 13);
             this.comboBoxFind.Name = "comboBoxFind";
             this.comboBoxFind.Size = new System.Drawing.Size(189, 21);
             this.comboBoxFind.TabIndex = 0;
+            this.comboBoxFind.TextChanged += new System.EventHandler(this.comboBoxFind_TextChanged);
             this.comboBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ComboBoxFind_KeyDown);
             // 
             // buttonCount
@@ -140,6 +142,7 @@
             this.checkBoxWholeWord.TabIndex = 4;
             this.checkBoxWholeWord.Text = "Whole word";
             this.checkBoxWholeWord.UseVisualStyleBackColor = true;
+            this.checkBoxWholeWord.CheckedChanged += new System.EventHandler(this.checkBoxWholeWord_CheckedChanged);
             // 
             // FindDialog
             // 

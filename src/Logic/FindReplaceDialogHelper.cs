@@ -8,8 +8,8 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public class FindReplaceDialogHelper
     {
-        private const string StartChars = " >-\"”“['‘`´¶(♪¿¡.…—\r\n\u2028";
-        private const string EndChars = " <-\"”“]'`´¶)♪,.!?:;…—\r\n\u2028";
+        private const string StartChars = " >-\"”“[]'‘`´¶(){}♪¿¡.…—\r\n\u2028";
+        private const string EndChars = " <-\"”“]'`´¶(){}♪,.!?:;…—\r\n\u2028";
         private readonly string _findText = string.Empty;
         private readonly string _replaceText = string.Empty;
         private Regex _regEx;

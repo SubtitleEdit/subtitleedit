@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
-                if (textBoxFind.Visible || !comboBoxFind.Visible)
+                if (Configuration.Settings.Tools.FindHistory.Count == 0)
                     return textBoxFind.Text;
                 return comboBoxFind.Text;
             }
@@ -148,6 +148,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxFind.ContextMenu = null;
             }
             checkBoxWholeWord.Enabled = !radioButtonRegEx.Checked;
+            labelCount.Text = string.Empty;
         }
 
         internal void Initialize(string selectedText, FindReplaceDialogHelper findHelper)
@@ -200,6 +201,21 @@ namespace Nikse.SubtitleEdit.Forms
             var count = GetFindDialogHelper(0).FindCount(_subtitle, checkBoxWholeWord.Checked);
             labelCount.ForeColor = count > 0 ? Color.Blue : Color.Red;
             labelCount.Text = count == 1 ? Configuration.Settings.Language.FindDialog.OneMatch : string.Format(Configuration.Settings.Language.FindDialog.XNumberOfMatches, count);
+        }
+
+        private void comboBoxFind_TextChanged(object sender, EventArgs e)
+        {
+            labelCount.Text = string.Empty;
+        }
+
+        private void textBoxFind_TextChanged(object sender, EventArgs e)
+        {
+            labelCount.Text = string.Empty;
+        }
+
+        private void checkBoxWholeWord_CheckedChanged(object sender, EventArgs e)
+        {
+            labelCount.Text = string.Empty;
         }
 
     }
