@@ -589,11 +589,18 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        private string GetDisplayTime(TimeCode timeCode)
+        {
+            if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
+                return new TimeCode(timeCode.TotalMilliseconds + Configuration.Settings.General.CurrentVideoOffsetInMs).ToDisplayString();
+            return timeCode.ToDisplayString();
+        }
+
         private void Add(Paragraph paragraph)
         {
             var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph, UseItemStyleForSubItems = false };
-            item.SubItems.Add(paragraph.StartTime.ToDisplayString());
-            item.SubItems.Add(paragraph.EndTime.ToDisplayString());
+            item.SubItems.Add(GetDisplayTime(paragraph.StartTime));
+            item.SubItems.Add(GetDisplayTime(paragraph.EndTime));
             item.SubItems.Add(paragraph.Duration.ToShortDisplayString());
             item.SubItems.Add(paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString));
             item.Font = SubtitleFontBold ? new Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold) : new Font(_subtitleFontName, SubtitleFontSize);
@@ -658,8 +665,8 @@ namespace Nikse.SubtitleEdit.Controls
             foreach (ListViewItem item in Items)
             {
                 if (item.Text == p.Number.ToString(CultureInfo.InvariantCulture) &&
-                    item.SubItems[ColumnIndexStart].Text == p.StartTime.ToDisplayString() &&
-                    item.SubItems[ColumnIndexEnd].Text == p.EndTime.ToDisplayString() &&
+                    item.SubItems[ColumnIndexStart].Text == GetDisplayTime(p.StartTime) &&
+                    item.SubItems[ColumnIndexEnd].Text == GetDisplayTime(p.EndTime) &&
                     item.SubItems[ColumnIndexText].Text == p.Text)
                 {
                     RestoreFirstVisibleIndex();
@@ -702,8 +709,8 @@ namespace Nikse.SubtitleEdit.Controls
             if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
-                item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToDisplayString();
-                item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToDisplayString();
+                item.SubItems[ColumnIndexStart].Text = GetDisplayTime(paragraph.StartTime);
+                item.SubItems[ColumnIndexEnd].Text = GetDisplayTime(paragraph.EndTime);
                 item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
                 item.SubItems[ColumnIndexText].Text = paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString);
             }
@@ -809,7 +816,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
-                item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToDisplayString();
+                item.SubItems[ColumnIndexEnd].Text = GetDisplayTime(paragraph.EndTime);
                 item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
             }
         }
@@ -834,8 +841,8 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         Paragraph p = subtitle.Paragraphs[i];
                         ListViewItem item = Items[i];
-                        item.SubItems[ColumnIndexStart].Text = p.StartTime.ToDisplayString();
-                        item.SubItems[ColumnIndexEnd].Text = p.EndTime.ToDisplayString();
+                        item.SubItems[ColumnIndexStart].Text = GetDisplayTime(p.StartTime);
+                        item.SubItems[ColumnIndexEnd].Text = GetDisplayTime(p.EndTime);
                         item.SubItems[ColumnIndexDuration].Text = p.Duration.ToShortDisplayString();
                     }
                 }
@@ -848,8 +855,8 @@ namespace Nikse.SubtitleEdit.Controls
             if (IsValidIndex(index))
             {
                 ListViewItem item = Items[index];
-                item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToDisplayString();
-                item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToDisplayString();
+                item.SubItems[ColumnIndexStart].Text = GetDisplayTime(paragraph.StartTime);
+                item.SubItems[ColumnIndexEnd].Text = GetDisplayTime(paragraph.EndTime);
                 item.SubItems[ColumnIndexDuration].Text = paragraph.Duration.ToShortDisplayString();
             }
         }
