@@ -172,11 +172,6 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        /// <summary>
-        /// Video offset in seconds
-        /// </summary>
-        public double Offset { get; set; }
-
         public bool IsSpectrogramAvailable
         {
             get

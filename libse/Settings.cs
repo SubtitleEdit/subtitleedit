@@ -549,6 +549,7 @@ namespace Nikse.SubtitleEdit.Core
         public DateTime LastCheckForUpdates { get; set; }
         public bool ShowProgress { get; set; }
         public bool ShowBetaStuff { get; set; }
+        public long CurrentVideoOffsetInMs { get; set; }
 
         public GeneralSettings()
         {

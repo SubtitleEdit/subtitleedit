@@ -3806,7 +3806,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             item.SubItems.Add(subItem);
 
             subItem = new ListViewItem.ListViewSubItem(item, paragraph.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
-            subItem.Font = new Font(_subtitleFontName, Font.Size);
+            try
+            {
+                subItem.Font = new Font(_subtitleFontName, Font.Size);
+            }
+            catch
+            {
+                subItem.Font = new Font(_subtitleFontName, Font.Size, FontStyle.Bold);
+            }
             item.SubItems.Add(subItem);
 
             subtitleListView1.Items.Add(item);

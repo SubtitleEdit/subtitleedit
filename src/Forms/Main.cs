@@ -13618,10 +13618,6 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                mediaPlayer.Offset = 0;
-                if (audioVisualizer != null)
-                    audioVisualizer.Offset = 0;
-
                 if (audioVisualizer.WavePeaks != null)
                 {
                     audioVisualizer.WavePeaks = null;
@@ -19602,16 +19598,18 @@ namespace Nikse.SubtitleEdit.Forms
             using (var form = new SetVideoOffset())
             {
                 form.VideoOffset = new TimeCode(10, 0, 0, 0);
-                if (mediaPlayer.Offset > 0.001)
-                    form.VideoOffset = TimeCode.FromSeconds(mediaPlayer.Offset);
+                if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0.001)
+                    form.VideoOffset = new TimeCode(Configuration.Settings.General.CurrentVideoOffsetInMs);
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    var offsetInSeconds = form.VideoOffset.TotalSeconds;
-                    if (form.FromCurrentVideoPosition)
-                        offsetInSeconds -= mediaPlayer.VideoPlayer.CurrentPosition;
-                    mediaPlayer.Offset = offsetInSeconds;
-                    if (audioVisualizer != null)
-                        audioVisualizer.Offset = offsetInSeconds;
+                    Configuration.Settings.General.CurrentVideoOffsetInMs = (long)(Math.Round(form.VideoOffset.TotalSeconds * 1000.0));
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    //var offsetInSeconds = form.VideoOffset.TotalSeconds;
+                    //if (form.FromCurrentVideoPosition)
+                    //    offsetInSeconds -= mediaPlayer.VideoPlayer.CurrentPosition;
+                    //mediaPlayer.Offset = offsetInSeconds;
+                    //if (audioVisualizer != null)
+                    //    audioVisualizer.Offset = offsetInSeconds;
                 }
             }
         }

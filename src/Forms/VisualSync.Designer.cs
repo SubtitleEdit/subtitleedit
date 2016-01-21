@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.MediaPlayerStart.FontSizeFactor = 1F;
             this.MediaPlayerStart.Location = new System.Drawing.Point(6, 34);
             this.MediaPlayerStart.Name = "MediaPlayerStart";
-            this.MediaPlayerStart.Offset = 0D;
+//            this.MediaPlayerStart.Offset = 0D;
             this.MediaPlayerStart.ShowFullscreenButton = true;
             this.MediaPlayerStart.ShowMuteButton = true;
             this.MediaPlayerStart.ShowStopButton = true;
@@ -219,7 +219,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.MediaPlayerEnd.FontSizeFactor = 1F;
             this.MediaPlayerEnd.Location = new System.Drawing.Point(6, 34);
             this.MediaPlayerEnd.Name = "MediaPlayerEnd";
-            this.MediaPlayerEnd.Offset = 0D;
+//            this.MediaPlayerEnd.Offset = 0D;
             this.MediaPlayerEnd.ShowFullscreenButton = true;
             this.MediaPlayerEnd.ShowMuteButton = true;
             this.MediaPlayerEnd.ShowStopButton = true;
