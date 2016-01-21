@@ -2656,7 +2656,6 @@
             this.audioVisualizer.Margin = new System.Windows.Forms.Padding(0);
             this.audioVisualizer.Name = "audioVisualizer";
             this.audioVisualizer.NewSelectionParagraph = null;
-            this.audioVisualizer.Offset = 0D;
             this.audioVisualizer.ParagraphColor = System.Drawing.Color.LimeGreen;
             this.audioVisualizer.SceneChanges = ((System.Collections.Generic.List<double>)(resources.GetObject("audioVisualizer.SceneChanges")));
             this.audioVisualizer.SelectedColor = System.Drawing.Color.Red;
@@ -4445,7 +4444,7 @@
             this.mediaPlayer.Location = new System.Drawing.Point(0, 0);
             this.mediaPlayer.Margin = new System.Windows.Forms.Padding(0);
             this.mediaPlayer.Name = "mediaPlayer";
-            this.mediaPlayer.Offset = 0D;
+//            this.mediaPlayer.Offset = 0D;
             this.mediaPlayer.ShowFullscreenButton = true;
             this.mediaPlayer.ShowMuteButton = true;
             this.mediaPlayer.ShowStopButton = true;

@@ -1177,8 +1177,7 @@ namespace Nikse.SubtitleEdit.Controls
             double percent = (mouseX * 100.0) / max;
             _pictureBoxProgressBar.Width = (int)(max * percent / 100.0);
 
-            double pos = percent * (Duration - Offset) / 100.0;
-            CurrentPosition = pos + Offset;
+            CurrentPosition = percent * Duration / 100.0;
         }
 
         private void PictureBoxProgressbarBackgroundMouseDown(object sender, MouseEventArgs e)
@@ -1285,7 +1284,6 @@ namespace Nikse.SubtitleEdit.Controls
             if (VideoPlayer != null)
             {
                 VideoPlayer.Pause();
-                CurrentPosition = Offset;
                 HideAllPauseImages();
                 _pictureBoxPlay.Visible = true;
                 RefreshProgressBar();
@@ -1356,11 +1354,6 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         /// <summary>
-        /// Video offset in seconds
-        /// </summary>
-        public double Offset { get; set; }
-
-        /// <summary>
         /// Current position in seconds
         /// </summary>
         public double CurrentPosition
@@ -1368,14 +1361,14 @@ namespace Nikse.SubtitleEdit.Controls
             get
             {
                 if (VideoPlayer != null)
-                    return VideoPlayer.CurrentPosition + Offset;
+                    return VideoPlayer.CurrentPosition;
                 return 0;
             }
             set
             {
                 if (VideoPlayer != null)
                 {
-                    VideoPlayer.CurrentPosition = value - Offset;
+                    VideoPlayer.CurrentPosition = value;
                 }
             }
         }
@@ -1388,7 +1381,7 @@ namespace Nikse.SubtitleEdit.Controls
             get
             {
                 if (VideoPlayer != null)
-                    return VideoPlayer.Duration + Offset;
+                    return VideoPlayer.Duration;
                 return 0;
             }
         }
