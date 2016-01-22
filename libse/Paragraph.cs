@@ -115,11 +115,8 @@ namespace Nikse.SubtitleEdit.Core
             if (StartTime.IsMaxTime)
                 return;
 
-            double seconds = StartTime.TimeSpan.TotalSeconds * factor + adjustmentInSeconds;
-            StartTime.TimeSpan = TimeSpan.FromSeconds(seconds);
-
-            seconds = EndTime.TimeSpan.TotalSeconds * factor + adjustmentInSeconds;
-            EndTime.TimeSpan = TimeSpan.FromSeconds(seconds);
+            StartTime.TotalMilliseconds = StartTime.TotalMilliseconds * factor + (adjustmentInSeconds * TimeCode.BaseUnit);
+            EndTime.TotalMilliseconds = EndTime.TotalMilliseconds * factor + (adjustmentInSeconds * TimeCode.BaseUnit);
         }
 
         public void CalculateFrameNumbersFromTimeCodes(double frameRate)
