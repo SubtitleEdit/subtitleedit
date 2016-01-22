@@ -269,30 +269,21 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == (Keys.Control | Keys.G))
             {
-                var isSubtitleListview1Active = true;
-                if (subtitleListView2 != null && subtitleListView2.Visible)
+                var subView = SubtitleListview1;
+                if (subtitleListView2 != null && subtitleListView2.Visible && !SubtitleListview1.Focused)
                 {
-                    var point = PointToClient(MousePosition);
-                    if (point.X >= subtitleListView2.Left && point.X <= subtitleListView2.Left + subtitleListView2.Width)
+                    var x = PointToClient(MousePosition).X;
+                    if (x >= subtitleListView2.Left && x <= subtitleListView2.Left + subtitleListView2.Width)
                     {
-                        isSubtitleListview1Active = false;
+                        subView = subtitleListView2;
                     }
                 }
                 using (var gotoForm = new GoToLine())
                 {
-                    gotoForm.Initialize(1, isSubtitleListview1Active ? _subtitle.Paragraphs.Count : _otherSubtitle.Paragraphs.Count);
+                    gotoForm.Initialize(1, subView.Items.Count);
                     if (gotoForm.ShowDialog() == DialogResult.OK)
                     {
-                        if (isSubtitleListview1Active)
-                        {
-                            SubtitleListview1.Items[gotoForm.LineNumber - 1].Selected = true;
-                            SubtitleListview1.EnsureVisible(gotoForm.LineNumber - 1);
-                        }
-                        else
-                        {
-                            subtitleListView2.Items[gotoForm.LineNumber - 1].Selected = true;
-                            subtitleListView2.EnsureVisible(gotoForm.LineNumber - 1);
-                        }
+                        subView.SelectIndexAndEnsureVisible(gotoForm.LineNumber - 1, true);
                     }
                 }
             }
