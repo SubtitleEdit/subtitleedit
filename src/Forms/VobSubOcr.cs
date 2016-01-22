@@ -306,6 +306,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _numericUpDownPixelsIsSpace = 6;
         private double _numericUpDownMaxErrorPct = 6;
         private int _ocrMethodIndex = 0;
+        private bool _autoBreakLines = false;
 
         private int _ocrMethodTesseract = 0;
         private int _ocrMethodImageCompare = 1;
@@ -1488,40 +1489,50 @@ namespace Nikse.SubtitleEdit.Forms
                 emphasis2 = Color.Transparent;
         }
 
-        private long GetSubtitleStartTimeMilliseconds(int index)
+        private void GetSubtitleTime(int index, out TimeCode start, out TimeCode end)
         {
             if (_mp4List != null)
-                return (long)(_mp4List[index].Start.TotalMilliseconds);
+            {
+                var item = _mp4List[index];
+                start = new TimeCode(item.Start.TotalMilliseconds);
+                end = new TimeCode(item.End.TotalMilliseconds);
+            }
             else if (_spList != null)
-                return (long)(_spList[index].StartTime.TotalMilliseconds);
+            {
+                var item = _spList[index];
+                start = new TimeCode(item.StartTime.TotalMilliseconds);
+                end = new TimeCode(item.StartTime.TotalMilliseconds + item.Picture.Delay.TotalMilliseconds);
+            }
             else if (_bdnXmlSubtitle != null)
-                return (long)_bdnXmlSubtitle.Paragraphs[index].StartTime.TotalMilliseconds;
+            {
+                var item = _bdnXmlSubtitle.Paragraphs[index];
+                start = new TimeCode(item.StartTime.TotalMilliseconds);
+                end = new TimeCode(item.EndTime.TotalMilliseconds);
+            }
             else if (_bluRaySubtitlesOriginal != null)
-                return (_bluRaySubtitles[index].StartTime + 45) / 90;
+            {
+                var item = _bluRaySubtitles[index];
+                start = new TimeCode((item.StartTime + 45) / 90.0);
+                end = new TimeCode((item.EndTime + 45) / 90.0);
+            }
             else if (_xSubList != null)
-                return (long)_xSubList[index].Start.TotalMilliseconds;
+            {
+                var item = _xSubList[index];
+                start = new TimeCode(item.Start.TotalMilliseconds);
+                end = new TimeCode(item.End.TotalMilliseconds);
+            }
             else if (_dvbSubtitles != null)
-                return (long)_dvbSubtitles[index].StartMilliseconds;
+            {
+                var item = _dvbSubtitles[index];
+                start = new TimeCode(item.StartMilliseconds);
+                end = new TimeCode(item.EndMilliseconds);
+            }
             else
-                return (long)_vobSubMergedPackist[index].StartTime.TotalMilliseconds;
-        }
-
-        private long GetSubtitleEndTimeMilliseconds(int index)
-        {
-            if (_mp4List != null)
-                return (long)(_mp4List[index].End.TotalMilliseconds);
-            else if (_spList != null)
-                return (long)(_spList[index].StartTime.TotalMilliseconds + _spList[index].Picture.Delay.TotalMilliseconds);
-            else if (_bdnXmlSubtitle != null)
-                return (long)_bdnXmlSubtitle.Paragraphs[index].EndTime.TotalMilliseconds;
-            else if (_bluRaySubtitlesOriginal != null)
-                return (_bluRaySubtitles[index].EndTime + 45) / 90;
-            else if (_xSubList != null)
-                return (long)_xSubList[index].End.TotalMilliseconds;
-            else if (_dvbSubtitles != null)
-                return (long)_dvbSubtitles[index].EndMilliseconds;
-            else
-                return (long)_vobSubMergedPackist[index].EndTime.TotalMilliseconds;
+            {
+                var item = _vobSubMergedPackist[index];
+                start = new TimeCode(item.StartTime.TotalMilliseconds);
+                end = new TimeCode(item.EndTime.TotalMilliseconds);
+            }
         }
 
         private int GetSubtitleCount()
@@ -1598,7 +1609,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static NOcrChar NOcrFindExpandedMatch(NikseBitmap nbmp, ImageSplitterItem targetItem, List<NOcrChar> nOcrChars)
         {
-            //            var nbmp = new NikseBitmap(parentBitmap);
             int w = targetItem.NikseBitmap.Width;
             foreach (NOcrChar oc in nOcrChars)
             {
@@ -4938,7 +4948,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_bluRaySubtitlesOriginal != null)
             {
-                numericUpDownMaxErrorPct.Value = (decimal)Configuration.Settings.VobSubOcr.BlurayAllowDifferenceInPercent;
+                var v = (decimal)Configuration.Settings.VobSubOcr.BlurayAllowDifferenceInPercent;
+                if (v >= numericUpDownMaxErrorPct.Minimum && v <= numericUpDownMaxErrorPct.Maximum)
+                {
+                    numericUpDownMaxErrorPct.Value = (decimal)Configuration.Settings.VobSubOcr.BlurayAllowDifferenceInPercent;
+                }
                 LoadBluRaySup();
                 bool hasForcedSubtitles = false;
                 foreach (var x in _bluRaySubtitlesOriginal)
@@ -5404,6 +5418,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonEditCharacterDatabase.Enabled = false;
             _fromMenuItem = false;
             _abort = false;
+            _autoBreakLines = checkBoxAutoBreakLines.Checked;
             listBoxUnknownWords.Items.Clear();
             int max = GetSubtitleCount();
 
@@ -5527,8 +5542,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var bmp = ShowSubtitleImage(i);
-            var startTime = new TimeCode(GetSubtitleStartTimeMilliseconds(i));
-            var endTime = new TimeCode(GetSubtitleEndTimeMilliseconds(i));
+            TimeCode startTime;
+            TimeCode endTime;
+            GetSubtitleTime(i, out startTime, out endTime);
             labelStatus.Text = string.Format("{0} / {1}: {2} - {3}", i + 1, max, startTime, endTime);
             progressBar1.Value = i + 1;
             labelStatus.Refresh();
@@ -5585,7 +5601,7 @@ namespace Nikse.SubtitleEdit.Forms
             text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
             // max allow 2 lines
-            if (checkBoxAutoBreakLines.Checked && text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
+            if (_autoBreakLines && text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
             {
                 text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                 text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
