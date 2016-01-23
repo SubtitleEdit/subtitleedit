@@ -29,11 +29,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > 0;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            throw new NotImplementedException();
-        }
-
         private static string ConvertJavaSpecialCharacters(string s)
         {
             if (s.Contains("&#"))

@@ -11,7 +11,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class PacUnicode : SubtitleFormat
     {
-
         public override string Extension
         {
             get { return ".fpc"; }
@@ -69,11 +68,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return false;
-        }
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
