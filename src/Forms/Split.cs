@@ -211,7 +211,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (Subtitle sub in _parts)
                 {
                     string fileName = Path.Combine(textBoxOutputFolder.Text, fileNameNoExt + ".Part" + number + format.Extension);
-                    string allText = sub.ToText(format);
+                    string allText = sub.ToText(format as IText);
                     if (File.Exists(fileName) && !overwrite)
                     {
                         if (MessageBox.Show(Configuration.Settings.Language.SplitSubtitle.OverwriteExistingFiles, "", MessageBoxButtons.YesNo) == DialogResult.No)

@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (format.IsFrameBased)
                                 part.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
-                            File.WriteAllText(fileName, part.ToText(format), _encoding);
+                            File.WriteAllText(fileName, part.ToText(format as IText), _encoding);
                         }
                         index++;
                     }
