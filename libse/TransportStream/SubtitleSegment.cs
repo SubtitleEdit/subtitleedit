@@ -1,6 +1,5 @@
 ﻿namespace Nikse.SubtitleEdit.Core.TransportStream
 {
-
     public class SubtitleSegment
     {
         public const int PageCompositionSegment = 0x10;

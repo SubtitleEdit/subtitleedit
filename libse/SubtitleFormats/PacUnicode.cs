@@ -11,7 +11,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class PacUnicode : SubtitleFormat
     {
-
         public override string Extension
         {
             get { return ".fpc"; }

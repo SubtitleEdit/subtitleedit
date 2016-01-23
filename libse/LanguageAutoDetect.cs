@@ -8,7 +8,6 @@ namespace Nikse.SubtitleEdit.Core
 {
     public static class LanguageAutoDetect
     {
-
         private static int GetCount(string text, params string[] words)
         {
             var options = RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture;
