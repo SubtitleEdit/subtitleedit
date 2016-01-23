@@ -2593,7 +2593,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     // Seungki end
 
-                    textBoxSource.Text = _subtitle.ToText(format);
+                    textBoxSource.Text = _subtitle.ToText(format as IText);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     if (SubtitleListview1.Items.Count > 0)
                         SubtitleListview1.Items[0].Selected = true;
@@ -2688,14 +2688,14 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (formatType == typeof(DCinemaSmpte2007))
                     {
-                        format.ToText(_subtitle, string.Empty);
+                        ((IText)format).ToText(_subtitle, string.Empty);
                         string errors = (format as DCinemaSmpte2007).Errors;
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     else if (formatType == typeof(DCinemaSmpte2010))
                     {
-                        format.ToText(_subtitle, string.Empty);
+                        ((IText)format).ToText(_subtitle, string.Empty);
                         string errors = (format as DCinemaSmpte2010).Errors;
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -2748,7 +2748,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowHideTextBasedFeatures(SubtitleFormat format)
         {
-            if (format != null && !format.IsTextBased)
+            if (format != null && !(format is IText))
             {
                 textBoxSource.Enabled = false;
             }
@@ -3121,7 +3121,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             try
             {
-                if (format != null && !format.IsTextBased)
+                if (format != null && !(format is IText))
                 {
                     if (format.GetType() == typeof(Ebu))
                     {
@@ -3130,7 +3130,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return DialogResult.OK;
                 }
 
-                string allText = _subtitle.ToText(format);
+                string allText = _subtitle.ToText(format as IText);
 
                 // Seungki begin
                 if (_splitDualSami && _subtitleAlternate != null)
@@ -3138,7 +3138,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var s = new Subtitle(_subtitle);
                     foreach (var p in _subtitleAlternate.Paragraphs)
                         s.Paragraphs.Add(p);
-                    allText = s.ToText(format);
+                    allText = s.ToText(format as IText);
                 }
                 // Seungki end
 
@@ -3245,7 +3245,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                string allText = _subtitleAlternate.ToText(format).Trim();
+                string allText = _subtitleAlternate.ToText(format as IText).Trim();
                 var currentEncoding = GetCurrentEncoding();
                 bool isUnicode = currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8;
                 if (!isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
@@ -3528,7 +3528,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
 
                     textBoxSource.TextChanged -= TextBoxSourceTextChanged;
-                    textBoxSource.Text = _subtitle.ToText(format);
+                    textBoxSource.Text = _subtitle.ToText(format as IText);
                     textBoxSource.TextChanged += TextBoxSourceTextChanged;
                     return;
                 }
@@ -4650,14 +4650,14 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (formatType == typeof(DCinemaSmpte2007))
                     {
-                        format.ToText(_subtitle, string.Empty);
+                        ((IText)format).ToText(_subtitle, string.Empty);
                         string errors = (format as DCinemaSmpte2007).Errors;
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     else if (formatType == typeof(DCinemaSmpte2010))
                     {
-                        format.ToText(_subtitle, string.Empty);
+                        ((IText)format).ToText(_subtitle, string.Empty);
                         string errors = (format as DCinemaSmpte2010).Errors;
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -14752,7 +14752,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                     else
                         _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
-                    rawText = _subtitle.ToText(format);
+                    rawText = _subtitle.ToText(format as IText);
                 }
 
                 string pluginResult = (string)mi.Invoke(pluginObject,
@@ -14817,7 +14817,7 @@ namespace Nikse.SubtitleEdit.Forms
             string currentText = string.Empty;
             if (_subtitle != null && _subtitle.Paragraphs.Count > 0)
             {
-                currentText = _subtitle.ToText(GetCurrentSubtitleFormat());
+                currentText = _subtitle.ToText(GetCurrentSubtitleFormat() as IText);
                 if (_textAutoSave == null)
                     _textAutoSave = _changeSubtitleToString;
                 if (!string.IsNullOrEmpty(_textAutoSave) && currentText.Trim() != _textAutoSave.Trim() && !string.IsNullOrWhiteSpace(currentText))
@@ -14844,7 +14844,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_subtitleAlternateFileName != null && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
-                string currentTextAlternate = _subtitleAlternate.ToText(GetCurrentSubtitleFormat());
+                string currentTextAlternate = _subtitleAlternate.ToText(GetCurrentSubtitleFormat() as IText);
                 if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                 {
                     if (_textAutoSaveOriginal == null)
@@ -16977,7 +16977,7 @@ namespace Nikse.SubtitleEdit.Forms
             selectedLines.Paragraphs.Clear();
             foreach (int index in SubtitleListview1.SelectedIndices)
                 selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
-            Clipboard.SetText(selectedLines.ToText(GetCurrentSubtitleFormat()));
+            Clipboard.SetText(selectedLines.ToText(GetCurrentSubtitleFormat() as IText));
         }
 
         public void PlayPause()
@@ -17212,7 +17212,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (tabControlSubtitle.SelectedIndex != TabControlSourceView && textBoxSource.Text.Trim().Length > 1)
             {
                 var currentFormat = GetCurrentSubtitleFormat();
-                if (currentFormat != null && !currentFormat.IsTextBased)
+                if (currentFormat != null && !(currentFormat is IText))
                     return;
 
                 SubtitleFormat format = new Subtitle().ReloadLoadSubtitle(textBoxSource.Lines.ToList(), null, currentFormat);
@@ -18630,7 +18630,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (saveFileDialog1.FilterIndex == index + 1)
                     {
-                        if (format.IsTextBased)
+                        if (format is IText)
                         {
                             // only allow current extension or ".txt"
                             string fileName = saveFileDialog1.FileName;
@@ -18643,7 +18643,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 fileName += format.Extension;
                             }
 
-                            string allText = newSub.ToText(format);
+                            string allText = newSub.ToText(format as IText);
                             File.WriteAllText(fileName, allText, GetCurrentEncoding());
                             ShowStatus(string.Format(_language.XLinesSavedAsY, newSub.Paragraphs.Count, fileName));
                             return;

@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             var l = Configuration.Settings.Language.SubStationAlphaStyles;
             Text = l.Title;
-//            groupBoxStyles.Text = l.Styles;
+            //            groupBoxStyles.Text = l.Styles;
             groupBoxProperties.Text = l.Properties;
             groupBoxFont.Text = l.Font;
             labelFontName.Text = l.FontName;
@@ -196,7 +196,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             else
                 format = new AdvancedSubStationAlpha();
             var sub = new Subtitle();
-            string text = format.ToText(sub, string.Empty);
+            string text = ((IText)format).ToText(sub, string.Empty);
             var lines = new List<string>();
             foreach (string line in text.SplitToLines())
                 lines.Add(line);
