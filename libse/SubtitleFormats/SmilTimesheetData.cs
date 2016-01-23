@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// http://wam.inrialpes.fr/timesheets/annotations/video.html
     /// </summary>
-    public class SmilTimesheetData : SubtitleFormat
+    public class SmilTimesheetData : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             string header =
 @"<!DOCTYPE html>

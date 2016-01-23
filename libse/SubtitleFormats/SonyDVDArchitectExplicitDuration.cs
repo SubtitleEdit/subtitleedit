@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class SonyDVDArchitectExplicitDuration : SubtitleFormat
+    public class SonyDVDArchitectExplicitDuration : SubtitleFormat, IText
     {
         private static readonly Regex regex = new Regex(@"^\d\d:\d\d:\d\d\.\d\d\d[ \t]+\d\d:\d\d:\d\d\.\d\d\d[ \t]+\d\d:\d\d:\d\d\.\d\d\d[ \t]+", RegexOptions.Compiled);
 
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
             const string writeFormat = "{0:00}:{1:00}:{2:00}.{3:000}\t{4:00}:{5:00}:{6:00}.{7:000}\t{8:00}:{9:00}:{10:00}.{11:000}\t{12}";

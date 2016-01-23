@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle19 : SubtitleFormat
+    public class UnknownSubtitle19 : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return TimeCode.FromSeconds(double.Parse(s));
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             //<Subtitle version="1.0" timeline="ee_disc1" name="Subtitle 1:" language="English" type="image">
             //  <Clip start="121.888" end="125.092" fileName="ee_disc1_subtitle_1/Subtitle_1.png" text="Hello.My name is Laura Knight-Jadcyzk" x="155" y="364" width="328" height="77"/>

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class AQTitle : SubtitleFormat
+    public class AQTitle : SubtitleFormat, IText
     {
         private enum ExpectingLine
         {
@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             //-->> 072058
             //<i>Meine Mutter und meine Schwester,

@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class GpacTtxt : SubtitleFormat
+    public class GpacTtxt : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > 0;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +

@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Spruce : SubtitleFormat
+    public class Spruce : SubtitleFormat, IText
     {
         private const string Italic = "^I";
         private const string Bold = "^B";
@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             const string Header = @"//Font select and font size
 $FontName       = Arial
