@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class SwiftText : SubtitleFormat
+    public class SwiftText : SubtitleFormat, IText
     {
         private enum ExpectingLine
         {
@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             //TIMEIN: 01:00:01:09   DURATION: 01:20 TIMEOUT: --:--:--:--
             //Broadcasting

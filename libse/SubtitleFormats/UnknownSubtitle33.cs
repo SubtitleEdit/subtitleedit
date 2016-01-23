@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle33 : SubtitleFormat
+    public class UnknownSubtitle33 : SubtitleFormat, IText
     {
 
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\:\d\d\:\d\d\s+\d+    ", RegexOptions.Compiled);
@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             //08:59:51  3    ON THE PANEL THIS WEEK WE HAVE EMILY LAWLER AND ZACH
             //08:59:54  4    GORCHOW, ALONG WITH RON DZWONKOWSKI.

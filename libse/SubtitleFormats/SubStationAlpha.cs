@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class SubStationAlpha : SubtitleFormat
+    public class SubStationAlpha : SubtitleFormat, IText
     {
         public string Errors { get; private set; }
 
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             const string header =
 @"[Script Info]

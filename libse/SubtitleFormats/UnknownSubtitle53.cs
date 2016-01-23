@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle53 : SubtitleFormat
+    public class UnknownSubtitle53 : SubtitleFormat, IText
     {
 
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\:\d\d\:\d\d\:\d\d [^ ]+", RegexOptions.Compiled);
@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             //10:56:54:12 FEATURING BRIAN LORENTE AND THE
             //10:56:59:18 USUAL SUSPECTS.

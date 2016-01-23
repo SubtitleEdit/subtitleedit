@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// .CHK subtitle file format - 128 bytes blocks, first byte in block is id (01==text)
     /// </summary>
-    public class Chk : SubtitleFormat
+    public class Chk : SubtitleFormat, IText
     {
         private readonly Encoding _codePage = Encoding.GetEncoding(850);
         // private string _languageId = "DEN"; // English
@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             return "Not implemented!";
         }

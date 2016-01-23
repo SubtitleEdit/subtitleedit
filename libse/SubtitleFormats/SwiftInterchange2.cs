@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class SwiftInterchange2 : SubtitleFormat
+    public class SwiftInterchange2 : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             string date = string.Format("{0:00}/{1:00}/{2}", DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year);
             const string header = @"# SWIFT INTERCHANGE FILE V2

@@ -7,7 +7,7 @@ using System.Xml;
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     //  - Mom, when you were my age&#13;what did you want to do?
-    public class FinalCutProXml : SubtitleFormat
+    public class FinalCutProXml : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return "TRUE";
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             int duration = 0;
             if (subtitle.Paragraphs.Count > 0)

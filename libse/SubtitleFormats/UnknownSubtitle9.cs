@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle9 : SubtitleFormat
+    public class UnknownSubtitle9 : SubtitleFormat, IText
     {
         //00:04:04.219
         //The city council of long beach
@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
             sb.AppendLine("<div id=\"transcript\">");
@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine("    <div id=\"transcriptPanel\">");
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("      <a class=\"caption\" starttime=\"{0}\" duration=\"{1}\">{2}</a>",((long)(Math.Round(p.StartTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture), ((long)(Math.Round(p.Duration.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture), p.Text.Replace(Environment.NewLine, "<br />")));
+                sb.AppendLine(string.Format("      <a class=\"caption\" starttime=\"{0}\" duration=\"{1}\">{2}</a>", ((long)(Math.Round(p.StartTime.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture), ((long)(Math.Round(p.Duration.TotalMilliseconds))).ToString(CultureInfo.InvariantCulture), p.Text.Replace(Environment.NewLine, "<br />")));
             }
             sb.AppendLine("    </div>");
             sb.AppendLine("  </div>");

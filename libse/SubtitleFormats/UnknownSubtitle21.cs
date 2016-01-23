@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle21 : SubtitleFormat
+    public class UnknownSubtitle21 : SubtitleFormat, IText
     {
         private static readonly Regex RegexTimeCode1 = new Regex(@"^\s*\d+\t\d\d:\d\d:\d\d;\d\d", RegexOptions.Compiled);
 
@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return string.Format("{0:00}:{1:00}:{2:00};{3:00}", tc.Hours, tc.Minutes, tc.Seconds, MillisecondsToFramesMaxFrameRate(tc.Milliseconds));
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
             sb.AppendLine("#\tAppearance\tCaption\t");

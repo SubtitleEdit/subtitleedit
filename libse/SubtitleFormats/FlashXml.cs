@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     //      <p begin="00:00:15.200" end="00:00:19.700"><![CDATA[<sub>Many other properties related to fonts, sizes, colors<br/>and list properties are in style.css file</sub>]]></p>
     // </div>
     //</tt>
-    public class FlashXml : SubtitleFormat
+    public class FlashXml : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +

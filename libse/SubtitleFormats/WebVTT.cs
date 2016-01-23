@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// http://www.whatwg.org/specs/web-apps/current-work/webvtt.html
     /// </summary>
-    public class WebVTT : SubtitleFormat
+    public class WebVTT : SubtitleFormat, IText
     {
 
         private static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             const string timeCodeFormatHours = "{0:00}:{1:00}:{2:00}.{3:000}"; // hh:mm:ss.cc
             const string paragraphWriteFormat = "{0} --> {1}{4}{2}{3}{4}";

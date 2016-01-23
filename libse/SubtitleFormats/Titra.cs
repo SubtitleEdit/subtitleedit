@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Titra : SubtitleFormat
+    public class Titra : SubtitleFormat, IText
     {
         //* 1 : 01:01:31:19 01:01:33:04 22c
         private static readonly Regex RegexTimeCodes = new Regex(@"^\* \d+ :\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t\d+c", RegexOptions.Compiled);
@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return (int)Math.Round(15.7 * durationSeconds);
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
             sb.AppendLine(@"TVS - TITRA FILM

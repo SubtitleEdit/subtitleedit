@@ -5,7 +5,7 @@ using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle16 : SubtitleFormat
+    public class UnknownSubtitle16 : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             var u52 = new UnknownSubtitle52();
             return u52.ToText(subtitle, title).ToRtf();

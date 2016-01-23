@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// SoftNi - http://www.softni.com/
     /// </summary>
-    public class SoftNicolonSub : SubtitleFormat
+    public class SoftNicolonSub : SubtitleFormat, IText
     {
         private static readonly Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d\\\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
             var lineSb = new StringBuilder();

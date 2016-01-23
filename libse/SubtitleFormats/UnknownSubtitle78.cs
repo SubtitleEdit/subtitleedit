@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    class UnknownSubtitle78 : SubtitleFormat
+    class UnknownSubtitle78 : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             const string xmpTemplate = @"<?xml version='1.0' encoding='utf-8'?>
 <Document version='1.0'>
