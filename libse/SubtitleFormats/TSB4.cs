@@ -27,11 +27,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > this._errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
-        }
-
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;

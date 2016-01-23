@@ -113,11 +113,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
-        }
-
         private static TimeCode DecodeTimestamp(string timeCode)
         {
             try

@@ -382,7 +382,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight)
                 {
-                    newline = encoding.GetString(new byte[] {0x8a, 0x8a, 0x0d, 0x0d }); // 0d==double height
+                    newline = encoding.GetString(new byte[] { 0x8a, 0x8a, 0x0d, 0x0d }); // 0d==double height
                 }
                 if (header.DisplayStandardCode == "0") // 0=Open subtitling
                 {
@@ -672,11 +672,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             return false;
-        }
-
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -1165,19 +1160,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                         else if (b == 0xd3 && header.CharacterCodeTableNumber == "00") // Latin
                         {
-                                sb.Append("©");
+                            sb.Append("©");
                         }
                         else if (b == 0xd4 && header.CharacterCodeTableNumber == "00") // Latin
                         {
-                                sb.Append("™");
+                            sb.Append("™");
                         }
                         else if (b == 0xd5 && header.CharacterCodeTableNumber == "00") // Latin
                         {
-                                sb.Append("♪");
+                            sb.Append("♪");
                         }
 
-                            //else if (b == 0xD0) // em-dash
-                            //    sb.Append('–');
+                        //else if (b == 0xD0) // em-dash
+                        //    sb.Append('–');
                         else if (b == textFieldTerminator)
                             break;
                         else if ((b >= 0x20 && b <= 0x7F) || b >= 0xA1 || header.LanguageCode == LanguageCodeChinese)
@@ -1232,14 +1227,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 list.Add(tti);
             }
             return list;
-        }
-
-        public override bool IsTextBased
-        {
-            get
-            {
-                return false;
-            }
         }
 
     }
