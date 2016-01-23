@@ -313,8 +313,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         abstract public bool IsMine(List<string> lines, string fileName);
 
-        abstract public string ToText(Subtitle subtitle, string title);
-
         abstract public void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName);
 
         public bool IsVobSubIndexFile
@@ -386,14 +384,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return result.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"").Trim();
-        }
-
-        public virtual bool IsTextBased
-        {
-            get
-            {
-                return true;
-            }
         }
 
         protected static TimeCode DecodeTimeCode(string[] parts, bool msToMaxFrame = false)
