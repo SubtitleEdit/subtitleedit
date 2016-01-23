@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle74 : SubtitleFormat
+    public class UnknownSubtitle74 : SubtitleFormat, IText
     {
         //07:02:27
         //>> GOOD MORNING AND WELCOME TO THE FALL 2014 COMMENCEMENT CEREMONY, A TIME TO RECOGNIZE OUR GRADUATING SENIORS.
@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             const string paragraphWriteFormat = "{0}\r\n{1}\r\n";
 

@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// MicroDVD with time codes...?
     /// </summary>
-    public class UnknownSubtitle11 : SubtitleFormat
+    public class UnknownSubtitle11 : SubtitleFormat, IText
     {
         private static readonly Regex RegexMicroDvdLine = new Regex(@"^\{-?\d+:\d+:\d+}\{-?\d+:\d+:\d+}.*$", RegexOptions.Compiled);
 
@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return string.Format("{0}:{1:00}:{2:00}", tc.Hours, tc.Minutes, tc.Seconds);
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)

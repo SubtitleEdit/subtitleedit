@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// YouTube "SubViewer" format... I think YouTube tried to add "SubViewer 2.0" support but instread they created their own format... nice ;)
     /// </summary>
-    public class YouTubeSbv : SubtitleFormat
+    public class YouTubeSbv : SubtitleFormat, IText
     {
         private enum ExpectingLine
         {
@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             const string paragraphWriteFormat = "{0},{1}\r\n{2}\r\n\r\n";
 

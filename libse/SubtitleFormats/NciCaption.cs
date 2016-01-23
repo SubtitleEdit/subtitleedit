@@ -65,11 +65,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not supported!";
-        }
-
         private static TimeCode DecodeTimeCode(byte[] buffer, int index)
         {
             int hour = buffer[index];

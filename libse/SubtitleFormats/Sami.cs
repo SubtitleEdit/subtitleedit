@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Sami : SubtitleFormat
+    public class Sami : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             string language = LanguageAutoDetect.AutoDetectLanguageName("en_US", subtitle);
             var ci = CultureInfo.GetCultureInfo(language.Replace("_", "-"));

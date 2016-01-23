@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// § 15.119 47 CFR Ch. I (10–1–10 Edition) (pdf)
     /// Maximum four lines + max 32 characters on each line
     /// </summary>
-    public class ScenaristClosedCaptions : SubtitleFormat
+    public class ScenaristClosedCaptions : SubtitleFormat, IText
     {
         public class SccPositionAndStyle
         {
@@ -678,7 +678,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return text;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
             sb.AppendLine("Scenarist_SCC V1.0");

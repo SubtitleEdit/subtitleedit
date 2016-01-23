@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class FinalCutProXmlGap : SubtitleFormat
+    public class FinalCutProXmlGap : SubtitleFormat, IText
     {
         public double FrameRate { get; set; }
 
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > 0;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             if (Configuration.Settings.General.CurrentFrameRate > 26)
                 FrameRate = 30;

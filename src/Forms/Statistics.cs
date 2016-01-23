@@ -117,7 +117,7 @@ https://github.com/SubtitleEdit/subtitleedit
             }
 
             var sb = new StringBuilder();
-            int sourceLength = _subtitle.ToText(_format).Length;
+            int sourceLength = _subtitle.ToText(_format as IText).Length;
             var allTextToLower = allText.ToString().ToLower();
 
             sb.AppendLine(string.Format(_l.NumberOfLinesX, _subtitle.Paragraphs.Count));

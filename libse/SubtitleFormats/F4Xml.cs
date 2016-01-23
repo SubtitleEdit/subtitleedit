@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public new string ToText(Subtitle subtitle, string title)
         {
             var xml = new XmlDocument();
             var template = @"<?xml version='1.0' encoding='utf-8' standalone='no'?>

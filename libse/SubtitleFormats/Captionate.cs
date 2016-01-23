@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Captionate : SubtitleFormat
+    public class Captionate : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > 0;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             const string xmlStructure = @"<captionate>
 <timeformat>hh:mm:ss:ff/30</timeformat>

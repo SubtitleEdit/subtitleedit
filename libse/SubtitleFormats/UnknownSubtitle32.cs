@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle32 : SubtitleFormat
+    public class UnknownSubtitle32 : SubtitleFormat, IText
     {
         //1:  02:25:07.24  02:25:10.19
         private static readonly Regex RegexTimeCode = new Regex(@"^\d+:\s+\d\d:\d\d:\d\d\.\d\d  \d\d:\d\d:\d\d\.\d\d$", RegexOptions.Compiled);
@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             string paragraphWriteFormat = string.Empty.PadLeft(5, ' ') + "{4}:  {0}  {1}{3}{2}{3}";
             var sb = new StringBuilder();

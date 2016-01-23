@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Oresme : SubtitleFormat
+    public class Oresme : SubtitleFormat, IText
     {
         //00:00:00:00{BC}{W2710}
         //10:00:00:15{Bottom}{Open Caption}{Center}{White}{Font Arial GVP Bold}
@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             const string format = "{0}{1}{2}";
             const string tags = "{Bottom}{Open Caption}{Center}{White}{Font Arial GVP Bold}";

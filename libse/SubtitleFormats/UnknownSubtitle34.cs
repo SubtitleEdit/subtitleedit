@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle34 : SubtitleFormat
+    public class UnknownSubtitle34 : SubtitleFormat, IText
     {
 
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\:\d\d\:\d\d\t[^ ]+", RegexOptions.Compiled);
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             //08:55:05  >>> WELCOME BACK.
             //08:59:49  """OFF THE RECORD"" STARTS RIGHT NOW."

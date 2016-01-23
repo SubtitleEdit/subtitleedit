@@ -32,11 +32,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            return "Not implemented";
-        }
-
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             //<I s="0.600" e="3.720" x="268" y="458" w="218" h="58" i="AYZ1.png" />
