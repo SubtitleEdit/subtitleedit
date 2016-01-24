@@ -1,6 +1,6 @@
 ;* Subtitle Edit - Installer script
 ;*
-;* Copyright (C) 2010-2015 XhmikosR
+;* Copyright (C) 2010-2016 XhmikosR
 ;*
 ;* This file is part of Subtitle Edit.
 ;*
@@ -22,8 +22,8 @@
 
 
 ; preprocessor checks
-#if VER < EncodeVer(5,5,6)
-  #error Update your Inno Setup version (5.5.6 or newer)
+#if VER < EncodeVer(5,5,8)
+  #error Update your Inno Setup version (5.5.8 or newer)
 #endif
 
 #ifndef UNICODE
@@ -31,7 +31,7 @@
 #endif
 
 
-#define app_copyright "Copyright © 2001-2015, Nikse"
+#define app_copyright "Copyright © 2001-2016, Nikse"
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
