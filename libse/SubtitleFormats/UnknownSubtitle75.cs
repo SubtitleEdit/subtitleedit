@@ -8,23 +8,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class UnknownSubtitle75 : SubtitleFormat
     {
 
-//BOSTA - English
-//REEL 1
-//0001:   124+12    127+12
-//Get going, you idiot!
-//0002:   139+13    143+07
-//They scorn it, but they don't
-//know its true value.
-//0003:   143+12    146+09
-//Move on, move on!
-//0004:   147+04    151+00
-//In 1943, it was one of a kind.
-//0005:   159+00    161+15
-//...
-//1083:  1575+05   1583+09
-//THE END IS THE BEGINNING
-//1084:  1918+12      0+00
-//END OF THE FILM
+        //BOSTA - English
+        //REEL 1
+        //0001:   124+12    127+12
+        //Get going, you idiot!
+        //0002:   139+13    143+07
+        //They scorn it, but they don't
+        //know its true value.
+        //0003:   143+12    146+09
+        //Move on, move on!
+        //0004:   147+04    151+00
+        //In 1943, it was one of a kind.
+        //0005:   159+00    161+15
+        //...
+        //1083:  1575+05   1583+09
+        //THE END IS THE BEGINNING
+        //1084:  1918+12      0+00
+        //END OF THE FILM
 
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\d\d:\s+\d+\+\d+\s+\d+\+\d+$", RegexOptions.Compiled);
 

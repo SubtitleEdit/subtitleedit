@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.VobSub;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Nikse.SubtitleEdit.Core.BluRaySup;
-using Nikse.SubtitleEdit.Core.VobSub;
 
 namespace Nikse.SubtitleEdit.Core.TransportStream
 {
@@ -20,8 +20,10 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         public long TotalNumberOfPrivateStream1Continuation0 { get; private set; }
         public List<int> SubtitlePacketIds { get; private set; }
         public List<Packet> SubtitlePackets { get; private set; }
+
         //        public List<Packet> ProgramAssociationTables { get; private set; }
         private Dictionary<int, List<DvbSubPes>> SubtitlesLookup { get; set; }
+
         private Dictionary<int, List<TransportStreamSubtitle>> DvbSubtitlesLookup { get; set; }
         public bool IsM2TransportStream { get; private set; }
         public ulong FirstVideoPts { get; private set; }

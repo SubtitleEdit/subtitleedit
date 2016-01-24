@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Forms;
+using System;
 using System.Reflection;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Forms;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic
 {

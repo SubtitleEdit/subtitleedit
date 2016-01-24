@@ -5588,7 +5588,6 @@ namespace Nikse.SubtitleEdit.Forms
             //}
             //Text = (ts / _elapseds.Count).ToString(); // display ms in win title bar
 
-
             _lastLine = text;
 
             text = text.Replace("<i>-</i>", "-");
@@ -7950,7 +7949,6 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.VobSubOcr.LastBinaryImageCompareDb = comboBoxCharacterDatabase.SelectedItem.ToString();
                 Configuration.Settings.VobSubOcr.LastBinaryImageSpellCheck = comboBoxDictionaries.SelectedItem.ToString();
             }
-
 
             if (_bluRaySubtitlesOriginal != null)
                 Configuration.Settings.VobSubOcr.BlurayAllowDifferenceInPercent = (double)numericUpDownMaxErrorPct.Value;

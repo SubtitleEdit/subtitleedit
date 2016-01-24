@@ -130,7 +130,6 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 if (!string.IsNullOrEmpty(p.MarginV) && Utilities.IsInteger(p.MarginV))
                     marginV = p.MarginV.PadLeft(4, '0');
 
-
                 string effect = "";
                 if (!string.IsNullOrEmpty(p.Effect))
                     effect = p.Effect;

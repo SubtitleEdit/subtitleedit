@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         }
 
         private int _volume = 75;
+
         public override int Volume
         {
             get

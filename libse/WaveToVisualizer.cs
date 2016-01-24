@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Core
         /// Size of sound data
         /// </summary>
         public uint DataChunkSize { get; private set; }
+
         public int DataStartPosition { get; private set; }
 
         public WaveHeader(Stream stream)
@@ -559,7 +560,7 @@ namespace Nikse.SubtitleEdit.Core
         private static int ReadValue16Bit(byte[] data, ref int index)
         {
             int result = (short)
-                ((data[index    ]     ) |
+                ((data[index]) |
                  (data[index + 1] << 8));
             index += 2;
             return result;
@@ -568,7 +569,7 @@ namespace Nikse.SubtitleEdit.Core
         private static int ReadValue24Bit(byte[] data, ref int index)
         {
             int result =
-                ((data[index    ] <<  8) |
+                ((data[index] << 8) |
                  (data[index + 1] << 16) |
                  (data[index + 2] << 24)) >> 8;
             index += 3;
@@ -578,8 +579,8 @@ namespace Nikse.SubtitleEdit.Core
         private static int ReadValue32Bit(byte[] data, ref int index)
         {
             int result =
-                (data[index    ]      ) |
-                (data[index + 1] <<  8) |
+                (data[index]) |
+                (data[index + 1] << 8) |
                 (data[index + 2] << 16) |
                 (data[index + 3] << 24);
             index += 4;
@@ -593,20 +594,20 @@ namespace Nikse.SubtitleEdit.Core
 
         private static void WriteValue16Bit(byte[] buffer, int offset, int value)
         {
-            buffer[offset    ] = (byte)value;
+            buffer[offset] = (byte)value;
             buffer[offset + 1] = (byte)(value >> 8);
         }
 
         private static void WriteValue24Bit(byte[] buffer, int offset, int value)
         {
-            buffer[offset    ] = (byte)value;
+            buffer[offset] = (byte)value;
             buffer[offset + 1] = (byte)(value >> 8);
             buffer[offset + 2] = (byte)(value >> 16);
         }
 
         private static void WriteValue32Bit(byte[] buffer, int offset, int value)
         {
-            buffer[offset    ] = (byte)value;
+            buffer[offset] = (byte)value;
             buffer[offset + 1] = (byte)(value >> 8);
             buffer[offset + 2] = (byte)(value >> 16);
             buffer[offset + 3] = (byte)(value >> 24);

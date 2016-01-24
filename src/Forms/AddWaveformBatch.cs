@@ -247,7 +247,6 @@ namespace Nikse.SubtitleEdit.Forms
                         Application.DoEvents();
                     }
 
-
                     // check for delay in matroska files
                     var audioTrackNames = new List<string>();
                     var mkvAudioTrackNumbers = new Dictionary<int, int>();

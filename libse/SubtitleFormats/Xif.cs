@@ -119,7 +119,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             globalFileInfoNode.Attributes["StopTime"].InnerText = lastTimeCode.ToHHMMSSFF();
             globalFileInfoNode.Attributes["NumberOfCaptions"].InnerText = subtitle.Paragraphs.Count.ToString(CultureInfo.InvariantCulture);
 
-
             var fileBodyNode = xml.DocumentElement.SelectSingleNode("FileBody");
             foreach (Paragraph p in subtitle.Paragraphs)
             {

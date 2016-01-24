@@ -153,7 +153,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private delegate int libvlc_video_set_spu(IntPtr mediaPlayer, int trackNumber);
         private libvlc_video_set_spu _libvlc_video_set_spu;
 
-
         //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         //public unsafe delegate void* LockEventHandler(void* opaque, void** plane);
 
@@ -238,7 +237,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private bool IsAllMethodsLoaded()
         {
             return _libvlc_new != null &&
-                //_libvlc_get_version != null &&
+                   //_libvlc_get_version != null &&
                    _libvlc_release != null &&
                    _libvlc_media_new_path != null &&
                    _libvlc_media_player_new_from_media != null &&
@@ -248,12 +247,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                    _libvlc_audio_set_volume != null &&
                    _libvlc_media_player_play != null &&
                    _libvlc_media_player_stop != null &&
-                //_libvlc_media_player_pause != null &&
+                   //_libvlc_media_player_pause != null &&
                    _libvlc_media_player_set_hwnd != null &&
                    _libvlc_media_player_is_playing != null &&
                    _libvlc_media_player_get_time != null &&
                    _libvlc_media_player_set_time != null &&
-                //_libvlc_media_player_get_fps != null &&
+                   //_libvlc_media_player_get_fps != null &&
                    _libvlc_media_player_get_state != null &&
                    _libvlc_media_player_get_length != null &&
                    _libvlc_media_player_release != null &&

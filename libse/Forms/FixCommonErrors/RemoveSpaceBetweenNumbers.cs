@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
-
-namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
+﻿namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class RemoveSpaceBetweenNumbers : IFixCommonError
     {

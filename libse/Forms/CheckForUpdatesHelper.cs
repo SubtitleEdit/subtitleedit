@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
         private int _successCount;
 
         public string Error { get; set; }
+
         public bool Done
         {
             get
@@ -25,6 +26,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 return _successCount == 1;
             }
         }
+
         public string LatestVersionNumber { get; set; }
         public string LatestChangeLog { get; set; }
 

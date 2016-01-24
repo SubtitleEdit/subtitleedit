@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.Dictionaries;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,6 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {

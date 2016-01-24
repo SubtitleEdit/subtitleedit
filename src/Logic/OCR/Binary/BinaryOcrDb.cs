@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                     if (bob.ExpandCount == 0)
                         System.Windows.Forms.MessageBox.Show("Ups, not expanded image in CompareImagesExpanded!");
                     bob.Save(gz);
-                    if (bob.ExpandedList.Count != bob.ExpandCount -1)
+                    if (bob.ExpandedList.Count != bob.ExpandCount - 1)
                     {
                         throw new Exception("BinaryOcrDb.Save: Expanded image should have " + (bob.ExpandCount - 1) + " sub images");
                     }
@@ -130,8 +130,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             int index;
             if (bob.ExpandCount > 0)
             {
-                if (bob.ExpandedList == null || bob.ExpandCount -1 != bob.ExpandedList.Count )
-                    throw new Exception("BinaryOcrDb.Add: There should be " + (bob.ExpandCount -1) + " sub image(s)");
+                if (bob.ExpandedList == null || bob.ExpandCount - 1 != bob.ExpandedList.Count)
+                    throw new Exception("BinaryOcrDb.Add: There should be " + (bob.ExpandCount - 1) + " sub image(s)");
 
                 if (bob.ExpandedList[0].Text != null)
                     throw new Exception("BinaryOcrDb.Add: sub image should have null text");
@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                     if (!allAlike)
                         CompareImagesExpanded.Add(bob);
                     else
-                       throw new Exception("BinaryOcrDb.Add: Expanded image already in db!");
+                        throw new Exception("BinaryOcrDb.Add: Expanded image already in db!");
                 }
             }
             else

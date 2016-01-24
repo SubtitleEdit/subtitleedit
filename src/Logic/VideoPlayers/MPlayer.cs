@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         }
 
         private float _volume;
+
         public override int Volume
         {
             get
@@ -55,6 +56,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         }
 
         private double _timePosition;
+
         public override double CurrentPosition
         {
             get

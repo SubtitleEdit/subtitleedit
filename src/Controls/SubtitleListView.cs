@@ -23,6 +23,7 @@ namespace Nikse.SubtitleEdit.Controls
         private Font _subtitleFont = new Font("Tahoma", 8.25F);
 
         private string _subtitleFontName = "Tahoma";
+
         public string SubtitleFontName
         {
             get { return _subtitleFontName; }
@@ -37,6 +38,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private bool _subtitleFontBold;
+
         public bool SubtitleFontBold
         {
             get { return _subtitleFontBold; }
@@ -51,6 +53,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private int _subtitleFontSize = 8;
+
         public int SubtitleFontSize
         {
             get { return _subtitleFontSize; }
