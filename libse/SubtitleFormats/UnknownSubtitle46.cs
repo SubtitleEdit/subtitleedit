@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle46 : SubtitleFormat
+    public class UnknownSubtitle46 : SubtitleFormat, IText
     {
         //7:00:01:27AM
         private static readonly Regex regexTimeCodesAM = new Regex(@"^\d\:\d\d\:\d\d\:\d\dAM", RegexOptions.Compiled);
@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             //OFF THE RECORD STARTS RIGHT NOW.   7:00:01:27AM
             //HERE IS THE RUNDOWN.               7:00:05:03AM

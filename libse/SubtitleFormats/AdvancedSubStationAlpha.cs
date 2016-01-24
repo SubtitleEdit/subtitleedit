@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class AdvancedSubStationAlpha : SubtitleFormat
+    public class AdvancedSubStationAlpha : SubtitleFormat, IText
     {
         public string Errors { get; private set; }
 
@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 SubtitleFormat format = new AdvancedSubStationAlpha();
                 var sub = new Subtitle();
-                string text = format.ToText(sub, string.Empty);
+                string text = ((IText)format).ToText(sub, string.Empty);
                 string[] lineArray = text.SplitToLines();
                 var lines = new List<string>();
                 foreach (string line in lineArray)
@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             string header = @"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.

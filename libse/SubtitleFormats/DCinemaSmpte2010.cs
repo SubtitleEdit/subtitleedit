@@ -8,7 +8,7 @@ using System.Xml.Schema;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class DCinemaSmpte2010 : SubtitleFormat
+    public class DCinemaSmpte2010 : SubtitleFormat, IText
     {
         //<?xml version="1.0" encoding="UTF-8"?>
         //<dcst:SubtitleReel xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcst="http://www.smpte-ra.org/schemas/428-7/2010/DCST">
@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return s;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             Errors = null;
             var ss = Configuration.Settings.SubtitleSettings;

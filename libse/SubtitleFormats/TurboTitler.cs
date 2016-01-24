@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class TurboTitler : SubtitleFormat
+    public class TurboTitler : SubtitleFormat, IText
     {
         private static Regex regexTimeCodes = new Regex(@"^\d:\d\d:\d\d\.\d\d,\d:\d\d:\d\d\.\d\d,NTP ", RegexOptions.Compiled);
 
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             //0:01:37.89,0:01:40.52,NTP You should come to the Drama Club, too.
             //0:01:40.52,0:01:43.77,NTP Yeah. The Drama Club is worried|that you haven't been coming.

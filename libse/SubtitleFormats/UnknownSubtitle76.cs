@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle76 : SubtitleFormat
+    public class UnknownSubtitle76 : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return Convert.ToInt64(Math.Round(time.TotalMilliseconds)).ToString(CultureInfo.InvariantCulture);
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             var xml = new XmlDocument();
             xml.LoadXml("<?xml version=\"1.0\" encoding=\"utf-8\" ?><timedtext></timedtext>");

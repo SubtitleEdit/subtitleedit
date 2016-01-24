@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     //We don't have sacred rock stars
     //that we put above others.
 
-    public class UnknownSubtitle50 : SubtitleFormat
+    public class UnknownSubtitle50 : SubtitleFormat, IText
     {
         private enum ExpectingLine
         {
@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             const string paragraphWriteFormat = "{0}-{1}\r\n{2}";
             var sb = new StringBuilder();

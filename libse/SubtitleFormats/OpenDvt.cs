@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class OpenDvt : SubtitleFormat
+    public class OpenDvt : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             var guid = new Guid().ToString();
             string xmlStructure =

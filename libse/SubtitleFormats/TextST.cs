@@ -1019,11 +1019,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            throw new NotImplementedException();
-        }
-
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             if (FileUtil.IsMpeg2PrivateStream2(fileName))

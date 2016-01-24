@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
     //00:02:20:16            ,           00:02:24:00           ,Gente di questo quartiere |Un gran festival!
 
-    public class UnknownSubtitle36 : SubtitleFormat
+    public class UnknownSubtitle36 : SubtitleFormat, IText
     {
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+           ,           \d+:\d+:\d+:\d+           ,.*$", RegexOptions.Compiled);
 
@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             const string paragraphWriteFormat = "{0}           ,           {1}           ,{2}\r\n";
             const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";

@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Xif : SubtitleFormat
+    public class Xif : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             const string xmpTemplate = @"<XIF version='1.0' filename='file:///filename.xif'>
   <FileHeader>

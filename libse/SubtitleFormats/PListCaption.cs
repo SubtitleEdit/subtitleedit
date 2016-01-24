@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// “Property Lists” (or “PLists” for short) is an xml format by Apple.
     /// </summary>
-    public class PListCaption : SubtitleFormat
+    public class PListCaption : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +

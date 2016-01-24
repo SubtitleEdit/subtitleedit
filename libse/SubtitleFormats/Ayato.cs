@@ -40,11 +40,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Save(string fileName, string videoFileName, Subtitle subtitle)
         {
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))

@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class UnknownSubtitle63 : SubtitleFormat
+    public class UnknownSubtitle63 : SubtitleFormat, IText
     {
         //3:       00:00:09:23 00:00:16:21 06:23
         //Alustame sellest...
@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             const string format = "{0}:       {1} {2} {3:00}:{4:00}";
             var sb = new StringBuilder();

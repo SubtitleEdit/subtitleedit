@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class F4Rtf : F4Text
+    public class F4Rtf : F4Text, IText
     {
         public override string Extension
         {
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public new string ToText(Subtitle subtitle, string title)
         {
             return ToF4Text(subtitle).ToRtf();
         }

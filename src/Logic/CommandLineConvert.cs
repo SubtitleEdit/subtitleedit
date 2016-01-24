@@ -584,7 +584,7 @@ namespace Nikse.SubtitleEdit.Logic
                 string outputFileName;
                 foreach (SubtitleFormat sf in formats)
                 {
-                    if (sf.IsTextBased && (sf.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase) || sf.Name.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase)))
+                    if (sf is IText && (sf.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase) || sf.Name.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase)))
                     {
                         targetFormatFound = true;
                         sf.BatchMode = true;
@@ -605,7 +605,7 @@ namespace Nikse.SubtitleEdit.Logic
                             Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
                             using (var file = new StreamWriter(outputFileName, false, outputEnc)) // open file with encoding
                             {
-                                file.Write(sub.ToText(sf));
+                                file.Write(sub.ToText(sf as IText));
                             } // save and close it
                         }
                         else if (targetEncoding == Encoding.UTF8 && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
@@ -613,14 +613,14 @@ namespace Nikse.SubtitleEdit.Logic
                             Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
                             using (var file = new StreamWriter(outputFileName, false, outputEnc)) // open file with encoding
                             {
-                                file.Write(sub.ToText(sf));
+                                file.Write(sub.ToText(sf as IText));
                             } // save and close it
                         }
                         else
                         {
                             try
                             {
-                                File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                                File.WriteAllText(outputFileName, sub.ToText(sf as IText), targetEncoding);
                             }
                             catch (Exception ex)
                             {
@@ -649,7 +649,7 @@ namespace Nikse.SubtitleEdit.Logic
                                     else
                                         s += "_" + className + format.Extension;
                                     outputFileName = FormatOutputFileNameForBatchConvert(s, sf.Extension, outputFolder, overwrite);
-                                    File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
+                                    File.WriteAllText(outputFileName, newSub.ToText(sf as IText), targetEncoding);
                                 }
                             }
                         }

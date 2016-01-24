@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     //  </Font>
     //</DCSubtitle>
 
-    public class DCSubtitle : SubtitleFormat
+    public class DCSubtitle : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return s;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             string languageEnglishName;
             try

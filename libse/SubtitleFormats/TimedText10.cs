@@ -10,7 +10,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class TimedText10 : SubtitleFormat
+    public class TimedText10 : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             XmlNode styleHead = null;
             if (subtitle.Header != null)

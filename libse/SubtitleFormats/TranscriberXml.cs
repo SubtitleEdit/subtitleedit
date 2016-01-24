@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// <summary>
     /// http://trans.sourceforge.net
     /// </summary>
-    public class TranscriberXml : SubtitleFormat
+    public class TranscriberXml : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > 0;
         }
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +

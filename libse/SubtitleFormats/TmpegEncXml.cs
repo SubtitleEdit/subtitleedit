@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     //    </SubtitleItem>
     //    ...
 
-    public class TmpegEncXml : SubtitleFormat
+    public class TmpegEncXml : SubtitleFormat, IText
     {
         public override string Extension
         {
@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     </Subtitle>
 </TMPGEncVMESubtitleTextFormat>";
 
-        public override string ToText(Subtitle subtitle, string title)
+        public string ToText(Subtitle subtitle, string title)
         {
             var xmlStructure = Layout.Replace('\'', '"');
 

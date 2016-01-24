@@ -225,8 +225,10 @@ namespace Nikse.SubtitleEdit.Core
         /// </summary>
         /// <param name="format">Format to output</param>
         /// <returns>Native format as text string</returns>
-        public string ToText(SubtitleFormat format)
+        public string ToText(IText format)
         {
+            if (format == null)
+                return "Not Supported!";
             return format.ToText(this, Path.GetFileNameWithoutExtension(FileName));
         }
 
