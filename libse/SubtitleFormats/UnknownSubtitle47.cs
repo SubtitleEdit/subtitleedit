@@ -9,6 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         //7:00:01:27AM
         private static Regex regexTimeCodes = new Regex(@"^\d\:\d\d\:\d\d\:\d\d\t", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".txt"; }

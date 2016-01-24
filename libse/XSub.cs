@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core
             var nibble_end = buf.Length * 2;
             var x = 0;
             var y = 0;
-            for (; ; )
+            for (;;)
             {
                 if (nibbleOffset >= nibble_end)
                     return -1;

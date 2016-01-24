@@ -1364,6 +1364,7 @@
 
                 //translation helper
                 public string AutoRepeat { get; set; }
+
                 public string AutoRepeatOn { get; set; }
                 public string AutoRepeatCount { get; set; }
                 public string AutoContinue { get; set; }
@@ -1383,6 +1384,7 @@
 
                 // create/adjust
                 public string InsertNewSubtitleAtVideoPosition { get; set; }
+
                 public string Auto { get; set; }
                 public string PlayFromJustBeforeText { get; set; }
                 public string Pause { get; set; }

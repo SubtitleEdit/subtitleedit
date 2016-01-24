@@ -42,7 +42,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //0 = Height (0=bottom, 5=middle, 9=top)
             //N or I or B = Normal or Italic or Bold
 
-
             const string paragraphWriteFormat = "SUB [{0} {1} {2}>{3}]{4}{5}";
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)

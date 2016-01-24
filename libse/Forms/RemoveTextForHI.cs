@@ -661,7 +661,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 text = "<i>" + text.Remove(0, removeText.Length).TrimStart(' ');
             }
 
-
             if (oldText != text)
             {
                 // insert spaces before "-"

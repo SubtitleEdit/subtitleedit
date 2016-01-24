@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         public interface IGetPacEncoding
         {
-            int GetPacEncoding(byte[] previewBuffer , string fileName);
+            int GetPacEncoding(byte[] previewBuffer, string fileName);
         }
 
         public static IGetPacEncoding GetPacEncodingImplementation;

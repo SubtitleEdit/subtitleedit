@@ -1,7 +1,7 @@
-﻿using System.IO;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core;
+using System.IO;
+using System.Text;
 
 namespace Test.Core
 {
@@ -33,7 +33,6 @@ namespace Test.Core
             var languageCode = GetLanguageCode("auto_detect_Danish.srt");
             Assert.AreEqual(languageCode, "da");
         }
-
 
     }
 }

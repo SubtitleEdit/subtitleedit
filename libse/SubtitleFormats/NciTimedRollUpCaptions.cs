@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Paragraph p = subtitle.Paragraphs[index];
                 p.Text = FixText(p.Text);
 
-                Paragraph next = subtitle.GetParagraphOrDefault(index+1);
+                Paragraph next = subtitle.GetParagraphOrDefault(index + 1);
                 if (next != null)
                 {
                     if (next.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds <= MaxDurationMs)

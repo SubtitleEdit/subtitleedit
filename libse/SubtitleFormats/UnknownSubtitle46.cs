@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //7:00:01:27AM
         private static readonly Regex regexTimeCodesAM = new Regex(@"^\d\:\d\d\:\d\d\:\d\dAM", RegexOptions.Compiled);
         private static readonly Regex regexTimeCodesPM = new Regex(@"^\d\:\d\d\:\d\d\:\d\dPM", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".pst"; }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
 using Nikse.SubtitleEdit.Core.TransportStream;
+using System.IO;
 
 namespace Test.Logic.TransportStream
 {
