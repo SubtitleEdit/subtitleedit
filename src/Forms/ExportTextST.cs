@@ -134,7 +134,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     count++;
                     var presentationSegmentNode = new TreeNode(string.Format("Segment {0}: {1} -- > {2}", count,
-                        new TimeCode(segment.StartPtsMilliseconds), new TimeCode(segment.EndPtsMilliseconds))) { Tag = segment };
+                        new TimeCode(segment.StartPtsMilliseconds), new TimeCode(segment.EndPtsMilliseconds)))
+                    { Tag = segment };
                     presentationSegmentsNode.Nodes.Add(presentationSegmentNode);
 
                     foreach (var subtitleRegion in segment.Regions)
@@ -708,7 +709,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void addFontSizeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var newContent = new TextST.SubtitleRegionContentChangeFontSize { FontSize = 45};
+            var newContent = new TextST.SubtitleRegionContentChangeFontSize { FontSize = 45 };
             AddSubtitleContent(newContent, newContent.Name);
         }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.MaterialExchangeFormat

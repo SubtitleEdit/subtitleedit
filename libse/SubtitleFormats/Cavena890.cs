@@ -717,7 +717,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 _languageIdLine2 = LanguageIdRussian;
             }
 
-
             // Chinese
             else if (_languageIdLine1 == LanguageIdChineseSimplified)
             {
@@ -729,7 +728,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 _languageIdLine1 = LanguageIdChineseTraditional;
                 _languageIdLine2 = LanguageIdChineseTraditional;
             }
-
 
             int i = 455;
             int lastNumber = -1;

@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private FormattingType[] _formattingTypes;
 
         private Encoding _screenScrapingEncoding;
+
         public Encoding ScreenScrapingEncoding
         {
             get { return _screenScrapingEncoding; }
@@ -309,7 +310,7 @@ namespace Nikse.SubtitleEdit.Forms
             string languagePair = (comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|" + (comboBoxTo.SelectedItem as ComboBoxItem).Value;
             bool romanji = languagePair.EndsWith("|romanji", StringComparison.InvariantCulture);
             if (romanji)
-                languagePair = (comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|ja" ;
+                languagePair = (comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|ja";
 
             input = PreTranslate(input.TrimEnd('|').Trim());
 

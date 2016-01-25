@@ -1,9 +1,9 @@
-﻿using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core;
 using System;
-using System.IO;
-using System.Windows.Forms;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {

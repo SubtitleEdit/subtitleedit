@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System.Collections.Generic;
 using System.Text;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {

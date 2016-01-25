@@ -1,11 +1,11 @@
-﻿using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Xml;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Test.Logic.SubtitleFormats
 {
@@ -151,7 +151,6 @@ Line 3";
             string expected = "Line 1" + Environment.NewLine + "Line 2" + Environment.NewLine + "Line 3";
             Assert.AreEqual(expected, actual);
         }
-
 
         [TestMethod]
         public void SrtKeepBlankLines()
@@ -614,8 +613,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             Assert.IsTrue(outSubtitle.Paragraphs[1].Text == subText);
         }
 
-        #endregion
-
+        #endregion Sami (.smi)
 
         #region Scenerist SCC
 
@@ -791,6 +789,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         #endregion All subtitle formats
 
         #region ToUtf8XmlString
+
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void ToUtf8XmlStringDefault()
@@ -823,7 +822,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             Assert.IsTrue(doc.InnerXml.Contains("ø"));
         }
 
-        #endregion
+        #endregion ToUtf8XmlString
 
     }
 }

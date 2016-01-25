@@ -1,11 +1,11 @@
 ﻿// Ripped from http://www.codeproject.com/KB/recipes/DetectEncoding.aspx
 
+using Nikse.SubtitleEdit.Core.DetectEncoding.Multilang;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using Nikse.SubtitleEdit.Core.DetectEncoding.Multilang;
 
 namespace Nikse.SubtitleEdit.Core.DetectEncoding
 {

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.ContainerFormats.Ebml;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Ebml;
 
 namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
 {

@@ -1,9 +1,7 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nikse.SubtitleEdit.Core.Forms;
-using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
-using Nikse.SubtitleEdit.Logic;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
+using System;
 
 namespace Test.Logic
 {

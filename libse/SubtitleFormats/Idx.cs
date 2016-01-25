@@ -122,10 +122,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     int.TryParse(parts[4], out milliseconds))
                 {
                     return new Paragraph
-                                {
-                                    StartTime = { TimeSpan = new TimeSpan(0, hours, minutes, seconds, milliseconds) },
-                                    Text = parts[6]
-                                };
+                    {
+                        StartTime = { TimeSpan = new TimeSpan(0, hours, minutes, seconds, milliseconds) },
+                        Text = parts[6]
+                    };
                 }
             }
             return null;

@@ -854,7 +854,8 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (first)
                                     {
                                         first = false;
-                                    } else
+                                    }
+                                    else
                                     {
                                         if (prev.EndTime.TotalMilliseconds >= p.StartTime.TotalMilliseconds)
                                             prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;

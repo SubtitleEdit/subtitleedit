@@ -109,6 +109,7 @@ namespace Nikse.SubtitleEdit.Controls
         public const double ZoomMinimum = 0.1;
         public const double ZoomMaximum = 2.5;
         private double _zoomFactor = 1.0; // 1.0=no zoom
+
         public double ZoomFactor
         {
             get
@@ -133,6 +134,7 @@ namespace Nikse.SubtitleEdit.Controls
         public const double VerticalZoomMinimum = 1.0;
         public const double VerticalZoomMaximum = 20.0;
         private double _verticalZoomFactor = 1.0; // 1.0=no zoom
+
         public double VerticalZoomFactor
         {
             get
@@ -181,6 +183,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private bool _showSpectrogram;
+
         public bool ShowSpectrogram
         {
             get
@@ -200,6 +203,7 @@ namespace Nikse.SubtitleEdit.Controls
         public bool AllowOverlap { get; set; }
 
         private bool _showWaveform;
+
         public bool ShowWaveform
         {
             get
@@ -217,6 +221,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         private double _startPositionSeconds;
+
         public double StartPositionSeconds
         {
             get

@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using System;
 using System.IO;
-using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 
 namespace Test.Logic.VideoFormats
 {

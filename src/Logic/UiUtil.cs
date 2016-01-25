@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
-using Nikse.SubtitleEdit.Controls;
+﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic
@@ -308,7 +308,6 @@ namespace Nikse.SubtitleEdit.Logic
             else if (control is Button)
                 control.Height = newHeight;
         }
-
 
         public static void InitializeSubtitleFont(Control control)
         {

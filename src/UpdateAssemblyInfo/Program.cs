@@ -110,22 +110,22 @@ namespace UpdateAssemblyInfo
                 return FullVersion.GetHashCode();
             }
 
-            public static bool operator == (VersionInfo vi1, VersionInfo vi2)
+            public static bool operator ==(VersionInfo vi1, VersionInfo vi2)
             {
                 return object.ReferenceEquals(vi2, null) ? object.ReferenceEquals(vi1, null) : vi2.Equals(vi1);
             }
 
-            public static bool operator != (VersionInfo vi1, VersionInfo vi2)
+            public static bool operator !=(VersionInfo vi1, VersionInfo vi2)
             {
                 return object.ReferenceEquals(vi2, null) ? !object.ReferenceEquals(vi1, null) : !vi2.Equals(vi1);
             }
 
-            public static bool operator > (VersionInfo vi1, VersionInfo vi2)
+            public static bool operator >(VersionInfo vi1, VersionInfo vi2)
             {
                 return object.ReferenceEquals(vi1, null) ? false : vi1.CompareTo(vi2) > 0;
             }
 
-            public static bool operator < (VersionInfo vi1, VersionInfo vi2)
+            public static bool operator <(VersionInfo vi1, VersionInfo vi2)
             {
                 return object.ReferenceEquals(vi2, null) ? false : vi2.CompareTo(vi1) > 0;
             }
@@ -257,7 +257,7 @@ namespace UpdateAssemblyInfo
                 }
                 else if (currentRepositoryVersion.RevisionGuid.Length == 0)
                 {
-                     // last resort when building from source tarball - unknown build number and revision guid
+                    // last resort when building from source tarball - unknown build number and revision guid
                     newVersion = GetTemplateVersion(seTemplateFileName);
                 }
                 else

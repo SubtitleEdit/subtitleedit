@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         double dBegin, dEnd;
                         if (!start.Contains(':') && Utilities.CountTagInText(start, '.') == 1 &&
                             !end.Contains(':') && Utilities.CountTagInText(end, '.') == 1 &&
-                            double.TryParse(start, NumberStyles.Float , CultureInfo.InvariantCulture, out dBegin) && double.TryParse(end, NumberStyles.Float, CultureInfo.InvariantCulture, out dEnd))
+                            double.TryParse(start, NumberStyles.Float, CultureInfo.InvariantCulture, out dBegin) && double.TryParse(end, NumberStyles.Float, CultureInfo.InvariantCulture, out dEnd))
                         {
                             subtitle.Paragraphs.Add(new Paragraph(text, dBegin * TimeCode.BaseUnit, dEnd * TimeCode.BaseUnit));
                         }

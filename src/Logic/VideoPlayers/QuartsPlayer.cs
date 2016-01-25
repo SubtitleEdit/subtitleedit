@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using QuartzTypeLib;
+using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using QuartzTypeLib;
-using System.ComponentModel;
 
 //http://msdn.microsoft.com/en-us/library/dd375454%28VS.85%29.aspx
 //http://msdn.microsoft.com/en-us/library/dd387928%28v=vs.85%29.aspx

@@ -443,7 +443,6 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonCustomUrl2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
                 buttonCustomUrl2.Visible = Configuration.Settings.VideoControls.CustomSearchUrl2.Length > 1;
 
-
                 if (fileName.Length > 0 && File.Exists(fileName))
                 {
                     OpenSubtitle(fileName, null);
@@ -1903,7 +1902,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-
                 if (format == null)
                 {
                     var cavena890 = new Cavena890();
@@ -2504,7 +2502,6 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-
 
                     // Try to use a generic subtitle format parser (guessing subtitle format)
                     try

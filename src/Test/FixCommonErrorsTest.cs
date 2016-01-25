@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Forms.FixCommonErrors;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms;
-using Nikse.SubtitleEdit.Core;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Test
 {
@@ -207,7 +207,6 @@ namespace Test
             }
         }
 
-
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void MergeShortLinesHearingImpaired()
@@ -221,8 +220,6 @@ namespace Test
             var result2 = Helper.FixShortLines(input2);
             Assert.AreEqual(result, expected); Assert.AreEqual(result2, expected2.Replace(Environment.NewLine, " "));
         }
-
-
 
         #endregion Merge short lines
 
@@ -488,7 +485,6 @@ namespace Test
             }
         }
 
-
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensDontCrash()
@@ -501,9 +497,6 @@ namespace Test
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, input);
             }
         }
-
-
-
 
         #endregion Fix Hyphens (add dash)
 
@@ -884,9 +877,6 @@ namespace Test
             }
         }
 
-
-
-
         #endregion Fix unneeded spaces
 
         #region Fix EmptyLines
@@ -915,8 +905,7 @@ namespace Test
             }
         }
 
-
-        #endregion
+        #endregion Fix EmptyLines
 
         #region Fix missing periods at end of line
 
@@ -941,7 +930,8 @@ namespace Test
             new FixMissingPeriodsAtEndOfLine().Fix(s, new EmptyFixCallback());
             Assert.AreEqual(s.Paragraphs[0].Text, "The house seemed desolate to me and");
         }
-        #endregion
+
+        #endregion Fix missing periods at end of line
 
         #region Start with uppercase after paragraph
 
@@ -1474,7 +1464,7 @@ namespace Test
             Assert.AreEqual(result4, expected4);
         }
 
-        #endregion
+        #endregion FixDoubleGreater
 
         #region Fix uppercase I inside words
 
@@ -1566,7 +1556,7 @@ namespace Test
             }
         }
 
-        #endregion
+        #endregion FixDoubleDash
 
         #region Start with upppercase after colon
 
@@ -1613,9 +1603,11 @@ namespace Test
                 Assert.AreEqual("John: <font color=\"#ffff80\">Hello world.</font>", _subtitle.Paragraphs[0].Text);
             }
         }
-        #endregion
+
+        #endregion Start with upppercase after colon
 
         #region Fix Music Notation
+
         [TestMethod]
         public void FixMusicNotation1()
         {
@@ -1649,9 +1641,11 @@ namespace Test
                 Assert.AreEqual(string.Format("{0} Hello world. {0}", Configuration.Settings.Tools.MusicSymbol), _subtitle.Paragraphs[0].Text);
             }
         }
-        #endregion
+
+        #endregion Fix Music Notation
 
         #region FixFrenchLApostrophe
+
         [TestMethod]
         public void FixFrenchLApostrophe1()
         {
@@ -1683,6 +1677,7 @@ namespace Test
             res = Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.FixFrenchLApostrophe(res, " l'", "Bye.");
             Assert.AreEqual("L'Axxxx and" + Environment.NewLine + "l'axxxx", res);
         }
-        #endregion
+
+        #endregion FixFrenchLApostrophe
     }
 }

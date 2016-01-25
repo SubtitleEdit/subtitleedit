@@ -177,8 +177,6 @@ namespace Nikse.SubtitleEdit.Core
             return string.Format("{0:0.0} gb", (float)fileSize / (1024 * 1024 * 1024));
         }
 
-
-
         /// <summary>
         /// Downloads the requested resource as a <see cref="String"/> using the configured <see cref="WebProxy"/>.
         /// </summary>
@@ -906,7 +904,6 @@ namespace Nikse.SubtitleEdit.Core
             sb.Append("|*.*");
             return sb.ToString();
         }
-
 
         public static bool IsValidRegex(string testPattern)
         {
