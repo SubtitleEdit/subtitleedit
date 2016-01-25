@@ -105,7 +105,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <VlcMediaPlayerNotFoundTitle>VLC multimedia irakurgailua ez da aurkitu</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>SubtitleEdit-ek VLC multimedia irakurgailua 1.1.x edo berriago behar du audio datuak ateratzeko.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Nahi duzu VLC multimedia irakurgailua webgunera joatea?</GoToVlcMediaPlayerHomePage>
-    <GeneratingPeakFile>Gailur agiria sortzen...</GeneratingPeakFile>
+    <GeneratingPeakFile>Uhinera sortzen...</GeneratingPeakFile>
     <GeneratingSpectrogram>Argilitza sortzen...</GeneratingSpectrogram>
     <ExtractingSeconds>Audioa ateratzen: {0:0.0} segundu</ExtractingSeconds>
     <ExtractingMinutes>Audioa ateratzen: {0}.{1:00} minutu</ExtractingMinutes>
@@ -217,6 +217,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Zehaztu abiadura ehunekotan</Title>
+    <TitleShort>Zehaztu abiadura</TitleShort>
     <Info>Aldatu azpidatzi abiadura ehunekotan</Info>
     <Custom>Norberea</Custom>
     <ToDropFrame>Framea erorira</ToDropFrame>
@@ -226,7 +227,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <Title>Egiaztatu eguneraketak</Title>
     <CheckingForUpdates>Eguneraketak egiaztatzen...</CheckingForUpdates>
     <CheckingForUpdatesFailedX>Eguneraketa egiaztatze hutsegitea: {0}</CheckingForUpdatesFailedX>
-    <CheckingForUpdatesNoneAvailable>Subtitle Edit-en azken bertsio erabiltzen ari zara :)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNoneAvailable>Subtitle Edit-en azken bertsioa erabiltzen ari zara :)</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Bertsio berria eskuragarri!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Joan jeisketa orrialdera</InstallUpdate>
     <NoUpdates>Ez eguneratu</NoUpdates>
@@ -365,6 +366,9 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <Import>Inportatu...</Import>
     <TextAndTimingInformation>Idazki eta denborapen argibideak</TextAndTimingInformation>
     <JustificationCode>Bazter kodea</JustificationCode>
+    <Teletext>Teletestua</Teletext>
+    <UseBox>Erabili kutxatila idazkiaren inguruan</UseBox>
+    <DoubleHeight>Erabili garaiera bikoitza idazkiarentzat</DoubleHeight>
     <Errors>Akatsak</Errors>
     <ErrorsX>Akatsak: {0}</ErrorsX>
     <MaxLengthError>{0} lerroka ({1}) geh luzera gainditzen du {2}: {3}</MaxLengthError>
@@ -1632,6 +1636,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <MusicSymbolsToReplace>Musika ikurrak ordezteko (tarte batez bananduta)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Zuzendu OCR akats arruntak - erabili baita ere kodegogor arauak</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Zuzendu erakuspen denbora laburrak - ahalbidetu hasiera denbora mugitzea</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Jauzi lehen urratsa (hautatu zuzenketa arauak)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Lasterteklak</Shortcuts>
     <Shortcut>Lasterteklak:</Shortcut>
     <Control>Ktrl</Control>
@@ -1671,6 +1676,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <WaveformSeekSilenceForward>Bilatu hurrengo isilunea</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Bilatu aurreko isilunea</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Gehitu idatzia hemen (hautapen berrirako)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>Gehitu idazkia hemen (hautapen berrirako gakotik)</WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>Irakurri hautapen berria</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Irakurri hautapenaren amaiera</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Irakurri lehenik hautaturiko azpidatzia</WaveformPlayFirstSelectedSubtitle>
