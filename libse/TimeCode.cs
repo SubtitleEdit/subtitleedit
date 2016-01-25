@@ -4,6 +4,12 @@ using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core
 {
+    public enum TimeCodeOutFormat
+    {
+        Colon,
+        Period
+    }
+
     public class TimeCode
     {
         public static readonly TimeCode MaxTime = new TimeCode(99, 59, 59, 999);
@@ -218,22 +224,24 @@ namespace Nikse.SubtitleEdit.Core
             return s;
         }
 
-        public string ToHHMMSSFF()
+        public string ToHHMMSSFF(TimeCodeOutFormat format = TimeCodeOutFormat.Colon)
         {
             var ts = TimeSpan;
-            var frames = Math.Round(ts.Milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
-            if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
-                return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds + 1, 0);
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
-        }
+            var frames = SubtitleFormat.MillisecondsToFramesOutDouble(ts.Milliseconds);
+            string timeCodeFormat = string.Empty;
 
-        public string ToHHMMSSPeriodFF()
-        {
-            var ts = TimeSpan;
-            var frames = Math.Round(ts.Milliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            switch (format)
+            {
+                case TimeCodeOutFormat.Colon:
+                    timeCodeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
+                    break;
+                case TimeCodeOutFormat.Period:
+                    timeCodeFormat = "{0:00}:{1:00}:{2:00}.{3:00}";
+                    break;
+            }
             if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
-                return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds + 1, 0);
-            return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
+                return string.Format(timeCodeFormat, ts.Hours, ts.Minutes, ts.Seconds + 1, 0);
+            return string.Format(timeCodeFormat, ts.Hours, ts.Minutes, ts.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
         }
 
         public string ToDisplayString()

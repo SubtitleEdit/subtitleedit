@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string MakeTimeCode(TimeCode timeCode)
         {
-            return timeCode.ToHHMMSSPeriodFF();
+            return timeCode.ToHHMMSSFF(TimeCodeOutFormat.Period);
         }
 
         private static TimeCode DecodeTimeCode(string timeCode)
