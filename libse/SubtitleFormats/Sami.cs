@@ -250,10 +250,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             var p = new Paragraph();
+            const string expectedChars = @"""'0123456789";
             while (syncStartPos >= 0)
             {
                 string millisecAsString = string.Empty;
-                while (index < allInput.Length && @"""'0123456789".Contains(allInput[index]))
+                while (index < allInput.Length && expectedChars.Contains(allInput[index]))
                 {
                     if (allInput[index] != '"' && allInput[index] != '\'')
                         millisecAsString += allInput[index];

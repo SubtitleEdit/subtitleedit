@@ -34,21 +34,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return time.ToHHMMSSFF();
         }
 
-        private static TimeCode DecodeTimeCode(string s)
-        {
-            var parts = s.Split(new[] { ':', ';' }, StringSplitOptions.RemoveEmptyEntries);
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-
-            int milliseconds = (int)Math.Round(((TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames)));
-            if (milliseconds > 999)
-                milliseconds = 999;
-
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
-        }
-
         public override string ToText(Subtitle subtitle, string title)
         {
             //<TitlerData>
@@ -164,6 +149,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return;
             }
 
+            char[] splitChars = { ':', ';' };
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("Data"))
             {
                 try
@@ -173,7 +159,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         string text = node.Attributes.GetNamedItem("Title").InnerText.Trim();
                         string start = node.Attributes.GetNamedItem("StartTimecode").InnerText;
                         string end = node.Attributes.GetNamedItem("EndTimecode").InnerText;
-                        subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text));
+                        subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start, splitChars), DecodeTimeCode(end, splitChars), text));
                     }
                 }
                 catch (Exception ex)
