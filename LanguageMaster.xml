@@ -1489,10 +1489,10 @@ can edit in same subtitle file (collaboration)</Information>
     <MaxVolume>Volume must be below</MaxVolume>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
-    <Title>Set minimum display time between subtitles</Title>
+    <Title>Set minimum display time between paragraphs</Title>
     <PreviewLinesModifiedX>Preview - subtitles modified: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Show only modified lines</ShowOnlyModifiedLines>
-    <MinimumMillisecondsBetweenParagraphs>Minimum milliseconds between lines</MinimumMillisecondsBetweenParagraphs>
+    <MinimumMillisecondsBetweenParagraphs>Minimum milliseconds between paragraphs</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Frame rate info</FrameInfo>
     <OneFrameXisYMilliseconds>One frame at {0:0.00} fps is {1} milliseconds</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>

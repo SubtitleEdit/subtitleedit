@@ -16,7 +16,6 @@ namespace Nikse.SubtitleEdit.Core
     /// </remarks>
     public static class RichTextToPlainText
     {
-
         public static IRtfTextConverter NativeRtfTextConverter { get; set; }
 
         private class StackEntry

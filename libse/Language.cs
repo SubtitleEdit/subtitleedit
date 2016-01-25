@@ -1762,9 +1762,9 @@ can edit in same subtitle file (collaboration)",
 
             SetMinimumDisplayTimeBetweenParagraphs = new LanguageStructure.SetMinimumDisplayTimeBetweenParagraphs
             {
-                Title = "Set minimum display time between subtitles",
+                Title = "Set minimum display time between paragraphs",
                 PreviewLinesModifiedX = "Preview - subtitles modified: {0}",
-                MinimumMillisecondsBetweenParagraphs = "Minimum milliseconds between lines",
+                MinimumMillisecondsBetweenParagraphs = "Minimum milliseconds between paragraphs",
                 ShowOnlyModifiedLines = "Show only modified lines",
                 FrameInfo = "Frame rate info",
                 OneFrameXisYMilliseconds = "One frame at {0:0.00} fps is {1} milliseconds",
