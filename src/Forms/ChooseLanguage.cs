@@ -15,12 +15,14 @@ namespace Nikse.SubtitleEdit.Forms
         private class TranslationInfo : IEquatable<TranslationInfo>
         {
             private readonly string _cultureName;
+
             public string CultureName
             {
                 get { return _cultureName; }
             }
 
             private readonly string _displayName;
+
             public string DisplayName
             {
                 get { return _displayName; }

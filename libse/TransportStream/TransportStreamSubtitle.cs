@@ -5,6 +5,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
     public class TransportStreamSubtitle
     {
         private ulong _startMilliseconds;
+
         public ulong StartMilliseconds
         {
             get
@@ -20,6 +21,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
         }
 
         private ulong _endMilliseconds;
+
         public ulong EndMilliseconds
         {
             get

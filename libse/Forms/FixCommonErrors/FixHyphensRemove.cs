@@ -1,5 +1,4 @@
-﻿
-namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
+﻿namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixHyphensRemove : IFixCommonError
     {

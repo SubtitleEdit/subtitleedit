@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -6,9 +9,6 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             var l = Configuration.Settings.Language.SubStationAlphaStyles;
             Text = l.Title;
-//            groupBoxStyles.Text = l.Styles;
+            // groupBoxStyles.Text = l.Styles;
             groupBoxProperties.Text = l.Properties;
             groupBoxFont.Text = l.Font;
             labelFontName.Text = l.FontName;

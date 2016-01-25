@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.VobSub;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
-using Nikse.SubtitleEdit.Core.VobSub;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -1098,7 +1098,7 @@ namespace Nikse.SubtitleEdit.Core
 
             var pixels = new byte[_bitmapData.Length];
             int offsetDest = 0;
-            for (int y = Height-1; y >= 0; y--) // takes lines from bottom lines to top (mirrowed horizontally)
+            for (int y = Height - 1; y >= 0; y--) // takes lines from bottom lines to top (mirrowed horizontally)
             {
                 for (int x = 0; x < Width; x++)
                 {

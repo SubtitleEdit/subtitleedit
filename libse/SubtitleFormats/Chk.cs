@@ -148,7 +148,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Remove(0, 5);
             }
 
-
             // special language codes...
             text = text.Replace("ÔA", "Á");
             text = text.Replace("ÔE", "É");

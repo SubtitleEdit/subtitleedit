@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
         public bool FromCurrentVideoPosition { get; set; }
 
         private TimeCode _videoOffset = new TimeCode(0);
+
         public TimeCode VideoOffset
         {
             get

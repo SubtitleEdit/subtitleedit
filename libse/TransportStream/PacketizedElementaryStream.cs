@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                     return;
             }
 
-            DataBuffer = new byte[dataSize+1];
+            DataBuffer = new byte[dataSize + 1];
             //Buffer.BlockCopy(buffer, dataIndex, DataBuffer, 0, dataSize);
             Buffer.BlockCopy(buffer, dataIndex - 1, DataBuffer, 0, DataBuffer.Length); // why subtract one from dataIndex???
         }

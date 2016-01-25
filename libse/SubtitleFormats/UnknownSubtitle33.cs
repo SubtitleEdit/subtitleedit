@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\:\d\d\:\d\d\s+\d+    ", RegexOptions.Compiled);
         private static readonly Regex RegexNumberAndText = new Regex(@"^\d+    [^ ]+", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".txt"; }

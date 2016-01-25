@@ -12,7 +12,7 @@ IF DEFINED COVDIR IF NOT EXIST "%COVDIR%" (
 )
 
 
-CALL "%VS120COMNTOOLS%\vsvars32.bat"
+CALL "%VS140COMNTOOLS%\vsvars32.bat"
 IF %ERRORLEVEL% NEQ 0 (
   ECHO vsvars32.bat call failed.
   GOTO End

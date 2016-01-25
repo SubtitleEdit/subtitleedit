@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
         private HashSet<string> _notAllowedFixes = new HashSet<string>();
 
         private Dictionary<string, string> _fixedText = new Dictionary<string, string>();
+
         public Dictionary<string, string> FixedText
         {
             get { return _fixedText; }

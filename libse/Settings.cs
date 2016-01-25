@@ -732,7 +732,7 @@ namespace Nikse.SubtitleEdit.Core
         public int LineOcrMinLineHeight { get; set; }
         public int LineOcrMaxLineHeight { get; set; }
         public string LastBinaryImageCompareDb { get; set; }
-        public string LastBinaryImageSpellCheck { get; set; }        
+        public string LastBinaryImageSpellCheck { get; set; }
 
         public VobSubOcrSettings()
         {
@@ -1849,7 +1849,7 @@ namespace Nikse.SubtitleEdit.Core
                     settings.SubtitleSettings.SsaMarginRight = Convert.ToInt32(subNode.InnerText);
                 subNode = node.SelectSingleNode("SsaMarginTopBottom");
                 if (subNode != null)
-                    settings.SubtitleSettings.SsaMarginTopBottom= Convert.ToInt32(subNode.InnerText);
+                    settings.SubtitleSettings.SsaMarginTopBottom = Convert.ToInt32(subNode.InnerText);
                 subNode = node.SelectSingleNode("DCinemaFontFile");
                 if (subNode != null)
                     settings.SubtitleSettings.DCinemaFontFile = subNode.InnerText;
@@ -2242,10 +2242,10 @@ namespace Nikse.SubtitleEdit.Core
                 settings.VobSubOcr.LineOcrMinLineHeight = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("LineOcrMaxLineHeight");
             if (subNode != null)
-                settings.VobSubOcr.LineOcrMaxLineHeight = Convert.ToInt32(subNode.InnerText);            
+                settings.VobSubOcr.LineOcrMaxLineHeight = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("LastBinaryImageCompareDb");
             if (subNode != null)
-                settings.VobSubOcr.LastBinaryImageCompareDb = subNode.InnerText;            
+                settings.VobSubOcr.LastBinaryImageCompareDb = subNode.InnerText;
             subNode = node.SelectSingleNode("LastBinaryImageSpellCheck");
             if (subNode != null)
                 settings.VobSubOcr.LastBinaryImageSpellCheck = subNode.InnerText;

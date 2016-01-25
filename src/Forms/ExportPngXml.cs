@@ -1156,7 +1156,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
                         string template = " <clipitem id=\"" + System.Security.SecurityElement.Escape(fileNameNoPath) + "\">" + Environment.NewLine +
 
-//              <pathurl>file://localhost/" + fileNameNoPath.Replace(" ", "%20") + @"</pathurl>
+                                          // <pathurl>file://localhost/" + fileNameNoPath.Replace(" ", "%20") + @"</pathurl>
 
                                           @"            <name>" + System.Security.SecurityElement.Escape(fileNameNoPath) + @"</name>
             <duration>[DURATION]</duration>

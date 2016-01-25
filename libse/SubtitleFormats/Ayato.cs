@@ -110,7 +110,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 header[2082] = 0x01;
                 header[2085] = 0x01;
 
-
                 // Microsoft Sans Serif
                 header[2088] = 0x4d;
                 header[2089] = 0x69;

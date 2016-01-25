@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System.Collections.Generic;
 using System.Text;
-using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
@@ -42,6 +42,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         }
 
         private string _language = "en";
+
         public string Language
         {
             get { return _language; }
@@ -54,6 +55,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         }
 
         private Encoding _encoding = Encoding.UTF8;
+
         public Encoding Encoding
         {
             get { return _encoding; }

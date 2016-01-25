@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core;
+using System;
 
 namespace Test.Logic
 {
@@ -38,7 +38,7 @@ namespace Test.Logic
         [TestMethod]
         public void TestAdjust1()
         {
-            var p = new Paragraph { Text = string.Empty, StartTime = new TimeCode(0,1,1,1), EndTime = new TimeCode(0, 1, 3, 1) };
+            var p = new Paragraph { Text = string.Empty, StartTime = new TimeCode(0, 1, 1, 1), EndTime = new TimeCode(0, 1, 3, 1) };
             p.Adjust(1, 10);
             Assert.AreEqual(new TimeCode(0, 1, 11, 1).TotalMilliseconds, p.StartTime.TotalMilliseconds);
             Assert.AreEqual(new TimeCode(0, 1, 13, 1).TotalMilliseconds, p.EndTime.TotalMilliseconds);
@@ -64,7 +64,7 @@ namespace Test.Logic
         [TestMethod]
         public void TestDuration()
         {
-            var p = new Paragraph { Text = string.Empty, StartTime = new TimeCode(0, 1, 0, 0), EndTime =  new TimeCode(0, 1, 1, 1) };
+            var p = new Paragraph { Text = string.Empty, StartTime = new TimeCode(0, 1, 0, 0), EndTime = new TimeCode(0, 1, 1, 1) };
             Assert.AreEqual(p.Duration.TotalMilliseconds, 1001);
         }
 

@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Core
 
             List<ZipFileEntry> result = new List<ZipFileEntry>();
 
-            for (int pointer = 0; pointer < this.CentralDirImage.Length; )
+            for (int pointer = 0; pointer < this.CentralDirImage.Length;)
             {
                 uint signature = BitConverter.ToUInt32(CentralDirImage, pointer);
                 if (signature != 0x02014b50)

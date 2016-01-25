@@ -1,13 +1,13 @@
-﻿using System.Globalization;
-using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 using Nikse.SubtitleEdit.Forms;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
-using Nikse.SubtitleEdit.Core.BluRaySup;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -483,7 +483,6 @@ namespace Nikse.SubtitleEdit.Logic
                 BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, overwrite, pacCodePage, targetFrameRate, removeTextForHi, fixCommonErrors, redoCasing);
             }
         }
-
 
         /// <summary>
         /// Gets a argument from the command line

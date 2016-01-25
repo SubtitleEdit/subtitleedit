@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
         public string ChangeWord { get { return textBoxWord.Text; } set { textBoxWord.Text = value; } }
         public string ChangeWholeText { get { return textBoxWholeText.Text; } }
         public bool AutoFixNames { get { return checkBoxAutoChangeNames.Checked; } }
+
         public int CurrentLineIndex
         {
             get { return _currentIndex; }

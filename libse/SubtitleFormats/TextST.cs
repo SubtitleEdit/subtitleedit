@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core.BluRaySup;
+using Nikse.SubtitleEdit.Core.TransportStream;
+using Nikse.SubtitleEdit.Core.VobSub;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using Nikse.SubtitleEdit.Core.BluRaySup;
-using Nikse.SubtitleEdit.Core.TransportStream;
-using Nikse.SubtitleEdit.Core.VobSub;
 using Helper = Nikse.SubtitleEdit.Core.TransportStream.Helper;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
@@ -422,7 +422,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-
         public abstract class SubtitleRegionContent
         {
             public int EscapeCode { get; set; }
@@ -803,22 +802,28 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var fontOutlineThickness = buffer[idx + 2];
                             switch (fontStyle)
                             {
-                                case 1: region.Texts.Add("<b>");
+                                case 1:
+                                    region.Texts.Add("<b>");
                                     endStyle = "</b>";
                                     break;
-                                case 2: region.Texts.Add("<i>");
+                                case 2:
+                                    region.Texts.Add("<i>");
                                     endStyle = "</i>";
                                     break;
-                                case 3: region.Texts.Add("<b><i>");
+                                case 3:
+                                    region.Texts.Add("<b><i>");
                                     endStyle = "</i></b>";
                                     break;
-                                case 5: region.Texts.Add("<b>");
+                                case 5:
+                                    region.Texts.Add("<b>");
                                     endStyle = "</b>";
                                     break;
-                                case 6: region.Texts.Add("<i>");
+                                case 6:
+                                    region.Texts.Add("<i>");
                                     endStyle = "</i>";
                                     break;
-                                case 7: region.Texts.Add("<b><i>");
+                                case 7:
+                                    region.Texts.Add("<b><i>");
                                     endStyle = "</i></b>";
                                     break;
                             }

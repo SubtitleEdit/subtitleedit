@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Mp4;
+using System.IO;
 
 namespace Test.Logic.Mp4
 {

@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core;
+using System;
 
 namespace Test.Logic
 {
@@ -60,7 +60,6 @@ namespace Test.Logic
 
             Assert.AreEqual(tc.TotalMilliseconds, 2000);
         }
-
 
         [TestMethod]
         public void TimeCodeAddTime7()
