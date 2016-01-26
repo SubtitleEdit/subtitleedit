@@ -15,7 +15,6 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly LanguageStructure.RemoveTextFromHearImpaired _language;
         private readonly RemoveTextForHI _removeTextForHiLib;
         private Dictionary<Paragraph, string> _fixes;
-
         public FormRemoveTextForHearImpaired()
         {
             InitializeComponent();
@@ -62,6 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonApply.Text = Configuration.Settings.Language.General.Apply;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -297,6 +297,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 item.Checked = selectAll ? selectAll : !item.Checked;
             }
+        }
+
+        private void buttonApply_Click(object sender, EventArgs e)
+        {
+            if (_subtitle == null)
+                return;
+            RemoveTextFromHearImpaired();
+            _subtitle.Renumber();
+            GeneratePreview();
         }
     }
 }
