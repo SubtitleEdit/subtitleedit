@@ -2209,5 +2209,18 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static void Swap<T>(ref T t1, ref T t2)
+        {
+            T temp = t1;
+            t1 = t2;
+            t2 = temp;
+        }
+
+        public static void Swap<T>(this IList<T> list, int a, int b)
+        {
+            var t = list[a];
+            list[a] = list[b];
+            list[b] = t;
+        }
     }
 }
