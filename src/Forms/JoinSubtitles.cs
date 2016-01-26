@@ -124,13 +124,8 @@ namespace Nikse.SubtitleEdit.Forms
                     var b = subtitles[inner];
                     if (a.Paragraphs.Count > 0 && b.Paragraphs.Count > 0 && a.Paragraphs[0].StartTime.TotalMilliseconds > b.Paragraphs[0].StartTime.TotalMilliseconds)
                     {
-                        string t1 = _fileNamesToJoin[inner - 1];
-                        _fileNamesToJoin[inner - 1] = _fileNamesToJoin[inner];
-                        _fileNamesToJoin[inner] = t1;
-
-                        var t2 = subtitles[inner - 1];
-                        subtitles[inner - 1] = subtitles[inner];
-                        subtitles[inner] = t2;
+                        _fileNamesToJoin.Swap(inner - 1, inner);
+                        subtitles.Swap(inner - 1, inner);
                     }
                 }
             }
