@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                string text = HtmlUtil.RemoveHtmlTags(p.Text);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 sb.AppendLine(string.Format("{0}:  {1}  {2}\r\n{3}\r\n", count, MakeTimeCode(p.StartTime), MakeTimeCode(p.EndTime), text));
                 count++;
             }
@@ -97,6 +97,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             Paragraph p = null;
             var sb = new StringBuilder();
+            char[] splitChars = { ':', ';', ',', '.' };
+            char[] splitChar = { ' ' };
             foreach (string line in lines)
             {
                 string s = line.TrimEnd();
@@ -110,8 +112,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             subtitle.Paragraphs.Add(p);
                         }
                         sb = new StringBuilder();
-                        string[] arr = s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        char[] splitChars = { ':', ';', ',', '.' };
+                        string[] arr = s.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
                         if (arr.Length == 3)
                             p = new Paragraph(DecodeTimeCode(arr[1].TrimEnd('*'), splitChars), DecodeTimeCode(arr[2].TrimEnd('*'), splitChars), string.Empty);
                     }

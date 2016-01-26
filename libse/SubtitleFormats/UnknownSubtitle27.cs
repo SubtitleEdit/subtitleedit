@@ -67,6 +67,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
+            char[] splitChar = { ':' };
             foreach (string line in lines)
             {
                 string s = line.Trim();
@@ -74,7 +75,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     var temp = s.Substring(0, 8);
 
-                    string[] startParts = temp.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] startParts = temp.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
                     if (startParts.Length == 3)
                     {
                         try

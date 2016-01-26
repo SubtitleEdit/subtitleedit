@@ -95,6 +95,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return;
             }
 
+            char[] splitChars = { ':', ',', '.' };
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("title"))
             {
                 try
@@ -109,7 +110,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (textNode != null)
                             text = (text + Environment.NewLine + textNode.InnerText).Trim();
                     }
-                    subtitle.Paragraphs.Add(new Paragraph(text, ParseTimeCode(start), ParseTimeCode(end)));
+                    subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start, splitChars), DecodeTimeCode(end, splitChars), text));
                 }
                 catch (Exception ex)
                 {
@@ -119,12 +120,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             subtitle.Renumber();
         }
-
-        private static double ParseTimeCode(string start)
-        {
-            string[] arr = start.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeSpan(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3])).TotalMilliseconds;
-        }
-
     }
 }

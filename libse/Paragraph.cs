@@ -121,8 +121,8 @@ namespace Nikse.SubtitleEdit.Core
 
         public void CalculateFrameNumbersFromTimeCodes(double frameRate)
         {
-            StartFrame = (int)Math.Round((StartTime.TotalMilliseconds / TimeCode.BaseUnit * frameRate));
-            EndFrame = (int)Math.Round((EndTime.TotalMilliseconds / TimeCode.BaseUnit * frameRate));
+            StartFrame = (int)Math.Round(StartTime.TotalMilliseconds / TimeCode.BaseUnit * frameRate);
+            EndFrame = (int)Math.Round(EndTime.TotalMilliseconds / TimeCode.BaseUnit * frameRate);
         }
 
         public void CalculateTimeCodesFromFrameNumbers(double frameRate)

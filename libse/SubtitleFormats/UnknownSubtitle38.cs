@@ -60,6 +60,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
+            char[] splitChar = { ':' };
             foreach (string line in lines)
             {
                 if (RegexTimeCodes.IsMatch(line))
@@ -70,8 +71,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         string start = temp[1];
                         string end = temp[2];
 
-                        string[] startParts = start.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                        string[] endParts = end.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] startParts = start.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
                         if (startParts.Length == 4 && endParts.Length == 4)
                         {
                             p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), string.Empty);
@@ -94,16 +95,5 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             subtitle.Renumber();
         }
-
-        private static TimeCode DecodeTimeCode(string[] parts)
-        {
-            //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-        }
-
     }
 }
