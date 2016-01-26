@@ -14,9 +14,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (Descending)
             {
-                ListViewItem temp = lvi1;
-                lvi1 = lvi2;
-                lvi2 = temp;
+                Core.Utilities.Swap(ref lvi1, ref lvi2);
             }
 
             if (IsNumber)
