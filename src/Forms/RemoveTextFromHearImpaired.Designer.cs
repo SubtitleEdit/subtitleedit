@@ -80,7 +80,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(872, 523);
+            this.buttonCancel.Location = new System.Drawing.Point(791, 523);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 3;
@@ -233,7 +233,7 @@
             this.buttonEditInterjections.Location = new System.Drawing.Point(377, 168);
             this.buttonEditInterjections.Name = "buttonEditInterjections";
             this.buttonEditInterjections.Size = new System.Drawing.Size(103, 23);
-            this.buttonEditInterjections.TabIndex = 0;
+            this.buttonEditInterjections.TabIndex = 17;
             this.buttonEditInterjections.Text = "Edit...";
             this.buttonEditInterjections.UseVisualStyleBackColor = true;
             this.buttonEditInterjections.Click += new System.EventHandler(this.buttonEditInterjections_Click);
@@ -413,7 +413,7 @@
             // buttonApply
             // 
             this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonApply.Location = new System.Drawing.Point(791, 523);
+            this.buttonApply.Location = new System.Drawing.Point(872, 523);
             this.buttonApply.Name = "buttonApply";
             this.buttonApply.Size = new System.Drawing.Size(75, 21);
             this.buttonApply.TabIndex = 4;
