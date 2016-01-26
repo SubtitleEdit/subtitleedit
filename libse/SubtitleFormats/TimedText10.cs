@@ -340,7 +340,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (regions.Contains("top"))
                     region = "top";
                 else if (regions.Contains("topCenter"))
-                    region = "topCenter";                
+                    region = "topCenter";
             }
             text = Utilities.RemoveSsaTags(text);
 
@@ -452,7 +452,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string xmlSpace = GetEffect(p, "xml:space");
             if (!string.IsNullOrEmpty(xmlSpace))
             {
-                XmlAttribute xmlSpaceAttribute = xml.CreateAttribute("xml:space"); 
+                XmlAttribute xmlSpaceAttribute = xml.CreateAttribute("xml:space");
                 xmlSpaceAttribute.InnerText = xmlSpace;
                 paragraph.Attributes.Append(xmlSpaceAttribute);
             }
@@ -496,7 +496,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 ttsExtentAttribute.InnerText = ttsExtent;
                 paragraph.Attributes.Append(ttsExtentAttribute);
             }
-            
+
             string ttsTextAlign = GetEffect(p, "tts:textAlign");
             if (!string.IsNullOrEmpty(ttsTextAlign))
             {
@@ -691,7 +691,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (node.Attributes["tts:textAlign"] != null)
                     {
                         SetEffect(p, "tts:textAlign", node.Attributes["tts:textAlign"].Value);
-                    }                    
+                    }
 
                     if (node.ParentNode.Name == "div")
                     {

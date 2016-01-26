@@ -13,7 +13,7 @@ using Nikse.SubtitleEdit.Core.SpellCheck;
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class SpellCheck : Form, IDoSpell
-    {    
+    {
         private List<UndoObject> _undoList = new List<UndoObject>();
         private SpellCheckAction _action = SpellCheckAction.Skip;
         private List<string> _suggestions;
@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
         public SpellCheckAction Action { get { return _action; } set { _action = value; } }
         public string ChangeWord { get { return textBoxWord.Text; } set { textBoxWord.Text = value; } }
         public string ChangeWholeText { get { return textBoxWholeText.Text; } }
-        public bool AutoFixNames { get { return checkBoxAutoChangeNames.Checked; } }     
+        public bool AutoFixNames { get { return checkBoxAutoChangeNames.Checked; } }
 
         private SpellCheckWordLists _spellCheckWordLists;
         private List<string> _skipAllList = new List<string>();
@@ -690,7 +690,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-       
+
         private void SetWords(string s)
         {
             s = _spellCheckWordLists.ReplaceHtmlTagsWithBlanks(s);

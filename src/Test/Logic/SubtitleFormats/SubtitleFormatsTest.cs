@@ -87,7 +87,7 @@ Let us have some! Let us have some!";
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod]        
+        [TestMethod]
         public void SrtNoLineNumbers()
         {
             var target = new SubRip();

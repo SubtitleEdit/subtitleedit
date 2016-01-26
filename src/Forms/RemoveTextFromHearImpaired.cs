@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly LanguageStructure.RemoveTextFromHearImpaired _language;
         private readonly RemoveTextForHI _removeTextForHiLib;
         private Dictionary<Paragraph, string> _fixes;
+
         public FormRemoveTextForHearImpaired()
         {
             InitializeComponent();
