@@ -59,6 +59,7 @@
             this.checkBoxRemoveTextBetweenBrackets = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveTextBetweenSquares = new System.Windows.Forms.CheckBox();
             this.labelAnd = new System.Windows.Forms.Label();
+            this.buttonApply = new System.Windows.Forms.Button();
             this.groupBoxLinesFound.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxRemoveTextConditions.SuspendLayout();
@@ -67,7 +68,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(791, 523);
+            this.buttonOK.Location = new System.Drawing.Point(710, 523);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 2;
@@ -409,11 +410,23 @@
             this.labelAnd.TabIndex = 7;
             this.labelAnd.Text = "and";
             // 
+            // buttonApply
+            // 
+            this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonApply.Location = new System.Drawing.Point(791, 523);
+            this.buttonApply.Name = "buttonApply";
+            this.buttonApply.Size = new System.Drawing.Size(75, 21);
+            this.buttonApply.TabIndex = 4;
+            this.buttonApply.Text = "Apply";
+            this.buttonApply.UseVisualStyleBackColor = true;
+            this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
+            // 
             // FormRemoveTextForHearImpaired
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(965, 550);
+            this.Controls.Add(this.buttonApply);
             this.Controls.Add(this.groupBoxRemoveTextConditions);
             this.Controls.Add(this.groupBoxLinesFound);
             this.Controls.Add(this.buttonOK);
@@ -471,5 +484,6 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSelAll;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInvertSel;
+        private System.Windows.Forms.Button buttonApply;
     }
 }

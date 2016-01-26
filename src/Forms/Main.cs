@@ -4958,10 +4958,10 @@ namespace Nikse.SubtitleEdit.Forms
             ReloadFromSourceView();
             using (var removeTextFromHearImpaired = new FormRemoveTextForHearImpaired())
             {
+                MakeHistoryForUndo(_language.BeforeRemovalOfTextingForHearingImpaired);
                 removeTextFromHearImpaired.Initialize(_subtitle);
                 if (removeTextFromHearImpaired.ShowDialog(this) == DialogResult.OK)
                 {
-                    MakeHistoryForUndo(_language.BeforeRemovalOfTextingForHearingImpaired);
                     int count = removeTextFromHearImpaired.RemoveTextFromHearImpaired();
                     if (count > 0)
                     {
