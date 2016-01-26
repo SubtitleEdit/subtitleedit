@@ -62,17 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void listViewParts_DragDrop(object sender, DragEventArgs e)
         {
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (string fileName in files)
-            {
-                bool alreadyInList = false;
-                foreach (string existingFileName in _fileNamesToJoin)
-                {
-                    if (existingFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
-                        alreadyInList = true;
-                }
-                if (!alreadyInList)
-                    _fileNamesToJoin.Add(fileName);
-            }
+            AddFilesIfNotInList(files);
             SortAndLoad();
         }
 
@@ -180,18 +170,26 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Multiselect = true;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                foreach (string fileName in openFileDialog1.FileNames)
-                {
-                    bool alreadyInList = false;
-                    foreach (string existingFileName in _fileNamesToJoin)
-                    {
-                        if (existingFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
-                            alreadyInList = true;
-                    }
-                    if (!alreadyInList)
-                        _fileNamesToJoin.Add(fileName);
-                }
+                AddFilesIfNotInList(openFileDialog1.FileNames);
                 SortAndLoad();
+            }
+        }
+
+        private void AddFilesIfNotInList(string[] fileNames)
+        {
+            foreach (string fileName in fileNames)
+            {
+                bool alreadyInList = false;
+                foreach (string existingFileName in _fileNamesToJoin)
+                {
+                    if (existingFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        alreadyInList = true;
+                        break;
+                    }
+                }
+                if (!alreadyInList)
+                    _fileNamesToJoin.Add(fileName);
             }
         }
 
