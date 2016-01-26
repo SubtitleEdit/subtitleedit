@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Core.BluRaySup;
 using Nikse.SubtitleEdit.Core.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using Nikse.SubtitleEdit.Core.VobSub;
 using Nikse.SubtitleEdit.Forms;
 using System;
 using System.Collections.Generic;
@@ -55,6 +56,7 @@ namespace Nikse.SubtitleEdit.Logic
                     Console.WriteLine("    " + Spt.NameOfFormat);
                     Console.WriteLine("    " + Ultech130.NameOfFormat);
                     Console.WriteLine("- For Blu-ray .sup output use: '" + BatchConvert.BluRaySubtitle.Replace(" ", string.Empty) + "'");
+                    Console.WriteLine("- For VobSub .sub output use: '" + BatchConvert.VobSubSubtitle.Replace(" ", string.Empty) + "'");
                 }
 
                 Console.WriteLine();
@@ -771,6 +773,41 @@ namespace Nikse.SubtitleEdit.Logic
                                 binarySubtitleFile.Write(mp.Buffer, 0, mp.Buffer.Length);
                             }
                             binarySubtitleFile.Close();
+                        }
+                        Console.WriteLine(" done.");
+                    }
+                    else if (string.Compare(BatchConvert.VobSubSubtitle, toFormat, StringComparison.OrdinalIgnoreCase) == 0 || string.Compare(BatchConvert.VobSubSubtitle.Replace(" ", string.Empty), toFormat, StringComparison.OrdinalIgnoreCase) == 0)
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".sub", outputFolder, overwrite);
+                        Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
+                        using (var form = new ExportPngXml())
+                        {
+                            form.Initialize(sub, format, "VOBSUB", fileName, null, null);
+                            int width = 720;
+                            int height = 576;
+                            var parts = Configuration.Settings.Tools.ExportVobSubVideoResolution.Split('x');
+                            if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+                            {
+                                width = int.Parse(parts[0]);
+                                height = int.Parse(parts[1]);
+                            }
+
+                            var cfg = Configuration.Settings.Tools;
+                            var languageIndex = IfoParser.ArrayOfLanguageCode.IndexOf(LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(sub));
+                            if (languageIndex < 0)
+                                languageIndex = IfoParser.ArrayOfLanguageCode.IndexOf("en");
+                            using (var vobSubWriter = new VobSubWriter(outputFileName, width, height, cfg.ExportBottomMargin, cfg.ExportBottomMargin, 32, cfg.ExportFontColor, cfg.ExportBorderColor, !cfg.ExportVobAntiAliasingWithTransparency, IfoParser.ArrayOfLanguage[languageIndex], IfoParser.ArrayOfLanguageCode[languageIndex]))
+                            {
+                                for (int index = 0; index < sub.Paragraphs.Count; index++)
+                                {
+                                    var mp = form.MakeMakeBitmapParameter(index, width, height);
+                                    mp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
+                                    mp.Bitmap = ExportPngXml.GenerateImageFromTextWithStyle(mp);
+                                    vobSubWriter.WriteParagraph(mp.P, mp.Bitmap, mp.Alignment);
+                                }
+                                vobSubWriter.WriteIdxFile();
+                            }
                         }
                         Console.WriteLine(" done.");
                     }

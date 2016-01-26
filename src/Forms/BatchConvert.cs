@@ -66,6 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _abort;
         private Ebu.EbuGeneralSubtitleInformation _ebuGeneralInformation;
         public const string BluRaySubtitle = "Blu-ray sup";
+        public const string VobSubSubtitle = "VobSub";
 
         public BatchConvert(Icon icon)
         {
@@ -154,6 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
             formatNames.Add(new Ayato().Name);
             formatNames.Add(l.PlainText);
             formatNames.Add(BluRaySubtitle);
+            formatNames.Add(VobSubSubtitle);
             for (int index = 0; index < formatNames.Count; index++)
             {
                 var name = formatNames[index];
@@ -1117,6 +1119,12 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonStyles.Visible = true;
                 comboBoxEncoding.Enabled = false;
             }
+            else if (comboBoxSubtitleFormats.Text == VobSubSubtitle)
+            {
+                buttonStyles.Text = Configuration.Settings.Language.BatchConvert.Settings;
+                buttonStyles.Visible = true;
+                comboBoxEncoding.Enabled = false;
+            }
             else
             {
                 buttonStyles.Visible = false;
@@ -1140,6 +1148,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ShowBluraySettings();
             }
+            else if (comboBoxSubtitleFormats.Text == VobSubSubtitle)
+            {
+                VobSubSettings();
+            }
         }
 
         private void ShowBluraySettings()
@@ -1149,6 +1161,18 @@ namespace Nikse.SubtitleEdit.Forms
                 var s = new Subtitle();
                 s.Paragraphs.Add(new Paragraph("Test 123." + Environment.NewLine + "Test 456.", 0, 4000));
                 properties.Initialize(s, new SubRip(), "BLURAYSUP", null, null, null);
+                properties.DisableSaveButtonAndCheckBoxes();
+                properties.ShowDialog(this);
+            }
+        }
+
+        private void VobSubSettings()
+        {
+            using (var properties = new ExportPngXml())
+            {
+                var s = new Subtitle();
+                s.Paragraphs.Add(new Paragraph("Test 123." + Environment.NewLine + "Test 456.", 0, 4000));
+                properties.Initialize(s, new SubRip(), "VOBSUB", null, null, null);
                 properties.DisableSaveButtonAndCheckBoxes();
                 properties.ShowDialog(this);
             }
