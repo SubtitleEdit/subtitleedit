@@ -19065,6 +19065,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (SubtitleListview1.SelectedIndices.Count < 1)
                 return;
 
+            MakeHistoryForUndo(_language.BeforeColumnDelete);
             foreach (int index in SubtitleListview1.SelectedIndices)
             {
                 _subtitle.Paragraphs[index].Text = string.Empty;
