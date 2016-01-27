@@ -136,6 +136,37 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void FixShortLinesAllNormal()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "HILDEBRAND" + Environment.NewLine + "IMPRESSOS & RARIDADES");
+                new FixShortLinesAll().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "HILDEBRAND IMPRESSOS & RARIDADES");
+            }
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixShortLinesAllNormal2()
+        {
+            const string expected = "Obrigado\r\nJ.";
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, expected);
+                var fixSetting = new EmptyFixCallbackNotAllowFix();
+                fixSetting.NotAllowedFix.Add(_subtitle.Paragraphs[0].Number + "|" + Configuration.Settings.Language.FixCommonErrors.MergeShortLine);
+
+                new FixShortLines().Fix(_subtitle, fixSetting);
+                Assert.AreEqual(expected, _subtitle.Paragraphs[0].Text);
+
+                new FixShortLinesAll().Fix(_subtitle, fixSetting);
+                Assert.AreEqual(expected, _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesLong()
         {
             using (var target = GetFixCommonErrorsLib())

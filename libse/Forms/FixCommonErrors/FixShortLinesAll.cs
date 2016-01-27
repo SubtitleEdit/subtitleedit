@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                if (callbacks.AllowFix(p, fixAction))
+                if (callbacks.AllowFix(p, fixAction) && callbacks.AllowFix(p, language.MergeShortLine))
                 {
                     string s = HtmlUtil.RemoveHtmlTags(p.Text, true);
                     if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))

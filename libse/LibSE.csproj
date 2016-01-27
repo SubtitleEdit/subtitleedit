@@ -123,6 +123,7 @@
     <Compile Include="Forms\CheckForUpdatesHelper.cs" />
     <Compile Include="Forms\FixCommonErrors\AddMissingQuotes.cs" />
     <Compile Include="Forms\FixCommonErrors\EmptyFixCallback.cs" />
+    <Compile Include="Forms\FixCommonErrors\EmptyFixCallbackNotAllowFix.cs" />
     <Compile Include="Forms\FixCommonErrors\Fix3PlusLines.cs" />
     <Compile Include="Forms\FixCommonErrors\FixAloneLowercaseIToUppercaseI.cs" />
     <Compile Include="Forms\FixCommonErrors\FixDanishLetterI.cs" />
