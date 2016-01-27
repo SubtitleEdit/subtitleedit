@@ -10,6 +10,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static IList<SubtitleFormat> _allSubtitleFormats;
 
+        protected static readonly char[] SplitCharColon = new[] { ':' };
+
         /// <summary>
         /// Formats supported by Subtitle Edit
         /// </summary>

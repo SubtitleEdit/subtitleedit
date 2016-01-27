@@ -129,7 +129,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(sb.ToString().Trim());
             string lastKey = string.Empty;
-            char[] splitChar = { ':' };
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("subtitle"))
             {
                 try
@@ -143,10 +142,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 p.Text = innerNode.InnerText.Replace("\\N", Environment.NewLine);
                                 break;
                             case "in":
-                                p.StartTime = DecodeTimeCode(innerNode.InnerText, splitChar);
+                                p.StartTime = DecodeTimeCode(innerNode.InnerText, SplitCharColon);
                                 break;
                             case "out":
-                                p.EndTime = DecodeTimeCode(innerNode.InnerText, splitChar);
+                                p.EndTime = DecodeTimeCode(innerNode.InnerText, SplitCharColon);
                                 break;
                         }
                     }

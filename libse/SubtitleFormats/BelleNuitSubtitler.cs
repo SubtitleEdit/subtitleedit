@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (RegexTimeCode.IsMatch(line))
                 {
-                    string[] parts = line.Substring(4, 11).Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Substring(4, 11).Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {
                         try
@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
 
                             var start = DecodeTimeCode(parts);
-                            parts = line.Substring(16, 11).Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                            parts = line.Substring(16, 11).Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                             var end = DecodeTimeCode(parts);
                             paragraph = new Paragraph { StartTime = start, EndTime = end };
                             subtitle.Paragraphs.Add(paragraph);

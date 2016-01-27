@@ -76,12 +76,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
-            char[] splitChar = { ':' };
             foreach (string line in lines)
             {
                 if (RegexTimeCode.IsMatch(line))
                 {
-                    string[] parts = line.Substring(0, 11).Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Substring(0, 11).Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {
                         try
@@ -105,7 +104,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (RegexTimeCodeEnd.IsMatch(line))
                 {
-                    string[] parts = line.Substring(0, 11).Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Substring(0, 11).Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {
                         var tc = DecodeTimeCode(parts);

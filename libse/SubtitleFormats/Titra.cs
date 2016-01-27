@@ -81,7 +81,6 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
             Paragraph p = null;
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
-            char[] splitChar = { ':' };
             foreach (string line in lines)
             {
                 if (RegexTimeCodes.IsMatch(line))
@@ -92,8 +91,8 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
                         string start = arr[1];
                         string end = arr[2];
 
-                        string[] startParts = start.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
-                        string[] endParts = end.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+                        string[] startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                         if (startParts.Length == 4 && endParts.Length == 4)
                         {
                             p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), string.Empty);

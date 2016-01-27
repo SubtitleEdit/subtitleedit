@@ -228,7 +228,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             xml.LoadXml(sb.ToString().Trim());
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
-            char[] splitChar = { ':' };
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//w:tr", nsmgr))
             {
                 try
@@ -237,7 +236,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     XmlNode t = node.SelectSingleNode("w:tc/w:p/w:r/w:t", nsmgr);
                     if (t != null)
                     {
-                        p.StartTime = DecodeTimeCode(t.InnerText.Trim(), splitChar);
+                        p.StartTime = DecodeTimeCode(t.InnerText.Trim(), SplitCharColon);
                         sb = new StringBuilder();
                         foreach (XmlNode wrNode in node.SelectNodes("w:tc/w:p/w:r", nsmgr))
                         {

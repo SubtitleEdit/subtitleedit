@@ -68,7 +68,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string[] arr = rtf.FromRtf().SplitToLines();
             var p = new Paragraph();
             subtitle.Paragraphs.Clear();
-            char[] splitChar = { ':' };
             foreach (string line in arr)
             {
                 string s = line.Trim();
@@ -85,13 +84,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             if (!string.IsNullOrEmpty(p.Text))
                             {
-                                p.EndTime = DecodeTimeCode(parts[0], splitChar);
+                                p.EndTime = DecodeTimeCode(parts[0], SplitCharColon);
                                 subtitle.Paragraphs.Add(p);
                                 p = new Paragraph();
                             }
                             else
                             {
-                                p.StartTime = DecodeTimeCode(parts[0], splitChar);
+                                p.StartTime = DecodeTimeCode(parts[0], SplitCharColon);
                             }
                         }
                         catch (Exception exception)

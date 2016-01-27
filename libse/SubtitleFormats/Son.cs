@@ -61,7 +61,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             var regexTimeCodes = new Regex(@"^\d\d\d\d[\t]+\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t.+\.(tif|tiff|png|bmp|TIF|TIFF|PNG|BMP)", RegexOptions.Compiled);
             int index = 0;
-            char[] splitChar = { ':' };
             foreach (string line in lines)
             {
                 if (regexTimeCodes.IsMatch(line))
@@ -70,8 +69,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string start = temp.Substring(5, 11);
                     string end = temp.Substring(12 + 5, 11);
 
-                    string[] startParts = start.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
-                    string[] endParts = end.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+                    string[] startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
+                    string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                     if (startParts.Length == 4 && endParts.Length == 4)
                     {
                         int lastIndexOfTab = line.LastIndexOf('\t');

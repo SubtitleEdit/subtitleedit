@@ -72,8 +72,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string start = temp.Substring(5, 11);
                     string end = temp.Substring(12 + 5, 11);
 
-                    string[] startParts = start.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                    string[] endParts = end.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
+                    string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                     if (startParts.Length == 4 && endParts.Length == 4)
                     {
                         string text = line.Remove(0, RegexTimeCodes.Match(line).Length - 1).Trim();

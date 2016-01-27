@@ -187,13 +187,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var xml = new XmlDocument { XmlResolver = null };
                 xml.LoadXml(xmlAsText);
-                char[] splitChar = { ':' };
                 foreach (XmlNode node in xml.DocumentElement.SelectNodes("FileBody/ContentBlock"))
                 {
                     try
                     {
-                        var timeCodeIn = DecodeTimeCode(node.SelectSingleNode("ThreadedObject/TimingObject/TimeIn").Attributes["value"].InnerText, splitChar);
-                        var timeCodeOut = DecodeTimeCode(node.SelectSingleNode("ThreadedObject/TimingObject/TimeOut").Attributes["value"].InnerText, splitChar);
+                        var timeCodeIn = DecodeTimeCode(node.SelectSingleNode("ThreadedObject/TimingObject/TimeIn").Attributes["value"].InnerText, SplitCharColon);
+                        var timeCodeOut = DecodeTimeCode(node.SelectSingleNode("ThreadedObject/TimingObject/TimeOut").Attributes["value"].InnerText, SplitCharColon);
                         sb.Clear();
                         foreach (XmlNode paragraphNode in node.SelectSingleNode("ThreadedObject/Content/SubtitleText/Paragraph").ChildNodes)
                         {
