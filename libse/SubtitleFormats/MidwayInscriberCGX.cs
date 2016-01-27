@@ -65,7 +65,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             subtitle.Paragraphs.Clear();
             sb.Clear();
-            char[] splitChar = { ':' };
             foreach (string line in lines)
             {
                 if (!string.IsNullOrWhiteSpace(line))
@@ -79,8 +78,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         string start = line.Substring(idx + 1, 11);
                         string end = line.Substring(idx + 15, 11);
 
-                        string[] startParts = start.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
-                        string[] endParts = end.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+                        string[] startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                         if (startParts.Length == 4 && endParts.Length == 4)
                         {
                             var p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), sb.ToString().Trim());

@@ -84,7 +84,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             Paragraph p = null;
-            char[] splitChar = { ':' };
             foreach (string line in lines)
             {
                 string s = line.TrimEnd();
@@ -94,7 +93,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (p != null)
                             subtitle.Paragraphs.Add(p);
-                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11), splitChar), new TimeCode(0, 0, 0, 0), s.Remove(0, 37).Trim());
+                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11), SplitCharColon), new TimeCode(0, 0, 0, 0), s.Remove(0, 37).Trim());
                     }
                     catch
                     {
@@ -108,7 +107,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (p != null)
                             subtitle.Paragraphs.Add(p);
-                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11), splitChar), new TimeCode(0, 0, 0, 0), string.Empty);
+                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11), SplitCharColon), new TimeCode(0, 0, 0, 0), string.Empty);
                     }
                     catch
                     {
@@ -122,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (p != null)
                         {
-                            p.EndTime = DecodeTimeCode(s.Substring(5, 11), splitChar);
+                            p.EndTime = DecodeTimeCode(s.Substring(5, 11), SplitCharColon);
                             if (string.IsNullOrWhiteSpace(p.Text))
                                 p.Text = s.Remove(0, 37).Trim();
                             else

@@ -73,7 +73,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             bool expectStartTime = true;
             var p = new Paragraph();
             subtitle.Paragraphs.Clear();
-            char[] splitChar = { ':' };
             foreach (string line in lines)
             {
                 string s = line.Trim().Replace("*", string.Empty);
@@ -90,8 +89,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 subtitle.Paragraphs.Add(p);
                                 p = new Paragraph();
                             }
-                            p.StartTime = DecodeTimeCode(parts[1], splitChar);
-                            p.EndTime = DecodeTimeCode(parts[2], splitChar);
+                            p.StartTime = DecodeTimeCode(parts[1], SplitCharColon);
+                            p.EndTime = DecodeTimeCode(parts[2], SplitCharColon);
                             expectStartTime = false;
                         }
                         catch (Exception exception)

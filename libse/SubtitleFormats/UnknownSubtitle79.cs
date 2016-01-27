@@ -80,7 +80,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string verticalAglinment = "0";
 
             subtitle.Paragraphs.Clear();
-            char[] splitChar = { ':' };
             char[] splitChars = { ' ', '>' };
             foreach (string line in lines)
             {
@@ -96,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             verticalAglinment = parts[1].TrimStart('[');
                             formatting = parts[2];
-                            paragraph = new Paragraph { StartTime = DecodeTimeCode(parts[3], splitChar), EndTime = DecodeTimeCode(parts[4].TrimEnd(']'), splitChar) };
+                            paragraph = new Paragraph { StartTime = DecodeTimeCode(parts[3], SplitCharColon), EndTime = DecodeTimeCode(parts[4].TrimEnd(']'), SplitCharColon) };
                         }
                         catch (Exception)
                         {

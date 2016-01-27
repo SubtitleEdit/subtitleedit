@@ -185,13 +185,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 var xml = new XmlDocument { XmlResolver = null };
                 xml.LoadXml(xmlAsText);
-                char[] splitChar = { ':' };
                 foreach (XmlNode node in xml.DocumentElement.SelectNodes("TextSection/TextScreen"))
                 {
                     try
                     {
-                        var timeCodeIn = DecodeTimeCode(node.SelectSingleNode("TimeCodeIn").InnerText, splitChar);
-                        var timeCodeOut = DecodeTimeCode(node.SelectSingleNode("TimeCodeOut").InnerText, splitChar);
+                        var timeCodeIn = DecodeTimeCode(node.SelectSingleNode("TimeCodeIn").InnerText, SplitCharColon);
+                        var timeCodeOut = DecodeTimeCode(node.SelectSingleNode("TimeCodeOut").InnerText, SplitCharColon);
                         sb.Clear();
                         foreach (XmlNode textBlockNode in node.SelectNodes("TextBlock"))
                         {

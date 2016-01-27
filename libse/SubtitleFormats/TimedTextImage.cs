@@ -140,9 +140,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 end.Length == 8 && end[2] == ':' && end[5] == ':')
                             {
                                 var p = new Paragraph();
-                                var parts = start.Split(new[] { ':' });
+                                var parts = start.Split(SplitCharColon);
                                 p.StartTime = new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), 0);
-                                parts = end.Split(new[] { ':' });
+                                parts = end.Split(SplitCharColon);
                                 p.EndTime = new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), 0);
                                 p.Text = text;
                                 subtitle.Paragraphs.Add(p);
