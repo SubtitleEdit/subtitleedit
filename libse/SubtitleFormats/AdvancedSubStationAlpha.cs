@@ -422,7 +422,16 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     {
                         text = text.Remove(indexOfEndFont, 7);
                         if (indexOfEndFont < text.Length - 9)
-                            text = text.Insert(indexOfEndFont, "{\\c}");
+                        {
+                            if (fontTag.Contains(" size="))
+                            {
+                                text = text.Insert(indexOfEndFont, "{\\fs}");
+                            }
+                            if (fontTag.Contains(" face="))
+                            {
+                                text = text.Insert(indexOfEndFont, "{\\fn}");
+                            }
+                        }
                     }
 
                     fontTag = FormatTag(ref text, start, fontTag, "face=\"", "fn", "}");
@@ -439,7 +448,24 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 }
                 count++;
             }
-            return text.Replace("{\\c}", "@___@@").Replace("}{", string.Empty).Replace("@___@@", "{\\c}").Replace("{\\c}{\\c&", "{\\c&");
+            text = text.Replace("{\\c}", "@___@@").Replace("}{", string.Empty).Replace("@___@@", "{\\c}").Replace("{\\c}{\\c&", "{\\c&");
+            while (text.EndsWith("{\\c}", StringComparison.Ordinal))
+            {
+                text = text.Remove(text.Length - 4);
+            }
+            while (text.Contains("\\fs\\fs", StringComparison.Ordinal))
+            {
+                text = text.Replace("\\fs\\fs", "\\fs");
+            }
+            while (text.Contains("\\fn\\fn", StringComparison.Ordinal))
+            {
+                text = text.Replace("\\fn\\fn", "\\fn");
+            }
+            while (text.Contains("\\c\\c&H", StringComparison.Ordinal))
+            {
+                text = text.Replace("\\c\\c&H", "\\c&H");
+            }            
+            return text;
         }
 
         private static string FormatTag(ref string text, int start, string fontTag, string tag, string ssaTagName, string endSsaTag)
@@ -491,9 +517,26 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
                         int indexOfEndTag = text.IndexOf("{\\fn}", start, StringComparison.Ordinal);
                         if (indexOfEndTag > 0)
+                        {
                             text = text.Remove(indexOfEndTag, "{\\fn}".Length).Insert(indexOfEndTag, "</font>");
+                        }
                         else
-                            text += "</font>";
+                        {
+                            int indexOfNextTag1 = text.IndexOf("{\\fn", start, StringComparison.Ordinal);
+                            int indexOfNextTag2 = text.IndexOf("{\\c}", start, StringComparison.Ordinal);
+                            if (indexOfNextTag1 > 0)
+                            {
+                                text = text.Insert(indexOfNextTag1, "</font>");
+                            }
+                            else if (indexOfNextTag2 > 0 && text.IndexOf("{\\", start, StringComparison.Ordinal) >= indexOfNextTag2)
+                            {
+                                text = text.Insert(indexOfNextTag2, "</font>");
+                            }
+                            else
+                            {
+                                text += "</font>";
+                            }
+                        }
                     }
                 }
 
@@ -516,9 +559,26 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
                             int indexOfEndTag = text.IndexOf("{\\fs}", start, StringComparison.Ordinal);
                             if (indexOfEndTag > 0)
+                            {
                                 text = text.Remove(indexOfEndTag, "{\\fs}".Length).Insert(indexOfEndTag, "</font>");
+                            }
                             else
-                                text += "</font>";
+                            {
+                                int indexOfNextTag1 = text.IndexOf("{\\fs", start, StringComparison.Ordinal);
+                                int indexOfNextTag2 = text.IndexOf("{\\c}", start, StringComparison.Ordinal);
+                                if (indexOfNextTag1 > 0)
+                                {
+                                    text = text.Insert(indexOfNextTag1, "</font>");
+                                }
+                                else if (indexOfNextTag2 > 0 && text.IndexOf("{\\", start, StringComparison.Ordinal) >= indexOfNextTag2)
+                                {
+                                    text = text.Insert(indexOfNextTag2, "</font>");
+                                }
+                                else
+                                {
+                                    text += "</font>";
+                                }
+                            }
                         }
                     }
                 }

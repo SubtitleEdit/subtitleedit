@@ -74,7 +74,6 @@ namespace Test.Logic.SubtitleFormats
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void SrtCoordinates()
         {
             var target = new SubRip();
@@ -88,8 +87,7 @@ Let us have some! Let us have some!";
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
+        [TestMethod]        
         public void SrtNoLineNumbers()
         {
             var target = new SubRip();
@@ -106,7 +104,6 @@ Line 2.";
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void SrtDotsInsteadOfCommas()
         {
             var target = new SubRip();
@@ -121,7 +118,6 @@ Dots instead of commas";
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void SrtTwoLiner()
         {
             var target = new SubRip();
@@ -136,7 +132,6 @@ Line 2";
             Assert.AreEqual(expected, actual);
         }
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void SrtThreeLiner()
         {
             var target = new SubRip();
@@ -199,7 +194,6 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleItalic()
         {
             var target = new AdvancedSubStationAlpha();
@@ -211,7 +205,6 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleBold()
         {
             var target = new AdvancedSubStationAlpha();
@@ -223,7 +216,6 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleUnderline()
         {
             var target = new AdvancedSubStationAlpha();
@@ -235,7 +227,6 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleFontSize()
         {
             var target = new AdvancedSubStationAlpha();
@@ -247,7 +238,27 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
+        public void AssSimpleFontSizeMultiple()
+        {
+            var target = new AdvancedSubStationAlpha();
+            var subtitle = new Subtitle();
+            target.LoadSubtitle(subtitle, GetAssLines(@"{\fs1}T{\fs2}E{\fs3}S{\fs4}T"), null);
+            string actual = subtitle.Paragraphs[0].Text;
+            const string expected = "<font size=\"1\">T</font><font size=\"2\">E</font><font size=\"3\">S</font><font size=\"4\">T</font>";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void AssSimpleFontSizeMultipleToText()
+        {
+            var target = new AdvancedSubStationAlpha();
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("<font size=\"1\">T</font><font size=\"2\">E</font><font size=\"3\">S</font><font size=\"4\">T</font>", 0, 2000));
+            var result = target.ToText(subtitle, "");
+            Assert.IsTrue(result.Contains(@"{\fs1}T{\fs2}E{\fs3}S{\fs4}T"));
+        }
+
+        [TestMethod]
         public void AssSimpleFontName()
         {
             var target = new AdvancedSubStationAlpha();
@@ -259,7 +270,17 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
+        public void AssSimpleFontNameMultiple()
+        {
+            var target = new AdvancedSubStationAlpha();
+            var subtitle = new Subtitle();
+            target.LoadSubtitle(subtitle, GetAssLines(@"{\fnArial}Font1{\fnTahoma}Font2"), null);
+            string actual = subtitle.Paragraphs[0].Text;
+            const string expected = "<font face=\"Arial\">Font1</font><font face=\"Tahoma\">Font2</font>";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void AssSimpleFontColor1()
         {
             var target = new AdvancedSubStationAlpha();
@@ -271,7 +292,6 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleFontColor2()
         {
             var target = new AdvancedSubStationAlpha();
@@ -283,7 +303,6 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleFontColor3()
         {
             var target = new AdvancedSubStationAlpha();
@@ -295,7 +314,6 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleFontColor4()
         {
             var target = new AdvancedSubStationAlpha();
@@ -307,7 +325,6 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void AssSimpleFontColorAndItalic()
         {
             var target = new AdvancedSubStationAlpha();
@@ -319,7 +336,6 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void AssFontNameAndSize()
         {
             var target = new AdvancedSubStationAlpha();
@@ -355,7 +371,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void SsaSimpleFontColorAndItalic()
         {
             var target = new SubStationAlpha();
@@ -371,7 +386,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         #region DCinema smpte (.xml)
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void DcinemaSmpteItalic()
         {
             var target = new DCinemaSmpte2010();
@@ -382,7 +396,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void DcinemaSmpteColorAndItalic()
         {
             var target = new DCinemaSmpte2010();
@@ -397,7 +410,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         #region DCinema interop (.xml)
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void DcinemaInteropItalic()
         {
             var target = new DCSubtitle();
@@ -408,7 +420,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void DcinemaInteropColorAndItalic()
         {
             var target = new DCSubtitle();
@@ -423,7 +434,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         #region MicroDVD
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdItalic()
         {
             var target = new MicroDvd();
@@ -434,7 +444,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdBold()
         {
             var target = new MicroDvd();
@@ -445,7 +454,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdUnderline()
         {
             var target = new MicroDvd();
@@ -456,7 +464,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdUnderlineItalic()
         {
             var target = new MicroDvd();
@@ -467,7 +474,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdItalicUnderline()
         {
             var target = new MicroDvd();
@@ -478,7 +484,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdReadBoldItalic()
         {
             var target = new MicroDvd();
@@ -490,7 +495,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdReadFont()
         {
             var target = new MicroDvd();
@@ -502,7 +506,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdReadAdvanced()
         {
             var target = new MicroDvd();
@@ -514,7 +517,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdReadBoldFirstLineOnly()
         {
             var target = new MicroDvd();
@@ -526,7 +528,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdReadBoldSecondLineOnly()
         {
             var target = new MicroDvd();
@@ -538,7 +539,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdReadItalicBothLines()
         {
             var target = new MicroDvd();
@@ -551,7 +551,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void MicroDvdReadBoldBothLinesItalicFirst()
         {
             var target = new MicroDvd();
@@ -618,7 +617,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         #region Scenerist SCC
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void CheckTimeCodes()
         {
             var target = new ScenaristClosedCaptions();
@@ -693,7 +691,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         #region All subtitle formats
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void LineCount()
         {
             var subtitle = new Subtitle();
@@ -721,7 +718,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void LineContent()
         {
             var subtitle = new Subtitle();
@@ -752,7 +748,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         //         [TestMethod()]
-        //         [DeploymentItem("SubtitleEdit.exe")]
         //         public void FormatReload()
         //         {
         //             var subtitle = new Subtitle();
@@ -791,7 +786,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         #region ToUtf8XmlString
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void ToUtf8XmlStringDefault()
         {
             var doc = new XmlDocument();
@@ -801,7 +795,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void ToUtf8XmlStringNoHeader()
         {
             var doc = new XmlDocument();
@@ -811,7 +804,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void ToUtf8XmlStringStillXml()
         {
             var doc = new XmlDocument();
