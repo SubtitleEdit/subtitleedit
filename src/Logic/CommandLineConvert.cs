@@ -559,7 +559,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 if (fixCommonErrors)
                 {
-                    using (var fce = new FixCommonErrors())
+                    using (var fce = new FixCommonErrors { BatchMode = true })
                     {
                         for (int i = 0; i < 3; i++)
                         {

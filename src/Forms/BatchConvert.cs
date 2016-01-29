@@ -982,7 +982,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    using (var fixCommonErrors = new FixCommonErrors())
+                    using (var fixCommonErrors = new FixCommonErrors { BatchMode = true })
                     {
                         for (int i = 0; i < 3; i++)
                         {
@@ -1279,7 +1279,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonFixCommonErrorSettings_Click(object sender, EventArgs e)
         {
-            using (var form = new FixCommonErrors())
+            using (var form = new FixCommonErrors { BatchMode = true })
             {
                 form.RunBatchSettings(new Subtitle(), GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage);
                 form.ShowDialog(this);
