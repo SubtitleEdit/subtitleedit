@@ -299,10 +299,8 @@ namespace Nikse.SubtitleEdit.Core
         {
             foreach (Paragraph p in Paragraphs)
             {
-                double startFrame = p.StartTime.TotalMilliseconds / TimeCode.BaseUnit * oldFrameRate;
-                double endFrame = p.EndTime.TotalMilliseconds / TimeCode.BaseUnit * oldFrameRate;
-                p.StartTime.TotalMilliseconds = startFrame * (TimeCode.BaseUnit / newFrameRate);
-                p.EndTime.TotalMilliseconds = endFrame * (TimeCode.BaseUnit / newFrameRate);
+                p.StartTime.TotalMilliseconds = (p.StartTime.TotalMilliseconds * oldFrameRate / newFrameRate);
+                p.EndTime.TotalMilliseconds = (p.EndTime.TotalMilliseconds * oldFrameRate / newFrameRate);
                 p.CalculateFrameNumbersFromTimeCodes(newFrameRate);
             }
         }
