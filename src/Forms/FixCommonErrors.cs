@@ -175,6 +175,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        public bool BatchMode
+        {
+            get
+            {
+                return _batchMode;
+            }
+
+            set
+            {
+                _batchMode = value;
+            }
+        }
+
         public void RunBatch(Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language)
         {
             _autoDetectGoogleLanguage = language;
@@ -215,7 +228,6 @@ namespace Nikse.SubtitleEdit.Forms
             _onlyListFixes = false;
             _totalFixes = 0;
             _totalErrors = 0;
-            _batchMode = true;
             RunSelectedActions();
             _originalSubtitle = Subtitle;
         }
@@ -311,7 +323,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Width = MinimumSize.Width;
                 Height = MinimumSize.Height;
             }
-            if (Configuration.Settings.Tools.FixCommonErrorsSkipStepOne)
+            if (Configuration.Settings.Tools.FixCommonErrorsSkipStepOne && !_batchMode)
             {
                 Next();
             }
