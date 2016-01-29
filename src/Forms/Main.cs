@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
         private double _endSeconds = -1;
         private const double EndDelay = 0.05;
         private int _autoContinueDelayCount = -1;
-        private long _lastTextKeyDownTicks;
+        private long _lastTextKeyDownTicks = DateTime.Now.AddSeconds(5).Ticks;
         private long _lastHistoryTicks;
         private long _lastWaveformMenuCloseTicks;
         private double? _audioWaveformRightClickSeconds = null;
