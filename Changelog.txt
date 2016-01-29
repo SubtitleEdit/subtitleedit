@@ -1,5 +1,25 @@
 ﻿Subtitle Edit Changelog
 
+3.4.12 (xth March 2016) BETA
+* NEW:
+   * 
+* IMPROVED:
+   * Updated Catalan translation - thx juansa
+   * updated Bulgarian translation - thx Maknol
+   * Updated Basque translation - thx Xabier Aramendi
+   * Batch convert: Added VobSub output
+   * Point sync: Added "Go to line" (Ctrl+G) - thx ivandrofly
+   * Remove text for HI: Added Apply button - thx Splike/ivandrofly
+* FIXED:
+   * Several fixes for Find/Count - thx André
+   * Batch convert: Show FCE settings if "Skip step one" is checked - thx ivandrofly
+   * Fixed crash regarding font in image export - thx r0lZ
+   * Fix for (sometimes) not restoring last focused line at startup - thx vmb
+   * Fixed bug in handling of inline font tag in ASS format - thx Kyoichi
+   * Added missing undo regarding column delete text
+   * Allow reading of small PAC files - thx Mike
+
+
 3.4.11 (16th January 2016)
 * NEW:
    * New "Binary Image Compare" OCR
