@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
         private double _endSeconds = -1;
         private const double EndDelay = 0.05;
         private int _autoContinueDelayCount = -1;
-        private long _lastTextKeyDownTicks = DateTime.Now.AddSeconds(5).Ticks;
+        private long _lastTextKeyDownTicks;
         private long _lastHistoryTicks;
         private long _lastWaveformMenuCloseTicks;
         private double? _audioWaveformRightClickSeconds = null;
@@ -2980,13 +2980,14 @@ namespace Nikse.SubtitleEdit.Forms
                     if (file.FileName == item.Text)
                         rfe = file;
                 }
-
+                SubtitleListview1.BeginUpdate();
                 if (rfe == null)
                     OpenSubtitle(item.Text, null);
                 else
                     OpenSubtitle(rfe.FileName, null, rfe.VideoFileName, rfe.OriginalFileName);
                 SetRecentIndices(item.Text);
-                GotoSubPosAndPause();
+                SubtitleListview1.EndUpdate();
+                GotoSubPosAndPause();                
             }
         }
 
@@ -3007,6 +3008,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (!Configuration.Settings.General.RememberSelectedLine)
                 return;
 
+            ShowSubtitleTimer.Stop();
+            Application.DoEvents();
             foreach (var x in Configuration.Settings.RecentFiles.Files)
             {
                 if (fileName.Equals(x.FileName, StringComparison.OrdinalIgnoreCase))
@@ -3014,7 +3017,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int sIndex = x.FirstSelectedIndex;
                     if (sIndex >= 0 && sIndex < SubtitleListview1.Items.Count)
                     {
-                        SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                        SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;                        
                         for (int i = 0; i < SubtitleListview1.Items.Count; i++)
                             SubtitleListview1.Items[i].Selected = i == sIndex;
                         _subtitleListViewIndex = -1;
@@ -3036,6 +3039,8 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 }
             }
+            if (!_loading)
+                ShowSubtitleTimer.Start();
         }
 
         private void SaveToolStripMenuItemClick(object sender, EventArgs e)
@@ -13039,7 +13044,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (_endSeconds <= 0 || !checkBoxAutoRepeatOn.Checked)
                     {
-                        if (!timerAutoDuration.Enabled && !mediaPlayer.IsPaused)
+                        if (!timerAutoDuration.Enabled && !mediaPlayer.IsPaused && (mediaPlayer.CurrentPosition > 0.2 || index > 0))
                         {
                             SubtitleListview1.BeginUpdate();
                             SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
