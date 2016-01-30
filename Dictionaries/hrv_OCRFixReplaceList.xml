@@ -1278,6 +1278,7 @@
     <RegEx find="Vazdušn" replaceWith="Zračn" />
     <RegEx find="\b([vV])eč([aeiu]|[ei]m|eg|ih|ima|o[mj])?\b" replaceWith="$1eć$2" />
     <RegEx find="([vV])e[čć]n" replaceWith="$1ječn" />
+    <RegEx find="([vV])enča" replaceWith="$1jenča" />
     <RegEx find="([vV])eoma" replaceWith="$1rlo" />
     <RegEx find="\b([vV])er([aeiou]|an|n[aeiou]|no[mgj]|nost|nošću|om|ama|nik|nik[aeu]|ni[ck]om|nic[aeiu]|nic[ai]ma|sk[aeiou]|sko[mgj]|ski[mh]|oval[aeio]|ovanja|ovanjima]|ovati)\b" replaceWith="$1jer$2" />
     <RegEx find="\b([nN])ever([aeioun])" replaceWith="$1evjer$2" />
