@@ -85,16 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFind_Click(object sender, EventArgs e)
         {
-            string searchText = FindText;
-            textBoxFind.Text = searchText;
-
-            // text needs to be set multiple times... bug in winforms?
-            comboBoxFind.Text = searchText;
-            comboBoxFind.Text = searchText;
-            comboBoxFind.Text = searchText;
-            comboBoxFind.Text = searchText;
-            comboBoxFind.Text = searchText;
-
+            var searchText = FindText;
             if (searchText.Length == 0)
             {
                 DialogResult = DialogResult.Cancel;
@@ -111,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    _regEx = new Regex(FindText, RegexOptions.Compiled);
+                    _regEx = new Regex(searchText, RegexOptions.Compiled);
                     DialogResult = DialogResult.OK;
                 }
                 catch (Exception exception)

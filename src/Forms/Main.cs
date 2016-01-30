@@ -3964,9 +3964,16 @@ namespace Nikse.SubtitleEdit.Forms
                     if (SubtitleListview1.SelectedItems.Count > 0)
                         selectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
+                    var positon = 0;
+                    // if text is already found start from position after the found text
+                    if (textBoxListViewText.SelectedText.Equals(_findHelper.FindText, StringComparison.OrdinalIgnoreCase))
+                    {
+                        positon = textBoxListViewText.SelectionStart + 1;
+                    }
+
                     //if we fail to find the text, we might want to start searching from the top of the file.
                     bool foundIt = false;
-                    if (_findHelper.Find(_subtitle, _subtitleAlternate, selectedIndex))
+                    if (_findHelper.Find(_subtitle, _subtitleAlternate, selectedIndex, positon))
                     {
                         foundIt = true;
                     }
