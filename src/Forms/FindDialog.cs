@@ -87,6 +87,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string searchText = FindText;
             textBoxFind.Text = searchText;
+
+            // text needs to be set multiple times... bug in winforms?
+            comboBoxFind.Text = searchText;
+            comboBoxFind.Text = searchText;
+            comboBoxFind.Text = searchText;
+            comboBoxFind.Text = searchText;
             comboBoxFind.Text = searchText;
 
             if (searchText.Length == 0)
