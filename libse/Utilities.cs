@@ -2188,15 +2188,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             if (string.IsNullOrEmpty(text))
                 return 0;
-
-            int lines = 1;
-            int idx = text.IndexOf('\n');
-            while (idx >= 0)
-            {
-                lines++;
-                idx = text.IndexOf('\n', idx + 1);
-            }
-            return lines;
+            return CountTagInText(text, '\n') + 1;
         }
 
         public static string Sha256Hash(string value)
