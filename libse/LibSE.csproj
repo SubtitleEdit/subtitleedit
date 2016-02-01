@@ -163,7 +163,6 @@
     <Compile Include="HistoryItem.cs" />
     <Compile Include="HtmlUtil.cs" />
     <Compile Include="IfoParser.cs" />
-    <Compile Include="ImageSplitter.cs" />
     <Compile Include="ImageSplitterItem.cs" />
     <Compile Include="Interfaces\IRtfTextConverter.cs" />
     <Compile Include="Language.cs" />
@@ -467,7 +466,6 @@
     <Compile Include="VobSub\VobSubPack.cs" />
     <Compile Include="VobSub\VobSubParser.cs" />
     <Compile Include="VobSub\VobSubWriter.cs" />
-    <Compile Include="Wave.cs" />
     <Compile Include="WaveToVisualizer.cs" />
     <Compile Include="XmlDeserializerGenerator.cs" />
     <Compile Include="XSub.cs" />

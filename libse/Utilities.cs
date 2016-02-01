@@ -52,10 +52,6 @@ namespace Nikse.SubtitleEdit.Core
                     info.VideoCodec = videoCodec;
                 }
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 if (matroska != null)
@@ -246,7 +242,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static bool CanBreak(string s, int index, string language)
         {
-            char nextChar = ' ';
+            char nextChar;
             if (index >= 0 && index < s.Length)
                 nextChar = s[index];
             else
@@ -617,7 +613,7 @@ namespace Nikse.SubtitleEdit.Core
                 s = s.Substring(0, splitPos) + Environment.NewLine + s.Substring(splitPos);
 
             s = ReInsertHtmlTags(s, htmlTags);
-            var idx = s.IndexOf(Environment.NewLine + "</");
+            var idx = s.IndexOf(Environment.NewLine + "</", StringComparison.Ordinal);
             if (idx > 2)
             {
                 var endIdx = s.IndexOf('>', idx + 2);

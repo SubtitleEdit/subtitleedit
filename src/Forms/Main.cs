@@ -88,29 +88,29 @@ namespace Nikse.SubtitleEdit.Forms
         private long _lastTextKeyDownTicks;
         private long _lastHistoryTicks;
         private long _lastWaveformMenuCloseTicks;
-        private double? _audioWaveformRightClickSeconds = null;
+        private double? _audioWaveformRightClickSeconds;
         private Timer _timerDoSyntaxColoring = new Timer();
         private Timer _timerAutoSave = new Timer();
         private Timer _timerClearStatus = new Timer();
         private string _textAutoSave;
         private string _textAutoSaveOriginal;
         private StringBuilder _statusLog = new StringBuilder();
-        private bool _makeHistoryPaused = false;
+        private bool _makeHistoryPaused;
 
         private CheckForUpdatesHelper _checkForUpdatesHelper;
         private Timer _timerCheckForUpdates;
 
         private NikseWebServiceSession _networkSession;
-        private NetworkChat _networkChat = null;
+        private NetworkChat _networkChat;
 
-        private ShowEarlierLater _showEarlierOrLater = null;
+        private ShowEarlierLater _showEarlierOrLater;
 
-        private bool _isVideoControlsUndocked = false;
-        private VideoPlayerUndocked _videoPlayerUndocked = null;
-        private WaveformUndocked _waveformUndocked = null;
-        private VideoControlsUndocked _videoControlsUndocked = null;
+        private bool _isVideoControlsUndocked;
+        private VideoPlayerUndocked _videoPlayerUndocked;
+        private WaveformUndocked _waveformUndocked;
+        private VideoControlsUndocked _videoControlsUndocked;
 
-        private GoogleOrMicrosoftTranslate _googleOrMicrosoftTranslate = null;
+        private GoogleOrMicrosoftTranslate _googleOrMicrosoftTranslate;
 
         private bool _cancelWordSpellCheck = true;
 
@@ -200,17 +200,17 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainTranslateCustomSearch4 = Keys.None;
         private Keys _mainTranslateCustomSearch5 = Keys.None;
         private Keys _mainTranslateCustomSearch6 = Keys.None;
-        private bool _videoLoadedGoToSubPosAndPause = false;
+        private bool _videoLoadedGoToSubPosAndPause;
         private string _cutText = string.Empty;
         private Paragraph _mainCreateStartDownEndUpParagraph;
         private Paragraph _mainAdjustStartDownEndUpAndGoToNextParagraph;
         private string _lastDoNotPrompt = string.Empty;
-        private VideoInfo _videoInfo = null;
-        private bool _splitDualSami = false;
-        private bool _openFileDialogOn = false;
+        private VideoInfo _videoInfo;
+        private bool _splitDualSami;
+        private bool _openFileDialogOn;
         private bool _resetVideo = true;
         private static object _syncUndo = new object();
-        private string[] _dragAndDropFiles = null;
+        private string[] _dragAndDropFiles;
         private Timer _dragAndDropTimer = new Timer(); // to prevent locking windows explorer
 
         private bool AutoRepeatContinueOn
@@ -1775,7 +1775,6 @@ namespace Nikse.SubtitleEdit.Forms
                             if (subtitles.Count > 0)
                             {
                                 SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                                encoding = GetCurrentEncoding();
                                 var list = new List<string>(subtitles[0].SplitToLines());
                                 _subtitle = new Subtitle();
                                 var mxfFormat = _subtitle.ReloadLoadSubtitle(list, null, null);
@@ -4863,7 +4862,6 @@ namespace Nikse.SubtitleEdit.Forms
                         if (onlySelectedLines)
                         {
                             // we only update selected lines
-                            int i = 0;
                             if (_networkSession != null)
                             {
                                 var deletes = new List<int>();
@@ -4881,7 +4879,6 @@ namespace Nikse.SubtitleEdit.Forms
                                         _subtitle.Paragraphs[index] = p;
                                         SubtitleListview1.SetTimeAndText(index, p);
                                     }
-                                    i++;
                                 }
                                 NetworkGetSendUpdates(deletes, 0, null);
                             }
@@ -4900,7 +4897,6 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         _subtitle.Paragraphs[idx] = p;
                                     }
-                                    i++;
                                 }
                             }
                             ShowStatus(_language.CommonErrorsFixedInSelectedLines);
@@ -5547,68 +5543,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SpellCheckToolStripMenuItemClick(object sender, EventArgs e)
         {
             SpellCheck(true, 0);
-        }
-
-        private void SpellCheckViaWord()
-        {
-            if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
-                return;
-
-            WordSpellChecker wordSpellChecker = null;
-            int totalLinesChanged = 0;
-            try
-            {
-                wordSpellChecker = new WordSpellChecker(this, LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle));
-                wordSpellChecker.NewDocument();
-                Application.DoEvents();
-            }
-            catch
-            {
-                MessageBox.Show(_language.UnableToStartWord);
-                return;
-            }
-            string version = wordSpellChecker.Version;
-
-            int index = FirstSelectedIndex;
-            if (index < 0)
-                index = 0;
-
-            _cancelWordSpellCheck = false;
-            for (; index < _subtitle.Paragraphs.Count; index++)
-            {
-                var p = _subtitle.Paragraphs[index];
-                int errorsBefore;
-                int errorsAfter;
-                ShowStatus(string.Format(_language.SpellChekingViaWordXLineYOfX, version, index + 1, _subtitle.Paragraphs.Count));
-                SubtitleListview1.SelectIndexAndEnsureVisible(index);
-                var newText = wordSpellChecker.CheckSpelling(p.Text, out errorsBefore, out errorsAfter);
-                if (errorsAfter > 0)
-                {
-                    wordSpellChecker.CloseDocument();
-                    wordSpellChecker.Quit();
-                    ShowStatus(string.Format(_language.SpellCheckAbortedXCorrections, totalLinesChanged));
-                    Cursor = Cursors.Default;
-                    return;
-                }
-                else if (errorsBefore != errorsAfter)
-                {
-                    if (textBoxListViewText.Text != newText)
-                    {
-                        textBoxListViewText.Text = newText;
-                        totalLinesChanged++;
-                    }
-                }
-
-                Application.DoEvents();
-                if (_cancelWordSpellCheck)
-                    break;
-            }
-            wordSpellChecker.CloseDocument();
-            wordSpellChecker.Quit();
-            ShowStatus(string.Format(_language.SpellCheckCompletedXCorrections, totalLinesChanged));
-            Cursor = Cursors.Default;
-            _cancelWordSpellCheck = true;
-        }
+        }     
 
         private void SpellCheck(bool autoDetect, int startFromLine)
         {
@@ -10200,7 +10135,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (showInTaskbar)
                 {
-                    vobSubOcr.Icon = (Icon)this.Icon.Clone();
+                    vobSubOcr.Icon = (Icon)Icon.Clone();
                     vobSubOcr.ShowInTaskbar = true;
                     vobSubOcr.ShowIcon = true;
                 }
@@ -11986,7 +11921,6 @@ namespace Nikse.SubtitleEdit.Forms
                 if (autoBreakUnbreakLines.ShowDialog() == DialogResult.OK && autoBreakUnbreakLines.FixedText.Count > 0)
                 {
                     MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines);
-                    var language = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle);
                     SubtitleListview1.BeginUpdate();
                     foreach (int index in SubtitleListview1.SelectedIndices)
                     {
@@ -12443,7 +12377,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         subtitleChooser.Initialize(subtitleList);
                                         if (_loading)
                                         {
-                                            subtitleChooser.Icon = (Icon)this.Icon.Clone();
+                                            subtitleChooser.Icon = (Icon)Icon.Clone();
                                             subtitleChooser.ShowInTaskbar = true;
                                             subtitleChooser.ShowIcon = true;
                                         }
@@ -15482,7 +15416,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var tb = GetFocusedTextBox();
 
-            string text = string.Empty;
+            string text;
             int selectionStart = tb.SelectionStart;
 
             // No text selected.
@@ -17684,7 +17618,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             // text undo
             int index = _listViewTextUndoIndex;
-            if (_listViewTextTicks == -1 || !this.CanFocus || _subtitle == null || _subtitle.Paragraphs.Count == 0 || index < 0 || index >= _subtitle.Paragraphs.Count)
+            if (_listViewTextTicks == -1 || !CanFocus || _subtitle == null || _subtitle.Paragraphs.Count == 0 || index < 0 || index >= _subtitle.Paragraphs.Count)
                 return;
 
             if ((DateTime.Now.Ticks - _listViewTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
@@ -17751,7 +17685,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
                 int index = _listViewTextUndoIndex;
-                if (_listViewAlternateTextTicks == -1 || !this.CanFocus || _subtitleAlternate == null || _subtitleAlternate.Paragraphs.Count == 0 || index < 0 || index >= _subtitleAlternate.Paragraphs.Count)
+                if (_listViewAlternateTextTicks == -1 || !CanFocus || _subtitleAlternate == null || _subtitleAlternate.Paragraphs.Count == 0 || index < 0 || index >= _subtitleAlternate.Paragraphs.Count)
                     return;
 
                 if ((DateTime.Now.Ticks - _listViewAlternateTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
@@ -18988,10 +18922,6 @@ namespace Nikse.SubtitleEdit.Forms
                 DisplaySubtitleNotLoadedMessage();
                 return;
             }
-
-            int lastSelectedIndex = 0;
-            if (SubtitleListview1.SelectedItems.Count > 0)
-                lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
             ReloadFromSourceView();
             using (var form = new ChangeSpeedInPercent(SubtitleListview1.SelectedItems.Count))
