@@ -35,9 +35,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 if (line.StartsWith("timestamp: ", StringComparison.Ordinal))
-                    subtitleCount++;
+                {
+                    if (++subtitleCount > 10)
+                        return true;
+                }
             }
-            return subtitleCount > 10;
+            return false;
         }
 
         public override string ToText(Subtitle subtitle, string title)
