@@ -470,9 +470,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 var stSub = new StripableText(s, pre, post);
                 string strippedText = stSub.StrippedText;
-                if (lineNumber == parts.Length - 1 && st.Post.Contains('?'))
-                    strippedText += "?";
-                else if (stSub.Post.Contains('?'))
+                if ((lineNumber == parts.Length - 1 && st.Post.Contains('?')) || stSub.Post.Contains('?'))
                     strippedText += "?";
                 if (!StartsAndEndsWithHearImpariedTags(strippedText))
                 {
