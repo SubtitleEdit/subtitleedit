@@ -801,6 +801,7 @@
     <RegEx find="([kK])oristić" replaceWith="$1oristit ć" />
     <RegEx find="([kK])oriš[ćč]en" replaceWith="$1orišten" />
     <RegEx find="([kK])orj?en" replaceWith="$1orijen" />
+    <RegEx find="([kK])rofn" replaceWith="$1rafn" /> 
     <RegEx find="([kK])rompir" replaceWith="$1rumpir" />
     <RegEx find="\b([kK])rst([au]|ića?)?\b" replaceWith="$1riž$2" />
     <RegEx find="\b([kK])rstov(e|ima)\b" replaceWith="$1rižev$2" />
@@ -1027,8 +1028,8 @@
     <RegEx find="Prevazi" replaceWith="Nadi" />
     <RegEx find="([pP])ridik" replaceWith="$1rodik" />
     <RegEx find="([pP])rihvata" replaceWith="$1rihvaća" />
-    <RegEx find="prijatn([aeiou])" replaceWith="ugodn$2" />
-    <RegEx find="Prijatn([aeiou])" replaceWith="Ugodn$2" />
+    <RegEx find="prijatn([aeiou])" replaceWith="ugodn$1" />
+    <RegEx find="Prijatn([aeiou])" replaceWith="Ugodn$1" />
     <RegEx find="([pP])rimj?en([ji])" replaceWith="$1rimijen$2" />
     <RegEx find="([pP])(r?)([io])veš[čć]" replaceWith="$1$2$3vest ć" />
     <RegEx find="([pP])rj?edlog([au]|om)?\b" replaceWith="$1rijedlog$2" />
