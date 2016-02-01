@@ -436,7 +436,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public string RemoveTextFromHearImpaired(string text)
         {
-            if (StartsAndEndsWithHearImpariedTags(HtmlUtil.RemoveHtmlTags(text, true).TrimStart(TrimStartNoiseChar)))
+            if (StartsAndEndsWithHearImpairedTags(HtmlUtil.RemoveHtmlTags(text, true).TrimStart(TrimStartNoiseChar)))
             {
                 return string.Empty;
             }
@@ -472,7 +472,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 string strippedText = stSub.StrippedText;
                 if ((lineNumber == parts.Length - 1 && st.Post.Contains('?')) || stSub.Post.Contains('?'))
                     strippedText += "?";
-                if (!StartsAndEndsWithHearImpariedTags(strippedText))
+                if (!StartsAndEndsWithHearImpairedTags(strippedText))
                 {
                     if (removedDialogInFirstLine && stSub.Pre.Contains("- "))
                         stSub.Pre = stSub.Pre.Replace("- ", string.Empty);
@@ -547,7 +547,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             st = new StripableText(text, " >-\"'‘`´♪¿¡.…—", " -\"'`´♪.!?:…—");
             text = st.StrippedText;
-            if (StartsAndEndsWithHearImpariedTags(text))
+            if (StartsAndEndsWithHearImpairedTags(text))
             {
                 text = RemoveStartEndTags(text);
             }
@@ -1169,18 +1169,18 @@ namespace Nikse.SubtitleEdit.Core.Forms
         public bool HasHearImpariedTagsAtStart(string text)
         {
             if (Settings.OnlyIfInSeparateLine)
-                return StartsAndEndsWithHearImpariedTags(text);
+                return StartsAndEndsWithHearImpairedTags(text);
             return HasHearImpairedText(text);
         }
 
         public bool HasHearImpariedTagsAtEnd(string text)
         {
             if (Settings.OnlyIfInSeparateLine)
-                return StartsAndEndsWithHearImpariedTags(text);
+                return StartsAndEndsWithHearImpairedTags(text);
             return HasHearImpairedText(text);
         }
 
-        private bool StartsAndEndsWithHearImpariedTags(string text)
+        private bool StartsAndEndsWithHearImpairedTags(string text)
         {
             return (Settings.RemoveTextBetweenSquares && text.StartsWith('[') && text.EndsWith(']') && !text.Trim('[').Contains('[')) ||
                    (Settings.RemoveTextBetweenBrackets && text.StartsWith('{') && text.EndsWith('}') && !text.Trim('{').Contains('{')) ||
