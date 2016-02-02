@@ -24,6 +24,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -5638,7 +5639,7 @@ namespace Nikse.SubtitleEdit.Forms
             int index = -1;
             for (int i = 0; i < text.Length; i++)
             {
-                if (Forms.SpellCheck.SplitChars.Contains(text[i]))
+                if (SpellCheckWordLists.SplitChars.Contains(text[i]))
                 {
                     if (sb.Length > 0)
                     {
