@@ -13,6 +13,7 @@
 * FIXED:
    * Several fixes for Find/Count - thx André
    * Batch convert: Show FCE settings if "Skip step one" is checked - thx ivandrofly
+   * Spell check "change" / "change all" issue regarding dash - thx kurosu
    * Fixed crash regarding font in image export - thx r0lZ
    * Fix for (sometimes) not restoring last focused line at startup - thx vmb
    * Fixed bug in handling of inline font tag in ASS format - thx Kyoichi
