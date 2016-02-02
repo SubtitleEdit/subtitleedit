@@ -180,7 +180,10 @@
     <Compile Include="RegistryUtil.cs" />
     <Compile Include="RichTextToPlainText.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="SpellCheckWord.cs" />
+    <Compile Include="Interfaces\IDoSpell.cs" />
+    <Compile Include="SpellCheck\SpellCheckWord.cs" />
+    <Compile Include="SpellCheck\SpellCheckWordLists.cs" />
+    <Compile Include="SpellCheck\UndoObject.cs" />
     <Compile Include="SsaStyle.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="StripableText.cs" />
