@@ -26,10 +26,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public string RemoveHearImpairedtagsInsideLine(string newText)
         {
+            const string endChars = ".?!";
             for (int i = 6; i < newText.Length; i++)
             {
                 var s = newText.Substring(i);
-                if (s.Length > 2 && ".?!".Contains(s[0]))
+                if (s.Length > 2 && endChars.Contains(s[0]))
                 {
                     var pre = string.Empty;
 
@@ -129,7 +130,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 {
                                     s = s.Remove(indexOf + 1, indexOfColon - indexOf);
                                     s = s.Insert(indexOf + 1, " -");
-                                    if (newText.StartsWith("<i>") && !newText.StartsWith("<i>-"))
+                                    if (newText.StartsWith("<i>", StringComparison.Ordinal) && !newText.StartsWith("<i>-", StringComparison.Ordinal))
                                         newText = "<i>- " + newText.Remove(0, 3);
                                     else if (!newText.StartsWith("-"))
                                         newText = "- " + newText;
@@ -492,7 +493,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         }
                     }
 
-                    if (stSub.Pre == "<i>- " && newText.StartsWith("</i>"))
+                    if (stSub.Pre == "<i>- " && newText.StartsWith("</i>", StringComparison.Ordinal))
                         sb.AppendLine("- " + newText.Remove(0, 4).Trim() + stSub.Post);
                     else
                         sb.AppendLine(stSub.Pre + newText + stSub.Post);
@@ -1231,14 +1232,15 @@ namespace Nikse.SubtitleEdit.Core.Forms
             if (!Settings.RemoveIfAllUppercase)
                 return text;
 
-            var lines = text.SplitToLines();
             var sb = new StringBuilder();
-            foreach (var line in lines)
+            char[] endTrimChars = { '.', '!', '?', ':' };
+            char[] trimChars = { ' ', '-', '—' };
+            foreach (var line in text.SplitToLines())
             {
                 var lineNoHtml = HtmlUtil.RemoveHtmlTags(line, true);
                 if (lineNoHtml == lineNoHtml.ToUpper() && lineNoHtml != lineNoHtml.ToLower())
                 {
-                    var temp = lineNoHtml.TrimEnd('.', '!', '?', ':').Trim().Trim(' ', '-', '—');
+                    var temp = lineNoHtml.TrimEnd(endTrimChars).Trim().Trim(trimChars);
                     if (temp.Length == 1 || temp == "YES" || temp == "NO" || temp == "WHY" || temp == "HI")
                     {
                         sb.AppendLine(line);
