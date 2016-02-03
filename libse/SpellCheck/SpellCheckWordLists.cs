@@ -320,7 +320,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 }
             }
             if (sb.Length > 0)
-                list.Add(new SpellCheckWord { Text = sb.ToString(), Index = s.Length - 1 - sb.Length });
+                list.Add(new SpellCheckWord { Text = sb.ToString(), Index = s.Length - sb.Length });
             return list;
         }
 
