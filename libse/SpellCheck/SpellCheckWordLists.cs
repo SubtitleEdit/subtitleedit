@@ -12,8 +12,10 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
     public class SpellCheckWordLists
     {
 
-        private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '“' };
         public static readonly string SplitChars = " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“";
+
+        private static readonly char[] PeriodAndDash = { '.', '-' };
+        private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '“' };
 
         private readonly NamesList _namesList;
         private readonly HashSet<string> _namesEtcList;
@@ -85,12 +87,12 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             _wordsWithDashesOrPeriods.AddRange(namesEtcMultiWordList);
             foreach (string name in _namesEtcList)
             {
-                if (name.Contains(new[] { '.', '-' }))
+                if (name.Contains(PeriodAndDash))
                     _wordsWithDashesOrPeriods.Add(name);
             }
             foreach (string word in _userWordList)
             {
-                if (word.Contains(new[] { '.', '-' }))
+                if (word.Contains(PeriodAndDash))
                     _wordsWithDashesOrPeriods.Add(word);
             }
             _wordsWithDashesOrPeriods.AddRange(_userPhraseList);
@@ -204,7 +206,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                     _wordsWithDashesOrPeriods.Add(w);
             }
 
-            if (text.Contains(new[] { '.', '-' }))
+            if (text.Contains(PeriodAndDash))
             {
                 int i = 0;
                 foreach (string wordWithDashesOrPeriods in _wordsWithDashesOrPeriods)
@@ -218,7 +220,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                         if (indexStart >= 0)
                         {
                             int endIndexPlus = indexStart + wordWithDashesOrPeriods.Length;
-                            bool startOk = indexStart == 0 || (@" (['""" + Environment.NewLine).Contains(text[indexStart - 1]);
+                            bool startOk = indexStart == 0 || (@" (['""" + "\r\n").Contains(text[indexStart - 1]);
                             bool endOk = endIndexPlus == text.Length;
                             if (!endOk && endIndexPlus < text.Length && @",!?:;. ])<'""".Contains(text[endIndexPlus]))
                                 endOk = true;
