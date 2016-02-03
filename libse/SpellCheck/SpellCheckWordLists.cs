@@ -129,27 +129,26 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
         public string ReplaceKnownWordsOrNamesWithBlanks(string s)
         {
-            var replaceIds = new List<string>();
-            var replaceNames = new List<string>();
-            GetTextWithoutUserWordsAndNames(replaceIds, replaceNames, s);
-            foreach (string name in replaceNames)
+            var replaceDictionary = new Dictionary<string, string>();
+            GetTextWithoutUserWordsAndNames(replaceDictionary, s);
+            foreach (string key in replaceDictionary.Keys)
             {
-                int start = s.IndexOf(name, StringComparison.Ordinal);
+                var wordWithDashesOrPeriods = replaceDictionary[key];
+                int start = s.IndexOf(wordWithDashesOrPeriods, StringComparison.Ordinal);
                 while (start >= 0)
                 {
                     bool startOk = start == 0 || SplitChars.Contains(s[start - 1]);
                     if (startOk)
                     {
-                        int end = start + name.Length;
+                        int end = start + wordWithDashesOrPeriods.Length;
                         bool endOk = end >= s.Length || SplitChars.Contains(s[end]);
                         if (endOk)
-                            s = s.Remove(start, name.Length).Insert(start, string.Empty.PadLeft(name.Length));
+                            s = s.Remove(start, wordWithDashesOrPeriods.Length).Insert(start, string.Empty.PadLeft(wordWithDashesOrPeriods.Length));
                     }
 
-                    if (start + 1 < s.Length)
-                        start = s.IndexOf(name, start + 1, StringComparison.Ordinal);
-                    else
-                        start = -1;
+                    if (start + 1 >= s.Length)
+                        break;
+                    start = s.IndexOf(wordWithDashesOrPeriods, start + 1, StringComparison.Ordinal);
                 }
             }
             return s;
@@ -195,7 +194,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         /// <summary>
         /// Removes words with dash'es that are correct, so spell check can ignore the combination (do not split correct words with dash'es)
         /// </summary>
-        private void GetTextWithoutUserWordsAndNames(List<string> replaceIds, List<string> replaceNames, string text)
+        private void GetTextWithoutUserWordsAndNames(Dictionary<string, string> replaceDictionary, string text)
         {
             string[] wordsWithDash = text.Split(SplitChars2, StringSplitOptions.RemoveEmptyEntries);
             foreach (string w in wordsWithDash)
@@ -206,7 +205,9 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
             if (text.Contains(new[] { '.', '-' }))
             {
-                int i = 0;
+                int idNum = 0;
+                string expectedChars1 = @" (['""" + Environment.NewLine;
+                const string expectedChars2 = @",!?:;. ])<'""";
                 foreach (string wordWithDashesOrPeriods in _wordsWithDashesOrPeriods)
                 {
                     bool found = true;
@@ -218,17 +219,14 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                         if (indexStart >= 0)
                         {
                             int endIndexPlus = indexStart + wordWithDashesOrPeriods.Length;
-                            bool startOk = indexStart == 0 || (@" (['""" + Environment.NewLine).Contains(text[indexStart - 1]);
+                            bool startOk = indexStart == 0 || expectedChars1.Contains(text[indexStart - 1]);
                             bool endOk = endIndexPlus == text.Length;
-                            if (!endOk && endIndexPlus < text.Length && @",!?:;. ])<'""".Contains(text[endIndexPlus]))
+                            if (!endOk && endIndexPlus < text.Length && expectedChars2.Contains(text[endIndexPlus]))
                                 endOk = true;
                             if (startOk && endOk)
                             {
-                                i++;
-                                string id = string.Format("_@{0}_", i);
-                                replaceIds.Add(id);
-                                replaceNames.Add(wordWithDashesOrPeriods);
-                                text = text.Remove(indexStart, wordWithDashesOrPeriods.Length).Insert(indexStart, id);
+                                replaceDictionary.Add($"_@{++idNum}_", wordWithDashesOrPeriods);
+                                text = text.Remove(indexStart, wordWithDashesOrPeriods.Length).Insert(indexStart, idNum.ToString());
                             }
                             else
                             {
