@@ -249,16 +249,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 foreach (var exportedType in assembly.GetExportedTypes())
                                 {
-                                    try
-                                    {
-                                        object pluginObject = Activator.CreateInstance(exportedType);
-                                        var po = pluginObject as SubtitleFormat;
-                                        if (po != null)
-                                            _allSubtitleFormats.Insert(1, po);
-                                    }
-                                    catch
-                                    {
-                                    }
+                                    object pluginObject = Activator.CreateInstance(exportedType);
+                                    var po = pluginObject as SubtitleFormat;
+                                    if (po != null)
+                                        _allSubtitleFormats.Insert(1, po);
                                 }
                             }
                         }
