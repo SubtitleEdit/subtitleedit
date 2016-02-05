@@ -21,12 +21,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (!text.Contains(Environment.NewLine))
                     {
                         text = Helper.FixDoubleGreaterThanHelper(text);
-                        if (oldText != text)
-                        {
-                            fixCount++;
-                            p.Text = text;
-                            callbacks.AddFixToListView(p, fixAction, oldText, text);
-                        }
                     }
                     else
                     {
@@ -36,12 +30,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             lines[k] = Helper.FixDoubleGreaterThanHelper(lines[k]);
                         }
                         text = string.Join(Environment.NewLine, lines);
-                        if (oldText != text)
-                        {
-                            fixCount++;
-                            p.Text = text;
-                            callbacks.AddFixToListView(p, fixAction, oldText, text);
-                        }
+                    }
+                    if (oldText != text)
+                    {
+                        fixCount++;
+                        p.Text = text;
+                        callbacks.AddFixToListView(p, fixAction, oldText, text);
                     }
                 }
             }
