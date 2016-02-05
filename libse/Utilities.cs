@@ -1607,7 +1607,8 @@ namespace Nikse.SubtitleEdit.Core
             int i2 = 0;
             int i = 0;
             int c = 0;
-            while (i < Math.Max(parts1.Length, parts2.Length) && i1 < parts1.Length && i2 < parts2.Length)
+            var max = Math.Max(parts1.Length, parts2.Length);
+            while (i < max && i1 < parts1.Length && i2 < parts2.Length)
             {
                 if (parts1[i1] == parts2[i2])
                 {
