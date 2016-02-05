@@ -55,5 +55,11 @@ namespace Test.Core
             Assert.AreEqual("SubtitleEdit", HtmlUtil.RemoveHtmlTags(source));
         }
 
+        [TestMethod]
+        public void RemoveHtmlTagsBadItalic2()
+        {
+            const string s = "<i>foobar<i>?";
+            Assert.AreEqual("<i>foobar</i>?", HtmlUtil.FixInvalidItalicTags(s));
+        }
     }
 }
