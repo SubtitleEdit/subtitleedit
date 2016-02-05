@@ -164,13 +164,18 @@ namespace Nikse.SubtitleEdit.Core
             return false;
         }
 
-        public static string RemoveControlCharacters(this string s)
+        public unsafe static string RemoveControlCharacters(this string s)
         {
             var sb = new StringBuilder(s.Length);
-            foreach (var ch in s)
+            fixed (char* c = s)
             {
-                if (!Char.IsControl(ch))
-                    sb.Append(ch);
+                for (int i = 0; i < s.Length; i++)
+                {
+                    if (!char.IsControl(*(c + i)))
+                    {
+                        sb.Append(*(c + i));
+                    }
+                }
             }
             return sb.ToString();
         }
