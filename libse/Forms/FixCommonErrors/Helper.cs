@@ -377,8 +377,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         {
             Paragraph p = subtitle.Paragraphs[i];
             string text = p.Text;
-            var textCache = HtmlUtil.RemoveHtmlTags(text.TrimStart());
-            if (textCache.StartsWith('-') || textCache.Contains(Environment.NewLine + "-"))
+            var textCache = HtmlUtil.RemoveHtmlTags(text.TrimStart(), true);
+            if (textCache.StartsWith('-') ^ textCache.Contains(Environment.NewLine + "-"))
             {
                 Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
 
