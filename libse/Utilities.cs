@@ -1546,19 +1546,13 @@ namespace Nikse.SubtitleEdit.Core
                 int i = 0;
                 while (i < s.Length)
                 {
-                    if (ignoreLineBreaks && s.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
+                    if (s.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
                         if (word.Length > 0)
                             list.Add(word.ToString());
                         word.Clear();
-                        i += Environment.NewLine.Length;
-                    }
-                    else if (s.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
-                    {
-                        if (word.Length > 0)
-                            list.Add(word.ToString());
-                        word.Clear();
-                        list.Add(Environment.NewLine);
+                        if (!ignoreLineBreaks)
+                            list.Add(Environment.NewLine);
                         i += Environment.NewLine.Length;
                     }
                     else if (s[i] == ' ')
