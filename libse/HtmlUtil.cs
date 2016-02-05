@@ -473,9 +473,10 @@ namespace Nikse.SubtitleEdit.Core
             {
                 if (italicBeginTagCount == 1 && italicEndTagCount == 1 && text.IndexOf(beginTag, StringComparison.Ordinal) > text.IndexOf(endTag, StringComparison.Ordinal))
                 {
-                    text = text.Replace(beginTag, "___________@");
+                    const string pattern = "___________@";
+                    text = text.Replace(beginTag, pattern);
                     text = text.Replace(endTag, beginTag);
-                    text = text.Replace("___________@", endTag);
+                    text = text.Replace(pattern, endTag);
                 }
 
                 if (italicBeginTagCount == 2 && italicEndTagCount == 0)
@@ -494,13 +495,10 @@ namespace Nikse.SubtitleEdit.Core
                 if (italicBeginTagCount == 1 && italicEndTagCount == 2)
                 {
                     int firstIndex = text.IndexOf(endTag, StringComparison.Ordinal);
-                    if (text.StartsWith("</i>-<i>-", StringComparison.Ordinal))
-                        text = text.Remove(0, 5);
-                    else if (text.StartsWith("</i>- <i>-", StringComparison.Ordinal))
-                        text = text.Remove(0, 5);
-                    else if (text.StartsWith("</i>- <i> -", StringComparison.Ordinal))
-                        text = text.Remove(0, 5);
-                    else if (text.StartsWith("</i>-<i> -", StringComparison.Ordinal))
+                    if (text.StartsWith("</i>-<i>-", StringComparison.Ordinal) ||
+                        text.StartsWith("</i>- <i>-", StringComparison.Ordinal) ||
+                        text.StartsWith("</i>- <i> -", StringComparison.Ordinal) ||
+                        text.StartsWith("</i>-<i> -", StringComparison.Ordinal))
                         text = text.Remove(0, 5);
                     else if (firstIndex == 0)
                         text = text.Remove(0, 4);
@@ -603,7 +601,7 @@ namespace Nikse.SubtitleEdit.Core
                     if (index > 0 && text.Length > index + (beginTag.Length + endTag.Length))
                     {
                         var firstLine = text.Substring(0, index).Trim();
-                        var secondLine = text.Substring(index + 2).Trim();
+                        var secondLine = text.Substring(index + Environment.NewLine.Length).Trim();
 
                         if (firstLine.Length > 10 && firstLine.StartsWith("- <i>", StringComparison.Ordinal) && firstLine.EndsWith(endTag, StringComparison.Ordinal))
                         {
@@ -611,7 +609,7 @@ namespace Nikse.SubtitleEdit.Core
                             text = text.Replace("<i>-  ", "<i>- ");
                             index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                             firstLine = text.Substring(0, index).Trim();
-                            secondLine = text.Substring(index + 2).Trim();
+                            secondLine = text.Substring(index + Environment.NewLine.Length).Trim();
                         }
                         if (secondLine.Length > 10 && secondLine.StartsWith("- <i>", StringComparison.Ordinal) && secondLine.EndsWith(endTag, StringComparison.Ordinal))
                         {
@@ -619,12 +617,12 @@ namespace Nikse.SubtitleEdit.Core
                             text = text.Replace("<i>-  ", "<i>- ");
                             index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                             firstLine = text.Substring(0, index).Trim();
-                            secondLine = text.Substring(index + 2).Trim();
+                            secondLine = text.Substring(index + Environment.NewLine.Length).Trim();
                         }
 
                         if (Utilities.StartsAndEndsWithTag(firstLine, beginTag, endTag) && Utilities.StartsAndEndsWithTag(secondLine, beginTag, endTag))
                         {
-                            text = text.Replace(beginTag, String.Empty).Replace(endTag, String.Empty).Trim();
+                            text = text.Replace(beginTag, string.Empty).Replace(endTag, string.Empty).Trim();
                             text = beginTag + text + endTag;
                         }
                     }
