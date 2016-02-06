@@ -397,41 +397,39 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        protected static TimeCode DecodeTimeCodeFrames(string[] parts)
+        protected TimeCode DecodeTimeCodeFramesTwoParts(string[] parts)
         {
             if (parts == null)
                 return new TimeCode(0, 0, 0, 0);
-
-            int hour = 0;
-            int minutes = 0;
-            int seconds = 0;
-            int frames = 0;
-
-            if (parts.Length == 4)
-            {
-                hour = int.Parse(parts[0]);
-                minutes = int.Parse(parts[1]);
-                seconds = int.Parse(parts[2]);
-                frames = int.Parse(parts[3]);
-            }
-            else if (parts.Length == 3)
-            {
-                minutes = int.Parse(parts[0]);
-                seconds = int.Parse(parts[1]);
-                frames = int.Parse(parts[2]);
-            }
-            else if (parts.Length == 2)
-            {
-                seconds = int.Parse(parts[0]);
-                frames = int.Parse(parts[1]);
-            }
-
-           return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
+            if (parts.Length != 2)
+                throw new InvalidOperationException();
+            // 00:00
+            return new TimeCode(0, 0, int.Parse(parts[0]), FramesToMillisecondsMax999(int.Parse(parts[1])));
         }
 
-        protected static TimeCode DecodeTimeCodeFrames(string part, char[] splitChars)
+        protected TimeCode DecodeTimeCodeFramesThreeParts(string[] parts)
         {
-            return DecodeTimeCodeFrames(part.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
+            if (parts == null)
+                return new TimeCode(0, 0, 0, 0);
+            if (parts.Length != 3)
+                throw new InvalidOperationException();
+            // 00:00:00
+            return new TimeCode(0, int.Parse(parts[0]), int.Parse(parts[1]), FramesToMillisecondsMax999(int.Parse(parts[2])));
+        }
+
+        protected TimeCode DecodeTimeCodeFramesFourParts(string[] parts)
+        {
+            if (parts == null)
+                return new TimeCode(0, 0, 0, 0);
+            if (parts.Length != 4)
+                throw new InvalidOperationException();
+            // 00:00:00:00
+            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
+        }
+
+        protected TimeCode DecodeTimeCodeFrames(string part, char[] splitChars)
+        {
+            return DecodeTimeCodeFramesFourParts(part.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
         }
 
     }

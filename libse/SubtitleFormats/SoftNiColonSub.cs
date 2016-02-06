@@ -159,8 +159,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             try
                             {
                                 p = new Paragraph();
-                                p.StartTime = DecodeTimeCodeFrames(startParts);
-                                p.EndTime = DecodeTimeCodeFrames(endParts);
+                                p.StartTime = DecodeTimeCodeFramesFourParts(startParts);
+                                p.EndTime = DecodeTimeCodeFramesFourParts(endParts);
                                 string text = sb.ToString().Trim();
 
                                 bool positionTop = false;
