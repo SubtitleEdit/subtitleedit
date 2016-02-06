@@ -17,10 +17,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     string text = p.Text;
                     string oldText = p.Text;
 
-                    while (text.Contains("---", StringComparison.Ordinal))
-                    {
-                        text = text.Replace("---", "--");
-                    }
+                    const string tripleHyphen = "---";
+                    while (text.Contains(tripleHyphen, StringComparison.Ordinal))
+                        text = text.Replace(tripleHyphen, "--");
 
                     if (text.Contains("--", StringComparison.Ordinal))
                     {
