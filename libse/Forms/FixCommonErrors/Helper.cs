@@ -145,6 +145,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return pre + text;
         }
 
+        private static readonly string[] EndPlusDashList = { ". -", "! -", "? -", "— -", "-- -", ") -", "] -", "> -" };
+        private static readonly string[] EndPlusDashListShort = { ". -", "! -", "? -", "— -" };
+
         public static string FixDialogsOnOneLine(string text, string language)
         {
             if (text.Contains(" - ") && !text.Contains(Environment.NewLine))
@@ -169,8 +172,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
             }
 
-            var stringArray = new[] { ". -", "! -", "? -", "— -", "-- -", ") -", "] -", "> -" };
-            var idx = text.IndexOfAny(stringArray, StringComparison.Ordinal);
+            var idx = text.IndexOfAny(EndPlusDashList, StringComparison.Ordinal);
             if (idx >= 0)
             {
                 if (Utilities.GetNumberOfLines(text) == 2)
@@ -198,7 +200,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     else
                     {
-                        int index = text.IndexOfAny(new[] { ". -", "! -", "? -", "— -" }, StringComparison.Ordinal);
+                        int index = text.IndexOfAny(EndPlusDashListShort, StringComparison.Ordinal);
                         if (index < 0 && text.IndexOf("-- -", StringComparison.Ordinal) > 0)
                             index = text.IndexOf("-- -", StringComparison.Ordinal) + 1;
                         if (index > 0)
@@ -390,7 +392,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     if (startHyphenCount == 1 && totalSpaceHyphen == 0)
                     {
                         var parts = textCache.SplitToLines();
-                        if (parts.Length == 2)
+                        if (parts.Length == 2 && !string.IsNullOrWhiteSpace(parts[0]))
                         {
                             var part0 = parts[0].TrimEnd();
                             bool doAdd = "!?.".Contains(part0[part0.Length - 1]) || language == "ko";
@@ -470,6 +472,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return post + text;
         }
 
+        private static readonly char[] NoShortLineList = { '.', '?', '!', ':', ';', '-', '♪', '♫' };
+
         public static string FixShortLines(string text)
         {
             if (string.IsNullOrWhiteSpace(text) || !text.Contains(Environment.NewLine, StringComparison.Ordinal))
@@ -480,7 +484,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 s = s.TrimEnd().TrimEnd('.', '?', '!', ':', ';');
                 s = s.TrimStart('-');
-                if (!s.Contains(new[] { '.', '?', '!', ':', ';', '-', '♪', '♫' }) &&
+                if (!s.Contains(NoShortLineList) &&
                     !(s.StartsWith('[') && s.Contains("]" + Environment.NewLine, StringComparison.Ordinal)) &&
                     !(s.StartsWith('(') && s.Contains(")" + Environment.NewLine, StringComparison.Ordinal)) &&
                     s != s.ToUpper())
