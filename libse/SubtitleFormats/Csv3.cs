@@ -103,8 +103,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (parts.Length == 2)
                         try
                         {
-                            var start = DecodeTimeCode(parts[0], splitChars);
-                            var end = DecodeTimeCode(parts[1], splitChars);
+                            var start = DecodeTimeCodeFrames(parts[0], splitChars);
+                            var end = DecodeTimeCodeFrames(parts[1], splitChars);
                             string text = ReadText(line.Remove(0, m.Length));
                             var p = new Paragraph(start, end, text);
                             subtitle.Paragraphs.Add(p);

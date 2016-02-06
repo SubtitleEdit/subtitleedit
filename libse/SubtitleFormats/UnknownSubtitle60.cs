@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         try
                         {
-                            p.StartTime = DecodeTimeCode(parts);
+                            p.StartTime = DecodeTimeCodeFrames(parts);
                             expectActor = true;
                             expectStartTime = false;
                         }

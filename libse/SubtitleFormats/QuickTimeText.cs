@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 int indexOfEndTime = line.IndexOf(']');
                                 if (indexOfEndTime > 0 && indexOfEndTime + 1 < line.Length)
                                     text = line.Substring(indexOfEndTime + 1);
-                                p = new Paragraph(DecodeTimeCode(parts), DecodeTimeCode(parts), text);
+                                p = new Paragraph(DecodeTimeCodeFrames(parts), DecodeTimeCodeFrames(parts), text);
                             }
                             catch
                             {
@@ -103,14 +103,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else
                         {
-                            p.EndTime = DecodeTimeCode(parts);
+                            p.EndTime = DecodeTimeCodeFrames(parts);
                             subtitle.Paragraphs.Add(p);
 
                             string text = string.Empty;
                             int indexOfEndTime = line.IndexOf(']');
                             if (indexOfEndTime > 0 && indexOfEndTime + 1 < line.Length)
                                 text = line.Substring(indexOfEndTime + 1);
-                            p = new Paragraph(DecodeTimeCode(parts), DecodeTimeCode(parts), text);
+                            p = new Paragraph(DecodeTimeCodeFrames(parts), DecodeTimeCodeFrames(parts), text);
                         }
                     }
                 }

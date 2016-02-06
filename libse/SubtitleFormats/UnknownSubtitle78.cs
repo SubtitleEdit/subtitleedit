@@ -189,8 +189,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     try
                     {
-                        var timeCodeIn = DecodeTimeCode(node.SelectSingleNode("TimeCodeIn").InnerText, SplitCharColon);
-                        var timeCodeOut = DecodeTimeCode(node.SelectSingleNode("TimeCodeOut").InnerText, SplitCharColon);
+                        var timeCodeIn = DecodeTimeCodeFrames(node.SelectSingleNode("TimeCodeIn").InnerText, SplitCharColon);
+                        var timeCodeOut = DecodeTimeCodeFrames(node.SelectSingleNode("TimeCodeOut").InnerText, SplitCharColon);
                         sb.Clear();
                         foreach (XmlNode textBlockNode in node.SelectNodes("TextBlock"))
                         {

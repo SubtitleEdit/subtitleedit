@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             verticalAglinment = parts[1].TrimStart('[');
                             formatting = parts[2];
-                            paragraph = new Paragraph { StartTime = DecodeTimeCode(parts[3], SplitCharColon), EndTime = DecodeTimeCode(parts[4].TrimEnd(']'), SplitCharColon) };
+                            paragraph = new Paragraph { StartTime = DecodeTimeCodeFrames(parts[3], SplitCharColon), EndTime = DecodeTimeCodeFrames(parts[4].TrimEnd(']'), SplitCharColon) };
                         }
                         catch (Exception)
                         {

@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     }
                                     text = HtmlUtil.FixInvalidItalicTags(text);
                                 }
-                                p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
+                                p = new Paragraph(DecodeTimeCodeFrames(startParts), DecodeTimeCodeFrames(endParts), text);
                                 subtitle.Paragraphs.Add(p);
                             }
                             catch (Exception exception)

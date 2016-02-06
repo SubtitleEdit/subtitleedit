@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var match = RegexTimeCodes.Match(s);
                     if (match.Success)
                     {
-                        TimeCode startTime = DecodeTimeCode(s.Substring(0, match.Length - 1), splitChars);
+                        TimeCode startTime = DecodeTimeCodeFrames(s.Substring(0, match.Length - 1), splitChars);
                         string text = GetSccText(s.Substring(match.Index));
 
                         if (text == "942c 942c" || text == "942c")

@@ -91,8 +91,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 subtitle.Paragraphs.Add(p);
                                 p = new Paragraph();
                             }
-                            p.StartTime = DecodeTimeCode(parts[1], splitChars);
-                            p.EndTime = DecodeTimeCode(parts[2], splitChars);
+                            p.StartTime = DecodeTimeCodeFrames(parts[1], splitChars);
+                            p.EndTime = DecodeTimeCodeFrames(parts[2], splitChars);
                             expectStartTime = false;
                         }
                         catch (Exception exception)

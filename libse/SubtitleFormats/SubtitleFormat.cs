@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         private static IList<SubtitleFormat> _allSubtitleFormats;
 
-        protected static readonly char[] SplitCharColon = new[] { ':' };
+        protected static readonly char[] SplitCharColon = { ':' };
 
         /// <summary>
         /// Formats supported by Subtitle Edit
@@ -152,7 +152,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new YouTubeTranscript(),
                     new YouTubeTranscriptOneLine(),
                     new ZeroG(),
-
                     // new Idx(),
                     new UnknownSubtitle1(),
                     new UnknownSubtitle2(),
@@ -398,7 +397,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        protected static TimeCode DecodeTimeCode(string[] parts, bool msToMaxFrame = false)
+        protected static TimeCode DecodeTimeCodeFrames(string[] parts)
         {
             if (parts == null)
                 return new TimeCode(0, 0, 0, 0);
@@ -406,36 +405,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int hour = 0;
             int minutes = 0;
             int seconds = 0;
-            int millisecondsFrames = 0;
+            int frames = 0;
 
             if (parts.Length == 4)
             {
                 hour = int.Parse(parts[0]);
                 minutes = int.Parse(parts[1]);
                 seconds = int.Parse(parts[2]);
-                millisecondsFrames = int.Parse(parts[3]);
+                frames = int.Parse(parts[3]);
             }
             else if (parts.Length == 3)
             {
                 minutes = int.Parse(parts[0]);
                 seconds = int.Parse(parts[1]);
-                millisecondsFrames = int.Parse(parts[2]);
+                frames = int.Parse(parts[2]);
             }
             else if (parts.Length == 2)
             {
                 seconds = int.Parse(parts[0]);
-                millisecondsFrames = int.Parse(parts[1]);
+                frames = int.Parse(parts[1]);
             }
 
-            if (!msToMaxFrame)
-                return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(millisecondsFrames));
-
-            return new TimeCode(hour, minutes, seconds, MillisecondsToFramesMaxFrameRate(millisecondsFrames));
+           return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
-        protected static TimeCode DecodeTimeCode(string part, char[] splitChars)
+        protected static TimeCode DecodeTimeCodeFrames(string part, char[] splitChars)
         {
-            return DecodeTimeCode(part.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
+            return DecodeTimeCodeFrames(part.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
         }
+
     }
 }

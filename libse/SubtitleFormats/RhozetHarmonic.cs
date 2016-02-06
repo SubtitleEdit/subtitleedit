@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         string text = node.Attributes.GetNamedItem("Title").InnerText.Trim();
                         string start = node.Attributes.GetNamedItem("StartTimecode").InnerText;
                         string end = node.Attributes.GetNamedItem("EndTimecode").InnerText;
-                        subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start, splitChars), DecodeTimeCode(end, splitChars), text));
+                        subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCodeFrames(start, splitChars), DecodeTimeCodeFrames(end, splitChars), text));
                     }
                 }
                 catch (Exception ex)

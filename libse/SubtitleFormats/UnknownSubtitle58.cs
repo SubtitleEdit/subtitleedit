@@ -84,13 +84,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             if (!string.IsNullOrEmpty(p.Text))
                             {
-                                p.EndTime = DecodeTimeCode(parts[0], SplitCharColon);
+                                p.EndTime = DecodeTimeCodeFrames(parts[0], SplitCharColon);
                                 subtitle.Paragraphs.Add(p);
                                 p = new Paragraph();
                             }
                             else
                             {
-                                p.StartTime = DecodeTimeCode(parts[0], SplitCharColon);
+                                p.StartTime = DecodeTimeCodeFrames(parts[0], SplitCharColon);
                             }
                         }
                         catch (Exception exception)

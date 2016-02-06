@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             if (expectStartTime)
                             {
-                                p.StartTime = DecodeTimeCode(parts);
+                                p.StartTime = DecodeTimeCodeFrames(parts);
                                 expectStartTime = false;
                             }
                             else
@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 if (!string.IsNullOrEmpty(p.Text))
                                     _errorCount++;
 
-                                p.EndTime = DecodeTimeCode(parts);
+                                p.EndTime = DecodeTimeCodeFrames(parts);
                             }
                         }
                         catch (Exception exception)
