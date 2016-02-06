@@ -880,7 +880,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (files.Length > 1)
             {
                 MessageBox.Show(Configuration.Settings.Language.Main.DropOnlyOneFile,
-                    "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
