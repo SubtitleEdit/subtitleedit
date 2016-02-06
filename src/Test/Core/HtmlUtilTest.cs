@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Core;
 
 namespace Test.Core
@@ -53,6 +54,20 @@ namespace Test.Core
         {
             const string source = "<i>SubtitleEdit<i/>";
             Assert.AreEqual("SubtitleEdit", HtmlUtil.RemoveHtmlTags(source));
+        }
+
+        [TestMethod]
+        public void FixInvalidItalicTags1()
+        {
+            const string s = "<i>foobar<i>?";
+            Assert.AreEqual("<i>foobar</i>?", HtmlUtil.FixInvalidItalicTags(s));
+        }
+
+        [TestMethod]
+        public void FixInvalidItalicTags2()
+        {
+            string s = "<i>foobar?" + Environment.NewLine + "<i>foobar?";
+            Assert.AreEqual("<i>foobar?</i>" + Environment.NewLine + "<i>foobar?</i>", HtmlUtil.FixInvalidItalicTags(s));
         }
 
     }

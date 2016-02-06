@@ -486,10 +486,8 @@ namespace Nikse.SubtitleEdit.Core
                     int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag, StringComparison.Ordinal) + Environment.NewLine.Length;
                     if (noOfLines == 2 && lastIndex == lastIndexWithNewLine && firstIndex < 2)
                         text = text.Replace(Environment.NewLine, endTag + Environment.NewLine) + endTag;
-                    else if (text.Length > lastIndex + endTag.Length)
-                        text = text.Substring(0, lastIndex) + endTag + text.Substring(lastIndex - 1 + endTag.Length);
                     else
-                        text = text.Substring(0, lastIndex) + endTag;
+                        text = text.Remove(lastIndex, beginTag.Length).Insert(lastIndex, endTag);
                 }
 
                 if (italicBeginTagCount == 1 && italicEndTagCount == 2)
