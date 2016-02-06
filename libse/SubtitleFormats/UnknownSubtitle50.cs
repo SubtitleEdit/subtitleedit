@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else
                     {
-                        if (line.StartsWith("||"))
+                        if (line.StartsWith("||", StringComparison.Ordinal))
                             line = "<i>" + line.Replace("||", string.Empty) + "</i>";
                         p.Text = (p.Text + Environment.NewLine + line).Trim();
                         expecting = ExpectingLine.TimeCodes;

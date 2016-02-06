@@ -60,12 +60,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var arr = s.Substring(0, 10).Split(':');
                         if (arr.Length == 4)
                         {
-                            int hours = int.Parse(arr[0]);
-                            int minutes = int.Parse(arr[1]);
-                            int seconds = int.Parse(arr[2]);
-                            int frames = int.Parse(arr[3]);
                             var p = new Paragraph();
-                            p.StartTime = new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
+                            p.StartTime = DecodeTimeCode(arr);
                             p.Text = s.Remove(0, 10).Trim();
                             subtitle.Paragraphs.Add(p);
                         }
