@@ -911,7 +911,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             else if (_codePage == CodePageJapanese)
                 textBuffer = GetW16Bytes(text, alignment, EncodingJapanese);
             else if (_codePage == CodePageThai)
-                textBuffer = encoding.GetBytes(text.Replace("ต", "€"));
+                textBuffer = encoding.GetBytes(text.Replace('ต', '€'));
             else
                 textBuffer = encoding.GetBytes(text);
 

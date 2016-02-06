@@ -230,9 +230,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 paragraph.Text = DecodeText(sb);
                             }
 
-                            var start = DecodeTimeCodeFrames(parts);
+                            var start = DecodeTimeCodeFramesFourParts(parts);
                             parts = line.Substring(16, 11).Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                            var end = DecodeTimeCodeFrames(parts);
+                            var end = DecodeTimeCodeFramesFourParts(parts);
                             paragraph = new Paragraph { StartTime = start, EndTime = end };
                             subtitle.Paragraphs.Add(paragraph);
                             sb.Clear();

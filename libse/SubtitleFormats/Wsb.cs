@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         string[] startTimeParts = { starTime.Substring(0, 2), starTime.Substring(2, 2), starTime.Substring(4, 2), starTime.Substring(6, 2) };
                         string[] endTimeParts = { starTime.Substring(0, 2), starTime.Substring(2, 2), starTime.Substring(4, 2), starTime.Substring(6, 2) };
 
-                        p = new Paragraph(DecodeTimeCodeFrames(startTimeParts), DecodeTimeCodeFrames(endTimeParts), text);
+                        p = new Paragraph(DecodeTimeCodeFramesFourParts(startTimeParts), DecodeTimeCodeFramesFourParts(endTimeParts), text);
                         subtitle.Paragraphs.Add(p);
                     }
                     catch (Exception exception)
