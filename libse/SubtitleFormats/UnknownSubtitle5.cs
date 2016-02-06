@@ -43,11 +43,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("text");
 
                 XmlAttribute start = xml.CreateAttribute("start");
-                start.InnerText = string.Format("{0}", p.StartTime.TotalMilliseconds / 1000).Replace(",", ".");
+                start.InnerText = string.Format("{0}", p.StartTime.TotalMilliseconds / 1000).Replace(',', '.');
                 paragraph.Attributes.Append(start);
 
                 XmlAttribute duration = xml.CreateAttribute("dur");
-                duration.InnerText = string.Format("{0}", p.Duration.TotalMilliseconds / 1000).Replace(",", ".");
+                duration.InnerText = string.Format("{0}", p.Duration.TotalMilliseconds / 1000).Replace(',', '.');
                 paragraph.Attributes.Append(duration);
 
                 paragraph.InnerText = p.Text;
@@ -87,10 +87,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string start = node.Attributes["start"].InnerText;
                     if (!string.IsNullOrEmpty(start))
-                        start = start.Replace(",", ".");
+                        start = start.Replace(',', '.');
                     string end = node.Attributes["dur"].InnerText;
                     if (!string.IsNullOrEmpty(end))
-                        end = end.Replace(",", ".");
+                        end = end.Replace(',', '.');
                     string text = node.InnerText;
 
                     subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start, System.Globalization.CultureInfo.InvariantCulture) * TimeCode.BaseUnit, TimeCode.BaseUnit * (Convert.ToDouble(start, System.Globalization.CultureInfo.InvariantCulture) + Convert.ToDouble(end, System.Globalization.CultureInfo.InvariantCulture))));

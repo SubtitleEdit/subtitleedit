@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         subtitle.Paragraphs.Add(p);
                     }
                 }
-                else if (line.StartsWith("//"))
+                else if (line.StartsWith("//", StringComparison.Ordinal))
                 {
                     // comment
                 }
