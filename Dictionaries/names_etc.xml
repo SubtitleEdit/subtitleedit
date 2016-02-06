@@ -1,4 +1,5 @@
-﻿<!--
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
 Contains names that should not be translated.
 This file is case sensitive.
 This file is generated/updated by Multi Translator
@@ -910,6 +911,7 @@ This file is generated/updated by Multi Translator
   <name>Carol</name>
   <name>Carole</name>
   <name>Carolina</name>
+  <name>Carolina Panthers</name>
   <name>Caroline</name>
   <name>Carolines</name>
   <name>Carols</name>
@@ -977,11 +979,13 @@ This file is generated/updated by Multi Translator
   <name>Chad</name>
   <name>Chadian</name>
   <name>Chadians</name>
+  <name>Chadwick</name>
   <name>Chaim</name>
   <name>Chamberlain</name>
   <name>Chambliss</name>
   <name>Chandler</name>
   <name>Chang</name>
+  <name>Channing</name>
   <name>Chantal</name>
   <name>Chantix</name>
   <name>Chapman</name>
@@ -1457,6 +1461,7 @@ This file is generated/updated by Multi Translator
   <name>Doheny</name>
   <name>Doherty</name>
   <name>DOJ</name>
+  <name>Dolce &amp; Gabbana</name>
   <name>Dollhouse</name>
   <name>Dolly</name>
   <name>Dolores</name>
@@ -1571,6 +1576,7 @@ This file is generated/updated by Multi Translator
   <name>Ecuadorian</name>
   <name>Ecuadorians</name>
   <name>Eddie</name>
+  <name>Eddie Thawne</name>
   <name>Eddies</name>
   <name>Edgar</name>
   <name>Edgington</name>
@@ -1634,6 +1640,7 @@ This file is generated/updated by Multi Translator
   <name>Elton</name>
   <name>Elvis</name>
   <name>Elvyra</name>
+  <name>Élysée</name>
   <name>Emanuel</name>
   <name>Emely</name>
   <name>Emend</name>
@@ -1653,10 +1660,12 @@ This file is generated/updated by Multi Translator
   <name>Enbrel</name>
   <name>Enfield</name>
   <name>Engelbert</name>
+  <name>Englehart</name>
   <name>English</name>
   <name>Enos</name>
   <name>Enrique</name>
   <name>Enya</name>
+  <name>Eobard Thawne</name>
   <name>Ephraim</name>
   <name>Epstein</name>
   <name>Equatoguinean</name>
@@ -2237,6 +2246,7 @@ This file is generated/updated by Multi Translator
   <name>Hassan</name>
   <name>Hasselhoff</name>
   <name>Hastings</name>
+  <name>Hatfield</name>
   <name>Hatsumomo</name>
   <name>Hausdorff</name>
   <name>Haverford</name>
@@ -2303,6 +2313,7 @@ This file is generated/updated by Multi Translator
   <name>Hernandez</name>
   <name>Hernández</name>
   <name>Herodes</name>
+  <name>Herrmann</name>
   <name>Hersheys</name>
   <name>Hertfordshire</name>
   <name>Herveaux</name>
@@ -2407,6 +2418,8 @@ This file is generated/updated by Multi Translator
   <name>I'd</name>
   <name>ID</name>
   <name>Idaho</name>
+  <name>Idris</name>
+  <name>Idris Elba</name>
   <name>ID's</name>
   <name>Igor</name>
   <name>III</name>
@@ -2480,6 +2493,7 @@ This file is generated/updated by Multi Translator
   <name>Ismael</name>
   <name>Isobel</name>
   <name>Isobels</name>
+  <name>Isodyne</name>
   <name>Israel</name>
   <name>Israeli</name>
   <name>Israelis</name>
@@ -2677,6 +2691,7 @@ This file is generated/updated by Multi Translator
   <name>Johnny-Adam</name>
   <name>Johnnys</name>
   <name>Johns</name>
+  <name>Johnse</name>
   <name>Johnson</name>
   <name>Johnsons</name>
   <name>Jonah</name>
@@ -2712,6 +2727,7 @@ This file is generated/updated by Multi Translator
   <name>Jr.</name>
   <name>Juan</name>
   <name>Juanito</name>
+  <name>Juárez</name>
   <name>Judah</name>
   <name>Judas</name>
   <name>Judith</name>
@@ -2729,6 +2745,7 @@ This file is generated/updated by Multi Translator
   <name>Julius</name>
   <name>Julliard</name>
   <name>July</name>
+  <name>Jumanji</name>
   <name>June</name>
   <name>Juneau</name>
   <name>Jupiter</name>
@@ -2749,6 +2766,7 @@ This file is generated/updated by Multi Translator
   <name>Kali</name>
   <name>Kalinda</name>
   <name>Kalle</name>
+  <name>Kamil</name>
   <name>Kamila</name>
   <name>Kamiya</name>
   <name>Kandor</name>
@@ -2891,6 +2909,7 @@ This file is generated/updated by Multi Translator
   <name>Kondracki</name>
   <name>Kong</name>
   <name>Konichiwa</name>
+  <name>Kopack</name>
   <name>Koranen</name>
   <name>Korea</name>
   <name>Korean</name>
@@ -3011,6 +3030,7 @@ This file is generated/updated by Multi Translator
   <name>Learjets</name>
   <name>Lebanese</name>
   <name>Lebanon</name>
+  <name>LeBron</name>
   <name>Lecter</name>
   <name>Lee</name>
   <name>Leeds</name>
@@ -3332,6 +3352,7 @@ This file is generated/updated by Multi Translator
   <name>Marci</name>
   <name>Marcie</name>
   <name>Marco</name>
+  <name>Marco Polo</name>
   <name>Marcus</name>
   <name>Marcy</name>
   <name>Margaret</name>
@@ -3542,6 +3563,7 @@ This file is generated/updated by Multi Translator
   <name>Meade</name>
   <name>Medicus</name>
   <name>Medvedev</name>
+  <name>Meegan</name>
   <name>Meg</name>
   <name>Megan</name>
   <name>Megatron</name>
@@ -3705,7 +3727,7 @@ This file is generated/updated by Multi Translator
   <name>Moroccans</name>
   <name>Morocco</name>
   <name>Morris</name>
-  <name>Morrisey</name>
+  <name>Morrissey</name>
   <name>Mortimer</name>
   <name>Mortimers</name>
   <name>Morton</name>
@@ -4209,6 +4231,7 @@ This file is generated/updated by Multi Translator
   <name>Polo</name>
   <name>Pompeii</name>
   <name>Pompeji</name>
+  <name>Pompidou</name>
   <name>Pomtini</name>
   <name>Pont Neuf</name>
   <name>Pontiac</name>
@@ -4471,8 +4494,10 @@ This file is generated/updated by Multi Translator
   <name>Rooney</name>
   <name>Roosevelt</name>
   <name>Rory</name>
+  <name>Rosalee</name>
   <name>Rosalie</name>
   <name>Roscoe</name>
+  <name>Roseanna</name>
   <name>Rosemary</name>
   <name>Rosemarys</name>
   <name>Rosenbaum</name>
@@ -4486,6 +4511,7 @@ This file is generated/updated by Multi Translator
   <name>Rothgar</name>
   <name>Rotterdam</name>
   <name>Rouge</name>
+  <name>Rouhani</name>
   <name>Rourke</name>
   <name>Rousseau</name>
   <name>Rowena</name>
@@ -4582,6 +4608,7 @@ This file is generated/updated by Multi Translator
   <name>Sanjay</name>
   <name>Santa</name>
   <name>Santiago</name>
+  <name>Santiani</name>
   <name>Santomauro</name>
   <name>Santos</name>
   <name>Sao</name>
@@ -4749,6 +4776,7 @@ This file is generated/updated by Multi Translator
   <name>Silas</name>
   <name>Silberman</name>
   <name>Silverado</name>
+  <name>Silverberg</name>
   <name>Silverlake</name>
   <name>Silvia</name>
   <name>Simcoe</name>
@@ -4879,6 +4907,7 @@ This file is generated/updated by Multi Translator
   <name>Stef</name>
   <name>Stefan</name>
   <name>Stefani</name>
+  <name>Stefanie</name>
   <name>Stefano</name>
   <name>Stefanos</name>
   <name>Stein</name>
@@ -5146,6 +5175,7 @@ This file is generated/updated by Multi Translator
   <name>Tokelau</name>
   <name>Tokyo</name>
   <name>Toland</name>
+  <name>Tolbert</name>
   <name>Toledo</name>
   <name>Tomasson</name>
   <name>Tome</name>
@@ -5282,6 +5312,7 @@ This file is generated/updated by Multi Translator
   <name>Vandenbergs</name>
   <name>Vanderbilt</name>
   <name>Vanderhof</name>
+  <name>Vandervoort</name>
   <name>Vanessa</name>
   <name>Vanuatu</name>
   <name>Vanya</name>
@@ -5357,6 +5388,7 @@ This file is generated/updated by Multi Translator
   <name>Von</name>
   <name>Vortac</name>
   <name>Vriess</name>
+  <name>Vuitton</name>
   <name>Vytorin</name>
   <name>Wagner</name>
   <name>Wainwright</name>
@@ -5604,7 +5636,6 @@ This file is generated/updated by Multi Translator
   <name>Zorro</name>
   <name>Zory</name>
   <name>Zoysia</name>
-  <name>zozlow</name>
   <name>Zuazo</name>
   <name>Zuma</name>
   <name>Zurich</name>
