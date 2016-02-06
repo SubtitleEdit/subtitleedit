@@ -769,13 +769,8 @@ namespace Nikse.SubtitleEdit.Core
             if (optimalCharactersPerSecond < 2 || optimalCharactersPerSecond > 100)
                 optimalCharactersPerSecond = 14.7;
             double duration = (HtmlUtil.RemoveHtmlTags(text, true).Length / optimalCharactersPerSecond) * TimeCode.BaseUnit;
-
-            if (duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
-                duration = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
-
-            if (duration > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                duration = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-
+            duration = Math.Max(duration, Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds);
+            duration = Math.Min(duration, Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds);
             return duration;
         }
 
