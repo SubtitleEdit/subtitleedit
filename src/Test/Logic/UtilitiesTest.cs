@@ -389,6 +389,34 @@ namespace Test.Logic
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void FixHyphensAddTestAssTag()
+        {
+            string test1 = "{\\an5}- At least I was going back to Hawaii." + Environment.NewLine + "Woody.";
+            string expected1 = "{\\an5}- At least I was going back to Hawaii." + Environment.NewLine + "- Woody.";
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph(test1, 0000, 11111));
+
+            string output1 = Helper.FixHyphensAdd(sub, 0, "en");
+
+            Assert.AreEqual(output1, expected1);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixHyphensAddTestItalic()
+        {
+            string test1 = "<i>- At least I was going back to Hawaii.</i>" + Environment.NewLine + "<i>Woody.</i>";
+            string expected1 = "<i>- At least I was going back to Hawaii.</i>" + Environment.NewLine + "<i>- Woody.</i>";
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph(test1, 0000, 11111));
+
+            string output1 = Helper.FixHyphensAdd(sub, 0, "en");
+
+            Assert.AreEqual(output1, expected1);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveLineBreaks1()
         {
             string result = Utilities.RemoveLineBreaks("Hey" + Environment.NewLine + "you!");
