@@ -61,22 +61,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
+            char[] splitChars = { ':', '.' };
             foreach (string line in lines)
             {
-                if (RegexTimeCodes.IsMatch(line))
+                var match = RegexTimeCodes.Match(line);
+                if (match.Success)
                 {
-                    string temp = line.Substring(0, RegexTimeCodes.Match(line).Length);
-                    string start = temp.Substring(0, 11);
-                    string end = temp.Substring(12, 11);
-
-                    string[] startParts = start.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
-                    string[] endParts = end.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (startParts.Length == 4 && endParts.Length == 4 && line.Length >= 23)
+                    string temp = line.Substring(0, match.Length);
+                    if (line.Length >= 23)
                     {
                         string text = line.Remove(0, 23).Trim();
                         if (!text.Contains(Environment.NewLine))
                             text = text.Replace("//", Environment.NewLine);
-                        p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
+                        p = new Paragraph(DecodeTimeCode(temp.Substring(0, 11), splitChars), DecodeTimeCode(temp.Substring(12, 11), splitChars), text);
                         subtitle.Paragraphs.Add(p);
                     }
                 }

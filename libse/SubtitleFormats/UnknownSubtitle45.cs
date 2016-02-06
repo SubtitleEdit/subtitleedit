@@ -73,7 +73,7 @@ ST 0 EB 3.10
                 sb.AppendLine(line);
 
             string rtf = sb.ToString().Trim();
-            if (!rtf.StartsWith("{\\rtf"))
+            if (!rtf.StartsWith("{\\rtf", StringComparison.Ordinal))
                 return;
 
             string[] arr = rtf.FromRtf().SplitToLines();
@@ -93,7 +93,7 @@ ST 0 EB 3.10
                         string[] endParts = end.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
                         if (startParts.Length == 2 && endParts.Length == 2)
                         {
-                            p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), string.Empty);
+                            p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), string.Empty); //00119.12
                             subtitle.Paragraphs.Add(p);
                         }
                     }
@@ -113,15 +113,6 @@ ST 0 EB 3.10
                 }
             }
             subtitle.Renumber();
-        }
-
-        private static TimeCode DecodeTimeCode(string[] parts)
-        {
-            //00119.12
-            string seconds = parts[0];
-            string frames = parts[1];
-            TimeCode tc = new TimeCode(0, 0, int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
         }
 
     }
