@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string timeCode = Encoding.ASCII.GetString(buffer, i + 1, 11);
                     if (timeCode != "00:00:00:00" && RegexTimeCodes.IsMatch(timeCode))
                     {
-                        var p = new Paragraph { StartTime = DecodeTimeCode(timeCode.Split(':')) };
+                        var p = new Paragraph { StartTime = DecodeTimeCodeFrames(timeCode.Split(':')) };
                         bool italic = buffer[i + 22] == 3; // 3=italic, 1=normal
                         int textStart = i + 25; // text starts 25 chars after time code
                         int textLength = 0;
@@ -254,7 +254,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 try
                 {
                     string adjust = Encoding.GetEncoding(1252).GetString(buffer, 1354, 11); // 00:59:59:28
-                    TimeCode tc = DecodeTimeCode(adjust.Split(':'));
+                    TimeCode tc = DecodeTimeCodeFrames(adjust.Split(':'));
                     if (tc.TotalMilliseconds > 0)
                         subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-tc.TotalMilliseconds));
                 }

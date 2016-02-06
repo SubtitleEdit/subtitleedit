@@ -93,7 +93,7 @@ ST 0 EB 3.10
                         string[] endParts = end.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
                         if (startParts.Length == 2 && endParts.Length == 2)
                         {
-                            p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), string.Empty); //00119.12
+                            p = new Paragraph(DecodeTimeCodeFrames(startParts), DecodeTimeCodeFrames(endParts), string.Empty); //00119.12
                             subtitle.Paragraphs.Add(p);
                         }
                     }

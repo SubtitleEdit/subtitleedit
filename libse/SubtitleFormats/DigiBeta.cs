@@ -59,9 +59,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         try
                         {
-                            var start = DecodeTimeCode(parts);
+                            var start = DecodeTimeCodeFrames(parts);
                             parts = line.Substring(12, 11).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                            var end = DecodeTimeCode(parts);
+                            var end = DecodeTimeCodeFrames(parts);
                             paragraph = new Paragraph();
                             paragraph.StartTime = start;
                             paragraph.EndTime = end;

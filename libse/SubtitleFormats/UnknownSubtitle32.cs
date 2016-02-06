@@ -98,8 +98,8 @@ Sony,Sony DVD/UMD,1:85,16x9
                     paragraph = new Paragraph();
                     try
                     {
-                        paragraph.StartTime = DecodeTimeCode(parts[1], splitChars);
-                        paragraph.EndTime = DecodeTimeCode(parts[2], splitChars);
+                        paragraph.StartTime = DecodeTimeCodeFrames(parts[1], splitChars);
+                        paragraph.EndTime = DecodeTimeCodeFrames(parts[2], splitChars);
                     }
                     catch
                     {

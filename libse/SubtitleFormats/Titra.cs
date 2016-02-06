@@ -95,7 +95,7 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
                         string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                         if (startParts.Length == 4 && endParts.Length == 4)
                         {
-                            p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), string.Empty);
+                            p = new Paragraph(DecodeTimeCodeFrames(startParts), DecodeTimeCodeFrames(endParts), string.Empty);
                             subtitle.Paragraphs.Add(p);
                         }
                     }

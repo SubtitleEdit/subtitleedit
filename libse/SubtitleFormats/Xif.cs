@@ -191,8 +191,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     try
                     {
-                        var timeCodeIn = DecodeTimeCode(node.SelectSingleNode("ThreadedObject/TimingObject/TimeIn").Attributes["value"].InnerText, SplitCharColon);
-                        var timeCodeOut = DecodeTimeCode(node.SelectSingleNode("ThreadedObject/TimingObject/TimeOut").Attributes["value"].InnerText, SplitCharColon);
+                        var timeCodeIn = DecodeTimeCodeFrames(node.SelectSingleNode("ThreadedObject/TimingObject/TimeIn").Attributes["value"].InnerText, SplitCharColon);
+                        var timeCodeOut = DecodeTimeCodeFrames(node.SelectSingleNode("ThreadedObject/TimingObject/TimeOut").Attributes["value"].InnerText, SplitCharColon);
                         sb.Clear();
                         foreach (XmlNode paragraphNode in node.SelectSingleNode("ThreadedObject/Content/SubtitleText/Paragraph").ChildNodes)
                         {

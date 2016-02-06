@@ -142,10 +142,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 p.Text = innerNode.InnerText.Replace("\\N", Environment.NewLine);
                                 break;
                             case "in":
-                                p.StartTime = DecodeTimeCode(innerNode.InnerText, SplitCharColon);
+                                p.StartTime = DecodeTimeCodeFrames(innerNode.InnerText, SplitCharColon);
                                 break;
                             case "out":
-                                p.EndTime = DecodeTimeCode(innerNode.InnerText, SplitCharColon);
+                                p.EndTime = DecodeTimeCodeFrames(innerNode.InnerText, SplitCharColon);
                                 break;
                         }
                     }

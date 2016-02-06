@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         string[] arr = s.Split('\t');
                         if (arr.Length == 4)
                         {
-                            p = new Paragraph(DecodeTimeCode(arr[1], splitChars), DecodeTimeCode(arr[3], splitChars), string.Empty);
+                            p = new Paragraph(DecodeTimeCodeFrames(arr[1], splitChars), DecodeTimeCodeFrames(arr[3], splitChars), string.Empty);
                         }
                     }
                     catch

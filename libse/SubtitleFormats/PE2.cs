@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         try
                         {
-                            var tc = DecodeTimeCode(parts);
+                            var tc = DecodeTimeCodeFrames(parts);
                             if (expecting == ExpectingLine.TimeStart)
                             {
                                 paragraph = new Paragraph();
@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string[] parts = line.Substring(0, 11).Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {
-                        var tc = DecodeTimeCode(parts);
+                        var tc = DecodeTimeCodeFrames(parts);
                         paragraph.EndTime = tc;
                         subtitle.Paragraphs.Add(paragraph);
                         if (paragraph.StartTime.TotalMilliseconds < 0.001)

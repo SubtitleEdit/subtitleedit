@@ -108,7 +108,7 @@ FILE_INFO_END";
                         text = new StringBuilder();
                         string start = line.Substring(7, 11);
                         string end = line.Substring(19, 11);
-                        p = new Paragraph(DecodeTimeCode(start, splitChar), DecodeTimeCode(end, splitChar), string.Empty);
+                        p = new Paragraph(DecodeTimeCodeFrames(start, splitChar), DecodeTimeCodeFrames(end, splitChar), string.Empty);
                         subtitle.Paragraphs.Add(p);
                     }
                     else if (!started)

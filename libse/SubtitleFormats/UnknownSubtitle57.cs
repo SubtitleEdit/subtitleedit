@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         string text = line.Remove(0, 23).Trim();
                         if (!text.Contains(Environment.NewLine))
                             text = text.Replace("//", Environment.NewLine);
-                        p = new Paragraph(DecodeTimeCode(temp.Substring(0, 11), splitChars), DecodeTimeCode(temp.Substring(12, 11), splitChars), text);
+                        p = new Paragraph(DecodeTimeCodeFrames(temp.Substring(0, 11), splitChars), DecodeTimeCodeFrames(temp.Substring(12, 11), splitChars), text);
                         subtitle.Paragraphs.Add(p);
                     }
                 }

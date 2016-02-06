@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         if (arr.Length == 4)
                         {
                             var p = new Paragraph();
-                            p.StartTime = DecodeTimeCode(arr);
+                            p.StartTime = DecodeTimeCodeFrames(arr);
                             p.Text = s.Remove(0, 10).Trim();
                             subtitle.Paragraphs.Add(p);
                         }

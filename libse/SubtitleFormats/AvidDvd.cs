@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 text = "<i>" + text + "</i>";
                             sb.AppendLine(text);
                             char[] splitChars = { ',', '.', ':' };
-                            p = new Paragraph(DecodeTimeCode(arr[1], splitChars), DecodeTimeCode(arr[2], splitChars), string.Empty);
+                            p = new Paragraph(DecodeTimeCodeFrames(arr[1], splitChars), DecodeTimeCodeFrames(arr[2], splitChars), string.Empty);
                         }
                     }
                     catch
