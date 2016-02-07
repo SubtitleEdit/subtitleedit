@@ -15399,10 +15399,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void NormalToolStripMenuItem1Click(object sender, EventArgs e)
         {
             var tb = GetFocusedTextBox();
-
             string text = tb.SelectedText;
+            if (text.Length == 0)
+                return;
             int selectionStart = tb.SelectionStart;
-            text = HtmlUtil.RemoveHtmlTags(text);
+            text = HtmlUtil.RemoveHtmlTags(text, true);
             tb.SelectedText = text;
             tb.SelectionStart = selectionStart;
             tb.SelectionLength = text.Length;
