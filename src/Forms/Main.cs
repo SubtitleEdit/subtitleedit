@@ -15591,7 +15591,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void ColorToolStripMenuItem1Click(object sender, EventArgs e)
         {
             var tb = GetFocusedTextBox();
-
+            if (tb.Text.Length == 0)
+                return;
             //color
             string text = tb.SelectedText;
             int selectionStart = tb.SelectionStart;
@@ -15601,34 +15602,44 @@ namespace Nikse.SubtitleEdit.Forms
                 string color = Utilities.ColorToHex(colorDialog1.Color);
                 bool done = false;
                 string s = text;
-                if (s.StartsWith("<font "))
+                if (s.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                 {
-                    int end = s.IndexOf('>');
+                    int end = s.IndexOf('>', 6);
                     if (end > 0)
                     {
                         string f = s.Substring(0, end);
                         if (f.Contains(" face=") && !f.Contains(" color="))
                         {
                             var start = s.IndexOf(" face=", StringComparison.Ordinal);
-                            s = s.Insert(start, string.Format(" color=\"{0}\"", color));
-                            text = s;
+                            text = s.Insert(start, string.Format(" color=\"{0}\"", color));
                             done = true;
                         }
                         else if (f.Contains(" color="))
                         {
-                            int colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
-                            if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
-                                end = s.IndexOf('"', colorStart + " color=".Length + 1);
-                            s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
-                            text = s;
+                            int colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
+                            if (s.IndexOf('"', colorStart + 8) > 0)
+                                end = s.IndexOf('"', colorStart + 8);
+                            text = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
                             done = true;
                         }
                     }
                 }
-
                 if (!done)
-                    text = string.Format("<font color=\"{0}\">{1}</font>", color, text);
-
+                {
+                    const string colorFormat = "<font color=\"{0}\">{1}</font>";
+                    if (text.Length > 0)
+                    {
+                        text = string.Format(colorFormat, color, text); // color only selected text
+                    }
+                    else
+                    {
+                        text = string.Format(colorFormat, color, tb.Text); // color entire text if nothing was selected
+                        tb.Text = text;
+                        tb.SelectionStart = 0;
+                        tb.SelectionLength = text.Length;
+                        return;
+                    }
+                }
                 tb.SelectedText = text;
                 tb.SelectionStart = selectionStart;
                 tb.SelectionLength = text.Length;
