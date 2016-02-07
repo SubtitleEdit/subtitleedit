@@ -79,6 +79,7 @@ ST 0 EB 3.10
             string[] arr = rtf.FromRtf().SplitToLines();
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
+            char[] splitChar = { '.' };
             foreach (string line in arr)
             {
                 if (regexTimeCodes.IsMatch(line.Trim()))
@@ -89,11 +90,11 @@ ST 0 EB 3.10
                         string start = temp[0];
                         string end = temp[1];
 
-                        string[] startParts = start.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-                        string[] endParts = end.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] startParts = start.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
                         if (startParts.Length == 2 && endParts.Length == 2)
                         {
-                            p = new Paragraph(DecodeTimeCodeFrames(startParts), DecodeTimeCodeFrames(endParts), string.Empty); //00119.12
+                            p = new Paragraph(DecodeTimeCodeFramesTwoParts(startParts), DecodeTimeCodeFramesTwoParts(endParts), string.Empty); //00119.12
                             subtitle.Paragraphs.Add(p);
                         }
                     }

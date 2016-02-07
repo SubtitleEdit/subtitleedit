@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         string[] arr = s.Substring(0, 11).Split(':');
                         if (arr.Length == 4)
                         {
-                            p.StartTime = DecodeTimeCodeFrames(arr);
+                            p.StartTime = DecodeTimeCodeFramesFourParts(arr);
                             string text = s.Substring(11).Trim();
                             p.Text = text;
                             if (text.Length > 1 && Utilities.IsInteger(text.Substring(0, 2)))
