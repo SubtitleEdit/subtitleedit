@@ -83,11 +83,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             // parts1/2 most have length of 2
                             if (parts1.Length + parts2.Length == 4)
                             {
-                                p = new Paragraph(DecodeTimeCodeFrames(parts1), DecodeTimeCodeFrames(parts2), string.Empty);
+                                p = new Paragraph(DecodeTimeCodeFramesTwoParts(parts1), DecodeTimeCodeFramesTwoParts(parts2), string.Empty);
                             }
                             else
                             {
-                                p = new Paragraph(DecodeTimeCodeFrames(new[] { parts1[0], parts1[1] }), DecodeTimeCodeFrames(new[] { parts2[0], parts2[1] }), string.Empty);
+                                p = new Paragraph(DecodeTimeCodeFramesTwoParts(parts1), DecodeTimeCodeFramesTwoParts(parts2), string.Empty);
                             }
                         }
                     }

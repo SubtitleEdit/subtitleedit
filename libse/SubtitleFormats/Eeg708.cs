@@ -88,13 +88,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string start = node.Attributes["timecode"].InnerText;
                     if (lastParagraph != null)
-                        lastParagraph.EndTime = DecodeTimeCodeFrames(start.Split(':'));
+                        lastParagraph.EndTime = DecodeTimeCodeFramesFourParts(start.Split(':'));
                     XmlNode text = node.SelectSingleNode("Text");
                     if (text != null)
                     {
                         string s = text.InnerText;
                         s = s.Replace("<br />", Environment.NewLine).Replace("<br/>", Environment.NewLine);
-                        TimeCode startTime = DecodeTimeCodeFrames(start.Split(':'));
+                        TimeCode startTime = DecodeTimeCodeFramesFourParts(start.Split(':'));
                         lastParagraph = new Paragraph(s, startTime.TotalMilliseconds, startTime.TotalMilliseconds + 3000);
                         subtitle.Paragraphs.Add(lastParagraph);
                     }

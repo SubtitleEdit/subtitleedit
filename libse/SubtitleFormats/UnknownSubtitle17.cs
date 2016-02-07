@@ -107,7 +107,7 @@ DIGITAL_CINEMA=YES
                     {
                         try
                         {
-                            var tc = DecodeTimeCodeFrames(parts);
+                            var tc = DecodeTimeCodeFramesFourParts(parts);
                             paragraph.StartTime = tc;
                             expecting = ExpectingLine.TimeEnd;
                         }
@@ -125,7 +125,7 @@ DIGITAL_CINEMA=YES
                     {
                         try
                         {
-                            var tc = DecodeTimeCodeFrames(parts);
+                            var tc = DecodeTimeCodeFramesFourParts(parts);
                             paragraph.EndTime = tc;
                             expecting = ExpectingLine.Text;
                         }

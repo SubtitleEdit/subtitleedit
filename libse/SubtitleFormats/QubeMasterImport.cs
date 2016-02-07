@@ -83,14 +83,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             if (expectStartTime)
                             {
-                                p.StartTime = DecodeTimeCodeFrames(parts);
+                                p.StartTime = DecodeTimeCodeFramesFourParts(parts);
                                 expectStartTime = false;
                             }
                             else
                             {
                                 if (p.EndTime.TotalMilliseconds < 0.01)
                                     _errorCount++;
-                                p.EndTime = DecodeTimeCodeFrames(parts);
+                                p.EndTime = DecodeTimeCodeFramesFourParts(parts);
                             }
                         }
                         catch (Exception exception)

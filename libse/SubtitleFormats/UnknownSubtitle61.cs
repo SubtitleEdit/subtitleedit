@@ -68,6 +68,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             bool expectStartTime = true;
             var p = new Paragraph();
             subtitle.Paragraphs.Clear();
+            char[] splitChars = { ':', '.' };
             foreach (string line in lines)
             {
                 string s = line.Trim();
@@ -85,7 +86,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     p = new Paragraph();
-                    string[] parts = s.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = s.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {
                         try
