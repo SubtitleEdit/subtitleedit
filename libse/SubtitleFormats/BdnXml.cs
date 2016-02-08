@@ -63,10 +63,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 xml.DocumentElement.AppendChild(paragraph);
             }
 
-            var ms = new MemoryStream();
-            var writer = new XmlTextWriter(ms, Encoding.UTF8) { Formatting = Formatting.Indented };
-            xml.Save(writer);
-            return Encoding.UTF8.GetString(ms.ToArray()).Trim();
+            string textUtf8;
+            using (var ms = new MemoryStream())
+            {
+                var writer = new XmlTextWriter(ms, Encoding.UTF8) { Formatting = Formatting.Indented };
+                xml.Save(writer);
+                textUtf8 = Encoding.UTF8.GetString(ms.ToArray());
+            }
+            return textUtf8;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
