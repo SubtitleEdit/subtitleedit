@@ -2987,7 +2987,7 @@ namespace Nikse.SubtitleEdit.Forms
                     OpenSubtitle(rfe.FileName, null, rfe.VideoFileName, rfe.OriginalFileName);
                 SetRecentIndices(item.Text);
                 SubtitleListview1.EndUpdate();
-                GotoSubPosAndPause();                
+                GotoSubPosAndPause();
             }
         }
 
@@ -3017,7 +3017,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int sIndex = x.FirstSelectedIndex;
                     if (sIndex >= 0 && sIndex < SubtitleListview1.Items.Count)
                     {
-                        SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;                        
+                        SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                         for (int i = 0; i < SubtitleListview1.Items.Count; i++)
                             SubtitleListview1.Items[i].Selected = i == sIndex;
                         _subtitleListViewIndex = -1;
@@ -5544,7 +5544,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SpellCheckToolStripMenuItemClick(object sender, EventArgs e)
         {
             SpellCheck(true, 0);
-        }     
+        }
 
         private void SpellCheck(bool autoDetect, int startFromLine)
         {
