@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
 
                     string oldText = p.Text;
-                    var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
+                    var lines = HtmlUtil.RemoveHtmlTags(p.Text, true).SplitToLines();
                     if (lines.Length == 2 && lines[0].TrimStart().StartsWith('-') && lines[1].TrimStart().StartsWith('-'))
                     { // dialog
                         lines = p.Text.SplitToLines();
