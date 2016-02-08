@@ -631,17 +631,32 @@ namespace Nikse.SubtitleEdit.Forms
                                 DoAction(SpellCheckAction.ChangeAll);
                                 return;
                             }
-                            if (AutoFixNames && _currentWord.Length > 3 && suggestions.Contains(_currentWord.ToUpper()))
-                            { // does not work well with two letter words like "da" and "de" which get auto-corrected to "DA" and "DE"
-                                ChangeWord = _currentWord.ToUpper();
-                                DoAction(SpellCheckAction.ChangeAll);
-                                return;
-                            }
-                            if (AutoFixNames && _currentWord.Length > 1 && _spellCheckWordLists.HasName(char.ToUpper(_currentWord[0]) + _currentWord.Substring(1)))
+                            if (AutoFixNames && _currentWord.Length > 1)
                             {
-                                ChangeWord = char.ToUpper(_currentWord[0]) + _currentWord.Substring(1);
-                                DoAction(SpellCheckAction.ChangeAll);
-                                return;
+                                if (_currentWord.Length > 3 && suggestions.Contains(_currentWord.ToUpper()))
+                                { // does not work well with two letter words like "da" and "de" which get auto-corrected to "DA" and "DE"
+                                    ChangeWord = _currentWord.ToUpper();
+                                    DoAction(SpellCheckAction.ChangeAll);
+                                    return;
+                                }
+                                if (_spellCheckWordLists.HasName(char.ToUpper(_currentWord[0]) + _currentWord.Substring(1)))
+                                {
+                                    ChangeWord = char.ToUpper(_currentWord[0]) + _currentWord.Substring(1);
+                                    DoAction(SpellCheckAction.ChangeAll);
+                                    return;
+                                }
+                                if (_currentWord.Length > 3 && _currentWord.StartsWith("mc", StringComparison.InvariantCultureIgnoreCase) && _spellCheckWordLists.HasName(char.ToUpper(_currentWord[0]) + _currentWord.Substring(1, 1 ) + char.ToUpper(_currentWord[2]) + _currentWord.Remove(0, 3)))
+                                {
+                                    ChangeWord = char.ToUpper(_currentWord[0]) + _currentWord.Substring(1, 1) + char.ToUpper(_currentWord[2]) + _currentWord.Remove(0, 3);
+                                    DoAction(SpellCheckAction.ChangeAll);
+                                    return;
+                                }
+                                if (_spellCheckWordLists.HasName(_currentWord.ToUpperInvariant()))
+                                {
+                                    ChangeWord = _currentWord.ToUpperInvariant();
+                                    DoAction(SpellCheckAction.ChangeAll);
+                                    return;
+                                }
                             }
                             if (_prefix != null && _prefix == "''" && _currentWord.EndsWith("''"))
                             {
