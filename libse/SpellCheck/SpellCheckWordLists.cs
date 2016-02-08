@@ -290,7 +290,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
         public bool HasName(string word)
         {
-            return _namesEtcList.Contains(word) || (word.StartsWith('\'') || word.EndsWith('\'')) && _namesEtcList.Contains(word.Trim('\''));
+            return _namesEtcList.Contains(word) || ((word.StartsWith('\'') || word.EndsWith('\'')) && _namesEtcList.Contains(word.Trim('\'')));
         }
 
         public bool HasNameExtended(string word, string text)
