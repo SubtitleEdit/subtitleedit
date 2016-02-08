@@ -464,7 +464,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             while (text.Contains("\\c\\c&H", StringComparison.Ordinal))
             {
                 text = text.Replace("\\c\\c&H", "\\c&H");
-            }            
+            }
             return text;
         }
 
