@@ -416,6 +416,13 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case SpellCheckAction.AddToNamesEtc:
                     _spellCheckWordLists.AddName(ChangeWord);
+                    if (string.Compare(ChangeWord, _currentWord, StringComparison.OrdinalIgnoreCase) != 0)
+                        return; // don't prepare next word if change was more than just casing
+                    if (ChangeWord != _currentWord)
+                    {
+                        _changeAllDictionary.Add(_currentWord, ChangeWord);
+                        _mainWindow.CorrectWord(_prefix + ChangeWord + _postfix, _currentParagraph, _prefix + _currentWord + _postfix, ref _firstChange, -1);
+                    }
                     break;
                 case SpellCheckAction.ChangeWholeText:
                     _mainWindow.ShowStatus(string.Format(Configuration.Settings.Language.Main.SpellCheckChangedXToY, _currentParagraph.Text.Replace(Environment.NewLine, " "), ChangeWholeText.Replace(Environment.NewLine, " ")));
