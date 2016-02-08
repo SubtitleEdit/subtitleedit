@@ -102,6 +102,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             // this must be the very last action done, or line numbers will be messed up!!!
+            var preCount = subtitle.Paragraphs.Count;
             for (int i = subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
                 Paragraph p = subtitle.Paragraphs[i];
@@ -109,15 +110,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (callbacks.AllowFix(p, fixAction0) && string.IsNullOrEmpty(text))
                 {
                     subtitle.Paragraphs.RemoveAt(i);
-                    emptyLinesRemoved++;
                     callbacks.AddFixToListView(p, fixAction0, p.Text, string.Format("[{0}]", language.RemovedEmptyLine));
                     callbacks.AddToDeleteIndices(i);
                 }
             }
-
-            if (emptyLinesRemoved > 0)
+            var totalRemovedEmptyLines = preCount - subtitle.Paragraphs.Count;
+            if (totalRemovedEmptyLines > 0)
             {
-                callbacks.UpdateFixStatus(emptyLinesRemoved, language.RemovedEmptyLinesUnsedLineBreaks, string.Format(language.EmptyLinesRemovedX, emptyLinesRemoved));
+                callbacks.UpdateFixStatus(totalRemovedEmptyLines, language.RemovedEmptyLinesUnsedLineBreaks, string.Format(language.EmptyLinesRemovedX, emptyLinesRemoved));
                 subtitle.Renumber();
             }
         }
