@@ -251,23 +251,25 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SelectCurrentWord()
         {
+            var j = SelectionStart;
             var i = SelectionStart;
+
+            // search from current selection rear
             while (i > 0 && !BreakChars.Contains(Text[i - 1]))
             {
                 i--;
             }
-            SelectionStart = i;
 
-            var selectionLength = 0;
-            for (; i < Text.Length; i++)
+            // search from current selection front
+            while (j < Text.Length)
             {
-                if (BreakChars.Contains(Text[i]))
-                {
+                if (BreakChars.Contains(Text[j]))
                     break;
-                }
-                selectionLength++;
+                j++;
             }
-            SelectionLength = selectionLength;
+
+            SelectionStart = i;
+            SelectionLength = j - i;
         }
 
     }
