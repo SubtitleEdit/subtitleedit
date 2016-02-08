@@ -10,8 +10,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         //>>> "COMMON GROUND" IS FUNDED BY  10:01:04:12                         1
         //THE MINNESOTA ARTS AND CULTURAL   10:01:07:09
-        private static Regex regexTimeCodes1 = new Regex(@" \d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
-        private static Regex regexTimeCodes2 = new Regex(@" \d\d:\d\d:\d\d:\d\d         +\d+$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes1 = new Regex(@" \d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes2 = new Regex(@" \d\d:\d\d:\d\d:\d\d         +\d+$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -84,12 +84,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line.Trim();
-                var match = regexTimeCodes2.Match(s);
+                var match = RegexTimeCodes2.Match(s);
                 if (match.Success)
                 {
                     s = s.Substring(0, match.Index + 13).Trim();
                 }
-                match = regexTimeCodes1.Match(s);
+                match = RegexTimeCodes1.Match(s);
                 if (match.Success && match.Index > 13)
                 {
                     string text = s.Substring(0, match.Index).Trim();
@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                 }
-                else if (string.IsNullOrWhiteSpace(line) || regexTimeCodes1.IsMatch("   " + s))
+                else if (string.IsNullOrWhiteSpace(line) || RegexTimeCodes1.IsMatch("   " + s))
                 {
                     // skip empty lines
                 }

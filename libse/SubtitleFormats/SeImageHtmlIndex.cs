@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class SeImageHtmlIndex : SubtitleFormat
     {
-        private static readonly Regex regexTimeCodes = new Regex(@"^#\d+:\d+", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^#\d+:\d+", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             foreach (string line in lines)
             {
-                if (line.Contains(".png") && regexTimeCodes.IsMatch(line))
+                if (line.Contains(".png") && RegexTimeCodes.IsMatch(line))
                 {
                     int idx = line.IndexOf("<div");
                     if (idx > 0)
