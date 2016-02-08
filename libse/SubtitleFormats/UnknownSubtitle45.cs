@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     {
         //*         00001.00-00003.00 02.01 00.0 1 0001 00 16-090-090
         //*         00138.10-00143.05 00.00 00.0 1 0003 00 16-090-090
-        private static Regex regexTimeCodes = new Regex(@"^\*\s+\d\d\d\d\d\.\d\d-\d\d\d\d\d\.\d\d \d\d.\d\d \d\d.\d\ \d \d\d\d\d \d\d \d\d-\d\d\d-\d\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\*\s+\d\d\d\d\d\.\d\d-\d\d\d\d\d\.\d\d \d\d.\d\d \d\d.\d\ \d \d\d\d\d \d\d \d\d-\d\d\d-\d\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -82,7 +82,7 @@ ST 0 EB 3.10
             char[] splitChar = { '.' };
             foreach (string line in arr)
             {
-                if (regexTimeCodes.IsMatch(line.Trim()))
+                if (RegexTimeCodes.IsMatch(line.Trim()))
                 {
                     string[] temp = line.Substring(1).Trim().Substring(0, 17).Split('-');
                     if (temp.Length == 2)

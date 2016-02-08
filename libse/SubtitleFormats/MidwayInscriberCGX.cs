@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class MidwayInscriberCGX : SubtitleFormat
     {
-        private static readonly Regex regexTimeCodes = new Regex(@"<\d\d:\d\d:\d\d:\d\d> <\d\d:\d\d:\d\d:\d\d>$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"<\d\d:\d\d:\d\d:\d\d> <\d\d:\d\d:\d\d:\d\d>$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -69,9 +69,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (!string.IsNullOrWhiteSpace(line))
                 {
-                    if (regexTimeCodes.IsMatch(line))
+                    if (RegexTimeCodes.IsMatch(line))
                     {
-                        int idx = regexTimeCodes.Match(line).Index;
+                        int idx = RegexTimeCodes.Match(line).Index;
                         string temp = line.Substring(0, idx).Trim();
                         sb.AppendLine(temp);
 
