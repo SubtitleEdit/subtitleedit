@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 _errorCount = 1;
                 return;
             }
-
+            char[] splitChars = { ':', ':' };
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("Events/Event"))
             {
                 try
@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var textBuilder = new StringBuilder();
                     foreach (XmlNode graphic in node.SelectNodes("Graphic"))
                         textBuilder.AppendLine(graphic.InnerText);
-                    var p = new Paragraph(textBuilder.ToString().Trim(), GetMillisecondsFromTimeCode(start), GetMillisecondsFromTimeCode(end));
+                    var p = new Paragraph(textBuilder.ToString().Trim(), DecodeTimeCodeFrames(start, splitChars).TotalMilliseconds, DecodeTimeCodeFrames(end, splitChars).TotalMilliseconds);
                     if (node.Attributes["Forced"] != null && node.Attributes["Forced"].Value.Equals("true", StringComparison.OrdinalIgnoreCase))
                         p.Forced = true;
                     subtitle.Paragraphs.Add(p);
@@ -112,18 +112,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             subtitle.Renumber();
-        }
-
-        private static double GetMillisecondsFromTimeCode(string time)
-        {
-            string[] parts = time.Split(new[] { ':', ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-            var hour = int.Parse(parts[0]);
-            var minutes = int.Parse(parts[1]);
-            var seconds = int.Parse(parts[2]);
-            var frames = int.Parse(parts[3]);
-
-            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames)).TotalMilliseconds;
         }
 
     }
