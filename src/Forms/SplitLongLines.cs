@@ -229,7 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     splittedIndexes.Add(splittedSubtitle.Paragraphs.Count + 1);
 
                                     string p1 = HtmlUtil.RemoveHtmlTags(newParagraph1.Text).TrimEnd();
-                                    if (p1.EndsWith('.') || p1.EndsWith('!') || p1.EndsWith('?') || p1.EndsWith(':') || p1.EndsWith(')') || p1.EndsWith(']') || p1.EndsWith('♪'))
+                                    if (p1.Length > 0 && ".!?:)]♪".Contains(p1[p1.Length - 1]))
                                     {
                                         if (newParagraph1.Text.StartsWith('-') && newParagraph2.Text.StartsWith('-'))
                                         {
@@ -272,8 +272,8 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
 
                                     var italicStart1 = newParagraph1.Text.IndexOf("<i>", StringComparison.Ordinal);
-                                    if (italicStart1 >= 0 && italicStart1 < 10 && newParagraph1.Text.IndexOf("</i>", StringComparison.Ordinal) < 0 &&
-                                        newParagraph2.Text.Contains("</i>") && newParagraph2.Text.IndexOf("<i>", StringComparison.Ordinal) < 0)
+                                    if (italicStart1 >= 0 && italicStart1 < 10 && !newParagraph1.Text.Contains("</i>") &&
+                                        newParagraph2.Text.Contains("</i>") && !newParagraph2.Text.Contains("<i>"))
                                     {
                                         newParagraph1.Text += "</i>";
                                         newParagraph2.Text = "<i>" + newParagraph2.Text;
