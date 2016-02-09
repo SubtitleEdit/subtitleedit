@@ -169,6 +169,13 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            // Break if FROM is same as TO
+            if (comboBoxFrom.SelectedIndex == comboBoxTo.SelectedIndex)
+            {
+                MessageBox.Show(string.Format("Cannot translate from: {0} to: {0}", comboBoxFrom.SelectedItem));
+                return;
+            }
+
             // empty all texts
             foreach (Paragraph p in _translatedSubtitle.Paragraphs)
                 p.Text = string.Empty;
