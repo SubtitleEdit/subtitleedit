@@ -370,8 +370,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                     int indexOfNewLine = newText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                     string second = newText.Substring(indexOfNewLine).Trim();
-                    indexOfDialogChar = second.IndexOf('-');
+                    indexOfDialogChar = second.IndexOf(" -", StringComparison.Ordinal);
                     if (indexOfDialogChar < 0 || indexOfDialogChar > 6)
+                    {
+                        indexOfDialogChar = second.IndexOf("- ", StringComparison.Ordinal);
+                    }
+                    if ((indexOfDialogChar < 0 || indexOfDialogChar > 6) && !second.StartsWith('-'))
                     {
                         var st = new StripableText(second, String.Empty, String.Empty);
                         second = st.Pre + "- " + st.StrippedText + st.Post;
@@ -601,7 +605,14 @@ namespace Nikse.SubtitleEdit.Core.Forms
                  oldText.Contains(Environment.NewLine + "<i>- ") ||
                  oldText.Contains(Environment.NewLine + "<i> - ")))
             {
-                text = text.TrimStart().TrimStart('-').TrimStart();
+                if (text.StartsWith("<i>-", StringComparison.Ordinal))
+                {
+                    text = "<i>" + text.Remove(0,4).Trim();
+                }
+                else
+                {
+                    text = text.TrimStart().TrimStart('-').TrimStart();
+                }
             }
             if (oldText.TrimStart().StartsWith('-') && !oldText.TrimStart().StartsWith("--", StringComparison.Ordinal) &&
                 text != null && !text.Contains(Environment.NewLine) &&

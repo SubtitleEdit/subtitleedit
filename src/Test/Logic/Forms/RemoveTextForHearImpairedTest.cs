@@ -1499,6 +1499,62 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void RemoveAdvanced1()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.RemoveTextBetweenParentheses = true;
+            target.Settings.RemoveIfAllUppercase = false;
+
+            string text = "- NORA: <i>Sir?</i>" + Environment.NewLine + "- (CAR DOOR CLOSES)";
+            string expected = "<i>Sir?</i>";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveAdvanced2()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.RemoveTextBetweenParentheses = true;
+            target.Settings.RemoveIfAllUppercase = false;
+
+            string text = "- Well, received, technically." + Environment.NewLine + "- KEVIN: <i>Mmm-hmm.</i>";
+            string expected = "- Well, received, technically." + Environment.NewLine + "<i>- Mmm-hmm.</i>";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+
+        [TestMethod]
+        public void RemoveAdvanced3()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBetweenBrackets = false;
+            target.Settings.RemoveTextBetweenParentheses = true;
+            target.Settings.RemoveIfAllUppercase = false;
+
+            string text = "- Well, received, technically." + Environment.NewLine + "- KEVIN: <i>Mmm-hmm.</i>";
+            string expected = "Well, received, technically.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+
         #region Additional test attributes
 
         //
