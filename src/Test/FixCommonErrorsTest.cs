@@ -1679,5 +1679,65 @@ namespace Test
         }
 
         #endregion FixFrenchLApostrophe
+
+        #region FixStartWithUppercaseLetterAfterPeriodInsideParagraph
+
+        [TestMethod]
+        public void FixStartWithUpperAfterPeriod1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Foobar 2016. hi foobar!");
+                new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("Foobar 2016. Hi foobar!", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixStartWithUpperAfterPeriod2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Foobar 2016... hi foobar!");
+                new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("Foobar 2016... Hi foobar!", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixStartWithUpperAfterPeriod3()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Foobar 2... m! 6... hi foobar!");
+                new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("Foobar 2... M! 6... Hi foobar!", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixStartWithUpperAfterPeriod4()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "2. hi..  yeah  2015? hi foobar!"); // two spaces after period
+                new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual("2. Hi.. Yeah 2015? Hi foobar!", _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixStartWithUpperAfterPeriod5()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string expected = "2.2 foobar!";
+                InitializeFixCommonErrorsLine(target, expected);
+                new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(expected, _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        #endregion
     }
 }
