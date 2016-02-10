@@ -38,14 +38,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (p.Text.Length > 3)
                 {
                     string text = st.StrippedText.Replace("  ", " ");
-                    int start = text.IndexOfAny(ExpectedChars);
+                    int start = text.LastIndexOfAny(ExpectedChars);
                     while (start >= 0 && start < text.Length)
                     {
-                        if (start > 0 && char.IsDigit(text[start - 1]))
+                        if (start > 0 && char.IsDigit(text[start - 1]) && text.Length > start + 1 && char.IsDigit(text[start + 1]))
                         {
                             // ignore periods after a number
                         }
-                        else if (start + 4 < text.Length && text[start + 1] == ' ')
+                        else if (start + 4 < text.Length && text[start + 1] == ' ' && !char.IsDigit(text[start + 2]))
                         {
                             if (!IsAbbreviation(text, start, callbacks))
                             {
@@ -74,9 +74,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 }
                             }
                         }
-                        start += 4;
-                        if (start < text.Length)
-                            start = text.IndexOfAny(ExpectedChars, start);
+                        start -= 3;
+                        if (start > 0)
+                            start = text.LastIndexOfAny(ExpectedChars, start);
                     }
                 }
 
