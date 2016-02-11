@@ -68,10 +68,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         index++;
                     }
 
-                    while (line.Contains(' ') && line.IndexOf(' ') < index)
+                    var whiteSpaceIdx = line.IndexOf(' ', 0, index);
+                    while (whiteSpaceIdx >= 0)
                     {
-                        line = line.Remove(line.IndexOf(' '), 1);
-                        index--;
+                        line = line.Remove(whiteSpaceIdx, 1);
+                        whiteSpaceIdx = line.IndexOf(' ', whiteSpaceIdx, --index - whiteSpaceIdx);
                     }
                 }
             }
