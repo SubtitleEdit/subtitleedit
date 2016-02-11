@@ -171,60 +171,35 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 string tag = s.Substring(0, end);
                                 if (tag.Contains(" color="))
                                 {
-                                    int colorStart = tag.IndexOf(" color=", StringComparison.Ordinal);
-                                    int colorEnd = tag.IndexOf('"', colorStart + " color=".Length + 1);
-                                    if (colorEnd > 0)
+                                    var color = GetAttributeFromFontTag(tag, "color=", '"', '\'', '"');
+                                    if (color.Length == 6)
                                     {
-                                        string color = tag.Substring(colorStart, colorEnd - colorStart);
-                                        color = color.Remove(0, " color=".Length);
-                                        color = color.Trim('"');
-                                        color = color.Trim('\'');
-                                        color = color.TrimStart('#');
-                                        if (color.Length == 6)
-                                        {
-                                            if (s.Contains(Environment.NewLine) && s.Contains("</font>" + Environment.NewLine))
-                                                pre.Append("{c:$" + color.Substring(4, 2) + color.Substring(2, 2) + color.Substring(0, 2) + "}");
-                                            else
-                                                pre.Append("{C:$" + color.Substring(4, 2) + color.Substring(2, 2) + color.Substring(0, 2) + "}");
-                                        }
+                                        if (s.Contains(Environment.NewLine) && s.Contains("</font>" + Environment.NewLine))
+                                            pre.Append("{c:$" + color.Substring(4, 2) + color.Substring(2, 2) + color.Substring(0, 2) + "}");
+                                        else
+                                            pre.Append("{C:$" + color.Substring(4, 2) + color.Substring(2, 2) + color.Substring(0, 2) + "}");
                                     }
                                 }
                                 if (tag.Contains(" face="))
                                 {
-                                    var faceStart = tag.IndexOf(" face=", StringComparison.Ordinal);
-                                    var faceEnd = tag.IndexOf('"', faceStart + " face=".Length + 1);
-                                    if (faceEnd > 0)
+                                    var fontName = GetAttributeFromFontTag(tag, "face=", '"', '\'');
+                                    if (fontName.Length > 0)
                                     {
-                                        string fontName = tag.Substring(faceStart, faceEnd - faceStart);
-                                        fontName = fontName.Remove(0, " face=".Length).Trim();
-                                        fontName = fontName.Trim('"');
-                                        fontName = fontName.Trim('\'');
-                                        if (fontName.Length > 0)
-                                        {
-                                            if (s.Contains(Environment.NewLine) && s.Contains("</font>" + Environment.NewLine))
-                                                pre.Append("{f:" + fontName + "}");
-                                            else
-                                                pre.Append("{F:" + fontName + "}");
-                                        }
+                                        if (s.Contains(Environment.NewLine) && s.Contains("</font>" + Environment.NewLine))
+                                            pre.Append("{f:" + fontName + "}");
+                                        else
+                                            pre.Append("{F:" + fontName + "}");
                                     }
                                 }
                                 if (tag.Contains(" size="))
                                 {
-                                    var sizeStart = tag.IndexOf(" size=", StringComparison.Ordinal);
-                                    var sizeEnd = tag.IndexOf('"', sizeStart + " size=".Length + 1);
-                                    if (sizeEnd > 0)
+                                    var fontSize = GetAttributeFromFontTag(tag, "size=", '"', '\'');
+                                    if (fontSize.Length > 0)
                                     {
-                                        string fontSize = tag.Substring(sizeStart, sizeEnd - sizeStart);
-                                        fontSize = fontSize.Remove(0, " size=".Length).Trim();
-                                        fontSize = fontSize.Trim('"');
-                                        fontSize = fontSize.Trim('\'');
-                                        if (fontSize.Length > 0)
-                                        {
-                                            if (s.Contains(Environment.NewLine) && s.Contains("</font>" + Environment.NewLine))
-                                                pre.Append("{s:" + fontSize + "}");
-                                            else
-                                                pre.Append("{S:" + fontSize + "}");
-                                        }
+                                        if (s.Contains(Environment.NewLine) && s.Contains("</font>" + Environment.NewLine))
+                                            pre.Append("{s:" + fontSize + "}");
+                                        else
+                                            pre.Append("{S:" + fontSize + "}");
                                     }
                                 }
                                 s = s.Remove(0, end + 1);
@@ -561,6 +536,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 i++;
             }
             return i;
+        }
+
+        // color: <font color="#ff0000"> | face:  <font face="verdana"> | size:  <font size="6">
+        private string GetAttributeFromFontTag(string s, string attrib, params char[] trimChars)
+        {
+            var startIdx = s.IndexOf(attrib);
+            if (startIdx > 5 && s.Length > startIdx + attrib.Length + 2)
+            {
+                var endIdx = s.IndexOf('"', startIdx + attrib.Length + 2);
+                if (endIdx < startIdx)
+                    return string.Empty;
+                s = s.Substring(startIdx + attrib.Length, endIdx - (startIdx + attrib.Length));
+                return s.Trim(trimChars);
+            }
+            return string.Empty;
         }
     }
 }
