@@ -556,35 +556,6 @@ namespace Nikse.SubtitleEdit.Forms
             return _abbreviationList;
         }
 
-        public void FixOcrErrorsViaReplaceList(string threeLetterIsoLanguageName)
-        {
-            using (var ocrFixEngine = new OcrFixEngine(threeLetterIsoLanguageName, null, this))
-            {
-                string fixAction = _language.FixCommonOcrErrors;
-                int noOfFixes = 0;
-                string lastLine = string.Empty;
-                for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
-                {
-                    var p = Subtitle.Paragraphs[i];
-                    string text = ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
-                    lastLine = text;
-                    if (AllowFix(p, fixAction) && p.Text != text)
-                    {
-                        string oldText = p.Text;
-                        p.Text = text;
-                        noOfFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                    Application.DoEvents();
-                }
-                if (noOfFixes > 0)
-                {
-                    _totalFixes += noOfFixes;
-                    LogStatus(_language.FixCommonOcrErrors, string.Format(_language.CommonOcrErrorsFixed, noOfFixes));
-                }
-            }
-        }
-
         public void UpdateFixStatus(int fixes, string message, string xMessage)
         {
             if (fixes > 0)
