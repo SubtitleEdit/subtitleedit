@@ -1383,6 +1383,9 @@
     <Content Include="Languages\ja-JP.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\nb-NO.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\nl-NL.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
