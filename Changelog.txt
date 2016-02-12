@@ -21,7 +21,7 @@
    * Fixed bug in handling of inline font tag in ASS format - thx Kyoichi
    * Added missing undo regarding column delete text
    * Allow reading of small PAC files - thx Mike
-   * Fixed bug in "Fix invalid italic tags" - thx invandrofly
+   * Fixed bug in "Fix invalid italic tags" - thx ivandrofly
 
 
 3.4.11 (16th January 2016)
