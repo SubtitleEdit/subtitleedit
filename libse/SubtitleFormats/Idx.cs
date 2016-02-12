@@ -83,11 +83,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
+            char[] splitChars = { ',', ':' };
             foreach (string line in lines)
             {
                 if (_regexTimeCodes.IsMatch(line))
                 {
-                    Paragraph p = GetTimeCodes(line);
+                    Paragraph p = GetParagraph(line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
                     if (p != null)
                         subtitle.Paragraphs.Add(p);
                     else
@@ -108,11 +109,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private static Paragraph GetTimeCodes(string line)
+        private static Paragraph GetParagraph(string[] parts)
         {
             // timestamp: 00:00:01:401, filepos: 000000000
-
-            string[] parts = line.Split(new[] { ',', ':' }, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 7)
             {
                 int hours;
