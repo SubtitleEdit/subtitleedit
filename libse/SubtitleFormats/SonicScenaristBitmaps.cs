@@ -66,6 +66,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             int index = 0;
             char[] splitChar = { ' ' };
+            char[] splitCharTimeCode = { ':' };
             var sb = new StringBuilder();
             foreach (string line in lines)
             {
@@ -81,7 +82,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         for (int i = 3; i < parts.Length; i++)
                             sb.Append(parts[i] + " ");
                         string text = sb.ToString().Trim();
-                        p = new Paragraph(DecodeTimeCode(parts[1].Split(':')), DecodeTimeCode(parts[2].Split(':')), text);
+                        p = new Paragraph(DecodeTimeCodeFramesFourParts(parts[1].Split(splitCharTimeCode)), DecodeTimeCodeFramesFourParts(parts[2].Split(splitCharTimeCode)), text);
                         subtitle.Paragraphs.Add(p);
                     }
                 }
@@ -96,20 +97,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 index++;
             }
             subtitle.Renumber();
-        }
-
-        private static TimeCode DecodeTimeCode(string[] parts)
-        {
-            //00:00:07:12
-            var hour = int.Parse(parts[0]);
-            var minutes = int.Parse(parts[1]);
-            var seconds = int.Parse(parts[2]);
-            var frames = double.Parse(parts[3]);
-
-            int milliseconds = FramesToMillisecondsMax999(frames);
-            if (milliseconds > 999)
-                milliseconds = 999;
-            return new TimeCode(hour, minutes, seconds, milliseconds);
         }
 
     }
