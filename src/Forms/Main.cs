@@ -21,6 +21,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.AccessControl;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -3224,7 +3225,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return DialogResult.Cancel;
                     }
 
-                    using (var fs = File.Create(_fileName, 1024, FileOptions.WriteThrough)) // use 'WriteThough' in order to try to avoid issue with power failure
+                    using (var fs = new FileStream(_fileName, FileMode.Create, FileAccess.Write, FileShare.Read, 8, FileOptions.WriteThrough)) // use 'WriteThough' in order to try to avoid issue with power failure
                     using (var sw = new StreamWriter(fs, currentEncoding))
                     {
                         sw.Write(allText);
