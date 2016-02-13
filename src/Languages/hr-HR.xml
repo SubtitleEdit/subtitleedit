@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.11</Version>
-    <TranslatedBy>Prijevod: Jozo Marić</TranslatedBy>
+    <TranslatedBy>Prijevod: Jozo Marić & diomed</TranslatedBy>
     <CultureName>hr-HR</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -1060,8 +1060,8 @@ Datoteka samo za čitanje!</FileXIsReadOnly>
 Želiš li početi od vrha dokumenta i nastaviti pretraživanje i zamjenu?</ReplaceXContinue>
     <ReplaceContinueTitle>Nastavi 'Zamijeni'?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Potraži za '{0}' s linije broj {1}...</SearchingForXFromLineY>
-    <XFoundAtLineNumberY>{0} su pronađene na liniji broj {1}.</XFoundAtLineNumberY>
-    <XNotFound>{0} nisu pronađene.</XNotFound>
+    <XFoundAtLineNumberY>{0} je pronađeno na liniji broj {1}.</XFoundAtLineNumberY>
+    <XNotFound>{0} nije pronađeno.</XNotFound>
     <BeforeReplace>Zamijenjeno sa: {0}</BeforeReplace>
     <MatchFoundX>Preklapanja: {0}</MatchFoundX>
     <NoMatchFoundX>Nema preklapanja: {0}</NoMatchFoundX>
