@@ -424,7 +424,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (parts.Length != 4)
                 throw new InvalidOperationException();
             // 00:00:00:00
-            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(double.Parse(parts[3])));
+            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
         }
 
         protected TimeCode DecodeTimeCodeFrames(string part, char[] splitChars)

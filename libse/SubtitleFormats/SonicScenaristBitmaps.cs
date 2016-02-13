@@ -26,7 +26,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (System.IO.Path.GetExtension(fileName).ToLowerInvariant() != ".sst")
+            var extension = System.IO.Path.GetExtension(fileName);
+            if (extension != null && extension.ToLowerInvariant() != ".sst")
                 return false;
 
             var subtitle = new Subtitle();
@@ -66,7 +67,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             int index = 0;
             char[] splitChar = { ' ' };
-            char[] splitCharTimeCode = { ':' };
             var sb = new StringBuilder();
             foreach (string line in lines)
             {
@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         for (int i = 3; i < parts.Length; i++)
                             sb.Append(parts[i] + " ");
                         string text = sb.ToString().Trim();
-                        p = new Paragraph(DecodeTimeCodeFramesFourParts(parts[1].Split(splitCharTimeCode)), DecodeTimeCodeFramesFourParts(parts[2].Split(splitCharTimeCode)), text);
+                        p = new Paragraph(DecodeTimeCodeFramesFourParts(parts[1].Split(SplitCharColon)), DecodeTimeCodeFramesFourParts(parts[2].Split(SplitCharColon)), text);
                         subtitle.Paragraphs.Add(p);
                     }
                 }
