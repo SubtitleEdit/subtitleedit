@@ -21,7 +21,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.AccessControl;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -5341,7 +5340,6 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     int selectedIndex = FirstSelectedIndex;
-                    string text = string.Empty;
                     if (undo)
                     {
                         _subtitle.HistoryItems[_undoIndex].RedoParagraphs = new List<Paragraph>();
@@ -5380,7 +5378,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _undoIndex++;
                     }
-                    text = _subtitle.HistoryItems[_undoIndex].Description;
+                    var text = _subtitle.HistoryItems[_undoIndex].Description;
 
                     _subtitleListViewIndex = -1;
                     textBoxListViewText.Text = string.Empty;
@@ -6755,17 +6753,6 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowSource();
                 RefreshSelectedParagraph();
             }
-        }
-
-        private string RemoveUnicodeCharacters(string text)
-        {
-            IList<char> uCharList = new List<char>() { '♫', '♪', '☺', '☹', '♥', '©', '☮', '☯', 'Σ', '∞', '≡', '⇒', 'π' };
-            foreach (char uChar in uCharList)
-            {
-                if (text.IndexOf(uChar) >= 0)
-                    text = text.Replace(uChar, ' ');
-            }
-            return text.FixExtraSpaces().Trim();
         }
 
         private void ButtonAutoBreakClick(object sender, EventArgs e)
