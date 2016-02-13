@@ -233,7 +233,7 @@ namespace Test
             {
                 InitializeFixCommonErrorsLine(target, "<i>Hey!" + Environment.NewLine + "<i>Boy!");
                 new FixInvalidItalicTags().Fix(_subtitle, new EmptyFixCallback());
-                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>Hey!</i>" + Environment.NewLine + "<i>Boy!</i>");
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "<i>Hey!" + Environment.NewLine + "Boy!</i>");
             }
         }
 

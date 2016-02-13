@@ -485,7 +485,7 @@ namespace Nikse.SubtitleEdit.Core
                     int lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
                     int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag, StringComparison.Ordinal) + Environment.NewLine.Length;
                     if (noOfLines == 2 && lastIndex == lastIndexWithNewLine && firstIndex < 2)
-                        text = text.Replace(Environment.NewLine, endTag + Environment.NewLine) + endTag;
+                        text = text.Substring(0, lastIndex) + text.Substring(lastIndex + beginTag.Length).TrimStart() + endTag;
                     else
                         text = text.Remove(lastIndex, beginTag.Length).Insert(lastIndex, endTag);
                 }
