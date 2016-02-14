@@ -101,13 +101,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var paragraph = new Paragraph();
             ExpectingLine expecting = ExpectingLine.TimeCodes;
             _errorCount = 0;
-
+            char[] splitChars = { ':', ',', '.' };
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
                 if (regexTimeCodes.IsMatch(line))
                 {
-                    string[] parts = line.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 8)
                     {
                         try
