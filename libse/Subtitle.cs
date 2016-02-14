@@ -481,16 +481,11 @@ namespace Nikse.SubtitleEdit.Core
         /// <returns>Number of lines deleted</returns>
         public int RemoveParagraphsByIndices(IEnumerable<int> indices)
         {
-            int count = 0;
+            int count = Paragraphs.Count;
             foreach (var index in indices.OrderByDescending(p => p))
-            {
                 if (index >= 0 && index < _paragraphs.Count)
-                {
                     _paragraphs.RemoveAt(index);
-                    count++;
-                }
-            }
-            return count;
+            return count - Paragraphs.Count;
         }
 
         /// <summary>

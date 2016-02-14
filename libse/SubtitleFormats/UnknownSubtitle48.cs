@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private static bool GetTimeCode(TimeCode timeCode, string timeString)
+        private bool GetTimeCode(TimeCode timeCode, string timeString)
         {
             try
             {
