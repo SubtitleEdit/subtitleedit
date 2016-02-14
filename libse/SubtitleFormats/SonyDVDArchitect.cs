@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (line.Length > 26 && line[2] == ':')
                     match = Regex.Match(line);
 
-                if (match != null && match.Success)
+                if (match?.Success == true)
                 {
                     string s = line.Substring(0, match.Length);
                     s = s.Replace(" - ", ":");

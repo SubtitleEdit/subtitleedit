@@ -92,8 +92,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 subtitle.Paragraphs.Add(lastParagraph);
 
                             var arr = line.Split('\t');
-                            TimeCode start = DecodeTimeCode(arr[1]);
-                            TimeCode end = DecodeTimeCode(arr[2]);
+                            TimeCode start = DecodeTimeCodeFramesFourParts(arr[1].Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries));
+                            TimeCode end = DecodeTimeCodeFramesFourParts(arr[2].Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries));
                             lastParagraph = new Paragraph(start, end, string.Empty);
                             success = true;
                         }
@@ -111,20 +111,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (lastParagraph != null)
                 subtitle.Paragraphs.Add(lastParagraph);
             subtitle.Renumber();
-        }
-
-        private static TimeCode DecodeTimeCode(string s)
-        {
-            var parts = s.Split(':');
-
-            //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
         }
 
     }
