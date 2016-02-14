@@ -1201,6 +1201,41 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                         fileName = Path.Combine(Path.GetDirectoryName(param.SavDialogFileName), fileName);
 
+                        var outBitmap = param.Bitmap;
+                        if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
+                        {
+                            var nbmp = new NikseBitmap(param.Bitmap);
+                            nbmp.ReplaceTransparentWith(panelFullFrameBackground.BackColor);
+                            using (var bmp = nbmp.GetBitmap())
+                            {
+                                int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
+                                int left = (param.ScreenWidth - param.Bitmap.Width)/2;
+
+                                var b = new NikseBitmap(param.ScreenWidth, param.ScreenHeight);
+                                {
+                                    b.Fill(panelFullFrameBackground.BackColor);
+                                    outBitmap = b.GetBitmap();
+                                    {
+                                        if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
+                                            left = param.LeftRightMargin;
+                                        else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
+                                            left = param.ScreenWidth - param.Bitmap.Width - param.LeftRightMargin;
+                                        if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
+                                            top = param.BottomMargin;
+                                        if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
+                                            top = (param.ScreenHeight - param.Bitmap.Height)/2;
+
+                                        using (var g = Graphics.FromImage(outBitmap))
+                                        {
+                                            g.DrawImage(bmp, left, top);
+                                            g.Dispose();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+
                         if (comboBoxImageFormat.Text == "8-bit png")
                         {
                             foreach (var encoder in ImageCodecInfo.GetImageEncoders())
@@ -1210,7 +1245,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     var parameters = new EncoderParameters();
                                     parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8);
 
-                                    var nbmp = new NikseBitmap(param.Bitmap);
+                                    var nbmp = new NikseBitmap(outBitmap);
                                     var b = nbmp.ConverTo8BitsPerPixel();
                                     b.Save(fileName, encoder, parameters);
                                     b.Dispose();
@@ -1221,7 +1256,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         else
                         {
-                            SaveImage(param.Bitmap, fileName, ImageFormat);
+                            SaveImage(outBitmap, fileName, ImageFormat);
                         }
                         imagesSavedCount++;
 
@@ -2869,7 +2904,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             bool showImageFormat = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP" || exportType == "BDNXML";
-            checkBoxFullFrameImage.Visible = exportType == "FAB" || exportType == "BLURAYSUP";
+            checkBoxFullFrameImage.Visible = exportType == "FAB" || exportType == "BLURAYSUP" || exportType == "FCP";
             comboBoxImageFormat.Visible = showImageFormat;
             labelImageFormat.Visible = showImageFormat;
             labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
@@ -2962,6 +2997,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxFrameRate.Items.Add("60");
                 comboBoxFrameRate.SelectedIndex = 2;
                 comboBoxFrameRate.DropDownStyle = ComboBoxStyle.DropDownList;
+
+                checkBoxFullFrameImage.Top = comboBoxFrameRate.Top + comboBoxFrameRate.Height + 5;
+                panelFullFrameBackground.Top = checkBoxFullFrameImage.Top;
             }
             if (comboBoxFrameRate.Items.Count >= 2)
             {
