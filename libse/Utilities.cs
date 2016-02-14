@@ -2072,6 +2072,7 @@ namespace Nikse.SubtitleEdit.Core
             if (!string.IsNullOrEmpty(matroskaSubtitleInfo.CodecPrivate))
             {
                 bool footerOn = false;
+                char[] splitChars = { ':', '.' };
                 foreach (string line in lines)
                 {
                     if (footerOn)
@@ -2093,7 +2094,7 @@ namespace Nikse.SubtitleEdit.Core
                         var arr = line.Split(',');
                         if (arr.Length > 3)
                         {
-                            arr = arr[1].Split(new[] { ':', '.' });
+                            arr = arr[1].Split(splitChars);
                             if (arr.Length == 4)
                             {
                                 int hour;

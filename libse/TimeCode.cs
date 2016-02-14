@@ -209,11 +209,11 @@ namespace Nikse.SubtitleEdit.Core
         public string ToShortStringHHMMSSFF()
         {
             string s = ToHHMMSSFF();
-            if (s.StartsWith("0:00:"))
+            if (s.StartsWith("0:00:", StringComparison.Ordinal))
                 s = s.Remove(0, 5);
-            if (s.StartsWith("00:"))
+            if (s.StartsWith("00:", StringComparison.Ordinal))
                 s = s.Remove(0, 3);
-            if (s.StartsWith("00:"))
+            if (s.StartsWith("00:", StringComparison.Ordinal))
                 s = s.Remove(0, 3);
             return s;
         }
