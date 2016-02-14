@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (string s in lines)
                 sb.Append(s);
-            int startIndex = sb.ToString().IndexOf("[{\"duration", StringComparison.Ordinal);
+            int startIndex = sb.ToString().IndexOf("[{\"", StringComparison.Ordinal);
             if (startIndex < 0)
                 return;
 

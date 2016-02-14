@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (string s in lines)
                 sb.Append(s);
-            if (!sb.ToString().TrimStart().StartsWith("[{\"start"))
+            if (!sb.ToString().TrimStart().StartsWith("[{\"", StringComparison.Ordinal))
                 return;
 
             foreach (string line in sb.ToString().Replace("},{", Environment.NewLine).SplitToLines())
@@ -145,6 +145,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return s;
         }
 
+        private static readonly char[] CommaAndEndCurlyBracket = { ',', '}' };
+
         public static string ReadTag(string s, string tag)
         {
             var startIndex = s.IndexOfAny(new[] { "\"" + tag + "\"", "'" + tag + "'" }, StringComparison.Ordinal);
@@ -153,7 +155,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var res = s.Substring(startIndex + 3 + tag.Length).Trim().TrimStart(':').TrimStart();
             if (res.StartsWith('"'))
             { // text
-                res = Json.ConvertJsonSpecialCharacters(res);
+                res = ConvertJsonSpecialCharacters(res);
                 res = res.Replace("\\\"", "@__1");
                 int endIndex = res.IndexOf("\"}", StringComparison.Ordinal);
                 int endAlternate = res.IndexOf("\",", StringComparison.Ordinal);
@@ -169,7 +171,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             else
             { // number
-                var endIndex = res.IndexOfAny(new[] { ',', '}' });
+                var endIndex = res.IndexOfAny(CommaAndEndCurlyBracket);
                 if (endIndex < 0)
                     return null;
                 return res.Substring(0, endIndex);
