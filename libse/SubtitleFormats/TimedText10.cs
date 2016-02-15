@@ -334,13 +334,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
             string text = p.Text;
 
-            string region = null;
-            if (text.StartsWith("{\\an8}"))
+            string region = GetEffect(p, "region");
+            if (text.StartsWith("{\\an8}") && string.IsNullOrEmpty(region))
             {
                 if (regions.Contains("top"))
                     region = "top";
                 else if (regions.Contains("topCenter"))
-                    region = "topCenter";
+                    region = "topCenter";                
             }
             text = Utilities.RemoveSsaTags(text);
 
@@ -442,13 +442,61 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             end.InnerText = ConvertToTimeString(p.EndTime);
             paragraph.Attributes.Append(end);
 
-            if (region != null)
+            if (!string.IsNullOrEmpty(region))
             {
                 XmlAttribute regionAttribute = xml.CreateAttribute("region");
                 regionAttribute.InnerText = region;
                 paragraph.Attributes.Append(regionAttribute);
             }
 
+            string xmlSpace = GetEffect(p, "xml:space");
+            if (!string.IsNullOrEmpty(xmlSpace))
+            {
+                XmlAttribute xmlSpaceAttribute = xml.CreateAttribute("xml:space"); 
+                xmlSpaceAttribute.InnerText = xmlSpace;
+                paragraph.Attributes.Append(xmlSpaceAttribute);
+            }
+
+            string ttsFontSize = GetEffect(p, "tts:fontSize");
+            if (!string.IsNullOrEmpty(ttsFontSize))
+            {
+                XmlAttribute ttsFontSizeAttribute = xml.CreateAttribute("tts:fontSize", "http://www.w3.org/ns/10/ttml#style");
+                ttsFontSizeAttribute.InnerText = ttsFontSize;
+                paragraph.Attributes.Append(ttsFontSizeAttribute);
+            }
+
+            string ttsFontFamily = GetEffect(p, "tts:fontFamily");
+            if (!string.IsNullOrEmpty(ttsFontFamily))
+            {
+                XmlAttribute ttsFontFamilyAttribute = xml.CreateAttribute("tts:fontFamily", "http://www.w3.org/ns/10/ttml#style");
+                ttsFontFamilyAttribute.InnerText = ttsFontFamily;
+                paragraph.Attributes.Append(ttsFontFamilyAttribute);
+            }
+
+            string ttsBackgroundColor = GetEffect(p, "tts:backgroundColor");
+            if (!string.IsNullOrEmpty(ttsBackgroundColor))
+            {
+                XmlAttribute ttsBackgroundColorAttribute = xml.CreateAttribute("tts:backgroundColor", "http://www.w3.org/ns/10/ttml#style");
+                ttsBackgroundColorAttribute.InnerText = ttsBackgroundColor;
+                paragraph.Attributes.Append(ttsBackgroundColorAttribute);
+            }
+
+            string ttsOrigin = GetEffect(p, "tts:origin");
+            if (!string.IsNullOrEmpty(ttsOrigin))
+            {
+                XmlAttribute ttsOriginAttribute = xml.CreateAttribute("tts:origin", "http://www.w3.org/ns/10/ttml#style");
+                ttsOriginAttribute.InnerText = ttsOrigin;
+                paragraph.Attributes.Append(ttsOriginAttribute);
+            }
+
+            string ttsExtent = GetEffect(p, "tts:extent");
+            if (!string.IsNullOrEmpty(ttsExtent))
+            {
+                XmlAttribute ttsExtentAttribute = xml.CreateAttribute("tts:extent", "http://www.w3.org/ns/10/ttml#style");
+                ttsExtentAttribute.InnerText = ttsExtent;
+                paragraph.Attributes.Append(ttsExtentAttribute);
+            }
+            
             if (subtitle.Header != null && p.Style != null && headerStyles.Contains(p.Style))
             {
                 if (p.Style != defaultStyle)
@@ -606,6 +654,31 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         string region = node.Attributes["region"].Value;
                         if (region == "top" || region == "topCenter")
                             p.Text = "{\\an8}" + p.Text;
+                        SetEffect(p, "region", region);
+                    }
+                    if (node.Attributes["xml:space"] != null)
+                    {
+                        SetEffect(p, "xml:space", node.Attributes["xml:space"].Value);
+                    }
+                    if (node.Attributes["tts:fontSize"] != null)
+                    {
+                        SetEffect(p, "tts:fontSize", node.Attributes["tts:fontSize"].Value);
+                    }
+                    if (node.Attributes["tts:fontFamily"] != null)
+                    {
+                        SetEffect(p, "tts:fontFamily", node.Attributes["tts:fontFamily"].Value);
+                    }
+                    if (node.Attributes["tts:backgroundColor"] != null)
+                    {
+                        SetEffect(p, "tts:backgroundColor", node.Attributes["tts:backgroundColor"].Value);
+                    }
+                    if (node.Attributes["tts:origin"] != null)
+                    {
+                        SetEffect(p, "tts:origin", node.Attributes["tts:origin"].Value);
+                    }
+                    if (node.Attributes["tts:extent"] != null)
+                    {
+                        SetEffect(p, "tts:extent", node.Attributes["tts:extent"].Value);
                     }
 
                     if (node.ParentNode.Name == "div")
@@ -637,6 +710,57 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             subtitle.Renumber();
+        }
+
+        private static void SetEffect(Paragraph paragraph, string tag, string value)
+        {
+            if (string.IsNullOrEmpty(paragraph.Effect))
+            {
+                paragraph.Effect = tag + "=" + value;
+            }
+            else
+            {
+                var list = paragraph.Effect.Split('|');
+                var sb = new StringBuilder();
+                bool found = false;
+                foreach (var s in list)
+                {
+                    string addValue = s;
+                    var arr = s.Split('=');
+                    if (arr.Length == 2)
+                    {
+                        if (arr[0] == tag)
+                        {
+                            addValue = tag + "=" + value;
+                            found = true;
+                        }
+                    }
+                    sb.Append(addValue + "|");
+                }
+                if (!found)
+                {
+                    sb.Append("|" + tag + "=" + value);
+                }
+                paragraph.Effect = sb.ToString().TrimEnd('|');
+            }
+        }
+
+        private static string GetEffect(Paragraph paragraph, string tag)
+        {
+            var list = paragraph.Effect.Split('|');
+            var sb = new StringBuilder();
+            foreach (var s in list)
+            {
+                var arr = s.Split('=');
+                if (arr.Length == 2)
+                {
+                    if (arr[0] == tag)
+                    {
+                        return arr[1];
+                    }
+                }
+            }
+            return string.Empty;
         }
 
         private static bool IsFrames(string timeCode)
