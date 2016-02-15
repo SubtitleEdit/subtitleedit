@@ -89,11 +89,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
+            char[] splitChars = { ':', ']', '[', ' ' };
             foreach (string line in lines)
             {
                 if (line.StartsWith('[') && RegexTimeCode.IsMatch(line))
                 {
-                    string[] parts = line.Split(new[] { ':', ']', '[', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 3)
                     {
                         try

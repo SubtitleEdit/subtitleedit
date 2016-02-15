@@ -521,7 +521,7 @@ namespace Nikse.SubtitleEdit.Logic
             try
             {
                 // adjust offset
-                if (!string.IsNullOrEmpty(offset) && (offset.StartsWith("/offset:") || offset.StartsWith("offset:")))
+                if (!string.IsNullOrEmpty(offset) && (offset.StartsWith("/offset:", StringComparison.Ordinal) || offset.StartsWith("offset:", StringComparison.Ordinal)))
                 {
                     string[] parts = offset.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 5)
