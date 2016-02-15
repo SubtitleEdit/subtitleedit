@@ -101,7 +101,9 @@ $TapeOffset         =   FALSE
 
                     try
                     {
-                        Paragraph p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(25).Trim()));
+                        var startTime = DecodeTimeCodeFramesFourParts(start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries));
+                        var endTime = DecodeTimeCodeFramesFourParts(end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries));
+                        var p = new Paragraph(startTime, endTime, DecodeText(line.Substring(25).Trim()));
                         subtitle.Paragraphs.Add(p);
                     }
                     catch
@@ -109,25 +111,12 @@ $TapeOffset         =   FALSE
                         _errorCount++;
                     }
                 }
-                else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//") && !line.StartsWith('$'))
+                else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//", StringComparison.Ordinal) && !line.StartsWith('$'))
                 {
                     _errorCount++;
                 }
             }
             subtitle.Renumber();
-        }
-
-        private static TimeCode DecodeTimeCode(string time)
-        {
-            //00:01:54:19
-
-            string hour = time.Substring(0, 2);
-            string minutes = time.Substring(3, 2);
-            string seconds = time.Substring(6, 2);
-            string frames = time.Substring(9, 2);
-
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
         }
 
         private static string DecodeText(string text)
