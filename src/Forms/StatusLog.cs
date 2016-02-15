@@ -17,6 +17,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
+
+            if (e.KeyData == (Keys.Control | Keys.A) && textBoxStatusLog.Text.Length > 0)
+            {
+                textBoxStatusLog.SelectAll();
+            }
         }
     }
 }
