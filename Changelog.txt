@@ -10,6 +10,7 @@
    * Batch convert: Added VobSub output
    * Point sync: Added "Go to line" (Ctrl+G) - thx ivandrofly
    * Remove text for HI: Added Apply button - thx Splike/ivandrofly
+   * Export to FPC+image now allows for full frame image - thx Mathieu
 * FIXED:
    * Several fixes for Find/Count - thx André
    * Saving no longer requires exclusive access (regression from 3.4.11) - thx Whisker72

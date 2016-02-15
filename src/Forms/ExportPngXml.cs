@@ -4070,6 +4070,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             subtitleListView1_SelectedIndexChanged(null, null);
             panelFullFrameBackground.Visible = checkBoxFullFrameImage.Checked;
+            comboBoxBottomMargin.Visible = checkBoxFullFrameImage.Checked;
+            labelBottomMargin.Visible = checkBoxFullFrameImage.Checked;
         }
 
         public void DisableSaveButtonAndCheckBoxes()
