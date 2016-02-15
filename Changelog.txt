@@ -12,6 +12,7 @@
    * Remove text for HI: Added Apply button - thx Splike/ivandrofly
 * FIXED:
    * Several fixes for Find/Count - thx André
+   * Saving no longer requires exclusive access (regression from 3.4.11) - thx Whisker72
    * Batch convert: Show FCE settings if "Skip step one" is checked - thx ivandrofly
    * Spell check "change" / "change all" issue regarding dash - thx kurosu
    * Fix for "Spell check" auto-fix name - thx Chamallow
@@ -22,6 +23,7 @@
    * Added missing undo regarding column delete text
    * Allow reading of small PAC files - thx Mike
    * Fixed bug in "Fix invalid italic tags" - thx ivandrofly
+   * Fixed allowing random order of json tags - thx fela98
 
 
 3.4.11 (16th January 2016)
