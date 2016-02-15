@@ -747,6 +747,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetEffect(Paragraph paragraph, string tag)
         {
+            if (paragraph == null || paragraph.Effect == null)
+            {
+                return string.Empty;
+            }
+
             var list = paragraph.Effect.Split('|');
             var sb = new StringBuilder();
             foreach (var s in list)
