@@ -130,8 +130,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 }
             }
-            subtitle.RemoveEmptyLines();
-            subtitle.Renumber();
+            if (subtitle.RemoveEmptyLines() == 0)
+                subtitle.Renumber();
         }
 
         private static string FixText(string text)

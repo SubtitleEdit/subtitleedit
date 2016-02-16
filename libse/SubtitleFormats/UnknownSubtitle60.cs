@@ -143,8 +143,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!allNullEndTime)
                 subtitle.Paragraphs.Clear();
 
-            subtitle.RemoveEmptyLines();
-            subtitle.Renumber();
+            if (subtitle.RemoveEmptyLines() == 0)
+                subtitle.Renumber();
         }
 
     }

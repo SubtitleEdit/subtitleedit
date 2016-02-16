@@ -269,13 +269,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds;
             }
             subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds = 2500;
-            subtitle.RemoveEmptyLines();
+            var totalRemoved = subtitle.RemoveEmptyLines();
             for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {
                 if (subtitle.Paragraphs[i].EndTime.TotalMilliseconds == subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
                     subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - 1;
             }
-            subtitle.Renumber();
+            if (totalRemoved == 0)
+                subtitle.Renumber();
         }
 
     }

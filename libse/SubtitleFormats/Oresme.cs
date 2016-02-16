@@ -100,8 +100,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].StartTime.TotalMilliseconds +
                          Utilities.GetOptimalDisplayMilliseconds(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text);
             }
-            subtitle.RemoveEmptyLines();
-            subtitle.Renumber();
+            if (subtitle.RemoveEmptyLines() == 0)
+                subtitle.Renumber();
         }
 
         private static string GetText(string s)

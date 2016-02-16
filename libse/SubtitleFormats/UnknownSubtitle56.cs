@@ -117,8 +117,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph temp in subtitle.Paragraphs)
                 temp.Text = temp.Text.Replace("<", "@ITALIC_START").Replace(">", "</i>").Replace("@ITALIC_START", "<i>");
 
-            subtitle.RemoveEmptyLines();
-            subtitle.Renumber();
+            if (subtitle.RemoveEmptyLines() == 0)
+                subtitle.Renumber();
         }
 
     }

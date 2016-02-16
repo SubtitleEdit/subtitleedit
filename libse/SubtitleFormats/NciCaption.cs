@@ -247,11 +247,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
             }
 
-            subtitle.RemoveEmptyLines();
+            var totalRemoved = subtitle.RemoveEmptyLines();
             Paragraph last = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
             if (last != null)
                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);
-            subtitle.Renumber();
+            if (totalRemoved == 0)
+                subtitle.Renumber();
         }
 
     }

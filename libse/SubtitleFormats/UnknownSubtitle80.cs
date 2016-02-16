@@ -116,8 +116,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 paragraph.Text = text.ToString().Trim();
             }
-            subtitle.RemoveEmptyLines();
-            subtitle.Renumber();
+            if (subtitle.RemoveEmptyLines() == 0)
+                subtitle.Renumber();
         }
 
         private static string EncodeTimeCode(TimeCode time)

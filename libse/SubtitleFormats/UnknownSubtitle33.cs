@@ -147,8 +147,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 index++;
             }
 
-            subtitle.RemoveEmptyLines();
-            subtitle.Renumber();
+            if (subtitle.RemoveEmptyLines() == 0)
+                subtitle.Renumber();
         }
 
     }
