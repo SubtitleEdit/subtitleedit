@@ -1,11 +1,9 @@
-﻿<!-- This list contains names/words with specific casing - and specific to English only -->
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- This list contains names/words with specific casing - and specific to English only -->
 <ignore_list>
-  <name>Aaden</name>
   <name>Aarav</name>
   <name>Abbey</name>
   <name>Abbie</name>
-  <name>Abbigail</name>
-  <name>Abrielle</name>
   <name>Abril</name>
   <name>Accra</name>
   <name>Ace</name>
@@ -15,30 +13,24 @@
   <name>Addilyn</name>
   <name>Addis Ababa</name>
   <name>Addisyn</name>
-  <name>Addyson</name>
-  <name>Adelaide</name>
   <name>Adelina</name>
   <name>Adeline</name>
   <name>Adelyn</name>
   <name>Adelynn</name>
   <name>Adonis</name>
   <name>Adrien</name>
-  <name>Adrienne</name>
   <name>Adyson</name>
   <name>Agoura</name>
-  <name>Aguilera</name>
   <name>Aidyn</name>
   <name>Aileen</name>
   <name>Aimee</name>
   <name>Ainsley</name>
-  <name>Aisha</name>
   <name>Aiyana</name>
   <name>Akira</name>
   <name>Alaina</name>
   <name>Alana</name>
   <name>Alani</name>
   <name>Alanna</name>
-  <name>Alannah</name>
   <name>Alaya</name>
   <name>Alayah</name>
   <name>Alayna</name>
@@ -50,17 +42,12 @@
   <name>Aleigha</name>
   <name>Alejandra</name>
   <name>Alena</name>
-  <name>Alessandra</name>
-  <name>Alessandro</name>
   <name>Alexia</name>
   <name>Algiers</name>
   <name>Ali</name>
   <name>Alia</name>
-  <name>Aliana</name>
   <name>Alianna</name>
   <name>Alina</name>
-  <name>Alisha</name>
-  <name>Alisson</name>
   <name>Alivia</name>
   <name>Aliya</name>
   <name>Aliyah</name>
@@ -71,7 +58,6 @@
   <name>Alyvia</name>
   <name>Amalia</name>
   <name>Amani</name>
-  <name>Amara</name>
   <name>Amare</name>
   <name>Amaya</name>
   <name>Amelie</name>
@@ -88,19 +74,14 @@
   <name>Anahi</name>
   <name>Analia</name>
   <name>Anaya</name>
-  <name>Angelica</name>
-  <name>Angeline</name>
   <name>Angelique</name>
-  <name>Angelo</name>
   <name>Anheuser</name>
-  <name>Anika</name>
   <name>Aniya</name>
   <name>Aniyah</name>
   <name>Annabel</name>
   <name>Annabell</name>
   <name>Annabella</name>
   <name>Annalise</name>
-  <name>Annika</name>
   <name>Ansley</name>
   <name>Arabella</name>
   <name>Araceli</name>
@@ -157,7 +138,6 @@
   <name>Belgrade</name>
   <name>Bentlee</name>
   <name>Bently</name>
-  <name>Benton</name>
   <name>Berne</name>
   <name>Birnbaum</name>
   <name>Blakely</name>
@@ -172,7 +152,6 @@
   <name>Bowen</name>
   <name>Boxster</name>
   <name>Boxter</name>
-  <name>Brad Pitt</name>
   <name>Braelyn</name>
   <name>Braelynn</name>
   <name>Brandenberg</name>
@@ -187,14 +166,11 @@
   <name>Brenna</name>
   <name>Bria</name>
   <name>Bridger</name>
-  <name>Bridget</name>
   <name>Briella</name>
   <name>Brielle</name>
   <name>Briley</name>
   <name>Brinley</name>
   <name>Brisa</name>
-  <name>Brisbane</name>
-  <name>Broderick</name>
   <name>Brogan</name>
   <name>Brooklynn</name>
   <name>Brussels</name>
@@ -243,7 +219,6 @@
   <name>Cecelia</name>
   <name>Chana</name>
   <name>Chanel</name>
-  <name>Channing</name>
   <name>Chantel</name>
   <name>Charlee</name>
   <name>Charleigh</name>
@@ -265,11 +240,8 @@
   <name>Colombo</name>
   <name>Colt</name>
   <name>Colten</name>
-  <name>Columbo</name>
   <name>Colvin</name>
-  <name>Conklin</name>
   <name>Connery</name>
-  <name>Cooper</name>
   <name>Corban</name>
   <name>Corbin</name>
   <name>Coverdale</name>
@@ -292,7 +264,6 @@
   <name>Davina</name>
   <name>Davon</name>
   <name>Dax</name>
-  <name>Daxton</name>
   <name>Dayana</name>
   <name>Deangelo</name>
   <name>Deanna</name>
@@ -366,16 +337,13 @@
   <name>Farell</name>
   <name>Farrah</name>
   <name>Fassbach</name>
-  <name>Felicity</name>
   <name>Fernanda</name>
   <name>Finn</name>
-  <name>Finnegan</name>
   <name>Finney</name>
   <name>Fisher</name>
   <name>Flexx</name>
   <name>Florenz</name>
   <name>Frances</name>
-  <name>Francesca</name>
   <name>Franco</name>
   <name>Froot Loops</name>
   <name>Gabor</name>
@@ -383,7 +351,6 @@
   <name>Gael</name>
   <name>Gage</name>
   <name>Gaige</name>
-  <name>Galadriel</name>
   <name>Galilea</name>
   <name>Galliard</name>
   <name>Garfield</name>
@@ -398,7 +365,6 @@
   <name>Gianna</name>
   <name>Gianni</name>
   <name>Gibralta</name>
-  <name>Gideon</name>
   <name>Gil</name>
   <name>Gill</name>
   <name>Giovani</name>
@@ -419,8 +385,6 @@
   <name>Guadalupe</name>
   <name>Guangzhou</name>
   <name>Guillermo</name>
-  <name>Gutenberg</name>
-  <name>Gyllenhaal</name>
   <name>H.U.D.</name>
   <name>Hadassah</name>
   <name>Haiden</name>
@@ -432,10 +396,8 @@
   <name>Hamza</name>
   <name>Hana</name>
   <name>Hanoi</name>
-  <name>Harley</name>
   <name>Harlow</name>
   <name>Harmony</name>
-  <name>Harrelson</name>
   <name>Hattie</name>
   <name>Havanno</name>
   <name>Haylee</name>
@@ -467,15 +429,11 @@
   <name>Isla</name>
   <name>Islamabad</name>
   <name>Issac</name>
-  <name>Izabella</name>
-  <name>Izabelle</name>
   <name>Izaiah</name>
   <name>Izayah</name>
   <name>Jabari</name>
   <name>Jace</name>
   <name>Jacey</name>
-  <name>Jacoby</name>
-  <name>Jacqueline</name>
   <name>Jada</name>
   <name>Jade</name>
   <name>Jadiel</name>
@@ -500,7 +458,6 @@
   <name>Jamarion</name>
   <name>Jamir</name>
   <name>Jamis</name>
-  <name>Jamison</name>
   <name>Janae</name>
   <name>Janelle</name>
   <name>Janessa</name>
@@ -559,13 +516,9 @@
   <name>Joaquin</name>
   <name>Jocelyn</name>
   <name>Jocelynn</name>
-  <name>Johan</name>
   <name>Johann</name>
-  <name>Johanna</name>
   <name>Johnathan</name>
   <name>Johnathon</name>
-  <name>Johnny Depp</name>
-  <name>Jolene</name>
   <name>Jolie</name>
   <name>Jon</name>
   <name>Jonathon</name>
@@ -752,7 +705,6 @@
   <name>Leland</name>
   <name>Leningrad</name>
   <name>Leona</name>
-  <name>Leonardo DiCaprio</name>
   <name>Leonel</name>
   <name>Leonidas</name>
   <name>Lesly</name>
@@ -856,12 +808,9 @@
   <name>Mathias</name>
   <name>Matias</name>
   <name>Matilda</name>
-  <name>Matteo</name>
-  <name>Matthias</name>
   <name>Mattie</name>
   <name>Mauricio</name>
   <name>Maxim</name>
-  <name>Maximilian</name>
   <name>Maximiliano</name>
   <name>Maximo</name>
   <name>Maxton</name>
@@ -890,14 +839,11 @@
   <name>Miley</name>
   <name>Milo</name>
   <name>Mina</name>
-  <name>Minogue</name>
   <name>Mira</name>
   <name>Mirakuru</name>
-  <name>Mirkwood</name>
   <name>Misael</name>
   <name>Mischa</name>
   <name>Miya</name>
-  <name>Mohamed</name>
   <name>Moises</name>
   <name>Mollie</name>
   <name>Montevideo</name>
@@ -905,8 +851,6 @@
   <name>Moriah</name>
   <name>Moscow</name>
   <name>Moshe</name>
-  <name>Muhammad</name>
-  <name>Mustafa</name>
   <name>Mya</name>
   <name>Myah</name>
   <name>Myla</name>
@@ -924,14 +868,10 @@
   <name>Nathaly</name>
   <name>Nathanael</name>
   <name>Nayeli</name>
-  <name>Nehemiah</name>
   <name>Neveah</name>
-  <name>New Orleans</name>
   <name>Nia</name>
-  <name>Niagara Falls</name>
   <name>Nickolas</name>
   <name>Nicosia</name>
-  <name>Niklaus</name>
   <name>Niko</name>
   <name>Noe</name>
   <name>Noelle</name>
@@ -945,16 +885,12 @@
   <name>Nutella</name>
   <name>Nyla</name>
   <name>Nylah</name>
-  <name>Oakenshield</name>
-  <name>Odin</name>
   <name>Oeufcocque Penteano</name>
   <name>Oeufcocque-Penteano</name>
   <name>Ogilvie</name>
-  <name>Oleg</name>
   <name>Oliveira</name>
   <name>Omari</name>
   <name>OMG</name>
-  <name>Oprah Winfrey</name>
   <name>O'Regan</name>
   <name>Orion</name>
   <name>Osaka</name>
@@ -1016,9 +952,7 @@
   <name>Rivka</name>
   <name>Riya</name>
   <name>Robert De Niro</name>
-  <name>Rocco</name>
   <name>Rochway</name>
-  <name>Roderick</name>
   <name>Rodolfo</name>
   <name>Rodrigo</name>
   <name>Rogelio</name>
@@ -1034,7 +968,6 @@
   <name>Rowen</name>
   <name>Roxane</name>
   <name>Royce</name>
-  <name>Ruben</name>
   <name>Ryann</name>
   <name>Ryder</name>
   <name>Ryker</name>
@@ -1045,11 +978,9 @@
   <name>Rylen</name>
   <name>Rylie</name>
   <name>Saanvi</name>
-  <name>Sadie</name>
   <name>Sage</name>
   <name>Saige</name>
   <name>Salma</name>
-  <name>Salma Hayek</name>
   <name>Samara</name>
   <name>Samir</name>
   <name>Samiya</name>
@@ -1205,7 +1136,6 @@
   <name>Yazmin</name>
   <name>Yehuda</name>
   <name>Yesenia</name>
-  <name>Yoko Ono</name>
   <name>Yokohama</name>
   <name>Yoselin</name>
   <name>Yuliana</name>

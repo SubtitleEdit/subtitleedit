@@ -1,4 +1,5 @@
-﻿<!-- This list contains names/words with specific casing - and specific to German only -->
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- This list contains names/words with specific casing - and specific to German only -->
 <ignore_list>
   <name>Abelard</name>
   <name>Ada</name>
@@ -22,7 +23,6 @@
   <name>Adalwolfa</name>
   <name>Adel</name>
   <name>Adela</name>
-  <name>Adelaide</name>
   <name>Adelbert</name>
   <name>Adelhard</name>
   <name>Adelheid</name>
@@ -37,7 +37,6 @@
   <name>Adlar</name>
   <name>Adler</name>
   <name>Adne</name>
-  <name>Adolph</name>
   <name>Adolpha</name>
   <name>Adriane</name>
   <name>Agathe</name>
@@ -97,7 +96,6 @@
   <name>Amald</name>
   <name>Amalda</name>
   <name>Amall</name>
-  <name>Amara</name>
   <name>Amaud</name>
   <name>Amd</name>
   <name>Amdt</name>
@@ -554,9 +552,7 @@
   <name>Jarman</name>
   <name>Jarmann</name>
   <name>Jaye</name>
-  <name>Johan</name>
   <name>Johann</name>
-  <name>Johanna</name>
   <name>Johannah</name>
   <name>Jolan</name>
   <name>Jolanka</name>
@@ -721,7 +717,6 @@
   <name>Mathild</name>
   <name>Mathilda</name>
   <name>Matilda</name>
-  <name>Maximilian</name>
   <name>Maximillian</name>
   <name>Maynard</name>
   <name>Mayne</name>
@@ -815,7 +810,6 @@
   <name>Roddy</name>
   <name>Roderic</name>
   <name>Roderica</name>
-  <name>Roderick</name>
   <name>Roderik</name>
   <name>Roderika</name>
   <name>Rodrik</name>
