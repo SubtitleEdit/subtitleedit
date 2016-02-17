@@ -73,13 +73,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var endTime = parts[1].Trim();
 
                             string[] startTimeParts = { startTime.Substring(0, 2), startTime.Substring(2, 2), startTime.Substring(4, 2), startTime.Substring(6, 2) };
-                            string[] endTimeParts = { startTime.Substring(0, 2), startTime.Substring(2, 2), startTime.Substring(4, 2), startTime.Substring(6, 2) };
+                            string[] endTimeParts = { endTime.Substring(0, 2), endTime.Substring(2, 2), endTime.Substring(4, 2), endTime.Substring(6, 2) };
 
                             paragraph = new Paragraph { StartTime = DecodeTimeCodeFramesFourParts(startTimeParts), EndTime = DecodeTimeCodeFramesFourParts(endTimeParts) };
                             subtitle.Paragraphs.Add(paragraph);
                             text = new StringBuilder();
                             s = s.Remove(0, 18 + lineParts[0].Length).Trim();
-                            var idxA = s.IndexOf("＠");
+                            var idxA = s.IndexOf('＠');
                             if (idxA > 0)
                             {
                                 s = s.Substring(0, idxA - 1).Trim();
@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (paragraph != null && text.Length < 150)
                 {
-                    var idxA = s.IndexOf("＠");
+                    var idxA = s.IndexOf('＠');
                     if (idxA > 0)
                     {
                         s = s.Substring(0, idxA - 1).Trim();
