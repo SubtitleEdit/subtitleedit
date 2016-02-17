@@ -54,17 +54,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
+            char[] splitChars = { ':', '.' };
             foreach (string line in lines)
             {
                 if (regexTimeCodes.IsMatch(line))
                 {
-                    string[] parts = line.Substring(0, 10).Trim().Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Substring(0, 10).Trim().Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {
                         try
                         {
                             var start = DecodeTimeCode(parts);
-                            parts = line.Substring(11, 10).Trim().Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                            parts = line.Substring(11, 10).Trim().Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                             var end = DecodeTimeCode(parts);
                             string text = line.Substring(25).Trim();
                             var p = new Paragraph();

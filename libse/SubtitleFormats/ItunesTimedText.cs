@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string text = p.Text;
 
                 XmlAttribute regionP = xml.CreateAttribute("region");
-                if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an8}") || text.StartsWith("{\\an9}"))
+                if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
                 {
                     if (hasTopRegion)
                     {
@@ -193,7 +193,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     regionP.InnerText = "bottom";
                     paragraph.Attributes.Append(regionP);
                 }
-                if (text.StartsWith("{\\an") && text.Length > 6 && text[5] == '}')
+                if (text.StartsWith("{\\an", StringComparison.Ordinal) && text.Length > 6 && text[5] == '}')
                     text = text.Remove(0, 6);
 
                 if (subtitle.Header != null && p.Style != null && GetStylesFromHeader(subtitle.Header).Contains(p.Style))
@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             skipCount--;
                         }
-                        else if (line.Substring(i).StartsWith("<i>"))
+                        else if (line.Substring(i).StartsWith("<i>", StringComparison.Ordinal))
                         {
                             styles.Push(currentStyle);
                             currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
@@ -241,7 +241,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             currentStyle.Attributes.Append(attr);
                             skipCount = 2;
                         }
-                        else if (line.Substring(i).StartsWith("<b>"))
+                        else if (line.Substring(i).StartsWith("<b>", StringComparison.Ordinal))
                         {
                             currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
                             paragraph.AppendChild(currentStyle);
@@ -250,7 +250,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             currentStyle.Attributes.Append(attr);
                             skipCount = 2;
                         }
-                        else if (line.Substring(i).StartsWith("<font "))
+                        else if (line.Substring(i).StartsWith("<font ", StringComparison.Ordinal))
                         {
                             int endIndex = line.Substring(i + 1).IndexOf('>');
                             if (endIndex > 0)
@@ -276,7 +276,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 skipCount = line.Length;
                             }
                         }
-                        else if (line.Substring(i).StartsWith("</i>") || line.Substring(i).StartsWith("</b>") || line.Substring(i).StartsWith("</font>"))
+                        else if (line.Substring(i).StartsWith("</i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</b>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</font>", StringComparison.Ordinal))
                         {
                             currentStyle = xml.CreateTextNode(string.Empty);
                             if (styles.Count > 0)
@@ -285,7 +285,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 currentStyle.InnerText = string.Empty;
                             }
                             paragraph.AppendChild(currentStyle);
-                            if (line.Substring(i).StartsWith("</font>"))
+                            if (line.Substring(i).StartsWith("</font>", StringComparison.Ordinal))
                                 skipCount = 6;
                             else
                                 skipCount = 3;
