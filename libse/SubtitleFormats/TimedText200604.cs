@@ -157,16 +157,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
 
-            XmlNode div;
-            var body = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr);
-            if (body == null)
-                div = xml.DocumentElement;
-            else
-                div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
-
-            if (div == null)
-                div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
-            foreach (XmlNode node in div.ChildNodes)
+            foreach (XmlNode node in xml.DocumentElement.SelectNodes("//ttaf1:p", nsmgr))
             {
                 try
                 {
@@ -241,6 +232,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             bool allBelow100 = true;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
+                p.Text = Utilities.RemoveUnneededSpaces(p.Text, null).Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                 if (p.StartTime.Milliseconds >= 100 || p.EndTime.Milliseconds >= 100)
                     allBelow100 = false;
             }
