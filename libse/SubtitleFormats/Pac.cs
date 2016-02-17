@@ -1011,7 +1011,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var fi = new FileInfo(fileName);
                     if (fi.Length > 65 && fi.Length < 1024000) // not too small or too big
                     {
-                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
+                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName, 24);
 
                         if (buffer[00] == 1 && // These bytes seems to be PAC files... TODO: Verify!
                             buffer[01] == 0 &&
