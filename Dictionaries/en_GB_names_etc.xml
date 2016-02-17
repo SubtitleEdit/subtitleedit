@@ -1,4 +1,5 @@
-﻿<!-- This list contains names/words with specific casing - and specific to English only -->
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- This list contains names/words with specific casing - and specific to English only -->
 <ignore_list>
   <name>Abbie</name>
   <name>Abi</name>
@@ -8,7 +9,6 @@
   <name>Ciara</name>
   <name>Faye</name>
   <name>Finn</name>
-  <name>Francesca</name>
   <name>Freya</name>
   <name>Holly</name>
   <name>Imogen</name>
