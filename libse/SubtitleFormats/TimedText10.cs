@@ -497,6 +497,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraph.Attributes.Append(ttsExtentAttribute);
             }
             
+            string ttsTextAlign = GetEffect(p, "tts:textAlign");
+            if (!string.IsNullOrEmpty(ttsTextAlign))
+            {
+                XmlAttribute ttsTextAlignAttribute = xml.CreateAttribute("tts:textAlign", "http://www.w3.org/ns/10/ttml#style");
+                ttsTextAlignAttribute.InnerText = ttsTextAlign;
+                paragraph.Attributes.Append(ttsTextAlignAttribute);
+            }
+
             if (subtitle.Header != null && p.Style != null && headerStyles.Contains(p.Style))
             {
                 if (p.Style != defaultStyle)
@@ -680,6 +688,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         SetEffect(p, "tts:extent", node.Attributes["tts:extent"].Value);
                     }
+                    if (node.Attributes["tts:textAlign"] != null)
+                    {
+                        SetEffect(p, "tts:textAlign", node.Attributes["tts:textAlign"].Value);
+                    }                    
 
                     if (node.ParentNode.Name == "div")
                     {
