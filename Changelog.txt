@@ -2,6 +2,7 @@
 
 3.4.12 (xth March 2016) BETA
 * NEW:
+   * Added new subtitle formats
    * Norwegian translation - thx Imre
 * IMPROVED:
    * Updated Catalan translation - thx juansa
@@ -25,6 +26,7 @@
    * Allow reading of small PAC files - thx Mike
    * Fixed bug in "Fix invalid italic tags" - thx ivandrofly
    * Fixed allowing random order of json tags - thx fela98
+   * Remember (extra) inline styles for TTML 1.0 - thx Oskar
 
 
 3.4.11 (16th January 2016)
