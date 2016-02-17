@@ -1840,7 +1840,7 @@ can edit in same subtitle file (collaboration)</Information>
   <StartNumberingFrom>
     <Title>Renumber</Title>
     <StartFromNumber>Start from number:</StartFromNumber>
-    <PleaseEnterAValidNumber>Ups, please enter a number</PleaseEnterAValidNumber>
+    <PleaseEnterAValidNumber>Ups, please enter a valid number</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <Statistics>
     <Title>Statistics</Title>
