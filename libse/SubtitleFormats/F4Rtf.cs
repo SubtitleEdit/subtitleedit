@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine(line);
 
             string rtf = sb.ToString().Trim();
-            if (!rtf.StartsWith("{\\rtf"))
+            if (!rtf.StartsWith("{\\rtf", StringComparison.Ordinal))
                 return;
 
             LoadF4TextSubtitle(subtitle, rtf.FromRtf());
