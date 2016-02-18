@@ -2133,7 +2133,7 @@ can edit in same subtitle file (collaboration)",
             {
                 Title = "Renumber",
                 StartFromNumber = "Start from number:",
-                PleaseEnterAValidNumber = "Ups, please enter a number",
+                PleaseEnterAValidNumber = "Ups, please enter a valid number",
             };
 
             Statistics = new LanguageStructure.Statistics
