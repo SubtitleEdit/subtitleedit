@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 count++;
                 string text = HtmlUtil.RemoveHtmlTags(p.Text);
-                if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>"))
+                if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal))
                     text = "#" + text;
                 sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), text, Environment.NewLine, count));
             }
@@ -78,6 +78,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
+            char[] splitChar = { ',' };
             foreach (string line in lines)
             {
                 if (line.EndsWith('.') && Utilities.IsInteger(line.TrimEnd('.')))
@@ -89,7 +90,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (paragraph != null && expecting == ExpectingLine.TimeStart && RegexTimeCode.IsMatch(line))
                 {
-                    string[] parts = line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2)
                     {
                         try
@@ -107,7 +108,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (paragraph != null && expecting == ExpectingLine.TimeEnd && RegexTimeCode.IsMatch(line))
                 {
-                    string[] parts = line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2)
                     {
                         try
