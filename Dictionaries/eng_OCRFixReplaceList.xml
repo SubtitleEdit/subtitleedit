@@ -246,7 +246,6 @@
     <Word from="Cho/r" to="Choir" />
     <Word from="cHucKl_Es" to="CHUCKLES" />
     <Word from="CIark" to="Clark" />
-    <Word from="CIass" to="Class" />
     <Word from="CIear" to="Clear" />
     <Word from="circumcised_" to="circumcised." />
     <Word from="ckay" to="okay" />
@@ -1113,7 +1112,6 @@
     <Word from="Persona/4/" to="Personally" />
     <Word from="Persona/y" to="Personally" />
     <Word from="persors" to="person's" />
-    <Word from="PIace" to="Place" />
     <Word from="PIain" to="Plain" />
     <Word from="PIease" to="Please" />
     <Word from="PIeasure" to="Pleasure" />
@@ -1818,11 +1816,6 @@
     <Word from="lron" to="Iron" />
     <Word from="It'syour" to="It's your" />
     <Word from="lfstill" to="if still" />
-    <Word from="internationaljudges" to="international judges" />
-    <Word from="YQu" to="You" />
-    <Word from="onJanuaw" to="on January" />
-    <Word from="Shdsjust" to="She's just" />
-    <Word from="HeyJennifer" to="Hey Jennifer" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
