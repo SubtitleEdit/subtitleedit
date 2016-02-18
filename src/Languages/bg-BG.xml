@@ -616,9 +616,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} важни съобщения с отчети!</NumberOfImportantLogMessages>
     <FixedOkXY>Поправено и OK - '{0}': {1}</FixedOkXY>
-    <FixOcrErrorExample></FixOcrErrorExample>
-    <FixSpaceBetweenNumbersExample></FixSpaceBetweenNumbersExample>
-    <FixDialogsOneLineExample></FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Кой речник желаете?</Title>
@@ -1152,7 +1149,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MatroskaFiles>Matroska файлове</MatroskaFiles>
     <NoSubtitlesFound>Няма намерени субтитри</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Това е невалиден Matroska файл: {0}</NotAValidMatroskaFileX>
-    <BlurayNotSubtitlesFound>Blu-ray sup файла не съдържа никакви субтитри или е повреден - опитайте да го демуксните отново </BlurayNotSubtitlesFound>
+    <BlurayNotSubtitlesFound>Blu-ray sup файла не съдържа никакви субтитри или е повреден - опитайте да го демуксните отново</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Обработка на файла Matroska. Моля, изчакайте...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Анализ на Transport Stream файл. Изчакайте, моля...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Преди внасянето на субтитри от файла Matroska</BeforeImportFromMatroskaFile>
