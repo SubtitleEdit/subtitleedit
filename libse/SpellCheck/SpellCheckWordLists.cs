@@ -208,6 +208,8 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
             if (text.Contains(PeriodAndDash))
             {
+                const string expectedChars1 = @" (['""\r\n";
+                const string expectedChars2 = @",!?:;. ])<'""";
                 int i = 0;
                 foreach (string wordWithDashesOrPeriods in _wordsWithDashesOrPeriods)
                 {
@@ -220,9 +222,9 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                         if (indexStart >= 0)
                         {
                             int endIndexPlus = indexStart + wordWithDashesOrPeriods.Length;
-                            bool startOk = indexStart == 0 || (@" (['""" + "\r\n").Contains(text[indexStart - 1]);
+                            bool startOk = indexStart == 0 || expectedChars1.Contains(text[indexStart - 1]);
                             bool endOk = endIndexPlus == text.Length;
-                            if (!endOk && endIndexPlus < text.Length && @",!?:;. ])<'""".Contains(text[endIndexPlus]))
+                            if (!endOk && endIndexPlus < text.Length && expectedChars2.Contains(text[endIndexPlus]))
                                 endOk = true;
                             if (startOk && endOk)
                             {
