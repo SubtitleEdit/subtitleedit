@@ -107,7 +107,7 @@ WB,GDMX,1:33,4x3
             foreach (var line in lines)
             {
                 string s = line.Trim();
-                if (s.Length >= 39 && s.Length <= 47 && RegexTimeCodes.IsMatch(s))
+                if (s.Length >= 38 && s.Length <= 47 && RegexTimeCodes.IsMatch(s))
                 {
                     if (p != null)
                     {
