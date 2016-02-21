@@ -56,11 +56,16 @@ WB,GDMX,1:33,4x3
 
             var sb = new StringBuilder();
             sb.AppendLine(pre);
+            int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{0}{1}", p.StartTime.ToHHMMSSPeriodFF(), p.EndTime.ToHHMMSSPeriodFF()));
-                sb.AppendLine(EncodeText(p.Text));
+                sb.AppendLine(string.Format("     {0}:  {1}  {2}  {3:00}.{4:00}  {5}", count, p.StartTime.ToHHMMSSPeriodFF(), p.EndTime.ToHHMMSSPeriodFF(), p.Duration.Seconds, MillisecondsToFrames(p.Duration.Milliseconds), p.Text.Length));
+                foreach (var line in EncodeText(p.Text).SplitToLines())
+                {
+                    sb.AppendLine("        " + line);
+                }
                 sb.AppendLine();
+                count++;
             }
             sb.AppendLine();
             sb.AppendLine();
@@ -74,12 +79,12 @@ WB,GDMX,1:33,4x3
             text = text.Replace("#", string.Empty);
             while (i < text.Length)
             {
-                if (text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                 {
                     sb.Append("#");
                     i += 3;
                 }
-                else if (text.StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
+                else if (text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
                 {
                     sb.Append("#");
                     i += 4;
@@ -147,9 +152,9 @@ WB,GDMX,1:33,4x3
             bool italicOn = false;
             while (i < text.Length)
             {
-                if (text.StartsWith("#", StringComparison.OrdinalIgnoreCase))
+                if (text.Substring(i).StartsWith("#", StringComparison.OrdinalIgnoreCase))
                 {
-                    sb.Append(italicOn ? "<i>" : "</i>");
+                    sb.Append(italicOn ? "</i>" : "<i>");
                     italicOn = !italicOn;
                     i++;
                 }
@@ -160,7 +165,7 @@ WB,GDMX,1:33,4x3
             }
             if (italicOn)
                 sb.Append("</i>");
-            return sb.ToString().Replace("@+", string.Empty).Replace("@/", string.Empty).Replace("@|", string.Empty);
+            return sb.ToString().Replace("@+", string.Empty).Replace("@/", string.Empty).Replace("@|", string.Empty).Replace(" </i>", "</i> ");
         }
 
     }
