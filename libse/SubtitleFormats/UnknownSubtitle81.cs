@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     internal class UnknownSubtitle81 : SubtitleFormat
     {
+
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d+a?:\s+\**\d\d:\d\d:\d\d\.\d\d\s+\d\d:\d\d:\d\d\.\d\d\**\s+\d\d\.\d\d\s+\d+$", RegexOptions.Compiled);
+
         public override string Extension
         {
-            get { return ".xml"; }
+            get { return ".txt"; }
         }
 
         public override string Name
@@ -31,68 +34,133 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string xmpTemplate = @"<?xml version='1.0' encoding='utf-8'?>
-<timedtext format='3'>
-    <body />
-</timedtext>";
-           
-            var xml = new XmlDocument();
-            xml.LoadXml(xmpTemplate.Replace('\'', '"'));
-            var paragraphInsertNode = xml.DocumentElement.SelectSingleNode("body");
+            string pre = title +  @"
+Enigma
+PAL
+SDI Media Group
+ENGLISH (US)
+WB,GDMX,1:33,4x3
+0000.00
+0000.00
+0000.00
+0000.00
+0000.00
+0000.00
+0000.00
+#: Italics Text
+@/: Force title
+@+: reposition top
+@|: reposition middle
+
+";
+
+            var sb = new StringBuilder();
+            sb.AppendLine(pre);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                XmlNode paragraph = xml.CreateElement("p");
-                paragraph.InnerText = p.Text.Replace(Environment.NewLine, " ");
-
-                XmlAttribute tAttribute = xml.CreateAttribute("t");
-                tAttribute.InnerText = Convert.ToInt64(p.StartTime.TotalMilliseconds).ToString();
-                paragraph.Attributes.Append(tAttribute);
-
-                XmlAttribute dAttribute = xml.CreateAttribute("d");
-                dAttribute.InnerText = Convert.ToInt64(p.Duration.TotalMilliseconds).ToString();
-                paragraph.Attributes.Append(dAttribute);
-
-                paragraphInsertNode.AppendChild(paragraph);
+                sb.AppendLine(string.Format("{0}{1}", p.StartTime.ToHHMMSSPeriodFF(), p.EndTime.ToHHMMSSPeriodFF()));
+                sb.AppendLine(EncodeText(p.Text));
+                sb.AppendLine();
             }
-            return ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty);
+            sb.AppendLine();
+            sb.AppendLine();
+            return sb.ToString();
         }
+
+        private static string EncodeText(string text)
+        {
+            var sb = new StringBuilder();
+            int i = 0;
+            text = text.Replace("#", string.Empty);
+            while (i < text.Length)
+            {
+                if (text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                {
+                    sb.Append("#");
+                    i += 3;
+                }
+                else if (text.StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
+                {
+                    sb.Append("#");
+                    i += 4;
+                }
+                else
+                {
+                    sb.Append(text.Substring(i++, 1));
+                }
+            }
+            return HtmlUtil.RemoveHtmlTags(sb.ToString().TrimEnd('#'), true);
+        }
+
+        private static readonly char[] TimeCodeSplitChars = { ':', '.' };
+        private static readonly char[] LineSplitChars = { ' ', '\t' };
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            var xmlAsText = sb.ToString().Trim();
-            if (!xmlAsText.Contains("</timedtext>") || !xmlAsText.Contains("<p "))
+            Paragraph p = null;
+            foreach (var line in lines)
             {
-                return;
-            }
-
-            try
-            {
-                var xml = new XmlDocument { XmlResolver = null };
-                xml.LoadXml(xmlAsText);
-                foreach (XmlNode node in xml.DocumentElement.SelectNodes("body/p"))
+                string s = line.Trim();
+                if (s.Length >= 39 && s.Length <= 47 && RegexTimeCodes.IsMatch(s))
                 {
-                    try
+                    if (p != null)
                     {
-                        var timeCodeIn = new TimeCode(Convert.ToDouble(node.Attributes["t"].InnerText));
-                        var timeCodeOut = new TimeCode(timeCodeIn.TotalMilliseconds + Convert.ToDouble(node.Attributes["d"].InnerText));
-                        var p = new Paragraph(timeCodeIn, timeCodeOut, Utilities.AutoBreakLine(node.InnerText));
                         subtitle.Paragraphs.Add(p);
                     }
-                    catch (Exception ex)
+                    s = s.Replace("*", string.Empty);
+                    try
                     {
-                        System.Diagnostics.Debug.WriteLine(ex.Message);
+                        var arr = s.Split(LineSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                        p = new Paragraph(DecodeTimeCodeFrames(arr[1], TimeCodeSplitChars), DecodeTimeCodeFrames(arr[2], TimeCodeSplitChars), string.Empty);
+                    }
+                    catch (Exception)
+                    {
                         _errorCount++;
                     }
                 }
-                subtitle.Renumber();
+                else if (p != null)
+                {
+                    if (p.Text.Length > 500)
+                    {
+                        _errorCount++;
+                        return;
+                    }
+                    p.Text = (p.Text + Environment.NewLine + s).Trim();
+                }
             }
-            catch (Exception)
+            if (p != null)
             {
-                _errorCount++;
+                subtitle.Paragraphs.Add(p);
             }
+            subtitle.Renumber();
+            foreach (var paragraph in subtitle.Paragraphs)
+            {
+                paragraph.Text = DecodeText(paragraph.Text);
+            }
+        }
+
+        private static string DecodeText(string text)
+        {
+            var sb = new StringBuilder();
+            int i = 0;
+            bool italicOn = false;
+            while (i < text.Length)
+            {
+                if (text.StartsWith("#", StringComparison.OrdinalIgnoreCase))
+                {
+                    sb.Append(italicOn ? "<i>" : "</i>");
+                    italicOn = !italicOn;
+                    i++;
+                }
+                else
+                {
+                    sb.Append(text.Substring(i++, 1));
+                }
+            }
+            if (italicOn)
+                sb.Append("</i>");
+            return sb.ToString().Replace("@+", string.Empty).Replace("@/", string.Empty).Replace("@|", string.Empty);
         }
 
     }
