@@ -39,6 +39,21 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static byte[] ReadAllBytesShared(string path, int count)
+        {
+            using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                if (count > fs.Length)
+                    throw new IndexOutOfRangeException();
+                var buffer = new byte[count];
+                while ((count = fs.Read(buffer, 0, count)) > 0)
+                {
+                    return buffer;
+                }
+                throw new InvalidOperationException("End of file reac   hed before expected");
+            }
+        }
+
         public static bool IsZip(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))

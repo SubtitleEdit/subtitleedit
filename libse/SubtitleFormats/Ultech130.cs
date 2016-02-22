@@ -196,7 +196,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (fileName.EndsWith(".ult", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".uld", StringComparison.OrdinalIgnoreCase)) //  drop frame is often named uld, and ult for non-drop
                     {
-                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
+                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName, UltechId.Length);
                         string id = Encoding.ASCII.GetString(buffer, 0, UltechId.Length);
                         return id == UltechId;
                     }
