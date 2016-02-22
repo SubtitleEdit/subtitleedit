@@ -46,9 +46,11 @@ namespace Nikse.SubtitleEdit.Core
                 if (count > fs.Length)
                     throw new IndexOutOfRangeException();
                 var buffer = new byte[count];
-                if (fs.Read(buffer, 0, count) == 0)
-                    throw new InvalidOperationException("End of file reached before expected");
-                return buffer;
+                while ((count = fs.Read(buffer, 0, count)) > 0)
+                {
+                    return buffer;
+                }
+                throw new InvalidOperationException("End of file reac   hed before expected");
             }
         }
 
