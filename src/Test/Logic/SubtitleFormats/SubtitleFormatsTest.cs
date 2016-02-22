@@ -816,5 +816,17 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
 
         #endregion ToUtf8XmlString
 
+        #region UTX
+        [TestMethod]
+        public void LoadTestStartingWithCardinal()
+        {
+            string s = "#Every satellite...#\r\n#0:02:06.14,0:02:08.08";
+            var target = new Utx();
+            var subtitle = new Subtitle();
+            target.LoadSubtitle(subtitle, s.SplitToLines().ToList(), string.Empty);
+            string actual = subtitle.Paragraphs[0].Text;
+            Assert.AreEqual("#Every satellite...#", actual);
+        }
+        #endregion
     }
 }
