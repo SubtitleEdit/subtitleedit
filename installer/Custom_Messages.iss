@@ -1,7 +1,7 @@
 ﻿;* Subtitle Edit - Installer script
 ;*
-;* Copyright (C) 2010-2014 XhmikosR
-;* Copyright (C) 2010-2015 all the respective translators
+;* Copyright (C) 2010-2016 XhmikosR
+;* Copyright (C) 2010-2016 all the respective translators
 ;*
 ;* This file is part of Subtitle Edit.
 ;*
@@ -189,7 +189,7 @@ eu.tsk_CurrentUser=Uneko erabiltzailearentzat bakarrik
 eu.tsk_Other=Besterik:
 eu.tsk_ResetDictionaries=Berrezarri Hiztegiak eta ezabatu norbere izena
 eu.tsk_ResetSettings=Berrezarri Subtitle Edit ezarpenak
-eu.tsk_SetFileTypes=Associate SubRip Text (.srt) files with Subtitle Edit
+eu.tsk_SetFileTypes=Elkartu SubRip Text (.srt) agiriak Subtitle Edit-ekin
 eu.types_custom=Norbere ezarpena
 eu.types_default=Berezko ezarpena
 
