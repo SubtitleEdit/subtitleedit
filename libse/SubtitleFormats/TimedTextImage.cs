@@ -76,7 +76,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             XmlNode body = xml.DocumentElement.SelectSingleNode("//tt:body", nsmgr);
             if (body == null)
                 body = xml.DocumentElement.SelectSingleNode("//tt:body", nsmgr);
-            int numberOfParagraphs = body.ChildNodes.Count;
 
             bool couldBeFrames = true;
             bool couldBeMillisecondsWithMissingLastDigit = true;
@@ -87,19 +86,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var pText = new StringBuilder();
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
-                        switch (innerNode.Name.Replace("tt:", string.Empty))
+                        if (innerNode.Name == "image" || innerNode.Name.EndsWith(":image", StringComparison.Ordinal))
                         {
-                            case "image":
-                                var src = innerNode.Attributes["src"];
-                                if (src != null)
-                                    pText.Append(src.InnerText);
-                                break;
+                            var src = innerNode.Attributes["src"];
+                            if (src != null)
+                                pText.Append(src.InnerText);
+                            break;
                         }
                     }
 
-                    string start = null; // = node.Attributes["begin"].InnerText;
-                    string end = null; // = node.Attributes["begin"].InnerText;
-                    string dur = null; // = node.Attributes["begin"].InnerText;
+                    string start = null;
+                    string end = null;
+                    string dur = null;
                     foreach (XmlAttribute attr in node.Attributes)
                     {
                         if (attr.Name.EndsWith("begin", StringComparison.Ordinal))
@@ -109,7 +107,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         else if (attr.Name.EndsWith("duration", StringComparison.Ordinal))
                             dur = attr.InnerText;
                     }
-                    //string start = node.Attributes["begin"].InnerText;
                     string text = pText.ToString();
                     text = text.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
                     text = text.Replace("<i></i>", string.Empty).Trim();
@@ -126,7 +123,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             couldBeMillisecondsWithMissingLastDigit = false;
                         }
 
-                        //string end = node.Attributes["end"].InnerText;
                         double dBegin, dEnd;
                         if (!start.Contains(':') && Utilities.CountTagInText(start, '.') == 1 &&
                             !end.Contains(':') && Utilities.CountTagInText(end, '.') == 1 &&
@@ -192,8 +188,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     foreach (Paragraph p in subtitle.Paragraphs)
                     {
-                        p.StartTime.Milliseconds = SubtitleFormat.FramesToMillisecondsMax999(p.StartTime.Milliseconds);
-                        p.EndTime.Milliseconds = SubtitleFormat.FramesToMillisecondsMax999(p.EndTime.Milliseconds);
+                        p.StartTime.Milliseconds = FramesToMillisecondsMax999(p.StartTime.Milliseconds);
+                        p.EndTime.Milliseconds = FramesToMillisecondsMax999(p.EndTime.Milliseconds);
                     }
                 }
             }
