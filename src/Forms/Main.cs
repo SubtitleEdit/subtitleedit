@@ -7488,22 +7488,30 @@ namespace Nikse.SubtitleEdit.Forms
                     middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
                 }
 
-                if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
-                    middle = splitSeconds.Value * TimeCode.BaseUnit;
-                newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
-                currentParagraph.EndTime.TotalMilliseconds = middle;
-                newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
-                if (Configuration.Settings.General.MinimumMillisecondsBetweenLines > 0)
+                if (currentParagraph.StartTime.IsMaxTime && currentParagraph.EndTime.IsMaxTime)
                 {
-                    var next = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
-                    if (next == null || next.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                    newParagraph.StartTime = TimeCode.MaxTime;
+                    newParagraph.EndTime = TimeCode.MaxTime;
+                }
+                else
+                {
+                    if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
+                        middle = splitSeconds.Value * TimeCode.BaseUnit;
+                    newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
+                    currentParagraph.EndTime.TotalMilliseconds = middle;
+                    newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
+                    if (Configuration.Settings.General.MinimumMillisecondsBetweenLines > 0)
                     {
-                        newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                        newParagraph.EndTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                    }
-                    else
-                    {
-                        newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        var next = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
+                        if (next == null || next.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                        {
+                            newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            newParagraph.EndTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        }
+                        else
+                        {
+                            newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        }
                     }
                 }
 
