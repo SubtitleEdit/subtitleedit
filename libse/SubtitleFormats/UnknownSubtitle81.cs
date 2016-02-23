@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string pre = title +  @"
+            string pre = title + @"
 Enigma
 PAL
 SDI Media Group
@@ -91,7 +91,7 @@ WB,GDMX,1:33,4x3
                 }
                 else
                 {
-                    sb.Append(text.Substring(i++, 1));
+                    sb.Append(text[i++]);
                 }
             }
             return HtmlUtil.RemoveHtmlTags(sb.ToString().TrimEnd('#'), true);
@@ -119,12 +119,12 @@ WB,GDMX,1:33,4x3
                         var arr = s.Split(LineSplitChars, StringSplitOptions.RemoveEmptyEntries);
                         p = new Paragraph(DecodeTimeCodeFrames(arr[1], TimeCodeSplitChars), DecodeTimeCodeFrames(arr[2], TimeCodeSplitChars), string.Empty);
                     }
-                    catch (Exception)
+                    catch
                     {
                         _errorCount++;
                     }
                 }
-                else if (p != null)
+                else if (p != null && s.Length > 0)
                 {
                     if (p.Text.Length > 500)
                     {
@@ -152,7 +152,7 @@ WB,GDMX,1:33,4x3
             bool italicOn = false;
             while (i < text.Length)
             {
-                if (text.Substring(i).StartsWith("#", StringComparison.OrdinalIgnoreCase))
+                if (text[i] == '#')
                 {
                     sb.Append(italicOn ? "</i>" : "<i>");
                     italicOn = !italicOn;
@@ -160,7 +160,7 @@ WB,GDMX,1:33,4x3
                 }
                 else
                 {
-                    sb.Append(text.Substring(i++, 1));
+                    sb.Append(text[i++]);
                 }
             }
             if (italicOn)
