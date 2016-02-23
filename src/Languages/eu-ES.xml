@@ -368,7 +368,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <JustificationCode>Bazter kodea</JustificationCode>
     <Teletext>Teletestua</Teletext>
     <UseBox>Erabili kutxatila idazkiaren inguruan</UseBox>
-    <DoubleHeight>Erabili garaiera bikoitza idazkiarentzat</DoubleHeight>
+    <DoubleHeight>Erabili garaiera bikoitza idazkirako</DoubleHeight>
     <Errors>Akatsak</Errors>
     <ErrorsX>Akatsak: {0}</ErrorsX>
     <MaxLengthError>{0} lerroka ({1}) geh luzera gainditzen du {2}: {3}</MaxLengthError>
@@ -1635,7 +1635,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <MusicSymbol>Musika ikurrak:</MusicSymbol>
     <MusicSymbolsToReplace>Musika ikurrak ordezteko (tarte batez bananduta)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Zuzendu OCR akats arruntak - erabili baita ere kodegogor arauak</FixCommonOcrErrorsUseHardcodedRules>
-    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Zuzendu erakuspen denbora laburrak - ahalbidetu hasiera denbora mugitzea</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Zuzendu erakus denb. laburrak - ahalbidetu hasiera denb. mugitzea</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Jauzi lehen urratsa (hautatu zuzenketa arauak)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Lasterteklak</Shortcuts>
     <Shortcut>Lasterteklak:</Shortcut>
