@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string text = p.Text.Replace(Environment.NewLine, "|");
+                string text = EncodeFormatting(p.Text);
 
                 sb.AppendLine(string.Format(paragraphWriteFormat,
                                         p.StartTime.Hours,
@@ -115,21 +115,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (line.Length > 0)
                         {
-                            string text = line.Replace("|", Environment.NewLine);
-                            text = line.Replace("[br]", Environment.NewLine);
-                            text = line.Replace("<br>", Environment.NewLine);
-                            text = line.Replace("<br />", Environment.NewLine);
-                            text = text.Replace("{\\i1}", "<i>");
-                            text = text.Replace("{\\i0}", "</i>");
-                            text = text.Replace("{\\i}", "</i>");
-                            text = text.Replace("{\\b1}", "<b>'");
-                            text = text.Replace("{\\b0}", "</b>");
-                            text = text.Replace("{\\b}", "</b>");
-                            text = text.Replace("{\\u1}", "<u>");
-                            text = text.Replace("{\\u0}", "</u>");
-                            text = text.Replace("{\\u}", "</u>");
-
-                            paragraph.Text = text;
+                            paragraph.Text = DecodeFormatting(line);
                             subtitle.Paragraphs.Add(paragraph);
                             paragraph = new Paragraph();
                             expecting = ExpectingLine.TimeCodes;
@@ -139,5 +125,37 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             subtitle.Renumber();
         }
+
+        public string DecodeFormatting(string text)
+        {
+            text = text.Replace("|", Environment.NewLine);
+            text = text.Replace("[br]", Environment.NewLine);
+            text = text.Replace("<br>", Environment.NewLine);
+            text = text.Replace("<br/>", Environment.NewLine);
+            text = text.Replace("<br />", Environment.NewLine);
+            text = text.Replace("{\\i1}", "<i>");
+            text = text.Replace("{\\i0}", "</i>");
+            text = text.Replace("{\\i}", "</i>");
+            text = text.Replace("{\\b1}", "<b>'");
+            text = text.Replace("{\\b0}", "</b>");
+            text = text.Replace("{\\b}", "</b>");
+            text = text.Replace("{\\u1}", "<u>");
+            text = text.Replace("{\\u0}", "</u>");
+            text = text.Replace("{\\u}", "</u>");
+            return text;
+        }
+
+        public string EncodeFormatting(string text)
+        {
+            text = text.Replace(Environment.NewLine, "|");
+            text = text.Replace("<i>", "{\\i1}");
+            text = text.Replace("</i>", "{\\i0}");
+            text = text.Replace("<b>", "{\\b1}");
+            text = text.Replace("</b>", "{\\b0}");
+            text = text.Replace("<u>", "{\\u1}");
+            text = text.Replace("</u>", "{\\u0}");
+            return text;
+        }
+
     }
 }
