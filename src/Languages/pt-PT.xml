@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="português (Portugal)">
+<Language Name="Portuguese - Portugal">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.11</Version>
@@ -1841,7 +1841,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
   <StartNumberingFrom>
     <Title>Renumerar</Title>
     <StartFromNumber>Iniciar pelo número:</StartFromNumber>
-    <PleaseEnterAValidNumber>Por favor, introduza um número</PleaseEnterAValidNumber>
+    <PleaseEnterAValidNumber>Por favor, introduza um número válido</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <Statistics>
     <Title>Estatísticas</Title>
@@ -1902,7 +1902,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Name>Nome</Name>
     <Font>Tipo de letra</Font>
     <FontName>Nome do tipo de letra</FontName>
-    <FontSize>Tamanho do tipo de letra</FontSize>
+    <FontSize>Tamanho da letra</FontSize>
     <UseCount>Usado</UseCount>
     <Primary>Primário</Primary>
     <Secondary>Segundário</Secondary>
