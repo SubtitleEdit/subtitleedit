@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Utx : SubtitleFormat
     {
+        // #0:03:03.23,0:03:08.05
+        private static readonly Regex RegexTimeCode = new Regex(@"^#\d\d?:\d\d:\d\d\.\d\d,\d:\d\d:\d\d\.\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -53,37 +56,37 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
-            var text = new StringBuilder();
+            var sb = new StringBuilder();
+            char[] splitChars = { '#', ',' };
+            char[] splitChars2 = { ':', '.' };
             for (int i = 0; i < lines.Count; i++)
             {
                 string line = lines[i].Trim();
-
-                if (line.StartsWith('#'))
+                if (line.StartsWith('#') && RegexTimeCode.IsMatch(line))
                 {
-                    var timeParts = line.Split(new[] { '#', ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (timeParts.Length == 2)
+                    var timeParts = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
+                    try
                     {
-                        try
-                        {
-                            TimeCode start = DecodeTimeCode(timeParts[0]);
-                            TimeCode end = DecodeTimeCode(timeParts[1]);
-                            subtitle.Paragraphs.Add(new Paragraph(start, end, text.ToString().Trim()));
-                        }
-                        catch
-                        {
-                            _errorCount++;
-                        }
+                        string[] startParts = timeParts[0].Split(splitChars2, StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = timeParts[1].Split(splitChars2, StringSplitOptions.RemoveEmptyEntries);
+                        TimeCode start = DecodeTimeCodeFramesFourParts(startParts);
+                        TimeCode end = DecodeTimeCodeFramesFourParts(endParts);
+                        subtitle.Paragraphs.Add(new Paragraph(start, end, sb.ToString().Trim()));
+                    }
+                    catch
+                    {
+                        _errorCount++;
                     }
                 }
                 else if (line.Length > 0)
                 {
-                    text.AppendLine(line.Trim());
-                    if (text.Length > 5000)
+                    sb.AppendLine(line);
+                    if (sb.Length > 5000)
                         return;
                 }
                 else
                 {
-                    text = new StringBuilder();
+                    sb.Clear();
                 }
             }
             subtitle.Renumber();
@@ -93,18 +96,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             //0:03:02.15
             return string.Format("{0}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
-        }
-
-        private static TimeCode DecodeTimeCode(string timePart)
-        {
-            //0:03:02.15
-            var parts = timePart.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
-
-            int hours = int.Parse(parts[0]);
-            int minutes = int.Parse(parts[1]);
-            int seconds = int.Parse(parts[2]);
-            int milliseconds = (int)((TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * int.Parse(parts[3]));
-            return new TimeCode(hours, minutes, seconds, milliseconds);
         }
 
     }
