@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private SpellCheckWordLists _spellCheckWordLists;
         private List<string> _skipAllList = new List<string>();
-        private Dictionary<string, string> _changeAllDictionary = new Dictionary<string, string>();
+        private Dictionary<string, string> _changeAllDictionary;
         private string _prefix = string.Empty;
         private string _postfix = string.Empty;
         private Hunspell _hunspell;
@@ -805,7 +805,6 @@ namespace Nikse.SubtitleEdit.Forms
             _changeAllDictionary = new Dictionary<string, string>();
             _skipAllList = new List<string>();
             _spellCheckWordLists = new SpellCheckWordLists(dictionaryFolder, languageName, this);
-            _changeAllDictionary = new Dictionary<string, string>();
             LoadHunspell(dictionary);
         }
 
