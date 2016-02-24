@@ -17056,6 +17056,7 @@ namespace Nikse.SubtitleEdit.Forms
                     oldDuration = Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + addMilliseconds;
                 next.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + oldDuration;
+                SubtitleListview1.SetStartTimeAndDuration(index + 1, next);
                 SubtitleListview1.SelectIndexAndEnsureVisible(index + 1);
             }
             audioVisualizer.Invalidate();
