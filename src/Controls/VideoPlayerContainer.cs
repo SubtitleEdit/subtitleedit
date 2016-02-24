@@ -309,6 +309,8 @@ namespace Nikse.SubtitleEdit.Controls
                 // remove styles for display text (except italic)
                 string text = RemoveSubStationAlphaFormatting(_subtitleText);
                 text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagBold, HtmlUtil.TagUnderline);
+                text = text.Replace("<i></i>", string.Empty);
+                text = text.Replace("<b></b>", string.Empty);
 
                 // display italic
                 var sb = new StringBuilder();
@@ -349,33 +351,38 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             string f = s.Substring(0, end);
                             int colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
+                            
                             if (colorStart > 0)
                             {
-                                int colorEnd = f.IndexOf('"', colorStart + " color=".Length + 1);
-                                if (colorEnd > 0)
+                                int colorEnd = colorStart + " color=".Length + 1;
+                                if (colorEnd < f.Length)
                                 {
-                                    s = f.Substring(colorStart, colorEnd - colorStart);
-                                    s = s.Remove(0, " color=".Length);
-                                    s = s.Trim('"');
-                                    s = s.Trim('\'');
-                                    try
+                                    colorEnd = f.IndexOf('"', colorEnd);
+                                    if (colorEnd > 0)
                                     {
-                                        fontColor = ColorTranslator.FromHtml(s);
-                                        fontFound = true;
-                                    }
-                                    catch
-                                    {
-                                        fontFound = false;
-                                        if (s.Length > 0)
+                                        s = f.Substring(colorStart, colorEnd - colorStart);
+                                        s = s.Remove(0, " color=".Length);
+                                        s = s.Trim('"');
+                                        s = s.Trim('\'');
+                                        try
                                         {
-                                            try
+                                            fontColor = ColorTranslator.FromHtml(s);
+                                            fontFound = true;
+                                        }
+                                        catch
+                                        {
+                                            fontFound = false;
+                                            if (s.Length > 0)
                                             {
-                                                fontColor = ColorTranslator.FromHtml("#" + s);
-                                                fontFound = true;
-                                            }
-                                            catch
-                                            {
-                                                fontFound = false;
+                                                try
+                                                {
+                                                    fontColor = ColorTranslator.FromHtml("#" + s);
+                                                    fontFound = true;
+                                                }
+                                                catch
+                                                {
+                                                    fontFound = false;
+                                                }
                                             }
                                         }
                                     }
@@ -383,7 +390,6 @@ namespace Nikse.SubtitleEdit.Controls
                             }
                             i += end;
                         }
-                        //fontIndices.Push(_subtitleTextBox.Text.Length);
                         if (fontFound)
                         {
                             _subtitleTextBox.AppendText(sb.ToString());
