@@ -310,7 +310,6 @@ namespace Nikse.SubtitleEdit.Controls
                 string text = RemoveSubStationAlphaFormatting(_subtitleText);
                 text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagBold, HtmlUtil.TagUnderline);
                 text = text.Replace("<i></i>", string.Empty);
-                text = text.Replace("<b></b>", string.Empty);
 
                 // display italic
                 var sb = new StringBuilder();
