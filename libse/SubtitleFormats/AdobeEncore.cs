@@ -80,11 +80,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
-                if (RegexTimeCodes.IsMatch(line))
+                Match match = RegexTimeCodes.Match(line);
+                if (match.Success)
                 {
                     try
                     {
-                        string temp = line.Substring(0, RegexTimeCodes.Match(line).Length);
+                        string temp = line.Substring(0, match.Value.Length);
                         string start = temp.Substring(0, 11);
                         string end = temp.Substring(12, 11);
 
