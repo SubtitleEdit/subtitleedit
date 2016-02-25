@@ -393,5 +393,20 @@ namespace Nikse.SubtitleEdit.Logic
             label.Text = sb.ToString();
         }
 
+        /// <summary>
+        /// This is useful, if you want to avoid flickering of controls
+        /// such as ListView (when updating) or Panel (when you draw on it).
+        /// </summary>
+        /// <param name="control"></param>
+        public static void SetDoubleBuffered(Control control)
+        {
+            if (control == null)
+                return;
+            typeof(Control).InvokeMember("DoubleBuffered",
+                System.Reflection.BindingFlags.NonPublic |
+                System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.SetProperty,
+                null, control, new object[] { true });
+        }
     }
 }
