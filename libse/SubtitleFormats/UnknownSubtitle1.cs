@@ -42,17 +42,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             const string paragraphWriteFormat = "{0} – {1} {2}";
 
             var sb = new StringBuilder();
+            const string format = "{0:0}:{1:00}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 int seconds = p.StartTime.Seconds;
                 if (p.StartTime.Milliseconds >= 500)
                     seconds++;
-                string startTime = string.Format("{0:0}:{1:00}", (int)(p.StartTime.Minutes + p.StartTime.Hours * 60), seconds);
+                string startTime = string.Format(format, p.StartTime.Minutes + p.StartTime.Hours * 60, seconds);
 
                 seconds = p.EndTime.Seconds;
                 if (p.EndTime.Milliseconds >= 500)
                     seconds++;
-                string timeOut = string.Format("{0:0}:{1:00}", (int)(p.EndTime.Minutes + p.EndTime.Hours * 60), seconds);
+                string timeOut = string.Format(format, p.EndTime.Minutes + p.EndTime.Hours * 60, seconds);
 
                 sb.AppendLine(string.Format(paragraphWriteFormat, startTime, timeOut, p.Text));
             }
