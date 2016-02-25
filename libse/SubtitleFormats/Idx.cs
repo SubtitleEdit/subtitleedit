@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class Idx : SubtitleFormat
     {
         // timestamp: 00:00:01:401, filepos: 000000000
-        private static Regex _regexTimeCodes = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);
 
         public Hashtable NonTimeCodes = new Hashtable();
 
@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             char[] splitChars = { ',', ':' };
             foreach (string line in lines)
             {
-                if (_regexTimeCodes.IsMatch(line))
+                if (RegexTimeCodes.IsMatch(line))
                 {
                     Paragraph p = GetParagraph(line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries));
                     if (p != null)
