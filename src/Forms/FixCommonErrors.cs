@@ -447,6 +447,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width - 3;
             FixLargeFonts();
             listView1.Select();
+            UiUtil.SetDoubleBuffered(listView1);
+            UiUtil.SetDoubleBuffered(listViewFixes);
         }
 
         private void FixLargeFonts()

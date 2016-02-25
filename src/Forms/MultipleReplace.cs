@@ -94,6 +94,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
+            UiUtil.SetDoubleBuffered(listViewFixes);
+            UiUtil.SetDoubleBuffered(listViewReplaceList);
         }
 
         public void Initialize(Subtitle subtitle)
