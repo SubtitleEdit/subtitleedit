@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return;
             }
             if (p != null)
-                p.Text = (p.Text + Environment.NewLine + text.ToString().Trim()).Trim();
+                p.Text = (p.Text + Environment.NewLine + text.ToString()).Trim();
 
             subtitle.Renumber();
         }
