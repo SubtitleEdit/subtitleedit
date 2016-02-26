@@ -68,9 +68,9 @@ namespace Nikse.SubtitleEdit.Core
             _totalMilliseconds = totalMilliseconds;
         }
 
-        public TimeCode(int hour, int minute, int seconds, int milliseconds)
+        public TimeCode(int hours, int minutes, int seconds, int milliseconds)
         {
-            _totalMilliseconds = hour * 60 * 60 * BaseUnit + minute * 60 * BaseUnit + seconds * BaseUnit + milliseconds;
+            _totalMilliseconds = hours * 60 * 60 * BaseUnit + minutes * 60 * BaseUnit + seconds * BaseUnit + milliseconds;
         }
 
         public int Hours
@@ -150,9 +150,9 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        public void AddTime(int hour, int minutes, int seconds, int milliseconds)
+        public void AddTime(int hours, int minutes, int seconds, int milliseconds)
         {
-            Hours += hour;
+            Hours += hours;
             Minutes += minutes;
             Seconds += seconds;
             Milliseconds += milliseconds;
