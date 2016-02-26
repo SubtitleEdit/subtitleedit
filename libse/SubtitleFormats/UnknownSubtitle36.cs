@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
     public class UnknownSubtitle36 : SubtitleFormat
     {
-        private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+           ,           \d+:\d+:\d+:\d+           ,.*$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+           ,           \d+:\d+:\d+:\d+           ,", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (lines.Count > 0 && lines[0] != null && lines[0].StartsWith("{\\rtf1"))
+            if (lines.Count > 0 && lines[0] != null && lines[0].StartsWith("{\\rtf1", StringComparison.Ordinal))
                 return false;
 
             var subtitle = new Subtitle();
@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string paragraphWriteFormat = "{0}           ,           {1}           ,{2}\r\n";
+            string paragraphWriteFormat = "{0}           ,           {1}           ,{2}" + Environment.NewLine;
             const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -72,7 +72,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            int number = 0;
+            int number = 1;
+            char[] splitChar = { ',' };
+            Match match = null;
             foreach (string line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line) || string.IsNullOrWhiteSpace(line.Trim('-')))
@@ -80,42 +82,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     continue;
                 }
 
-                if (RegexTimeCodes.Match(line).Success)
+                if (line.Length > 57 && (match = RegexTimeCodes.Match(line)).Success)
                 {
-                    string[] threePart = line.Split(new[] { ',' }, StringSplitOptions.None);
-                    var p = new Paragraph();
-                    if (threePart.Length > 2 &&
-                        line.Length > 58 &&
-                        GetTimeCode(p.StartTime, threePart[0].Trim()) &&
-                        GetTimeCode(p.EndTime, threePart[1].Trim()))
+                    try
                     {
-                        number++;
-                        p.Number = number;
-                        p.Text = line.Remove(0, 57).Trim().Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
+                        string[] timeParts = line.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+                        TimeCode startTime = DecodeTimeCodeFrames(timeParts[0].Trim(), SplitCharColon);
+                        TimeCode endTime = DecodeTimeCodeFrames(timeParts[1].Trim(), SplitCharColon);
+                        var p = new Paragraph { Number = number++, StartTime = startTime, EndTime = endTime };
+                        p.Text = line.Substring(match.Length).Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
                         subtitle.Paragraphs.Add(p);
+                    }
+                    catch
+                    {
+                        _errorCount++;
                     }
                 }
                 else
                 {
                     _errorCount++;
                 }
-            }
-        }
-
-        private static bool GetTimeCode(TimeCode timeCode, string timeString)
-        {
-            try
-            {
-                string[] timeParts = timeString.Split(':');
-                timeCode.Hours = int.Parse(timeParts[0]);
-                timeCode.Minutes = int.Parse(timeParts[1]);
-                timeCode.Seconds = int.Parse(timeParts[2]);
-                timeCode.Milliseconds = FramesToMillisecondsMax999(int.Parse(timeParts[3]));
-                return true;
-            }
-            catch
-            {
-                return false;
             }
         }
     }
