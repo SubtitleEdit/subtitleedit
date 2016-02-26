@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class TurboTitler : SubtitleFormat
     {
-        private static readonly Regex regexTimeCodes = new Regex(@"^\d:\d\d:\d\d\.\d\d,\d:\d\d:\d\d\.\d\d,NTP ", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d:\d\d:\d\d\.\d\d,\d:\d\d:\d\d\.\d\d,NTP ", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             char[] splitChars = { ':', '.' };
             foreach (string line in lines)
             {
-                if (regexTimeCodes.IsMatch(line))
+                if (RegexTimeCodes.IsMatch(line))
                 {
                     string[] parts = line.Substring(0, 10).Trim().Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)

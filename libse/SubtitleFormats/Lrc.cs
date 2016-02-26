@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     /// </summary>
     public class Lrc : SubtitleFormat
     {
-        private static Regex _timeCode = new Regex(@"^\[\d+:\d\d\.\d\d\].*$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\[\d+:\d\d\.\d\d\].*$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             char[] splitChars = { ':', '.' };
             foreach (string line in lines)
             {
-                if (line.StartsWith('[') && _timeCode.Match(line).Success)
+                if (line.StartsWith('[') && RegexTimeCodes.Match(line).Success)
                 {
                     string s = line;
                     s = line.Substring(1, 8);
@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = 0; i < max; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                while (_timeCode.Match(p.Text).Success)
+                while (RegexTimeCodes.Match(p.Text).Success)
                 {
                     string s = p.Text.Substring(1, 8);
                     p.Text = p.Text.Remove(0, 10).Trim();
@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string GetTextAfterTimeCodes(string s)
         {
-            while (_timeCode.IsMatch(s))
+            while (RegexTimeCodes.IsMatch(s))
                 s = s.Remove(0, 10).Trim();
             return s;
         }

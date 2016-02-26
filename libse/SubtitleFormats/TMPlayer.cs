@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class TMPlayer : SubtitleFormat
     {
-        private static readonly Regex regex = new Regex(@"^\d+:\d\d:\d\d[: ].*$", RegexOptions.Compiled); // accept a " " instead of the last ":" too
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d\d:\d\d[: ].*$", RegexOptions.Compiled); // accept a " " instead of the last ":" too
 
         public override string Extension
         {
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 bool success = false;
-                if (line.IndexOf(':') > 0 && regex.Match(line).Success)
+                if (line.IndexOf(':') > 0 && RegexTimeCodes.Match(line).Success)
                 {
                     try
                     {
