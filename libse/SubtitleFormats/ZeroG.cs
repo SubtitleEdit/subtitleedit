@@ -7,6 +7,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class ZeroG : SubtitleFormat
     {
+        //E 1 0:50:05.42 0:50:10.06 Default NTP
+        private static readonly Regex RegexTimeCodes = new Regex(@"^E 1 \d:\d\d:\d\d.\d\d \d:\d\d:\d\d.\d\d Default NTP ", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".zeg"; }
@@ -52,24 +55,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var regexTimeCode = new Regex(@"^E 1 \d:\d\d:\d\d.\d\d \d:\d\d:\d\d.\d\d Default NTP ", RegexOptions.Compiled);
-            //E 1 0:50:05.42 0:50:10.06 Default NTP
-
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
-                if (regexTimeCode.IsMatch(line))
+                var s = line.Trim();
+                if (s.Length > 35 && RegexTimeCodes.IsMatch(s))
                 {
                     try
                     {
-                        string timePart = line.Substring(4, 10).Trim();
+                        string timePart = s.Substring(4, 10).TrimEnd();
                         var start = DecodeTimeCode(timePart);
-                        timePart = line.Substring(15, 10).Trim();
+                        timePart = s.Substring(15, 10).Trim();
                         var end = DecodeTimeCode(timePart);
-                        var paragraph = new Paragraph();
-                        paragraph.StartTime = start;
-                        paragraph.EndTime = end;
-                        paragraph.Text = line.Substring(38).Replace(" \\n ", Environment.NewLine).Replace("\\n", Environment.NewLine);
+                        var paragraph = new Paragraph { StartTime = start, EndTime = end };
+                        paragraph.Text = s.Substring(38).Replace(" \\n ", Environment.NewLine).Replace("\\n", Environment.NewLine);
                         subtitle.Paragraphs.Add(paragraph);
                     }
                     catch
