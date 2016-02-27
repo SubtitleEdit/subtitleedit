@@ -4,13 +4,13 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-
     //Subtitle number: 1
     //Start time (or frames): 00:00:48,862:0000001222
     //End time (or frames): 00:00:50,786:0000001270
     //Subtitle text: In preajma lacului Razel,
     public class UnknownSubtitle3 : SubtitleFormat
     {
+        private static readonly char[] SplitChar = { '|' };
 
         public override string Extension
         {
@@ -64,14 +64,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             // 150583||3968723||Rythme standard quatre-par-quatre.\~- Sûr... Accord d'entrée, D majeur?||
             // 155822||160350||Rob n'y connait rien en claviers. Il\~commence chaque chanson en D majeur||
-            string[] parts = line.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = line.Split(SplitChar, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 3)
             {
                 int start;
                 int end;
                 if (int.TryParse(parts[0], out start) && int.TryParse(parts[1], out end))
                 {
-                    Paragraph p = new Paragraph(parts[2].Replace("\\~", Environment.NewLine), start, end);
+                    var p = new Paragraph(parts[2].Replace("\\~", Environment.NewLine), start, end);
                     subtitle.Paragraphs.Add(p);
                 }
                 else
