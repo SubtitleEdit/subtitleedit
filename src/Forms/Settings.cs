@@ -122,20 +122,20 @@ namespace Nikse.SubtitleEdit.Forms
             if (gs.VideoPlayer.Trim().Equals("VLC", StringComparison.OrdinalIgnoreCase) && LibVlcDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Checked = true;
             else if (gs.VideoPlayer.Trim().Equals("MPlayer", StringComparison.OrdinalIgnoreCase) && UiUtil.IsMPlayerAvailable)
-                radioButtonVideoPlayerMPlayer.Checked = true;
+                radioButtonVideoPlayerMPV.Checked = true;
             else if (gs.VideoPlayer.Trim().Equals("MPC-HC", StringComparison.OrdinalIgnoreCase) && UiUtil.IsMpcHcInstalled)
                 radioButtonVideoPlayerMpcHc.Checked = true;
             else if (UiUtil.IsQuartsDllInstalled)
                 radioButtonVideoPlayerDirectShow.Checked = true;
             else if (UiUtil.IsMPlayerAvailable)
-                radioButtonVideoPlayerMPlayer.Checked = true;
+                radioButtonVideoPlayerMPV.Checked = true;
             else if (LibVlcDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Checked = true;
 
             if (!LibVlcDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Enabled = false;
             if (!UiUtil.IsMPlayerAvailable)
-                radioButtonVideoPlayerMPlayer.Enabled = false;
+                radioButtonVideoPlayerMPV.Enabled = false;
             if (!UiUtil.IsQuartsDllInstalled)
                 radioButtonVideoPlayerDirectShow.Enabled = false;
             if (Logic.VideoPlayers.MpcHC.MpcHc.GetMpcHcFileName() == null)
@@ -335,7 +335,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonVideoPlayerMpcHc.Text = language.MpcHc;
             labelMpcHcDescription.Text = language.MpcHcDescription;
 
-            radioButtonVideoPlayerMPlayer.Text = language.MPlayer;
+            radioButtonVideoPlayerMPV.Text = language.MPlayer;
             labelVideoPlayerMPlayer.Text = language.MPlayerDescription;
             radioButtonVideoPlayerVLC.Text = language.VlcMediaPlayer;
             labelVideoPlayerVLC.Text = language.VlcMediaPlayerDescription;
@@ -1095,7 +1095,7 @@ namespace Nikse.SubtitleEdit.Forms
             gs.AllowEditOfOriginalSubtitle = checkBoxAllowEditOfOriginalSubtitle.Checked;
             gs.PromptDeleteLines = checkBoxPromptDeleteLines.Checked;
 
-            if (radioButtonVideoPlayerMPlayer.Checked)
+            if (radioButtonVideoPlayerMPV.Checked)
                 gs.VideoPlayer = "MPlayer";
             //else if (radioButtonVideoPlayerManagedDirectX.Checked)
             //    gs.VideoPlayer = "ManagedDirectX";

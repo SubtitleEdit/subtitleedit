@@ -156,7 +156,7 @@
             this.labelVideoPlayerMPlayer = new System.Windows.Forms.Label();
             this.labelDirectShowDescription = new System.Windows.Forms.Label();
             this.labelMpcHcDescription = new System.Windows.Forms.Label();
-            this.radioButtonVideoPlayerMPlayer = new System.Windows.Forms.RadioButton();
+            this.radioButtonVideoPlayerMPV = new System.Windows.Forms.RadioButton();
             this.radioButtonVideoPlayerDirectShow = new System.Windows.Forms.RadioButton();
             this.radioButtonVideoPlayerMpcHc = new System.Windows.Forms.RadioButton();
             this.tabPageWaveform = new System.Windows.Forms.TabPage();
@@ -203,6 +203,7 @@
             this.checkBoxSpellCheckOneLetterWords = new System.Windows.Forms.CheckBox();
             this.checkBoxSpellCheckAutoChangeNames = new System.Windows.Forms.CheckBox();
             this.groupBoxFixCommonErrors = new System.Windows.Forms.GroupBox();
+            this.checkBoxFceSkipStep1 = new System.Windows.Forms.CheckBox();
             this.checkBoxFixShortDisplayTimesAllowMoveStartTime = new System.Windows.Forms.CheckBox();
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules = new System.Windows.Forms.CheckBox();
             this.comboBoxToolsMusicSymbol = new System.Windows.Forms.ComboBox();
@@ -303,7 +304,6 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
-            this.checkBoxFceSkipStep1 = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1743,7 +1743,7 @@
             this.groupBoxVideoEngine.Controls.Add(this.labelVideoPlayerMPlayer);
             this.groupBoxVideoEngine.Controls.Add(this.labelDirectShowDescription);
             this.groupBoxVideoEngine.Controls.Add(this.labelMpcHcDescription);
-            this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerMPlayer);
+            this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerMPV);
             this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerDirectShow);
             this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerMpcHc);
             this.groupBoxVideoEngine.Location = new System.Drawing.Point(6, 6);
@@ -1821,9 +1821,9 @@
             this.labelVideoPlayerMPlayer.ForeColor = System.Drawing.Color.Gray;
             this.labelVideoPlayerMPlayer.Location = new System.Drawing.Point(167, 93);
             this.labelVideoPlayerMPlayer.Name = "labelVideoPlayerMPlayer";
-            this.labelVideoPlayerMPlayer.Size = new System.Drawing.Size(83, 11);
+            this.labelVideoPlayerMPlayer.Size = new System.Drawing.Size(284, 11);
             this.labelVideoPlayerMPlayer.TabIndex = 11;
-            this.labelVideoPlayerMPlayer.Text = "MPlayer2/MPlayer";
+            this.labelVideoPlayerMPlayer.Text = "https://mpv.io/ - free, open source, and cross-platform media player";
             // 
             // labelDirectShowDescription
             // 
@@ -1847,16 +1847,16 @@
             this.labelMpcHcDescription.TabIndex = 9;
             this.labelMpcHcDescription.Text = "Media Player Classic - Home Cinema";
             // 
-            // radioButtonVideoPlayerMPlayer
+            // radioButtonVideoPlayerMPV
             // 
-            this.radioButtonVideoPlayerMPlayer.AutoSize = true;
-            this.radioButtonVideoPlayerMPlayer.Location = new System.Drawing.Point(10, 89);
-            this.radioButtonVideoPlayerMPlayer.Name = "radioButtonVideoPlayerMPlayer";
-            this.radioButtonVideoPlayerMPlayer.Size = new System.Drawing.Size(69, 17);
-            this.radioButtonVideoPlayerMPlayer.TabIndex = 28;
-            this.radioButtonVideoPlayerMPlayer.TabStop = true;
-            this.radioButtonVideoPlayerMPlayer.Text = "MPlayer2";
-            this.radioButtonVideoPlayerMPlayer.UseVisualStyleBackColor = true;
+            this.radioButtonVideoPlayerMPV.AutoSize = true;
+            this.radioButtonVideoPlayerMPV.Location = new System.Drawing.Point(10, 89);
+            this.radioButtonVideoPlayerMPV.Name = "radioButtonVideoPlayerMPV";
+            this.radioButtonVideoPlayerMPV.Size = new System.Drawing.Size(45, 17);
+            this.radioButtonVideoPlayerMPV.TabIndex = 28;
+            this.radioButtonVideoPlayerMPV.TabStop = true;
+            this.radioButtonVideoPlayerMPV.Text = "mpv";
+            this.radioButtonVideoPlayerMPV.UseVisualStyleBackColor = true;
             // 
             // radioButtonVideoPlayerDirectShow
             // 
@@ -2370,6 +2370,16 @@
             this.groupBoxFixCommonErrors.TabIndex = 3;
             this.groupBoxFixCommonErrors.TabStop = false;
             this.groupBoxFixCommonErrors.Text = "Fix common errors";
+            // 
+            // checkBoxFceSkipStep1
+            // 
+            this.checkBoxFceSkipStep1.AutoSize = true;
+            this.checkBoxFceSkipStep1.Location = new System.Drawing.Point(15, 161);
+            this.checkBoxFceSkipStep1.Name = "checkBoxFceSkipStep1";
+            this.checkBoxFceSkipStep1.Size = new System.Drawing.Size(176, 17);
+            this.checkBoxFceSkipStep1.TabIndex = 36;
+            this.checkBoxFceSkipStep1.Text = "Skip step one (choose fix rules)";
+            this.checkBoxFceSkipStep1.UseVisualStyleBackColor = true;
             // 
             // checkBoxFixShortDisplayTimesAllowMoveStartTime
             // 
@@ -3569,16 +3579,6 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
-            // checkBoxFceSkipStep1
-            // 
-            this.checkBoxFceSkipStep1.AutoSize = true;
-            this.checkBoxFceSkipStep1.Location = new System.Drawing.Point(15, 161);
-            this.checkBoxFceSkipStep1.Name = "checkBoxFceSkipStep1";
-            this.checkBoxFceSkipStep1.Size = new System.Drawing.Size(176, 17);
-            this.checkBoxFceSkipStep1.TabIndex = 36;
-            this.checkBoxFceSkipStep1.Text = "Skip step one (choose fix rules)";
-            this.checkBoxFceSkipStep1.UseVisualStyleBackColor = true;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3755,7 +3755,7 @@
         private System.Windows.Forms.Label labelVideoPlayerMPlayer;
         private System.Windows.Forms.Label labelDirectShowDescription;
         private System.Windows.Forms.Label labelMpcHcDescription;
-        private System.Windows.Forms.RadioButton radioButtonVideoPlayerMPlayer;
+        private System.Windows.Forms.RadioButton radioButtonVideoPlayerMPV;
         private System.Windows.Forms.RadioButton radioButtonVideoPlayerDirectShow;
         private System.Windows.Forms.RadioButton radioButtonVideoPlayerMpcHc;
         private System.Windows.Forms.CheckBox checkBoxRememberWindowPosition;
