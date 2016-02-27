@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                UiUtil.InitializeVideoPlayerAndContainer(MediaPlayerStart.VideoPlayer.VideoFileName, _videoInfo, MediaPlayerEnd, VideoEndLoaded, VideoEndEnded);
+                UiUtil.InitializeVideoPlayerAndContainer(VideoFileName, _videoInfo, MediaPlayerEnd, VideoEndLoaded, VideoEndEnded);
             }
             timer1.Start();
             timerProgressBarRefresh.Start();

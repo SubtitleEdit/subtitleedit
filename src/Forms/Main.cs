@@ -10726,12 +10726,28 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video1FrameLeft)
             {
-                MoveVideoSeconds(-1.0 / Configuration.Settings.General.CurrentFrameRate);
+                var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
+                if (libMpv != null)
+                {
+                    libMpv.GetPreviousFrame();
+                }
+                else
+                {
+                    MoveVideoSeconds(-1.0 / Configuration.Settings.General.CurrentFrameRate);
+                }
                 e.SuppressKeyPress = true;
             }
             else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video1FrameRight)
             {
-                MoveVideoSeconds(1.0 / Configuration.Settings.General.CurrentFrameRate);
+                var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
+                if (libMpv != null)
+                {
+                    libMpv.GetNextFrame();
+                }
+                else
+                {
+                    MoveVideoSeconds(1.0 / Configuration.Settings.General.CurrentFrameRate);
+                }
                 e.SuppressKeyPress = true;
             }
             else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video100MsLeft)

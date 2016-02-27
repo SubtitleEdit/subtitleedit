@@ -1732,8 +1732,8 @@
             public string DirectShowDescription { get; set; }
             public string MpcHc { get; set; }
             public string MpcHcDescription { get; set; }
-            public string MPlayer { get; set; }
-            public string MPlayerDescription { get; set; }
+            public string MpvPlayer { get; set; }
+            public string MpvPlayerDescription { get; set; }
             public string VlcMediaPlayer { get; set; }
             public string VlcMediaPlayerDescription { get; set; }
             public string VlcBrowseToLabel { get; set; }
