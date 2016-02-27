@@ -182,11 +182,14 @@ namespace Nikse.SubtitleEdit.Logic
             if (gs.VideoPlayer == "VLC" && LibVlcDynamic.IsInstalled)
                 return new LibVlcDynamic();
 
+            if (gs.VideoPlayer == "MPV" && LibMvpvDynamic.IsInstalled)
+                return new LibMvpvDynamic();
+
             //if (gs.VideoPlayer == "WindowsMediaPlayer" && IsWmpAvailable)
             //    return new WmpPlayer();
 
-            if (gs.VideoPlayer == "MPlayer" && MPlayer.IsInstalled)
-                return new MPlayer();
+            //            if (gs.VideoPlayer == "MPlayer" && MPlayer.IsInstalled)
+            //                return new MPlayer();
 
             if (gs.VideoPlayer == "MPC-HC" && VideoPlayers.MpcHC.MpcHc.IsInstalled)
                 return new VideoPlayers.MpcHC.MpcHc();
