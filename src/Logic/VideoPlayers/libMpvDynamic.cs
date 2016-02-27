@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             get { return "MPV Lib"; }
         }
 
-        private int _volume = 0;
+        private int _volume = 75;
         public override int Volume
         {
             get
@@ -148,15 +148,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
+        private double _playRate = 1.0;
         public override double PlayRate
         {
             get
             {
-                return 0; //TODO: FIx
+                return _playRate; 
             }
             set
             {
-                //TODO: FIx
+                _mpvCommand(_mpvHandle, new[] { "set", "speed", value.ToString(CultureInfo.InvariantCulture), null });
+                _playRate = value;
             }
         }
 
@@ -238,15 +240,18 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
+        private int _audioTrackNumber = 0;
         public int AudioTrackNumber
         {
             get
             {
-                return 0;
+                return _audioTrackNumber;
             }
             set
             {
-                //TODO: FIX
+                //TODO: Fix
+                //_mpvCommand(_mpvHandle, new[] { "set", "aid", value.ToString(CultureInfo.InvariantCulture), null });
+                //_audioTrackNumber = value;
             }
         }
 
