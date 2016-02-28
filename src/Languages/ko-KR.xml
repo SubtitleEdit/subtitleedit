@@ -1570,8 +1570,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <DirectShowDescription>system32\quartz.dll</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>미디어 플레이어 클래식 - 홈 시네마</MpcHcDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
+    <MpvPlayer>mvp</MpvPlayer>
+    <MpvPlayerDescription>https://mpv.io/ - 무료, 오픈 소스, 크로스 플랫폼 미디어 플레이어</MpvPlayerDescription>
     <VlcMediaPlayer>VLC 미디어 플레이어</VlcMediaPlayer>
     <VlcMediaPlayerDescription>VLC 미디어 플레이어 1.1.0 이후의 libvlc.dll</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC 경로 (VLC 포터블 버전을 사용하는 경우)</VlcBrowseToLabel>
@@ -1837,7 +1837,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   <StartNumberingFrom>
     <Title>* 번호 다시 매기기</Title>
     <StartFromNumber>새 시작 번호:</StartFromNumber>
-    <PleaseEnterAValidNumber>숫자를 입력하십시오!</PleaseEnterAValidNumber>
+    <PleaseEnterAValidNumber>유효한 숫자를 입력하십시오!</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <Statistics>
     <Title>* 통계</Title>
