@@ -7,7 +7,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class SubViewer20 : SubtitleFormat
     {
-        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d+,\d\d:\d\d:\d\d.\d+$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d\.\d+,\d\d:\d\d:\d\d\.\d+$", RegexOptions.Compiled);
+
+        private readonly HashSet<string> MetaDataHashSet = new HashSet<string>()
+        {
+            "[INFORMATION]",
+            //"[TITLE]{0}",
+            "[AUTHOR]",
+            "[SOURCE]",
+            "[PRG]",
+            "[FILEPATH]",
+            "[DELAY]0",
+            "[CD TRACK]0",
+            "[COMMENT]",
+            "[END INFORMATION]",
+            "[SUBTITLE]",
+            //"[COLF]&H000000,[STYLE]bd,[SIZE]25,[FONT]Arial"
+        };
 
         private enum ExpectingLine
         {
@@ -32,8 +48,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sbv = new YouTubeSbv();
-            if (sbv.IsMine(lines, fileName) && !string.Join(string.Empty, lines.ToArray()).Contains("[br]"))
+            if (lines.Find(x => x.Contains("[br]")) == null && new YouTubeSbv().IsMine(lines, fileName))
                 return false;
 
             var subtitle = new Subtitle();
@@ -88,6 +103,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
+            if (fileName != null && (fileName.EndsWith("xml", StringComparison.OrdinalIgnoreCase) ||
+                fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase)))
+            {
+                _errorCount = 1;
+                return;
+            }
             var paragraph = new Paragraph();
             ExpectingLine expecting = ExpectingLine.TimeCodes;
             _errorCount = 0;
@@ -96,7 +117,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string line in lines)
             {
                 string lineTrimmed = line.Trim();
-                if (lineTrimmed.Length >= 23 && RegexTimeCodes.IsMatch(lineTrimmed))
+                if ((expecting == ExpectingLine.TimeCodes) && (lineTrimmed.Length >= 23) && RegexTimeCodes.IsMatch(lineTrimmed))
                 {
                     string[] parts = lineTrimmed.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     try
@@ -131,13 +152,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             // Do not include metadata
-            if (_errorCount > 12)
+            if (_errorCount > 12 && IsMetaDataPresent(lines))
                 _errorCount -= 12;
             subtitle.Renumber();
         }
 
         private string DecodeFormatting(string text)
         {
+            if (!text.Contains("{\\"))
+                return text;
             text = text.Replace("[br]", Environment.NewLine);
             text = text.Replace("{\\i1}", "<i>");
             text = text.Replace("{\\i0}", "</i>");
@@ -152,6 +175,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private string EncodeFormatting(string text)
         {
+            if (!text.Contains('<'))
+                return text;
             text = text.Replace(Environment.NewLine, "[br]");
             text = text.Replace("<i>", "{\\i1}");
             text = text.Replace("</i>", "{\\i0}");
@@ -162,6 +187,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             text = text.Replace("<u>", "{\\u1}");
             text = text.Replace("</u>", "{\\u0}");
             return text.Replace("</u>", "{\\u}");
+        }
+
+        private bool IsMetaDataPresent(IList<string> lines)
+        {
+            var count = 0;
+            for (int i = 0; i < 12; i++)
+            {
+                string line = lines[i].Trim();
+                if (MetaDataHashSet.Contains(line))
+                {
+                    count++;
+                }
+            }
+            return (count / 2) > 5;
         }
     }
 }
