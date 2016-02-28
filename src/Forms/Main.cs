@@ -12811,10 +12811,10 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", _videoInfo.FramesPerSecond);
 
                 UiUtil.InitializeVideoPlayerAndContainer(fileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
+                mediaPlayer.Volume = 0;
                 mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
                 mediaPlayer.OnButtonClicked -= MediaPlayer_OnButtonClicked;
                 mediaPlayer.OnButtonClicked += MediaPlayer_OnButtonClicked;
-                mediaPlayer.Volume = 0;
 
                 if (_videoInfo.VideoCodec != null)
                     labelVideoInfo.Text = Path.GetFileName(fileName) + " " + _videoInfo.Width + "x" + _videoInfo.Height + " " + _videoInfo.VideoCodec.Trim();

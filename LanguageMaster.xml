@@ -1745,6 +1745,11 @@ can edit in same subtitle file (collaboration)</Information>
     <Miscellaneous>Misc.</Miscellaneous>
     <UseDoNotBreakAfterList>Use do-not-break-after list (for auto-br)</UseDoNotBreakAfterList>
   </Settings>
+  <SettingsMpv>
+    <Title>Settings for mpv</Title>
+    <DownloadMpv>Download mpv dll</DownloadMpv>
+    <DownloadMpvFailed>Unable to download mpv - please re-try later!</DownloadMpvFailed>
+  </SettingsMpv>
   <SetVideoOffset>
     <Title>Set video offset</Title>
     <Description>Set video offset (subtitles should not follow real video time, but e.g. +10 hours)</Description>

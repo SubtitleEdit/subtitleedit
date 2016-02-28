@@ -55,6 +55,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         private IntPtr _libMpvDll;
         private IntPtr _mpvHandle;
+        private Timer _videoLoadedTimer;
+        private Timer _videoEndedTimer;
+
+        public override event EventHandler OnVideoLoaded;
+        public override event EventHandler OnVideoEnded;
 
         private object GetDllType(Type type, string name)
         {
@@ -312,7 +317,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (!string.IsNullOrEmpty(videoFileName))
             {
                 _mpvInitialize.Invoke(_mpvHandle);
-                _mpvSetOptionString(_mpvHandle, Encoding.UTF8.GetBytes("vo\0"), Encoding.UTF8.GetBytes("direct3d_shaders\0")); // "direct3d" for compabality with old systems                                                                                                                           
+
+                string videoOutput = "direct3d_shaders"; 
+                if (string.IsNullOrWhiteSpace(Configuration.Settings.General.MpvVideoOutput))
+                    videoOutput = Configuration.Settings.General.MpvVideoOutput;
+                _mpvSetOptionString(_mpvHandle, Encoding.UTF8.GetBytes("vo\0"), Encoding.UTF8.GetBytes(videoOutput + "\0")); // "direct3d_shaders" is default, "direct3d" could be used for compabality with old systems                                                                                                                           
+
                 _mpvSetOptionString(_mpvHandle, Encoding.UTF8.GetBytes("keep-open\0"), Encoding.UTF8.GetBytes("always\0")); // don't auto close video
                 _mpvSetOptionString(_mpvHandle, Encoding.UTF8.GetBytes("no-sub\0"), Encoding.UTF8.GetBytes("\0")); // don't load subtitles
                 if (ownerControl != null)
@@ -323,36 +333,51 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
                 _mpvCommand(_mpvHandle, new[] { "loadfile", videoFileName, null });
 
-                const int mpvEventFileLoaded = 8;
-                int l = 0;
-                while (l < 10000)
+                _videoLoadedTimer = new Timer { Interval = 50 };
+                _videoLoadedTimer.Tick += VideoLoadedTimer_Tick;
+                _videoLoadedTimer.Start();
+            }
+        }
+
+        private void VideoLoadedTimer_Tick(object sender, EventArgs e)
+        {
+            _videoLoadedTimer.Stop();
+            const int mpvEventFileLoaded = 8;
+            int l = 0;
+            while (l < 10000)
+            {
+                
+                Application.DoEvents();
+                try
                 {
-                    Application.DoEvents();
                     var eventIdHandle = _mpvWaitEvent(_mpvHandle, 0);
                     var eventId = Convert.ToInt64(Marshal.PtrToStructure(eventIdHandle, typeof(int)));
                     if (eventId == mpvEventFileLoaded)
                     {
-                        Application.DoEvents();
-                        if (onVideoLoaded != null)
-                            onVideoLoaded.Invoke(this, null);
-                        Application.DoEvents();
-                        Pause();
-                        return;
+                        break;
                     }
                     l++;
                 }
+                catch
+                {
+                    return;
+                }
             }
+            Application.DoEvents();
+            if (OnVideoLoaded != null)
+                OnVideoLoaded.Invoke(this, null);
+            Application.DoEvents();
+            Pause();
         }
 
+        private void VideoEndedTimer_Tick(object sender, EventArgs e)
+        {
+        }
 
         public override void DisposeVideoPlayer()
         {
             Dispose();
         }
-
-        public override event EventHandler OnVideoLoaded;
-
-        public override event EventHandler OnVideoEnded;
 
         private void ReleaseUnmangedResources()
         {

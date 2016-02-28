@@ -134,12 +134,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!LibVlcDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Enabled = false;
-            if (!LibMpvDynamic.IsInstalled)
-                radioButtonVideoPlayerMPV.Enabled = false;
             if (!UiUtil.IsQuartsDllInstalled)
                 radioButtonVideoPlayerDirectShow.Enabled = false;
             if (Logic.VideoPlayers.MpcHC.MpcHc.GetMpcHcFileName() == null)
                 radioButtonVideoPlayerMpcHc.Enabled = false;
+            RefreshMpvSettings();
 
             textBoxVlcPath.Text = gs.VlcLocation;
             textBoxVlcPath.Left = labelVideoPlayerVLC.Left + labelVideoPlayerVLC.Width + 5;
@@ -337,6 +336,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             radioButtonVideoPlayerMPV.Text = language.MpvPlayer;
             labelVideoPlayerMPlayer.Text = language.MpvPlayerDescription;
+            buttonMpvSettings.Left = labelVideoPlayerMPlayer.Left + labelVideoPlayerMPlayer.Width + 5;
+            labelMpvSettings.Left = buttonMpvSettings.Left + buttonMpvSettings.Width + 5;
             radioButtonVideoPlayerVLC.Text = language.VlcMediaPlayer;
             labelVideoPlayerVLC.Text = language.VlcMediaPlayerDescription;
             gs.VlcLocation = textBoxVlcPath.Text;
@@ -2632,5 +2633,19 @@ namespace Nikse.SubtitleEdit.Forms
             UpdateSsaExample();
         }
 
+        private void buttonMpvSettings_Click(object sender, EventArgs e)
+        {
+            using (var form = new SettingsMpv())
+            {
+                form.ShowDialog(this);
+                RefreshMpvSettings();
+            }
+        }
+
+        private void RefreshMpvSettings()
+        {
+            radioButtonVideoPlayerMPV.Enabled = LibMpvDynamic.IsInstalled;
+            labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutput;
+        }
     }
 }

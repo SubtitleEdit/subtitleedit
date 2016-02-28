@@ -1905,6 +1905,12 @@
             public string UseDoNotBreakAfterList { get; set; }
         }
 
+        public class SettingsMpv
+        {
+            public string Title { get; set; }
+            public string DownloadMpv { get; set; }
+            public string DownloadMpvFailed { get; set; }
+        }
         public class SetVideoOffset
         {
             public string Title { get; set; }
