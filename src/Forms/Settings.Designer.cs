@@ -147,6 +147,7 @@
             this.comboBoxlVideoPlayerPreviewFontSize = new System.Windows.Forms.ComboBox();
             this.checkBoxVideoPlayerShowStopButton = new System.Windows.Forms.CheckBox();
             this.groupBoxVideoEngine = new System.Windows.Forms.GroupBox();
+            this.buttonMpvSettings = new System.Windows.Forms.Button();
             this.labelPlatform = new System.Windows.Forms.Label();
             this.buttonVlcPathBrowse = new System.Windows.Forms.Button();
             this.textBoxVlcPath = new System.Windows.Forms.TextBox();
@@ -304,6 +305,7 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
+            this.labelMpvSettings = new System.Windows.Forms.Label();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1734,6 +1736,8 @@
             // 
             // groupBoxVideoEngine
             // 
+            this.groupBoxVideoEngine.Controls.Add(this.labelMpvSettings);
+            this.groupBoxVideoEngine.Controls.Add(this.buttonMpvSettings);
             this.groupBoxVideoEngine.Controls.Add(this.labelPlatform);
             this.groupBoxVideoEngine.Controls.Add(this.buttonVlcPathBrowse);
             this.groupBoxVideoEngine.Controls.Add(this.textBoxVlcPath);
@@ -1752,6 +1756,16 @@
             this.groupBoxVideoEngine.TabIndex = 0;
             this.groupBoxVideoEngine.TabStop = false;
             this.groupBoxVideoEngine.Text = "Video engine";
+            // 
+            // buttonMpvSettings
+            // 
+            this.buttonMpvSettings.Location = new System.Drawing.Point(466, 87);
+            this.buttonMpvSettings.Name = "buttonMpvSettings";
+            this.buttonMpvSettings.Size = new System.Drawing.Size(29, 21);
+            this.buttonMpvSettings.TabIndex = 29;
+            this.buttonMpvSettings.Text = "...";
+            this.buttonMpvSettings.UseVisualStyleBackColor = true;
+            this.buttonMpvSettings.Click += new System.EventHandler(this.buttonMpvSettings_Click);
             // 
             // labelPlatform
             // 
@@ -3579,6 +3593,17 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
+            // labelMpvSettings
+            // 
+            this.labelMpvSettings.AutoSize = true;
+            this.labelMpvSettings.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMpvSettings.ForeColor = System.Drawing.Color.Gray;
+            this.labelMpvSettings.Location = new System.Drawing.Point(501, 93);
+            this.labelMpvSettings.Name = "labelMpvSettings";
+            this.labelMpvSettings.Size = new System.Drawing.Size(33, 11);
+            this.labelMpvSettings.TabIndex = 30;
+            this.labelMpvSettings.Text = "--vo=?";
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3973,5 +3998,7 @@
         private System.Windows.Forms.Button buttonSsaColor;
         private System.Windows.Forms.CheckBox checkBoxSsaFontBold;
         private System.Windows.Forms.CheckBox checkBoxFceSkipStep1;
+        private System.Windows.Forms.Button buttonMpvSettings;
+        private System.Windows.Forms.Label labelMpvSettings;
     }
 }

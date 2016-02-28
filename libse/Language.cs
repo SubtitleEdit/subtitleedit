@@ -79,6 +79,7 @@ namespace Nikse.SubtitleEdit.Core
         public LanguageStructure.SetMinimumDisplayTimeBetweenParagraphs SetMinimumDisplayTimeBetweenParagraphs;
         public LanguageStructure.SetSyncPoint SetSyncPoint;
         public LanguageStructure.Settings Settings;
+        public LanguageStructure.SettingsMpv SettingsMpv;
         public LanguageStructure.SetVideoOffset SetVideoOffset;
         public LanguageStructure.ShowEarlierLater ShowEarlierLater;
         public LanguageStructure.ShowHistory ShowHistory;
@@ -2021,6 +2022,13 @@ can edit in same subtitle file (collaboration)",
                 MainFileSaveAll = "Save all",
                 Miscellaneous = "Misc.",
                 UseDoNotBreakAfterList = "Use do-not-break-after list (for auto-br)",
+            };
+
+            SettingsMpv = new LanguageStructure.SettingsMpv
+            {
+                Title = "Settings for mpv",
+                DownloadMpv = "Download mpv dll",
+                DownloadMpvFailed = "Unable to download mpv - please re-try later!",
             };
 
             SetVideoOffset = new LanguageStructure.SetVideoOffset
