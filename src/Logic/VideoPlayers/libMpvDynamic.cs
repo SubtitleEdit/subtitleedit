@@ -319,7 +319,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mpvInitialize.Invoke(_mpvHandle);
 
                 string videoOutput = "direct3d_shaders"; 
-                if (string.IsNullOrWhiteSpace(Configuration.Settings.General.MpvVideoOutput))
+                if (!string.IsNullOrWhiteSpace(Configuration.Settings.General.MpvVideoOutput))
                     videoOutput = Configuration.Settings.General.MpvVideoOutput;
                 _mpvSetOptionString(_mpvHandle, Encoding.UTF8.GetBytes("vo\0"), Encoding.UTF8.GetBytes(videoOutput + "\0")); // "direct3d_shaders" is default, "direct3d" could be used for compabality with old systems                                                                                                                           
 
