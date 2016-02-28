@@ -1573,7 +1573,7 @@ can edit in same subtitle file (collaboration)</Information>
     <DirectShowDescription>quartz.dll in system32 folder</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
-    <MpvPlayer>mvp</MpvPlayer>
+    <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - free, open source, and cross-platform media player</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll from VLC media player 1.1.0 or newer</VlcMediaPlayerDescription>
