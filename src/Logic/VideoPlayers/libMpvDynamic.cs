@@ -281,11 +281,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
                 return null;
 
-            var path = Path.Combine(Configuration.BaseDirectory, @"MPV\" + fileName);
-            if (File.Exists(path))
-                return path;
-
-            path = Path.Combine(Configuration.BaseDirectory, fileName);
+            var path = Path.Combine(Configuration.DataDirectory, fileName);
             if (File.Exists(path))
                 return path;
 
