@@ -547,14 +547,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 double fr;
                 if (double.TryParse(frameRateAttr.Value, out fr))
                 {
-                    Configuration.Settings.General.CurrentFrameRate = fr;
+                    if (fr > 20 && fr < 100)
+                        Configuration.Settings.General.CurrentFrameRate = fr;
 
                     var frameRateMultiplier = xml.DocumentElement.Attributes["ttp:frameRateMultiplier"];
                     if (frameRateMultiplier != null)
                     {
-                        if (frameRateMultiplier.InnerText == "999 1000")
+                        var arr = frameRateMultiplier.InnerText.Split();
+                        if (arr.Length == 2 && Utilities.IsInteger(arr[0]) && Utilities.IsInteger(arr[1]) && int.Parse(arr[1]) > 0)
                         {
-                            Configuration.Settings.General.CurrentFrameRate = fr * (999.0 / TimeCode.BaseUnit);
+                            fr =  double.Parse(arr[0]) / double.Parse(arr[1]);
+                            if (fr > 20 && fr < 100)
+                                Configuration.Settings.General.CurrentFrameRate = fr;
                         }
                     }
                 }
