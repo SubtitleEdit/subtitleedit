@@ -59,6 +59,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string ConvertToTimeString(TimeCode time)
         {
+            if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource == "hh:mm:ss.ms-two-digits")
+                return string.Format("{0:00}:{1:00}:{2:00}.{3:0}", time.Hours, time.Minutes, time.Seconds, (int)(Math.Round(time.Milliseconds / 10.0)));
             return string.Format("{0:00}:{1:00}:{2:00}.{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
         }
 
@@ -100,12 +102,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/2006/10/ttaf1");
 
-                //string text = p.Text.Replace("<i>", "@iSTART__").Replace("</i>", "@iEND__");
                 string text = p.Text.Replace(Environment.NewLine, "\n").Replace("\n", "@iNEWLINE__");
                 text = HtmlUtil.RemoveHtmlTags(text);
                 paragraph.InnerText = text;
                 paragraph.InnerXml = paragraph.InnerXml.Replace("@iNEWLINE__", "<br />");
-                //paragraph.InnerXml = paragraph.InnerXml.Replace("@iSTART__", "<i>").Replace("@iEND__", "</i>");
 
                 XmlAttribute start = xml.CreateAttribute("begin");
                 start.InnerText = ConvertToTimeString(p.StartTime);
@@ -218,9 +218,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
 
-                    string start = null; // = node.Attributes["begin"].InnerText;
-                    string end = null; // = node.Attributes["begin"].InnerText;
-                    string dur = null; // = node.Attributes["begin"].InnerText;
+                    string start = null;
+                    string end = null;
+                    string dur = null;
                     foreach (XmlAttribute attr in node.Attributes)
                     {
                         if (attr.Name.EndsWith("begin", StringComparison.Ordinal))
@@ -230,24 +230,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         else if (attr.Name.EndsWith("duration", StringComparison.Ordinal))
                             dur = attr.InnerText;
                     }
-                    //string start = node.Attributes["begin"].InnerText;
                     string text = pText.ToString();
                     text = text.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
                     text = text.Replace("<i></i>", string.Empty).Trim();
                     if (end != null)
                     {
-                        if (end.Length != 11 || end.Substring(8, 1) != ":" || start == null ||
-                            start.Length != 11 || start.Substring(8, 1) != ":")
+                        if (end.Length != 11 || end.Substring(8, 1) != ":" || start == null || start.Length != 11 || start.Substring(8, 1) != ":")
                         {
                             couldBeFrames = false;
                         }
 
-                        if (couldBeMillisecondsWithMissingLastDigit && (end.Length != 11 || start == null || start.Length != 11 || end.Substring(8, 1) != "." | start.Substring(8, 1) != "."))
+                        if (couldBeMillisecondsWithMissingLastDigit && (end.Length != 11 || start == null || start.Length != 11 || end.Substring(8, 1) != "." || start.Substring(8, 1) != "."))
                         {
                             couldBeMillisecondsWithMissingLastDigit = false;
                         }
 
-                        //string end = node.Attributes["end"].InnerText;
                         double dBegin, dEnd;
                         if (!start.Contains(':') && Utilities.CountTagInText(start, '.') == 1 &&
                             !end.Contains(':') && Utilities.CountTagInText(end, '.') == 1 &&
@@ -257,8 +254,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         else
                         {
-                            if (start.Length == 8 && start[2] == ':' && start[5] == ':' &&
-                                end.Length == 8 && end[2] == ':' && end[5] == ':')
+                            if (start.Length == 8 && start[2] == ':' && start[5] == ':' && end.Length == 8 && end[2] == ':' && end[5] == ':')
                             {
                                 var p = new Paragraph();
                                 var parts = start.Split(SplitCharColon);
@@ -270,19 +266,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                             else
                             {
+                                
                                 subtitle.Paragraphs.Add(new Paragraph(TimedText10.GetTimeCode(start, false), TimedText10.GetTimeCode(end, false), text));
                             }
                         }
                     }
                     else if (dur != null)
                     {
-                        if (dur.Length != 11 || dur.Substring(8, 1) != ":" || start == null ||
-                           start.Length != 11 || start.Substring(8, 1) != ":")
+                        if (dur.Length != 11 || dur.Substring(8, 1) != ":" || start == null || start.Length != 11 || start.Substring(8, 1) != ":")
                         {
                             couldBeFrames = false;
                         }
 
-                        if (couldBeMillisecondsWithMissingLastDigit && (dur.Length != 11 || start == null || start.Length != 11 || dur.Substring(8, 1) != "." | start.Substring(8, 1) != "."))
+                        if (couldBeMillisecondsWithMissingLastDigit && (dur.Length != 11 || start == null || start.Length != 11 || dur.Substring(8, 1) != "." || start.Substring(8, 1) != "."))
                         {
                             couldBeMillisecondsWithMissingLastDigit = false;
                         }
@@ -318,7 +314,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
             }
-            else if (couldBeMillisecondsWithMissingLastDigit)
+            else if (couldBeMillisecondsWithMissingLastDigit &&  Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource != "hh:mm:ss.ms-two-digits")
             {
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {

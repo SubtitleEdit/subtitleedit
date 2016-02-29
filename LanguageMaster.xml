@@ -1747,9 +1747,9 @@ can edit in same subtitle file (collaboration)</Information>
   </Settings>
   <SettingsMpv>
     <Title>Settings for mpv</Title>
-    <DownloadMpv>Download mpv dll</DownloadMpv>
+    <DownloadMpv>Download mpv lib</DownloadMpv>
     <DownloadMpvFailed>Unable to download mpv - please re-try later!</DownloadMpvFailed>
-    <DownloadMpvOk>The mpv dll file was downloaded and is ready for use.</DownloadMpvOk>
+    <DownloadMpvOk>The mpv lib was downloaded and is ready for use.</DownloadMpvOk>
   </SettingsMpv>
   <SetVideoOffset>
     <Title>Set video offset</Title>
