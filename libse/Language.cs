@@ -2027,9 +2027,9 @@ can edit in same subtitle file (collaboration)",
             SettingsMpv = new LanguageStructure.SettingsMpv
             {
                 Title = "Settings for mpv",
-                DownloadMpv = "Download mpv dll",
+                DownloadMpv = "Download mpv lib",
                 DownloadMpvFailed = "Unable to download mpv - please re-try later!",
-                DownloadMpvOk = "The mpv dll file was downloaded and is ready for use.",
+                DownloadMpvOk = "The mpv lib was downloaded and is ready for use.",
             };
 
             SetVideoOffset = new LanguageStructure.SetVideoOffset
