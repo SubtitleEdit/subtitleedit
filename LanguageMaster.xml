@@ -1749,6 +1749,7 @@ can edit in same subtitle file (collaboration)</Information>
     <Title>Settings for mpv</Title>
     <DownloadMpv>Download mpv dll</DownloadMpv>
     <DownloadMpvFailed>Unable to download mpv - please re-try later!</DownloadMpvFailed>
+    <DownloadMpvOk>The mpv dll file was downloaded and is ready for use.</DownloadMpvOk>
   </SettingsMpv>
   <SetVideoOffset>
     <Title>Set video offset</Title>

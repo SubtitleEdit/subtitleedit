@@ -4696,6 +4696,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "SettingsMpv/DownloadMpvFailed":
                     language.SettingsMpv.DownloadMpvFailed = reader.Value;
                     break;
+                case "SettingsMpv/DownloadMpvOk":
+                    language.SettingsMpv.DownloadMpvOk = reader.Value;
+                    break;
                 case "SetVideoOffset/Title":
                     language.SetVideoOffset.Title = reader.Value;
                     break;

@@ -16618,10 +16618,27 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemSetAudioTrack.Visible = false;
             var libVlc = mediaPlayer.VideoPlayer as LibVlcDynamic;
+            var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
             if (libVlc != null)
             {
                 int numberOfTracks = libVlc.AudioTrackCount;
                 _videoAudioTrackNumber = libVlc.AudioTrackNumber;
+                if (numberOfTracks > 1)
+                {
+                    toolStripMenuItemSetAudioTrack.DropDownItems.Clear();
+                    for (int i = 0; i < numberOfTracks; i++)
+                    {
+                        toolStripMenuItemSetAudioTrack.DropDownItems.Add((i + 1).ToString(CultureInfo.InvariantCulture), null, ChooseAudioTrack);
+                        if (i == _videoAudioTrackNumber)
+                            toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Select();
+                    }
+                    toolStripMenuItemSetAudioTrack.Visible = true;
+                }
+            }
+            else if (libMpv != null)
+            {
+                int numberOfTracks = libMpv.AudioTrackCount;
+                _videoAudioTrackNumber = libMpv.AudioTrackNumber;
                 if (numberOfTracks > 1)
                 {
                     toolStripMenuItemSetAudioTrack.DropDownItems.Clear();
@@ -16650,13 +16667,21 @@ namespace Nikse.SubtitleEdit.Forms
         private void ChooseAudioTrack(object sender, EventArgs e)
         {
             var libVlc = mediaPlayer.VideoPlayer as LibVlcDynamic;
+            var libMpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
             if (libVlc != null)
             {
                 var item = sender as ToolStripItem;
-
                 int number = int.Parse(item.Text);
                 number--;
                 libVlc.AudioTrackNumber = number;
+                _videoAudioTrackNumber = number;
+            }
+            else if (libMpv != null)
+            {
+                var item = sender as ToolStripItem;
+                int number = int.Parse(item.Text);
+                number--;
+                libMpv.AudioTrackNumber = number;
                 _videoAudioTrackNumber = number;
             }
         }

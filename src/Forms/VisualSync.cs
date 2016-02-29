@@ -191,6 +191,11 @@ namespace Nikse.SubtitleEdit.Forms
                 var libVlc = (LibVlcDynamic)MediaPlayerStart.VideoPlayer;
                 libVlc.AudioTrackNumber = AudioTrackNumber;
             }
+            else if (AudioTrackNumber >= 0 && MediaPlayerStart.VideoPlayer is LibMpvDynamic)
+            {
+                var libMpv = (LibMpvDynamic)MediaPlayerStart.VideoPlayer;
+                libMpv.AudioTrackNumber = AudioTrackNumber;
+            }
         }
 
         private void VideoEndEnded(object sender, EventArgs e)
@@ -211,6 +216,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var libVlc = (LibVlcDynamic)MediaPlayerEnd.VideoPlayer;
                 libVlc.AudioTrackNumber = AudioTrackNumber;
+            }
+            else if (AudioTrackNumber >= 0 && MediaPlayerEnd.VideoPlayer is LibMpvDynamic)
+            {
+                var libMpv = (LibMpvDynamic)MediaPlayerEnd.VideoPlayer;
+                libMpv.AudioTrackNumber = AudioTrackNumber;
             }
         }
 

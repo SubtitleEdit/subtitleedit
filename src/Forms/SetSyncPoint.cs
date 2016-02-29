@@ -163,6 +163,11 @@ namespace Nikse.SubtitleEdit.Forms
                 var libVlc = (LibVlcDynamic)videoPlayerContainer1.VideoPlayer;
                 libVlc.AudioTrackNumber = _audioTrackNumber;
             }
+            else if (_audioTrackNumber >= 0 && videoPlayerContainer1.VideoPlayer is LibMpvDynamic)
+            {
+                var libMpv = (LibMpvDynamic)videoPlayerContainer1.VideoPlayer;
+                libMpv.AudioTrackNumber = _audioTrackNumber;
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
