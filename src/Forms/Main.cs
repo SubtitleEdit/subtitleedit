@@ -3308,8 +3308,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             // Others
             text = text.Replace("…", "...");
-            text = text.Replace('♪', '#');
-            text = text.Replace('♫', '#');
+            char musicSymbol = '#';
+            if (GetCurrentSubtitleFormat().GetType() == typeof(SwiftInterchange2))
+                musicSymbol = '*';
+            text = text.Replace('♪', musicSymbol);
+            text = text.Replace('♫', musicSymbol);
             text = text.Replace("⇒", "=>");
 
             // Spaces
