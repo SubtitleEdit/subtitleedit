@@ -2,16 +2,19 @@
 
 3.4.12 (xth March 2016) BETA
 * NEW:
+   * "mpv" can be now used as video player (has precise seeking) - thx emk2203/aaaxx
    * Added new subtitle formats
    * Norwegian translation - thx Imre
 * IMPROVED:
    * Updated Catalan translation - thx juansa
    * updated Bulgarian translation - thx Maknol
    * Updated Basque translation - thx Xabier Aramendi
+   * Updated Korean translation - thx domddol
    * Batch convert: Added VobSub output
    * Point sync: Added "Go to line" (Ctrl+G) - thx ivandrofly
    * Remove text for HI: Added Apply button - thx Splike/ivandrofly
-   * Export to FPC+image now allows for full frame image - thx Mathieu
+   * Export to FCP+image now allows full frame + bottom border - thx Mathieu
+   * Remember (extra) inline styles for TTML 1.0 - thx Oskar
 * FIXED:
    * Several fixes for Find/Count - thx André
    * Saving no longer requires exclusive access (regression from 3.4.11) - thx Whisker72
@@ -26,7 +29,13 @@
    * Allow reading of small PAC files - thx Mike
    * Fixed bug in "Fix invalid italic tags" - thx ivandrofly
    * Fixed allowing random order of json tags - thx fela98
-   * Remember (extra) inline styles for TTML 1.0 - thx Oskar
+   * Utx won't load text if starts with '#' - thx invandrofly
+   * Fixed crash when showing text "<i></i><i>..." - thx montillasauces
+   * Fix for TTML 1.0 to keep source time format when using frames - thx Tuan
+   * Fixed split when subtitle has no time code - thx João
+   * Fixed issues with extraction of audio with VLC settings repeat/loop - thx davidzou2131
+   * Fix for reading of some TTML+Image files - thx snakeLo
+   * Some fixes form TTML Draft 2006-04 - thx MagicGreenDragon
 
 
 3.4.11 (16th January 2016)
