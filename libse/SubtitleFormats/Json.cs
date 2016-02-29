@@ -290,5 +290,53 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return list;
         }
 
+        public static List<string> ReadObjectArray(string text)
+        {
+            var list = new List<string>();
+            text = text.Trim();
+            if (text.StartsWith('[') && text.EndsWith(']'))
+            {
+                text = text.Trim('[', ']').Trim();
+                int onCount = 0;
+                bool keepNext = false;
+                var sb = new StringBuilder();
+                foreach (var c in text)
+                {
+                    if (keepNext)
+                    {
+                        sb.Append(c);
+                        keepNext = false;
+                    }
+                    else if (c == '\\')
+                    {
+                        sb.Append(c);
+                        keepNext = true;
+                    }
+                    else if (c == '{')
+                    {
+                        sb.Append(c);
+                        onCount++;
+                    }
+                    else if (c == '}')
+                    {
+                        sb.Append(c);
+                        onCount--;
+                    }
+                    else if (c == ',' && onCount == 0)
+                    {
+                        list.Add(sb.ToString().Trim());
+                        sb.Clear();
+                    }
+                    else
+                    {
+                        sb.Append(c);
+                    }
+                }
+                if (sb.Length > 0)
+                    list.Add(sb.ToString().Trim());
+            }
+            return list;
+        }
+
     }
 }

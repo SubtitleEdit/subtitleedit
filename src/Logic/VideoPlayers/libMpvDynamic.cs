@@ -1,10 +1,12 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
@@ -237,26 +239,54 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             get { return !IsPaused; }
         }
 
+        private List<string> _audioTrackIds;
         public int AudioTrackCount
         {
             get
             {
-                return 1; //TODO: Fix
+                if (_audioTrackIds == null)
+                {
+                    _audioTrackIds = new List<string>();
+                    int mpvFormatString = 1;
+                    IntPtr lpBuffer = Marshal.AllocHGlobal(1024);
+                    _mpvGetPropertyString(_mpvHandle, Encoding.UTF8.GetBytes("track-list\0"), mpvFormatString, ref lpBuffer);
+                    string trackListJson = Marshal.PtrToStringAnsi(lpBuffer);
+                    foreach (var json in Json.ReadObjectArray(trackListJson))
+                    {
+                        string trackType = Json.ReadTag(json, "type");
+                        string id = Json.ReadTag(json, "id");
+                        if (trackType == "audio")
+                        {
+                            _audioTrackIds.Add(id);
+                        }
+                    }
+                }
+                return _audioTrackIds.Count; 
             }
         }
 
-        private int _audioTrackNumber = 0;
         public int AudioTrackNumber
         {
             get
             {
-                return _audioTrackNumber;
+                int mpvFormatString = 1;
+                IntPtr lpBuffer = Marshal.AllocHGlobal(10);
+                _mpvGetPropertyString(_mpvHandle, Encoding.UTF8.GetBytes("aid\0"), mpvFormatString, ref lpBuffer);
+                string str = Marshal.PtrToStringAnsi(lpBuffer);                    
+                if (AudioTrackCount > 1 && _audioTrackIds.Contains(str))
+                {
+                    return _audioTrackIds.IndexOf(str);
+                }
+                return 0;
             }
             set
             {
-                //TODO: Fix
-                //_mpvCommand(_mpvHandle, new[] { "set", "aid", value.ToString(CultureInfo.InvariantCulture), null });
-                //_audioTrackNumber = value;
+                string id = "1";
+                if (AudioTrackCount > 1 && value >= 0 && value < _audioTrackIds.Count)
+                {
+                    id = _audioTrackIds[value];
+                }
+                _mpvCommand(_mpvHandle, new[] { "set", "aid", id.ToString(CultureInfo.InvariantCulture), null });
             }
         }
 
