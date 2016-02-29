@@ -900,7 +900,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return new TimeCode(ts.TotalMilliseconds);
             }
 
-            var parts = s.Split(new[] { ':', '.', ',' });
+            var parts = s.Split(':', '.', ',');
             if (s.Length == 12 && s[2] == ':' && s[5] == ':' && s[8] == '.') // 00:01:39.946
             {
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "hh:mm:ss.ms";
@@ -916,7 +916,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             if (frames)
+            {
+                Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "frames";
                 return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
+            }
             return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
         }
 
