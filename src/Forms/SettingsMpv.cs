@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;
             buttonDownload.Enabled = true;
-            MessageBox.Show("mpv downloaded OK");
+            MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvOk);
         }
 
         private void buttonDownload_Click_1(object sender, EventArgs e)

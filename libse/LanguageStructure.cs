@@ -1910,6 +1910,7 @@
             public string Title { get; set; }
             public string DownloadMpv { get; set; }
             public string DownloadMpvFailed { get; set; }
+            public string DownloadMpvOk { get; set; }
         }
         public class SetVideoOffset
         {
