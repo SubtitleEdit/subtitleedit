@@ -7,6 +7,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class SubViewer20 : SubtitleFormat
     {
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d\.\d+,\d\d:\d\d:\d\d\.\d+$", RegexOptions.Compiled);
+
+        private readonly HashSet<string> MetaDataHashSet = new HashSet<string>()
+        {
+            "[INFORMATION]",
+            //"[TITLE]{0}",
+            "[AUTHOR]",
+            "[SOURCE]",
+            "[PRG]",
+            "[FILEPATH]",
+            "[DELAY]0",
+            "[CD TRACK]0",
+            "[COMMENT]",
+            "[END INFORMATION]",
+            "[SUBTITLE]",
+            //"[COLF]&H000000,[STYLE]bd,[SIZE]25,[FONT]Arial"
+        };
+
         private enum ExpectingLine
         {
             TimeCodes,
@@ -30,8 +48,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var sbv = new YouTubeSbv();
-            if (sbv.IsMine(lines, fileName) && !String.Join(String.Empty, lines.ToArray()).Contains("[br]"))
+            if (lines.Find(x => x.Contains("[br]")) == null && new YouTubeSbv().IsMine(lines, fileName))
                 return false;
 
             var subtitle = new Subtitle();
@@ -61,17 +78,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendFormat(header, title);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string text = p.Text.Replace(Environment.NewLine, "[br]");
-                text = text.Replace("<i>", "{\\i1}");
-                text = text.Replace("</i>", "{\\i0}");
-                text = text.Replace("</i>", "{\\i}");
-                text = text.Replace("<b>", "{\\b1}'");
-                text = text.Replace("</b>", "{\\b0}");
-                text = text.Replace("</b>", "{\\b}");
-                text = text.Replace("<u>", "{\\u1}");
-                text = text.Replace("</u>", "{\\u0}");
-                text = text.Replace("</u>", "{\\u}");
 
+                string text = EncodeFormatting(p.Text);
                 sb.AppendLine(string.Format(paragraphWriteFormat,
                                         p.StartTime.Hours,
                                         p.StartTime.Minutes,
@@ -90,14 +98,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static int RoundTo2Cifres(int milliseconds)
         {
-            int rounded = (int)Math.Round((double)milliseconds / 10);
-            return rounded;
+            return (int)Math.Round((double)milliseconds / 10);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            var regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d+,\d\d:\d\d:\d\d.\d+$", RegexOptions.Compiled);
-
+            if (fileName != null && (fileName.EndsWith("xml", StringComparison.OrdinalIgnoreCase) ||
+                fileName.EndsWith(".json", StringComparison.OrdinalIgnoreCase)))
+            {
+                _errorCount = 1;
+                return;
+            }
             var paragraph = new Paragraph();
             ExpectingLine expecting = ExpectingLine.TimeCodes;
             _errorCount = 0;
@@ -105,57 +116,91 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
-                if (regexTimeCodes.IsMatch(line))
+                string lineTrimmed = line.Trim();
+                if ((expecting == ExpectingLine.TimeCodes) && (lineTrimmed.Length >= 23) && RegexTimeCodes.IsMatch(lineTrimmed))
                 {
-                    string[] parts = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 8)
+                    string[] parts = lineTrimmed.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
+                    try
                     {
-                        try
-                        {
-                            int startHours = int.Parse(parts[0]);
-                            int startMinutes = int.Parse(parts[1]);
-                            int startSeconds = int.Parse(parts[2]);
-                            int startMilliseconds = int.Parse(parts[3]);
-                            int endHours = int.Parse(parts[4]);
-                            int endMinutes = int.Parse(parts[5]);
-                            int endSeconds = int.Parse(parts[6]);
-                            int endMilliseconds = int.Parse(parts[7]);
-                            paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                            paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
-                            expecting = ExpectingLine.Text;
-                        }
-                        catch
-                        {
-                            expecting = ExpectingLine.TimeCodes;
-                        }
+                        int startHours = int.Parse(parts[0]);
+                        int startMinutes = int.Parse(parts[1]);
+                        int startSeconds = int.Parse(parts[2]);
+                        int startMilliseconds = int.Parse(parts[3]);
+                        int endHours = int.Parse(parts[4]);
+                        int endMinutes = int.Parse(parts[5]);
+                        int endSeconds = int.Parse(parts[6]);
+                        int endMilliseconds = int.Parse(parts[7]);
+                        paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
+                        paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
+                        expecting = ExpectingLine.Text;
+                    }
+                    catch
+                    {
+                        _errorCount++;
                     }
                 }
-                else
+                else if (expecting == ExpectingLine.Text && lineTrimmed.Length > 0)
                 {
-                    if (expecting == ExpectingLine.Text)
-                    {
-                        if (line.Length > 0)
-                        {
-                            string text = line.Replace("[br]", Environment.NewLine);
-                            text = text.Replace("{\\i1}", "<i>");
-                            text = text.Replace("{\\i0}", "</i>");
-                            text = text.Replace("{\\i}", "</i>");
-                            text = text.Replace("{\\b1}", "<b>'");
-                            text = text.Replace("{\\b0}", "</b>");
-                            text = text.Replace("{\\b}", "</b>");
-                            text = text.Replace("{\\u1}", "<u>");
-                            text = text.Replace("{\\u0}", "</u>");
-                            text = text.Replace("{\\u}", "</u>");
-
-                            paragraph.Text = text;
-                            subtitle.Paragraphs.Add(paragraph);
-                            paragraph = new Paragraph();
-                            expecting = ExpectingLine.TimeCodes;
-                        }
-                    }
+                    paragraph.Text = DecodeFormatting(lineTrimmed);
+                    subtitle.Paragraphs.Add(paragraph);
+                    paragraph = new Paragraph();
+                    expecting = ExpectingLine.TimeCodes;
+                }
+                else if (lineTrimmed.Length > 0) // Do not count empty lines
+                {
+                    _errorCount++;
                 }
             }
+            // Do not include metadata
+            if (_errorCount > 12 && IsMetaDataPresent(lines))
+                _errorCount -= 12;
             subtitle.Renumber();
+        }
+
+        private string DecodeFormatting(string text)
+        {
+            if (!text.Contains("{\\"))
+                return text;
+            text = text.Replace("[br]", Environment.NewLine);
+            text = text.Replace("{\\i1}", "<i>");
+            text = text.Replace("{\\i0}", "</i>");
+            text = text.Replace("{\\i}", "</i>");
+            text = text.Replace("{\\b1}", "<b>");
+            text = text.Replace("{\\b0}", "</b>");
+            text = text.Replace("{\\b}", "</b>");
+            text = text.Replace("{\\u1}", "<u>");
+            text = text.Replace("{\\u0}", "</u>");
+            return text.Replace("{\\u}", "</u>");
+        }
+
+        private string EncodeFormatting(string text)
+        {
+            if (!text.Contains('<'))
+                return text;
+            text = text.Replace(Environment.NewLine, "[br]");
+            text = text.Replace("<i>", "{\\i1}");
+            text = text.Replace("</i>", "{\\i0}");
+            text = text.Replace("</i>", "{\\i}");
+            text = text.Replace("<b>", "{\\b1}");
+            text = text.Replace("</b>", "{\\b0}");
+            text = text.Replace("</b>", "{\\b}");
+            text = text.Replace("<u>", "{\\u1}");
+            text = text.Replace("</u>", "{\\u0}");
+            return text.Replace("</u>", "{\\u}");
+        }
+
+        private bool IsMetaDataPresent(IList<string> lines)
+        {
+            var count = 0;
+            for (int i = 0; i < 12; i++)
+            {
+                string line = lines[i].Trim();
+                if (MetaDataHashSet.Contains(line))
+                {
+                    count++;
+                }
+            }
+            return (count / 2) > 5;
         }
     }
 }
