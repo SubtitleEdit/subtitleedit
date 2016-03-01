@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="polski">
+<Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.11</Version>
@@ -1285,7 +1285,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <ErrorLoadJpg>Ten plik wydaje się być plikiem JPG. W Subtitle Edit nie można otworzyć plików JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Ten plik wydaje się być plikiem ReScene .srr - to nie jest plik z napisami.</ErrorLoadSrr>
     <ErrorLoadTorrent>Ten plik wydaje się być plikiem BitTorrent - to nie jest plik z napisami.</ErrorLoadTorrent>
-    <ErrorLoadBinaryZeroes>Przepraszamy, ten plik zawiera tylko zera binarne!
+    <ErrorLoadBinaryZeroes>Przepraszamy, ten plik zawiera tylko zera binarne! 
 
 Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapasową poprzez pozycję menu Plik -&gt; Przywróć automatycznie zapisaną kopię zapasową...</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Upuszczanie katalogu nie jest tutaj obsługiwane.</ErrorDirectoryDropNotAllowed>
@@ -1571,8 +1571,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <DirectShowDescription>quartz.dll z folderu system32</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
+    <MpvPlayer>mpv</MpvPlayer>
+    <MpvPlayerDescription>https://mpv.io/ - darmowy, open source i wieloplatformowy odtwarzacz multimedialny</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll z VLC media player 1.1.0 lub nowszego</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Ścieżka do VLC (potrzebna tylko wtedy, gdy używasz wersji portable VLC)</VlcBrowseToLabel>
@@ -1744,6 +1744,12 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <Miscellaneous>Inne</Miscellaneous>
     <UseDoNotBreakAfterList>Użyj listy wykluczeń (dla automatycznego łamania linii)</UseDoNotBreakAfterList>
   </Settings>
+  <SettingsMpv>
+    <Title>Ustawienia mpv</Title>
+    <DownloadMpv>Pobierz mpv lib</DownloadMpv>
+    <DownloadMpvFailed>Nie można pobrać mpv - proszę spróbować później!</DownloadMpvFailed>
+    <DownloadMpvOk>mpv lib został pobrany i jest gotowy do użycia.</DownloadMpvOk>
+  </SettingsMpv>
   <SetVideoOffset>
     <Title>Ustaw przesunięcie wideo</Title>
     <Description>Ustaw przesunięcie wideo (napisy nie powinny śledzić rzeczywistego czasu wideo, ale np. +10 godzin)</Description>
@@ -1839,7 +1845,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
   <StartNumberingFrom>
     <Title>Zmień numerację</Title>
     <StartFromNumber>Rozpocznij od numeru:</StartFromNumber>
-    <PleaseEnterAValidNumber>Ups, proszę wpisać numer</PleaseEnterAValidNumber>
+    <PleaseEnterAValidNumber>Ups, proszę wpisać prawidłowy numer</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <Statistics>
     <Title>Statystyki</Title>
