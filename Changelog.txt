@@ -29,7 +29,7 @@
    * Allow reading of small PAC files - thx Mike
    * Fixed bug in "Fix invalid italic tags" - thx ivandrofly
    * Fixed allowing random order of json tags - thx fela98
-   * Utx won't load text if starts with '#' - thx invandrofly
+   * Utx won't load text if starts with '#' - thx ivandrofly
    * Fixed crash when showing text "<i></i><i>..." - thx montillasauces
    * Fix for TTML 1.0 to keep source time format when using frames - thx Tuan
    * Fixed split when subtitle has no time code - thx João
