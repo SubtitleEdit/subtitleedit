@@ -1574,8 +1574,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DirectShowDescription>quartz.dll na pasta system32</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
+    <MpvPlayer>mpv</MpvPlayer>
+    <MpvPlayerDescription>https://mpv.io/ - leitor multimédia gratuito e de Código aberto</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll do VLC media player 1.1.0 ou superior</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Directoria do VLC (só é necessário se estiver a usar a versão portátil do VLC)</VlcBrowseToLabel>
@@ -1746,6 +1746,12 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Miscellaneous>Diversos</Miscellaneous>
     <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista" (para o ajuste-auto)</UseDoNotBreakAfterList>
   </Settings>
+  <SettingsMpv>
+    <Title>Definições do mpv</Title>
+    <DownloadMpv>Transferir o mpv lib</DownloadMpv>
+    <DownloadMpvFailed>Não é possível transferir o mpv - por favor, tente novamente mais tarde!</DownloadMpvFailed>
+    <DownloadMpvOk>O mpv lib foi transferido e está disponível para ser usado.</DownloadMpvOk>
+  </SettingsMpv>
   <SetVideoOffset>
     <Title>Definir o deslocamento do vídeo</Title>
     <Description>Definir o deslocamento do vídeo (A legenda não deve seguir o tempo real do vídeo, mas por ex. +10 horas)</Description>
