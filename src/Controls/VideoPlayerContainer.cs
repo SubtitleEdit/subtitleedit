@@ -357,9 +357,12 @@ namespace Nikse.SubtitleEdit.Controls
                                 if (colorEnd < f.Length)
                                 {
                                     colorEnd = f.IndexOf('"', colorEnd);
-                                    if (colorEnd > 0)
+                                    if (colorEnd > 0 || colorEnd == -1)
                                     {
-                                        s = f.Substring(colorStart, colorEnd - colorStart);
+                                        if (colorEnd == -1)
+                                            s = f.Substring(colorStart);
+                                        else
+                                            s = f.Substring(colorStart, colorEnd - colorStart);
                                         s = s.Remove(0, " color=".Length);
                                         s = s.Trim('"');
                                         s = s.Trim('\'');
