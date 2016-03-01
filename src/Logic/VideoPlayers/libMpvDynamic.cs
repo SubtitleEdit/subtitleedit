@@ -286,7 +286,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     id = _audioTrackIds[value];
                 }
-                _mpvCommand(_mpvHandle, new[] { "set", "aid", id.ToString(CultureInfo.InvariantCulture), null });
+                _mpvCommand(_mpvHandle, new[] { "set", "aid", id, null });
             }
         }
 
