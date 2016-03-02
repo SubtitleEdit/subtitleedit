@@ -6,8 +6,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class UnknownSubtitle41 : SubtitleFormat
     {
-        private static readonly Regex RegexTimeCodes1 = new Regex(@"^\d+.\d$", RegexOptions.Compiled);
-        private static readonly Regex RegexTimeCodes2 = new Regex(@"^\d+.\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d+.\d\d?$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -67,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (textOn)
                     {
-                        if (RegexTimeCodes1.Match(line.TrimEnd('/')).Success || RegexTimeCodes2.Match(line).Success)
+                        if (RegexTimeCodes.Match(line.TrimEnd('/')).Success)
                         {
                             p.EndTime = DecodeTimeCode(line.TrimEnd('/').Split('.'));
                             if (sb.Length > 0)
@@ -89,7 +88,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else
                     {
-                        if (RegexTimeCodes1.Match(line).Success || RegexTimeCodes2.Match(line).Success)
+                        if (RegexTimeCodes.Match(line).Success)
                         {
                             p = new Paragraph();
                             sb.Clear();
