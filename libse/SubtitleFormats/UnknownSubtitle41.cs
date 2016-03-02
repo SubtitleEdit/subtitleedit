@@ -6,8 +6,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class UnknownSubtitle41 : SubtitleFormat
     {
-        private static readonly Regex RegexTimeCodes1 = new Regex(@"^\d+.\d$", RegexOptions.Compiled);
-        private static readonly Regex RegexTimeCodes2 = new Regex(@"^\d+.\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d+.\d\d?$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -33,6 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
+            Configuration.Settings.General.CurrentFrameRate = 24.0;
             const string paragraphWriteFormat = "{0}\r\n{1}\r\n{2}\r\n";
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -52,6 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //Comment elle s’appelait ?
             //924.6/
 
+            Configuration.Settings.General.CurrentFrameRate = 24.0;
             _errorCount = 0;
             Paragraph p = null;
             bool textOn = false;
@@ -62,7 +63,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (textOn)
                     {
-                        if (RegexTimeCodes1.Match(line.TrimEnd('/')).Success || RegexTimeCodes2.Match(line).Success)
+                        if (line.Length > 1 && line.Length < 11 && RegexTimeCodes.Match(line.TrimEnd('/')).Success)
                         {
                             p.EndTime = DecodeTimeCode(line.TrimEnd('/').Split('.'));
                             if (sb.Length > 0)
@@ -84,7 +85,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     else
                     {
-                        if (RegexTimeCodes1.Match(line).Success || RegexTimeCodes2.Match(line).Success)
+                        if (line.Length > 1 && line.Length < 11 && RegexTimeCodes.Match(line).Success)
                         {
                             p = new Paragraph();
                             sb.Clear();
@@ -109,7 +110,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            Configuration.Settings.General.CurrentFrameRate = 24.0;
             int frames = MillisecondsToFrames(time.TotalMilliseconds);
             int footage = frames / 16;
             int rest = (int)((frames % 16) / 16.0 * Configuration.Settings.General.CurrentFrameRate);
@@ -118,7 +118,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string[] parts)
         {
-            Configuration.Settings.General.CurrentFrameRate = 24.0;
             var frames16 = int.Parse(parts[0]);
             var frames = int.Parse(parts[1]);
             return new TimeCode(0, 0, 0, FramesToMilliseconds(16 * frames16 + frames));
