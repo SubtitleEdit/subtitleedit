@@ -39,6 +39,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             const string paragraphWriteFormat = "{0}\r\n{1}\r\n{2}\r\n";
             var sb = new StringBuilder();
+            Configuration.Settings.General.CurrentFrameRate = 24.0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), p.Text, EncodeTimeCode(p.EndTime)));
@@ -60,6 +61,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             bool textOn = false;
             var sb = new StringBuilder();
+            Configuration.Settings.General.CurrentFrameRate = 24.0;
             foreach (string line in lines)
             {
                 try
@@ -113,7 +115,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            Configuration.Settings.General.CurrentFrameRate = 24.0;
             int frames = MillisecondsToFrames(time.TotalMilliseconds);
             int footage = frames / 16;
             int rest = (int)((frames % 16) / 16.0 * Configuration.Settings.General.CurrentFrameRate);
@@ -122,7 +123,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string[] parts)
         {
-            Configuration.Settings.General.CurrentFrameRate = 24.0;
             var frames16 = int.Parse(parts[0]);
             var frames = int.Parse(parts[1]);
             return new TimeCode(0, 0, 0, FramesToMilliseconds(16 * frames16 + frames));
