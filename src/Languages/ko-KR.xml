@@ -1744,8 +1744,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   </Settings>
   <SettingsMpv>
     <Title>mpv 설정</Title>
-    <DownloadMpv>mpv dll 다운로드</DownloadMpv>
+    <DownloadMpv>mpv lib 다운로드</DownloadMpv>
     <DownloadMpvFailed>mpv를 다운로드할 수 없음 - 나중에 다시 시도하십시오!</DownloadMpvFailed>
+    <DownloadMpvOk>mpv lib를 다운로드했고 사용 준비 완료입니다.</DownloadMpvOk>
   </SettingsMpv>
   <SetVideoOffset>
     <Title>비디오 오프셋 설정</Title>
@@ -2090,7 +2091,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AddParagraphHere>여기에 텍스트 쓰기</AddParagraphHere>
     <AddParagraphHereAndPasteText>여기에 복사한 텍스트 추가...</AddParagraphHereAndPasteText>
     <FocusTextBox>텍스트 입력 창으로 이동...</FocusTextBox>
-    <DeleteParagraph>텍스트 삭제</DeleteParagraph>
+    <DeleteParagraph>이 줄 삭제</DeleteParagraph>
     <Split>분할</Split>
     <SplitAtCursor>커서 위치에서 분할</SplitAtCursor>
     <MergeWithPrevious>이전과 병합</MergeWithPrevious>
