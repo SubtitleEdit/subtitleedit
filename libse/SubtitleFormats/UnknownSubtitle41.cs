@@ -57,6 +57,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //Comment elle s’appelait ?
             //924.6/
 
+            if (lines.Count >= 6)
+            {
+                bool couldBe = false;
+                for (int i = 0; i < 6; i++)
+                {
+                    if (RegexTimeCodes.IsMatch(lines[i]))
+                    {
+                        couldBe = true;
+                        break;
+                    }
+                }
+                if (!couldBe)
+                {
+                    _errorCount++;
+                    return;
+                }
+            }
             _errorCount = 0;
             Paragraph p = null;
             bool textOn = false;
