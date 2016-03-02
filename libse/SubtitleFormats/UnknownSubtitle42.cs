@@ -18,8 +18,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //SUB[0 N 01:02:12:26>01:02:14:19] FABINHO CRIANÇA + VAL
         //-Olha.
         //-Tô olhando!
-        private static readonly Regex RegexTimeCodesI = new Regex(@"^SUB\[\d I \d\d:\d\d:\d\d:\d\d\>\d\d:\d\d:\d\d:\d\d\]", RegexOptions.Compiled);
-        private static readonly Regex RegexTimeCodesN = new Regex(@"^SUB\[\d N \d\d:\d\d:\d\d:\d\d\>\d\d:\d\d:\d\d:\d\d\]", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^SUB\[\d [NI] \d\d:\d\d:\d\d:\d\d\>\d\d:\d\d:\d\d:\d\d\]", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -75,47 +74,40 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             bool italic = false;
             foreach (string line in lines)
             {
-                if (RegexTimeCodesI.IsMatch(line) || RegexTimeCodesN.IsMatch(line))
+                string lineTrimmed = line.Trim();
+                if (lineTrimmed.Length >= 32 && RegexTimeCodes.IsMatch(lineTrimmed))
                 {
                     if (p != null && italic)
                         p.Text = "<i>" + p.Text.Trim() + "</i>";
 
-                    italic = line[6] == 'I';
-                    string start = line.Substring(8, 11);
-                    string end = line.Substring(20, 11);
+                    italic = lineTrimmed[6] == 'I';
+                    string start = lineTrimmed.Substring(8, 11);
+                    string end = lineTrimmed.Substring(20, 11);
                     string[] startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                     string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                    if (startParts.Length == 4 && endParts.Length == 4)
+                    try
                     {
-                        p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), string.Empty);
+                        TimeCode startTime = DecodeTimeCodeFramesFourParts(startParts);
+                        TimeCode endTime = DecodeTimeCodeFramesFourParts(endParts);
+                        p = new Paragraph(startTime, endTime, string.Empty);
                         subtitle.Paragraphs.Add(p);
                     }
+                    catch
+                    {
+                        _errorCount++;
+                    }
                 }
-                else if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith('@'))
-                {
-                    // skip these lines
-                }
-                else if (p != null)
+                else if (p != null && (lineTrimmed.Length > 0 && !lineTrimmed.StartsWith('@')))
                 {
                     if (string.IsNullOrEmpty(p.Text))
-                        p.Text = line;
+                        p.Text = lineTrimmed;
                     else
-                        p.Text = p.Text.TrimEnd() + Environment.NewLine + line;
+                        p.Text = p.Text.TrimEnd() + Environment.NewLine + lineTrimmed;
                 }
             }
             if (p != null && italic)
                 p.Text = "<i>" + p.Text.Trim() + "</i>";
             subtitle.Renumber();
-        }
-
-        private static TimeCode DecodeTimeCode(string[] parts)
-        {
-            //00:00:07:12
-            var hour = int.Parse(parts[0]);
-            var minutes = int.Parse(parts[1]);
-            var seconds = int.Parse(parts[2]);
-            var frames = int.Parse(parts[3]);
-            return new TimeCode(hour, minutes, seconds, FramesToMillisecondsMax999(frames));
         }
 
     }
