@@ -26,6 +26,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            if (fileName != null && fileName.EndsWith("xml", System.StringComparison.OrdinalIgnoreCase) ||
+                fileName.EndsWith(".json", System.StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
             Subtitle subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
