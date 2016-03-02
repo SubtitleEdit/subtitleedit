@@ -88,15 +88,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                         }
                     }
-                    else
+                    else if (RegexTimeCodes.Match(line).Success)
                     {
-                        if (RegexTimeCodes.Match(line).Success)
-                        {
-                            p = new Paragraph();
-                            sb.Clear();
-                            p.StartTime = DecodeTimeCode(line.Split('.'));
-                            textOn = true;
-                        }
+                        p = new Paragraph();
+                        sb.Clear();
+                        p.StartTime = DecodeTimeCode(line.Split('.'));
+                        textOn = true;
                     }
                 }
                 catch
