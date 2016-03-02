@@ -1568,8 +1568,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <DirectShowDescription>Quartz.dll i system32 mappen</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
+    <MpvPlayer>mpv</MpvPlayer>
+    <MpvPlayerDescription>https://mpv.io/ - gratis, open source og cross-platform medie afspiller</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll fra VLC media player 1.1.0 eller nyere</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC sti (kun nødvendig, hvis du bruger den portable version af VLC)</VlcBrowseToLabel>
@@ -1741,6 +1741,12 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Miscellaneous>Diverse</Miscellaneous>
     <UseDoNotBreakAfterList>Benyt skift-ikke-efter-liste (for auto-ombrydning)</UseDoNotBreakAfterList>
   </Settings>
+  <SettingsMpv>
+    <Title>Indstillinger for MPV</Title>
+    <DownloadMpv>Hent MPV lib</DownloadMpv>
+    <DownloadMpvFailed>Kan ikke downloade MPV - prøv igen senere!</DownloadMpvFailed>
+    <DownloadMpvOk>MPV lib blev hentet og er klar til brug.</DownloadMpvOk>
+  </SettingsMpv>
   <SetVideoOffset>
     <Title>Indstil video offset</Title>
     <Description>Indstil video offset (undertekster bør ikke følge real video tid, men fx +10 timer)</Description>
