@@ -206,7 +206,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
         public static bool IsMpeg2PackHeader(byte[] buffer)
         {
-            return buffer.Length >= 3 &&
+            return buffer.Length >= 4 &&
                    buffer[0] == 0 &&
                    buffer[1] == 0 &&
                    buffer[2] == 1 &&
@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
         public static bool IsPrivateStream1(byte[] buffer, int index)
         {
-            return buffer.Length >= index + 3 &&
+            return buffer.Length >= index + 4 &&
                    buffer[index + 0] == 0 &&
                    buffer[index + 1] == 0 &&
                    buffer[index + 2] == 1 &&
@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
         public static bool IsPrivateStream2(byte[] buffer, int index)
         {
-            return buffer.Length >= index + 3 &&
+            return buffer.Length >= index + 4 &&
                    buffer[index + 0] == 0 &&
                    buffer[index + 1] == 0 &&
                    buffer[index + 2] == 1 &&
