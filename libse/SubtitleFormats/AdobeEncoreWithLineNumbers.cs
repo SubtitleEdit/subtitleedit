@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.AppendLine(line);
             if (sb.ToString().Contains("#INPOINT OUTPOINT PATH"))
                 return false; // Pinnacle Impression
-            if (sb.ToString().StartsWith("{{\\rtf1"))
+            if (sb.ToString().StartsWith("{{\\rtf1", StringComparison.Ordinal))
                 return false;
 
             LoadSubtitle(subtitle, lines, fileName);
@@ -43,21 +43,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
-            int index = 0;
+            int index = 1;
+            const string writeFormat = "{0} {1} {2} {3}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //00:03:15:22 00:03:23:10 This is line one.
                 //This is line two.
-                sb.AppendLine(string.Format("{0} {1} {2} {3}", index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(p.Text, true)));
+                sb.AppendLine(string.Format(writeFormat, index, p.StartTime.ToHHMMSSFF(), p.EndTime.ToHHMMSSFF(), HtmlUtil.RemoveHtmlTags(p.Text, true)));
                 index++;
             }
             return sb.ToString();
-        }
-
-        private static string EncodeTimeCode(TimeCode time)
-        {
-            //00:03:15:22 (last is frame)
-            return time.ToHHMMSSFF();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -67,9 +62,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
+            Match match = null;
             foreach (string line in lines)
             {
-                if (RegexTimeCodes.IsMatch(line))
+                if (line.Length >= 25 && (match = RegexTimeCodes.Match(line)).Success)
                 {
                     string temp = line.Substring(line.IndexOf(' ')).Trim();
                     string start = temp.Substring(0, 11);
@@ -77,18 +73,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     string[] startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
                     string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                    if (startParts.Length == 4 && endParts.Length == 4)
+                    try
                     {
-                        string text = line.Remove(0, RegexTimeCodes.Match(line).Length - 1).Trim();
+                        string text = line.Remove(0, match.Length - 1).Trim();
                         p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), DecodeTimeCodeFramesFourParts(endParts), text);
                         subtitle.Paragraphs.Add(p);
                     }
+                    catch
+                    {
+                        _errorCount++;
+                    }
                 }
-                else if (string.IsNullOrWhiteSpace(line))
-                {
-                    // skip these lines
-                }
-                else if (p != null)
+                else if (p != null && !string.IsNullOrWhiteSpace(line))
                 {
                     if (string.IsNullOrEmpty(p.Text))
                         p.Text = line;
