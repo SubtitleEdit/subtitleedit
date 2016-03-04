@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Spruce : SubtitleFormat
     {
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,", RegexOptions.Compiled);
+
         private const string Italic = "^I";
         private const string Bold = "^B";
         private const string Underline = "^U";
@@ -108,19 +110,16 @@ $ColorIndex4    = 3
             //00:01:54:19,00:01:56:17,We should be thankful|they accepted our offer.
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
-            var regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,.+", RegexOptions.Compiled);
-            if (fileName != null && fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase)) // allow empty text if extension is ".stl"...
-                regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,", RegexOptions.Compiled);
             foreach (string line in lines)
             {
-                if (line.IndexOf(':') == 2 && regexTimeCodes.IsMatch(line))
+                if (line.Length >= 23 && line[2] == ':' && RegexTimeCodes.IsMatch(line))
                 {
                     string start = line.Substring(0, 11);
                     string end = line.Substring(12, 11);
 
                     try
                     {
-                        Paragraph p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(24)));
+                        var p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(24)));
                         subtitle.Paragraphs.Add(p);
                     }
                     catch
