@@ -99,9 +99,7 @@ $ColorIndex4    = 3
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:01:54:19
-
-            int frames = time.Milliseconds / (1000 / 25);
-
+            int frames = (int)(time.Milliseconds / (TimeCode.BaseUnit / 25));
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
         }
 
@@ -147,7 +145,7 @@ $ColorIndex4    = 3
             string seconds = time.Substring(6, 2);
             string frames = time.Substring(9, 2);
 
-            int milliseconds = (int)((1000 / 25.0) * int.Parse(frames));
+            int milliseconds = (int)((TimeCode.BaseUnit / 25.0) * int.Parse(frames));
             if (milliseconds > 999)
                 milliseconds = 999;
 
