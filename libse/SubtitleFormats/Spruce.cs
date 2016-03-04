@@ -72,7 +72,7 @@ $ColorIndex3    = 2
 $ColorIndex4    = 3
 
 //Subtitles";
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine(Header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -128,7 +128,7 @@ $ColorIndex4    = 3
                         _errorCount++;
                     }
                 }
-                else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//") && !line.StartsWith('$'))
+                else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//", StringComparison.Ordinal) && !line.StartsWith('$'))
                 {
                     _errorCount++;
                 }
@@ -149,8 +149,7 @@ $ColorIndex4    = 3
             if (milliseconds > 999)
                 milliseconds = 999;
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
-            return tc;
+            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
         }
 
         private string DecodeText(string text)
