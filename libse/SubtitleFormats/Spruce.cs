@@ -178,7 +178,7 @@ $ColorIndex4    = 3
         {
             var htmlCloseTag = htmlOpenTag.Insert(1, "/");
 
-            var idx = text.IndexOf(SpruceTag, StringComparison.Ordinal);
+            var idx = text.IndexOf(SpruceTag, StringComparison.OrdinalIgnoreCase);
             var c = Utilities.CountTagInText(text, SpruceTag);
             if (c == 1)
             {
@@ -200,7 +200,7 @@ $ColorIndex4    = 3
                     var htmlTag = isOpen ? htmlOpenTag : htmlCloseTag;
                     text = text.Remove(idx, SpruceTag.Length).Insert(idx, htmlTag);
                     isOpen = !isOpen;
-                    idx = text.IndexOf(SpruceTag, idx + htmlTag.Length);
+                    idx = text.IndexOf(SpruceTag, idx + htmlTag.Length, StringComparison.OrdinalIgnoreCase);
                 }
             }
             return text;
