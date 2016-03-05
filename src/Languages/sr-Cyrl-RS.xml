@@ -970,8 +970,6 @@
     <VideoEngine>Добављач слике</VideoEngine>
     <DirectShow>Директшоу</DirectShow>
     <DirectShowDescription>quartz.dll у фасцикли „System32“</DirectShowDescription>
-    <MPlayer>Ем плејер</MPlayer>
-    <MPlayerDescription>Ем плејер 2/Ем плејер</MPlayerDescription>
     <VlcMediaPlayer>ВЛЦ медија плејер</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll из ВЛЦ медија плејера 1.1.0 или новијег издања</VlcMediaPlayerDescription>
     <ShowStopButton>&amp;Дугме за заустављање</ShowStopButton>

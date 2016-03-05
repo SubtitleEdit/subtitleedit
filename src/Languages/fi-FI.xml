@@ -1521,8 +1521,6 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <DirectShowDescription>Quartz.dll Kansiossa 'System32'</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>VLC Media Player 1.1.0 libvlc.dll (tai uudempi)</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC:n sijainti (tarvitaan vain mikäli käytössä on siirrettävä VLC-versio)</VlcBrowseToLabel>
