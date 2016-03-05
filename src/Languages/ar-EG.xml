@@ -980,8 +980,6 @@ Continue?</SubtitleAppendPrompt>
     <VideoEngine>محرك فيديو</VideoEngine>
     <DirectShow>عرض مباشر</DirectShow>
     <DirectShowDescription>quartz.dll in system32 folder</DirectShowDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC ميديا ​​بلاير</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll from VLC media player 1.1.0 or newer</VlcMediaPlayerDescription>
     <ShowStopButton>عرض زر توقف</ShowStopButton>

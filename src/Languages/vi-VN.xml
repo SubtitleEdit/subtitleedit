@@ -1242,8 +1242,6 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <VideoEngine>Phương tiện video</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll trong thư mục system32</DirectShowDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll từ VLC media player 1.1.0 hoặc phiên bản mới hơn</VlcMediaPlayerDescription>
     <ShowStopButton>Hiển thị nút dừng</ShowStopButton>

@@ -1543,8 +1543,6 @@ Command line: {1} {2}
     <DirectShowDescription>使用 System32 文件夹中的 quartz.dll</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/MPlayer</MPlayerDescription>
     <VlcMediaPlayer>VLC 媒体播放器</VlcMediaPlayer>
     <VlcMediaPlayerDescription>使用 VLC 媒体播放器 1.1.0 或更新版本的 libvlc.dll</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC程序路径 (仅在使用便携版VLC时有用)</VlcBrowseToLabel>

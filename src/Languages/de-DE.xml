@@ -1572,8 +1572,6 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <DirectShowDescription>quartz.dll im system32 Ordner</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll von VLC Media Player 1.1.0 oder höher</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC Pfad (nur bei Verwendung der portablen VLC Version benötigt)</VlcBrowseToLabel>

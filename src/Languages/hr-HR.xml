@@ -1550,8 +1550,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <DirectShowDescription>quartz.dll u mapi „System32“</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer 2/MPlayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll iz VLC media player-a 1.1.0 ili novijeg izdanja</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC putanja (potrebno samo ako se koristi prijenosna verzija VLC)</VlcBrowseToLabel>

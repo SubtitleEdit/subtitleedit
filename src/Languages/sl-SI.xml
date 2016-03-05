@@ -1439,8 +1439,6 @@ popravlja en podnapis (sodelovanje)</Information>
     <VideoEngine>Video pogon</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll v sistem32 mapi</DirectShowDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC medijski predvajalnik</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll iz VLC media predvajalnika 1.1.0 ali novejši</VlcMediaPlayerDescription>
     <ShowStopButton>Prikaži gumb Ustavi</ShowStopButton>

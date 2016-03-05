@@ -1561,8 +1561,6 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <DirectShowDescription>quartz.dll a system32 mappában</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Médialejátszó</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll az 1.1.0 VLC verzióból vagy újabb</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC helye (csak a hordozható VLC használata esetén szükséges)</VlcBrowseToLabel>
