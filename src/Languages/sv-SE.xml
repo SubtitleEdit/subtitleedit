@@ -1473,8 +1473,6 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <VideoEngine>Video motor</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>Quartz.dll i system32-mappen</DirectShowDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>Libvlc.dll från VLC media player 1.1.0 eller senare</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC sökväg (behövs endast om du använder den bärbara versionen av VLC)</VlcBrowseToLabel>
