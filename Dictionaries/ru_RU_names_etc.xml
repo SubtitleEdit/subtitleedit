@@ -1,4 +1,5 @@
-﻿<!-- This list contains names/words with specific casing - and specific to Russian only -->
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- This list contains names/words with specific casing - and specific to Russian only -->
 <ignore_list>
   <name>Абакум</name>
   <name>Абакумович</name>
