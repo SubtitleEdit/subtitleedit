@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 <timedtext format='3'>
     <body />
 </timedtext>";
-           
+
             var xml = new XmlDocument();
             xml.LoadXml(xmpTemplate.Replace('\'', '"'));
             var paragraphInsertNode = xml.DocumentElement.SelectSingleNode("body");

@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                return _playRate; 
+                return _playRate;
             }
             set
             {
@@ -261,7 +261,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         }
                     }
                 }
-                return _audioTrackIds.Count; 
+                return _audioTrackIds.Count;
             }
         }
 
@@ -272,7 +272,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 int mpvFormatString = 1;
                 IntPtr lpBuffer = Marshal.AllocHGlobal(10);
                 _mpvGetPropertyString(_mpvHandle, Encoding.UTF8.GetBytes("aid\0"), mpvFormatString, ref lpBuffer);
-                string str = Marshal.PtrToStringAnsi(lpBuffer);                    
+                string str = Marshal.PtrToStringAnsi(lpBuffer);
                 if (AudioTrackCount > 1 && _audioTrackIds.Contains(str))
                 {
                     return _audioTrackIds.IndexOf(str);
@@ -344,10 +344,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 _mpvInitialize.Invoke(_mpvHandle);
 
-                string videoOutput = "direct3d_shaders"; 
+                string videoOutput = "direct3d_shaders";
                 if (!string.IsNullOrWhiteSpace(Configuration.Settings.General.MpvVideoOutput))
                     videoOutput = Configuration.Settings.General.MpvVideoOutput;
-                _mpvSetOptionString(_mpvHandle, Encoding.UTF8.GetBytes("vo\0"), Encoding.UTF8.GetBytes(videoOutput + "\0")); // "direct3d_shaders" is default, "direct3d" could be used for compabality with old systems                                                                                                                           
+                _mpvSetOptionString(_mpvHandle, Encoding.UTF8.GetBytes("vo\0"), Encoding.UTF8.GetBytes(videoOutput + "\0")); // "direct3d_shaders" is default, "direct3d" could be used for compabality with old systems
 
                 _mpvSetOptionString(_mpvHandle, Encoding.UTF8.GetBytes("keep-open\0"), Encoding.UTF8.GetBytes("always\0")); // don't auto close video
                 _mpvSetOptionString(_mpvHandle, Encoding.UTF8.GetBytes("no-sub\0"), Encoding.UTF8.GetBytes("\0")); // don't load subtitles
@@ -372,7 +372,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             int l = 0;
             while (l < 10000)
             {
-                
                 Application.DoEvents();
                 try
                 {
