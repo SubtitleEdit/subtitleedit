@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.Error != null )
             {
-                MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvFailed);  
+                MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvFailed);
                 labelPleaseWait.Text = string.Empty;
                 buttonOK.Enabled = true;
                 buttonDownload.Enabled = true;
