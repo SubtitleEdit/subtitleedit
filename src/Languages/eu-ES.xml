@@ -1560,8 +1560,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <DirectShowDescription>quartz.dll - system32 agiritegian</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Irakurgailua</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll VLC Irakurgailua 1.1.0 edo berriagoa</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC helburua (VLC bertsio eramangarria erabiltzen ari bazara besterik ez da beharrezkoa)</VlcBrowseToLabel>

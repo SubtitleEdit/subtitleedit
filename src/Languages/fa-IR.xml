@@ -989,8 +989,6 @@ http://soft98.ir
     <VideoEngine>موتور ویدئو</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll در پوشه system32</DirectShowDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>وی ال سی مدیا پلیر</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll از وی ال سی مدیا پلیر 1.1.0 و نسخه های جدیدتر</VlcMediaPlayerDescription>
     <ShowStopButton>نمایش توقف را فشار دهید</ShowStopButton>

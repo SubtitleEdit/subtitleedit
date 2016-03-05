@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Español (México)">
   <General>
     <Title>Subtitle Edit</Title>
@@ -779,8 +779,8 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
         <InsertUnicodeControlCharacters>Insertar caracteres de control Unicode</InsertUnicodeControlCharacters>
         <InsertUnicodeControlCharactersLRM>Marca de izquierda a derecha (LRM)</InsertUnicodeControlCharactersLRM>
         <InsertUnicodeControlCharactersRLM>Marca de derecha a izquierda (RLM)</InsertUnicodeControlCharactersRLM>
-        <InsertUnicodeControlCharactersLRE>Incrustación inicial de izquierda a derecha (LRE) </InsertUnicodeControlCharactersLRE>
-        <InsertUnicodeControlCharactersRLE>Incrustación inicial de derecha a izquierda (LRE) </InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRE>Incrustación inicial de izquierda a derecha (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Incrustación inicial de derecha a izquierda (LRE)</InsertUnicodeControlCharactersRLE>
         <InsertUnicodeControlCharactersLRO>Anulación inicial de izquierda a derecha (LRO)</InsertUnicodeControlCharactersLRO>
         <InsertUnicodeControlCharactersRLO>Anulación inicial de derecha a izquierda (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>Buscar</Find>

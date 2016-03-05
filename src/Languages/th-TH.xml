@@ -1477,8 +1477,6 @@
     <VideoEngine>เอนจิ้นของวิดีโอ</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll ในโฟลเดอร์ system32</DirectShowDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll จาก VLC Media Player 1.1.0 หรือใหม่กว่า</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>พาธของ VLC (เฉพาะตอนที่ใช้ VLC รุ่นพอร์ตเอเบิ้ล)</VlcBrowseToLabel>

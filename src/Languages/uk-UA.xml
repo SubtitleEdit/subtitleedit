@@ -1563,8 +1563,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DirectShowDescription>quartz.dll у теці system32</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>Медіа-програвач VLC</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll з програвача VLC 1.1.0 або новішого</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Шлях до VLC (потрібен лише якщо ви використовуєте портативну версію VLC)</VlcBrowseToLabel>

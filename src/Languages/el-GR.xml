@@ -1478,8 +1478,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VideoEngine>Μηχανισμός απόδοσης βίντεο</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll στο φάκελο system32</DirectShowDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll από VLC media player 1.1.0 ή νεότερο</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Διαδρομή του VLC (χρειάζεται μόνο εάν χρησιμοποιείται την φορητή έκδοση του VLC)</VlcBrowseToLabel>

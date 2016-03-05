@@ -1227,8 +1227,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <VideoEngine>ビデオ エンジン</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>system32 フォルダーの quartz.dll</DirectShowDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>VLC media player 1.1.0 以降の libvlc.dll</VlcMediaPlayerDescription>
     <ShowStopButton>停止ボタンを表示する</ShowStopButton>

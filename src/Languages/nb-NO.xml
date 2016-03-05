@@ -1569,8 +1569,6 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <DirectShowDescription>quartz.dll i system32-mappen</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll fra VLC Media Player 1.1.0 eller nyere</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC-filbane (behøves kun hvis du bruker direktefil uten installering for VLC)</VlcBrowseToLabel>
