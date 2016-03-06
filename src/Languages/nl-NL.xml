@@ -1571,6 +1571,8 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <DirectShowDescription>quartz.dll in System32 map</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
+    <MpvPlayer>mpv</MpvPlayer>
+    <MpvPlayerDescription>https://mpv.io/ - vrĳ te gebruiken multiplatform mediaspeler met open broncode</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll van VLC media player 1.1.0 of nieuwer</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC pad (alleen nodig als u met de draagbare versie van VLC werkt)</VlcBrowseToLabel>
@@ -1741,6 +1743,14 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <Miscellaneous>Diversen</Miscellaneous>
     <UseDoNotBreakAfterList>Gebruik breek-niet-af-lĳst (voor auto-afbr)</UseDoNotBreakAfterList>
   </Settings>
+  <SettingsMpv>
+    <Title>mpv instellingen</Title>
+    <DownloadMpv>Download mpv lib</DownloadMpv>
+    <DownloadMpvFailed>Downloaden van de mpv lib is mislukt!
+
+Probeer het later opnieuw a.u.b.</DownloadMpvFailed>
+    <DownloadMpvOk>De mpv lib is gedownload en klaar voor gebruik.</DownloadMpvOk>
+  </SettingsMpv>
   <SetVideoOffset>
     <Title>Videotĳdsverschil instellen</Title>
     <Description>Videotĳdsverschil instellen (ondertitels moeten niet de echte videotĳd volgen, maar bĳvoorbeeld +10 uur)</Description>
