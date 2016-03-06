@@ -1750,7 +1750,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <DownloadMpvFailed>Herunterladen der Mpv-Programmbibliothek ist fehlgeschlagen!
 
 Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
-    <DownloadMpvOk>Nach erfolgreichem Herunterladen ist der Mpv-Programmbibliothek gebrauchsfertig.</DownloadMpvOk>
+    <DownloadMpvOk>Nach erfolgreichem Herunterladen ist die Mpv-Programmbibliothek gebrauchsfertig.</DownloadMpvOk>
   </SettingsMpv>
   <SetVideoOffset>
     <Title>Video Ausgleich</Title>
@@ -1847,7 +1847,7 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
   <StartNumberingFrom>
     <Title>Nummerierung beginnen ab...</Title>
     <StartFromNumber>Beginne ab Nummer:</StartFromNumber>
-    <PleaseEnterAValidNumber>Ups, bitte eine Nummer eingeben</PleaseEnterAValidNumber>
+    <PleaseEnterAValidNumber>Ups, bitte eine gültige Nummer eingeben</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <Statistics>
     <Title>Statistik</Title>
