@@ -1578,6 +1578,8 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <DirectShowDescription>quartz.dll du dossier system32/</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
+    <MpvPlayer>mpv</MpvPlayer>
+    <MpvPlayerDescription>https://mpv.io/ - lecteur multimédia multiplateforme, libre et à code source ouvert</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll de VLC media player 1.1.0 ou plus récent</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Chemin uniquement pour la version portable de VLC :</VlcBrowseToLabel>
@@ -1749,6 +1751,14 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <Miscellaneous>Divers</Miscellaneous>
     <UseDoNotBreakAfterList>Sans pause après la liste (pause automatique)</UseDoNotBreakAfterList>
   </Settings>
+  <SettingsMpv>
+    <Title>Configuration de mpv</Title>
+    <DownloadMpv>Télécharger mpv lib</DownloadMpv>
+    <DownloadMpvFailed>Échec du téléchargement de la bibliothèque mpv !
+
+Veuillez réessayer plus tard.</DownloadMpvFailed>
+    <DownloadMpvOk>La bibliothèque mpv a été téléchargé et est prête pour utilisation.</DownloadMpvOk>
+  </SettingsMpv>
   <SetVideoOffset>
     <Title>Régler décalage vidéo</Title>
     <Description>Régler décalage vidéo (sous-titres ne devraient pas suivre la durée réelle de la vidéo, ex : +10 hours)</Description>
@@ -1844,7 +1854,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
   <StartNumberingFrom>
     <Title>Nouvelle numérotation...</Title>
     <StartFromNumber>Démarrer à partir de :</StartFromNumber>
-    <PleaseEnterAValidNumber>Oups, veuillez entrer un nombre !</PleaseEnterAValidNumber>
+    <PleaseEnterAValidNumber>Oups, veuillez entrer un nombre valable !</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <Statistics>
     <Title>Statistiques</Title>
