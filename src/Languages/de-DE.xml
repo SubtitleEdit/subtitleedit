@@ -1572,6 +1572,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <DirectShowDescription>quartz.dll im system32 Ordner</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
+    <MpvPlayer>Mpv</MpvPlayer>
+    <MpvPlayerDescription>https://mpv.io/ – Kostenloser, quelloffener und plattformübergreifender Medienabspieler</MpvPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll von VLC Media Player 1.1.0 oder höher</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC Pfad (nur bei Verwendung der portablen VLC Version benötigt)</VlcBrowseToLabel>
@@ -1742,6 +1744,14 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Miscellaneous>Sonstiges</Miscellaneous>
     <UseDoNotBreakAfterList>Nicht nach Liste umbrechen (für Auto Umbruch)</UseDoNotBreakAfterList>
   </Settings>
+  <SettingsMpv>
+    <Title>Mpv Einstellungen</Title>
+    <DownloadMpv>Mpv-lib herunterladen</DownloadMpv>
+    <DownloadMpvFailed>Herunterladen der Mpv-Programmbibliothek ist fehlgeschlagen!
+
+Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
+    <DownloadMpvOk>Nach erfolgreichem Herunterladen ist der Mpv-Programmbibliothek gebrauchsfertig.</DownloadMpvOk>
+  </SettingsMpv>
   <SetVideoOffset>
     <Title>Video Ausgleich</Title>
     <Description>Video Ausgleich einstellen (Falls Untertitel nicht der Videozeit folgen, z.B. +10 Sekunden)</Description>
