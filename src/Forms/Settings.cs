@@ -391,6 +391,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var ssaStyles = Configuration.Settings.Language.SubStationAlphaStyles;
             labelSsaFontSize.Text = ssaStyles.FontSize;
+            labelFontName.Text = ssaStyles.FontName;
             buttonSsaColor.Text = Configuration.Settings.Language.Settings.ChooseColor;
             groupSsaBoxFont.Text = ssaStyles.Font;
             groupBoxSsaBorder.Text = ssaStyles.Border;
