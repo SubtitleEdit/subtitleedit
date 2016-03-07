@@ -327,6 +327,7 @@ namespace Nikse.SubtitleEdit.Forms
                 translatedText = translatedText.Replace("+- +", "+-+");
                 translatedText = translatedText.Replace("+ -+", "+-+");
                 translatedText = translatedText.Replace("+ - +", "+-+");
+                translatedText = translatedText.Replace("+ +", "+-+");                
                 translatedText = translatedText.Replace("+-+", "|");
             }
             return translatedText.Split('|').ToList();
