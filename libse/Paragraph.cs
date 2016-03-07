@@ -4,6 +4,8 @@ namespace Nikse.SubtitleEdit.Core
 {
     public class Paragraph
     {
+        private readonly TimeCode _duration = new TimeCode(0);
+
         public int Number { get; set; }
 
         public string Text { get; set; }
@@ -16,7 +18,8 @@ namespace Nikse.SubtitleEdit.Core
         {
             get
             {
-                return new TimeCode(EndTime.TotalMilliseconds - StartTime.TotalMilliseconds);
+                _duration.TotalMilliseconds = EndTime.TotalMilliseconds - StartTime.TotalMilliseconds;
+                return _duration;
             }
         }
 
