@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -488,6 +489,11 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewEditTextAndPause);
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewEditText);
 
+            groupBoxBing.Text = language.MicrosoftBingTranslator;
+            linkLabelBingSubscribe.Text = language.HowToSignUp;
+            labelClientId.Text = language.ClientId;
+            labelClientSecret.Text = language.ClientSecret;
+
             if (gs.ListViewDoubleClickAction >= 0 && gs.ListViewDoubleClickAction < comboBoxListViewDoubleClickEvent.Items.Count)
                 comboBoxListViewDoubleClickEvent.SelectedIndex = gs.ListViewDoubleClickAction;
 
@@ -595,6 +601,9 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSpellCheckOneLetterWords.Checked = toolsSettings.SpellCheckOneLetterWords;
             checkBoxTreatINQuoteAsING.Checked = toolsSettings.SpellCheckEnglishAllowInQuoteAsIng;
             checkBoxUseDoNotBreakAfterList.Checked = toolsSettings.UseNoLineBreakAfter;
+
+            textBoxBingClientId.Text = Configuration.Settings.Tools.MicrosoftBingClientId;
+            textBoxBingClientSecret.Text = Configuration.Settings.Tools.MicrosoftBingClientSecret;
 
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -1160,6 +1169,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.OcrFixUseHardcodedRules = checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked;
             toolsSettings.FixShortDisplayTimesAllowMoveStartTime = checkBoxFixShortDisplayTimesAllowMoveStartTime.Checked;
             toolsSettings.FixCommonErrorsSkipStepOne = checkBoxFceSkipStep1.Checked;
+            toolsSettings.MicrosoftBingClientId = textBoxBingClientId.Text.Trim();
+            toolsSettings.MicrosoftBingClientSecret = textBoxBingClientSecret.Text.Trim();
 
             WordListSettings wordListSettings = Configuration.Settings.WordLists;
             wordListSettings.UseOnlineNamesEtc = checkBoxNamesEtcOnline.Checked;
@@ -2648,5 +2659,11 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonVideoPlayerMPV.Enabled = LibMpvDynamic.IsInstalled;
             labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutput;
         }
+
+        private void linkLabelBingSubscribe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("http://blogs.msdn.com/b/translation/p/gettingstarted1.aspx");
+        }
+
     }
 }

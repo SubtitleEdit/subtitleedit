@@ -31,6 +31,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonTranslate.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.Translate;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonCancel);
+            buttonGoogle.Text = string.Empty;
+            buttonMicrosoft.Text = string.Empty;
         }
 
         private static void RemovedLanguagesNotInMicrosoftTranslate(ComboBox comboBox)

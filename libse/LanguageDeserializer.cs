@@ -4687,6 +4687,18 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/UseDoNotBreakAfterList":
                     language.Settings.UseDoNotBreakAfterList = reader.Value;
                     break;
+                case "Settings/MicrosoftBingTranslator":
+                    language.Settings.MicrosoftBingTranslator = reader.Value;
+                    break;
+                case "Settings/HowToSignUp":
+                    language.Settings.HowToSignUp = reader.Value;
+                    break;
+                case "Settings/ClientId":
+                    language.Settings.ClientId = reader.Value;
+                    break;
+                case "Settings/ClientSecret":
+                    language.Settings.ClientSecret = reader.Value;
+                    break;
                 case "SettingsMpv/Title":
                     language.SettingsMpv.Title = reader.Value;
                     break;

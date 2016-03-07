@@ -1744,6 +1744,10 @@ can edit in same subtitle file (collaboration)</Information>
     <MainFileSaveAll>Save all</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>
     <UseDoNotBreakAfterList>Use do-not-break-after list (for auto-br)</UseDoNotBreakAfterList>
+    <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
+    <HowToSignUp>How to sign up</HowToSignUp>
+    <ClientId>Client ID</ClientId>
+    <ClientSecret>Client secret</ClientSecret>
   </Settings>
   <SettingsMpv>
     <Title>Settings for mpv</Title>

@@ -2022,6 +2022,10 @@ can edit in same subtitle file (collaboration)",
                 MainFileSaveAll = "Save all",
                 Miscellaneous = "Misc.",
                 UseDoNotBreakAfterList = "Use do-not-break-after list (for auto-br)",
+                MicrosoftBingTranslator = "Microsoft Bing Translator",
+                HowToSignUp = "How to sign up",
+                ClientId = "Client ID",
+                ClientSecret = "Client secret"
             };
 
             SettingsMpv = new LanguageStructure.SettingsMpv

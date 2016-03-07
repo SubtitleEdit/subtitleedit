@@ -147,6 +147,7 @@
             this.comboBoxlVideoPlayerPreviewFontSize = new System.Windows.Forms.ComboBox();
             this.checkBoxVideoPlayerShowStopButton = new System.Windows.Forms.CheckBox();
             this.groupBoxVideoEngine = new System.Windows.Forms.GroupBox();
+            this.labelMpvSettings = new System.Windows.Forms.Label();
             this.buttonMpvSettings = new System.Windows.Forms.Button();
             this.labelPlatform = new System.Windows.Forms.Label();
             this.buttonVlcPathBrowse = new System.Windows.Forms.Button();
@@ -196,7 +197,15 @@
             this.buttonWaveformSelectedColor = new System.Windows.Forms.Button();
             this.checkBoxWaveformShowGrid = new System.Windows.Forms.CheckBox();
             this.tabPageTools = new System.Windows.Forms.TabPage();
+            this.groupBoxBing = new System.Windows.Forms.GroupBox();
+            this.textBoxBingClientId = new System.Windows.Forms.TextBox();
+            this.labelClientSecret = new System.Windows.Forms.Label();
+            this.textBoxBingClientSecret = new System.Windows.Forms.TextBox();
+            this.labelClientId = new System.Windows.Forms.Label();
+            this.linkLabelBingSubscribe = new System.Windows.Forms.LinkLabel();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBoxToolsMisc = new System.Windows.Forms.GroupBox();
+            this.labelUserBingApiId = new System.Windows.Forms.Label();
             this.buttonEditDoNotBreakAfterList = new System.Windows.Forms.Button();
             this.checkBoxUseDoNotBreakAfterList = new System.Windows.Forms.CheckBox();
             this.groupBoxSpellCheck = new System.Windows.Forms.GroupBox();
@@ -305,7 +314,6 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
-            this.labelMpvSettings = new System.Windows.Forms.Label();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -339,6 +347,7 @@
             this.groupBoxWaveformAppearence.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaveformBorderHitMs)).BeginInit();
             this.tabPageTools.SuspendLayout();
+            this.groupBoxBing.SuspendLayout();
             this.groupBoxToolsMisc.SuspendLayout();
             this.groupBoxSpellCheck.SuspendLayout();
             this.groupBoxFixCommonErrors.SuspendLayout();
@@ -1757,6 +1766,17 @@
             this.groupBoxVideoEngine.TabStop = false;
             this.groupBoxVideoEngine.Text = "Video engine";
             // 
+            // labelMpvSettings
+            // 
+            this.labelMpvSettings.AutoSize = true;
+            this.labelMpvSettings.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMpvSettings.ForeColor = System.Drawing.Color.Gray;
+            this.labelMpvSettings.Location = new System.Drawing.Point(501, 93);
+            this.labelMpvSettings.Name = "labelMpvSettings";
+            this.labelMpvSettings.Size = new System.Drawing.Size(33, 11);
+            this.labelMpvSettings.TabIndex = 30;
+            this.labelMpvSettings.Text = "--vo=?";
+            // 
             // buttonMpvSettings
             // 
             this.buttonMpvSettings.Location = new System.Drawing.Point(466, 87);
@@ -2284,6 +2304,7 @@
             // 
             // tabPageTools
             // 
+            this.tabPageTools.Controls.Add(this.groupBoxBing);
             this.tabPageTools.Controls.Add(this.groupBoxToolsMisc);
             this.tabPageTools.Controls.Add(this.groupBoxSpellCheck);
             this.tabPageTools.Controls.Add(this.groupBoxFixCommonErrors);
@@ -2296,16 +2317,91 @@
             this.tabPageTools.Text = "Tools";
             this.tabPageTools.UseVisualStyleBackColor = true;
             // 
+            // groupBoxBing
+            // 
+            this.groupBoxBing.Controls.Add(this.textBoxBingClientId);
+            this.groupBoxBing.Controls.Add(this.labelClientSecret);
+            this.groupBoxBing.Controls.Add(this.textBoxBingClientSecret);
+            this.groupBoxBing.Controls.Add(this.labelClientId);
+            this.groupBoxBing.Controls.Add(this.linkLabelBingSubscribe);
+            this.groupBoxBing.Controls.Add(this.label1);
+            this.groupBoxBing.Location = new System.Drawing.Point(374, 259);
+            this.groupBoxBing.Name = "groupBoxBing";
+            this.groupBoxBing.Size = new System.Drawing.Size(445, 179);
+            this.groupBoxBing.TabIndex = 6;
+            this.groupBoxBing.TabStop = false;
+            this.groupBoxBing.Text = "Bing translator";
+            // 
+            // textBoxBingClientId
+            // 
+            this.textBoxBingClientId.Location = new System.Drawing.Point(94, 45);
+            this.textBoxBingClientId.Name = "textBoxBingClientId";
+            this.textBoxBingClientId.Size = new System.Drawing.Size(331, 21);
+            this.textBoxBingClientId.TabIndex = 25;
+            // 
+            // labelClientSecret
+            // 
+            this.labelClientSecret.AutoSize = true;
+            this.labelClientSecret.Location = new System.Drawing.Point(13, 72);
+            this.labelClientSecret.Name = "labelClientSecret";
+            this.labelClientSecret.Size = new System.Drawing.Size(67, 13);
+            this.labelClientSecret.TabIndex = 30;
+            this.labelClientSecret.Text = "Client secret";
+            // 
+            // textBoxBingClientSecret
+            // 
+            this.textBoxBingClientSecret.Location = new System.Drawing.Point(94, 72);
+            this.textBoxBingClientSecret.Name = "textBoxBingClientSecret";
+            this.textBoxBingClientSecret.Size = new System.Drawing.Size(331, 21);
+            this.textBoxBingClientSecret.TabIndex = 26;
+            // 
+            // labelClientId
+            // 
+            this.labelClientId.AutoSize = true;
+            this.labelClientId.Location = new System.Drawing.Point(12, 47);
+            this.labelClientId.Name = "labelClientId";
+            this.labelClientId.Size = new System.Drawing.Size(48, 13);
+            this.labelClientId.TabIndex = 28;
+            this.labelClientId.Text = "Client ID";
+            // 
+            // linkLabelBingSubscribe
+            // 
+            this.linkLabelBingSubscribe.Location = new System.Drawing.Point(242, 17);
+            this.linkLabelBingSubscribe.Name = "linkLabelBingSubscribe";
+            this.linkLabelBingSubscribe.Size = new System.Drawing.Size(183, 27);
+            this.linkLabelBingSubscribe.TabIndex = 24;
+            this.linkLabelBingSubscribe.TabStop = true;
+            this.linkLabelBingSubscribe.Text = "How to sign up";
+            this.linkLabelBingSubscribe.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.linkLabelBingSubscribe.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelBingSubscribe_LinkClicked);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(16, 106);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(0, 13);
+            this.label1.TabIndex = 25;
+            // 
             // groupBoxToolsMisc
             // 
+            this.groupBoxToolsMisc.Controls.Add(this.labelUserBingApiId);
             this.groupBoxToolsMisc.Controls.Add(this.buttonEditDoNotBreakAfterList);
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
-            this.groupBoxToolsMisc.Location = new System.Drawing.Point(374, 259);
+            this.groupBoxToolsMisc.Location = new System.Drawing.Point(7, 331);
             this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
-            this.groupBoxToolsMisc.Size = new System.Drawing.Size(445, 179);
-            this.groupBoxToolsMisc.TabIndex = 5;
+            this.groupBoxToolsMisc.Size = new System.Drawing.Size(361, 107);
+            this.groupBoxToolsMisc.TabIndex = 4;
             this.groupBoxToolsMisc.TabStop = false;
             this.groupBoxToolsMisc.Text = "Misc";
+            // 
+            // labelUserBingApiId
+            // 
+            this.labelUserBingApiId.AutoSize = true;
+            this.labelUserBingApiId.Location = new System.Drawing.Point(16, 106);
+            this.labelUserBingApiId.Name = "labelUserBingApiId";
+            this.labelUserBingApiId.Size = new System.Drawing.Size(0, 13);
+            this.labelUserBingApiId.TabIndex = 25;
             // 
             // buttonEditDoNotBreakAfterList
             // 
@@ -2335,7 +2431,7 @@
             this.groupBoxSpellCheck.Location = new System.Drawing.Point(374, 129);
             this.groupBoxSpellCheck.Name = "groupBoxSpellCheck";
             this.groupBoxSpellCheck.Size = new System.Drawing.Size(448, 124);
-            this.groupBoxSpellCheck.TabIndex = 4;
+            this.groupBoxSpellCheck.TabIndex = 5;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
             // 
@@ -2380,7 +2476,7 @@
             this.groupBoxFixCommonErrors.Controls.Add(this.labelToolsMusicSymbol);
             this.groupBoxFixCommonErrors.Location = new System.Drawing.Point(7, 129);
             this.groupBoxFixCommonErrors.Name = "groupBoxFixCommonErrors";
-            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(361, 309);
+            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(361, 196);
             this.groupBoxFixCommonErrors.TabIndex = 3;
             this.groupBoxFixCommonErrors.TabStop = false;
             this.groupBoxFixCommonErrors.Text = "Fix common errors";
@@ -3593,17 +3689,6 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
-            // labelMpvSettings
-            // 
-            this.labelMpvSettings.AutoSize = true;
-            this.labelMpvSettings.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelMpvSettings.ForeColor = System.Drawing.Color.Gray;
-            this.labelMpvSettings.Location = new System.Drawing.Point(501, 93);
-            this.labelMpvSettings.Name = "labelMpvSettings";
-            this.labelMpvSettings.Size = new System.Drawing.Size(33, 11);
-            this.labelMpvSettings.TabIndex = 30;
-            this.labelMpvSettings.Text = "--vo=?";
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3666,6 +3751,8 @@
             this.groupBoxWaveformAppearence.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWaveformBorderHitMs)).EndInit();
             this.tabPageTools.ResumeLayout(false);
+            this.groupBoxBing.ResumeLayout(false);
+            this.groupBoxBing.PerformLayout();
             this.groupBoxToolsMisc.ResumeLayout(false);
             this.groupBoxToolsMisc.PerformLayout();
             this.groupBoxSpellCheck.ResumeLayout(false);
@@ -4000,5 +4087,13 @@
         private System.Windows.Forms.CheckBox checkBoxFceSkipStep1;
         private System.Windows.Forms.Button buttonMpvSettings;
         private System.Windows.Forms.Label labelMpvSettings;
+        private System.Windows.Forms.LinkLabel linkLabelBingSubscribe;
+        private System.Windows.Forms.Label labelUserBingApiId;
+        private System.Windows.Forms.TextBox textBoxBingClientId;
+        private System.Windows.Forms.GroupBox groupBoxBing;
+        private System.Windows.Forms.Label labelClientSecret;
+        private System.Windows.Forms.TextBox textBoxBingClientSecret;
+        private System.Windows.Forms.Label labelClientId;
+        private System.Windows.Forms.Label label1;
     }
 }
