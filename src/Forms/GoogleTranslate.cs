@@ -1,7 +1,9 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17,6 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _breakTranslation;
         private bool _googleTranslate = true;
         private MicrosoftTranslationService.SoapService _microsoftTranslationService;
+        private string _bingAccessToken;
         private bool _googleApiNotWorking;
         private const string SplitterString = " == ";
         private const string NewlineString = " __ ";
@@ -177,7 +180,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string from = (comboBoxFrom.SelectedItem as ComboBoxItem).Value;
                 string to = (comboBoxTo.SelectedItem as ComboBoxItem).Value;
-                DoMicrosoftTranslate(from, to);
+                if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientId) && !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientSecret))
+                {
+                    _bingAccessToken = GetBingAccesstoken(Configuration.Settings.Tools.MicrosoftBingClientId, Configuration.Settings.Tools.MicrosoftBingClientSecret);
+                    if (!string.IsNullOrEmpty(_bingAccessToken))
+                    {
+                        DoMicrosoftTranslateNew(from, to); // uses new api with access token
+                        return;
+                    }
+                }
+                DoMicrosoftTranslate(from, to); // uses old api key
                 return;
             }
 
@@ -259,7 +271,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void FillTranslatedText(string translatedText, int start, int end)
         {
             int index = start;
-            foreach (string s in translatedText.Split(new[] { "|" }, StringSplitOptions.None))
+            foreach (string s in SplitToLines(translatedText))
             {
                 if (index < _translatedSubtitle.Paragraphs.Count)
                 {
@@ -275,6 +287,7 @@ namespace Nikse.SubtitleEdit.Forms
                     cleanText = cleanText.Replace("<br />", Environment.NewLine);
                     cleanText = cleanText.Replace("<br/>", Environment.NewLine);
                     cleanText = cleanText.Replace("<br />", Environment.NewLine);
+                    cleanText = cleanText.Replace("< br / >", Environment.NewLine);
                     cleanText = cleanText.Replace(Environment.NewLine + " ", Environment.NewLine);
                     cleanText = cleanText.Replace(" " + Environment.NewLine, Environment.NewLine);
                     cleanText = cleanText.Replace("<I>", "<i>");
@@ -303,6 +316,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
             subtitleListViewTo.Fill(_translatedSubtitle);
             subtitleListViewTo.SelectIndexAndEnsureVisible(end);
+        }
+
+        private List<string> SplitToLines(string translatedText)
+        {
+            if (!_googleTranslate)
+            {
+                translatedText = translatedText.Replace("+- +", "+-+");
+                translatedText = translatedText.Replace("+ -+", "+-+");
+                translatedText = translatedText.Replace("+ - +", "+-+");
+                translatedText = translatedText.Replace("+-+", "|");
+            }
+            return translatedText.Split('|').ToList();
         }
 
         private string DoTranslate(string input)
@@ -392,7 +417,7 @@ namespace Nikse.SubtitleEdit.Forms
         private static string RemovePStyleParameters(string test)
         {
             var startPosition = test.IndexOf("<p style", StringComparison.Ordinal);
-            while (startPosition >= 0)
+            if (startPosition >= 0)
             {
                 var endPosition = test.IndexOf('>', startPosition + 8);
                 if (endPosition > 0)
@@ -504,43 +529,76 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!_googleTranslate)
             {
-                if (comboBox == comboBoxTo)
+                foreach (var bingLanguageCode in GetBingLanguageCodes())
                 {
-                    foreach (ComboBoxItem item in comboBoxFrom.Items)
-                    {
-                        comboBoxTo.Items.Add(new ComboBoxItem(item.Text, item.Value));
-                    }
-                    return;
+                    comboBox.Items.Add(new ComboBoxItem(bingLanguageCode.Value, bingLanguageCode.Key));
                 }
-
-                // MicrosoftTranslationService.SoapService client = MsTranslationServiceClient;
-
-                //string[] locales = client.GetLanguagesForTranslate(BingApiId);
-                string[] locales = GetMsLocales();
-
-                //                string[] names = client.GetLanguageNames(BingApiId, "en", locales);
-                string[] names = GetMsNames();
-
-                for (int i = 0; i < locales.Length; i++)
-                {
-                    if (names.Length > i && locales.Length > i)
-                        comboBox.Items.Add(new ComboBoxItem(names[i], locales[i]));
-                }
-
                 return;
             }
 
             FillComboWithGoogleLanguages(comboBox);
         }
 
-        private static string[] GetMsLocales()
+        /// <summary>
+        /// https://msdn.microsoft.com/en-us/library/hh456380.aspx - current list is from October 2015
+        /// </summary>
+        /// <returns></returns>
+        private Dictionary<string, string> GetBingLanguageCodes()
         {
-            return new[] { "ar", "bg", "zh-CHS", "zh-CHT", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "ht", "he", "hu", "id", "it", "ja", "ko", "lv", "lt", "no", "pl", "pt", "ro", "ru", "sk", "sl", "es", "sv", "th", "tr", "uk", "vi" };
-        }
-
-        private static string[] GetMsNames()
-        {
-            return new[] { "Arabic", "Bulgarian", "Chinese Simplified", "Chinese Traditional", "Czech", "Danish", "Dutch", "English", "Estonian", "Finnish", "French", "German", "Greek", "Haitian Creole", "Hebrew", "Hungarian", "Indonesian", "Italian", "Japanese", "Korean", "Latvian", "Lithuanian", "Norwegian", "Polish", "Portuguese", "Romanian", "Russian", "Slovak", "Slovenian", "Spanish", "Swedish", "Thai", "Turkish", "Ukrainian", "Vietnamese" };
+            return new Dictionary<string, string>
+            {
+                {"ar", "Arabic"},
+                { "bs-Latn", "Bosnian (Latin)"},
+                { "bg", "Bulgarian"},
+                { "ca", "Catalan"},
+                { "zh-CHS", "Chinese Simplified"},
+                { "zh-CHT", "Chinese Traditional"},
+                { "hr", "Croatian"},
+                { "cs", "Czech"},
+                { "da", "Danish"},
+                { "en", "English"},
+                { "et", "Estonian"},
+                { "fi", "Finnish"},
+                { "fr", "French"},
+                { "de", "German"},
+                { "el", "Greek"},
+                { "ht", " Haitian Creole"},
+                { "he", "Hebrew"},
+                { "hi", "Hindi"},
+                { "mww", "Hmong Daw"},
+                { "hu", "Hungarian"},
+                { "id", "Indonesian"},
+                { "it", "Italian"},
+                { "ja", "Japanese"},
+                { "sw", "Kiswahili"},
+                { "tlh", "Klingon"},
+                { "tlh-Qaak", "Klingon (pIqaD)"},
+                { "ko", "Korean"},
+                { "lv", "Latvian"},
+                { "lt", "Lithuanian"},
+                { "ms", "Malay"},
+                { "mt", "Maltese"},
+                { "no", "Norwegian"},
+                { "fa", "Persian"},
+                { "pl", "Polish"},
+                { "pt", "Portuguese"},
+                { "otq", "Querétaro Otomi"},
+                { "ro", "Romanian"},
+                { "ru", "Russian"},
+                { "sr-Cyrl", "Serbian (Cyrillic)"},
+                { "sr-Latn", "Serbian (Latin)"},
+                { "sk", "Slovak"},
+                { "sl", "Slovenian"},
+                { "es", "Spanish"},
+                { "sv", "Swedish"},
+                { "th", "Thai"},
+                { "tr", "Turkish"},
+                { "uk", "Ukrainian"},
+                { "ur", "Urdu"},
+                { "vi", "Vietnamese"},
+                { "cy", "Welsh"},
+                { "yua", "Yucatec Maya"},
+            };
         }
 
         public void FillComboWithGoogleLanguages(ComboBox comboBox)
@@ -848,10 +906,73 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private string BingTranslateViaAccessToken(string accessToken, string text, string fromLanguage, string toLanguage)
+        {
+            string url = string.Format("http://api.microsofttranslator.com/v2/Http.svc/Translate?text={0}&from={1}&to={2}", Utilities.UrlEncode(text), fromLanguage, toLanguage);
+            var req = WebRequest.Create(url);
+            req.Method = "GET";
+            req.Headers["Authorization"] = "Bearer " + accessToken;
+            var response = req.GetResponse() as HttpWebResponse;
+            if (response == null)
+            {
+                return null;
+            }
+            var responseStream = response.GetResponseStream();
+            if (responseStream == null)
+            {
+                return null;
+            }
+
+            using (var reader = new StreamReader(responseStream, Encoding.UTF8))
+            {
+                string xml = reader.ReadToEnd();
+                var doc = new XmlDocument();
+                doc.LoadXml(xml);
+                return doc.InnerText;
+            }
+        }
+
+        private string GetBingAccesstoken(string clientId, string clientSecret)
+        {
+            string datamarketAccessUri = "https://datamarket.accesscontrol.windows.net/v2/OAuth2-13";
+            string requestDetails = string.Format("grant_type=client_credentials&client_id={0}&client_secret={1}&scope=http://api.microsofttranslator.com", Utilities.UrlEncode(clientId), Utilities.UrlEncode(clientSecret));
+            var webRequest = WebRequest.Create(datamarketAccessUri);
+            webRequest.ContentType = "application/x-www-form-urlencoded";
+            webRequest.Method = "POST";
+            var bytes = Encoding.ASCII.GetBytes(requestDetails);
+            webRequest.ContentLength = bytes.Length;
+            using (Stream outputStream = webRequest.GetRequestStream())
+            {
+                outputStream.Write(bytes, 0, bytes.Length);
+            }
+            using (WebResponse webResponse = webRequest.GetResponse())
+            {
+                var responseStream = webResponse.GetResponseStream();
+                if (responseStream == null)
+                {
+                    return null;
+                }
+                using (var reader = new StreamReader(responseStream, Encoding.UTF8))
+                {
+                    string json = reader.ReadToEnd();
+                    int startIndex = json.IndexOf("access_token", StringComparison.Ordinal) + 12;
+                    if (startIndex > 0)
+                    {
+                        string s = json.Substring(startIndex).TrimStart(':', ' ', '"');
+                        int endIndex = s.IndexOf("\"", StringComparison.Ordinal);
+                        if (endIndex > 0)
+                        {
+                            return s.Substring(0, endIndex);
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
         public void DoMicrosoftTranslate(string from, string to)
         {
             MicrosoftTranslationService.SoapService client = MsTranslationServiceClient;
-
             _breakTranslation = false;
             buttonTranslate.Text = Configuration.Settings.Language.General.Cancel;
             const int textMaxSize = 10000;
@@ -904,7 +1025,73 @@ namespace Nikse.SubtitleEdit.Forms
                     catch (System.Web.Services.Protocols.SoapHeaderException exception)
                     {
                         MessageBox.Show("Sorry, Microsoft is closing their free api: " + exception.Message);
-                        overQuota = true;
+                    }
+                }
+            }
+            finally
+            {
+                labelPleaseWait.Visible = false;
+                progressBar1.Visible = false;
+                Cursor.Current = Cursors.Default;
+                buttonTranslate.Text = Configuration.Settings.Language.GoogleTranslate.Translate;
+                buttonTranslate.Enabled = true;
+            }
+        }
+
+        public void DoMicrosoftTranslateNew(string from, string to)
+        {
+            _breakTranslation = false;
+            buttonTranslate.Text = Configuration.Settings.Language.General.Cancel;
+            const int textMaxSize = 10000;
+            Cursor.Current = Cursors.WaitCursor;
+            progressBar1.Maximum = _subtitle.Paragraphs.Count;
+            progressBar1.Value = 0;
+            progressBar1.Visible = true;
+            labelPleaseWait.Visible = true;
+            int start = 0;
+            bool overQuota = false;
+
+            try
+            {
+                var sb = new StringBuilder();
+                int index = 0;
+                foreach (Paragraph p in _subtitle.Paragraphs)
+                {
+                    string text = string.Format("{0} +-+", SetFormattingType(index, p.Text), SplitterString);
+                    if (!overQuota)
+                    {
+                        if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
+                        {
+                            try
+                            {
+                                FillTranslatedText(BingTranslateViaAccessToken(_bingAccessToken, sb.ToString(), from, to), start, index - 1);
+                            }
+                            catch (Exception exception)
+                            {
+                                MessageBox.Show(exception.Message);
+                                overQuota = true;
+                            }
+                            sb = new StringBuilder();
+                            progressBar1.Refresh();
+                            Application.DoEvents();
+                            start = index;
+                        }
+                        sb.Append(text);
+                    }
+                    index++;
+                    progressBar1.Value = index;
+                    if (_breakTranslation)
+                        break;
+                }
+                if (sb.Length > 0 && !overQuota)
+                {
+                    try
+                    {
+                        FillTranslatedText(BingTranslateViaAccessToken(_bingAccessToken, sb.ToString(), from, to), start, index - 1);
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show(exception.Message);
                     }
                 }
             }

@@ -1168,7 +1168,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAutoTranslate.Text = _language.Menu.AutoTranslate.Title;
             translateByGoogleToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByGoogle;
             translatepoweredByMicrosoftToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByMicrosoft;
-            translatepoweredByMicrosoftToolStripMenuItem.Visible = Configuration.Settings.Tools.MicrosoftBingApiId != "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
+            translatepoweredByMicrosoftToolStripMenuItem.Visible = !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientId) &&
+                                                                   !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientSecret);
             translateFromSwedishToDanishToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslateFromSwedishToDanish;
 
             optionsToolStripMenuItem.Text = _language.Menu.Options.Title;
@@ -3682,6 +3683,9 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxListViewTextAlternate.Enabled = Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleListViewIndex >= 0;
 
             SetShortcuts();
+
+            translatepoweredByMicrosoftToolStripMenuItem.Visible = !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientId) &&
+                                                                   !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientSecret);
 
             _timerAutoSave.Stop();
             if (!string.IsNullOrEmpty(_videoFileName) && oldVideoPlayer != Configuration.Settings.General.VideoPlayer && mediaPlayer.VideoPlayer != null)
