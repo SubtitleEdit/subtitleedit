@@ -1740,6 +1740,10 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MainFileSaveAll>Gem alle</MainFileSaveAll>
     <Miscellaneous>Diverse</Miscellaneous>
     <UseDoNotBreakAfterList>Benyt skift-ikke-efter-liste (for auto-ombrydning)</UseDoNotBreakAfterList>
+    <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
+    <HowToSignUp>Sådan tilmelder du dig</HowToSignUp>
+    <ClientId>Client ID</ClientId>
+    <ClientSecret>Client secret</ClientSecret>
   </Settings>
   <SettingsMpv>
     <Title>Indstillinger for MPV</Title>
