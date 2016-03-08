@@ -182,7 +182,15 @@ namespace Nikse.SubtitleEdit.Forms
                 string to = (comboBoxTo.SelectedItem as ComboBoxItem).Value;
                 if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientId) && !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientSecret))
                 {
-                    _bingAccessToken = GetBingAccesstoken(Configuration.Settings.Tools.MicrosoftBingClientId, Configuration.Settings.Tools.MicrosoftBingClientSecret);
+                    try
+                    {
+                        _bingAccessToken = GetBingAccesstoken(Configuration.Settings.Tools.MicrosoftBingClientId, Configuration.Settings.Tools.MicrosoftBingClientSecret);
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show("Make sure 'Client ID' and 'Client secret' are correct!" + Environment.NewLine + Environment.NewLine + exception.Message + Environment.NewLine + exception.StackTrace);
+                        return;
+                    }
                     if (!string.IsNullOrEmpty(_bingAccessToken))
                     {
                         DoMicrosoftTranslateNew(from, to); // uses new api with access token
