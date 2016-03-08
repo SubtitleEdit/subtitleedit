@@ -1635,7 +1635,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ProxyAddress>Endereço proxy</ProxyAddress>
     <ProxyAuthentication>Autenticação</ProxyAuthentication>
     <ProxyUserName>Nome do utilizador</ProxyUserName>
-    <ProxyPassword>Senha</ProxyPassword>
+    <ProxyPassword>Palavra-passe</ProxyPassword>
     <ProxyDomain>Domínio</ProxyDomain>
     <NetworkSessionSettings>Configurações da Sessão de rede</NetworkSessionSettings>
     <NetworkSessionNewSound>Reproduzir o ficheiro de som quando houver uma nova mensagem</NetworkSessionNewSound>
@@ -1745,6 +1745,10 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainFileSaveAll>Guardar tudo</MainFileSaveAll>
     <Miscellaneous>Diversos</Miscellaneous>
     <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista" (para o ajuste-auto)</UseDoNotBreakAfterList>
+    <MicrosoftBingTranslator>Tradutor Microsoft Bing</MicrosoftBingTranslator>
+    <HowToSignUp>Como efectuar o registo</HowToSignUp>
+    <ClientId>Nome</ClientId>
+    <ClientSecret>Palavra-passe</ClientSecret>
   </Settings>
   <SettingsMpv>
     <Title>Definições do mpv</Title>
