@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 string startTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
                 string duration = string.Format("{0:00}:{1:00}", p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds));
-                sb.AppendLine(string.Format(paragraphWriteFormat, startTime, duration, HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " ")), count));
+                sb.AppendLine(string.Format(paragraphWriteFormat, startTime, duration, HtmlUtil.RemoveHtmlTags(EncodeText(p.Text)), count));
                 sb.AppendLine();
                 sb.AppendLine();
                 count++;
@@ -154,6 +154,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 return false;
             }
+        }
+
+        private string EncodeText(string text)
+        {
+            text = text.Replace(Environment.NewLine, " ");
+            return text.Replace('#', '*');
         }
     }
 }
