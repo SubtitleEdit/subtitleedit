@@ -2,7 +2,7 @@
 
 3.4.12 (xth March 2016) BETA
 * NEW:
-   * "mpv" can be now used as video player (has precise seeking) - thx emk2203/aaaxx
+   * "mpv" can be now used as video player (has precise seeking) - thx emk2203/aaaxx/lachs0r/rossy
    * Norwegian translation - thx Imre
    * Added new subtitle formats
    * Added option for Bing translate client id/secret in UI
