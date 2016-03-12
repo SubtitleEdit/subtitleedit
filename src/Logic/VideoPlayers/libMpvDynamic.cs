@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private MpvInitialize _mpvInitialize;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int MpvCommand(IntPtr mpvHandle, [MarshalAs(UnmanagedType.LPArray)] string[] args);
+        private delegate int MpvCommand(IntPtr mpvHandle, IntPtr utf8Strings);
         private MpvCommand _mpvCommand;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -113,6 +113,43 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             return Encoding.UTF8.GetBytes(s + "\0");
         }
 
+        public static IntPtr AllocateUtf8IntPtrArrayWithSentinel(string[] arr, out IntPtr[] byteArrayPointers)
+        {
+            int numberOfStrings = arr.Length + 1; // add extra element for extra null pointer last (sentinel)
+            byteArrayPointers = new IntPtr[numberOfStrings];
+            int dim = IntPtr.Size * numberOfStrings;
+            IntPtr rootPointer = Marshal.AllocCoTaskMem(dim);
+            for (int index = 0; index < arr.Length; index++)
+            {
+                string arg = arr[index];
+                if (arg == null)
+                {
+                    throw new Exception("AllocateUtf8IntPtrArrayWithSentinel cannot handle null strings");
+                }
+                var bytes = GetUtf8Bytes(arr[index]);
+                IntPtr unmanagedPointer = Marshal.AllocHGlobal(bytes.Length);
+                Marshal.Copy(bytes, 0, unmanagedPointer, bytes.Length);
+                byteArrayPointers[index] = unmanagedPointer;
+            }
+            Marshal.Copy(byteArrayPointers, 0, rootPointer, numberOfStrings);
+            return rootPointer;
+        }
+
+        private void DoMpvCommand(params string[] args)
+        {
+            if (_mpvHandle == IntPtr.Zero)
+                return;
+
+            IntPtr[] byteArrayPointers;
+            var mainPtr = AllocateUtf8IntPtrArrayWithSentinel(args, out byteArrayPointers);
+            _mpvCommand(_mpvHandle, mainPtr);
+            foreach (var ptr in byteArrayPointers)
+            {
+                Marshal.FreeHGlobal(ptr);
+            }
+            Marshal.FreeHGlobal(mainPtr);
+        }
+
         public override string PlayerName
         {
             get { return "MPV Lib"; }
@@ -127,7 +164,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
             set
             {
-                _mpvCommand(_mpvHandle, new[] { "set", "volume", value.ToString(), null });
+                DoMpvCommand("set", "volume", value.ToString());
                 _volume = value;
             }
         }
@@ -163,7 +200,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 if (_mpvHandle == IntPtr.Zero)
                     return;
 
-                _mpvCommand(_mpvHandle, new[] { "seek", value.ToString(CultureInfo.InvariantCulture), "absolute", null });
+                DoMpvCommand("seek", value.ToString(CultureInfo.InvariantCulture), "absolute");
             }
         }
 
@@ -176,7 +213,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
             set
             {
-                _mpvCommand(_mpvHandle, new[] { "set", "speed", value.ToString(CultureInfo.InvariantCulture), null });
+                DoMpvCommand("set", "speed", value.ToString(CultureInfo.InvariantCulture));
                 _playRate = value;
             }
         }
@@ -186,7 +223,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (_mpvHandle == IntPtr.Zero)
                 return;
 
-            _mpvCommand(_mpvHandle, new[] { "frame-step", null });
+            DoMpvCommand("frame-step");
         }
 
         public void GetPreviousFrame()
@@ -194,7 +231,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (_mpvHandle == IntPtr.Zero)
                 return;
 
-            _mpvCommand(_mpvHandle, new[] { "frame-back-step", null });
+            DoMpvCommand("frame-back-step");
         }
 
 
@@ -291,7 +328,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     id = _audioTrackIds[value];
                 }
-                _mpvCommand(_mpvHandle, new[] { "set", "aid", id, null });
+                DoMpvCommand("set", "aid", id);
             }
         }
 
@@ -362,7 +399,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     var windowId = ownerControl.Handle.ToInt64();
                     _mpvSetOption(_mpvHandle, GetUtf8Bytes("wid"), mpvFormatInt64, ref windowId);
                 }
-                _mpvCommand(_mpvHandle, new[] { "loadfile", videoFileName, null });
+                DoMpvCommand("loadfile", videoFileName);
 
                 _videoLoadedTimer = new Timer { Interval = 50 };
                 _videoLoadedTimer.Tick += VideoLoadedTimer_Tick;
@@ -447,7 +484,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         protected virtual void Dispose(bool disposing)
         {
-            _mpvCommand(_mpvHandle, new[] { "quit", null });
+            if (_mpvHandle != IntPtr.Zero)
+                DoMpvCommand("quit");
             ReleaseUnmangedResources();
         }
 
