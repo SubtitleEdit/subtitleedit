@@ -309,9 +309,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                int mpvFormatString = 1;
                 var lpBuffer = IntPtr.Zero;
-                _mpvGetPropertyString(_mpvHandle, GetUtf8Bytes("aid"), mpvFormatString, ref lpBuffer);
+                _mpvGetPropertyString(_mpvHandle, GetUtf8Bytes("aid"), MpvFormatString, ref lpBuffer);
                 string str = Marshal.PtrToStringAnsi(lpBuffer);
                 int number = 0;
                 if (AudioTrackCount > 1 && _audioTrackIds.Contains(str))
