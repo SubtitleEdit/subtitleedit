@@ -3688,6 +3688,31 @@ namespace Nikse.SubtitleEdit.Forms
                                                                    !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientSecret);
 
             _timerAutoSave.Stop();
+
+
+            if (_videoFileName != null && Configuration.Settings.General.VideoPlayer == "MPV" && mediaPlayer.VideoPlayer != null)
+            {
+                var newDllFileName = Path.Combine(Configuration.DataDirectory, "mpv-new.dll");
+                if (File.Exists(newDllFileName)) // mpv-1.dll was in use, so unload + copy new dll + load
+                {
+                    var mpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
+                    if (mpv != null)
+                    {
+                        mpv.Dispose();
+                    }
+                    try
+                    {
+                        File.Copy(newDllFileName, Path.Combine(Configuration.DataDirectory, "mpv-1.dll"), true);
+                        File.Delete(newDllFileName);
+                    }
+                    catch (Exception)
+                    {
+                        // ignore
+                    }
+                    UiUtil.InitializeVideoPlayerAndContainer(_videoFileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
+                }
+            }
+
             if (!string.IsNullOrEmpty(_videoFileName) && oldVideoPlayer != Configuration.Settings.General.VideoPlayer && mediaPlayer.VideoPlayer != null)
             {
                 string vfn = _videoFileName;

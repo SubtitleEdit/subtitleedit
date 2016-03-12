@@ -43,6 +43,8 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string fileName = Path.GetFileName(entry.FilenameInZip);
                         string path = Path.Combine(dictionaryFolder, fileName);
+                        if (File.Exists(path))
+                            path = Path.Combine(dictionaryFolder, "mpv-new.dll");
                         zip.ExtractFile(entry, path);
                     }
                 }
@@ -73,6 +75,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
+                wc.DownloadProgressChanged += (o, args) =>
+                {
+                    labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait + "  " + args.ProgressPercentage + "%";
+                };
                 wc.DownloadDataAsync(new Uri(url));
                 Cursor = Cursors.Default;
             }
