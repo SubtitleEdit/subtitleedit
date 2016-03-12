@@ -166,24 +166,34 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string RemoveControlCharacters(this string s)
         {
-            var sb = new StringBuilder(s.Length);
-            foreach (var ch in s)
+            int max = s.Length;
+            var newStr = new char[max];
+            int newIdx = 0;
+            for (int index = 0; index < max; index++)
             {
-                if (!Char.IsControl(ch))
-                    sb.Append(ch);
+                var ch = s[index];
+                if (!char.IsControl(ch))
+                {
+                    newStr[newIdx++] = ch;
+                }
             }
-            return sb.ToString();
+            return new string(newStr, 0, newIdx);
         }
 
         public static string RemoveControlCharactersButWhiteSpace(this string s)
         {
-            var sb = new StringBuilder(s.Length);
-            foreach (var ch in s)
+            int max = s.Length;
+            var newStr = new char[max];
+            int newIdx = 0;
+            for (int index = 0; index < max; index++)
             {
-                if (!Char.IsControl(ch) || ch == '\u000d' || ch == '\u000a' || ch == '\u0009')
-                    sb.Append(ch);
+                var ch = s[index];
+                if (!char.IsControl(ch) || ch == '\u000d' || ch == '\u000a' || ch == '\u0009')
+                {
+                    newStr[newIdx++] = ch;
+                }
             }
-            return sb.ToString();
+            return new string(newStr, 0, newIdx);
         }
 
         public static string CapitalizeFirstLetter(this string s, CultureInfo ci = null)
