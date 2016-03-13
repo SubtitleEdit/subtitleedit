@@ -1750,6 +1750,10 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <MainFileSaveAll>Tout enregistrer</MainFileSaveAll>
     <Miscellaneous>Divers</Miscellaneous>
     <UseDoNotBreakAfterList>Sans pause après la liste (pause automatique)</UseDoNotBreakAfterList>
+    <MicrosoftBingTranslator>Microsoft Bing Traducteur</MicrosoftBingTranslator>
+    <HowToSignUp>Comment s'inscrire ?</HowToSignUp>
+    <ClientId>ID de client</ClientId>
+    <ClientSecret>Secret de client</ClientSecret>
   </Settings>
   <SettingsMpv>
     <Title>Configuration de mpv</Title>
