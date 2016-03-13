@@ -1742,6 +1742,10 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <MainFileSaveAll>Alles opslaan</MainFileSaveAll>
     <Miscellaneous>Diversen</Miscellaneous>
     <UseDoNotBreakAfterList>Gebruik breek-niet-af-lĳst (voor auto-afbr)</UseDoNotBreakAfterList>
+    <MicrosoftBingTranslator>Microsoft Bing Vertaalmachine</MicrosoftBingTranslator>
+    <HowToSignUp>Hoe meld ik mĳ aan?</HowToSignUp>
+    <ClientId>Aanmeldings-ID</ClientId>
+    <ClientSecret>Wachtwoord</ClientSecret>
   </Settings>
   <SettingsMpv>
     <Title>mpv instellingen</Title>
