@@ -34,10 +34,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            int duration = 0;
-            if (subtitle.Paragraphs.Count > 0)
-                duration = (int)Math.Round(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * Configuration.Settings.General.CurrentFrameRate);
-
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<ISS>" + Environment.NewLine +
@@ -77,9 +73,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 "    <StText StyleName=\"해설자\" Mark=\"0\">00:03:57:16</StText>" + Environment.NewLine +
                 "</StTextList>";
 
-            if (string.IsNullOrEmpty(title))
-                title = "Subtitle Edit subtitle";
-
             var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(xmlStructure);
             // TODO: Set variables...
@@ -97,7 +90,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 stItem.Attributes.Append(memo);
 
                 XmlAttribute tc = xml.CreateAttribute("TC");
-                tc.InnerText = p.StartTime.TotalMilliseconds.ToString();
+                tc.InnerText = ((int)Math.Round(p.StartTime.TotalMilliseconds)).ToString();
                 stItem.Attributes.Append(tc);
 
                 XmlAttribute row = xml.CreateAttribute("Row");
@@ -119,7 +112,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 stItem.Attributes.Append(memo);
 
                 tc = xml.CreateAttribute("TC");
-                tc.InnerText = p.EndTime.TotalMilliseconds.ToString();
+                tc.InnerText = ((int) Math.Round(p.EndTime.TotalMilliseconds)).ToString();
                 stItem.Attributes.Append(tc);
 
                 row = xml.CreateAttribute("Row");
@@ -161,9 +154,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     Paragraph p = new Paragraph();
                     p.StartTime = new TimeCode(long.Parse(node.Attributes["TC"].InnerText));
-
-                    //p.StartFrame = int.Parse(node.Attributes["TC"].InnerText);
-                    //p.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
                     try
                     {
                         string text = string.Empty;
