@@ -243,6 +243,7 @@
     <Word from="praktikuju" to="prakticiraju" />
     <Word from="pre" to="prije" />
     <Word from="Pre" to="Prije" />
+    <Word from="preći" to="prijeći" />
     <Word from="predame" to="preda me" />
     <Word from="preporuča" to="preporučuje" />
     <!-- nije za regex -->
@@ -966,7 +967,7 @@
     <RegEx find="([pP])acj?ent" replaceWith="$1acijent" />
     <RegEx find="pacov" replaceWith="štakor" />
     <RegEx find="Pacov" replaceWith="Štakor" />
-    <RegEx find="([pP])ašć([eu])" replaceWith="$1ast ć$2" />
+    <RegEx find="(?&lt;!\b[Zz]apre)([pP])ašć([eu])" replaceWith="$1ast ć$2" />
     <RegEx find="([pP])esni(č?)k([aeiou]|ov[aeiou]|ovo[mgj]|o[mgjv]|im)?\b" replaceWith="$1jesni$2k$3" />
     <RegEx find="\b([pP])j?es([ak])" replaceWith="$1ijes$2" />
     <RegEx find="\b([pP])j?eš[čć]an" replaceWith="$1ješčan" />
@@ -1382,6 +1383,7 @@
     <RegEx find="([nN])aj(maksimaln)ij([aeiou])" replaceWith="$2$3" />
     <!-- experimental -->
     <RegEx find="đž" replaceWith="dž" />
+    <RegEx find="anić" replaceWith="anit ć" />
     <RegEx find="(?&lt;!gl|[Nn])avić" replaceWith="avit ć" />
     <RegEx find="\bdral" replaceWith="deral" />
     <RegEx find="dsek" replaceWith="dsjek" />
