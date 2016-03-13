@@ -75,10 +75,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 XmlNode dur = xml.CreateElement("dur");
                 num.InnerText = EncodeDuration(p.Duration);
-                paragraph.AppendChild(num);
+                paragraph.AppendChild(dur);
 
                 XmlNode textNode = xml.CreateElement("text");
-                textNode.InnerText = p.Text.Replace(Environment.NewLine, "\\N");
+                textNode.InnerText = text.Replace(Environment.NewLine, "\\N");
                 paragraph.AppendChild(textNode);
 
                 XmlNode timeIn = xml.CreateElement("in");
