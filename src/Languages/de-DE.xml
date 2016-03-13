@@ -1743,6 +1743,10 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MainFileSaveAll>Alles Speichern</MainFileSaveAll>
     <Miscellaneous>Sonstiges</Miscellaneous>
     <UseDoNotBreakAfterList>Nicht nach Liste umbrechen (für Auto Umbruch)</UseDoNotBreakAfterList>
+    <MicrosoftBingTranslator>Microsoft Bing Übersetzer</MicrosoftBingTranslator>
+    <HowToSignUp>Wie anmelden?</HowToSignUp>
+    <ClientId>Anmelde-ID</ClientId>
+    <ClientSecret>Passwort</ClientSecret>
   </Settings>
   <SettingsMpv>
     <Title>Mpv Einstellungen</Title>
