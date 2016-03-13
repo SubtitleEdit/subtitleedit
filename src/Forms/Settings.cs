@@ -1650,10 +1650,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Font font;
                 try
                 {
+                    var fontSize = g.DpiY * _ssaFontSize / 72;
                     if (checkBoxSsaFontBold.Checked)
-                        font = new Font(_ssaFontName, (float)_ssaFontSize, FontStyle.Bold);
+                        font = new Font(_ssaFontName, (float)fontSize, FontStyle.Bold);
                     else
-                        font = new Font(_ssaFontName, (float)_ssaFontSize);
+                        font = new Font(_ssaFontName, (float)fontSize);
                 }
                 catch
                 {
