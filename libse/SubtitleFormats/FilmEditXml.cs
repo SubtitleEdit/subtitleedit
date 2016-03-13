@@ -128,7 +128,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(sb.ToString().Trim());
-            string lastKey = string.Empty;
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("subtitle"))
             {
                 try
