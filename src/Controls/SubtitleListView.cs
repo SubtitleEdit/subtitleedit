@@ -765,9 +765,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (Items[i].SubItems.Count == ColumnIndexExtra + 1)
                     {
-                        Items[i].SubItems[ColumnIndexExtra].Text = string.Empty;
-                        Items[i].SubItems[ColumnIndexExtra].BackColor = BackColor;
-                        Items[i].SubItems[ColumnIndexExtra].ForeColor = ForeColor;
+                        Items[i].SubItems.RemoveAt(ColumnIndexExtra);
                     }
                 }
                 Columns.RemoveAt(ColumnIndexExtra);
