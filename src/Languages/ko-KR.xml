@@ -1741,6 +1741,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MainFileSaveAll>모두 저장</MainFileSaveAll>
     <Miscellaneous>기타</Miscellaneous>
     <UseDoNotBreakAfterList>'뒤에 줄바꿈을 배제하는 목록' 사용 (자동 줄바꿈 用)</UseDoNotBreakAfterList>
+    <MicrosoftBingTranslator>Microsoft Bing 번역기</MicrosoftBingTranslator>
+    <HowToSignUp>가입 방법</HowToSignUp>
+    <ClientId>ID</ClientId>
+    <ClientSecret>암호</ClientSecret>
   </Settings>
   <SettingsMpv>
     <Title>mpv 설정</Title>
