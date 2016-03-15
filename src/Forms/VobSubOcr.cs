@@ -262,6 +262,9 @@ namespace Nikse.SubtitleEdit.Forms
         private List<TransportStreamSubtitle> _dvbSubtitles;
         private Color _dvbSubColor = Color.Transparent;
 
+        // DVB (from transport stream inside mkv)
+        private List<DvbSubPes> _dvbPesSubtitles;
+
         private string _lastLine;
         private string _languageId;
         private string _importLanguageString;
@@ -650,6 +653,36 @@ namespace Nikse.SubtitleEdit.Forms
 
             SetTesseractLanguageFromLanguageString(languageString);
             _importLanguageString = languageString;
+        }
+
+        internal void Initialize(Subtitle subtitle, List<DvbSubPes> subtitleImages, VobSubOcrSettings vobSubOcrSettings, object p)
+        {
+            buttonOK.Enabled = false;
+            buttonCancel.Enabled = false;
+            buttonStartOcr.Enabled = false;
+            buttonStop.Enabled = false;
+            buttonNewCharacterDatabase.Enabled = false;
+            buttonEditCharacterDatabase.Enabled = false;
+            labelStatus.Text = string.Empty;
+            progressBar1.Visible = false;
+            progressBar1.Maximum = 100;
+            progressBar1.Value = 0;
+            numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
+            numericUpDownNumberOfPixelsIsSpaceNOCR.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
+            _vobSubOcrSettings = vobSubOcrSettings;
+
+            InitializeModi();
+            InitializeTesseract();
+            LoadImageCompareCharacterDatabaseList();
+
+            SetOcrMethod();
+            groupBoxImagePalette.Visible = false;
+            _dvbPesSubtitles = subtitleImages;
+            _subtitle = subtitle;
+            _subtitle.Renumber();
+            subtitleListView1.Fill(_subtitle);
+            subtitleListView1.SelectIndexAndEnsureVisible(0);
+            checkBoxAutoTransparentBackground.Visible = false;
         }
 
         internal void InitializeQuick(List<VobSubMergedPack> vobSubMergedPackist, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string languageString)
@@ -1242,6 +1275,10 @@ namespace Nikse.SubtitleEdit.Forms
                 //                return _dvbSubtitles[index]. ??
                 return false;
             }
+            if (_dvbPesSubtitles != null)
+            {
+                return false;
+            }
             if (_bluRaySubtitlesOriginal != null)
             {
                 return _bluRaySubtitles[index].IsForced;
@@ -1435,6 +1472,24 @@ namespace Nikse.SubtitleEdit.Forms
                     returnBmp = nDvbBmp.GetBitmap();
                 }
             }
+            else if (_dvbPesSubtitles != null)
+            {
+                if (index >= 0 && index < _dvbPesSubtitles.Count)
+                {
+                    var dvbBmp = _dvbPesSubtitles[index].GetImageFull();
+                    var nDvbBmp = new NikseBitmap(dvbBmp);
+                    nDvbBmp.CropTopTransparent(2);
+                    nDvbBmp.CropTransparentSidesAndBottom(2, true);
+                    if (checkBoxTransportStreamGetColorAndSplit.Checked)
+                        _dvbSubColor = nDvbBmp.GetBrightestColor();
+                    if (checkBoxAutoTransparentBackground.Checked)
+                        nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
+                    if (checkBoxTransportStreamGrayscale.Checked)
+                        nDvbBmp.GrayScale();
+                    dvbBmp.Dispose();
+                    returnBmp = nDvbBmp.GetBitmap();
+                }
+            }
             else if (_bluRaySubtitlesOriginal != null)
             {
                 if (index >= 0 && index < _bluRaySubtitles.Count)
@@ -1527,6 +1582,12 @@ namespace Nikse.SubtitleEdit.Forms
                 start = new TimeCode(item.StartMilliseconds);
                 end = new TimeCode(item.EndMilliseconds);
             }
+            else if (_dvbPesSubtitles != null)
+            {
+                var item = _subtitle.Paragraphs[index];
+                start = item.StartTime;
+                end = item.EndTime;
+            }
             else
             {
                 var item = _vobSubMergedPackist[index];
@@ -1549,6 +1610,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return _xSubList.Count;
             else if (_dvbSubtitles != null)
                 return _dvbSubtitles.Count;
+            else if (_dvbPesSubtitles != null)
+                return _dvbPesSubtitles.Count;
             else
                 return _vobSubMergedPackist.Count;
         }
@@ -4931,6 +4994,19 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonEditCharacterDatabase.Enabled = true;
                 buttonStartOcr.Focus();
             }
+            else if (_dvbPesSubtitles != null)
+            {
+                checkBoxShowOnlyForced.Visible = false;
+                checkBoxUseTimeCodesFromIdx.Visible = false;
+
+                buttonOK.Enabled = true;
+                buttonCancel.Enabled = true;
+                buttonStartOcr.Enabled = true;
+                buttonStop.Enabled = false;
+                buttonNewCharacterDatabase.Enabled = true;
+                buttonEditCharacterDatabase.Enabled = true;
+                buttonStartOcr.Focus();
+            }
             else if (_bdnXmlOriginal != null)
             {
                 LoadBdnXml();
@@ -8032,6 +8108,11 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (int idx in indices)
                     _dvbSubtitles.RemoveAt(idx);
             }
+            else if (_dvbPesSubtitles != null)
+            {
+                foreach (int idx in indices)
+                    _dvbPesSubtitles.RemoveAt(idx);
+            }
             else if (_bdnXmlSubtitle != null)
             {
                 foreach (int idx in indices)
@@ -8612,6 +8693,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _numericUpDownMaxErrorPct = (double)numericUpDownMaxErrorPct.Value;
         }
-
+       
     }
 }

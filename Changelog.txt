@@ -6,6 +6,7 @@
    * Norwegian translation - thx Imre
    * Added new subtitle formats
    * Added option for Bing translate client id/secret in UI
+   * Added support for reading "S_DVBSUB" from mkv files - thx dreammday
 * IMPROVED:
    * Updated Catalan translation - thx juansa
    * updated Bulgarian translation - thx Maknol
@@ -19,7 +20,7 @@
    * Point sync: Added "Go to line" (Ctrl+G) - thx ivandrofly
    * Remove text for HI: Added Apply button - thx Splike/ivandrofly
    * Export to FCP+image now allows full frame + bottom border - thx Mathieu
-   * Remember (extra) inline styles for TTML 1.0 - thx Oskar   
+   * Remember (extra) inline styles for TTML 1.0 - thx Oskar
 * FIXED:
    * Several fixes for Find/Count - thx André
    * Saving no longer requires exclusive access (regression from 3.4.11) - thx Whisker72
@@ -34,7 +35,7 @@
    * Allow reading of small PAC files - thx Mike
    * Fixed bug in "Fix invalid italic tags" - thx ivandrofly
    * Fixed allowing random order of json tags - thx fela98
-   * Utx won't load text if starts with '#' - thx ivandrofly
+   * Format "Utx" won't load text if line starts with "#" - thx ivandrofly
    * Fixed crash when showing text "<i></i><i>..." - thx montillasauces
    * Fix for TTML 1.0 to keep source time format when using frames - thx Tuan
    * Fixed split when subtitle has no time code - thx João
@@ -43,6 +44,7 @@
    * Some fixes form TTML Draft 2006-04 - thx MagicGreenDragon
    * Fixed crash when showing text "<i></i><i>..." - thx montillasauces
    * Some optimizations for format "Uknown 41" - thx Ivandrofly
+   * + Many minor fixes from ivandrofly and xylographe
 
 
 3.4.11 (16th January 2016)
