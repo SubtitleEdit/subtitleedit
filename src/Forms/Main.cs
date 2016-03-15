@@ -8934,6 +8934,12 @@ namespace Nikse.SubtitleEdit.Forms
                     return false;
                 return LoadTextSTFromMatroska(matroskaSubtitleInfo, matroska, batchMode);
             }
+            if (matroskaSubtitleInfo.CodecId.Equals("S_DVBSUB", StringComparison.OrdinalIgnoreCase))
+            {
+                if (batchMode)
+                    return false;
+                return LoadDvbFromMatroska(matroskaSubtitleInfo, matroska, batchMode);
+            }
 
             ShowStatus(_language.ParsingMatroskaFile);
             Refresh();
@@ -9017,7 +9023,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int idx = -6; // MakeMKV starts at DialogPresentationSegment
                     if (VobSubParser.IsPrivateStream2(msub.Data, 0))
                         idx = 0; //  starts with MPEG2 private stream 2 (just to be sure)
-                    var dps = new Nikse.SubtitleEdit.Core.SubtitleFormats.TextST.DialogPresentationSegment(msub.Data, idx);
+                    var dps = new TextST.DialogPresentationSegment(msub.Data, idx);
                     _subtitle.Paragraphs[index].Text = dps.Text;
                 }
                 catch (Exception exception)
@@ -9057,6 +9063,131 @@ namespace Nikse.SubtitleEdit.Forms
 
             ShowSource();
             return true;
+        }
+
+        private bool LoadDvbFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, bool batchMode)
+        {
+            ShowStatus(_language.ParsingMatroskaFile);
+            Refresh();
+            Cursor.Current = Cursors.WaitCursor;
+            var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, MatroskaProgress);
+            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
+            Cursor.Current = Cursors.Default;
+
+            MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
+            _subtitleListViewIndex = -1;
+            if (!batchMode)
+                ResetSubtitle();
+            _subtitle.Paragraphs.Clear();
+            var subtitleImages = new List<DvbSubPes>();
+            var subtitle = new Subtitle();
+            Utilities.LoadMatroskaTextSubtitle(matroskaSubtitleInfo, matroska, sub, _subtitle);
+            for (int index = 0; index < sub.Count; index++)
+            {
+                try
+                {
+                    var msub = sub[index];
+
+                    DvbSubPes pes = null;
+                    if (msub.Data.Length > 9 && msub.Data[0] == 15 && msub.Data[1] == 16)
+                    {
+                        var buffer = new byte[msub.Data.Length + 2];
+                        Buffer.BlockCopy(msub.Data, 0, buffer, 2, msub.Data.Length);
+                        buffer[0] = 32;
+                        buffer[1] = 0;
+                        pes = new DvbSubPes(0, buffer);
+                    }
+                    else if (VobSubParser.IsMpeg2PackHeader(msub.Data))
+                    {
+                        pes = new DvbSubPes(msub.Data, Mpeg2Header.Length);
+                    }
+                    else if (VobSubParser.IsPrivateStream1(msub.Data, 0))
+                    {
+                        pes = new DvbSubPes(msub.Data, 0);
+                    }
+                    else if (msub.Data.Length > 9 && msub.Data[0] == 32 && msub.Data[1] == 0 && msub.Data[2] == 14 && msub.Data[3] == 16)
+                    {
+                        pes = new DvbSubPes(0, msub.Data);
+                    }
+                    else
+                    {
+                        pes = null;
+                    }
+                    if (pes == null && subtitle.Paragraphs.Count > 0)
+                    {
+                        var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
+                        if (last.Duration.TotalMilliseconds < 100)
+                        {
+                            last.EndTime.TotalMilliseconds = msub.Start;
+                            if (last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                            {
+                                last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 3000;
+                            }
+                        }
+                    }
+                    if (pes != null)
+                    {
+                        subtitleImages.Add(pes);
+                        subtitle.Paragraphs.Add(new Paragraph(string.Empty, msub.Start, msub.End));
+                    }
+                }
+                catch 
+                {
+                    // continue
+                }
+            }
+
+            if (subtitleImages.Count == 0)
+            {
+                return false;
+            }
+
+            for (int index = 0; index < subtitle.Paragraphs.Count; index++)
+            {
+                var p = subtitle.Paragraphs[index];
+                if (p.Duration.TotalMilliseconds < 200)
+                {
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 3000;
+                }
+                var next = subtitle.GetParagraphOrDefault(index + 1);
+                if (next != null && next.StartTime.TotalMilliseconds < p.EndTime.TotalMilliseconds)
+                {
+                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                }
+            }
+
+            using (var formSubOcr = new VobSubOcr())
+            {
+                formSubOcr.Initialize(subtitle, subtitleImages, Configuration.Settings.VobSubOcr, null); // TODO: language???
+                if (_loading)
+                {
+                    formSubOcr.Icon = (Icon)Icon.Clone();
+                    formSubOcr.ShowInTaskbar = true;
+                    formSubOcr.ShowIcon = true;
+                }
+                if (formSubOcr.ShowDialog(this) == DialogResult.OK)
+                {
+                    ResetSubtitle();
+                    _subtitle.Paragraphs.Clear();
+                    _subtitle.WasLoadedWithFrameNumbers = false;
+                    foreach (var p in formSubOcr.SubtitleFromOcr.Paragraphs)
+                        _subtitle.Paragraphs.Add(p);
+
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
+                    _fileName = Path.GetFileNameWithoutExtension(matroska.Path);
+                    _converted = true;
+                    Text = Title;
+
+                    Configuration.Settings.Save();
+                    return true;
+                }
+            }
+            return false;
         }
 
         public static void CopyStream(Stream input, Stream output)
