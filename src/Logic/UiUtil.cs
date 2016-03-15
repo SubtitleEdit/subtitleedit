@@ -228,35 +228,36 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
         {
-            int length = HtmlUtil.RemoveHtmlTags(textBox.Text).Length;
-            if (e.Modifiers == Keys.None && e.KeyCode != Keys.Enter && numberOfNewLines < 1 && length > Configuration.Settings.General.SubtitleLineMaximumLength)
-            {
-                if (Configuration.Settings.General.AutoWrapLineWhileTyping) // only if auto-break-setting is true
-                {
-                    string newText;
-                    if (length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
-                    {
-                        newText = Utilities.AutoBreakLine(textBox.Text);
-                    }
-                    else
-                    {
-                        int lastSpace = textBox.Text.LastIndexOf(' ');
-                        if (lastSpace > 0)
-                            newText = textBox.Text.Remove(lastSpace, 1).Insert(lastSpace, Environment.NewLine);
-                        else
-                            newText = textBox.Text;
-                    }
+            // Do not autobreak lines more than 1 line.
+            if (numberOfNewLines != 1 || !Configuration.Settings.General.AutoWrapLineWhileTyping)
+                return;
 
-                    int autobreakIndex = newText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-                    if (autobreakIndex > 0)
-                    {
-                        int selectionStart = textBox.SelectionStart;
-                        textBox.Text = newText;
-                        if (selectionStart > autobreakIndex)
-                            selectionStart += Environment.NewLine.Length - 1;
-                        if (selectionStart >= 0)
-                            textBox.SelectionStart = selectionStart;
-                    }
+            int length = HtmlUtil.RemoveHtmlTags(textBox.Text, true).Length;
+            if (e.Modifiers == Keys.None && e.KeyCode != Keys.Enter && length > Configuration.Settings.General.SubtitleLineMaximumLength)
+            {
+                string newText;
+                if (length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
+                {
+                    newText = Utilities.AutoBreakLine(textBox.Text);
+                }
+                else
+                {
+                    int lastSpace = textBox.Text.LastIndexOf(' ');
+                    if (lastSpace > 0)
+                        newText = textBox.Text.Remove(lastSpace, 1).Insert(lastSpace, Environment.NewLine);
+                    else
+                        newText = textBox.Text;
+                }
+
+                int autobreakIndex = newText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                if (autobreakIndex > 0)
+                {
+                    int selectionStart = textBox.SelectionStart;
+                    textBox.Text = newText;
+                    if (selectionStart > autobreakIndex)
+                        selectionStart += Environment.NewLine.Length - 1;
+                    if (selectionStart >= 0)
+                        textBox.SelectionStart = selectionStart;
                 }
             }
         }
