@@ -75,8 +75,8 @@
 //        {
 //            try
 //            {
-//                if (e.newState == (int) WMPLib.WMPPlayState.wmppsPlaying ||
-//                    e.newState == (int) WMPLib.WMPPlayState.wmppsMediaEnded)
+//                if (e.newState == (int)WMPLib.WMPPlayState.wmppsPlaying ||
+//                    e.newState == (int)WMPLib.WMPPlayState.wmppsMediaEnded)
 //                {
 //                    _axWindowsMediaPlayer.PlayStateChange -= AxWindowsMediaPlayerStatusChange;
 //                    if (OnVideoLoaded != null)
