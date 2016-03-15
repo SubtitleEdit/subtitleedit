@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 stItem.Attributes.Append(memo);
 
                 tc = xml.CreateAttribute("TC");
-                tc.InnerText = ((int) Math.Round(p.EndTime.TotalMilliseconds)).ToString();
+                tc.InnerText = ((int)Math.Round(p.EndTime.TotalMilliseconds)).ToString();
                 stItem.Attributes.Append(tc);
 
                 row = xml.CreateAttribute("Row");
