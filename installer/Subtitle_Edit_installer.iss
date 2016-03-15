@@ -417,7 +417,7 @@ Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: "PerceivedTyp
 Root: HKLM; Subkey: "{#keyApps}\SubtitleEdit.exe\SupportedTypes"; ValueType: string; ValueName: ".srt"; ValueData: ""; Check: HklmKeyExists('{#keyApps}')
 Root: HKLM; Subkey: "{#keySE}\Capabilities\FileAssociations"; ValueType: string; ValueName: ".srt"; ValueData: "SubtitleEdit.srt"
 ; Associate .srt file type with SE (only if requested by user)
-Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: ""; ValueData: "SubtitleEdit.srt"; Tasks: associate_srt
+Root: HKLM; Subkey: "{#keyCl}\.srt"; ValueType: string; ValueName: ""; ValueData: "SubtitleEdit.srt"; Check: DoSystemAssoc('srt')
 ; Add .sup to the SE-supported file types
 Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sup"; ValueType: string; ValueName: ""; ValueData: "{#RCDESC_SUP_DEFAULT}"; Flags: deletekey uninsdeletekey
 Root: HKLM; Subkey: "{#keyCl}\SubtitleEdit.sup"; ValueType: string; ValueName: "FriendlyTypeName"; ValueData: "{#rctext(RCDESC_SUP)}"
@@ -469,6 +469,21 @@ begin
     FindClose(FindRec);
   end else
     Result := False;
+end;
+
+
+// Reset HKLM file type association if it is currently ours, and check if it should be renewed
+function DoSystemAssoc(const FileType: String): Boolean;
+var
+  CurrentProgId, MyProgId, KeyName: String;
+begin
+  KeyName := '{#keyCl}\.' + FileType;
+  if RegQueryStringValue(HKEY_LOCAL_MACHINE, KeyName, '', CurrentProgId) then begin
+    MyProgId := 'SubtitleEdit.' + FileType;
+    if CompareText(CurrentProgId, MyProgId) = 0 then
+      RegWriteStringValue(HKEY_LOCAL_MACHINE, KeyName, '', '');
+  end;
+  Result := IsTaskSelected('associate_' + FileType);
 end;
 
 
