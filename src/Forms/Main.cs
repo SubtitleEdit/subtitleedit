@@ -9110,10 +9110,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         pes = new DvbSubPes(0, msub.Data);
                     }
-                    else
-                    {
-                        pes = null;
-                    }
                     if (pes == null && subtitle.Paragraphs.Count > 0)
                     {
                         var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
