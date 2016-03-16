@@ -1744,17 +1744,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainFileSaveAll>Save all</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>
     <UseDoNotBreakAfterList>Use do-not-break-after list (for auto-br)</UseDoNotBreakAfterList>
-    <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
-    <HowToSignUp>How to sign up</HowToSignUp>
-    <ClientId>Client ID</ClientId>
-    <ClientSecret>Client secret</ClientSecret>
   </Settings>
-  <SettingsMpv>
-    <Title>Settings for mpv</Title>
-    <DownloadMpv>Download mpv lib</DownloadMpv>
-    <DownloadMpvFailed>Unable to download mpv - please re-try later!</DownloadMpvFailed>
-    <DownloadMpvOk>The mpv lib was downloaded and is ready for use.</DownloadMpvOk>
-  </SettingsMpv>
   <SetVideoOffset>
     <Title>Set video offset</Title>
     <Description>Set video offset (subtitles should not follow real video time, but e.g. +10 hours)</Description>
@@ -1850,7 +1840,7 @@ can edit in same subtitle file (collaboration)</Information>
   <StartNumberingFrom>
     <Title>Renumber</Title>
     <StartFromNumber>Start from number:</StartFromNumber>
-    <PleaseEnterAValidNumber>Oops, please enter a valid number</PleaseEnterAValidNumber>
+    <PleaseEnterAValidNumber>Ups, please enter a valid number</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <Statistics>
     <Title>Statistics</Title>
