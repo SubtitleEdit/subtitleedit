@@ -155,8 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (radioButtonCharacters.Checked)
             {
-                int partSize = (int)(_totalNumberOfCharacters / numericUpDownParts.Value);
-                int nextLimit = partSize;
+                int nextLimit = (int)(_totalNumberOfCharacters / numericUpDownParts.Value);
                 int currentSize = 0;
                 var temp = new Subtitle();
                 temp.Header = _subtitle.Header;
