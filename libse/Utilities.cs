@@ -320,39 +320,7 @@ namespace Nikse.SubtitleEdit.Core
             s = RemoveLineBreaks(s);
 
             var htmlTags = new Dictionary<int, string>();
-            var sb = new StringBuilder(s.Length);
-            int six = 0;
-            while (six < s.Length)
-            {
-                var letter = s[six];
-                var tagFound = letter == '<' && (s.Substring(six).StartsWith("<font", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</font", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("<u", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</u", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("<b", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</b", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("<i", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</i", StringComparison.OrdinalIgnoreCase));
-                int endIndex = -1;
-                if (tagFound)
-                    endIndex = s.IndexOf('>', six + 1);
-
-                if (tagFound && endIndex > 0)
-                {
-                    string tag = s.Substring(six, endIndex - six + 1);
-                    s = s.Remove(six, tag.Length);
-                    if (htmlTags.ContainsKey(six))
-                        htmlTags[six] = htmlTags[six] + tag;
-                    else
-                        htmlTags.Add(six, tag);
-                }
-                else
-                {
-                    sb.Append(letter);
-                    six++;
-                }
-            }
-            s = sb.ToString();
+            s = StripHtmlTags(s, htmlTags);
 
             var words = s.Split(' ');
             for (int numberOfLines = 3; numberOfLines < 9999; numberOfLines++)
@@ -388,6 +356,40 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             return text;
+        }
+
+        private static string StripHtmlTags(string s, Dictionary<int, string> htmlTags)
+        {
+            var sb = new StringBuilder(s.Length);
+            int idx = 0;
+            while (idx < s.Length)
+            {
+                var letter = s[idx];
+                var tagFound = letter == '<' && (s.Substring(idx).StartsWith("<font", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(idx).StartsWith("</font", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(idx).StartsWith("<u", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(idx).StartsWith("</u", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(idx).StartsWith("<b", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(idx).StartsWith("</b", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(idx).StartsWith("<i", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(idx).StartsWith("</i", StringComparison.OrdinalIgnoreCase));
+                int endIndex = -1;
+                if (tagFound && (endIndex = s.IndexOf('>', idx + 2)) > 0)
+                {
+                    string tag = s.Substring(idx, endIndex - idx + 1);
+                    s = s.Remove(idx, tag.Length);
+                    if (htmlTags.ContainsKey(idx))
+                        htmlTags[idx] = htmlTags[idx] + tag;
+                    else
+                        htmlTags.Add(idx, tag);
+                }
+                else
+                {
+                    sb.Append(letter);
+                    idx++;
+                }
+            }
+            return s;
         }
 
         private static List<int> SplitToX(string[] words, int count, int average)
@@ -452,39 +454,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             var htmlTags = new Dictionary<int, string>();
-            var sb = new StringBuilder();
-            int six = 0;
-            while (six < s.Length)
-            {
-                var letter = s[six];
-                var tagFound = letter == '<' && (s.Substring(six).StartsWith("<font", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</font", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("<u", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</u", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("<b", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</b", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("<i", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</i", StringComparison.OrdinalIgnoreCase));
-                int endIndex = -1;
-                if (tagFound)
-                    endIndex = s.IndexOf('>', six + 1);
-
-                if (tagFound && endIndex > 0)
-                {
-                    string tag = s.Substring(six, endIndex - six + 1);
-                    s = s.Remove(six, tag.Length);
-                    if (htmlTags.ContainsKey(six))
-                        htmlTags[six] = htmlTags[six] + tag;
-                    else
-                        htmlTags.Add(six, tag);
-                }
-                else
-                {
-                    sb.Append(letter);
-                    six++;
-                }
-            }
-            s = sb.ToString();
+            s = StripHtmlTags(s, htmlTags);
 
             int splitPos = -1;
             int mid = s.Length / 2;
