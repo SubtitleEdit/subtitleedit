@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="русский">
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.11</Version>
     <TranslatedBy>Перевод на русский: Leserg (mailto:leserg@ua.fm)
-Дополнения и доработка перевода: Elheym (http://forum.hqclub.net/)</TranslatedBy>
+Дополнения и последующие доработки перевода: Elheym (http://forum.hqclub.net/)</TranslatedBy>
     <CultureName>ru-RU</CultureName>
     <HelpFile>http://www.nikse.dk/Content/SubtitleEdit/Help/RU/</HelpFile>
     <Ok>OK</Ok>
@@ -225,6 +225,7 @@ https://github.com/SubtitleEdit/subtitleedit
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Настройка скорости в процентах</Title>
+    <TitleShort>Настройка скорости</TitleShort>
     <Info>Измените скорость субтитров в процентах</Info>
     <Custom>Пользовательские</Custom>
     <ToDropFrame>Удалить кадр</ToDropFrame>
@@ -373,6 +374,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <Import>Импорт...</Import>
     <TextAndTimingInformation>Текст и сведения о синхронизации</TextAndTimingInformation>
     <JustificationCode>Размещение кода:</JustificationCode>
+    <Teletext>Телетекст</Teletext>
+    <UseBox>Использовать обводку вокруг текста</UseBox>
+    <DoubleHeight>Использовать двойную высоту для текста</DoubleHeight>
     <Errors>Ошибки</Errors>
     <ErrorsX>Ошибок: {0}</ErrorsX>
     <MaxLengthError>В строке {0} превышено макс. число символов ({1}) на {2}: {3}</MaxLengthError>
@@ -497,7 +501,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <CaseSensitive>С учетом регистра</CaseSensitive>
     <RegularExpression>Регулярное выражение</RegularExpression>
     <WholeWord>Целое слово</WholeWord>
-    <Count>Count</Count>
+    <Count>Подсчёт</Count>
     <XNumberOfMatches>{0:#,##0} совпадений</XNumberOfMatches>
     <OneMatch>Одно совпадение</OneMatch>
   </FindDialog>
@@ -787,10 +791,10 @@ https://github.com/SubtitleEdit/subtitleedit
         <InsertUnicodeControlCharacters>Вставить управляющие символы Unicode</InsertUnicodeControlCharacters>
         <InsertUnicodeControlCharactersLRM>Помечать слева направо (ЛПМ)</InsertUnicodeControlCharactersLRM>
         <InsertUnicodeControlCharactersRLM>Помечать справо налево (ПЛМ)</InsertUnicodeControlCharactersRLM>
-        <InsertUnicodeControlCharactersLRE>Start of left-to-right embedding (LRE)</InsertUnicodeControlCharactersLRE>
-        <InsertUnicodeControlCharactersRLE>Start of right-to-left embedding (RLE)</InsertUnicodeControlCharactersRLE>
-        <InsertUnicodeControlCharactersLRO>Start of left-to-right override (LRO)</InsertUnicodeControlCharactersLRO>
-        <InsertUnicodeControlCharactersRLO>Start of right-to-left override (RLO)</InsertUnicodeControlCharactersRLO>
+        <InsertUnicodeControlCharactersLRE>Начать вставку слева направо (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Начать вставку справа налево (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>Начать отмену слева направо (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>Начать отмену справа налево (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>Найти</Find>
         <FindNext>Найти далее</FindNext>
         <Replace>Заменить</Replace>
@@ -1014,8 +1018,8 @@ https://github.com/SubtitleEdit/subtitleedit
       <SearchTextOnline>Поиск текста онлайн</SearchTextOnline>
       <GoogleTranslate>Переводчик Google</GoogleTranslate>
       <GoogleIt>Сайт Google</GoogleIt>
-      <SecondsBackShort>&lt;&lt;</SecondsBackShort>
-      <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
+      <SecondsBackShort>←</SecondsBackShort>
+      <SecondsForwardShort>→</SecondsForwardShort>
       <VideoPosition>Позиция видео:</VideoPosition>
       <TranslateTip>Используйте клавиши [Alt+стрелки Вверх/Вниз] для
 перехода к предудыщему/следующему субтитру.</TranslateTip>
@@ -1585,7 +1589,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <DirectShowDescription>quartz.dll в папке system32</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
-    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <MpvPlayer>mpv проигрыватель</MpvPlayer>
+    <MpvPlayerDescription>https://mpv.io/ - свободно распространяемый, 
+с открытым исходным кодом, кроссплатформенный медиа проигрыватель</MpvPlayerDescription>
+    <VlcMediaPlayer>VLC медиа проигрыватель</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll из VLC media player 1.1.0 или новее</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Путь к VLC (только для переносной версии VLC)</VlcBrowseToLabel>
     <ShowStopButton>Показывать кнопку "Стоп"</ShowStopButton>
@@ -1660,6 +1667,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixCommonOcrErrorsUseHardcodedRules>Исправить ошибки OCR - применить жесткие правила</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Исправить короткое время отображения
 (разрешить изменение начального времени)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Пропустить 1-й шаг (выбрать правила исправления)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Клавишные команды</Shortcuts>
     <Shortcut>Команда:</Shortcut>
     <Control>Ctrl</Control>
@@ -1699,6 +1707,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformSeekSilenceForward>Поиск пауз далее</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Поиск пауз назад</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Добавить здесь текст (для нового выделения)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>Добавить здесь текст (для нового выделения из буфера обмена)</WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>Проиграть новое выделение</WaveformPlayNewSelection>
     <WaveformPlayNewSelectionEnd>Воспроизвести конец выделения</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Проиграть первый выделенный субтитр</WaveformPlayFirstSelectedSubtitle>
@@ -1754,7 +1763,17 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainFileSaveAll>Сохранить все</MainFileSaveAll>
     <Miscellaneous>Разное</Miscellaneous>
     <UseDoNotBreakAfterList>Применить список исключений (для автопереноса)</UseDoNotBreakAfterList>
+    <MicrosoftBingTranslator>Переводчик Microsoft Bing</MicrosoftBingTranslator>
+    <HowToSignUp>Как зарегистрироваться</HowToSignUp>
+    <ClientId>Учетная запись (ID)</ClientId>
+    <ClientSecret>Пароль</ClientSecret>
   </Settings>
+  <SettingsMpv>
+    <Title>Настройки для mpv</Title>
+    <DownloadMpv>Загрузить mpv</DownloadMpv>
+    <DownloadMpvFailed>Не удалось загрузить mpv - пожалуйста, попробуйте позже!</DownloadMpvFailed>
+    <DownloadMpvOk>mpv был загружен и готов к использованию.</DownloadMpvOk>
+  </SettingsMpv>
   <SetVideoOffset>
     <Title>Установить смещение видео</Title>
     <Description>Задать смещение видео (субтитры не должны следовать в реальном времени видео, а, например, +10 часов)</Description>
@@ -2082,6 +2101,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Проверка символьного соответствия для текущего изображения</Title>
     <InspectItems>Элементы субтитра</InspectItems>
     <AddBetterMatch>Добавить лучшее соответствие</AddBetterMatch>
+    <Add>Добавить</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Новая папка</Title>
