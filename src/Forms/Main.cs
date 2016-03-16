@@ -9091,10 +9091,11 @@ namespace Nikse.SubtitleEdit.Forms
                     DvbSubPes pes = null;
                     if (msub.Data.Length > 9 && msub.Data[0] == 15 && msub.Data[1] == 16)
                     {
-                        var buffer = new byte[msub.Data.Length + 2];
+                        var buffer = new byte[msub.Data.Length + 3];
                         Buffer.BlockCopy(msub.Data, 0, buffer, 2, msub.Data.Length);
                         buffer[0] = 32;
                         buffer[1] = 0;
+                        buffer[buffer.Length - 1] = 255;
                         pes = new DvbSubPes(0, buffer);
                     }
                     else if (VobSubParser.IsMpeg2PackHeader(msub.Data))
@@ -9131,7 +9132,7 @@ namespace Nikse.SubtitleEdit.Forms
                         subtitle.Paragraphs.Add(new Paragraph(string.Empty, msub.Start, msub.End));
                     }
                 }
-                catch 
+                catch
                 {
                     // continue
                 }
