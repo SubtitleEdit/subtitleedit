@@ -365,7 +365,10 @@ namespace Nikse.SubtitleEdit.Core
                     foreach (var lineLength in list)
                     {
                         if (lineLength > maximumLineLength)
+                        {
                             allOk = false;
+                            break;
+                        }
                     }
                     if (allOk)
                     {
