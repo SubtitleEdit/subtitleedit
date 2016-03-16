@@ -4687,30 +4687,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/UseDoNotBreakAfterList":
                     language.Settings.UseDoNotBreakAfterList = reader.Value;
                     break;
-                case "Settings/MicrosoftBingTranslator":
-                    language.Settings.MicrosoftBingTranslator = reader.Value;
-                    break;
-                case "Settings/HowToSignUp":
-                    language.Settings.HowToSignUp = reader.Value;
-                    break;
-                case "Settings/ClientId":
-                    language.Settings.ClientId = reader.Value;
-                    break;
-                case "Settings/ClientSecret":
-                    language.Settings.ClientSecret = reader.Value;
-                    break;
-                case "SettingsMpv/Title":
-                    language.SettingsMpv.Title = reader.Value;
-                    break;
-                case "SettingsMpv/DownloadMpv":
-                    language.SettingsMpv.DownloadMpv = reader.Value;
-                    break;
-                case "SettingsMpv/DownloadMpvFailed":
-                    language.SettingsMpv.DownloadMpvFailed = reader.Value;
-                    break;
-                case "SettingsMpv/DownloadMpvOk":
-                    language.SettingsMpv.DownloadMpvOk = reader.Value;
-                    break;
                 case "SetVideoOffset/Title":
                     language.SetVideoOffset.Title = reader.Value;
                     break;
