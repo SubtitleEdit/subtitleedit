@@ -10047,14 +10047,16 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                var chooseEncoding = new ChooseEncoding();
-                chooseEncoding.Initialize(openFileDialog1.FileName);
-                if (chooseEncoding.ShowDialog(this) == DialogResult.OK)
+                using (var chooseEncoding = new ChooseEncoding())
                 {
-                    Encoding encoding = chooseEncoding.GetEncoding();
-                    SetEncoding(Encoding.UTF8);
-                    OpenSubtitle(openFileDialog1.FileName, encoding);
-                    _converted = true;
+                    chooseEncoding.Initialize(openFileDialog1.FileName);
+                    if (chooseEncoding.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Encoding encoding = chooseEncoding.Encoding;
+                        SetEncoding(encoding);
+                        OpenSubtitle(openFileDialog1.FileName, encoding);
+                        _converted = true;
+                    }
                 }
             }
         }

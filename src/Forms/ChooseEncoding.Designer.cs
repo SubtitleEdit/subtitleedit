@@ -104,6 +104,7 @@
             this.textBoxPreview.Location = new System.Drawing.Point(13, 301);
             this.textBoxPreview.Multiline = true;
             this.textBoxPreview.Name = "textBoxPreview";
+            this.textBoxPreview.ReadOnly = true;
             this.textBoxPreview.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxPreview.Size = new System.Drawing.Size(604, 156);
             this.textBoxPreview.TabIndex = 9;
