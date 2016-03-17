@@ -3875,9 +3875,13 @@ namespace Nikse.SubtitleEdit.Forms
             ShowSourceLineNumber();
         }
 
-        private void TextBoxSourceKeyDown(object sender, KeyEventArgs e)
+        private void textBoxSource_KeyUp(object sender, KeyEventArgs e)
         {
             ShowSourceLineNumber();
+        }
+
+        private void TextBoxSourceKeyDown(object sender, KeyEventArgs e)
+        {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
             {
                 textBoxSource.SelectAll();
@@ -3901,11 +3905,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
             {
-                string number = textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart).ToString();
-                if (number.Length > 0)
-                    toolStripSelected.Text = string.Format(_language.LineNumberX, int.Parse(number) + 1);
-                else
-                    toolStripSelected.Text = string.Empty;
+                int number = textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart);
+                toolStripSelected.Text = string.Format(_language.LineNumberX, number + 1);
             }
         }
 
