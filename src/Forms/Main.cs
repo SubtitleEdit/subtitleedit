@@ -4751,39 +4751,18 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
                     {
-                        // binary search
-                        int start = 0;
-                        int end = textBoxSource.Text.Length;
-                        while (end - start > 10)
+                        if (textBoxSource.Lines.Length >= goToLine.LineNumber)
                         {
-                            int middle = start + (end - start) / 2;
-                            if (goToLine.LineNumber - 1 >= textBoxSource.GetLineFromCharIndex(middle))
-                                start = middle;
-                            else
-                                end = middle;
+                            int startSelectionFrom = textBoxSource.GetFirstCharIndexFromLine(goToLine.LineNumber - 1);
+                            // select line, scroll to line, and focus...
+                            textBoxSource.SelectionStart = startSelectionFrom;
+                            textBoxSource.SelectionLength = textBoxSource.Lines[goToLine.LineNumber - 1].Length;
+                            textBoxSource.ScrollToCaret();
+                            ShowStatus(string.Format(_language.GoToLineNumberX, goToLine.LineNumber));
+                            if (textBoxSource.CanFocus)
+                                textBoxSource.Focus();
+                            ShowSourceLineNumber();
                         }
-
-                        // go before line, so we can find first char on line
-                        start -= 100;
-                        if (start < 0)
-                            start = 0;
-
-                        for (int i = start; i <= end; i++)
-                        {
-                            if (textBoxSource.GetLineFromCharIndex(i) == goToLine.LineNumber - 1)
-                            {
-                                // select line, scroll to line, and focus...
-                                textBoxSource.SelectionStart = i;
-                                textBoxSource.SelectionLength = textBoxSource.Lines[goToLine.LineNumber - 1].Length;
-                                textBoxSource.ScrollToCaret();
-                                ShowStatus(string.Format(_language.GoToLineNumberX, goToLine.LineNumber));
-                                if (textBoxSource.CanFocus)
-                                    textBoxSource.Focus();
-                                break;
-                            }
-                        }
-
-                        ShowSourceLineNumber();
                     }
                 }
             }
