@@ -111,6 +111,7 @@
             this.toolStripMenuItemExport = new System.Windows.Forms.ToolStripMenuItem();
             this.adobeEncoreFABImageScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAvidStl = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportAyato = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportPngXml = new System.Windows.Forms.ToolStripMenuItem();
             this.bluraySupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportBdTextSt = new System.Windows.Forms.ToolStripMenuItem();
@@ -464,7 +465,6 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemExportAyato = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1210,6 +1210,13 @@
             this.toolStripMenuItemAvidStl.Size = new System.Drawing.Size(258, 22);
             this.toolStripMenuItemAvidStl.Text = "Avid STL...";
             this.toolStripMenuItemAvidStl.Click += new System.EventHandler(this.toolStripMenuItemAvidStl_Click);
+            // 
+            // toolStripMenuItemExportAyato
+            // 
+            this.toolStripMenuItemExportAyato.Name = "toolStripMenuItemExportAyato";
+            this.toolStripMenuItemExportAyato.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemExportAyato.Text = "Ayato...";
+            this.toolStripMenuItemExportAyato.Click += new System.EventHandler(this.toolStripMenuItemExportAyato_Click);
             // 
             // toolStripMenuItemExportPngXml
             // 
@@ -3146,6 +3153,7 @@
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
             this.timeUpDownVideoPosition.Size = new System.Drawing.Size(96, 25);
             this.timeUpDownVideoPosition.TabIndex = 12;
+            this.timeUpDownVideoPosition.UseVideoOffset = false;
             // 
             // buttonGotoSub
             // 
@@ -3590,6 +3598,7 @@
             this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
             this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(96, 25);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
+            this.timeUpDownVideoPositionAdjust.UseVideoOffset = false;
             // 
             // ShowSubtitleTimer
             // 
@@ -4296,6 +4305,7 @@
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 25);
             this.timeUpDownStartTime.TabIndex = 0;
+            this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // numericUpDownDuration
             // 
@@ -4419,6 +4429,7 @@
             this.textBoxSource.DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBoxSourceDragDrop);
             this.textBoxSource.DragEnter += new System.Windows.Forms.DragEventHandler(this.TextBoxSourceDragEnter);
             this.textBoxSource.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxSourceKeyDown);
+            this.textBoxSource.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxSource_KeyUp);
             this.textBoxSource.Leave += new System.EventHandler(this.TextBoxSourceLeave);
             // 
             // panelVideoPlayer
@@ -4444,7 +4455,6 @@
             this.mediaPlayer.Location = new System.Drawing.Point(0, 0);
             this.mediaPlayer.Margin = new System.Windows.Forms.Padding(0);
             this.mediaPlayer.Name = "mediaPlayer";
-//            this.mediaPlayer.Offset = 0D;
             this.mediaPlayer.ShowFullscreenButton = true;
             this.mediaPlayer.ShowMuteButton = true;
             this.mediaPlayer.ShowStopButton = true;
@@ -4489,13 +4499,6 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
-            // 
-            // toolStripMenuItemExportAyato
-            // 
-            this.toolStripMenuItemExportAyato.Name = "toolStripMenuItemExportAyato";
-            this.toolStripMenuItemExportAyato.Size = new System.Drawing.Size(258, 22);
-            this.toolStripMenuItemExportAyato.Text = "Ayato...";
-            this.toolStripMenuItemExportAyato.Click += new System.EventHandler(this.toolStripMenuItemExportAyato_Click);
             // 
             // Main
             // 
