@@ -211,6 +211,7 @@
     <Compile Include="SubtitleFormats\CaptionsInc.cs" />
     <Compile Include="SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="SubtitleFormats\Cavena890.cs" />
+    <Compile Include="SubtitleFormats\CheetahCaptionOld.cs" />
     <Compile Include="SubtitleFormats\CheetahCaption.cs" />
     <Compile Include="SubtitleFormats\Chk.cs" />
     <Compile Include="SubtitleFormats\Csv.cs" />

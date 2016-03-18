@@ -1966,6 +1966,21 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
+                    var cheetahCaption = new CheetahCaptionOld();
+                    if (cheetahCaption.IsMine(null, fileName))
+                    {
+                        cheetahCaption.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = cheetahCaption;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+                if (format == null)
+                {
                     var capMakerPlus = new CapMakerPlus();
                     if (capMakerPlus.IsMine(null, fileName))
                     {
@@ -9122,7 +9137,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-                    if (pes != null)
+                    if (pes != null && pes.PageCompositions != null && pes.PageCompositions.Any(p=>p.Regions.Count > 0))
                     {
                         subtitleImages.Add(pes);
                         subtitle.Paragraphs.Add(new Paragraph(string.Empty, msub.Start, msub.End));
