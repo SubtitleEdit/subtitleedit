@@ -3905,6 +3905,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void textBoxSource_KeyUp(object sender, KeyEventArgs e)
+        {
+            ShowSourceLineNumber();
+        }
+
         private void TextBoxSourceTextChanged(object sender, EventArgs e)
         {
             ShowSourceLineNumber();
@@ -3915,12 +3920,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowSourceLineNumber()
         {
             if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
-            {
-                string number = textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart).ToString();
-                if (number.Length > 0)
-                    toolStripSelected.Text = string.Format(_language.LineNumberX, int.Parse(number) + 1);
-                else
-                    toolStripSelected.Text = string.Empty;
+            {                
+                toolStripSelected.Text = string.Format(_language.LineNumberX, textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart) + 1);
             }
         }
 
@@ -4766,38 +4767,9 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
                     {
-                        // binary search
-                        int start = 0;
-                        int end = textBoxSource.Text.Length;
-                        while (end - start > 10)
-                        {
-                            int middle = start + (end - start) / 2;
-                            if (goToLine.LineNumber - 1 >= textBoxSource.GetLineFromCharIndex(middle))
-                                start = middle;
-                            else
-                                end = middle;
-                        }
-
-                        // go before line, so we can find first char on line
-                        start -= 100;
-                        if (start < 0)
-                            start = 0;
-
-                        for (int i = start; i <= end; i++)
-                        {
-                            if (textBoxSource.GetLineFromCharIndex(i) == goToLine.LineNumber - 1)
-                            {
-                                // select line, scroll to line, and focus...
-                                textBoxSource.SelectionStart = i;
-                                textBoxSource.SelectionLength = textBoxSource.Lines[goToLine.LineNumber - 1].Length;
-                                textBoxSource.ScrollToCaret();
-                                ShowStatus(string.Format(_language.GoToLineNumberX, goToLine.LineNumber));
-                                if (textBoxSource.CanFocus)
-                                    textBoxSource.Focus();
-                                break;
-                            }
-                        }
-
+                        textBoxSource.SelectionStart = textBoxSource.GetFirstCharIndexFromLine(goToLine.LineNumber - 1);
+                        textBoxSource.SelectionLength = textBoxSource.Lines[goToLine.LineNumber - 1].Length;
+                        textBoxSource.ScrollToCaret();
                         ShowSourceLineNumber();
                     }
                 }
@@ -19821,6 +19793,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _lastWaveformMenuCloseTicks = DateTime.Now.Ticks;
         }
-
+        
     }
 }
