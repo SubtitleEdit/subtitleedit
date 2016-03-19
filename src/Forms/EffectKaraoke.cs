@@ -222,8 +222,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PlayAnimation()
         {
-            _colorList = new List<ColorEntry>();
-            _fontList = new List<FontEntry>();
             _timerCount = (int)_paragraph.StartTime.TotalMilliseconds;
             timer1.Start();
         }
