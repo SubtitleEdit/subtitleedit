@@ -1650,11 +1650,10 @@ namespace Nikse.SubtitleEdit.Forms
                 Font font;
                 try
                 {
-                    var fontSize = g.DpiY * _ssaFontSize / 72;
                     if (checkBoxSsaFontBold.Checked)
-                        font = new Font(_ssaFontName, (float)fontSize, FontStyle.Bold);
+                        font = new Font(_ssaFontName, (float)_ssaFontSize, FontStyle.Bold);
                     else
-                        font = new Font(_ssaFontName, (float)fontSize);
+                        font = new Font(_ssaFontName, (float)_ssaFontSize);
                 }
                 catch
                 {
@@ -1675,7 +1674,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), checkBoxSsaFontBold.Checked) + 1;
                 var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), checkBoxSsaFontBold.Checked) + 1;
 
-                float left = ((float)(bmp.Width - measuredWidth * 0.8 + 15) / 2);
+                float left = (float)(bmp.Width - measuredWidth * 0.8 + 15) / 2;
 
                 float top = bmp.Height - measuredHeight - (int)numericUpDownSsaMarginVertical.Value;
 
@@ -2581,7 +2580,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!Directory.Exists(dictionaryFolder))
                 Directory.CreateDirectory(dictionaryFolder);
 
-            System.Diagnostics.Process.Start(dictionaryFolder);
+            Process.Start(dictionaryFolder);
         }
 
         private void textBoxVlcPath_MouseLeave(object sender, EventArgs e)
