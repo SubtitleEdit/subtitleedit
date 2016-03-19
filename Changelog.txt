@@ -44,6 +44,7 @@
    * Some fixes form TTML Draft 2006-04 - thx MagicGreenDragon
    * Fixed crash when showing text "<i></i><i>..." - thx montillasauces
    * Some optimizations for format "Uknown 41" - thx Ivandrofly
+   * Some fixes for line number in source text box - thx Ivandrofly
    * + Many minor fixes from ivandrofly and xylographe
 
 
