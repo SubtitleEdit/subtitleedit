@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private IntPtr _libMpvDll;
         private IntPtr _mpvHandle;
         private Timer _videoLoadedTimer;
-        private Timer _videoEndedTimer;
+//        private Timer _videoEndedTimer;
 
         public override event EventHandler OnVideoLoaded;
         public override event EventHandler OnVideoEnded;
@@ -429,9 +429,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Pause();
         }
 
-        private void VideoEndedTimer_Tick(object sender, EventArgs e)
-        {
-        }
+        //private void VideoEndedTimer_Tick(object sender, EventArgs e)
+        //{
+        //}
 
         public override void DisposeVideoPlayer()
         {
