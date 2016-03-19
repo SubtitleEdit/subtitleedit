@@ -36,7 +36,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Initialize(Paragraph paragraph)
         {
-            _paragraph = paragraph;
+            _paragraph = new Paragraph(paragraph);
+            if (_paragraph.Text.Length > 3)
+            {
+                _paragraph.Text = HtmlUtil.FixUpperTags(_paragraph.Text);
+            }
             _animation = new List<Paragraph>();
 
             colorDialog1.Color = Color.Red;
@@ -45,21 +49,21 @@ namespace Nikse.SubtitleEdit.Forms
 
             AddToPreview(richTextBoxPreview, paragraph.Text);
             RefreshPreview();
-            labelTotalMilliseconds.Text = string.Format("{0:#,##0.000}", paragraph.Duration.TotalMilliseconds / 1000);
-            numericUpDownDelay.Maximum = (int)((paragraph.Duration.TotalMilliseconds - 500) / 1000);
+            labelTotalMilliseconds.Text = string.Format("{0:#,##0.000}", paragraph.Duration.TotalMilliseconds / TimeCode.BaseUnit);
+            numericUpDownDelay.Maximum = (int)((paragraph.Duration.TotalMilliseconds - 500) / TimeCode.BaseUnit);
             numericUpDownDelay.Minimum = 0;
 
             numericUpDownDelay.Left = labelEndDelay.Left + labelEndDelay.Width + 5;
         }
 
-        internal class ColorEntry
+        internal struct ColorEntry
         {
             public int Start { get; set; }
             public int Length { get; set; }
             public Color Color { get; set; }
         }
 
-        internal class FontEntry
+        internal struct FontEntry
         {
             public int Start { get; set; }
             public int Length { get; set; }
@@ -85,11 +89,11 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 0;
             while (i < text.Length)
             {
-                if (text[i] == '<')
+                if (text[i] == '<' && IsTagFollowIndex(text, i))
                 {
                     AddTextToRichTextBox(rtb, bold > 0, italic > 0, underline > 0, currentColor, sb.ToString());
                     sb.Clear();
-                    string tag = GetTag(text.Substring(i).ToLower());
+                    string tag = GetTag(text.Substring(i));
                     if (i + 1 < text.Length && text[i + 1] == '/')
                     {
                         if (tag == "</i>" && italic > 0)
@@ -109,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
                             bold++;
                         else if (tag == "<u>")
                             underline++;
-                        else if (tag.StartsWith("<font "))
+                        else if (tag.StartsWith("<font ", StringComparison.Ordinal))
                         {
                             const string colorTag = " color=";
                             if (tag.Contains(colorTag))
@@ -117,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 string tempColor = string.Empty;
                                 var start = tag.IndexOf(colorTag, StringComparison.Ordinal);
                                 int j = start + colorTag.Length;
-                                if (@"""'".Contains(tag[j]))
+                                if ("\"'".Contains(tag[j]))
                                     j++;
                                 while (j < tag.Length && (@"#" + Utilities.LowercaseLettersWithNumbers).Contains(tag[j]))
                                 {
@@ -164,16 +168,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int length = rtb.Text.Length;
                 richTextBoxPreview.Text += text;
-
                 _colorList.Add(new ColorEntry { Start = length, Length = text.Length, Color = string.IsNullOrWhiteSpace(color) ? Color.White : ColorTranslator.FromHtml(color) });
 
                 var fontStyle = new FontStyle();
                 if (underline)
-                    fontStyle = fontStyle | FontStyle.Underline;
+                    fontStyle = FontStyle.Underline;
                 if (italic)
-                    fontStyle = fontStyle | FontStyle.Italic;
+                    fontStyle |= FontStyle.Italic;
                 if (bold)
-                    fontStyle = fontStyle | FontStyle.Bold;
+                    fontStyle |= FontStyle.Bold;
                 _fontList.Add(new FontEntry { Start = length, Length = text.Length, Font = new Font(rtb.Font.FontFamily, rtb.Font.Size, fontStyle) });
             }
         }
@@ -225,10 +228,11 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Start();
         }
 
-        private static double CalculateStepLength(string text, double duration)
+        public static double CalculateStepLength(string text, double duration)
         {
-            text = HtmlUtil.RemoveHtmlTags(text);
-            return duration / text.Length;
+            // Exclude non displayed characters.
+            int totalNewLineChars = Utilities.CountTagInText(text, '\n') + Utilities.CountTagInText(text, '\r');
+            return duration / (HtmlUtil.RemoveHtmlTags(text, true).Length - totalNewLineChars);
         }
 
         public List<Paragraph> MakeAnimation(Paragraph paragraph)
@@ -258,16 +262,19 @@ namespace Nikse.SubtitleEdit.Forms
             string afterCurrentTag = string.Empty;
             string beforeEndTag = string.Empty;
             string alignment = string.Empty;
+
+            // Preserve SSA tag if present.
+            if (_paragraph.Text.StartsWith("{\\", StringComparison.Ordinal) && _paragraph.Text.IndexOf('}') > 2)
+            {
+                int idx = _paragraph.Text.IndexOf('}');
+                alignment = _paragraph.Text.Substring(0, idx + 1);
+                i = idx;
+            }
+
             while (i < _paragraph.Text.Length)
             {
                 var c = _paragraph.Text[i];
-                if (i == 0 && _paragraph.Text.StartsWith("{\\", StringComparison.Ordinal) && _paragraph.Text.IndexOf('}') > 2)
-                {
-                    int idx = _paragraph.Text.IndexOf('}');
-                    alignment = _paragraph.Text.Substring(0, idx + 1);
-                    i = idx;
-                }
-                else if (tagOn)
+                if (tagOn)
                 {
                     tag += c;
                     if (_paragraph.Text[i] == '>')
@@ -295,7 +302,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
-                else if (_paragraph.Text[i] == '<')
+                else if (_paragraph.Text[i] == '<' && IsTagFollowIndex(_paragraph.Text, i))
                 {
                     afterCurrentTag = string.Empty;
                     tagOn = true;
@@ -306,12 +313,20 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     text += tag + c;
                     tag = string.Empty;
+                    // Take next char if current is (\r or \n);
+                    while ((_paragraph.Text[i] == '\r' || _paragraph.Text[i] == '\n') && (i + 1 < _paragraph.Text.Length))
+                    {
+                        text += _paragraph.Text[++i];
+                    }
                     string afterText = string.Empty;
                     if (i + 1 < _paragraph.Text.Length)
                         afterText = _paragraph.Text.Substring(i + 1);
-                    if (string.Compare(afterText, endFontTag, StringComparison.InvariantCultureIgnoreCase) == 0 && afterCurrentTag.StartsWith("<font", StringComparison.InvariantCultureIgnoreCase))
+                    if (afterText.StartsWith(endFontTag, StringComparison.Ordinal) && afterCurrentTag.StartsWith("<font", StringComparison.Ordinal))
                     {
-                        afterText = string.Empty;
+                        // Take text after </font> if present.
+                        afterText = afterText.Substring(endFontTag.Length);
+                        // Move pointer to end to avoid redundant loop.
+                        i += endFontTag.Length;
                         afterCurrentTag = string.Empty;
                     }
                     string tempText = alignment + startFontTag + text + beforeEndTag + endFontTag + afterCurrentTag + afterText;
@@ -330,17 +345,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 i++;
             }
-
-            if (numericUpDownDelay.Value > 0)
-            {
-                startMilliseconds = index * stepsLength;
-                startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
-                endMilliseconds = _paragraph.EndTime.TotalMilliseconds;
-                start = new TimeCode(startMilliseconds);
-                end = new TimeCode(endMilliseconds);
-                _animation.Add(new Paragraph(start, end, startFontTag + _paragraph.Text + endFontTag));
-            }
-            else if (_animation.Count > 0)
+            // All remaining time should go to the last paragraph.
+            if (_animation.Count > 0)
             {
                 _animation[_animation.Count - 1].EndTime.TotalMilliseconds = _paragraph.EndTime.TotalMilliseconds;
             }
@@ -383,5 +389,28 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
+        public static bool IsTagFollowIndex(string text, int index)
+        {
+            string tag = string.Empty;
+            // <i>, </i>, <font...>, </font>
+            if (text.Length >= index + 7)
+            {
+                tag = text.Substring(index, 7);
+                if (tag.StartsWith("<font", StringComparison.OrdinalIgnoreCase) || tag.StartsWith("</font", StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
+            if (text.Length >= index + 3)
+            {
+                tag = text.Substring(index, 3);
+                int idx = 1;
+                if ((tag[2] == '>' || tag[idx++] == '/') && (tag[idx] == 'i' || tag[idx] == 'I' || tag[idx] == 'b' || tag[idx] == 'B' || tag[idx] == 'u' || tag[idx] == 'U'))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
