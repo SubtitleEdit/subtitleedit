@@ -296,6 +296,7 @@
     <Compile Include="SubtitleFormats\SonicScenaristBitmaps.cs" />
     <Compile Include="SubtitleFormats\SonyDVDArchitect.cs" />
     <Compile Include="SubtitleFormats\SonyDVDArchitectExplicitDuration.cs" />
+    <Compile Include="SubtitleFormats\Edl.cs" />
     <Compile Include="SubtitleFormats\SonyDVDArchitectLineAndDuration.cs" />
     <Compile Include="SubtitleFormats\SonyDVDArchitectTabs.cs" />
     <Compile Include="SubtitleFormats\SonyDVDArchitectWithLineNumbers.cs" />
