@@ -42,7 +42,6 @@
    * Fixed issues with extraction of audio with VLC settings repeat/loop - thx davidzou2131
    * Fix for reading of some TTML+Image files - thx snakeLo
    * Some fixes form TTML Draft 2006-04 - thx MagicGreenDragon
-   * Fixed crash when showing text "<i></i><i>..." - thx montillasauces
    * Some optimizations for format "Uknown 41" - thx Ivandrofly
    * Some fixes for line number in source text box - thx Ivandrofly
    * Some fixes "Karaoke effect" - thx Ivandrofly
