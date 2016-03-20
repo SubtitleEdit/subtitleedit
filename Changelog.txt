@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.4.12 (xth March 2016) BETA
+3.4.12 (20th March 2016)
 * NEW:
    * "mpv" can be now used as video player (has precise seeking) - thx emk2203/aaaxx/lachs0r/rossy
    * Norwegian translation - thx Imre
@@ -45,6 +45,7 @@
    * Fixed crash when showing text "<i></i><i>..." - thx montillasauces
    * Some optimizations for format "Uknown 41" - thx Ivandrofly
    * Some fixes for line number in source text box - thx Ivandrofly
+   * Some fixes "Karaoke effect" - thx Ivandrofly
    * + Many minor fixes from ivandrofly and xylographe
 
 
