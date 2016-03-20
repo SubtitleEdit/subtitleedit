@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddToPreview(richTextBoxPreview, paragraph.Text);
             RefreshPreview();
             labelTotalMilliseconds.Text = string.Format("{0:#,##0.000}", paragraph.Duration.TotalMilliseconds / TimeCode.BaseUnit);
-            numericUpDownDelay.Maximum = (int)((paragraph.Duration.TotalMilliseconds - 500) / TimeCode.BaseUnit);
+            numericUpDownDelay.Maximum = (decimal)((paragraph.Duration.TotalMilliseconds - 500) / TimeCode.BaseUnit);
             numericUpDownDelay.Minimum = 0;
 
             numericUpDownDelay.Left = labelEndDelay.Left + labelEndDelay.Width + 5;
@@ -222,8 +222,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PlayAnimation()
         {
-            _colorList = new List<ColorEntry>();
-            _fontList = new List<FontEntry>();
             _timerCount = (int)_paragraph.StartTime.TotalMilliseconds;
             timer1.Start();
         }
@@ -391,7 +389,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static bool IsTagFollowIndex(string text, int index)
         {
-            string tag = string.Empty;
+            string tag;
             // <i>, </i>, <font...>, </font>
             if (text.Length >= index + 7)
             {
