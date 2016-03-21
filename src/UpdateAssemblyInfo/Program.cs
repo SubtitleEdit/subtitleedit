@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace UpdateAssemblyInfo
 {
@@ -128,6 +130,22 @@ namespace UpdateAssemblyInfo
             public static bool operator <(VersionInfo vi1, VersionInfo vi2)
             {
                 return object.ReferenceEquals(vi2, null) ? false : vi2.CompareTo(vi1) > 0;
+            }
+        }
+
+        private static void UpdateTranslations(string languagesFolderName, VersionInfo newVersion, VersionInfo oldVersion)
+        {
+            var fileNamePattern = string.Format(@"[\{0}\{1}][a-z]{{2,3}}-[A-Za-z-]+\.xml\z", Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            var fileNameRegex = new Regex(fileNamePattern, RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+            var translation = new XmlDocument { XmlResolver = null };
+
+            foreach (var fileName in Directory.EnumerateFiles(languagesFolderName).Where(fn => fileNameRegex.IsMatch(fn)))
+            {
+                translation.Load(fileName);
+                var node = translation.DocumentElement.SelectSingleNode("General/Version") as XmlElement;
+                if (node != null && node.InnerText.Trim() == oldVersion.ShortVersion)
+                    node.InnerText = newVersion.ShortVersion;
+                translation.Save(fileName);
             }
         }
 
@@ -268,6 +286,11 @@ namespace UpdateAssemblyInfo
                 if (newVersion != currentVersion)
                 {
                     Console.WriteLine(" updating version number to " + newVersion.FullVersion);
+                    if (updateTemplateFile) {
+                        var oldVersion = GetTemplateVersion(seTemplateFileName);
+                        var languagesFolderName = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(seTemplateFileName)), "Languages");
+                        UpdateTranslations(languagesFolderName, newVersion, oldVersion);
+                    }
                     UpdateAssemblyInfo(libSeTemplateFileName, newVersion, updateTemplateFile);
                     UpdateAssemblyInfo(seTemplateFileName, newVersion, updateTemplateFile);
                 }
