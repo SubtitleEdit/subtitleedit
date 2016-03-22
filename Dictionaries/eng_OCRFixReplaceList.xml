@@ -439,6 +439,7 @@
     <Word from="genercsity" to="generosity" />
     <Word from="generosityn" to="generosity&quot;" />
     <Word from="getjust" to="get just" />
+    <Word from="gﬂing" to="going" />
     <Word from="giﬂfriend" to="girlfriend" />
     <Word from="gir/" to="girl" />
     <Word from="gir/s'boarding" to="girls' boarding" />
@@ -2200,7 +2201,6 @@
     <Line from="[M EOWS]" to="[MEOWS]" />
     <Line from="Uaughs]" to="[laughs]" />
     <Line from="[chitte rs]" to="[chitters]" />
-    <Line from="Where're you gﬂing?" to="Where're you going?" />
     <Line from="SQMEWH ERE ELSE" to="SOMEWHERE ELSE" />
     <Line from="Hil‘ it!" to="Hit it!" />
     <Line from="&lt;i&gt;Hil‘ it!&lt;/i&gt;" to="&lt;i&gt;Hit it!&lt;/i&gt;" />
