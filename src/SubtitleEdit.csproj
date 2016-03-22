@@ -1441,7 +1441,7 @@
     <Content Include="Languages\zh-Hans.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Languages\zh-tw.xml">
+    <Content Include="Languages\zh-TW.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\pictureBoxNoFSOver.Image.png" />

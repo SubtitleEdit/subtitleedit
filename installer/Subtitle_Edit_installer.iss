@@ -268,7 +268,7 @@ Source: {#bindir}\Languages\tr-TR.xml;             DestDir: {app}\Languages;    
 Source: {#bindir}\Languages\uk-UA.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\vi-VN.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\zh-Hans.xml;           DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\zh-tw.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\zh-TW.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 #endif
 
 Source: {#bindir}\SubtitleEdit.exe;                DestDir: {app};                                    Flags: ignoreversion; Components: main
@@ -375,7 +375,7 @@ Type: files;      Name: {app}\Languages\tr-TR.xml;      Check: not IsComponentSe
 Type: files;      Name: {app}\Languages\uk-UA.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\vi-VN.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\zh-Hans.xml;    Check: not IsComponentSelected('translations') and IsUpgrade()
-Type: files;      Name: {app}\Languages\zh-tw.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\zh-TW.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: dirifempty; Name: {app}\Languages;                Check: not IsComponentSelected('translations') and IsUpgrade()
 #endif
 
