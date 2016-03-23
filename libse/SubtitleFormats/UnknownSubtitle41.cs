@@ -26,7 +26,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             Subtitle subtitle = new Subtitle();
+            var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
             LoadSubtitle(subtitle, lines, fileName);
+            Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
