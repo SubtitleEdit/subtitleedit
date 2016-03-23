@@ -36,7 +36,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!sb.ToString().Contains("$FORMAT"))
                 return false;
 
+            var oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
             LoadSubtitle(subtitle, lines, fileName);
+            Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
