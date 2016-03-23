@@ -1039,27 +1039,11 @@ namespace Nikse.SubtitleEdit.Core
             return userWordListXmlFileName;
         }
 
-        public static readonly string UppercaseLetters = GetLetters(true, false, false);
-        public static readonly string LowercaseLetters = GetLetters(false, true, false);
-        public static readonly string LowercaseLettersWithNumbers = GetLetters(false, true, true);
-        public static readonly string AllLetters = GetLetters(true, true, false);
-        public static readonly string AllLettersAndNumbers = GetLetters(true, true, true);
-
-        private static string GetLetters(bool uppercase, bool lowercase, bool numbers)
-        {
-            var sb = new StringBuilder();
-
-            if (uppercase)
-                sb.Append(Configuration.Settings.General.UppercaseLetters.ToUpper());
-
-            if (lowercase)
-                sb.Append(Configuration.Settings.General.UppercaseLetters.ToLower());
-
-            if (numbers)
-                sb.Append("0123456789");
-
-            return sb.ToString();
-        }
+        public static readonly string UppercaseLetters = Configuration.Settings.General.UppercaseLetters.ToUpper();
+        public static readonly string LowercaseLetters = Configuration.Settings.General.UppercaseLetters.ToLower();
+        public static readonly string LowercaseLettersWithNumbers = LowercaseLetters + "0123456789";
+        public static readonly string AllLetters = UppercaseLetters + LowercaseLetters;
+        public static readonly string AllLettersAndNumbers = UppercaseLetters + LowercaseLettersWithNumbers;
 
         public static Color GetColorFromUserName(string userName)
         {
