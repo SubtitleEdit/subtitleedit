@@ -127,11 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
                 namesEtcList.Remove("Long");
                 namesEtcList.Remove("Don");
             }
-
-            var sb = new StringBuilder();
-            foreach (Paragraph p in _subtitle.Paragraphs)
-                sb.AppendLine(p.Text);
-            string text = HtmlUtil.RemoveHtmlTags(sb.ToString());
+            string text = HtmlUtil.RemoveHtmlTags(_subtitle.GetAllTexts());
             string textToLower = text.ToLower();
             listViewNames.BeginUpdate();
             foreach (string name in namesEtcList)
