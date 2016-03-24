@@ -99,7 +99,7 @@ namespace UpdateAssemblyInfo
 
             public bool Equals(VersionInfo vi)
             {
-                return ReferenceEquals(vi, null) ? false : Major.Equals(vi.Major) && Minor.Equals(vi.Minor) && Maintenance.Equals(vi.Maintenance) && Build.Equals(vi.Build) && RevisionGuid.Equals(vi.RevisionGuid, StringComparison.Ordinal);
+                return !ReferenceEquals(vi, null) && Major.Equals(vi.Major) && Minor.Equals(vi.Minor) && Maintenance.Equals(vi.Maintenance) && Build.Equals(vi.Build) && RevisionGuid.Equals(vi.RevisionGuid, StringComparison.Ordinal);
             }
 
             public override bool Equals(object obj)
@@ -124,18 +124,22 @@ namespace UpdateAssemblyInfo
 
             public static bool operator >(VersionInfo vi1, VersionInfo vi2)
             {
-                return ReferenceEquals(vi1, null) ? false : vi1.CompareTo(vi2) > 0;
+                return !ReferenceEquals(vi1, null) && vi1.CompareTo(vi2) > 0;
             }
 
             public static bool operator <(VersionInfo vi1, VersionInfo vi2)
             {
-                return ReferenceEquals(vi2, null) ? false : vi2.CompareTo(vi1) > 0;
+                return !ReferenceEquals(vi2, null) && vi2.CompareTo(vi1) > 0;
             }
         }
 
         private static void UpdateTranslations(string languagesFolderName, VersionInfo newVersion, VersionInfo oldVersion)
         {
-            var fileNamePattern = string.Format(@"[\{0}\{1}][a-z]{{2,3}}-[A-Za-z-]+\.xml\z", Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            // Valid translation file name formats:
+            //   <language-id> "-" <script-id> "-" <region-id> ".xml"  (e.g., sr-Cyrl-RS.xml)
+            //   <language-id> "-" <script-id> ".xml"  (e.g., zh-Hans.xml)
+            //   <language-id> "-" <region-id> ".xml"  (e.g., nb-NO.xml)
+            var fileNamePattern = string.Format(@"[\{0}\{1}][a-z]{{2,3}}-[A-Z][A-Za-z-]+\.xml\z", Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             var fileNameRegex = new Regex(fileNamePattern, RegexOptions.Compiled | RegexOptions.ExplicitCapture);
             var translation = new XmlDocument { XmlResolver = null };
 
