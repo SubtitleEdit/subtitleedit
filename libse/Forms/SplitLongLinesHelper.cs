@@ -8,25 +8,25 @@ namespace Nikse.SubtitleEdit.Core.Forms
         public static bool QualifiesForSplit(string text, int singleLineMaxCharacters, int totalLineMaxCharacters)
         {
             string s = HtmlUtil.RemoveHtmlTags(text.Trim(), true);
+            // TODO: Exclude \r\n.
             if (s.Length > totalLineMaxCharacters)
                 return true;
 
-            var arr = s.SplitToLines();
-            foreach (string line in arr)
+            foreach (string line in s.SplitToLines())
             {
                 if (line.Length > singleLineMaxCharacters)
                     return true;
             }
 
-            var tempText = Utilities.UnbreakLine(text);
-            if (Utilities.CountTagInText(tempText, '-') == 2 && (text.StartsWith('-') || text.StartsWith("<i>-")))
+            s = Utilities.UnbreakLine(s);
+            if (s.StartsWith('-') && Utilities.CountTagInText(s, '-') == 2)
             {
-                var idx = tempText.IndexOfAny(new[] { ". -", "! -", "? -" }, StringComparison.Ordinal);
+                var idx = s.IndexOfAny(new[] { ". -", "! -", "? -" }, StringComparison.Ordinal);
                 if (idx > 1)
                 {
                     idx++;
-                    string dialogText = tempText.Remove(idx, 1).Insert(idx, Environment.NewLine);
-                    foreach (string line in dialogText.SplitToLines())
+                    s = s.Remove(idx, 1).Insert(idx, Environment.NewLine);
+                    foreach (string line in s.SplitToLines())
                     {
                         if (line.Length > singleLineMaxCharacters)
                             return true;
