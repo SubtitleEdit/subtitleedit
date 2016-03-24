@@ -656,7 +656,7 @@
     <RegEx find="ekspert([auo])" replaceWith="stručnjak$1" />
     <RegEx find="Ekspert([auo])" replaceWith="Stručnjak$1" />
     <RegEx find="([eE])mitovan" replaceWith="$1mitiran" />
-    <RegEx find="([eE])volucij?on(?!arni\b)" replaceWith="$1volucijsk" />
+    <RegEx find="([eE])volucij?on(?!arn[aeiou])" replaceWith="$1volucijsk" />
     <RegEx find="\b([eE])vr([aeiou]|om|ima)\b" replaceWith="$1ur$2" />
     <RegEx find="[eE]vrop([aeiou])" replaceWith="Europ$1" />
     <RegEx find="([eE])vropsk" replaceWith="$1uropsk" />
