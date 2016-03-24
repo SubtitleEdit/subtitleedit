@@ -86,7 +86,7 @@ namespace UpdateAssemblyInfo
             public int CompareTo(VersionInfo vi)
             {
                 int cmp = 1;
-                if (!object.ReferenceEquals(vi, null))
+                if (!ReferenceEquals(vi, null))
                 {
                     cmp = Major.CompareTo(vi.Major);
                     if (cmp == 0)
@@ -99,7 +99,7 @@ namespace UpdateAssemblyInfo
 
             public bool Equals(VersionInfo vi)
             {
-                return object.ReferenceEquals(vi, null) ? false : Major.Equals(vi.Major) && Minor.Equals(vi.Minor) && Maintenance.Equals(vi.Maintenance) && Build.Equals(vi.Build) && RevisionGuid.Equals(vi.RevisionGuid, StringComparison.Ordinal);
+                return ReferenceEquals(vi, null) ? false : Major.Equals(vi.Major) && Minor.Equals(vi.Minor) && Maintenance.Equals(vi.Maintenance) && Build.Equals(vi.Build) && RevisionGuid.Equals(vi.RevisionGuid, StringComparison.Ordinal);
             }
 
             public override bool Equals(object obj)
@@ -114,22 +114,22 @@ namespace UpdateAssemblyInfo
 
             public static bool operator ==(VersionInfo vi1, VersionInfo vi2)
             {
-                return object.ReferenceEquals(vi2, null) ? object.ReferenceEquals(vi1, null) : vi2.Equals(vi1);
+                return ReferenceEquals(vi2, null) ? ReferenceEquals(vi1, null) : vi2.Equals(vi1);
             }
 
             public static bool operator !=(VersionInfo vi1, VersionInfo vi2)
             {
-                return object.ReferenceEquals(vi2, null) ? !object.ReferenceEquals(vi1, null) : !vi2.Equals(vi1);
+                return ReferenceEquals(vi2, null) ? !ReferenceEquals(vi1, null) : !vi2.Equals(vi1);
             }
 
             public static bool operator >(VersionInfo vi1, VersionInfo vi2)
             {
-                return object.ReferenceEquals(vi1, null) ? false : vi1.CompareTo(vi2) > 0;
+                return ReferenceEquals(vi1, null) ? false : vi1.CompareTo(vi2) > 0;
             }
 
             public static bool operator <(VersionInfo vi1, VersionInfo vi2)
             {
-                return object.ReferenceEquals(vi2, null) ? false : vi2.CompareTo(vi1) > 0;
+                return ReferenceEquals(vi2, null) ? false : vi2.CompareTo(vi1) > 0;
             }
         }
 
@@ -259,11 +259,10 @@ namespace UpdateAssemblyInfo
                 var libSeTemplateFileName = Environment.GetCommandLineArgs()[2];
                 VersionInfo currentRepositoryVersion;
                 VersionInfo latestRepositoryVersion;
-                VersionInfo currentVersion;
                 VersionInfo newVersion;
 
                 GetRepositoryVersions(out currentRepositoryVersion, out latestRepositoryVersion);
-                currentVersion = GetCurrentVersion(seTemplateFileName);
+                var currentVersion = GetCurrentVersion(seTemplateFileName);
                 var updateTemplateFile = false;
                 if (latestRepositoryVersion.RevisionGuid.Length > 0 && currentVersion > latestRepositoryVersion && latestRepositoryVersion == currentRepositoryVersion)
                 {
@@ -286,7 +285,8 @@ namespace UpdateAssemblyInfo
                 if (newVersion != currentVersion)
                 {
                     Console.WriteLine(" updating version number to " + newVersion.FullVersion);
-                    if (updateTemplateFile) {
+                    if (updateTemplateFile)
+                    {
                         var oldVersion = GetTemplateVersion(seTemplateFileName);
                         var languagesFolderName = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(seTemplateFileName)), "Languages");
                         UpdateTranslations(languagesFolderName, newVersion, oldVersion);
