@@ -835,29 +835,27 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         public void TestUnknownFormatAndFrameRate()
         {
             var sb = new StringBuilder();
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < 100; i++)
             {
                 sb.AppendLine(i.ToString(CultureInfo.InvariantCulture));
-                sb.AppendLine(string.Empty.PadLeft(50, '0'));
+                sb.AppendLine(Utilities.LowercaseLetters);
                 sb.AppendLine();
             }
             var lines = sb.ToString().SplitToLines().ToList();
             Configuration.Settings.General.CurrentFrameRate = 27;
             foreach (var format in SubtitleFormat.AllSubtitleFormats)
             {
-                //if (format.IsTextBased)
+                if (format.IsMine(lines, null))
                 {
-                    if (format.IsMine(lines, null))
-                    {
-                        Assert.Fail("This format should not be recognized");
-                    }
+                    Assert.Fail("This format should not be recognized: " + format.GetType());
+                }
+                if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 27) > 0.01)
+                {
+                    Assert.Fail("Frame rate changed in 'IsMine': " + format.GetType());
                 }
             }
-            if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 27) > 0.01)
-            {
-                Assert.Fail("Frame rate changed in 'IsMine'!");
-            }
         }
-        #endregion  
+        #endregion
+
     }
 }
