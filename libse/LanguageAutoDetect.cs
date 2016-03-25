@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        private static readonly string[] AutoDetectWordsEnglish = { "we", "are", "and", "your?", "what" };
+        private static readonly string[] AutoDetectWordsEnglish = { "we", "are", "and", "your?", "what", "That's", "something", "You're", "What's" };
         private static readonly string[] AutoDetectWordsDanish = { "vi", "han", "og", "jeg", "var", "men", "gider", "bliver", "virkelig", "kommer", "tilbage", "Hej" };
         private static readonly string[] AutoDetectWordsNorwegian = { "vi", "er", "og", "jeg", "var", "men" };
         private static readonly string[] AutoDetectWordsSwedish = { "vi", "är", "och", "Jag", "inte", "för" };
@@ -126,7 +126,11 @@ namespace Nikse.SubtitleEdit.Core
         {
             int count = GetCount(text, AutoDetectWordsEnglish);
             if (count > bestCount)
-                return "en";
+            {
+                int dutchCount = GetCount(text, AutoDetectWordsDutch);
+                if (dutchCount > count + 20)
+                    return "nl";
+            }
 
             count = GetCount(text, AutoDetectWordsDanish);
             if (count > bestCount)
