@@ -339,11 +339,10 @@ namespace Nikse.SubtitleEdit.Logic
         {
             using (Graphics graphics = mainCtrl.CreateGraphics())
             {
-                SizeF textSize = graphics.MeasureString(ctrl.Text, mainCtrl.Font);
+                SizeF textSize = graphics.MeasureString(ctrl.Text, ctrl.Font);
                 if (textSize.Height > ctrl.Height - 4)
                 {
-                    int newButtonHeight = (int)(textSize.Height + 7.5);
-                    SetButtonHeight(mainCtrl, newButtonHeight, 1);
+                    SetButtonHeight(mainCtrl, (int)Math.Round(textSize.Height + 7.5), 1);
                 }
             }
         }
