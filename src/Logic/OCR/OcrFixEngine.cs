@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private HashSet<string> _wordSkipList = new HashSet<string>();
         private Hunspell _hunspell;
         private OcrSpellCheck _spellCheck;
-        private readonly Form _parentForm;
+        private Form _parentForm;
         private string _spellCheckDictionaryName;
         private readonly string _threeLetterIsoLanguageName;
 
@@ -1412,6 +1412,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 _spellCheck.Dispose();
                 _spellCheck = null;
             }
+            _parentForm = null;
         }
 
     }
