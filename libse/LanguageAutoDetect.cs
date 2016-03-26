@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        private static readonly string[] AutoDetectWordsEnglish = { "we", "are", "and", "your?", "what", "That's", "something", "You're", "What's" };
+        private static readonly string[] AutoDetectWordsEnglish = { "we", "are", "and", "your?", "what", "That's", "something", "You're", "What's", "money", "everything", "anything", "because" };
         private static readonly string[] AutoDetectWordsDanish = { "vi", "han", "og", "jeg", "var", "men", "gider", "bliver", "virkelig", "kommer", "tilbage", "Hej" };
         private static readonly string[] AutoDetectWordsNorwegian = { "vi", "er", "og", "jeg", "var", "men" };
         private static readonly string[] AutoDetectWordsSwedish = { "vi", "är", "och", "Jag", "inte", "för" };
@@ -88,8 +88,8 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string[] AutoDetectWordsPortuguese = { "[Nn]ão", "[Ee]ntão", "uma", "ele", "bem", "isso", "você", "sim", "meu", "muito", "estou", "ela", "fazer", "tem", "já", "minha", "tudo", "só", "tenho", "agora", "vou", "seu", "quem",
                                                                        "há", "lhe", "quero", "nós", "coisa", "são", "ter", "dizer", "eles", "pode", "bom", "mesmo", "mim", "estava", "assim", "estão", "até", "quer", "temos", "acho", "obrigado", "também",
                                                                        "tens", "deus", "quê", "ainda", "noite" };
-        private static readonly string[] AutoDetectWordsGerman = { "und", "auch", "sich", "bin", "hast", "möchte" };
-        private static readonly string[] AutoDetectWordsDutch = { "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n" };
+        private static readonly string[] AutoDetectWordsGerman = { "und", "auch", "sich", "bin", "hast", "möchte", "müssen", "weiß", "[Vv]ielleicht", "Warum", "jetzt" };
+        private static readonly string[] AutoDetectWordsDutch = { "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n", "hebben", "alleen", "Waarom" };
         private static readonly string[] AutoDetectWordsPolish = { "Czy", "ale", "ty", "siê", "jest", "mnie" };
         private static readonly string[] AutoDetectWordsGreek = { "μου", "[Εε]ίναι", "αυτό", "Τόμπυ", "καλά", "Ενταξει", "πρεπει", "Λοιπον", "τιποτα", "ξερεις" };
         private static readonly string[] AutoDetectWordsRussian = { "[Ээч]?то", "[Нн]е", "[ТтМмбв]ы", "Да", "[Нн]ет", "Он", "его", "тебя", "как", "меня", "Но", "всё", "мне", "вас", "знаю", "ещё", "за", "нас", "чтобы", "был" };
@@ -128,8 +128,8 @@ namespace Nikse.SubtitleEdit.Core
             if (count > bestCount)
             {
                 int dutchCount = GetCount(text, AutoDetectWordsDutch);
-                if (dutchCount > count + 20)
-                    return "nl";
+                if (count > dutchCount)
+                    return "en";
             }
 
             count = GetCount(text, AutoDetectWordsDanish);
