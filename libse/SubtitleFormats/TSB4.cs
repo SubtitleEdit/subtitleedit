@@ -84,8 +84,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     i += endOfText + 5;
                 }
             }
-            subtitle.RemoveEmptyLines();
-            subtitle.Renumber();
+            if (subtitle.RemoveEmptyLines() == 0)
+                subtitle.Renumber();
         }
 
     }

@@ -135,8 +135,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             if (p != null)
                 subtitle.Paragraphs.Add(p);
-            subtitle.RemoveEmptyLines();
-            subtitle.Renumber();
+            if (subtitle.RemoveEmptyLines() == 0)
+                subtitle.Renumber();
         }
 
         private static bool GetTimeCode(TimeCode timeCode, string timeString)

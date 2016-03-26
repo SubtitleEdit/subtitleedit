@@ -132,8 +132,8 @@ FILE_INFO_END";
             if (p != null)
                 p.Text = text.ToString().Trim();
             subtitle.Header = header.ToString();
-            subtitle.RemoveEmptyLines();
-            subtitle.Renumber();
+            if (subtitle.RemoveEmptyLines() == 0)
+                subtitle.Renumber();
         }
 
     }
