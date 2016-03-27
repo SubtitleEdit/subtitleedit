@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Core
                     if (start + 3 > lower.Length)
                         start = lower.Length + 1;
                     else
-                        start = lower.IndexOf(name.ToLower(), start + 3, StringComparison.Ordinal);
+                        start = lower.IndexOf(name, start + 3, StringComparison.OrdinalIgnoreCase);
                 }
             }
 
