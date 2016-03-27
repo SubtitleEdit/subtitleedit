@@ -580,5 +580,18 @@ namespace Nikse.SubtitleEdit.Core
             return sb.ToString().TrimEnd();
         }
 
+        /// <summary>
+        /// Concatenates all the Paragraph its Text property from Paragraphs, using the default line terminator between each Text.
+        /// </summary>
+        /// <returns>Contatenated Text property of all Paragraph present in Paragraphs property.</returns>
+        public string GetAllTexts()
+        {
+            var sb = new StringBuilder();
+            foreach (Paragraph p in Paragraphs)
+            {
+                sb.AppendLine(p.Text);
+            }
+            return sb.ToString();
+        }
     }
 }
