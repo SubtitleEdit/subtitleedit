@@ -103,15 +103,9 @@ namespace Nikse.SubtitleEdit.Core
             StrippedText = text;
         }
 
-        private static string GetAndInsertNextId(List<string> replaceIds, List<string> replaceNames, string name)
+        private static string GetAndInsertNextId(List<string> replaceIds, List<string> replaceNames, string name, int idName)
         {
-            int i = 0;
-            string id = string.Format("_@{0}_", i);
-            while (replaceIds.Contains(id))
-            {
-                i++;
-                id = string.Format("_@{0}_", i);
-            }
+            string id = $"_@{idName}_";
             replaceIds.Add(id);
             replaceNames.Add(name);
             return id;
@@ -126,7 +120,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             string lower = StrippedText.ToLower();
-
+            int idName = 0;
             foreach (string name in namesEtc)
             {
                 int start = lower.IndexOf(name, StringComparison.OrdinalIgnoreCase);
@@ -151,7 +145,7 @@ namespace Nikse.SubtitleEdit.Core
                             string originalName = StrippedText.Substring(start, name.Length);
                             originalNames.Add(originalName);
                             StrippedText = StrippedText.Remove(start, name.Length);
-                            StrippedText = StrippedText.Insert(start, GetAndInsertNextId(replaceIds, replaceNames, name));
+                            StrippedText = StrippedText.Insert(start, GetAndInsertNextId(replaceIds, replaceNames, name, idName++));
                             lower = StrippedText.ToLower();
                         }
                     }
