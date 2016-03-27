@@ -270,10 +270,7 @@ namespace Nikse.SubtitleEdit.Core
                 StrippedText = sb.ToString();
             }
 
-            if (changeNameCases)
-                ReplaceNames2Fix(replaceIds, replaceNames);
-            else
-                ReplaceNames2Fix(replaceIds, originalNames);
+            ReplaceNames2Fix(replaceIds, changeNameCases ? replaceNames : originalNames);
         }
 
     }
