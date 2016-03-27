@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -10,7 +11,6 @@ namespace Nikse.SubtitleEdit.Controls
     /// </summary>
     public class SETextBox : TextBox
     {
-        private const string BreakChars = " \".!?,:;¿¡()[]{}<>♪♫-/#*|\t\r\n";
         private string _dragText = string.Empty;
         private int _dragStartFrom = 0;
         private long _dragStartTicks = 0;
@@ -37,34 +37,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Back)
             {
-                if (SelectionLength == 0)
-                {
-                    var s = Text;
-                    var index = SelectionStart;
-                    var deleteFrom = index - 1;
-
-                    if (deleteFrom > 0 && deleteFrom < s.Length)
-                    {
-                        if (s[deleteFrom] == ' ')
-                            deleteFrom--;
-                        while (deleteFrom > 0 && !BreakChars.Contains(s[deleteFrom]))
-                        {
-                            deleteFrom--;
-                        }
-                        if (deleteFrom == index - 1)
-                        {
-                            var breakCharsNoSpace = BreakChars.Substring(1);
-                            while (deleteFrom > 0 && breakCharsNoSpace.Contains(s[deleteFrom - 1]))
-                            {
-                                deleteFrom--;
-                            }
-                        }
-                        if (s[deleteFrom] == ' ')
-                            deleteFrom++;
-                        Select(deleteFrom, index - deleteFrom);
-                        Paste(string.Empty);
-                    }
-                }
+                UiUtil.ApplyControlBackspace(this);
                 e.SuppressKeyPress = true;
             }
         }
@@ -87,7 +60,7 @@ namespace Nikse.SubtitleEdit.Controls
                     SelectionStart = _dragStartFrom;
                     SelectionLength = _dragText.Length;
 
-                    DataObject dataObject = new DataObject();
+                    var dataObject = new DataObject();
                     dataObject.SetText(_dragText, TextDataFormat.UnicodeText);
                     dataObject.SetText(_dragText, TextDataFormat.Text);
 
@@ -124,7 +97,7 @@ namespace Nikse.SubtitleEdit.Controls
             else
             {
                 bool justAppend = index == Text.Length - 1 && index > 0;
-                const string expectedChars = @";:]<.!?";
+                const string expectedChars = ":;]<.!?";
                 if (_dragFromThis)
                 {
                     _dragFromThis = false;
@@ -132,7 +105,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (milliseconds < 400)
                     {
                         SelectionLength = 0;
-                        if (index == Text.Length - 1 && index > 0)
+                        if (justAppend)
                             index++;
                         SelectionStart = index;
                         return; // too fast - nobody can drag'n'drop this fast
@@ -208,7 +181,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 SelectionStart = index + 1;
-                SelectCurrentWord();
+                UiUtil.SelectWordAtCaret(this);
             }
 
             _dragRemoveOld = false;
@@ -237,7 +210,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (m.Msg == WM_DBLCLICK || m.Msg == WM_LBUTTONDBLCLK)
             {
-                SelectCurrentWord();
+                UiUtil.SelectWordAtCaret(this);
                 return;
             }
             if (m.Msg == WM_LBUTTONDOWN)
@@ -247,27 +220,6 @@ namespace Nikse.SubtitleEdit.Controls
                 _dragStartTicks = DateTime.Now.Ticks;
             }
             base.WndProc(ref m);
-        }
-
-        private void SelectCurrentWord()
-        {
-            var i = SelectionStart;
-            while (i > 0 && !BreakChars.Contains(Text[i - 1]))
-            {
-                i--;
-            }
-            SelectionStart = i;
-
-            var selectionLength = 0;
-            for (; i < Text.Length; i++)
-            {
-                if (BreakChars.Contains(Text[i]))
-                {
-                    break;
-                }
-                selectionLength++;
-            }
-            SelectionLength = selectionLength;
         }
 
     }
