@@ -1216,6 +1216,76 @@ namespace Nikse.SubtitleEdit.Core
             return Uri.UnescapeDataString(text);
         }
 
+        public static string ReverseStartAndEndingForRightToLeft(string s)
+        {
+            var lines = s.SplitToLines();
+            var newLines = new StringBuilder();
+            foreach (var line in lines)
+            {
+                string s2 = line;
+
+                bool startsWithItalic = false;
+                if (s2.StartsWith("<i>", StringComparison.Ordinal))
+                {
+                    startsWithItalic = true;
+                    s2 = s2.Remove(0, 3);
+                }
+                bool endsWithItalic = false;
+                if (s2.EndsWith("</i>", StringComparison.Ordinal))
+                {
+                    endsWithItalic = true;
+                    s2 = s2.Remove(s2.Length - 4, 4);
+                }
+
+                var pre = new StringBuilder();
+                var post = new StringBuilder();
+
+                int i = 0;
+                while (i < s2.Length && @"- !?.""،,():;[]".Contains(s2[i]))
+                {
+                    pre.Append(s2[i]);
+                    i++;
+                }
+                int j = s2.Length - 1;
+                while (j > i && @"- !?.""،,():;[]".Contains(s2[j]))
+                {
+                    post.Append(s2[j]);
+                    j--;
+                }
+                if (startsWithItalic)
+                    newLines.Append("<i>");
+                newLines.Append(ReverseParenthesis(post.ToString()));
+                newLines.Append(s2.Substring(pre.Length, s2.Length - (pre.Length + post.Length)));
+                newLines.Append(ReverseParenthesis(ReverseString(pre.ToString())));
+                if (endsWithItalic)
+                    newLines.Append("</i>");
+                newLines.AppendLine();
+            }
+            return newLines.ToString().Trim();
+        }
+
+        private static string ReverseString(string s)
+        {
+            var charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
+
+        private static string ReverseParenthesis(string s)
+        {
+            const string k = "@__<<>___@";
+
+            s = s.Replace("(", k);
+            s = s.Replace(')', '(');
+            s = s.Replace(k, ")");
+
+            s = s.Replace("[", k);
+            s = s.Replace(']', '[');
+            s = s.Replace(k, "]");
+
+            return s;
+        }
+
         public static string FixEnglishTextInRightToLeftLanguage(string text, string reverseChars)
         {
             var sb = new StringBuilder();
