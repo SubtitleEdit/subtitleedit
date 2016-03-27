@@ -49,15 +49,9 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         public List<string> GetAllNames()
         {
-            var list = new List<string>();
-            foreach (var name in _namesList)
-            {
-                list.Add(name);
-            }
-            foreach (var name in _namesMultiList)
-            {
-                list.Add(name);
-            }
+            var list = new List<string>(_namesList.Count + _namesMultiList.Count);
+            list.AddRange(_namesList);
+            list.AddRange(_namesMultiList);
             return list;
         }
 
