@@ -23,11 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Initialize(Subtitle subtitle, int firstSelectedIndex)
         {
-            var sb = new StringBuilder();
-            foreach (Paragraph p in subtitle.Paragraphs)
-                sb.AppendLine(p.Text);
-
-            string watermark = ReadWaterMark(sb.ToString().Trim());
+            string watermark = ReadWaterMark(subtitle.GetAllTexts().Trim());
             LabelWatermark.Text = string.Format("Watermark: {0}", watermark);
             if (watermark.Length == 0)
             {
