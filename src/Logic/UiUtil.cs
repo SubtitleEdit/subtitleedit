@@ -361,7 +361,7 @@ namespace Nikse.SubtitleEdit.Logic
             saveFileDialog.Filter = sb.ToString().TrimEnd('|');
         }
 
-        public static Color ColorDarkOrange = Color.FromArgb(220, 90, 10);
+        public static readonly Color ColorDarkOrange = Color.FromArgb(220, 90, 10);
 
         public static void GetLineLengths(Label label, string text)
         {
@@ -388,10 +388,14 @@ namespace Nikse.SubtitleEdit.Logic
                 }
 
                 sb.Append(line.Length);
-                if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                    label.ForeColor = Color.Red;
-                else if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength - 5)
-                    label.ForeColor = ColorDarkOrange;
+                // Once label's fore color is red do not enter.
+                if (label.ForeColor != Color.Red)
+                {
+                    if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                        label.ForeColor = Color.Red;
+                    else if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength - 5)
+                        label.ForeColor = ColorDarkOrange;
+                }
             }
             label.Text = sb.ToString();
         }
