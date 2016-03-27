@@ -11507,7 +11507,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (line.TrimStart().StartsWith('-') || line.TrimStart().StartsWith("<i>-") || line.TrimStart().StartsWith("<i> -"))
                         sb.AppendLine(line);
                     else if (line.TrimStart().StartsWith("<i>") && line.Trim().Length > 3)
-                        sb.AppendLine("<i>-" + line.Substring(3));
+                        sb.AppendLine("<i>- " + line.Substring(3).TrimStart());
                     else
                         sb.AppendLine("- " + line);
                 }
