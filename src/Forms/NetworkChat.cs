@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Networking;
 using System;
 using System.Windows.Forms;
@@ -8,7 +9,6 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class NetworkChat : Form
     {
         private Logic.Networking.NikseWebServiceSession _networkSession;
-        private string breakChars = "\".!?,)([]<>:;♪{}-/#*| ¿¡" + Environment.NewLine + "\t";
 
         protected override bool ShowWithoutActivation
         {
@@ -74,44 +74,15 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 buttonSendChat_Click(null, null);
             }
-            else
+            else if (e.KeyData == (Keys.Control | Keys.A))
             {
-                if (e.KeyData == (Keys.Control | Keys.A))
-                {
-                    textBoxChat.SelectAll();
-                    e.SuppressKeyPress = true;
-                }
-                if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Back)
-                {
-                    int index = textBoxChat.SelectionStart;
-                    if (textBoxChat.SelectionLength == 0)
-                    {
-                        var s = textBoxChat.Text;
-                        int deleteFrom = index - 1;
-
-                        if (deleteFrom > 0 && deleteFrom < s.Length)
-                        {
-                            if (s[deleteFrom] == ' ')
-                                deleteFrom--;
-                            while (deleteFrom > 0 && !breakChars.Contains(s[deleteFrom]))
-                            {
-                                deleteFrom--;
-                            }
-                            if (deleteFrom == index - 1)
-                            {
-                                while (deleteFrom > 0 && breakChars.Replace(" ", string.Empty).Contains(s[deleteFrom - 1]))
-                                {
-                                    deleteFrom--;
-                                }
-                            }
-                            if (s[deleteFrom] == ' ')
-                                deleteFrom++;
-                            textBoxChat.Text = s.Remove(deleteFrom, index - deleteFrom);
-                            textBoxChat.SelectionStart = deleteFrom;
-                        }
-                    }
-                    e.SuppressKeyPress = true;
-                }
+                textBoxChat.SelectAll();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == (Keys.Control | Keys.Back))
+            {
+                UiUtil.ApplyControlBackspace(textBoxChat);
+                e.SuppressKeyPress = true;
             }
         }
 
