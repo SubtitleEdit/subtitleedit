@@ -6620,10 +6620,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (paragraph.Duration.TotalSeconds > 0)
             {
                 double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
-                if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds + 7)
+                if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     charsPerSecond.ForeColor = Color.Red;
-                else if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
-                    charsPerSecond.ForeColor = UiUtil.ColorDarkOrange;
                 else
                     charsPerSecond.ForeColor = Color.Black;
                 charsPerSecond.Text = string.Format(_language.CharactersPerSecond, charactersPerSecond);
