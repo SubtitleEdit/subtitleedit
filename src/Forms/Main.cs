@@ -5706,10 +5706,7 @@ namespace Nikse.SubtitleEdit.Forms
                 while (startIndex >= 0 && startIndex < p.Text.Length && p.Text.Substring(startIndex).Contains(oldWord))
                 {
                     bool startOk = startIndex == 0 ||
-                                   p.Text[startIndex - 1] == ' ' ||
-                                   p.Text[startIndex - 1] == '>' ||
-                                   p.Text[startIndex - 1] == '"' ||
-                                   p.Text[startIndex - 1] == '\'' ||
+                                   " >'\"[({".Contains(p.Text[startIndex - 1]) ||
                                    startIndex == p.Text.Length - oldWord.Length ||
                                    Environment.NewLine.EndsWith(p.Text[startIndex - 1]);
                     if (startOk)
