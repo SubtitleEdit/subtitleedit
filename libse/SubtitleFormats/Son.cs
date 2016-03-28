@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                     }
                 }
-                else if (string.IsNullOrWhiteSpace(line) || line.StartsWith("Display_Area") || line.StartsWith('#') || line.StartsWith("Color") || index < 10)
+                else if (string.IsNullOrWhiteSpace(line) || line.StartsWith("Display_Area", StringComparison.Ordinal) || line.StartsWith('#') || line.StartsWith("Color", StringComparison.Ordinal) || index < 10)
                 {
                     // skip these lines
                 }
