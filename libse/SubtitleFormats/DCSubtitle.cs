@@ -67,14 +67,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static string RemoveSubStationAlphaFormatting(string s)
         {
-            int indexOfBegin = s.IndexOf('{');
-            while (indexOfBegin >= 0 && s.IndexOf('}') > indexOfBegin)
-            {
-                int indexOfEnd = s.IndexOf('}');
-                s = s.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = s.IndexOf('{');
-            }
-            return s;
+            return Utilities.RemoveSsaTags(s);
         }
 
         public override string ToText(Subtitle subtitle, string title)
