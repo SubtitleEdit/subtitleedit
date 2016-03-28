@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Son : SubtitleFormat
     {
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\d\d[\t]+\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t.+\.(tif|tiff|png|bmp|TIF|TIFF|PNG|BMP)", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".son"; }
@@ -59,13 +61,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
-            var regexTimeCodes = new Regex(@"^\d\d\d\d[\t]+\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t.+\.(tif|tiff|png|bmp|TIF|TIFF|PNG|BMP)", RegexOptions.Compiled);
+
             int index = 0;
             foreach (string line in lines)
             {
-                if (regexTimeCodes.IsMatch(line))
+                if (RegexTimeCodes.IsMatch(line))
                 {
-                    string temp = line.Substring(0, regexTimeCodes.Match(line).Length);
+                    string temp = line.Substring(0, RegexTimeCodes.Match(line).Length);
                     string start = temp.Substring(5, 11);
                     string end = temp.Substring(12 + 5, 11);
 
