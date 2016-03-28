@@ -1191,7 +1191,7 @@ namespace Nikse.SubtitleEdit.Core
                 ErrorLoadJpg = "This file seems to be a JPG image file. Subtitle Edit cannot open JPG files.",
                 ErrorLoadSrr = "This file seems to be a ReScene .srr file - not a subtitle file.",
                 ErrorLoadTorrent = "This file seems to be a BitTorrent file - not a subtitle file.",
-                ErrorLoadBinaryZeroes = "Sorry, this file contains only binary zeroes!\r\n\r\nIf you have edited this file with Subtitle Edit you might be alble to find a backup via the menu item File -> Restore auto-backup...",
+                ErrorLoadBinaryZeroes = "Sorry, this file contains only binary zeroes!\r\n\r\nIf you have edited this file with Subtitle Edit you might be able to find a backup via the menu item File -> Restore auto-backup...",
                 ErrorDirectoryDropNotAllowed = "Directory drop are not supported here.",
                 NoSupportEncryptedVobSub = "Encrypted VobSub content is not supported.",
                 NoSupportHereBluRaySup = "Blu-ray sup files are not supported here.",
