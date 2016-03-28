@@ -5706,7 +5706,7 @@ namespace Nikse.SubtitleEdit.Forms
                 while (startIndex >= 0 && startIndex < p.Text.Length && p.Text.Substring(startIndex).Contains(oldWord))
                 {
                     bool startOk = startIndex == 0 ||
-                                   " >'\"[({".Contains(p.Text[startIndex - 1]) ||
+                                   " >-'\"[({".Contains(p.Text[startIndex - 1]) ||
                                    startIndex == p.Text.Length - oldWord.Length ||
                                    Environment.NewLine.EndsWith(p.Text[startIndex - 1]);
                     if (startOk)
@@ -11448,6 +11448,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ReverseStartAndEndingForRTL()
         {
+            MakeHistoryForUndo(toolStripMenuItemReverseRightToLeftStartEnd.Text);
             int selectedIndex = FirstSelectedIndex;
             foreach (int index in SubtitleListview1.SelectedIndices)
             {
