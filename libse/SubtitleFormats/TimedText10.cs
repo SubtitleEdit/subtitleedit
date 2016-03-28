@@ -332,7 +332,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static XmlNode MakeParagraph(Subtitle subtitle, XmlDocument xml, string defaultStyle, int no, List<string> headerStyles, List<string> regions, Paragraph p)
         {
             XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
-            string text = p.Text;
+            string text = p.Text.RemoveControlCharactersButWhiteSpace();
 
             string region = GetEffect(p, "region");
             if (text.StartsWith("{\\an8}") && string.IsNullOrEmpty(region))
