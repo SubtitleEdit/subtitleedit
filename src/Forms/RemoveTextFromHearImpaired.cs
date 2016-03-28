@@ -11,10 +11,12 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class FormRemoveTextForHearImpaired : PositionAndSizeForm
     {
-        private Subtitle _subtitle;
+        public Subtitle Subtitle;
         private readonly LanguageStructure.RemoveTextFromHearImpaired _language;
         private readonly RemoveTextForHI _removeTextForHiLib;
         private Dictionary<Paragraph, string> _fixes;
+        private int _removeCount;
+
 
         public FormRemoveTextForHearImpaired()
         {
@@ -78,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             comboBoxRemoveIfTextContains.Left = checkBoxRemoveWhereContains.Left + checkBoxRemoveWhereContains.Width;
 
-            _subtitle = subtitle;
+            Subtitle = new Subtitle(subtitle);
             GeneratePreview();
         }
 
@@ -93,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreview()
         {
-            if (_subtitle == null)
+            if (Subtitle == null)
                 return;
 
             _removeTextForHiLib.Settings = GetSettings();
@@ -102,9 +104,9 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Items.Clear();
             int count = 0;
             _fixes = new Dictionary<Paragraph, string>();
-            for (int index = 0; index < _subtitle.Paragraphs.Count; index++)
+            for (int index = 0; index < Subtitle.Paragraphs.Count; index++)
             {
-                Paragraph p = _subtitle.Paragraphs[index];
+                Paragraph p = Subtitle.Paragraphs[index];
                 _removeTextForHiLib.WarningIndex = index - 1;
                 string newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text);
                 if (p.Text.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty))
@@ -147,7 +149,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         public int RemoveTextFromHearImpaired()
         {
-            int count = 0;
             for (int i = listViewFixes.Items.Count - 1; i >= 0; i--)
             {
                 var item = listViewFixes.Items[i];
@@ -157,16 +158,16 @@ namespace Nikse.SubtitleEdit.Forms
                     string newText = _fixes[p];
                     if (string.IsNullOrWhiteSpace(newText))
                     {
-                        _subtitle.Paragraphs.Remove(p);
+                        Subtitle.Paragraphs.Remove(p);
                     }
                     else
                     {
                         p.Text = newText;
                     }
-                    count++;
+                    _removeCount++;
                 }
             }
-            return count;
+            return _removeCount;
         }
 
         private void CheckBoxRemoveTextBetweenCheckedChanged(object sender, EventArgs e)
@@ -302,11 +303,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonApply_Click(object sender, EventArgs e)
         {
-            if (_subtitle == null)
+            if (Subtitle == null)
                 return;
             RemoveTextFromHearImpaired();
-            _subtitle.Renumber();
+            Subtitle.Renumber();
             GeneratePreview();
         }
+
     }
 }
