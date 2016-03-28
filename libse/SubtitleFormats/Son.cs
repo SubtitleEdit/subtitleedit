@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int index = 0;
             foreach (string line in lines)
             {
-                if (RegexTimeCodes.IsMatch(line))
+                if (line.Length > 32 && RegexTimeCodes.IsMatch(line))
                 {
                     string temp = line.Substring(0, RegexTimeCodes.Match(line).Length);
                     string start = temp.Substring(5, 11);
