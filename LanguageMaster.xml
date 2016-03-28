@@ -1289,7 +1289,7 @@ Continue?</SubtitleAppendPrompt>
     <ErrorLoadTorrent>This file seems to be a BitTorrent file - not a subtitle file.</ErrorLoadTorrent>
     <ErrorLoadBinaryZeroes>Sorry, this file contains only binary zeroes!
 
-If you have edited this file with Subtitle Edit you might be alble to find a backup via the menu item File -&gt; Restore auto-backup...</ErrorLoadBinaryZeroes>
+If you have edited this file with Subtitle Edit you might be able to find a backup via the menu item File -&gt; Restore auto-backup...</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Directory drop are not supported here.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Encrypted VobSub content is not supported.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Blu-ray sup files are not supported here.</NoSupportHereBluRaySup>
