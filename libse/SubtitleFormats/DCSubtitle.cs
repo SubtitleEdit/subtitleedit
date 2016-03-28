@@ -163,17 +163,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     end.InnerText = ConvertToTimeString(p.EndTime);
                     subNode.Attributes.Append(end);
 
-                    bool alignLeft = p.Text.StartsWith("{\\a1}") || p.Text.StartsWith("{\\a5}") || p.Text.StartsWith("{\\a9}") || // sub station alpha
-                                    p.Text.StartsWith("{\\an1}") || p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an7}"); // advanced sub station alpha
+                    bool alignLeft = p.Text.StartsWith("{\\a1}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a9}", StringComparison.Ordinal) || // sub station alpha
+                                    p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an7}", StringComparison.Ordinal); // advanced sub station alpha
 
-                    bool alignRight = p.Text.StartsWith("{\\a3}") || p.Text.StartsWith("{\\a7}") || p.Text.StartsWith("{\\a11}") || // sub station alpha
-                                      p.Text.StartsWith("{\\an3}") || p.Text.StartsWith("{\\an6}") || p.Text.StartsWith("{\\an9}"); // advanced sub station alpha
+                    bool alignRight = p.Text.StartsWith("{\\a3}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a7}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a11}", StringComparison.Ordinal) || // sub station alpha
+                                      p.Text.StartsWith("{\\an3}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal); // advanced sub station alpha
 
-                    bool alignVTop = p.Text.StartsWith("{\\a5}") || p.Text.StartsWith("{\\a6}") || p.Text.StartsWith("{\\a7}") || // sub station alpha
-                                    p.Text.StartsWith("{\\an7}") || p.Text.StartsWith("{\\an8}") || p.Text.StartsWith("{\\an9}"); // advanced sub station alpha
+                    bool alignVTop = p.Text.StartsWith("{\\a5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a6}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a7}", StringComparison.Ordinal) || // sub station alpha
+                                    p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal); // advanced sub station alpha
 
-                    bool alignVCenter = p.Text.StartsWith("{\\a9}") || p.Text.StartsWith("{\\a10}") || p.Text.StartsWith("{\\a11}") || // sub station alpha
-                                      p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an5}") || p.Text.StartsWith("{\\an6}"); // advanced sub station alpha
+                    bool alignVCenter = p.Text.StartsWith("{\\a9}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a10}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a11}", StringComparison.Ordinal) || // sub station alpha
+                                      p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal); // advanced sub station alpha
 
                     // remove styles for display text (except italic)
                     string text = RemoveSubStationAlphaFormatting(p.Text);
