@@ -4980,6 +4980,8 @@ namespace Nikse.SubtitleEdit.Forms
                 removeTextFromHearImpaired.Initialize(_subtitle);
                 if (removeTextFromHearImpaired.ShowDialog(this) == DialogResult.OK)
                 {
+                    _subtitle.Paragraphs.Clear();
+                    _subtitle.Paragraphs.AddRange(removeTextFromHearImpaired.Subtitle.Paragraphs);
                     int count = removeTextFromHearImpaired.RemoveTextFromHearImpaired();
                     if (count > 0)
                     {
