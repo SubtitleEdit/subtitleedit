@@ -634,6 +634,11 @@ namespace Nikse.SubtitleEdit.Forms
             _deleteIndices = new List<int>();
 
             Subtitle = new Subtitle(_originalSubtitle, false);
+            if (listView1.Items[IndexFixOcrErrorsViaReplaceList].Checked)
+            {
+                var fixItem = (FixItem)listView1.Items[IndexFixOcrErrorsViaReplaceList].Tag;
+                fixItem.Action.Invoke();
+            }
             foreach (ListViewItem item in listView1.Items)
             {
                 if (item.Checked && item.Index != IndexRemoveEmptyLines)
