@@ -1,5 +1,20 @@
 ﻿Subtitle Edit Changelog
 
+3.4.13 (xh May 2016) BETA
+* NEW:
+   * Added new subtitle format - thx Oli
+* IMPROVED:
+   * Some updates for format "sif"
+* FIXED:
+   * Fix updating of main list view after "Remove text for HI" + "Apply" - thx Henry
+   * Spell check "change" / "change all" issue regarding brackets/dash - thx jc
+   * Fixed issue where current frame rate was lost when loading new sub - thx elad
+   * Remove bad chars when saving TTML 1.0
+   * Minor fix for "Toggle dashed" inside italic tag - thx Bryan
+   * Sometimes Dutch was detected as English
+   * + Many minor fixes from ivandrofly and xylographe
+
+
 3.4.12 (20th March 2016)
 * NEW:
    * "mpv" can be now used as video player (has precise seeking) - thx emk2203/aaaxx/lachs0r/rossy
