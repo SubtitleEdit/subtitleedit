@@ -10783,6 +10783,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     using (var watermarkForm = new Watermark())
                     {
+                        // TODO: Localize description.
+                        MakeHistoryForUndo("Before Watermark.");
                         watermarkForm.Initialize(_subtitle, FirstSelectedIndex);
                         if (watermarkForm.ShowDialog(this) == DialogResult.OK)
                         {
