@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Core
             var format = styleFormat.ToLowerInvariant().Substring(8).Split(',');
             for (int i = 0; i < format.Length; i++)
             {
-                string f = format[i].Trim().ToLower();
+                string f = format[i].Trim();
                 if (f == "name")
                     sb.Append(Name);
                 else if (f == "fontname")
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Core
             var format = styleFormat.ToLowerInvariant().Substring(8).Split(',');
             for (int i = 0; i < format.Length; i++)
             {
-                string f = format[i].Trim().ToLower();
+                string f = format[i].Trim();
                 if (f == "name")
                     sb.Append(Name);
                 else if (f == "fontname")
