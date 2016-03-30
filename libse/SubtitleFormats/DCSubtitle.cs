@@ -59,15 +59,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return false;
                 }
             }
-            else
-            {
-                return false;
-            }
-        }
-
-        private static string RemoveSubStationAlphaFormatting(string s)
-        {
-            return Utilities.RemoveSsaTags(s);
+            return false;
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -157,19 +149,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     subNode.Attributes.Append(end);
 
                     bool alignLeft = p.Text.StartsWith("{\\a1}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a9}", StringComparison.Ordinal) || // sub station alpha
-                                    p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an7}", StringComparison.Ordinal); // advanced sub station alpha
+                                     p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an7}", StringComparison.Ordinal); // advanced sub station alpha
 
                     bool alignRight = p.Text.StartsWith("{\\a3}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a7}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a11}", StringComparison.Ordinal) || // sub station alpha
                                       p.Text.StartsWith("{\\an3}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal); // advanced sub station alpha
 
                     bool alignVTop = p.Text.StartsWith("{\\a5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a6}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a7}", StringComparison.Ordinal) || // sub station alpha
-                                    p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal); // advanced sub station alpha
+                                     p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal); // advanced sub station alpha
 
                     bool alignVCenter = p.Text.StartsWith("{\\a9}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a10}", StringComparison.Ordinal) || p.Text.StartsWith("{\\a11}", StringComparison.Ordinal) || // sub station alpha
-                                      p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal); // advanced sub station alpha
+                                        p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal); // advanced sub station alpha
 
-                    // remove styles for display text (except italic)
-                    string text = RemoveSubStationAlphaFormatting(p.Text);
+                    string text = Utilities.RemoveSsaTags(p.Text);
 
                     var lines = text.SplitToLines();
                     int vPos = 1 + lines.Length * 7;
@@ -645,35 +636,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Renumber();
         }
 
-        private static string GetColorStringForDCinema(string p)
-        {
-            string s = p.ToUpper().Trim();
-            if (s.Replace("#", string.Empty).
-                Replace("0", string.Empty).
-                Replace("1", string.Empty).
-                Replace("2", string.Empty).
-                Replace("3", string.Empty).
-                Replace("4", string.Empty).
-                Replace("5", string.Empty).
-                Replace("6", string.Empty).
-                Replace("7", string.Empty).
-                Replace("8", string.Empty).
-                Replace("9", string.Empty).
-                Replace("A", string.Empty).
-                Replace("B", string.Empty).
-                Replace("C", string.Empty).
-                Replace("D", string.Empty).
-                Replace("E", string.Empty).
-                Replace("F", string.Empty).Length == 0)
-            {
-                return s.TrimStart('#');
-            }
-            else
-            {
-                return p;
-            }
-        }
-
         private static string GetColorStringFromDCinema(string p)
         {
             string s = p.ToLower().Trim();
@@ -697,13 +659,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (s.StartsWith('#'))
                     return s;
-                else
-                    return "#" + s;
+                return "#" + s;
             }
-            else
-            {
-                return p;
-            }
+            return p;
         }
 
         private static TimeCode GetTimeCode(string s)
