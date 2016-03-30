@@ -213,6 +213,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
 
                 bool first = true;
+                bool italicOn = false;
                 foreach (string line in text.SplitToLines())
                 {
                     if (!first)
@@ -240,7 +241,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             attr.InnerText = "italic";
                             currentStyle.Attributes.Append(attr);
                             skipCount = 2;
-                        }
+                            italicOn = true;
+                        }                        
                         else if (line.Substring(i).StartsWith("<b>", StringComparison.Ordinal))
                         {
                             currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
@@ -289,9 +291,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 skipCount = 6;
                             else
                                 skipCount = 3;
+                            italicOn = false;
                         }
                         else
                         {
+                            if (i == 0 && italicOn && !(line.Substring(i).StartsWith("<i>", StringComparison.Ordinal)))
+                            {
+                                styles.Push(currentStyle);
+                                currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
+                                paragraph.AppendChild(currentStyle);
+                                XmlAttribute attr = xml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/10/ttml#style");
+                                attr.InnerText = "italic";
+                                currentStyle.Attributes.Append(attr);
+                            }
                             currentStyle.InnerText = currentStyle.InnerText + line[i];
                         }
                     }
