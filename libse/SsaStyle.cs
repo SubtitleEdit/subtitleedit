@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             var sb = new StringBuilder();
             sb.Append("Style: ");
-            var format = styleFormat.ToLower().Substring(8).Split(',');
+            var format = styleFormat.ToLowerInvariant().Substring(8).Split(',');
             for (int i = 0; i < format.Length; i++)
             {
                 string f = format[i].Trim().ToLower();
@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             var sb = new StringBuilder();
             sb.Append("Style: ");
-            var format = styleFormat.ToLower().Substring(8).Split(',');
+            var format = styleFormat.ToLowerInvariant().Substring(8).Split(',');
             for (int i = 0; i < format.Length; i++)
             {
                 string f = format[i].Trim().ToLower();
