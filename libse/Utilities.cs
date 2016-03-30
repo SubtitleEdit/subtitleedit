@@ -707,19 +707,10 @@ namespace Nikse.SubtitleEdit.Core
             int k = s.IndexOf('{');
             while (k >= 0)
             {
-                int l = s.IndexOf('}', k);
-                if (l > k)
-                {
-                    s = s.Remove(k, l - k + 1);
-                    if (s.Length > 1 && s.Length > k)
-                        k = s.IndexOf('{', k);
-                    else
-                        break;
-                }
-                else
-                {
-                    break;
-                }
+                int l = s.IndexOf('}', k + 1);
+                if (l < k) break;
+                s = s.Remove(k, l - k + 1);
+                k = s.IndexOf('{', k);
             }
             return s;
         }
