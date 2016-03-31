@@ -1215,6 +1215,8 @@ namespace Nikse.SubtitleEdit.Core
         {
             var lines = s.SplitToLines();
             var newLines = new StringBuilder();
+            var pre = new StringBuilder();
+            var post = new StringBuilder();
             foreach (var line in lines)
             {
                 string s2 = line;
@@ -1232,9 +1234,8 @@ namespace Nikse.SubtitleEdit.Core
                     s2 = s2.Remove(s2.Length - 4, 4);
                 }
 
-                var pre = new StringBuilder();
-                var post = new StringBuilder();
-
+                pre.Clear();
+                post.Clear();
                 int i = 0;
                 while (i < s2.Length && PrePostStringsToReverse.Contains(s2[i]))
                 {
