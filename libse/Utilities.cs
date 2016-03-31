@@ -1207,6 +1207,10 @@ namespace Nikse.SubtitleEdit.Core
             return Uri.UnescapeDataString(text);
         }
 
+
+        private const string PrePostStringsToReverse = @"- !?.""،,():;[]";
+        private static readonly Regex TwoOrMoreDigitsNumber = new Regex(@"\d\d+", RegexOptions.Compiled);
+
         public static string ReverseStartAndEndingForRightToLeft(string s)
         {
             var lines = s.SplitToLines();
@@ -1232,13 +1236,13 @@ namespace Nikse.SubtitleEdit.Core
                 var post = new StringBuilder();
 
                 int i = 0;
-                while (i < s2.Length && @"- !?.""،,():;[]".Contains(s2[i]))
+                while (i < s2.Length && PrePostStringsToReverse.Contains(s2[i]))
                 {
                     pre.Append(s2[i]);
                     i++;
                 }
                 int j = s2.Length - 1;
-                while (j > i && @"- !?.""،,():;[]".Contains(s2[j]))
+                while (j > i && PrePostStringsToReverse.Contains(s2[j]))
                 {
                     post.Append(s2[j]);
                     j--;
@@ -1253,6 +1257,16 @@ namespace Nikse.SubtitleEdit.Core
                 newLines.AppendLine();
             }
             return newLines.ToString().Trim();
+        }
+
+        public static string ReverseNumbers(string s)
+        {
+            foreach (Match match in TwoOrMoreDigitsNumber.Matches(s))
+            {
+                var numberString = ReverseString(match.ToString());
+                s = s.Remove(match.Index, match.Length).Insert(match.Index, numberString);
+            }
+            return s;
         }
 
         private static string ReverseString(string s)

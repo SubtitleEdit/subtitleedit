@@ -367,7 +367,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     buffer = new byte[] { 0, 0, 0, 0, 0, 0, 0 }; // 0x16 }; -- the last two bytes might be something with vertical alignment...
                     fs.Write(buffer, 0, buffer.Length);
 
-                    WriteText(fs, p.Text, p == subtitle.Paragraphs[subtitle.Paragraphs.Count - 1], _languageIdLine1);
+                    bool hasBox = Utilities.RemoveSsaTags(p.Text).StartsWith("<box>");
+                    var text = p.Text.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
+                    text = HtmlUtil.RemoveOpenCloseTags(Utilities.RemoveSsaTags(text), HtmlUtil.TagBold, HtmlUtil.TagFont, HtmlUtil.TagBold);
+                    WriteText(fs, text, p == subtitle.Paragraphs[subtitle.Paragraphs.Count - 1], _languageIdLine1, hasBox);
 
                     number += 16;
                 }
@@ -390,7 +393,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return buffer;
         }
 
-        private static void WriteText(FileStream fs, string text, bool isLast, int languageIdLine)
+        private static void WriteText(Stream fs, string text, bool isLast, int languageIdLine, bool useBox)
         {
             string line1 = string.Empty;
             string line2 = string.Empty;
@@ -411,6 +414,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             fs.Write(buffer, 0, buffer.Length);
 
             buffer = new byte[] { 00, 00, 00, 00, 00, 00 };
+            if (useBox)
+                buffer[3] = 0xa0;
             fs.Write(buffer, 0, buffer.Length);
 
             buffer = GetTextAsBytes(line2, languageIdLine);
@@ -432,6 +437,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 for (int i = 0; i < buffer.Length; i++)
                     buffer[i] = 0;
+            }
+            else if (languageId == LanguageIdHebrew)
+            {
+                text = Utilities.ReverseNumbers(text);
+                if (!Configuration.Settings.General.RightToLeftMode)
+                    text = Utilities.ReverseStartAndEndingForRightToLeft(text);
             }
 
             var encoding = Encoding.Default;
@@ -741,6 +752,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 double startFrame = buffer[start - 14] * 256 * 256 + buffer[start - 13] * 256 + buffer[start - 12];
                 double endFrame = buffer[start - 11] * 256 * 256 + buffer[start - 10] * 256 + buffer[start - 9];
 
+                byte boxType = buffer[start + textLength + 3];
+
                 string line1 = FixText(buffer, start, textLength, _languageIdLine1);
                 string line2 = FixText(buffer, start + textLength + 6, textLength, _languageIdLine2);
 
@@ -758,6 +771,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     p.EndTime.TotalMilliseconds = (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * endFrame;
                     p.Text = (line1 + Environment.NewLine + line2).Trim();
                 }
+                if (boxType >= 0xa0 && boxType <= 0xa9 && !string.IsNullOrEmpty(p.Text)) // box
+                {
+                    if (p.Text.StartsWith("{\\") && p.Text.Contains("}"))
+                    {
+                        p.Text = p.Text.Insert(p.Text.IndexOf("}" + 1, StringComparison.Ordinal), "<box>") + "</box>";
+                    }
+                    else
+                    {
+                        p.Text = "<box>" + p.Text + "</box>";
+                    }
+                }
 
                 lastNumber = number;
 
@@ -765,6 +789,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             subtitle.Renumber();
+        }
+
+        public static string Reverse(string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
         }
 
         private static string FixText(byte[] buffer, int start, int textLength, int languageId)
@@ -815,8 +846,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
                 text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
                 text = FixColors(text);
-
-                text = Utilities.FixEnglishTextInRightToLeftLanguage(text, ",.?-'/\"0123456789abcdefghijklmnopqrstuvwxyz");
+                if (!Configuration.Settings.General.RightToLeftMode)
+                    text = Utilities.ReverseStartAndEndingForRightToLeft(text);
+                text = Utilities.ReverseNumbers(text);
             }
             else if (languageId == LanguageIdChineseTraditional || languageId == LanguageIdChineseSimplified) //  (_language == "CCKM44" || _language == "TVB000")
             {
