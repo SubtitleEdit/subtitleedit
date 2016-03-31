@@ -775,7 +775,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     if (p.Text.StartsWith("{\\") && p.Text.Contains("}"))
                     {
-                        p.Text = p.Text.Insert(p.Text.IndexOf("}" + 1, StringComparison.Ordinal), "<box>") + "</box>";
+                        p.Text = p.Text.Insert(p.Text.IndexOf('}', 3) + 1, "<box>") + "</box>";
                     }
                     else
                     {
