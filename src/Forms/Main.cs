@@ -5573,11 +5573,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SpellCheck(bool autoDetect, int startFromLine)
         {
-            //if (Configuration.Settings.General.SpellChecker.Contains("word", StringComparison.OrdinalIgnoreCase))
-            //{
-            //    SpellCheckViaWord();
-            //    return;
-            //}
             if (!IsSubtitleLoaded)
             {
                 DisplaySubtitleNotLoadedMessage();

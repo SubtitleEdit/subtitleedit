@@ -785,7 +785,25 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             if (autoDetect || string.IsNullOrEmpty(_languageName))
+            {
                 _languageName = LanguageAutoDetect.AutoDetectLanguageName(_languageName, subtitle);
+                if (_languageName != null && _languageName.Length > 3)
+                {
+                    string start = _languageName.Substring(0, 3);
+                    if (_languageName.StartsWith(start, StringComparison.Ordinal) && Configuration.Settings.General.SpellCheckLanguage != null &&
+                        Configuration.Settings.General.SpellCheckLanguage.StartsWith(start, StringComparison.Ordinal) && _languageName != Configuration.Settings.General.SpellCheckLanguage)
+                    {
+                        foreach (var dictionaryName in Utilities.GetDictionaryLanguages())
+                        {
+                            if (dictionaryName.Contains(Configuration.Settings.General.SpellCheckLanguage))
+                            {
+                                _languageName = Configuration.Settings.General.SpellCheckLanguage;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
             string dictionary = Utilities.DictionaryFolder + _languageName;
 
             LoadDictionaries(dictionaryFolder, dictionary, _languageName);
