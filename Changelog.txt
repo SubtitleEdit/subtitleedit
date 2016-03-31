@@ -12,6 +12,8 @@
    * Remove bad chars when saving TTML 1.0
    * Minor fix for "Toggle dashed" inside italic tag - thx Bryan
    * Sometimes Dutch was detected as English
+   * Fixed bug regarding double line italic in format "iTunes Timed Text" - thx Ajax
+   * Restore video position after "Reopen" - thx vmb
    * + Many minor fixes from ivandrofly and xylographe
 
 

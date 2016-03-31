@@ -3001,9 +3001,17 @@ namespace Nikse.SubtitleEdit.Forms
                     OpenSubtitle(item.Text, null);
                 else
                     OpenSubtitle(rfe.FileName, null, rfe.VideoFileName, rfe.OriginalFileName);
+                GotoSubPosAndPause();
                 SetRecentIndices(item.Text);
                 SubtitleListview1.EndUpdate();
-                GotoSubPosAndPause();
+                if (rfe != null && !string.IsNullOrEmpty(rfe.VideoFileName))
+                {
+                    var p = _subtitle.GetParagraphOrDefault(rfe.FirstSelectedIndex);
+                    if (p != null)
+                    {
+                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                    }
+                }
             }
         }
 
@@ -8348,7 +8356,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (!string.IsNullOrEmpty(_fileName))
                     Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
-                Configuration.Settings.General.RightToLeftMode = toolStripMenuItemRightToLeftMode.Checked;
 
                 SaveUndockedPositions();
                 SaveListViewWidths();
@@ -18168,6 +18175,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.RightToLeftLayout = false;
                 textBoxSource.RightToLeft = RightToLeft.No;
                 mediaPlayer.TextRightToLeft = RightToLeft.No;
+                Configuration.Settings.General.RightToLeftMode = false;
             }
             else
             {
@@ -18177,6 +18185,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.RightToLeftLayout = true;
                 textBoxSource.RightToLeft = RightToLeft.Yes;
                 mediaPlayer.TextRightToLeft = RightToLeft.Yes;
+                Configuration.Settings.General.RightToLeftMode = true;
             }
         }
 
@@ -19723,6 +19732,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _lastWaveformMenuCloseTicks = DateTime.Now.Ticks;
         }
-        
+
     }
 }
