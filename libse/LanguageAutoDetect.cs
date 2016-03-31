@@ -663,6 +663,7 @@ namespace Nikse.SubtitleEdit.Core
             }
             catch
             {
+                // ignored
             }
             return encoding;
         }
