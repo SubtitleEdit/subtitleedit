@@ -3069,6 +3069,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                 }
             }
+            _borderWidth = float.Parse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()));
             checkBoxBold.Checked = Configuration.Settings.Tools.ExportLastFontBold;
 
             if (Configuration.Settings.Tools.Export3DType >= 0 && Configuration.Settings.Tools.Export3DType < comboBox3D.Items.Count)
@@ -3144,7 +3145,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 SubtitleListView1Fill(_subtitle);
                 SubtitleListView1SelectIndexAndEnsureVisible(0);
-            }
+            }            
         }
 
         private void InitBorderStyle()
