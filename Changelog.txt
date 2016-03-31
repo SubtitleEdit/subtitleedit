@@ -4,16 +4,19 @@
 * NEW:
    * Added new subtitle format - thx Oli
 * IMPROVED:
+   * Updated Finnish translation - thx Teijo S.
    * Some updates for format "sif"
+   * Some updates for format "Cavena 890" - thx Elad
 * FIXED:
    * Fix updating of main list view after "Remove text for HI" + "Apply" - thx Henry
    * Spell check "change" / "change all" issue regarding brackets/dash - thx jc
-   * Fixed issue where current frame rate was lost when loading new sub - thx elad
+   * Fixed issue where current frame rate was lost when loading new sub - thx Elad
    * Remove bad chars when saving TTML 1.0
    * Minor fix for "Toggle dashed" inside italic tag - thx Bryan
    * Sometimes Dutch was detected as English
    * Fixed bug regarding double line italic in format "iTunes Timed Text" - thx Ajax
-   * Restore video position after "Reopen" - thx vmb
+   * Set video position after "Reopen" - thx vmb
+   * Fix for border size in vobsub export via cmd line - thx S_E_New
    * + Many minor fixes from ivandrofly and xylographe
 
 
