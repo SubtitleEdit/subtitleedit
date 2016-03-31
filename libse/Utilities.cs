@@ -901,14 +901,13 @@ namespace Nikse.SubtitleEdit.Core
 
             try
             {
-                Regex.Match(string.Empty, testPattern);
+                return Regex.IsMatch(string.Empty, testPattern);
             }
             catch (ArgumentException)
             {
                 // BAD PATTERN: Syntax error
                 return false;
             }
-            return true;
         }
 
         public static Regex MakeWordSearchRegex(string word)
