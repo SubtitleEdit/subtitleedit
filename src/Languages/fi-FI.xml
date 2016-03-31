@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.12</Version>
-    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [02-04-2015]</TranslatedBy>
+    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [30-03-2016]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -108,12 +108,21 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Muodostetaan taajuusanalyysi</GeneratingSpectrogram>
     <ExtractingSeconds>Puretaan ääntä: {0:0.0} sekuntia</ExtractingSeconds>
     <ExtractingMinutes>Puretaan ääntä: {0}.{1: 00} minuuttia</ExtractingMinutes>
+    <WaveFileNotFound>Purettua aaltoäänitiedostoa ei löydy!
+Toiminto vaatii sovelluksen VLC media player 1.1.x tai uudemman ({0}-bit). 
+Komentorivi: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} ei onnistunut tallentamaan ääntä aaltoäänitiedostoon! 
+Komentorivi: {1} {2} 
+HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
+    <LowDiskSpace>LEVYTILA VÄHISSÄ!</LowDiskSpace>
+    <FreeDiskSpace>{0} vapaana</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Aaltomuototietojen tuottaminen eräajona</Title>
     <ExtractingAudio>Puretaan ääntä...</ExtractingAudio>
     <Calculating>Lasketaan...</Calculating>
     <Done>Valmis</Done>
+    <Error>Virhe</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Säädä kestoja</Title>
@@ -206,6 +215,7 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Säädä nopeus prosentteina</Title>
+    <TitleShort>Säädä nopeutta</TitleShort>
     <Info>Säädä tekstityksen nopeus prosentteina</Info>
     <Custom>Mukauta</Custom>
     <ToDropFrame>Pudotuskehykseen asti</ToDropFrame>
@@ -344,6 +354,8 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <TranslatorsName>Kääntäjän nimi</TranslatorsName>
     <SubtitleListReferenceCode>Tekstitysluettelon viitekoodi</SubtitleListReferenceCode>
     <CountryOfOrigin>Alkuperämaa</CountryOfOrigin>
+    <TimeCodeStatus>Aikakoodin tila</TimeCodeStatus>
+    <TimeCodeStartOfProgramme></TimeCodeStartOfProgramme>
     <RevisionNumber>Muunnosnumero</RevisionNumber>
     <MaxNoOfDisplayableChars>Enintään merkkiä rivillä</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Enintään riviä</MaxNumberOfDisplayableRows>
@@ -352,6 +364,9 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <Import>Tuo</Import>
     <TextAndTimingInformation>Teksti- ja ajoitustietoja</TextAndTimingInformation>
     <JustificationCode>Rivintasauskoodi</JustificationCode>
+    <Teletext></Teletext>
+    <UseBox></UseBox>
+    <DoubleHeight></DoubleHeight>
     <Errors>Virheet</Errors>
     <ErrorsX>Virheitä: {0}</ErrorsX>
     <MaxLengthError>Rivinpituus {0} on suurempi kuin enimmäispituus ({1}) {2}: {3}</MaxLengthError>
@@ -407,6 +422,7 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <ShadowWidth>Varjon leveys</ShadowWidth>
     <Transparency>Alfakanava</Transparency>
     <ImageFormat>Kuvaformaatti</ImageFormat>
+    <FullFrameImage></FullFrameImage>
     <SimpleRendering>Yksinkertainen renderöinti</SimpleRendering>
     <AntiAliasingWithTransparency>Läpikuultavasti pehmennetty</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
@@ -426,12 +442,18 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveVobSubAs>Valitse VobSub-tiedostonimi</SaveVobSubAs>
     <SaveFabImageScriptAs>Valitse Blu-ray sup -tiedostonimi</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Valitse DVD Studio Pro STL -tiedostonimi</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Valitse Digital Cinema Interop -tiedostonimi</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Valitse Premiere EDL -tiedostonimi</SavePremiereEdlAs>
+    <SaveFcpAs>Valitse Final Cut Pro xm -tiedostonimi</SaveFcpAs>
+    <SaveDostAs>Valitse DoStudio dost -tiedostonimi</SaveDostAs>
     <SomeLinesWereTooLongX>Liian pitkiä rivejä:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Rivin korkeus</LineHeight>
     <BoxSingleLine>Laatikko, yksirivinen</BoxSingleLine>
     <BoxMultiLine>Laatikko, monirivinen</BoxMultiLine>
     <Forced>Pakotettu</Forced>
+    <ChooseBackgroundColor>Valitse taustakuva</ChooseBackgroundColor>
+    <SaveImageAs>Tallenna kuva nimellä...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Vie teksti</Title>
@@ -468,6 +490,10 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <Normal>Normaali</Normal>
     <CaseSensitive>Sama kirjainkoko</CaseSensitive>
     <RegularExpression>Säännöllinen lauseke</RegularExpression>
+    <WholeWord>Kokonainen sana</WholeWord>
+    <Count>Määrä</Count>
+    <XNumberOfMatches>{0:#,##0} osumaa</XNumberOfMatches>
+    <OneMatch>Yksi osuma</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Etsi tekstitysrivi</Title>
@@ -644,6 +670,8 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <ImageFiles>Kuvatiedostot</ImageFiles>
     <Input>Syöte</Input>
     <InputDescription>Valitse syötetiedostot (selaa tai raahaa)</InputDescription>
+    <Remove>Poista</Remove>
+    <RemoveAll>Poista kaikki</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Tuo muutoskohdat</Title>
@@ -1238,12 +1266,18 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <BeforeMergeLinesWithSameText>Ennen samansisältöisten rivien yhdistämistä</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Aikaleimat sisältävässä tekstityksessä on eri rivimäärä ({0)} kuin nykyisessä tekstityksessä - jatketaanko silti?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Luodaan siirtovirtausta - odota</ParsingTransportStream>
+    <XPercentCompleted>{0}% valmiina</XPercentCompleted>
     <ErrorLoadIdx>Idx-tiedostojen luku tai muokkaus epäonnistui, mutta sub-tiedoston avaus onnistuu. idx-tiedostot ovat osa idx/sub -tiedostoparia (nk VobSub).</ErrorLoadIdx>
     <ErrorLoadRar>Tiedostoa ei ole pakattu rar-pakkauksella, joten sitä ei voida avata.</ErrorLoadRar>
     <ErrorLoadZip>Tiedostoa ei ole pakattu zip-pakkauksella, joten sitä ei voida avata.</ErrorLoadZip>
     <ErrorLoadPng>Tiedosto on PGN-kuva, sitä ei voida avata.</ErrorLoadPng>
+    <ErrorLoadJpg>Tiedosto on JPG-kuva, sitä ei voida avata.</ErrorLoadJpg>
     <ErrorLoadSrr>Tiedosto on ReScene .srr -tiedosto, eikä sisällä tekstitystä.</ErrorLoadSrr>
     <ErrorLoadTorrent>Tiedosto on BitTorrent-tiedosto, eikä sisällä tekstitystä.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Tiedosto sisältää vain binäärinollia!
+
+Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytettävissä valikostaTiedosto -&gt; Palauta varmuuskopio...</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>Kansioita ei voi raahata tähän.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Salattuja VobSub-tiedostoja ei voida avata.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Toiminto ei toteutettavissa Blu-ray sup -tiedostoille.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>Toiminto ei toteutettavissa DVD sup -tiedostoille.</NoSupportHereDvdSup>
@@ -1385,8 +1419,10 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <NewLine>Uusi rivi (\r\n)</NewLine>
     <NewLineShort>Uusi rivi (\n)</NewLineShort>
     <AnyDigit>Mikä tahansa numero (\d)</AnyDigit>
+    <NonDigit>Muu kuin numero (\D)</NonDigit>
     <AnyCharacter>Mikä tahansa merkki (.)</AnyCharacter>
     <AnyWhitespace>Mikä tahansa tyhjä merkki (\s)</AnyWhitespace>
+    <NonSpaceCharacter>Ei välilyönti (\S)</NonSpaceCharacter>
     <ZeroOrMore>Ei yhtään tai enemmän(*)</ZeroOrMore>
     <OneOrMore>Yksi tai enemmän (+)</OneOrMore>
     <InCharacterGroup>Merkkiryhmässä ([test])</InCharacterGroup>
@@ -1462,6 +1498,7 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <Tools>Työkalut</Tools>
     <WordLists>Sanaluettelot</WordLists>
     <SsaStyle>Sub Station Alpha</SsaStyle>
+    <Network>Verkko</Network>
     <ShowToolBarButtons>Työkalupalkin kuvakkeet</ShowToolBarButtons>
     <New>Uusi</New>
     <Open>Avaa</Open>
@@ -1521,6 +1558,8 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <DirectShowDescription>Quartz.dll Kansiossa 'System32'</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
+    <MpvPlayer>mpv</MpvPlayer>
+    <MpvPlayerDescription>https://mpv.io/ - ilmainen, vapaan lähdekoodin monialustainen mediasoitin</MpvPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>VLC Media Player 1.1.0 libvlc.dll (tai uudempi)</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC:n sijainti (tarvitaan vain mikäli käytössä on siirrettävä VLC-versio)</VlcBrowseToLabel>
@@ -1582,6 +1621,8 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <ProxyUserName>Käyttäjänimi</ProxyUserName>
     <ProxyPassword>Salasana</ProxyPassword>
     <ProxyDomain>Toimialue</ProxyDomain>
+    <NetworkSessionSettings>Verkkoistunnon asetukset</NetworkSessionSettings>
+    <NetworkSessionNewSound>Äänimerkki uuden viestin saapuessa</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Toistoaika ennen paluuta (sek.):</PlayXSecondsAndBack>
     <StartSceneIndex>Käynnistyskohtauksen kappale:</StartSceneIndex>
     <EndSceneIndex>Lopetuskohtauksen kappale:</EndSceneIndex>
@@ -1593,6 +1634,7 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <MusicSymbolsToReplace>Korvattavat nuotit (erota välilyönnillä)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Korjaa yleiset tekstintunnistusvirheet</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Korjaa liian lyhyet kestot aloitusaikaa muuttamalla</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Ohita ensimmäinen vaihe (korjaussääntöjen ohitus)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Pikanäppäimet</Shortcuts>
     <Shortcut>Pikanäppäin</Shortcut>
     <Control>Ctrl</Control>
@@ -1632,7 +1674,9 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <WaveformSeekSilenceForward>Hae hiljaisuus eteenpäin</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Hae hiljaisuus takaisinpäin</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Lisää tekstiä tähän (uudelle valinnalle)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>Lisää tekstiä tähän (leikepöydältä uudelle valinnalle)</WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>Toista uusi valinta</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Toista valinnan loppu</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Toista ensimmäinen valittu tekstitys</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Tarkennusluettelonäkymä</WaveformFocusListView>
     <GoBack1Frame>Yksi kehys takaisin</GoBack1Frame>
@@ -1685,7 +1729,17 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <MainFileSaveAll>Tallenna kaikki</MainFileSaveAll>
     <Miscellaneous>Sekalaiset</Miscellaneous>
     <UseDoNotBreakAfterList>Käytä rivinvaihdon kieltoluetteloa (automaattiselle rivinvaihdolle)</UseDoNotBreakAfterList>
+    <MicrosoftBingTranslator>Microsoft Bing -kääntäjä</MicrosoftBingTranslator>
+    <HowToSignUp>Tilinluontiohje</HowToSignUp>
+    <ClientId>Asiakastunnus</ClientId>
+    <ClientSecret>Asiakas salasana</ClientSecret>
   </Settings>
+  <SettingsMpv>
+    <Title>mpv:n asetukset</Title>
+    <DownloadMpv>Lataa mpv lib</DownloadMpv>
+    <DownloadMpvFailed>mpv:n lataaminen epäonnistui, yritä myöhemmin uudelleen.</DownloadMpvFailed>
+    <DownloadMpvOk>mpv:n lataaminen onnistui ja se on käytettävissä.</DownloadMpvOk>
+  </SettingsMpv>
   <SetVideoOffset>
     <Title>Videosiirtymäasetukset</Title>
     <Description>Aseta videosiirtymä (tekstityksen tulee olla +10 yksikköä edellä)</Description>
@@ -1986,6 +2040,8 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <InspectCompareMatchesForCurrentImage>Tarkista vertailuvastaavuudet nykyisessä kuvassa</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Muokkaa viimeisen kuvan vertailulisäyksiä</EditLastAdditions>
     <SetUnitalicFactor>Poista kursivointi</SetUnitalicFactor>
+    <DiscardTitle>Hylätäänkö tekstintunnistuksessa tehdyt muutokset?</DiscardTitle>
+    <DiscardText>Hylätäänkö nykyisessä tekstintunnistuksessa tehdyt muutokset?</DiscardText>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - manuaalinen kuva tekstiksi</Title>
@@ -2007,6 +2063,7 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <Title>Tarkista vertailuvastaavuudet nykyisessä kuvassa</Title>
     <InspectItems>Tarkista kohteet</InspectItems>
     <AddBetterMatch>Lisää parempi vastine</AddBetterMatch>
+    <Add>Lisää</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Uusi kansio</Title>
