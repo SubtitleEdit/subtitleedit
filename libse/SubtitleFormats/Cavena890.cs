@@ -195,15 +195,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
                 int russianCount = 0;
+                char[] logoGrams = { '的', '是', '啊', '吧', '好', '吧', '亲', '爱', '的', '早', '上' };
+                char[] russianChars = { 'я', 'д', 'й', 'л', 'щ', 'ж', 'ц', 'ф', 'ы' };
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
-                    if (p.Text.Contains(new[] { '的', '是', '啊', '吧', '好', '吧', '亲', '爱', '的', '早', '上' }))
+                    if (p.Text.Contains(logoGrams))
                     {
                         _languageIdLine1 = LanguageIdChineseSimplified;
                         _languageIdLine2 = LanguageIdChineseSimplified;
                         break;
                     }
-                    if (p.Text.Contains(new[] { 'я', 'д', 'й', 'л', 'щ', 'ж', 'ц', 'ф', 'ы' }))
+                    if (p.Text.Contains(russianChars))
                     {
                         russianCount++;
                         if (russianCount > 10)
