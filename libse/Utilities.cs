@@ -1261,12 +1261,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string ReverseNumbers(string s)
         {
-            foreach (Match match in TwoOrMoreDigitsNumber.Matches(s))
-            {
-                var numberString = ReverseString(match.ToString());
-                s = s.Remove(match.Index, match.Length).Insert(match.Index, numberString);
-            }
-            return s;
+            return TwoOrMoreDigitsNumber.Replace(s, m => ReverseString(m.Value));
         }
 
         private static string ReverseString(string s)
