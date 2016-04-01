@@ -791,14 +791,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             subtitle.Renumber();
-        }
-
-        public static string Reverse(string s)
-        {
-            char[] charArray = s.ToCharArray();
-            Array.Reverse(charArray);
-            return new string(charArray);
-        }
+        }       
 
         private static string FixText(byte[] buffer, int start, int textLength, int languageId)
         {
