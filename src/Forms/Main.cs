@@ -4806,7 +4806,7 @@ namespace Nikse.SubtitleEdit.Forms
             using (var adjustDisplayTime = new AdjustDisplayDuration())
             {
                 List<int> selectedIndices = null;
-                if (onlySelectedLines)
+                if (onlySelectedLines || SubtitleListview1.SelectedIndices.Count > 1)
                 {
                     adjustDisplayTime.Text += " - " + _language.SelectedLines;
                     selectedIndices = new List<int>();
