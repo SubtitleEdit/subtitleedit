@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.4.13 (xh May 2016) BETA
+3.4.13 (xth May 2016) BETA
 * NEW:
    * Added new subtitle format - thx Oli
 * IMPROVED:
@@ -12,12 +12,13 @@
    * Spell check "change" / "change all" issue regarding brackets/dash - thx jc
    * Fixed issue where current frame rate was lost when loading new sub - thx Elad
    * Remove bad chars when saving TTML 1.0
-   * Minor fix for "Toggle dashed" inside italic tag - thx Bryan
+   * Minor fix for "Toggle dashes" inside italic tag - thx Bryan
    * Sometimes Dutch was detected as English
    * Fixed bug regarding double line italic in format "iTunes Timed Text" - thx Ajax
    * Set video position after "Reopen" - thx vmb
    * Fix for border size in vobsub export via cmd line - thx S_E_New
    * Adjust duration fixed for last subtitle - thx mariner
+   * Read more variations of "S_DVBSUB" from mkv files - thx dreammday
    * + Many minor fixes from ivandrofly and xylographe
 
 
