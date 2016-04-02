@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -390,6 +391,104 @@ namespace Nikse.SubtitleEdit.Logic
                     label.ForeColor = Color.Red;
             }
             label.Text = sb.ToString();
+        }
+
+        private const string BreakChars = "\",:;.¡!¿?()[]{}<>♪♫-–—/#*|";
+
+        public static void ApplyControlBackspace(TextBox textBox)
+        {
+            if (textBox.SelectionLength == 0)
+            {
+                var text = textBox.Text;
+                var deleteUpTo = textBox.SelectionStart;
+                if (deleteUpTo > 0 && deleteUpTo <= text.Length)
+                {
+                    text = text.Substring(0, deleteUpTo);
+                    var textElementIndices = StringInfo.ParseCombiningCharacters(text);
+                    var index = textElementIndices.Length;
+                    var textIndex = deleteUpTo;
+                    var deleteFrom = -1;
+                    while (index > 0)
+                    {
+                        index--;
+                        textIndex = textElementIndices[index];
+                        if (!IsSpaceCategory(CharUnicodeInfo.GetUnicodeCategory(text, textIndex)))
+                            break;
+                    }
+                    if (index > 0 && text[textIndex] == '>') // HTML tag?
+                    {
+                        var openingBracketIndex = text.LastIndexOf('<', textIndex - 1);
+                        if (openingBracketIndex >= 0 && text.IndexOf('>', openingBracketIndex + 1) == textIndex)
+                            deleteFrom = openingBracketIndex; // delete whole tag
+                    }
+                    if (deleteFrom < 0)
+                    {
+                        if (BreakChars.Contains(text[textIndex]))
+                            deleteFrom = -2;
+                        while (index > 0)
+                        {
+                            index--;
+                            textIndex = textElementIndices[index];
+                            if (IsSpaceCategory(CharUnicodeInfo.GetUnicodeCategory(text, textIndex)))
+                            {
+                                if (deleteFrom > -2)
+                                {
+                                    if (deleteFrom < 0)
+                                        deleteFrom = textElementIndices[index + 1];
+                                    break;
+                                }
+                                deleteFrom = textElementIndices[index + 1];
+                                if (!":!?".Contains(text[deleteFrom]))
+                                    break;
+                            }
+                            else if (BreakChars.Contains(text[textIndex]))
+                            {
+                                if (deleteFrom > -2)
+                                {
+                                    if (deleteFrom < 0)
+                                        deleteFrom = textElementIndices[index + 1];
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                deleteFrom = -1;
+                            }
+                        }
+                    }
+                    if (deleteFrom < deleteUpTo)
+                    {
+                        if (deleteFrom < 0)
+                            deleteFrom = 0;
+                        textBox.Select(deleteFrom, deleteUpTo - deleteFrom);
+                        textBox.Paste(string.Empty);
+                    }
+                }
+            }
+        }
+
+        public static void SelectWordAtCaret(TextBox textBox)
+        {
+            var text = textBox.Text;
+            var endIndex = textBox.SelectionStart;
+            var startIndex = endIndex;
+
+            while (startIndex > 0 && !IsSpaceCategory(CharUnicodeInfo.GetUnicodeCategory(text[startIndex - 1])) && !BreakChars.Contains(text[startIndex - 1]))
+            {
+                startIndex--;
+            }
+            textBox.SelectionStart = startIndex;
+
+            while (endIndex < text.Length && !IsSpaceCategory(CharUnicodeInfo.GetUnicodeCategory(text[endIndex])) && !BreakChars.Contains(text[endIndex]))
+            {
+                endIndex++;
+            }
+            textBox.SelectionLength = endIndex - startIndex;
+        }
+
+        private static bool IsSpaceCategory(UnicodeCategory c)
+        {
+            return c == UnicodeCategory.SpaceSeparator || c == UnicodeCategory.Control || c == UnicodeCategory.LineSeparator || c == UnicodeCategory.ParagraphSeparator;
         }
 
     }
