@@ -9073,9 +9073,8 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var msub = sub[index];
-
                     DvbSubPes pes = null;
-                    if (msub.Data.Length > 9 && msub.Data[0] == 15 && msub.Data[1] == 16)
+                    if (msub.Data.Length > 9 && msub.Data[0] == 15 && msub.Data[1] >= 16 && msub.Data[1] <= 24) // sync byte + segment id
                     {
                         var buffer = new byte[msub.Data.Length + 3];
                         Buffer.BlockCopy(msub.Data, 0, buffer, 2, msub.Data.Length);
@@ -9096,6 +9095,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         pes = new DvbSubPes(0, msub.Data);
                     }
+
                     if (pes == null && subtitle.Paragraphs.Count > 0)
                     {
                         var last = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
