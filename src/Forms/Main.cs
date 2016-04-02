@@ -9074,7 +9074,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var msub = sub[index];
                     DvbSubPes pes = null;
-                    if (msub.Data.Length > 9 && msub.Data[0] == 15 && msub.Data[1] >= 16 && msub.Data[1] <= 24) // sync byte + segment id
+                    if (msub.Data.Length > 9 && msub.Data[0] == 15 && msub.Data[1] >= SubtitleSegment.PageCompositionSegment && msub.Data[1] <= SubtitleSegment.DisplayDefinitionSegment) // sync byte + segment id
                     {
                         var buffer = new byte[msub.Data.Length + 3];
                         Buffer.BlockCopy(msub.Data, 0, buffer, 2, msub.Data.Length);
