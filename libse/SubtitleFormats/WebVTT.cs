@@ -133,7 +133,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (p.Text.Contains('<'))
                 {
                     string text = p.Text;
-                    text = RemoveTag("v", text);
+
+                    // Only remove voice tag if subtitle format is not subrip.
+                    if (newFormat.GetType() != typeof(SubRip))
+                    {
+                        text = RemoveTag("v", text);
+                    }
+                    else
+                    {
+                        // Convert voice tag to subrip its narrator notation.
+                        string formattedText = p.Text;
+                        int startIdx = formattedText.IndexOf("<v ", StringComparison.Ordinal);
+                        if (startIdx >= 0)
+                        {
+                            int endIdx = formattedText.IndexOf('>', startIdx + 3);
+                            if (endIdx > startIdx)
+                            {
+                                string narrator = formattedText.Substring(startIdx + 3, endIdx - (startIdx + 3));
+                                formattedText = formattedText.Remove(startIdx, endIdx - startIdx + 1);
+                                formattedText = formattedText.Insert(startIdx, narrator + ": ");
+                                text = formattedText;
+                            }
+                        }
+                    }
                     text = RemoveTag("rt", text);
                     text = RemoveTag("ruby", text);
                     text = RemoveTag("c", text);
