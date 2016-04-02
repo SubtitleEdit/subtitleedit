@@ -323,7 +323,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 if (selectedIndexes == null || selectedIndexes.Contains(i))
                 {
-                    double nextStartMilliseconds = _paragraphs[_paragraphs.Count - 1].EndTime.TotalMilliseconds + TimeCode.BaseUnit;
+                    double nextStartMilliseconds = double.MaxValue;
                     if (i + 1 < _paragraphs.Count)
                         nextStartMilliseconds = _paragraphs[i + 1].StartTime.TotalMilliseconds;
 
