@@ -17,6 +17,7 @@
    * Fixed bug regarding double line italic in format "iTunes Timed Text" - thx Ajax
    * Set video position after "Reopen" - thx vmb
    * Fix for border size in vobsub export via cmd line - thx S_E_New
+   * Adjust duration fixed for last subtitle - thx mariner
    * + Many minor fixes from ivandrofly and xylographe
 
 
