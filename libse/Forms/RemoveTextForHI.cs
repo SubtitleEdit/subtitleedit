@@ -200,7 +200,9 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 string l1Trimmed = HtmlUtil.RemoveHtmlTags(lines[0]).TrimEnd('"');
                                 if (count == 1 && lines.Length == 2 && !l1Trimmed.EndsWith('.') &&
                                                                        !l1Trimmed.EndsWith('!') &&
-                                                                       !l1Trimmed.EndsWith('?'))
+                                                                       !l1Trimmed.EndsWith('?') &&
+                                                                       !l1Trimmed.EndsWith("--", StringComparison.Ordinal) &&
+                                                                       !l1Trimmed.EndsWith("—", StringComparison.Ordinal))
                                 {
                                     remove = false;
                                 }
@@ -343,7 +345,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         if (insertDash)
                         {
                             string arr0QuoteTrimmed = arr[0].TrimEnd('"');
-                            if (arr0QuoteTrimmed.Length > 0 && !".?!".Contains(arr0QuoteTrimmed[arr0QuoteTrimmed.Length - 1]) && !arr0QuoteTrimmed.EndsWith("</i>", StringComparison.Ordinal))
+                            if (arr0QuoteTrimmed.Length > 0 && !".?!".Contains(arr0QuoteTrimmed[arr0QuoteTrimmed.Length - 1]) && !arr0QuoteTrimmed.EndsWith("</i>", StringComparison.Ordinal) && !arr0QuoteTrimmed.EndsWith("--", StringComparison.Ordinal) && !arr0QuoteTrimmed.EndsWith("—", StringComparison.Ordinal))
                             {
                                 if (!arr1Stripable.Pre.Contains('-'))
                                 {
