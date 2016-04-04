@@ -219,7 +219,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     string newText = p.Text;
                     while (index != -1)
                     {
-                        if (newText.Length > index + 4 && index > 1)
+                        if (newText.Length > index + 4 && index >= 1)
                         {
                             if (Utilities.AllLettersAndNumbers.Contains(newText[index + 3]) &&
                                 Utilities.AllLettersAndNumbers.Contains(newText[index - 1]))

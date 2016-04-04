@@ -728,6 +728,18 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingSpacesOneLetterPlusDotDotDot()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "I...want missing spaces.");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "en" });  
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "I... want missing spaces.");
+            }
+        }
+
         #endregion Fix missing spaces
 
         #region Fix unneeded spaces
