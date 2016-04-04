@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         public readonly List<Color> Palette = new List<Color>();
         public readonly List<string> Languages = new List<string>();
 
-        private static Regex timeCodeLinePattern = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);
+        private static readonly Regex _timeCodeLinePattern = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);
 
         public Idx(string fileName)
             : this(File.ReadAllLines(fileName))
@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         {
             foreach (string line in lines)
             {
-                if (timeCodeLinePattern.IsMatch(line))
+                if (_timeCodeLinePattern.IsMatch(line))
                 {
                     IdxParagraph p = GetTimeCodeAndFilePosition(line);
                     if (p != null)
@@ -47,15 +47,25 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                     string[] parts = s.Split(new[] { ':', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length > 0)
                     {
-                        try
+                        string twoLetterLanguageId = parts[0];
+                        string nativeName;
+                        if (IfoParser.LanguageCodes.Contains(twoLetterLanguageId))
                         {
-                            string twoLetterLanguageId = parts[0];
-                            CultureInfo info = CultureInfo.GetCultureInfoByIetfLanguageTag(twoLetterLanguageId);
-                            Languages.Add(string.Format("{0} (0x{1:x})", info.NativeName, Languages.Count + 32));
+                            nativeName = IfoParser.LanguageNames[IfoParser.LanguageCodes.IndexOf(twoLetterLanguageId)];
                         }
-                        catch
+                        else
                         {
+                            try
+                            {
+                                nativeName = CultureInfo.GetCultureInfoByIetfLanguageTag(twoLetterLanguageId).NativeName;
+                            }
+                            catch
+                            {
+                                nativeName = "Unknown (" + twoLetterLanguageId + ")";
+                            }
                         }
+                        // Use U+200E (LEFT-TO-RIGHT MARK) to support right-to-left scripts
+                        Languages.Add(string.Format("{0} \x200E(0x{1:x})", nativeName, Languages.Count + 32));
                     }
                 }
             }
