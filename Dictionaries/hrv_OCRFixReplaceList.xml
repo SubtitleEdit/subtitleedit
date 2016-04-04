@@ -1424,6 +1424,7 @@
     <RegEx find="lizovan" replaceWith="liziran" />
     <RegEx find="luparenj" replaceWith="lupiranj" />
     <RegEx find="mjenim" replaceWith="mijenim" />
+    <RegEx find="nisa([nlot])" replaceWith="nira$1" />
     <RegEx find="(?&lt;!am)nesti" replaceWith="nijeti" />
     <RegEx find="(?&lt;!sit)nišem" replaceWith="niram" />
     <RegEx find="(?&lt;!sit)nišeš" replaceWith="niraš" />
