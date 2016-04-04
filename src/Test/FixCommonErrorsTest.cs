@@ -730,6 +730,42 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingSpacesNoChange6()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Go to nikse.com for more info");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Go to nikse.com for more info");
+            }
+        }
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingSpacesNoChange7()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Go to nikse.net for more info");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Go to nikse.net for more info");
+            }
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingSpacesNoChange8()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Go to nikse.org for more info");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "Go to nikse.org for more info");
+            }
+        }
+
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesOneLetterPlusDotDotDot()
         {
             using (var target = GetFixCommonErrorsLib())
