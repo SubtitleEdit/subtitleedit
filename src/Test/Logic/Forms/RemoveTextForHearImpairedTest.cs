@@ -1554,6 +1554,21 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void RemoveColonTestDash()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            string text = "- I have a theory, captain--" + Environment.NewLine + "UHURA: Captain Kirk.";
+            string expected = "- I have a theory, captain--" + Environment.NewLine + "- Captain Kirk."; ;
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
 
         #region Additional test attributes
 
