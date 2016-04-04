@@ -11,9 +11,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
         private static readonly Regex FixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z]", RegexOptions.Compiled);
         private static readonly Regex FixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![a-zA-Z]", RegexOptions.Compiled);
         private static readonly Regex FixMissingSpacesReColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
-        private static readonly Regex UrlCom = new Regex(@"\w\.com\b", RegexOptions.Compiled);
-        private static readonly Regex UrlNet = new Regex(@"\w\.net\b", RegexOptions.Compiled);
-        private static readonly Regex UrlOrg = new Regex(@"\w\.org\b", RegexOptions.Compiled);
+        private static readonly Regex Url = new Regex(@"\w\.(?:com|net|org)\b", RegexOptions.Compiled);
 
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
@@ -105,9 +103,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     if (!p.Text.Contains("www.", StringComparison.OrdinalIgnoreCase) &&
                         !p.Text.Contains("http://", StringComparison.OrdinalIgnoreCase) &&
-                        !UrlCom.IsMatch(p.Text) &&
-                        !UrlNet.IsMatch(p.Text) &&
-                        !UrlOrg.IsMatch(p.Text)) // urls are skipped
+                        !Url.IsMatch(p.Text)) // Skip urls.
                     {
                         bool isMatchAbbreviation = false;
 
