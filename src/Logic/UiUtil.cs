@@ -415,11 +415,22 @@ namespace Nikse.SubtitleEdit.Logic
                         if (!IsSpaceCategory(CharUnicodeInfo.GetUnicodeCategory(text, textIndex)))
                             break;
                     }
-                    if (index > 0 && text[textIndex] == '>') // HTML tag?
+                    if (index > 0) // HTML tag?
                     {
-                        var openingBracketIndex = text.LastIndexOf('<', textIndex - 1);
-                        if (openingBracketIndex >= 0 && text.IndexOf('>', openingBracketIndex + 1) == textIndex)
-                            deleteFrom = openingBracketIndex; // delete whole tag
+                        if (text[textIndex] == '>')
+                        {
+                            var openingBracketIndex = text.LastIndexOf('<', textIndex - 1);
+                            if (openingBracketIndex >= 0 && text.IndexOf('>', openingBracketIndex + 1) == textIndex)
+                                deleteFrom = openingBracketIndex; // delete whole tag
+                        }
+                        else if (text[textIndex] == '}')
+                        {
+                            var startIdx = text.LastIndexOf("{\\", textIndex - 1, StringComparison.Ordinal);
+                            if (startIdx >= 0 && text.IndexOf('}', startIdx + 1) == textIndex)
+                            {
+                                deleteFrom = startIdx;
+                            }
+                        }
                     }
                     if (deleteFrom < 0)
                     {
