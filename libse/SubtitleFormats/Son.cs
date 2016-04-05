@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Son : SubtitleFormat
     {
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\d\d[\t]+\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t.+\.(tif|tiff|png|bmp|TIF|TIFF|PNG|BMP)", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".son"; }
@@ -59,29 +61,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
-            var regexTimeCodes = new Regex(@"^\d\d\d\d[\t]+\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t.+\.(tif|tiff|png|bmp|TIF|TIFF|PNG|BMP)", RegexOptions.Compiled);
+
             int index = 0;
+            Match match = null;
             foreach (string line in lines)
             {
-                if (regexTimeCodes.IsMatch(line))
+                if (line.Length > 32)
                 {
-                    string temp = line.Substring(0, regexTimeCodes.Match(line).Length);
-                    string start = temp.Substring(5, 11);
-                    string end = temp.Substring(12 + 5, 11);
-
-                    string[] startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                    string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                    if (startParts.Length == 4 && endParts.Length == 4)
+                    match = RegexTimeCodes.Match(line);
+                    if (match.Success)
                     {
-                        int lastIndexOfTab = line.LastIndexOf('\t');
-                        string text = line.Remove(0, lastIndexOfTab + 1).Trim();
-                        if (!text.Contains(Environment.NewLine))
-                            text = text.Replace("\t", Environment.NewLine);
-                        p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), DecodeTimeCodeFramesFourParts(endParts), text);
-                        subtitle.Paragraphs.Add(p);
+                        string temp = line.Substring(0, match.Length);
+                        string start = temp.Substring(5, 11);
+                        string end = temp.Substring(12 + 5, 11);
+
+                        string[] startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
+                        if (startParts.Length == 4 && endParts.Length == 4)
+                        {
+                            int lastIndexOfTab = line.LastIndexOf('\t');
+                            string text = line.Remove(0, lastIndexOfTab + 1).Trim();
+                            if (!text.Contains(Environment.NewLine))
+                                text = text.Replace("\t", Environment.NewLine);
+                            p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), DecodeTimeCodeFramesFourParts(endParts), text);
+                            subtitle.Paragraphs.Add(p);
+                        }
                     }
                 }
-                else if (string.IsNullOrWhiteSpace(line) || line.StartsWith("Display_Area") || line.StartsWith('#') || line.StartsWith("Color") || index < 10)
+                else if (string.IsNullOrWhiteSpace(line) || line.StartsWith("Display_Area", StringComparison.Ordinal) || line.StartsWith('#') || line.StartsWith("Color", StringComparison.Ordinal) || index < 10)
                 {
                     // skip these lines
                 }
