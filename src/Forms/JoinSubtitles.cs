@@ -68,7 +68,10 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (string existingFileName in _fileNamesToJoin)
                 {
                     if (existingFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
+                    {
                         alreadyInList = true;
+                        break;
+                    }
                 }
                 if (!alreadyInList)
                     _fileNamesToJoin.Add(fileName);
