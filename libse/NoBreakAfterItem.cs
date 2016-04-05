@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core
 {
-    public class NoBreakAfterItem : IComparable
+    public class NoBreakAfterItem : IComparable<NoBreakAfterItem>
     {
         public readonly Regex Regex;
         public readonly string Text;
@@ -21,13 +21,12 @@ namespace Nikse.SubtitleEdit.Core
 
         public bool IsMatch(string line)
         {
+            // Make sure that both *line and *Text are not null.
+            if (string.IsNullOrEmpty(line) || string.IsNullOrEmpty(Text))
+                return false;
             if (Regex != null)
                 return Regex.IsMatch(line);
-
-            if (!string.IsNullOrEmpty(Text) && line.EndsWith(Text, StringComparison.Ordinal))
-                return true;
-
-            return false;
+            return line.EndsWith(Text, StringComparison.Ordinal);
         }
 
         public override string ToString()
@@ -35,22 +34,15 @@ namespace Nikse.SubtitleEdit.Core
             return Text;
         }
 
-        public int CompareTo(object obj)
+        public int CompareTo(NoBreakAfterItem obj)
         {
             if (obj == null)
                 return -1;
-
-            var o = obj as NoBreakAfterItem;
-            if (o == null)
-                return -1;
-
-            if (o.Text == null && this.Text == null)
+            if (obj.Text == null && Text == null)
                 return 0;
-
-            if (o.Text == null)
+            else if (obj.Text == null)
                 return -1;
-
-            return string.Compare(Text, o.Text, StringComparison.Ordinal);
+            return string.Compare(Text, obj.Text, StringComparison.Ordinal);
         }
     }
 }
