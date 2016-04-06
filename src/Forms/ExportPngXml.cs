@@ -482,7 +482,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_exportType == "BLURAYSUP")
                     binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
                 else if (_exportType == "VOBSUB")
-                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, comboBoxBottomMargin.SelectedIndex, comboBoxLeftRightMargin.SelectedIndex, 32, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked, IfoParser.ArrayOfLanguage[comboBoxLanguage.SelectedIndex], IfoParser.ArrayOfLanguageCode[comboBoxLanguage.SelectedIndex]);
+                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, comboBoxBottomMargin.SelectedIndex, comboBoxLeftRightMargin.SelectedIndex, 32, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked, IfoParser.LanguageNames[comboBoxLanguage.SelectedIndex], IfoParser.LanguageCodes[comboBoxLanguage.SelectedIndex]);
 
                 progressBar1.Value = 0;
                 progressBar1.Maximum = _subtitle.Paragraphs.Count - 1;
@@ -2893,10 +2893,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 string languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle);
                 if (languageCode == null)
                     languageCode = Configuration.Settings.Tools.ExportVobSubLanguage;
-                for (int i = 0; i < IfoParser.ArrayOfLanguage.Count; i++)
+                for (int i = 0; i < IfoParser.LanguageNames.Count; i++)
                 {
-                    comboBoxLanguage.Items.Add(IfoParser.ArrayOfLanguage[i]);
-                    if (IfoParser.ArrayOfLanguageCode[i] == languageCode || IfoParser.ArrayOfLanguage[i] == languageCode)
+                    comboBoxLanguage.Items.Add(IfoParser.LanguageNames[i]);
+                    if (IfoParser.LanguageCodes[i] == languageCode || IfoParser.LanguageNames[i] == languageCode)
                         comboBoxLanguage.SelectedIndex = i;
                 }
                 if (comboBoxLanguage.SelectedIndex == -1 && comboBoxLanguage.Items.Count > 25)
