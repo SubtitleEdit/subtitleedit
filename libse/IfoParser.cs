@@ -49,24 +49,10 @@ namespace Nikse.SubtitleEdit.Core
                         {
                             list.Add(Subtitles[i] + " (" + ids[0].Trim() + ")");
                         }
-                        else
+                        else if (ids.Length >= 1 && types.Length >= 1)
                         {
-                            if (ids.Length >= 1 && types.Length >= 1)
-                            {
-                                list.Add(Subtitles[i] + ", " + types[0].Trim() + " (" + ids[0].Trim() + ")");
-                            }
-                            if (ids.Length >= 2 && types.Length >= 2)
-                            {
-                                list.Add(Subtitles[i] + ", " + types[1].Trim() + " (" + ids[1].Trim() + ")");
-                            }
-                            if (ids.Length >= 3 && types.Length >= 3)
-                            {
-                                list.Add(Subtitles[i] + ", " + types[2].Trim() + " (" + ids[2].Trim() + ")");
-                            }
-                            if (ids.Length >= 4 && types.Length >= 4)
-                            {
-                                list.Add(Subtitles[i] + ", " + types[3].Trim() + " (" + ids[3].Trim() + ")");
-                            }
+                            int minLen = Math.Min(ids.Length, types.Length);
+                            list.Add(Subtitles[i] + ", " + types[minLen - 1].Trim() + " (" + ids[minLen - 1].Trim() + ")");
                         }
                     }
                 }
