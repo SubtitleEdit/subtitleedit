@@ -130,19 +130,30 @@ namespace Nikse.SubtitleEdit.Core
         private readonly List<string> _arrayOfCodingMode = new List<string> { "MPEG1", "MPEG2" };
         private readonly List<string> _arrayOfNtscResolution = new List<string> { "720x480", "704x480", "352x480", "352x240" };
         private readonly List<string> _arrayOfPalResolution = new List<string> { "720x576", "704x576", "352x576", "352x288" };
-        public static List<string> ArrayOfLanguageCode = new List<string> { "  ", "aa", "ab", "af", "am", "ar", "as", "ay", "az", "ba", "be", "bg", "bh", "bi", "bn", "bo", "br", "ca", "co", "cs", "cy", "da", "de", "dz", "el",
-           "en", "eo", "es", "et", "eu", "fa", "fi", "fj", "fo", "fr", "fy", "ga", "gd", "gl", "gn", "gu", "ha", "he", "hi", "hr", "hu", "hy", "ia", "id", "ie", "ik",
-           "in", "is", "it", "iu", "iw", "ja", "ji", "jw", "ka", "kk", "kl", "km", "kn", "ko", "ks", "ku", "ky", "la", "ln", "lo", "lt", "lv", "mg", "mi", "mk", "ml",
-           "mn", "mo", "mr", "ms", "mt", "my", "na", "ne", "nl", "no", "oc", "om", "or", "pa", "pl", "ps", "pt", "qu", "rm", "rn", "ro", "ru", "rw", "sa", "sd", "sg",
-           "sh", "si", "sk", "sl", "sm", "sn", "so", "sq", "sr", "ss", "st", "su", "sv", "sw", "ta", "te", "tg", "th", "ti", "tk", "tl", "tn", "to", "tr", "ts", "tt",
-           "tw", "ug", "uk", "ur", "uz", "vi", "vo", "wo", "xh", "yi", "yo", "za", "zh", "zu", ""};
-        public static List<string> ArrayOfLanguage = new List<string> { "Not Specified", "Afar", "Abkhazian", "Afrikaans", "Amharic", "Arabic", "Assamese", "Aymara", "Azerbaijani", "Bashkir", "Byelorussian", "Bulgarian", "Bihari", "Bislama", "Bengali; Bangla", "Tibetan", "Breton", "Catalan", "Corsican", "Czech(Ceske)", "Welsh", "Dansk", "Deutsch", "Bhutani", "Greek",
-           "English", "Esperanto", "Espanol", "Estonian", "Basque", "Persian", "Suomi", "Fiji", "Faroese", "Français", "Frisian", "Irish", "Scots Gaelic", "Galician", "Guarani", "Gujarati", "Hausa", "Hebrew", "Hindi", "Hrvatski", "Magyar", "Armenian", "Interlingua", "Indonesian", "Interlingue", "Inupiak",
-           "Indonesian", "Islenska", "Italiano", "Inuktitut", "Hebrew", "Japanese", "Yiddish", "Javanese", "Georgian", "Kazakh", "Greenlandic", "Cambodian", "Kannada", "Korean", "Kashmiri", "Kurdish", "Kirghiz", "Latin", "Lingala", "Laothian", "Lithuanian", "Latvian, Lettish", "Malagasy", "Maori", "Macedonian", "Malayalam",
-           "Mongolian", "Moldavian", "Marathi", "Malay", "Maltese", "Burmese", "Nauru", "Nepali", "Nederlands", "Norsk", "Occitan", "(Afan) Oromo", "Oriya", "Punjabi", "Polish", "Pashto, Pushto", "Portugues", "Quechua", "Rhaeto-Romance", "Kirundi", "Romanian", "Russian", "Kinyarwanda", "Sanskrit", "Sindhi", "Sangho",
-           "Serbo-Croatian", "Sinhalese", "Slovak", "Slovenian", "Samoan", "Shona", "Somali", "Albanian", "Serbian", "Siswati", "Sesotho", "Sundanese", "Svenska", "Swahili", "Tamil", "Telugu", "Tajik", "Thai", "Tigrinya", "Turkmen", "Tagalog", "Setswana", "Tonga", "Turkish", "Tsonga", "Tatar",
-           "Twi", "Uighur", "Ukrainian", "Urdu", "Uzbek", "Vietnamese", "Volapuk", "Wolof", "Xhosa", "Yiddish", "Yoruba", "Zhuang", "Chinese", "Zulu", "???"};
-
+        public static readonly IList<string> LanguageCodes = new List<string>
+        {
+            "  ", "aa", "ab", "af", "am", "ar", "as", "ay", "az", "ba", "be", "bg", "bh", "bi", "bn", "bo", "br", "bs", "ca", "co", "cs", "cy", "da", "de", "dz", "el",
+            "en", "eo", "es", "et", "eu", "fa", "fi", "fj", "fo", "fr", "fy", "ga", "gd", "gl", "gn", "gu", "ha", "he", "hi", "hr", "hu", "hy", "ia", "id", "ie", "ik",
+            "in", "is", "it", "iu", "iw", "ja", "ji", "jv", "jw", "ka", "kk", "kl", "km", "kn", "ko", "ks", "ku", "ky", "la", "lb", "ln", "lo", "lt", "lv", "mg", "mi",
+            "mk", "ml", "mn", "mo", "mr", "ms", "mt", "my", "na", "ne", "nl", "no", "oc", "om", "or", "pa", "pl", "ps", "pt", "qu", "rm", "rn", "ro", "ru", "rw", "sa",
+            "sd", "sg", "sh", "si", "sk", "sl", "sm", "sn", "so", "sq", "sr", "ss", "st", "su", "sv", "sw", "ta", "te", "tg", "th", "ti", "tk", "tl", "tn", "to", "tr",
+            "ts", "tt", "tw", "ug", "uk", "ur", "uz", "vi", "vo", "wo", "xh", "yi", "yo", "za", "zh", "zu"
+        };
+        public static readonly IList<string> LanguageNames = new List<string>
+        {
+            "Not Specified", "Qafár af", "Аҧсуа бызшәа", "Afrikaans", "አማርኛ", "العربية", "অসমীয়", "Aymar aru", "Azərbaycan dili", "Башҡорт теле", "Беларуская мова", "Български език", "भोजपुरी",
+            "Bislama", "বাংলা", "བོད་ཡིག", "Brezhoneg", "Bosanski", "Català", "Corsu", "Čeština", "Cymraeg", "Dansk", "Deutsch", "ོང་ཁ", "Ελληνικά",
+            "English", "Esperanto", "Español", "Eesti", "Euskara", "فارسی", "Suomi", "Vosa Vakaviti", "Føroyskt", "Français", "Frysk", "Gaeilge", "Gàidhlig",
+            "Galego", "Avañe'ẽ", "ગુજરાતી", "هَوُسَ", "עברית", "हिन्दी", "Hrvatski jezik", "Magyar", "Հայերեն", "Interlingua", "Bahasa Indonesia", "Interlingue", "Iñupiaq",
+            "Bahasa Indonesia", "Íslenska", "Italiano", "ᐃᓄᒃᑎᑐᑦ", "עברית", "日本語", "ייִדיש", "Basa Jawa", "Basa Jawa", "ქართული", "Қазақ тілі", "Kalaallisut", "ខ្មែរ",
+            "ಕನ್ನಡ", "한국어", "कश्मीरी‎", "Kurdî‎", "Кыргызча", "Lingua latina", "Lëtzebuergesch", "Lingála", "ພາສາລາວ", "Lietuvių kalba", "Latviešu valoda", "Fiteny malagasy", "Te reo Māori",
+            "Македонски јазик", "മലയാളം", "Монгол хэл", "Limba moldovenească", "मराठी", "Bahasa Melayu", "Malti", "Myanma", "Dorerin Naoero", "नेपाली", "Nederlands", "Norsk", "Occitan",
+            "Afaan Oromoo", "ଓଡ଼ିଆ", "ਪੰਜਾਬੀ‎", "Język polski", "پښتو", "Português", "Runa Simi", "Rumantsch grischun", "Ikirundi", "Limba română", "Русский", "Ikinyarwanda", "संस्कृतम्",
+            "सिन्धी‎", "Yângâ tî sängö", "Srpskohrvatski jezik", "සිංහල", "Slovenčina", "Slovenščina", "Gagana fa'a Samoa", "ChiShona", "Soomaaliga", "Shqip", "Српски језик", "SiSwati", "Sesotho",
+            "Basa Sunda", "Svenska", "Kiswahili", "தமிழ்", "తెలుగు", "Тоҷикӣ", "ไทย", "ትግርኛ", "Türkmen", "Wikang Tagalog", "Setswana", "Faka Tonga", "Türkçe",
+            "Xitsonga", "Татар теле", "Twi", "ئۇيغۇرچە", "Українська", "اردو", "Oʻzbek‎", "Tiếng Việt", "Volapük", "Wollof", "IsiXhosa", "ייִדיש", "Yorùbá",
+            "Vahcuengh (話僮)", "中文", "IsiZulu"
+        };
         public VtsPgci VideoTitleSetProgramChainTable { get { return _vtsPgci; } }
         public VtsVobs VideoTitleSetVobs { get { return _vtsVobs; } }
         public string ErrorMessage { get; private set; }
@@ -203,8 +214,8 @@ namespace Nikse.SubtitleEdit.Core
                 audioStream.Channels = BinToInt(MidStr(data, 13, 3)) + 1;
                 _fs.Read(buffer, 0, 2);
                 audioStream.LanguageCode = new string(new[] { Convert.ToChar(buffer[0]), Convert.ToChar(buffer[1]) });
-                if (ArrayOfLanguageCode.Contains(audioStream.LanguageCode))
-                    audioStream.Language = ArrayOfLanguage[ArrayOfLanguageCode.IndexOf(audioStream.LanguageCode)];
+                if (LanguageCodes.Contains(audioStream.LanguageCode))
+                    audioStream.Language = LanguageNames[LanguageCodes.IndexOf(audioStream.LanguageCode)];
                 _fs.Seek(1, SeekOrigin.Current);
                 audioStream.Extension = _arrayOfAudioExtension[_fs.ReadByte()];
                 _fs.Seek(2, SeekOrigin.Current);
@@ -273,11 +284,11 @@ namespace Nikse.SubtitleEdit.Core
         private static string InterpretLanguageCode(string code)
         {
             int i = 0;
-            while (ArrayOfLanguageCode[i] != code && i < 143)
+            while (LanguageCodes[i] != code && i < 143)
             {
                 i++;
             }
-            return ArrayOfLanguage[i];
+            return LanguageNames[i];
         }
 
         private void ParseVtsPgci()
