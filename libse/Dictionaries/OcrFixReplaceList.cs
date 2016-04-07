@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         private static readonly Regex RegExTime1 = new Regex(@"[a-zæøåöääöéèàùâêîôûëï]0", RegexOptions.Compiled);
         private static readonly Regex RegExTime2 = new Regex(@"0[a-zæøåöääöéèàùâêîôûëï]", RegexOptions.Compiled);
         private static readonly Regex HexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
-        private static readonly Regex StartEndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
+        private static readonly Regex StartsAndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
 
         public readonly Dictionary<string, string> WordReplaceList;
         public readonly Dictionary<string, string> PartialLineWordBoundaryReplaceList;
@@ -482,7 +482,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         public static string FixIor1InsideLowerCaseWord(string word)
         {
-            if (StartEndEndsWithNumber.IsMatch(word))
+            if (StartsAndEndsWithNumber.IsMatch(word))
                 return word;
 
             if (word.Contains(new[] { '2', '3', '4', '5', '6', '7', '8', '9' }))
@@ -518,7 +518,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         public static string Fix0InsideLowerCaseWord(string word)
         {
-            if (StartEndEndsWithNumber.IsMatch(word))
+            if (StartsAndEndsWithNumber.IsMatch(word))
                 return word;
 
             if (word.Contains(new[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' }) ||
