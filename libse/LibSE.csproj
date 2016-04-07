@@ -113,6 +113,7 @@
     <Compile Include="DetectEncoding\Multilang\__MIDL_IWinTypes_0009.cs" />
     <Compile Include="Dictionaries\NamesList.cs" />
     <Compile Include="Dictionaries\OcrFixReplaceList.cs" />
+    <Compile Include="DvdSubtitleLanguage.cs" />
     <Compile Include="Enums\FindType.cs" />
     <Compile Include="Enums\SelectionChoice.cs" />
     <Compile Include="Enums\SpellCheckAction.cs" />
