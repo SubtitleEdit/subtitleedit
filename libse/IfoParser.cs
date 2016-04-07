@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         var ids = SubtitleIDs[i].Split(',');
                         var types = SubtitleTypes[i].Split(',');
-                        if (ids.Length == 2 && ids[0].Trim() == ids[1].Trim() || ids.Length == 3 && ids[0].Trim() == ids[1].Trim() && ids[1].Trim() == ids[2].Trim())
+                        if ((ids.Length == 2 && ids[0].Trim() == ids[1].Trim()) || (ids.Length == 3 && ids[0].Trim() == ids[1].Trim() && ids[1].Trim() == ids[2].Trim()))
                         {
                             list.Add(Subtitles[i] + " (" + ids[0].Trim() + ")");
                         }
