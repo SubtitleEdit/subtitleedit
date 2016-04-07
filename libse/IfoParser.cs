@@ -283,12 +283,8 @@ namespace Nikse.SubtitleEdit.Core
 
         private static string InterpretLanguageCode(string code)
         {
-            int i = 0;
-            while (LanguageCodes[i] != code && i < 143)
-            {
-                i++;
-            }
-            return LanguageNames[i];
+            int i = LanguageCodes.IndexOf(code);
+            return i < 0 ? "Unknown (" + code + ")" : LanguageNames[i];
         }
 
         private void ParseVtsPgci()
