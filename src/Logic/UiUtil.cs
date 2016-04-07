@@ -425,7 +425,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else if (text[textIndex] == '}')
                         {
-                            var startIdx = text.LastIndexOf("{\\", textIndex - 1, StringComparison.Ordinal);
+                            var startIdx = text.LastIndexOf(@"{\", textIndex - 1, StringComparison.Ordinal);
                             if (startIdx >= 0 && text.IndexOf('}', startIdx + 1) == textIndex)
                             {
                                 deleteFrom = startIdx;
