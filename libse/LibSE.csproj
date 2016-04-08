@@ -187,6 +187,7 @@
     <Compile Include="SsaStyle.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="StripableText.cs" />
+    <Compile Include="SubtitleEditRegex.cs" />
     <Compile Include="Subtitle.cs" />
     <Compile Include="SubtitleFormats\AbcIViewer.cs" />
     <Compile Include="SubtitleFormats\AdobeAfterEffectsFTME.cs" />
