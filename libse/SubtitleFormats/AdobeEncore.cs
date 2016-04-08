@@ -41,14 +41,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (p.Text.Contains(Environment.NewLine))
+                {
                     containsNewLine = true;
+                    break;
+                }
             }
-            if (sb.ToString().Contains("//") && !containsNewLine)
-                return false; // "DVD Subtitle System" format
-
-            if (_maxMsDiv10 > 90 && !containsNewLine)
-                return false; // "DVD Subtitle System" format (frame rate should not go higher than 90...)
-
+            if (!containsNewLine)
+            {
+                if (_maxMsDiv10 > 90)
+                    return false; // "DVD Subtitle System" format (frame rate should not go higher than 90...)
+                if (sb.ToString().Contains("//"))
+                    return false; // "DVD Subtitle System" format
+            }
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
@@ -78,63 +82,38 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _maxMsDiv10 = 0;
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
+            Match match = null;
             foreach (string line in lines)
             {
-                Match match = RegexTimeCodes.Match(line);
-                if (match.Success)
+                if (line.Length >= 23 && (match = RegexTimeCodes.Match(line)).Success)
                 {
-                    try
-                    {
-                        string temp = line.Substring(0, match.Value.Length);
-                        string start = temp.Substring(0, 11);
-                        string end = temp.Substring(12, 11);
+                    string temp = line.Substring(0, match.Value.Length);
+                    string start = temp.Substring(0, 11);
+                    string end = temp.Substring(12, 11);
 
-                        string[] startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                        string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                        if (startParts.Length == 4 && endParts.Length == 4)
-                        {
-                            string text = line.Remove(0, RegexTimeCodes.Match(line).Length - 1).Trim();
-                            p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
-                            subtitle.Paragraphs.Add(p);
-                        }
-                    }
-                    catch
+                    string[] startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
+                    string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
+                    string text = line.Substring(match.Length).Trim();
+                    p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), DecodeTimeCodeFramesFourParts(endParts), text);
+                    subtitle.Paragraphs.Add(p);
+                }
+                else if (!string.IsNullOrWhiteSpace(line))
+                {
+                    if (p != null)
                     {
-                        _errorCount += 10;
+                        if (string.IsNullOrEmpty(p.Text))
+                            p.Text = line;
+                        else
+                            p.Text += Environment.NewLine + line;
                     }
-                }
-                else if (string.IsNullOrWhiteSpace(line))
-                {
-                    // skip these lines
-                }
-                else if (p != null)
-                {
-                    if (string.IsNullOrEmpty(p.Text))
-                        p.Text = line;
                     else
-                        p.Text += Environment.NewLine + line;
-                }
-                else
-                {
-                    _errorCount++;
+                    {
+                        _errorCount++;
+                    }
                 }
             }
 
             subtitle.Renumber();
-        }
-
-        private TimeCode DecodeTimeCode(string[] parts)
-        {
-            //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            int frames = int.Parse(parts[3]);
-
-            if (frames > _maxMsDiv10)
-                _maxMsDiv10 = frames;
-
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(frames));
         }
 
     }
