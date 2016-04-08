@@ -1228,19 +1228,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (alignment == 0) // right
                     p.Text = "{\\an3}" + p.Text;
             }
-
-            p.Text = p.Text.Replace(Convert.ToChar(0).ToString(CultureInfo.InvariantCulture), string.Empty);
-            p.Text = p.Text.Replace(Convert.ToChar(1).ToString(CultureInfo.InvariantCulture), string.Empty);
-            p.Text = p.Text.Replace(Convert.ToChar(2).ToString(CultureInfo.InvariantCulture), string.Empty);
-            p.Text = p.Text.Replace(Convert.ToChar(3).ToString(CultureInfo.InvariantCulture), string.Empty);
-            p.Text = p.Text.Replace(Convert.ToChar(4).ToString(CultureInfo.InvariantCulture), string.Empty);
-            p.Text = p.Text.Replace(Convert.ToChar(5).ToString(CultureInfo.InvariantCulture), string.Empty);
-            p.Text = p.Text.Replace(Convert.ToChar(6).ToString(CultureInfo.InvariantCulture), string.Empty);
-            p.Text = p.Text.Replace(Convert.ToChar(7).ToString(CultureInfo.InvariantCulture), string.Empty);
-            p.Text = p.Text.Replace(Convert.ToChar(8).ToString(CultureInfo.InvariantCulture), string.Empty);
-            p.Text = p.Text.Replace(Convert.ToChar(11).ToString(CultureInfo.InvariantCulture), string.Empty);
-            p.Text = p.Text.Replace(Convert.ToChar(12).ToString(CultureInfo.InvariantCulture), string.Empty);
-
+            p.Text = p.Text.RemoveControlCharactersButWhiteSpace();
             return p;
         }
 
