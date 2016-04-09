@@ -543,6 +543,146 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <Join>Kết nối</Join>
     <TotalNumberOfLinesX>Tổng số các dòng: {0:#,###,###}</TotalNumberOfLinesX>
   </JoinSubtitles>
+  <LanguageNames>
+    <aaName>Tiếng Afar</aaName>
+    <abName>Tiếng Abkhazia</abName>
+    <afName>Tiếng Nam Phi</afName>
+    <amName>Tiếng Amharic</amName>
+    <arName>Tiếng Ả Rập</arName>
+    <asName>Tiếng Assam</asName>
+    <ayName>Tiếng Aymara</ayName>
+    <azName>Tiếng Azerbaijan</azName>
+    <baName>Tiếng Bashkir</baName>
+    <beName>Tiếng Belarus</beName>
+    <bgName>Tiếng Bulgaria</bgName>
+    <biName>Tiếng Bislama</biName>
+    <bnName>Tiếng Bengali</bnName>
+    <boName>Tiếng Tây Tạng</boName>
+    <brName>Tiếng Breton</brName>
+    <caName>Tiếng Catalan</caName>
+    <coName>Tiếng Corsica</coName>
+    <csName>Tiếng Séc</csName>
+    <cyName>Tiếng Wales</cyName>
+    <daName>Tiếng Đan Mạch</daName>
+    <deName>Tiếng Đức</deName>
+    <dzName>Tiếng Dzongkha</dzName>
+    <elName>Tiếng Hy Lạp</elName>
+    <enName>Tiếng Anh</enName>
+    <eoName>Tiếng Quốc Tế Ngữ</eoName>
+    <esName>Tiếng Tây Ban Nha</esName>
+    <etName>Tiếng Estonia</etName>
+    <euName>Tiếng Basque</euName>
+    <faName>Tiếng Ba Tư</faName>
+    <fiName>Tiếng Phần Lan</fiName>
+    <fjName>Tiếng Fiji</fjName>
+    <foName>Tiếng Faore</foName>
+    <frName>Tiếng Pháp</frName>
+    <fyName>Tiếng Frisia</fyName>
+    <gaName>Tiếng Ai-len</gaName>
+    <gdName>Tiếng Xentơ (Xcốt len)</gdName>
+    <glName>Tiếng Galician</glName>
+    <gnName>Tiếng Guarani</gnName>
+    <guName>Tiếng Gujarati</guName>
+    <haName>Tiếng Hausa</haName>
+    <heName>Tiếng Do Thái</heName>
+    <hiName>Tiếng Hindi</hiName>
+    <hrName>Tiếng Croatia</hrName>
+    <huName>Tiếng Hungary</huName>
+    <hyName>Tiếng Armenia</hyName>
+    <iaName>Tiếng Khoa Học Quốc Tế</iaName>
+    <idName>Tiếng Indonesia</idName>
+    <ieName>Tiếng Interlingue</ieName>
+    <ikName>Tiếng Inupiaq</ikName>
+    <isName>Tiếng Iceland</isName>
+    <itName>Tiếng Ý</itName>
+    <iuName>Tiếng Inuktitut</iuName>
+    <jaName>Tiếng Nhật</jaName>
+    <jvName>Tiếng Java</jvName>
+    <kaName>Tiếng Gruzia</kaName>
+    <kkName>Tiếng Kazakh</kkName>
+    <klName>Tiếng Kalaallisut</klName>
+    <kmName>Tiếng Khơ-me</kmName>
+    <knName>Tiếng Kannada</knName>
+    <koName>Tiếng Hàn</koName>
+    <ksName>Tiếng Kashmiri</ksName>
+    <kuName>Tiếng Kurd</kuName>
+    <kyName>Tiếng Kyrgyz</kyName>
+    <laName>Tiếng La-tinh</laName>
+    <lbName>Tiếng Luxembourg</lbName>
+    <lnName>Tiếng Lingala</lnName>
+    <loName>Tiếng Lào</loName>
+    <ltName>Tiếng Lít-va</ltName>
+    <lvName>Tiếng Latvia</lvName>
+    <mgName>Tiếng Malagasy</mgName>
+    <miName>Tiếng Maori</miName>
+    <mkName>Tiếng Macedonia</mkName>
+    <mlName>Tiếng Malayalam</mlName>
+    <mnName>Tiếng Mông Cổ</mnName>
+    <mrName>Tiếng Marathi</mrName>
+    <msName>Tiếng Malaysia</msName>
+    <mtName>Tiếng Malt</mtName>
+    <myName>Tiếng Miến Điện</myName>
+    <naName>Tiếng Nauru</naName>
+    <neName>Tiếng Nepal</neName>
+    <nlName>Tiếng Hà Lan</nlName>
+    <noName>Tiếng Na Uy</noName>
+    <ocName>Tiếng Occitan</ocName>
+    <omName>Tiếng Oromo</omName>
+    <orName>Tiếng Oriya</orName>
+    <paName>Tiếng Punjab</paName>
+    <plName>Tiếng Ba Lan</plName>
+    <psName>Tiếng Pashto</psName>
+    <ptName>Tiếng Bồ Đào Nha</ptName>
+    <quName>Tiếng Quechua</quName>
+    <rmName>Tiếng Romansh</rmName>
+    <rnName>Tiếng Rundi</rnName>
+    <roName>Tiếng Rumani</roName>
+    <ruName>Tiếng Nga</ruName>
+    <rwName>Tiếng Kinyarwanda</rwName>
+    <saName>Tiếng Phạn</saName>
+    <sdName>Tiếng Sindhi</sdName>
+    <sgName>Tiếng Sango</sgName>
+    <shName>Tiếng Xéc bi - Croatia</shName>
+    <siName>Tiếng Sinhala</siName>
+    <skName>Tiếng Slovak</skName>
+    <slName>Tiếng Slovenia</slName>
+    <smName>Tiếng Samoa</smName>
+    <snName>Tiếng Shona</snName>
+    <soName>Tiếng Somali</soName>
+    <sqName>Tiếng An-ba-ni</sqName>
+    <srName>Tiếng Serbia</srName>
+    <ssName>Tiếng Swati</ssName>
+    <stName>Tiếng Sesotho</stName>
+    <suName>Tiếng Sunda</suName>
+    <svName>Tiếng Thụy Điển</svName>
+    <swName>Tiếng Swahili</swName>
+    <taName>Tiếng Tamil</taName>
+    <teName>Tiếng Telugu</teName>
+    <tgName>Tiếng Tajik</tgName>
+    <thName>Tiếng Thái</thName>
+    <tiName>Tiếng Tigrigya</tiName>
+    <tkName>Tiếng Turk</tkName>
+    <tlName>Tiếng Tagalog</tlName>
+    <tnName>Tiếng Tswana</tnName>
+    <toName>Tiếng Tonga</toName>
+    <trName>Tiếng Thổ Nhĩ Kỳ</trName>
+    <tsName>Tiếng Tsonga</tsName>
+    <ttName>Tiếng Tatar</ttName>
+    <twName>Tiếng Twi</twName>
+    <ugName>Tiếng Uyghur</ugName>
+    <ukName>Tiếng Ucraina</ukName>
+    <urName>Tiếng Uđu</urName>
+    <uzName>Tiếng Uzbek</uzName>
+    <viName>Tiếng Việt</viName>
+    <voName>Tiếng Volapük</voName>
+    <woName>Tiếng Wolof</woName>
+    <xhName>Tiếng Xhosa</xhName>
+    <yiName>Tiếng Y-đit</yiName>
+    <yoName>Tiếng Yoruba</yoName>
+    <zaName>Tiếng Zhuang</zaName>
+    <zhName>Tiếng Trung</zhName>
+    <zuName>Tiếng Zulu</zuName>
+  </LanguageNames>
   <Main>
     <Menu>
       <File>
