@@ -672,6 +672,146 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <Join>Ekle</Join>
     <TotalNumberOfLinesX>Toplam satır sayısı: {0:#,###,###}</TotalNumberOfLinesX>
   </JoinSubtitles>
+  <LanguageNames>
+    <aaName>Afar</aaName>
+    <abName>Abhazca</abName>
+    <afName>Afrikaanca</afName>
+    <amName>Amharca</amName>
+    <arName>Arapça</arName>
+    <asName>Assamca</asName>
+    <ayName>Aymara</ayName>
+    <azName>Azerice</azName>
+    <baName>Başkırtça</baName>
+    <beName>Beyaz Rusça</beName>
+    <bgName>Bulgarca</bgName>
+    <biName>Bislama</biName>
+    <bnName>Bengalce</bnName>
+    <boName>Tibetçe</boName>
+    <brName>Bretonca</brName>
+    <caName>Katalanca</caName>
+    <coName>Korsikaca</coName>
+    <csName>Çekçe</csName>
+    <cyName>Galce</cyName>
+    <daName>Danca</daName>
+    <deName>Almanca</deName>
+    <dzName>Butan Dili</dzName>
+    <elName>Yunanca</elName>
+    <enName>İngilizce</enName>
+    <eoName>Esperanto</eoName>
+    <esName>İspanyolca</esName>
+    <etName>Estonca</etName>
+    <euName>Baskça</euName>
+    <faName>Farsça</faName>
+    <fiName>Fince</fiName>
+    <fjName>Fiji Dili</fjName>
+    <foName>Faroe Dili</foName>
+    <frName>Fransızca</frName>
+    <fyName>Batı Frizcesi</fyName>
+    <gaName>İrlandaca</gaName>
+    <gdName>İskoç Gal Dili</gdName>
+    <glName>Galiçyaca</glName>
+    <gnName>Guarani Dili</gnName>
+    <guName>Güceratça</guName>
+    <haName>Hausa</haName>
+    <heName>İbranice</heName>
+    <hiName>Hintçe</hiName>
+    <hrName>Hırvatça</hrName>
+    <huName>Macarca</huName>
+    <hyName>Ermenice</hyName>
+    <iaName>Interlingua</iaName>
+    <idName>Endonezce</idName>
+    <ieName>Interlingue</ieName>
+    <ikName>Inupiak</ikName>
+    <isName>İzlandaca</isName>
+    <itName>İtalyanca</itName>
+    <iuName>Inuktitut</iuName>
+    <jaName>Japonca</jaName>
+    <jvName>Cava Dili</jvName>
+    <kaName>Gürcüce</kaName>
+    <kkName>Kazakça</kkName>
+    <klName>Grönland Dili</klName>
+    <kmName>Kmerce</kmName>
+    <knName>Kannada</knName>
+    <koName>Korece</koName>
+    <ksName>Keşmirce</ksName>
+    <kuName>Kürtçe</kuName>
+    <kyName>Kırgızca</kyName>
+    <laName>Latince</laName>
+    <lbName>Lüksemburgca</lbName>
+    <lnName>Lingala</lnName>
+    <loName>Laoca</loName>
+    <ltName>Litvanca</ltName>
+    <lvName>Letonca</lvName>
+    <mgName>Malgaşça</mgName>
+    <miName>Maori Dili</miName>
+    <mkName>Makedonca</mkName>
+    <mlName>Malayalam</mlName>
+    <mnName>Moğolca</mnName>
+    <mrName>Marathi</mrName>
+    <msName>Malayca</msName>
+    <mtName>Maltaca</mtName>
+    <myName>Burmaca</myName>
+    <naName>Nauru Dili</naName>
+    <neName>Nepalce</neName>
+    <nlName>Hollandaca</nlName>
+    <noName>Norveççe</noName>
+    <ocName>Occitan</ocName>
+    <omName>Oromo</omName>
+    <orName>Oriya Dili</orName>
+    <paName>Pencapça</paName>
+    <plName>Lehçe</plName>
+    <psName>Peştuca</psName>
+    <ptName>Portekizce</ptName>
+    <quName>Keçuvaca</quName>
+    <rmName>Romanşça</rmName>
+    <rnName>Kirundi</rnName>
+    <roName>Romence</roName>
+    <ruName>Rusça</ruName>
+    <rwName>Kinyarwanda</rwName>
+    <saName>Sanskritçe</saName>
+    <sdName>Sindhi</sdName>
+    <sgName>Sango</sgName>
+    <shName>Sırp-Hırvat Dili</shName>
+    <siName>Seylanca</siName>
+    <skName>Slovakça</skName>
+    <slName>Slovence</slName>
+    <smName>Samoa Dili</smName>
+    <snName>Shona</snName>
+    <soName>Somalice</soName>
+    <sqName>Arnavutça</sqName>
+    <srName>Sırpça</srName>
+    <ssName>Sisvati</ssName>
+    <stName>Güney Sotho</stName>
+    <suName>Sunda Dili</suName>
+    <svName>İsveççe</svName>
+    <swName>Svahili</swName>
+    <taName>Tamilce</taName>
+    <teName>Telugu Dili</teName>
+    <tgName>Tacikçe</tgName>
+    <thName>Tayca</thName>
+    <tiName>Tigrinya</tiName>
+    <tkName>Türkmence</tkName>
+    <tlName>Takalotça</tlName>
+    <tnName>Setsvana</tnName>
+    <toName>Tongaca</toName>
+    <trName>Türkçe</trName>
+    <tsName>Tsonga</tsName>
+    <ttName>Tatarca</ttName>
+    <twName>Tvi</twName>
+    <ugName>Uygurca</ugName>
+    <ukName>Ukraynaca</ukName>
+    <urName>Urduca</urName>
+    <uzName>Özbekçe</uzName>
+    <viName>Vietnamca</viName>
+    <voName>Volapük</voName>
+    <woName>Volofça</woName>
+    <xhName>Zosa</xhName>
+    <yiName>Yidiş</yiName>
+    <yoName>Yorubaca</yoName>
+    <zaName>Zhuang</zaName>
+    <zhName>Çince</zhName>
+    <zuName>Zuluca</zuName>
+  </LanguageNames>
   <Main>
     <Menu>
       <File>
