@@ -834,6 +834,19 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         {
                             int index = match.Index;
                             string temp = text.Remove(index, s.Length);
+                            while (index == 0 && temp.StartsWith("... ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(3, 1);
+                            }
+                            while (index == 3 && temp.StartsWith("<i>... ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(6, 1);
+                            }
+                            while (index > 2 && (" \r\n".Contains(text.Substring(index - 1, 1))) && temp.Substring(index).StartsWith("... ", StringComparison.Ordinal))
+                            {
+                                temp = temp.Remove(index + 3, 1);
+                            }
+
                             if (temp.Remove(0, index) == " —" && temp.EndsWith("—  —", StringComparison.Ordinal))
                             {
                                 temp = temp.Remove(temp.Length - 3);
@@ -906,6 +919,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                             temp = temp.Remove(subIndex, 2);
                                             removeAfter = false;
                                         }
+                                        else if (index > 2 && subTemp.StartsWith("-  —", StringComparison.Ordinal))
+                                        {
+                                            temp = temp.Remove(subIndex + 2, 2).Replace("  ", " ");
+                                            removeAfter = false;
+                                        }
                                     }
                                 }
                                 if (removeAfter && temp.Length > index - s.Length + 2)
@@ -933,6 +951,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                 {
                                     temp = temp.Remove(index - 2, 1);
                                     index--;
+                                }
+                                if (subTemp.StartsWith("- ...", StringComparison.Ordinal))
+                                {
+                                    removeAfter = false;
                                 }
                             }
 

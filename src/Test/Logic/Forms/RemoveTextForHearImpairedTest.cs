@@ -156,7 +156,7 @@ namespace Test.Logic.Forms
             target.Settings.ColonSeparateLine = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             string text = "Kelly has an eating" + Environment.NewLine + "disorder? Michael: Yes.";
-            string expected = "- Kelly has an eating" + Environment.NewLine + "disorder? - Yes."; ;
+            string expected = "- Kelly has an eating" + Environment.NewLine + "disorder? - Yes.";
             string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
@@ -172,7 +172,7 @@ namespace Test.Logic.Forms
             target.Settings.ColonSeparateLine = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
             string text = "Kelly has an eating" + Environment.NewLine + "disorder? MICHAEL: Yes.";
-            string expected = "- Kelly has an eating" + Environment.NewLine + "disorder? - Yes."; ;
+            string expected = "- Kelly has an eating" + Environment.NewLine + "disorder? - Yes.";
             string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
@@ -188,7 +188,7 @@ namespace Test.Logic.Forms
             target.Settings.ColonSeparateLine = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             string text = "That's really great, you" + Environment.NewLine + "guys. RYAN: Don't vaccinate it.";
-            string expected = "- That's really great, you" + Environment.NewLine + "guys. - Don't vaccinate it."; ;
+            string expected = "- That's really great, you" + Environment.NewLine + "guys. - Don't vaccinate it.";
             string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
@@ -204,7 +204,7 @@ namespace Test.Logic.Forms
             target.Settings.ColonSeparateLine = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             string text = "<i>- JOHN: Hvordan går det?</i>" + Environment.NewLine + "<i>-Marry: Det går fint!</i>";
-            string expected = "<i>- Hvordan går det?</i>" + Environment.NewLine + "<i>- Det går fint!</i>"; ;
+            string expected = "<i>- Hvordan går det?</i>" + Environment.NewLine + "<i>- Det går fint!</i>";
             string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
@@ -1567,6 +1567,44 @@ namespace Test.Logic.Forms
             string text = "- I have a theory, captain--" + Environment.NewLine + "UHURA: Captain Kirk.";
             string expected = "- I have a theory, captain--" + Environment.NewLine + "- Captain Kirk."; ;
             string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionDotDotDot()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            string expected = "...alright."; ;
+            string actual = target.RemoveInterjections("Oh... alright.");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionDotDotDotItalic()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            string expected = "<i>...alright.</i>"; ;
+            string actual = target.RemoveInterjections("<i>Oh... alright.</i>");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionDotDotDotSecondLineDialog()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            string expected = "- OK." + Environment.NewLine + "- ...alright."; ;
+            string actual = target.RemoveInterjections("- OK." + Environment.NewLine + "- Oh... alright.");
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveInterjectionDialogSecondLineEmDash()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenParentheses = true;
+            target.Settings.RemoveInterjections = true;
+            string expected = "- How many, sir?" + Environment.NewLine + "- 275."; ;
+            string actual = target.RemoveTextFromHearImpaired("- How many, sir?" + Environment.NewLine + "- Uh — (clears throat) 275.");
             Assert.AreEqual(expected, actual);
         }
 
