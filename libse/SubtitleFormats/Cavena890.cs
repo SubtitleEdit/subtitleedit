@@ -8,13 +8,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Cavena890 : SubtitleFormat
     {
-        private const int LanguageIdDanish = 0x07;
-        private const int LanguageIdEnglish = 0x09;
-        private const int LanguageIdRussian = 0x56;
-        private const int LanguageIdArabic = 0x80;
-        private const int LanguageIdHebrew = 0x8f;
-        private const int LanguageIdChineseTraditional = 0x90;
-        private const int LanguageIdChineseSimplified = 0x91;
+        public const int LanguageIdDanish = 0x07;
+        public const int LanguageIdEnglish = 0x09;
+        public const int LanguageIdRussian = 0x56;
+        public const int LanguageIdArabic = 0x80;
+        public const int LanguageIdHebrew = 0x8f;
+        public const int LanguageIdChineseTraditional = 0x90;
+        public const int LanguageIdChineseSimplified = 0x91;
 
         private static readonly List<int> HebrewCodes = new List<int> {
             0x40, // א
@@ -217,26 +217,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
 
-                var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-                if (language == "he") // Hebrew
+                if (Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId > 0)
                 {
-                    _languageIdLine1 = LanguageIdHebrew;
-                    _languageIdLine2 = LanguageIdHebrew; // or 0x09
+                    _languageIdLine1 = Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId;
+                    _languageIdLine2 = Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId; 
                 }
-                else if (language == "ru")
+                else
                 {
-                    _languageIdLine1 = LanguageIdRussian;
-                    _languageIdLine2 = LanguageIdRussian; // or 0x09?
-                }
-                else if (language == "zh")
-                {
-                    _languageIdLine1 = LanguageIdChineseSimplified;
-                    _languageIdLine2 = LanguageIdChineseSimplified;
-                }
-                else if (language == "da")
-                {
-                    _languageIdLine1 = LanguageIdDanish;
-                    _languageIdLine2 = LanguageIdDanish;
+                    var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+                    switch (language)
+                    {
+                        case "he":
+                            _languageIdLine1 = LanguageIdHebrew;
+                            _languageIdLine2 = LanguageIdHebrew; // or 0x09
+                            break;
+                        case "ru":
+                            _languageIdLine1 = LanguageIdRussian;
+                            _languageIdLine2 = LanguageIdRussian; // or 0x09?
+                            break;
+                        case "zh":
+                            _languageIdLine1 = LanguageIdChineseSimplified;
+                            _languageIdLine2 = LanguageIdChineseSimplified;
+                            break;
+                        case "da":
+                            _languageIdLine1 = LanguageIdDanish;
+                            _languageIdLine2 = LanguageIdDanish;
+                            break;
+                    }
                 }
 
                 // prompt???
@@ -262,14 +269,26 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string title = Path.GetFileNameWithoutExtension(fileName) ?? string.Empty;
                 if (title.Length > 28)
                     title = title.Substring(0, 28);
+                if (!string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.CurrentCavena89Title) && Configuration.Settings.SubtitleSettings.CurrentCavena89Title.Length <= 28)
+                    title = Configuration.Settings.SubtitleSettings.CurrentCavena89Title;
                 var buffer = Encoding.ASCII.GetBytes(title);
                 fs.Write(buffer, 0, buffer.Length);
                 for (int i = 0; i < 28 - buffer.Length; i++)
                     fs.WriteByte(0);
 
                 // translator (28 bytes)
-                for (int i = 0; i < 28; i++)
-                    fs.WriteByte(0);
+                if (!string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.CurrentCavena890Translator) && Configuration.Settings.SubtitleSettings.CurrentCavena890Translator.Length <= 28)
+                {
+                    buffer = Encoding.ASCII.GetBytes(Configuration.Settings.SubtitleSettings.CurrentCavena890Translator);
+                    fs.Write(buffer, 0, buffer.Length);
+                    for (int i = 0; i < 28 - buffer.Length; i++)
+                        fs.WriteByte(0);
+                }
+                else
+                {
+                    for (int i = 0; i < 28; i++)
+                        fs.WriteByte(0);
+                }
 
                 // ?
                 for (int i = 0; i < 9; i++)
@@ -288,7 +307,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 fs.Write(buffer, 0, buffer.Length);
 
                 // comments (24 bytes)
-                buffer = Encoding.ASCII.GetBytes("Made with Subtitle Edit");
+                buffer = Encoding.ASCII.GetBytes("");
+                if (!string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.CurrentCavena89Comment) && Configuration.Settings.SubtitleSettings.CurrentCavena89Comment.Length <= 24)
+                    buffer = Encoding.ASCII.GetBytes(Configuration.Settings.SubtitleSettings.CurrentCavena89Comment);
+
                 fs.Write(buffer, 0, buffer.Length);
                 for (int i = 0; i < 24 - buffer.Length; i++)
                     fs.WriteByte(0);
@@ -311,37 +333,52 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 for (int i = 0; i < 13; i++)
                     fs.WriteByte(0);
 
-                // some language codes again?
-                if (_languageIdLine1 == LanguageIdHebrew || _languageIdLine2 == LanguageIdHebrew)
-                {
-                    buffer = new byte[] { 0x64, 0x02, 0x64, 0x02 };
-                }
-                else if (_languageIdLine1 == LanguageIdRussian || _languageIdLine2 == LanguageIdRussian)
-                {
-                    buffer = new byte[] { 0xce, 0x00, 0xce, 0x00 };
-                }
-                else
-                {
-                    buffer = new byte[] { 0x37, 0x00, 0x37, 0x00 }; // seen in English files
-                }
-                fs.Write(buffer, 0, buffer.Length);
+                // number of subtitles again
+                fs.WriteByte((byte)(subtitle.Paragraphs.Count % 256));
+                fs.WriteByte((byte)(subtitle.Paragraphs.Count / 256));
+
+
+                // number of subtitles again again
+                fs.WriteByte((byte)(subtitle.Paragraphs.Count % 256));
+                fs.WriteByte((byte)(subtitle.Paragraphs.Count / 256));
 
                 // ?
                 for (int i = 0; i < 6; i++)
                     fs.WriteByte(0);
 
                 // original programme title (28 chars)
-                for (int i = 0; i < 28; i++)
-                    fs.WriteByte(0);
+                if (!string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.CurrentCavena890riginalTitle) && Configuration.Settings.SubtitleSettings.CurrentCavena890riginalTitle.Length <= 28)
+                {
+                    buffer = Encoding.ASCII.GetBytes(Configuration.Settings.SubtitleSettings.CurrentCavena890riginalTitle);
+                    fs.Write(buffer, 0, buffer.Length);
+                    for (int i = 0; i < 28 - buffer.Length; i++)
+                        fs.WriteByte(0);
+                }
+                else
+                {
+                    for (int i = 0; i < 28; i++)
+                        fs.WriteByte(0);
+                }
 
                 // write font (use same font id from line 1)
                 buffer = GetFontBytesFromLanguageId(_languageIdLine1);
                 fs.Write(buffer, 0, buffer.Length);
 
+                // ?
+                fs.WriteByte(0x3d);
+                fs.WriteByte(0x8d);
+
+                // start of message time
+                string startOfMessage = "10:00:00:00";
+                if (Configuration.Settings.SubtitleSettings.Cavena890StartOfMessage != null &&
+                    Configuration.Settings.SubtitleSettings.Cavena890StartOfMessage.Length == startOfMessage.Length)
+                    startOfMessage = Configuration.Settings.SubtitleSettings.Cavena890StartOfMessage;
+                buffer = Encoding.ASCII.GetBytes(startOfMessage);
+                fs.Write(buffer, 0, buffer.Length);
+
                 buffer = new byte[]
                 {
-                    0x3d, 0x8d, 0x31, 0x30, 0x3A, 0x30, 0x30, 0x3A, 0x30, 0x30, 0x3A, 0x30, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x54, 0x44
+                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x54, 0x44
                 };
                 fs.Write(buffer, 0, buffer.Length);
 

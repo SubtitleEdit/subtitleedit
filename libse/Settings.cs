@@ -281,6 +281,12 @@ namespace Nikse.SubtitleEdit.Core
 
         public int CurrentCavena890LanguageIdLine1 { get; set; }
         public int CurrentCavena890LanguageIdLine2 { get; set; }
+        public string CurrentCavena89Title { get; set; }
+        public string CurrentCavena890riginalTitle { get; set; }
+        public string CurrentCavena890Translator { get; set; }
+        public string CurrentCavena89Comment { get; set; }
+        public int CurrentCavena89LanguageId { get; set; }
+        public string Cavena890StartOfMessage { get; set; }
 
         public bool EbuStlTeletextUseBox { get; set; }
         public bool EbuStlTeletextUseDoubleHeight { get; set; }
@@ -330,6 +336,8 @@ namespace Nikse.SubtitleEdit.Core
 
             FcpFontSize = 18;
             FcpFontName = "Lucida Grande";
+
+            Cavena890StartOfMessage = "10:00:00:00";
         }
 
         public void InitializeDCinameSettings(bool smpte)
@@ -1911,6 +1919,10 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("NuendoCharacterListFile");
                 if (subNode != null)
                     settings.SubtitleSettings.NuendoCharacterListFile = subNode.InnerText;
+                subNode = node.SelectSingleNode("Cavena890StartOfMessage");
+                if (subNode != null)
+                    settings.SubtitleSettings.Cavena890StartOfMessage = subNode.InnerText;
+
             }
 
             settings.Proxy = new ProxySettings();
@@ -3003,6 +3015,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("TimedText10ShowStyleAndLanguage", settings.SubtitleSettings.TimedText10ShowStyleAndLanguage.ToString());
                 textWriter.WriteElementString("FcpFontSize", settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FcpFontName", settings.SubtitleSettings.FcpFontName);
+                textWriter.WriteElementString("Cavena890StartOfMessage", settings.SubtitleSettings.Cavena890StartOfMessage);
                 textWriter.WriteElementString("EbuStlTeletextUseBox", settings.SubtitleSettings.EbuStlTeletextUseBox.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("EbuStlTeletextUseDoubleHeight", settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("CheetahCaptionAlwayWriteEndTime", settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime.ToString(CultureInfo.InvariantCulture));
