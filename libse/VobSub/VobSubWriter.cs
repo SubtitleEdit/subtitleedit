@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         private readonly string _languageName = "English";
         private readonly string _languageNameShort = "en";
 
-        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int leftRightMargin, int languageStreamId, Color pattern, Color emphasis1, bool useInnerAntialiasing, string languageName, string languageNameShort)
+        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int leftRightMargin, int languageStreamId, Color pattern, Color emphasis1, bool useInnerAntialiasing, DvdSubtitleLanguage language)
         {
             _subFileName = subFileName;
             _screenWidth = screenWidth;
@@ -67,8 +67,8 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             _pattern = pattern;
             _emphasis1 = emphasis1;
             _useInnerAntialiasing = useInnerAntialiasing;
-            _languageName = languageName;
-            _languageNameShort = languageNameShort;
+            _languageName = language.NativeName;
+            _languageNameShort = language.Code;
             _idx = CreateIdxHeader();
             _subFile = new FileStream(subFileName, FileMode.Create);
         }
