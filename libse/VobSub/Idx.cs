@@ -48,22 +48,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                     if (parts.Length > 1)
                     {
                         string twoLetterLanguageId = parts[1];
-                        string nativeName;
-                        if (IfoParser.LanguageCodes.Contains(twoLetterLanguageId))
-                        {
-                            nativeName = IfoParser.LanguageNames[IfoParser.LanguageCodes.IndexOf(twoLetterLanguageId)];
-                        }
-                        else
-                        {
-                            try
-                            {
-                                nativeName = CultureInfo.GetCultureInfoByIetfLanguageTag(twoLetterLanguageId).NativeName;
-                            }
-                            catch
-                            {
-                                nativeName = "Unknown (" + twoLetterLanguageId + ")";
-                            }
-                        }
+                        string languageName = DvdSubtitleLanguage.GetLocalLanguageName(twoLetterLanguageId);
                         if (parts.Length > 3 && parts[2].Equals("index", StringComparison.OrdinalIgnoreCase))
                         {
                             int index;
@@ -71,7 +56,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                                 languageIndex = index;
                         }
                         // Use U+200E (LEFT-TO-RIGHT MARK) to support right-to-left scripts
-                        Languages.Add(string.Format("{0} \x200E(0x{1:x})", nativeName, languageIndex + 32));
+                        Languages.Add(string.Format("{0} \x200E(0x{1:x})", languageName, languageIndex + 32));
                         languageIndex++;
                     }
                 }

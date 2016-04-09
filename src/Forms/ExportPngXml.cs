@@ -487,7 +487,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_exportType == "BLURAYSUP")
                     binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
                 else if (_exportType == "VOBSUB")
-                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, comboBoxBottomMargin.SelectedIndex, comboBoxLeftRightMargin.SelectedIndex, 32, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked, IfoParser.LanguageNames[comboBoxLanguage.SelectedIndex], IfoParser.LanguageCodes[comboBoxLanguage.SelectedIndex]);
+                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, comboBoxBottomMargin.SelectedIndex, comboBoxLeftRightMargin.SelectedIndex, 32, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked, (DvdSubtitleLanguage)comboBoxLanguage.SelectedItem);
 
                 progressBar1.Value = 0;
                 progressBar1.Maximum = _subtitle.Paragraphs.Count - 1;
@@ -2903,14 +2903,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 string languageCode = LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(subtitle);
                 if (languageCode == null)
                     languageCode = Configuration.Settings.Tools.ExportVobSubLanguage;
-                for (int i = 0; i < IfoParser.LanguageNames.Count; i++)
+                int index = -1;
+                foreach (var language in DvdSubtitleLanguage.CompliantLanguages)
                 {
-                    comboBoxLanguage.Items.Add(IfoParser.LanguageNames[i]);
-                    if (IfoParser.LanguageCodes[i] == languageCode || IfoParser.LanguageNames[i] == languageCode)
-                        comboBoxLanguage.SelectedIndex = i;
+                    int i = comboBoxLanguage.Items.Add(language);
+                    if (language.Code == languageCode || (index < 0 && language.Code == "en"))
+                        index = i;
                 }
-                if (comboBoxLanguage.SelectedIndex == -1 && comboBoxLanguage.Items.Count > 25)
-                    comboBoxLanguage.SelectedIndex = 25;
+                comboBoxLanguage.SelectedIndex = index;
             }
 
             bool showImageFormat = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP" || exportType == "BDNXML";
@@ -3201,7 +3201,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 for (int i = 0; i < comboBoxLanguage.Items.Count; i++)
                 {
                     string l = comboBoxLanguage.Items[i].ToString();
-                    if (l == languageString && i < comboBoxLanguage.Items.Count)
+                    if (l == languageString)
                         comboBoxLanguage.SelectedIndex = i;
                 }
             }
