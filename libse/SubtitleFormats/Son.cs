@@ -25,24 +25,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             var subtitle = new Subtitle();
-
-            var sb = new StringBuilder();
-            foreach (string line in lines)
-                sb.AppendLine(line);
-
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
         public override string ToText(Subtitle subtitle, string title)
         {
+            const string writeFormat = "{0:0000}\t{1}\t{2}\t{3}";
             var sb = new StringBuilder();
             int index = 0;
-            const string writeFormat = "{0:0000}\t{1}\t{2}\t{3}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(writeFormat, index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "\t")));
                 index++;
+                sb.AppendLine(string.Format(writeFormat, index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "\t")));
             }
             return sb.ToString();
         }
@@ -56,32 +51,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             //0001  00:00:19:13 00:00:22:10 a_0001.tif
+            var regexTimeCodes = new Regex(@"^\d\d\d\d\t+(\d\d:\d\d:\d\d:\d\d)\t(\d\d:\d\d:\d\d:\d\d)\t.+\.(?:tif|tiff|png|bmp|TIF|TIFF|PNG|BMP)", RegexOptions.Compiled);
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
-            var regexTimeCodes = new Regex(@"^\d\d\d\d[\t]+\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t.+\.(tif|tiff|png|bmp|TIF|TIFF|PNG|BMP)", RegexOptions.Compiled);
             int index = 0;
             foreach (string line in lines)
             {
-                if (regexTimeCodes.IsMatch(line))
+                var match = regexTimeCodes.Match(line);
+                if (match.Success)
                 {
-                    string temp = line.Substring(0, regexTimeCodes.Match(line).Length);
-                    string start = temp.Substring(5, 11);
-                    string end = temp.Substring(12 + 5, 11);
-
-                    string[] startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                    string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                    if (startParts.Length == 4 && endParts.Length == 4)
-                    {
-                        int lastIndexOfTab = line.LastIndexOf('\t');
-                        string text = line.Remove(0, lastIndexOfTab + 1).Trim();
-                        if (!text.Contains(Environment.NewLine))
-                            text = text.Replace("\t", Environment.NewLine);
-                        p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), DecodeTimeCodeFramesFourParts(endParts), text);
-                        subtitle.Paragraphs.Add(p);
-                    }
+                    var start = DecodeTimeCodeFramesFourParts(match.Groups[1].Value.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries));
+                    var end = DecodeTimeCodeFramesFourParts(match.Groups[2].Value.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries));
+                    var lastTabIndex = line.LastIndexOf('\t');
+                    var text = line.Substring(lastTabIndex + 1).Trim();
+                    p = new Paragraph(start, end, text);
+                    subtitle.Paragraphs.Add(p);
                 }
-                else if (string.IsNullOrWhiteSpace(line) || line.StartsWith("Display_Area") || line.StartsWith('#') || line.StartsWith("Color") || index < 10)
+                else if (index < 10 || string.IsNullOrWhiteSpace(line) || line[0] == '#' || line.StartsWith("Display_Area", StringComparison.Ordinal) || line.StartsWith("Color", StringComparison.Ordinal))
                 {
                     // skip these lines
                 }
@@ -93,5 +80,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             subtitle.Renumber();
         }
+
     }
 }
