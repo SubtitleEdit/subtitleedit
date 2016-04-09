@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class Spruce : SubtitleFormat
     {
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,", RegexOptions.Compiled);
+
         private const string Italic = "^I";
         private const string Bold = "^B";
         private const string Underline = "^U";
@@ -72,7 +74,7 @@ $ColorIndex3    = 2
 $ColorIndex4    = 3
 
 //Subtitles";
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine(Header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -81,7 +83,7 @@ $ColorIndex4    = 3
             return sb.ToString();
         }
 
-        private static string EncodeText(string text)
+        private string EncodeText(string text)
         {
             text = HtmlUtil.FixUpperTags(text);
             bool allItalic = text.StartsWith("<i>") && text.EndsWith("</i>") && Utilities.CountTagInText(text, "<i>") == 1;
@@ -96,12 +98,10 @@ $ColorIndex4    = 3
             return text.Replace(Environment.NewLine, "|");
         }
 
-        private static string EncodeTimeCode(TimeCode time)
+        private string EncodeTimeCode(TimeCode time)
         {
             //00:01:54:19
-
-            int frames = time.Milliseconds / (1000 / 25);
-
+            int frames = (int)(time.Milliseconds / (TimeCode.BaseUnit / 25));
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
         }
 
@@ -110,19 +110,16 @@ $ColorIndex4    = 3
             //00:01:54:19,00:01:56:17,We should be thankful|they accepted our offer.
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
-            var regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,.+", RegexOptions.Compiled);
-            if (fileName != null && fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase)) // allow empty text if extension is ".stl"...
-                regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,", RegexOptions.Compiled);
             foreach (string line in lines)
             {
-                if (line.IndexOf(':') == 2 && regexTimeCodes.IsMatch(line))
+                if (line.Length >= 23 && line[2] == ':' && RegexTimeCodes.IsMatch(line))
                 {
                     string start = line.Substring(0, 11);
                     string end = line.Substring(12, 11);
 
                     try
                     {
-                        Paragraph p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(24)));
+                        var p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(24)));
                         subtitle.Paragraphs.Add(p);
                     }
                     catch
@@ -130,7 +127,7 @@ $ColorIndex4    = 3
                         _errorCount++;
                     }
                 }
-                else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//") && !line.StartsWith('$'))
+                else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//", StringComparison.Ordinal) && !line.StartsWith('$'))
                 {
                     _errorCount++;
                 }
@@ -138,7 +135,7 @@ $ColorIndex4    = 3
             subtitle.Renumber();
         }
 
-        private static TimeCode DecodeTimeCode(string time)
+        private TimeCode DecodeTimeCode(string time)
         {
             //00:01:54:19
 
@@ -147,15 +144,14 @@ $ColorIndex4    = 3
             string seconds = time.Substring(6, 2);
             string frames = time.Substring(9, 2);
 
-            int milliseconds = (int)((1000 / 25.0) * int.Parse(frames));
+            int milliseconds = (int)((TimeCode.BaseUnit / 25.0) * int.Parse(frames));
             if (milliseconds > 999)
                 milliseconds = 999;
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
-            return tc;
+            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
         }
 
-        private static string DecodeText(string text)
+        private string DecodeText(string text)
         {
             text = text.Replace("|", Environment.NewLine);
 
@@ -176,11 +172,11 @@ $ColorIndex4    = 3
             return text;
         }
 
-        private static string DecoderTextExtension(string text, string SpruceTag, string htmlOpenTag)
+        private string DecoderTextExtension(string text, string SpruceTag, string htmlOpenTag)
         {
             var htmlCloseTag = htmlOpenTag.Insert(1, "/");
 
-            var idx = text.IndexOf(SpruceTag, StringComparison.Ordinal);
+            var idx = text.IndexOf(SpruceTag, StringComparison.OrdinalIgnoreCase);
             var c = Utilities.CountTagInText(text, SpruceTag);
             if (c == 1)
             {
@@ -202,7 +198,7 @@ $ColorIndex4    = 3
                     var htmlTag = isOpen ? htmlOpenTag : htmlCloseTag;
                     text = text.Remove(idx, SpruceTag.Length).Insert(idx, htmlTag);
                     isOpen = !isOpen;
-                    idx = text.IndexOf(SpruceTag, idx + htmlTag.Length);
+                    idx = text.IndexOf(SpruceTag, idx + htmlTag.Length, StringComparison.OrdinalIgnoreCase);
                 }
             }
             return text;
