@@ -140,6 +140,20 @@
                     }
                     else
                     {
+
+                        // move some... though not enough
+                        var improvedEndtime = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        if (improvedEndtime > p.EndTime.TotalMilliseconds)
+                        {
+                            if (callbacks.AllowFix(p, fixAction))
+                            {
+                                string oldCurrent = p.ToString();
+                                p.EndTime.TotalMilliseconds = improvedEndtime;
+                                noOfShortDisplayTimes++;
+                                callbacks.AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                            }
+                        }
+
                         callbacks.LogStatus(language.FixShortDisplayTimes, string.Format(language.UnableToFixTextXY, i + 1, p));
                         callbacks.AddToTotalErrors(1);
                     }
