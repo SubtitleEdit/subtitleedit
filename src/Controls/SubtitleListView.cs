@@ -503,6 +503,15 @@ namespace Nikse.SubtitleEdit.Controls
                 FirstVisibleIndex = -1;
         }
 
+        public void SyntaxColorAllLines(Subtitle subtitle)
+        {
+            for (int index = 0; index < subtitle.Paragraphs.Count; index++)
+            {
+                var paragraph = subtitle.Paragraphs[index];
+                SyntaxColorLine(subtitle.Paragraphs, index, paragraph);
+            }
+        }
+
         public void SyntaxColorLine(List<Paragraph> paragraphs, int i, Paragraph paragraph)
         {
             if (UseSyntaxColoring && _settings != null && IsValidIndex(i))

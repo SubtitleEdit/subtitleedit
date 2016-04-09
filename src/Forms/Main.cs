@@ -3763,6 +3763,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (oldUseTimeFormatHHMMSSFF != Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                 RefreshTimeCodeMode();
+
+            SubtitleListview1.SyntaxColorAllLines(_subtitle);
         }
 
         private void AddAlternate()
@@ -18119,6 +18121,7 @@ namespace Nikse.SubtitleEdit.Forms
                             i++;
                         }
                         ShowStatus(_language.VisualSyncPerformedOnSelectedLines);
+                        SubtitleListview1.SyntaxColorAllLines(_subtitle);
                     }
                     else
                     {
