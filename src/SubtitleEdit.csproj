@@ -94,6 +94,12 @@
     <Compile Include="Forms\AddWaveformBatch.Designer.cs">
       <DependentUpon>AddWaveformBatch.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Cavena890SaveOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Cavena890SaveOptions.Designer.cs">
+      <DependentUpon>Cavena890SaveOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\CheckForUpdates.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -893,6 +899,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddWaveformBatch.resx">
       <DependentUpon>AddWaveformBatch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Cavena890SaveOptions.resx">
+      <DependentUpon>Cavena890SaveOptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CheckForUpdates.resx">
       <DependentUpon>CheckForUpdates.cs</DependentUpon>

@@ -17575,7 +17575,13 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += cavena890.Extension;
                 }
-                cavena890.Save(fileName, _subtitle);
+                using (var form = new Cavena890SaveOptions(_subtitle, _fileName))
+                {
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        cavena890.Save(fileName, _subtitle);
+                    }
+                }
             }
         }
 

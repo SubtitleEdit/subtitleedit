@@ -7,6 +7,7 @@
    * Updated Finnish translation - thx Teijo S.
    * Some updates for format "sif"
    * Some updates for format "Cavena 890" - thx Elad
+   * Ctrl+Backspace in text box works better with html tags - thx xylographe
 * FIXED:
    * Fix updating of main list view after "Remove text for HI" + "Apply" - thx Henry
    * Spell check "change" / "change all" issue regarding brackets/dash - thx jc
@@ -19,6 +20,10 @@
    * Fix for border size in vobsub export via cmd line - thx S_E_New
    * Adjust duration fixed for last subtitle - thx mariner
    * Read more variations of "S_DVBSUB" from mkv files - thx dreammday
+   * Fixed some "Remove text for HI" issues - thx Thunderbolt8
+   * Fixed "Remove text for HI" issue - thx Andrew
+   * Fixed "Add missing spaces" issue - thx Andrew
+   * "Fix short display time" is improved even if chars/sec still high - thx Frédéric
    * + Many minor fixes from ivandrofly and xylographe
 
 
