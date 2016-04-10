@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             var subtitle = new Subtitle();
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
             if (sb.ToString().Contains("#INPOINT OUTPOINT PATH"))
@@ -40,17 +40,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine(@"-------------------------------------------------
 #INPOINT OUTPOINT PATH
 -------------------------------------------------");
-            int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //00:03:15:22 00:03:23:10 This is line one.
                 //This is line two.
-                sb.AppendLine(string.Format("{0} {1} {2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(p.Text)));
-                index++;
+                sb.AppendLine(string.Format("{0} {1} {2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(p.Text, true)));
             }
             sb.AppendLine(@"-------------------------------------------------");
 
@@ -60,7 +58,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:03:15:22 (last is frame)
-            int frames = time.Milliseconds / (1000 / 30);
+            int frames = (int)(time.Milliseconds / (TimeCode.BaseUnit / 30.0));
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
         }
 
@@ -73,17 +71,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             foreach (string line in lines)
             {
-                if (RegexTimeCodes.IsMatch(line))
+                if (line.Length >= 24)
                 {
-                    string temp = line.Substring(0, RegexTimeCodes.Match(line).Length);
-                    string start = temp.Substring(0, 11);
-                    string end = temp.Substring(12, 11);
-
-                    string[] startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                    string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
-                    if (startParts.Length == 4 && endParts.Length == 4)
+                    Match match = RegexTimeCodes.Match(line);
+                    if (match.Success)
                     {
-                        string text = line.Remove(0, RegexTimeCodes.Match(line).Length - 1).Trim();
+                        string start = match.Value.Substring(0, 11);
+                        string end = match.Value.Substring(12, 11);
+
+                        string[] startParts = start.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(SplitCharColon, StringSplitOptions.RemoveEmptyEntries);
+                        string text = line.Remove(0, match.Length - 1).Trim();
                         p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
                         subtitle.Paragraphs.Add(p);
                     }
@@ -91,6 +89,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (string.IsNullOrWhiteSpace(line.Trim('-')))
                 {
                     // skip these lines
+                    _errorCount++;
                 }
                 else if (!string.IsNullOrWhiteSpace(line) && p != null)
                 {
@@ -100,7 +99,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         p.Text = p.Text + Environment.NewLine + line;
                 }
             }
-
+            // Set error if no paragraphs were loaded.
+            if (subtitle.Paragraphs.Count == 0)
+            {
+                _errorCount = 100;
+            }
             subtitle.Renumber();
         }
 
@@ -112,12 +115,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string seconds = parts[2];
             string frames = parts[3];
 
-            int milliseconds = (int)((1000 / 30.0) * int.Parse(frames));
+            int milliseconds = (int)((TimeCode.BaseUnit / 30.0) * int.Parse(frames));
             if (milliseconds > 999)
                 milliseconds = 999;
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
-            return tc;
+            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
         }
 
     }
