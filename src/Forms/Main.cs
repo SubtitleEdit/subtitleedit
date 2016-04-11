@@ -1273,13 +1273,15 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.InitializeLanguage(_languageGeneral, Configuration.Settings);
             toolStripLabelSubtitleFormat.Text = _language.Controls.SubtitleFormat;
             toolStripLabelEncoding.Text = _language.Controls.FileEncoding;
-            tabControlSubtitle.TabPages[0].Text = _language.Controls.ListView;
-            tabControlSubtitle.TabPages[1].Text = _language.Controls.SourceView;
-            labelDuration.Text = _languageGeneral.Duration;
-            labelStartTime.Text = _languageGeneral.StartTime;
-            labelText.Text = _languageGeneral.Text;
-            labelAlternateText.Text = _languageGeneral.OriginalText;
             toolStripLabelFrameRate.Text = _languageGeneral.FrameRate;
+            tabControlSubtitle.TabPages[TabControlSourceView].Text = _language.Controls.SourceView;
+            tabControlSubtitle.TabPages[TabControlListView].Text = _language.Controls.ListView;
+            labelStartTime.Text = _languageGeneral.StartTime;
+            labelDuration.Text = _languageGeneral.Duration;
+            labelText.Text = _languageGeneral.Text;
+            UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle?.GetParagraphOrDefault(_subtitleListViewIndex), textBoxListViewText);
+            labelAlternateText.Text = _languageGeneral.OriginalText;
+            UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, _subtitleAlternate?.GetParagraphOrDefault(_subtitleListViewIndex), textBoxListViewTextAlternate);
             buttonPrevious.Text = _language.Controls.Previous;
             buttonNext.Text = _language.Controls.Next;
             buttonAutoBreak.Text = _language.Controls.AutoBreak;
@@ -3930,7 +3932,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowSourceLineNumber()
         {
             if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
-            {                
+            {
                 toolStripSelected.Text = string.Format(_language.LineNumberX, textBoxSource.GetLineFromCharIndex(textBoxSource.SelectionStart) + 1);
             }
         }
@@ -11953,34 +11955,34 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetLanguage(string cultureName)
         {
-            try
+            if (string.IsNullOrEmpty(cultureName))
             {
-                if (string.IsNullOrEmpty(cultureName) || cultureName == "en-US")
-                {
-                    Configuration.Settings.Language = new Language(); // default is en-US
-                }
-                else
+                cultureName = "en-US";
+            }
+            if (cultureName != "en-US")
+            {
+                try
                 {
                     Configuration.Settings.Language = Language.Load(Path.Combine(Configuration.BaseDirectory, "Languages", cultureName + ".xml"));
                 }
-                Configuration.Settings.General.Language = cultureName;
-                _languageGeneral = Configuration.Settings.Language.General;
-                _language = Configuration.Settings.Language.Main;
-                InitializeLanguage();
+                catch (Exception ex)
+                {
+                    var cap = "Language file load error";
+                    var msg = "Could not load language file " + cultureName + ".xml" +
+                              "\n\nError Message:\n" + ex.Message +
+                              "\n\nStack Trace:\n" + ex.StackTrace;
+                    MessageBox.Show(this, msg, cap);
+                    cultureName = "en-US";
+                }
             }
-            catch (Exception ex)
+            if (cultureName == "en-US")
             {
-                var cap = "Language file load error";
-                var msg = "Could not load language file " + cultureName + ".xml" +
-                          "\n\nError Message:\n" + ex.Message +
-                          "\n\nStack Trace:\n" + ex.StackTrace;
-                MessageBox.Show(this, msg, cap);
                 Configuration.Settings.Language = new Language(); // default is en-US
-                Configuration.Settings.General.Language = null;
-                _languageGeneral = Configuration.Settings.Language.General;
-                _language = Configuration.Settings.Language.Main;
-                InitializeLanguage();
             }
+            Configuration.Settings.General.Language = cultureName;
+            _languageGeneral = Configuration.Settings.Language.General;
+            _language = Configuration.Settings.Language.Main;
+            InitializeLanguage();
         }
 
         private void ToolStripMenuItemCompareClick(object sender, EventArgs e)
