@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Core.Forms
 {
@@ -1254,6 +1255,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     text[start] == ':' && text[start - 1] == ' ' && ".?!".Contains(text[start - 2]))
                 {
                     text = text.Remove(start - 1, 2);
+                }
+                else if (start == 0 && text.Length > 1 && text[0] == ':')
+                {
+                    text = text.Remove(0, 1).TrimStart();
                 }
                 start = text.IndexOf(startTag, StringComparison.Ordinal);
             }
