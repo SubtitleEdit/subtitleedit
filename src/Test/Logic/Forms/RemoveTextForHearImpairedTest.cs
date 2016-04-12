@@ -1608,6 +1608,17 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void RemoveColonAfterHITags()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenParentheses = false;
+            target.Settings.RemoveTextBetweenSquares = true;
+            target.Settings.RemoveInterjections = false;
+            string actual = target.RemoveTextFromHearImpaired("[scoffs]: Nice try.");
+            Assert.AreEqual("Nice try.", actual);
+        }
+
         #region Additional test attributes
 
         //
