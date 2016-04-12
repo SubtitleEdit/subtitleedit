@@ -424,7 +424,7 @@ namespace Nikse.SubtitleEdit.Core
                 if (noTagLines.Length == 2)
                 {
                     var arr0 = noTagLines[0].Trim().TrimEnd('"', '\'').TrimEnd();
-                    if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && ".?!)]".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–'))
+                    if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (".?!)]".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–')))
                         return text;
                 }
             }
