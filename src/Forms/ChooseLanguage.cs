@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             public bool Equals(TranslationInfo ti)
             {
-                return (ti != null) ? CultureName.Equals(ti.CultureName, StringComparison.OrdinalIgnoreCase) : false;
+                return !ReferenceEquals(ti, null) && CultureName.Equals(ti.CultureName, StringComparison.OrdinalIgnoreCase);
             }
 
             public override bool Equals(Object obj)
@@ -84,6 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (currentLanguage == null)
             {
                 CurrentTranslation = new TranslationInfo(CultureInfo.CurrentUICulture.Name, CultureInfo.CurrentUICulture.NativeName);
+                Configuration.Settings.Language = defaultLanguage;
             }
             else
             {
