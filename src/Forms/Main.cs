@@ -210,6 +210,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _splitDualSami;
         private bool _openFileDialogOn;
         private bool _resetVideo = true;
+        private bool _doAutoBreakOnTextChanged = true;
         private static object _syncUndo = new object();
         private string[] _dragAndDropFiles;
         private Timer _dragAndDropTimer = new Timer(); // to prevent locking windows explorer
@@ -6830,7 +6831,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitleListViewIndex >= 0)
             {
                 int numberOfNewLines = Utilities.GetNumberOfLines(textBoxListViewText.Text);
-                UiUtil.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), numberOfNewLines);
+                if (_doAutoBreakOnTextChanged)
+                    UiUtil.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), numberOfNewLines);
 
                 // update _subtitle + listview
                 string text = textBoxListViewText.Text.TrimEnd();
@@ -8391,6 +8393,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonUnBreakClick(object sender, EventArgs e)
         {
+            // Disable Autobreak feature.
+            _doAutoBreakOnTextChanged = false;
             if (SubtitleListview1.SelectedItems.Count > 1)
             {
                 MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
@@ -8409,6 +8413,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxListViewText.Text = Utilities.UnbreakLine(textBoxListViewText.Text);
             }
+            // Enable Autobreak feature.
+            _doAutoBreakOnTextChanged = true;
         }
 
         private void TabControlSubtitleSelectedIndexChanged(object sender, EventArgs e)
@@ -9112,7 +9118,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-                    if (pes != null && pes.PageCompositions != null && pes.PageCompositions.Any(p=>p.Regions.Count > 0))
+                    if (pes != null && pes.PageCompositions != null && pes.PageCompositions.Any(p => p.Regions.Count > 0))
                     {
                         subtitleImages.Add(pes);
                         subtitle.Paragraphs.Add(new Paragraph(string.Empty, msub.Start, msub.End));
