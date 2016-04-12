@@ -1451,7 +1451,7 @@
     <RegEx find="([kKPp])ratić" replaceWith="$1ratit ć" />
     <RegEx find="koriš[čć]a" replaceWith="korišta" />
     <RegEx find="([nl])izovan" replaceWith="$1iziran" />
-    <RegEx find="(?&lt;![Oo]b)([nl])izuje" replaceWith="$2izira" />
+    <RegEx find="(?&lt;![Oo]b)([nl])izuje" replaceWith="$1izira" />
     <RegEx find="luparenj" replaceWith="lupiranj" />
     <RegEx find="mjenim" replaceWith="mijenim" />
     <RegEx find="nisa([nlot])" replaceWith="nira$1" />
