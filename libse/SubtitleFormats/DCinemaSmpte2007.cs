@@ -682,7 +682,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             subtitle.Renumber();
         }
-     
+
         private static string GetColorStringFromDCinema(string p)
         {
             string s = p.ToLower().Trim();

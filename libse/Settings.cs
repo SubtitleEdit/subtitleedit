@@ -1927,7 +1927,6 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("Cavena890StartOfMessage");
                 if (subNode != null)
                     settings.SubtitleSettings.Cavena890StartOfMessage = subNode.InnerText;
-
             }
 
             settings.Proxy = new ProxySettings();

@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId > 0)
                 {
                     _languageIdLine1 = Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId;
-                    _languageIdLine2 = Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId; 
+                    _languageIdLine2 = Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId;
                 }
                 else
                 {
@@ -828,7 +828,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             subtitle.Renumber();
-        }       
+        }
 
         private static string FixText(byte[] buffer, int start, int textLength, int languageId)
         {

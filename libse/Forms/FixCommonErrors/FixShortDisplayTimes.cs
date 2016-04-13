@@ -140,7 +140,6 @@
                     }
                     else
                     {
-
                         // move some... though not enough
                         var improvedEndtime = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                         if (improvedEndtime > p.EndTime.TotalMilliseconds)
