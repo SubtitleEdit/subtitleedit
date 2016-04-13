@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
 
         public Idx(string[] lines)
         {
+            int languageIndex = 0;
             foreach (string line in lines)
             {
                 if (_timeCodeLinePattern.IsMatch(line))
@@ -43,11 +44,10 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                 {
                     //id: en, index: 1
                     //id: es, index: 2
-                    string s = line.Substring("id:".Length + 1);
-                    string[] parts = s.Split(new[] { ':', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length > 0)
+                    var parts = line.Split(new[] { ':', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length > 1)
                     {
-                        string twoLetterLanguageId = parts[0];
+                        string twoLetterLanguageId = parts[1];
                         string nativeName;
                         if (IfoParser.LanguageCodes.Contains(twoLetterLanguageId))
                         {
@@ -64,8 +64,15 @@ namespace Nikse.SubtitleEdit.Core.VobSub
                                 nativeName = "Unknown (" + twoLetterLanguageId + ")";
                             }
                         }
+                        if (parts.Length > 3 && parts[2].Equals("index", StringComparison.OrdinalIgnoreCase))
+                        {
+                            int index;
+                            if (int.TryParse(parts[3], out index))
+                                languageIndex = index;
+                        }
                         // Use U+200E (LEFT-TO-RIGHT MARK) to support right-to-left scripts
-                        Languages.Add(string.Format("{0} \x200E(0x{1:x})", nativeName, Languages.Count + 32));
+                        Languages.Add(string.Format("{0} \x200E(0x{1:x})", nativeName, languageIndex + 32));
+                        languageIndex++;
                     }
                 }
             }
