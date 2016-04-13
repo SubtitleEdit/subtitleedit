@@ -11,20 +11,31 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class Watermark : Form
     {
         private const char ZeroWidthSpace = '\u200B';
-        private const char zeroWidthNoBreakSpace = '\uFEFF';
+        private const char ZeroWidthNoBreakSpace = '\uFEFF';
+
+        private readonly LanguageStructure.Watermark _language;
 
         private int _firstSelectedIndex;
 
         public Watermark()
         {
             InitializeComponent();
+
+            _language = Configuration.Settings.Language.Watermark;
+            Text = _language.Title;
+            groupBoxGenerate.Text = _language.GenerateWatermarkTitle;
+            radioButtonSpread.Text = _language.SpreadOverEntireSubtitle;
+            buttonGenerate.Text = _language.Generate;
+            buttonRemove.Text = _language.Remove;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
         internal void Initialize(Subtitle subtitle, int firstSelectedIndex)
         {
-            string watermark = ReadWaterMark(subtitle.GetAllTexts().Trim());
-            LabelWatermark.Text = string.Format("Watermark: {0}", watermark);
+            var watermark = ReadWaterMark(subtitle.GetAllTexts().Trim());
+            labelWatermark.Text = string.Format(_language.WatermarkX, watermark);
             if (watermark.Length == 0)
             {
                 buttonRemove.Enabled = false;
@@ -37,11 +48,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _firstSelectedIndex = firstSelectedIndex;
-            Paragraph current = subtitle.GetParagraphOrDefault(_firstSelectedIndex);
+            var current = subtitle.GetParagraphOrDefault(_firstSelectedIndex);
             if (current != null)
-                radioButtonCurrentLine.Text = radioButtonCurrentLine.Text + " " + current.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
+            {
+                radioButtonCurrentLine.Text = string.Format(_language.CurrentLineOnlyX, current.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            }
             else
+            {
+                radioButtonCurrentLine.Text = string.Format(_language.CurrentLineOnlyX, string.Empty);
                 radioButtonCurrentLine.Enabled = false;
+            }
         }
 
         private static string ReadWaterMark(string input)
@@ -62,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
                     letterOn = true;
                     letter = 0;
                 }
-                else if (c == zeroWidthNoBreakSpace && letterOn)
+                else if (c == ZeroWidthNoBreakSpace && letterOn)
                 {
                     letter++;
                 }
@@ -94,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     sb.Append(ZeroWidthSpace);
                     for (int i = 0; i < b; i++)
-                        sb.Append(zeroWidthNoBreakSpace);
+                        sb.Append(ZeroWidthNoBreakSpace);
                 }
                 Paragraph p = subtitle.GetParagraphOrDefault(_firstSelectedIndex);
                 if (p != null)
@@ -127,7 +143,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Paragraph p = subtitle.Paragraphs[indices[j]];
                     sb.Append(ZeroWidthSpace);
                     for (int i = 0; i < b; i++)
-                        sb.Append(zeroWidthNoBreakSpace);
+                        sb.Append(ZeroWidthNoBreakSpace);
                     if (p.Text.Length > 1)
                         p.Text = p.Text.Insert(p.Text.Length / 2, sb.ToString());
                     else
@@ -153,7 +169,7 @@ namespace Nikse.SubtitleEdit.Forms
         private static void RemoveWaterMark(Subtitle subtitle)
         {
             var zws = ZeroWidthSpace.ToString(CultureInfo.InvariantCulture);
-            var zwnbs = zeroWidthNoBreakSpace.ToString(CultureInfo.InvariantCulture);
+            var zwnbs = ZeroWidthNoBreakSpace.ToString(CultureInfo.InvariantCulture);
             foreach (Paragraph p in subtitle.Paragraphs)
                 p.Text = p.Text.Replace(zws, string.Empty).Replace(zwnbs, string.Empty);
         }

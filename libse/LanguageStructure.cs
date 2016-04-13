@@ -2293,6 +2293,19 @@
             public string Description { get; set; }
         }
 
+        public class Watermark
+        {
+            public string Title { get; set; }
+            public string WatermarkX { get; set; }
+            public string GenerateWatermarkTitle { get; set; }
+            public string SpreadOverEntireSubtitle { get; set; }
+            public string CurrentLineOnlyX { get; set; }
+            public string Generate { get; set; }
+            public string Remove { get; set; }
+            public string BeforeWatermark { get; set; }
+            public string ErrorUnicodeEncodingOnly { get; set; }
+        }
+
         public class Waveform
         {
             public string ClickToAddWaveform { get; set; }
