@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        private static readonly string[] AutoDetectWordsEnglish = { "we", "are", "and", "your?", "what", "That's", "something", "You're", "What's", "money", "everything", "anything", "because" };
+        private static readonly string[] AutoDetectWordsEnglish = { "we", "are", "and", "your?", "what", "[TW]hat's", "You're", "(any|some|every)thing", "money", "because" };
         private static readonly string[] AutoDetectWordsDanish = { "vi", "han", "og", "jeg", "var", "men", "gider", "bliver", "virkelig", "kommer", "tilbage", "Hej" };
         private static readonly string[] AutoDetectWordsNorwegian = { "vi", "er", "og", "jeg", "var", "men" };
         private static readonly string[] AutoDetectWordsSwedish = { "vi", "är", "och", "Jag", "inte", "för" };
@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Core
             if (count > bestCount)
             {
                 int dutchCount = GetCount(text, AutoDetectWordsDutch);
-                if (count > dutchCount)
+                if (dutchCount < count)
                     return "en";
             }
 
@@ -371,13 +371,17 @@ namespace Nikse.SubtitleEdit.Core
                         count = GetCount(text, AutoDetectWordsEnglish);
                         if (count > bestCount)
                         {
-                            languageName = shortName;
-                            if (containsEnGb)
+                            int dutchCount = GetCount(text, AutoDetectWordsDutch);
+                            if (dutchCount < count)
                             {
-                                int usCount = GetCount(text, "color", "flavor", "honor", "humor", "neighbor", "honor");
-                                int gbCount = GetCount(text, "colour", "flavour", "honour", "humour", "neighbour", "honour");
-                                if (gbCount > usCount)
-                                    languageName = "en_GB";
+                                languageName = shortName;
+                                if (containsEnGb)
+                                {
+                                    int usCount = GetCount(text, "color", "flavor", "honor", "humor", "neighbor", "honor");
+                                    int gbCount = GetCount(text, "colour", "flavour", "honour", "humour", "neighbour", "honour");
+                                    if (gbCount > usCount)
+                                        languageName = "en_GB";
+                                }
                             }
                         }
                         break;
@@ -385,13 +389,17 @@ namespace Nikse.SubtitleEdit.Core
                         count = GetCount(text, AutoDetectWordsEnglish);
                         if (count > bestCount)
                         {
-                            languageName = shortName;
-                            if (containsEnUs)
+                            int dutchCount = GetCount(text, AutoDetectWordsDutch);
+                            if (dutchCount < count)
                             {
-                                int usCount = GetCount(text, "color", "flavor", "honor", "humor", "neighbor", "honor");
-                                int gbCount = GetCount(text, "colour", "flavour", "honour", "humour", "neighbour", "honour");
-                                if (gbCount < usCount)
-                                    languageName = "en_US";
+                                languageName = shortName;
+                                if (containsEnUs)
+                                {
+                                    int usCount = GetCount(text, "color", "flavor", "honor", "humor", "neighbor", "honor");
+                                    int gbCount = GetCount(text, "colour", "flavour", "honour", "humour", "neighbour", "honour");
+                                    if (gbCount < usCount)
+                                        languageName = "en_US";
+                                }
                             }
                         }
                         break;
