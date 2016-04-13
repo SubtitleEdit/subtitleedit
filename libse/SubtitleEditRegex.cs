@@ -150,7 +150,6 @@ namespace Nikse.SubtitleEdit.Core
                     RegexFactory(@"\b[Vv]iste i(?:, at| at)\b"),
                     RegexFactory(@"\bvover i\b"),
                 };
-
             }
 
             /// <summary>
@@ -169,7 +168,6 @@ namespace Nikse.SubtitleEdit.Core
             /// Carriage-Return (U+000D) and Line-Feed (U+000A) minimum once or all its successors.
             /// </summary>
             private static string ExpandWhiteSpace(string pattern) => pattern.Replace(" ", "[ \r\n]+");
-
         }
     }
 }

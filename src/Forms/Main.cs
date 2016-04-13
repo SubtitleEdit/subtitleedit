@@ -10011,7 +10011,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         ImportSubtitleFromMp4(fileName);
                         return;
-                    }                    
+                    }
                 }
                 else if (ext == ".vob" || ext == ".ifo")
                 {

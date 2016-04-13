@@ -3155,7 +3155,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 SubtitleListView1Fill(_subtitle);
                 SubtitleListView1SelectIndexAndEnsureVisible(0);
-            }            
+            }
         }
 
         private void InitBorderStyle()

@@ -242,7 +242,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             currentStyle.Attributes.Append(attr);
                             skipCount = 2;
                             italicOn = true;
-                        }                        
+                        }
                         else if (line.Substring(i).StartsWith("<b>", StringComparison.Ordinal))
                         {
                             currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);

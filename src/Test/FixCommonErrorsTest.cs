@@ -771,7 +771,7 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "I...want missing spaces.");
-                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "en" });  
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "en" });
                 Assert.AreEqual(_subtitle.Paragraphs[0].Text, "I... want missing spaces.");
             }
         }
