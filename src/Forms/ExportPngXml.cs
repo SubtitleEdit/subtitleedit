@@ -397,6 +397,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             FixStartEndWithSameTimeCode();
 
+            if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
+            {
+                _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(Configuration.Settings.General.CurrentVideoOffsetInMs));
+            }
+
             var errors = new List<string>();
             buttonExport.Enabled = false;
             SetupImageParameters();
@@ -860,9 +865,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
             }
             buttonExport.Enabled = true;
+
+            if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
+            {
+                _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
+            }
         }
 
-        static private string FormatUtf8Xml(XmlDocument doc)
+        private static string FormatUtf8Xml(XmlDocument doc)
         {
             var sb = new StringBuilder();
             using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))

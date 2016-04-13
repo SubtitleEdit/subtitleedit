@@ -3,11 +3,13 @@
 3.4.13 (xth May 2016) BETA
 * NEW:
    * Added new subtitle format - thx Oli
+   * It's now possible use "video offset" - in "Video" menu.
 * IMPROVED:
    * Updated Finnish translation - thx Teijo S.
    * Some updates for format "sif"
    * Some updates for format "Cavena 890" - thx Elad
    * Ctrl+Backspace in text box works better with html tags - thx xylographe
+   * Drag'n'drop to subtitle list now supports ifo/vob/mp4/mks (with subs) - thx Budman
 * FIXED:
    * Fix updating of main list view after "Remove text for HI" + "Apply" - thx Henry
    * Spell check "change" / "change all" issue regarding brackets/dash - thx jc
@@ -24,6 +26,7 @@
    * Fixed "Remove text for HI" issue - thx Andrew
    * Fixed "Add missing spaces" issue - thx Andrew
    * "Fix short display time" is improved even if chars/sec still high - thx Frédéric
+   * Fixed possible crash when loading subtitle from command line - thx Félix
    * + Many minor fixes from ivandrofly and xylographe
 
 

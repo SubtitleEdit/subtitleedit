@@ -1195,6 +1195,7 @@
                     public string OpenDvd { get; set; }
                     public string ChooseAudioTrack { get; set; }
                     public string CloseVideo { get; set; }
+                    public string SetVideoOffset { get; set; }
                     public string ImportSceneChanges { get; set; }
                     public string RemoveSceneChanges { get; set; }
                     public string WaveformBatchGenerate { get; set; }
@@ -1921,6 +1922,7 @@
             public string Title { get; set; }
             public string Description { get; set; }
             public string RelativeToCurrentVideoPosition { get; set; }
+            public string Reset { get; set; }
         }
 
         public class ShowEarlierLater

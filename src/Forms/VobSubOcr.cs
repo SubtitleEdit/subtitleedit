@@ -279,11 +279,10 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _isSon;
 
         private List<ImageCompareAddition> _lastAdditions = new List<ImageCompareAddition>();
-        private VobSubOcrCharacter _vobSubOcrCharacter = new VobSubOcrCharacter();
+        private readonly VobSubOcrCharacter _vobSubOcrCharacter = new VobSubOcrCharacter();
 
-        //List<NOcrChar> _nocrChars = null;
         private NOcrDb _nOcrDb;
-        private VobSubOcrNOcrCharacter _vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter();
+        private readonly VobSubOcrNOcrCharacter _vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter();
         private int _nocrLastLowercaseHeight = -1;
         private int _nocrLastUppercaseHeight = -1;
         private bool _nocrThreadsStop;
@@ -301,9 +300,10 @@ namespace Nikse.SubtitleEdit.Forms
         private int _tesseractAsyncIndex;
         private BackgroundWorker _tesseractThread;
 
-        private DateTime _windowStartTime = DateTime.Now;
-        private int _linesOcred = 0;
-        private bool OkClicked = false;
+        private readonly DateTime _windowStartTime = DateTime.Now;
+        private int _linesOcred;
+        private bool _okClicked;
+        private Dictionary<string, int> _unknownWordsDictionary = new Dictionary<string, int>();
 
         // optimization vars
         private int _numericUpDownPixelsIsSpace = 6;
@@ -4078,16 +4078,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // Log unkown words guess (found via spelling dictionaries)
                 LogUnknownWords();
 
-                if (wordsNotFound >= 3)
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.Red);
-                if (wordsNotFound == 2)
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
-                else if (wordsNotFound == 1)
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.Yellow);
-                else if (string.IsNullOrWhiteSpace(line))
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
-                else
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.LightGreen);
+                ColorLineByNumberOfUnknownWords(listViewIndex, wordsNotFound, line);
             }
 
             if (textWithOutFixes.Trim() != line.Trim())
@@ -4098,6 +4089,32 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return line;
+        }
+
+        private void ColorLineByNumberOfUnknownWords(int index, int wordsNotFound, string line)
+        {
+            if (wordsNotFound >= 3)
+                subtitleListView1.SetBackgroundColor(index, Color.Red);
+            if (wordsNotFound == 2)
+                subtitleListView1.SetBackgroundColor(index, Color.Orange);
+            else if (wordsNotFound == 1 || line.Length == 1 || line.Contains('_') || HasSingleLetters(line))
+                subtitleListView1.SetBackgroundColor(index, Color.Yellow);
+            else if (wordsNotFound == 1)
+                subtitleListView1.SetBackgroundColor(index, Color.Yellow);
+            else if (string.IsNullOrWhiteSpace(line))
+                subtitleListView1.SetBackgroundColor(index, Color.Orange);
+            else
+                subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
+
+            var p = _subtitle.GetParagraphOrDefault(index);
+            if (p != null && _unknownWordsDictionary.ContainsKey(p.ID))
+            {
+                _unknownWordsDictionary[p.ID] = wordsNotFound;
+            }
+            else if (p != null)
+            {
+                _unknownWordsDictionary.Add(p.ID, wordsNotFound);
+            }
         }
 
         /// <summary>
@@ -4275,16 +4292,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // Log unkown words guess (found via spelling dictionaries)
                 LogUnknownWords();
 
-                if (wordsNotFound >= 3)
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.Red);
-                if (wordsNotFound == 2)
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
-                else if (wordsNotFound == 1)
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.Yellow);
-                else if (string.IsNullOrWhiteSpace(line))
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
-                else
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.LightGreen);
+                ColorLineByNumberOfUnknownWords(listViewIndex, wordsNotFound, line);
             }
 
             if (textWithOutFixes.Trim() != line.Trim())
@@ -4577,16 +4585,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // Log unkown words guess (found via spelling dictionaries)
                 LogUnknownWords();
 
-                if (wordsNotFound >= 3)
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.Red);
-                if (wordsNotFound == 2)
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
-                else if (wordsNotFound == 1)
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.Yellow);
-                else if (string.IsNullOrWhiteSpace(line))
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
-                else
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.LightGreen);
+                ColorLineByNumberOfUnknownWords(listViewIndex, wordsNotFound, line);
             }
 
             if (textWithOutFixes.Trim() != line.Trim())
@@ -5093,7 +5092,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            OkClicked = true; // don't ask about discard changes
+            _okClicked = true; // don't ask about discard changes
             if (_dvbSubtitles != null && checkBoxTransportStreamGetColorAndSplit.Checked)
                 MergeDvbForEachSubImage();
 
@@ -6547,16 +6546,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // Log unkown words guess (found via spelling dictionaries)
                 LogUnknownWords();
 
-                if (wordsNotFound >= 3)
-                    subtitleListView1.SetBackgroundColor(index, Color.Red);
-                if (wordsNotFound == 2)
-                    subtitleListView1.SetBackgroundColor(index, Color.Orange);
-                else if (wordsNotFound == 1 || line.Length == 1 || line.Contains('_') || HasSingleLetters(line))
-                    subtitleListView1.SetBackgroundColor(index, Color.Yellow);
-                else if (string.IsNullOrWhiteSpace(line))
-                    subtitleListView1.SetBackgroundColor(index, Color.Orange);
-                else
-                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
+                ColorLineByNumberOfUnknownWords(index, wordsNotFound, line);
             }
             else
             { // no dictionary :(
@@ -7990,7 +7980,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!OkClicked && HasChangesBeenMade())
+            if (!_okClicked && HasChangesBeenMade())
             {
                 if (MessageBox.Show(Configuration.Settings.Language.VobSubOcr.DiscardText, Configuration.Settings.Language.VobSubOcr.DiscardTitle, MessageBoxButtons.YesNo) == DialogResult.No)
                 {
@@ -8170,6 +8160,8 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(selIdx, true);
             else
                 subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView1.Items.Count - 1, true);
+
+            _unknownWordsDictionary = new Dictionary<string, int>();
         }
 
         private void buttonUknownToNames_Click(object sender, EventArgs e)
@@ -8189,12 +8181,39 @@ namespace Nikse.SubtitleEdit.Forms
                         if (form.ShowDialog(this) == DialogResult.OK)
                         {
                             comboBoxDictionaries_SelectedIndexChanged(null, null);
+                            UpdateUnknownWordColoring(form.NewName, StringComparison.Ordinal);
                             ShowStatus(string.Format(Configuration.Settings.Language.Main.NameXAddedToNamesEtcList, form.NewName));
                         }
                         else if (!string.IsNullOrEmpty(form.NewName))
                         {
                             MessageBox.Show(string.Format(Configuration.Settings.Language.Main.NameXNotAddedToNamesEtcList, form.NewName));
                         }
+                    }
+                }
+            }
+        }
+
+        private void UpdateUnknownWordColoring(string name, StringComparison comparison)
+        {
+            if (string.IsNullOrEmpty(name))
+                return;
+
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                var p = _subtitle.Paragraphs[i];
+                if (_unknownWordsDictionary.ContainsKey(p.ID))
+                {
+                    string text = " " + HtmlUtil.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, " ") + " ";
+                    int start = 0;
+                    int count = 0;
+                    while (text.IndexOf(name, start, comparison) > start)
+                    {
+                        count++;
+                        start = text.IndexOf(name, start, comparison) + 1;
+                    }
+                    if (count > 0)
+                    {
+                        ColorLineByNumberOfUnknownWords(i, _unknownWordsDictionary[p.ID] - count, p.Text);
                     }
                 }
             }
@@ -8214,6 +8233,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (form.ShowDialog(this) == DialogResult.OK)
                         {
                             comboBoxDictionaries_SelectedIndexChanged(null, null);
+                            UpdateUnknownWordColoring(form.NewWord, StringComparison.OrdinalIgnoreCase);
                             ShowStatus(string.Format(Configuration.Settings.Language.Main.WordXAddedToUserDic, form.NewWord));
                         }
                         else if (!string.IsNullOrEmpty(form.NewWord))

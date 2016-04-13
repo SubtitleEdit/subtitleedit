@@ -2995,6 +2995,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/Video/CloseVideo":
                     language.Main.Menu.Video.CloseVideo = reader.Value;
                     break;
+                case "Main/Menu/Video/SetVideoOffset":
+                    language.Main.Menu.Video.SetVideoOffset = reader.Value;
+                    break;
                 case "Main/Menu/Video/ImportSceneChanges":
                     language.Main.Menu.Video.ImportSceneChanges = reader.Value;
                     break;
@@ -4719,6 +4722,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "SetVideoOffset/RelativeToCurrentVideoPosition":
                     language.SetVideoOffset.RelativeToCurrentVideoPosition = reader.Value;
+                    break;
+                case "SetVideoOffset/Reset":
+                    language.SetVideoOffset.Reset = reader.Value;
                     break;
                 case "ShowEarlierLater/Title":
                     language.ShowEarlierLater.Title = reader.Value;
