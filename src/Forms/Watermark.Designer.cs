@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.LabelWatermark = new System.Windows.Forms.Label();
+            this.labelWatermark = new System.Windows.Forms.Label();
             this.groupBoxGenerate = new System.Windows.Forms.GroupBox();
             this.textBoxWatermark = new System.Windows.Forms.TextBox();
             this.radioButtonSpread = new System.Windows.Forms.RadioButton();
@@ -39,14 +39,14 @@
             this.groupBoxGenerate.SuspendLayout();
             this.SuspendLayout();
             // 
-            // LabelWatermark
+            // labelWatermark
             // 
-            this.LabelWatermark.AutoSize = true;
-            this.LabelWatermark.Location = new System.Drawing.Point(4, 19);
-            this.LabelWatermark.Name = "LabelWatermark";
-            this.LabelWatermark.Size = new System.Drawing.Size(62, 13);
-            this.LabelWatermark.TabIndex = 0;
-            this.LabelWatermark.Text = "Watermark:";
+            this.labelWatermark.AutoSize = true;
+            this.labelWatermark.Location = new System.Drawing.Point(4, 19);
+            this.labelWatermark.Name = "LabelWatermark";
+            this.labelWatermark.Size = new System.Drawing.Size(62, 13);
+            this.labelWatermark.TabIndex = 0;
+            this.labelWatermark.Text = "Watermark:";
             // 
             // groupBoxGenerate
             // 
@@ -88,7 +88,7 @@
             this.radioButtonCurrentLine.Name = "radioButtonCurrentLine";
             this.radioButtonCurrentLine.Size = new System.Drawing.Size(122, 17);
             this.radioButtonCurrentLine.TabIndex = 1;
-            this.radioButtonCurrentLine.Text = "Only on current line: ";
+            this.radioButtonCurrentLine.Text = "Only on current line:";
             this.radioButtonCurrentLine.UseVisualStyleBackColor = true;
             // 
             // buttonGenerate
@@ -129,7 +129,7 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonRemove);
             this.Controls.Add(this.groupBoxGenerate);
-            this.Controls.Add(this.LabelWatermark);
+            this.Controls.Add(this.labelWatermark);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -148,7 +148,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label LabelWatermark;
+        private System.Windows.Forms.Label labelWatermark;
         private System.Windows.Forms.GroupBox groupBoxGenerate;
         private System.Windows.Forms.RadioButton radioButtonSpread;
         private System.Windows.Forms.RadioButton radioButtonCurrentLine;
