@@ -289,6 +289,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rip subtitles from IFO/VOBs (DVD)";
+            this.Shown += new System.EventHandler(this.DvdSubRip_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DvdSubRip_KeyDown);
             this.groupBoxDvd.ResumeLayout(false);
             this.groupBoxDvd.PerformLayout();

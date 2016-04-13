@@ -1325,6 +1325,7 @@ namespace Nikse.SubtitleEdit.Core
                         OpenDvd = "Open DVD...",
                         ChooseAudioTrack = "Choose audio track",
                         CloseVideo = "Close video file",
+                        SetVideoOffset = "Set video offset...",
                         ImportSceneChanges = "Import scene changes...",
                         RemoveSceneChanges = "Remove scene changes",
                         WaveformBatchGenerate = "Batch generate waveforms...",
@@ -2040,7 +2041,8 @@ can edit in same subtitle file (collaboration)",
             {
                 Title = "Set video offset",
                 Description = "Set video offset (subtitles should not follow real video time, but e.g. +10 hours)",
-                RelativeToCurrentVideoPosition = "Relative to current video position"
+                RelativeToCurrentVideoPosition = "Relative to current video position",
+                Reset = "Reset",
             };
 
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater

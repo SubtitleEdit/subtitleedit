@@ -844,6 +844,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <OpenDvd>Open DVD...</OpenDvd>
         <ChooseAudioTrack>Choose audio track</ChooseAudioTrack>
         <CloseVideo>Close video file</CloseVideo>
+        <SetVideoOffset>Set video offset...</SetVideoOffset>
         <ImportSceneChanges>Import scene changes...</ImportSceneChanges>
         <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
@@ -1759,6 +1760,7 @@ can edit in same subtitle file (collaboration)</Information>
     <Title>Set video offset</Title>
     <Description>Set video offset (subtitles should not follow real video time, but e.g. +10 hours)</Description>
     <RelativeToCurrentVideoPosition>Relative to current video position</RelativeToCurrentVideoPosition>
+    <Reset>Reset</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Show selected lines earlier/later</Title>
