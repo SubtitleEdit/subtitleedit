@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
@@ -1590,7 +1590,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv проигрыватель</MpvPlayer>
-    <MpvPlayerDescription>https://mpv.io/ - свободно распространяемый, 
+    <MpvPlayerDescription>https://mpv.io/ - свободно распространяемый,
 с открытым исходным кодом, кроссплатформенный медиа проигрыватель</MpvPlayerDescription>
     <VlcMediaPlayer>VLC медиа проигрыватель</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll из VLC media player 1.1.0 или новее</VlcMediaPlayerDescription>
