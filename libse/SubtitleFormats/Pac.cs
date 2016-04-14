@@ -19,6 +19,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static readonly TimeCode PacNullTime = new TimeCode(655, 35, 00, 0);
 
+        public static bool IsValidCodePage(int codePage)
+        {
+            return 0 <= codePage && codePage <= 10;
+        }
         public const int CodePageLatin = 0;
         public const int CodePageGreek = 1;
         public const int CodePageLatinCzech = 2;
@@ -30,6 +34,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public const int CodePageChineseSimplified = 8;
         public const int CodePageKorean = 9;
         public const int CodePageJapanese = 10;
+
         private const int EncodingChineseSimplified = 936;
         private const int EncodingChineseTraditional = 950;
         private const int EncodingKorean = 949;

@@ -403,7 +403,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var fileName = string.Empty;
                 var args = Environment.GetCommandLineArgs();
                 int srcLineNumber = -1;
-                if (args.Length >= 2 && args[1].Equals("/convert", StringComparison.OrdinalIgnoreCase))
+                if (args.Length >= 2 && (args[1].Equals("/convert", StringComparison.OrdinalIgnoreCase) || args[1].Equals("/?")))
                 {
                     CommandLineConvert.Convert(Title, args);
                     return;
