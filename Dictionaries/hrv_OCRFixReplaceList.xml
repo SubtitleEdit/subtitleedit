@@ -1372,7 +1372,7 @@
     <RegEx find="\b([vV])odk([aeiou])" replaceWith="$1otk$2" />
     <RegEx find="([vV])ole([ntl])" replaceWith="$1olje$2" />
     <RegEx find="([vV])olj?eć" replaceWith="$1oljet ć" />
-    <RegEx find="\b([vV])oz([au]|om|ovi)?\b" replaceWith="$1lak$2" />
+    <RegEx find="\b([vV])oz([au]|om|ov[ie]|ovima)?\b" replaceWith="$1lak$2" />
     <RegEx find="\b([vV])ozi[čć]([eu])" replaceWith="$1ozit ć$2" />
     <RegEx find="\b([vV])ratić([eu])" replaceWith="$1ratit ć$2" />
     <RegEx find="\b([vV])rj?edi([mštl])?\b" replaceWith="$1rijedi$2" />
