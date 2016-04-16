@@ -2088,6 +2088,17 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Title>기울임꼴 인자 설정</Title>
     <Description>텍스트가 기울임이 없어질 때까지 값을 조정하십시오! 원본 이미지가 기울임꼴(이탤릭체)이어야 합니다.</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>워터마크</Title>
+    <WatermarkX>워터마크: {0}</WatermarkX>
+    <GenerateWatermarkTitle>워터마크 생성</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>자막 전체에 걸쳐</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>현재 줄: {0}</CurrentLineOnlyX>
+    <Generate>생성</Generate>
+    <Remove>제거</Remove>
+    <BeforeWatermark>워터마크 전</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>워터마크는 오직 유니코드 파일 인코딩으로 작업합니다.</ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
     <ClickToAddWaveform>파형을 추가하려면 여기를 클릭하십시오!</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>파형 및 스펙트로그램을 추가하려면 여기를 클릭하십시오.</ClickToAddWaveformAndSpectrogram>
