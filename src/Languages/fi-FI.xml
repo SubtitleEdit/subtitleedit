@@ -109,10 +109,10 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtractingSeconds>Puretaan ääntä: {0:0.0} sekuntia</ExtractingSeconds>
     <ExtractingMinutes>Puretaan ääntä: {0}.{1: 00} minuuttia</ExtractingMinutes>
     <WaveFileNotFound>Purettua aaltoäänitiedostoa ei löydy!
-Toiminto vaatii sovelluksen VLC media player 1.1.x tai uudemman ({0}-bit). 
+Toiminto vaatii sovelluksen VLC media player 1.1.x tai uudemman ({0}-bit).
 Komentorivi: {1} {2}</WaveFileNotFound>
-    <WaveFileMalformed>{0} ei onnistunut tallentamaan ääntä aaltoäänitiedostoon! 
-Komentorivi: {1} {2} 
+    <WaveFileMalformed>{0} ei onnistunut tallentamaan ääntä aaltoäänitiedostoon!
+Komentorivi: {1} {2}
 HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <LowDiskSpace>LEVYTILA VÄHISSÄ!</LowDiskSpace>
     <FreeDiskSpace>{0} vapaana</FreeDiskSpace>
@@ -355,7 +355,6 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <SubtitleListReferenceCode>Tekstitysluettelon viitekoodi</SubtitleListReferenceCode>
     <CountryOfOrigin>Alkuperämaa</CountryOfOrigin>
     <TimeCodeStatus>Aikakoodin tila</TimeCodeStatus>
-    <TimeCodeStartOfProgramme></TimeCodeStartOfProgramme>
     <RevisionNumber>Muunnosnumero</RevisionNumber>
     <MaxNoOfDisplayableChars>Enintään merkkiä rivillä</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Enintään riviä</MaxNumberOfDisplayableRows>
@@ -364,9 +363,6 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <Import>Tuo</Import>
     <TextAndTimingInformation>Teksti- ja ajoitustietoja</TextAndTimingInformation>
     <JustificationCode>Rivintasauskoodi</JustificationCode>
-    <Teletext></Teletext>
-    <UseBox></UseBox>
-    <DoubleHeight></DoubleHeight>
     <Errors>Virheet</Errors>
     <ErrorsX>Virheitä: {0}</ErrorsX>
     <MaxLengthError>Rivinpituus {0} on suurempi kuin enimmäispituus ({1}) {2}: {3}</MaxLengthError>
@@ -422,7 +418,6 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <ShadowWidth>Varjon leveys</ShadowWidth>
     <Transparency>Alfakanava</Transparency>
     <ImageFormat>Kuvaformaatti</ImageFormat>
-    <FullFrameImage></FullFrameImage>
     <SimpleRendering>Yksinkertainen renderöinti</SimpleRendering>
     <AntiAliasingWithTransparency>Läpikuultavasti pehmennetty</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
