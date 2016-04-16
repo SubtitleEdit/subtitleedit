@@ -5590,6 +5590,33 @@ namespace Nikse.SubtitleEdit.Core
                 case "VobSubOcrSetItalicFactor/Description":
                     language.VobSubOcrSetItalicFactor.Description = reader.Value;
                     break;
+                case "Watermark/Title":
+                    language.Watermark.Title = reader.Value;
+                    break;
+                case "Watermark/WatermarkX":
+                    language.Watermark.WatermarkX = reader.Value;
+                    break;
+                case "Watermark/GenerateWatermarkTitle":
+                    language.Watermark.GenerateWatermarkTitle = reader.Value;
+                    break;
+                case "Watermark/SpreadOverEntireSubtitle":
+                    language.Watermark.SpreadOverEntireSubtitle = reader.Value;
+                    break;
+                case "Watermark/CurrentLineOnlyX":
+                    language.Watermark.CurrentLineOnlyX = reader.Value;
+                    break;
+                case "Watermark/Generate":
+                    language.Watermark.Generate = reader.Value;
+                    break;
+                case "Watermark/Remove":
+                    language.Watermark.Remove = reader.Value;
+                    break;
+                case "Watermark/BeforeWatermark":
+                    language.Watermark.BeforeWatermark = reader.Value;
+                    break;
+                case "Watermark/ErrorUnicodeEncodingOnly":
+                    language.Watermark.ErrorUnicodeEncodingOnly = reader.Value;
+                    break;
                 case "Waveform/ClickToAddWaveform":
                     language.Waveform.ClickToAddWaveform = reader.Value;
                     break;

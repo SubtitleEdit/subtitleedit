@@ -2092,6 +2092,17 @@ Keep changes?</KeepChangesMessage>
     <Title>Set un-italic factor</Title>
     <Description>Adjust value until text style is normal and not italic. Note that original image should be italic.</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>Watermark</Title>
+    <WatermarkX>Watermark: {0}</WatermarkX>
+    <GenerateWatermarkTitle>Generate watermark</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>Spread over entire subtitle</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>Only on current line: {0}</CurrentLineOnlyX>
+    <Generate>Generate</Generate>
+    <Remove>Remove</Remove>
+    <BeforeWatermark>Before Watermark</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>Watermark only works with unicode file encoding.</ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
     <ClickToAddWaveform>Click to add waveform</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Click to add waveform/spectrogram</ClickToAddWaveformAndSpectrogram>
