@@ -10823,19 +10823,18 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
-            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.W) // watermak
+            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.W) // watermark
             {
-                Encoding enc = GetCurrentEncoding();
+                var enc = GetCurrentEncoding();
                 if (enc != Encoding.UTF8 && enc != Encoding.UTF32 && enc != Encoding.Unicode && enc != Encoding.UTF7)
                 {
-                    MessageBox.Show("Watermark only works with unicode file encoding");
+                    MessageBox.Show(Configuration.Settings.Language.Watermark.ErrorUnicodeEncodingOnly);
                 }
                 else
                 {
                     using (var watermarkForm = new Watermark())
                     {
-                        // TODO: Localize description.
-                        MakeHistoryForUndo("Before Watermark.");
+                        MakeHistoryForUndo(Configuration.Settings.Language.Watermark.BeforeWatermark);
                         watermarkForm.Initialize(_subtitle, FirstSelectedIndex);
                         if (watermarkForm.ShowDialog(this) == DialogResult.OK)
                         {
@@ -10844,6 +10843,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+                e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.F) // Toggle HHMMSSFF / HHMMSSMMM
             {

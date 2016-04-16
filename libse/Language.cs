@@ -101,6 +101,7 @@ namespace Nikse.SubtitleEdit.Core
         public LanguageStructure.VobSubOcrCharacterInspect VobSubOcrCharacterInspect;
         public LanguageStructure.VobSubOcrNewFolder VobSubOcrNewFolder;
         public LanguageStructure.VobSubOcrSetItalicFactor VobSubOcrSetItalicFactor;
+        public LanguageStructure.Watermark Watermark;
         public LanguageStructure.Waveform Waveform;
         public LanguageStructure.WaveformGenerateTimeCodes WaveformGenerateTimeCodes;
         public LanguageStructure.WebVttNewVoice WebVttNewVoice;
@@ -2413,6 +2414,19 @@ Keep changes?",
             {
                 Title = "Set un-italic factor",
                 Description = "Adjust value until text style is normal and not italic. Note that original image should be italic.",
+            };
+
+            Watermark = new LanguageStructure.Watermark
+            {
+                Title = "Watermark",
+                WatermarkX = "Watermark: {0}",
+                GenerateWatermarkTitle = "Generate watermark",
+                SpreadOverEntireSubtitle = "Spread over entire subtitle",
+                CurrentLineOnlyX = "Only on current line: {0}",
+                Generate = "Generate",
+                Remove = "Remove",
+                BeforeWatermark = "Before Watermark",
+                ErrorUnicodeEncodingOnly = "Watermark only works with unicode file encoding.",
             };
 
             Waveform = new LanguageStructure.Waveform
