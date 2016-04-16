@@ -409,11 +409,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 Application.DoEvents();
                 try
                 {
-                    var eventIdHandle = _mpvWaitEvent(_mpvHandle, 0);
-                    var eventId = Convert.ToInt64(Marshal.PtrToStructure(eventIdHandle, typeof(int)));
-                    if (eventId == mpvEventFileLoaded)
+                    if (_mpvHandle != IntPtr.Zero)
                     {
-                        break;
+                        var eventIdHandle = _mpvWaitEvent(_mpvHandle, 0);
+                        var eventId = Convert.ToInt64(Marshal.PtrToStructure(eventIdHandle, typeof(int)));
+                        if (eventId == mpvEventFileLoaded)
+                        {
+                            break;
+                        }
                     }
                     l++;
                 }

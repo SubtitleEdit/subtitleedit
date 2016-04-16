@@ -1228,7 +1228,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 long videoOffset = 0;
                 if (listNode.Attributes["VideoOffset"] != null)
-                    videoOffset = long.Parse(listNode.Attributes["VideoOffset"].Value);
+                    long.TryParse(listNode.Attributes["VideoOffset"].Value, out videoOffset);
 
                 settings.RecentFiles.Files.Add(new RecentFileEntry { FileName = listNode.InnerText, FirstVisibleIndex = int.Parse(firstVisibleIndex), FirstSelectedIndex = int.Parse(firstSelectedIndex), VideoFileName = videoFileName, OriginalFileName = originalFileName, VideoOffsetInMs = videoOffset });
             }
