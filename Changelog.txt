@@ -3,7 +3,7 @@
 3.4.13 (xth May 2016) BETA
 * NEW:
    * Added new subtitle format - thx Oli
-   * It's now possible use "video offset" - in "Video" menu.
+   * It's now possible to use "video offset" via "Video" menu
 * IMPROVED:
    * Updated Finnish translation - thx Teijo S.
    * Some updates for format "sif"
