@@ -845,6 +845,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <OpenDvd>Abrir DVD...</OpenDvd>
         <ChooseAudioTrack>Seleccione a faixa de áudio</ChooseAudioTrack>
         <CloseVideo>Fechar ficheiro de vídeo</CloseVideo>
+        <SetVideoOffset>Definir o deslocamento do vídeo...</SetVideoOffset>
         <ImportSceneChanges>Importar mudanças de cena...</ImportSceneChanges>
         <RemoveSceneChanges>Remover mudanças de cena</RemoveSceneChanges>
         <WaveformBatchGenerate>Gerar formas de onda em série...</WaveformBatchGenerate>
@@ -1760,6 +1761,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Title>Definir o deslocamento do vídeo</Title>
     <Description>Definir o deslocamento do vídeo (A legenda não deve seguir o tempo real do vídeo, mas por ex. +10 horas)</Description>
     <RelativeToCurrentVideoPosition>Em relação à posição do vídeo actual</RelativeToCurrentVideoPosition>
+    <Reset>Redefinir</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Mostrar linhas seleccionadas antes/depois</Title>
