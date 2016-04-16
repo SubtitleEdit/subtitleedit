@@ -339,7 +339,7 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
   <DvdSubRipChooseLanguage>
     <Title>Odabir jezika</Title>
     <ChooseLanguageStreamId>Izaberite željeni jezik ispod:</ChooseLanguageStreamId>
-    <UnknownLanguage>Nepoznat Jezik</UnknownLanguage>
+    <UnknownLanguage>Nepoznat jezik</UnknownLanguage>
     <SubtitleImageXofYAndWidthXHeight>Slika podnaslova ({0}/{1} – {2}×{3})</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Slika podnaslova</SubtitleImage>
   </DvdSubRipChooseLanguage>
