@@ -112,6 +112,42 @@ namespace Nikse.SubtitleEdit.Forms
                 groupBoxLinesFound.Enabled = false;
         }
 
+        internal void RunFromBatch(Subtitle subtitle)
+        {
+            Initialize(subtitle);
+            GeneratePreview();
+        }
+
+        internal void RunFromBatch(Subtitle subtitle, IEnumerable<string> importFileNames)
+        {
+            var savedList = Configuration.Settings.MultipleSearchAndReplaceList;
+            try
+            {
+                Configuration.Settings.MultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
+                foreach (var fileName in importFileNames)
+                {
+                    if (fileName.Equals("."))
+                    {
+                        Configuration.Settings.MultipleSearchAndReplaceList.AddRange(savedList);
+                        continue;
+                    }
+                    try
+                    {
+                        ImportRulesFile(fileName);
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine(exception.Message);
+                    }
+                }
+                RunFromBatch(subtitle);
+            }
+            finally
+            {
+                Configuration.Settings.MultipleSearchAndReplaceList = savedList;
+            }
+        }
+
         private void MultipleReplace_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
@@ -154,12 +190,6 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxFind.Select();
                 SaveReplaceList(false);
             }
-        }
-
-        internal void RunFromBatch(Subtitle subtitle)
-        {
-            Initialize(subtitle);
-            GeneratePreview();
         }
 
         private void GeneratePreview()
@@ -551,33 +581,14 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Filter = Configuration.Settings.Language.MultipleReplace.Rules + "|*.template";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                var doc = new XmlDocument();
                 try
                 {
-                    doc.Load(openFileDialog1.FileName);
+                    ImportRulesFile(openFileDialog1.FileName);
                 }
                 catch (Exception exception)
                 {
                     MessageBox.Show(exception.Message);
                     return;
-                }
-
-                foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
-                {
-                    var item = new MultipleSearchAndReplaceSetting();
-                    var subNode = listNode.SelectSingleNode(RuleEnabled);
-                    if (subNode != null)
-                        item.Enabled = Convert.ToBoolean(subNode.InnerText);
-                    subNode = listNode.SelectSingleNode(FindWhat);
-                    if (subNode != null)
-                        item.FindWhat = subNode.InnerText;
-                    subNode = listNode.SelectSingleNode(ReplaceWith);
-                    if (subNode != null)
-                        item.ReplaceWith = subNode.InnerText;
-                    subNode = listNode.SelectSingleNode(SearchType);
-                    if (subNode != null)
-                        item.SearchType = subNode.InnerText;
-                    Configuration.Settings.MultipleSearchAndReplaceList.Add(item);
                 }
 
                 listViewReplaceList.ItemChecked -= ListViewReplaceListItemChecked;
@@ -588,6 +599,30 @@ namespace Nikse.SubtitleEdit.Forms
                 GeneratePreview();
                 listViewReplaceList.ItemChecked += ListViewReplaceListItemChecked;
                 listViewReplaceList.EndUpdate();
+            }
+        }
+
+        private void ImportRulesFile(string fileName)
+        {
+            var doc = new XmlDocument { XmlResolver = null };
+            doc.Load(fileName);
+
+            foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
+            {
+                var item = new MultipleSearchAndReplaceSetting();
+                var subNode = listNode.SelectSingleNode(RuleEnabled);
+                if (subNode != null)
+                    item.Enabled = Convert.ToBoolean(subNode.InnerText);
+                subNode = listNode.SelectSingleNode(FindWhat);
+                if (subNode != null)
+                    item.FindWhat = subNode.InnerText;
+                subNode = listNode.SelectSingleNode(ReplaceWith);
+                if (subNode != null)
+                    item.ReplaceWith = subNode.InnerText;
+                subNode = listNode.SelectSingleNode(SearchType);
+                if (subNode != null)
+                    item.SearchType = subNode.InnerText;
+                Configuration.Settings.MultipleSearchAndReplaceList.Add(item);
             }
         }
 
