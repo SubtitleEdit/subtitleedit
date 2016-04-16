@@ -26,9 +26,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         public static void Save(string fileName, Subtitle subtitle)
-        {           
+        {
         }
-    
+
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))

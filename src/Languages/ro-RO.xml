@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Language Name="Română">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="română">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.12</Version>
@@ -1300,7 +1300,7 @@ Dacă aveți de editat acest fișier cu SE ați putea descoperi un backup realiz
   <MatroskaSubtitleChooser>
     <Title>Alegere subtitrare din fișier Matroska</Title>
     <PleaseChoose>Sunt mai multe subtitrări: te rog, alege una</PleaseChoose>
-    <TrackXLanguageYTypeZ>Pistă audio {0} - {1} - limbă: {2} - tip: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Pistă audio {0} - limbă: {1} - tip: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Convertor de măsură</Title>
@@ -1416,7 +1416,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <Date>Data</Date>
     <Type>Tip</Type>
     <OpenPluginsFolder>Deschide directorul 'Plugin-uri'</OpenPluginsFolder>
-	<GetPluginsInfo1>Plugin-urile SE trebuie să fie descărcate în directorul 'Plugin-uri'</GetPluginsInfo1>
+    <GetPluginsInfo1>Plugin-urile SE trebuie să fie descărcate în directorul 'Plugin-uri'</GetPluginsInfo1>
     <GetPluginsInfo2>Alege plugin-ul și clic pe 'Descărcare'</GetPluginsInfo2>
     <PluginXDownloaded>Plugin {0} descărcat</PluginXDownloaded>
     <Download>&amp;Descărcare</Download>
@@ -1573,8 +1573,6 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <DirectShowDescription>quartz.dll în directorul system32</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
-    <MPlayer>MPlayer</MPlayer>
-    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll de la VLC media player 1.1.0 sau mai recent</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>&gt; Calea VLC (doar dacă folosești versiunea portabilă a VLC)</VlcBrowseToLabel>
@@ -1677,7 +1675,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <GoToPrevious>Treci la linia anterioară</GoToPrevious>
     <GoToCurrentSubtitleStart>Treci la linia curentă de Start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Treci la linia curentă de Sfârșit</GoToCurrentSubtitleEnd>
-	<ToggleFocus>Comută focalizarea între lista de explorare și caseta text a subtitrării</ToggleFocus>
+    <ToggleFocus>Comută focalizarea între lista de explorare și caseta text a subtitrării</ToggleFocus>
     <ToggleDialogDashes>Comută liniuțele de dialog</ToggleDialogDashes>
     <Alignment>Aliniere (linii selectate)</Alignment>
     <CopyTextOnly>Copiază doar textul în clipboard (linii selectate)</CopyTextOnly>
@@ -1690,8 +1688,8 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <WaveformSeekSilenceBack>Caută tacit înapoi</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Adaugă text aici (ptr. noua selecție)</WaveformAddTextHere>
     <WaveformAddTextHereFromClipboard>Adaugă text aici (pt. noua selecție din clipboard)</WaveformAddTextHereFromClipboard>
-    <WaveformPlayNewSelection>Redă selecția</WaveformPlayNewSelection> 
-	<WaveformPlayNewSelectionEnd>Redă sfârșitul selecției</WaveformPlayNewSelectionEnd>
+    <WaveformPlayNewSelection>Redă selecția</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Redă sfârșitul selecției</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Redă prima subtitrare selectată</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focalizează lista de explorare</WaveformFocusListView>
     <GoBack1Frame>Înapoi cu un cadru</GoBack1Frame>
@@ -1747,14 +1745,14 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <MicrosoftBingTranslator>Translator Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Modalitatea de înregistrare</HowToSignUp>
     <ClientId>Cont client</ClientId>
-    <ClientSecret>Client secret</ClientSecret>    
+    <ClientSecret>Client secret</ClientSecret>
   </Settings>
   <SettingsMpv>
     <Title>Setări ptr. mpv</Title>
     <DownloadMpv>Descărcare mpv lib</DownloadMpv>
     <DownloadMpvFailed>Imposibilă descărcarea mpv - încearcă mai târziu!</DownloadMpvFailed>
     <DownloadMpvOk>Mpv lib s-a descărcat și este gata de folosire.</DownloadMpvOk>
-  </SettingsMpv>  
+  </SettingsMpv>
   <SetVideoOffset>
     <Title>Corectare decalare video</Title>
     <Description>Corectare decalare video (subtitrările n-ar trebui să respecte timpul real, de ex. +10 ore)</Description>
@@ -1959,7 +1957,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <SetSyncPoint>Set. pct. de sincr.</SetSyncPoint>
     <RemoveSyncPoint>Elim. pct. de sincr.</RemoveSyncPoint>
     <SyncPointsX>Puncte de sincr.: {0}</SyncPointsX>
-	<Info>Un pct. de sincr. va ajusta poz., două sau  mai multe puncte de sincr. vor ajusta poz. și viteza</Info>
+    <Info>Un pct. de sincr. va ajusta poz., două sau  mai multe puncte de sincr. vor ajusta poz. și viteza</Info>
     <ApplySync>Aplică</ApplySync>
   </PointSync>
   <TransportStreamSubtitleChooser>
@@ -2080,11 +2078,11 @@ Păstrezi schimbările?</KeepChangesMessage>
     <Title>Inspectare potriviri comparate ptr. imaginea curentă</Title>
     <InspectItems>Inspectează elemente</InspectItems>
     <AddBetterMatch>Adaugă potrivirea mai bună</AddBetterMatch>
-	<Add>Adaugă</Add>
+    <Add>Adaugă</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Dosar nou</Title>
-	<Message>Nume dosar nou ptr. bază de date caractere</Message>
+    <Message>Nume dosar nou ptr. bază de date caractere</Message>
   </VobSubOcrNewFolder>
   <VobSubOcrSetItalicFactor>
     <Title>Setare factor ne-italic</Title>

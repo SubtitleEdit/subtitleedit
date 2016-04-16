@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public Cavena890SaveOptions(Subtitle subtitle, string subtitleFileName)
         {
-            InitializeComponent();            
+            InitializeComponent();
 
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
                 default:
                     Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId = Cavena890.LanguageIdEnglish;
                     break;
-            }          
+            }
 
             DialogResult = DialogResult.OK;
         }

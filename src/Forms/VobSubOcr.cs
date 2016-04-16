@@ -8713,6 +8713,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _numericUpDownMaxErrorPct = (double)numericUpDownMaxErrorPct.Value;
         }
-       
+
     }
 }
