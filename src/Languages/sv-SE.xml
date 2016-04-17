@@ -1552,7 +1552,6 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <Key>Key</Key>
     <TextBox>Textruta</TextBox>
     <UpdateShortcut>Uppdatera</UpdateShortcut>
-    <ShortcutIsNotValid>Genväg är inte giltig: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Växla dock/undock video kontroll</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Välj slut, lägg till ny och gå till nya</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Justera via ändläge och gå till nästa</AdjustViaEndAutoStartAndGoToNext>

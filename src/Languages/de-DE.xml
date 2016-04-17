@@ -1657,7 +1657,6 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Key>Taste</Key>
     <TextBox>Textbox</TextBox>
     <UpdateShortcut>Änderung</UpdateShortcut>
-    <ShortcutIsNotValid>Kurzbefehl ist ungültig: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>An-/Abdocken der Videosteuerung umschalten</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ende setzen, ergänzen und dahin</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Über Endposition anpassen und weiter</AdjustViaEndAutoStartAndGoToNext>

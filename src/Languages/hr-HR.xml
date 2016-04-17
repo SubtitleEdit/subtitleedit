@@ -1632,7 +1632,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <Key>Tipka:</Key>
     <TextBox>Polje za tekst</TextBox>
     <UpdateShortcut>Ažuriraj prečac</UpdateShortcut>
-    <ShortcutIsNotValid>Prečac nije ispravan: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Zakači/otkači video kontrole</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Postavi kraj, dodaj novi i idi na novi</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Prilagodi preko završnog položaja i prijeđi na sljedeći</AdjustViaEndAutoStartAndGoToNext>

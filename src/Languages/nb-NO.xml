@@ -1652,7 +1652,6 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <Key>-knappen</Key>
     <TextBox>Tekstboks</TextBox>
     <UpdateShortcut>Oppdatering</UpdateShortcut>
-    <ShortcutIsNotValid>Snarveien er ikke gyldig: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Velg å feste/avfeste videokontrolleren</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Velg sluttid, legg til ny og hopp til ny</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Juster gjennom sluttid og hopp til neste</AdjustViaEndAutoStartAndGoToNext>

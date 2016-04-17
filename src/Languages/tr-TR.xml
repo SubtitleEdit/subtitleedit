@@ -1567,7 +1567,6 @@ Yeni oturum başlatın.</Information>
     <Key>Key</Key>
     <TextBox>Metin kutusu</TextBox>
     <UpdateShortcut>Güncelleştir</UpdateShortcut>
-    <ShortcutIsNotValid>Kısayol geçerli değil: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Sonunu ayarla, yeni ekle ve yeniye git</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Son süreye göre ayarla ve sonrakine git</AdjustViaEndAutoStartAndGoToNext>

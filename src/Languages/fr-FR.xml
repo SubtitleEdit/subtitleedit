@@ -1663,7 +1663,6 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <Key>Clé</Key>
     <TextBox>Textbox</TextBox>
     <UpdateShortcut>Mise à jour</UpdateShortcut>
-    <ShortcutIsNotValid>Raccourci invalide: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Attacher/détacher les fenêtres vidéos</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Définir la fin, ajouter nouvelle position et y aller</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Ajuster par rapport à la dernière position et aller à la suite</AdjustViaEndAutoStartAndGoToNext>

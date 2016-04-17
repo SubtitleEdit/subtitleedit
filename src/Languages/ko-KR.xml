@@ -1656,7 +1656,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Key>키</Key>
     <TextBox>텍스트 상자</TextBox>
     <UpdateShortcut>업데이트</UpdateShortcut>
-    <ShortcutIsNotValid>다음 단축키 사용불가: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>비디오 컨트롤 연결 | 해제</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>끝 지점과 새로 추가할 지점을 정하고 새 지점으로 이동</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>끝 지점을 통해 조정하고 다음으로 이동</AdjustViaEndAutoStartAndGoToNext>

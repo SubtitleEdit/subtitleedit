@@ -1657,7 +1657,6 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <Key>Klawisz</Key>
     <TextBox>Pole tekstowe</TextBox>
     <UpdateShortcut>Aktualizuj</UpdateShortcut>
-    <ShortcutIsNotValid>Skrót nie jest poprawny: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Przełączanie "Zadokuj"/"Oddokuj" panelu wideo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ustaw koniec, dodaj nowy i przejdź do nowego</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Dostosuj przy pomocy pozycji końca i przejdź do następnej</AdjustViaEndAutoStartAndGoToNext>

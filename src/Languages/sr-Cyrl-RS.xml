@@ -1032,7 +1032,6 @@
     <Key>Тастер:</Key>
     <TextBox>Поље за текст</TextBox>
     <UpdateShortcut>&amp;Промени</UpdateShortcut>
-    <ShortcutIsNotValid>Пречица није исправна: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Закачи/откачи видео контроле</ToggleDockUndockOfVideoControls>
     <AdjustViaEndAutoStartAndGoToNext>Прилагоди преко завршног положаја и пређи на следећи</AdjustViaEndAutoStartAndGoToNext>
   </Settings>

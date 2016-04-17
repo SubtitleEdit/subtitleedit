@@ -1818,7 +1818,6 @@
             public string Key { get; set; }
             public string TextBox { get; set; }
             public string UpdateShortcut { get; set; }
-            public string ShortcutIsNotValid { get; set; }
             public string ToggleDockUndockOfVideoControls { get; set; }
             public string CreateSetEndAddNewAndGoToNew { get; set; }
             public string AdjustViaEndAutoStartAndGoToNext { get; set; }

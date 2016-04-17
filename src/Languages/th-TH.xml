@@ -1556,7 +1556,6 @@
     <Key>ปุ่ม</Key>
     <TextBox>กล่องข้อความ</TextBox>
     <UpdateShortcut>อัพเดต</UpdateShortcut>
-    <ShortcutIsNotValid>ช็อตคัทไม่ถูกต้อง: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>สลับแผงควบคุมวิดีโอให้ยึด/ไม่ยึด</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>กำหนดตำแหน่งสิ้นสุด สร้าง และไปตำแหน่งที่สร้าง</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>ปรับจากตำแหน่งสิ้นสุด และไปตำแหน่งถัดไป</AdjustViaEndAutoStartAndGoToNext>

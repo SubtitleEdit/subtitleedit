@@ -1654,7 +1654,6 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <Key>Tecla</Key>
     <TextBox>Cuadro de texto</TextBox>
     <UpdateShortcut>Actualizar</UpdateShortcut>
-    <ShortcutIsNotValid>Acceso directo no válido: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Cambiar acoplar/desacoplar controles de video</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ajustar final, añadir nuevo e ir a la nueva</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar posición final e ir al siguiente</AdjustViaEndAutoStartAndGoToNext>

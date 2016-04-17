@@ -1052,7 +1052,6 @@ http://soft98.ir
     <Key>Key</Key>
     <TextBox>Textbox</TextBox>
     <UpdateShortcut>Update</UpdateShortcut>
-    <ShortcutIsNotValid>Shortcut is not valid: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>کنترل حالت چسبان/غیرچسبان بودن کنترل های ویدئو</ToggleDockUndockOfVideoControls>
     <AdjustViaEndAutoStartAndGoToNext>میزان کردن توسط محل پایان و رفتن به ادامه</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>تنظیم شروع،مدت اتوماتیک و رفتن به ادامه</AdjustSetStartAutoDurationAndGoToNext>

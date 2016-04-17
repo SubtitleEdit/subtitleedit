@@ -1656,7 +1656,6 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <Key>Tastă</Key>
     <TextBox>Casetă text</TextBox>
     <UpdateShortcut>Actualizare</UpdateShortcut>
-    <ShortcutIsNotValid>Comandă rapidă invalidă: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Comută între cuplarea/decuplarea comenzilor video</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Setează Sfârșit, adaugă Nou și treci la Nou.</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Corectează prin poziția de final și treci la următoarea</AdjustViaEndAutoStartAndGoToNext>

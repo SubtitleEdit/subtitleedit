@@ -1292,7 +1292,6 @@ određeni prevod s drugim ljudima.</Information>
     <Key>Tipka:</Key>
     <TextBox>Polje za tekst</TextBox>
     <UpdateShortcut>Promeni prečicu</UpdateShortcut>
-    <ShortcutIsNotValid>Prečica nije ispravna: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Zakači/Otkači video kontrole</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Postavite kraj, dodajte novi i idite na novi</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Prilagodi preko završnog položaja i pređi na sledeći</AdjustViaEndAutoStartAndGoToNext>

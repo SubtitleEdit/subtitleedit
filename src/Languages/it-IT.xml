@@ -1626,7 +1626,6 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <Key>Tasto</Key>
     <TextBox>Textbox</TextBox>
     <UpdateShortcut>Aggiorna scorciatoia</UpdateShortcut>
-    <ShortcutIsNotValid>Scorciatoia non valida: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Alterna blocca/sblocca controlli video</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Imposta fine, aggiungi nuovo e vai a nuovo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Regola via posizione finale e vai al successivo</AdjustViaEndAutoStartAndGoToNext>

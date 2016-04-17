@@ -1556,7 +1556,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <Key>按鍵</Key>
     <TextBox>文字框</TextBox>
     <UpdateShortcut>更新</UpdateShortcut>
-    <ShortcutIsNotValid>快速鍵無效: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>切換 停靠/不停靠 視訊控制項</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>設定結束時間，加入新的起始時間並移至新的起始時間</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>透過結束時間位置調整並移至下一行</AdjustViaEndAutoStartAndGoToNext>

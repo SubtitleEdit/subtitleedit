@@ -1636,7 +1636,6 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <Key>Tecla</Key>
     <TextBox>Caixa de texto</TextBox>
     <UpdateShortcut>Atualizar</UpdateShortcut>
-    <ShortcutIsNotValid>Atalho inválido: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Alternar acoplar/desacoplar controles de vídeo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Definir final, adicionar novo e ir para novo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar posição final e ir ao seguinte</AdjustViaEndAutoStartAndGoToNext>
