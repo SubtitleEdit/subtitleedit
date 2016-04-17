@@ -6,10 +6,13 @@
    * It's now possible to use "video offset" via "Video" menu
 * IMPROVED:
    * Updated Finnish translation - thx Teijo S.
+   * Updated Korean translation - thx domddol
+   * Updated Portuguese translation - thx moob
    * Some updates for format "sif"
    * Some updates for format "Cavena 890" - thx Elad
    * Ctrl+Backspace in text box works better with html tags - thx xylographe
    * Drag'n'drop to subtitle list now supports ifo/vob/mp4/mks (with subs) - thx Budman
+   * Some improvements to cmd line (mostly multiplereplace) - thx xylographe
 * FIXED:
    * Fix updating of main list view after "Remove text for HI" + "Apply" - thx Henry
    * Spell check "change" / "change all" issue regarding brackets/dash - thx jc
@@ -27,6 +30,9 @@
    * Fixed "Add missing spaces" issue - thx Andrew
    * "Fix short display time" is improved even if chars/sec still high - thx Frédéric
    * Fixed possible crash when loading subtitle from command line - thx Félix
+   * Fixed showing correct language when opening dvd multi lang sub - thx xylographe
+   * Fixed validation of shortcuts in settings window - thx 
+   * Fixed bug when converting ttml to ass - thx SwK
    * + Many minor fixes from ivandrofly and xylographe
 
 
