@@ -90,6 +90,34 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void UnBreakLine1()
+        {
+            string s = Utilities.UnbreakLine("Hallo!" + Environment.NewLine + "Hallo!");
+            Assert.AreEqual("Hallo! Hallo!", s);
+        }
+
+        [TestMethod]
+        public void UnBreakLine2()
+        {
+            string s = Utilities.UnbreakLine("Hallo!\nHallo!");
+            Assert.AreEqual("Hallo! Hallo!", s);
+        }
+
+        [TestMethod]
+        public void UnBreakLine3()
+        {
+            string s = Utilities.UnbreakLine("Hallo!\r\nHallo!");
+            Assert.AreEqual("Hallo! Hallo!", s);
+        }
+
+        [TestMethod]
+        public void UnBreakLine4()
+        {
+            string s = Utilities.UnbreakLine("Hallo! \nHallo!");
+            Assert.AreEqual("Hallo! Hallo!", s);
+        }
+
+        [TestMethod]
         public void FixInvalidItalicTags2()
         {
             const string s1 = "Gledaj prema kameri i rici <i>zdravo!";
