@@ -273,6 +273,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
         private static void LoadStylesFromTimedText10(Subtitle subtitle, string title, string header, string headerNoStyles, StringBuilder sb)
         {
+            foreach (Paragraph p in subtitle.Paragraphs)
+            {
+                p.Effect = null;
+            }
+
             try
             {
                 var lines = new List<string>();
