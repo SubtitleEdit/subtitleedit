@@ -1660,6 +1660,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Key>Tecla</Key>
     <TextBox>Caixa de texto</TextBox>
     <UpdateShortcut>Actualizar</UpdateShortcut>
+    
     <ToggleDockUndockOfVideoControls>Alternar acoplar/desacoplar controlos de vídeo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Definir o fim, adicionar novo e ir para o novo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar pela posição final e ir para o seguinte</AdjustViaEndAutoStartAndGoToNext>
@@ -2092,6 +2093,17 @@ Manter as alterações?</KeepChangesMessage>
     <Title>Definir um factor itálico</Title>
     <Description>Ajustar o valor até que o estilo do texto seja normal e não itálico. Note-se que a imagem original deve ser itálico.</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>Marca d'água</Title>
+    <WatermarkX>Marca d'água: {0}</WatermarkX>
+    <GenerateWatermarkTitle>Gerar marca d'água</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>Distribuir por toda a legenda</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>Apenas na linha actual: {0}</CurrentLineOnlyX>
+    <Generate>Gerar</Generate>
+    <Remove>Remover</Remove>
+    <BeforeWatermark>Antes da marca d'água</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>A marca d'água só funciona em ficheiros com codificação Unicode.</ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
     <ClickToAddWaveform>Clique para adicionar forma de onda</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Clique para adicionar forma de onda/espectrograma</ClickToAddWaveformAndSpectrogram>
