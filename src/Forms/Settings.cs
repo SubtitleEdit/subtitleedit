@@ -2090,21 +2090,25 @@ namespace Nikse.SubtitleEdit.Forms
             string text = treeViewShortcuts.SelectedNode.Text.Substring(0, treeViewShortcuts.SelectedNode.Text.IndexOf('[')).Trim();
             var shortcutText = GetCurrentShortcutText();
             var existsIn = new StringBuilder();
-            foreach (TreeNode node in treeViewShortcuts.Nodes)
+            if (comboBoxShortcutKey.SelectedIndex > 0)
             {
-                foreach (TreeNode subNode in node.Nodes)
+                foreach (TreeNode node in treeViewShortcuts.Nodes)
                 {
-                    if (subNode.Text.Contains(shortcutText) && treeViewShortcuts.SelectedNode.Text != subNode.Text)
-                        existsIn.AppendLine(string.Format(Configuration.Settings.Language.Settings.ShortcutIsAlreadyDefinedX, node.Text + " -> " + subNode.Text));
+                    foreach (TreeNode subNode in node.Nodes)
+                    {
+                        if (subNode.Text.Contains(shortcutText) && treeViewShortcuts.SelectedNode.Text != subNode.Text)
+                            existsIn.AppendLine(string.Format(Configuration.Settings.Language.Settings.ShortcutIsAlreadyDefinedX, node.Text + " -> " + subNode.Text));
+                    }
                 }
-            }
-            if (existsIn.Length > 0)
-            {
-                MessageBox.Show(existsIn.ToString(), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                if (existsIn.Length > 0)
+                {
+                    MessageBox.Show(existsIn.ToString(), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
             }
             treeViewShortcuts.SelectedNode.Text = text + " " + shortcutText;
             AddToSaveList((ShortcutHelper)treeViewShortcuts.SelectedNode.Tag, shortcutText);
+            treeViewShortcuts.Focus();
         }
 
         private void AddToSaveList(ShortcutHelper helper, string shortcutText)
