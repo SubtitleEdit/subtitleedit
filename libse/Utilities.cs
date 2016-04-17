@@ -684,7 +684,9 @@ namespace Nikse.SubtitleEdit.Core
             if (!text.Contains(Environment.NewLine))
                 return text;
 
-            var singleLine = text.Replace(Environment.NewLine, " ");
+            text = text.Replace('\r', ' ');
+            text = text.Replace('\n', ' ');
+            var singleLine = text;
             while (singleLine.Contains("  "))
                 singleLine = singleLine.Replace("  ", " ");
 
