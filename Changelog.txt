@@ -31,7 +31,7 @@
    * "Fix short display time" is improved even if chars/sec still high - thx Frédéric
    * Fixed possible crash when loading subtitle from command line - thx Félix
    * Fixed showing correct language when opening dvd multi lang sub - thx xylographe
-   * Fixed validation of shortcuts in settings window - thx 
+   * Fixed validation of shortcuts in settings window - thx marb99/xylographe
    * Fixed bug when converting ttml to ass - thx SwK
    * + Many minor fixes from ivandrofly and xylographe
 
