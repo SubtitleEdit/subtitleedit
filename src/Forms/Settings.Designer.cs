@@ -3484,6 +3484,7 @@
             this.comboBoxShortcutKey.Name = "comboBoxShortcutKey";
             this.comboBoxShortcutKey.Size = new System.Drawing.Size(92, 21);
             this.comboBoxShortcutKey.TabIndex = 4;
+            this.comboBoxShortcutKey.SelectedIndexChanged += new System.EventHandler(this.ValidateShortcut);
             this.comboBoxShortcutKey.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxShortcutKey_KeyDown);
             // 
             // labelShortcutKey
@@ -3505,6 +3506,7 @@
             this.checkBoxShortcutsShift.TabIndex = 3;
             this.checkBoxShortcutsShift.Text = "Shift";
             this.checkBoxShortcutsShift.UseVisualStyleBackColor = true;
+            this.checkBoxShortcutsShift.CheckedChanged += new System.EventHandler(this.ValidateShortcut);
             // 
             // checkBoxShortcutsAlt
             // 
@@ -3516,6 +3518,7 @@
             this.checkBoxShortcutsAlt.TabIndex = 2;
             this.checkBoxShortcutsAlt.Text = "Alt";
             this.checkBoxShortcutsAlt.UseVisualStyleBackColor = true;
+            this.checkBoxShortcutsAlt.CheckedChanged += new System.EventHandler(this.ValidateShortcut);
             // 
             // checkBoxShortcutsControl
             // 
@@ -3527,6 +3530,7 @@
             this.checkBoxShortcutsControl.TabIndex = 1;
             this.checkBoxShortcutsControl.Text = "Control";
             this.checkBoxShortcutsControl.UseVisualStyleBackColor = true;
+            this.checkBoxShortcutsControl.CheckedChanged += new System.EventHandler(this.ValidateShortcut);
             // 
             // buttonUpdateShortcut
             // 

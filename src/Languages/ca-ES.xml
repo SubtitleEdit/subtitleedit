@@ -1635,7 +1635,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Key>Tecla</Key>
     <TextBox>Quadre de text</TextBox>
     <UpdateShortcut>Actualització</UpdateShortcut>
-    <ShortcutIsNotValid>Drecera no vàlida: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Alterna acoblament/desacoblament controls vídeo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Estableix final, afegeix nou i vés al nou</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Ajustament via possició final i vés al següent</AdjustViaEndAutoStartAndGoToNext>

@@ -1515,7 +1515,6 @@ popravlja en podnapis (sodelovanje)</Information>
     <Key>Tipka</Key>
     <TextBox>Okvir za besedilo</TextBox>
     <UpdateShortcut>Posodobi</UpdateShortcut>
-    <ShortcutIsNotValid>Bližnjica ni veljavna: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Preklopi med zasidraj/odstrani video nadzor</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Nastavi zaključek in novega, ter pojdi na novega</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Prilagodi glede na končno pozicijo in pojdi naprej</AdjustViaEndAutoStartAndGoToNext>

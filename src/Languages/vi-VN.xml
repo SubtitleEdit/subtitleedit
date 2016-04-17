@@ -1307,7 +1307,6 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <Key>Khóa</Key>
     <TextBox>Hộp thoại</TextBox>
     <UpdateShortcut>Cập nhật đường dẫn</UpdateShortcut>
-    <ShortcutIsNotValid>Đường dẫn không đúng: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Kích hoạt bật/tắt bảng điều khiển video</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Thiết lập kết thúc, thêm mới và đi đến</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Điều chỉnh thông qua vị trí F và đi tới</AdjustViaEndAutoStartAndGoToNext>

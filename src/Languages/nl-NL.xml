@@ -1656,7 +1656,6 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <Key>Toets</Key>
     <TextBox>Tekstbox</TextBox>
     <UpdateShortcut>Bĳwerken</UpdateShortcut>
-    <ShortcutIsNotValid>Sneltoets is ongeldig: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Wissel koppel/loskoppel video controles</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Bepaal einde, voeg nieuwe toe en ga naar nieuwe</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Pas aan via eindpositie en ga naar volgende</AdjustViaEndAutoStartAndGoToNext>

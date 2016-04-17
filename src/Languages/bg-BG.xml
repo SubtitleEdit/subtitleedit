@@ -1638,7 +1638,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Key>Клавиш</Key>
     <TextBox>Текстово поле</TextBox>
     <UpdateShortcut>Обнови</UpdateShortcut>
-    <ShortcutIsNotValid>Невалидна клавишна комбинация: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Превключване положението на видео регулаторите</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Задайте край, добавете нов и идете на него</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Задай крайно време в позицията на курсора и премини към следващите субтитри</AdjustViaEndAutoStartAndGoToNext>

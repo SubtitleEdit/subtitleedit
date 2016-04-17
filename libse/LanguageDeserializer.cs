@@ -4432,9 +4432,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/UpdateShortcut":
                     language.Settings.UpdateShortcut = reader.Value;
                     break;
-                case "Settings/ShortcutIsNotValid":
-                    language.Settings.ShortcutIsNotValid = reader.Value;
-                    break;
                 case "Settings/ToggleDockUndockOfVideoControls":
                     language.Settings.ToggleDockUndockOfVideoControls = reader.Value;
                     break;

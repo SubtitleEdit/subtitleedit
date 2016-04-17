@@ -1645,7 +1645,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Key>Клав.</Key>
     <TextBox>Текстове поле</TextBox>
     <UpdateShortcut>Оновити</UpdateShortcut>
-    <ShortcutIsNotValid>Комбінація некоректна: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Відкріпити/закріпити елементи керування відео</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Встановити кінець, додати новий і перейти до нового</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Посунути через встановлення кінцевої позиції і перейти до наступного</AdjustViaEndAutoStartAndGoToNext>

@@ -1643,7 +1643,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <Key>Tekla:</Key>
     <TextBox>Idazkutxa</TextBox>
     <UpdateShortcut>Eguneratu</UpdateShortcut>
-    <ShortcutIsNotValid>Lastertekla ez da baliozkoa: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Aldatu uztartu/uztargabetu bideo aginteak</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ezarri amaiera, gehitu berria eta joan berrira</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Zehaztu amaiera kokap bidez eta joan hurr.</AdjustViaEndAutoStartAndGoToNext>

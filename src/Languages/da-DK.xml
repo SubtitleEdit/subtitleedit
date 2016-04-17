@@ -1653,7 +1653,6 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Key>Key</Key>
     <TextBox>Tekstboks</TextBox>
     <UpdateShortcut>Opdater</UpdateShortcut>
-    <ShortcutIsNotValid>Genvej er ikke gyldig: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Skift dok/frigør af video kontrol</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Sæt slut, tilføj ny og gå til ny</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Juster via slutposition og gå til næste</AdjustViaEndAutoStartAndGoToNext>

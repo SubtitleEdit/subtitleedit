@@ -1643,7 +1643,6 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <Key>Billentyű</Key>
     <TextBox>Szövegdoboz</TextBox>
     <UpdateShortcut>Frissítés</UpdateShortcut>
-    <ShortcutIsNotValid>A gyorsbillentyű nem érvényes: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Videóvezérlő dokkolás/leválasztás kapcsoló</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Befejezés beállítása, új hozzáadása és ugrás az újra</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Beállítás a végpozíción keresztül és ugrás a következőre</AdjustViaEndAutoStartAndGoToNext>

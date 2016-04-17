@@ -1638,7 +1638,6 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Key>Näppäin</Key>
     <TextBox>Tekstiruutu</TextBox>
     <UpdateShortcut>Päivitä</UpdateShortcut>
-    <ShortcutIsNotValid>Pikanäppäin {0} ei ole kelvollinen.</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Vaihda videovalvonnan telakointi/irrottaminen</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Aseta loppu, lisää uusi ja siirry uuteen</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Säädä lopetuskohdan mukaan ja siirry seuraavaan</AdjustViaEndAutoStartAndGoToNext>

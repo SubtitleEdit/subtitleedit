@@ -1557,7 +1557,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Key>Πλήκτρο</Key>
     <TextBox>Πλαίσιο κειμένου</TextBox>
     <UpdateShortcut>Ενημέρωση</UpdateShortcut>
-    <ShortcutIsNotValid>Η συντόμευση δεν είναι έγκυρη: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Εναλλαγή αγκύστρωσης/απαγκύστρωσης των στοιχείων ελέγχου βίντεο</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ορισμός τέλους, προσθήκη νέου και πηγαίνετε στο νέο</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Προσαρμογή μέσω τελικής θέσης και μετάβαση στο επόμενο</AdjustViaEndAutoStartAndGoToNext>

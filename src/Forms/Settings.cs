@@ -1796,8 +1796,7 @@ namespace Nikse.SubtitleEdit.Forms
                 e.KeyCode == Keys.None ||
                 e.KeyCode == Keys.F1 ||
                 e.KeyCode == Keys.Home ||
-                e.KeyCode == Keys.End
-                )
+                e.KeyCode == Keys.End)
                 return;
 
             if (TimeSpan.FromTicks(_listBoxSearchStringLastUsed.Ticks).TotalMilliseconds + 1800 <
@@ -2069,95 +2068,55 @@ namespace Nikse.SubtitleEdit.Forms
             return shortcut;
         }
 
-        private void buttonUpdateShortcut_Click(object sender, EventArgs e)
+        private string GetCurrentShortcutText()
         {
-            if (treeViewShortcuts.SelectedNode != null && treeViewShortcuts.SelectedNode.Text.Contains('['))
-            {
-                string text = treeViewShortcuts.SelectedNode.Text.Substring(0, treeViewShortcuts.SelectedNode.Text.IndexOf('[')).Trim();
-
-                var sb = new StringBuilder(@"[");
-                if (checkBoxShortcutsControl.Checked)
-                    sb.Append("Control+");
-                if (checkBoxShortcutsAlt.Checked)
-                    sb.Append("Alt+");
-                if (checkBoxShortcutsShift.Checked)
-                    sb.Append("Shift+");
-                sb.Append(comboBoxShortcutKey.Items[comboBoxShortcutKey.SelectedIndex]);
-                sb.Append(']');
-
-                var helper = (ShortcutHelper)treeViewShortcuts.SelectedNode.Tag;
-                if (comboBoxShortcutKey.SelectedIndex == 0)
-                {
-                    treeViewShortcuts.SelectedNode.Text = text + " [" + Configuration.Settings.Language.General.None + "]";
-                    AddToSaveList(helper, sb);
-                    return;
-                }
-
-                if (sb.Length < 3 || sb.ToString().EndsWith("+]"))
-                {
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.ShortcutIsNotValid, sb));
-                    return;
-                }
-
-                if (!IsShortcutValid(sb.ToString(), helper))
-                {
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.ShortcutIsNotValid, sb));
-                    return;
-                }
-
-                if (sb.ToString() == "[CapsLock]")
-                {
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.ShortcutIsNotValid, sb));
-                    return;
-                }
-                treeViewShortcuts.SelectedNode.Text = text + " " + sb;
-
-                var existsIn = new StringBuilder();
-                foreach (TreeNode node in treeViewShortcuts.Nodes)
-                {
-                    foreach (TreeNode subNode in node.Nodes)
-                    {
-                        if (subNode.Text.Contains(sb.ToString()) && treeViewShortcuts.SelectedNode.Text != subNode.Text)
-                            existsIn.AppendLine(string.Format(Configuration.Settings.Language.Settings.ShortcutIsAlreadyDefinedX, node.Text + " -> " + subNode.Text));
-                    }
-                }
-                if (existsIn.Length > 0)
-                {
-                    MessageBox.Show(existsIn.ToString(), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-                AddToSaveList(helper, sb);
-            }
+            var sb = new StringBuilder(@"[");
+            if (checkBoxShortcutsControl.Checked)
+                sb.Append("Control+");
+            if (checkBoxShortcutsAlt.Checked)
+                sb.Append("Alt+");
+            if (checkBoxShortcutsShift.Checked)
+                sb.Append("Shift+");
+            sb.Append(comboBoxShortcutKey.Items[comboBoxShortcutKey.SelectedIndex]);
+            sb.Append(']');
+            return sb.ToString();
         }
 
-        private void AddToSaveList(ShortcutHelper helper, StringBuilder sb)
+        private void buttonUpdateShortcut_Click(object sender, EventArgs e)
+        {
+            if (!IsShortcutValid())
+                return;
+
+            string text = treeViewShortcuts.SelectedNode.Text.Substring(0, treeViewShortcuts.SelectedNode.Text.IndexOf('[')).Trim();
+            var shortcutText = GetCurrentShortcutText();
+            var existsIn = new StringBuilder();
+            foreach (TreeNode node in treeViewShortcuts.Nodes)
+            {
+                foreach (TreeNode subNode in node.Nodes)
+                {
+                    if (subNode.Text.Contains(shortcutText) && treeViewShortcuts.SelectedNode.Text != subNode.Text)
+                        existsIn.AppendLine(string.Format(Configuration.Settings.Language.Settings.ShortcutIsAlreadyDefinedX, node.Text + " -> " + subNode.Text));
+                }
+            }
+            if (existsIn.Length > 0)
+            {
+                MessageBox.Show(existsIn.ToString(), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            treeViewShortcuts.SelectedNode.Text = text + " " + shortcutText;
+            AddToSaveList((ShortcutHelper)treeViewShortcuts.SelectedNode.Tag, shortcutText);
+        }
+
+        private void AddToSaveList(ShortcutHelper helper, string shortcutText)
         {
             if (_newShortcuts.ContainsKey(helper))
             {
-                _newShortcuts[helper] = GetShortcut(sb.ToString());
+                _newShortcuts[helper] = GetShortcut(shortcutText);
             }
             else
             {
-                _newShortcuts.Add(helper, GetShortcut(sb.ToString()));
+                _newShortcuts.Add(helper, GetShortcut(shortcutText));
             }
-        }
-
-        private static bool IsShortcutValid(string shortcutAsString, ShortcutHelper helper)
-        {
-            if (!helper.IsMenuItem)
-            {
-                return true;
-            }
-
-            try
-            {
-                new ToolStripMenuItem().ShortcutKeys = UiUtil.GetKeys(shortcutAsString.TrimStart('[').TrimEnd(']'));
-            }
-            catch (InvalidEnumArgumentException)
-            {
-                return false;
-            }
-            return true;
         }
 
         private void buttonListViewSyntaxColorError_Click(object sender, EventArgs e)
@@ -2350,6 +2309,44 @@ namespace Nikse.SubtitleEdit.Forms
         private void linkLabelBingSubscribe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("http://blogs.msdn.com/b/translation/p/gettingstarted1.aspx");
+        }
+
+        private void ValidateShortcut(object sender, EventArgs e)
+        {
+            buttonUpdateShortcut.Enabled = IsShortcutValid();
+        }
+
+        private bool IsShortcutValid()
+        {
+            if (treeViewShortcuts.SelectedNode == null || !treeViewShortcuts.SelectedNode.Text.Contains('[') )
+            {
+                return false;
+            }
+
+            var shortcutText = GetCurrentShortcutText();
+            if (shortcutText == "[CapsLock]" || shortcutText.Length < 3 || shortcutText.EndsWith("+]"))
+            {
+                return false;
+            }
+
+            if (comboBoxShortcutKey.SelectedIndex == 0)
+            {
+                return true;
+            }
+
+            var helper = (ShortcutHelper)treeViewShortcuts.SelectedNode.Tag;
+            if (helper.IsMenuItem)
+            {
+                try
+                {
+                    new ToolStripMenuItem().ShortcutKeys = UiUtil.GetKeys(GetShortcut(shortcutText));
+                }
+                catch (InvalidEnumArgumentException)
+                {
+                    return false;
+                }
+            }         
+            return true;
         }
 
     }

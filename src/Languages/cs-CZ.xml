@@ -1651,7 +1651,6 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <Key>Klávesa</Key>
     <TextBox>Textové okno</TextBox>
     <UpdateShortcut>Aktualizovat</UpdateShortcut>
-    <ShortcutIsNotValid>Klávesová zkratka není platná: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Ukotvit/zrušit ukotvení ovládání videa</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Nastavit konec, přidat nový a přejít na nový</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Nastavit podle pozice konce a přejít na další</AdjustViaEndAutoStartAndGoToNext>

@@ -1292,7 +1292,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <Key>キー</Key>
     <TextBox>テキストボックス</TextBox>
     <UpdateShortcut>更新</UpdateShortcut>
-    <ShortcutIsNotValid>ショートカットが有効ではありません: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>ビデオ コントロールのドック/ドック解除の切り替え</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>終了を設定して新規へ</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>終了位置から調整して次へ</AdjustViaEndAutoStartAndGoToNext>

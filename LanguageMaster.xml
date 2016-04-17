@@ -1659,7 +1659,6 @@ can edit in same subtitle file (collaboration)</Information>
     <Key>Key</Key>
     <TextBox>Textbox</TextBox>
     <UpdateShortcut>Update</UpdateShortcut>
-    <ShortcutIsNotValid>Shortcut is not valid: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Set end, add new and go to new</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Adjust via end position and go to next</AdjustViaEndAutoStartAndGoToNext>

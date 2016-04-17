@@ -1676,7 +1676,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <Key>+ Клавиша:</Key>
     <TextBox>Текстовое поле</TextBox>
     <UpdateShortcut>Обновить</UpdateShortcut>
-    <ShortcutIsNotValid>Недопустимое клавиатурное сочетание: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Переключить состояние панели управления видео</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Установить конец, добавить новый и перейти к нему</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Установить конечное время в позиции курсора и перейти к следующему субтитру</AdjustViaEndAutoStartAndGoToNext>

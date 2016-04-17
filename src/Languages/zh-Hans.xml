@@ -1623,7 +1623,6 @@ Command line: {1} {2}
     <Key>键</Key>
     <TextBox>文本框</TextBox>
     <UpdateShortcut>更新</UpdateShortcut>
-    <ShortcutIsNotValid>快捷键无效: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>切换 停靠/不停靠 视频控件</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>设置终点，添加新点并转到新点</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>通过结束位置调整并转到下一个</AdjustViaEndAutoStartAndGoToNext>
