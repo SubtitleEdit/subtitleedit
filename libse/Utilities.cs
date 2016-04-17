@@ -681,10 +681,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string UnbreakLine(string text)
         {
-            if (!text.Contains(Environment.NewLine))
+            var lines = text.SplitToLines();
+            if (lines.Length == 1)
                 return text;
 
-            var singleLine = text.Replace(Environment.NewLine, " ");
+            var singleLine = string.Join(" ", lines);
             while (singleLine.Contains("  "))
                 singleLine = singleLine.Replace("  ", " ");
 

@@ -8422,7 +8422,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonUnBreakClick(object sender, EventArgs e)
         {
-            // Disable Autobreak feature.
             _doAutoBreakOnTextChanged = false;
             if (SubtitleListview1.SelectedItems.Count > 1)
             {
@@ -8442,7 +8441,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxListViewText.Text = Utilities.UnbreakLine(textBoxListViewText.Text);
             }
-            // Enable Autobreak feature.
             _doAutoBreakOnTextChanged = true;
         }
 
