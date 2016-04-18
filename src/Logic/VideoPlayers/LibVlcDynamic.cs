@@ -691,21 +691,26 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 return;
 
             _mouseTimer.Stop();
-            if (_parentForm != null && _ownerControl != null && _ownerControl.Visible && _parentForm.ContainsFocus && IsLeftMouseButtonDown())
+
+            var mainForm = _parentForm as Forms.Main;
+            if (mainForm == null || !mainForm.IsMenuOpen)
             {
-                var p = _ownerControl.PointToClient(Control.MousePosition);
-                if (p.X > 0 && p.X < _ownerControl.Width && p.Y > 0 && p.Y < _ownerControl.Height)
+                if (_parentForm != null && _ownerControl != null && _ownerControl.Visible && _parentForm.ContainsFocus && IsLeftMouseButtonDown())
                 {
-                    if (IsPlaying)
-                        Pause();
-                    else
-                        Play();
-                    int i = 0;
-                    while (IsLeftMouseButtonDown() && i < 200)
+                    var p = _ownerControl.PointToClient(Control.MousePosition);
+                    if (p.X > 0 && p.X < _ownerControl.Width && p.Y > 0 && p.Y < _ownerControl.Height)
                     {
-                        System.Threading.Thread.Sleep(2);
-                        Application.DoEvents();
-                        i++;
+                        if (IsPlaying)
+                            Pause();
+                        else
+                            Play();
+                        int i = 0;
+                        while (IsLeftMouseButtonDown() && i < 200)
+                        {
+                            System.Threading.Thread.Sleep(2);
+                            Application.DoEvents();
+                            i++;
+                        }
                     }
                 }
             }
