@@ -141,8 +141,6 @@
     <Word from="Ko" to="Tko" />
     <Word from="komandni" to="zapovjedni" />
     <Word from="kompanija" to="tvrtka" />
-    <Word from="konkurišem" to="konkuriram" />
-    <Word from="konkuriše" to="konkurira" />
     <Word from="koa" to="kao" />
     <Word from="koaj" to="koja" />
     <Word from="korpu" to="košaru" />
@@ -169,7 +167,6 @@
     <Word from="mere" to="mjere" />
     <Word from="minut" to="minutu" />
     <Word from="moč" to="moć" />
-    <Word from="motivišu" to="motiviraju" />
     <Word from="muzejem" to="muzejom" />
     <Word from="muzici" to="glazbi" />
     <Word from="naduvan" to="napušen" />
@@ -234,6 +231,9 @@
     <Word from="odma" to="odmah" />
     <Word from="odneti" to="odnijeti" />
     <Word from="odprilike" to="otprilike" />
+    <Word from="odseo" to="odsjeo" />
+    <Word from="odsela" to="odsjela" />
+    <Word from="odseli" to="odsjeli" />
     <Word from="odupreti" to="oduprijeti" />
     <Word from="Ohajo" to="Ohio" />
     <Word from="organizovao" to="organizirao" />
@@ -462,11 +462,6 @@
     <Word from="oblastima" to="područjima" />
     <!-- ostaje ovako jer je prijevod u raznim padežima različit -->
     <Word from="oblasti" to="područj " />
-    <Word from="operišem" to="operiram" />
-    <Word from="operiše" to="operira" />
-    <Word from="operišeš" to="operiraš" />
-    <Word from="operišemo" to="operiramo" />
-    <Word from="operišete" to="operirate" />
     <Word from="pomera" to="miče" />
     <Word from="pomjeri" to="pomakni" />
     <Word from="pomjeraj" to="miči" />
@@ -591,7 +586,7 @@
     <RegEx find="ajsmiješnij" replaceWith="ajsmješnij" />
     <RegEx find="([aA])kcion" replaceWith="$1kcijsk" />
     <RegEx find="\b[aA]las([kc])" replaceWith="Aljas$1" />
-    <RegEx find="([aA])luminijum" replaceWith="$1luminij" />
+    <RegEx find="minijum" replaceWith="minij" />
     <RegEx find="([aA])ngažov" replaceWith="$1ngažir" />
     <RegEx find="armij" replaceWith="vojsk" />
     <RegEx find="Armij" replaceWith="Vojsk" />
@@ -659,6 +654,7 @@
     <RegEx find="\b([dD])j?eli([mšo]|mo|l[aeio]|t[ei])\b" replaceWith="$1ijeli$2" />
     <RegEx find="\b([dD])j?el([ei])\b" replaceWith="$1ijel$2" />
     <RegEx find="([dD])elikvent" replaceWith="$1elinkvent" />
+    <RegEx find="([dD])elimi" replaceWith="$1jelomi" />
     <RegEx find="([dD])eluj([eu])" replaceWith="$1jeluj$2" />
     <RegEx find="diskutova" replaceWith="raspravlja" />
     <RegEx find="diskutuje" replaceWith="raspravlja" />
@@ -771,7 +767,6 @@
     <RegEx find="([hH])tj?eo" replaceWith="$1tio" />
     <RegEx find="([hH])te([lt])" replaceWith="$1tje$2" />
     <RegEx find="([iI])gnorisa([nlot])" replaceWith="$1gnorira$2" />
-    <RegEx find="([iI])gnoriše" replaceWith="$1gnorira" />
     <RegEx find="\b([iI])mać([eu]|eš|emo|ete)\b" replaceWith="$1mat ć$2" />
     <RegEx find="([iI])migracion" replaceWith="$1migracijsk" />
     <RegEx find="([iI])nformacij?on" replaceWith="$1nformacijsk" />
@@ -833,18 +828,18 @@
     <RegEx find="\b([kK])olen([aiou])" replaceWith="$1oljen$2" />
     <RegEx find="([kK])olj?evk" replaceWith="$1olijevk" />
     <RegEx find="([kK])olj?evc" replaceWith="$1olijevc" />
-    <RegEx find="komanduj([eu])" replaceWith="naređuj$1" />
+    <!-- ne vadi iz RegEx -->
+    <RegEx find="komanduj" replaceWith="naređuj" />
     <RegEx find="([kK])ombinuje([mšt])" replaceWith="$1ombinira$2" />
     <RegEx find="([kK])ombinuju" replaceWith="$1ombiniraju" />
     <RegEx find="([kK])ombinovanj" replaceWith="$1ombiniranj" />
+    <!-- ne diraj!!! - mijenja drugačije -->
     <RegEx find="([kK])omentariše" replaceWith="$1omentira" />
     <RegEx find="komitet" replaceWith="odbor" />
     <RegEx find="Komitet" replaceWith="Odbor" />
     <RegEx find="plikuj" replaceWith="plicira" />
     <RegEx find="([kK])ompromitova" replaceWith="$1ompromitira" />
     <RegEx find="komšijsk" replaceWith="susjedn" />
-    <RegEx find="([kK])oncentriš[ei]" replaceWith="$1oncentrira" />
-    <RegEx find="([kK])oncentrišu" replaceWith="$1oncentriraju" />
     <RegEx find="([kK])onfor" replaceWith="$1omfor" />
     <RegEx find="konkurs" replaceWith="natječaj" />
     <RegEx find="Konkurs" replaceWith="Natječaj" />
@@ -1091,8 +1086,6 @@
     <RegEx find="([pP])roletn" replaceWith="$1roljetn" />
     <RegEx find="([pP])romen([aeiuoj])" replaceWith="$1romjen$2" />
     <RegEx find="([pP])romj?eni([mštl])" replaceWith="$1romijeni$2" />
-    <RegEx find="([pP])romoviše" replaceWith="$1romovira" />
-    <RegEx find="([pP])romovišu" replaceWith="$1romoviraju" />
     <RegEx find="([pP])rotiv([adkoprstz])" replaceWith="$1rotu$2" />
     <RegEx find="([pP])rovid([an])" replaceWith="$1rozir$2" />
     <RegEx find="([pP])rovj?erić" replaceWith="$1rovjerit ć" />
@@ -1267,7 +1260,6 @@
     <RegEx find="točkov([aei])" replaceWith="kotač$1" />
     <RegEx find="\b([tT])okom(?!\s+ri?j?eke)" replaceWith="$1ijekom" />
     <RegEx find="\b([tT])oleris" replaceWith="$1olerir" />
-    <RegEx find="([tT])oleriše" replaceWith="$1olerira" />
     <RegEx find="([tT])oplot" replaceWith="$1oplin" />
     <RegEx find="([tT])raći" replaceWith="$1rati" />
     <RegEx find="([tT])rajać" replaceWith="$1rajat ć" />
@@ -1438,11 +1430,13 @@
     <RegEx find="eizbež" replaceWith="eizbjež" />
     <RegEx find="efinišu" replaceWith="efiniraju" />
     <RegEx find="erišu" replaceWith="eriraju" />
+    <RegEx find="esvest" replaceWith="esvijest" />
     <RegEx find="(mpl|st|f)ikova([nlot])" replaceWith="$1icira$2" />
     <RegEx find="fikuj" replaceWith="ficir" />
     <RegEx find="fisa" replaceWith="fira" />
     <RegEx find="fiše" replaceWith="fira" />
     <RegEx find="frov" replaceWith="frir" />
+    <RegEx find="inić" replaceWith="init ć" />
     <RegEx find="(?&lt;!\b[Oo]zlo|\b[Ii]sp(rip)?ov|i)jeđen" replaceWith="ijeđen" />
     <RegEx find="(?&lt;!hva)lisati" replaceWith="lirati" />
     <RegEx find="jći" replaceWith="jući" />
@@ -1469,7 +1463,8 @@
     <RegEx find="oćeju" replaceWith="oće" />
     <RegEx find="odpisa" replaceWith="otpisa" />
     <RegEx find="\bpominj" replaceWith="spominj" />
-    <RegEx find="piriše" replaceWith="pirira" />
+    <!-- ignoriše / koncentriše /operiše /toleriše /-->
+    <RegEx find="([te]|ku|pi|no)riše" replaceWith="$1rira" />
     <RegEx find="(?&lt;![Pp]r|[Nn])adje(?!(v|n(e|u[olt]))\b)" replaceWith="ađe" />
     <RegEx find="par nedj?elja" replaceWith="par tjedana" />
     <RegEx find="rasčist" replaceWith="raščist" />
@@ -1485,10 +1480,11 @@
     <RegEx find="tede(?![oć])" replaceWith="tedje" />
     <RegEx find="tešn" replaceWith="tješn" />
     <RegEx find="tisanj" replaceWith="tiranj" />
-    <RegEx find="tiviše" replaceWith="tivira" />
+    <RegEx find="([mo|ti|r])više" replaceWith="$1vira" />
+    <RegEx find="([mo|ti|r])višu" replaceWith="$1vira" />
     <RegEx find="trisa" replaceWith="trira" />
-    <RegEx find="triše" replaceWith="trira" />
     <RegEx find="triši" replaceWith="triraj" />
+    <RegEx find="trišu" replaceWith="triraju" />
     <RegEx find="([tz])ueln" replaceWith="$1ualn" />
     <RegEx find="ubić" replaceWith="ubit ć" />
     <RegEx find="ucać" replaceWith="ucat ć" />
@@ -1578,6 +1574,7 @@
     <RegEx find="Majkl" replaceWith="Michael" />
     <RegEx find="Marfi" replaceWith="Murphy" />
     <RegEx find="Memfis" replaceWith="Memphis" />
+    <RegEx find="Menhetn" replaceWith="Manhattan" />
     <RegEx find="Mejn(u|om)?\b" replaceWith="Maine$1" />
     <RegEx find="Metju" replaceWith="Matthew" />
     <RegEx find="Mexico" replaceWith="Meksiko" />
@@ -1586,7 +1583,7 @@
     <RegEx find="Nejt" replaceWith="Nate" />
     <RegEx find="Nensi" replaceWith="Nancy" />
     <RegEx find="Njutn" replaceWith="Newton" />
-    <RegEx find="N[jJ]u Džersi" replaceWith="New Jersey" />
+    <RegEx find="N[jJ]u Džer[sz]i" replaceWith="New Jersey" />
     <RegEx find="N[jJ]u Jork" replaceWith="New York" />
     <RegEx find="N[jJ]u Orleans" replaceWith="New Orleans" />
     <RegEx find="Njujork" replaceWith="New York" />
