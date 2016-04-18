@@ -242,16 +242,34 @@ namespace Nikse.SubtitleEdit.Core
 
         private static bool CanBreak(string s, int index, string language)
         {
-            char nextChar;
+            char charAtIndex;
             if (index >= 0 && index < s.Length)
-                nextChar = s[index];
+            {
+                charAtIndex = s[index];
+            }
             else
+            {
                 return false;
-            if (!"\r\n\t ".Contains(nextChar))
-                return false;
+            }
 
-            // Some words we don't like breaking after
+            if (!"\r\n\t ".Contains(charAtIndex))
+            {
+                return false;
+            }
+
             string s2 = s.Substring(0, index);
+            // Do not break after the hyphen (-).
+            if (s2.EndsWith("? -", StringComparison.Ordinal) ||
+                s2.EndsWith("! -", StringComparison.Ordinal) ||
+                s2.EndsWith(". -", StringComparison.Ordinal) ||
+                s2.EndsWith(") -", StringComparison.Ordinal) ||
+                s2.EndsWith("] -", StringComparison.Ordinal)
+                )
+            {
+                return false;
+            }
+
+            // Some words we don't like breaking after.
             if (Configuration.Settings.Tools.UseNoLineBreakAfter)
             {
                 foreach (NoBreakAfterItem ending in NoBreakAfterList(language))
@@ -260,9 +278,6 @@ namespace Nikse.SubtitleEdit.Core
                         return false;
                 }
             }
-
-            if (s2.EndsWith("? -", StringComparison.Ordinal) || s2.EndsWith("! -", StringComparison.Ordinal) || s2.EndsWith(". -", StringComparison.Ordinal))
-                return false;
 
             return true;
         }
@@ -412,221 +427,180 @@ namespace Nikse.SubtitleEdit.Core
             return list;
         }
 
-        public static string AutoBreakLine(string text, int maximumLength, int mergeLinesShorterThan, string language)
+        public static string AutoBreakLine(string text, int singleLineMaximumLength, int mergeLinesShorterThan, string language)
         {
             if (text == null || text.Length < 3)
                 return text;
 
-            // do not autobreak dialogs
-            if (text.Contains('-') && text.Contains(Environment.NewLine))
+            const string lineCloseChars = ".!?)]";
+
+            string noTagText = HtmlUtil.RemoveHtmlTags(text, true);
+            string briefNoLineBreakText = RemoveLineBreaks(text);
+
+            bool couldBeDialogue = briefNoLineBreakText.TrimEnd('-').Contains('-');
+            bool containsHyphenBetweenSpaces = couldBeDialogue && briefNoLineBreakText.Contains(" - ");
+
+            // Do not autobreak dialogs.
+            if (couldBeDialogue && (text.Length > briefNoLineBreakText.Length))
             {
-                var noTagLines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
+                string[] noTagLines = noTagText.SplitToLines();
                 if (noTagLines.Length == 2)
                 {
                     var arr0 = noTagLines[0].Trim().TrimEnd('"', '\'').TrimEnd();
-                    if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (".?!)]".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–')))
+                    if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && (lineCloseChars.Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–')))
                         return text;
                 }
             }
 
-            string s = RemoveLineBreaks(text);
-            string noTagText = HtmlUtil.RemoveHtmlTags(s, true);
-
-            if (noTagText.Length < mergeLinesShorterThan)
+            if (!containsHyphenBetweenSpaces)
             {
-                var noTagLines = noTagText.SplitToLines();
-                if (noTagLines.Length > 1)
+                // Do not include new-line chars.
+                int excludeChars = text.Length - briefNoLineBreakText.Length;
+                if ((noTagText.Length - excludeChars) < mergeLinesShorterThan || (noTagText.Length - excludeChars) <= singleLineMaximumLength)
                 {
-                    bool isDialog = true;
-                    foreach (string line in noTagLines)
-                    {
-                        var noTagLine = line.TrimStart();
-                        isDialog = isDialog && (noTagLine.StartsWith('-') || noTagLine.StartsWith('—'));
-                    }
-                    if (isDialog)
-                    {
-                        return text;
-                    }
+                    return briefNoLineBreakText;
                 }
-                return s;
             }
 
             var htmlTags = new Dictionary<int, string>();
-            var sb = new StringBuilder();
-            int six = 0;
-            while (six < s.Length)
+            // Check if indeed there are tag present.
+            if (noTagText.Length < text.Length)
             {
-                var letter = s[six];
-                var tagFound = letter == '<' && (s.Substring(six).StartsWith("<font", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</font", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("<u", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</u", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("<b", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</b", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("<i", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</i", StringComparison.OrdinalIgnoreCase));
-                int endIndex = -1;
-                if (tagFound)
-                    endIndex = s.IndexOf('>', six + 1);
+                var sb = new StringBuilder();
+                int charIdx = 0;
+                while (charIdx < briefNoLineBreakText.Length)
+                {
+                    var letter = briefNoLineBreakText[charIdx];
+                    var tagFound = letter == '<' && (briefNoLineBreakText.Substring(charIdx).StartsWith("<font", StringComparison.OrdinalIgnoreCase)
+                                                     || briefNoLineBreakText.Substring(charIdx).StartsWith("</font", StringComparison.OrdinalIgnoreCase)
+                                                     || briefNoLineBreakText.Substring(charIdx).StartsWith("<u", StringComparison.OrdinalIgnoreCase)
+                                                     || briefNoLineBreakText.Substring(charIdx).StartsWith("</u", StringComparison.OrdinalIgnoreCase)
+                                                     || briefNoLineBreakText.Substring(charIdx).StartsWith("<b", StringComparison.OrdinalIgnoreCase)
+                                                     || briefNoLineBreakText.Substring(charIdx).StartsWith("</b", StringComparison.OrdinalIgnoreCase)
+                                                     || briefNoLineBreakText.Substring(charIdx).StartsWith("<i", StringComparison.OrdinalIgnoreCase)
+                                                     || briefNoLineBreakText.Substring(charIdx).StartsWith("</i", StringComparison.OrdinalIgnoreCase));
+                    int endIndex = -1;
+                    if (tagFound)
+                        endIndex = briefNoLineBreakText.IndexOf('>', charIdx + 1);
 
-                if (tagFound && endIndex > 0)
-                {
-                    string tag = s.Substring(six, endIndex - six + 1);
-                    s = s.Remove(six, tag.Length);
-                    if (htmlTags.ContainsKey(six))
-                        htmlTags[six] = htmlTags[six] + tag;
+                    if (tagFound && endIndex > 0)
+                    {
+                        string tag = briefNoLineBreakText.Substring(charIdx, endIndex - charIdx + 1);
+                        briefNoLineBreakText = briefNoLineBreakText.Remove(charIdx, tag.Length);
+                        if (htmlTags.ContainsKey(charIdx))
+                            htmlTags[charIdx] = htmlTags[charIdx] + tag;
+                        else
+                            htmlTags.Add(charIdx, tag);
+                    }
                     else
-                        htmlTags.Add(six, tag);
+                    {
+                        sb.Append(letter);
+                        charIdx++;
+                    }
                 }
-                else
-                {
-                    sb.Append(letter);
-                    six++;
-                }
+                briefNoLineBreakText = sb.ToString();
             }
-            s = sb.ToString();
 
             int splitPos = -1;
-            int mid = s.Length / 2;
+            int mid = briefNoLineBreakText.Length / 2;
 
-            // try to find " - " with uppercase letter after (dialog)
-            if (s.Contains(" - "))
+            // Try to find " - " with uppercase letter after (dialog)
+            if (containsHyphenBetweenSpaces)
             {
-                for (int j = 0; j <= (maximumLength / 2) + 5; j++)
+                for (int j = 0; j + 3 < mid; j++)
                 {
-                    if (mid + j + 4 < s.Length)
+                    int lookUpIndex1 = mid + j;
+                    if (briefNoLineBreakText[lookUpIndex1] == '-' && briefNoLineBreakText[lookUpIndex1 + 1] == ' ' && briefNoLineBreakText[lookUpIndex1 - 1] == ' ')
                     {
-                        if (s[mid + j] == '-' && s[mid + j + 1] == ' ' && s[mid + j - 1] == ' ')
+                        string rest = briefNoLineBreakText.Substring(lookUpIndex1 + 1).TrimStart();
+                        if (rest.Length > 0 && char.IsUpper(rest[0]) && lineCloseChars.Contains(briefNoLineBreakText[lookUpIndex1 - 2]))
                         {
-                            string rest = s.Substring(mid + j + 1).TrimStart();
-                            if (rest.Length > 0 && char.IsUpper(rest[0]))
-                            {
-                                splitPos = mid + j;
-                                break;
-                            }
+                            splitPos = lookUpIndex1;
+                            break;
                         }
                     }
-                    if (mid - (j + 1) > 4)
+                    int lookUpIndex2 = mid - (j + 1);
+                    if (briefNoLineBreakText[lookUpIndex2] == '-' && briefNoLineBreakText[lookUpIndex2 + 1] == ' ' && briefNoLineBreakText[lookUpIndex2 - 1] == ' ')
                     {
-                        if (s[mid - j] == '-' && s[mid - j + 1] == ' ' && s[mid - j - 1] == ' ')
+                        string rest = briefNoLineBreakText.Substring(lookUpIndex2 + 1).TrimStart();
+                        if (rest.Length > 0 && char.IsUpper(rest[0]) && lineCloseChars.Contains(briefNoLineBreakText[lookUpIndex2 - 2]))
                         {
-                            string rest = s.Substring(mid - j + 1).TrimStart();
-                            if (rest.Length > 0 && char.IsUpper(rest[0]))
-                            {
-                                if (mid - j > 5 && s[mid - j - 1] == ' ' && @"!?.".Contains(s[mid - j - 2]))
-                                {
-                                    splitPos = mid - j;
-                                    break;
-                                }
-                            }
+                            splitPos = lookUpIndex2;
+                            break;
                         }
                     }
                 }
             }
 
-            if (splitPos == maximumLength + 1 && s[maximumLength] != ' ') // only allow space for last char (as it does not count)
-                splitPos = -1;
-
             if (splitPos < 0)
             {
-                const string expectedChars1 = ".!?0123456789";
-                const string expectedChars2 = ".!?";
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j + 4 < mid; j++)
                 {
-                    if (mid + j + 1 < s.Length && mid + j > 0)
+                    if ((briefNoLineBreakText[mid + j] == ' ') && CanBreak(briefNoLineBreakText, mid + j, language))
                     {
-                        if (expectedChars2.Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && CanBreak(s, mid + j + 1, language))
+                        splitPos = mid + j;
+                        break;
+                    }
+                    int preMidIndex = mid - (j + 1);
+                    if ((briefNoLineBreakText[preMidIndex] == ' ') && CanBreak(briefNoLineBreakText, preMidIndex, language))
+                    {
+                        splitPos = preMidIndex;
+                        break;
+                    }
+                }
+
+                // Do not split between white-space and (!!!, ??? or ...)...
+                if (splitPos > 0)
+                {
+                    bool takeTwoChars = true;
+                    while (splitPos + 1 < briefNoLineBreakText.Length && lineCloseChars.Contains(briefNoLineBreakText[splitPos + 1]))
+                    {
+                        if (takeTwoChars)
                         {
-                            splitPos = mid + j + 1;
-                            if (expectedChars1.Contains(s[splitPos]))
-                            { // do not break double/tripple end lines like "!!!" or "..."
-                                splitPos++;
-                                if (expectedChars1.Contains(s[mid + j + 1]))
-                                    splitPos++;
-                            }
-                            break;
+                            splitPos += 2;
+                            takeTwoChars = false;
                         }
-                        if (expectedChars2.Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && CanBreak(s, mid - j, language))
+                        else
                         {
-                            splitPos = mid - j;
                             splitPos++;
-                            break;
                         }
                     }
                 }
             }
 
-            if (splitPos > maximumLength) // too long first line
-            {
-                if (splitPos != maximumLength + 1 || s[maximumLength] != ' ') // allow for maxlength+1 char to be space (does not count)
-                    splitPos = -1;
-            }
-            else if (splitPos >= 0 && s.Length - splitPos > maximumLength) // too long second line
-            {
-                splitPos = -1;
-            }
-
-            if (splitPos < 0)
-            {
-                const string expectedChars1 = ".!?, ";
-                const string expectedChars2 = " .!?";
-                const string expectedChars3 = ".!?";
-                for (int j = 0; j < 25; j++)
-                {
-                    if (mid + j + 1 < s.Length && mid + j > 0)
-                    {
-                        if (expectedChars1.Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && s.Length > mid + j + 2 && CanBreak(s, mid + j, language))
-                        {
-                            splitPos = mid + j;
-                            if (expectedChars2.Contains(s[mid + j + 1]))
-                            {
-                                splitPos++;
-                                if (expectedChars2.Contains(s[mid + j + 2]))
-                                    splitPos++;
-                            }
-                            break;
-                        }
-                        if (expectedChars1.Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && s.Length > mid + j + 2 && CanBreak(s, mid - j, language))
-                        {
-                            splitPos = mid - j;
-                            if (expectedChars3.Contains(s[splitPos]))
-                                splitPos--;
-                            if (expectedChars3.Contains(s[splitPos]))
-                                splitPos--;
-                            if (expectedChars3.Contains(s[splitPos]))
-                                splitPos--;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (splitPos < 0)
+            if (splitPos < 0 && mid > singleLineMaximumLength)
             {
                 splitPos = mid;
-                s = s.Insert(mid - 1, Environment.NewLine);
-                s = ReInsertHtmlTags(s, htmlTags);
+                briefNoLineBreakText = briefNoLineBreakText.Insert(mid - 1, Environment.NewLine);
+                briefNoLineBreakText = ReInsertHtmlTags(briefNoLineBreakText, htmlTags);
                 htmlTags = new Dictionary<int, string>();
-                s = s.Replace(Environment.NewLine, "-");
+                briefNoLineBreakText = briefNoLineBreakText.Replace(Environment.NewLine, "-");
             }
-            if (splitPos < s.Length - 2)
-                s = s.Substring(0, splitPos) + Environment.NewLine + s.Substring(splitPos);
 
-            s = ReInsertHtmlTags(s, htmlTags);
-            var idx = s.IndexOf(Environment.NewLine + "</", StringComparison.Ordinal);
+            if ((splitPos > 3) && (briefNoLineBreakText.Length - splitPos > 3))
+            {
+                string firstLine = briefNoLineBreakText.Substring(0, splitPos);
+                string secondLine = briefNoLineBreakText.Substring(splitPos);
+                briefNoLineBreakText = firstLine + Environment.NewLine + secondLine;
+            }
+
+            briefNoLineBreakText = ReInsertHtmlTags(briefNoLineBreakText, htmlTags);
+
+            var idx = briefNoLineBreakText.IndexOf(Environment.NewLine + "</", StringComparison.Ordinal);
             if (idx > 2)
             {
-                var endIdx = s.IndexOf('>', idx + 2);
+                var endIdx = briefNoLineBreakText.IndexOf('>', idx + 2);
                 if (endIdx > idx)
                 {
-                    var tag = s.Substring(idx + Environment.NewLine.Length, endIdx - (idx + Environment.NewLine.Length) + 1);
-                    s = s.Insert(idx, tag);
-                    s = s.Remove(idx + tag.Length + Environment.NewLine.Length, tag.Length);
+                    var tag = briefNoLineBreakText.Substring(idx + Environment.NewLine.Length, endIdx - (idx + Environment.NewLine.Length) + 1);
+                    briefNoLineBreakText = briefNoLineBreakText.Insert(idx, tag);
+                    briefNoLineBreakText = briefNoLineBreakText.Remove(idx + tag.Length + Environment.NewLine.Length, tag.Length);
                 }
             }
-            s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
-            s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
-            return s.TrimEnd();
+
+            briefNoLineBreakText = briefNoLineBreakText.Replace(" " + Environment.NewLine, Environment.NewLine);
+            briefNoLineBreakText = briefNoLineBreakText.Replace(Environment.NewLine + " ", Environment.NewLine);
+            return briefNoLineBreakText.TrimEnd();
         }
 
         public static string RemoveLineBreaks(string s)
@@ -656,7 +630,7 @@ namespace Nikse.SubtitleEdit.Core
                 int six = 0;
                 foreach (var letter in s)
                 {
-                    if (Environment.NewLine.Contains(letter))
+                    if (letter == '\n' || letter == '\r')
                     {
                         sb.Append(letter);
                     }
