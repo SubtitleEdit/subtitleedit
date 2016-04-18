@@ -214,6 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
         private static object _syncUndo = new object();
         private string[] _dragAndDropFiles;
         private Timer _dragAndDropTimer = new Timer(); // to prevent locking windows explorer
+        public bool IsMenuOpen { get; private set; }
 
         private bool AutoRepeatContinueOn
         {
@@ -19816,6 +19817,21 @@ namespace Nikse.SubtitleEdit.Forms
         private void contextMenuStripWaveform_Closing(object sender, ToolStripDropDownClosingEventArgs e)
         {
             _lastWaveformMenuCloseTicks = DateTime.Now.Ticks;
+        }
+
+        private void MenuOpened(object sender, EventArgs e)
+        {
+            IsMenuOpen = true;
+        }
+
+        private void MenuClosed(object sender, ToolStripDropDownClosedEventArgs e)
+        {
+            IsMenuOpen = false;
+        }
+
+        private void MenuClosed(object sender, EventArgs e)
+        {
+            IsMenuOpen = false;
         }
 
     }
