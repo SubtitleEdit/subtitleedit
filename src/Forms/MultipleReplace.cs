@@ -127,18 +127,9 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var fileName in importFileNames)
                 {
                     if (fileName.Equals("."))
-                    {
                         Configuration.Settings.MultipleSearchAndReplaceList.AddRange(savedList);
-                        continue;
-                    }
-                    try
-                    {
+                    else
                         ImportRulesFile(fileName);
-                    }
-                    catch (Exception exception)
-                    {
-                        Console.WriteLine(exception.Message);
-                    }
                 }
                 RunFromBatch(subtitle);
             }

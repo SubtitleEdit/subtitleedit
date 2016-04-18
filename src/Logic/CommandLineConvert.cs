@@ -97,29 +97,11 @@ namespace Nikse.SubtitleEdit.Logic
                 var targetFormat = args[3].Trim().Replace(" ", string.Empty);
                 var offset = GetArgument(args, "offset:");
 
-                double? targetFrameRate = null;
+                var targetFrameRate = GetFrameRate(args, "targetfps");
+                var frameRate = GetFrameRate(args, "fps");
+                if (frameRate.HasValue)
                 {
-                    var fps = GetArgument(args, "targetfps:");
-                    if (fps.Length > 1)
-                    {
-                        fps = fps.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, ".");
-                        double d;
-                        if (double.TryParse(fps, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
-                        {
-                            targetFrameRate = d;
-                        }
-                    }
-
-                    fps = GetArgument(args, "fps:");
-                    if (fps.Length > 1)
-                    {
-                        fps = fps.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, ".");
-                        double d;
-                        if (double.TryParse(fps, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
-                        {
-                            Configuration.Settings.General.CurrentFrameRate = d;
-                        }
-                    }
+                    Configuration.Settings.General.CurrentFrameRate = frameRate.Value;
                 }
 
                 var targetEncoding = Encoding.UTF8;
@@ -139,18 +121,32 @@ namespace Nikse.SubtitleEdit.Logic
                 var outputFolder = string.Empty;
                 {
                     var folder = GetArgument(args, "outputfolder:");
-                    if (folder.Length > 0 && Directory.Exists(folder))
+                    if (folder.Length > 0)
                     {
-                        outputFolder = folder;
+                        if (Directory.Exists(folder))
+                        {
+                            outputFolder = folder;
+                        }
+                        else
+                        {
+                            throw new Exception("The /outputfolder '" + folder + "' does not exist.");
+                        }
                     }
                 }
 
                 var inputFolder = currentFolder;
                 {
-                    var folder = GetArgument(args, "inputFolder:");
-                    if (folder.Length > 0 && Directory.Exists(folder))
+                    var folder = GetArgument(args, "inputfolder:");
+                    if (folder.Length > 0)
                     {
-                        inputFolder = folder;
+                        if (Directory.Exists(folder))
+                        {
+                            inputFolder = folder;
+                        }
+                        else
+                        {
+                            throw new Exception("The /inputfolder '" + folder + "' does not exist.");
+                        }
                     }
                 }
 
@@ -183,8 +179,7 @@ namespace Nikse.SubtitleEdit.Logic
                             pacCodePage = Pac.CodePageJapanese;
                         else if (!int.TryParse(pcp, out pacCodePage) || !Pac.IsValidCodePage(pacCodePage))
                         {
-                            Console.WriteLine("Unknown pac code page '" + pcp + "' - using default code page");
-                            pacCodePage = -1;
+                            throw new Exception("The /pac-codepage value '" + pcp + "' is invalid.");
                         }
                     }
                 }
@@ -485,13 +480,17 @@ namespace Nikse.SubtitleEdit.Logic
             catch (Exception exception)
             {
                 Console.WriteLine();
-                Console.WriteLine("Oops - an error occured: " + exception.Message);
+                Console.WriteLine("ERROR: " + exception.Message);
                 Console.WriteLine();
+                errors++;
             }
 
-            Console.WriteLine();
-            Console.WriteLine("{0} file(s) converted", converted);
-            Console.WriteLine();
+            if (count > 0)
+            {
+                Console.WriteLine();
+                Console.WriteLine("{0} file(s) converted", converted);
+                Console.WriteLine();
+            }
 
             if (!Configuration.IsRunningOnMac() && !Configuration.IsRunningOnLinux())
             {
@@ -548,6 +547,33 @@ namespace Nikse.SubtitleEdit.Logic
                 Console.WriteLine("Converted subtitle");
                 BatchConvertSave(targetFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, overwrite, pacCodePage, targetFrameRate, multipleReplaceImportFiles, removeTextForHi, fixCommonErrors, redoCasing);
             }
+        }
+
+        /// <summary>
+        /// Gets a frame rate argument from the command line
+        /// </summary>
+        /// <param name="commandLineArguments">All arguments from the command line</param>
+        /// <param name="requestedFrameRateName">The name of the frame rate argument that is requested</param>
+        private static double? GetFrameRate(string[] commandLineArguments, string requestedFrameRateName)
+        {
+            const double minimumFrameRate = 1.0;
+            const double maximumFrameRate = 200.0;
+
+            var fps = GetArgument(commandLineArguments, requestedFrameRateName + ':');
+            if (fps.Length > 0)
+            {
+                if (fps.Length > 1)
+                {
+                    fps = fps.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, ".");
+                    double d;
+                    if (double.TryParse(fps, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d) && d >= minimumFrameRate && d <= maximumFrameRate)
+                    {
+                        return d;
+                    }
+                }
+                throw new Exception(string.Format("The /{0} value '{1}' is invalid - number between {2} and {3} expected.", requestedFrameRateName, fps, minimumFrameRate, maximumFrameRate));
+            }
+            return null;
         }
 
         /// <summary>
