@@ -1719,6 +1719,16 @@ namespace Nikse.SubtitleEdit.Forms
 
                 openFileDialog1.InitialDirectory = file.DirectoryName;
 
+
+                if (ext == ".idx")
+                {
+                    var subFileName = fileName.Substring(0, fileName.Length - 3) + "sub";
+                    if (File.Exists(subFileName) && FileUtil.IsVobSub(subFileName))
+                    {
+                        ext = ".sub";
+                        fileName = subFileName;
+                    }
+                }
                 if (ext == ".sub" && IsVobSubFile(fileName, false))
                 {
                     if (MessageBox.Show(this, _language.ImportThisVobSubSubtitle, _title, MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -10026,7 +10036,15 @@ namespace Nikse.SubtitleEdit.Forms
                     ImportDvdSubtitle(fileName);
                     return;
                 }
-
+                else if (ext == ".idx")
+                {
+                    var subFileName = fileName.Substring(0, fileName.Length - 3) + "sub";
+                    if (File.Exists(subFileName) && FileUtil.IsVobSub(subFileName))
+                    {
+                        ImportAndOcrVobSubSubtitleNew(subFileName, _loading);
+                        return;
+                    }
+                }
 
                 if (file.Length < 1024 * 1024 * 2) // max 2 mb
                 {
