@@ -528,7 +528,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (_changeAllDictionary.ContainsKey(_currentWord.Trim('\'')))
                     {
                         _noOfChangedWords++;
-                        _mainWindow.CorrectWord(_changeAllDictionary[_currentWord], _currentParagraph, _currentWord.Trim('\''), ref _firstChange, -1);
+                        _mainWindow.CorrectWord(_changeAllDictionary[_currentWord.Trim('\'')], _currentParagraph, _currentWord.Trim('\''), ref _firstChange, -1);
                     }
                     else if (_spellCheckWordLists.HasNameExtended(_currentWord, _currentParagraph.Text)) // TODO: Verify this!
                     {
