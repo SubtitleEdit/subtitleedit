@@ -799,7 +799,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (lastNumber == number)
                 {
                     p = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
-                    string temp = (line1 + Environment.NewLine + line2).Trim();
+                    string temp = (line1.TrimEnd() + Environment.NewLine + line2).TrimEnd();
                     if (temp.Length > 0)
                         p.Text = temp;
                 }
@@ -808,7 +808,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     subtitle.Paragraphs.Add(p);
                     p.StartTime.TotalMilliseconds = (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * startFrame;
                     p.EndTime.TotalMilliseconds = (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate) * endFrame;
-                    p.Text = (line1 + Environment.NewLine + line2).Trim();
+                    p.Text = (line1.TrimEnd() + Environment.NewLine + line2).TrimEnd();
                 }
                 if (boxType >= 0xa0 && boxType <= 0xa9 && !string.IsNullOrEmpty(p.Text)) // box
                 {
