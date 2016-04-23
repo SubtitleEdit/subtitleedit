@@ -30,3 +30,5 @@ SubtitleEdit-*-setup.exe
 /src/.nuget/NuGet.Config
 /src/packages/
 /src/SubtitleEdit.VC.opendb
+/src/SubtitleEdit.VC.VC.opendb
+/src/SubtitleEdit.VC.db
