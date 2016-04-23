@@ -28,6 +28,7 @@
    * Fixed some "Remove text for HI" issues - thx Thunderbolt8
    * Fixed "Remove text for HI" issue - thx Andrew
    * Fixed "Add missing spaces" issue - thx Andrew
+   * Fixed possible crash in spell check - thx Andrew
    * "Fix short display time" is improved even if chars/sec still high - thx Frédéric
    * Fixed possible crash when loading subtitle from command line - thx Félix
    * Fixed showing correct language when opening dvd multi lang sub - thx xylographe
