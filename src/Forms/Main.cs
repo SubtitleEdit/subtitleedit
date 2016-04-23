@@ -1301,7 +1301,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSplitLine.Text = _languageGeneral.SplitLine;
             ShowSourceLineNumber();
 
-            // Video controls
+            // video controls
             tabPageTranslate.Text = _language.VideoControls.Translate + "  ";
             tabPageCreate.Text = _language.VideoControls.Create + "  ";
             tabPageAdjust.Text = _language.VideoControls.Adjust + "  ";
@@ -1355,7 +1355,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAdjustSecForward2.Text = _language.VideoControls.SecondsForwardShort;
             labelAdjustTip.Text = _language.VideoControls.CreateTip;
 
-            //waveform
+            // waveform
             var languageWaveform = Configuration.Settings.Language.Waveform;
             addParagraphHereToolStripMenuItem.Text = languageWaveform.AddParagraphHere;
             addParagraphAndPasteToolStripMenuItem.Text = languageWaveform.AddParagraphHereAndPasteText;
@@ -1379,6 +1379,9 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.WaveformNotLoadedText = languageWaveform.ClickToAddWaveformAndSpectrogram;
             else
                 audioVisualizer.WaveformNotLoadedText = languageWaveform.ClickToAddWaveform;
+
+            // clear cached language names
+            DvdSubtitleLanguage.Initialize();
         }
 
         private void SetFormatToSubRip()

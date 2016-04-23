@@ -13,7 +13,7 @@ namespace Test.Logic.VobSub
         public void VobSubWriteAndReadTwoBitmaps()
         {
             string fileName = Guid.NewGuid() + ".sub";
-            using (var writer = new VobSubWriter(fileName, 800, 600, 10, 10, 32, Color.White, Color.Black, true, "English", "en"))
+            using (var writer = new VobSubWriter(fileName, 800, 600, 10, 10, 32, Color.White, Color.Black, true, DvdSubtitleLanguage.English))
             {
                 var p1 = new Paragraph("Line1", 0, 1000);
                 var p2 = new Paragraph("Line2", 2000, 3000);

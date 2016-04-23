@@ -1888,6 +1888,432 @@ namespace Nikse.SubtitleEdit.Core
                 case "JoinSubtitles/Note":
                     language.JoinSubtitles.Note = reader.Value;
                     break;
+                case "LanguageNames/NotSpecified":
+                    language.LanguageNames.NotSpecified = reader.Value;
+                    break;
+                case "LanguageNames/UnknownCodeX":
+                    language.LanguageNames.UnknownCodeX = reader.Value;
+                    break;
+                case "LanguageNames/aaName":
+                    language.LanguageNames.aaName = reader.Value;
+                    break;
+                case "LanguageNames/abName":
+                    language.LanguageNames.abName = reader.Value;
+                    break;
+                case "LanguageNames/afName":
+                    language.LanguageNames.afName = reader.Value;
+                    break;
+                case "LanguageNames/amName":
+                    language.LanguageNames.amName = reader.Value;
+                    break;
+                case "LanguageNames/arName":
+                    language.LanguageNames.arName = reader.Value;
+                    break;
+                case "LanguageNames/asName":
+                    language.LanguageNames.asName = reader.Value;
+                    break;
+                case "LanguageNames/ayName":
+                    language.LanguageNames.ayName = reader.Value;
+                    break;
+                case "LanguageNames/azName":
+                    language.LanguageNames.azName = reader.Value;
+                    break;
+                case "LanguageNames/baName":
+                    language.LanguageNames.baName = reader.Value;
+                    break;
+                case "LanguageNames/beName":
+                    language.LanguageNames.beName = reader.Value;
+                    break;
+                case "LanguageNames/bgName":
+                    language.LanguageNames.bgName = reader.Value;
+                    break;
+                case "LanguageNames/bhName":
+                    language.LanguageNames.bhName = reader.Value;
+                    break;
+                case "LanguageNames/biName":
+                    language.LanguageNames.biName = reader.Value;
+                    break;
+                case "LanguageNames/bnName":
+                    language.LanguageNames.bnName = reader.Value;
+                    break;
+                case "LanguageNames/boName":
+                    language.LanguageNames.boName = reader.Value;
+                    break;
+                case "LanguageNames/brName":
+                    language.LanguageNames.brName = reader.Value;
+                    break;
+                case "LanguageNames/caName":
+                    language.LanguageNames.caName = reader.Value;
+                    break;
+                case "LanguageNames/coName":
+                    language.LanguageNames.coName = reader.Value;
+                    break;
+                case "LanguageNames/csName":
+                    language.LanguageNames.csName = reader.Value;
+                    break;
+                case "LanguageNames/cyName":
+                    language.LanguageNames.cyName = reader.Value;
+                    break;
+                case "LanguageNames/daName":
+                    language.LanguageNames.daName = reader.Value;
+                    break;
+                case "LanguageNames/deName":
+                    language.LanguageNames.deName = reader.Value;
+                    break;
+                case "LanguageNames/dzName":
+                    language.LanguageNames.dzName = reader.Value;
+                    break;
+                case "LanguageNames/elName":
+                    language.LanguageNames.elName = reader.Value;
+                    break;
+                case "LanguageNames/enName":
+                    language.LanguageNames.enName = reader.Value;
+                    break;
+                case "LanguageNames/eoName":
+                    language.LanguageNames.eoName = reader.Value;
+                    break;
+                case "LanguageNames/esName":
+                    language.LanguageNames.esName = reader.Value;
+                    break;
+                case "LanguageNames/etName":
+                    language.LanguageNames.etName = reader.Value;
+                    break;
+                case "LanguageNames/euName":
+                    language.LanguageNames.euName = reader.Value;
+                    break;
+                case "LanguageNames/faName":
+                    language.LanguageNames.faName = reader.Value;
+                    break;
+                case "LanguageNames/fiName":
+                    language.LanguageNames.fiName = reader.Value;
+                    break;
+                case "LanguageNames/fjName":
+                    language.LanguageNames.fjName = reader.Value;
+                    break;
+                case "LanguageNames/foName":
+                    language.LanguageNames.foName = reader.Value;
+                    break;
+                case "LanguageNames/frName":
+                    language.LanguageNames.frName = reader.Value;
+                    break;
+                case "LanguageNames/fyName":
+                    language.LanguageNames.fyName = reader.Value;
+                    break;
+                case "LanguageNames/gaName":
+                    language.LanguageNames.gaName = reader.Value;
+                    break;
+                case "LanguageNames/gdName":
+                    language.LanguageNames.gdName = reader.Value;
+                    break;
+                case "LanguageNames/glName":
+                    language.LanguageNames.glName = reader.Value;
+                    break;
+                case "LanguageNames/gnName":
+                    language.LanguageNames.gnName = reader.Value;
+                    break;
+                case "LanguageNames/guName":
+                    language.LanguageNames.guName = reader.Value;
+                    break;
+                case "LanguageNames/haName":
+                    language.LanguageNames.haName = reader.Value;
+                    break;
+                case "LanguageNames/heName":
+                    language.LanguageNames.heName = reader.Value;
+                    break;
+                case "LanguageNames/hiName":
+                    language.LanguageNames.hiName = reader.Value;
+                    break;
+                case "LanguageNames/hrName":
+                    language.LanguageNames.hrName = reader.Value;
+                    break;
+                case "LanguageNames/huName":
+                    language.LanguageNames.huName = reader.Value;
+                    break;
+                case "LanguageNames/hyName":
+                    language.LanguageNames.hyName = reader.Value;
+                    break;
+                case "LanguageNames/iaName":
+                    language.LanguageNames.iaName = reader.Value;
+                    break;
+                case "LanguageNames/idName":
+                    language.LanguageNames.idName = reader.Value;
+                    break;
+                case "LanguageNames/ieName":
+                    language.LanguageNames.ieName = reader.Value;
+                    break;
+                case "LanguageNames/ikName":
+                    language.LanguageNames.ikName = reader.Value;
+                    break;
+                case "LanguageNames/isName":
+                    language.LanguageNames.isName = reader.Value;
+                    break;
+                case "LanguageNames/itName":
+                    language.LanguageNames.itName = reader.Value;
+                    break;
+                case "LanguageNames/iuName":
+                    language.LanguageNames.iuName = reader.Value;
+                    break;
+                case "LanguageNames/jaName":
+                    language.LanguageNames.jaName = reader.Value;
+                    break;
+                case "LanguageNames/jvName":
+                    language.LanguageNames.jvName = reader.Value;
+                    break;
+                case "LanguageNames/kaName":
+                    language.LanguageNames.kaName = reader.Value;
+                    break;
+                case "LanguageNames/kkName":
+                    language.LanguageNames.kkName = reader.Value;
+                    break;
+                case "LanguageNames/klName":
+                    language.LanguageNames.klName = reader.Value;
+                    break;
+                case "LanguageNames/kmName":
+                    language.LanguageNames.kmName = reader.Value;
+                    break;
+                case "LanguageNames/knName":
+                    language.LanguageNames.knName = reader.Value;
+                    break;
+                case "LanguageNames/koName":
+                    language.LanguageNames.koName = reader.Value;
+                    break;
+                case "LanguageNames/ksName":
+                    language.LanguageNames.ksName = reader.Value;
+                    break;
+                case "LanguageNames/kuName":
+                    language.LanguageNames.kuName = reader.Value;
+                    break;
+                case "LanguageNames/kyName":
+                    language.LanguageNames.kyName = reader.Value;
+                    break;
+                case "LanguageNames/laName":
+                    language.LanguageNames.laName = reader.Value;
+                    break;
+                case "LanguageNames/lbName":
+                    language.LanguageNames.lbName = reader.Value;
+                    break;
+                case "LanguageNames/lnName":
+                    language.LanguageNames.lnName = reader.Value;
+                    break;
+                case "LanguageNames/loName":
+                    language.LanguageNames.loName = reader.Value;
+                    break;
+                case "LanguageNames/ltName":
+                    language.LanguageNames.ltName = reader.Value;
+                    break;
+                case "LanguageNames/lvName":
+                    language.LanguageNames.lvName = reader.Value;
+                    break;
+                case "LanguageNames/mgName":
+                    language.LanguageNames.mgName = reader.Value;
+                    break;
+                case "LanguageNames/miName":
+                    language.LanguageNames.miName = reader.Value;
+                    break;
+                case "LanguageNames/mkName":
+                    language.LanguageNames.mkName = reader.Value;
+                    break;
+                case "LanguageNames/mlName":
+                    language.LanguageNames.mlName = reader.Value;
+                    break;
+                case "LanguageNames/mnName":
+                    language.LanguageNames.mnName = reader.Value;
+                    break;
+                case "LanguageNames/moName":
+                    language.LanguageNames.moName = reader.Value;
+                    break;
+                case "LanguageNames/mrName":
+                    language.LanguageNames.mrName = reader.Value;
+                    break;
+                case "LanguageNames/msName":
+                    language.LanguageNames.msName = reader.Value;
+                    break;
+                case "LanguageNames/mtName":
+                    language.LanguageNames.mtName = reader.Value;
+                    break;
+                case "LanguageNames/myName":
+                    language.LanguageNames.myName = reader.Value;
+                    break;
+                case "LanguageNames/naName":
+                    language.LanguageNames.naName = reader.Value;
+                    break;
+                case "LanguageNames/neName":
+                    language.LanguageNames.neName = reader.Value;
+                    break;
+                case "LanguageNames/nlName":
+                    language.LanguageNames.nlName = reader.Value;
+                    break;
+                case "LanguageNames/noName":
+                    language.LanguageNames.noName = reader.Value;
+                    break;
+                case "LanguageNames/ocName":
+                    language.LanguageNames.ocName = reader.Value;
+                    break;
+                case "LanguageNames/omName":
+                    language.LanguageNames.omName = reader.Value;
+                    break;
+                case "LanguageNames/orName":
+                    language.LanguageNames.orName = reader.Value;
+                    break;
+                case "LanguageNames/paName":
+                    language.LanguageNames.paName = reader.Value;
+                    break;
+                case "LanguageNames/plName":
+                    language.LanguageNames.plName = reader.Value;
+                    break;
+                case "LanguageNames/psName":
+                    language.LanguageNames.psName = reader.Value;
+                    break;
+                case "LanguageNames/ptName":
+                    language.LanguageNames.ptName = reader.Value;
+                    break;
+                case "LanguageNames/quName":
+                    language.LanguageNames.quName = reader.Value;
+                    break;
+                case "LanguageNames/rmName":
+                    language.LanguageNames.rmName = reader.Value;
+                    break;
+                case "LanguageNames/rnName":
+                    language.LanguageNames.rnName = reader.Value;
+                    break;
+                case "LanguageNames/roName":
+                    language.LanguageNames.roName = reader.Value;
+                    break;
+                case "LanguageNames/ruName":
+                    language.LanguageNames.ruName = reader.Value;
+                    break;
+                case "LanguageNames/rwName":
+                    language.LanguageNames.rwName = reader.Value;
+                    break;
+                case "LanguageNames/saName":
+                    language.LanguageNames.saName = reader.Value;
+                    break;
+                case "LanguageNames/sdName":
+                    language.LanguageNames.sdName = reader.Value;
+                    break;
+                case "LanguageNames/sgName":
+                    language.LanguageNames.sgName = reader.Value;
+                    break;
+                case "LanguageNames/shName":
+                    language.LanguageNames.shName = reader.Value;
+                    break;
+                case "LanguageNames/siName":
+                    language.LanguageNames.siName = reader.Value;
+                    break;
+                case "LanguageNames/skName":
+                    language.LanguageNames.skName = reader.Value;
+                    break;
+                case "LanguageNames/slName":
+                    language.LanguageNames.slName = reader.Value;
+                    break;
+                case "LanguageNames/smName":
+                    language.LanguageNames.smName = reader.Value;
+                    break;
+                case "LanguageNames/snName":
+                    language.LanguageNames.snName = reader.Value;
+                    break;
+                case "LanguageNames/soName":
+                    language.LanguageNames.soName = reader.Value;
+                    break;
+                case "LanguageNames/sqName":
+                    language.LanguageNames.sqName = reader.Value;
+                    break;
+                case "LanguageNames/srName":
+                    language.LanguageNames.srName = reader.Value;
+                    break;
+                case "LanguageNames/ssName":
+                    language.LanguageNames.ssName = reader.Value;
+                    break;
+                case "LanguageNames/stName":
+                    language.LanguageNames.stName = reader.Value;
+                    break;
+                case "LanguageNames/suName":
+                    language.LanguageNames.suName = reader.Value;
+                    break;
+                case "LanguageNames/svName":
+                    language.LanguageNames.svName = reader.Value;
+                    break;
+                case "LanguageNames/swName":
+                    language.LanguageNames.swName = reader.Value;
+                    break;
+                case "LanguageNames/taName":
+                    language.LanguageNames.taName = reader.Value;
+                    break;
+                case "LanguageNames/teName":
+                    language.LanguageNames.teName = reader.Value;
+                    break;
+                case "LanguageNames/tgName":
+                    language.LanguageNames.tgName = reader.Value;
+                    break;
+                case "LanguageNames/thName":
+                    language.LanguageNames.thName = reader.Value;
+                    break;
+                case "LanguageNames/tiName":
+                    language.LanguageNames.tiName = reader.Value;
+                    break;
+                case "LanguageNames/tkName":
+                    language.LanguageNames.tkName = reader.Value;
+                    break;
+                case "LanguageNames/tlName":
+                    language.LanguageNames.tlName = reader.Value;
+                    break;
+                case "LanguageNames/tnName":
+                    language.LanguageNames.tnName = reader.Value;
+                    break;
+                case "LanguageNames/toName":
+                    language.LanguageNames.toName = reader.Value;
+                    break;
+                case "LanguageNames/trName":
+                    language.LanguageNames.trName = reader.Value;
+                    break;
+                case "LanguageNames/tsName":
+                    language.LanguageNames.tsName = reader.Value;
+                    break;
+                case "LanguageNames/ttName":
+                    language.LanguageNames.ttName = reader.Value;
+                    break;
+                case "LanguageNames/twName":
+                    language.LanguageNames.twName = reader.Value;
+                    break;
+                case "LanguageNames/ugName":
+                    language.LanguageNames.ugName = reader.Value;
+                    break;
+                case "LanguageNames/ukName":
+                    language.LanguageNames.ukName = reader.Value;
+                    break;
+                case "LanguageNames/urName":
+                    language.LanguageNames.urName = reader.Value;
+                    break;
+                case "LanguageNames/uzName":
+                    language.LanguageNames.uzName = reader.Value;
+                    break;
+                case "LanguageNames/viName":
+                    language.LanguageNames.viName = reader.Value;
+                    break;
+                case "LanguageNames/voName":
+                    language.LanguageNames.voName = reader.Value;
+                    break;
+                case "LanguageNames/woName":
+                    language.LanguageNames.woName = reader.Value;
+                    break;
+                case "LanguageNames/xhName":
+                    language.LanguageNames.xhName = reader.Value;
+                    break;
+                case "LanguageNames/yiName":
+                    language.LanguageNames.yiName = reader.Value;
+                    break;
+                case "LanguageNames/yoName":
+                    language.LanguageNames.yoName = reader.Value;
+                    break;
+                case "LanguageNames/zaName":
+                    language.LanguageNames.zaName = reader.Value;
+                    break;
+                case "LanguageNames/zhName":
+                    language.LanguageNames.zhName = reader.Value;
+                    break;
+                case "LanguageNames/zuName":
+                    language.LanguageNames.zuName = reader.Value;
+                    break;
                 case "Main/SaveChangesToUntitled":
                     language.Main.SaveChangesToUntitled = reader.Value;
                     break;

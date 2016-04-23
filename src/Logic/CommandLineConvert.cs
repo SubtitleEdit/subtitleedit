@@ -851,10 +851,8 @@ namespace Nikse.SubtitleEdit.Logic
                             }
 
                             var cfg = Configuration.Settings.Tools;
-                            var languageIndex = IfoParser.LanguageCodes.IndexOf(LanguageAutoDetect.AutoDetectGoogleLanguageOrNull(sub));
-                            if (languageIndex < 0)
-                                languageIndex = IfoParser.LanguageCodes.IndexOf("en");
-                            using (var vobSubWriter = new VobSubWriter(outputFileName, width, height, cfg.ExportBottomMargin, cfg.ExportBottomMargin, 32, cfg.ExportFontColor, cfg.ExportBorderColor, !cfg.ExportVobAntiAliasingWithTransparency, IfoParser.LanguageNames[languageIndex], IfoParser.LanguageCodes[languageIndex]))
+                            var language = DvdSubtitleLanguage.GetLanguageOrNull(LanguageAutoDetect.AutoDetectGoogleLanguage(sub)) ?? DvdSubtitleLanguage.English;
+                            using (var vobSubWriter = new VobSubWriter(outputFileName, width, height, cfg.ExportBottomMargin, cfg.ExportBottomMargin, 32, cfg.ExportFontColor, cfg.ExportBorderColor, !cfg.ExportVobAntiAliasingWithTransparency, language))
                             {
                                 for (int index = 0; index < sub.Paragraphs.Count; index++)
                                 {
