@@ -727,6 +727,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Note>Nota: Os ficheiros já devem ter os tempos correctos</Note>
   </JoinSubtitles>
   <LanguageNames>
+    <NotSpecified>Not Specified</NotSpecified>
+    <UnknownCodeX>Unknown ({0})</UnknownCodeX>
     <aaName>afar</aaName>
     <abName>abcázio</abName>
     <afName>africânder</afName>
@@ -738,6 +740,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <baName>bashkir</baName>
     <beName>bielorrusso</beName>
     <bgName>búlgaro</bgName>
+    <bhName>biari</bhName>
     <biName>bislamá</biName>
     <bnName>bengali</bnName>
     <boName>tibetano</boName>
@@ -801,6 +804,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <mkName>macedónio</mkName>
     <mlName>malaiala</mlName>
     <mnName>mongol</mnName>
+    <moName>moldavo</moName>
     <mrName>marata</mrName>
     <msName>malaio</msName>
     <mtName>maltês</mtName>
