@@ -987,6 +987,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
         <OpenDvd>Dvd openen...</OpenDvd>
         <ChooseAudioTrack>Audiospoor kiezen</ChooseAudioTrack>
         <CloseVideo>Videobestand sluiten</CloseVideo>
+        <SetVideoOffset>Videotĳdsverschil instellen...</SetVideoOffset>
         <ImportSceneChanges>Scènewisselingen importeren</ImportSceneChanges>
         <RemoveSceneChanges>Scènewisselingen verwĳderen</RemoveSceneChanges>
         <WaveformBatchGenerate>Golfvormen genereren</WaveformBatchGenerate>
@@ -1902,6 +1903,7 @@ Probeer het later opnieuw a.u.b.</DownloadMpvFailed>
     <Title>Videotĳdsverschil instellen</Title>
     <Description>Videotĳdsverschil instellen (ondertitels moeten niet de echte videotĳd volgen, maar bĳvoorbeeld +10 uur)</Description>
     <RelativeToCurrentVideoPosition>Ten opzichte van de huidige videopositie</RelativeToCurrentVideoPosition>
+    <Reset>Terugstellen</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Geselecteerde ondertitels eerder/later tonen</Title>
@@ -2233,6 +2235,17 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <Title>Decursiveringsfactor bepalen</Title>
     <Description>Waarde aanpassen tot cursief in romein overgaat. De originele afbeelding moet cursief zĳn.</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>Watermerk</Title>
+    <WatermarkX>Watermerk: {0}</WatermarkX>
+    <GenerateWatermarkTitle>Watermerk genereren</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>Over alle ondertitels spreiden</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>Alleen huidige tekst: {0}</CurrentLineOnlyX>
+    <Generate>&amp;Genereren</Generate>
+    <Remove>&amp;Verwĳderen</Remove>
+    <BeforeWatermark>Vóór watermerk</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>Een watermerk toevoegen kan alleen in unicode codering.</ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
     <ClickToAddWaveform>Klik om golfvorm toe te voegen</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klik om golfvorm/spectrogram toe te voegen</ClickToAddWaveformAndSpectrogram>
