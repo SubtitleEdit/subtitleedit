@@ -5,7 +5,7 @@
     <Version>3.4.12</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
-    <HelpFile />
+    <HelpFile></HelpFile>
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Fortryd</Cancel>
     <Apply>Anvend</Apply>
@@ -723,6 +723,8 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Note>Bemærk: Filer skal allerede have korrekte tidskoder</Note>
   </JoinSubtitles>
   <LanguageNames>
+    <NotSpecified>Ikke angivet</NotSpecified>
+    <UnknownCodeX>Ukendt ({0})</UnknownCodeX>
     <aaName>afar</aaName>
     <abName>abkhasisk</abName>
     <afName>afrikaans</afName>
@@ -734,6 +736,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <baName>bashkir</baName>
     <beName>hviderussisk</beName>
     <bgName>bulgarsk</bgName>
+    <bhName>Bihari</bhName>
     <biName>bislama</biName>
     <bnName>bengali</bnName>
     <boName>tibetansk</boName>
@@ -797,6 +800,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <mkName>makedonsk</mkName>
     <mlName>malayalam</mlName>
     <mnName>mongolsk</mnName>
+    <moName>moldovisk</moName>
     <mrName>marathisk</mrName>
     <msName>malajisk</msName>
     <mtName>maltesisk</mtName>
@@ -981,6 +985,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <OpenDvd>Åbn DVD...</OpenDvd>
         <ChooseAudioTrack>Vælg lydspor</ChooseAudioTrack>
         <CloseVideo>Luk videofil</CloseVideo>
+        <SetVideoOffset>Indstil video offset...</SetVideoOffset>
         <ImportSceneChanges>Importer sceneskift...</ImportSceneChanges>
         <RemoveSceneChanges>Fjern sceneskift</RemoveSceneChanges>
         <WaveformBatchGenerate>Batch generer bølgeformer...</WaveformBatchGenerate>
@@ -1894,6 +1899,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Title>Indstil video offset</Title>
     <Description>Indstil video offset (undertekster bør ikke følge real video tid, men fx +10 timer)</Description>
     <RelativeToCurrentVideoPosition>I forhold til aktuelle video position</RelativeToCurrentVideoPosition>
+    <Reset>Reset</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Vis valgte linjer tidligere/senere</Title>
@@ -2223,6 +2229,17 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Title>Juster de-kursiv faktor</Title>
     <Description>Juster værdi indtil tekst stil er normalt og ikke kursiv. Bemærk, at det oprindelige billede skal være kursiv.</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>Vandmærke</Title>
+    <WatermarkX>Vandmærke: {0}</WatermarkX>
+    <GenerateWatermarkTitle>Generer vandmærke</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>Spredt over hele underteksten</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>Kun på den aktuelle linje: {0}</CurrentLineOnlyX>
+    <Generate>Generer</Generate>
+    <Remove>Fjern</Remove>
+    <BeforeWatermark>Før "Vandmærke"</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>"Vandmærke" virker kun med unicode fil kodning.</ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
     <ClickToAddWaveform>Klik for at tilføje audio kurve</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klik for at tilføje bølgeform/spektrogram</ClickToAddWaveformAndSpectrogram>
