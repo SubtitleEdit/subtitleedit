@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="polski">
+<Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.12</Version>
@@ -110,9 +110,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generowanie spektrogramu...</GeneratingSpectrogram>
     <ExtractingSeconds>Wyodrębnione audio: {0:0.0} sek.</ExtractingSeconds>
     <ExtractingMinutes>Wyodrębnione audio: {0:0.0} min.</ExtractingMinutes>
-    <WaveFileNotFound>Nie można znaleźć wyodrębnionego pliku wave!
+    <WaveFileNotFound>Nie można znaleźć wyodrębnionego pliku wave! 
 Ta funkcja wymaga VLC media player 1.1.x lub nowszego ({0}-bit). Wiersz poleceń: {1} {2}</WaveFileNotFound>
-    <WaveFileMalformed>{0} nie był w stanie wyodrębnić danych audio do pliku wave!
+    <WaveFileMalformed>{0} nie był w stanie wyodrębnić danych audio do pliku wave! 
 
 Wiersz poleceń: {1} {2}
 
@@ -724,144 +724,148 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Note>Uwaga: Pliki muszą zawierać poprawne kody czasowe</Note>
   </JoinSubtitles>
   <LanguageNames>
-    <aaName>afar</aaName>
-    <abName>abchaski</abName>
-    <afName>afrikaans</afName>
-    <amName>amharski</amName>
-    <arName>arabski</arName>
-    <asName>asamski</asName>
-    <ayName>ajmara</ayName>
-    <azName>azerski</azName>
-    <baName>baszkirski</baName>
-    <beName>białoruski</beName>
-    <bgName>bułgarski</bgName>
-    <biName>bislama</biName>
-    <bnName>bengalski</bnName>
-    <boName>tybetański</boName>
-    <brName>bretoński</brName>
-    <caName>kataloński</caName>
-    <coName>korsykański</coName>
-    <csName>czeski</csName>
-    <cyName>walijski</cyName>
-    <daName>duński</daName>
-    <deName>niemiecki</deName>
-    <dzName>dzongkha</dzName>
-    <elName>grecki</elName>
-    <enName>angielski</enName>
-    <eoName>esperanto</eoName>
-    <esName>hiszpański</esName>
-    <etName>estoński</etName>
-    <euName>baskijski</euName>
-    <faName>perski</faName>
-    <fiName>fiński</fiName>
-    <fjName>fidżijski</fjName>
-    <foName>farerski</foName>
-    <frName>francuski</frName>
-    <fyName>zachodniofryzyjski</fyName>
-    <gaName>irlandzki</gaName>
-    <gdName>szkocki gaelicki</gdName>
-    <glName>galicyjski</glName>
-    <gnName>guarani</gnName>
-    <guName>gudźaracki</guName>
-    <haName>hausa</haName>
-    <heName>hebrajski</heName>
-    <hiName>hindi</hiName>
-    <hrName>chorwacki</hrName>
-    <huName>węgierski</huName>
-    <hyName>ormiański</hyName>
-    <iaName>interlingua</iaName>
-    <idName>indonezyjski</idName>
-    <ieName>interlingue</ieName>
-    <ikName>inupiak</ikName>
-    <isName>islandzki</isName>
-    <itName>włoski</itName>
-    <iuName>inuktitut</iuName>
-    <jaName>japoński</jaName>
-    <jvName>jawajski</jvName>
-    <kaName>gruziński</kaName>
-    <kkName>kazachski</kkName>
-    <klName>grenlandzki</klName>
-    <kmName>khmerski</kmName>
-    <knName>kannada</knName>
-    <koName>koreański</koName>
-    <ksName>kaszmirski</ksName>
-    <kuName>kurdyjski</kuName>
-    <kyName>kirgiski</kyName>
-    <laName>łaciński</laName>
-    <lbName>luksemburski</lbName>
-    <lnName>lingala</lnName>
-    <loName>laotański</loName>
-    <ltName>litewski</ltName>
-    <lvName>łotewski</lvName>
-    <mgName>malgaski</mgName>
-    <miName>maoryjski</miName>
-    <mkName>macedoński</mkName>
-    <mlName>malajalam</mlName>
-    <mnName>mongolski</mnName>
-    <mrName>marathi</mrName>
-    <msName>malajski</msName>
-    <mtName>maltański</mtName>
-    <myName>birmański</myName>
-    <naName>nauru</naName>
-    <neName>nepalski</neName>
-    <nlName>niderlandzki</nlName>
-    <noName>norweski</noName>
-    <ocName>prowansalski</ocName>
-    <omName>oromski</omName>
-    <orName>orija</orName>
-    <paName>pendżabski</paName>
-    <plName>polski</plName>
-    <psName>paszto</psName>
-    <ptName>portugalski</ptName>
-    <quName>keczua</quName>
-    <rmName>retoromański</rmName>
-    <rnName>rundi</rnName>
-    <roName>rumuński</roName>
-    <ruName>rosyjski</ruName>
-    <rwName>kinya-ruanda</rwName>
-    <saName>sanskryt</saName>
-    <sdName>sindhi</sdName>
-    <sgName>sango</sgName>
-    <shName>serbsko-chorwacki</shName>
-    <siName>syngaleski</siName>
-    <skName>słowacki</skName>
-    <slName>słoweński</slName>
-    <smName>samoański</smName>
-    <snName>szona</snName>
-    <soName>somalijski</soName>
-    <sqName>albański</sqName>
-    <srName>serbski</srName>
-    <ssName>siswati</ssName>
-    <stName>sotho południowy</stName>
-    <suName>sundajski</suName>
-    <svName>szwedzki</svName>
-    <swName>suahili</swName>
-    <taName>tamilski</taName>
-    <teName>telugu</teName>
-    <tgName>tadżycki</tgName>
-    <thName>tajski</thName>
-    <tiName>tigrinia</tiName>
-    <tkName>turkmeński</tkName>
-    <tlName>tagalski</tlName>
-    <tnName>setswana</tnName>
-    <toName>tonga</toName>
-    <trName>turecki</trName>
-    <tsName>tsonga</tsName>
-    <ttName>tatarski</ttName>
-    <twName>twi</twName>
-    <ugName>ujgurski</ugName>
-    <ukName>ukraiński</ukName>
-    <urName>urdu</urName>
-    <uzName>uzbecki</uzName>
-    <viName>wietnamski</viName>
-    <voName>volapuk</voName>
-    <woName>wolof</woName>
-    <xhName>khosa</xhName>
-    <yiName>jidysz</yiName>
-    <yoName>joruba</yoName>
-    <zaName>czuang</zaName>
-    <zhName>chiński</zhName>
-    <zuName>zulu</zuName>
+    <NotSpecified>Nie określony</NotSpecified>
+    <UnknownCodeX>Nieznany ({0})</UnknownCodeX>
+    <aaName>Afar</aaName>
+    <abName>Abchaski</abName>
+    <afName>Afrikaans</afName>
+    <amName>Amharic</amName>
+    <arName>Arabski</arName>
+    <asName>Asamski</asName>
+    <ayName>Aymara</ayName>
+    <azName>Azerbejdżański</azName>
+    <baName>Baszkirski</baName>
+    <beName>Białoruski</beName>
+    <bgName>Bułgarski</bgName>
+    <bhName>Bihari</bhName>
+    <biName>Bislama</biName>
+    <bnName>Bengalski</bnName>
+    <boName>Tybetański</boName>
+    <brName>Bretoński</brName>
+    <caName>Kataloński</caName>
+    <coName>Korsykański</coName>
+    <csName>Czeski</csName>
+    <cyName>Walijski</cyName>
+    <daName>Duński</daName>
+    <deName>Niemiecki</deName>
+    <dzName>Dzongkha</dzName>
+    <elName>Grecki</elName>
+    <enName>Angielski</enName>
+    <eoName>Esperanto</eoName>
+    <esName>Hiszpański</esName>
+    <etName>Estoński</etName>
+    <euName>Baskijski</euName>
+    <faName>Perski</faName>
+    <fiName>Fiński</fiName>
+    <fjName>Fidżi</fjName>
+    <foName>Farerski</foName>
+    <frName>Francuski</frName>
+    <fyName>Zachodniofryzyjski</fyName>
+    <gaName>Irlandzki</gaName>
+    <gdName>Gaelicki szkocki</gdName>
+    <glName>Galicyjski</glName>
+    <gnName>Guarani</gnName>
+    <guName>Gudźarati</guName>
+    <haName>Hausa</haName>
+    <heName>Hebrajski</heName>
+    <hiName>Hindi</hiName>
+    <hrName>Chorwacki</hrName>
+    <huName>Węgierski</huName>
+    <hyName>Ormiański</hyName>
+    <iaName>Interlingua</iaName>
+    <idName>Indonezyjski</idName>
+    <ieName>Interlingue</ieName>
+    <ikName>Inupiak</ikName>
+    <isName>Islandzki</isName>
+    <itName>Włoski</itName>
+    <iuName>Inuktitut</iuName>
+    <jaName>Japoński</jaName>
+    <jvName>Jawajski</jvName>
+    <kaName>Gruziński</kaName>
+    <kkName>Kazachski</kkName>
+    <klName>Kalaallisut</klName>
+    <kmName>Khmerski</kmName>
+    <knName>Kannada</knName>
+    <koName>Koreański</koName>
+    <ksName>Kaszmirski</ksName>
+    <kuName>Kurdyjski</kuName>
+    <kyName>Kirgiski</kyName>
+    <laName>Łaciński</laName>
+    <lbName>Luksemburski</lbName>
+    <lnName>Lingala</lnName>
+    <loName>Laotański</loName>
+    <ltName>Litewski</ltName>
+    <lvName>Łotewski</lvName>
+    <mgName>Malgaski</mgName>
+    <miName>Maoryski</miName>
+    <mkName>Macedoński</mkName>
+    <mlName>Malajalam</mlName>
+    <mnName>Mongolski</mnName>
+    <moName>Mołdawski</moName>
+    <mrName>Marathi</mrName>
+    <msName>Malajski</msName>
+    <mtName>Maltański</mtName>
+    <myName>Birmański</myName>
+    <naName>Nauru</naName>
+    <neName>Nepalski</neName>
+    <nlName>Holenderski</nlName>
+    <noName>Norweski</noName>
+    <ocName>Oksytański</ocName>
+    <omName>Oromo</omName>
+    <orName>Orija</orName>
+    <paName>Pendżabski</paName>
+    <plName>Polski</plName>
+    <psName>Paszto</psName>
+    <ptName>Portugalski</ptName>
+    <quName>Keczua</quName>
+    <rmName>Retoromański</rmName>
+    <rnName>Rundi</rnName>
+    <roName>Rumuński</roName>
+    <ruName>Rosyjski</ruName>
+    <rwName>Ruanda-rundi</rwName>
+    <saName>Sanskryt</saName>
+    <sdName>Sindhi</sdName>
+    <sgName>Sango</sgName>
+    <shName>Serbochorwacki</shName>
+    <siName>Syngaleski</siName>
+    <skName>Słowacki</skName>
+    <slName>Słoweński</slName>
+    <smName>Samoański</smName>
+    <snName>Shona</snName>
+    <soName>Somalijski</soName>
+    <sqName>Albański</sqName>
+    <srName>Serbski</srName>
+    <ssName>Swati</ssName>
+    <stName>Sotho południowy</stName>
+    <suName>Sundajski</suName>
+    <svName>Szwedzki</svName>
+    <swName>Suahili</swName>
+    <taName>Tamilski</taName>
+    <teName>Telugu</teName>
+    <tgName>Tadżycki</tgName>
+    <thName>Tajski</thName>
+    <tiName>Tigrinia</tiName>
+    <tkName>Turkmeński</tkName>
+    <tlName>Tagalski</tlName>
+    <tnName>Tswana</tnName>
+    <toName>Tonga</toName>
+    <trName>Turecki</trName>
+    <tsName>Tsonga</tsName>
+    <ttName>Tatarski</ttName>
+    <twName>Twi</twName>
+    <ugName>Ujgurski</ugName>
+    <ukName>Ukraiński</ukName>
+    <urName>Urdu</urName>
+    <uzName>Uzbecki</uzName>
+    <viName>Wietnamski</viName>
+    <voName>Wolapik</voName>
+    <woName>Wolof</woName>
+    <xhName>Xhosa</xhName>
+    <yiName>Jidysz</yiName>
+    <yoName>Joruba</yoName>
+    <zaName>Zhuang</zaName>
+    <zhName>Chiński</zhName>
+    <zuName>Zulu</zuName>
   </LanguageNames>
   <Main>
     <Menu>
@@ -982,6 +986,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <OpenDvd>Otwórz DVD...</OpenDvd>
         <ChooseAudioTrack>Wybierz ścieżkę audio</ChooseAudioTrack>
         <CloseVideo>Zamknij plik wideo</CloseVideo>
+        <SetVideoOffset>Ustaw przesunięcie wideo...</SetVideoOffset>
         <ImportSceneChanges>Importuj zmiany w scenach...</ImportSceneChanges>
         <RemoveSceneChanges>Usuń zmiany w scenach</RemoveSceneChanges>
         <WaveformBatchGenerate>Zbiorcze generowanie wykresów falowych...</WaveformBatchGenerate>
@@ -1425,7 +1430,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <ErrorLoadJpg>Ten plik wydaje się być plikiem JPG. W Subtitle Edit nie można otworzyć plików JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Ten plik wydaje się być plikiem ReScene .srr - to nie jest plik z napisami.</ErrorLoadSrr>
     <ErrorLoadTorrent>Ten plik wydaje się być plikiem BitTorrent - to nie jest plik z napisami.</ErrorLoadTorrent>
-    <ErrorLoadBinaryZeroes>Przepraszamy, ten plik zawiera tylko zera binarne!
+    <ErrorLoadBinaryZeroes>Przepraszamy, ten plik zawiera tylko zera binarne! 
 
 Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapasową poprzez pozycję menu Plik -&gt; Przywróć automatycznie zapisaną kopię zapasową...</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Upuszczanie katalogu nie jest tutaj obsługiwane.</ErrorDirectoryDropNotAllowed>
@@ -1523,7 +1528,7 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
   <NetworkJoin>
     <Title>Dołącz do sesji sieciowej</Title>
     <Information>Dołącz do istniejącej sesji, w której wiele osób
-może edytować ten sam plik z napisami (współpracować)</Information>
+ może edytować ten sam plik z napisami (współpracować)</Information>
     <Join>Dołącz</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1534,7 +1539,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <Title>Uruchom sesję sieciową</Title>
     <ConnectionTo>Łączenie się z {0}...</ConnectionTo>
     <Information>Rozpocznij nową sesję, w której wiele osób
-może edytować ten sam plik z napisami (współpracować)</Information>
+ może edytować ten sam plik z napisami (współpracować)</Information>
     <Start>Start</Start>
   </NetworkStart>
   <OpenVideoDvd>
@@ -1787,7 +1792,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <MusicSymbolsToReplace>Symbole muzyczne do zastąpienia (oddzielone spacją)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw częste błędy OCR - także z użyciem sztywnych reguł</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania
-(z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+	(z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Pomiń pierwszy krok (wybór zasad poprawy)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Skróty klawiszowe</Shortcuts>
     <Shortcut>Skrót</Shortcut>
@@ -1897,6 +1902,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <Title>Ustaw przesunięcie wideo</Title>
     <Description>Ustaw przesunięcie wideo (napisy nie powinny śledzić rzeczywistego czasu wideo, ale np. +10 godzin)</Description>
     <RelativeToCurrentVideoPosition>W odniesieniu do aktualnej pozycji wideo</RelativeToCurrentVideoPosition>
+    <Reset>Resetuj</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Pokaż zaznaczone linie wcześniej/później</Title>
@@ -1966,8 +1972,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <LineMaximumLength>Maksymalna długość linii</LineMaximumLength>
     <LineContinuationBeginEndStrings>Znak kontynuacji na początku/końcu linii</LineContinuationBeginEndStrings>
     <NumberOfSplits>Ilość podzielonych: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków</LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków</LongestLineIsXAtY>
+    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków </LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków </LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Podziel napisy</Title>
@@ -2228,6 +2234,17 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <Title>Ustaw faktor nie kursywy</Title>
     <Description>Dostosuj wartość tak, że styl tekstu jest normalny, a nie kursywą. Należy pamiętać, że oryginalny obraz powinien być kursywą.</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>Znak wodny</Title>
+    <WatermarkX>Znak wodny: {0}</WatermarkX>
+    <GenerateWatermarkTitle>Generowanie znaku wodnego</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>Rozłożony na całe napisy</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>Tylko w aktualnej linii: {0}</CurrentLineOnlyX>
+    <Generate>Generuj</Generate>
+    <Remove>Usuń</Remove>
+    <BeforeWatermark>Przed znakiem wodnym</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>Znak wodny działa tylko przy kodowaniu plików Unicode.</ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
     <ClickToAddWaveform>Kliknij, aby dodać wykres falowy</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Kliknij, aby dodać wykres falowy/spektrogram</ClickToAddWaveformAndSpectrogram>
