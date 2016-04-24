@@ -38,8 +38,8 @@
   <Dictionary>
     <EnglishName>Catalan</EnglishName>
     <NativeName>català</NativeName>
-    <DownloadLink>http://www.softcatala.org/diccionaris/actualitzacions/OOo/catalan.oxt</DownloadLink>
-    <Description>Spelling dictionary for Catalan language</Description>
+    <DownloadLink>https://github.com/Softcatala/catalan-dict-tools/releases/download/v3.0.1/ca-valencia.3.0.1.oxt</DownloadLink>
+    <Description>Catalan spellchecking dictionaries, July 2015</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Catalan</EnglishName>
@@ -212,13 +212,13 @@
   <Dictionary>
     <EnglishName>Malay</EnglishName>
     <NativeName>Malay</NativeName>
-    <DownloadLink>http://ftp.sunet.se/pub/Office/OpenOffice.org/contrib/dictionaries/ms_MY.zip</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/3904/0/ms_my.oxt</DownloadLink>
     <Description>Malay Spell Checker v0.1 - 07/10/04</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Macedonian</EnglishName>
     <NativeName>Macedonian</NativeName>
-    <DownloadLink>http://ftp.sunet.se/pub/Office/OpenOffice.org/contrib/dictionaries/mk_MK.zip</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/3403/0/dict-mk.oxt</DownloadLink>
     <Description>Macedonian dictionary was created by Taras Bendik</Description>
   </Dictionary>
   <Dictionary>
@@ -236,7 +236,7 @@
   <Dictionary>
     <EnglishName>Polish</EnglishName>
     <NativeName>polski</NativeName>
-    <DownloadLink>http://sjp.pl/slownik/ort/sjp-myspell-pl-20141006.zip</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/806/4/pl-dict.oxt</DownloadLink>
     <Description>Zestaw polskich słowników do OpenOffice.org 3.0 - 2014-10-06</Description>
   </Dictionary>
   <Dictionary>
