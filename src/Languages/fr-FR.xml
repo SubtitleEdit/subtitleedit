@@ -726,6 +726,8 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <Note>Note : Il faut ajuster les timecodes avant de fusionner les sous-titres</Note>
   </JoinSubtitles>
   <LanguageNames>
+    <NotSpecified>Indéterminé</NotSpecified>
+    <UnknownCodeX>Inconnu ({0})</UnknownCodeX>
     <aaName>afar</aaName>
     <abName>abkhaze</abName>
     <afName>afrikaans</afName>
@@ -737,6 +739,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <baName>bachkir</baName>
     <beName>biélorusse</beName>
     <bgName>bulgare</bgName>
+    <bhName>bihari</bhName>
     <biName>bichelamar</biName>
     <bnName>bengali</bnName>
     <boName>tibétain</boName>
@@ -800,6 +803,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <mkName>macédonien</mkName>
     <mlName>malayalam</mlName>
     <mnName>mongol</mnName>
+    <moName>moldave</moName>
     <mrName>marathe</mrName>
     <msName>malais</msName>
     <mtName>maltais</mtName>
@@ -984,6 +988,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
         <OpenDvd>Ouvrir DVD...</OpenDvd>
         <ChooseAudioTrack>Choisir piste audio</ChooseAudioTrack>
         <CloseVideo>Fermer fichier vidéo</CloseVideo>
+        <SetVideoOffset>Régler décalage vidéo...</SetVideoOffset>
         <ImportSceneChanges>Importer changements de scène...</ImportSceneChanges>
         <RemoveSceneChanges>Supprimer changements de scène...</RemoveSceneChanges>
         <WaveformBatchGenerate>Générer par lots des formes d'onde sonores</WaveformBatchGenerate>
@@ -1906,6 +1911,7 @@ Veuillez réessayer plus tard.</DownloadMpvFailed>
     <Title>Régler décalage vidéo</Title>
     <Description>Régler décalage vidéo (sous-titres ne devraient pas suivre la durée réelle de la vidéo, ex : +10 hours)</Description>
     <RelativeToCurrentVideoPosition>Par rapport à la position de la vidéo en cours</RelativeToCurrentVideoPosition>
+    <Reset>Réinitialiser</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Visualiser les sous-titres plus tôt/tard</Title>
@@ -2235,6 +2241,17 @@ Veuillez réessayer plus tard.</DownloadMpvFailed>
     <Title>Définir facteur non italique</Title>
     <Description>Ramène l'angle d'inclinaison des caractères italiques à zero. Il faut que l'image de référence est italiqué.</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>Filigrane numérique</Title>
+    <WatermarkX>Filigrane: {0}</WatermarkX>
+    <GenerateWatermarkTitle>Générer filigrane numérique</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>Étaler sur tous les sous-titres</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>Ligne sélectionnée: {0}</CurrentLineOnlyX>
+    <Generate>&amp;Générer</Generate>
+    <Remove>&amp;Supprimer</Remove>
+    <BeforeWatermark>Avant filigrane numérique</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>Pour créer des filigranes numériques le codage Unicode est requis.</ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
     <ClickToAddWaveform>Cliquer pour ajouter une forme sonore</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Cliquer pour ajouter onde/spectrogramme</ClickToAddWaveformAndSpectrogram>
