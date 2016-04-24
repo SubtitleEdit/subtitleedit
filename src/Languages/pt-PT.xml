@@ -1800,7 +1800,6 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Key>Tecla</Key>
     <TextBox>Caixa de texto</TextBox>
     <UpdateShortcut>Actualizar</UpdateShortcut>
-    
     <ToggleDockUndockOfVideoControls>Alternar acoplar/desacoplar controlos de vídeo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Definir o fim, adicionar novo e ir para o novo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar pela posição final e ir para o seguinte</AdjustViaEndAutoStartAndGoToNext>
