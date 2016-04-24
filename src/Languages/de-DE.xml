@@ -725,6 +725,8 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <Note>Hinweis: Dateien sollten passenden Zeitstempel enthalten</Note>
   </JoinSubtitles>
   <LanguageNames>
+    <NotSpecified>Unbestimmt</NotSpecified>
+    <UnknownCodeX>Unbekannt ({0})</UnknownCodeX>
     <aaName>Afar</aaName>
     <abName>Abchasisch</abName>
     <afName>Afrikaans</afName>
@@ -736,6 +738,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <baName>Baschkirisch</baName>
     <beName>Weißrussisch</beName>
     <bgName>Bulgarisch</bgName>
+    <bhName>Bihari</bhName>
     <biName>Bislama</biName>
     <bnName>Bengalisch</bnName>
     <boName>Tibetisch</boName>
@@ -799,6 +802,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <mkName>Mazedonisch</mkName>
     <mlName>Malayalam</mlName>
     <mnName>Mongolisch</mnName>
+    <moName>Moldauisch</moName>
     <mrName>Marathi</mrName>
     <msName>Malaiisch</msName>
     <mtName>Maltesisch</mtName>
@@ -983,6 +987,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
         <OpenDvd>DVD öffnen...</OpenDvd>
         <ChooseAudioTrack>Tonspur auswählen</ChooseAudioTrack>
         <CloseVideo>Videodatei schließen</CloseVideo>
+        <SetVideoOffset>Video Ausgleich einstellen...</SetVideoOffset>
         <ImportSceneChanges>Szenenänderungen importieren...</ImportSceneChanges>
         <RemoveSceneChanges>Szenenänderungen entfernen</RemoveSceneChanges>
         <WaveformBatchGenerate>Wellenforme im Stapel generieren...</WaveformBatchGenerate>
@@ -1899,6 +1904,7 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
     <Title>Video Ausgleich</Title>
     <Description>Video Ausgleich einstellen (Falls Untertitel nicht der Videozeit folgen, z.B. +10 Sekunden)</Description>
     <RelativeToCurrentVideoPosition>Relativ zur aktuellen Videoposition</RelativeToCurrentVideoPosition>
+    <Reset>Rücksetzen</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Ausgewählte Texte früher/später anzeigen</Title>
@@ -2230,6 +2236,17 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
     <Title>Entkursivierungsfaktor setzen</Title>
     <Description>Anpassen bis zur aufrechten Schriftlage. Das Originalbild muss in Kursivschrift vorliegen.</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>Digitales Wasserzeichen</Title>
+    <WatermarkX>Wasserzeichen: {0}</WatermarkX>
+    <GenerateWatermarkTitle>Wasserzeichen erstellen</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>Über alle Texte ausdehnen</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>Nur diesen Text: {0}</CurrentLineOnlyX>
+    <Generate>&amp;Erstellen</Generate>
+    <Remove>&amp;Löschen</Remove>
+    <BeforeWatermark>Vor Wasserzeichen</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>Zum Erstellen eines digitalen Wasserzeichens wird Unicode-Codierung benötigt.</ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
     <ClickToAddWaveform>Klicken um Wellenform hinzuzufügen</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klicken um Wellenform/Spektogramm hinzuzufügen</ClickToAddWaveformAndSpectrogram>
