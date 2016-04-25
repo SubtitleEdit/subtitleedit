@@ -727,8 +727,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Note>Nota: Os ficheiros já devem ter os tempos correctos</Note>
   </JoinSubtitles>
   <LanguageNames>
-    <NotSpecified>Not Specified</NotSpecified>
-    <UnknownCodeX>Unknown ({0})</UnknownCodeX>
+    <NotSpecified>Não especificado</NotSpecified>
+    <UnknownCodeX>Desconhecido ({0})</UnknownCodeX>
     <aaName>afar</aaName>
     <abName>abcázio</abName>
     <afName>africânder</afName>
