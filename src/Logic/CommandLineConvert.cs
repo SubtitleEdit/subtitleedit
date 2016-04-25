@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public static class CommandLineConvert
     {
-        public static void Convert(string title, string[] args) // E.g.: /convert *.txt SubRip
+        public static void Convert(string title, string[] arguments) // E.g.: /convert *.txt SubRip
         {
             const int ATTACH_PARENT_PROCESS = -1;
             if (!Configuration.IsRunningOnMac() && !Configuration.IsRunningOnLinux())
@@ -27,9 +27,9 @@ namespace Nikse.SubtitleEdit.Logic
             Console.WriteLine(title + " - Batch converter");
             Console.WriteLine();
 
-            if (args.Length < 4)
+            if (arguments.Length < 4)
             {
-                if (args.Length == 3 && (args[2].Equals("/list", StringComparison.OrdinalIgnoreCase) || args[2].Equals("-list", StringComparison.OrdinalIgnoreCase)))
+                if (arguments.Length == 3 && (arguments[2].Equals("/list", StringComparison.OrdinalIgnoreCase) || arguments[2].Equals("-list", StringComparison.OrdinalIgnoreCase)))
                 {
                     Console.WriteLine("- Supported formats (input/output):");
                     foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
@@ -93,8 +93,9 @@ namespace Nikse.SubtitleEdit.Logic
             int errors = 0;
             try
             {
-                var pattern = args[2].Trim();
-                var targetFormat = args[3].Trim().Replace(" ", string.Empty);
+                var pattern = arguments[2].Trim();
+                var targetFormat = arguments[3].Trim().Replace(" ", string.Empty);
+                var args = new List<string>(arguments.Skip(4).Select(s => s.Trim()));
                 var offset = GetArgument(args, "offset:");
 
                 var targetFrameRate = GetFrameRate(args, "targetfps");
@@ -244,6 +245,18 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         files.Add(fn); // silently ignore duplicates
                     }
+                }
+
+                if (args.Count > 0)
+                {
+                    foreach (var argument in args)
+                    {
+                        if (argument.StartsWith('/') || argument.StartsWith('-'))
+                            Console.WriteLine("ERROR: Unknown or multiply defined option '" + argument + "'.");
+                        else
+                            Console.WriteLine("ERROR: Unexpected argument '" + argument + "'.");
+                    }
+                    throw new Exception(string.Empty);
                 }
 
                 var formats = SubtitleFormat.AllSubtitleFormats;
@@ -479,8 +492,15 @@ namespace Nikse.SubtitleEdit.Logic
             }
             catch (Exception exception)
             {
-                Console.WriteLine();
-                Console.WriteLine("ERROR: " + exception.Message);
+                if (exception.Message.Length > 0)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("ERROR: " + exception.Message);
+                }
+                else
+                {
+                    Console.WriteLine("Try 'SubtitleEdit /?' for more information.");
+                }
                 Console.WriteLine();
                 errors++;
             }
@@ -552,9 +572,9 @@ namespace Nikse.SubtitleEdit.Logic
         /// <summary>
         /// Gets a frame rate argument from the command line
         /// </summary>
-        /// <param name="commandLineArguments">All arguments from the command line</param>
+        /// <param name="commandLineArguments">All unresolved arguments from the command line</param>
         /// <param name="requestedFrameRateName">The name of the frame rate argument that is requested</param>
-        private static double? GetFrameRate(string[] commandLineArguments, string requestedFrameRateName)
+        private static double? GetFrameRate(IList<string> commandLineArguments, string requestedFrameRateName)
         {
             const double minimumFrameRate = 1.0;
             const double maximumFrameRate = 200.0;
@@ -579,9 +599,9 @@ namespace Nikse.SubtitleEdit.Logic
         /// <summary>
         /// Gets an argument from the command line
         /// </summary>
-        /// <param name="commandLineArguments">All arguments from the command line</param>
+        /// <param name="commandLineArguments">All unresolved arguments from the command line</param>
         /// <param name="requestedArgumentName">The name of the argument that is requested</param>
-        private static string GetArgument(string[] commandLineArguments, string requestedArgumentName)
+        private static string GetArgument(IList<string> commandLineArguments, string requestedArgumentName)
         {
             return GetArgument(commandLineArguments, requestedArgumentName, string.Empty);
         }
@@ -589,19 +609,20 @@ namespace Nikse.SubtitleEdit.Logic
         /// <summary>
         /// Gets an argument from the command line
         /// </summary>
-        /// <param name="commandLineArguments">All arguments from the command line</param>
+        /// <param name="commandLineArguments">All unresolved arguments from the command line</param>
         /// <param name="requestedArgumentName">The name of the argument that is requested</param>
         /// <param name="defaultValue">The default value, if the parameter could not be found</param>
-        private static string GetArgument(string[] commandLineArguments, string requestedArgumentName, string defaultValue)
+        private static string GetArgument(IList<string> commandLineArguments, string requestedArgumentName, string defaultValue)
         {
             var prefixWithSlash = '/' + requestedArgumentName;
             var prefixWithHyphen = '-' + requestedArgumentName;
 
-            for (int i = 4; i < commandLineArguments.Length; i++)
+            for (int i = 0; i < commandLineArguments.Count; i++)
             {
-                var argument = commandLineArguments[i].Trim();
+                var argument = commandLineArguments[i];
                 if (argument.StartsWith(prefixWithSlash, StringComparison.OrdinalIgnoreCase) || argument.StartsWith(prefixWithHyphen, StringComparison.OrdinalIgnoreCase))
                 {
+                    commandLineArguments.RemoveAt(i);
                     if (prefixWithSlash[prefixWithSlash.Length - 1] == ':')
                         return argument.Substring(prefixWithSlash.Length);
                     else
