@@ -32,14 +32,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int fine = 0;
             int failed = 0;
             bool continuation = false;
-            foreach (string line in lines)
+            int count = lines.Count / 2 + 1;
+            for (int i = 0; i < count; i++)
             {
-                Match m = CsvLine.Match(line);
-                if (m.Success)
+                string line = lines[i];
+                Match match = CsvLine.Match(line);
+                if (match.Success)
                 {
                     fine++;
-                    string s = line.Remove(0, m.Length);
-                    continuation = s.StartsWith('"');
+                    continuation = line.StartsWith('"');
                 }
                 else if (!string.IsNullOrWhiteSpace(line))
                 {
