@@ -5462,7 +5462,7 @@ namespace Nikse.SubtitleEdit.Forms
             var bitmap = (Bitmap)e.Argument;
             if (bitmap != null)
             {
-                if (_tesseractAsyncIndex >= 0 && _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
+                if (_tesseractAsyncIndex >= 0 && _tesseractAsyncStrings != null &&  _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
                 {
                     if (string.IsNullOrEmpty(_tesseractAsyncStrings[_tesseractAsyncIndex]))
                         _tesseractAsyncStrings[_tesseractAsyncIndex] = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.);
@@ -5476,7 +5476,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!e.Cancelled)
             {
                 _tesseractAsyncIndex++;
-                if (_tesseractAsyncIndex >= 0 && _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
+                if (_tesseractAsyncIndex >= 0 && _tesseractAsyncStrings != null && _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
                     _tesseractThread.RunWorkerAsync(GetSubtitleBitmap(_tesseractAsyncIndex));
             }
         }
@@ -7362,8 +7362,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (_tesseractThread != null)
             {
                 _tesseractThread.CancelAsync();
-                for (int i = 0; i < _tesseractAsyncStrings.Length; i++)
-                    _tesseractAsyncStrings[i] = string.Empty;
+                if (_tesseractAsyncStrings != null)
+                {
+                    for (int i = 0; i < _tesseractAsyncStrings.Length; i++)
+                        _tesseractAsyncStrings[i] = string.Empty;
+                }
                 _tesseractAsyncIndex = 0;
             }
         }
@@ -8537,6 +8540,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void checkBoxTransportStreamGetColorAndSplit_CheckedChanged(object sender, EventArgs e)
         {
+            if (_ocrMethodIndex == _ocrMethodTesseract)
+            {
+                _icThreadsStop = true;
+                _abort = true;
+                _nocrThreadsStop = true;
+                ResetTesseractThread();
+            }
+
             if (checkBoxTransportStreamGetColorAndSplit.Checked)
             {
                 SplitDvbForEachSubImage();
