@@ -722,8 +722,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Note>주의: 파일이 올바른 타임코드를 가지고 있어야 합니다.</Note>
   </JoinSubtitles>
   <LanguageNames>
+    <NotSpecified>지정되지 않음</NotSpecified>
+    <UnknownCodeX>알 수 없는 코드 ({0})</UnknownCodeX>
     <aaName>아파르어</aaName>
-    <abName>압카즈어</abName>
+    <abName>압하스어</abName>
     <afName>아프리칸스어</afName>
     <amName>암하라어</amName>
     <arName>아랍어</arName>
@@ -733,6 +735,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <baName>바슈키르어</baName>
     <beName>벨라루스어</beName>
     <bgName>불가리아어</bgName>
+    <bhName>비하르어</bhName>
     <biName>비슬라마어</biName>
     <bnName>벵골어</bnName>
     <boName>티베트어</boName>
@@ -767,13 +770,13 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <hrName>크로아티아어</hrName>
     <huName>헝가리어</huName>
     <hyName>아르메니아어</hyName>
-    <iaName>인테르링구아 (국제보조어협회)</iaName>
+    <iaName>인테르링구아</iaName>
     <idName>인도네시아어</idName>
     <ieName>인테르링구에</ieName>
     <ikName>이누피아크어</ikName>
     <isName>아이슬란드어</isName>
     <itName>이탈리아어</itName>
-    <iuName>이눅티투트어</iuName>
+    <iuName>이누크티투트어</iuName>
     <jaName>일본어</jaName>
     <jvName>자바어</jvName>
     <kaName>조지아어</kaName>
@@ -796,6 +799,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <mkName>마케도니아어</mkName>
     <mlName>말라얄람어</mlName>
     <mnName>몽고어</mnName>
+    <moName>몰다비아어</moName>
     <mrName>마라티어</mrName>
     <msName>말레이어</msName>
     <mtName>몰타어</mtName>
@@ -807,7 +811,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ocName>오크어</ocName>
     <omName>오로모어</omName>
     <orName>오리야어</orName>
-    <paName>펀잡어</paName>
+    <paName>펀자브어</paName>
     <plName>폴란드어</plName>
     <psName>파슈토어</psName>
     <ptName>포르투갈어</ptName>
@@ -816,11 +820,11 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <rnName>룬디어</rnName>
     <roName>루마니아어</roName>
     <ruName>러시아어</ruName>
-    <rwName>르완다어</rwName>
+    <rwName>키냐르완다어</rwName>
     <saName>산스크리트어</saName>
     <sdName>신디어</sdName>
-    <sgName>산고어</sgName>
-    <shName>세르비아-크로아티아어</shName>
+    <sgName>상고어</sgName>
+    <shName>세르보크로아티아어</shName>
     <siName>스리랑카어</siName>
     <skName>슬로바키아어</skName>
     <slName>슬로베니아어</slName>
@@ -830,18 +834,18 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <sqName>알바니아어</sqName>
     <srName>세르비아어</srName>
     <ssName>시스와티어</ssName>
-    <stName>소토어 (남부)</stName>
+    <stName>남부 소토어어</stName>
     <suName>순다어</suName>
     <svName>스웨덴어</svName>
     <swName>스와힐리어</swName>
     <taName>타밀어</taName>
     <teName>텔루구어</teName>
-    <tgName>타지크어</tgName>
+    <tgName>타지키스탄어</tgName>
     <thName>태국어</thName>
     <tiName>티그리냐어</tiName>
     <tkName>투르크멘어</tkName>
     <tlName>타갈로그어</tlName>
-    <tnName>세츠와나어</tnName>
+    <tnName>츠와나어</tnName>
     <toName>통가어</toName>
     <trName>터키어</trName>
     <tsName>총가어</tsName>
@@ -850,14 +854,14 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ugName>위구르어</ugName>
     <ukName>우크라이나어</ukName>
     <urName>우르두어</urName>
-    <uzName>우즈베크어</uzName>
+    <uzName>우즈벡어</uzName>
     <viName>베트남어</viName>
     <voName>볼라퓌크어</voName>
     <woName>월로프어</woName>
     <xhName>코사어</xhName>
     <yiName>이디시어</yiName>
     <yoName>요루바어</yoName>
-    <zaName>주앙어</zaName>
+    <zaName>좡어</zaName>
     <zhName>중국어</zhName>
     <zuName>줄루어</zuName>
   </LanguageNames>
