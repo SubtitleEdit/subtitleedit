@@ -197,15 +197,30 @@ namespace Nikse.SubtitleEdit.Core
 
         private string GetDataDirectory()
         {
+            var appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
+
             if (IsRunningOnLinux() || IsRunningOnMac())
             {
-                return _baseDir;
+                if (!Directory.Exists(appDataRoamingPath) && !File.Exists(Path.Combine(_baseDir, ".PACKAGE-MANAGER")))
+                {
+                    try
+                    {
+                        var path = Path.Combine(Directory.CreateDirectory(Path.Combine(_baseDir, "Dictionaries")).FullName, "not-a-word-list");
+                        File.Create(path).Close();
+                        File.Delete(path);
+                        return _baseDir; // user installation
+                    }
+                    catch
+                    {
+                    }
+                }
+                Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));
+                return appDataRoamingPath + Path.DirectorySeparatorChar; // system installation
             }
 
             var installerPath = GetInstallerPath();
             var hasUninstallFiles = Directory.GetFiles(_baseDir, "unins*.*").Length > 0;
             var hasDictionaryFolder = Directory.Exists(Path.Combine(_baseDir, "Dictionaries"));
-            var appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
 
             if ((installerPath == null || !installerPath.TrimEnd(Path.DirectorySeparatorChar).Equals(_baseDir.TrimEnd(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase))
                 && !hasUninstallFiles && (hasDictionaryFolder || !Directory.Exists(Path.Combine(appDataRoamingPath, "Dictionaries"))))
