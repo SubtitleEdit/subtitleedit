@@ -34,59 +34,72 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 string oldText = p.Text;
-                var st = new StripableText(p.Text);
-                if (p.Text.Length > 3)
+                if (p.Text.Length > 3 && callbacks.AllowFix(p, fixAction))
                 {
-                    string text = st.StrippedText.Replace("  ", " ");
+                    var st = new StripableText(p.Text);
+                    string text = st.StrippedText;
                     int start = text.IndexOfAny(ExpectedChars);
-                    while (start >= 0 && start < text.Length)
+                    while (start > 0 && start < text.Length)
                     {
-                        if (start > 0 && char.IsDigit(text[start - 1]))
+                        char charAtPosition = text[start];
+                        // Allow fixing lowercase letter after recursive ??? or !!!.
+                        if (charAtPosition != '.') // Dot is not include 'cause I don't capitalize word after the ellipses (...), right?
                         {
-                            // ignore periods after a number
-                        }
-                        else if (start + 4 < text.Length && text[start + 1] == ' ')
-                        {
-                            if (!IsAbbreviation(text, start, callbacks))
+                            while (start + 1 < text.Length && text[start + 1] == charAtPosition)
                             {
-                                var subText = new StripableText(text.Substring(start + 2));
-                                if (subText.StrippedText.Length > 0 && Helper.IsTurkishLittleI(subText.StrippedText[0], callbacks.Encoding, callbacks.Language))
-                                {
-                                    if (subText.StrippedText.Length > 1 && !(subText.Pre.Contains('\'') && subText.StrippedText.StartsWith('s')))
-                                    {
-                                        text = text.Substring(0, start + 2) + subText.Pre + Helper.GetTurkishUppercaseLetter(subText.StrippedText[0], callbacks.Encoding) + subText.StrippedText.Substring(1) + subText.Post;
-                                        if (callbacks.AllowFix(p, fixAction))
-                                        {
-                                            p.Text = st.Pre + text + st.Post;
-                                        }
-                                    }
-                                }
-                                else if (subText.StrippedText.Length > 0 && Configuration.Settings.General.UppercaseLetters.Contains(char.ToUpper(subText.StrippedText[0])))
-                                {
-                                    if (subText.StrippedText.Length > 1 && !(subText.Pre.Contains('\'') && subText.StrippedText.StartsWith('s')))
-                                    {
-                                        text = text.Substring(0, start + 2) + subText.Pre + char.ToUpper(subText.StrippedText[0]) + subText.StrippedText.Substring(1) + subText.Post;
-                                        if (callbacks.AllowFix(p, fixAction))
-                                        {
-                                            p.Text = st.Pre + text + st.Post;
-                                        }
-                                    }
-                                }
+                                start++;
                             }
                         }
-                        start += 4;
+                        if ((start + 3 < text.Length) && (text[start + 1] == ' ') && !IsAbbreviation(text, start, callbacks))
+                        {
+                            var subText = new StripableText(text.Substring(start + 2));
+                            text = text.Substring(0, start + 2) + subText.CombineWithPrePost(ToUpperFirstLetter(subText.StrippedText, callbacks));
+                        }
+                        // Try to reach the last dot if char at *start is '.'.
+                        if (charAtPosition == '.')
+                        {
+                            while (start + 1 < text.Length && text[start + 1] == '.')
+                            {
+                                start++;
+                            }
+                        }
+                        start += 3;
                         if (start < text.Length)
                             start = text.IndexOfAny(ExpectedChars, start);
                     }
-                }
-
-                if (oldText != p.Text)
-                {
-                    noOfFixes++;
-                    callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                    text = st.CombineWithPrePost(text);
+                    if (oldText != text)
+                    {
+                        p.Text = text;
+                        noOfFixes++;
+                        callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
                 }
             }
             callbacks.UpdateFixStatus(noOfFixes, language.StartWithUppercaseLetterAfterPeriodInsideParagraph, noOfFixes.ToString(CultureInfo.InvariantCulture));
+        }
+
+        private static string ToUpperFirstLetter(string text, IFixCallbacks callbacks)
+        {
+            if (string.IsNullOrEmpty(text) || !char.IsLetter(text[0]) || char.IsUpper(text[0]))
+            {
+                return text;
+            }
+            // Skip words like iPhone, iPad...
+            if (text[0] == 'i' && text.Length > 1 && char.IsUpper(text[1]))
+            {
+                return text;
+            }
+            if (Helper.IsTurkishLittleI(text[0], callbacks.Encoding, callbacks.Language))
+            {
+                text = Helper.GetTurkishUppercaseLetter(text[0], callbacks.Encoding) + text.Substring(1);
+            }
+            else
+            {
+                text = char.ToUpper(text[0]) + text.Substring(1); // text.CapitalizeFirstLetter();
+            }
+
+            return text;
         }
 
     }
