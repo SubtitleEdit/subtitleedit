@@ -4,6 +4,8 @@ namespace Nikse.SubtitleEdit.Core
 {
     public class Paragraph
     {
+        private readonly string _id;
+
         public int Number { get; set; }
 
         public string Text { get; set; }
@@ -40,7 +42,13 @@ namespace Nikse.SubtitleEdit.Core
 
         public int Layer { get; set; }
 
-        public string ID { get; private set; }
+        public string ID
+        {
+            get
+            {
+                return _id;
+            }
+        }
 
         public string Language { get; set; }
 
@@ -58,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core
             StartTime = TimeCode.FromSeconds(0);
             EndTime = TimeCode.FromSeconds(0);
             Text = string.Empty;
-            ID = GenerateId();
+            _id = GenerateId();
         }
 
         public Paragraph(TimeCode startTime, TimeCode endTime, string text)
@@ -66,7 +74,7 @@ namespace Nikse.SubtitleEdit.Core
             StartTime = startTime;
             EndTime = endTime;
             Text = text;
-            ID = GenerateId();
+            _id = GenerateId();
         }
 
         public Paragraph(Paragraph paragraph, bool generateNewId = true)
@@ -86,7 +94,7 @@ namespace Nikse.SubtitleEdit.Core
             MarginV = paragraph.MarginV;
             Effect = paragraph.Effect;
             Layer = paragraph.Layer;
-            ID = generateNewId ? GenerateId() : paragraph.ID;
+            _id = generateNewId ? GenerateId() : paragraph.ID;
             Language = paragraph.Language;
             Style = paragraph.Style;
             NewSection = paragraph.NewSection;
@@ -99,7 +107,7 @@ namespace Nikse.SubtitleEdit.Core
             StartFrame = startFrame;
             EndFrame = endFrame;
             Text = text;
-            ID = GenerateId();
+            _id = GenerateId();
         }
 
         public Paragraph(string text, double startTotalMilliseconds, double endTotalMilliseconds)
@@ -107,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core
             StartTime = new TimeCode(startTotalMilliseconds);
             EndTime = new TimeCode(endTotalMilliseconds);
             Text = text;
-            ID = GenerateId();
+            _id = GenerateId();
         }
 
         public void Adjust(double factor, double adjustmentInSeconds)
