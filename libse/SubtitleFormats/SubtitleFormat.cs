@@ -404,7 +404,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         protected TimeCode DecodeTimeCodeFramesTwoParts(string[] parts)
         {
             if (parts == null)
-                return new TimeCode(0, 0, 0, 0);
+                return new TimeCode(0);
             if (parts.Length != 2)
                 throw new InvalidOperationException();
             // 00:00
@@ -414,7 +414,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         protected TimeCode DecodeTimeCodeFramesThreeParts(string[] parts)
         {
             if (parts == null)
-                return new TimeCode(0, 0, 0, 0);
+                return new TimeCode(0);
             if (parts.Length != 3)
                 throw new InvalidOperationException();
             // 00:00:00
@@ -424,7 +424,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         protected TimeCode DecodeTimeCodeFramesFourParts(string[] parts)
         {
             if (parts == null)
-                return new TimeCode(0, 0, 0, 0);
+                return new TimeCode(0);
             if (parts.Length != 4)
                 throw new InvalidOperationException();
             // 00:00:00:00
