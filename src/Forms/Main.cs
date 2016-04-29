@@ -9538,6 +9538,11 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
                     _fileName = string.Empty;
+                    if (!string.IsNullOrEmpty(formSubOcr.FileName))
+                    {
+                        _fileName = Path.GetFileNameWithoutExtension(formSubOcr.FileName);
+                        _converted = true;
+                    }
                     Text = Title;
 
                     Configuration.Settings.Save();
