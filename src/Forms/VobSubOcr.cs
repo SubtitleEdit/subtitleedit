@@ -238,7 +238,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Object _modiDoc;
         private bool _modiEnabled;
 
-        private bool _fromMenuItem = false;
+        private bool _fromMenuItem;
 
         // DVD rip/vobsub
         private List<VobSubMergedPack> _vobSubMergedPackistOriginal;
@@ -308,7 +308,7 @@ namespace Nikse.SubtitleEdit.Forms
         // optimization vars
         private int _numericUpDownPixelsIsSpace = 6;
         private double _numericUpDownMaxErrorPct = 6;
-        private int _ocrMethodIndex = 0;
+        private int _ocrMethodIndex;
         private bool _autoBreakLines = false;
 
         private int _ocrMethodTesseract = 0;
@@ -1463,7 +1463,7 @@ namespace Nikse.SubtitleEdit.Forms
                     nDvbBmp.CropTopTransparent(2);
                     nDvbBmp.CropTransparentSidesAndBottom(2, true);
                     if (checkBoxTransportStreamGetColorAndSplit.Checked)
-                        _dvbSubColor = nDvbBmp.GetBrightestColor();
+                        _dvbSubColor = nDvbBmp.GetBrightestColorWhiteIsTransparent();
                     if (checkBoxAutoTransparentBackground.Checked)
                         nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
                     if (checkBoxTransportStreamGrayscale.Checked)
@@ -1481,7 +1481,7 @@ namespace Nikse.SubtitleEdit.Forms
                     nDvbBmp.CropTopTransparent(2);
                     nDvbBmp.CropTransparentSidesAndBottom(2, true);
                     if (checkBoxTransportStreamGetColorAndSplit.Checked)
-                        _dvbSubColor = nDvbBmp.GetBrightestColor();
+                        _dvbSubColor = nDvbBmp.GetBrightestColorWhiteIsTransparent();
                     if (checkBoxAutoTransparentBackground.Checked)
                         nDvbBmp.MakeBackgroundTransparent((int)numericUpDownAutoTransparentAlphaMax.Value);
                     if (checkBoxTransportStreamGrayscale.Checked)
@@ -3041,7 +3041,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (smallestDifference > 2 && target.Width > 15)
                 {
                     var cutBitmap = target.CopyRectangle(new Rectangle(1, 0, target.Width - 2, target.Height));
-                    int topCrop = 0;
+                    int topCrop;
                     var cutBitmap2 = NikseBitmapImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
                     if (cutBitmap2.Height != target.Height)
                         FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap2, _compareBitmaps);
@@ -8595,16 +8595,44 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (dvbSub.ActiveImageIndex == null)
                 {
+                    var tempList = new List<TransportStreamSubtitle>();
                     for (int i = 0; i < dvbSub.Pes.ObjectDataList.Count; i++)
                     {
-                        var newDbvSub = new TransportStreamSubtitle();
-                        newDbvSub.Pes = dvbSub.Pes;
-                        newDbvSub.ActiveImageIndex = i;
-                        newDbvSub.StartMilliseconds = dvbSub.StartMilliseconds;
-                        newDbvSub.EndMilliseconds = dvbSub.EndMilliseconds;
-                        if (newDbvSub.Pes.ObjectDataList[i].TopFieldDataBlockLength > 8)
-                            list.Add(newDbvSub);
+                        if (dvbSub.Pes.ObjectDataList[i].TopFieldDataBlockLength > 8)
+                        {
+                            tempList.Add(new TransportStreamSubtitle
+                            {
+                                Pes = dvbSub.Pes,
+                                ActiveImageIndex = i,
+                                StartMilliseconds = dvbSub.StartMilliseconds,
+                                EndMilliseconds = dvbSub.EndMilliseconds
+                            });
+                        }
                     }
+
+                    if (tempList.Count > 1)
+                    {
+                        var lastColor = Color.Transparent;
+                        bool allAlike = true;
+                        foreach (var item in tempList)
+                        {
+                            var dvbBmp = item.GetActiveImage();
+                            var nDvbBmp = new NikseBitmap(dvbBmp);
+                            var color = nDvbBmp.GetBrightestColor();
+                            if (lastColor != Color.Transparent && (Math.Abs(color.R - lastColor.R) > 10 || Math.Abs(color.G - lastColor.G) > 10 || Math.Abs(color.B - lastColor.B) > 10))
+                            {
+                                allAlike = false;
+                                break;
+                            }
+                            lastColor = color;
+                        }
+                        if (allAlike)
+                        {
+                            tempList.Clear();
+                            tempList.Add(dvbSub);
+                        }
+                    }
+                    list.AddRange(tempList);
                 }
                 else
                 {

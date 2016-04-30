@@ -2177,7 +2177,7 @@ Keep changes?</KeepChangesMessage>
     <TransparentMinAlpha>Min. alpha value (0=transparent, 255=fully visible)</TransparentMinAlpha>
     <TransportStream>Transport stream</TransportStream>
     <TransportStreamGrayscale>Grayscale</TransportStreamGrayscale>
-    <TransportStreamGetColor>Use color (will include some splitting of lines)</TransportStreamGetColor>
+    <TransportStreamGetColor>Use color (splitting of lines may occur)</TransportStreamGetColor>
     <PromptForUnknownWords>Prompt for unknown words</PromptForUnknownWords>
     <TryToGuessUnkownWords>Try to guess unknown words</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Auto break paragraph if more than two lines</AutoBreakSubtitleIfMoreThanTwoLines>

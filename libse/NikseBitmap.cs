@@ -966,7 +966,7 @@ namespace Nikse.SubtitleEdit.Core
         /// Returns brightest color (not white though)
         /// </summary>
         /// <returns>Brightest color, if not found or if brightes color is white, then Color.Transparent is returned</returns>
-        public Color GetBrightestColor()
+        public Color GetBrightestColorWhiteIsTransparent()
         {
             int max = Width * Height - 4;
             Color brightest = Color.Black;
@@ -980,6 +980,23 @@ namespace Nikse.SubtitleEdit.Core
                 return Color.Transparent;
             if (IsColorClose(Color.Black, brightest, 10))
                 return Color.Transparent;
+            return brightest;
+        }
+
+        /// <summary>
+        /// Returns brightest color 
+        /// </summary>
+        /// <returns>Brightest color</returns>
+        public Color GetBrightestColor()
+        {
+            int max = Width * Height - 4;
+            Color brightest = Color.Black;
+            for (int i = 0; i < max; i++)
+            {
+                Color c = GetPixelNext();
+                if (c.A > 220 && c.R + c.G + c.B > 200 && c.R + c.G + c.B > brightest.R + brightest.G + brightest.B)
+                    brightest = c;
+            }
             return brightest;
         }
 
