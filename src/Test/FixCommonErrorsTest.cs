@@ -509,7 +509,9 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "(laughing/clapping)");
-                target.FixOcrErrorsViaReplaceList("eng");
+                //target.FixOcrErrorsViaReplaceList("eng");
+                var fe = new FixOcrErrorsViaReplaceList { ThreeLettersISOLanguageName = "eng", ParentForm = target };
+                fe.Fix(_subtitle, target);
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "(laughing/clapping)");
             }
         }
@@ -521,7 +523,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "The font is ita/ic!");
-                target.FixOcrErrorsViaReplaceList("eng");
+                var fe = new FixOcrErrorsViaReplaceList { ThreeLettersISOLanguageName = "eng", ParentForm = target };
+                fe.Fix(_subtitle, target);
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "The font is italic!"); // will fail if English dictionary is not found
             }
         }
@@ -533,7 +536,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "The clock is 12 a.m.");
-                target.FixOcrErrorsViaReplaceList("eng");
+                var fe = new FixOcrErrorsViaReplaceList { ThreeLettersISOLanguageName = "eng", ParentForm = target };
+                fe.Fix(_subtitle, target);
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "The clock is 12 a.m.");
             }
         }
@@ -545,7 +549,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- I'll ring her." + Environment.NewLine + "- ...in a lot of trouble.");
-                target.FixOcrErrorsViaReplaceList("eng");
+                var fe = new FixOcrErrorsViaReplaceList { ThreeLettersISOLanguageName = "eng", ParentForm = target };
+                fe.Fix(_subtitle, target);
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "- I'll ring her." + Environment.NewLine + "- ...in a lot of trouble.");
             }
         }
@@ -557,7 +562,8 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "Yeah, see, that's not mine.");
-                target.FixOcrErrorsViaReplaceList("eng");
+                var fe = new FixOcrErrorsViaReplaceList { ThreeLettersISOLanguageName = "eng", ParentForm = target };
+                fe.Fix(_subtitle, target);
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "Yeah, see, that's not mine.");
             }
         }

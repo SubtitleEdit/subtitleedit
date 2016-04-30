@@ -295,6 +295,7 @@
     <Compile Include="Forms\FcpProperties.Designer.cs">
       <DependentUpon>FcpProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FixCommonErrors\FixOcrErrosViaReplaceList.cs" />
     <Compile Include="Forms\ImportImages.cs">
       <SubType>Form</SubType>
     </Compile>
