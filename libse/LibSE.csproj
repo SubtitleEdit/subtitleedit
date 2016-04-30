@@ -155,8 +155,8 @@
     <Compile Include="Forms\FixCommonErrors\FixUnneededSpaces.cs" />
     <Compile Include="Forms\FixCommonErrors\FixUppercaseIInsideWords.cs" />
     <Compile Include="Forms\FixCommonErrors\Helper.cs" />
-    <Compile Include="Forms\FixCommonErrors\IFixCallbacks.cs" />
-    <Compile Include="Forms\FixCommonErrors\IFixCommonError.cs" />
+    <Compile Include="Interfaces\IFixCallbacks.cs" />
+    <Compile Include="Interfaces\IFixCommonError.cs" />
     <Compile Include="Forms\FixCommonErrors\RemoveSpaceBetweenNumbers.cs" />
     <Compile Include="Forms\RemoveTextForHI.cs" />
     <Compile Include="Forms\RemoveTextForHISettings.cs" />
