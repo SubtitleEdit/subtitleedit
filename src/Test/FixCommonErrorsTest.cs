@@ -1727,5 +1727,65 @@ namespace Test
         }
 
         #endregion FixFrenchLApostrophe
+
+        #region Start with uppercase letter after period inside paragraph.
+
+        [TestMethod]
+        public void FixStartWithUppercaseLetterAfterPeriodInsideParagraphTest1()
+        {
+            const string ExpectedOuput = "<i>- Foobar! - What is it?</i>";
+            var p = new Paragraph("<i>- Foobar! - what is it?</i>", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(ExpectedOuput, p.Text);
+        }
+
+        [TestMethod]
+        public void FixStartWithUppercaseLetterAfterPeriodInsideParagraphTest2()
+        {
+            const string ExpectedOuput = "<i>- Foobar... what is it?</i>";
+            var p = new Paragraph(ExpectedOuput, 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(ExpectedOuput, p.Text);
+        }
+
+        [TestMethod]
+        public void FixStartWithUppercaseLetterAfterPeriodInsideParagraphTest3()
+        {
+            const string ExpectedOuput = "<i>- Foobar??? What is it?</i>";
+            var p = new Paragraph("<i>- Foobar??? what is it?</i>", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(ExpectedOuput, p.Text);
+        }
+
+        [TestMethod]
+        public void FixStartWithUppercaseLetterAfterPeriodInsideParagraphTest4()
+        {
+            const string ExpectedOuput = "<i>- Foobar??? 'Cause.</i>";
+            var p = new Paragraph("<i>- Foobar??? 'cause.</i>", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(ExpectedOuput, p.Text);
+        }
+
+        [TestMethod]
+        public void FixStartWithUppercaseLetterAfterPeriodInsideParagraphTest5()
+        {
+            const string ExpectedOuput = "<i>- Foobar??? I. Lower</i>";
+            var p = new Paragraph("<i>- Foobar??? i. lower</i>", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new FixStartWithUppercaseLetterAfterPeriodInsideParagraph().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual(ExpectedOuput, p.Text);
+        }
+
+        #endregion 
+
     }
 }
