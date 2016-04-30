@@ -273,5 +273,9 @@ namespace Nikse.SubtitleEdit.Core
             ReplaceNames2Fix(replaceIds, changeNameCases ? replaceNames : originalNames);
         }
 
+        public string CombineWithPrePost(string text)
+        {
+            return Pre + text + Post;
+        }
     }
 }
