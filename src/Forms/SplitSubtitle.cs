@@ -65,7 +65,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var part1 = new Subtitle();
                 var part2 = new Subtitle();
                 part1.Header = _subtitle.Header;
+                part1.Footer = _subtitle.Footer;
                 part2.Header = _subtitle.Header;
+                part2.Footer = _subtitle.Footer;
 
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
