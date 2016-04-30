@@ -254,16 +254,12 @@ namespace Nikse.SubtitleEdit.Core.Forms
                                                                            !l1Trim.EndsWith('!') &&
                                                                            !l1Trim.EndsWith('?'))
                                     {
-                                        int indexOf = line.IndexOf(". ", StringComparison.Ordinal);
-                                        if (indexOf == -1)
-                                            indexOf = line.IndexOf("! ", StringComparison.Ordinal);
-                                        if (indexOf == -1)
-                                            indexOf = line.IndexOf("? ", StringComparison.Ordinal);
-                                        if (indexOf > 0 && indexOf < indexOfColon)
+                                        int indexOf = line.IndexOfAny(ExpectedStrings, StringComparison.Ordinal);
+                                        if (indexOf > 0)
                                         {
                                             s = s.Remove(indexOf + 1, indexOfColon - indexOf);
                                             s = s.Insert(indexOf + 1, " -");
-                                            if (newText.StartsWith("<i>") && !newText.StartsWith("<i>-"))
+                                            if (newText.StartsWith("<i>", StringComparison.Ordinal) && !newText.StartsWith("<i>-", StringComparison.Ordinal))
                                                 newText = "<i>- " + newText.Remove(0, 3);
                                             else if (!newText.StartsWith("-"))
                                                 newText = "- " + newText;

@@ -365,7 +365,10 @@ namespace Nikse.SubtitleEdit.Core
                     foreach (var lineLength in list)
                     {
                         if (lineLength > maximumLineLength)
+                        {
                             allOk = false;
+                            break;
+                        }
                     }
                     if (allOk)
                     {
@@ -1878,7 +1881,7 @@ namespace Nikse.SubtitleEdit.Core
                     idx = text.IndexOf("- ", 5, StringComparison.Ordinal);
                 while (idx > 0)
                 {
-                    if (idx > 0 && idx < text.Length - 2)
+                    if (idx < text.Length - 2)
                     {
                         string before = string.Empty;
                         int k = idx - 1;
