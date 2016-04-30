@@ -1535,7 +1535,6 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
-
         [TestMethod]
         public void RemoveAdvanced3()
         {

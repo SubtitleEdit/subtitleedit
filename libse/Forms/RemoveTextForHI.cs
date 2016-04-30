@@ -484,10 +484,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     if (removedDialogInFirstLine && stSub.Pre.Contains("- "))
                         stSub.Pre = stSub.Pre.Replace("- ", string.Empty);
 
-                    string newText = stSub.StrippedText;
-
-                    newText = RemoveHearImpairedTags(newText);
-
+                    string newText = RemoveHearImpairedTags(stSub.StrippedText);
                     if (stSub.StrippedText.Length - newText.Length > 2)
                     {
                         string removedText = GetRemovedString(stSub.StrippedText, newText);
@@ -609,7 +606,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 if (text.StartsWith("<i>-", StringComparison.Ordinal))
                 {
-                    text = "<i>" + text.Remove(0,4).Trim();
+                    text = "<i>" + text.Remove(0, 4).Trim();
                 }
                 else
                 {
