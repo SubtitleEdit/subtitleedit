@@ -1690,6 +1690,20 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixMusicNotation4()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                string text = "- # <font color=\"#804040\">MAN #1</font>: Oh, yeah.\r\n- <font color=\"#804040\"> MAN #2</font>: Yeah. #";
+                const string expected = "- ♫ <font color=\"#804040\">MAN #1</font>: Oh, yeah.\r\n- <font color=\"#804040\"> MAN #2</font>: Yeah. ♫";
+                InitializeFixCommonErrorsLine(target, text);
+                Configuration.Settings.Tools.MusicSymbol = "♫";
+                new FixMusicNotation().Fix(_subtitle, new EmptyFixCallback());
+                Assert.AreEqual(expected, _subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Fix Music Notation
 
         #region FixFrenchLApostrophe

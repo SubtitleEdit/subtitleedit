@@ -17,22 +17,18 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     var oldText = p.Text;
                     var newText = oldText;
-                    bool containsFontTag = oldText.Contains("<font ", StringComparison.OrdinalIgnoreCase);
                     foreach (string musicSymbol in musicSymbols)
                     {
-                        if (containsFontTag && musicSymbol == "#")
+                        if (musicSymbol == "#")
                         {
-                            var idx = newText.IndexOf('#');
+                            int idx = newText.IndexOf('#');
                             while (idx >= 0)
                             {
-                                // <font color="#808080">NATIVE HAWAIIAN CHANTING</font>
-                                var isInsideFontTag = (idx < 13) ? false : (newText[idx - 1] == '"' && (newText.Length > idx + 2 && Uri.IsHexDigit(newText[idx + 1]) && Uri.IsHexDigit(newText[idx + 2])));
-                                if (!isInsideFontTag)
+                                if (IsQualified(newText, idx))
                                 {
                                     newText = newText.Remove(idx, 1);
                                     newText = newText.Insert(idx, Configuration.Settings.Tools.MusicSymbol);
                                 }
-
                                 idx = newText.IndexOf('#', idx + 1);
                             }
                         }
@@ -53,5 +49,25 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
             callbacks.UpdateFixStatus(fixCount, language.FixMusicNotation, language.XFixMusicNotation);
         }
+
+        public static bool IsQualified(string text, int idx)
+        {
+            if (idx == 0 || idx + 1 == text.Length)
+            {
+                return true;
+            }
+            // Do not replace number-sign 'MAN #1' with music symbols in text like:
+            //- <font color="#804040">MAN #1</font>: Oh, yeah.
+            if (text[idx - 1] == ' ' && char.IsDigit(text[idx + 1]))
+            {
+                return false;
+            }
+            if (text.Contains("<font ", StringComparison.OrdinalIgnoreCase) && (text[idx - 1] == '"') && (text.Length > idx + 2 && Uri.IsHexDigit(text[idx + 1]) && Uri.IsHexDigit(text[idx + 2])))
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
 }
