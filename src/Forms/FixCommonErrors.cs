@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _autoDetectGoogleLanguage;
         private List<string> _namesEtcList;
         private HashSet<string> _abbreviationList;
-        private StringBuilder _newLog = new StringBuilder();
+        private readonly StringBuilder _newLog = new StringBuilder();
         private readonly StringBuilder _appliedLog = new StringBuilder();
         private int _numberOfImportantLogMessages;
         private List<int> _deleteIndices = new List<int>();
@@ -630,7 +630,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void RunSelectedActions()
         {
             subtitleListView1.BeginUpdate();
-            _newLog = new StringBuilder();
+            _newLog.Clear();
             _deleteIndices = new List<int>();
 
             Subtitle = new Subtitle(_originalSubtitle, false);
