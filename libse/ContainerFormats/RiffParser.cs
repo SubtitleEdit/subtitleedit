@@ -409,7 +409,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats
 
         public static string FromFourCC(int FourCC)
         {
-            char[] chars = new char[4];
+            var chars = new char[4];
             chars[0] = (char)(FourCC & 0xFF);
             chars[1] = (char)((FourCC >> 8) & 0xFF);
             chars[2] = (char)((FourCC >> 16) & 0xFF);
