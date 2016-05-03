@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             ColonSeparateLine = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyOnSeparateLine;
             RemoveWhereContains = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains;
             RemoveIfTextContains = new List<string>();
-            foreach (string item in Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string item in Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 RemoveIfTextContains.Add(item.Trim());
             }

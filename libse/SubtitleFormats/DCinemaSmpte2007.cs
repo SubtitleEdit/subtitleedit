@@ -713,7 +713,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private TimeCode GetTimeCode(string s)
         {
-            string[] parts = s.Split(new char[] { ':', '.', ',' });
+            var parts = s.Split(new[] { ':', '.', ',' });
 
             int milliseconds = (int)Math.Round(int.Parse(parts[3]) * (TimeCode.BaseUnit / _frameRate));
             if (milliseconds > 999)
