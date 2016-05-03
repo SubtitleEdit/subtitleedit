@@ -821,8 +821,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             if (_isSubStationAlpha)
             {
                 var ssa = new SubStationAlpha();
-                string text = ssa.ToText(sub, string.Empty);
-                string[] lineArray = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                var text = ssa.ToText(sub, string.Empty);
+                var lineArray = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 var lines = new List<string>();
                 foreach (string line in lineArray)
                     lines.Add(line);
@@ -832,8 +832,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             else
             {
                 var ass = new AdvancedSubStationAlpha();
-                string text = ass.ToText(sub, string.Empty);
-                string[] lineArray = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                var text = ass.ToText(sub, string.Empty);
+                var lineArray = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 var lines = new List<string>();
                 foreach (string line in lineArray)
                     lines.Add(line);
