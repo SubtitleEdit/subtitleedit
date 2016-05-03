@@ -666,7 +666,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static TimeCode GetTimeCode(string s)
         {
-            string[] parts = s.Split(new char[] { ':', '.', ',' });
+            var parts = s.Split(new[] { ':', '.', ',' });
 
             int milliseconds = (int)(int.Parse(parts[3]) * 4); // 000 to 249
             if (s.Contains('.'))
