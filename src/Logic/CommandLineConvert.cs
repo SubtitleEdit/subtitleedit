@@ -638,7 +638,7 @@ namespace Nikse.SubtitleEdit.Logic
             try
             {
                 // adjust offset
-                if (offset.Length > 0)
+                if (!string.IsNullOrWhiteSpace(offset))
                 {
                     var parts = offset.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 5)
