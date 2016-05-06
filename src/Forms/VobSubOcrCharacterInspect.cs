@@ -147,11 +147,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (node.Attributes["Text"] != null && node.InnerText == match.Name)
                         {
                             string text = node.Attributes["Text"].InnerText;
-                            string imageFileName = node.InnerText;
-                            imageFileName = Path.Combine(_directoryPath, imageFileName);
                             textBoxText.Text = text;
                             checkBoxItalic.Checked = node.Attributes["Italic"] != null;
-
                             string databaseName = Path.Combine(_directoryPath, "Images.db");
                             using (var f = new FileStream(databaseName, FileMode.Open))
                             {
@@ -197,8 +194,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonUpdate.Enabled = false;
                 buttonDelete.Enabled = false;
-                buttonAddBetterMatch.Enabled = false;
-                textBoxText.Enabled = false;
+                buttonAddBetterMatch.Enabled = true;
+                textBoxText.Enabled = true;
                 textBoxText.Text = string.Empty;
                 checkBoxItalic.Enabled = false;
             }
@@ -238,7 +235,10 @@ namespace Nikse.SubtitleEdit.Forms
                 _selectedCompareBinaryOcrBitmap.Text = newText;
                 _selectedCompareBinaryOcrBitmap.Italic = checkBoxItalic.Checked;
                 listBoxInspectItems.SelectedIndexChanged -= listBoxInspectItems_SelectedIndexChanged;
-                listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex] = newText;
+                if (checkBoxItalic.Checked)
+                    listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex] = newText + " (italic)";
+                else
+                    listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex] = newText;
                 listBoxInspectItems.SelectedIndexChanged += listBoxInspectItems_SelectedIndexChanged;
             }
             else
@@ -308,15 +308,23 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (_selectedCompareBinaryOcrBitmap != null || (_binOcrDb != null && _selectedMatch.Text == Configuration.Settings.Language.VobSubOcr.NoMatch))
+            if (_selectedCompareBinaryOcrBitmap != null || (_binOcrDb != null && (_selectedMatch.Text == Configuration.Settings.Language.VobSubOcr.NoMatch || _selectedMatch.NOcrCharacter == null)))
             {
                 var nbmp = new NikseBitmap((pictureBoxInspectItem.Image as Bitmap));
                 int x = 0;
                 int y = 0;
                 if (_selectedMatch != null && _selectedMatch.ImageSplitterItem != null)
                 {
-                    x = _selectedMatch.X;
-                    y = _selectedMatch.Y;
+                    if (_selectedMatch.ImageSplitterItem != null)
+                    {
+                        x = _selectedMatch.ImageSplitterItem.X;
+                        y = _selectedMatch.ImageSplitterItem.Top;
+                    }
+                    else
+                    {
+                        x = _selectedMatch.X;
+                        y = _selectedMatch.Y;
+                    }
                 }
                 var bob = new BinaryOcrBitmap(nbmp, checkBoxItalic.Checked, 0, textBoxText.Text, x, y);
                 _binOcrDb.Add(bob);
@@ -338,7 +346,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_selectedCompareNode != null)
             {
                 XmlNode newNode = ImageCompareDocument.CreateElement("Item");
-                XmlAttribute text = newNode.OwnerDocument.CreateAttribute("Text");
+                var text = newNode.OwnerDocument.CreateAttribute("Text");
                 text.InnerText = textBoxText.Text;
                 newNode.Attributes.Append(text);
 

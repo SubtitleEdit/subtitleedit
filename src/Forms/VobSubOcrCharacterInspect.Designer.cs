@@ -264,7 +264,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "VobSubOcrCharacterInspect";
+            this.Text = " ";
             this.groupBoxCurrentCompareImage.ResumeLayout(false);
             this.groupBoxCurrentCompareImage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmapDouble)).EndInit();

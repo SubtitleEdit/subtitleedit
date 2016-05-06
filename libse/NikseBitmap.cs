@@ -535,7 +535,7 @@ namespace Nikse.SubtitleEdit.Core
             return 0;
         }
 
-        public void CropTransparentSidesAndBottom(int maximumCropping, bool bottom)
+        public int CropTransparentSidesAndBottom(int maximumCropping, bool bottom)
         {
             int leftStart = 0;
             bool done = false;
@@ -551,7 +551,8 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         done = true;
                         leftStart = x;
-                        leftStart -= maximumCropping;
+                        if (leftStart > maximumCropping)
+                            leftStart = leftStart - maximumCropping;
                         if (leftStart < 0)
                             leftStart = 0;
                     }
@@ -573,7 +574,8 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         done = true;
                         rightEnd = x;
-                        rightEnd += maximumCropping;
+                        if (Width - rightEnd > maximumCropping)
+                            rightEnd += maximumCropping;
                         if (rightEnd >= Width)
                             rightEnd = Width - 1;
                     }
@@ -608,11 +610,11 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             if (leftStart < 2 && rightEnd >= Width - 3)
-                return;
+                return 0;
 
             int newWidth = rightEnd - leftStart + 1;
             if (newWidth <= 0)
-                return;
+                return 0;
 
             var newBitmapData = new byte[newWidth * newHeight * 4];
             int index = 0;
@@ -625,6 +627,7 @@ namespace Nikse.SubtitleEdit.Core
             Width = newWidth;
             Height = newHeight;
             _bitmapData = newBitmapData;
+            return leftStart;
         }
 
         public void CropSidesAndBottom(int maximumCropping, Color transparentColor, bool bottom)

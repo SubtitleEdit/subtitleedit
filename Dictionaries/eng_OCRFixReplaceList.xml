@@ -188,7 +188,6 @@
     <Word from="BIind" to="Blind" />
     <Word from="BIood" to="Blood" />
     <Word from="BIue" to="Blue" />
-    <Word from="blonde" to="blonde" />
     <Word from="BLOVVS" to="BLOWS" />
     <Word from="blowholel" to="blowhole!" />
     <Word from="blt" to="bit" />
@@ -1818,6 +1817,52 @@
     <Word from="lron" to="Iron" />
     <Word from="It'syour" to="It's your" />
     <Word from="lfstill" to="if still" />
+    <Word to="for joining" from="forjoining"/>
+    <Word to="for years" from="foryears"/>
+    <Word to="If it" from="Ifit"/>
+    <Word to="not jump" from="notjump"/>
+    <Word to="our problem" from="ourproblem"/>
+    <Word to="your profile" from="yourprofile"/>
+    <Word to="if Janine" from="ifJanine"/>
+    <Word to="for preventative" from="forpreventative"/>
+    <Word to="a hold" from="ahold"/>
+    <Word to="whether protest" from="whetherprotest"/>
+    <Word to="If not" from="Ifnot"/>
+    <Word to="our people" from="ourpeople"/>
+    <Word to="off my" from="offmy"/>
+    <Word to="for providing" from="forproviding"/>
+    <Word to="had just" from="hadjust"/>
+    <Word to="near you" from="nearyou"/>
+    <Word to="whatever you" from="whateveryou"/>
+    <Word to="hour puts" from="hourputs"/>
+    <Word to="time job" from="timejob"/>
+    <Word to="over your" from="overyour"/>
+    <Word to="or permanent" from="orpermanent"/>
+    <Word to="create jobs" from="createjobs"/>
+    <Word to="I've just" from="I'vejust"/>
+    <Word to="people jobs" from="peoplejobs"/>
+    <Word to="dinner pail" from="dinnerpail"/>
+    <Word to="has jumped" from="hasjumped"/>
+    <Word to="their privacy" from="theirprivacy"/>
+    <Word to="All" from="AIl"/>
+    <Word to="of serious" from="ofserious"/>
+    <Word to="your professional" from="yourprofessional"/>
+    <Word to="political" from="poiitical"/>
+    <Word to="to jump" from="tojump"/>
+    <Word to="lives" from="iives"/>
+    <Word to="elections" from="eiections"/>
+    <Word to="military juntas" from="militaryjuntas"/>
+    <Word to="no joke" from="nojoke"/>
+    <Word to="your presidency" from="yourpresidency"/>
+    <Word to="of military juntas" from="ofmilitaryjuntas"/>
+    <Word to="Our proposal" from="Ourproposal"/>
+    <Word to="LeBlanc" from="LeBIanc"/>
+    <Word to="Klaus" from="KIaus"/>
+    <Word to="your pussy" from="yourpussy"/>
+    <Word to="INTERVIEWER" from="lNTERVIEWER"/>
+    <Word to="INAUDIBLE" from="lNAUDIBLE"/>
+    <Word to="Simpsons" from="SImpsons"/>
+    <Word from="tojump" to="to jump" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -1850,9 +1895,8 @@
     <WordPart from="i" to="t" />
     <WordPart from="cc" to="oo" />
     <WordPart from="ii" to="tt" />
-    <WordPart from="ii" to="ll" />
-    <!-- "f " will be two words -->
-    <WordPart from="f" to="f " />
+    <WordPart from="ii" to="ll" />    
+    <WordPart from="f" to="f " /> <!-- "f " will be two words -->
     <WordPart from="c" to="e" />
     <WordPart from="I" to="t" />
     <WordPart from="n" to="o" />
@@ -2096,6 +2140,7 @@
     <LinePart from=". Lt " to=". It " />
     <LinePart from="! Lt " to="! It " />
     <LinePart from="? Lt " to="? It " />
+    <LinePart from="SQMEWH ERE ELSE" to="SOMEWHERE ELSE" />
   </PartialLines>
   <PartialLinesAlways>
     <LinePart from="forbest act" to="for best act" />
@@ -2202,7 +2247,6 @@
     <Line from="[M EOWS]" to="[MEOWS]" />
     <Line from="Uaughs]" to="[laughs]" />
     <Line from="[chitte rs]" to="[chitters]" />
-    <Line from="SQMEWH ERE ELSE" to="SOMEWHERE ELSE" />
     <Line from="Hil‘ it!" to="Hit it!" />
     <Line from="&lt;i&gt;Hil‘ it!&lt;/i&gt;" to="&lt;i&gt;Hit it!&lt;/i&gt;" />
     <Line from="ISIGHS]" to="[SIGHS]" />

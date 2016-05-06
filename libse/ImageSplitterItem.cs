@@ -5,6 +5,7 @@
         public int X { get; set; }
         public int Y { get; set; }
         public int ParentY { get; set; }
+        public int Top { get; set; }
         public NikseBitmap NikseBitmap { get; set; }
         public string SpecialCharacter { get; set; }
 
