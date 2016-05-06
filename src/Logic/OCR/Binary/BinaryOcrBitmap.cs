@@ -293,5 +293,383 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             }
         }
 
+
+
+        public bool IsPeriod()
+        {
+            if (ExpandCount > 0 || Y < 20)
+                return false;
+
+            if (Width == 4 && Height == 5 && NumberOfColoredPixels == 20)
+                return true;
+
+            if (Width == 5 && Height == 6 && NumberOfColoredPixels >= 28)
+                return true;
+
+            if (Width == 6 && Height == 7 && NumberOfColoredPixels >= 40)
+                return true;
+
+            if (Width < Height || Width < 5 || Width > 10 || Height < 3 || Height > 9)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool IsComma()
+        {
+            if (ExpandCount > 0 || Y < 20 || Height < Width || Width < 4 || Width > 12 || Height < 8 || Height > 15)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool IsApostrophe()
+        {
+            if (ExpandCount > 0 || Y > 10 || Height < Width - 2 || Width < 4 || Width > 12 || Height < 8 || Height > 16)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool IsLowercaseI()
+        {
+            if (ExpandCount > 0 || Y > 20 || Height < Width + 10 || Width < 3 || Width > 17 || Height < 21 || Height > 50)
+            {
+                return false;
+            }
+
+            var transparentHorLines = new bool[Height];
+            for (int y = 0; y < Height; y++)
+            {
+                transparentHorLines[y] = true;
+                for (int x = 0; x < Width; x++)
+                {
+                    if (GetPixel(x, y) != 0)
+                    {
+                        transparentHorLines[y] = false;
+                        break;
+                    }
+                }
+            }
+            if (transparentHorLines[0] || transparentHorLines[1])
+                return false;
+            for (int i = 0; i < Height / 2; i++)
+            {
+                if (transparentHorLines[Height - i - 1])
+                    return false;
+            }
+            var top = Height / 7;
+            for (int i = 0; i < 6; i++)
+            {
+                if (transparentHorLines[top + i])
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool IsColon()
+        {
+            if (ExpandCount > 0 || Y < 5 || Y > 45 || Width > Height / 2 || Width < 3 || Width > 18 || Height < 14 || Height > 45)
+            {
+                return false;
+            }
+
+            if (NumberOfColoredPixels* 2 > Width * Height)
+            {
+                return false;
+            }
+
+            var transparentHorLines = new bool[Height];
+            for (int y = 0; y < Height; y++)
+            {
+                transparentHorLines[y] = true;
+                for (int x = 0; x < Width; x++)
+                {
+                    if (GetPixel(x, y) != 0)
+                    {
+                        transparentHorLines[y] = false;
+                        break;
+                    }
+                }
+            }
+            if (transparentHorLines[0] || transparentHorLines[1] || transparentHorLines[2])
+                return false;
+            if (transparentHorLines[Height-1] || transparentHorLines[Height - 2] || transparentHorLines[Height - 3])
+                return false;
+
+            int startY = Height / 4;
+            int endY = startY * 3;
+            startY++;
+            endY--;
+            for (int y = startY; y < endY; y++)
+            {
+                if (!transparentHorLines[y])
+                    return false;
+            }
+
+            return true;
+        }
+
+        public bool IsDash()
+        {
+            if (ExpandCount > 0 || Y < 13 || Height * 2.3 > Width || Width < 10 || Width > 25 || Height < 3 || Height > 7)
+            {
+                return false;
+            }
+
+            if (NumberOfColoredPixels + 7 < Width * Height)
+            {
+                return false;
+            }
+
+            var transparentHorLines = new bool[Height];
+            for (int y = 0; y < Height; y++)
+            {
+                transparentHorLines[y] = true;
+                for (int x = 0; x < Width; x++)
+                {
+                    if (GetPixel(x, y) != 0)
+                    {
+                        transparentHorLines[y] = false;
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < transparentHorLines.Length; i++)
+            {
+                if (transparentHorLines[i])
+                    return false;
+            }
+
+            var transparentVerLines = new bool[Width];
+            for (int x = 0; x < Width; x++)
+            {
+                transparentVerLines[x] = true;
+                for (int y = 0; y < Height; y++)
+                {
+                    if (GetPixel(x, y) != 0)
+                    {
+                        transparentVerLines[x] = false;
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < transparentVerLines.Length; i++)
+            {
+                if (transparentVerLines[i])
+                    return false;
+            }
+
+            return true;
+        }
+
+        public bool IsExclamationMark()
+        {
+            if (ExpandCount > 0 || Y > 20 || Height < Width + 10 || Width < 3 || Width > 17 || Height < 21 || Height > 50)
+            {
+                return false;
+            }
+
+            var transparentHorLines = new bool[Height];
+            for (int y = 0; y < Height; y++)
+            {
+                transparentHorLines[y] = true;
+                for (int x = 0; x < Width; x++)
+                {
+                    if (GetPixel(x, y) != 0)
+                    {
+                        transparentHorLines[y] = false;
+                        break;
+                    }
+                }
+            }
+            if (transparentHorLines[Height -1 ] || transparentHorLines[Height - 2])
+                return false;
+            for (int i = 0; i < Height / 2; i++)
+            {
+                if (transparentHorLines[i])
+                    return false;
+            }
+            var bottom = Height - Height / 7;
+            for (int i = 0; i < 6; i++)
+            {
+                if (transparentHorLines[bottom - i])
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool IsLowercaseL()
+        {
+            if (ExpandCount > 0 || Y > 20 || Height < Width + 10 || Width < 4 || Width > 17 || Height < 21 || Height > 50)
+            {
+                return false;
+            }
+
+            var transparentHorLines = new bool[Height];
+            for (int y = 0; y < Height; y++)
+            {
+                transparentHorLines[y] = true;
+                for (int x = 0; x < Width; x++)
+                {
+                    if (GetPixel(x, y) != 0)
+                    {
+                        transparentHorLines[y] = false;
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < transparentHorLines.Length; i++)
+            {
+                if (transparentHorLines[i])
+                    return false;
+            }
+
+            return true;
+        }
+
+        public bool IsC()
+        {
+            if (ExpandCount > 0 || Y > 20 || Height < Width + 1 || Width < 12 || Width > 49 || Height < 15 || Height > 55)
+            {
+                return false;
+            }
+
+            if (GetPixel(1, 1) != 0)
+                return false;
+            if (GetPixel(1, Height - 1) != 0)
+                return false;
+            if (GetPixel(Width - 1, 0) != 0)
+                return false;
+            if (GetPixel(Width - 2, Height - 2) != 0)
+                return false;
+
+            var transparentHorLines = new bool[Height];
+            for (int y = 0; y < Height; y++)
+            {
+                transparentHorLines[y] = true;
+                for (int x = 0; x < Width; x++)
+                {
+                    if (GetPixel(x, y) != 0)
+                    {
+                        transparentHorLines[y] = false;
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < transparentHorLines.Length; i++)
+            {
+                if (transparentHorLines[i])
+                    return false;
+            }
+
+            var transparentVerLines = new bool[Width];
+            for (int x = 0; x < Width; x++)
+            {
+                transparentVerLines[x] = true;
+                for (int y = 0; y < Height; y++)
+                {
+                    if (GetPixel(x, y) != 0)
+                    {
+                        transparentVerLines[x] = false;
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < transparentVerLines.Length; i++)
+            {
+                if (transparentVerLines[i])
+                    return false;
+            }
+
+            int halfWidth = Width/2 - 1;
+            int halfHeight = Height / 2;
+            int halfHeightM1 = halfHeight--;
+            for (int x = halfWidth; x < Width; x++)
+            {
+                if (GetPixel(x, halfHeight) != 0 || GetPixel(x, halfHeightM1) != 0)
+                    return false;
+            }
+
+            return true;
+        }
+
+
+        public bool IsO()
+        {
+            if (ExpandCount > 0 || Y > 20 || Math.Abs(Height - Width) > (int)Math.Round(Height / 6.0) || Width < 12 || Width > 49 || Height < 15 || Height > 55)
+            {
+                return false;
+            }
+
+            if (GetPixel(1, 1) != 0)
+                return false;
+            if (GetPixel(1, Height - 1) != 0)
+                return false;
+            if (GetPixel(Width - 1, 0) != 0)
+                return false;
+            if (GetPixel(Width - 2, Height - 2) != 0)
+                return false;
+
+            var transparentHorLines = new bool[Height];
+            for (int y = 0; y < Height; y++)
+            {
+                transparentHorLines[y] = true;
+                for (int x = 0; x < Width; x++)
+                {
+                    if (GetPixel(x, y) != 0)
+                    {
+                        transparentHorLines[y] = false;
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < transparentHorLines.Length; i++)
+            {
+                if (transparentHorLines[i])
+                    return false;
+            }
+
+            var transparentVerLines = new bool[Width];
+            for (int x = 0; x < Width; x++)
+            {
+                transparentVerLines[x] = true;
+                for (int y = 0; y < Height; y++)
+                {
+                    if (GetPixel(x, y) != 0)
+                    {
+                        transparentVerLines[x] = false;
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < transparentVerLines.Length; i++)
+            {
+                if (transparentVerLines[i])
+                    return false;
+            }
+
+            int halfWidth = Width / 2 - 1;
+            int halfHeight = Height / 2;
+            int runLength = Width/6;
+            for (int x = halfWidth - runLength; x < halfWidth + runLength; x++)
+            {
+                if (GetPixel(x, halfHeight - 1) != 0 ||
+                    GetPixel(x, halfHeight + 0) != 0 ||
+                    GetPixel(x, halfHeight + 1) != 0)
+                    return false;
+            }
+
+            return true;
+        }
+
     }
 }

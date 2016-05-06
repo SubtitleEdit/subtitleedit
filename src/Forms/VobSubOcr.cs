@@ -3072,13 +3072,13 @@ namespace Nikse.SubtitleEdit.Forms
             int index = 0;
             int smallestDifference = 10000;
             int smallestIndex = -1;
-            NikseBitmap target = targetItem.NikseBitmap;
+            var target = targetItem.NikseBitmap;
             if (_binaryOcrDb == null)
             {
                 return null;
             }
 
-            var bob = new BinaryOcrBitmap(target);
+            var bob = new BinaryOcrBitmap(target) { X = targetItem.X, Y = targetItem.Top };
 
             for (int k = 0; k < _binaryOcrDb.CompareImagesExpanded.Count; k++)
             {
@@ -3100,7 +3100,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (ok)
                     {
-                        secondBestGuess = null;
                         return new CompareMatch(b.Text, b.Italic, b.ExpandCount, b.Key);
                     }
                 }
@@ -3152,12 +3151,65 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         SetBinOcrLowercaseUppercase(hit.Height, text);
                     }
+                    if (differencePercentage > 0)
+                    {
+                        if ((hit.Text == "l" || hit.Text == "!") && bob.IsLowercaseI())
+                        {
+                            hit = null;
+                        }
+                        else if ((hit.Text == "i" || hit.Text == "!") && bob.IsLowercaseL())
+                        {
+                            hit = null;
+                        }
+                        else if ((hit.Text == "o" || hit.Text == "O") && bob.IsC())
+                        {
+                            return new CompareMatch(hit.Text == "o" ? "c" : "C", false, 0, null);
+                        }
+                        else if ((hit.Text == "c" || hit.Text == "C") && !bob.IsC() && bob.IsO())
+                        {
+                            return new CompareMatch(hit.Text == "c" ? "o" : "O", false, 0, null);
+                        }
+                    }
 
-                    return new CompareMatch(text, hit.Italic, hit.ExpandCount, hit.Key);
+                    if (hit != null)
+                    {
+                        if (_binOcrLastLowercaseHeight < 0 && differencePercentage < 9 && (text == "e" || text == "d" || text == "a"))
+                            _binOcrLastLowercaseHeight = bob.Height;
+                        return new CompareMatch(text, hit.Italic, hit.ExpandCount, hit.Key);
+                    }
                 }
 
                 var guess = _binaryOcrDb.CompareImages[smallestIndex];
                 secondBestGuess = new CompareMatch(guess.Text, guess.Italic, guess.ExpandCount, guess.Key);
+            }
+
+            if (bob.IsPeriod())
+            {
+                return new CompareMatch(".", false, 0, null);
+            }
+            if (bob.IsComma())
+            {
+                return new CompareMatch(",", false, 0, null);
+            }
+            if (bob.IsApostrophe())
+            {
+                return new CompareMatch("'", false, 0, null);
+            }
+            if (bob.IsLowercaseI())
+            {
+                return new CompareMatch("i", false, 0, null);
+            }
+            if (bob.IsColon())
+            {
+                return new CompareMatch(":", false, 0, null);
+            }
+            if (bob.IsExclamationMark())
+            {
+                return new CompareMatch("!", false, 0, null);
+            }
+            if (bob.IsDash())
+            {
+                return new CompareMatch("-", false, 0, null);
             }
 
             return null;
@@ -3165,8 +3217,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static Bitmap CopyBitmapSection(Bitmap srcBitmap, Rectangle section)
         {
-            Bitmap bmp = new Bitmap(section.Width, section.Height);
-            Graphics g = Graphics.FromImage(bmp);
+            var bmp = new Bitmap(section.Width, section.Height);
+            var g = Graphics.FromImage(bmp);
             g.DrawImage(srcBitmap, 0, 0, section, GraphicsUnit.Pixel);
             g.Dispose();
             return bmp;
@@ -3885,13 +3937,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (expandCount > 0)
             {
-                var bob = new BinaryOcrBitmap(expandList[0].NikseBitmap, isItalic, expandCount, text, expandList[0].X, expandList[0].Y);
+                var bob = new BinaryOcrBitmap(expandList[0].NikseBitmap, isItalic, expandCount, text, expandList[0].X, expandList[0].Top);
                 bob.ExpandedList = new List<BinaryOcrBitmap>();
                 for (int j = 1; j < expandList.Count; j++)
                 {
                     var expandedBob = new BinaryOcrBitmap(expandList[j].NikseBitmap);
                     expandedBob.X = expandList[j].X;
-                    expandedBob.Y = expandList[j].Y;
+                    expandedBob.Y = expandList[j].Top;
                     bob.ExpandedList.Add(expandedBob);
                 }
                 _binaryOcrDb.Add(bob);
@@ -3900,7 +3952,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                var bob = new BinaryOcrBitmap(newTarget.NikseBitmap, isItalic, expandCount, text, newTarget.X, newTarget.Y);
+                var bob = new BinaryOcrBitmap(newTarget.NikseBitmap, isItalic, expandCount, text, newTarget.X, newTarget.Top);
                 _binaryOcrDb.Add(bob);
                 _binaryOcrDb.Save();
                 return bob.Key;
@@ -5462,7 +5514,7 @@ namespace Nikse.SubtitleEdit.Forms
             var bitmap = (Bitmap)e.Argument;
             if (bitmap != null)
             {
-                if (_tesseractAsyncIndex >= 0 && _tesseractAsyncStrings != null &&  _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
+                if (_tesseractAsyncIndex >= 0 && _tesseractAsyncStrings != null && _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
                 {
                     if (string.IsNullOrEmpty(_tesseractAsyncStrings[_tesseractAsyncIndex]))
                         _tesseractAsyncStrings[_tesseractAsyncIndex] = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.);
@@ -5751,7 +5803,7 @@ namespace Nikse.SubtitleEdit.Forms
             SaveNOcr();
         }
 
-        private static Bitmap ResizeBitmap(Bitmap b, int width, int height)
+        public static Bitmap ResizeBitmap(Bitmap b, int width, int height)
         {
             var result = new Bitmap(width, height);
             using (Graphics g = Graphics.FromImage(result))
@@ -8751,6 +8803,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void numericUpDownMaxErrorPct_ValueChanged(object sender, EventArgs e)
         {
             _numericUpDownMaxErrorPct = (double)numericUpDownMaxErrorPct.Value;
+        }
+
+        private void subtitleListView1_DoubleClick(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count > 0 && (_ocrMethodIndex == _ocrMethodBinaryImageCompare || _ocrMethodIndex == _ocrMethodImageCompare))
+            {
+                inspectImageCompareMatchesForCurrentImageToolStripMenuItem_Click(null, null);
+            }
         }
 
     }

@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _directoryPath;
         private List<bool> _italics = new List<bool>();
         internal List<VobSubOcr.ImageCompareAddition> Additions { get; private set; }
-        private BinaryOcrDb _binOcrDb = null;
+        private readonly BinaryOcrDb _binOcrDb;
 
         public XmlDocument ImageCompareDocument
         {
@@ -267,15 +267,17 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxItalic.Checked = _italics[listBoxFileNames.SelectedIndex];
             string name = listBoxFileNames.Items[listBoxFileNames.SelectedIndex].ToString();
             string databaseName = _directoryPath + "Images.db";
-            string posAsString = GetSelectedFileName();
             Bitmap bmp = null;
             labelExpandCount.Text = string.Empty;
+            labelImageInfo.Text = string.Empty;
             if (_binOcrDb != null)
             {
                 var bob = GetSelectedBinOcrBitmap();
                 if (bob != null)
                 {
                     bmp = bob.ToOldBitmap();
+                    labelImageInfo.Text = string.Format("Top:{0}, {1} colored pixels of {2}", bob.Y, bob.NumberOfColoredPixels, (bob.Width * bob.Height));
+                    // labelImageInfo.Text = string.Format("T:{0} -{1} :{2} i{3} !{4} '{5} #{6}/{7}", bob.Y, bob.IsDash(), bob.IsColon(), bob.IsLowercaseI(), bob.IsExclamationMark(), bob.IsApostrophe(), bob.NumberOfColoredPixels, (bob.Width * bob.Height));
                     if (bob.ExpandCount > 0)
                     {
                         labelExpandCount.Text = string.Format("Expand count: {0}", bob.ExpandCount);
@@ -298,10 +300,17 @@ namespace Nikse.SubtitleEdit.Forms
                 bmp = new Bitmap(1, 1);
                 labelImageInfo.Text = Configuration.Settings.Language.VobSubEditCharacters.ImageFileNotFound;
             }
+
             pictureBox1.Image = bmp;
-            pictureBox2.Width = bmp.Width * 2;
-            pictureBox2.Height = bmp.Height * 2;
-            pictureBox2.Image = bmp;
+            pictureBox1.Width = bmp.Width + 2;
+            pictureBox1.Height = bmp.Height + 2;
+            pictureBox1.SizeMode = PictureBoxSizeMode.CenterImage;
+
+            var bmp2 = VobSubOcr.ResizeBitmap(bmp, bmp.Width * 2, bmp.Height * 2);
+            pictureBox2.Image = bmp2;
+            pictureBox2.Width = bmp2.Width + 2;
+            pictureBox2.Height = bmp2.Height + 2;
+            pictureBox2.SizeMode = PictureBoxSizeMode.CenterImage;
 
             if (Additions != null && Additions.Count > 0)
             {
@@ -406,6 +415,7 @@ namespace Nikse.SubtitleEdit.Forms
                         i++;
                     }
                 }
+                listBoxFileNames.Focus();
                 return;
             }
 
@@ -620,5 +630,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
+
     }
 }
