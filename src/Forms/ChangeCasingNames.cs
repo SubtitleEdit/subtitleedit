@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(language))
                 language = "en_US";
 
-            var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+            var namesList = NamesList.NamesListFactory(language);
 
             // Will contains both one word names and multi names
             var namesEtcList = namesList.GetAllNames();

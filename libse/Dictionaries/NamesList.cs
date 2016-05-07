@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 try
                 {
-                    var xml = Utilities.DownloadString(Configuration.Settings.WordLists.NamesEtcUrl);
+                    var xml = Utilities.DownloadString(namesEtcUrl);
                     var namesDoc = new XmlDocument();
                     namesDoc.LoadXml(xml);
                     LoadNames(_namesList, _namesMultiList, namesDoc);
@@ -248,5 +248,12 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             return false;
         }
 
+        /// <summary>
+        /// Initializes a NamesList instance with the specified configuration.
+        /// </summary>
+        public static NamesList NamesListFactory(string language)
+        {
+            return new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+        }
     }
 }
