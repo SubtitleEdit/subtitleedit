@@ -159,10 +159,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
-                var ci = (CultureInfo)comboBoxLanguage.SelectedItem;
-                if (ci == null)
-                    return "en";
-                return ci.TwoLetterISOLanguageName;
+                return ((CultureInfo)comboBoxLanguage.SelectedItem).TwoLetterISOLanguageName;
             }
             set
             {
