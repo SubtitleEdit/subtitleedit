@@ -1096,7 +1096,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int feIndex = index;
             const int endDelimiter = 0x00;
             byte alignment = buffer[feIndex + 1];
-            byte verticalAlignment = buffer[feIndex - 1];
             var p = new Paragraph();
 
             int timeStartIndex = feIndex - 15;
@@ -1119,6 +1118,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (textLength > 500)
                 return null; // probably not correct index
             int maxIndex = timeStartIndex + 10 + textLength;
+
+            byte verticalAlignment = buffer[timeStartIndex + 11];
 
             if (_codePage == -1)
                 GetCodePage(buffer, index, endDelimiter);
