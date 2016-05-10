@@ -67,12 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
-                string url = "https://github.com/SubtitleEdit/subtitleedit/raw/master/Other/mpv-dll-64.zip";
-                if (IntPtr.Size * 8 == 32)
-                {
-                    url = "https://github.com/SubtitleEdit/subtitleedit/raw/master/Other/mpv-dll-32.zip";
-                }
-
+                string url = "https://github.com/SubtitleEdit/support-files/blob/master/mpv/mpv-dll-" + IntPtr.Size * 8 + ".zip?raw=true";
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                 wc.DownloadProgressChanged += (o, args) =>
