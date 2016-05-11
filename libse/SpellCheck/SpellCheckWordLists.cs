@@ -248,7 +248,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
         public bool AddName(string word)
         {
-            if (word == null || word.Length <= 1 || _namesEtcList.Contains(word))
+            if (string.IsNullOrEmpty(word) || _namesEtcList.Contains(word))
                 return false;
 
             _namesEtcList.Add(word);
@@ -277,7 +277,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
                 return false;
 
             word = word.Trim().ToLower();
-            if (word.Length <= 1 || _userWordList.IndexOf(word) >= 0)
+            if (word.Length == 0 || _userWordList.IndexOf(word) >= 0)
                 return false;
 
             if (word.Contains(' '))
