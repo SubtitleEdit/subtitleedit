@@ -2201,6 +2201,27 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
+                    try
+                    {
+                        var imageFormat = new SpuImage();
+                        var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                        if (imageFormat.IsMine(list, fileName))
+                        {
+                            if (ContinueNewOrExit())
+                            {
+                                ImportAndOcrDost(fileName, imageFormat, list);
+                            }
+                            return;
+                        }
+                    }
+                    catch
+                    {
+                        format = null;
+                    }
+                }
+
+                if (format == null)
+                {
                     var elr = new ELRStudioClosedCaption();
                     if (elr.IsMine(null, fileName))
                     {
