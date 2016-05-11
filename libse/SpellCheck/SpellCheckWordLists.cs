@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
         public static readonly string SplitChars = " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“«»";
 
         private static readonly char[] PeriodAndDash = { '.', '-' };
-        private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '“' };
+        private static readonly char[] SplitChars2 = { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '“', '«', '»' };
 
         private readonly NamesList _namesList;
         private readonly HashSet<string> _namesEtcList;
