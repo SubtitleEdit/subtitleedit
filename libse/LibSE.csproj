@@ -190,6 +190,7 @@
     <Compile Include="StripableText.cs" />
     <Compile Include="SubtitleEditRegex.cs" />
     <Compile Include="Subtitle.cs" />
+    <Compile Include="SubtitleFormats\SpuImage.cs" />
     <Compile Include="SubtitleFormats\AbcIViewer.cs" />
     <Compile Include="SubtitleFormats\AdobeAfterEffectsFTME.cs" />
     <Compile Include="SubtitleFormats\AdobeEncore.cs" />
