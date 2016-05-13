@@ -175,7 +175,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool subtitleAlignLeft = comboBoxHAlign.SelectedIndex == 0;
 
             // remove styles for display text (except italic)
-            text = RemoveSubStationAlphaFormatting(text);
+            text = Utilities.RemoveSsaTags(text);
             text = text.Replace("<b>", string.Empty);
             text = text.Replace("</b>", string.Empty);
             text = text.Replace("<B>", string.Empty);
@@ -416,20 +416,6 @@ namespace Nikse.SubtitleEdit.Forms
             var nbmp = new NikseBitmap(bmp);
             nbmp.CropTransparentSidesAndBottom(2, true);
             return nbmp.GetBitmap();
-        }
-
-        private static string RemoveSubStationAlphaFormatting(string s)
-        {
-            int indexOfBegin = s.IndexOf('{');
-            while (indexOfBegin >= 0)
-            {
-                int indexOfEnd = s.IndexOf('}', indexOfBegin + 1);
-                if (indexOfEnd < indexOfBegin)
-                    break;
-                s = s.Remove(indexOfBegin, indexOfEnd - indexOfBegin + 1);
-                indexOfBegin = s.IndexOf('{', indexOfBegin);
-            }
-            return s;
         }
 
         private void Timer1Tick(object sender, EventArgs e)
