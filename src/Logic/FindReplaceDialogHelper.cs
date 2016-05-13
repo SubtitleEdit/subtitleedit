@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Core.Enums;
 using System;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -168,41 +169,24 @@ namespace Nikse.SubtitleEdit.Logic
             return false;
         }
 
-        public static ContextMenu GetRegExContextMenu(TextBox textBox)
+        public static ContextMenu GetRegExContextMenu(object control)
         {
+            PropertyInfo propertyInfo = control.GetType().GetProperty("SelectedText", (BindingFlags.Public | BindingFlags.Instance));
+            if (propertyInfo == null) return null;
             var cm = new ContextMenu();
             var l = Configuration.Settings.Language.RegularExpressionContextMenu;
-            cm.MenuItems.Add(l.WordBoundary, delegate { textBox.SelectedText = "\\b"; });
-            cm.MenuItems.Add(l.NonWordBoundary, delegate { textBox.SelectedText = "\\B"; });
-            cm.MenuItems.Add(l.NewLine, delegate { textBox.SelectedText = "\\r\\n"; });
-            cm.MenuItems.Add(l.AnyDigit, delegate { textBox.SelectedText = "\\d"; });
-            cm.MenuItems.Add(l.NonDigit, delegate { textBox.SelectedText = "\\D"; });
-            cm.MenuItems.Add(l.AnyCharacter, delegate { textBox.SelectedText = "."; });
-            cm.MenuItems.Add(l.AnyWhitespace, delegate { textBox.SelectedText = "\\s"; });
-            cm.MenuItems.Add(l.NonSpaceCharacter, delegate { textBox.SelectedText = "\\S"; });
-            cm.MenuItems.Add(l.ZeroOrMore, delegate { textBox.SelectedText = "*"; });
-            cm.MenuItems.Add(l.OneOrMore, delegate { textBox.SelectedText = "+"; });
-            cm.MenuItems.Add(l.InCharacterGroup, delegate { textBox.SelectedText = "[test]"; });
-            cm.MenuItems.Add(l.NotInCharacterGroup, delegate { textBox.SelectedText = "[^test]"; });
-            return cm;
-        }
-
-        public static ContextMenu GetRegExContextMenu(ComboBox comboBox)
-        {
-            var cm = new ContextMenu();
-            var l = Configuration.Settings.Language.RegularExpressionContextMenu;
-            cm.MenuItems.Add(l.WordBoundary, delegate { comboBox.SelectedText = "\\b"; });
-            cm.MenuItems.Add(l.NonWordBoundary, delegate { comboBox.SelectedText = "\\B"; });
-            cm.MenuItems.Add(l.NewLine, delegate { comboBox.SelectedText = "\\r\\n"; });
-            cm.MenuItems.Add(l.AnyDigit, delegate { comboBox.SelectedText = "\\d"; });
-            cm.MenuItems.Add(l.NonDigit, delegate { comboBox.SelectedText = "\\D"; });
-            cm.MenuItems.Add(l.AnyCharacter, delegate { comboBox.SelectedText = "."; });
-            cm.MenuItems.Add(l.AnyWhitespace, delegate { comboBox.SelectedText = "\\s"; });
-            cm.MenuItems.Add(l.NonSpaceCharacter, delegate { comboBox.SelectedText = "\\S"; });
-            cm.MenuItems.Add(l.ZeroOrMore, delegate { comboBox.SelectedText = "*"; });
-            cm.MenuItems.Add(l.OneOrMore, delegate { comboBox.SelectedText = "+"; });
-            cm.MenuItems.Add(l.InCharacterGroup, delegate { comboBox.SelectedText = "[test]"; });
-            cm.MenuItems.Add(l.NotInCharacterGroup, delegate { comboBox.SelectedText = "[^test]"; });
+            cm.MenuItems.Add(l.WordBoundary, delegate { propertyInfo.SetValue(control, "\\b", null); });
+            cm.MenuItems.Add(l.NonWordBoundary, delegate { propertyInfo.SetValue(control, "\\B", null); });
+            cm.MenuItems.Add(l.NewLine, delegate { propertyInfo.SetValue(control, "\\r\\n", null); });
+            cm.MenuItems.Add(l.AnyDigit, delegate { propertyInfo.SetValue(control, "\\d", null); });
+            cm.MenuItems.Add(l.NonDigit, delegate { propertyInfo.SetValue(control, "\\D", null); });
+            cm.MenuItems.Add(l.AnyCharacter, delegate { propertyInfo.SetValue(control, ".", null); });
+            cm.MenuItems.Add(l.AnyWhitespace, delegate { propertyInfo.SetValue(control, "\\s", null); });
+            cm.MenuItems.Add(l.NonSpaceCharacter, delegate { propertyInfo.SetValue(control, "\\S", null); });
+            cm.MenuItems.Add(l.ZeroOrMore, delegate { propertyInfo.SetValue(control, "*", null); });
+            cm.MenuItems.Add(l.OneOrMore, delegate { propertyInfo.SetValue(control, "+", null); });
+            cm.MenuItems.Add(l.InCharacterGroup, delegate { propertyInfo.SetValue(control, "[test]", null); });
+            cm.MenuItems.Add(l.NotInCharacterGroup, delegate { propertyInfo.SetValue(control, "^[test]", null); });
             return cm;
         }
 
