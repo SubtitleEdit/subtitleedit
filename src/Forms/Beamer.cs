@@ -167,12 +167,6 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitleFontName = comboBoxSubtitleFont.SelectedItem.ToString();
             _subtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
             _borderWidth = float.Parse(comboBoxBorderWidth.SelectedItem.ToString());
-
-            Configuration.Settings.SubtitleBeaming.FontName = _subtitleFontName;
-            Configuration.Settings.SubtitleBeaming.FontSize = (int)_subtitleFontSize;
-            Configuration.Settings.SubtitleBeaming.FontColor = _subtitleColor;
-            Configuration.Settings.SubtitleBeaming.BorderColor = _borderColor;
-            Configuration.Settings.SubtitleBeaming.BorderWidth = (int)_borderWidth;
         }
 
         private Bitmap GenerateImageFromTextWithStyle(string text)
@@ -680,6 +674,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void BeamerFormClosing(object sender, FormClosingEventArgs e)
         {
             Cursor.Show();
+            // Save user-configurations.
+            Configuration.Settings.SubtitleBeaming.FontName = _subtitleFontName;
+            Configuration.Settings.SubtitleBeaming.FontSize = (int)_subtitleFontSize;
+            Configuration.Settings.SubtitleBeaming.FontColor = _subtitleColor;
+            Configuration.Settings.SubtitleBeaming.BorderColor = _borderColor;
+            Configuration.Settings.SubtitleBeaming.BorderWidth = (int)_borderWidth;
         }
 
         private void ComboBoxHAlignSelectedIndexChanged(object sender, EventArgs e)
