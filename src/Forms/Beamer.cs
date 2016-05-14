@@ -145,10 +145,18 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 var bmp = GenerateImageFromTextWithStyle(text);
                 pictureBox1.Top = groupBoxImageSettings.Top + groupBoxImageSettings.Height + 5;
-                pictureBox1.Left = 5;
-                if (comboBoxHAlign.SelectedIndex == 1) // center
+                // Aligment direction.
+                switch (comboBoxHAlign.SelectedIndex)
                 {
-                    pictureBox1.Left = ((groupBoxImageSettings.Width - bmp.Width) / 2);
+                    case 0: // Left.
+                        pictureBox1.Left = 5;
+                        break;
+                    case 1: // Center.
+                        pictureBox1.Left = ((groupBoxImageSettings.Width - bmp.Width) / 2);
+                        break;
+                    case 2: // Right.
+                        pictureBox1.Left = groupBoxImageSettings.Width - bmp.Width;
+                        break;
                 }
                 pictureBox1.Image = bmp;
                 pictureBox1.Height = bmp.Height;
