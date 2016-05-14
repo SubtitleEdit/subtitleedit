@@ -79,7 +79,8 @@
             this.comboBoxHAlign.FormattingEnabled = true;
             this.comboBoxHAlign.Items.AddRange(new object[] {
             "Left",
-            "Center"});
+            "Center",
+            "Right"});
             this.comboBoxHAlign.Location = new System.Drawing.Point(100, 78);
             this.comboBoxHAlign.Name = "comboBoxHAlign";
             this.comboBoxHAlign.Size = new System.Drawing.Size(121, 21);
