@@ -62,18 +62,22 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxBorderWidth.SelectedIndex = (int)_borderWidth;
             else
                 comboBoxBorderWidth.SelectedIndex = 2;
-            comboBoxHAlign.SelectedIndex = 1;
 
+            comboBoxHAlign.SelectedIndexChanged -= ComboBoxHAlignSelectedIndexChanged;
+            comboBoxHAlign.SelectedIndex = 1;
+            comboBoxHAlign.SelectedIndexChanged += ComboBoxHAlignSelectedIndexChanged;
+
+            comboBoxSubtitleFont.SelectedIndexChanged -= ComboBoxSubtitleFontSizeSelectedIndexChanged;
             foreach (var x in FontFamily.Families)
             {
                 comboBoxSubtitleFont.Items.Add(x.Name);
                 if (x.Name.Equals(_subtitleFontName, StringComparison.OrdinalIgnoreCase))
                     comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
             }
-            if (_subtitleFontSize > 10 && _subtitleFontSize < 100)
-                comboBoxSubtitleFontSize.SelectedIndex = (int)(_subtitleFontSize - 10);
-            else
-                comboBoxSubtitleFontSize.SelectedIndex = 40;
+            comboBoxSubtitleFont.SelectedIndexChanged += ComboBoxSubtitleFontSizeSelectedIndexChanged;
+
+            // Index 0 = Value: 10; Index 90 = Value: 100;
+            comboBoxSubtitleFontSize.SelectedIndex = (_subtitleFontSize >= 10 && _subtitleFontSize <= 100) ? (int)(_subtitleFontSize - 10) : 40;
             _isLoading = false;
             ShowCurrent();
         }
