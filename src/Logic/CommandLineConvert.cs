@@ -277,7 +277,7 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 if (matroska.IsValid)
                                 {
-                                    var tracks = matroska.GetTracks();
+                                    var tracks = matroska.GetTracks(true);
                                     if (tracks.Count > 0)
                                     {
                                         foreach (var track in tracks)
