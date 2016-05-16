@@ -32,6 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private FormattingType[] _formattingTypes;
+        private bool[] _autoSplit;
 
         private Encoding _screenScrapingEncoding;
 
@@ -159,6 +160,7 @@ namespace Nikse.SubtitleEdit.Forms
             _googleApiNotWorking = !Configuration.Settings.Tools.UseGooleApiPaidService; // google has closed their free api service :(
 
             _formattingTypes = new FormattingType[_subtitle.Paragraphs.Count];
+            _autoSplit = new bool[_subtitle.Paragraphs.Count];
         }
 
         private void buttonTranslate_Click(object sender, EventArgs e)
@@ -219,7 +221,7 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
                     Paragraph p = _subtitle.Paragraphs[i];
-                    string text = SetFormattingType(i, p.Text);
+                    string text = SetFormattingTypeAndSplitting(i, p.Text, (comboBoxFrom.SelectedItem as ComboBoxItem).Value.StartsWith("zh"));
                     text = string.Format("{1} {0} |", text, SplitterString);
                     if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
                     {
@@ -256,7 +258,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string SetFormattingType(int i, string text)
+        private string SetFormattingTypeAndSplitting(int i, string text, bool skipSplit)
         {
             text = text.Trim();
             if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && text.Contains("</i>" + Environment.NewLine + "<i>") && Utilities.GetNumberOfLines(text) == 2 && Utilities.CountTagInText(text, "<i>") == 1)
@@ -273,6 +275,19 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _formattingTypes[i] = FormattingType.None;
             }
+
+            if (skipSplit)
+            {
+                return text;
+            }
+
+            var lines = text.SplitToLines();
+            if (Configuration.Settings.Tools.TranslateAutoSplit && lines.Length == 2 && !string.IsNullOrEmpty(lines[0]) && (Utilities.AllLettersAndNumbers + ",").Contains(lines[0].Substring(lines[0].Length-1)))
+            {
+                _autoSplit[i] = true;
+                text = Utilities.RemoveLineBreaks(text);
+            }
+
             return text;
         }
 
@@ -313,6 +328,10 @@ namespace Nikse.SubtitleEdit.Forms
                     cleanText = cleanText.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
                     cleanText = cleanText.Replace(" </i>" + Environment.NewLine, "</i>" + Environment.NewLine);
 
+                    if (_autoSplit[index])
+                    {
+                        cleanText = Utilities.AutoBreakLine(cleanText);
+                    }
                     if (_formattingTypes[index] == FormattingType.ItalicTwoLines || _formattingTypes[index] == FormattingType.Italic)
                     {
                         _translatedSubtitle.Paragraphs[index].Text = "<i>" + cleanText + "</i>";
@@ -1001,7 +1020,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = string.Format("{1}{0}|", SetFormattingType(index, p.Text), SplitterString);
+                    string text = string.Format("{1}{0}|", SetFormattingTypeAndSplitting(index, p.Text, from.StartsWith("zh")), SplitterString);
                     if (!overQuota)
                     {
                         if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
@@ -1068,7 +1087,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = string.Format("{0} +-+", SetFormattingType(index, p.Text), SplitterString);
+                    string text = string.Format("{0} +-+", SetFormattingTypeAndSplitting(index, p.Text, from.StartsWith("zh")));
                     if (!overQuota)
                     {
                         if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)

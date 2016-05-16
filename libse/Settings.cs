@@ -92,6 +92,7 @@ namespace Nikse.SubtitleEdit.Core
         public string GoogleApiKey { get; set; }
         public bool UseGooleApiPaidService { get; set; }
         public string GoogleTranslateLastTargetLanguage { get; set; }
+        public bool TranslateAutoSplit { get; set; }
         public bool ListViewSyntaxColorDurationSmall { get; set; }
         public bool ListViewSyntaxColorDurationBig { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
@@ -185,6 +186,7 @@ namespace Nikse.SubtitleEdit.Core
             GoogleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
             UseGooleApiPaidService = false;
             GoogleTranslateLastTargetLanguage = "en";
+            TranslateAutoSplit = true;
             SpellCheckOneLetterWords = true;
             SpellCheckEnglishAllowInQuoteAsIng = false;
             SpellCheckShowCompletedMessage = true;
@@ -1611,6 +1613,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("GoogleTranslateLastTargetLanguage");
             if (subNode != null)
                 settings.Tools.GoogleTranslateLastTargetLanguage = subNode.InnerText;
+            subNode = node.SelectSingleNode("TranslateAutoSplit");
+            if (subNode != null)
+                settings.Tools.TranslateAutoSplit = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ListViewSyntaxColorDurationSmall");
             if (subNode != null)
                 settings.Tools.ListViewSyntaxColorDurationSmall = Convert.ToBoolean(subNode.InnerText);
@@ -2909,6 +2914,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);
                 textWriter.WriteElementString("UseGooleApiPaidService", settings.Tools.UseGooleApiPaidService.ToString());
                 textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
+                textWriter.WriteElementString("TranslateAutoSplit", settings.Tools.TranslateAutoSplit.ToString());
                 textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString());
                 textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString());
                 textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString());
