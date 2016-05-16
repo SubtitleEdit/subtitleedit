@@ -4,6 +4,7 @@
 * NEW:
    * Added new subtitle format - thx Oli
    * It's now possible to use "video offset" via "Video" menu
+   * Added support for spu/png OCR - thx claunia
 * IMPROVED:
    * Updated Finnish translation - thx Teijo S.
    * Updated Korean translation - thx domddol
@@ -39,6 +40,10 @@
    * Fixed broken link to German dictionary - thx be-sc
    * Fixed crash in OCR when changing "Use color" - thx kurosu
    * Fixed end-time for (some) TS files - thx kurosu
+   * Allow adding one letter words to spell check lists - thx Alexandra
+   * Fixed spell check+angled quotes - thx claunia
+   * Fixed reading of vertical alignment in (some) pac files - thx Ingo
+   * Fixed Matroska command line convert bug - thx KristjanLaane/xylographe
    * + Many minor fixes from ivandrofly and xylographe
 
 
