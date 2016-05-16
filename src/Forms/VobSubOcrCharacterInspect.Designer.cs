@@ -258,6 +258,7 @@
             this.Controls.Add(this.groupBoxCurrentCompareImage);
             this.Controls.Add(this.buttonOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "VobSubOcrCharacterInspect";
@@ -265,6 +266,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = " ";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubOcrCharacterInspect_KeyDown);
             this.groupBoxCurrentCompareImage.ResumeLayout(false);
             this.groupBoxCurrentCompareImage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCompareBitmapDouble)).EndInit();

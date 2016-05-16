@@ -3153,7 +3153,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (differencePercentage > 0)
                     {
-                        if ((hit.Text == "l" || hit.Text == "!") && bob.IsLowercaseI())
+                        bool dummy;
+                        if ((hit.Text == "l" || hit.Text == "!") && bob.IsLowercaseI(out dummy))
                         {
                             hit = null;
                         }
@@ -3195,9 +3196,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return new CompareMatch("'", false, 0, null);
             }
-            if (bob.IsLowercaseI())
+            if (bob.IsLowercaseJ()) // "j" detection must be before "i"
             {
-                return new CompareMatch("i", false, 0, null);
+                return new CompareMatch("j", false, 0, null); 
+            }
+            bool italicLowercaseI;
+            if (bob.IsLowercaseI(out italicLowercaseI))
+            {
+                return new CompareMatch("i", italicLowercaseI, 0, null);
             }
             if (bob.IsColon())
             {
