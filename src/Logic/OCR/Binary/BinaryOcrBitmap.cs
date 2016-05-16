@@ -294,7 +294,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
         }
 
 
-
         public bool IsPeriod()
         {
             if (ExpandCount > 0 || Y < 20)
@@ -337,11 +336,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             return true;
         }
 
-        public bool IsLowercaseI()
+        public bool IsLowercaseI(out bool italic)
         {
-            if (ExpandCount > 0 || Y > 20 || Height < Width + 10 || Width < 3 || Width > 17 || Height < 21 || Height > 50)
+            italic = false;
+            if (ExpandCount > 0 || Y > 20 || Height < Width + 10 || Width < 3 || Width > 20 || Height < 21 || Height > 60)
             {
                 return false;
+            }
+
+            if (Width > Height / 4)
+            {
+                if (GetPixel(1, 1) == 0 && GetPixel(2, 2) == 0 && GetPixel(Width - 1, Height - 1) == 0 && GetPixel(Width - 2, Height - 2) == 0)
+                {
+                    italic = true;
+                }
+                if (Height > 40 && (GetPixel(3, 3) == 1 || GetPixel(Width - 3, Height - 3) == 1))
+                {
+                    italic = false;
+                }
             }
 
             var transparentHorLines = new bool[Height];
@@ -374,6 +386,80 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             return false;
         }
 
+        /// <summary>
+        /// Detects a lowercase non-italic 'j'
+        /// </summary>
+        /// <returns>true if image is 'j'</returns>
+        public bool IsLowercaseJ()
+        {
+            if (ExpandCount > 0 || Y > 20 || Height < Width * 2 || Width < 5 || Width > 25 || Height < 21 || Height > 70)
+            {
+                return false;
+            }
+
+            var transparentHorLines = new bool[Height];
+            for (int y = 0; y < Height; y++)
+            {
+                transparentHorLines[y] = true;
+                for (int x = 0; x < Width; x++)
+                {
+                    if (GetPixel(x, y) != 0)
+                    {
+                        transparentHorLines[y] = false;
+                        break;
+                    }
+                }
+            }
+
+            // top should be filled
+            if (transparentHorLines[0] || transparentHorLines[1])
+                return false;
+
+            // bottom half should be filled
+            for (int i = 0; i < Height / 2; i++)
+            {
+                if (transparentHorLines[Height - i - 1])
+                    return false;
+            }
+
+            var top = Height / 7;
+            for (int i = 0; i < 6; i++)
+            {
+                if (transparentHorLines[top + i])
+                {
+                    top = top + i;
+
+                    // top left area should be free
+                    int freeXPixels = 0;
+                    for (int x = 0; x < Width; x++)
+                    {
+                        if (GetPixel(x, Height / 2) != 0)
+                        {
+                            break;
+                        }
+                        freeXPixels++;
+                    }
+                    if (freeXPixels < 3 || freeXPixels > Width * 0.67)
+                    {
+                        return false;
+                    }
+                    for (int y = top; y < Height * 0.67; y++)
+                    {
+                        for (int x = 0; x < freeXPixels; x++)
+                        {
+                            if (GetPixel(x, y) != 0)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public bool IsColon()
         {
             if (ExpandCount > 0 || Y < 5 || Y > 45 || Width > Height / 2 || Width < 3 || Width > 18 || Height < 14 || Height > 45)
@@ -381,7 +467,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 return false;
             }
 
-            if (NumberOfColoredPixels* 2 > Width * Height)
+            if (NumberOfColoredPixels * 2 > Width * Height)
             {
                 return false;
             }
@@ -401,7 +487,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             }
             if (transparentHorLines[0] || transparentHorLines[1] || transparentHorLines[2])
                 return false;
-            if (transparentHorLines[Height-1] || transparentHorLines[Height - 2] || transparentHorLines[Height - 3])
+            if (transparentHorLines[Height - 1] || transparentHorLines[Height - 2] || transparentHorLines[Height - 3])
                 return false;
 
             int startY = Height / 4;
@@ -490,7 +576,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                     }
                 }
             }
-            if (transparentHorLines[Height -1 ] || transparentHorLines[Height - 2])
+            if (transparentHorLines[Height - 1] || transparentHorLines[Height - 2])
                 return false;
             for (int i = 0; i < Height / 2; i++)
             {
@@ -590,7 +676,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                     return false;
             }
 
-            int halfWidth = Width/2 - 1;
+            int halfWidth = Width / 2 - 1;
             int halfHeight = Height / 2;
             int halfHeightM1 = halfHeight--;
             for (int x = halfWidth; x < Width; x++)
@@ -601,7 +687,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
 
             return true;
         }
-
 
         public bool IsO()
         {
@@ -659,7 +744,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
 
             int halfWidth = Width / 2 - 1;
             int halfHeight = Height / 2;
-            int runLength = Width/6;
+            int runLength = Width / 6;
             for (int x = halfWidth - runLength; x < halfWidth + runLength; x++)
             {
                 if (GetPixel(x, halfHeight - 1) != 0 ||

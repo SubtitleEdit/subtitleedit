@@ -394,5 +394,13 @@ namespace Nikse.SubtitleEdit.Forms
             labelCount.Text = listBoxInspectItems.Items.Count > 1 ? listBoxInspectItems.Items.Count.ToString(CultureInfo.InvariantCulture) : string.Empty;
         }
 
+        private void VobSubOcrCharacterInspect_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+        }
+
     }
 }
