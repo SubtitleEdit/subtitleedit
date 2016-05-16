@@ -62,18 +62,22 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxBorderWidth.SelectedIndex = (int)_borderWidth;
             else
                 comboBoxBorderWidth.SelectedIndex = 2;
-            comboBoxHAlign.SelectedIndex = 1;
 
+            comboBoxHAlign.SelectedIndexChanged -= ComboBoxHAlignSelectedIndexChanged;
+            comboBoxHAlign.SelectedIndex = 1;
+            comboBoxHAlign.SelectedIndexChanged += ComboBoxHAlignSelectedIndexChanged;
+
+            comboBoxSubtitleFont.SelectedIndexChanged -= ComboBoxSubtitleFontSizeSelectedIndexChanged;
             foreach (var x in FontFamily.Families)
             {
                 comboBoxSubtitleFont.Items.Add(x.Name);
                 if (x.Name.Equals(_subtitleFontName, StringComparison.OrdinalIgnoreCase))
                     comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
             }
-            if (_subtitleFontSize > 10 && _subtitleFontSize < 100)
-                comboBoxSubtitleFontSize.SelectedIndex = (int)(_subtitleFontSize - 10);
-            else
-                comboBoxSubtitleFontSize.SelectedIndex = 40;
+            comboBoxSubtitleFont.SelectedIndexChanged += ComboBoxSubtitleFontSizeSelectedIndexChanged;
+
+            // Index 0 = Value: 10; Index 90 = Value: 100;
+            comboBoxSubtitleFontSize.SelectedIndex = (_subtitleFontSize >= 10 && _subtitleFontSize <= 100) ? (int)(_subtitleFontSize - 10) : 40;
             _isLoading = false;
             ShowCurrent();
         }
@@ -145,10 +149,18 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 var bmp = GenerateImageFromTextWithStyle(text);
                 pictureBox1.Top = groupBoxImageSettings.Top + groupBoxImageSettings.Height + 5;
-                pictureBox1.Left = 5;
-                if (comboBoxHAlign.SelectedIndex == 1) // center
+                // Aligment direction.
+                switch (comboBoxHAlign.SelectedIndex)
                 {
-                    pictureBox1.Left = ((groupBoxImageSettings.Width - bmp.Width) / 2);
+                    case 0: // Left.
+                        pictureBox1.Left = 5;
+                        break;
+                    case 1: // Center.
+                        pictureBox1.Left = ((groupBoxImageSettings.Width - bmp.Width) / 2);
+                        break;
+                    case 2: // Right.
+                        pictureBox1.Left = groupBoxImageSettings.Width - bmp.Width;
+                        break;
                 }
                 pictureBox1.Image = bmp;
                 pictureBox1.Height = bmp.Height;
@@ -167,12 +179,6 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitleFontName = comboBoxSubtitleFont.SelectedItem.ToString();
             _subtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
             _borderWidth = float.Parse(comboBoxBorderWidth.SelectedItem.ToString());
-
-            Configuration.Settings.SubtitleBeaming.FontName = _subtitleFontName;
-            Configuration.Settings.SubtitleBeaming.FontSize = (int)_subtitleFontSize;
-            Configuration.Settings.SubtitleBeaming.FontColor = _subtitleColor;
-            Configuration.Settings.SubtitleBeaming.BorderColor = _borderColor;
-            Configuration.Settings.SubtitleBeaming.BorderWidth = (int)_borderWidth;
         }
 
         private Bitmap GenerateImageFromTextWithStyle(string text)
@@ -181,7 +187,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool subtitleAlignLeft = comboBoxHAlign.SelectedIndex == 0;
 
             // remove styles for display text (except italic)
-            text = RemoveSubStationAlphaFormatting(text);
+            text = Utilities.RemoveSsaTags(text);
             text = text.Replace("<b>", string.Empty);
             text = text.Replace("</b>", string.Empty);
             text = text.Replace("<B>", string.Empty);
@@ -422,20 +428,6 @@ namespace Nikse.SubtitleEdit.Forms
             var nbmp = new NikseBitmap(bmp);
             nbmp.CropTransparentSidesAndBottom(2, true);
             return nbmp.GetBitmap();
-        }
-
-        private static string RemoveSubStationAlphaFormatting(string s)
-        {
-            int indexOfBegin = s.IndexOf('{');
-            while (indexOfBegin >= 0)
-            {
-                int indexOfEnd = s.IndexOf('}', indexOfBegin + 1);
-                if (indexOfEnd < indexOfBegin)
-                    break;
-                s = s.Remove(indexOfBegin, indexOfEnd - indexOfBegin + 1);
-                indexOfBegin = s.IndexOf('{', indexOfBegin);
-            }
-            return s;
         }
 
         private void Timer1Tick(object sender, EventArgs e)
@@ -680,6 +672,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void BeamerFormClosing(object sender, FormClosingEventArgs e)
         {
             Cursor.Show();
+            // Save user-configurations.
+            Configuration.Settings.SubtitleBeaming.FontName = _subtitleFontName;
+            Configuration.Settings.SubtitleBeaming.FontSize = (int)_subtitleFontSize;
+            Configuration.Settings.SubtitleBeaming.FontColor = _subtitleColor;
+            Configuration.Settings.SubtitleBeaming.BorderColor = _borderColor;
+            Configuration.Settings.SubtitleBeaming.BorderWidth = (int)_borderWidth;
         }
 
         private void ComboBoxHAlignSelectedIndexChanged(object sender, EventArgs e)
