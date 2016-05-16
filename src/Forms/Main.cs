@@ -2159,6 +2159,22 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
+                    var f = new DlDd();
+                    var list = new List<string>(File.ReadAllLines(fileName, LanguageAutoDetect.GetEncodingFromFile(fileName)));
+                    if (f.IsMine(list, fileName))
+                    {
+                        f.LoadSubtitle(_subtitle, list, fileName);
+                        _oldSubtitleFormat = f;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+                if (format == null)
+                {
                     try
                     {
                         var bdnXml = new BdnXml();
@@ -5162,6 +5178,35 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             Encoding encoding;
                             format = subtitleToAppend.LoadSubtitle(fileName, out encoding, null);
+
+                            if (format == null)
+                            {
+                                var ebu = new Ebu();
+                                if (ebu.IsMine(null, fileName))
+                                {
+                                    ebu.LoadSubtitle(subtitleToAppend, null, fileName);
+                                    format = ebu;
+                                }
+                            }
+                            if (format == null)
+                            {
+                                var pac = new Pac();
+                                if (pac.IsMine(null, fileName))
+                                {
+                                    pac.LoadSubtitle(subtitleToAppend, null, fileName);
+                                    format = pac;
+                                }
+                            }
+                            if (format == null)
+                            {
+                                var cavena890 = new Cavena890();
+                                if (cavena890.IsMine(null, fileName))
+                                {
+                                    cavena890.LoadSubtitle(subtitleToAppend, null, fileName);
+                                    format = cavena890;
+                                }
+                            }
+
                             if (GetCurrentSubtitleFormat().IsFrameBased)
                                 subtitleToAppend.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                             else
@@ -18312,8 +18357,7 @@ namespace Nikse.SubtitleEdit.Forms
             ReloadFromSourceView();
             using (var joinSubtitles = new JoinSubtitles())
             {
-                if (joinSubtitles.ShowDialog(this) == DialogResult.OK
-                    && joinSubtitles.JoinedSubtitle != null && joinSubtitles.JoinedSubtitle.Paragraphs.Count > 0 && ContinueNewOrExit())
+                if (joinSubtitles.ShowDialog(this) == DialogResult.OK && joinSubtitles.JoinedSubtitle != null && joinSubtitles.JoinedSubtitle.Paragraphs.Count > 0 && ContinueNewOrExit())
                 {
                     MakeHistoryForUndo(_language.BeforeDisplaySubtitleJoin);
 

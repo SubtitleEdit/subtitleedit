@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class JoinSubtitles : PositionAndSizeForm
     {
-        private List<string> _fileNamesToJoin = new List<string>();
+        private readonly List<string> _fileNamesToJoin = new List<string>();
         public Subtitle JoinedSubtitle { get; set; }
         public SubtitleFormat JoinedFormat { get; private set; }
 
@@ -93,6 +93,35 @@ namespace Nikse.SubtitleEdit.Forms
                     var sub = new Subtitle();
                     Encoding encoding;
                     var format = sub.LoadSubtitle(fileName, out encoding, null);
+
+                    if (format == null)
+                    {
+                        var ebu = new Ebu();
+                        if (ebu.IsMine(null, fileName))
+                        {
+                            ebu.LoadSubtitle(sub, null, fileName);
+                            format = ebu;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var pac = new Pac();
+                        if (pac.IsMine(null, fileName))
+                        {
+                            pac.LoadSubtitle(sub, null, fileName);
+                            format = pac;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var cavena890 = new Cavena890();
+                        if (cavena890.IsMine(null, fileName))
+                        {
+                            cavena890.LoadSubtitle(sub, null, fileName);
+                            format = cavena890;
+                        }
+                    }
+
                     if (format == null)
                     {
                         for (int j = k; j < _fileNamesToJoin.Count; j++)
@@ -143,7 +172,7 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 0;
             foreach (string fileName in _fileNamesToJoin)
             {
-                Subtitle sub = subtitles[i];
+                var sub = subtitles[i];
                 var lvi = new ListViewItem(string.Format("{0:#,###,###}", sub.Paragraphs.Count));
                 if (sub.Paragraphs.Count > 0)
                 {
@@ -162,11 +191,11 @@ namespace Nikse.SubtitleEdit.Forms
             listViewParts.EndUpdate();
 
             JoinedSubtitle = new Subtitle();
-            if (JoinedFormat.FriendlyName != SubRip.NameOfFormat)
+            if (JoinedFormat != null && JoinedFormat.FriendlyName != SubRip.NameOfFormat)
                 JoinedSubtitle.Header = header;
-            foreach (Subtitle sub in subtitles)
+            foreach (var sub in subtitles)
             {
-                foreach (Paragraph p in sub.Paragraphs)
+                foreach (var p in sub.Paragraphs)
                 {
                     JoinedSubtitle.Paragraphs.Add(p);
                 }
