@@ -1462,10 +1462,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string GetCurrentWordListLanguage()
         {
             var cb = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
-            if (cb != null)
-                return cb.CultureInfo.Name.Replace('-', '_');
-
-            return null;
+            return cb?.CultureInfo.Name.Replace('-', '_');
         }
 
         private void ButtonAddNamesEtcClick(object sender, EventArgs e)
@@ -2322,7 +2319,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool IsShortcutValid()
         {
-            if (treeViewShortcuts.SelectedNode == null || !treeViewShortcuts.SelectedNode.Text.Contains('[') )
+            if (treeViewShortcuts.SelectedNode == null || !treeViewShortcuts.SelectedNode.Text.Contains('['))
             {
                 return false;
             }
@@ -2349,7 +2346,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     return false;
                 }
-            }         
+            }
             return true;
         }
 
