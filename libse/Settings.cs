@@ -596,7 +596,7 @@ namespace Nikse.SubtitleEdit.Core
             SubtitleBackgroundColor = Color.White;
             CenterSubtitleInTextBox = false;
             DefaultSubtitleFormat = "SubRip";
-            DefaultEncoding = Encoding.UTF8.EncodingName;
+            DefaultEncoding = Encoding.UTF8.WebName;
             AutoConvertToUtf8 = false;
             AutoGuessAnsiEncoding = false;
             ShowRecentFiles = true;
@@ -1140,7 +1140,7 @@ namespace Nikse.SubtitleEdit.Core
                     settings = CustomDeserialize(settingsFileName); //  15 msecs
 
                     if (settings.General.AutoConvertToUtf8)
-                        settings.General.DefaultEncoding = Encoding.UTF8.EncodingName;
+                        settings.General.DefaultEncoding = Encoding.UTF8.WebName;
                 }
                 catch
                 {

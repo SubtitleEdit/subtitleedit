@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,19 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             _title = title;
 
-            comboBoxEncoding.Items.Clear();
-            int encodingSelectedIndex = 0;
-            comboBoxEncoding.Items.Add(Encoding.UTF8.EncodingName);
-            foreach (var encoding in Configuration.AvailableEncodings)
-            {
-                if (encoding.CodePage >= 949 && encoding.CodePage != 1047 && !encoding.EncodingName.Contains("EBCDIC") && !encoding.WebName.Equals(Encoding.UTF8.WebName))
-                {
-                    comboBoxEncoding.Items.Add(encoding.CodePage + ": " + encoding.EncodingName);
-                    if (encoding.WebName == Configuration.Settings.General.DefaultEncoding)
-                        encodingSelectedIndex = comboBoxEncoding.Items.Count - 1;
-                }
-            }
-            comboBoxEncoding.SelectedIndex = encodingSelectedIndex;
+            UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
 
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.ExportCustomTemplates))
             {
@@ -183,18 +172,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Encoding GetCurrentEncoding()
         {
-            if (comboBoxEncoding.Text == Encoding.UTF8.BodyName || comboBoxEncoding.Text == Encoding.UTF8.EncodingName || comboBoxEncoding.Text == "utf-8")
-            {
-                return Encoding.UTF8;
-            }
-
-            foreach (var encoding in Configuration.AvailableEncodings)
-            {
-                if (encoding.CodePage + ": " + encoding.EncodingName == comboBoxEncoding.Text)
-                    return encoding;
-            }
-
-            return Encoding.UTF8;
+            return UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding);
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
