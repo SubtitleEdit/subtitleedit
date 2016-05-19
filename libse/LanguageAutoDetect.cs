@@ -579,9 +579,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 foreach (var enc in Configuration.AvailableEncodings)
                 {
-                    if (enc.CodePage + ": " + enc.EncodingName == Configuration.Settings.General.DefaultEncoding &&
-                        enc.WebName != Encoding.UTF8.WebName &&
-                        enc.WebName != Encoding.Unicode.WebName)
+                    if (enc.WebName == Configuration.Settings.General.DefaultEncoding && enc.WebName != Encoding.Unicode.WebName && enc.WebName != Encoding.UTF8.WebName)
                     {
                         encoding = enc;
                         break;
@@ -618,7 +616,7 @@ namespace Nikse.SubtitleEdit.Core
                         {
                             encoding = Encoding.UTF8;
                         }
-                        else if (couldBeUtf8 && Configuration.Settings.General.DefaultEncoding == Encoding.UTF8.BodyName)
+                        else if (couldBeUtf8 && Configuration.Settings.General.DefaultEncoding == Encoding.UTF8.WebName)
                         { // keep utf-8 encoding if it's default
                             encoding = Encoding.UTF8;
                         }

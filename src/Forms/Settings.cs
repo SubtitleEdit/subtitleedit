@@ -96,19 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxShowFrameRate.Checked = gs.ShowFrameRate;
             comboBoxFrameRate.Text = gs.DefaultFrameRate.ToString(CultureInfo.CurrentCulture);
 
-            comboBoxEncoding.Items.Clear();
-            int encodingSelectedIndex = 0;
-            comboBoxEncoding.Items.Add(Encoding.UTF8.EncodingName);
-            foreach (var encoding in Configuration.AvailableEncodings)
-            {
-                if (encoding.CodePage >= 949 && encoding.CodePage != 1047 && !encoding.EncodingName.Contains("EBCDIC") && !encoding.WebName.Equals(Encoding.UTF8.WebName))
-                {
-                    comboBoxEncoding.Items.Add(encoding.CodePage + ": " + encoding.EncodingName);
-                    if (encoding.WebName == gs.DefaultEncoding || encoding.CodePage + ": " + encoding.EncodingName == gs.DefaultEncoding)
-                        encodingSelectedIndex = comboBoxEncoding.Items.Count - 1;
-                }
-            }
-            comboBoxEncoding.SelectedIndex = encodingSelectedIndex;
+            UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
 
             checkBoxAutoDetectAnsiEncoding.Checked = gs.AutoGuessAnsiEncoding;
             comboBoxSubtitleFontSize.Text = gs.SubtitleFontSize.ToString(CultureInfo.InvariantCulture);
@@ -1065,12 +1053,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (double.TryParse(comboBoxFrameRate.Text.Replace(',', '.').Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out outFrameRate))
                 gs.DefaultFrameRate = outFrameRate;
 
-            gs.DefaultEncoding = Encoding.UTF8.BodyName;
-            foreach (var encoding in Configuration.AvailableEncodings)
-            {
-                if (encoding.CodePage + ": " + encoding.EncodingName == comboBoxEncoding.Text)
-                    gs.DefaultEncoding = comboBoxEncoding.Text;
-            }
+            gs.DefaultEncoding = UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding).WebName;
 
             gs.AutoGuessAnsiEncoding = checkBoxAutoDetectAnsiEncoding.Checked;
             gs.SubtitleFontSize = int.Parse(comboBoxSubtitleFontSize.Text);
