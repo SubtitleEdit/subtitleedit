@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -13,11 +15,13 @@ namespace Nikse.SubtitleEdit.Core
         private readonly string _baseDir;
         private readonly string _dataDir;
         private readonly Lazy<Settings> _settings;
+        private readonly IEnumerable<Encoding> _encodings;
 
         private Configuration()
         {
             _baseDir = GetBaseDirectory();
             _dataDir = GetDataDirectory();
+            _encodings = GetAvailableEncodings();
             _settings = new Lazy<Settings>(Settings.GetSettings);
         }
 
@@ -165,6 +169,14 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static IEnumerable<Encoding> AvailableEncodings
+        {
+            get
+            {
+                return Instance.Value._encodings;
+            }
+        }
+
         private static string GetInstallerPath()
         {
             const string valueName = "InstallLocation";
@@ -243,6 +255,23 @@ namespace Nikse.SubtitleEdit.Core
             {
                 throw new Exception("Please re-install Subtitle Edit (installer version)");
             }
+        }
+
+        private static IEnumerable<Encoding> GetAvailableEncodings()
+        {
+            var encodings = new List<Encoding>();
+            foreach (var ei in Encoding.GetEncodings())
+            {
+                try
+                {
+                    encodings.Add(Encoding.GetEncoding(ei.CodePage));
+                }
+                catch
+                {
+                    // though advertised, this code page is not supported
+                }
+            }
+            return encodings.ToArray();
         }
 
     }
