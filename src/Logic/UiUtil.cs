@@ -393,6 +393,50 @@ namespace Nikse.SubtitleEdit.Logic
             label.Text = sb.ToString();
         }
 
+        public static void InitializeTextEncodingComboBox(ComboBox comboBox)
+        {
+            var defaultEncoding = Configuration.Settings.General.DefaultEncoding;
+            var selectedItem = (TextEncodingListItem)null;
+            comboBox.BeginUpdate();
+            comboBox.Items.Clear();
+            using (var graphics = comboBox.CreateGraphics())
+            {
+                var maxWidth = 0.0F;
+                foreach (var encoding in Configuration.AvailableEncodings)
+                {
+                    if (encoding.CodePage >= 949 && encoding.CodePage != 1047 && !encoding.EncodingName.Contains("EBCDIC"))
+                    {
+                        var item = new TextEncodingListItem(encoding);
+                        if (selectedItem == null && item.Equals(defaultEncoding))
+                            selectedItem = item;
+                        var width = graphics.MeasureString(item.DisplayName, comboBox.Font).Width;
+                        if (width > maxWidth)
+                            maxWidth = width;
+                        if (encoding.CodePage.Equals(Encoding.UTF8.CodePage))
+                            comboBox.Items.Insert(0, item);
+                        else
+                            comboBox.Items.Add(item);
+                    }
+                }
+                comboBox.DropDownWidth = (int)Math.Round(maxWidth + 7.5);
+            }
+            if (selectedItem == null)
+                comboBox.SelectedIndex = 0; // UTF-8 if DefaultEncoding is not found
+            else
+                comboBox.SelectedItem = selectedItem;
+            comboBox.EndUpdate();
+            Configuration.Settings.General.DefaultEncoding = (comboBox.SelectedItem as TextEncodingListItem).Encoding.WebName;
+        }
+
+        public static Encoding GetTextEncodingComboBoxCurrentEncoding(ComboBox comboBox)
+        {
+            if (comboBox.SelectedIndex > 0)
+            {
+                return (comboBox.SelectedItem as TextEncodingListItem).Encoding;
+            }
+            return Encoding.UTF8;
+        }
+
         private const string BreakChars = "\",:;.¡!¿?()[]{}<>♪♫-–—/#*|";
 
         public static void ApplyControlBackspace(TextBox textBox)
