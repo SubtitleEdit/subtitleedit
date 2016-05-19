@@ -22,13 +22,13 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
         /// </summary>
         static EncodingTools()
         {
-            List<int> streamEcodings = new List<int>();
+            List<int> streamEncodings = new List<int>();
             List<int> allEncodings = new List<int>();
-            List<int> mimeEcodings = new List<int>();
+            List<int> mimeEncodings = new List<int>();
 
             // asscii - most simple so put it in first place...
-            streamEcodings.Add(Encoding.ASCII.CodePage);
-            mimeEcodings.Add(Encoding.ASCII.CodePage);
+            streamEncodings.Add(Encoding.ASCII.CodePage);
+            mimeEncodings.Add(Encoding.ASCII.CodePage);
             allEncodings.Add(Encoding.ASCII.CodePage);
 
             // add default 2nd for all encodings
@@ -37,66 +37,61 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
             if (Encoding.Default.IsSingleByte)
             {
                 // put it in second place
-                streamEcodings.Add(Encoding.Default.CodePage);
-                mimeEcodings.Add(Encoding.Default.CodePage);
+                streamEncodings.Add(Encoding.Default.CodePage);
+                mimeEncodings.Add(Encoding.Default.CodePage);
             }
 
             // prefer JIS over JIS-SHIFT (JIS is detected better than JIS-SHIFT)
             // this one does include cyrilic (strange but true)
             allEncodings.Add(50220);
-            mimeEcodings.Add(50220);
+            mimeEncodings.Add(50220);
 
             // always allow unicode flavours for streams (they all have a preamble)
-            streamEcodings.Add(Encoding.Unicode.CodePage);
-            foreach (EncodingInfo enc in Encoding.GetEncodings())
+            streamEncodings.Add(Encoding.Unicode.CodePage);
+            foreach (var encoding in Configuration.AvailableEncodings)
             {
-                if (!streamEcodings.Contains(enc.CodePage))
+                if (!streamEncodings.Contains(encoding.CodePage))
                 {
-                    Encoding encoding = Encoding.GetEncoding(enc.CodePage);
                     if (encoding.GetPreamble().Length > 0)
-                        streamEcodings.Add(enc.CodePage);
+                        streamEncodings.Add(encoding.CodePage);
                 }
             }
 
             // stream is done here
-            PreferredEncodingsForStream = streamEcodings.ToArray();
+            PreferredEncodingsForStream = streamEncodings.ToArray();
 
             // all singlebyte encodings
-            foreach (EncodingInfo enc in Encoding.GetEncodings())
+            foreach (var encoding in Configuration.AvailableEncodings)
             {
-                if (!enc.GetEncoding().IsSingleByte)
-                    continue;
-
-                if (!allEncodings.Contains(enc.CodePage))
-                    allEncodings.Add(enc.CodePage);
-
-                // only add iso and IBM encodings to mime encodings
-                if (enc.CodePage <= 1258)
+                if (encoding.IsSingleByte)
                 {
-                    mimeEcodings.Add(enc.CodePage);
+                    if (!allEncodings.Contains(encoding.CodePage))
+                        allEncodings.Add(encoding.CodePage);
+
+                    // only add iso and IBM encodings to mime encodings
+                    if (encoding.CodePage <= 1258)
+                        mimeEncodings.Add(encoding.CodePage);
                 }
             }
 
             // add the rest (multibyte)
-            foreach (EncodingInfo enc in Encoding.GetEncodings())
+            foreach (var encoding in Configuration.AvailableEncodings)
             {
-                if (!enc.GetEncoding().IsSingleByte)
+                if (!encoding.IsSingleByte)
                 {
-                    if (!allEncodings.Contains(enc.CodePage))
-                        allEncodings.Add(enc.CodePage);
+                    if (!allEncodings.Contains(encoding.CodePage))
+                        allEncodings.Add(encoding.CodePage);
 
                     // only add iso and IBM encodings to mime encodings
-                    if (enc.CodePage <= 1258)
-                    {
-                        mimeEcodings.Add(enc.CodePage);
-                    }
+                    if (encoding.CodePage <= 1258)
+                        mimeEncodings.Add(encoding.CodePage);
                 }
             }
 
             // add unicodes
-            mimeEcodings.Add(Encoding.Unicode.CodePage);
+            mimeEncodings.Add(Encoding.Unicode.CodePage);
 
-            PreferredEncodings = mimeEcodings.ToArray();
+            PreferredEncodings = mimeEncodings.ToArray();
         }
 
         /// <summary>
@@ -338,7 +333,7 @@ namespace Nikse.SubtitleEdit.Core.DetectEncoding
         }
 
         /// <summary>
-        /// Rerurns up to maxEncodings codpages that are assumed to be apropriate
+        /// Returns up to maxEncodings codepages that are assumed to be apropriate
         /// </summary>
         /// <param name="input">array containing the raw data</param>
         /// <param name="maxEncodings">maxiumum number of encodings to detect</param>

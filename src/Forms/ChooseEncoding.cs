@@ -54,12 +54,12 @@ namespace Nikse.SubtitleEdit.Forms
                 _fileBuffer = new byte[0];
             }
 
-            Encoding encoding = LanguageAutoDetect.DetectAnsiEncoding(_fileBuffer);
-            foreach (EncodingInfo ei in Encoding.GetEncodings())
+            var encoding = LanguageAutoDetect.DetectAnsiEncoding(_fileBuffer);
+            foreach (var enc in Configuration.AvailableEncodings)
             {
-                var item = new ListViewItem(new[] { ei.CodePage.ToString(), ei.Name, ei.DisplayName });
+                var item = new ListViewItem(new[] { enc.CodePage.ToString(), enc.WebName, enc.EncodingName });
                 listView1.Items.Add(item);
-                if (ei.CodePage == encoding.CodePage)
+                if (enc.CodePage == encoding.CodePage)
                     item.Selected = true;
             }
 
