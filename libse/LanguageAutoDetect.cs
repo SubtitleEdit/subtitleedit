@@ -577,13 +577,13 @@ namespace Nikse.SubtitleEdit.Core
 
             try
             {
-                foreach (EncodingInfo ei in Encoding.GetEncodings())
+                foreach (var enc in Configuration.AvailableEncodings)
                 {
-                    if (ei.CodePage + ": " + ei.DisplayName == Configuration.Settings.General.DefaultEncoding &&
-                        ei.Name != Encoding.UTF8.BodyName &&
-                        ei.Name != Encoding.Unicode.BodyName)
+                    if (enc.CodePage + ": " + enc.EncodingName == Configuration.Settings.General.DefaultEncoding &&
+                        enc.WebName != Encoding.UTF8.WebName &&
+                        enc.WebName != Encoding.Unicode.WebName)
                     {
-                        encoding = ei.GetEncoding();
+                        encoding = enc;
                         break;
                     }
                 }

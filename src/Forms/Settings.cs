@@ -99,12 +99,12 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxEncoding.Items.Clear();
             int encodingSelectedIndex = 0;
             comboBoxEncoding.Items.Add(Encoding.UTF8.EncodingName);
-            foreach (var ei in Encoding.GetEncodings())
+            foreach (var encoding in Configuration.AvailableEncodings)
             {
-                if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= 949 && !ei.DisplayName.Contains("EBCDIC") && ei.CodePage != 1047)
+                if (encoding.CodePage >= 949 && encoding.CodePage != 1047 && !encoding.EncodingName.Contains("EBCDIC") && !encoding.WebName.Equals(Encoding.UTF8.WebName))
                 {
-                    comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
-                    if (ei.Name == gs.DefaultEncoding || ei.CodePage + ": " + ei.DisplayName == gs.DefaultEncoding)
+                    comboBoxEncoding.Items.Add(encoding.CodePage + ": " + encoding.EncodingName);
+                    if (encoding.WebName == gs.DefaultEncoding || encoding.CodePage + ": " + encoding.EncodingName == gs.DefaultEncoding)
                         encodingSelectedIndex = comboBoxEncoding.Items.Count - 1;
                 }
             }
@@ -1066,9 +1066,9 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.DefaultFrameRate = outFrameRate;
 
             gs.DefaultEncoding = Encoding.UTF8.BodyName;
-            foreach (var ei in Encoding.GetEncodings())
+            foreach (var encoding in Configuration.AvailableEncodings)
             {
-                if (ei.CodePage + ": " + ei.DisplayName == comboBoxEncoding.Text)
+                if (encoding.CodePage + ": " + encoding.EncodingName == comboBoxEncoding.Text)
                     gs.DefaultEncoding = comboBoxEncoding.Text;
             }
 
