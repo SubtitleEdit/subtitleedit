@@ -78,13 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 radioButtonCharacters.Checked = true;
 
-            foreach (SubtitleFormat f in SubtitleFormat.AllSubtitleFormats)
-            {
-                if (!f.IsVobSubIndexFile)
-                    comboBoxSubtitleFormats.Items.Add(f.FriendlyName);
-                if (f.FriendlyName == format.FriendlyName)
-                    comboBoxSubtitleFormats.SelectedIndex = comboBoxSubtitleFormats.Items.Count - 1;
-            }
+            UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, format.FriendlyName);
 
             UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
 

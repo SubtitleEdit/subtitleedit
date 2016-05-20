@@ -397,7 +397,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static void InitializeSubtitleFormatComboBox(ToolStripComboBox comboBox, SubtitleFormat format)
         {
             InitializeSubtitleFormatComboBox(comboBox.ComboBox, format);
-            comboBox.DropDownWidth += 5;
+            comboBox.DropDownWidth += 5; // .Net quirk?
         }
 
         public static void InitializeSubtitleFormatComboBox(ComboBox comboBox, SubtitleFormat format)
@@ -408,7 +408,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static void InitializeSubtitleFormatComboBox(ToolStripComboBox comboBox, string selectedName)
         {
             InitializeSubtitleFormatComboBox(comboBox.ComboBox, selectedName);
-            comboBox.DropDownWidth += 5;
+            comboBox.DropDownWidth += 5; // .Net quirk?
         }
 
         public static void InitializeSubtitleFormatComboBox(ComboBox comboBox, string selectedName)

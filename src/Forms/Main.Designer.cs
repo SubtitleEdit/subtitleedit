@@ -794,9 +794,7 @@
             // 
             this.comboBoxSubtitleFormats.DropDownHeight = 215;
             this.comboBoxSubtitleFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxSubtitleFormats.DropDownWidth = 230;
             this.comboBoxSubtitleFormats.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
-            this.comboBoxSubtitleFormats.IntegralHeight = false;
             this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
             this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(150, 40);
             this.comboBoxSubtitleFormats.DropDown += new System.EventHandler(this.MenuOpened);
