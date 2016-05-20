@@ -142,30 +142,20 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonCancel);
 
             _allFormats = new List<SubtitleFormat> { new Pac() };
-            int selectedFormatIndex = 0;
             var formatNames = new List<string>();
-            foreach (var f in SubtitleFormat.AllSubtitleFormats)
+            foreach (var format in SubtitleFormat.AllSubtitleFormats)
             {
-                if (!f.IsVobSubIndexFile)
+                if (!format.IsVobSubIndexFile)
                 {
-                    formatNames.Add(f.Name);
-                    _allFormats.Add(f);
+                    formatNames.Add(format.Name);
+                    _allFormats.Add(format);
                 }
             }
             formatNames.Add(new Ayato().Name);
             formatNames.Add(l.PlainText);
             formatNames.Add(BluRaySubtitle);
             formatNames.Add(VobSubSubtitle);
-            for (int index = 0; index < formatNames.Count; index++)
-            {
-                var name = formatNames[index];
-                comboBoxSubtitleFormats.Items.Add(name);
-                if (Configuration.Settings.Tools.BatchConvertFormat == name)
-                {
-                    selectedFormatIndex = index;
-                }
-            }
-            comboBoxSubtitleFormats.SelectedIndex = selectedFormatIndex;
+            UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, formatNames, Configuration.Settings.Tools.BatchConvertFormat);
 
             UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
 
