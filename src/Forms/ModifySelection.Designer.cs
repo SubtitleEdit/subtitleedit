@@ -133,7 +133,6 @@
             this.checkBoxCaseSensitive.TabIndex = 2;
             this.checkBoxCaseSensitive.Text = "Case sensitive";
             this.checkBoxCaseSensitive.UseVisualStyleBackColor = true;
-            this.checkBoxCaseSensitive.CheckedChanged += new System.EventHandler(this.checkBoxCaseSensitive_CheckedChanged);
             // 
             // textBox1
             // 

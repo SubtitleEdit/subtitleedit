@@ -54,8 +54,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.RegEx);
             comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.UnequalLines);
             comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.EqualLines);
-
             checkBoxCaseSensitive.Checked = Configuration.Settings.Tools.ModifySelectionCaseSensitive;
+            checkBoxCaseSensitive.CheckedChanged += checkBoxCaseSensitive_CheckedChanged;
             textBox1.Text = Configuration.Settings.Tools.ModifySelectionText;
             if (Configuration.Settings.Tools.ModifySelectionRule == "Starts with")
                 comboBoxRule.SelectedIndex = FunctionStartsWith;
