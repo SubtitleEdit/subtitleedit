@@ -186,15 +186,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (startIndex < 0)
                 return list;
 
-            startIndex += tag.Length + 4;
-
-            string res = s.Substring(startIndex);
-
-            int tagLevel = 1;
-            int nextTag = 0;
+            startIndex += tag.Length + 2;
+            string res = s.Substring(startIndex).TrimStart().TrimStart(':').TrimStart(); //.TrimStart('[').TrimStart();
+            int tagLevel = 1;            
             int oldStart = 0;
+            if (oldStart < res.Length && res[oldStart] == '[')
+            {
+                oldStart++;
+            }
+            int nextTag = oldStart;
             while (tagLevel >= 1 && nextTag >= 0 && nextTag + 1 < res.Length)
             {
+                while (oldStart < res.Length && res[oldStart] == ' ')
+                {
+                    oldStart++;
+                }
+
                 if (res[oldStart] == '"')
                 {
                     nextTag = res.IndexOf('"', oldStart + 1);
@@ -206,7 +213,35 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         string newValue = res.Substring(oldStart, nextTag - oldStart);
                         list.Add(newValue.Remove(0, 1));
-                        oldStart = nextTag + 2;
+                        oldStart = nextTag + 1;
+                        while (oldStart < res.Length && "\r\n\t ".Contains(res[oldStart]))
+                        {
+                            oldStart++;
+                        }
+                        if (oldStart < res.Length && res[oldStart] == ']')
+                        {
+                            oldStart++;
+                        }
+                        while (oldStart < res.Length && "\r\n\t ".Contains(res[oldStart]))
+                        {
+                            oldStart++;
+                        }
+                        if (oldStart < res.Length && res[oldStart] == ',')
+                        {
+                            oldStart++;
+                        }
+                        while (oldStart < res.Length && "\r\n\t ".Contains(res[oldStart]))
+                        {
+                            oldStart++;
+                        }
+                        if (oldStart < res.Length && res[oldStart] == '[')
+                        {
+                            oldStart++;
+                        }
+                        while (oldStart < res.Length && "\r\n\t ".Contains(res[oldStart]))
+                        {
+                            oldStart++;
+                        }
                     }
                 }
                 else if (res[oldStart] != '[' && res[oldStart] != ']')
