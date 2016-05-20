@@ -814,7 +814,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int columnRest = left % 4;
             int column = left - columnRest;
 
-            List<string> columnCodes = null;
+            List<string> columnCodes;
             switch (column)
             {
                 case 0:
@@ -838,7 +838,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 case 24:
                     columnCodes = new List<string> { "dc", "7c", "dc", "7c", "dc", "7c", "dc", "7c", "dc", "7c", "dc", "dc", "7c", "dc", "7c" };
                     break;
-                case 28:
+                default: // 28
                     columnCodes = new List<string> { "5e", "fe", "5e", "fe", "5e", "fe", "5e", "fe", "5e", "fe", "5e", "5e", "fe", "5e", "fe" };
                     break;
             }
@@ -1613,7 +1613,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (text == "942c 942c" || text == "942c")
                     {
-                        p.EndTime = new TimeCode(startTime.TotalMilliseconds);
+                        if (p != null)
+                        {
+                            p.EndTime = new TimeCode(startTime.TotalMilliseconds);                            
+                        }
                     }
                     else
                     {
@@ -1626,7 +1629,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 p = subtitle.GetParagraphOrDefault(i);
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
-                if (p != null && next != null && p.EndTime.TotalMilliseconds == p.StartTime.TotalMilliseconds)
+                if (p != null && next != null && Math.Abs(p.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) < 0.001)
                     p.EndTime = new TimeCode(next.StartTime.TotalMilliseconds);
                 if (next != null && string.IsNullOrEmpty(next.Text))
                     subtitle.Paragraphs.Remove(next);
@@ -1651,7 +1654,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string part = parts[k];
                 if (part.Length == 4)
                 {
-                    if (part != "94ae" && part != "9420" && part != "94ad" && part != "9426")
+                    if (part != "94ae" && part != "9420" && part != "94ad" && part != "9426" && part != "946e" && part != "91ce" && part != "13ce")
                     {
                         //  Spanish inverted question mark (extended char)
                         if (part == "91b3" && k < parts.Length - 1 && parts[k + 1] == "91b3")
