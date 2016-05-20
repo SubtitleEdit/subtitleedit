@@ -83,6 +83,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new JsonType4(),
                     new JsonType5(),
                     new JsonType6(),
+                    new JsonType7(),
                     new Lrc(),
                     new MicroDvd(),
                     new MidwayInscriberCGX(),
