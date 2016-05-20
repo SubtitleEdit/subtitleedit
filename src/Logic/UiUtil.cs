@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -391,6 +392,52 @@ namespace Nikse.SubtitleEdit.Logic
                     label.ForeColor = Color.Red;
             }
             label.Text = sb.ToString();
+        }
+
+        public static void InitializeSubtitleFormatComboBox(ToolStripComboBox comboBox, SubtitleFormat format)
+        {
+            InitializeSubtitleFormatComboBox(comboBox.ComboBox, format);
+            comboBox.DropDownWidth += 5;
+        }
+
+        public static void InitializeSubtitleFormatComboBox(ComboBox comboBox, SubtitleFormat format)
+        {
+            InitializeSubtitleFormatComboBox(comboBox, new[] { format.FriendlyName }, format.FriendlyName);
+        }
+
+        public static void InitializeSubtitleFormatComboBox(ToolStripComboBox comboBox, string selectedName)
+        {
+            InitializeSubtitleFormatComboBox(comboBox.ComboBox, selectedName);
+            comboBox.DropDownWidth += 5;
+        }
+
+        public static void InitializeSubtitleFormatComboBox(ComboBox comboBox, string selectedName)
+        {
+            var formatNames = SubtitleFormat.AllSubtitleFormats.Where(format => !format.IsVobSubIndexFile).Select(format => format.FriendlyName);
+            InitializeSubtitleFormatComboBox(comboBox, formatNames, selectedName);
+        }
+
+        public static void InitializeSubtitleFormatComboBox(ComboBox comboBox, IEnumerable<string> formatNames, string selectedName)
+        {
+            var selectedIndex = 0;
+            comboBox.BeginUpdate();
+            comboBox.Items.Clear();
+            using (var graphics = comboBox.CreateGraphics())
+            {
+                var maxWidth = 0.0F;
+                foreach (var name in formatNames)
+                {
+                    var index = comboBox.Items.Add(name);
+                    if (name.Equals(selectedName, StringComparison.OrdinalIgnoreCase))
+                        selectedIndex = index;
+                    var width = graphics.MeasureString(name, comboBox.Font).Width;
+                    if (width > maxWidth)
+                        maxWidth = width;
+                }
+                comboBox.DropDownWidth = (int)Math.Round(maxWidth + 7.5);
+            }
+            comboBox.SelectedIndex = selectedIndex;
+            comboBox.EndUpdate();
         }
 
         public static void InitializeTextEncodingComboBox(ComboBox comboBox)
