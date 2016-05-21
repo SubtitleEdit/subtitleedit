@@ -86,19 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxSubtitleFormats.SelectedIndex = comboBoxSubtitleFormats.Items.Count - 1;
             }
 
-            comboBoxEncoding.Items.Clear();
-            int encodingSelectedIndex = 0;
-            comboBoxEncoding.Items.Add(Encoding.UTF8.EncodingName);
-            foreach (EncodingInfo ei in Encoding.GetEncodings())
-            {
-                if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= 949 && !ei.DisplayName.Contains("EBCDIC") && ei.CodePage != 1047)
-                {
-                    comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
-                    if (ei.Name == Configuration.Settings.General.DefaultEncoding)
-                        encodingSelectedIndex = comboBoxEncoding.Items.Count - 1;
-                }
-            }
-            comboBoxEncoding.SelectedIndex = encodingSelectedIndex;
+            UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
 
             if (numericUpDownParts.Maximum > _subtitle.Paragraphs.Count)
                 numericUpDownParts.Maximum = _subtitle.Paragraphs.Count / 2;
@@ -277,18 +265,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Encoding GetCurrentEncoding()
         {
-            if (comboBoxEncoding.Text == Encoding.UTF8.BodyName || comboBoxEncoding.Text == Encoding.UTF8.EncodingName || comboBoxEncoding.Text == "utf-8")
-            {
-                return Encoding.UTF8;
-            }
-
-            foreach (EncodingInfo ei in Encoding.GetEncodings())
-            {
-                if (ei.CodePage + ": " + ei.DisplayName == comboBoxEncoding.Text)
-                    return ei.GetEncoding();
-            }
-
-            return Encoding.UTF8;
+            return UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding);
         }
 
         private void Split_Shown(object sender, EventArgs e)

@@ -332,21 +332,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (Configuration.Settings.General.DefaultSubtitleFormat != "SubRip")
                     SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
 
-                comboBoxEncoding.Items.Clear();
-                comboBoxEncoding.Items.Add(Encoding.UTF8.EncodingName);
-                foreach (var ei in Encoding.GetEncodings())
-                {
-                    try
-                    {
-                        if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= 949 && !ei.DisplayName.Contains("EBCDIC") && ei.CodePage != 1047) //Configuration.Settings.General.EncodingMinimumCodePage)
-                            comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
-                    }
-                    catch
-                    {
-                        // Work-around for issue #1285
-                    }
-                }
-                SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding.ComboBox);
 
                 // set up UI interfaces / injections
                 YouTubeAnnotations.GetYouTubeAnnotationStyles = new UiGetYouTubeAnnotationStyles();
@@ -566,60 +552,33 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetEncoding(Encoding encoding)
         {
-            if (encoding.BodyName == Encoding.UTF8.BodyName)
+            foreach (TextEncodingListItem item in comboBoxEncoding.Items)
             {
-                comboBoxEncoding.SelectedIndex = 0;
-                return;
-            }
-
-            int i = 0;
-            foreach (string s in comboBoxEncoding.Items)
-            {
-                if (s == encoding.CodePage + ": " + encoding.EncodingName)
+                if (item.Equals(encoding))
                 {
-                    comboBoxEncoding.SelectedIndex = i;
+                    comboBoxEncoding.SelectedItem = item;
                     return;
                 }
-                i++;
             }
-            comboBoxEncoding.SelectedIndex = 0;
+            comboBoxEncoding.SelectedIndex = 0; // UTF-8
         }
 
         private void SetEncoding(string encodingName)
         {
-            if (encodingName == Encoding.UTF8.BodyName || encodingName == Encoding.UTF8.EncodingName || encodingName == "utf-8")
+            foreach (TextEncodingListItem item in comboBoxEncoding.Items)
             {
-                comboBoxEncoding.SelectedIndex = 0;
-                return;
-            }
-
-            int i = 0;
-            foreach (string s in comboBoxEncoding.Items)
-            {
-                if (s == encodingName || s.StartsWith(encodingName + ":", StringComparison.Ordinal))
+                if (item.Equals(encodingName))
                 {
-                    comboBoxEncoding.SelectedIndex = i;
+                    comboBoxEncoding.SelectedItem = item;
                     return;
                 }
-                i++;
             }
-            comboBoxEncoding.SelectedIndex = 0;
+            comboBoxEncoding.SelectedIndex = 0; // UTF-8
         }
 
         private Encoding GetCurrentEncoding()
         {
-            if (comboBoxEncoding.Text == Encoding.UTF8.BodyName || comboBoxEncoding.Text == Encoding.UTF8.EncodingName || comboBoxEncoding.Text == "utf-8")
-            {
-                return Encoding.UTF8;
-            }
-
-            foreach (EncodingInfo ei in Encoding.GetEncodings())
-            {
-                if (ei.CodePage + ": " + ei.DisplayName == comboBoxEncoding.Text)
-                    return ei.GetEncoding();
-            }
-
-            return Encoding.UTF8;
+            return UiUtil.GetTextEncodingComboBoxCurrentEncoding(comboBoxEncoding.ComboBox);
         }
 
         private void AudioWaveform_OnNonParagraphRightClicked(object sender, AudioVisualizer.ParagraphEventArgs e)
