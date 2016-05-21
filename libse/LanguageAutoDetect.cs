@@ -593,12 +593,14 @@ namespace Nikse.SubtitleEdit.Core
                     file.Read(bom, 0, bom.Length);
                     if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf)
                         encoding = Encoding.UTF8;
+                    else if (bom[0] == 0xff && bom[1] == 0xfe && bom[2] == 0 && bom[3] == 0)
+                        encoding = Encoding.GetEncoding(12000); // UTF-32 (LE)
                     else if (bom[0] == 0xff && bom[1] == 0xfe)
                         encoding = Encoding.Unicode;
                     else if (bom[0] == 0xfe && bom[1] == 0xff) // utf-16 and ucs-2
                         encoding = Encoding.BigEndianUnicode;
                     else if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) // ucs-4
-                        encoding = Encoding.UTF32;
+                        encoding = Encoding.GetEncoding(12001); // UTF-32 (BE)
                     else if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76 && (bom[3] == 0x38 || bom[3] == 0x39 || bom[3] == 0x2b || bom[3] == 0x2f)) // utf-7
                         encoding = Encoding.UTF7;
                     else if (file.Length > bom.Length)
