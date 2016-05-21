@@ -39,14 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 file.Position = 0;
                 _fileBuffer = new byte[length];
-                file.Read(_fileBuffer, 0, length);
-
-                for (int i = 0; i < length; i++)
-                {
-                    if (_fileBuffer[i] == 0)
-                        _fileBuffer[i] = 32;
-                }
-
+                file.Read(_fileBuffer, 0, length);                
                 file.Close();
             }
             catch
@@ -93,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listView1.SelectedItems.Count > 0)
             {
                 Encoding encoding = Encoding.GetEncoding(int.Parse(listView1.SelectedItems[0].Text));
-                textBoxPreview.Text = encoding.GetString(_fileBuffer);
+                textBoxPreview.Text = encoding.GetString(_fileBuffer).Replace("\0", " ");
                 LabelPreview.Text = Configuration.Settings.Language.General.Preview + " - " + encoding.EncodingName;
             }
         }
