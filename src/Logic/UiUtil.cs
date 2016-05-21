@@ -404,7 +404,7 @@ namespace Nikse.SubtitleEdit.Logic
                 var maxWidth = 0.0F;
                 foreach (var encoding in Configuration.AvailableEncodings)
                 {
-                    if (encoding.CodePage >= 949 && encoding.CodePage != 1047 && !encoding.EncodingName.Contains("EBCDIC"))
+                    if (encoding.CodePage >= 949 && !encoding.IsEbcdic())
                     {
                         var item = new TextEncodingListItem(encoding);
                         if (selectedItem == null && item.Equals(defaultEncoding))
