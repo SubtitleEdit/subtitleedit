@@ -444,6 +444,7 @@
     <Compile Include="TarReader.cs" />
     <Compile Include="TaskbarList.cs" />
     <Compile Include="TextDraw.cs" />
+    <Compile Include="TextEncodingExtensions.cs" />
     <Compile Include="TimeCode.cs" />
     <Compile Include="TransportStream\AdaptationField.cs" />
     <Compile Include="TransportStream\ClutDefinitionSegment.cs" />
