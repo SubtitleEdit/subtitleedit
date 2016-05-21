@@ -836,7 +836,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddNode(TreeNode node, string text, string shortcut, bool isMenuItem = false)
         {
             var prop = Configuration.Settings.Shortcuts.GetType().GetProperty(shortcut);
-            node.Nodes.Add(new TreeNode(text + GetShortcutText(prop.GetValue(Configuration.Settings.Shortcuts, null).ToString())) { Tag = new ShortcutHelper(prop, isMenuItem) });
+            node.Nodes.Add(new TreeNode(text + GetShortcutText((string)prop.GetValue(Configuration.Settings.Shortcuts, null))) { Tag = new ShortcutHelper(prop, isMenuItem) });
         }
 
         private static string GetShortcutText(string shortcut)
