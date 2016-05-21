@@ -792,7 +792,7 @@
             // 
             // comboBoxSubtitleFormats
             // 
-            this.comboBoxSubtitleFormats.DropDownHeight = 220;
+            this.comboBoxSubtitleFormats.DropDownHeight = 215;
             this.comboBoxSubtitleFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSubtitleFormats.DropDownWidth = 230;
             this.comboBoxSubtitleFormats.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
@@ -817,11 +817,9 @@
             // 
             // comboBoxEncoding
             // 
-            this.comboBoxEncoding.DropDownHeight = 220;
+            this.comboBoxEncoding.DropDownHeight = 215;
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxEncoding.DropDownWidth = 240;
             this.comboBoxEncoding.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
-            this.comboBoxEncoding.IntegralHeight = false;
             this.comboBoxEncoding.Items.AddRange(new object[] {
             "ANSI",
             "UTF-7",
@@ -829,7 +827,7 @@
             "Unicode",
             "Unicode (big endian)"});
             this.comboBoxEncoding.Name = "comboBoxEncoding";
-            this.comboBoxEncoding.Size = new System.Drawing.Size(122, 40);
+            this.comboBoxEncoding.Size = new System.Drawing.Size(125, 40);
             this.comboBoxEncoding.DropDown += new System.EventHandler(this.MenuOpened);
             this.comboBoxEncoding.DropDownClosed += new System.EventHandler(this.MenuClosed);
             // 
