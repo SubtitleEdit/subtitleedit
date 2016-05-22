@@ -163,6 +163,7 @@ https://github.com/SubtitleEdit/subtitleedit
             if (text.Contains("< "))
                 text = HtmlUtil.FixInvalidItalicTags(text);
 
+            text = text.Replace(Environment.NewLine, " ");
             text = StripHtmlTags(text);
 
             var idx = text.IndexOf("<font", StringComparison.OrdinalIgnoreCase);
@@ -179,43 +180,52 @@ https://github.com/SubtitleEdit/subtitleedit
                 text = text.Remove(idx, endIdx - idx);
                 idx = text.IndexOf("<font", idx, StringComparison.OrdinalIgnoreCase);
             }
-            if (!error)
+            if (!error && idx >= 0)
+            {
                 text = text.Replace("</font>", ".");
-
+            }
             foreach (string word in text.Split(ExpectedChars, StringSplitOptions.RemoveEmptyEntries))
             {
                 var s = word.Trim();
-                if (s.Length > 1 && hashtable.ContainsKey(s))
+                if (s.Length > 1)
                 {
-                    hashtable[s]++;
-                }
-                else if (s.Length > 1)
-                {
-                    hashtable.Add(s, 1);
+                    if (hashtable.ContainsKey(s))
+                    {
+                        hashtable[s]++;
+                    }
+                    else
+                    {
+                        hashtable.Add(s, 1);
+                    }
                 }
             }
         }
 
         private static void MostUsedLinesAdd(Dictionary<string, int> hashtable, string text)
         {
-            text = StripHtmlTags(text);
+            text = text.Replace(Environment.NewLine, " ");
+            text = HtmlUtil.RemoveHtmlTags(text, true);
             text = text.Replace('!', '.');
             text = text.Replace('?', '.');
             text = text.Replace("...", ".");
             text = text.Replace("..", ".");
-            text = text.Replace('-', ' ');
+            // text = text.Replace('-', ' '); Mm-mm.
             text = text.FixExtraSpaces();
 
             foreach (string line in text.Split('.'))
             {
                 var s = line.Trim();
-                if (hashtable.ContainsKey(s))
+                s = s.Trim('-').Trim();
+                if (s.Length > 1 && s.Contains(' '))
                 {
-                    hashtable[s]++;
-                }
-                else if (s.Length > 0 && s.Contains(' '))
-                {
-                    hashtable.Add(s, 1);
+                    if (hashtable.ContainsKey(s))
+                    {
+                        hashtable[s]++;
+                    }
+                    else
+                    {
+                        hashtable.Add(s, 1);
+                    }
                 }
             }
         }
@@ -225,21 +235,22 @@ https://github.com/SubtitleEdit/subtitleedit
             text = text.Trim('\'');
             text = text.Replace("\"", string.Empty);
 
-            if (text.Length < 8)
+            // Min: <i>/three length.
+            if (text.Length < 3)
                 return text;
-
+            const string replaceChar = ".";
             text = text.Replace("<i>", string.Empty);
-            text = text.Replace("</i>", ".");
+            text = text.Replace("</i>", replaceChar);
             text = text.Replace("<I>", string.Empty);
-            text = text.Replace("</I>", ".");
+            text = text.Replace("</I>", replaceChar);
             text = text.Replace("<b>", string.Empty);
-            text = text.Replace("</b>", ".");
+            text = text.Replace("</b>", replaceChar);
             text = text.Replace("<B>", string.Empty);
-            text = text.Replace("</B>", ".");
+            text = text.Replace("</B>", replaceChar);
             text = text.Replace("<u>", string.Empty);
-            text = text.Replace("</u>", ".");
+            text = text.Replace("</u>", replaceChar);
             text = text.Replace("<U>", string.Empty);
-            text = text.Replace("</U>", ".");
+            text = text.Replace("</U>", replaceChar);
             return text;
         }
 
@@ -281,7 +292,7 @@ https://github.com/SubtitleEdit/subtitleedit
             var hashtable = new Dictionary<string, int>();
 
             foreach (Paragraph p in _subtitle.Paragraphs)
-                MostUsedLinesAdd(hashtable, p.Text.Replace(Environment.NewLine, " ").Replace("  ", " "));
+                MostUsedLinesAdd(hashtable, p.Text);
 
             var sortedTable = new SortedDictionary<string, string>();
             foreach (KeyValuePair<string, int> item in hashtable)
