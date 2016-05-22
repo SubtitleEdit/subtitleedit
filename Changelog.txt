@@ -2,7 +2,7 @@
 
 3.4.13 (xth May 2016) BETA
 * NEW:
-   * Added new subtitle format - thx Oli
+   * Added new subtitle formats - thx Oli/Mauricio
    * It's now possible to use "video offset" via "Video" menu
    * Added support for spu/png OCR - thx claunia
 * IMPROVED:
@@ -44,6 +44,7 @@
    * Fixed spell check+angled quotes - thx claunia
    * Fixed reading of vertical alignment in (some) pac files - thx Ingo
    * Fixed Matroska command line convert bug - thx KristjanLaane/xylographe
+   * Fixed reading UTF-32
    * + Many minor fixes from ivandrofly and xylographe
 
 
