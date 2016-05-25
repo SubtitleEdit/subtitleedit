@@ -631,6 +631,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return defaultValue;
         }
+        
 
         internal static bool BatchConvertSave(string targetFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IEnumerable<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite, int pacCodePage, double? targetFrameRate, IEnumerable<string> multipleReplaceImportFiles, bool removeTextForHi, bool fixCommonErrors, bool redoCasing)
         {
@@ -640,11 +641,12 @@ namespace Nikse.SubtitleEdit.Logic
                 // adjust offset
                 if (!string.IsNullOrWhiteSpace(offset))
                 {
-                    var parts = offset.Split(new[] { ':','.' }, StringSplitOptions.RemoveEmptyEntries);
+                    var offsetSplitChars = new[] { ':', '.', ',' };
+                    var parts = offset.Split(offsetSplitChars, StringSplitOptions.RemoveEmptyEntries);
                     while (parts.Length > 1 && parts.Length < 4)
                     {
                         offset = "0:" + offset;
-                        parts = offset.Split(new[] { ':', '.', ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        parts = offset.Split(offsetSplitChars, StringSplitOptions.RemoveEmptyEntries);
                     }
                     if (parts.Length == 4)
                     {
