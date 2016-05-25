@@ -65,6 +65,7 @@ namespace Nikse.SubtitleEdit.Core
             _wasLoadedWithFrameNumbers = subtitle.WasLoadedWithFrameNumbers;
             Header = subtitle.Header;
             Footer = subtitle.Footer;
+            FileName = subtitle.FileName;
         }
 
         public List<Paragraph> Paragraphs

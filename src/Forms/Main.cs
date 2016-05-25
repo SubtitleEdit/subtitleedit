@@ -19242,6 +19242,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle GetSaveSubtitle(Subtitle subtitle)
         {
             var sub = new Subtitle(subtitle);
+            if (string.IsNullOrEmpty(sub.FileName))
+                sub.FileName = "Untitled";
             if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
             {
                 sub.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(Configuration.Settings.General.CurrentVideoOffsetInMs));
