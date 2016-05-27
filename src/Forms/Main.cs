@@ -234,45 +234,50 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void SetCurrentFormat(SubtitleFormat format)
+        private void SetCurrentFormat(string subtitleFormatName)
+        {
+            SetCurrentFormat(FormatNameToFormat(subtitleFormatName));
+        }
+
+        private void SetCurrentFormat(SubtitleFormat format)
         {
             if (format.IsVobSubIndexFile)
             {
-                comboBoxSubtitleFormats.Items.Clear();
-                comboBoxSubtitleFormats.Items.Add(format.FriendlyName);
-
+                UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, format);
                 SubtitleListview1.HideNonVobSubColumns();
             }
             else if (comboBoxSubtitleFormats.Items.Count == 1)
             {
-                SetFormatToSubRip();
+                SetFormatTo(format);
                 SubtitleListview1.ShowAllColumns();
             }
-
-            int i = 0;
-            foreach (object obj in comboBoxSubtitleFormats.Items)
+            else
             {
-                if (obj.ToString() == format.FriendlyName)
+                int index = 0;
+                foreach (string name in comboBoxSubtitleFormats.Items)
                 {
-                    comboBoxSubtitleFormats.SelectedIndex = i;
-                    return;
+                    if (name == format.FriendlyName)
+                    {
+                        comboBoxSubtitleFormats.SelectedIndex = index;
+                        return;
+                    }
+                    index++;
                 }
-                i++;
             }
         }
 
-        public void SetCurrentFormat(string subtitleFormatName)
+        private SubtitleFormat FormatNameToFormat(string subtitleFormatName)
         {
+            subtitleFormatName = subtitleFormatName.Trim();
             foreach (var format in SubtitleFormat.AllSubtitleFormats)
             {
-                if (format.Name.Trim().Equals(subtitleFormatName.Trim(), StringComparison.OrdinalIgnoreCase) ||
-                    format.FriendlyName.Trim().Equals(subtitleFormatName.Trim(), StringComparison.OrdinalIgnoreCase))
+                if (format.Name.Trim().Equals(subtitleFormatName, StringComparison.OrdinalIgnoreCase) ||
+                    format.FriendlyName.Trim().Equals(subtitleFormatName, StringComparison.OrdinalIgnoreCase))
                 {
-                    SetCurrentFormat(format);
-                    return;
+                    return format;
                 }
             }
-            SetCurrentFormat(new SubRip());
+            return new SubRip();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -327,10 +332,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxAutoContinue.Checked = Configuration.Settings.General.AutoContinueOn;
                 checkBoxSyncListViewWithVideoWhilePlaying.Checked = Configuration.Settings.General.SyncListViewWithVideoWhilePlaying;
 
-                SetFormatToSubRip();
-
-                if (Configuration.Settings.General.DefaultSubtitleFormat != "SubRip")
-                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                SetFormatTo(Configuration.Settings.General.DefaultSubtitleFormat);
 
                 UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding.ComboBox);
 
@@ -1343,15 +1345,15 @@ namespace Nikse.SubtitleEdit.Forms
             DvdSubtitleLanguage.Initialize();
         }
 
-        private void SetFormatToSubRip()
+        private void SetFormatTo(string subtitleFormatName)
+        {
+            SetFormatTo(FormatNameToFormat(subtitleFormatName));
+        }
+
+        private void SetFormatTo(SubtitleFormat subtitleFormat)
         {
             comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
-            foreach (var format in SubtitleFormat.AllSubtitleFormats)
-            {
-                if (!format.IsVobSubIndexFile)
-                    comboBoxSubtitleFormats.Items.Add(format.FriendlyName);
-            }
-            comboBoxSubtitleFormats.SelectedIndex = 0;
+            UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, subtitleFormat.FriendlyName);
             comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
         }
 
