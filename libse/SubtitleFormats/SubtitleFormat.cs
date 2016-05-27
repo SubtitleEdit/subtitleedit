@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         /// <summary>
         /// Formats supported by Subtitle Edit
         /// </summary>
-        public static IList<SubtitleFormat> AllSubtitleFormats
+        public static IEnumerable<SubtitleFormat> AllSubtitleFormats
         {
             get
             {
@@ -243,8 +243,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string path = Configuration.PluginsDirectory;
                 if (Directory.Exists(path))
                 {
-                    string[] pluginFiles = Directory.GetFiles(path, "*.DLL");
-                    foreach (string pluginFileName in pluginFiles)
+                    foreach (string pluginFileName in Directory.EnumerateFiles(path, "*.DLL"))
                     {
                         try
                         {
@@ -327,7 +326,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             get
             {
-                return string.CompareOrdinal(Extension, ".idx") == 0;
+                return Extension.Equals(".idx", StringComparison.Ordinal);
             }
         }
 
