@@ -309,7 +309,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _numericUpDownPixelsIsSpace = 6;
         private double _numericUpDownMaxErrorPct = 6;
         private int _ocrMethodIndex;
-        private bool _autoBreakLines = false;
+        private bool _autoBreakLines;
 
         private int _ocrMethodTesseract = 0;
         private int _ocrMethodImageCompare = 1;
@@ -4256,7 +4256,7 @@ namespace Nikse.SubtitleEdit.Forms
                     CompareMatch match = GetCompareMatchNew(item, out bestGuess, list, index);
                     if (match == null) // Try line OCR if no image compare match
                     {
-                        if (_nOcrDb != null && _nOcrDb.OcrCharacters.Count > 0)
+                        if (_nOcrDb != null && _nOcrDb.OcrCharacters.Count > 0 && _numericUpDownMaxErrorPct < 1)
                             match = GetNOcrCompareMatchNew(item, parentBitmap, _nOcrDb, true, true);
                     }
 
@@ -5881,7 +5881,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                    MessageBox.Show("Unable to start 'Tesseract' - make sure tesseract-ocr 3.x is installed!");
+                    if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+                    {
+                        MessageBox.Show("Unable to start 'Tesseract' - make sure tesseract-ocr 3.x is installed!");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Unable to start 'Tesseract' (" + Configuration.TesseractFolder + "tesseract.exe) - make sure tesseract-ocr 3.x is installed!");
+                    }
                     throw;
                 }
                 process.WaitForExit(5000);
