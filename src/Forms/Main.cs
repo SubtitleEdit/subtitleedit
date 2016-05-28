@@ -3194,7 +3194,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var sub = GetSaveSubtitle(_subtitle);
 
-                string allText = sub.ToText(format);
+                string allText = string.Empty;
 
                 // Seungki begin
                 if (_splitDualSami && _subtitleAlternate != null)
@@ -3203,8 +3203,11 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (var p in _subtitleAlternate.Paragraphs)
                         s.Paragraphs.Add(p);
                     allText = s.ToText(format);
+                } // Seungki end
+                else
+                {
+                    allText = sub.ToText(format);
                 }
-                // Seungki end
 
                 var currentEncoding = GetCurrentEncoding();
                 bool isUnicode = currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.GetEncoding(12001) || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8;
@@ -12492,7 +12495,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         ResetSubtitle();
                         if (!string.IsNullOrEmpty(importText.VideoFileName))
-                        { 
+                        {
                             OpenVideo(importText.VideoFileName);
                             _fileName = importText.VideoFileName;
                             _converted = true;
@@ -16813,7 +16816,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
                 {
-                    setVideoOffsetToolStripMenuItem.Text = string.Format("{0} [{1}]",_language.Menu.Video.SetVideoOffset, new TimeCode(Configuration.Settings.General.CurrentVideoOffsetInMs).ToShortDisplayString());
+                    setVideoOffsetToolStripMenuItem.Text = string.Format("{0} [{1}]", _language.Menu.Video.SetVideoOffset, new TimeCode(Configuration.Settings.General.CurrentVideoOffsetInMs).ToShortDisplayString());
                 }
                 else
                 {
