@@ -2,7 +2,7 @@
 
 3.4.13 (xth May 2016) BETA
 * NEW:
-   * Added new subtitle formats - thx Oli/Mauricio
+   * Added new subtitle formats - thx Oli/Mauricio/Leandro
    * It's now possible to use "video offset" via "Video" menu
    * Added support for spu/png OCR - thx claunia
 * IMPROVED:
@@ -18,7 +18,7 @@
    * Some minor improvements for OCR via "Binary image compare"
 * FIXED:
    * Fix updating of main list view after "Remove text for HI" + "Apply" - thx Henry
-   * Spell check "change" / "change all" issue regarding brackets/dash - thx jc
+   * Spell check "Change" / "Change all" issue regarding brackets/dash - thx jc
    * Fixed issue where current frame rate was lost when loading new sub - thx Elad
    * Remove bad chars when saving TTML 1.0
    * Minor fix for "Toggle dashes" inside italic tag - thx Bryan
