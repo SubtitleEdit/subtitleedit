@@ -19509,14 +19509,13 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            using (var form = new DurationsBridgeGaps(_subtitle))
+            using (var form = new DurationsBridgeGaps(_subtitle, MakeHistoryForUndo))
             {
                 if (form.ShowDialog(this) == DialogResult.OK && form.FixedCount > 0)
                 {
                     int index = FirstSelectedIndex;
                     if (index < 0)
                         index = 0;
-                    MakeHistoryForUndo(_language.BeforeDurationsBridgeGap);
                     _subtitle.Paragraphs.Clear();
                     foreach (var p in form.FixedSubtitle.Paragraphs)
                         _subtitle.Paragraphs.Add(p);
