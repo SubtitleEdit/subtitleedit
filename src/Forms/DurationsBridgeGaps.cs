@@ -9,16 +9,19 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class DurationsBridgeGaps : PositionAndSizeForm
     {
+        private Action<string> _historyMakerAction;
+        private bool _makeHistory;
         private readonly Subtitle _subtitle;
         private Subtitle _fixedSubtitle;
         private Dictionary<string, string> _dic;
         private readonly Timer _refreshTimer = new Timer();
         public Subtitle FixedSubtitle { get { return _fixedSubtitle; } }
 
-        public DurationsBridgeGaps(Subtitle subtitle)
+        public DurationsBridgeGaps(Subtitle subtitle, Action<string> historyMakerAction)
         {
             InitializeComponent();
             UiUtil.FixLargeFonts(this, buttonOK);
+            _historyMakerAction = historyMakerAction;
 
             // Remove SE's built-in ListView resize logic
             SubtitleListview1.SetCustomResize(SubtitleListView1_Resize);
@@ -74,6 +77,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Configuration.Settings.Tools.BridgeGapMilliseconds = (int)numericUpDownMaxMs.Value;
             DialogResult = DialogResult.OK;
+            // Only make history if there are changes.
+            if (_makeHistory)
+            {
+                _historyMakerAction.Invoke(Configuration.Settings.Language.Main.BeforeDurationsBridgeGap);
+            }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -119,8 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
                     before = string.Format("{0:0.000}", (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / TimeCode.BaseUnit);
                     if (radioButtonDivideEven.Checked && next.StartTime.TotalMilliseconds > cur.EndTime.TotalMilliseconds)
                     {
-                        double half = (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / 2.0;
-                        next.StartTime.TotalMilliseconds -= half;
+                        next.StartTime.TotalMilliseconds -= (next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds) / 2.0; // half
                     }
                     cur.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - minMsBetweenLines;
                     fixedIndexes.Add(i);
@@ -138,6 +145,8 @@ namespace Nikse.SubtitleEdit.Forms
                     _dic.Add(cur.ID, info);
                 }
             }
+            // True if gaps were fixed.
+            _makeHistory = count > 0;
 
             SubtitleListview1.Fill(_fixedSubtitle);
             for (int i = 0; i < _fixedSubtitle.Paragraphs.Count - 1; i++)
