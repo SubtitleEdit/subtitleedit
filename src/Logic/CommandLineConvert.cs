@@ -723,7 +723,7 @@ namespace Nikse.SubtitleEdit.Logic
                 string outputFileName;
                 foreach (SubtitleFormat sf in formats)
                 {
-                    if (sf.IsTextBased && sf.Name.Replace(" ", string.Empty).Equals(targetFormat, StringComparison.OrdinalIgnoreCase))
+                    if (sf.IsTextBased && sf.Name.Replace(" ", string.Empty).Equals(targetFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
                         sf.BatchMode = true;
@@ -799,7 +799,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (!targetFormatFound)
                 {
                     var ebu = new Ebu();
-                    if (ebu.Name.Replace(" ", string.Empty).Equals(targetFormat, StringComparison.OrdinalIgnoreCase))
+                    if (ebu.Name.Replace(" ", string.Empty).Equals(targetFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite);
@@ -811,7 +811,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (!targetFormatFound)
                 {
                     var pac = new Pac();
-                    if (pac.Name.Replace(" ", string.Empty).Equals(targetFormat, StringComparison.OrdinalIgnoreCase) || targetFormat.Equals(".pac", StringComparison.OrdinalIgnoreCase) || targetFormat.Equals("pac", StringComparison.OrdinalIgnoreCase))
+                    if (pac.Name.Replace(" ", string.Empty).Equals(targetFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase) || targetFormat.Equals(".pac", StringComparison.OrdinalIgnoreCase) || targetFormat.Equals("pac", StringComparison.OrdinalIgnoreCase))
                     {
                         pac.BatchMode = true;
                         pac.CodePage = pacCodePage;
@@ -825,7 +825,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (!targetFormatFound)
                 {
                     var cavena890 = new Cavena890();
-                    if (cavena890.Name.Replace(" ", string.Empty).Equals(targetFormat, StringComparison.OrdinalIgnoreCase))
+                    if (cavena890.Name.Replace(" ", string.Empty).Equals(targetFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, cavena890.Extension, outputFolder, overwrite);
@@ -837,7 +837,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (!targetFormatFound)
                 {
                     var cheetahCaption = new CheetahCaption();
-                    if (cheetahCaption.Name.Replace(" ", string.Empty).Equals(targetFormat, StringComparison.OrdinalIgnoreCase))
+                    if (cheetahCaption.Name.Replace(" ", string.Empty).Equals(targetFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension, outputFolder, overwrite);
@@ -849,7 +849,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (!targetFormatFound)
                 {
                     var ayato = new Ayato();
-                    if (ayato.Name.Replace(" ", string.Empty).Equals(targetFormat, StringComparison.OrdinalIgnoreCase))
+                    if (ayato.Name.Replace(" ", string.Empty).Equals(targetFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ayato.Extension, outputFolder, overwrite);
@@ -861,7 +861,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (!targetFormatFound)
                 {
                     var capMakerPlus = new CapMakerPlus();
-                    if (capMakerPlus.Name.Replace(" ", string.Empty).Equals(targetFormat, StringComparison.OrdinalIgnoreCase))
+                    if (capMakerPlus.Name.Replace(" ", string.Empty).Equals(targetFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension, outputFolder, overwrite);
@@ -872,7 +872,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 if (!targetFormatFound)
                 {
-                    if (Configuration.Settings.Language.BatchConvert.PlainText.Replace(" ", string.Empty).Equals(targetFormat, StringComparison.OrdinalIgnoreCase))
+                    if (Configuration.Settings.Language.BatchConvert.PlainText.Replace(" ", string.Empty).Equals(targetFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
@@ -883,7 +883,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 if (!targetFormatFound)
                 {
-                    if (BatchConvert.BluRaySubtitle.Replace(" ", string.Empty).Equals(targetFormat, StringComparison.OrdinalIgnoreCase))
+                    if (BatchConvert.BluRaySubtitle.Replace(" ", string.Empty).Equals(targetFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".sup", outputFolder, overwrite);
@@ -914,7 +914,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         Console.WriteLine(" done.");
                     }
-                    else if (BatchConvert.VobSubSubtitle.Replace(" ", string.Empty).Equals(targetFormat, StringComparison.OrdinalIgnoreCase))
+                    else if (BatchConvert.VobSubSubtitle.Replace(" ", string.Empty).Equals(targetFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
                     {
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".sub", outputFolder, overwrite);
