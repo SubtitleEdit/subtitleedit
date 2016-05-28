@@ -3523,6 +3523,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ShowStatus(string.Format(_language.ConvertedToX, format.FriendlyName));
                 _oldSubtitleFormat = format;
+                Configuration.Settings.General.LastSaveAsFormat = format.Name;
 
                 if (format.HasStyleSupport && _networkSession == null)
                 {
@@ -12488,8 +12489,14 @@ namespace Nikse.SubtitleEdit.Forms
                     if (ContinueNewOrExit())
                     {
                         MakeHistoryForUndo(_language.BeforeImportText);
+
+                        ResetSubtitle();
                         if (!string.IsNullOrEmpty(importText.VideoFileName))
+                        { 
                             OpenVideo(importText.VideoFileName);
+                            _fileName = importText.VideoFileName;
+                            _converted = true;
+                        }
 
                         _subtitleListViewIndex = -1;
                         _subtitle = importText.FixedSubtitle;
@@ -19504,7 +19511,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var form = new DurationsBridgeGaps(_subtitle))
             {
-                if (form.ShowDialog(this) == DialogResult.OK)
+                if (form.ShowDialog(this) == DialogResult.OK && form.FixedCount > 0)
                 {
                     int index = FirstSelectedIndex;
                     if (index < 0)
