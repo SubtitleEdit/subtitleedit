@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Dictionary<string, string> _dic;
         private readonly Timer _refreshTimer = new Timer();
         public Subtitle FixedSubtitle { get { return _fixedSubtitle; } }
+        public int FixedCount { get; private set; }
 
         public DurationsBridgeGaps(Subtitle subtitle)
         {
@@ -64,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
             GeneratePreviewReal();
         }
 
-        public override sealed string Text
+        public sealed override string Text
         {
             get { return base.Text; }
             set { base.Text = value; }
@@ -102,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
-            int count = 0;
+            FixedCount = 0;
             _fixedSubtitle = new Subtitle(_subtitle);
             _dic = new Dictionary<string, string>();
             var fixedIndexes = new List<int>(_fixedSubtitle.Paragraphs.Count);
@@ -125,7 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
                     cur.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - minMsBetweenLines;
                     fixedIndexes.Add(i);
                     fixedIndexes.Add(i + 1);
-                    count++;
+                    FixedCount++;
                 }
                 var msToNext = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;
                 if (msToNext < 2000)
@@ -151,7 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var index in fixedIndexes)
                 SubtitleListview1.SetBackgroundColor(index, Color.Green);
             SubtitleListview1.EndUpdate();
-            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.DurationsBridgeGaps.GapsBridgedX, count);
+            groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.DurationsBridgeGaps.GapsBridgedX, FixedCount);
 
             Cursor = Cursors.Default;
         }
