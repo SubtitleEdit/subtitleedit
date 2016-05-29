@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             <detx copyright='Chinkel S.A., 2007 - 2016'>
             <header>
                 <cappella version='3.7.0'/>
-                <last_position timecode='00:00:00:00' track='0'/>      
+                <last_position timecode='00:00:00:00' track='0'/>
             </header>
             <roles>
                 <role color='#000000' description='subtitle' id='sub' name='sub'/>
@@ -148,7 +148,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 {
                                     p.EndTime.TotalMilliseconds = TimeCode.ParseHHMMSSFFToMilliseconds(timeCodeNode.InnerText);
                                 }
-
                             }
                         }
                     }

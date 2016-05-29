@@ -12492,7 +12492,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         ResetSubtitle();
                         if (!string.IsNullOrEmpty(importText.VideoFileName))
-                        { 
+                        {
                             OpenVideo(importText.VideoFileName);
                             _fileName = importText.VideoFileName;
                             _converted = true;
