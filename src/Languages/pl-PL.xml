@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="Polish">
+<Language Name="polski">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.12</Version>
@@ -110,9 +110,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generowanie spektrogramu...</GeneratingSpectrogram>
     <ExtractingSeconds>Wyodrębnione audio: {0:0.0} sek.</ExtractingSeconds>
     <ExtractingMinutes>Wyodrębnione audio: {0:0.0} min.</ExtractingMinutes>
-    <WaveFileNotFound>Nie można znaleźć wyodrębnionego pliku wave! 
+    <WaveFileNotFound>Nie można znaleźć wyodrębnionego pliku wave!
 Ta funkcja wymaga VLC media player 1.1.x lub nowszego ({0}-bit). Wiersz poleceń: {1} {2}</WaveFileNotFound>
-    <WaveFileMalformed>{0} nie był w stanie wyodrębnić danych audio do pliku wave! 
+    <WaveFileMalformed>{0} nie był w stanie wyodrębnić danych audio do pliku wave!
 
 Wiersz poleceń: {1} {2}
 
@@ -1430,7 +1430,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <ErrorLoadJpg>Ten plik wydaje się być plikiem JPG. W Subtitle Edit nie można otworzyć plików JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Ten plik wydaje się być plikiem ReScene .srr - to nie jest plik z napisami.</ErrorLoadSrr>
     <ErrorLoadTorrent>Ten plik wydaje się być plikiem BitTorrent - to nie jest plik z napisami.</ErrorLoadTorrent>
-    <ErrorLoadBinaryZeroes>Przepraszamy, ten plik zawiera tylko zera binarne! 
+    <ErrorLoadBinaryZeroes>Przepraszamy, ten plik zawiera tylko zera binarne!
 
 Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapasową poprzez pozycję menu Plik -&gt; Przywróć automatycznie zapisaną kopię zapasową...</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Upuszczanie katalogu nie jest tutaj obsługiwane.</ErrorDirectoryDropNotAllowed>
@@ -1528,7 +1528,7 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
   <NetworkJoin>
     <Title>Dołącz do sesji sieciowej</Title>
     <Information>Dołącz do istniejącej sesji, w której wiele osób
- może edytować ten sam plik z napisami (współpracować)</Information>
+może edytować ten sam plik z napisami (współpracować)</Information>
     <Join>Dołącz</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1539,7 +1539,7 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <Title>Uruchom sesję sieciową</Title>
     <ConnectionTo>Łączenie się z {0}...</ConnectionTo>
     <Information>Rozpocznij nową sesję, w której wiele osób
- może edytować ten sam plik z napisami (współpracować)</Information>
+może edytować ten sam plik z napisami (współpracować)</Information>
     <Start>Start</Start>
   </NetworkStart>
   <OpenVideoDvd>
@@ -1792,7 +1792,7 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <MusicSymbolsToReplace>Symbole muzyczne do zastąpienia (oddzielone spacją)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw częste błędy OCR - także z użyciem sztywnych reguł</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania
-	(z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+(z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Pomiń pierwszy krok (wybór zasad poprawy)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Skróty klawiszowe</Shortcuts>
     <Shortcut>Skrót</Shortcut>
@@ -1972,8 +1972,8 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <LineMaximumLength>Maksymalna długość linii</LineMaximumLength>
     <LineContinuationBeginEndStrings>Znak kontynuacji na początku/końcu linii</LineContinuationBeginEndStrings>
     <NumberOfSplits>Ilość podzielonych: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków </LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków </LongestLineIsXAtY>
+    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków</LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Podziel napisy</Title>

@@ -1615,7 +1615,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (p != null)
                         {
-                            p.EndTime = new TimeCode(startTime.TotalMilliseconds);                            
+                            p.EndTime = new TimeCode(startTime.TotalMilliseconds);
                         }
                     }
                     else

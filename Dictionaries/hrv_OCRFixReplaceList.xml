@@ -606,7 +606,6 @@
     <LinePart from="tamo je natrag" to="tamo je iza" />
     <LinePart from="Tamo je natrag" to="Tamo je iza" />
     <LinePart from="zato sto" to="zato što" />
-
   </PartialLines>
   <PartialLinesAlways />
   <BeginLines />
@@ -956,7 +955,7 @@
     <RegEx find="([mM])oguč" replaceWith="$1oguć" />
     <RegEx find="([mpsMPS])olić" replaceWith="$1olit ć" />
     <RegEx find="([mM])orać([eu])" replaceWith="$1orat ć$2" />
-    <RegEx find="otivisa" replaceWith="otivira" /> 
+    <RegEx find="otivisa" replaceWith="otivira" />
     <RegEx find="([mM])rze([šolt])" replaceWith="$1rzi$2" />
     <RegEx find="([mM])rzeć([eu])" replaceWith="$1rzit ć$2" />
     <RegEx find="([mM])uva([mjovšlt])" replaceWith="$1ota$2" />
@@ -974,7 +973,7 @@
     <RegEx find="([nN])ane([lt])" replaceWith="$1anje$2" />
     <RegEx find="([nN])amesti" replaceWith="$1amjesti" />
     <RegEx find="aočar([ae]|[ai]ma)" replaceWith="aočal$1" />
-    <RegEx find="([nN])aran[đd]ž?([aeiou])" replaceWith="$1aranč$2" /> 
+    <RegEx find="([nN])aran[đd]ž?([aeiou])" replaceWith="$1aranč$2" />
     <RegEx find="([nN])asel([aeio])\b" replaceWith="$1asjel$2" />
     <RegEx find="([nN]a|[Ii])smej" replaceWith="$1smij" />
     <RegEx find="asle([dđ])" replaceWith="aslje$1" />
@@ -1490,7 +1489,8 @@
     <RegEx find="efinišu" replaceWith="efiniraju" />
     <RegEx find="elokup" replaceWith="jelokup" />
     <RegEx find="erišu" replaceWith="eriraju" />
-    <RegEx find="esvest" replaceWith="esvijest" />    <!-- bez j zbog nesvjestica npr. -->
+    <!-- bez j zbog nesvjestica npr. -->
+    <RegEx find="esvest" replaceWith="esvijest" />
     <RegEx find="fanziv" replaceWith="fenziv" />
     <RegEx find="figurisa" replaceWith="figurira" />
     <RegEx find="(mpl|st|f)ikova([nlot])" replaceWith="$1icira$2" />
@@ -1500,7 +1500,6 @@
     <RegEx find="fiše" replaceWith="fira" />
     <RegEx find="frov" replaceWith="frir" />
     <RegEx find="inić" replaceWith="init ć" />
-    <RegEx find="inuje" replaceWith="inira" />
     <RegEx find="(?&lt;!\b[Oo]zlo|\b[Ii]sp(rip)?ov|i)jeđen" replaceWith="ijeđen" />
     <RegEx find="(?&lt;!hva)lisati" replaceWith="lirati" />
     <RegEx find="jći" replaceWith="jući" />

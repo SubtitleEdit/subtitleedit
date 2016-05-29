@@ -188,7 +188,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             startIndex += tag.Length + 2;
             string res = s.Substring(startIndex).TrimStart().TrimStart(':').TrimStart(); //.TrimStart('[').TrimStart();
-            int tagLevel = 1;            
+            int tagLevel = 1;
             int oldStart = 0;
             if (oldStart < res.Length && res[oldStart] == '[')
             {
