@@ -1817,52 +1817,51 @@
     <Word from="lron" to="Iron" />
     <Word from="It'syour" to="It's your" />
     <Word from="lfstill" to="if still" />
-    <Word to="for joining" from="forjoining"/>
-    <Word to="for years" from="foryears"/>
-    <Word to="If it" from="Ifit"/>
-    <Word to="not jump" from="notjump"/>
-    <Word to="our problem" from="ourproblem"/>
-    <Word to="your profile" from="yourprofile"/>
-    <Word to="if Janine" from="ifJanine"/>
-    <Word to="for preventative" from="forpreventative"/>
-    <Word to="a hold" from="ahold"/>
-    <Word to="whether protest" from="whetherprotest"/>
-    <Word to="If not" from="Ifnot"/>
-    <Word to="our people" from="ourpeople"/>
-    <Word to="off my" from="offmy"/>
-    <Word to="for providing" from="forproviding"/>
-    <Word to="had just" from="hadjust"/>
-    <Word to="near you" from="nearyou"/>
-    <Word to="whatever you" from="whateveryou"/>
-    <Word to="hour puts" from="hourputs"/>
-    <Word to="time job" from="timejob"/>
-    <Word to="over your" from="overyour"/>
-    <Word to="or permanent" from="orpermanent"/>
-    <Word to="create jobs" from="createjobs"/>
-    <Word to="I've just" from="I'vejust"/>
-    <Word to="people jobs" from="peoplejobs"/>
-    <Word to="dinner pail" from="dinnerpail"/>
-    <Word to="has jumped" from="hasjumped"/>
-    <Word to="their privacy" from="theirprivacy"/>
-    <Word to="All" from="AIl"/>
-    <Word to="of serious" from="ofserious"/>
-    <Word to="your professional" from="yourprofessional"/>
-    <Word to="political" from="poiitical"/>
-    <Word to="to jump" from="tojump"/>
-    <Word to="lives" from="iives"/>
-    <Word to="elections" from="eiections"/>
-    <Word to="military juntas" from="militaryjuntas"/>
-    <Word to="no joke" from="nojoke"/>
-    <Word to="your presidency" from="yourpresidency"/>
-    <Word to="of military juntas" from="ofmilitaryjuntas"/>
-    <Word to="Our proposal" from="Ourproposal"/>
-    <Word to="LeBlanc" from="LeBIanc"/>
-    <Word to="Klaus" from="KIaus"/>
-    <Word to="your pussy" from="yourpussy"/>
-    <Word to="INTERVIEWER" from="lNTERVIEWER"/>
-    <Word to="INAUDIBLE" from="lNAUDIBLE"/>
-    <Word to="Simpsons" from="SImpsons"/>
+    <Word from="forjoining" to="for joining" />
+    <Word from="foryears" to="for years" />
+    <Word from="Ifit" to="If it" />
+    <Word from="notjump" to="not jump" />
+    <Word from="ourproblem" to="our problem" />
+    <Word from="yourprofile" to="your profile" />
+    <Word from="ifJanine" to="if Janine" />
+    <Word from="forpreventative" to="for preventative" />
+    <Word from="ahold" to="a hold" />
+    <Word from="whetherprotest" to="whether protest" />
+    <Word from="Ifnot" to="If not" />
+    <Word from="ourpeople" to="our people" />
+    <Word from="offmy" to="off my" />
+    <Word from="forproviding" to="for providing" />
+    <Word from="hadjust" to="had just" />
+    <Word from="nearyou" to="near you" />
+    <Word from="whateveryou" to="whatever you" />
+    <Word from="hourputs" to="hour puts" />
+    <Word from="timejob" to="time job" />
+    <Word from="overyour" to="over your" />
+    <Word from="orpermanent" to="or permanent" />
+    <Word from="createjobs" to="create jobs" />
+    <Word from="I'vejust" to="I've just" />
+    <Word from="peoplejobs" to="people jobs" />
+    <Word from="dinnerpail" to="dinner pail" />
+    <Word from="hasjumped" to="has jumped" />
+    <Word from="theirprivacy" to="their privacy" />
+    <Word from="AIl" to="All" />
+    <Word from="ofserious" to="of serious" />
+    <Word from="yourprofessional" to="your professional" />
+    <Word from="poiitical" to="political" />
     <Word from="tojump" to="to jump" />
+    <Word from="iives" to="lives" />
+    <Word from="eiections" to="elections" />
+    <Word from="militaryjuntas" to="military juntas" />
+    <Word from="nojoke" to="no joke" />
+    <Word from="yourpresidency" to="your presidency" />
+    <Word from="ofmilitaryjuntas" to="of military juntas" />
+    <Word from="Ourproposal" to="Our proposal" />
+    <Word from="LeBIanc" to="LeBlanc" />
+    <Word from="KIaus" to="Klaus" />
+    <Word from="yourpussy" to="your pussy" />
+    <Word from="lNTERVIEWER" to="INTERVIEWER" />
+    <Word from="lNAUDIBLE" to="INAUDIBLE" />
+    <Word from="SImpsons" to="Simpsons" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -1895,8 +1894,9 @@
     <WordPart from="i" to="t" />
     <WordPart from="cc" to="oo" />
     <WordPart from="ii" to="tt" />
-    <WordPart from="ii" to="ll" />    
-    <WordPart from="f" to="f " /> <!-- "f " will be two words -->
+    <WordPart from="ii" to="ll" />
+    <!-- "f " will be two words -->
+    <WordPart from="f" to="f " />
     <WordPart from="c" to="e" />
     <WordPart from="I" to="t" />
     <WordPart from="n" to="o" />
