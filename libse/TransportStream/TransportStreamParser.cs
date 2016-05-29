@@ -267,7 +267,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
             {
                 var subtitles = new List<TransportStreamSubtitle>();
                 var list = ParseAndRemoveEmpty(GetSubtitlePesPackets(pid));
-                
+
                 if (list != null)
                 {
                     for (int i = 0; i < list.Count; i++)

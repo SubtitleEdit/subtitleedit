@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            throw new NotImplementedException();                
+            throw new NotImplementedException();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

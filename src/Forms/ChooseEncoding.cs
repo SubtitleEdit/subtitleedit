@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 file.Position = 0;
                 _fileBuffer = new byte[length];
-                file.Read(_fileBuffer, 0, length);                
+                file.Read(_fileBuffer, 0, length);
                 file.Close();
             }
             catch

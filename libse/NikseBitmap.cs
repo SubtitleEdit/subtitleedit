@@ -987,7 +987,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Returns brightest color 
+        /// Returns brightest color
         /// </summary>
         /// <returns>Brightest color</returns>
         public Color GetBrightestColor()

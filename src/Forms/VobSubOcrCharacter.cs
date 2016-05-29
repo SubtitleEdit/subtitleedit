@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelCharactersAsText.Font = new Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size, FontStyle.Italic);
                 textBoxCharacters.Font = new Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size, FontStyle.Italic);
-                dataGridView1.Font = new Font(dataGridView1.Font.FontFamily, dataGridView1.Font.Size, FontStyle.Italic);               
+                dataGridView1.Font = new Font(dataGridView1.Font.FontFamily, dataGridView1.Font.Size, FontStyle.Italic);
                 labelItalicOn.Visible = true;
                 checkBoxItalic.Font = new Font(checkBoxItalic.Font.FontFamily, checkBoxItalic.Font.Size, FontStyle.Italic | FontStyle.Bold);
                 checkBoxItalic.ForeColor = Color.Red;
