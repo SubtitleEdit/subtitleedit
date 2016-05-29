@@ -35,16 +35,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             <detx copyright='Chinkel S.A., 2007 - 2016'>
             <header>
                 <cappella version='3.7.0'/>
-                <last_position timecode='[LAST]' track='0'/>      
+                <last_position timecode='00:00:00:00' track='0'/>      
             </header>
             <roles>
                 <role color='#000000' description='subtitle' id='sub' name='sub'/>
             </roles>
             <body />
-            </detx>".Replace('\"', '\'');
+            </detx>".Replace('\'', '\"');
             if (subtitle.Paragraphs.Count > 0)
             {
-                xmlStructure = xmlStructure.Replace("[LAST]", ToTimeCode(subtitle.Paragraphs[subtitle.Paragraphs.Count -1].EndTime));
+                xmlStructure = xmlStructure.Replace("00:00:00:00", ToTimeCode(subtitle.Paragraphs[subtitle.Paragraphs.Count -1].EndTime));
             }
 
             var xml = new XmlDocument();
