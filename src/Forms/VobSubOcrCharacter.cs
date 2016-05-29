@@ -35,8 +35,8 @@ namespace Nikse.SubtitleEdit.Forms
             germanToolStripMenuItem.Text = language.German;
             checkBoxAutoSubmitOfFirstChar.Text = language.AutoSubmitOnFirstChar;
 
-            dataGridView1.Rows.Add("♪", "á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű");
-            dataGridView1.Rows.Add("♫", "Á", "É", "Í", "Ó", "Ö", "Ő", "Ú", "Ü", "Ű");
+            dataGridView1.Rows.Add("♪", "á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű", "x", "z");
+            dataGridView1.Rows.Add("♫", "Á", "É", "Í", "Ó", "Ö", "Ő", "Ú", "Ü", "Ű", "X", "Z");
 
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
@@ -156,13 +156,19 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelCharactersAsText.Font = new Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size, FontStyle.Italic);
                 textBoxCharacters.Font = new Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size, FontStyle.Italic);
+                dataGridView1.Font = new Font(dataGridView1.Font.FontFamily, dataGridView1.Font.Size, FontStyle.Italic);               
                 labelItalicOn.Visible = true;
+                checkBoxItalic.Font = new Font(checkBoxItalic.Font.FontFamily, checkBoxItalic.Font.Size, FontStyle.Italic | FontStyle.Bold);
+                checkBoxItalic.ForeColor = Color.Red;
             }
             else
             {
                 labelCharactersAsText.Font = new Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size);
                 textBoxCharacters.Font = new Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size);
+                dataGridView1.Font = new Font(dataGridView1.Font.FontFamily, dataGridView1.Font.Size);
                 labelItalicOn.Visible = false;
+                checkBoxItalic.Font = new Font(checkBoxItalic.Font.FontFamily, checkBoxItalic.Font.Size);
+                checkBoxItalic.ForeColor = Control.DefaultForeColor;
             }
         }
 

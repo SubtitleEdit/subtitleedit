@@ -3083,19 +3083,27 @@ namespace Nikse.SubtitleEdit.Forms
             for (int k = 0; k < _binaryOcrDb.CompareImagesExpanded.Count; k++)
             {
                 var b = _binaryOcrDb.CompareImagesExpanded[k];
-                if (bob.Hash == b.Hash && bob.Width == b.Width && bob.Height == b.Height && bob.NumberOfColoredPixels == b.NumberOfColoredPixels)
+                if ((bob.Hash == b.Hash && bob.Width == b.Width && bob.Height == b.Height && bob.NumberOfColoredPixels == b.NumberOfColoredPixels) || GetPixelDifPercentage(b, bob, target) <= maxDiff)
                 {
                     bool ok = false;
                     for (int i = 0; i < b.ExpandedList.Count; i++)
                     {
-                        if (listIndex + i + 1 < list.Count && list[listIndex + i + 1].NikseBitmap != null && b.ExpandedList[i].Hash == new BinaryOcrBitmap(list[listIndex + i + 1].NikseBitmap).Hash)
+                        if (listIndex + i + 1 < list.Count && list[listIndex + i + 1].NikseBitmap != null)
                         {
-                            ok = true;
-                        }
-                        else
-                        {
-                            ok = false;
-                            break;
+                            var bobNext = new BinaryOcrBitmap(list[listIndex + i + 1].NikseBitmap);
+                            if (b.ExpandedList[i].Hash == bobNext.Hash)
+                            {
+                                ok = true;
+                            }
+                            else if (GetPixelDifPercentage(b.ExpandedList[i], bobNext, list[listIndex + i + 1].NikseBitmap) <= maxDiff)
+                            {
+                                ok = true;
+                            }
+                            else
+                            {
+                                ok = false;
+                                break;
+                            }
                         }
                     }
                     if (ok)
@@ -3198,7 +3206,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (bob.IsLowercaseJ()) // "j" detection must be before "i"
             {
-                return new CompareMatch("j", false, 0, null); 
+                return new CompareMatch("j", false, 0, null);
             }
             bool italicLowercaseI;
             if (bob.IsLowercaseI(out italicLowercaseI))
@@ -3219,6 +3227,37 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             return null;
+        }
+
+        private double GetPixelDifPercentage(BinaryOcrBitmap expanded, BinaryOcrBitmap bobNext, NikseBitmap nbmpNext)
+        {
+            var difColoredPercentage = (Math.Abs(expanded.NumberOfColoredPixels - bobNext.NumberOfColoredPixels)) * 100.0 / (bobNext.Width * bobNext.Height);
+            if (difColoredPercentage > 1 && expanded.Width < 3 || bobNext.Width < 3)
+                return 100;
+
+            int dif = int.MaxValue;
+            if (expanded.Height == bobNext.Height && expanded.Width == bobNext.Width)
+            {
+                dif = NikseBitmapImageSplitter.IsBitmapsAlike(nbmpNext, expanded);
+            }
+            else if (expanded.Height == bobNext.Height && expanded.Width == bobNext.Width + 1)
+            {
+                dif = NikseBitmapImageSplitter.IsBitmapsAlike(nbmpNext, expanded);
+            }
+            else if (expanded.Height == bobNext.Height && expanded.Width == bobNext.Width - 1)
+            {
+                dif = NikseBitmapImageSplitter.IsBitmapsAlike(expanded, nbmpNext);
+            }
+            else if (expanded.Width == bobNext.Width && expanded.Height == bobNext.Height + 1)
+            {
+                dif = NikseBitmapImageSplitter.IsBitmapsAlike(nbmpNext, expanded);
+            }
+            else if (expanded.Width == bobNext.Width && expanded.Height == bobNext.Height - 1)
+            {
+                dif = NikseBitmapImageSplitter.IsBitmapsAlike(expanded, nbmpNext);
+            }
+            var percentage = dif * 100.0 / (bobNext.Width * bobNext.Height);
+            return percentage;
         }
 
         public static Bitmap CopyBitmapSection(Bitmap srcBitmap, Rectangle section)
@@ -5571,6 +5610,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_compareBitmaps == null)
                     LoadImageCompareBitmaps();
+                _numericUpDownMaxErrorPct = (double)numericUpDownMaxErrorPct.Value;
             }
             else if (_ocrMethodIndex == _ocrMethodNocr)
             {
@@ -5624,6 +5664,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 _nOcrDb = new NOcrDb(_binaryOcrDb.FileName.Replace(".db", ".nocr"));
                 checkBoxNOcrCorrect.Checked = true;
+                _numericUpDownMaxErrorPct = (double)numericUpDownMaxErrorPct.Value;
             }
 
             progressBar1.Maximum = max;
