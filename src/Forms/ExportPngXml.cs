@@ -912,7 +912,39 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 return;
 
             xAndY = xAndY.ToLower();
-            if (Regex.IsMatch(xAndY, @"\d+x\d+", RegexOptions.IgnoreCase))
+
+            if (_exportType == "FCP")
+            {
+                switch (xAndY)
+                {
+                    case "720x480":
+                        xAndY = "NTSC-601";
+                        break;
+                    case "720x576":
+                        xAndY = "PAL-601";
+                        break;
+                    case "640x480":
+                        xAndY = "square";
+                        break;
+                    case "1280x720":
+                        xAndY = "DVCPROHD-720P";
+                        break;
+                    case "960x720":
+                        xAndY = "HD-(960x720)";
+                        break;
+                    case "1920x1080":
+                        xAndY = "DVCPROHD-1080i60";
+                        break;
+                    case "1280x1080":
+                        xAndY = "HD-(1280x1080)";
+                        break;
+                    case "1440x1080":
+                        xAndY = "HD-(1440x1080)";
+                        break;
+                }
+            }
+
+            if (_exportType == "FCP" || Regex.IsMatch(xAndY, @"\d+x\d+", RegexOptions.IgnoreCase))
             {
                 for (int i = 0; i < comboBoxResolution.Items.Count; i++)
                 {
@@ -1219,7 +1251,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             using (var bmp = nbmp.GetBitmap())
                             {
                                 int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
-                                int left = (param.ScreenWidth - param.Bitmap.Width)/2;
+                                int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
 
                                 var b = new NikseBitmap(param.ScreenWidth, param.ScreenHeight);
                                 {
@@ -1233,7 +1265,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                                             top = param.BottomMargin;
                                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
-                                            top = (param.ScreenHeight - param.Bitmap.Height)/2;
+                                            top = (param.ScreenHeight - param.Bitmap.Height) / 2;
 
                                         using (var g = Graphics.FromImage(outBitmap))
                                         {
@@ -3111,6 +3143,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxResolution.Items.Add("DVCPROHD-1080i50");
                 comboBoxResolution.Items.Add("HD-(1440x1080)");
                 comboBoxResolution.SelectedIndex = 3; // 720p
+                if ((_exportType == "FCP") && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportFcpVideoResolution))
+                    SetResolution(Configuration.Settings.Tools.ExportFcpVideoResolution);
+
                 buttonCustomResolution.Visible = true; // we still allow for custom resolutions
 
                 labelLanguage.Text = "NTSC/PAL";
@@ -3504,6 +3539,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportFcpFontSize = (int)_subtitleFontSize;
                 if (comboBoxImageFormat.SelectedItem != null)
                     Configuration.Settings.Tools.ExportFcpImageType = comboBoxImageFormat.SelectedItem.ToString();
+                Configuration.Settings.Tools.ExportFcpVideoResolution = res;
             }
             Configuration.Settings.Tools.ExportLastShadowTransparency = (int)numericUpDownShadowTransparency.Value;
             Configuration.Settings.Tools.ExportLastFrameRate = FrameRate;

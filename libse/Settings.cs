@@ -143,6 +143,7 @@ namespace Nikse.SubtitleEdit.Core
         public int ExportLastBorderWidth { get; set; }
         public bool ExportLastFontBold { get; set; }
         public string ExportBluRayVideoResolution { get; set; }
+        public string ExportFcpVideoResolution { get; set; }
         public Color ExportFontColor { get; set; }
         public Color ExportBorderColor { get; set; }
         public Color ExportShadowColor { get; set; }
@@ -1763,6 +1764,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ExportBluRayVideoResolution");
             if (subNode != null)
                 settings.Tools.ExportBluRayVideoResolution = subNode.InnerText;
+            subNode = node.SelectSingleNode("ExportFcpVideoResolution");
+            if (subNode != null)
+                settings.Tools.ExportFcpVideoResolution = subNode.InnerText;
             subNode = node.SelectSingleNode("ExportFontColor");
             if (subNode != null)
                 settings.Tools.ExportFontColor = Color.FromArgb(int.Parse(subNode.InnerText));
@@ -2964,6 +2968,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ExportLastBorderWidth", settings.Tools.ExportLastBorderWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastFontBold", settings.Tools.ExportLastFontBold.ToString());
                 textWriter.WriteElementString("ExportBluRayVideoResolution", settings.Tools.ExportBluRayVideoResolution);
+                textWriter.WriteElementString("ExportFcpVideoResolution", settings.Tools.ExportFcpVideoResolution);
                 textWriter.WriteElementString("ExportFontColor", settings.Tools.ExportFontColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportShadowColor", settings.Tools.ExportShadowColor.ToArgb().ToString(CultureInfo.InvariantCulture));
