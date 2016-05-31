@@ -82,6 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
         private LanguageStructure.General _languageGeneral;
         private SpellCheck _spellCheckForm;
         private bool _loading = true;
+        private bool _exitWhenLoaded;
         private int _repeatCount = -1;
         private double _endSeconds = -1;
         private const double EndDelay = 0.05;
@@ -1696,6 +1697,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         ImportAndOcrVobSubSubtitleNew(fileName, _loading);
                     }
+                    else
+                    {
+                        _exitWhenLoaded = _loading;
+                    }
                     return;
                 }
 
@@ -1706,7 +1711,7 @@ namespace Nikse.SubtitleEdit.Forms
                         ImportAndOcrBluRaySup(fileName, _loading);
                         return;
                     }
-                    else if (FileUtil.IsSpDvdSup(fileName))
+                    if (FileUtil.IsSpDvdSup(fileName))
                     {
                         ImportAndOcrSpDvdSup(fileName, _loading);
                         return;
@@ -8888,6 +8893,10 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         OpenVideo(matroska.Path);
                                     }
+                                    else
+                                    {
+                                        _exitWhenLoaded = _loading;
+                                    }
                                 }
                             }
                         }
@@ -8897,6 +8906,10 @@ namespace Nikse.SubtitleEdit.Forms
                                 Path.GetExtension(matroska.Path).Equals(".mkv", StringComparison.OrdinalIgnoreCase))
                             {
                                 OpenVideo(matroska.Path);
+                            }
+                            else
+                            {
+                                _exitWhenLoaded = _loading;
                             }
                         }
                     }
@@ -9527,6 +9540,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (tsParser.SubtitlePacketIds.Count == 0)
             {
                 MessageBox.Show(_language.NoSubtitlesFound);
+                _exitWhenLoaded = _loading;
                 return false;
             }
 
@@ -9576,6 +9590,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.Save();
                     return true;
                 }
+                _exitWhenLoaded = _loading;
                 return false;
             }
         }
@@ -10387,8 +10402,7 @@ namespace Nikse.SubtitleEdit.Forms
                     vobSubOcr.ShowInTaskbar = true;
                     vobSubOcr.ShowIcon = true;
                 }
-                if (vobSubOcr.Initialize(fileName, Configuration.Settings.VobSubOcr, this)
-                    && vobSubOcr.ShowDialog(this) == DialogResult.OK)
+                if (vobSubOcr.Initialize(fileName, Configuration.Settings.VobSubOcr, this) && vobSubOcr.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeImportingVobSubFile);
                     FileNew();
@@ -10412,6 +10426,10 @@ namespace Nikse.SubtitleEdit.Forms
                     _converted = true;
 
                     Configuration.Settings.Save();
+                }
+                else
+                {
+                    _exitWhenLoaded = _loading;
                 }
             }
         }
@@ -14500,6 +14518,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
             _dragAndDropTimer.Interval = 50;
             _dragAndDropTimer.Tick += DoSubtitleListview1Drop;
+
+            if (_exitWhenLoaded)
+                Application.Exit();
         }
 
         private void TimerCheckForUpdatesTick(object sender, EventArgs e)
@@ -15573,6 +15594,10 @@ namespace Nikse.SubtitleEdit.Forms
                     _converted = true;
 
                     Configuration.Settings.Save();
+                }
+                else
+                {
+                    _exitWhenLoaded = _loading;
                 }
             }
         }
