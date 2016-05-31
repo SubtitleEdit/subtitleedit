@@ -1806,6 +1806,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
             Font font = SetFont(parameter, parameter.SubtitleFontSize);
+            Stack<Font> fontStack = new Stack<Font>();
             while (i < text.Length)
             {
                 if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
@@ -1876,6 +1877,40 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 }
                             }
                         }
+                        if (fontContent.Contains(" face=") || fontContent.Contains(" size="))
+                        {
+                            float fontSize = parameter.SubtitleFontSize;
+                            string fontFace = parameter.SubtitleFontName;
+
+                            string[] arr = fontContent.Substring(fontContent.IndexOf(" face=", StringComparison.Ordinal) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (arr.Length > 0)
+                            {
+                                fontFace = arr[0].Trim('\'').Trim('"').Trim('\'');
+                            }
+
+                            arr = fontContent.Substring(fontContent.IndexOf(" size=", StringComparison.Ordinal) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (arr.Length > 0)
+                            {
+                                string temp = arr[0].Trim('\'').Trim('"').Trim('\'');
+                                float f;
+                                if (float.TryParse(temp, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out f))
+                                {
+                                    fontSize = f;
+                                }
+                            }
+
+                            try
+                            {
+                                fontStack.Push(font); // save old cfont
+                                var p = new MakeBitmapParameter() { SubtitleFontName = fontFace, SubtitleFontSize = fontSize };
+                                font = SetFont(p, p.SubtitleFontSize);
+                            }
+                            catch
+                            {
+                                font = fontStack.Pop();
+                            }
+
+                        }
                         i += endIndex;
                     }
                 }
@@ -1925,6 +1960,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             c = colorStack.Pop();
                         if (left >= 3)
                             left -= 2.5f;
+                    }
+                    if (fontStack.Count > 0)
+                    {
+                        font = fontStack.Pop();
                     }
                     i += 6;
                 }
@@ -2366,6 +2405,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         int newLinePathPoint = -1;
                         Color c = parameter.SubtitleColor;
                         var colorStack = new Stack<Color>();
+                        var fontStack = new Stack<Font>();
                         var lastText = new StringBuilder();
                         int numberOfCharsOnCurrentLine = 0;
                         for (var i = 0; i < text.Length; i++)
@@ -2438,6 +2478,42 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                             }
                                         }
                                     }
+                                    if (fontContent.Contains(" face=") || fontContent.Contains(" size="))
+                                    {
+                                        float fontSize = parameter.SubtitleFontSize;
+                                        string fontFace = parameter.SubtitleFontName;
+
+                                        string[] arr = fontContent.Substring(fontContent.IndexOf(" face=", StringComparison.Ordinal) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                        if (arr.Length > 0)
+                                        {
+                                            fontFace = arr[0].Trim('\'').Trim('"').Trim('\'');
+                                        }
+
+                                        arr = fontContent.Substring(fontContent.IndexOf(" size=", StringComparison.Ordinal) + 6).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                        if (arr.Length > 0)
+                                        {
+                                            string temp = arr[0].Trim('\'').Trim('"').Trim('\'');
+                                            float f;
+                                            if (float.TryParse(temp, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out f))
+                                            {
+                                                fontSize = f;
+                                            }
+                                        }
+
+                                        try
+                                        {
+                                            fontStack.Push(font); // save old cfont
+                                            var p = new MakeBitmapParameter() { SubtitleFontName = fontFace, SubtitleFontSize = fontSize };
+                                            font = SetFont(p, p.SubtitleFontSize);
+                                        }
+                                        catch
+                                        {
+                                            font = fontStack.Pop();
+                                        }
+
+                                    }
+
+
                                     i += endIndex;
                                 }
                             }
@@ -2487,6 +2563,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         c = colorStack.Pop();
                                     if (left >= 3)
                                         left -= 2.5f;
+                                }
+                                if (fontStack.Count > 0)
+                                {
+                                    font = fontStack.Pop();
                                 }
                                 i += 6;
                             }
