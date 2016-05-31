@@ -11387,8 +11387,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GoToFirstEmptyLine()
         {
-            var index = FirstSelectedIndex + 1;
-            for (; index < _subtitle.Paragraphs.Count; index++)
+            for (int index = FirstSelectedIndex + 1; index < _subtitle.Paragraphs.Count; index++)
             {
                 if (string.IsNullOrWhiteSpace(_subtitle.Paragraphs[index].Text))
                 {
@@ -11614,9 +11613,10 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 foreach (var line in lines)
                 {
-                    if (line.TrimStart().StartsWith('-') || line.TrimStart().StartsWith("<i>-") || line.TrimStart().StartsWith("<i> -"))
+                    string trimmedLine = line.TrimStart();
+                    if (trimmedLine.StartsWith('-') || trimmedLine.StartsWith("<i>-", StringComparison.Ordinal) || trimmedLine.StartsWith("<i> -", StringComparison.Ordinal))
                         sb.AppendLine(line);
-                    else if (line.TrimStart().StartsWith("<i>") && line.Trim().Length > 3)
+                    else if (trimmedLine.StartsWith("<i>", StringComparison.Ordinal) && trimmedLine.Length > 3)
                         sb.AppendLine("<i>- " + line.Substring(3).TrimStart());
                     else
                         sb.AppendLine("- " + line);
@@ -11638,10 +11638,11 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 foreach (var line in lines)
                 {
-                    if (line.TrimStart().StartsWith('-'))
-                        sb.AppendLine(line.TrimStart().TrimStart('-').TrimStart());
-                    else if (line.TrimStart().StartsWith("<i>-", StringComparison.Ordinal) || line.TrimStart().StartsWith("<i> -", StringComparison.Ordinal))
-                        sb.AppendLine("<i>" + line.TrimStart().Substring(3).TrimStart().TrimStart('-').TrimStart());
+                    string trimmedLine = line.TrimStart();
+                    if (trimmedLine.StartsWith('-'))
+                        sb.AppendLine(trimmedLine.TrimStart('-').TrimStart());
+                    else if (trimmedLine.StartsWith("<i>-", StringComparison.Ordinal) || trimmedLine.StartsWith("<i> -", StringComparison.Ordinal))
+                        sb.AppendLine("<i>" + trimmedLine.Substring(3).TrimStart().TrimStart('-').TrimStart());
                     else
                         sb.AppendLine(line);
                 }
@@ -13020,7 +13021,7 @@ namespace Nikse.SubtitleEdit.Forms
                     labelVideoInfo.Text = labelVideoInfo.Text + " " + string.Format("{0:0.0##}", _videoInfo.FramesPerSecond);
 
                 string peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(fileName);
-                string spectrogramFolder = Nikse.SubtitleEdit.Core.WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(fileName);
+                string spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(fileName);
                 if (File.Exists(peakWaveFileName))
                 {
                     audioVisualizer.WavePeaks = WavePeakData.FromDisk(peakWaveFileName);
@@ -15109,7 +15110,7 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var addWaveform = new AddWaveform())
                 {
                     var peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(_videoFileName);
-                    var spectrogramFolder = Nikse.SubtitleEdit.Core.WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(_videoFileName);
+                    var spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(_videoFileName);
 
                     if (WavePeakGenerator.IsFileValidForVisualizer(_videoFileName))
                     {
@@ -15501,7 +15502,7 @@ namespace Nikse.SubtitleEdit.Forms
             using (var addWaveform = new AddWaveform())
             {
                 string peakWaveFileName = WavePeakGenerator.GetPeakWaveFileName(_videoFileName);
-                string spectrogramFolder = Nikse.SubtitleEdit.Core.WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(_videoFileName);
+                string spectrogramFolder = WavePeakGenerator.SpectrogramDrawer.GetSpectrogramFolder(_videoFileName);
                 addWaveform.InitializeViaWaveFile(fileName, peakWaveFileName, spectrogramFolder);
                 if (addWaveform.ShowDialog() == DialogResult.OK)
                 {
