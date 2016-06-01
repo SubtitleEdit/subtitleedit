@@ -563,6 +563,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
             }
+            if (BatchSourceFrameRate.HasValue)
+            {
+                Configuration.Settings.General.CurrentFrameRate = BatchSourceFrameRate.Value;
+            }
 
             Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = null;
             subtitle.Header = sb.ToString();

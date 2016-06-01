@@ -85,6 +85,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         double f = frameRate / TimeCode.BaseUnit;
                         if (f > 10 && f < 500)
                             Configuration.Settings.General.CurrentFrameRate = f;
+
+                        if (BatchSourceFrameRate.HasValue)
+                        {
+                            Configuration.Settings.General.CurrentFrameRate = BatchSourceFrameRate.Value;
+                        }
                     }
                 }
                 else if (string.IsNullOrWhiteSpace(line) || line.StartsWith('$'))

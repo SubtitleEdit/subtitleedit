@@ -94,10 +94,32 @@ namespace Nikse.SubtitleEdit.Logic
             try
             {
                 var pattern = arguments[2].Trim();
-                var targetFormat = arguments[3].Trim().Replace(" ", string.Empty);
+
+
+                var targetFormat = arguments[3].Trim().Replace(" ", string.Empty).ToLowerInvariant();
+                if (targetFormat == "ass")
+                {
+                    targetFormat = AdvancedSubStationAlpha.NameOfFormat.Replace(" ", string.Empty).ToLowerInvariant();
+                }
+                else if (targetFormat == "ssa")
+                {
+                    targetFormat = SubStationAlpha.NameOfFormat.Replace(" ", string.Empty).ToLowerInvariant();
+                }
+                else if (targetFormat == "srt")
+                {
+                    targetFormat = SubRip.NameOfFormat.Replace(" ", string.Empty).ToLowerInvariant();
+                }
+                else if (targetFormat == "smi")
+                {
+                    targetFormat = "sami";
+                }
+                else if (targetFormat == "itt")
+                {
+                    targetFormat = "itunestimedtext";
+                }
+
                 var args = new List<string>(arguments.Skip(4).Select(s => s.Trim()));
                 var offset = GetArgument(args, "offset:");
-
                 var targetFrameRate = GetFrameRate(args, "targetfps");
                 var frameRate = GetFrameRate(args, "fps");
                 if (frameRate.HasValue)
@@ -339,7 +361,7 @@ namespace Nikse.SubtitleEdit.Logic
                         if (!done && fileInfo.Length < 10 * 1024 * 1024) // max 10 mb
                         {
                             Encoding encoding;
-                            format = sub.LoadSubtitle(fileName, out encoding, null, true);
+                            format = sub.LoadSubtitle(fileName, out encoding, null, true, frameRate);
 
                             if (format == null || format.GetType() == typeof(Ebu))
                             {

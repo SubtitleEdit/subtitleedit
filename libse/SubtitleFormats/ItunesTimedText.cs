@@ -88,21 +88,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             nsmgr.AddNamespace("tts", "http://www.w3.org/ns/10/ttml#style");
             nsmgr.AddNamespace("ttm", "http://www.w3.org/ns/10/ttml#metadata");
 
-            string frameRate = "24";
+            string frameRate = ((int)Math.Round(Configuration.Settings.General.CurrentFrameRate)).ToString();
             string frameRateMultiplier = "999 1000";
-            if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 30.0) < 0.2)
+            if (Configuration.Settings.General.CurrentFrameRate % 1.0 < 0.01)
             {
-                frameRate = "30";
-            }
-            else if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 25.0) < 0.01)
-            {
-                frameRate = "25";
                 frameRateMultiplier = "1 1";
+            }
+            string dropMode = "nonDrop";
+            if (Math.Abs(Configuration.Settings.General.CurrentFrameRate - 29.97) < 0.01)
+            {
+                dropMode = "dropNTSC";
             }
 
             const string language = "en-US";
             string xmlStructure = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
-            "<tt xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tt=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\" xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" xml:lang=\"" + language + "\" ttp:timeBase=\"smpte\" ttp:frameRate=\"" + frameRate + "\" ttp:frameRateMultiplier=\"" + frameRateMultiplier + "\" ttp:dropMode=\"nonDrop\">" + Environment.NewLine +
+            "<tt xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tt=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\" xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" xml:lang=\"" + language + "\" ttp:timeBase=\"smpte\" ttp:frameRate=\"" + frameRate + "\" ttp:frameRateMultiplier=\"" + frameRateMultiplier + "\" ttp:dropMode=\"" + dropMode + "\">" + Environment.NewLine +
             "   <head>" + Environment.NewLine +
             "       <styling>" + Environment.NewLine +
             "         <style tts:fontSize=\"100%\" tts:color=\"white\" tts:fontStyle=\"normal\" tts:fontWeight=\"normal\" tts:fontFamily=\"sansSerif\" xml:id=\"normal\"/>" + Environment.NewLine +
