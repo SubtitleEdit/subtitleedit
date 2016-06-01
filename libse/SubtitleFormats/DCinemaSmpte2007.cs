@@ -500,6 +500,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         Configuration.Settings.General.CurrentFrameRate = 24;
                     else if (ss.CurrentDCinemaEditRate == "25")
                         Configuration.Settings.General.CurrentFrameRate = 24;
+
+                    if (BatchSourceFrameRate.HasValue)
+                    {
+                        Configuration.Settings.General.CurrentFrameRate = BatchSourceFrameRate.Value;
+                    }
                 }
 
                 node = xml.DocumentElement.SelectSingleNode("StartTime");

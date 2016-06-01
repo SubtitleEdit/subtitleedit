@@ -29,9 +29,17 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _header = subtitle.Header;
             _format = format;
             _isSubStationAlpha = _format.Name == SubStationAlpha.NameOfFormat;
+
+            if (_header != null && _header.Contains("http://www.w3.org/ns/ttml"))
+            {
+                var s = new Subtitle { Header = _header };
+                AdvancedSubStationAlpha.LoadStylesFromTimedText10(s, string.Empty, _header, AdvancedSubStationAlpha.HeaderNoStyles, new StringBuilder());
+                _header = s.Header;
+            }
+
             if (_header == null || !_header.Contains("style:", StringComparison.OrdinalIgnoreCase))
                 ResetHeader();
-
+            
             comboBoxFontName.Items.Clear();
             foreach (var x in FontFamily.Families)
                 comboBoxFontName.Items.Add(x.Name);

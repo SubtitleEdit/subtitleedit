@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Core
             return LoadSubtitle(fileName, out encoding, useThisEncoding, false);
         }
 
-        public SubtitleFormat LoadSubtitle(string fileName, out Encoding encoding, Encoding useThisEncoding, bool batchMode)
+        public SubtitleFormat LoadSubtitle(string fileName, out Encoding encoding, Encoding useThisEncoding, bool batchMode, double? sourceFrameRate = null)
         {
             FileName = fileName;
 
@@ -174,6 +174,7 @@ namespace Nikse.SubtitleEdit.Core
                 {
                     Header = null;
                     subtitleFormat.BatchMode = batchMode;
+                    subtitleFormat.BatchSourceFrameRate = sourceFrameRate;
                     subtitleFormat.LoadSubtitle(this, lines, fileName);
                     _format = subtitleFormat;
                     _wasLoadedWithFrameNumbers = _format.IsFrameBased;

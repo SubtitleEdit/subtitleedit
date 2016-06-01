@@ -376,6 +376,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         }
 
         public bool BatchMode { get; set; }
+        public double? BatchSourceFrameRate { get; set; }
 
         public static string ToUtf8XmlString(XmlDocument xml, bool omitXmlDeclaration = false)
         {

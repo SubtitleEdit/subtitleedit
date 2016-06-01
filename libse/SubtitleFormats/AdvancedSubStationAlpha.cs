@@ -95,8 +95,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return false;
         }
 
+        public const string HeaderNoStyles = @"[Script Info]
+; This is an Advanced Sub Station Alpha v4+ script.
+Title: {0}
+ScriptType: v4.00+
+Collisions: Normal
+PlayDepth: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+{1}
+
+[Events]
+Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
+
         public override string ToText(Subtitle subtitle, string title)
         {
+            bool fromTtml = false;
             string header = @"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
 Title: {0}
@@ -107,20 +122,6 @@ PlayDepth: 0
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 " + DefaultStyle + @"
-
-[Events]
-Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
-
-            const string headerNoStyles = @"[Script Info]
-; This is an Advanced Sub Station Alpha v4+ script.
-Title: {0}
-ScriptType: v4.00+
-Collisions: Normal
-PlayDepth: 0
-
-[V4+ Styles]
-Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-{1}
 
 [Events]
 Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
@@ -140,11 +141,17 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             }
             else if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]"))
             {
-                LoadStylesFromSubstationAlpha(subtitle, title, header, headerNoStyles, sb);
+                LoadStylesFromSubstationAlpha(subtitle, title, header, HeaderNoStyles, sb);
             }
             else if (subtitle.Header != null && subtitle.Header.Contains("http://www.w3.org/ns/ttml"))
             {
-                LoadStylesFromTimedText10(subtitle, title, header, headerNoStyles, sb);
+                LoadStylesFromTimedText10(subtitle, title, header, HeaderNoStyles, sb);
+                fromTtml = true;
+                isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
+                if (isValidAssHeader)
+                {
+                    styles = GetStylesFromHeader(subtitle.Header);
+                }
             }
             else
             {
@@ -157,6 +164,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 string style = "Default";
                 if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
                     style = p.Extra;
+                if (fromTtml && !string.IsNullOrEmpty(p.Style) && isValidAssHeader && styles.Contains(p.Style))
+                    style = p.Style;
 
                 string actor = "";
                 if (!string.IsNullOrEmpty(p.Actor))
@@ -271,7 +280,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             }
         }
 
-        private static void LoadStylesFromTimedText10(Subtitle subtitle, string title, string header, string headerNoStyles, StringBuilder sb)
+        public static void LoadStylesFromTimedText10(Subtitle subtitle, string title, string header, string headerNoStyles, StringBuilder sb)
         {
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -388,6 +397,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
             if (headerLines == null)
                 headerLines = DefaultStyle;
+
+            if (headerLines.Contains("http://www.w3.org/ns/ttml"))
+            {
+                var subtitle = new Subtitle { Header = headerLines };
+                LoadStylesFromTimedText10(subtitle, string.Empty, headerLines, HeaderNoStyles, new StringBuilder());
+                headerLines = subtitle.Header;
+            }
 
             foreach (string line in headerLines.SplitToLines())
             {
