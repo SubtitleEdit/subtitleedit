@@ -14,9 +14,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             get { return ".itt"; }
         }
 
+        public new const string NameOfFormat = "iTunes Timed Text";
+
         public override string Name
         {
-            get { return "iTunes Timed Text"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -35,6 +37,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             XmlNode styleHead = null;
+            bool convertedFromSubStationAlpha = false;
             if (subtitle.Header != null)
             {
                 try
@@ -71,6 +74,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 if (ssaStyle.Bold)
                                     fontWeight = "bold";
                                 AddStyleToXml(x, styleHead, xnsmgr, ssaStyle.Name, ssaStyle.FontName, fontWeight, fontStyle, Utilities.ColorToHex(ssaStyle.Primary), ssaStyle.FontSize.ToString());
+                                convertedFromSubStationAlpha = true;
                             }
                         }
                         catch
@@ -174,6 +178,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             int no = 0;
+            var headerStyles = GetStylesFromHeader(subtitle.Header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
@@ -196,7 +201,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (text.StartsWith("{\\an", StringComparison.Ordinal) && text.Length > 6 && text[5] == '}')
                     text = text.Remove(0, 6);
 
-                if (subtitle.Header != null && p.Style != null && GetStylesFromHeader(subtitle.Header).Contains(p.Style))
+                if (convertedFromSubStationAlpha)
+                {
+                    if (string.IsNullOrEmpty(p.Style))
+                    {
+                        p.Style = p.Extra;
+                    }
+                }
+
+                if (subtitle.Header != null && p.Style != null && headerStyles.Contains(p.Style))
                 {
                     if (p.Style != defaultStyle)
                     {

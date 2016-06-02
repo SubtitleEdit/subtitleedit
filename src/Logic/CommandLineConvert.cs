@@ -115,7 +115,11 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 else if (targetFormat == "itt")
                 {
-                    targetFormat = "itunestimedtext";
+                    targetFormat = ItunesTimedText.NameOfFormat.Replace(" ", string.Empty).ToLowerInvariant();
+                }
+                else if (targetFormat == "ttml")
+                {
+                    targetFormat = TimedText10.NameOfFormat.Replace(" ", string.Empty).ToLowerInvariant();
                 }
 
                 var args = new List<string>(arguments.Skip(4).Select(s => s.Trim()));
