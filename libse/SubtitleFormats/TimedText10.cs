@@ -17,9 +17,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             get { return ".xml"; }
         }
 
+        public const string NameOfFormat = "Timed Text 1.0";
+
         public override string Name
         {
-            get { return "Timed Text 1.0"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -136,7 +138,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            XmlNode styleHead = null;
+            bool hasStyleHead = false;
+            bool convertedFromSubStationAlpha = false;
             if (subtitle.Header != null)
             {
                 try
@@ -145,40 +148,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     x.LoadXml(subtitle.Header);
                     var xnsmgr = new XmlNamespaceManager(x.NameTable);
                     xnsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                    styleHead = x.DocumentElement.SelectSingleNode("ttml:head", xnsmgr);
+                    hasStyleHead = x.DocumentElement.SelectSingleNode("ttml:head", xnsmgr) != null;
                 }
                 catch
                 {
                 }
-                if (styleHead == null && (subtitle.Header.Contains("[V4+ Styles]") || subtitle.Header.Contains("[V4 Styles]")))
+                if (!hasStyleHead  && (subtitle.Header.Contains("[V4+ Styles]") || subtitle.Header.Contains("[V4 Styles]")))
                 {
-                    var x = new XmlDocument();
-                    x.LoadXml(new TimedText10().ToText(new Subtitle(), "tt")); // load default xml
-                    var xnsmgr = new XmlNamespaceManager(x.NameTable);
-                    xnsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                    styleHead = x.DocumentElement.SelectSingleNode("ttml:head", xnsmgr);
-                    styleHead.SelectSingleNode("ttml:styling", xnsmgr).RemoveAll();
-                    foreach (string styleName in AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header))
-                    {
-                        try
-                        {
-                            var ssaStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitle.Header);
-                            if (ssaStyle != null)
-                            {
-                                string fontStyle = "normal";
-                                if (ssaStyle.Italic)
-                                    fontStyle = "italic";
-                                string fontWeight = "normal";
-                                if (ssaStyle.Bold)
-                                    fontWeight = "bold";
-                                AddStyleToXml(x, styleHead, xnsmgr, ssaStyle.Name, ssaStyle.FontName, fontWeight, fontStyle, Utilities.ColorToHex(ssaStyle.Primary), ssaStyle.FontSize.ToString(CultureInfo.InvariantCulture));
-                            }
-                        }
-                        catch
-                        {
-                        }
-                    }
-                    subtitle.Header = x.OuterXml; // save new xml with styles in header
+                    subtitle.Header = SubStationAlphaHeaderToTimedText(subtitle); // save new xml with styles in header
+                    convertedFromSubStationAlpha = true;
+                    hasStyleHead = true;
                 }
             }
 
@@ -202,7 +181,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "       <div />" + Environment.NewLine +
             "   </body>" + Environment.NewLine +
             "</tt>";
-            if (styleHead == null)
+            if (hasStyleHead || string.IsNullOrEmpty(subtitle.Header))
             {
                 xml.LoadXml(xmlStructure);
             }
@@ -315,6 +294,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         div = xml.CreateElement("div", "http://www.w3.org/ns/ttml");
                         divParentNode.AppendChild(div);
                     }
+                    if (convertedFromSubStationAlpha && string.IsNullOrEmpty(p.Style))
+                    {
+                        p.Style = p.Extra;
+                    }
+
                     XmlNode paragraph = MakeParagraph(subtitle, xml, defaultStyle, no, headerStyles, regions, p);
                     div.AppendChild(paragraph);
                     no++;
@@ -327,6 +311,38 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty).Replace(" xmlns:tts=\"http://www.w3.org/ns/10/ttml#style\">", ">");
+        }
+
+        public static string SubStationAlphaHeaderToTimedText(Subtitle subtitle)
+        {
+            var x = new XmlDocument();
+            x.LoadXml(new TimedText10().ToText(new Subtitle(), "tt")); // load default xml
+            var xnsmgr = new XmlNamespaceManager(x.NameTable);
+            xnsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+            var styleHead = x.DocumentElement.SelectSingleNode("ttml:head", xnsmgr);
+            styleHead.SelectSingleNode("ttml:styling", xnsmgr).RemoveAll();
+            foreach (string styleName in AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header))
+            {
+                try
+                {
+                    var ssaStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitle.Header);
+                    if (ssaStyle != null)
+                    {
+                        string fontStyle = "normal";
+                        if (ssaStyle.Italic)
+                            fontStyle = "italic";
+                        string fontWeight = "normal";
+                        if (ssaStyle.Bold)
+                            fontWeight = "bold";
+                        AddStyleToXml(x, styleHead, xnsmgr, ssaStyle.Name, ssaStyle.FontName, fontWeight, fontStyle, Utilities.ColorToHex(ssaStyle.Primary), ssaStyle.FontSize.ToString(CultureInfo.InvariantCulture));
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+            return x.OuterXml;
         }
 
         private static XmlNode MakeParagraph(Subtitle subtitle, XmlDocument xml, string defaultStyle, int no, List<string> headerStyles, List<string> regions, Paragraph p)

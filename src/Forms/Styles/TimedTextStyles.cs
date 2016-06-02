@@ -33,7 +33,23 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
             catch
             {
-                _xml.LoadXml(new TimedText10().ToText(new Subtitle(), "tt")); // load default xml
+                if (subtitle.Header.Contains("[V4+ Styles]") || subtitle.Header.Contains("[V4 Styles]"))
+                {
+                    subtitle.Header = TimedText10.SubStationAlphaHeaderToTimedText(subtitle); // save new header with TTML styles (converted from ssa/ass)
+                }
+
+                try
+                {
+                    _xml.LoadXml(subtitle.Header);
+                    var xnsmgr = new XmlNamespaceManager(_xml.NameTable);
+                    xnsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                    if (_xml.DocumentElement.SelectSingleNode("ttml:head", xnsmgr) == null)
+                        _xml.LoadXml(new TimedText10().ToText(new Subtitle(), "tt")); // load default xml
+                }
+                catch
+                {
+                    _xml.LoadXml(new TimedText10().ToText(new Subtitle(), "tt")); // load default xml
+                }
             }
             _nsmgr = new XmlNamespaceManager(_xml.NameTable);
             _nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
