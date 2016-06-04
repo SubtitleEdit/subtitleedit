@@ -278,9 +278,9 @@ namespace Nikse.SubtitleEdit.Forms
                     bmp = bob.ToOldBitmap();
                     labelImageInfo.Text = string.Format("Top:{0}, {1} colored pixels of {2}", bob.Y, bob.NumberOfColoredPixels, (bob.Width * bob.Height));
 
-                    //bool italicI;
-                    //var isI = bob.IsLowercaseI(out italicI);
-                    //labelImageInfo.Text = string.Format("T:{0} j{1} :{2} i{3}{4} '{5} #{6}/{7}", bob.Y, bob.IsLowercaseJ(), bob.IsColon(), isI, italicI ? "i" : "", bob.IsApostrophe(), bob.NumberOfColoredPixels, (bob.Width * bob.Height));
+                    bool italicI;
+                    var isI = bob.IsLowercaseI(out italicI);
+                    labelImageInfo.Text = string.Format("T:{0} j{1} :{2} i{3}{4} '{5} #{6}/{7}", bob.Y, bob.IsLowercaseJ(), bob.IsColon(), isI, italicI ? "i" : "", bob.IsApostrophe(), bob.NumberOfColoredPixels, (bob.Width * bob.Height));
 
                     if (bob.ExpandCount > 0)
                     {
@@ -632,6 +632,15 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MessageBox.Show(exception.Message);
                 }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            using (var form = new VobSubCharactersImport(_binOcrDb))
+            {
+                form.ShowDialog(this);
+                DialogResult = DialogResult.OK;
             }
         }
 

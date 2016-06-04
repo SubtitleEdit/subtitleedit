@@ -50,6 +50,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelCount = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBoxCurrentCompareImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -262,11 +263,25 @@
             this.labelCount.TabIndex = 8;
             this.labelCount.Text = "labelCount";
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.button1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.button1.Location = new System.Drawing.Point(453, 27);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(123, 21);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "&Import";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // VobSubEditCharacters
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(588, 426);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.labelCount);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBoxCurrentCompareImage);
@@ -319,5 +334,6 @@
         private System.Windows.Forms.ToolStripMenuItem saveImageAsToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Label labelExpandCount;
+        private System.Windows.Forms.Button button1;
     }
 }
