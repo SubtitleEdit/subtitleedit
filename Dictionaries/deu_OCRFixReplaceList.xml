@@ -6792,6 +6792,20 @@
     <Word from="ﬂlr" to="für" />
     <Word from="ﬂlrchterlich" to="fürchterlich" />
     <Word from="ﬂndet" to="findet" />
+    <Word from="AIle" to="Alle" />
+    <Word from="AIter" to="Alter" />
+    <Word from="GIück" to="Glück" />
+    <Word from="PIaystation" to="Playstation" />
+    <Word from="AIIes" to="Alles" />
+    <Word from="AIso" to="Also" />
+    <Word from="Ouatsch" to="Quatsch" />
+    <Word from="AIles" to="Alles" />
+    <Word from="BIeib" to="Bleib" />
+    <Word from="KIaut" to="Klaut" />
+    <Word from="AIlah" to="Allah" />
+    <Word from="PIan" to="Plan" />
+    <Word from="oderjemand" to="oder jemand" />
+    <Word from="liestjetzt" to="liest jetzt" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->

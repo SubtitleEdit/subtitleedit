@@ -240,6 +240,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
 
         public Bitmap ToOldBitmap()
         {
+            return ToOldBitmap(Color.White);
+        }
+
+        public Bitmap ToOldBitmap(Color color)
+        {
             if (ExpandedList != null && ExpandedList.Count > 0)
             {
                 int minX = X;
@@ -274,7 +279,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                     }
                 }
 
-                return nbmp.ToOldBitmap(); // Resursive
+                return nbmp.ToOldBitmap(color); // Resursive
             }
             else
             {
@@ -285,7 +290,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                     {
                         Color c = Color.Transparent;
                         if (GetPixel(x, y) > 0)
-                            c = Color.White;
+                            c = color;
                         nbmp.SetPixel(x, y, c);
                     }
                 }

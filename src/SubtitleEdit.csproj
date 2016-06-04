@@ -721,6 +721,12 @@
     <Compile Include="Forms\VisualSync.Designer.cs">
       <DependentUpon>VisualSync.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\VobSubCharactersImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VobSubCharactersImport.Designer.cs">
+      <DependentUpon>VobSubCharactersImport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\VobSubEditCharacters.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1205,6 +1211,9 @@
     <EmbeddedResource Include="Forms\VisualSync.resx">
       <DependentUpon>VisualSync.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VobSubCharactersImport.resx">
+      <DependentUpon>VobSubCharactersImport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VobSubNOcrCharacterInspect.resx">
       <DependentUpon>VobSubNOcrCharacterInspect.cs</DependentUpon>
