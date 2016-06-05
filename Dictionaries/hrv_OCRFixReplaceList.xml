@@ -695,8 +695,8 @@
     <RegEx find="[CČĆ]utanje\b" replaceWith="Šutnja" />
     <RegEx find="[cčć]utanjem" replaceWith="šutnjom" />
     <RegEx find="[CČĆ]utanjem" replaceWith="Šutnjom" />
-    <RegEx find="[cčć]ut(ln)j" replaceWith="šut$1j" />
-    <RegEx find="[CČĆ]ut(ln)j" replaceWith="Šut$1j" />
+    <RegEx find="[cčć]ut([ln])j" replaceWith="šut$1j" />
+    <RegEx find="[CČĆ]ut([ln])j" replaceWith="Šut$1j" />
     <RegEx find="\b([dD])a[čć]([eu])" replaceWith="$1at ć$2" />
     <RegEx find="([dD])ejstv" replaceWith="$1jelovanj" />
     <RegEx find="([dD])ejstvo(m)" replaceWith="$1jelovanje$2" />
