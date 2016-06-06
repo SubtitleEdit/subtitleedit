@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
@@ -733,144 +733,148 @@ https://github.com/SubtitleEdit/subtitleedit
     <Note>Примечание: Файлы должны иметь правильные временные коды</Note>
   </JoinSubtitles>
   <LanguageNames>
-    <aaName>афар</aaName>
-    <abName>абхазский</abName>
-    <afName>африкаанс</afName>
-    <amName>амхарский</amName>
-    <arName>арабский</arName>
-    <asName>ассамский</asName>
-    <ayName>аймара</ayName>
-    <azName>азербайджанский</azName>
-    <baName>башкирский</baName>
-    <beName>белорусский</beName>
-    <bgName>болгарский</bgName>
-    <biName>бислама</biName>
-    <bnName>бенгальский</bnName>
-    <boName>тибетский</boName>
-    <brName>бретонский</brName>
-    <caName>каталанский</caName>
-    <coName>корсиканский</coName>
-    <csName>чешский</csName>
-    <cyName>валлийский</cyName>
-    <daName>датский</daName>
-    <deName>немецкий</deName>
-    <dzName>дзонг-кэ</dzName>
-    <elName>греческий</elName>
-    <enName>английский</enName>
-    <eoName>эсперанто</eoName>
-    <esName>испанский</esName>
-    <etName>эстонский</etName>
-    <euName>баскский</euName>
-    <faName>персидский</faName>
-    <fiName>финский</fiName>
-    <fjName>фиджи</fjName>
-    <foName>фарерский</foName>
-    <frName>французский</frName>
-    <fyName>западно-фризский</fyName>
-    <gaName>ирландский</gaName>
-    <gdName>гэльский</gdName>
-    <glName>галисийский</glName>
-    <gnName>гуарани</gnName>
-    <guName>гуджарати</guName>
-    <haName>хауса</haName>
-    <heName>иврит</heName>
-    <hiName>хинди</hiName>
-    <hrName>хорватский</hrName>
-    <huName>венгерский</huName>
-    <hyName>армянский</hyName>
-    <iaName>интерлингва</iaName>
-    <idName>индонезийский</idName>
-    <ieName>интерлингве</ieName>
-    <ikName>инупиак</ikName>
-    <isName>исландский</isName>
-    <itName>итальянский</itName>
-    <iuName>инуктитут</iuName>
-    <jaName>японский</jaName>
-    <jvName>яванский</jvName>
-    <kaName>грузинский</kaName>
-    <kkName>казахский</kkName>
-    <klName>гренландский</klName>
-    <kmName>кхмерский</kmName>
-    <knName>каннада</knName>
-    <koName>корейский</koName>
-    <ksName>кашмири</ksName>
-    <kuName>курдский</kuName>
-    <kyName>киргизский</kyName>
-    <laName>латинский</laName>
-    <lbName>люксембургский</lbName>
-    <lnName>лингала</lnName>
-    <loName>лаосский</loName>
-    <ltName>литовский</ltName>
-    <lvName>латышский</lvName>
-    <mgName>малагасийский</mgName>
-    <miName>маори</miName>
-    <mkName>македонский</mkName>
-    <mlName>малаялам</mlName>
-    <mnName>монгольский</mnName>
-    <mrName>маратхи</mrName>
-    <msName>малайский</msName>
-    <mtName>мальтийский</mtName>
-    <myName>бирманский</myName>
-    <naName>науру</naName>
-    <neName>непальский</neName>
-    <nlName>нидерландский</nlName>
-    <noName>норвежский</noName>
-    <ocName>окситанский</ocName>
-    <omName>оромо</omName>
-    <orName>ория</orName>
-    <paName>панджаби</paName>
-    <plName>польский</plName>
-    <psName>пушту</psName>
-    <ptName>португальский</ptName>
-    <quName>кечуа</quName>
-    <rmName>романшский</rmName>
-    <rnName>рунди</rnName>
-    <roName>румынский</roName>
-    <ruName>русский</ruName>
-    <rwName>киньяруанда</rwName>
-    <saName>санскрит</saName>
-    <sdName>синдхи</sdName>
-    <sgName>санго</sgName>
-    <shName>сербскохорватский</shName>
-    <siName>сингальский</siName>
-    <skName>словацкий</skName>
-    <slName>словенский</slName>
-    <smName>самоанский</smName>
-    <snName>шона</snName>
-    <soName>сомали</soName>
-    <sqName>албанский</sqName>
-    <srName>сербский</srName>
-    <ssName>свази</ssName>
-    <stName>сото южный</stName>
-    <suName>сунданский</suName>
-    <svName>шведский</svName>
-    <swName>суахили</swName>
-    <taName>тамильский</taName>
-    <teName>телугу</teName>
-    <tgName>таджикский</tgName>
-    <thName>тайский</thName>
-    <tiName>тигринья</tiName>
-    <tkName>туркменский</tkName>
-    <tlName>тагалог</tlName>
-    <tnName>тсвана</tnName>
-    <toName>тонганский</toName>
-    <trName>турецкий</trName>
-    <tsName>тсонга</tsName>
-    <ttName>татарский</ttName>
-    <twName>тви</twName>
-    <ugName>уйгурский</ugName>
-    <ukName>украинский</ukName>
-    <urName>урду</urName>
-    <uzName>узбекский</uzName>
-    <viName>вьетнамский</viName>
-    <voName>волапюк</voName>
-    <woName>волоф</woName>
-    <xhName>коса</xhName>
-    <yiName>идиш</yiName>
-    <yoName>йоруба</yoName>
-    <zaName>чжуань</zaName>
-    <zhName>китайский</zhName>
-    <zuName>зулу</zuName>
+    <NotSpecified>Не указано</NotSpecified>
+    <UnknownCodeX>Неизвестных ({0})</UnknownCodeX>
+    <aaName>Афар</aaName>
+    <abName>Абхазский</abName>
+    <afName>Африканский</afName>
+    <amName>Амхарский</amName>
+    <arName>Арабский</arName>
+    <asName>Ассамский</asName>
+    <ayName>Аймара</ayName>
+    <azName>Азербайджанский</azName>
+    <baName>Башкирский</baName>
+    <beName>Беларусский</beName>
+    <bgName>Болгарский</bgName>
+    <bhName>Бихари</bhName>
+    <biName>Бисламский</biName>
+    <bnName>Бенгальский</bnName>
+    <boName>Тибетский</boName>
+    <brName>Бретанский</brName>
+    <caName>Каталанский</caName>
+    <coName>Корсиканский</coName>
+    <csName>Чешский</csName>
+    <cyName>Валлийский</cyName>
+    <daName>Датский</daName>
+    <deName>Немецкий</deName>
+    <dzName>Дзонкха</dzName>
+    <elName>Греческий</elName>
+    <enName>Английский</enName>
+    <eoName>Эсперанто</eoName>
+    <esName>Испанский</esName>
+    <etName>Эстонский</etName>
+    <euName>Баскский</euName>
+    <faName>Персидский</faName>
+    <fiName>Финский</fiName>
+    <fjName>Фиджийский</fjName>
+    <foName>Фарерский</foName>
+    <frName>Французский</frName>
+    <fyName>Западно-Фризский</fyName>
+    <gaName>Ирландский</gaName>
+    <gdName>Шотлано-Гаэльский</gdName>
+    <glName>Галицийский</glName>
+    <gnName>Гуарани</gnName>
+    <guName>Гуджаратский</guName>
+    <haName>Хауса</haName>
+    <heName>Иврит</heName>
+    <hiName>Индийский</hiName>
+    <hrName>Хорватский</hrName>
+    <huName>Венгерский</huName>
+    <hyName>Армянский</hyName>
+    <iaName>Интерлингва</iaName>
+    <idName>Индонезийский</idName>
+    <ieName>Интерлингве</ieName>
+    <ikName>Инупиак</ikName>
+    <isName>Исландский</isName>
+    <itName>Итальянский</itName>
+    <iuName>Инуктитут</iuName>
+    <jaName>Японский</jaName>
+    <jvName>Яванский</jvName>
+    <kaName>Грузинский</kaName>
+    <kkName>Казахский</kkName>
+    <klName>Гренландский</klName>
+    <kmName>Кхмерский</kmName>
+    <knName>Каннадский</knName>
+    <koName>Корейский</koName>
+    <ksName>Кашмири</ksName>
+    <kuName>Курдский</kuName>
+    <kyName>Киргизский</kyName>
+    <laName>Латинский</laName>
+    <lbName>Люксембургский</lbName>
+    <lnName>Английский</lnName>
+    <loName>Лаосский</loName>
+    <ltName>Литовский</ltName>
+    <lvName>Латвийский</lvName>
+    <mgName>Малагасийский</mgName>
+    <miName>Маори</miName>
+    <mkName>Македонский</mkName>
+    <mlName>Малаялам</mlName>
+    <mnName>Монгольский</mnName>
+    <moName>Молдавский</moName>
+    <mrName>Маратхи</mrName>
+    <msName>Малайский</msName>
+    <mtName>Мальтийский</mtName>
+    <myName>Бурмы</myName>
+    <naName>Науру</naName>
+    <neName>Непальский</neName>
+    <nlName>Голландский</nlName>
+    <noName>Норвежский</noName>
+    <ocName>Окситанский (Провансальский)</ocName>
+    <omName>Оромо</omName>
+    <orName>Ория</orName>
+    <paName>Панджаби</paName>
+    <plName>Польский</plName>
+    <psName>Пушту</psName>
+    <ptName>Португальский</ptName>
+    <quName>Кечуа</quName>
+    <rmName>Романшский</rmName>
+    <rnName>Рунди</rnName>
+    <roName>Румынский</roName>
+    <ruName>Русский</ruName>
+    <rwName>Киньяруанда</rwName>
+    <saName>Санскритский</saName>
+    <sdName>Синдхи</sdName>
+    <sgName>Санго</sgName>
+    <shName>Сербо-Хорватский</shName>
+    <siName>Сингальский</siName>
+    <skName>Словацкий</skName>
+    <slName>Словенский</slName>
+    <smName>Самоанский</smName>
+    <snName>Шона</snName>
+    <soName>Сомалийский</soName>
+    <sqName>Албанский</sqName>
+    <srName>Сербский</srName>
+    <ssName>Свати</ssName>
+    <stName>Сото Южный</stName>
+    <suName>Сунданский</suName>
+    <svName>Шведский</svName>
+    <swName>Суахили</swName>
+    <taName>Тамильский</taName>
+    <teName>Телугу</teName>
+    <tgName>Таджикский</tgName>
+    <thName>Тайский</thName>
+    <tiName>Тигринья</tiName>
+    <tkName>Туркменский</tkName>
+    <tlName>Тагальский</tlName>
+    <tnName>Тсвана</tnName>
+    <toName>Тонганский</toName>
+    <trName>Турецкий</trName>
+    <tsName>Тсонга</tsName>
+    <ttName>Татарский</ttName>
+    <twName>Тви</twName>
+    <ugName>Уйгурский</ugName>
+    <ukName>Украинский</ukName>
+    <urName>Урду</urName>
+    <uzName>Узбекский</uzName>
+    <viName>Вьетнамский</viName>
+    <voName>Волапюк</voName>
+    <woName>Волоф</woName>
+    <xhName>Коса</xhName>
+    <yiName>Идиш</yiName>
+    <yoName>Йоруба</yoName>
+    <zaName>Чжуан</zaName>
+    <zhName>Китайский</zhName>
+    <zuName>Зулусский</zuName>
   </LanguageNames>
   <Main>
     <Menu>
@@ -991,6 +995,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <OpenDvd>Открыть DVD...</OpenDvd>
         <ChooseAudioTrack>Выбор аудио трека</ChooseAudioTrack>
         <CloseVideo>Закрыть файл видео</CloseVideo>
+        <SetVideoOffset>Задать видео задержку...</SetVideoOffset>
         <ImportSceneChanges>Импорт изменений сцены...</ImportSceneChanges>
         <RemoveSceneChanges>Удалить изменения сцены</RemoveSceneChanges>
         <WaveformBatchGenerate>Пакетная обработка форм сигнала...</WaveformBatchGenerate>
@@ -1730,7 +1735,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv проигрыватель</MpvPlayer>
-    <MpvPlayerDescription>https://mpv.io/ - свободно распространяемый,
+    <MpvPlayerDescription>https://mpv.io/ - свободно распространяемый, 
 с открытым исходным кодом, кроссплатформенный медиа проигрыватель</MpvPlayerDescription>
     <VlcMediaPlayer>VLC медиа проигрыватель</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll из VLC media player 1.1.0 или новее</VlcMediaPlayerDescription>
@@ -1917,6 +1922,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Установить смещение видео</Title>
     <Description>Задать смещение видео (субтитры не должны следовать в реальном времени видео, а, например, +10 часов)</Description>
     <RelativeToCurrentVideoPosition>Относительно текущей позиции видео</RelativeToCurrentVideoPosition>
+    <Reset>Сбросить</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Сдвиг выбранных строк по времени</Title>
@@ -2251,9 +2257,20 @@ https://github.com/SubtitleEdit/subtitleedit
     <Description>Настраивайте значение до тех пор, пока стиль текста не станет нормальным, не курсивом.
 Обратите внимание, что исходное изображение должно быть полностью курсивным.</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>Водный знак</Title>
+    <WatermarkX>Водных знаков: {0}</WatermarkX>
+    <GenerateWatermarkTitle>Создать Водный знак</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>Растянуть за пределы</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>Только в текущей строке: {0}</CurrentLineOnlyX>
+    <Generate>Создать</Generate>
+    <Remove>Удалить</Remove>
+    <BeforeWatermark>Перед Водным знаком</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>Водный знак работает только с unicode кодировкой.</ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
-    <ClickToAddWaveform>Кликните здесь для создания формы сигнала</ClickToAddWaveform>
-    <ClickToAddWaveformAndSpectrogram>Кликните здесь для создания формы сигнала/спектрограммы</ClickToAddWaveformAndSpectrogram>
+    <ClickToAddWaveform>Нажмите для создания формы сигнала</ClickToAddWaveform>
+    <ClickToAddWaveformAndSpectrogram>Нажмите, чтобы создать форму сигнала/спектрограммы</ClickToAddWaveformAndSpectrogram>
     <Seconds>секунд</Seconds>
     <ZoomIn>Увеличить</ZoomIn>
     <ZoomOut>Уменьшить</ZoomOut>
