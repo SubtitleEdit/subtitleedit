@@ -74,7 +74,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             int number = 1;
             char[] splitChar = { ',' };
-            Match match = null;
             foreach (string line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line) || string.IsNullOrWhiteSpace(line.Trim('-')))
@@ -82,6 +81,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     continue;
                 }
 
+                Match match;
                 if (line.Length > 57 && (match = RegexTimeCodes.Match(line)).Success)
                 {
                     try

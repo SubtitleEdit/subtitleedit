@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string Header = @"$FontName           =   Arial
+            const string header = @"$FontName           =   Arial
 $FontSize               =   34
 $HorzAlign          =   Left
 $VertAlign          =   Bottom
@@ -62,7 +62,7 @@ $TapeOffset         =   FALSE
 \\Colour 7 = White
 ";
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(Header);
+            sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.AppendLine(string.Format("$HorzAlign     = Center\r\n{0}, {1}, {2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), EncodeText(p.Text)));

@@ -48,7 +48,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            var paragraph = new Paragraph();
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
             for (int i = 0; i < lines.Count; i++)
@@ -60,7 +59,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (line.Contains(':') && !next.Contains(':') && RegexTimeCodes.IsMatch(line) && !RegexTimeCodes.IsMatch(next))
                 {
-                    paragraph = new Paragraph();
+                    var paragraph = new Paragraph();
                     if (TryReadTimeCodesLine(line, paragraph))
                     {
                         paragraph.Text = next;

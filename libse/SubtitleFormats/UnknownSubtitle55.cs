@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (string.IsNullOrWhiteSpace(line))
                 {
-                    if (p.StartTime.TotalMilliseconds == 0 && p.EndTime.TotalMilliseconds == 0)
+                    if (Math.Abs(p.StartTime.TotalMilliseconds) < 0.001 && Math.Abs(p.EndTime.TotalMilliseconds) < 0.001)
                         _errorCount++;
                     else
                         subtitle.Paragraphs.Add(p);

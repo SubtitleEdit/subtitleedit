@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         try
                         {
                             TimeCode start = DecodeTimeCodeFrames(timeParts[0].Substring(0, 11), splitChars);
-                            if (p != null && p.EndTime.TotalMilliseconds == 0)
+                            if (p != null && Math.Abs(p.EndTime.TotalMilliseconds) < 0.001)
                                 p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                             TimeCode end = new TimeCode(0, 0, 0, 0);
                             p = MakeTextParagraph(text, p, start, end);
@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         try
                         {
                             TimeCode start = DecodeTimeCodeFrames(timeParts[0].Substring(0, 11), splitChars);
-                            if (p != null && p.EndTime.TotalMilliseconds == 0)
+                            if (p != null && Math.Abs(p.EndTime.TotalMilliseconds) < 0.001)
                                 p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                             TimeCode end = DecodeTimeCodeFrames(timeParts[1].Substring(0, 11), splitChars);
                             p = MakeTextParagraph(text, p, start, end);

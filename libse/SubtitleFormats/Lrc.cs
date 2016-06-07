@@ -90,8 +90,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (line.StartsWith('[') && RegexTimeCodes.Match(line).Success)
                 {
-                    string s = line;
-                    s = line.Substring(1, 8);
+                    string s = line.Substring(1, 8);
                     string[] parts = s.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 3)
                     {

@@ -35,11 +35,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             fs.WriteByte(0x60);
 
             // paragraphs
-            int number = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 WriteParagraph(p);
-                number++;
             }
 
             // footer

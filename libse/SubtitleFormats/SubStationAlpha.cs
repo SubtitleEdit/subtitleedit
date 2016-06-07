@@ -207,6 +207,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     }
                     catch
                     {
+                        // ignored
                     }
                 }
 

@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > this._errorCount;
+            return subtitle.Paragraphs.Count > _errorCount;
         }
 
         public override string ToText(Subtitle subtitle, string title)

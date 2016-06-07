@@ -44,13 +44,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             sb.AppendLine(@"-------------------------------------------------
 #INPOINT OUTPOINT PATH
 -------------------------------------------------");
-            int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //00:03:15:22 00:03:23:10 This is line one.
                 //This is line two.
                 sb.AppendLine(string.Format("{0} {1} {2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(p.Text)));
-                index++;
             }
             sb.AppendLine(@"-------------------------------------------------");
 

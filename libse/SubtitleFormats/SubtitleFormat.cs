@@ -262,6 +262,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     }
                                     catch
                                     {
+                                        // ignored
                                     }
                                 }
                             }
