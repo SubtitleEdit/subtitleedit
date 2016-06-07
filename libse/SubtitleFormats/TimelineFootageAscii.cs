@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             int frames16 = int.Parse(parts[0]);
             int frames = int.Parse(parts[1]);
-            return new TimeCode(0, 0, 0, FramesToMilliseconds(16 * frames16 + frames));
+            return new TimeCode(FramesToMilliseconds(16 * frames16 + (frames * 16.0 / 24.0)));
         }
 
         private Encoding GetEncodingFromLanguage(byte language)
