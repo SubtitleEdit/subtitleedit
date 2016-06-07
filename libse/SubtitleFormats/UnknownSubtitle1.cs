@@ -68,13 +68,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Paragraphs.Clear();
             var sb = new StringBuilder();
             char[] splitChars = { '–', ' ' };
-            Match match = null;
             foreach (string line in lines)
             {
+                Match match;
                 if (line.Length > 11 && (match = RegexTimeCodes.Match(line)).Success)
                 {
                     if (p != null)
-                        p.Text = (p.Text + Environment.NewLine + sb.ToString()).Trim();
+                        p.Text = (p.Text + Environment.NewLine + sb).Trim();
                     var parts = line.Substring(0, match.Length).Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     try
                     {
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     return;
             }
             if (p != null)
-                p.Text = (p.Text + Environment.NewLine + sb.ToString()).Trim();
+                p.Text = (p.Text + Environment.NewLine + sb).Trim();
 
             subtitle.Renumber();
         }

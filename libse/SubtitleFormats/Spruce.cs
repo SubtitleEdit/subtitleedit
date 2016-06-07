@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string Header = @"//Font select and font size
+            const string header = @"//Font select and font size
 $FontName       = Arial
 $FontSize       = 30
 
@@ -76,7 +76,7 @@ $ColorIndex4    = 3
 
 //Subtitles";
             var sb = new StringBuilder();
-            sb.AppendLine(Header);
+            sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.AppendLine(string.Format("{0},{1},{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), EncodeText(p.Text)));
@@ -177,18 +177,18 @@ $ColorIndex4    = 3
             return text;
         }
 
-        private static string DecoderTextExtension(string text, string SpruceTag, string htmlOpenTag)
+        private static string DecoderTextExtension(string text, string spruceTag, string htmlOpenTag)
         {
             var htmlCloseTag = htmlOpenTag.Insert(1, "/");
 
-            var idx = text.IndexOf(SpruceTag, StringComparison.Ordinal);
-            var c = Utilities.CountTagInText(text, SpruceTag);
+            var idx = text.IndexOf(spruceTag, StringComparison.Ordinal);
+            var c = Utilities.CountTagInText(text, spruceTag);
             if (c == 1)
             {
-                var l = idx + SpruceTag.Length;
+                var l = idx + spruceTag.Length;
                 if (l < text.Length)
                 {
-                    text = text.Replace(SpruceTag, htmlOpenTag) + htmlCloseTag;
+                    text = text.Replace(spruceTag, htmlOpenTag) + htmlCloseTag;
                 }
                 else if (l == text.Length) // Brillstein^I
                 {
@@ -201,9 +201,9 @@ $ColorIndex4    = 3
                 while (idx >= 0)
                 {
                     var htmlTag = isOpen ? htmlOpenTag : htmlCloseTag;
-                    text = text.Remove(idx, SpruceTag.Length).Insert(idx, htmlTag);
+                    text = text.Remove(idx, spruceTag.Length).Insert(idx, htmlTag);
                     isOpen = !isOpen;
-                    idx = text.IndexOf(SpruceTag, idx + htmlTag.Length);
+                    idx = text.IndexOf(spruceTag, idx + htmlTag.Length, StringComparison.Ordinal);
                 }
             }
             return text;

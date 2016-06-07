@@ -58,13 +58,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 ý
 ý                                       Kraj info blocka.");
             sb.AppendLine();
-            int count = 0;
-
             if (!subtitle.WasLoadedWithFrameNumbers)
                 subtitle.CalculateFrameNumbersFromTimeCodes(Configuration.Settings.General.CurrentFrameRate);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                count++;
                 var text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont);
                 sb.AppendLine(string.Format(paragraphWriteFormat, p.StartFrame, p.EndFrame, text));
             }

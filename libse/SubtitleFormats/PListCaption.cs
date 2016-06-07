@@ -74,11 +74,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
             XmlNode div = xml.DocumentElement.SelectSingleNode("array");
-            int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("dict");
-                string text = HtmlUtil.RemoveHtmlTags(p.Text);
 
                 XmlNode keyNode = xml.CreateElement("key");
                 keyNode.InnerText = "in";
@@ -113,7 +111,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     paragraph.AppendChild(valueNode);
                 }
                 div.AppendChild(paragraph);
-                no++;
             }
 
             return ToUtf8XmlString(xml).Replace("<plist>", "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" + Environment.NewLine +

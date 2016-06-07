@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 ReadLine(subtitle, line, next);
             }
-            if (!string.IsNullOrWhiteSpace(_paragraph.Text))
+            if (_paragraph != null && !string.IsNullOrWhiteSpace(_paragraph.Text))
                 subtitle.Paragraphs.Add(_paragraph);
 
             foreach (Paragraph p in subtitle.Paragraphs)

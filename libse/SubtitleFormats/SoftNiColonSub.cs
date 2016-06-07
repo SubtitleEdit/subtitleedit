@@ -57,7 +57,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var lines = text.SplitToLines();
                 int count = 0;
                 lineSb.Clear();
-                string tempLine = string.Empty;
                 bool nextLineInItalics = false;
                 foreach (string line in lines)
                 {
@@ -65,7 +64,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (count > 0)
                         lineSb.Append(Environment.NewLine);
 
-                    tempLine = line;
+                    var tempLine = line;
 
                     // This line should be in italics (it was detected in previous line)
                     if (nextLineInItalics)
@@ -179,13 +178,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 var subtitleLines = text.SplitToLines();
                                 int count = 0;
                                 lineSb.Clear();
-                                string tempLine = string.Empty;
                                 foreach (string subtitleLine in subtitleLines)
                                 {
                                     // Append line break in every line except the first one
                                     if (count > 0)
                                         lineSb.Append(Environment.NewLine);
-                                    tempLine = subtitleLine;
+                                    var tempLine = subtitleLine;
                                     // Close italics in every line (if next line is in italics, SoftNI will use "[" at the beginning)
                                     if (Utilities.CountTagInText(tempLine, "<i>") > Utilities.CountTagInText(tempLine, "</i>"))
                                         tempLine = tempLine + "</i>";

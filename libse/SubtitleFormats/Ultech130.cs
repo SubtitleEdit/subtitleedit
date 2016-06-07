@@ -230,7 +230,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 int length = buffer[i + 1];
 
                 p.StartTime = DecodeTimestamp(buffer, i + 3);
-                if (last != null && last.EndTime.TotalMilliseconds == 0)
+                if (last != null && Math.Abs(last.EndTime.TotalMilliseconds) < 0.001)
                     last.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;
 
                 if (length > 22)
@@ -448,7 +448,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
             if (last != null)
             {
-                if (last.EndTime.TotalMilliseconds == 0)
+                if (Math.Abs(last.EndTime.TotalMilliseconds) < 0.001)
                     last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + 2500;
                 if (last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(last.Text);

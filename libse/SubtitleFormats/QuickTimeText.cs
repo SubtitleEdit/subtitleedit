@@ -36,15 +36,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string Header = @"{QTtext} {font:Tahoma}
+            const string header = @"{QTtext} {font:Tahoma}
 {plain} {size:20}
 {timeScale:30}
 {width:160} {height:32}
 {timestamps:absolute} {language:0}";
 
             var sb = new StringBuilder();
-            sb.AppendLine(Header);
-            int index = 0;
+            sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //[00:00:07.12]
@@ -55,7 +54,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 //tout le temps,
                 //[00:00:35.08]
                 sb.AppendLine(string.Format("{0}{1}{2}", EncodeTimeCode(p.StartTime) + Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text) + Environment.NewLine, EncodeTimeCode(p.EndTime) + Environment.NewLine));
-                index++;
             }
             return sb.ToString();
         }

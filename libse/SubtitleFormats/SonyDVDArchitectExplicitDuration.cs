@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class SonyDVDArchitectExplicitDuration : SubtitleFormat
     {
-        private static readonly Regex regex = new Regex(@"^\d\d:\d\d:\d\d\.\d\d\d[ \t]+\d\d:\d\d:\d\d\.\d\d\d[ \t]+\d\d:\d\d:\d\d\.\d\d\d[ \t]+", RegexOptions.Compiled);
+        private static readonly Regex Regex = new Regex(@"^\d\d:\d\d:\d\d\.\d\d\d[ \t]+\d\d:\d\d:\d\d\.\d\d\d[ \t]+\d\d:\d\d:\d\d\.\d\d\d[ \t]+", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 if (s.Length > 26 && s.IndexOf(':') == 2)
                 {
-                    var match = regex.Match(s);
+                    var match = Regex.Match(s);
                     if (match.Success)
                     {
                         isTimeCode = true;

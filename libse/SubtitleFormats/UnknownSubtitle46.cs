@@ -8,8 +8,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class UnknownSubtitle46 : SubtitleFormat
     {
         //7:00:01:27AM
-        private static readonly Regex regexTimeCodesAM = new Regex(@"^\d\:\d\d\:\d\d\:\d\dAM", RegexOptions.Compiled);
-        private static readonly Regex regexTimeCodesPM = new Regex(@"^\d\:\d\d\:\d\d\:\d\dPM", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodesAm = new Regex(@"^\d\:\d\d\:\d\d\:\d\dAM", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodesPm = new Regex(@"^\d\:\d\d\:\d\d\:\d\dPM", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string s = line.Trim();
                 string[] arr = line.Split();
                 var timeCode = arr[arr.Length - 1];
-                if (regexTimeCodesAM.Match(timeCode).Success || regexTimeCodesPM.Match(timeCode).Success)
+                if (RegexTimeCodesAm.Match(timeCode).Success || RegexTimeCodesPm.Match(timeCode).Success)
                 {
                     try
                     {

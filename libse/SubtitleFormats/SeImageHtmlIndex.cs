@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 if (line.Contains(".png") && RegexTimeCodes.IsMatch(line))
                 {
-                    int idx = line.IndexOf("<div");
+                    int idx = line.IndexOf("<div", StringComparison.Ordinal);
                     if (idx > 0)
                     {
                         try
@@ -59,9 +59,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             var p = new Paragraph();
                             p.StartTime = DecodeTimeCode(arr[0]);
                             p.EndTime = DecodeTimeCode(arr[1]);
-                            int start = line.IndexOf("<img src=") + 9;
-                            int end = line.IndexOf(".png") + 4;
-                            p.Text = line.Substring(start, end - start).Trim(new[] { '"', '\'' });
+                            int start = line.IndexOf("<img src=", StringComparison.Ordinal) + 9;
+                            int end = line.IndexOf(".png", StringComparison.Ordinal) + 4;
+                            p.Text = line.Substring(start, end - start).Trim('"', '\'');
 
                             subtitle.Paragraphs.Add(p);
                         }

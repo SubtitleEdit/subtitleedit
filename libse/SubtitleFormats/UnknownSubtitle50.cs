@@ -90,9 +90,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            ExpectingLine expecting = ExpectingLine.TimeCodes;
             Paragraph p = new Paragraph();
-            expecting = ExpectingLine.TimeCodes;
+            var expecting = ExpectingLine.TimeCodes;
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
