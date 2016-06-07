@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.Globalization;
 using System.Text;
@@ -739,6 +740,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         newCode = "9120";
                         i += 3;
                         italic--;
+                    }
+                    else if (text.Substring(i).StartsWith("’"))
+                    {
+                        if (code.Length == 4)
+                        {
+                            sb.Append(code + " ");
+                            code = string.Empty;
+                        }
+                        if (code.Length == 0)
+                        {
+                            code = "80";
+                        }
+                        if (code.Length == 2)
+                        {
+                            code += "a7";
+                            sb.Append(code + " ");
+                        }
+                        code = "9229";
+                        newCode = "";
                     }
                     else if (index < 0)
                         newCode = LetterCodes[Letters.IndexOf(" ")];
@@ -1669,6 +1689,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             sb.Append("¡");
                             k += 3;
+                            continue;
+                        }
+
+                        // skewed apos "’"
+                        if (part == "9229" && k < parts.Length - 1 && parts[k + 1] == "9229" && sb.EndsWith('\''))
+                        {
+                            sb.Remove(sb.Length - 1, 1);
+                            sb.Append("’");
+                            k += 2;
                             continue;
                         }
 
