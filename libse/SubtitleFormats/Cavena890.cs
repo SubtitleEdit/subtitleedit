@@ -555,29 +555,25 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         else if (current == 'Å')
                             buffer[index] = 0x5D;
                         else if (current == 'Ä')
-                        {
-                            buffer[index] = 0x86;
-                            index++;
-                            buffer[index] = 0x41;
-                        }
+                            AddTwo(buffer, ref index, 0x86, 0x41);
                         else if (current == 'ä')
-                        {
-                            buffer[index] = 0x86;
-                            index++;
-                            buffer[index] = 0x61;
-                        }
+                            AddTwo(buffer, ref index, 0x86, 0x61);
                         else if (current == 'Ö')
-                        {
-                            buffer[index] = 0x86;
-                            index++;
-                            buffer[index] = 0x4F;
-                        }
+                            AddTwo(buffer, ref index, 0x86, 0x4F);
                         else if (current == 'ö')
-                        {
-                            buffer[index] = 0x86;
-                            index++;
-                            buffer[index] = 0x6F;
-                        }
+                            AddTwo(buffer, ref index, 0x86, 0x6F);
+                        else if (current == 'Ë')
+                            AddTwo(buffer, ref index, 0x86, 0x45);
+                        else if (current == 'ë')
+                            AddTwo(buffer, ref index, 0x86, 0x65);
+                        else if (current == 'Ï')
+                            AddTwo(buffer, ref index, 0x86, 0x49);
+                        else if (current == 'ï')
+                            AddTwo(buffer, ref index, 0x86, 0x69);
+                        else if (current == 'Ü')
+                            AddTwo(buffer, ref index, 0x86, 0x55);
+                        else if (current == 'ü')
+                            AddTwo(buffer, ref index, 0x86, 0x75);
 
                         // different language setting?
                         //else if (current == 'å')
@@ -595,89 +591,33 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                         // ăĂ îÎ şŞ ţŢ âÂ (romanian)
                         else if (current == 'ă')
-                        {
-                            buffer[index] = 0x89;
-                            index++;
-                            buffer[index] = 0x61;
-                        }
+                            AddTwo(buffer, ref index, 0x89, 0x61);
                         else if (current == 'Ă')
-                        {
-                            buffer[index] = 0x89;
-                            index++;
-                            buffer[index] = 0x41;
-                        }
+                            AddTwo(buffer, ref index, 0x89, 0x41);
                         else if (current == 'î')
-                        {
-                            buffer[index] = 0x83;
-                            index++;
-                            buffer[index] = 0x69;
-                        }
+                            AddTwo(buffer, ref index, 0x83, 0x69);
                         else if (current == 'Î')
-                        {
-                            buffer[index] = 0x83;
-                            index++;
-                            buffer[index] = 0x49;
-                        }
+                            AddTwo(buffer, ref index, 0x83, 0x49);
                         else if (current == 'ş')
-                        {
-                            buffer[index] = 0x87;
-                            index++;
-                            buffer[index] = 0x73;
-                        }
+                            AddTwo(buffer, ref index, 0x87, 0x73);
                         else if (current == 'Ş')
-                        {
-                            buffer[index] = 0x87;
-                            index++;
-                            buffer[index] = 0x53;
-                        }
+                            AddTwo(buffer, ref index, 0x87, 0x53);
                         else if (current == 'ţ')
-                        {
-                            buffer[index] = 0x87;
-                            index++;
-                            buffer[index] = 0x74;
-                        }
+                            AddTwo(buffer, ref index, 0x87, 0x74);
                         else if (current == 'Ţ')
-                        {
-                            buffer[index] = 0x87;
-                            index++;
-                            buffer[index] = 0x74;
-                        }
+                            AddTwo(buffer, ref index, 0x87, 0x54);
                         else if (current == 'â')
-                        {
-                            buffer[index] = 0x83;
-                            index++;
-                            buffer[index] = 0x61;
-                        }
+                            AddTwo(buffer, ref index, 0x83, 0x61);
                         else if (current == 'Â')
-                        {
-                            buffer[index] = 0x83;
-                            index++;
-                            buffer[index] = 0x41;
-                        }
+                            AddTwo(buffer, ref index, 0x83, 0x41);
                         else if (current == 'è')
-                        {
-                            buffer[index] = 0x81;
-                            index++;
-                            buffer[index] = 0x65;
-                        }
+                            AddTwo(buffer, ref index, 0x81, 0x65);
                         else if (current == 'é')
-                        {
-                            buffer[index] = 0x82;
-                            index++;
-                            buffer[index] = 0x65;
-                        }
+                            AddTwo(buffer, ref index, 0x82, 0x65);
                         else if (current == 'É')
-                        {
-                            buffer[index] = 0x82;
-                            index++;
-                            buffer[index] = 0x45;
-                        }
+                            AddTwo(buffer, ref index, 0x82, 0x45);
                         else if (current == 'È')
-                        {
-                            buffer[index] = 0x81;
-                            index++;
-                            buffer[index] = 0x45;
-                        }
+                            AddTwo(buffer, ref index, 0x81, 0x45);
                         else if (i + 3 < text.Length && text.Substring(i, 3) == "<i>")
                         {
                             buffer[index] = 0x88;
@@ -698,6 +638,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             return buffer;
+        }
+
+        private static void AddTwo(byte[] buffer, ref int index, byte b1, byte b2)
+        {
+            buffer[index] = b1;
+            index++;
+            buffer[index] = b2;
         }
 
         private static void WriteTime(FileStream fs, TimeCode timeCode)
