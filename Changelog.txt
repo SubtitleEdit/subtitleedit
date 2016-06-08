@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.4.13 (xth May 2016) BETA
+3.4.13 (xth June 2016) BETA
 * NEW:
    * Added new subtitle formats - thx Oli/Mauricio/Leandro
    * It's now possible to use "video offset" via "Video" menu
@@ -9,7 +9,8 @@
    * Updated Finnish translation - thx Teijo S.
    * Updated Korean translation - thx domddol
    * Updated Portuguese translation - thx moob
-   * Updated Polish Translation - thx admas
+   * Updated Polish translation - thx admas
+   * Updated Russion translation - thx Elheym
    * Some updates for format "sif"
    * Some updates for format "Cavena 890" - thx Elad
    * Ctrl+Backspace in text box works better with html tags - thx xylographe
@@ -45,6 +46,7 @@
    * Fixed reading of vertical alignment in (some) pac files - thx Ingo
    * Fixed Matroska command line convert bug - thx KristjanLaane/xylographe
    * Fixed reading UTF-32
+   * Support for "’" in scc - thx Mayte
    * + Many minor fixes from ivandrofly and xylographe
 
 
