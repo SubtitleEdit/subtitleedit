@@ -503,8 +503,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             public static byte GetFrameFromMilliseconds(int milliseconds, double frameRate)
             {
-                int frame = (int)(milliseconds / (TimeCode.BaseUnit / frameRate));
-                return (byte)(frame);
+                return (byte)Math.Round(milliseconds / (TimeCode.BaseUnit / frameRate));
             }
         }
 
@@ -1059,12 +1058,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 tti.TimeCodeInHours = buffer[index + 5 + 0];
                 tti.TimeCodeInMinutes = buffer[index + 5 + 1];
                 tti.TimeCodeInSeconds = buffer[index + 5 + 2];
-                tti.TimeCodeInMilliseconds = (int)(TimeCode.BaseUnit / (header.FrameRate / buffer[index + 5 + 3]));
+                tti.TimeCodeInMilliseconds = (int)Math.Round(TimeCode.BaseUnit / (header.FrameRate / buffer[index + 5 + 3]));
 
                 tti.TimeCodeOutHours = buffer[index + 9 + 0];
                 tti.TimeCodeOutMinutes = buffer[index + 9 + 1];
                 tti.TimeCodeOutSeconds = buffer[index + 9 + 2];
-                tti.TimeCodeOutMilliseconds = (int)(1000 / (header.FrameRate / buffer[index + 9 + 3]));
+                tti.TimeCodeOutMilliseconds = (int)Math.Round(TimeCode.BaseUnit / (header.FrameRate / buffer[index + 9 + 3]));
 
                 tti.VerticalPosition = buffer[index + 13];
                 VerticalPositions.Add(tti.VerticalPosition);
