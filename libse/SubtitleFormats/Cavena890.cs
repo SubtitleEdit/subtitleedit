@@ -932,6 +932,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x61 }), "ä");
                 text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x4F }), "Ö");
                 text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x6F }), "ö");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x45 }), "Ë");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x65 }), "ë");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x49 }), "Ï");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x69 }), "ï");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x55 }), "Ü");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x75 }), "ü");
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x8C, 0x61 }), "å");
                 text = text.Replace(encoding.GetString(new byte[] { 0x8C, 0x41 }), "Å");
