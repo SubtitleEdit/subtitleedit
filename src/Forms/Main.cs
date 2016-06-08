@@ -1537,11 +1537,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
-                if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
-                    return false;
-                if (_subtitle.Paragraphs.Count == 1 && string.IsNullOrEmpty(_subtitle.Paragraphs[0].Text))
-                    return false;
-                return true;
+                return _subtitle != null && (_subtitle.Paragraphs.Count > 1 || (_subtitle.Paragraphs.Count == 1 && !string.IsNullOrWhiteSpace(_subtitle.Paragraphs[0].Text))); 
             }
         }
 
@@ -3110,12 +3106,22 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SaveToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (!IsSubtitleLoaded)
+            {
+                return;
+            }
+
             ReloadFromSourceView();
             SaveSubtitle(GetCurrentSubtitleFormat());
         }
 
         private void SaveAsToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (!IsSubtitleLoaded)
+            {
+                return;
+            }
+
             ReloadFromSourceView();
             FileSaveAs(true);
         }
@@ -3903,6 +3909,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripButtonSaveClick(object sender, EventArgs e)
         {
+            if (!IsSubtitleLoaded)
+            {
+                return;
+            }
+
             ReloadFromSourceView();
             bool oldChange = _changeSubtitleToString != _subtitle.GetFastHashCode();
             SaveSubtitle(GetCurrentSubtitleFormat());
