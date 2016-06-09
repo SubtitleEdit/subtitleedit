@@ -1674,7 +1674,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string part = parts[k];
                 if (part.Length == 4)
                 {
-                    if (part != "94ae" && part != "9420" && part != "94ad" && part != "9426" && part != "946e" && part != "91ce" && part != "13ce")
+                    if (part != "94ae" && part != "9420" && part != "94ad" && part != "9426" && part != "946e" && part != "91ce" && part != "13ce" && part != "9425" && part != "9429")
                     {
                         //  Spanish inverted question mark (extended char)
                         if (part == "91b3" && k < parts.Length - 1 && parts[k + 1] == "91b3")
