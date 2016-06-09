@@ -16,8 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         private const string ModePlay = "0";
         private const string ModePause = "1";
         private string _playMode = string.Empty;
-        private const string StateLoaded = "2";
-        private int _loaded = 0;
+        private int _loaded;
         private IntPtr _mpcHandle = IntPtr.Zero;
         private IntPtr _videoHandle = IntPtr.Zero;
         private IntPtr _videoPanelHandle = IntPtr.Zero;
@@ -26,8 +25,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         private IntPtr _messageHandlerHandle = IntPtr.Zero;
         private string _videoFileName;
         private Timer _positionTimer;
-        private double _positionInSeconds = 0;
-        private double _durationInSeconds = 0;
+        private double _positionInSeconds;
+        private double _durationInSeconds;
         private MessageHandlerWindow _form;
         private int _initialWidth;
         private int _initialHeight;
@@ -50,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 // MPC-HC moves from 0-100 in steps of 5
                 for (int i = 0; i < 100; i += 5)
                     SendMpcMessage(MpcHcCommand.DecreaseVolume);
-                for (int _volume = 0; _volume < value; _volume += 5)
+                for (_volume = 0; _volume < value; _volume += 5)
                     SendMpcMessage(MpcHcCommand.IncreaseVolume);
             }
         }
@@ -124,7 +123,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             _startInfo.FileName = GetMpcHcFileName();
             _startInfo.Arguments = "/new /minimized /slave " + _messageHandlerHandle;
             _process = Process.Start(_startInfo);
-            _process.WaitForInputIdle();
+            if (_process != null)
+                _process.WaitForInputIdle();
             _positionTimer = new Timer();
             _positionTimer.Interval = 100;
             _positionTimer.Tick += PositionTimerTick;
@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             var param = Marshal.PtrToStringAuto(cds.lpData);
             var multiParam = param.Split('|');
 
-            switch (cds.dwData.ToUInt32())
+            switch (command)
             {
                 case MpcHcCommand.Connect:
                     _positionTimer.Stop();
@@ -167,7 +167,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                     if (_loaded == 1)
                     {
                         _loaded = 2;
-                        _durationInSeconds = double.Parse(multiParam[4], CultureInfo.InvariantCulture);
+
+                        _durationInSeconds = 5000;
+                        double d;
+                        if (multiParam.Length >= 5 && double.TryParse(multiParam[4].Replace(",", ".").Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                            _durationInSeconds = d;
+                        else if (multiParam.Length >= 1 && double.TryParse(multiParam[multiParam.Length-1].Replace(",", ".").Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                            _durationInSeconds = d;
+
                         Pause();
                         Resize(_initialWidth, _initialHeight);
                         if (OnVideoLoaded != null)
@@ -180,7 +187,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         OnVideoEnded.Invoke(this, new EventArgs());
                     break;
                 case MpcHcCommand.CurrentPosition:
-                    _positionInSeconds = double.Parse(param, CultureInfo.InvariantCulture);
+                    if (!string.IsNullOrWhiteSpace(param))
+                    {
+                        double d;
+                        if (double.TryParse(param.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                            _positionInSeconds = d;
+                    }
                     break;
             }
         }
