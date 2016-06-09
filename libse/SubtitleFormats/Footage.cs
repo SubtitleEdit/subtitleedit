@@ -154,7 +154,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             int frames = MillisecondsToFrames(time.TotalMilliseconds);
             int footage = frames / 16;
-            int rest = (int)(frames % 16 / 16.0 * 24.0);
+            int rest = (int)Math.Round(frames % 16.0 / 16.0 * 24.0);
             return string.Format("{0:00},{1:00}", footage, rest).PadLeft(8);
         }
 

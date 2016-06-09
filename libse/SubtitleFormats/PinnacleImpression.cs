@@ -110,12 +110,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string seconds = parts[2];
             string frames = parts[3];
 
-            int milliseconds = (int)((1000 / 30.0) * int.Parse(frames));
+            int milliseconds = (int)Math.Round(1000.0 / 30.0 * int.Parse(frames));
             if (milliseconds > 999)
                 milliseconds = 999;
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
-            return tc;
+            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
         }
 
     }

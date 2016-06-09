@@ -102,7 +102,7 @@ $ColorIndex4    = 3
         private static string EncodeTimeCode(TimeCode time)
         {
             //00:01:54:19
-            int frames = (int)(time.Milliseconds / (TimeCode.BaseUnit / 25));
+            int frames = (int)Math.Round(time.Milliseconds / (TimeCode.BaseUnit / 25.0));
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
         }
 

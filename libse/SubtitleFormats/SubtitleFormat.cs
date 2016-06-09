@@ -101,6 +101,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new RealTime(),
                     new RhozetHarmonic(),
                     new Sami(),
+                    new SamiAvDicPlayer(),
                     new SamiModern(),
                     new SamiYouTube(),
                     new Scenarist(),
