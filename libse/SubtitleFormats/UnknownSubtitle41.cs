@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -114,7 +115,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             int frames = MillisecondsToFrames(time.TotalMilliseconds);
             int footage = frames / 16;
-            int rest = (int)((frames % 16) / 16.0 * Configuration.Settings.General.CurrentFrameRate);
+            int rest = (int)Math.Round(frames % 16.0 / 16.0 * Configuration.Settings.General.CurrentFrameRate);
             return string.Format("{0}.{1:0}", footage, rest);
         }
 

@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var seconds = int.Parse(time.Substring(6, 2));
             var frames = int.Parse(time.Substring(9, 2));
 
-            int milliseconds = (int)(1000 / 25.0 * frames);
+            int milliseconds = (int)Math.Round(1000.0 / 25.0 * frames);
             if (milliseconds > 999)
                 milliseconds = 999;
 

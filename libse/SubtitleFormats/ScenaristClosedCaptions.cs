@@ -1803,7 +1803,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             string[] arr = start.Split(new[] { ':', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-            int milliseconds = (int)((1000 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(arr[3]));
+            int milliseconds = (int)Math.Round(1000.0 / Configuration.Settings.General.CurrentFrameRate * int.Parse(arr[3]));
             if (milliseconds > 999)
                 milliseconds = 999;
 

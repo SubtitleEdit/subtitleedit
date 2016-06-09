@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             int seconds = buffer[index + 2];
             int frames = buffer[index + 3];
 
-            int milliseconds = (int)(TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate * frames);
+            int milliseconds = (int)Math.Round(TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate * frames);
             if (milliseconds > 999)
                 milliseconds = 999;
 
