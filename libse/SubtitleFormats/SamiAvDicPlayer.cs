@@ -7,6 +7,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     public class SamiAvDicPlayer : Sami
     {
+        private static readonly Regex RegexAvDicPlayer = new Regex(@"<AVDicPlayer[^\s]*", RegexOptions.Compiled); //AVDicPlayer_TEDSYNⓒ_VER1.1
 
         public override string Name
         {
@@ -30,8 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var text = base.ToText(subtitle, title);
-            text = text.Replace("<SYNC", "<AVDicPlayer_TEDSYNⓒ_VER1.1");
-            return text;
+            return text.Replace("<SYNC", "<AVDicPlayer_TEDSYNⓒ_VER1.1");
         }
 
         private static string GetSamiFromAvDicPlayerText(List<string> lines)
@@ -44,8 +44,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var text = sb.ToString();
             if (text.Contains("<AVDicPlayer"))
             {
-                Regex regex = new Regex(@"<AVDicPlayer[^\s]*", RegexOptions.Compiled); //AVDicPlayer_TEDSYNⓒ_VER1.1
-                text = regex.Replace(text, "<SYNC");
+                text = RegexAvDicPlayer.Replace(text, "<SYNC");
             }
             return text;
         }
