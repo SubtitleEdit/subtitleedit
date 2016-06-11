@@ -27,7 +27,7 @@
     <NumberSymbol>#</NumberSymbol>
     <Number>Niver</Number>
     <Text>Skrid</Text>
-    <HourMinutesSecondsMilliseconds>eurvezh :munutenn :segskinnn :mikrosegskinnn</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>eurvezh:munutenn:segskinnn:mikrosegskinnn</HourMinutesSecondsMilliseconds>
     <Bold>Dru</Bold>
     <Italic>Stouet</Italic>
     <Underline>Islinennañ</Underline>
@@ -92,8 +92,7 @@ Postel : mailto:nikse.dk@gmail.com</AboutText1>
   </AddToNames>
   <AddToOcrReplaceList>
     <Title>Ouzhpennañ al listenn reizhañ OCR</Title>
-    <Description>Erlec'hiadoù (doujit ouzh ar c'hombod)
-:</Description>
+    <Description>Erlec'hiadoù (doujit ouzh ar c'hombod) :</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Ouzhpennañ da geriadur an implijer</Title>
@@ -140,7 +139,7 @@ Notenn : Gwiriekit spas an disk vak.</WaveFileMalformed>
     <SetAsPercent>Devoudañ en % eus ar padelezh</SetAsPercent>
     <Note>Notenn : Ar c'heidennoù na vo ket derallet ar c'hrafoù loc'hañ ganto</Note>
     <PleaseSelectAValueFromTheDropDownList>Diuzit mar-plij un dalvoudegezh e-barzh ar roll disachañ</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- Dibabit mar-plij - </PleaseChoose>
+    <PleaseChoose> - Dibabit mar-plij - </PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Arloañ bevennoù padelezh</Title>
@@ -157,7 +156,7 @@ Notenn : Gwiriekit spas an disk vak.</WaveFileMalformed>
   <BatchConvert>
     <Title>Amdreiñ dre vernioù</Title>
     <Input>Kas</Input>
-    <InputDescription>Kas restroù (gwedeiñ pe Stlej ha laosk)</InputDescription>
+    <InputDescription>Kas restroù (gwedeiñ pe stlej-ha-laosk)</InputDescription>
     <Status>Statud</Status>
     <Output>Ezvont</Output>
     <ChooseOutputFolder>Diuzit ezvont an teul</ChooseOutputFolder>
@@ -287,6 +286,7 @@ Notenn : Gwiriekit spas an disk vak.</WaveFileMalformed>
     <MovieTitle>Titl ar film</MovieTitle>
     <ReelNumber>Niverenn ar vobinenn</ReelNumber>
     <Language>Yezh</Language>
+    <IssueDate>Deiziad an embannadur</IssueDate>
     <EditRate>Dibun ar c'heweriadur</EditRate>
     <TimeCodeRate>Dibun an amzergod</TimeCodeRate>
     <StartTime>Eurvezh ar penn kentañ</StartTime>
@@ -334,7 +334,7 @@ Notenn : Gwiriekit spas an disk vak.</WaveFileMalformed>
     <AbortedByUser>Paouezet gant an implijer</AbortedByUser>
     <ReadingSubtitleData>Lenn stlennadoù an istitloù...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Ripañ restr VOB {1} war {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>Stumm restr IFO fall ‘’{0}’’, rankout a ra bezañ eus ar stumm ‘’DVDVIDEO-VTS’’. {1} Klaskit gant ur restr all evit « {2} »</WrongIfoType>
+    <WrongIfoType>Stumm restr IFO fall ‘{0}’, rankout a ra bezañ eus ar stumm ‘DVDVIDEO-VTS’.{1}Klaskit gant ur restr all evit « {2} »</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Dibab ar yezh</Title>
@@ -480,6 +480,9 @@ Notenn : Gwiriekit spas an disk vak.</WaveFileMalformed>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
     <TimeCodeSeparator>Disranner :</TimeCodeSeparator>
   </ExportText>
+  <ExtractDateTimeInfo>
+    <Example>Skouer</Example>
+  </ExtractDateTimeInfo>
   <FindDialog>
     <Title>Klask</Title>
     <Find>Klask</Find>
@@ -571,7 +574,7 @@ Notenn : Gwiriekit spas an disk vak.</WaveFileMalformed>
     <RemoveUnneededSpacesExample>Hey tu , du se. -&gt; Hey te, du-se.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>He te !. -&gt; He te !</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>He.Te. -&gt; He. Te.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Tost emAÑ ar fIN. -&gt; Tost emañ ar fin.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>Tost emañ ar fIn. -&gt; Tost emañ ar fin.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Testenn n°{0}: An amzer deraouek a zeu war-lerc'h an amzer fin : {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Dibosupl da reizhañ an destenn n°{0}: amzer deraoeuk &gt; amzer fin : {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -662,8 +665,7 @@ Notenn : Gwiriekit spas an disk vak.</WaveFileMalformed>
     <Title>Enporzhiañ skeudennoù</Title>
     <ImageFiles>Restr skeudenn</ImageFiles>
     <Input>Kas</Input>
-    <InputDescription>Kas restroù (naviguer pe
-Stlej ha laosk)</InputDescription>
+    <InputDescription>Kas restroù (gwedeiñ pe stlej-ha-laosk)</InputDescription>
     <Remove>Lemmel kuit</Remove>
     <RemoveAll>Tennañ kuit an holl</RemoveAll>
   </ImportImages>
@@ -715,6 +717,7 @@ Stlej ha laosk)</InputDescription>
     <Note>Notenn : Ret eo keidañ an amzerioù-kod a-raok kendeuziñ an istitloù</Note>
   </JoinSubtitles>
   <LanguageNames>
+    <NotSpecified>Amstrizh</NotSpecified>
     <UnknownCodeX>Dianav ({0})</UnknownCodeX>
     <aaName>afar</aaName>
     <abName>abkhazeg</abName>
@@ -1072,7 +1075,7 @@ Stlej ha laosk)</InputDescription>
         <Underline>Islinennañ</Underline>
         <Color>Liv...</Color>
         <FontName>Nodrezh...</FontName>
-        <Alignment>Steudadur ...</Alignment>
+        <Alignment>Steudadur...</Alignment>
         <AutoBalanceSelectedLines>Kempouez emgefreek (linennoù diuzet.)...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Diverkañ al lamm-linenn (linennoù diuzet.)...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Efed bisskriverezh...</TypewriterEffect>
@@ -1258,7 +1261,7 @@ Kenderc'hel ?</SubtitleAppendPrompt>
     <NumberOfNameHits>Niver a daolioù evit an anv : {0}</NumberOfNameHits>
     <SpellCheck>Reizher reizhskrivadurel</SpellCheck>
     <BeforeSpellCheck>A-raok ar wiriekadenn reizhskrivadurel</BeforeSpellCheck>
-    <SpellCheckChangedXToY>Gwiriekadenn reizhskrivadurel : Cheñchet '{0}' en '{1} "</SpellCheckChangedXToY>
+    <SpellCheckChangedXToY>Gwiriekadenn reizhskrivadurel : Cheñchet '{0}' en '{1}'</SpellCheckChangedXToY>
     <BeforeAddingTagX>A-raok ouzhpennañ &lt;{0}&gt; tag</BeforeAddingTagX>
     <TagXAdded>&lt;{0}&gt; tags ouzhpennet</TagXAdded>
     <LineXOfY>linenn {0}/{1}</LineXOfY>
@@ -1286,7 +1289,8 @@ Kenderc'hel ?</SubtitleAppendPrompt>
     <MatroskaFiles>Restroù Matroska</MatroskaFiles>
     <NoSubtitlesFound>N'eus bet kavet istitl ebet</NoSubtitlesFound>
     <NotAValidMatroskaFileX>N'eo ket ur restr Matroska gweredekaus : {0}</NotAValidMatroskaFileX>
-    <BlurayNotSubtitlesFound>Ar restr Blu-ray sup-mañ na endalc'h ket istitloù pe a endalc'h fazioù : - klask adober an démultiplexage diliesplexage.</BlurayNotSubtitlesFound>
+    <BlurayNotSubtitlesFound>Ar restr Blu-ray sup-mañ na endalc'h ket istitloù pe a endalc'h fazioù :
+- klask adober an démultiplexage diliesplexage.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Dielfennadenn ar restr Matroska. Gortozit...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Dielfennadenn ar restr red transport. Gortozit mar-plij...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>A-raok emporzhiañ istitloù ar restr Matroska</BeforeImportFromMatroskaFile>
@@ -1394,17 +1398,28 @@ Kenderc'hel ?</SubtitleAppendPrompt>
     <PluginXExecuted>Plugin '{0}' kaset da-benn</PluginXExecuted>
     <NotAValidXSubFile>N'eo ket ur restr XSUB gweredekaus !</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>A-raok kendeuziñ al linennoù gant ar memes testenn</BeforeMergeLinesWithSameText>
-    <ImportTimeCodesDifferentNumberOfLinesWarning>Amzergod an istitl emporzhet en deus un niver disheñvel linenn ({0}) e-keñver an hini war ober ({1}). Kenderc'hel ?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>Amzergod an istitl emporzhet en deus un niver disheñvel linenn ({0}) e-keñver an hini war ober ({1}).
+
+Kenderc'hel ?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Dielfennadenn red an transport - gortozit mar-plij...</ParsingTransportStream>
     <XPercentCompleted>{0}% graet</XPercentCompleted>
-    <ErrorLoadIdx>Ne c'hall ket Subtitle Edit lenn ar restroù .idx : - Ul lodenn eus ar restroù idx/sub (anvet c'hoazh VobSub). - Subtitle Edit a c'hall digeriñ ar restr .sub.</ErrorLoadIdx>
-    <ErrorLoadRar>Ar restr-mañ a zo un diell .rar : - Ne c'hall ket Subtitle Edit digeriñ ar restroù gwasket.</ErrorLoadRar>
-    <ErrorLoadZip>Ar restr-mañ a zo un diell .zip : - Ne c'hall ket Subtitle Edit digeriñ ar restroù gwasket.</ErrorLoadZip>
-    <ErrorLoadPng>Ar restr-mañ a zeblant bezañ ur restr skeudenn .png : - Ne c'hall ket Subtitle Edit digeriñ ar restroù gwasket PNG.</ErrorLoadPng>
-    <ErrorLoadJpg>Ar restr-mañ a zeblant bezañ ur restr skeudenn .jpg : - Ne c'hall ket Subtitle Edit digeriñ ar restroù gwasket JPEG.</ErrorLoadJpg>
-    <ErrorLoadSrr>Ar restr-mañ a zeblant bezañ metastlennadoù diell ReScene .srr : - N'eo ket ur restr istitloù.</ErrorLoadSrr>
-    <ErrorLoadTorrent>Ar restr-mañ a zeblant bezañ BitTorrent : - N'eo ket ur restr istitloù.</ErrorLoadTorrent>
-    <ErrorLoadBinaryZeroes>Ar restr-mañ a endalc'h zerioù binair tra-ken : M'ho peus kemmet ar restr gant Subtitle Edit gellout a rafec'h kavout une enrolladenn dindan ar poent Restr Menu -&gt; Ratreaat adalek backup-emgefreek...</ErrorLoadBinaryZeroes>
+    <ErrorLoadIdx>Ne c'hall ket Subtitle Edit lenn ar restroù .idx :
+- Ul lodenn eus ar restroù idx/sub (anvet c'hoazh VobSub).
+- Subtitle Edit a c'hall digeriñ ar restr .sub.</ErrorLoadIdx>
+    <ErrorLoadRar>Ar restr-mañ a zo un diell .rar :
+- Ne c'hall ket Subtitle Edit digeriñ ar restroù gwasket.</ErrorLoadRar>
+    <ErrorLoadZip>Ar restr-mañ a zo un diell .zip :
+- Ne c'hall ket Subtitle Edit digeriñ ar restroù gwasket.</ErrorLoadZip>
+    <ErrorLoadPng>Ar restr-mañ a zeblant bezañ ur restr skeudenn .png :
+- Ne c'hall ket Subtitle Edit digeriñ ar restroù gwasket PNG.</ErrorLoadPng>
+    <ErrorLoadJpg>Ar restr-mañ a zeblant bezañ ur restr skeudenn .jpg :
+- Ne c'hall ket Subtitle Edit digeriñ ar restroù gwasket JPEG.</ErrorLoadJpg>
+    <ErrorLoadSrr>Ar restr-mañ a zeblant bezañ metastlennadoù diell ReScene .srr :
+- N'eo ket ur restr istitloù.</ErrorLoadSrr>
+    <ErrorLoadTorrent>Ar restr-mañ a zeblant bezañ BitTorrent :
+- N'eo ket ur restr istitloù.</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>Ar restr-mañ a endalc'h zerioù binair tra-ken :
+M'ho peus kemmet ar restr gant Subtitle Edit gellout a rafec'h kavout une enrolladenn dindan ar poent Restr Menu -&gt; Ratreaat adalek backup-emgefreek...</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Dibosupl eo da glisser teulioù amañ !</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>N'eus ket a skor evit an istitloù VobSub chifret.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>N'eo ket skoret ar restroù Blu-ray sup.</NoSupportHereBluRaySup>
@@ -1499,7 +1514,8 @@ Kenderc'hel ?</SubtitleAppendPrompt>
   </NetworkChat>
   <NetworkJoin>
     <Title>Skoulmañ gant un estez war ar rouedad</Title>
-    <Information>Skoulmit gant un estez a-vremañ, lec'h-ma c'hall kemm meur a zen ar memes restr istitloù (kenlabour)</Information>
+    <Information>Skoulmit gant un estez a-vremañ, lec'h-ma c'hall kemm
+meur a zen ar memes restr istitloù (kenlabour)</Information>
     <Join>Skoulmañ ganti</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1509,7 +1525,8 @@ Kenderc'hel ?</SubtitleAppendPrompt>
   <NetworkStart>
     <Title>Loc'hañ gant estez rouedadel</Title>
     <ConnectionTo>Kevreadenn ouzh {0}...</ConnectionTo>
-    <Information>Loc'hañ gant un estez nevez, lec'h-ma c'hall kemm meur a zen ar memes restr istitloù (kenlabour)</Information>
+    <Information>Loc'hañ gant un estez nevez, lec'h-ma c'hall kemm
+meur a zen ar memes restr istitloù (kenlabour)</Information>
     <Start>Loc'hañ</Start>
   </NetworkStart>
   <OpenVideoDvd>
@@ -1588,6 +1605,7 @@ Kenderc'hel ?</SubtitleAppendPrompt>
   <RestoreAutoBackup>
     <Title>Ratreañ enrolladenn emgefreek</Title>
     <Information>Digeriñ ar restr enrolladenn emgefreek</Information>
+    <DateAndTime>Deiziad hag eur</DateAndTime>
     <FileName>Anv</FileName>
     <Extension>Stumm</Extension>
     <NoBackedUpFilesFound>N'eus bet kavet restr enrolladenn ebet !</NoBackedUpFilesFound>
@@ -1668,8 +1686,8 @@ Kenderc'hel ?</SubtitleAppendPrompt>
     <AllowEditOfOriginalSubtitle>Aotreañ kemmadurioù an istitl orin</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Kadarnaat al lemmel linennoù</PromptDeleteLines>
     <TimeCodeMode>Mod amzergod :</TimeCodeMode>
-    <TimeCodeModeHHMMSSMS>HH :MM :SS.MS (00 :00 :01.500)</TimeCodeModeHHMMSSMS>
-    <TimeCodeModeHHMMSSFF>HH :MM :SS :FF (00 :00 :01 :12)</TimeCodeModeHHMMSSFF>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
+    <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Keflusker ar roadenn video</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll eus an teul system32/</DirectShowDescription>
@@ -1823,7 +1841,8 @@ Kenderc'hel ?</SubtitleAppendPrompt>
     <ToggleTranslationMode>Mont war-du ar mod troidigezh</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Eskemm orin ha troidigezh</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Kendeuziñ orin ha troidigezh</MergeOriginalAndTranslation>
-    <ShortcutIsAlreadyDefinedX>Berradenn termenet c'hoazh : {0}</ShortcutIsAlreadyDefinedX>
+    <ShortcutIsAlreadyDefinedX>Berradenn termenet c'hoazh :
+{0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Gwintañ an albez etre troidigezh hag orin ar c'hlev/video</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Bann, diverkañ an destenn</ListViewColumnDelete>
     <ListViewColumnInsert>Bann, pegañ testenn</ListViewColumnInsert>
@@ -1848,13 +1867,16 @@ Kenderc'hel ?</SubtitleAppendPrompt>
   <SettingsMpv>
     <Title>Arventennoù mpv</Title>
     <DownloadMpv>Pellgargañ mpv lib</DownloadMpv>
-    <DownloadMpvFailed>Pellgargadenn al levraoueg mpv  a zo c'hwitet ! Adklaskit diwezhatoc'h mar-plij.</DownloadMpvFailed>
+    <DownloadMpvFailed>Pellgargadenn al levraoueg mpv a zo c'hwitet !
+
+Adklaskit diwezhatoc'h mar-plij.</DownloadMpvFailed>
     <DownloadMpvOk>Pellgarget eo bet al levraoueg MPV ha prest eo da vezañ implijet.</DownloadMpvOk>
   </SettingsMpv>
   <SetVideoOffset>
     <Title>Kompezañ dilec'hiadenn ar video</Title>
     <Description>Kompezañ dilec'hiadenn ar video (ne rankfe ket padout an istitloù padelezh ar video, ex  : +10 hours)</Description>
     <RelativeToCurrentVideoPosition>E-keñver lec'hiadur ar video war-vremañ</RelativeToCurrentVideoPosition>
+    <Reset>Adkorañ</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Hewelaat an istitloù abretoc'h/diwezhatoc'h</Title>
@@ -1897,7 +1919,7 @@ Kenderc'hel ?</SubtitleAppendPrompt>
     <AddXToNamesEtc>Ouzhpennañ '{0}' d'al listenn anv/hag-all hag-all</AddXToNamesEtc>
     <AutoFixNames>Reizhadenn emgefreek ma cheñch ar c'hombod nemetken</AutoFixNames>
     <CheckOneLetterWords>Klask ar gerioù dianv gant ul lizherenn</CheckOneLetterWords>
-    <TreatINQuoteAsING>Mezegañ ar gerioù oc'h echuiñ dre " in" en " ing" (saozneg hepken)</TreatINQuoteAsING>
+    <TreatINQuoteAsING>Mezegañ ar gerioù oc'h echuiñ dre "in'" en "ing" (saozneg hepken)</TreatINQuoteAsING>
     <ImageText>Testenn skeudenn</ImageText>
     <SpellCheckCompleted>Gwiriekadenn reizhskrivadur echuet</SpellCheckCompleted>
     <SpellCheckAborted>Gwiriekadenn reizhskrivadur torret</SpellCheckAborted>
@@ -1973,7 +1995,7 @@ Kenderc'hel ?</SubtitleAppendPrompt>
     <DurationMaximum>Padelezh - maksimom : {0:0.000} eilennoù</DurationMaximum>
     <DurationAverage>Padelezh - keidenn : {0:0.000} eilennoù</DurationAverage>
     <CharactersPerSecondMaximum>Arouezioù/eil - maksimom : {0:0.000}</CharactersPerSecondMaximum>
-    <CharactersPerSecondAverage>Arouezioù/eil - moyen : {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondAverage>Arouezioù/eil - keidat : {0:0.000}</CharactersPerSecondAverage>
     <Export>Ezporzhiañ...</Export>
   </Statistics>
   <SubStationAlphaProperties>
@@ -2198,7 +2220,7 @@ Kenderc'hel ?</SubtitleAppendPrompt>
     <ShowWaveformOnly>Diskouez stumm ar wagenn</ShowWaveformOnly>
     <ShowSpectrogramOnly>Diskouez ar skalfadlun</ShowSpectrogramOnly>
     <GuessTimeCodes>Martezeañ an amzergod...</GuessTimeCodes>
-    <SeekSilence>Klask an didrouz ...</SeekSilence>
+    <SeekSilence>Klask an didrouz...</SeekSilence>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Devinout an amzerioù-god</Title>
