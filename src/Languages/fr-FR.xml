@@ -335,7 +335,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <AbortedByUser>Interrompu par l'utilisateur</AbortedByUser>
     <ReadingSubtitleData>Lecture données des sous-titres...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Ripper fichier VOB {1} sur {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>Mauvais type de fichier IFO ‘’{0}’’, il doit être de type ‘’DVDVIDEO-VTS’’. {1} Essayer autre fichier que « {2} »</WrongIfoType>
+    <WrongIfoType>Mauvais type de fichier IFO ‘{0}’, il doit être de type ‘DVDVIDEO-VTS’.{1}Essayer autre fichier que « {2} »</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Choix de la langue</Title>
@@ -889,7 +889,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
         <CloseOriginal>Retirer original</CloseOriginal>
         <OpenContainingFolder>Ouvrir répertoire contenant les sous-titres</OpenContainingFolder>
         <Compare>&amp;Comparer...</Compare>
-        <Statistics>Statistiques ...</Statistics>
+        <Statistics>Statistiques...</Statistics>
         <Plugins>Plugins...</Plugins>
         <ImportOcrFromDvd>Importer sous-titres OCR de VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importer sous-titres OCR de VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
@@ -1093,7 +1093,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
         <Underline>Souligner</Underline>
         <Color>Couleur...</Color>
         <FontName>Police...</FontName>
-        <Alignment>Alignement ...</Alignment>
+        <Alignment>Alignement...</Alignment>
         <AutoBalanceSelectedLines>Balance automatique (lignes sélec.)...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Supprimer saut de ligne (lignes sélec.)...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Effet machine à écrire...</TypewriterEffect>
@@ -1209,10 +1209,13 @@ Le fichier est en lecture seule !</FileXIsReadOnly>
     <OpenVideoFile>Ouvrir fichier vidéo...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Nouvelle cadence de frame ({0}) a été utilisée pour calculer l'heure de début/fin</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Nouvelle cadence de frame ({0}) a été utilisé pour le calcul des numéros de frame de début/fin</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>L'élément de recherche n'a pas été trouvé. Souhaitez-vous recommencer à partir du haut du document et faire une nouvelle recherche ?</FindContinue>
+    <FindContinue>L'élément de recherche n'a pas été trouvé.
+Souhaitez-vous recommencer à partir du haut du document et faire une nouvelle recherche ?</FindContinue>
     <FindContinueTitle>Poursuivre recherche ?</FindContinueTitle>
-    <ReplaceContinueNotFound>L'élément à remplacer n'a pas été trouvé. Souhaitez-vous recommencer à partir du haut du document et faire une nouvelle recherche ?</ReplaceContinueNotFound>
-    <ReplaceXContinue>L'article cherché a été remplacé {0} fois. Voulez-vous aller vers le haut du document et poursuivre la recherche ?</ReplaceXContinue>
+    <ReplaceContinueNotFound>L'élément à remplacer n'a pas été trouvé.
+Souhaitez-vous recommencer à partir du haut du document et faire une nouvelle recherche ?</ReplaceContinueNotFound>
+    <ReplaceXContinue>L'article cherché a été remplacé {0} fois.
+Voulez-vous aller vers le haut du document et poursuivre la recherche ?</ReplaceXContinue>
     <ReplaceContinueTitle>Continuer de « remplacer » ?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Recherche de '{0}' sur le numéro de ligne {1} ...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' trouvé à la ligne {1}</XFoundAtLineNumberY>
@@ -1277,7 +1280,7 @@ Poursuivre ?</SubtitleAppendPrompt>
     <NumberOfNameHits>Nombre de hits pour nom: {0}</NumberOfNameHits>
     <SpellCheck>Correcteur d'orthographe</SpellCheck>
     <BeforeSpellCheck>Avant la vérification orthographique</BeforeSpellCheck>
-    <SpellCheckChangedXToY>Vérification orthographique: Changé '{0}' en '{1} "</SpellCheckChangedXToY>
+    <SpellCheckChangedXToY>Vérification orthographique: Changé '{0}' en '{1}'</SpellCheckChangedXToY>
     <BeforeAddingTagX>Avant d'ajouter &lt;{0}&gt; tag</BeforeAddingTagX>
     <TagXAdded>&lt;{0}&gt; tags ajoutés</TagXAdded>
     <LineXOfY>ligne {0}/{1}</LineXOfY>
@@ -1954,7 +1957,7 @@ Veuillez réessayer plus tard.</DownloadMpvFailed>
     <AddXToNamesEtc>Ajouter '{0}' à la liste nom/etc</AddXToNamesEtc>
     <AutoFixNames>Correction automatique seulement si la casse diffère</AutoFixNames>
     <CheckOneLetterWords>Rechercher les mots inconnus à une lettre</CheckOneLetterWords>
-    <TreatINQuoteAsING>Traiter les mots terminant par " in" en " ing" (anglais uniquement)</TreatINQuoteAsING>
+    <TreatINQuoteAsING>Traiter les mots terminant par "in'" en "ing" (anglais uniquement)</TreatINQuoteAsING>
     <ImageText>Texte de l'image</ImageText>
     <SpellCheckCompleted>Vérification d'orthographe terminée</SpellCheckCompleted>
     <SpellCheckAborted>Vérification d'orthographe interrompue</SpellCheckAborted>
@@ -2271,7 +2274,7 @@ Veuillez réessayer plus tard.</DownloadMpvFailed>
     <ShowWaveformOnly>Montrer forme d'onde</ShowWaveformOnly>
     <ShowSpectrogramOnly>Montrer spectrogramme</ShowSpectrogramOnly>
     <GuessTimeCodes>Supposer timecode...</GuessTimeCodes>
-    <SeekSilence>Recherche silence ...</SeekSilence>
+    <SeekSilence>Recherche silence...</SeekSilence>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Deviner timecodes</Title>
