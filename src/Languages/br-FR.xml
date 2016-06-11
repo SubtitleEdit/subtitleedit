@@ -5,7 +5,7 @@
     <Version>3.4.12</Version>
     <TranslatedBy>Troidigezh e Brezhoneg graet gant WaniBzh29.</TranslatedBy>
     <CultureName>br-FR</CultureName>
-    <HelpFile>Sikour</HelpFile>
+    <HelpFile />
     <Ok>Mat eo</Ok>
     <Cancel>N&amp;ullañ</Cancel>
     <Apply>Blivaat</Apply>
@@ -26,6 +26,7 @@
     <Duration>Padelezh</Duration>
     <NumberSymbol>#</NumberSymbol>
     <Number>Niver</Number>
+    <Text>Skrid</Text>
     <HourMinutesSecondsMilliseconds>eurvezh :munutenn :segskinnn :mikrosegskinnn</HourMinutesSecondsMilliseconds>
     <Bold>Dru</Bold>
     <Italic>Stouet</Italic>
@@ -35,7 +36,7 @@
     <Name>Anv</Name>
     <FileNameXAndSize>Anv ar restr : {0} ({1})</FileNameXAndSize>
     <ResolutionX>Spister : {0}</ResolutionX>
-    <FrameRateX>Kellusk an anneuenn : {0 :0.0###}</FrameRateX>
+    <FrameRateX>Kellusk an anneuenn : {0:0.0###}</FrameRateX>
     <TotalFramesX>Anneuennoù en holl : {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Enkodañ ar video : {0}</VideoEncodingX>
     <SingleLineLengths>Hirder al linenn :</SingleLineLengths>
@@ -74,12 +75,16 @@
   </General>
   <About>
     <Title>Diwar-benn Subtitle Edit</Title>
-    <AboutText1>Subtitle Edit a zo ur poellad digoust skignet gant ul lañvez
-foran GNU. Gellout a rit skignañ anezhañ, kemm anezhañ hag ober gantañ en un doare frank.
-Kod-mammenn ar poellad C# a zo kerzet war GitHub  :
-https://github.com/SubtitleEdit/subtitleedit Gweladennit www.nikse.dk evit kaout ar
-stumm diwezhañ. Ouzhpenn mat e vez degemeret ar c'hinnigoù. Postel  :
-mailto :nikse.dk@gmail.com</AboutText1>
+    <AboutText1>Subtitle Edit a zo ur poellad digoust skignet gant ul lañvez foran GNU.
+Gellout a rit skignañ anezhañ, kemm anezhañ hag ober gantañ en un doare frank.
+
+Kod-mammenn ar poellad C# a zo kerzet war GitHub : https://github.com/SubtitleEdit/subtitleedit
+
+Gweladennit www.nikse.dk evit kaout ar stumm diwezhañ.
+
+Ouzhpenn mat e vez degemeret ar c'hinnigoù.
+
+Postel : mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Ouzhpennañ al listenn anvioù/hag-all hag-all.</Title>
@@ -104,10 +109,17 @@ mailto :nikse.dk@gmail.com</AboutText1>
     <GoToVlcMediaPlayerHomePage>Ha fellout a ra deoc'h da vont war lec'hienn VLC media player ?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Geneladur restr ar pikoù...</GeneratingPeakFile>
     <GeneratingSpectrogram>Krouadur ar skalfadlun...</GeneratingSpectrogram>
-    <ExtractingSeconds>Eztennadenn ar c'hlev : {0 :0.0} eilennoù</ExtractingSeconds>
-    <ExtractingMinutes>Eztennadenn ar c'hlev : {0}:{1 :00} eilennoù</ExtractingMinutes>
-    <WaveFileNotFound>Restr stumm gwagenn digavus ! Eztennañ ar c'hlev a implij VLC media player 1.1.x pe nevesoc'h ({0}-bit). Linenn urzhiad : {1} {2}</WaveFileNotFound>
-    <WaveFileMalformed>N'en deus ket graet-berzh, geneladur stumm ar wagenn dre {0}  ! Linenn urzhiad : {1} {2} Notenn : Gwiriekit spas an disk vak.</WaveFileMalformed>
+    <ExtractingSeconds>Eztennadenn ar c'hlev : {0:0.0} eilennoù</ExtractingSeconds>
+    <ExtractingMinutes>Eztennadenn ar c'hlev : {0}:{1:00} eilennoù</ExtractingMinutes>
+    <WaveFileNotFound>Restr stumm gwagenn digavus !
+Eztennañ ar c'hlev a implij VLC media player 1.1.x pe nevesoc'h ({0}-bit).
+
+Linenn urzhiad : {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>N'en deus ket graet-berzh, geneladur stumm ar wagenn dre {0} !
+
+Linenn urzhiad : {1} {2}
+
+Notenn : Gwiriekit spas an disk vak.</WaveFileMalformed>
     <LowDiskSpace>SPAS AN DISK GWANN</LowDiskSpace>
     <FreeDiskSpace>{0} vak</FreeDiskSpace>
   </AddWaveform>
@@ -328,8 +340,7 @@ mailto :nikse.dk@gmail.com</AboutText1>
     <Title>Dibab ar yezh</Title>
     <ChooseLanguageStreamId>Dibab ar yezh (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Yezh dianavezet</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Skeudenn an istitl {0}/{1} -
-{2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Skeudenn an istitl {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Skeudenn an istitl</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -362,8 +373,7 @@ mailto :nikse.dk@gmail.com</AboutText1>
     <DoubleHeight>Diskouez an destenn war daou uhelder</DoubleHeight>
     <Errors>Fazioù</Errors>
     <ErrorsX>Fazioù : {0}</ErrorsX>
-    <MaxLengthError>Linenn {0} a zibas an hirder max. ({1}) à {2}:
-{3}</MaxLengthError>
+    <MaxLengthError>Linenn {0} a zibas an hirder max. ({1}) à {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Kinnigadur digemm</TextUnchangedPresentation>
     <TextLeftJustifiedText>Testenn marzekaet a-gleiz</TextLeftJustifiedText>
     <TextCenteredText>Testenn kreizet</TextCenteredText>
@@ -440,7 +450,8 @@ mailto :nikse.dk@gmail.com</AboutText1>
     <SavePremiereEdlAs>Enrollañ evel Premiere Edl</SavePremiereEdlAs>
     <SaveFcpAs>Enrollañ evel Final Cut Pro xml</SaveFcpAs>
     <SaveDostAs>Enrollañ evel DoStudio dost</SaveDostAs>
-    <SomeLinesWereTooLongX>Linennoù 'zo a zo re hir : {0}</SomeLinesWereTooLongX>
+    <SomeLinesWereTooLongX>Linennoù 'zo a zo re hir :
+{0}</SomeLinesWereTooLongX>
     <LineHeight>Uhelder al linenn</LineHeight>
     <BoxSingleLine>Boest unel</BoxSingleLine>
     <BoxMultiLine>Boest lies-linennoù</BoxMultiLine>
@@ -466,7 +477,7 @@ mailto :nikse.dk@gmail.com</AboutText1>
     <TimeCodeFormat>Stumm an amzergod</TimeCodeFormat>
     <Srt>.srt</Srt>
     <Milliseconds>Milieilennoù</Milliseconds>
-    <HHMMSSFF>HH :MM :SS :FF</HHMMSSFF>
+    <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
     <TimeCodeSeparator>Disranner :</TimeCodeSeparator>
   </ExportText>
   <FindDialog>
@@ -704,6 +715,7 @@ Stlej ha laosk)</InputDescription>
     <Note>Notenn : Ret eo keidañ an amzerioù-kod a-raok kendeuziñ an istitloù</Note>
   </JoinSubtitles>
   <LanguageNames>
+    <UnknownCodeX>Dianav ({0})</UnknownCodeX>
     <aaName>afar</aaName>
     <abName>abkhazeg</abName>
     <afName>afrikaans</afName>
@@ -715,6 +727,7 @@ Stlej ha laosk)</InputDescription>
     <baName>bachkir</baName>
     <beName>belaruseg</beName>
     <bgName>bulgareg</bgName>
+    <bhName>bihari</bhName>
     <biName>bislama</biName>
     <bnName>bengali</bnName>
     <boName>tibetaneg</boName>
@@ -760,6 +773,7 @@ Stlej ha laosk)</InputDescription>
     <jvName>javaneg</jvName>
     <kaName>jorjianeg</kaName>
     <kkName>kazak</kkName>
+    <klName>greunlandeg</klName>
     <kmName>khmer</kmName>
     <knName>kanareg</knName>
     <koName>koreaneg</koName>
@@ -777,6 +791,7 @@ Stlej ha laosk)</InputDescription>
     <mkName>makedoneg</mkName>
     <mlName>malayalam</mlName>
     <mnName>mongoleg</mnName>
+    <moName>moldoveg</moName>
     <mrName>marathi</mrName>
     <msName>malayseg</msName>
     <mtName>malteg</mtName>
@@ -786,6 +801,7 @@ Stlej ha laosk)</InputDescription>
     <nlName>nederlandeg</nlName>
     <noName>norvegeg</noName>
     <ocName>okitaneg</ocName>
+    <omName>oromoeg</omName>
     <orName>oriya</orName>
     <paName>punjabi</paName>
     <plName>poloneg</plName>
@@ -1000,7 +1016,7 @@ Stlej ha laosk)</InputDescription>
         <CheckForUpdates>Klask war-lerc'h hizivadurioù...</CheckForUpdates>
         <Title>&amp;Sikour</Title>
         <Help>&amp;Sikour</Help>
-        <About>Diwar-benn &amp;</About>
+        <About>&amp;Diwar-benn</About>
       </Help>
       <ToolBar>
         <New>Nevez</New>
@@ -1148,7 +1164,7 @@ Stlej ha laosk)</InputDescription>
     <VisualSyncPerformed>Goubredañ gweledel graet</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Enporzhiañ an istitl-mañ e VobSub ?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Restr uheloc'h evit 10 Mo : {0}</FileXIsLargerThan10MB>
-    <ContinueAnyway>Kenderc'hel memestra  ?</ContinueAnyway>
+    <ContinueAnyway>Kenderc'hel memestra ?</ContinueAnyway>
     <BeforeLoadOf>A-raok kargañ diouzh {0}</BeforeLoadOf>
     <LoadedSubtitleX>Istitloù kargañ {0}</LoadedSubtitleX>
     <LoadedEmptyOrShort>Istitl goullo pe berr-tre karget {0}</LoadedEmptyOrShort>
@@ -1157,8 +1173,10 @@ Stlej ha laosk)</InputDescription>
     <SavedSubtitleX>Istitloù enrollet {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Istitl orin enrollet {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Restr war disk kemmet</FileOnDiskModified>
-    <OverwriteModifiedFile>Rasklañ ar restr {0} kemmet da {1} {2} {3} gant ar restr a-vremañ karget da {4} {5} ?</OverwriteModifiedFile>
-    <FileXIsReadOnly>Dibosupl eo da enrollañ ar restr {0} Ar restr a zo e lennadur hepken !</FileXIsReadOnly>
+    <OverwriteModifiedFile>Rasklañ ar restr {0} kemmet da {1} {2}{3} gant ar restr a-vremañ karget da {4} {5} ?</OverwriteModifiedFile>
+    <FileXIsReadOnly>Dibosupl eo da enrollañ ar restr {0}
+
+Ar restr a zo e lennadur hepken !</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Dibosupl eo da enrollañ ar restr istitl {0}</UnableToSaveSubtitleX>
     <BeforeNew>A-raok unan nevez</BeforeNew>
     <New>Nevez</New>
@@ -1170,10 +1188,13 @@ Stlej ha laosk)</InputDescription>
     <OpenVideoFile>Digeriñ ar restr video...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Kellusk ar Frame nevez cadence ({0}) a zo bet implijet a-benn jediñ eurvezh ar penn-kentañ/fin</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Kellusk nevez ar Frame ({0}) a zo bet implijet a-benn jediñ niveroù Frame ar penn-kentañ/fin</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>N'eo ket bet kavet an elfenn a oa klask war e lerc'h. Ha fellout a ra deoc'h adkregiñ adalek krec'h ar restr hag ober un enklask nevez ?</FindContinue>
+    <FindContinue>N'eo ket bet kavet an elfenn a oa klask war e lerc'h.
+Ha fellout a ra deoc'h adkregiñ adalek krec'h ar restr hag ober un enklask nevez ?</FindContinue>
     <FindContinueTitle>Kenderc'hel gant an enklask ?</FindContinueTitle>
-    <ReplaceContinueNotFound>N'eo ket bet kavet an elfenn da erlec'hiañ. Ha fellout a ra deoc'h adkregiñ adalek krec'h ar restr hag ober un enklask nevez ?</ReplaceContinueNotFound>
-    <ReplaceXContinue>An elfenn a oa klask warni a zo bet erlec'hiet {0} gwezh. Ha fellout a ra deoc'h adkregiñ adalek krec'h ar restr ha kenderc'hel gant an enklask ?</ReplaceXContinue>
+    <ReplaceContinueNotFound>N'eo ket bet kavet an elfenn da erlec'hiañ.
+Ha fellout a ra deoc'h adkregiñ adalek krec'h ar restr hag ober un enklask nevez ?</ReplaceContinueNotFound>
+    <ReplaceXContinue>An elfenn a oa klask warni a zo bet erlec'hiet {0} gwezh.
+Ha fellout a ra deoc'h adkregiñ adalek krec'h ar restr ha kenderc'hel gant an enklask ?</ReplaceXContinue>
     <ReplaceContinueTitle>Kenderc'hel da « erlec'hiañ » ?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Klask war-lerc'h '{0}' war al linenn niverenn {1} ...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' kavet war al linenn {1}</XFoundAtLineNumberY>
@@ -1203,7 +1224,9 @@ Stlej ha laosk)</InputDescription>
     <TextingForHearingImpairedRemovedOneLine>Kemennadennoù evit ar re vouzar tennet : Ul linenn</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Kemennadennoù evit ar re vouzar tennet : {0} linennoù</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Istitl troc'het</SubtitleSplitted>
-    <SubtitleAppendPrompt>An dra-mañ a "concatènera" un istitl, a rankje bezañ dija bezañ gourbredet gant ar restr video, en istitloù karget evit bremañ. Kenderc'hel ?</SubtitleAppendPrompt>
+    <SubtitleAppendPrompt>An dra-mañ a "concatènera" un istitl, a rankje bezañ dija bezañ gourbredet gant ar restr video, en istitloù karget evit bremañ.
+
+Kenderc'hel ?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Ouzhpennañ un istitl</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Istitl digoret da glokaat...</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Goubredañ gweledel - ouzhpennañ eil lodenn an istitl</AppendViaVisualSyncTitle>
@@ -1291,12 +1314,12 @@ Stlej ha laosk)</InputDescription>
     <BeforeImportingBluRaySupFile>A-raok enporzhiañ an istitloù Blu-ray</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>A-raok enporzhiañ ur restr XML BDN</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>A-raok diskouez al linennoù diuzet abretoc'h/diwezhatoc'h</BeforeShowSelectedLinesEarlierLater>
-    <ShowAllLinesXSecondsLinesEarlier>Diskouez an holl linennoù {0 :0.0##} eilenn abretoc'h</ShowAllLinesXSecondsLinesEarlier>
-    <ShowAllLinesXSecondsLinesLater>Diskouez an holl linennoù {0 :0.0##} eilenn diwezhatoc'h</ShowAllLinesXSecondsLinesLater>
-    <ShowSelectedLinesXSecondsLinesEarlier>Diskouez al linennoù diuzet {0 :0.0##} eilenn abretoc'h</ShowSelectedLinesXSecondsLinesEarlier>
-    <ShowSelectedLinesXSecondsLinesLater>Diskouez linennoù diuzet {0 :0.0##} eilenn diwezhatoc'h</ShowSelectedLinesXSecondsLinesLater>
-    <ShowSelectionAndForwardXSecondsLinesEarlier>Diskouez al linennoù diuzet hag a-raok {0 :0.0##} eilenn abretoc'h</ShowSelectionAndForwardXSecondsLinesEarlier>
-    <ShowSelectionAndForwardXSecondsLinesLater>Diskouez linenn diuzet hag a-raok {0 :0.0##} eilenn diwezhatoc'h</ShowSelectionAndForwardXSecondsLinesLater>
+    <ShowAllLinesXSecondsLinesEarlier>Diskouez an holl linennoù {0:0.0##} eilenn abretoc'h</ShowAllLinesXSecondsLinesEarlier>
+    <ShowAllLinesXSecondsLinesLater>Diskouez an holl linennoù {0:0.0##} eilenn diwezhatoc'h</ShowAllLinesXSecondsLinesLater>
+    <ShowSelectedLinesXSecondsLinesEarlier>Diskouez al linennoù diuzet {0:0.0##} eilenn abretoc'h</ShowSelectedLinesXSecondsLinesEarlier>
+    <ShowSelectedLinesXSecondsLinesLater>Diskouez linennoù diuzet {0:0.0##} eilenn diwezhatoc'h</ShowSelectedLinesXSecondsLinesLater>
+    <ShowSelectionAndForwardXSecondsLinesEarlier>Diskouez al linennoù diuzet hag a-raok {0:0.0##} eilenn abretoc'h</ShowSelectionAndForwardXSecondsLinesEarlier>
+    <ShowSelectionAndForwardXSecondsLinesLater>Diskouez linenn diuzet hag a-raok {0:0.0##} eilenn diwezhatoc'h</ShowSelectionAndForwardXSecondsLinesLater>
     <ShowSelectedLinesEarlierLaterPerformed>Diskouez a-raok/da-heul graet war al linennoù diuzet</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Gerioù doubl dre regex {0}</DoubleWordsViaRegEx>
     <BeforeSortX>A-raok an tri : {0}</BeforeSortX>
@@ -1330,7 +1353,7 @@ Stlej ha laosk)</InputDescription>
     <BeforeSetEndTimeAndOffsetTheRest>A-raok despeziñ eurvezh ar fin ha dilec'hiañ ar pezh a zeu goude</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>A-raok despeziñ an amzer diwezhañ hervez lec'hiadur ar video ha jedadenn emgefreek ar penn-kentañ</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Kenderc'hel da wiriañ ar reizhskrivadur ?</ContinueWithCurrentSpellCheck>
-    <CharactersPerSecond>Arouezioù/eil : {0 :0.00}</CharactersPerSecond>
+    <CharactersPerSecond>Arouezioù/eil : {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Kaout kellusk anneuenn (fps) ur restr video</GetFrameRateFromVideoFile>
     <NetworkMessage>Kemennadenn nevez : {0} ({1}): {2}</NetworkMessage>
     <NetworkUpdate>Linenn hizivadur : {0} ({1}): Index = {2}, Testenn = {3}</NetworkUpdate>
@@ -1503,6 +1526,7 @@ Stlej ha laosk)</InputDescription>
     <GetPlugins>Pellgargañ pluginoù</GetPlugins>
     <Description>Diskrivadur</Description>
     <Version>Stumm</Version>
+    <Date>Deiziad</Date>
     <Type>Type</Type>
     <OpenPluginsFolder>Ouvrez an teul 'Pluginoù'</OpenPluginsFolder>
     <GetPluginsInfo1>Ar plugin kemm istitloù a rank bezañ pellgarget e-barzh an teul "Pluginoù"</GetPluginsInfo1>
@@ -1675,7 +1699,7 @@ Stlej ha laosk)</InputDescription>
     <WaveformTextColor>Liv an destenn</WaveformTextColor>
     <WaveformTextFontSize>Ment an nodrezh</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Lemmel kuit an endalc'had</WaveformAndSpectrogramsFolderEmpty>
-    <WaveformAndSpectrogramsFolderInfo>Teuliadoù 'Waveforms' ha 'Spectrograms' a endalc'h {0} restroù ({1 :0.00} Mo)</WaveformAndSpectrogramsFolderInfo>
+    <WaveformAndSpectrogramsFolderInfo>Teuliadoù 'Waveforms' ha 'Spectrograms' a endalc'h {0} restroù ({1:0.00} Mo)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Skalfadlun</Spectrogram>
     <GenerateSpectrogram>Genel</GenerateSpectrogram>
     <SpectrogramAppearance>Neuz :</SpectrogramAppearance>
@@ -1933,9 +1957,9 @@ Stlej ha laosk)</InputDescription>
     <MostUsedWords>Gerioù implijetañ</MostUsedWords>
     <NothingFound>Mann ebet kavet</NothingFound>
     <NumberOfLinesX>Niver a linennoù istitl : {0:#,###}</NumberOfLinesX>
-    <LengthInFormatXinCharactersY>Niver a arouezioù {0}: {1 : ####,##0}</LengthInFormatXinCharactersY>
+    <LengthInFormatXinCharactersY>Niver a arouezioù {0}: {1:####,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Niver a arouezioù (e-barzh an destenn nemetken): {0:#,###,##0}</NumberOfCharactersInTextOnly>
-    <TotalCharsPerSecond>Niver a arouezioù dre eilenn en holl : {0 :0.0}</TotalCharsPerSecond>
+    <TotalCharsPerSecond>Niver a arouezioù dre eilenn en holl : {0:0.0}</TotalCharsPerSecond>
     <NumberOfItalicTags>Niver a valizennoù stouet : {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Niver a valizennoù dru : {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Niver a valizennoù islinennet : {0}</NumberOfUnderlineTags>
@@ -1943,13 +1967,13 @@ Stlej ha laosk)</InputDescription>
     <NumberOfAlignmentTags>Niver a valizennoù steudet : {0}</NumberOfAlignmentTags>
     <LineLengthMaximum>Hirder an istitloù - an hini hirañ : {0} a arouezioù</LineLengthMaximum>
     <LineLengthAverage>Hirder an istitloù - keidenn : {0} a arouezioù</LineLengthAverage>
-    <LinesPerSubtitleAverage>Linennoù dre istitloù - keidenn : {0 :0.0}</LinesPerSubtitleAverage>
+    <LinesPerSubtitleAverage>Linennoù dre istitloù - keidenn : {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMaximum>Hirder al linenn unanel - maksimom : {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Hirder al linenn unanel - keidenn : {0}</SingleLineLengthAverage>
-    <DurationMaximum>Padelezh - maksimom : {0 :0.000} eilennoù</DurationMaximum>
-    <DurationAverage>Padelezh - keidenn : {0 :0.000} eilennoù</DurationAverage>
-    <CharactersPerSecondMaximum>Arouezioù/eil - maksimom : {0 :0.000}</CharactersPerSecondMaximum>
-    <CharactersPerSecondAverage>Arouezioù/eil - moyen : {0 :0.000}</CharactersPerSecondAverage>
+    <DurationMaximum>Padelezh - maksimom : {0:0.000} eilennoù</DurationMaximum>
+    <DurationAverage>Padelezh - keidenn : {0:0.000} eilennoù</DurationAverage>
+    <CharactersPerSecondMaximum>Arouezioù/eil - maksimom : {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Arouezioù/eil - moyen : {0:0.000}</CharactersPerSecondAverage>
     <Export>Ezporzhiañ...</Export>
   </Statistics>
   <SubStationAlphaProperties>
