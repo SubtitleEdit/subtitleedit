@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.4.13 (xth June 2016) BETA
+3.4.13 (12th June 2016)
 * NEW:
    * Breton translation - thx Wanibzh29
    * Added new subtitle formats - thx Oli/Mauricio/Leandro
