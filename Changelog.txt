@@ -2,6 +2,7 @@
 
 3.4.13 (xth June 2016) BETA
 * NEW:
+   * Breton translation - thx Wanibzh29
    * Added new subtitle formats - thx Oli/Mauricio/Leandro
    * It's now possible to use "video offset" via "Video" menu
    * Added support for spu/png OCR - thx claunia
@@ -47,6 +48,9 @@
    * Fixed Matroska command line convert bug - thx KristjanLaane/xylographe
    * Fixed reading UTF-32
    * Support for "’" in scc - thx Mayte
+   * Fixed support for more characters in Cavena 890 - thx boriseetgerink
+   * Fixed rounding bug in EBU time codes - thx Alessandra
+   * Fixed crash when using MPC-HC - thx ramon18
    * + Many minor fixes from ivandrofly and xylographe
 
 
