@@ -550,7 +550,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
 
-                if (_settings.Tools.ListViewSyntaxColorLongLines)
+                if (_settings.Tools.ListViewSyntaxColorLongLines && item.SubItems[ColumnIndexText].Tag == null)
                 {
                     int noOfLines = paragraph.Text.Split(Environment.NewLine[0]).Length;
                     string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
@@ -582,6 +582,63 @@ namespace Nikse.SubtitleEdit.Controls
                     if (newLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
                         item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }
+            }
+        }
+
+        public int Bookmark()
+        {
+            var item = FocusedItem;
+            if (item != null)
+            {
+                if (item.SubItems[ColumnIndexText].Tag != null)
+                {
+                    item.SubItems[ColumnIndexText].BackColor = BackColor;
+                    item.SubItems[ColumnIndexText].Tag = null;
+                    return item.Index;
+                }
+                item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewBookmarkColor;
+                item.SubItems[ColumnIndexText].Tag = item;
+            }
+            return -1;
+        }
+
+        public void GotoNextBookmark()
+        {
+            if (Items.Count > 0)
+            {
+                int startIndex = (FocusedItem != null) ? FocusedItem.Index : 0;
+                int index = startIndex;
+                do
+                {
+                    if (++index >= Items.Count)
+                        index = 0;
+                    if (Items[index].SubItems[ColumnIndexText].Tag != null)
+                    {
+                        SelectIndexAndEnsureVisible(index, focus: true);
+                        return;
+                    }
+                }
+                while (index != startIndex);
+            }
+        }
+
+        public void GotoPreviousBookmark()
+        {
+            if (Items.Count > 0)
+            {
+                int startIndex = (FocusedItem != null) ? FocusedItem.Index : 0;
+                int index = startIndex;
+                do
+                {
+                    if (--index < 0)
+                        index = Items.Count - 1;
+                    if (Items[index].SubItems[ColumnIndexText].Tag != null)
+                    {
+                        SelectIndexAndEnsureVisible(index, focus: true);
+                        return;
+                    }
+                }
+                while (index != startIndex);
             }
         }
 
@@ -945,5 +1002,6 @@ namespace Nikse.SubtitleEdit.Controls
         {
             return (index >= 0 && index < Items.Count);
         }
+
     }
 }
