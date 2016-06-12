@@ -73,8 +73,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string innerXml = paragraphInnerXml;
                 innerXml = innerXml.Replace("[START]", p.StartTime.ToString());
                 innerXml = innerXml.Replace("[END]", p.EndTime.ToString());
-                innerXml = innerXml.Replace("[TEXT]", p.Text.Replace(Environment.NewLine, "<br />"));
                 paragraph.InnerXml = innerXml;
+
+                XmlNode textNode = paragraph.SelectSingleNode("tuv/seg");
+                textNode.InnerText = HtmlUtil.RemoveHtmlTags(p.Text, true);
+                textNode.InnerXml = textNode.InnerXml.Replace(Environment.NewLine, "<br />");
 
                 body.AppendChild(paragraph);
                 count++;
