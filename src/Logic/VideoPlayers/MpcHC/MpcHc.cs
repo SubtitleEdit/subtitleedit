@@ -30,6 +30,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         private MessageHandlerWindow _form;
         private int _initialWidth;
         private int _initialHeight;
+        private Timer _hideMpcTimer = new Timer();
+        private int _hideMpcTimerCount;
 
         public override string PlayerName
         {
@@ -160,8 +162,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         {
                             Application.DoEvents();
                             HijackMpcHc();
-                        }
+                        }                       
                     }
+                    Application.DoEvents();
+                    NativeMethods.ShowWindow(_process.MainWindowHandle, NativeMethods.ShowWindowCommands.Hide);
+                    NativeMethods.SetWindowPos(_process.MainWindowHandle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, -9999, -9999, 0, 0, NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
                     break;
                 case MpcHcCommand.NowPlaying:
                     if (_loaded == 1)
@@ -180,6 +185,25 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         if (OnVideoLoaded != null)
                             OnVideoLoaded.Invoke(this, new EventArgs());
                         SendMpcMessage(MpcHcCommand.SetSubtitleTrack, "-1");
+
+                        // be sure to hide MPC
+                        _hideMpcTimerCount = 10;
+                        _hideMpcTimer.Interval = 100;
+                        _hideMpcTimer.Tick += (o, args) =>
+                        {
+                            _hideMpcTimer.Stop();
+                            if (_hideMpcTimerCount > 0)
+                            {
+                                Application.DoEvents();
+                                NativeMethods.ShowWindow(_process.MainWindowHandle, NativeMethods.ShowWindowCommands.Hide);
+                                NativeMethods.SetWindowPos(_process.MainWindowHandle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, -9999, -9999, 0, 0, NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
+
+                                _hideMpcTimerCount--;
+                                _hideMpcTimer.Start();
+                            }
+                        };
+                        _hideMpcTimer.Start();
+
                     }
                     break;
                 case MpcHcCommand.NotifyEndOfStream:
@@ -242,6 +266,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             NativeMethods.ShowWindow(_process.MainWindowHandle, NativeMethods.ShowWindowCommands.ShowNoActivate);
             NativeMethods.SetWindowPos(_videoHandle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, 0, 0, width, height, NativeMethods.SetWindowPosFlags.SWP_NOREPOSITION);
             NativeMethods.ShowWindow(_process.MainWindowHandle, NativeMethods.ShowWindowCommands.Hide);
+            NativeMethods.SetWindowPos(_process.MainWindowHandle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, -9999, -9999, 0, 0, NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
         }
 
         public static string GetMpcHcFileName()
@@ -371,6 +396,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             }
             catch
             {
+                // ignored
             }
         }
 
@@ -397,6 +423,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         _positionTimer.Stop();
                         _positionTimer.Dispose();
                         _positionTimer = null;
+                    }
+                    if (_hideMpcTimer != null)
+                    {
+                        _hideMpcTimer.Stop();
+                        _hideMpcTimer.Dispose();
+                        _hideMpcTimer = null;
                     }
 
                     if (_form != null)
