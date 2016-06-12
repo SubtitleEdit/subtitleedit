@@ -2060,6 +2060,9 @@
             public string ListViewColumnPaste { get; set; }
             public string ListViewFocusWaveform { get; set; }
             public string ListViewGoToNextError { get; set; }
+            public string ListViewToggleBookmark { get; set; }
+            public string ListViewGoToNextBookmark { get; set; }
+            public string ListViewGoToPreviousBookmark { get; set; }
             public string ShowBeamer { get; set; }
             public string MainTextBoxMoveLastWordDown { get; set; }
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }

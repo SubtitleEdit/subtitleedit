@@ -907,6 +907,9 @@ namespace Nikse.SubtitleEdit.Core
         public string MainListViewColumnPaste { get; set; }
         public string MainListViewFocusWaveform { get; set; }
         public string MainListViewGoToNextError { get; set; }
+        public string MainListViewToggleBookmark { get; set; }
+        public string MainListViewGoToNextBookmark { get; set; }
+        public string MainListViewGoToPreviousBookmark { get; set; }
         public string MainTextBoxItalic { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxMoveLastWordDown { get; set; }
@@ -1018,6 +1021,9 @@ namespace Nikse.SubtitleEdit.Core
             MainSynchronizationPointSync = "Control+Shift+P";
             MainSynchronizationChangeFrameRate = string.Empty;
             MainListViewItalic = "Control+I";
+            MainListViewToggleBookmark = "Control+F2";
+            MainListViewGoToNextBookmark = "F2";
+            MainListViewGoToPreviousBookmark = "Shift+F2";
             MainEditReverseStartAndEndingForRTL = string.Empty;
             MainTextBoxItalic = "Control+I";
             MainTextBoxSplitAtCursor = "Control+Alt+V";
@@ -2668,6 +2674,15 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainListViewGoToNextError");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewGoToNextError = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewToggleBookmark");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewToggleBookmark = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewGoToNextBookmark");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewGoToNextBookmark = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewGoToPreviousBookmark");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewGoToPreviousBookmark = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainEditReverseStartAndEndingForRTL");
                 if (subNode != null)
                     settings.Shortcuts.MainEditReverseStartAndEndingForRTL = subNode.InnerText;
@@ -3420,6 +3435,9 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainListViewColumnPaste", settings.Shortcuts.MainListViewColumnPaste);
                 textWriter.WriteElementString("MainListViewFocusWaveform", settings.Shortcuts.MainListViewFocusWaveform);
                 textWriter.WriteElementString("MainListViewGoToNextError", settings.Shortcuts.MainListViewGoToNextError);
+                textWriter.WriteElementString("MainListViewToggleBookmark", settings.Shortcuts.MainListViewToggleBookmark);
+                textWriter.WriteElementString("MainListViewGoToNextBookmark", settings.Shortcuts.MainListViewGoToNextBookmark);
+                textWriter.WriteElementString("MainListViewGoToPreviousBookmark", settings.Shortcuts.MainListViewGoToPreviousBookmark);
                 textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
                 textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
                 textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);

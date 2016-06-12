@@ -646,6 +646,7 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownWaveformBorderHitMs.Value = Configuration.Settings.VideoControls.WaveformBorderHitMs;
             checkBoxUseFFmpeg.Checked = gs.UseFFmpegForWaveExtraction;
             textBoxFFmpegPath.Text = gs.FFmpegLocation;
+
             var generalNode = new TreeNode(Configuration.Settings.Language.General.GeneralText);
             AddNode(generalNode, language.MergeSelectedLines, nameof(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines));
             AddNode(generalNode, language.MergeSelectedLinesOnlyFirstText, nameof(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText));
@@ -745,6 +746,9 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(listViewNode, language.ListViewColumnPaste, nameof(Configuration.Settings.Shortcuts.MainListViewColumnPaste), true);
             AddNode(listViewNode, language.ListViewFocusWaveform, nameof(Configuration.Settings.Shortcuts.MainListViewFocusWaveform));
             AddNode(listViewNode, language.ListViewGoToNextError, nameof(Configuration.Settings.Shortcuts.MainListViewGoToNextError));
+            AddNode(listViewNode, language.ListViewToggleBookmark, nameof(Configuration.Settings.Shortcuts.MainListViewToggleBookmark));
+            AddNode(listViewNode, language.ListViewGoToNextBookmark, nameof(Configuration.Settings.Shortcuts.MainListViewGoToNextBookmark));
+            AddNode(listViewNode, language.ListViewGoToPreviousBookmark, nameof(Configuration.Settings.Shortcuts.MainListViewGoToPreviousBookmark));
             treeViewShortcuts.Nodes.Add(listViewNode);
 
             var textBoxNode = new TreeNode(language.TextBox);

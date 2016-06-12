@@ -5140,6 +5140,15 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/ListViewGoToNextError":
                     language.Settings.ListViewGoToNextError = reader.Value;
                     break;
+                case "Settings/ListViewToggleBookmark":
+                    language.Settings.ListViewToggleBookmark = reader.Value;
+                    break;
+                case "Settings/ListViewGoToNextBookmark":
+                    language.Settings.ListViewGoToNextBookmark = reader.Value;
+                    break;
+                case "Settings/ListViewGoToPreviousBookmark":
+                    language.Settings.ListViewGoToPreviousBookmark = reader.Value;
+                    break;
                 case "Settings/ShowBeamer":
                     language.Settings.ShowBeamer = reader.Value;
                     break;
