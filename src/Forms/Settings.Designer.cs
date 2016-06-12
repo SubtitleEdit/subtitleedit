@@ -31,7 +31,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.tabControlSettings = new System.Windows.Forms.TabControl();
-            this.tabPageGenerel = new System.Windows.Forms.TabPage();
+            this.tabPageGeneral = new System.Windows.Forms.TabPage();
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
             this.checkBoxCheckForUpdates = new System.Windows.Forms.CheckBox();
             this.numericUpDownMinGapMs = new System.Windows.Forms.NumericUpDown();
@@ -315,7 +315,7 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.tabControlSettings.SuspendLayout();
-            this.tabPageGenerel.SuspendLayout();
+            this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinGapMs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSubtitleLineMaximumLength)).BeginInit();
@@ -406,7 +406,7 @@
             // 
             // tabControlSettings
             // 
-            this.tabControlSettings.Controls.Add(this.tabPageGenerel);
+            this.tabControlSettings.Controls.Add(this.tabPageGeneral);
             this.tabControlSettings.Controls.Add(this.tabPageToolBar);
             this.tabControlSettings.Controls.Add(this.tabPageVideoPlayer);
             this.tabControlSettings.Controls.Add(this.tabPageWaveform);
@@ -423,16 +423,16 @@
             this.tabControlSettings.TabIndex = 2;
             this.tabControlSettings.SelectedIndexChanged += new System.EventHandler(this.TabControlSettingsSelectedIndexChanged);
             // 
-            // tabPageGenerel
+            // tabPageGeneral
             // 
-            this.tabPageGenerel.Controls.Add(this.groupBoxMiscellaneous);
-            this.tabPageGenerel.Location = new System.Drawing.Point(4, 22);
-            this.tabPageGenerel.Name = "tabPageGenerel";
-            this.tabPageGenerel.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGenerel.Size = new System.Drawing.Size(825, 444);
-            this.tabPageGenerel.TabIndex = 0;
-            this.tabPageGenerel.Text = "Generel";
-            this.tabPageGenerel.UseVisualStyleBackColor = true;
+            this.tabPageGeneral.Controls.Add(this.groupBoxMiscellaneous);
+            this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
+            this.tabPageGeneral.Name = "tabPageGeneral";
+            this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageGeneral.Size = new System.Drawing.Size(825, 444);
+            this.tabPageGeneral.TabIndex = 0;
+            this.tabPageGeneral.Text = "General";
+            this.tabPageGeneral.UseVisualStyleBackColor = true;
             // 
             // groupBoxMiscellaneous
             // 
@@ -3713,7 +3713,7 @@
             this.Text = "Settings";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormSettings_KeyDown);
             this.tabControlSettings.ResumeLayout(false);
-            this.tabPageGenerel.ResumeLayout(false);
+            this.tabPageGeneral.ResumeLayout(false);
             this.groupBoxMiscellaneous.ResumeLayout(false);
             this.groupBoxMiscellaneous.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinGapMs)).EndInit();
@@ -3816,7 +3816,7 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.TabControl tabControlSettings;
-        private System.Windows.Forms.TabPage tabPageGenerel;
+        private System.Windows.Forms.TabPage tabPageGeneral;
         private System.Windows.Forms.TabPage tabPageSsaStyle;
         private System.Windows.Forms.GroupBox groupBoxMiscellaneous;
         private System.Windows.Forms.GroupBox groupBoxShowToolBarButtons;

@@ -228,7 +228,7 @@ namespace Nikse.SubtitleEdit.Forms
             // Language
             var language = Configuration.Settings.Language.Settings;
             Text = language.Title;
-            tabPageGenerel.Text = language.General;
+            tabPageGeneral.Text = language.General;
             tabPageVideoPlayer.Text = language.VideoPlayer;
             tabPageWaveform.Text = language.WaveformAndSpectrogram;
             tabPageWordLists.Text = language.WordLists;
