@@ -12,7 +12,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 {
     public class MpcHc : VideoPlayer, IDisposable
     {
-
         private const string ModePlay = "0";
         private const string ModePause = "1";
         private string _playMode = string.Empty;
@@ -127,8 +126,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             _process = Process.Start(_startInfo);
             if (_process != null)
                 _process.WaitForInputIdle();
-            _positionTimer = new Timer();
-            _positionTimer.Interval = 100;
+            _positionTimer = new Timer { Interval = 100 };
             _positionTimer.Tick += PositionTimerTick;
         }
 
@@ -143,7 +141,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             var cds = (NativeMethods.CopyDataStruct)Marshal.PtrToStructure(message.LParam, typeof(NativeMethods.CopyDataStruct));
             var command = cds.dwData.ToUInt32();
             var param = Marshal.PtrToStringAuto(cds.lpData);
-            var multiParam = param.Split('|');
+            var multiParam = new string[0];
+            if (param != null)
+                multiParam = param.Split('|');
 
             switch (command)
             {
@@ -162,11 +162,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         {
                             Application.DoEvents();
                             HijackMpcHc();
-                        }                       
+                        }
                     }
                     Application.DoEvents();
-                    NativeMethods.ShowWindow(_process.MainWindowHandle, NativeMethods.ShowWindowCommands.Hide);
-                    NativeMethods.SetWindowPos(_process.MainWindowHandle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, -9999, -9999, 0, 0, NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
+                    HideMpcPlayerWindow();
                     break;
                 case MpcHcCommand.NowPlaying:
                     if (_loaded == 1)
@@ -177,7 +176,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         double d;
                         if (multiParam.Length >= 5 && double.TryParse(multiParam[4].Replace(",", ".").Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
                             _durationInSeconds = d;
-                        else if (multiParam.Length >= 1 && double.TryParse(multiParam[multiParam.Length-1].Replace(",", ".").Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                        else if (multiParam.Length >= 1 && double.TryParse(multiParam[multiParam.Length - 1].Replace(",", ".").Trim(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
                             _durationInSeconds = d;
 
                         Pause();
@@ -187,7 +186,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         SendMpcMessage(MpcHcCommand.SetSubtitleTrack, "-1");
 
                         // be sure to hide MPC
-                        _hideMpcTimerCount = 10;
+                        _hideMpcTimerCount = 20;
                         _hideMpcTimer.Interval = 100;
                         _hideMpcTimer.Tick += (o, args) =>
                         {
@@ -195,9 +194,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                             if (_hideMpcTimerCount > 0)
                             {
                                 Application.DoEvents();
-                                NativeMethods.ShowWindow(_process.MainWindowHandle, NativeMethods.ShowWindowCommands.Hide);
-                                NativeMethods.SetWindowPos(_process.MainWindowHandle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, -9999, -9999, 0, 0, NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
-
+                                HideMpcPlayerWindow();
                                 _hideMpcTimerCount--;
                                 _hideMpcTimer.Start();
                             }
@@ -219,6 +216,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                     }
                     break;
             }
+        }
+
+        private void HideMpcPlayerWindow()
+        {
+            NativeMethods.ShowWindow(_process.MainWindowHandle, NativeMethods.ShowWindowCommands.Hide);
+            NativeMethods.SetWindowPos(_process.MainWindowHandle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, -9999, -9999, 0, 0, NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
         }
 
         internal static bool GetWindowHandle(IntPtr windowHandle, ArrayList windowHandles)
@@ -265,8 +268,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         {
             NativeMethods.ShowWindow(_process.MainWindowHandle, NativeMethods.ShowWindowCommands.ShowNoActivate);
             NativeMethods.SetWindowPos(_videoHandle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, 0, 0, width, height, NativeMethods.SetWindowPosFlags.SWP_NOREPOSITION);
-            NativeMethods.ShowWindow(_process.MainWindowHandle, NativeMethods.ShowWindowCommands.Hide);
-            NativeMethods.SetWindowPos(_process.MainWindowHandle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, -9999, -9999, 0, 0, NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
+            HideMpcPlayerWindow();
         }
 
         public static string GetMpcHcFileName()
@@ -282,7 +284,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 if (!string.IsNullOrEmpty(Configuration.Settings.General.MpcHcLocation))
                 {
                     path = Path.GetDirectoryName(Configuration.Settings.General.MpcHcLocation);
-                    if (File.Exists(path) && path.EndsWith("mpc-hc64.exe", StringComparison.OrdinalIgnoreCase))
+                    if (path != null && (File.Exists(path) && path.EndsWith("mpc-hc64.exe", StringComparison.OrdinalIgnoreCase)))
                         return path;
                     if (Directory.Exists(Configuration.Settings.General.MpcHcLocation))
                     {
@@ -329,7 +331,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 if (!string.IsNullOrEmpty(Configuration.Settings.General.MpcHcLocation))
                 {
                     path = Path.GetDirectoryName(Configuration.Settings.General.MpcHcLocation);
-                    if (File.Exists(path) && path.EndsWith("mpc-hc.exe", StringComparison.OrdinalIgnoreCase))
+                    if (path != null && File.Exists(path) && path.EndsWith("mpc-hc.exe", StringComparison.OrdinalIgnoreCase))
                         return path;
                     if (Directory.Exists(Configuration.Settings.General.MpcHcLocation))
                     {
