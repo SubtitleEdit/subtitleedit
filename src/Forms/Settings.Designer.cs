@@ -313,10 +313,12 @@
             this.checkBoxSyntaxColorTextMoreThanTwoLines = new System.Windows.Forms.CheckBox();
             this.checkBoxSyntaxOverlap = new System.Windows.Forms.CheckBox();
             this.checkBoxSyntaxColorDurationTooSmall = new System.Windows.Forms.CheckBox();
-            this.buttonListViewSyntaxColorError = new System.Windows.Forms.Button();
             this.checkBoxSyntaxColorTextTooLong = new System.Windows.Forms.CheckBox();
             this.checkBoxSyntaxColorDurationTooLarge = new System.Windows.Forms.CheckBox();
+            this.buttonListViewSyntaxColorError = new System.Windows.Forms.Button();
             this.panelListViewSyntaxColorError = new System.Windows.Forms.Panel();
+            this.buttonListViewBookmarkColor = new System.Windows.Forms.Button();
+            this.panelListViewBookmarkColor = new System.Windows.Forms.Panel();
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
@@ -3720,10 +3722,12 @@
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorTextMoreThanTwoLines);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxOverlap);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorDurationTooSmall);
-            this.groupBoxListViewSyntaxColoring.Controls.Add(this.buttonListViewSyntaxColorError);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorTextTooLong);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorDurationTooLarge);
+            this.groupBoxListViewSyntaxColoring.Controls.Add(this.buttonListViewSyntaxColorError);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.panelListViewSyntaxColorError);
+            this.groupBoxListViewSyntaxColoring.Controls.Add(this.buttonListViewBookmarkColor);
+            this.groupBoxListViewSyntaxColoring.Controls.Add(this.panelListViewBookmarkColor);
             this.groupBoxListViewSyntaxColoring.Location = new System.Drawing.Point(6, 6);
             this.groupBoxListViewSyntaxColoring.Name = "groupBoxListViewSyntaxColoring";
             this.groupBoxListViewSyntaxColoring.Size = new System.Drawing.Size(820, 445);
@@ -3761,16 +3765,6 @@
             this.checkBoxSyntaxColorDurationTooSmall.Text = "Duration - color if too small";
             this.checkBoxSyntaxColorDurationTooSmall.UseVisualStyleBackColor = true;
             // 
-            // buttonListViewSyntaxColorError
-            // 
-            this.buttonListViewSyntaxColorError.Location = new System.Drawing.Point(20, 192);
-            this.buttonListViewSyntaxColorError.Name = "buttonListViewSyntaxColorError";
-            this.buttonListViewSyntaxColorError.Size = new System.Drawing.Size(112, 21);
-            this.buttonListViewSyntaxColorError.TabIndex = 6;
-            this.buttonListViewSyntaxColorError.Text = "Error color";
-            this.buttonListViewSyntaxColorError.UseVisualStyleBackColor = true;
-            this.buttonListViewSyntaxColorError.Click += new System.EventHandler(this.buttonListViewSyntaxColorError_Click);
-            // 
             // checkBoxSyntaxColorTextTooLong
             // 
             this.checkBoxSyntaxColorTextTooLong.AutoSize = true;
@@ -3791,6 +3785,16 @@
             this.checkBoxSyntaxColorDurationTooLarge.Text = "Duration - color if too large";
             this.checkBoxSyntaxColorDurationTooLarge.UseVisualStyleBackColor = true;
             // 
+            // buttonListViewSyntaxColorError
+            // 
+            this.buttonListViewSyntaxColorError.Location = new System.Drawing.Point(20, 192);
+            this.buttonListViewSyntaxColorError.Name = "buttonListViewSyntaxColorError";
+            this.buttonListViewSyntaxColorError.Size = new System.Drawing.Size(112, 21);
+            this.buttonListViewSyntaxColorError.TabIndex = 6;
+            this.buttonListViewSyntaxColorError.Text = "Error color";
+            this.buttonListViewSyntaxColorError.UseVisualStyleBackColor = true;
+            this.buttonListViewSyntaxColorError.Click += new System.EventHandler(this.buttonListViewSyntaxColorError_Click);
+            // 
             // panelListViewSyntaxColorError
             // 
             this.panelListViewSyntaxColorError.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -3799,6 +3803,25 @@
             this.panelListViewSyntaxColorError.Size = new System.Drawing.Size(21, 20);
             this.panelListViewSyntaxColorError.TabIndex = 7;
             this.panelListViewSyntaxColorError.Click += new System.EventHandler(this.buttonListViewSyntaxColorError_Click);
+            // 
+            // buttonListViewBookmarkColor
+            // 
+            this.buttonListViewBookmarkColor.Location = new System.Drawing.Point(20, 220);
+            this.buttonListViewBookmarkColor.Name = "buttonListViewBookmarkColor";
+            this.buttonListViewBookmarkColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonListViewBookmarkColor.TabIndex = 8;
+            this.buttonListViewBookmarkColor.Text = "Bookmark color";
+            this.buttonListViewBookmarkColor.UseVisualStyleBackColor = true;
+            this.buttonListViewBookmarkColor.Click += new System.EventHandler(this.buttonListViewBookmarkColor_Click);
+            // 
+            // panelListViewBookmarkColor
+            // 
+            this.panelListViewBookmarkColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelListViewBookmarkColor.Location = new System.Drawing.Point(142, 220);
+            this.panelListViewBookmarkColor.Name = "panelListViewBookmarkColor";
+            this.panelListViewBookmarkColor.Size = new System.Drawing.Size(21, 20);
+            this.panelListViewBookmarkColor.TabIndex = 9;
+            this.panelListViewBookmarkColor.Click += new System.EventHandler(this.buttonListViewBookmarkColor_Click);
             // 
             // labelStatus
             // 
@@ -4127,6 +4150,8 @@
         private System.Windows.Forms.CheckBox checkBoxSyntaxColorTextMoreThanTwoLines;
         private System.Windows.Forms.Button buttonListViewSyntaxColorError;
         private System.Windows.Forms.Panel panelListViewSyntaxColorError;
+        private System.Windows.Forms.Button buttonListViewBookmarkColor;
+        private System.Windows.Forms.Panel panelListViewBookmarkColor;
         private System.Windows.Forms.Label labelMaxCharsPerSecond;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxCharsSec;
         private System.Windows.Forms.NumericUpDown numericUpDownSubtitleLineMaximumLength;

@@ -229,6 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             checkBoxSyntaxOverlap.Checked = Configuration.Settings.Tools.ListViewSyntaxColorOverlap;
             panelListViewSyntaxColorError.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+            panelListViewBookmarkColor.BackColor = Configuration.Settings.Tools.ListViewBookmarkColor;
 
             // Language
             var language = Configuration.Settings.Language.Settings;
@@ -848,6 +849,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(language.SyntaxColorTextMoreThanMaxLines, Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX);
             checkBoxSyntaxOverlap.Text = language.SyntaxColorOverlap;
             buttonListViewSyntaxColorError.Text = language.SyntaxErrorColor;
+            buttonListViewBookmarkColor.Text = language.BookmarkColor;
 
             UiUtil.FixLargeFonts(this, buttonOK);
 
@@ -1244,6 +1246,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = (int)numericUpDownMaxNumberOfLines.Value;
             Configuration.Settings.Tools.ListViewSyntaxColorOverlap = checkBoxSyntaxOverlap.Checked;
             Configuration.Settings.Tools.ListViewSyntaxErrorColor = panelListViewSyntaxColorError.BackColor;
+            Configuration.Settings.Tools.ListViewBookmarkColor = panelListViewBookmarkColor.BackColor;
 
             Configuration.Settings.VideoControls.WaveformDrawGrid = checkBoxWaveformShowGrid.Checked;
             Configuration.Settings.VideoControls.WaveformGridColor = panelWaveformGridColor.BackColor;
@@ -2148,6 +2151,13 @@ namespace Nikse.SubtitleEdit.Forms
             colorDialogSSAStyle.Color = panelListViewSyntaxColorError.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
                 panelListViewSyntaxColorError.BackColor = colorDialogSSAStyle.Color;
+        }
+
+        private void buttonListViewBookmarkColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelListViewBookmarkColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+                panelListViewBookmarkColor.BackColor = colorDialogSSAStyle.Color;
         }
 
         private void comboBoxShortcutKey_KeyDown(object sender, KeyEventArgs e)
