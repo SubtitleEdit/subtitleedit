@@ -1883,6 +1883,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SyntaxColorTextMoreThanMaxLines>Color text if more than {0} lines</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Color time code overlap</SyntaxColorOverlap>
     <SyntaxErrorColor>Error color</SyntaxErrorColor>
+    <BookmarkColor>Bookmark color</BookmarkColor>
     <GoToFirstSelectedLine>Go to first selected line</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Go to next empty line</GoToNextEmptyLine>
     <MergeSelectedLines>Merge selected lines</MergeSelectedLines>

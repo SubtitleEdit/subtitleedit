@@ -5098,6 +5098,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/SyntaxErrorColor":
                     language.Settings.SyntaxErrorColor = reader.Value;
                     break;
+                case "Settings/BookmarkColor":
+                    language.Settings.BookmarkColor = reader.Value;
+                    break;
                 case "Settings/GoToFirstSelectedLine":
                     language.Settings.GoToFirstSelectedLine = reader.Value;
                     break;

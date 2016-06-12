@@ -2046,6 +2046,7 @@
             public string SyntaxColorTextMoreThanMaxLines { get; set; }
             public string SyntaxColorOverlap { get; set; }
             public string SyntaxErrorColor { get; set; }
+            public string BookmarkColor { get; set; }
             public string GoToFirstSelectedLine { get; set; }
             public string GoToNextEmptyLine { get; set; }
             public string MergeSelectedLines { get; set; }

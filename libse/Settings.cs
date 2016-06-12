@@ -100,6 +100,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ListViewSyntaxMoreThanXLines { get; set; }
         public int ListViewSyntaxMoreThanXLinesX { get; set; }
         public Color ListViewSyntaxErrorColor { get; set; }
+        public Color ListViewBookmarkColor { get; set; }
         public Color ListViewUnfocusedSelectedColor { get; set; }
         public bool SplitAdvanced { get; set; }
         public string SplitOutputFolder { get; set; }
@@ -210,6 +211,7 @@ namespace Nikse.SubtitleEdit.Core
             ListViewSyntaxMoreThanXLines = true;
             ListViewSyntaxMoreThanXLinesX = 2;
             ListViewSyntaxErrorColor = Color.FromArgb(255, 180, 150);
+            ListViewBookmarkColor = Color.FromArgb(179, 255, 179);
             ListViewUnfocusedSelectedColor = Color.LightBlue;
             SplitAdvanced = false;
             SplitNumberOfParts = 3;
@@ -1693,6 +1695,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ListViewSyntaxErrorColor");
             if (subNode != null)
                 settings.Tools.ListViewSyntaxErrorColor = Color.FromArgb(int.Parse(subNode.InnerText));
+            subNode = node.SelectSingleNode("ListViewBookmarkColor");
+            if (subNode != null)
+                settings.Tools.ListViewBookmarkColor = Color.FromArgb(int.Parse(subNode.InnerText));
             subNode = node.SelectSingleNode("ListViewUnfocusedSelectedColor");
             if (subNode != null)
                 settings.Tools.ListViewUnfocusedSelectedColor = Color.FromArgb(int.Parse(subNode.InnerText));
@@ -3089,6 +3094,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ListViewSyntaxMoreThanXLinesX", settings.Tools.ListViewSyntaxMoreThanXLinesX.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString());
                 textWriter.WriteElementString("ListViewSyntaxErrorColor", settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewBookmarkColor", settings.Tools.ListViewBookmarkColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewUnfocusedSelectedColor", settings.Tools.ListViewUnfocusedSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SplitAdvanced", settings.Tools.SplitAdvanced.ToString());
                 textWriter.WriteElementString("SplitOutputFolder", settings.Tools.SplitOutputFolder);
