@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
 
-                    bool merge = !(p.Text.Contains(Environment.NewLine) || next == null);
+                    bool merge = !(p.Text.Contains(Environment.NewLine) || next == null) && Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX > 1;
 
                     if (merge && (p.Text.TrimEnd().EndsWith('!') || p.Text.TrimEnd().EndsWith('.')))
                     {
