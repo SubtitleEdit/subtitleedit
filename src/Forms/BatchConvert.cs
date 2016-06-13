@@ -1484,7 +1484,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonRemoveTextForHiSettings_Click(object sender, EventArgs e)
         {
-            using (var form = new FormRemoveTextForHearImpaired())
+            using (var form = new FormRemoveTextForHearImpaired(null))
             {
                 form.InitializeSettingsOnly();
                 form.ShowDialog(this);

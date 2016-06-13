@@ -16,12 +16,14 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly RemoveTextForHI _removeTextForHiLib;
         private Dictionary<Paragraph, string> _fixes;
         private int _removeCount;
+        private readonly Main _mainForm;
+        private readonly List<Paragraph> _unchecked = new List<Paragraph>();
 
-
-        public FormRemoveTextForHearImpaired()
+        public FormRemoveTextForHearImpaired(Main main)
         {
             InitializeComponent();
 
+            _mainForm = main;
             _removeTextForHiLib = new RemoveTextForHI(GetSettings());
 
             checkBoxRemoveTextBetweenSquares.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenBrackets;
@@ -122,7 +124,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddToListView(Paragraph p, string newText)
         {
-            var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
+            var item = new ListViewItem(string.Empty) { Tag = p, Checked = !_unchecked.Contains(p) };
             if (_removeTextForHiLib.Warnings != null && _removeTextForHiLib.Warnings.Contains(_removeTextForHiLib.WarningIndex))
             {
                 item.UseItemStyleForSubItems = true;
@@ -144,17 +146,27 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
+            if (Subtitle != null)
+            {
+                RemoveTextFromHearImpaired();
+                Subtitle.Renumber();
+                if (_mainForm != null)
+                {
+                    _mainForm.RemoveTextForHearImpared(Subtitle);
+                }
+            }
             DialogResult = DialogResult.OK;
         }
 
         public int RemoveTextFromHearImpaired()
         {
+            _unchecked.Clear();
             for (int i = listViewFixes.Items.Count - 1; i >= 0; i--)
             {
                 var item = listViewFixes.Items[i];
+                var p = (Paragraph)item.Tag;
                 if (item.Checked)
                 {
-                    var p = (Paragraph)item.Tag;
                     string newText = _fixes[p];
                     if (string.IsNullOrWhiteSpace(newText))
                     {
@@ -165,6 +177,10 @@ namespace Nikse.SubtitleEdit.Forms
                         p.Text = newText;
                     }
                     _removeCount++;
+                }
+                else
+                {
+                    _unchecked.Add(p);
                 }
             }
             return _removeCount;
@@ -307,7 +323,29 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             RemoveTextFromHearImpaired();
             Subtitle.Renumber();
+            if (_mainForm != null)
+            {
+                _mainForm.RemoveTextForHearImpared(Subtitle);
+            }            
             GeneratePreview();
+        }
+
+        private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            var p = e.Item.Tag as Paragraph;
+            if (p == null)
+                return;
+
+            if (e.Item.Checked)
+            {
+                if (_unchecked.Contains(p))
+                    _unchecked.Add(p);
+            }
+            else
+            {
+                if (!_unchecked.Contains(p))
+                    _unchecked.Remove(p);
+            }
         }
 
     }
