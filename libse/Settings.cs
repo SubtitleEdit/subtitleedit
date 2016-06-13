@@ -534,6 +534,7 @@ namespace Nikse.SubtitleEdit.Core
         public string UndockedWaveformPosition { get; set; }
         public string UndockedVideoControlsPosition { get; set; }
         public bool WaveformCenter { get; set; }
+        public int WaveformUpdateIntervalMs { get; set; }
         public int SmallDelayMilliseconds { get; set; }
         public int LargeDelayMilliseconds { get; set; }
         public bool ShowOriginalAsPreviewIfAvailable { get; set; }
@@ -636,6 +637,7 @@ namespace Nikse.SubtitleEdit.Core
             UndockedVideoPosition = "-32000;-32000";
             UndockedWaveformPosition = "-32000;-32000";
             UndockedVideoControlsPosition = "-32000;-32000";
+            WaveformUpdateIntervalMs = 30;
             SmallDelayMilliseconds = 500;
             LargeDelayMilliseconds = 5000;
             OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;*.ts"; // matroska/mp4/m4v files (can contain subtitles)
@@ -1461,6 +1463,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("WaveformCenter");
             if (subNode != null)
                 settings.General.WaveformCenter = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("WaveformUpdateIntervalMs");
+            if (subNode != null)
+                settings.General.WaveformUpdateIntervalMs = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("SmallDelayMilliseconds");
             if (subNode != null)
                 settings.General.SmallDelayMilliseconds = Convert.ToInt32((subNode.InnerText));
@@ -2864,6 +2869,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("UndockedWaveformPosition", settings.General.UndockedWaveformPosition);
                 textWriter.WriteElementString("UndockedVideoControlsPosition", settings.General.UndockedVideoControlsPosition);
                 textWriter.WriteElementString("WaveformCenter", settings.General.WaveformCenter.ToString());
+                textWriter.WriteElementString("WaveformUpdateIntervalMs", settings.General.WaveformUpdateIntervalMs.ToString());
                 textWriter.WriteElementString("SmallDelayMilliseconds", settings.General.SmallDelayMilliseconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LargeDelayMilliseconds", settings.General.LargeDelayMilliseconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowOriginalAsPreviewIfAvailable", settings.General.ShowOriginalAsPreviewIfAvailable.ToString());
