@@ -5038,6 +5038,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        internal void RemoveTextForHearImpared(Subtitle subtitle)
+        {
+            _subtitle.Paragraphs.Clear();
+            _subtitle.Paragraphs.AddRange(subtitle.Paragraphs);
+            _subtitleListViewIndex = -1;
+            ShowSource();
+            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+            if (_subtitle.Paragraphs.Count > 0)
+                SubtitleListview1.SelectIndexAndEnsureVisible(0);
+        }
+
         private void RemoveTextForHearImparedToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (!IsSubtitleLoaded)
@@ -5047,14 +5058,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ReloadFromSourceView();
-            using (var removeTextFromHearImpaired = new FormRemoveTextForHearImpaired())
+            using (var removeTextFromHearImpaired = new FormRemoveTextForHearImpaired(this))
             {
                 MakeHistoryForUndo(_language.BeforeRemovalOfTextingForHearingImpaired);
                 removeTextFromHearImpaired.Initialize(_subtitle);
                 if (removeTextFromHearImpaired.ShowDialog(this) == DialogResult.OK)
                 {
-                    _subtitle.Paragraphs.Clear();
-                    _subtitle.Paragraphs.AddRange(removeTextFromHearImpaired.Subtitle.Paragraphs);
                     int count = removeTextFromHearImpaired.RemoveTextFromHearImpaired();
                     if (count > 0)
                     {
@@ -5062,12 +5071,6 @@ namespace Nikse.SubtitleEdit.Forms
                             ShowStatus(_language.TextingForHearingImpairedRemovedOneLine);
                         else
                             ShowStatus(string.Format(_language.TextingForHearingImpairedRemovedXLines, count));
-                        _subtitleListViewIndex = -1;
-                        _subtitle.Renumber();
-                        ShowSource();
-                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                        if (_subtitle.Paragraphs.Count > 0)
-                            SubtitleListview1.SelectIndexAndEnsureVisible(0);
                     }
                 }
             }
