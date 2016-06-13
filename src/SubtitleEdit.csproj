@@ -1349,12 +1349,6 @@
     <None Include="Resources\Transparent Background.png" />
     <Content Include="DLLs\Voikkox64.dll" />
     <Content Include="DLLs\Voikkox86.dll" />
-    <None Include="Hunspellx64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Hunspellx86.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Content Include="Languages\ar-EG.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1646,12 +1640,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>"$(ProjectDir)..\build_helpers.bat" rev $(ConfigurationName)</PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5554.16953\content\*.dll" "$(TargetDir)"</PostBuildEvent>
-  </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
@@ -1659,6 +1647,27 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="BeforeCompile">
+    <Exec Command="%22$(SolutionDir)..\build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
+  </Target>
+  <Target Name="AfterBuild">
+    <XmlPeek XmlInputPath="$(PackagesConfig)" Query="//package[@id='NHunspell']/@version">
+      <Output TaskParameter="Result" PropertyName="NHunspellVersion" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="$(PackagesConfig)" Query="//package[@id='zlib.net']/@version">
+      <Output TaskParameter="Result" PropertyName="ZlibNetVersion" />
+    </XmlPeek>
+    <PropertyGroup>
+      <NHunspellDir>packages\NHunspell.$(NHunspellVersion)\content\</NHunspellDir>
+      <ZlibNetDir>packages\zlib.net.$(ZlibNetVersion)\lib\</ZlibNetDir>
+    </PropertyGroup>
+    <ItemGroup>
+      <InputFiles Include="$(NHunspellDir)Hunspellx64.dll" />
+      <InputFiles Include="$(NHunspellDir)Hunspellx86.dll" />
+      <InputFiles Include="$(ZlibNetDir)zlib.net.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(InputFiles)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="True" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

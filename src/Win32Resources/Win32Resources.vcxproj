@@ -85,12 +85,6 @@
       <OptimizeReferences>true</OptimizeReferences>
       <NoEntryPoint>true</NoEntryPoint>
     </Link>
-    <PreBuildEvent>
-      <Command>"$(SolutionDir)..\build_helpers.bat" rsrc $(ConfigurationName)</Command>
-    </PreBuildEvent>
-    <PostBuildEvent>
-      <Command>COPY /Y /V "$(ProjectDir)Resources.h" "$(OutDir)"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
@@ -113,4 +107,13 @@
   <ItemGroup>
     <Image Include="SubtitleEdit.sub.ico" />
   </ItemGroup>
+  <Target Name="BeforeResourceCompile">
+    <Exec Command="%22$(SolutionDir)..\build_helpers.bat%22 rsrc %22$(ConfigurationName)%22" />
+  </Target>
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <InputFiles Include="Resources.h" />
+    </ItemGroup>
+    <Copy SourceFiles="@(InputFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="True" />
+  </Target>
 </Project>
