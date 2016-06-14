@@ -108,12 +108,10 @@
     <Image Include="SubtitleEdit.sub.ico" />
   </ItemGroup>
   <Target Name="BeforeResourceCompile">
+    <Copy SourceFiles="Resources.h" DestinationFolder="$(OutDir)" SkipUnchangedFiles="True" />
     <Exec Command="%22$(SolutionDir)..\build_helpers.bat%22 rsrc %22$(ConfigurationName)%22" />
   </Target>
-  <Target Name="AfterBuild">
-    <ItemGroup>
-      <InputFiles Include="Resources.h" />
-    </ItemGroup>
-    <Copy SourceFiles="@(InputFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="True" />
+  <Target Name="BeforeClean">
+    <Delete Files="$(OutDir)Resources.h" />
   </Target>
 </Project>

@@ -66,7 +66,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="zlib.net">
       <HintPath>packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
-      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -1647,26 +1646,22 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <ItemGroup>
+    <HunspellAssemblies Include="Hunspellx64.dll" />
+    <HunspellAssemblies Include="Hunspellx86.dll" />
+  </ItemGroup>
   <Target Name="BeforeCompile">
-    <Exec Command="%22$(SolutionDir)..\build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
-  </Target>
-  <Target Name="AfterBuild">
     <XmlPeek XmlInputPath="$(PackagesConfig)" Query="//package[@id='NHunspell']/@version">
-      <Output TaskParameter="Result" PropertyName="NHunspellVersion" />
-    </XmlPeek>
-    <XmlPeek XmlInputPath="$(PackagesConfig)" Query="//package[@id='zlib.net']/@version">
-      <Output TaskParameter="Result" PropertyName="ZlibNetVersion" />
+      <Output TaskParameter="Result" PropertyName="HunspellVersion" />
     </XmlPeek>
     <PropertyGroup>
-      <NHunspellDir>packages\NHunspell.$(NHunspellVersion)\content\</NHunspellDir>
-      <ZlibNetDir>packages\zlib.net.$(ZlibNetVersion)\lib\</ZlibNetDir>
+      <HunspellDir>packages\NHunspell.$(HunspellVersion)\content\</HunspellDir>
     </PropertyGroup>
-    <ItemGroup>
-      <InputFiles Include="$(NHunspellDir)Hunspellx64.dll" />
-      <InputFiles Include="$(NHunspellDir)Hunspellx86.dll" />
-      <!--<InputFiles Include="$(ZlibNetDir)zlib.net.dll" />-->
-    </ItemGroup>
-    <Copy SourceFiles="@(InputFiles)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="True" />
+    <Copy SourceFiles="@(HunspellAssemblies -> '$(HunspellDir)%(Identity)')" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="True" />
+    <Exec Command="%22$(SolutionDir)..\build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
+  </Target>
+  <Target Name="BeforeClean">
+    <Delete Files="@(HunspellAssemblies -> '$(OutputPath)%(Identity)')" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
