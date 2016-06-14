@@ -48,14 +48,14 @@ TITLE %BUILDTYPE%ing SubtitleEdit - Release^|Any CPU...
  /maxcpucount /consoleloggerparameters:DisableMPLogging;Summary;Verbosity=minimal
 IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
+IF /I "%BUILDTYPE%" == "Clean" GOTO END
+
 ECHO.
 ECHO ILRepack...
-"packages\ILRepack.2.0.10\tools\ILRepack.exe" /parallel /internalize /targetplatform:v4 /out:"bin\Release\SubtitleEdit.exe" "bin\Release\SubtitleEdit.exe" "bin\Release\libse.dll" "packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll" "packages\zlib.net.1.0.4.0\lib\zlib.net.dll" "DLLs\Interop.QuartzTypeLib.dll"
+"packages\ILRepack.2.0.10\tools\ILRepack.exe" /parallel /internalize /targetplatform:v4 /out:"bin\Release\SubtitleEdit.exe" "bin\Release\SubtitleEdit.exe" "bin\Release\libse.dll" "bin\Release\zlib.net.dll" "bin\Release\NHunspell.dll" "DLLs\Interop.QuartzTypeLib.dll"
 ECHO.
 ECHO.
 POPD
-
-IF /I "%BUILDTYPE%" == "Clean" GOTO END
 
 CALL :SubDetectSevenzipPath
 IF DEFINED SEVENZIP IF EXIST "%SEVENZIP%" (

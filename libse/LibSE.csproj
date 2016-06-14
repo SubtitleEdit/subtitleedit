@@ -488,9 +488,10 @@
     <Compile Include="ZipExtractor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>"$(ProjectDir)..\build_helpers.bat" rev $(ConfigurationName) &amp;&amp; "$(ProjectDir)..\build_helpers.bat" lang $(ConfigurationName)</PreBuildEvent>
-  </PropertyGroup>
+  <Target Name="BeforeCompile">
+    <Exec Command="%22$(SolutionDir)..\build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
+    <Exec Command="%22$(SolutionDir)..\build_helpers.bat%22 lang %22$(ConfigurationName)%22" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
