@@ -1639,17 +1639,22 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             _subtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
             _subtitleFontBold = checkBoxBold.Checked;
 
-            if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine)
+            _borderWidth = GetBorderWidth();
+        }
+
+        private float GetBorderWidth()
+        {
+            if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine || 
+                comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox)
             {
-                _borderWidth = 0;
-            }
-            else if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox)
-            {
-                _borderWidth = 0;
+                return 0;
             }
             else
             {
-                _borderWidth = float.Parse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()));
+                float f;
+                if (float.TryParse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()), out f))
+                    return f;
+                return 0;
             }
         }
 
@@ -3191,7 +3196,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                 }
             }
-            _borderWidth = float.Parse(Utilities.RemoveNonNumbers(comboBoxBorderWidth.SelectedItem.ToString()));
+            _borderWidth = GetBorderWidth();
             checkBoxBold.Checked = Configuration.Settings.Tools.ExportLastFontBold;
 
             if (Configuration.Settings.Tools.Export3DType >= 0 && Configuration.Settings.Tools.Export3DType < comboBox3D.Items.Count)
