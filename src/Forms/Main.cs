@@ -3551,10 +3551,13 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (format.Name == "Nuendo")
                         styles = GetNuendoStyles();
 
-                    foreach (var p in _subtitle.Paragraphs)
+                    if (styles.Count > 0)
                     {
-                        if (string.IsNullOrEmpty(p.Extra) && styles.Count > 0)
-                            p.Extra = styles[0];
+                        foreach (var p in _subtitle.Paragraphs)
+                        {
+                            if (string.IsNullOrEmpty(p.Extra))
+                                p.Extra = styles[0];
+                        }
                     }
 
                     if (formatType == typeof(Sami) || formatType == typeof(SamiModern))
@@ -3601,7 +3604,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleFormat format = GetCurrentSubtitleFormat();
                 if (format != null)
                 {
-                    if (GetCurrentSubtitleFormat().IsFrameBased)
+                    if (format.IsFrameBased)
                         _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                     else
                         _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
