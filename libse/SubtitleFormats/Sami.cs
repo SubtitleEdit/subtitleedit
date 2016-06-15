@@ -333,7 +333,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (text.EndsWith("</p>", StringComparison.Ordinal) || text.EndsWith("</P>", StringComparison.Ordinal))
                     text = text.Substring(0, text.Length - 4).TrimEnd();
 
+                text = RemoveDiv(text).Trim();
                 text = text.Replace("&nbsp;", " ").Replace("&NBSP;", " ");
+                text = text.Replace("</p>", string.Empty).Replace("</sync>", string.Empty).Replace("</body>", string.Empty);
+                if (string.IsNullOrWhiteSpace(text))
+                    text = string.Empty;
 
                 if (text.Contains("<font color=") && !text.Contains("</font>"))
                     text += "</font>";
@@ -431,6 +435,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 p2.Text = p2.Text.Replace('\u00A0', ' '); // non-breaking space to normal space
             }
+        }
+
+        private string RemoveDiv(string text)
+        {
+            int indexOfDiv = text.IndexOf("<div ", StringComparison.Ordinal);
+            if (indexOfDiv < 0)
+                indexOfDiv = text.IndexOf("<div>", StringComparison.Ordinal);
+            int maxLoop = 10;
+            while (indexOfDiv > 0 && maxLoop > 0)
+            {
+                int indexOfStartEnd = text.IndexOf(">", indexOfDiv + 1, StringComparison.Ordinal);
+                if (indexOfStartEnd > 0)
+                {
+                    text = text.Remove(indexOfDiv, indexOfStartEnd - indexOfDiv + 1);
+                    text = text.Replace("</div>", string.Empty);
+
+                    indexOfDiv = text.IndexOf("<div ", StringComparison.Ordinal);
+                    if (indexOfDiv < 0)
+                        indexOfDiv = text.IndexOf("<div>", StringComparison.Ordinal);
+                }
+                maxLoop++;
+            }
+            return text;
         }
 
         public override bool HasStyleSupport
