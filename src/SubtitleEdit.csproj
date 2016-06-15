@@ -1664,7 +1664,7 @@
     <ItemGroup>
       <InputFiles Include="$(NHunspellDir)Hunspellx64.dll" />
       <InputFiles Include="$(NHunspellDir)Hunspellx86.dll" />
-      <InputFiles Include="$(ZlibNetDir)zlib.net.dll" />
+      <!--<InputFiles Include="$(ZlibNetDir)zlib.net.dll" />-->
     </ItemGroup>
     <Copy SourceFiles="@(InputFiles)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="True" />
   </Target>
