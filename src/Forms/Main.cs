@@ -1382,42 +1382,40 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ContinueNewOrExit()
         {
-            if (_changeSubtitleToString != _subtitle.GetFastHashCode())
+            string currentSubtitleHash = _subtitle.GetFastHashCode();
+            if (_changeSubtitleToString != currentSubtitleHash && _lastDoNotPrompt != currentSubtitleHash)
             {
-                if (_lastDoNotPrompt != _subtitle.GetFastHashCode())
+                string promptText = _language.SaveChangesToUntitled;
+                if (!string.IsNullOrEmpty(_fileName))
+                    promptText = string.Format(_language.SaveChangesToX, _fileName);
+
+                var dr = MessageBox.Show(this, promptText, Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
+
+                if (dr == DialogResult.Cancel)
+                    return false;
+
+                if (dr == DialogResult.Yes)
                 {
-                    string promptText = _language.SaveChangesToUntitled;
-                    if (!string.IsNullOrEmpty(_fileName))
-                        promptText = string.Format(_language.SaveChangesToX, _fileName);
-
-                    var dr = MessageBox.Show(this, promptText, Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
-
-                    if (dr == DialogResult.Cancel)
-                        return false;
-
-                    if (dr == DialogResult.Yes)
+                    if (string.IsNullOrEmpty(_fileName))
                     {
-                        if (string.IsNullOrEmpty(_fileName))
+                        if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                            saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+                        saveFileDialog1.Title = _language.SaveSubtitleAs;
+                        if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
                         {
-                            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
-                                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
-                            saveFileDialog1.Title = _language.SaveSubtitleAs;
-                            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
-                            {
-                                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
-                                _fileName = saveFileDialog1.FileName;
-                                SetTitle();
-                                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
-                                Configuration.Settings.Save();
-                            }
-                            else
-                            {
-                                return false;
-                            }
+                            openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
+                            _fileName = saveFileDialog1.FileName;
+                            SetTitle();
+                            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                            Configuration.Settings.Save();
                         }
-                        if (SaveSubtitle(GetCurrentSubtitleFormat()) != DialogResult.OK)
+                        else
+                        {
                             return false;
+                        }
                     }
+                    if (SaveSubtitle(GetCurrentSubtitleFormat()) != DialogResult.OK)
+                        return false;
                 }
             }
 
