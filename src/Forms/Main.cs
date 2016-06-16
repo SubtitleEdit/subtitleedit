@@ -3507,15 +3507,16 @@ namespace Nikse.SubtitleEdit.Forms
         private void ComboBoxSubtitleFormatsSelectedIndexChanged(object sender, EventArgs e)
         {
             _converted = true;
+            SubtitleFormat format = GetCurrentSubtitleFormat();
             if (_oldSubtitleFormat == null)
             {
                 if (!_loading)
-                    MakeHistoryForUndo(string.Format(_language.BeforeConvertingToX, GetCurrentSubtitleFormat().FriendlyName));
+                    MakeHistoryForUndo(string.Format(_language.BeforeConvertingToX, format.FriendlyName));
             }
             else
             {
-                _subtitle.MakeHistoryForUndo(string.Format(_language.BeforeConvertingToX, GetCurrentSubtitleFormat().FriendlyName), _oldSubtitleFormat, _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName, _subtitleListViewIndex, textBoxListViewText.SelectionStart, textBoxListViewTextAlternate.SelectionStart);
-                _oldSubtitleFormat.RemoveNativeFormatting(_subtitle, GetCurrentSubtitleFormat());
+                _subtitle.MakeHistoryForUndo(string.Format(_language.BeforeConvertingToX, format.FriendlyName), _oldSubtitleFormat, _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName, _subtitleListViewIndex, textBoxListViewText.SelectionStart, textBoxListViewTextAlternate.SelectionStart);
+                _oldSubtitleFormat.RemoveNativeFormatting(_subtitle, format);
                 SaveSubtitleListviewIndices();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndices();
@@ -3524,12 +3525,16 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     SubtitleListview1.HideExtraColumn();
                 }
+                // Recalculate time.
+                if (!_oldSubtitleFormat.IsFrameBased && format.IsFrameBased)
+                {
+                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate); // Milliseconds to frames
+                }
+                else if (_oldSubtitleFormat.IsFrameBased && !format.IsFrameBased)
+                {
+                    _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate); // Frame to Milliseconds.
+                }
             }
-            SubtitleFormat format = GetCurrentSubtitleFormat();
-            if (_oldSubtitleFormat != null && !_oldSubtitleFormat.IsFrameBased && format.IsFrameBased)
-                _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
-            else if (_oldSubtitleFormat != null && _oldSubtitleFormat.IsFrameBased && !format.IsFrameBased)
-                _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
             ShowSource();
             SubtitleListview1.DisplayExtraFromExtra = false;
             if (format != null)
