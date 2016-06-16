@@ -1654,14 +1654,33 @@
     <XmlPeek XmlInputPath="$(PackagesConfig)" Query="//package[@id='NHunspell']/@version">
       <Output TaskParameter="Result" PropertyName="HunspellVersion" />
     </XmlPeek>
-    <PropertyGroup>
-      <HunspellDir>packages\NHunspell.$(HunspellVersion)\content\</HunspellDir>
-    </PropertyGroup>
+    <CreateProperty Value="packages\NHunspell.$(HunspellVersion)\content\">
+      <Output TaskParameter="Value" PropertyName="HunspellDir" />
+    </CreateProperty>
     <Copy SourceFiles="@(HunspellAssemblies -> '$(HunspellDir)%(Identity)')" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="True" />
     <Exec Command="%22$(SolutionDir)..\build_helpers.bat%22 rev %22$(ConfigurationName)%22" />
   </Target>
   <Target Name="BeforeClean">
     <Delete Files="@(HunspellAssemblies -> '$(OutputPath)%(Identity)')" />
+  </Target>
+  <Target Name="ILRepack">
+    <XmlPeek XmlInputPath="$(PackagesConfig)" Query="//package[@id='ILRepack']/@version">
+      <Output TaskParameter="Result" PropertyName="ILRepackVersion" />
+    </XmlPeek>
+    <CreateProperty Value="packages\ILRepack.$(ILRepackVersion)\tools\ILRepack.exe /parallel /internalize /targetplatform:v4">
+      <Output TaskParameter="Value" PropertyName="RepackCommand" />
+    </CreateProperty>
+    <CreateProperty Value="$(OutputPath)$(AssemblyName).exe">
+      <Output TaskParameter="Value" PropertyName="OutputAssembly" />
+    </CreateProperty>
+    <ItemGroup>
+      <InputAssemblies Include="$(OutputAssembly)" />
+      <InputAssemblies Include="$(OutputPath)libse.dll" />
+      <InputAssemblies Include="$(OutputPath)zlib.net.dll" />
+      <InputAssemblies Include="$(OutputPath)NHunspell.dll" />
+      <InputAssemblies Include="DLLs\Interop.QuartzTypeLib.dll" />
+    </ItemGroup>
+    <Exec Command="$(RepackCommand) /out:%22$(OutputAssembly)%22 @(InputAssemblies -> '%22%(FullPath)%22', ' ')" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
