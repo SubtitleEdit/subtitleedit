@@ -12555,6 +12555,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemPointSync_Click(object sender, EventArgs e)
         {
+            if (!IsSubtitleLoaded)
+            {
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
             using (var pointSync = new SyncPointsSync())
             {
                 pointSync.Initialize(_subtitle, _fileName, _videoFileName, _videoAudioTrackNumber);
@@ -12578,6 +12583,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void pointSyncViaOtherSubtitleToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!IsSubtitleLoaded)
+            {
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
             using (var pointSync = new SyncPointsSync())
             {
                 openFileDialog1.Title = _language.OpenOtherSubtitle;
@@ -12585,7 +12595,6 @@ namespace Nikse.SubtitleEdit.Forms
                 openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
                 if (openFileDialog1.ShowDialog() == DialogResult.OK && File.Exists(openFileDialog1.FileName))
                 {
-                    var sub = new Subtitle();
                     var file = new FileInfo(openFileDialog1.FileName);
                     var fileName = file.FullName;
                     var extension = file.Extension.ToLowerInvariant();
@@ -12614,6 +12623,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
+                    var sub = new Subtitle();
                     if (extension == ".mkv" || extension == ".mks")
                     {
                         using (var matroska = new MatroskaFile(fileName))
