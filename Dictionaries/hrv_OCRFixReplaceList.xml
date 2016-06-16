@@ -1006,7 +1006,7 @@
     <RegEx find="edelj" replaceWith="edjelj" />
     <RegEx find="\b([nN])eg([aeu]|om|ama)\b" replaceWith="$1jeg$2" />
     <RegEx find="\b([nN])ež(an|n[aeiou]|nom|nima)\b" replaceWith="$1jež$2" />
-    <RegEx find="emačk" replaceWith="jemačk" />
+    <RegEx find="(?&lt;!j)emačk" replaceWith="jemačk" />
     <RegEx find="[nN]j?em(a?)c([aeiu])" replaceWith="Nijem$1c$2" />
     <RegEx find="emo[zž]e" replaceWith="e može" />
     <RegEx find="([nN])enamer(n[ao]|no[mgj]|nim)\b" replaceWith="$1enamjer$2" />
