@@ -292,8 +292,11 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 word = word.Replace("--", "-");
                 word = word.Replace('|', 'l');
                 word = word.Replace("vx/", "w");
-                if (Regex.IsMatch(word, "[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]¤"))
-                    word = word.Replace('¤', 'o');
+                if (word.Contains('¤'))
+                {
+                    if (Regex.IsMatch(word, "[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]¤"))
+                        word = word.Replace('¤', 'o');
+                }
             }
 
             //always replace list
