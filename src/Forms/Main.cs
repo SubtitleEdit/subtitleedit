@@ -8454,7 +8454,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.General.ShowWaveform = audioVisualizer.ShowWaveform;
                     Configuration.Settings.General.ShowSpectrogram = audioVisualizer.ShowSpectrogram;
                 }
-                if (!string.IsNullOrEmpty(_fileName))
+                if (Configuration.Settings.General.ShowRecentFiles && !string.IsNullOrEmpty(_fileName))
                     Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
 
                 SaveUndockedPositions();
