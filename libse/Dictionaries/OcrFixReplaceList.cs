@@ -289,7 +289,8 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 word = word.Replace('`', '\'');
                 word = word.Replace('‘', '\'');
                 word = word.Replace('—', '-');
-                word = word.Replace("--", "-");
+                while(word.Contains("--"))
+                    word = word.Replace("--", "-");
                 word = word.Replace('|', 'l');
                 word = word.Replace("vx/", "w");
                 if (word.Contains('¤'))
