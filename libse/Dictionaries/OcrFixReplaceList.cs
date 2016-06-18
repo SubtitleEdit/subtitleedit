@@ -182,27 +182,21 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 {
                     if (s.Contains(from))
                     {
-                        if (s.StartsWith(from))
+                        if (s.StartsWith(from, StringComparison.Ordinal))
                             s = s.Remove(0, from.Length).Insert(0, _beginLineReplaceList[from]);
-                        if (s.Contains(". " + from))
-                            s = s.Replace(". " + from, ". " + _beginLineReplaceList[from]);
-                        if (s.Contains("! " + from))
-                            s = s.Replace("! " + from, "! " + _beginLineReplaceList[from]);
-                        if (s.Contains("? " + from))
-                            s = s.Replace("? " + from, "? " + _beginLineReplaceList[from]);
-                        if (s.Contains("." + Environment.NewLine + from))
-                            s = s.Replace(". " + Environment.NewLine + from, ". " + Environment.NewLine + _beginLineReplaceList[from]);
-                        if (s.Contains("! " + Environment.NewLine + from))
-                            s = s.Replace("! " + Environment.NewLine + from, "! " + Environment.NewLine + _beginLineReplaceList[from]);
-                        if (s.Contains("? " + Environment.NewLine + from))
-                            s = s.Replace("? " + Environment.NewLine + from, "? " + Environment.NewLine + _beginLineReplaceList[from]);
-                        if (s.StartsWith('"') && !from.StartsWith('"') && s.StartsWith("\"" + from))
+                        s = s.Replace(". " + from, ". " + _beginLineReplaceList[from]);
+                        s = s.Replace("! " + from, "! " + _beginLineReplaceList[from]);
+                        s = s.Replace("? " + from, "? " + _beginLineReplaceList[from]);
+                        s = s.Replace(". " + Environment.NewLine + from, ". " + Environment.NewLine + _beginLineReplaceList[from]);
+                        s = s.Replace("! " + Environment.NewLine + from, "! " + Environment.NewLine + _beginLineReplaceList[from]);
+                        s = s.Replace("? " + Environment.NewLine + from, "? " + Environment.NewLine + _beginLineReplaceList[from]);
+                        if (s.StartsWith("\"" + from, StringComparison.Ordinal) && !from.StartsWith('"'))
                             s = s.Replace("\"" + from, "\"" + _beginLineReplaceList[from]);
                     }
                 }
                 sb.AppendLine(s);
             }
-            newText = pre + sb.ToString().TrimEnd('\r', '\n');
+            newText = pre + sb.ToString().TrimEnd(Utilities.NewLineChars);
 
             string post = string.Empty;
             if (newText.EndsWith("</i>", StringComparison.Ordinal))
@@ -291,33 +285,15 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             {
                 word = word.Replace("ﬁ", "fi");
                 word = word.Replace('ν', 'v'); // NOTE: first 'v' is a special unicode character!!!!
-
-                if (word.Contains('’'))
-                    word = word.Replace('’', '\'');
-
-                if (word.Contains('`'))
-                    word = word.Replace('`', '\'');
-
-                if (word.Contains('‘'))
-                    word = word.Replace('‘', '\'');
-
-                if (word.Contains('—'))
-                    word = word.Replace('—', '-');
-
-                while (word.Contains("--"))
-                    word = word.Replace("--", "-");
-
-                if (word.Contains('|'))
-                    word = word.Replace('|', 'l');
-
-                if (word.Contains("vx/"))
-                    word = word.Replace("vx/", "w");
-
-                if (word.Contains('¤'))
-                {
-                    if (Regex.IsMatch(word, "[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]¤"))
-                        word = word.Replace('¤', 'o');
-                }
+                word = word.Replace('’', '\'');
+                word = word.Replace('`', '\'');
+                word = word.Replace('‘', '\'');
+                word = word.Replace('—', '-');
+                word = word.Replace("--", "-");
+                word = word.Replace('|', 'l');
+                word = word.Replace("vx/", "w");
+                if (Regex.IsMatch(word, "[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]¤"))
+                    word = word.Replace('¤', 'o');
             }
 
             //always replace list
