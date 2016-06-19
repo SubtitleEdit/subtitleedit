@@ -8,9 +8,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class ExportCustomTextFormat : Form
     {
-
+        public const string EnglishDoNotModify = "[Do not modify]";
         public string FormatOk { get; set; }
-        public const string EnglishDoNoModify = "[Do not modify]";
 
         public ExportCustomTextFormat(string format)
         {
@@ -20,6 +19,10 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxNewLine.Items.Add(l.DoNotModify);
             comboBoxNewLine.Items.Add("||");
             comboBoxNewLine.Items.Add(" ");
+            comboBoxNewLine.Items.Add("{newline}");
+            comboBoxNewLine.Items.Add("{tab}");
+            comboBoxNewLine.Items.Add("{lf}");
+            comboBoxNewLine.Items.Add("{cr}");
 
             comboBoxTimeCode.Text = "hh:mm:ss,zzz";
             if (!string.IsNullOrEmpty(format))
@@ -31,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxHeader.Text = arr[1];
                     textBoxParagraph.Text = arr[2];
                     comboBoxTimeCode.Text = arr[3];
-                    comboBoxNewLine.Text = arr[4].Replace(EnglishDoNoModify, l.DoNotModify);
+                    comboBoxNewLine.Text = arr[4].Replace(EnglishDoNotModify, l.DoNotModify);
                     textBoxFooter.Text = arr[5];
                 }
             }
@@ -65,17 +68,17 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var subtitle = new Subtitle();
             var p1 = new Paragraph("Line 1a." + Environment.NewLine + "Line 1b.", 1000, 3500);
-            string start1 = GetTimeCode(p1.StartTime, comboBoxTimeCode.Text);
-            string end1 = GetTimeCode(p1.EndTime, comboBoxTimeCode.Text);
+            var start1 = GetTimeCode(p1.StartTime, comboBoxTimeCode.Text);
+            var end1 = GetTimeCode(p1.EndTime, comboBoxTimeCode.Text);
             var p2 = new Paragraph("Line 2a." + Environment.NewLine + "Line 2b.", 1000, 3500);
-            string start2 = GetTimeCode(p2.StartTime, comboBoxTimeCode.Text);
-            string end2 = GetTimeCode(p2.EndTime, comboBoxTimeCode.Text);
+            var start2 = GetTimeCode(p2.StartTime, comboBoxTimeCode.Text);
+            var end2 = GetTimeCode(p2.EndTime, comboBoxTimeCode.Text);
             subtitle.Paragraphs.Add(p1);
             subtitle.Paragraphs.Add(p2);
             try
             {
-                string newLine = comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNoModify);
-                string template = GetParagraphTemplate(textBoxParagraph.Text);
+                var newLine = comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNotModify);
+                var template = GetParagraphTemplate(textBoxParagraph.Text);
                 textBoxPreview.Text = GetHeaderOrFooter("Demo", subtitle, textBoxHeader.Text) +
                                       GetParagraph(template, start1, end1, GetText(p1.Text, newLine), GetText("Line 1a." + Environment.NewLine + "Line 1b.", newLine), 0, p1.Duration, comboBoxTimeCode.Text) +
                                       GetParagraph(template, start2, end2, GetText(p2.Text, newLine), GetText("Line 2a." + Environment.NewLine + "Line 2b.", newLine), 1, p2.Duration, comboBoxTimeCode.Text) +
@@ -104,12 +107,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string GetText(string text, string newLine)
         {
-            string template = newLine;
-            if (string.IsNullOrEmpty(newLine) || template == "[Do not modify]" || template == Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify)
-                return text;
-            if (template == "[Only newline (hex char 0xd)]")
-                return text.Replace(Environment.NewLine, "\n");
-            return text.Replace(Environment.NewLine, template);
+            if (!string.IsNullOrEmpty(newLine) && newLine != EnglishDoNotModify)
+            {
+                newLine = newLine.Replace("{newline}", Environment.NewLine);
+                newLine = newLine.Replace("{tab}", "\t");
+                newLine = newLine.Replace("{lf}", "\n");
+                newLine = newLine.Replace("{cr}", "\r");
+                text = text.Replace(Environment.NewLine, newLine);
+            }
+            return text;
         }
 
         public static string GetTimeCode(TimeCode timeCode, string template)
@@ -200,7 +206,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            FormatOk = textBoxName.Text + "Æ" + textBoxHeader.Text + "Æ" + textBoxParagraph.Text + "Æ" + comboBoxTimeCode.Text + "Æ" + comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNoModify) + "Æ" + textBoxFooter.Text;
+            FormatOk = textBoxName.Text + "Æ" + textBoxHeader.Text + "Æ" + textBoxParagraph.Text + "Æ" + comboBoxTimeCode.Text + "Æ" + comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNotModify) + "Æ" + textBoxFooter.Text;
             DialogResult = DialogResult.OK;
         }
 
