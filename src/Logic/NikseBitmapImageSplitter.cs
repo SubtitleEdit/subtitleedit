@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic
             for (int y = 0; y < maxTop; y++)
             {
                 bool allTransparent = true;
-                for (int x = 1; x < bmp.Width - 1; x++)
+                for (int x = 0; x < bmp.Width; x++)
                 {
                     int a = bmp.GetAlpha(x, y);
                     if (a != 0)
@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic
             bool bottomCroppingDone = false;
             for (int y = bmp.Height - 1; y > 3; y--)
             {
-                for (int x = 1; x < bmp.Width - 1; x++)
+                for (int x = 0; x < bmp.Width; x++)
                 {
                     int a = bmp.GetAlpha(x, y);
                     if (a != 0)
@@ -76,6 +76,8 @@ namespace Nikse.SubtitleEdit.Logic
                 if (bottomCroppingDone)
                     break;
             }
+            if (h - startTop + 1 <= 0)
+                return new NikseBitmap(0, 0);
             return bmp.CopyRectangle(new Rectangle(0, startTop, bmp.Width, h - startTop + 1));
         }
 
@@ -672,7 +674,8 @@ namespace Nikse.SubtitleEdit.Logic
                     if (spacePixels >= xOrMorePixelsMakesSpace && parts.Count > 0)
                         parts.Add(new ImageSplitterItem(" ") { Y = addY + lineSplitterItem.Y });
 
-                    parts.Add(new ImageSplitterItem(startX + lineSplitterItem.X, addY + lineSplitterItem.Y, b1)); //y is what?
+                    if (b1.Width > 0 && b1.Height > 0)
+                        parts.Add(new ImageSplitterItem(startX + lineSplitterItem.X, addY + lineSplitterItem.Y, b1)); //y is what?
 
                     // remove pixels before next letter;
                     const int begin = 0;
