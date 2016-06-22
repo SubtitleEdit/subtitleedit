@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             "       <div />" + Environment.NewLine +
             "   </body>" + Environment.NewLine +
             "</tt>";
-            if (hasStyleHead || string.IsNullOrEmpty(subtitle.Header))
+            if (!hasStyleHead || string.IsNullOrEmpty(subtitle.Header))
             {
                 xml.LoadXml(xmlStructure);
             }
