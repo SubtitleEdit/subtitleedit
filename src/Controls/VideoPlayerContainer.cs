@@ -308,20 +308,27 @@ namespace Nikse.SubtitleEdit.Controls
 
                 // remove styles for display text (except italic)
                 string text = RemoveSubStationAlphaFormatting(_subtitleText);
-                text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagBold, HtmlUtil.TagUnderline);
+                text = text.Replace("<b></b>", string.Empty);
                 text = text.Replace("<i></i>", string.Empty);
+                text = text.Replace("<u></u>", string.Empty);
 
                 // display italic
                 var sb = new StringBuilder();
                 int i = 0;
                 bool isItalic = false;
+                bool isBold = false;
+                bool isUnderline = false;
                 bool isFontColor = false;
-                int italicBegin = 0;
                 int fontColorBegin = 0;
                 _subtitleTextBox.Text = string.Empty;
                 int letterCount = 0;
-                var italicLookups = new System.Collections.Generic.Dictionary<int, int>();
                 var fontColorLookups = new System.Collections.Generic.Dictionary<Point, Color>();
+                var styleLookups = new System.Collections.Generic.Dictionary<int, FontStyle>(text.Length);
+                for (int j = 0; j < text.Length; j++)
+                {
+                    styleLookups.Add(j, Configuration.Settings.General.VideoPlayerPreviewFontBold ? FontStyle.Bold : FontStyle.Regular);
+                }
+
                 Color fontColor = Color.White;
                 while (i < text.Length)
                 {
@@ -330,15 +337,47 @@ namespace Nikse.SubtitleEdit.Controls
                         _subtitleTextBox.AppendText(sb.ToString());
                         sb = new StringBuilder();
                         isItalic = true;
-                        italicBegin = letterCount;
                         i += 2;
                     }
                     else if (text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) && isItalic)
                     {
-                        italicLookups.Add(italicBegin, _subtitleTextBox.Text.Length + sb.ToString().Length - italicBegin);
                         _subtitleTextBox.AppendText(sb.ToString());
                         sb = new StringBuilder();
                         isItalic = false;
+                        i += 3;
+                    }
+                    else if (text.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (!Configuration.Settings.General.VideoPlayerPreviewFontBold)
+                        {
+                            _subtitleTextBox.AppendText(sb.ToString());
+                            sb = new StringBuilder();
+                            isBold = true;
+                        }
+                        i += 2;
+                    }
+                    else if (text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase) && isBold)
+                    {
+                        if (!Configuration.Settings.General.VideoPlayerPreviewFontBold)
+                        {
+                            _subtitleTextBox.AppendText(sb.ToString());
+                            sb = new StringBuilder();
+                            isBold = false;
+                        }
+                        i += 3;
+                    }
+                    else if (text.Substring(i).StartsWith("<u>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        _subtitleTextBox.AppendText(sb.ToString());
+                        sb = new StringBuilder();
+                        isUnderline = true;
+                        i += 2;
+                    }
+                    else if (text.Substring(i).StartsWith("</u>", StringComparison.OrdinalIgnoreCase) && isUnderline)
+                    {
+                        _subtitleTextBox.AppendText(sb.ToString());
+                        sb = new StringBuilder();
+                        isUnderline = false;
                         i += 3;
                     }
                     else if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
@@ -412,8 +451,20 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         sb.Append(text[i]);
                     }
+                    else if (text[i] == '\r')
+                    {
+                        // skip carriage return (0xd / 13)
+                    }
                     else
                     {
+                        var idx = _subtitleTextBox.TextLength + sb.Length;
+                        if (isBold)
+                            styleLookups[idx] = styleLookups[idx] | FontStyle.Bold;
+                        if (isItalic)
+                            styleLookups[idx] = styleLookups[idx] | FontStyle.Italic;
+                        if (isUnderline)
+                            styleLookups[idx] = styleLookups[idx] | FontStyle.Underline;
+
                         sb.Append(text[i]);
                         letterCount++;
                     }
@@ -430,17 +481,16 @@ namespace Nikse.SubtitleEdit.Controls
                     _subtitleTextBox.SelectionAlignment = HorizontalAlignment.Center;
 
                 _subtitleTextBox.DeselectAll();
-                foreach (var entry in italicLookups)
+
+                Font currentFont = _subtitleTextBox.SelectionFont;
+                for (int k = 0; k < _subtitleTextBox.TextLength; k++)
                 {
-                    Font currentFont = _subtitleTextBox.SelectionFont;
-                    FontStyle newFontStyle = FontStyle.Italic | FontStyle.Bold;
-                    if (!Configuration.Settings.General.VideoPlayerPreviewFontBold)
-                        newFontStyle = FontStyle.Italic;
-                    _subtitleTextBox.SelectionStart = entry.Key;
-                    _subtitleTextBox.SelectionLength = entry.Value;
-                    _subtitleTextBox.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, newFontStyle);
+                    _subtitleTextBox.SelectionStart = k;
+                    _subtitleTextBox.SelectionLength = 1;
+                    _subtitleTextBox.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, styleLookups[k]);
                     _subtitleTextBox.DeselectAll();
                 }
+                                
                 foreach (var entry in fontColorLookups)
                 {
                     _subtitleTextBox.SelectionStart = entry.Key.X;
