@@ -1158,7 +1158,7 @@
     <RegEx find="([pP])rijtelj" replaceWith="$1rijatelj" />
     <RegEx find="([pP])ritiskaj" replaceWith="$1ritišći" />
     <RegEx find="([pP])rj?estupni([kc])([aeu]|om)\b" replaceWith="$1rijestupni$2$3" />
-     <RegEx find="\b([pP])rj?evoz([aiu]|om)?\b" replaceWith="$1rijevoz$2" />
+    <RegEx find="\b([pP])rj?evoz([aiu]|om)?\b" replaceWith="$1rijevoz$2" />
     <RegEx find="([pP])rj?etnj" replaceWith="$1rijetnj" />
     <RegEx find="([pP])rimi?j?ećuj([eu])" replaceWith="$1rimjećuj$2" />
     <RegEx find="\b([pP])rimj?e(ćen|ćen[aeiou]|tio?|til[aeio]|njen|šati|šan|[st]iti)\b" replaceWith="$1rimije$2" />
@@ -1517,7 +1517,8 @@
     <RegEx find="eizbež" replaceWith="eizbjež" />
     <RegEx find="efiniši" replaceWith="efiniraj" />
     <RegEx find="efinišu" replaceWith="efiniraju" />
-    <RegEx find="egun" replaceWith="jegun" />     <!-- bjegunac-->
+    <!-- bjegunac-->
+    <RegEx find="egun" replaceWith="jegun" />
     <RegEx find="elokup" replaceWith="jelokup" />
     <RegEx find="erišu" replaceWith="eriraju" />
     <!-- bez j zbog nesvjestica npr. -->
