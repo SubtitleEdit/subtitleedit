@@ -1620,7 +1620,8 @@
     <RegEx find="([vV])rača" replaceWith="$1raća" />
     <RegEx find="zleči" replaceWith="zliječi" />
     <RegEx find="([nl])izova([nolt])" replaceWith="$1izira$2" />
-    <RegEx find="(?&lt;![Oo]bra)zova([ltno])" replaceWith="zira$1" />
+    <!-- bez n! *ebozovan -->
+    <RegEx find="(?&lt;![Oo]bra)zova([lto])" replaceWith="zira$1" />
     <RegEx find="žalj?ev" replaceWith="žalijev" />
     <!-- osobna imena/prezimena i imena gradova/država itd. -->
     <RegEx find="Afghanistan" replaceWith="Afganistan" />
