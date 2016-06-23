@@ -1644,7 +1644,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private float GetBorderWidth()
         {
-            if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine || 
+            if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine ||
                 comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox)
             {
                 return 0;
@@ -1914,7 +1914,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             {
                                 font = fontStack.Pop();
                             }
-
                         }
                         i += endIndex;
                     }
@@ -2515,7 +2514,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         {
                                             font = fontStack.Pop();
                                         }
-
                                     }
 
 

@@ -114,7 +114,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch (Exception)
                 {
-
                 }
             }
 
@@ -138,7 +137,6 @@ namespace Nikse.SubtitleEdit.Forms
             UpdateSelectCount();
 
             listView1.ItemChecked += listView1_ItemChecked;
-
         }
 
         private void buttonFixesInverse_Click(object sender, EventArgs e)

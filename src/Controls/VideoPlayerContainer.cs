@@ -490,7 +490,7 @@ namespace Nikse.SubtitleEdit.Controls
                     _subtitleTextBox.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, styleLookups[k]);
                     _subtitleTextBox.DeselectAll();
                 }
-                                
+
                 foreach (var entry in fontColorLookups)
                 {
                     _subtitleTextBox.SelectionStart = entry.Key.X;

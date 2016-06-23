@@ -326,7 +326,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_mainForm != null)
             {
                 _mainForm.RemoveTextForHearImpared(Subtitle);
-            }            
+            }
             GeneratePreview();
         }
 

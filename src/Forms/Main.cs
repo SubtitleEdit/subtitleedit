@@ -1537,7 +1537,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
-                return _subtitle != null && (_subtitle.Paragraphs.Count > 1 || (_subtitle.Paragraphs.Count == 1 && !string.IsNullOrWhiteSpace(_subtitle.Paragraphs[0].Text))); 
+                return _subtitle != null && (_subtitle.Paragraphs.Count > 1 || (_subtitle.Paragraphs.Count == 1 && !string.IsNullOrWhiteSpace(_subtitle.Paragraphs[0].Text)));
             }
         }
 
