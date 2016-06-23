@@ -200,7 +200,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                             }
                         };
                         _hideMpcTimer.Start();
-
                     }
                     break;
                 case MpcHcCommand.NotifyEndOfStream:

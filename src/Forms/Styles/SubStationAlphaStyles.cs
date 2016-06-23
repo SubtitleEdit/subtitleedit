@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             if (_header == null || !_header.Contains("style:", StringComparison.OrdinalIgnoreCase))
                 ResetHeader();
-            
+
             comboBoxFontName.Items.Clear();
             foreach (var x in FontFamily.Families)
                 comboBoxFontName.Items.Add(x.Name);
