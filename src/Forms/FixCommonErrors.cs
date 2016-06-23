@@ -1180,13 +1180,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateListViewTextInfo(string text)
         {
-            labelTextLineTotal.Text = string.Empty;
-
             labelTextLineLengths.Text = _languageGeneral.SingleLineLengths;
             labelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
             UiUtil.GetLineLengths(labelSingleLine, text);
 
-            string s = HtmlUtil.RemoveHtmlTags(text).Replace(Environment.NewLine, " ");
+            string s = HtmlUtil.RemoveHtmlTags(text, true).Replace(Environment.NewLine, " ");
             buttonSplitLine.Visible = false;
             if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
             {
