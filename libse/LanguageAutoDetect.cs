@@ -128,11 +128,11 @@ namespace Nikse.SubtitleEdit.Core
                                                                            "[Dd]obr[ýáé]", "[Vv]šak", "[Cc]el[ýáé]", "[Nn]ov[ýáé]", "[Dd]ruh[ýáé]" };
 
         // differences between Czech and Slovak languages / Czech words / please keep the words aligned between these languages for better comparison
-        private static readonly string[] AutoDetectWordsCzechOnly =  { ".*[Řř].*", ".*[ůě].*", "[Bb]ýt", "[Jj]sem", "[Jj]si", "[Jj]á", "[Mm]ít", "[Aa]no", "[Nn]e",  "[Nn]ic", "[Dd]en", "[Jj]en", "[Cc]o", "[Jj]ak[o]?",
-                                                                       "[Nn]ebo",      "[Pp]ři", "[Pp]ro", "[Jj](ít|du|de|deme|dou)",         "[Pp]řed.*", "[Mm]ezi",  "[Jj]eště", "[Čč]lověk", "[Pp]odle", "[Dd]alší"          };
+        private static readonly string[] AutoDetectWordsCzech =  { ".*[Řř].*", ".*[ůě].*", "[Bb]ýt", "[Jj]sem", "[Jj]si", "[Jj]á", "[Mm]ít", "[Aa]no", "[Nn]e",  "[Nn]ic", "[Dd]en", "[Jj]en", "[Cc]o", "[Jj]ak[o]?",
+                                                                   "[Nn]ebo",      "[Pp]ři", "[Pp]ro", "[Jj](ít|du|de|deme|dou)",         "[Pp]řed.*", "[Mm]ezi",  "[Jj]eště", "[Čč]lověk", "[Pp]odle", "[Dd]alší"          };
         // differences between Czech and Slovak languages / Slovak words / please keep the words aligned between these languages for better comparison
-        private static readonly string[] AutoDetectWordsSlovakOnly = { ".*[Ôô].*", ".*[ä].*",  "[Bb]yť", "[Ss]om",  "[Ss]i",  "[Jj]a", "[Mm]ať", "[Áá]no", "[Nn]ie", "[Nn]ič", "[Dd]eň", "[Ll]en", "[Čč]o", "[Aa]ko",
-                                                                       "[Aa]?[Ll]ebo", "[Pp]ri", "[Pp]re", "([Íí]sť|[Ii](?:dem|de|deme|dú))", "[Pp]red.*", "[Mm]edzi", "[Ee]šte",  "[Čč]lovek", "[Pp]odľa", "[Ďď]alš(í|ia|ie)"  };
+        private static readonly string[] AutoDetectWordsSlovak = { ".*[Ôô].*", ".*[ä].*",  "[Bb]yť", "[Ss]om",  "[Ss]i",  "[Jj]a", "[Mm]ať", "[Áá]no", "[Nn]ie", "[Nn]ič", "[Dd]eň", "[Ll]en", "[Čč]o", "[Aa]ko",
+                                                                   "[Aa]?[Ll]ebo", "[Pp]ri", "[Pp]re", "([Íí]sť|[Ii](?:dem|de|deme|dú))", "[Pp]red.*", "[Mm]edzi", "[Ee]šte",  "[Čč]lovek", "[Pp]odľa", "[Ďď]alš(í|ia|ie)"  };
 
         private static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
@@ -297,8 +297,8 @@ namespace Nikse.SubtitleEdit.Core
             count = GetCount(text, AutoDetectWordsCzechAndSlovak);
             if (count > bestCount)
             {
-                int czechWordsCount = GetCount(text, AutoDetectWordsCzechOnly); 
-                int slovakWordsCount = GetCount(text, AutoDetectWordsSlovakOnly);
+                int czechWordsCount = GetCount(text, AutoDetectWordsCzech); 
+                int slovakWordsCount = GetCount(text, AutoDetectWordsSlovak);
                 if (czechWordsCount >= slovakWordsCount)
                     return "cs"; // Czech
                 else
@@ -540,6 +540,16 @@ namespace Nikse.SubtitleEdit.Core
                         break;
                     case "hu_HU": // Hungarian
                         count = GetCount(text, AutoDetectWordsHungarian);
+                        if (count > bestCount)
+                            languageName = shortName;
+                        break;
+                    case "cs_CZ": // Czech
+                        count = GetCount(text, AutoDetectWordsCzech);
+                        if (count > bestCount)
+                            languageName = shortName;
+                        break;
+                    case "sk_SK": // Slovak
+                        count = GetCount(text, AutoDetectWordsSlovak);
                         if (count > bestCount)
                             languageName = shortName;
                         break;
