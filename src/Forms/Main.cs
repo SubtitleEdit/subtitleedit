@@ -212,7 +212,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _openFileDialogOn;
         private bool _resetVideo = true;
         private bool _doAutoBreakOnTextChanged = true;
-        private static object _syncUndo = new object();
+        private static readonly object _syncUndo = new object();
         private string[] _dragAndDropFiles;
         private Timer _dragAndDropTimer = new Timer(); // to prevent locking windows explorer
         public bool IsMenuOpen { get; private set; }
