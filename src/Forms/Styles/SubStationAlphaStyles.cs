@@ -891,7 +891,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = listViewStyles.SelectedItems[0].Text;
                 if (checkBoxFontBold.Checked)
-                    SetSsaStyle(name, "bold", "1");
+                    SetSsaStyle(name, "bold", "-1");
                 else
                     SetSsaStyle(name, "bold", "0");
                 GeneratePreview();
@@ -904,7 +904,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = listViewStyles.SelectedItems[0].Text;
                 if (checkBoxFontItalic.Checked)
-                    SetSsaStyle(name, "italic", "1");
+                    SetSsaStyle(name, "italic", "-1");
                 else
                     SetSsaStyle(name, "italic", "0");
                 GeneratePreview();
@@ -917,7 +917,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             {
                 string name = listViewStyles.SelectedItems[0].Text;
                 if (checkBoxFontUnderline.Checked)
-                    SetSsaStyle(name, "underline", "1");
+                    SetSsaStyle(name, "underline", "-1");
                 else
                     SetSsaStyle(name, "underline", "0");
                 GeneratePreview();
