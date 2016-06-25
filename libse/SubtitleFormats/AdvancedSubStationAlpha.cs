@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 string boldStyle = "0"; // 0=regular
                 if (Configuration.Settings.SubtitleSettings.SsaFontBold)
-                    boldStyle = "1";
+                    boldStyle = "-1";
 
                 var ssa = Configuration.Settings.SubtitleSettings;
                 return "Style: Default," + ssa.SsaFontName + "," +
@@ -216,13 +216,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         {
                             string bold = "0";
                             if (ssaStyle.Bold)
-                                bold = "1";
+                                bold = "-1";
                             string italic = "0";
                             if (ssaStyle.Italic)
-                                italic = "1";
+                                italic = "-1";
                             string underline = "0";
                             if (ssaStyle.Underline)
-                                underline = "1";
+                                underline = "-1";
 
                             string newAlignment = "2";
                             switch (ssaStyle.Alignment)
@@ -355,11 +355,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
                         string italic = "0";
                         if (fontStyle == "italic")
-                            italic = "1";
+                            italic = "-1";
 
                         string bold = "0";
                         if (fontWeight == "bold")
-                            bold = "1";
+                            bold = "-1";
 
                         const string styleFormat = "Style: {0},{1},{2},{3},&H0300FFFF,&H00000000,&H02000000,{4},{5},0,0,100,100,0,0,1,2,2,2,10,10,10,1";
                         ttStyles.AppendLine(string.Format(styleFormat, name, fontFamily, fSize, GetSsaColorString(c), bold, italic));
@@ -1534,15 +1534,15 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             }
                             else if (i == boldIndex)
                             {
-                                style.Bold = f == "1";
+                                style.Bold = f == "-1" || f == "1";
                             }
                             else if (i == italicIndex)
                             {
-                                style.Italic = f == "1";
+                                style.Italic = f == "-1" || f == "1";
                             }
                             else if (i == underlineIndex)
                             {
-                                style.Underline = f == "1";
+                                style.Underline = f == "-1"|| f == "1";
                             }
                             else if (i == outlineIndex)
                             {
