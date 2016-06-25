@@ -122,6 +122,18 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string[] AutoDetectWordsRomanian1 = { "pentru", "oamenii", "decât", "[Vv]reau", "[Ss]înt", "Asteaptã", "Fãrã", "aici", "domnule", "trãiascã", "niciodatã", "înseamnã", "vorbesti", "fãcut", "spune" };
         private static readonly string[] AutoDetectWordsRomanian2 = { "pentru", "oamenii", "decat", "[Tt]rebuie", "[Aa]cum", "Poate", "vrea", "soare", "nevoie", "daca", "echilibrul", "vorbesti", "zeului", "atunci", "memoria", "soarele" };
 
+        // Czech and Slovak languages have many common words (especially when non flexed)
+        private static readonly string[] AutoDetectWordsCzechAndSlovak = { "[Aa]", "[Ss]", "[Zz]", "[Vv]", "[Nn]a", "[Oo]", "[Kk]", "i", "[Dd]o", "[Oo]d", "[Oo]n[ao]?", "[Tt]y", "[Jj]?si", "[Zz]a", "[Pp]o", "[Uu]ž",
+                                                                           "[Aa]le", "[Tt]en(to)?", "[Rr]ok", "[Tt]ak", "[Aa]by", "[Tt]am", "[Jj]ed(en|na|no)", "[Aa]ž", "[Nn]ež", "[Aa]ni", "[Čč]i", "[Bb]ez",
+                                                                           "[Dd]obr[ýáé]", "[Vv]šak", "[Cc]el[ýáé]", "[Nn]ov[ýáé]", "[Dd]ruh[ýáé]" };
+
+        // differences between Czech and Slovak languages / Czech words / please keep the words aligned between these languages for better comparison
+        private static readonly string[] AutoDetectWordsCzechOnly =  { ".*[Řř].*", ".*[ů].*", "[Bb]ýt", "[Jj]sem", "[Jj]si", "[Jj]á", "[Mm]ít", "[Aa]no", "[Nn]e",  "[Nn]ic", "[Dd]en", "[Jj]en", "[Cc]o", "[Jj]ak[o]?",
+                                                                       "[Nn]ebo",      "[Pp]ři", "[Pp]ro", "[Jj](ít|du|de|deme|dou)",   "[Pp]řed.*", "[Mm]ezi",  "[Jj]eště", "[Čč]lověk", "[Pp]odle", "[Dd]alší"          };
+        // differences between Czech and Slovak languages / Slovak words / please keep the words aligned between these languages for better comparison
+        private static readonly string[] AutoDetectWordsSlovakOnly = { ".*[Ôô].*", ".*[ä].*", "[Bb]yť", "[Ss]om",  "[Ss]i",  "[Jj]a", "[Mm]ať", "[Áá]no", "[Nn]ie", "[Nn]ič", "[Dd]eň", "[Ll]en", "[Čč]o", "[Aa]ko",
+                                                                       "[Aa]?[Ll]ebo", "[Pp]ri", "[Pp]re", "[Íí](sť|(dem|de|deme|dú))", "[Pp]red.*", "[Mm]edzi", "[Ee]šte",  "[Čč]lovek", "[Pp]odľa", "[Ďď]alš(í|ia|ie)"  };
+
         private static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
             int count = GetCount(text, AutoDetectWordsEnglish);
@@ -281,6 +293,17 @@ namespace Nikse.SubtitleEdit.Core
             count += GetCountContains(text, "来", "卡", "拉", "吐", "滚", "他");
             if (count > bestCount * 2)
                 return "zh"; // Chinese (simplified) - not tested...
+
+            count = GetCount(text, AutoDetectWordsCzechAndSlovak);
+            if (count > bestCount)
+            {
+                int czech = GetCount(text, AutoDetectWordsCzechOnly); 
+                int slovak = GetCount(text, AutoDetectWordsSlovakOnly);
+                if (czech >= slovak)
+                    return "cs"; // Czech
+                else
+                    return "sk"; // Slovak
+            }
 
             return string.Empty;
         }
