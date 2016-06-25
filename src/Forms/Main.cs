@@ -13461,7 +13461,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (_loading)
                 return;
 
-            panelVideoPlayer.Invalidate();
+            bool isPanelVisible = panelVideoPlayer?.Visible == true;
+            if (isPanelVisible)
+                panelVideoPlayer.Invalidate();
 
             MainResize();
 
@@ -13470,7 +13472,8 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             RestoreSubtitleListviewIndices();
 
-            panelVideoPlayer.Refresh();
+            if (isPanelVisible)
+                panelVideoPlayer.Refresh();
         }
 
         private void MainResize()
