@@ -1644,7 +1644,7 @@
             public string CaseSensitive { get; set; }
             public string RegularExpression { get; set; }
             public string LinesFoundX { get; set; }
-            public string Delete { get; set; }
+            public string Remove { get; set; }
             public string Add { get; set; }
             public string Update { get; set; }
             public string Enabled { get; set; }
@@ -1657,6 +1657,12 @@
             public string Rules { get; set; }
             public string MoveToTop { get; set; }
             public string MoveToBottom { get; set; }
+            public string MoveSelectedRulesToGroup { get; set; }
+            public string Groups { get; set; }
+            public string RulesForGroupX { get; set; }
+            public string GroupName { get; set; }
+            public string RenamGroup { get; set; }
+            public string NewGroup { get; set; }
         }
 
         public class NetworkChat

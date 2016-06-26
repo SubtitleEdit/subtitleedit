@@ -4066,8 +4066,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "MultipleReplace/LinesFoundX":
                     language.MultipleReplace.LinesFoundX = reader.Value;
                     break;
-                case "MultipleReplace/Delete":
-                    language.MultipleReplace.Delete = reader.Value;
+                case "MultipleReplace/Remove":
+                    language.MultipleReplace.Remove = reader.Value;
                     break;
                 case "MultipleReplace/Add":
                     language.MultipleReplace.Add = reader.Value;
@@ -4104,6 +4104,24 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "MultipleReplace/MoveToBottom":
                     language.MultipleReplace.MoveToBottom = reader.Value;
+                    break;
+                case "MultipleReplace/MoveSelectedRulesToGroup":
+                    language.MultipleReplace.MoveSelectedRulesToGroup = reader.Value;
+                    break;
+                case "MultipleReplace/Groups":
+                    language.MultipleReplace.Groups = reader.Value;
+                    break;
+                case "MultipleReplace/RulesForGroupX":
+                    language.MultipleReplace.RulesForGroupX = reader.Value;
+                    break;
+                case "MultipleReplace/GroupName":
+                    language.MultipleReplace.GroupName = reader.Value;
+                    break;
+                case "MultipleReplace/RenamGroup":
+                    language.MultipleReplace.RenamGroup = reader.Value;
+                    break;
+                case "MultipleReplace/NewGroup":
+                    language.MultipleReplace.NewGroup = reader.Value;
                     break;
                 case "NetworkChat/Title":
                     language.NetworkChat.Title = reader.Value;
