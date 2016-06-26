@@ -324,6 +324,12 @@
     <Compile Include="Forms\MergeTextWithSameTimeCodes.Designer.cs">
       <DependentUpon>MergeTextWithSameTimeCodes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\MultipleReplaceNewGroup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MultipleReplaceNewGroup.Designer.cs">
+      <DependentUpon>MultipleReplaceNewGroup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\NuendoProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1012,6 +1018,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MergeTextWithSameTimeCodes.resx">
       <DependentUpon>MergeTextWithSameTimeCodes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MultipleReplaceNewGroup.resx">
+      <DependentUpon>MultipleReplaceNewGroup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NuendoProperties.resx">
       <DependentUpon>NuendoProperties.cs</DependentUpon>

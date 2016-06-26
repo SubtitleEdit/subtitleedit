@@ -780,6 +780,13 @@ namespace Nikse.SubtitleEdit.Core
         public string SearchType { get; set; }
     }
 
+    public class MultipleSearchAndReplaceGroup
+    {
+        public string Name { get; set; }
+        public bool Enabled { get; set; }
+        public List<MultipleSearchAndReplaceSetting> Rules { get; set; }
+    }
+
     public class NetworkSettings
     {
         public string UserName { get; set; }
@@ -1090,10 +1097,8 @@ namespace Nikse.SubtitleEdit.Core
         public NetworkSettings NetworkSettings { get; set; }
         public Shortcuts Shortcuts { get; set; }
         public RemoveTextForHearingImpairedSettings RemoveTextForHearingImpaired { get; set; }
-        public SubtitleBeaming SubtitleBeaming { get; set; }
-
-        [XmlArrayItem("MultipleSearchAndReplaceItem")]
-        public List<MultipleSearchAndReplaceSetting> MultipleSearchAndReplaceList { get; set; }
+        public SubtitleBeaming SubtitleBeaming { get; set; }       
+        public List<MultipleSearchAndReplaceGroup> MultipleSearchAndReplaceGroups { get; set; }
 
         [XmlIgnore]
         public Language Language { get; set; }
@@ -1110,7 +1115,7 @@ namespace Nikse.SubtitleEdit.Core
             VobSubOcr = new VobSubOcrSettings();
             VideoControls = new VideoControlsSettings();
             NetworkSettings = new NetworkSettings();
-            MultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
+            MultipleSearchAndReplaceGroups = new List<MultipleSearchAndReplaceGroup>();
             Language = new Language();
             Shortcuts = new Shortcuts();
             RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
@@ -2293,22 +2298,67 @@ namespace Nikse.SubtitleEdit.Core
             if (subNode != null)
                 settings.VobSubOcr.LastBinaryImageSpellCheck = subNode.InnerText;
 
-            foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
+
+            // TODO: Remove future version (like SE 3.4.15)
+            //BEGIN OLD
+            var oldReplaceItems = doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem");
+            if (oldReplaceItems.Count > 0)
             {
-                var item = new MultipleSearchAndReplaceSetting();
-                subNode = listNode.SelectSingleNode("Enabled");
+                var group = new MultipleSearchAndReplaceGroup();
+                group.Rules = new List<MultipleSearchAndReplaceSetting>();
+                group.Name = "Default";
+                group.Enabled = true;
+                settings.MultipleSearchAndReplaceGroups.Add(group);
+                foreach (XmlNode listNode in oldReplaceItems)
+                {
+                    var item = new MultipleSearchAndReplaceSetting();
+                    subNode = listNode.SelectSingleNode("Enabled");
+                    if (subNode != null)
+                        item.Enabled = Convert.ToBoolean(subNode.InnerText);
+                    subNode = listNode.SelectSingleNode("FindWhat");
+                    if (subNode != null)
+                        item.FindWhat = subNode.InnerText;
+                    subNode = listNode.SelectSingleNode("ReplaceWith");
+                    if (subNode != null)
+                        item.ReplaceWith = subNode.InnerText;
+                    subNode = listNode.SelectSingleNode("SearchType");
+                    if (subNode != null)
+                        item.SearchType = subNode.InnerText;
+                    group.Rules.Add(item);
+                }
+            }
+            //END OLD
+
+
+            foreach (XmlNode groupNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceGroups/Group"))
+            {
+                var group = new MultipleSearchAndReplaceGroup();
+                group.Rules = new List<MultipleSearchAndReplaceSetting>();
+                subNode = groupNode.SelectSingleNode("Name");
                 if (subNode != null)
-                    item.Enabled = Convert.ToBoolean(subNode.InnerText);
-                subNode = listNode.SelectSingleNode("FindWhat");
+                    group.Name = subNode.InnerText;
+                subNode = groupNode.SelectSingleNode("Enabled");
                 if (subNode != null)
-                    item.FindWhat = subNode.InnerText;
-                subNode = listNode.SelectSingleNode("ReplaceWith");
-                if (subNode != null)
-                    item.ReplaceWith = subNode.InnerText;
-                subNode = listNode.SelectSingleNode("SearchType");
-                if (subNode != null)
-                    item.SearchType = subNode.InnerText;
-                settings.MultipleSearchAndReplaceList.Add(item);
+                    group.Enabled = Convert.ToBoolean(subNode.InnerText);
+                settings.MultipleSearchAndReplaceGroups.Add(group);
+
+                foreach (XmlNode listNode in groupNode.SelectNodes("Rule"))
+                {
+                    var item = new MultipleSearchAndReplaceSetting();
+                    subNode = listNode.SelectSingleNode("Enabled");
+                    if (subNode != null)
+                        item.Enabled = Convert.ToBoolean(subNode.InnerText);
+                    subNode = listNode.SelectSingleNode("FindWhat");
+                    if (subNode != null)
+                        item.FindWhat = subNode.InnerText;
+                    subNode = listNode.SelectSingleNode("ReplaceWith");
+                    if (subNode != null)
+                        item.ReplaceWith = subNode.InnerText;
+                    subNode = listNode.SelectSingleNode("SearchType");
+                    if (subNode != null)
+                        item.SearchType = subNode.InnerText;
+                    group.Rules.Add(item);                    
+                }
             }
 
             settings.Shortcuts = new Shortcuts();
@@ -3169,14 +3219,21 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("LastBinaryImageSpellCheck", settings.VobSubOcr.LastBinaryImageSpellCheck);
                 textWriter.WriteEndElement();
 
-                textWriter.WriteStartElement("MultipleSearchAndReplaceList", string.Empty);
-                foreach (var item in settings.MultipleSearchAndReplaceList)
+                textWriter.WriteStartElement("MultipleSearchAndReplaceGroups", string.Empty);
+                foreach (var group in settings.MultipleSearchAndReplaceGroups)
                 {
-                    textWriter.WriteStartElement("MultipleSearchAndReplaceItem", string.Empty);
-                    textWriter.WriteElementString("Enabled", item.Enabled.ToString());
-                    textWriter.WriteElementString("FindWhat", item.FindWhat);
-                    textWriter.WriteElementString("ReplaceWith", item.ReplaceWith);
-                    textWriter.WriteElementString("SearchType", item.SearchType);
+                    textWriter.WriteStartElement("Group", string.Empty);
+                    textWriter.WriteElementString("Name", group.Name);
+                    textWriter.WriteElementString("Enabled", group.Enabled.ToString());
+                    foreach (var item in group.Rules)
+                    {
+                        textWriter.WriteStartElement("Rule", string.Empty);
+                        textWriter.WriteElementString("Enabled", item.Enabled.ToString());
+                        textWriter.WriteElementString("FindWhat", item.FindWhat);
+                        textWriter.WriteElementString("ReplaceWith", item.ReplaceWith);
+                        textWriter.WriteElementString("SearchType", item.SearchType);
+                        textWriter.WriteEndElement();
+                    }
                     textWriter.WriteEndElement();
                 }
                 textWriter.WriteEndElement();

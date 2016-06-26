@@ -1509,7 +1509,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <CaseSensitive>Case sensitive</CaseSensitive>
     <RegularExpression>Regular expression</RegularExpression>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
-    <Delete>Delete</Delete>
+    <Remove>Remove</Remove>
     <Add>&amp;Add</Add>
     <Update>&amp;Update</Update>
     <Enabled>Enabled</Enabled>
@@ -1522,6 +1522,12 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <Rules>Find and replace rules</Rules>
     <MoveToTop>Move to top</MoveToTop>
     <MoveToBottom>Move to bottom</MoveToBottom>
+    <MoveSelectedRulesToGroup>Move selected rules to group</MoveSelectedRulesToGroup>
+    <Groups>Groups</Groups>
+    <RulesForGroupX>Rules for group "{0}"</RulesForGroupX>
+    <GroupName>Group name</GroupName>
+    <RenamGroup>Rename group</RenamGroup>
+    <NewGroup>New group</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>

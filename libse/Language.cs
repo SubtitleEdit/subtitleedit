@@ -1763,7 +1763,7 @@ namespace Nikse.SubtitleEdit.Core
                 CaseSensitive = "Case sensitive",
                 RegularExpression = "Regular expression",
                 LinesFoundX = "Lines found: {0}",
-                Delete = "Delete",
+                Remove = "Remove",
                 Add = "&Add",
                 Update = "&Update",
                 Enabled = "Enabled",
@@ -1775,7 +1775,13 @@ namespace Nikse.SubtitleEdit.Core
                 ExportRulesTitle = "Export replace rule(s) to...",
                 Rules = "Find and replace rules",
                 MoveToBottom = "Move to bottom",
-                MoveToTop = "Move to top"
+                MoveToTop = "Move to top",
+                GroupName = "Group name",
+                Groups = "Groups",
+                MoveSelectedRulesToGroup = "Move selected rules to group",
+                RenamGroup = "Rename group",
+                RulesForGroupX = "Rules for group \"{0}\"",
+                NewGroup = "New group",
             };
 
             NetworkChat = new LanguageStructure.NetworkChat
