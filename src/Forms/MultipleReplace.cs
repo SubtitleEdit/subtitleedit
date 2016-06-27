@@ -25,9 +25,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 FindWhat = findWhat;
                 ReplaceWith = replaceWith;
-                if (string.CompareOrdinal(searchType, Configuration.Settings.Language.MultipleReplace.RegularExpression) == 0)
+                if (string.CompareOrdinal(searchType, SearchTypeRegularExpression) == 0)
                     SearchType = SearchRegEx;
-                else if (string.CompareOrdinal(searchType, Configuration.Settings.Language.MultipleReplace.CaseSensitive) == 0)
+                else if (string.CompareOrdinal(searchType, SearchTypeCaseSensitive) == 0)
                     SearchType = SearchCaseSensitive;
             }
         }
@@ -72,6 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewRules.Columns[1].Text = Configuration.Settings.Language.MultipleReplace.FindWhat;
             listViewRules.Columns[2].Text = Configuration.Settings.Language.MultipleReplace.ReplaceWith;
             listViewRules.Columns[3].Text = Configuration.Settings.Language.MultipleReplace.SearchType;
+            groupBoxGroups.Text = Configuration.Settings.Language.MultipleReplace.Groups;
             groupBoxLinesFound.Text = string.Empty;
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
@@ -94,6 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
             moveDownToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveDown;
             moveTopToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToTop;
             moveBottomToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToBottom;
+            newToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.NewGroup;
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
