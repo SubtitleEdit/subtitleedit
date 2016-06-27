@@ -1779,7 +1779,7 @@ namespace Nikse.SubtitleEdit.Core
                 GroupName = "Group name",
                 Groups = "Groups",
                 MoveSelectedRulesToGroup = "Move selected rules to group",
-                RenamGroup = "Rename group",
+                RenamGroup = "Rename group...",
                 RulesForGroupX = "Rules for group \"{0}\"",
                 NewGroup = "New group...",
             };

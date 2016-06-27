@@ -5,7 +5,7 @@
     <Version>3.4.13</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
-    <HelpFile />
+    <HelpFile></HelpFile>
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Fortryd</Cancel>
     <Apply>Anvend</Apply>
@@ -1504,7 +1504,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <CaseSensitive>Versal følsom</CaseSensitive>
     <RegularExpression>Regulært udtryk</RegularExpression>
     <LinesFoundX>Linjer fundet: {0}</LinesFoundX>
-    <Delete>Slet</Delete>
+    <Remove>Fjern</Remove>
     <Add>Tilføj</Add>
     <Update>Opdater</Update>
     <Enabled>Aktiv</Enabled>
@@ -1517,6 +1517,12 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <Rules>Eksport regler</Rules>
     <MoveToTop>Flyt til top</MoveToTop>
     <MoveToBottom>Flyt til bund</MoveToBottom>
+    <MoveSelectedRulesToGroup>Flyt valgte regler gruppe</MoveSelectedRulesToGroup>
+    <Groups>Grupper</Groups>
+    <RulesForGroupX>Regler for gruppen "{0}"</RulesForGroupX>
+    <GroupName>Gruppenavn</GroupName>
+    <RenamGroup>Omdøb gruppe...</RenamGroup>
+    <NewGroup>Ny gruppe...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
