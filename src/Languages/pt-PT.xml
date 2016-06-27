@@ -168,7 +168,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <RemoveFormatting>Remover etiquetas de formatação</RemoveFormatting>
     <RemoveTextForHI>Eliminar texto para Surdos</RemoveTextForHI>
     <OverwriteOriginalFiles>Substituir os ficheiros originais (nova extensão se o formato for alterado)</OverwriteOriginalFiles>
-    <RedoCasing>Refazer maiúsculas/minúsculas</RedoCasing>
+    <RedoCasing>Refazer Maiúsculas/Minúsculas</RedoCasing>
     <Convert>Converter</Convert>
     <NothingToConvert>Nada para converter!</NothingToConvert>
     <PleaseChooseOutputFolder>Por favor, seleccione a pasta de saída</PleaseChooseOutputFolder>
@@ -196,7 +196,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Title>Vídeo projector</Title>
   </Beamer>
   <ChangeCasing>
-    <Title>Inverter maiúsculas</Title>
+    <Title>Inverter Maiúsculas/Minúsculas</Title>
     <ChangeCasingTo>Inverter maiúsculas para</ChangeCasingTo>
     <NormalCasing>Maiúsculas normais. Primeira letra de cada frase em maiúsculo.</NormalCasing>
     <FixNamesCasing>Corrigir nomes em maiúsculas (por Dicionários\NomesEtc.xml)</FixNamesCasing>
@@ -208,7 +208,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
   <ChangeCasingNames>
     <Title>Alterar maiúsculas - Nomes</Title>
     <NamesFoundInSubtitleX>Nomes encontrados na legenda: {0}</NamesFoundInSubtitleX>
-    <Enabled>Activado</Enabled>
+    <Enabled>Activo</Enabled>
     <Name>Nome</Name>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
   </ChangeCasingNames>
@@ -419,9 +419,9 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FontFamily>Tipo de letra</FontFamily>
     <FontSize>Tamanho</FontSize>
     <FontColor>Cor do tipo de letra</FontColor>
-    <BorderColor>Cor da borda</BorderColor>
-    <BorderWidth>Tamanho da borda</BorderWidth>
-    <BorderStyle>Estilo da borda</BorderStyle>
+    <BorderColor>Cor do contorno</BorderColor>
+    <BorderWidth>Tamanho do contorno</BorderWidth>
+    <BorderStyle>Estilo do contorno</BorderStyle>
     <BorderStyleOneBox>Caixa por linha</BorderStyleOneBox>
     <BorderStyleBoxForEachLine>Caixa por diálogo</BorderStyleBoxForEachLine>
     <BorderStyleNormalWidthX>Normal, largura={0}</BorderStyleNormalWidthX>
@@ -454,7 +454,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <SaveFcpAs>Escolha o nome do ficheiro Final Cut Pro xml</SaveFcpAs>
     <SaveDostAs>Escolha o nome do ficheiro DoStudio dost</SaveDostAs>
     <SomeLinesWereTooLongX>Linhas demasiado longas: {0}</SomeLinesWereTooLongX>
-    <LineHeight>Altura da linha</LineHeight>
+    <LineHeight>Espaço entre linha</LineHeight>
     <BoxSingleLine>Caixa - linha única</BoxSingleLine>
     <BoxMultiLine>Caixa - todas as linhas</BoxMultiLine>
     <Forced>Forçado</Forced>
@@ -940,7 +940,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <GoToSubtitleNumber>&amp;Ir para a linha número...</GoToSubtitleNumber>
         <RightToLeftMode>Modo Direita-para-esquerda</RightToLeftMode>
         <FixTrlViaUnicodeControlCharacters>Corrigir RTL via controle de caracteres Unicode (para linhas seleccionadas)</FixTrlViaUnicodeControlCharacters>
-        <ReverseRightToLeftStartEnd>Reverter RTL inicio/fim (para linhas seleccionadas)</ReverseRightToLeftStartEnd>
+        <ReverseRightToLeftStartEnd>Reverter RTL início/fim (para linhas seleccionadas)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Mostrar o texto original na pré-visualização de áudio/vídeo</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modificar a selecção...</ModifySelection>
         <InverseSelection>Inverter a selecção</InverseSelection>
@@ -953,7 +953,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <FixCommonErrors>&amp;Corrigir erros comuns...</FixCommonErrors>
         <StartNumberingFrom>Renumerar...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Eliminar texto para surdos...</RemoveTextForHearingImpaired>
-        <ChangeCasing>Alterar maiúsculas ou minúsculas...</ChangeCasing>
+        <ChangeCasing>Alterar Maiúsculas/Minúsculas...</ChangeCasing>
         <ChangeFrameRate>Alterar taxa de fotogramas...</ChangeFrameRate>
         <ChangeSpeedInPercent>Alterar a velocidade (percentagem)...</ChangeSpeedInPercent>
         <MergeShortLines>Combinar as linhas curtas...</MergeShortLines>
@@ -1105,7 +1105,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <GoogleTranslateSelectedLines>Traduzir pelo Google as linhas seleccionadas</GoogleTranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Ajustar duração das linhas seleccionadas</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Corrigir erros comuns nas linhas seleccionadas</FixCommonErrorsInSelectedLines>
-        <ChangeCasingForSelectedLines>Alterar maiúsculas das linhas seleccionadas</ChangeCasingForSelectedLines>
+        <ChangeCasingForSelectedLines>Alterar Maiúsculas/Minúsculas nas linhas seleccionadas</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Guardar linhas seleccionadas como...</SaveSelectedLines>
         <WebVTTSetNewVoice>Definir nova voz</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Remover vozes</WebVTTRemoveVoices>
@@ -1126,12 +1126,12 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
       <Translate>Traduzir</Translate>
       <Create>Criar</Create>
       <Adjust>Ajustar</Adjust>
-      <SelectCurrentElementWhilePlaying>Seleccionar linha durante a reprodução</SelectCurrentElementWhilePlaying>
+      <SelectCurrentElementWhilePlaying>Selecção automática da linha durante a reprodução</SelectCurrentElementWhilePlaying>
       <AutoRepeat>Repetição automática</AutoRepeat>
       <AutoRepeatOn>Repetição automática activada</AutoRepeatOn>
       <AutoRepeatCount>Contador de repetições (vezes)</AutoRepeatCount>
       <AutoContinue>Auto continuar</AutoContinue>
-      <AutoContinueOn>Auto continuar activado</AutoContinueOn>
+      <AutoContinueOn>Continuar activo automaticamente</AutoContinueOn>
       <DelayInSeconds>Atraso (segundos)</DelayInSeconds>
       <OriginalText>Texto original</OriginalText>
       <Previous>&lt; &amp;Anterior</Previous>
@@ -1510,10 +1510,10 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <CaseSensitive>Diferenciar maiúsculas/minúsculas</CaseSensitive>
     <RegularExpression>Expressão regular</RegularExpression>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
-    <Delete>Eliminar</Delete>
+    <Remove>Remover</Remove>
     <Add>&amp;Adicionar</Add>
     <Update>&amp;Actualizar</Update>
-    <Enabled>Activado</Enabled>
+    <Enabled>Activo</Enabled>
     <SearchType>Tipo de pesquisa</SearchType>
     <RemoveAll>Remover tudo</RemoveAll>
     <Import>Importar...</Import>
@@ -1521,8 +1521,14 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <ImportRulesTitle>Importar regra(s) de substituição de...</ImportRulesTitle>
     <ExportRulesTitle>Exportar regra(s) de substituição para...</ExportRulesTitle>
     <Rules>Localizar e substituir Regras de exportação</Rules>
-    <MoveToTop>Mover para o inicio</MoveToTop>
+    <MoveToTop>Mover para o início</MoveToTop>
     <MoveToBottom>Mover para o fim</MoveToBottom>
+    <MoveSelectedRulesToGroup>Mover as regras seleccionadas para o grupo</MoveSelectedRulesToGroup>
+    <Groups>Grupos</Groups>
+    <RulesForGroupX>Regras do grupo "{0}"</RulesForGroupX>
+    <GroupName>Nome do grupo</GroupName>
+    <RenamGroup>Renomear grupo...</RenamGroup>
+    <NewGroup>Novo grupo...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Conversação</Title>
@@ -1694,7 +1700,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <RememberPositionAndSize>Lembrar tamanho e posição da janela principal</RememberPositionAndSize>
     <StartInSourceView>Iniciar no separador (Original) da janela principal</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Eliminar linhas em branco ao abrir a legenda</RemoveBlankLinesWhenOpening>
-    <ShowLineBreaksAs>Ver quebras de linha no separador (Lista) da janela principal como</ShowLineBreaksAs>
+    <ShowLineBreaksAs>Ver quebras de linha na "Lista" da janela principal como:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Ao clicar duas vezes na linha de texto na janela principal irá...</MainListViewDoubleClickAction>
     <MainListViewNothing>Não faz nada</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>... para posição do vídeo e pausar</MainListViewVideoGoToPositionAndPause>
@@ -1737,7 +1743,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformAllowOverlap>Permitir sobreposição (ao mover / redimensionar)</WaveformAllowOverlap>
     <WaveformFocusMouseEnter>Destacar a entrada do cursor do rato</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Destacar também a lista de visualização na entrada do cursor do rato</WaveformListViewFocusMouseEnter>
-    <WaveformBorderHitMs1>O acerto da marca da borda deve estar dentro</WaveformBorderHitMs1>
+    <WaveformBorderHitMs1>O acerto da marca do contorno deve estar dentro</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milissegundos</WaveformBorderHitMs2>
     <WaveformColor>Cor</WaveformColor>
     <WaveformSelectedColor>Cor seleccionada</WaveformSelectedColor>
@@ -2047,7 +2053,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Options>Opções</Options>
     <WrapStyle>Estilo moldado</WrapStyle>
     <Collision>Colisão</Collision>
-    <ScaleBorderAndShadow>Reduzir borda e sombreado</ScaleBorderAndShadow>
+    <ScaleBorderAndShadow>Reduzir o contorno e sombreado</ScaleBorderAndShadow>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
     <Title>Advanced Sub Station Alpha estilos</Title>
@@ -2080,7 +2086,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MarginLeft>Margem esq.</MarginLeft>
     <MarginRight>Margem dir.</MarginRight>
     <MarginVertical>Margem vert.</MarginVertical>
-    <Border>Borda</Border>
+    <Border>Contorno</Border>
     <PlusShadow>+ Sombra</PlusShadow>
     <OpaqueBox>Caixa opaca (contorno colorido)</OpaqueBox>
     <Import>Importar...</Import>
@@ -2178,7 +2184,7 @@ Manter as alterações?</KeepChangesMessage>
     <TransparentMinAlpha>Min. valor de opacidade (0=transparente, 255=totalmente visível)</TransparentMinAlpha>
     <TransportStream>Fluxo de transporte</TransportStream>
     <TransportStreamGrayscale>Tons de cinza</TransportStreamGrayscale>
-    <TransportStreamGetColor>Usar cor (irá incluir algumas linhas divididas)</TransportStreamGetColor>
+    <TransportStreamGetColor>Usar cor (divisão de linhas poderá ocorrer)</TransportStreamGetColor>
     <PromptForUnknownWords>Confirmar palavras desconhecidas</PromptForUnknownWords>
     <TryToGuessUnkownWords>Tentar adivinhar palavras desconhecidas</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Quebra de parágrafo automático se forem mais que duas linhas</AutoBreakSubtitleIfMoreThanTwoLines>
