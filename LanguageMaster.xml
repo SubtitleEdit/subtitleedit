@@ -1526,7 +1526,7 @@ If you have edited this file with Subtitle Edit you might be able to find a back
     <Groups>Groups</Groups>
     <RulesForGroupX>Rules for group "{0}"</RulesForGroupX>
     <GroupName>Group name</GroupName>
-    <RenamGroup>Rename group</RenamGroup>
+    <RenamGroup>Rename group...</RenamGroup>
     <NewGroup>New group...</NewGroup>
   </MultipleReplace>
   <NetworkChat>

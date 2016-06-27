@@ -97,6 +97,14 @@ namespace Nikse.SubtitleEdit.Forms
             moveBottomToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToBottom;
             newToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.NewGroup;
 
+            toolStripMenuItemMoveRulesToGroup.Text = Configuration.Settings.Language.MultipleReplace.MoveSelectedRulesToGroup;
+            moveUpToolStripMenuItem1.Text = Configuration.Settings.Language.DvdSubRip.MoveUp;
+            moveDownToolStripMenuItem1.Text = Configuration.Settings.Language.DvdSubRip.MoveDown;
+            moveToTopToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToTop;
+            moveToBottomToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToBottom;
+            toolStripMenuItemRename.Text = Configuration.Settings.Language.MultipleReplace.RenamGroup;
+            deleteToolStripMenuItem1.Text = Configuration.Settings.Language.MultipleReplace.Remove;
+
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
         }
