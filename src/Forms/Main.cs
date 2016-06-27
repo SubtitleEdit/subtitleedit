@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _doAutoBreakOnTextChanged = true;
         private static object _syncUndo = new object();
         private string[] _dragAndDropFiles;
-        private Timer _dragAndDropTimer = new Timer(); // to prevent locking windows explorer
+        private readonly Timer _dragAndDropTimer = new Timer(); // to prevent locking windows explorer
         public bool IsMenuOpen { get; private set; }
 
         private bool AutoRepeatContinueOn
@@ -2661,6 +2661,10 @@ namespace Nikse.SubtitleEdit.Forms
                             else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveform.Checked))
                             {
                                 TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
+                            }
+                            if (_videoFileName == null)
+                            {
+                                CloseVideoToolStripMenuItemClick(this, null);
                             }
                         }
                     }
@@ -16850,6 +16854,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelVideoInfo.Text = _languageGeneral.NoVideoLoaded;
             audioVisualizer.WavePeaks = null;
             audioVisualizer.Spectrogram = null;
+            mediaPlayer.CurrentPosition = 0;
         }
 
         private void ToolStripMenuItemVideoDropDownOpening(object sender, EventArgs e)
