@@ -1781,7 +1781,7 @@ namespace Nikse.SubtitleEdit.Core
                 MoveSelectedRulesToGroup = "Move selected rules to group",
                 RenamGroup = "Rename group",
                 RulesForGroupX = "Rules for group \"{0}\"",
-                NewGroup = "New group",
+                NewGroup = "New group...",
             };
 
             NetworkChat = new LanguageStructure.NetworkChat
