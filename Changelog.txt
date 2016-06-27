@@ -1,5 +1,26 @@
 ﻿Subtitle Edit Changelog
 
+3.4.14 (xth September 2016) BETA
+* NEW:
+   * Auto detection of Czech and Slovak languages - thx mm6502
+* IMPROVED:
+   * Updated Korean translation - thx domddol
+   * Updated Portuguese translation - thx moob
+   * Updated Hungarian translation - thx Zityi
+   * Custom export now supports {newline}, {tab}, {lf} and {cr} - thx aaaxx
+   * "Multiple replace" is now organized on groups - thx aaaxx
+   * Text below video now supports bold and underline - thx Xenophon
+* FIXED:
+   * Yet another fix for "Apply" / "OK" in "Remove text for HI" - thx Sami
+   * Fixed crash in Final Cut Pro + image - thx imyourshadow
+   * Minor fix for ".smi" reading - thx Eje
+   * Fixed bold/italic header tags for SSA/ASS - thx John
+   * Fixed unwanted reset of header in format "Timed Text 1.0" - thx Krystian
+   * Fixed crash in OCR - thx dreamday
+   * Minor spell check fix - thx JC
+   * + Many minor fixes from ivandrofly and xylographe
+
+
 3.4.13 (12th June 2016)
 * NEW:
    * Breton translation - thx Wanibzh29
