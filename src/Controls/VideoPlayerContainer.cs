@@ -1428,6 +1428,10 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     VideoPlayer.CurrentPosition = value;
                 }
+                else
+                {
+                    RefreshProgressBar();
+                }
             }
         }
 
