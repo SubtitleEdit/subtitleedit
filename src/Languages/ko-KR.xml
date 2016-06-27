@@ -1400,7 +1400,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SubtitleExported>내보낸 자막</SubtitleExported>
     <LineNumberXErrorReadingFromSourceLineY>라인 {0} - 읽기 오류: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>라인 {0} - 타임코드 판독 오류: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
-    <LineNumberXExpectedNumberFromSourceLineY>라인 {0} - 예상되는 라인 번호: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>라인 {0} - 자막 번호 오류: {1}</LineNumberXExpectedNumberFromSourceLineY>
     <BeforeGuessingTimeCodes>타임코드 예상하기 전</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>선택한 줄의 표시시간을 자동으로 설정하기 전</BeforeAutoDuration>
     <BeforeColumnPaste>문자열 붙여넣기 전</BeforeColumnPaste>
@@ -1506,7 +1506,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <CaseSensitive>대/소문자 구분</CaseSensitive>
     <RegularExpression>정규 표현식</RegularExpression>
     <LinesFoundX>발견된 줄: {0}</LinesFoundX>
-    <Delete>삭제</Delete>
+    <Remove>제거</Remove>
     <Add>추가(&amp;A)</Add>
     <Update>업데이트(&amp;U)</Update>
     <Enabled>사용</Enabled>
@@ -1519,6 +1519,12 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Rules>찾기 및 바꾸기 규칙</Rules>
     <MoveToTop>맨 위로 이동</MoveToTop>
     <MoveToBottom>맨 아래로 이동</MoveToBottom>
+    <MoveSelectedRulesToGroup>선택한 규칙을 그룹으로 이동</MoveSelectedRulesToGroup>
+    <Groups>그룹</Groups>
+    <RulesForGroupX>그룹 "{0}"에 대한 규칙</RulesForGroupX>
+    <GroupName>그룹 이름</GroupName>
+    <RenamGroup>그룹 이름 바꾸기</RenamGroup>
+    <NewGroup>새 그룹</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>채팅</Title>
@@ -2173,7 +2179,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <TransparentMinAlpha>최소 알파 값 (0=투명, 255=완벽히 보임)</TransparentMinAlpha>
     <TransportStream>전송 스트림</TransportStream>
     <TransportStreamGrayscale>회색조</TransportStreamGrayscale>
-    <TransportStreamGetColor>색 사용 (줄의 일부 분할을 포함)</TransportStreamGetColor>
+    <TransportStreamGetColor>색 사용 (줄 분할이 발생할 수 있음)</TransportStreamGetColor>
     <PromptForUnknownWords>알 수 없는 단어 알림</PromptForUnknownWords>
     <TryToGuessUnkownWords>알 수 없는 단어 추측</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>세 줄 이상의 텍스트 자동 줄바꿈</AutoBreakSubtitleIfMoreThanTwoLines>
