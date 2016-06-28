@@ -270,18 +270,6 @@ namespace Nikse.SubtitleEdit.Controls
             TogglePlayPause();
         }
 
-        private static string RemoveSubStationAlphaFormatting(string s)
-        {
-            int indexOfBegin = s.IndexOf('{');
-            while (indexOfBegin >= 0 && s.IndexOf('}') > indexOfBegin)
-            {
-                int indexOfEnd = s.IndexOf('}');
-                s = s.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = s.IndexOf('{', indexOfBegin);
-            }
-            return s;
-        }
-
         public Paragraph LastParagraph { get; private set; }
 
         public void SetSubtitleText(string text, Paragraph p)
@@ -307,7 +295,7 @@ namespace Nikse.SubtitleEdit.Controls
                                   _subtitleText.StartsWith("{\\an3}", StringComparison.Ordinal) || _subtitleText.StartsWith("{\\an6}", StringComparison.Ordinal) || _subtitleText.StartsWith("{\\an9}", StringComparison.Ordinal); // advanced sub station alpha
 
                 // remove styles for display text (except italic)
-                string text = RemoveSubStationAlphaFormatting(_subtitleText);
+                string text = Utilities.RemoveSsaTags(_subtitleText);
                 text = text.Replace("<b></b>", string.Empty);
                 text = text.Replace("<i></i>", string.Empty);
                 text = text.Replace("<u></u>", string.Empty);
