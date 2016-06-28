@@ -447,11 +447,11 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         var idx = _subtitleTextBox.TextLength + sb.Length;
                         if (isBold)
-                            styleLookups[idx] = styleLookups[idx] | FontStyle.Bold;
+                            styleLookups[idx] |= FontStyle.Bold;
                         if (isItalic)
-                            styleLookups[idx] = styleLookups[idx] | FontStyle.Italic;
+                            styleLookups[idx] |= FontStyle.Italic;
                         if (isUnderline)
-                            styleLookups[idx] = styleLookups[idx] | FontStyle.Underline;
+                            styleLookups[idx] |= FontStyle.Underline;
 
                         sb.Append(text[i]);
                         letterCount++;
