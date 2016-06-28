@@ -928,8 +928,7 @@ namespace Nikse.SubtitleEdit.Controls
             HideAllPlayImages();
             _pictureBoxPlayDown.Visible = true;
             _pictureBoxPlayDown.BringToFront();
-            if (OnButtonClicked != null)
-                OnButtonClicked.Invoke(sender, e);
+            OnButtonClicked?.Invoke(sender, e);
         }
 
         private void PictureBoxPlayOverMouseUp(object sender, MouseEventArgs e)
@@ -973,8 +972,7 @@ namespace Nikse.SubtitleEdit.Controls
                 HideAllPauseImages();
                 _pictureBoxPauseDown.Visible = true;
             }
-            if (OnButtonClicked != null)
-                OnButtonClicked.Invoke(sender, e);
+            OnButtonClicked?.Invoke(sender, e);
         }
 
         private void PictureBoxPauseOverMouseUp(object sender, MouseEventArgs e)
@@ -1017,8 +1015,7 @@ namespace Nikse.SubtitleEdit.Controls
                 HideAllStopImages();
                 _pictureBoxStopDown.Visible = true;
             }
-            if (OnButtonClicked != null)
-                OnButtonClicked.Invoke(sender, e);
+            OnButtonClicked?.Invoke(sender, e);
         }
 
         private void PictureBoxStopOverMouseUp(object sender, MouseEventArgs e)
@@ -1071,8 +1068,7 @@ namespace Nikse.SubtitleEdit.Controls
         private void PictureBoxFullscreenOverMouseDown(object sender, MouseEventArgs e)
         {
             HideAllFullscreenImages();
-            if (OnButtonClicked != null)
-                OnButtonClicked.Invoke(sender, e);
+            OnButtonClicked?.Invoke(sender, e);
         }
 
         private void PictureBoxFullscreenOverMouseUp(object sender, MouseEventArgs e)
@@ -1117,8 +1113,7 @@ namespace Nikse.SubtitleEdit.Controls
                 HideAllMuteImages();
                 _pictureBoxMuteDown.Visible = true;
             }
-            if (OnButtonClicked != null)
-                OnButtonClicked.Invoke(sender, e);
+            OnButtonClicked?.Invoke(sender, e);
         }
 
         private void PictureBoxMuteOverMouseUp(object sender, MouseEventArgs e)
@@ -1133,8 +1128,7 @@ namespace Nikse.SubtitleEdit.Controls
             Mute = false;
             HideAllMuteImages();
             _pictureBoxMute.Visible = true;
-            if (OnButtonClicked != null)
-                OnButtonClicked.Invoke(sender, e);
+            OnButtonClicked?.Invoke(sender, e);
         }
 
         #endregion Mute buttons
@@ -1241,15 +1235,13 @@ namespace Nikse.SubtitleEdit.Controls
         private void PictureBoxProgressbarBackgroundMouseDown(object sender, MouseEventArgs e)
         {
             SetProgressBarPosition(e.X - 4);
-            if (OnButtonClicked != null)
-                OnButtonClicked.Invoke(sender, e);
+            OnButtonClicked?.Invoke(sender, e);
         }
 
         private void PictureBoxProgressBarMouseDown(object sender, MouseEventArgs e)
         {
             SetProgressBarPosition(e.X + 2);
-            if (OnButtonClicked != null)
-                OnButtonClicked.Invoke(sender, e);
+            OnButtonClicked?.Invoke(sender, e);
         }
 
         public void RefreshProgressBar()
@@ -1295,15 +1287,13 @@ namespace Nikse.SubtitleEdit.Controls
         private void PictureBoxVolumeBarBackgroundMouseDown(object sender, MouseEventArgs e)
         {
             SetVolumeBarPosition(e.X - 6);
-            if (OnButtonClicked != null)
-                OnButtonClicked.Invoke(sender, e);
+            OnButtonClicked?.Invoke(sender, e);
         }
 
         private void PictureBoxVolumeBarMouseDown(object sender, MouseEventArgs e)
         {
             SetVolumeBarPosition(e.X + 2);
-            if (OnButtonClicked != null)
-                OnButtonClicked.Invoke(sender, e);
+            OnButtonClicked?.Invoke(sender, e);
         }
 
         private void RefreshVolumeBar()
@@ -1333,8 +1323,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _pictureBoxPause.BringToFront();
                 RefreshProgressBar();
             }
-            if (OnButtonClicked != null)
-                OnButtonClicked.Invoke(null, null);
+            OnButtonClicked?.Invoke(null, null);
         }
 
         public void Stop()
@@ -1346,8 +1335,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _pictureBoxPlay.Visible = true;
                 RefreshProgressBar();
             }
-            if (OnButtonClicked != null)
-                OnButtonClicked.Invoke(null, null);
+            OnButtonClicked?.Invoke(null, null);
         }
 
         public void Pause()
@@ -1376,11 +1364,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (VideoPlayer != null)
-                {
-                    return VideoPlayer.IsPaused;
-                }
-                return false;
+                return VideoPlayer?.IsPaused == true;
             }
         }
 
