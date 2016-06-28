@@ -323,14 +323,14 @@ namespace Nikse.SubtitleEdit.Controls
                     if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                     {
                         _subtitleTextBox.AppendText(sb.ToString());
-                        sb = new StringBuilder();
+                        sb.Clear();
                         isItalic = true;
                         i += 2;
                     }
-                    else if (text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) && isItalic)
+                    else if (isItalic && text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
                     {
                         _subtitleTextBox.AppendText(sb.ToString());
-                        sb = new StringBuilder();
+                        sb.Clear();
                         isItalic = false;
                         i += 3;
                     }
@@ -339,17 +339,17 @@ namespace Nikse.SubtitleEdit.Controls
                         if (!Configuration.Settings.General.VideoPlayerPreviewFontBold)
                         {
                             _subtitleTextBox.AppendText(sb.ToString());
-                            sb = new StringBuilder();
+                            sb.Clear();
                             isBold = true;
                         }
                         i += 2;
                     }
-                    else if (text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase) && isBold)
+                    else if (isBold && text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
                     {
                         if (!Configuration.Settings.General.VideoPlayerPreviewFontBold)
                         {
                             _subtitleTextBox.AppendText(sb.ToString());
-                            sb = new StringBuilder();
+                            sb.Clear();
                             isBold = false;
                         }
                         i += 3;
@@ -357,14 +357,14 @@ namespace Nikse.SubtitleEdit.Controls
                     else if (text.Substring(i).StartsWith("<u>", StringComparison.OrdinalIgnoreCase))
                     {
                         _subtitleTextBox.AppendText(sb.ToString());
-                        sb = new StringBuilder();
+                        sb.Clear();
                         isUnderline = true;
                         i += 2;
                     }
-                    else if (text.Substring(i).StartsWith("</u>", StringComparison.OrdinalIgnoreCase) && isUnderline)
+                    else if (isUnderline && text.Substring(i).StartsWith("</u>", StringComparison.OrdinalIgnoreCase))
                     {
                         _subtitleTextBox.AppendText(sb.ToString());
-                        sb = new StringBuilder();
+                        sb.Clear();
                         isUnderline = false;
                         i += 3;
                     }
@@ -422,16 +422,16 @@ namespace Nikse.SubtitleEdit.Controls
                         if (fontFound)
                         {
                             _subtitleTextBox.AppendText(sb.ToString());
-                            sb = new StringBuilder();
+                            sb.Clear();
                             isFontColor = true;
                             fontColorBegin = letterCount;
                         }
                     }
-                    else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase) && isFontColor)
+                    else if (isFontColor && text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                     {
                         fontColorLookups.Add(new Point(fontColorBegin, _subtitleTextBox.Text.Length + sb.ToString().Length - fontColorBegin), fontColor);
                         _subtitleTextBox.AppendText(sb.ToString());
-                        sb = new StringBuilder();
+                        sb.Clear();
                         isFontColor = false;
                         i += 6;
                     }
