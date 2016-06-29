@@ -1154,10 +1154,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             int uppercase = 0;
             for (int i = 0; i < word.Length; i++)
             {
-                if (Utilities.LowercaseLetters.Contains(word[i]))
-                    lowercase++;
-                else if (Utilities.UppercaseLetters.Contains(word[i]))
-                    uppercase++;
+                if (char.IsLetter(word[i]))
+                {
+                    if (Utilities.LowercaseLetters.Contains(word[i]))
+                        lowercase++;
+                    else if (Utilities.UppercaseLetters.Contains(word[i]))
+                        uppercase++;
+                }
             }
             if (uppercase > lowercase)
                 return word.ToUpper();
