@@ -257,7 +257,7 @@ namespace Nikse.SubtitleEdit.Core
                             if (s == ']' && idx > 1)
                             { // I [Motor roaring] love you!
                                 string temp = sb.ToString(0, idx - 1).Trim();
-                                if (temp.Length > 0 && !Utilities.LowercaseLetters.Contains(temp[temp.Length - 1]))
+                                if (temp.Length > 0 && !char.IsLower(temp[temp.Length - 1]))
                                     lastWasBreak = true;
                             }
                             else

@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 }
                 else if (!string.IsNullOrEmpty(nextText) && next != null &&
                     next.Text.Length > 0 &&
-                    Utilities.UppercaseLetters.Contains(nextText[0]) &&
+                    char.IsUpper(nextText[0]) &&
                     tempNoHtml.Length > 0 &&
                     !ExpectedString1.Contains(tempNoHtml[tempNoHtml.Length - 1]))
                 {
@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     {
                         var st = new StripableText(next.Text);
                         if (st.StrippedText.Length > 0 && st.StrippedText != st.StrippedText.ToUpper() &&
-                            Utilities.UppercaseLetters.Contains(st.StrippedText[0]))
+                            char.IsUpper(st.StrippedText[0]))
                         {
                             if (callbacks.AllowFix(p, fixAction))
                             {
@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i>-", 3, StringComparison.Ordinal);
                     if (indexOfNewLine < 0)
                         indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i> -", 3, StringComparison.Ordinal);
-                    if (indexOfNewLine > 0 && Configuration.Settings.General.UppercaseLetters.Contains(char.ToUpper(p.Text[indexOfNewLine - 1])) && callbacks.AllowFix(p, fixAction))
+                    if (indexOfNewLine > 0 && char.IsUpper(char.ToUpper(p.Text[indexOfNewLine - 1])) && callbacks.AllowFix(p, fixAction))
                     {
                         string oldText = p.Text;
 
