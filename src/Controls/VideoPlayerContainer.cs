@@ -270,18 +270,6 @@ namespace Nikse.SubtitleEdit.Controls
             TogglePlayPause();
         }
 
-        private static string RemoveSubStationAlphaFormatting(string s)
-        {
-            int indexOfBegin = s.IndexOf('{');
-            while (indexOfBegin >= 0 && s.IndexOf('}') > indexOfBegin)
-            {
-                int indexOfEnd = s.IndexOf('}');
-                s = s.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = s.IndexOf('{', indexOfBegin);
-            }
-            return s;
-        }
-
         public Paragraph LastParagraph { get; private set; }
 
         public void SetSubtitleText(string text, Paragraph p)
@@ -307,7 +295,7 @@ namespace Nikse.SubtitleEdit.Controls
                                   _subtitleText.StartsWith("{\\an3}", StringComparison.Ordinal) || _subtitleText.StartsWith("{\\an6}", StringComparison.Ordinal) || _subtitleText.StartsWith("{\\an9}", StringComparison.Ordinal); // advanced sub station alpha
 
                 // remove styles for display text (except italic)
-                string text = RemoveSubStationAlphaFormatting(_subtitleText);
+                string text = Utilities.RemoveSsaTags(_subtitleText);
                 text = text.Replace("<b></b>", string.Empty);
                 text = text.Replace("<i></i>", string.Empty);
                 text = text.Replace("<u></u>", string.Empty);
@@ -335,14 +323,14 @@ namespace Nikse.SubtitleEdit.Controls
                     if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                     {
                         _subtitleTextBox.AppendText(sb.ToString());
-                        sb = new StringBuilder();
+                        sb.Clear();
                         isItalic = true;
                         i += 2;
                     }
-                    else if (text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) && isItalic)
+                    else if (isItalic && text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase))
                     {
                         _subtitleTextBox.AppendText(sb.ToString());
-                        sb = new StringBuilder();
+                        sb.Clear();
                         isItalic = false;
                         i += 3;
                     }
@@ -351,17 +339,17 @@ namespace Nikse.SubtitleEdit.Controls
                         if (!Configuration.Settings.General.VideoPlayerPreviewFontBold)
                         {
                             _subtitleTextBox.AppendText(sb.ToString());
-                            sb = new StringBuilder();
+                            sb.Clear();
                             isBold = true;
                         }
                         i += 2;
                     }
-                    else if (text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase) && isBold)
+                    else if (isBold && text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
                     {
                         if (!Configuration.Settings.General.VideoPlayerPreviewFontBold)
                         {
                             _subtitleTextBox.AppendText(sb.ToString());
-                            sb = new StringBuilder();
+                            sb.Clear();
                             isBold = false;
                         }
                         i += 3;
@@ -369,14 +357,14 @@ namespace Nikse.SubtitleEdit.Controls
                     else if (text.Substring(i).StartsWith("<u>", StringComparison.OrdinalIgnoreCase))
                     {
                         _subtitleTextBox.AppendText(sb.ToString());
-                        sb = new StringBuilder();
+                        sb.Clear();
                         isUnderline = true;
                         i += 2;
                     }
-                    else if (text.Substring(i).StartsWith("</u>", StringComparison.OrdinalIgnoreCase) && isUnderline)
+                    else if (isUnderline && text.Substring(i).StartsWith("</u>", StringComparison.OrdinalIgnoreCase))
                     {
                         _subtitleTextBox.AppendText(sb.ToString());
-                        sb = new StringBuilder();
+                        sb.Clear();
                         isUnderline = false;
                         i += 3;
                     }
@@ -434,16 +422,16 @@ namespace Nikse.SubtitleEdit.Controls
                         if (fontFound)
                         {
                             _subtitleTextBox.AppendText(sb.ToString());
-                            sb = new StringBuilder();
+                            sb.Clear();
                             isFontColor = true;
                             fontColorBegin = letterCount;
                         }
                     }
-                    else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase) && isFontColor)
+                    else if (isFontColor && text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                     {
                         fontColorLookups.Add(new Point(fontColorBegin, _subtitleTextBox.Text.Length + sb.ToString().Length - fontColorBegin), fontColor);
                         _subtitleTextBox.AppendText(sb.ToString());
-                        sb = new StringBuilder();
+                        sb.Clear();
                         isFontColor = false;
                         i += 6;
                     }
@@ -459,11 +447,11 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         var idx = _subtitleTextBox.TextLength + sb.Length;
                         if (isBold)
-                            styleLookups[idx] = styleLookups[idx] | FontStyle.Bold;
+                            styleLookups[idx] |= FontStyle.Bold;
                         if (isItalic)
-                            styleLookups[idx] = styleLookups[idx] | FontStyle.Italic;
+                            styleLookups[idx] |= FontStyle.Italic;
                         if (isUnderline)
-                            styleLookups[idx] = styleLookups[idx] | FontStyle.Underline;
+                            styleLookups[idx] |= FontStyle.Underline;
 
                         sb.Append(text[i]);
                         letterCount++;
