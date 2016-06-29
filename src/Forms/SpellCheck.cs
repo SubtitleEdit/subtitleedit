@@ -603,7 +603,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     suggestions = DoSuggest(_currentWord); // TODO: 0.9.6 fails on "Lt'S"
                                 if (_languageName.StartsWith("fr_", StringComparison.Ordinal) && (_currentWord.StartsWith("I'", StringComparison.Ordinal) || _currentWord.StartsWith("I’", StringComparison.Ordinal)))
                                 {
-                                    if (_currentWord.Length > 3 && Utilities.LowercaseLetters.Contains(_currentWord[2]) && _currentSpellCheckWord.Index > 3)
+                                    if (_currentWord.Length > 3 && char.IsLower(_currentWord[2]) && _currentSpellCheckWord.Index > 3)
                                     {
                                         string ending = _currentParagraph.Text.Substring(0, _currentSpellCheckWord.Index - 1).Trim();
                                         if (ending.Length > 1 && !".!?".Contains(ending[ending.Length - 1]))

@@ -449,22 +449,22 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                     lastLine.EndsWith(".</font>", StringComparison.Ordinal) || lastLine.EndsWith("!</font>", StringComparison.Ordinal) || lastLine.EndsWith("?</font>", StringComparison.Ordinal);
             if (text.StartsWith(tag.TrimStart(), StringComparison.Ordinal) && text.Length > 3)
             {
-                if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text[2]))
+                if (endingBeforeThis || char.IsUpper(text[2]))
                 {
                     text = @"L" + text.Substring(1);
                 }
-                else if (Utilities.LowercaseLetters.Contains(text[2]))
+                else if (char.IsLower(text[2]))
                 {
                     text = @"l" + text.Substring(1);
                 }
             }
             else if (text.StartsWith("<i>" + tag.TrimStart(), StringComparison.Ordinal) && text.Length > 6)
             {
-                if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text[5]))
+                if (endingBeforeThis || char.IsUpper(text[5]))
                 {
                     text = text.Remove(3, 1).Insert(3, "L");
                 }
-                else if (Utilities.LowercaseLetters.Contains(text[5]))
+                else if (char.IsLower(text[5]))
                 {
                     text = text.Remove(3, 1).Insert(3, "l");
                 }
@@ -532,11 +532,11 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>", StringComparison.Ordinal);
                 if (start < text.Length - 8)
                 {
-                    if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text[start + 5 + Environment.NewLine.Length]))
+                    if (endingBeforeThis || char.IsUpper(text[start + 5 + Environment.NewLine.Length]))
                     {
                         text = text.Remove(start + Environment.NewLine.Length + 3, 1).Insert(start + Environment.NewLine.Length + 3, "L");
                     }
-                    else if (Utilities.LowercaseLetters.Contains(text[start + 5 + Environment.NewLine.Length]))
+                    else if (char.IsLower(text[start + 5 + Environment.NewLine.Length]))
                     {
                         text = text.Remove(start + Environment.NewLine.Length + 3, 1).Insert(start + Environment.NewLine.Length + 3, "l");
                     }
@@ -783,24 +783,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     input = input.Remove(0, 1);
             }
 
-            if (input.Length > 2 && input[0] == '-' && Utilities.UppercaseLetters.Contains(input[1]))
+            if (input.Length > 2 && input[0] == '-' && char.IsUpper(input[1]))
             {
                 input = input.Insert(1, " ");
             }
 
-            if (input.Length > 5 && input.StartsWith("<i>-", StringComparison.Ordinal) && Utilities.UppercaseLetters.Contains(input[4]))
+            if (input.Length > 5 && input.StartsWith("<i>-", StringComparison.Ordinal) && char.IsUpper(input[4]))
             {
                 input = input.Insert(4, " ");
             }
 
             int idx = input.IndexOf(Environment.NewLine + "-", StringComparison.Ordinal);
-            if (idx > 0 && idx + Environment.NewLine.Length + 1 < input.Length && Utilities.UppercaseLetters.Contains(input[idx + Environment.NewLine.Length + 1]))
+            if (idx > 0 && idx + Environment.NewLine.Length + 1 < input.Length && char.IsUpper(input[idx + Environment.NewLine.Length + 1]))
             {
                 input = input.Insert(idx + Environment.NewLine.Length + 1, " ");
             }
 
             idx = input.IndexOf(Environment.NewLine + "<i>-", StringComparison.Ordinal);
-            if (idx > 0 && Utilities.UppercaseLetters.Contains(input[idx + Environment.NewLine.Length + 4]))
+            if (idx > 0 && char.IsUpper(input[idx + Environment.NewLine.Length + 4]))
             {
                 input = input.Insert(idx + Environment.NewLine.Length + 4, " ");
             }
@@ -1154,9 +1154,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             int uppercase = 0;
             for (int i = 0; i < word.Length; i++)
             {
-                if (Utilities.LowercaseLetters.Contains(word[i]))
+                var ch = word[i];
+                if (char.IsLower(ch))
                     lowercase++;
-                else if (Utilities.UppercaseLetters.Contains(word[i]))
+                else if (char.IsUpper(ch))
                     uppercase++;
             }
             if (uppercase > lowercase)
