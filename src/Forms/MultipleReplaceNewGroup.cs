@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Text = Configuration.Settings.Language.MultipleReplace.NewGroup;
             }
-            else 
+            else
             {
                 Text = Configuration.Settings.Language.MultipleReplace.RenameGroup;
             }

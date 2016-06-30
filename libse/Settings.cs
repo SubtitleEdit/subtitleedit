@@ -1097,7 +1097,7 @@ namespace Nikse.SubtitleEdit.Core
         public NetworkSettings NetworkSettings { get; set; }
         public Shortcuts Shortcuts { get; set; }
         public RemoveTextForHearingImpairedSettings RemoveTextForHearingImpaired { get; set; }
-        public SubtitleBeaming SubtitleBeaming { get; set; }       
+        public SubtitleBeaming SubtitleBeaming { get; set; }
         public List<MultipleSearchAndReplaceGroup> MultipleSearchAndReplaceGroups { get; set; }
 
         [XmlIgnore]
@@ -2357,7 +2357,7 @@ namespace Nikse.SubtitleEdit.Core
                     subNode = listNode.SelectSingleNode("SearchType");
                     if (subNode != null)
                         item.SearchType = subNode.InnerText;
-                    group.Rules.Add(item);                    
+                    group.Rules.Add(item);
                 }
             }
 
