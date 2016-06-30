@@ -1235,7 +1235,7 @@
     <RegEx find="\b([sS])ed([ei]|i[mš]|imo|it[ei]|eć[iaeu]|il[aeio]|iše)\b" replaceWith="$1jed$2" />
     <RegEx find="\b([sS])e[ćč]a([mšo]|mo|t[ei]|ju|l[aeio]|nj[aeu]|njem?)?\b" replaceWith="$1jeća$2" />
     <RegEx find="([sS])ede([olt])" replaceWith="$1jedi$2" />
-    <RegEx find="([sS])j?ed([ei])ć(?!i)" replaceWith="$1jedit ć" />
+    <RegEx find="([sS])j?ed[ei]ć(?!i)" replaceWith="$1jedit ć" />
     <RegEx find="sedmičn" replaceWith="tjedn" />
     <RegEx find="Sedmičn" replaceWith="Tjedn" />
     <RegEx find="([sS])edn([eui])" replaceWith="$1jedn$2" />
