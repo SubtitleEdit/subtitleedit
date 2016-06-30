@@ -1,19 +1,29 @@
-<ReplaceList>
-<!-- nagy I-l javítások -->
-	<RegEx Find="[\x41-\x5a\x61-\x7a\xc1-\xfc](II)" replaceWith="ll"/>
-	<RegEx Find="(II)[\x61-\x7a\xe1-\xfc]" replaceWith="ll"/>
-	<RegEx Find="[\x61-\x7a\xe1-\xfc](I)" replaceWith="l"/>
-	<RegEx Find="[\x20](I)[^aeou\x41-\x5a\xc1-\xdc]" replaceWith="l"/>
-	<RegEx Find="\b(l)[bcdfghjklmnpqrstvwxz]" replaceWith="I"/>
-	<RegEx Find="\W(l)[bcdfghjklmnpqrstvwxz]" replaceWith="I"/>
-	<RegEx Find="[\x41-\x5a\xc1-\xdc](I)[\x61-\x7a\xe1-\xfc]" replaceWith="l"/>
-	<RegEx Find="[\x61-\x7a\xe1-\xfc][\-](I)[\x61-\x7a\xe1-\xfc]" replaceWith="l"/>
-	<RegEx Find="[\x41-\x5a\xc1-\xdc](I)[\-][\x41-\x5a\xc1-\xdc][\x61-\x7a\xe1-\xfc]" replaceWith="l"/>
-	<RegEx Find="^[AEÜÓ](I)[^\x41-\x5a\xc1-\xdc]" replaceWith="l"/>
-	<RegEx Find="\W[AEÜÓ](I)[^\x41-\x5a\xc1-\xdc]" replaceWith="l"/>
-	<RegEx Find="\b(I)[aáeéiíoóöuúüy\xf5\xfb]" replaceWith="l"/>
-	<RegEx Find="\W(I)[aáeéiíoóöuúüy\xf5\xfb]" replaceWith="l"/>
-	<RegEx Find="\b(II)" replaceWith="Il"/>
-	<RegEx Find="\b(ll)" replaceWith="Il"/>
-	<RegEx Find="[\xf5\xfb](I)" replaceWith="l"/>
-</ReplaceList>
+﻿<OCRFixReplaceList>
+  <WholeWords />
+  <PartialWordsAlways />
+  <PartialWords />
+  <PartialLines />
+  <PartialLinesAlways />
+  <BeginLines />
+  <EndLines />
+  <WholeLines />
+  <RegularExpressions>
+    <!-- nagy I-l javítások -->
+    <RegEx find="[\x41-\x5a\x61-\x7a\xc1-\xfc](II)" replaceWith="ll" />
+    <RegEx find="(II)[\x61-\x7a\xe1-\xfc]" replaceWith="ll" />
+    <RegEx find="[\x61-\x7a\xe1-\xfc](I)" replaceWith="l" />
+    <RegEx find="[\x20](I)[^aeou\x41-\x5a\xc1-\xdc]" replaceWith="l" />
+    <RegEx find="\b(l)[bcdfghjklmnpqrstvwxz]" replaceWith="I" />
+    <RegEx find="\W(l)[bcdfghjklmnpqrstvwxz]" replaceWith="I" />
+    <RegEx find="[\x41-\x5a\xc1-\xdc](I)[\x61-\x7a\xe1-\xfc]" replaceWith="l" />
+    <RegEx find="[\x61-\x7a\xe1-\xfc][\-](I)[\x61-\x7a\xe1-\xfc]" replaceWith="l" />
+    <RegEx find="[\x41-\x5a\xc1-\xdc](I)[\-][\x41-\x5a\xc1-\xdc][\x61-\x7a\xe1-\xfc]" replaceWith="l" />
+    <RegEx find="^[AEÜÓ](I)[^\x41-\x5a\xc1-\xdc]" replaceWith="l" />
+    <RegEx find="\W[AEÜÓ](I)[^\x41-\x5a\xc1-\xdc]" replaceWith="l" />
+    <RegEx find="\b(I)[aáeéiíoóöuúüy\xf5\xfb]" replaceWith="l" />
+    <RegEx find="\W(I)[aáeéiíoóöuúüy\xf5\xfb]" replaceWith="l" />
+    <RegEx find="\b(II)" replaceWith="Il" />
+    <RegEx find="\b(ll)" replaceWith="Il" />
+    <RegEx find="[\xf5\xfb](I)" replaceWith="l" />
+  </RegularExpressions>
+</OCRFixReplaceList>
