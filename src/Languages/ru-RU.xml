@@ -1525,7 +1525,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <CaseSensitive>С учетом регистра</CaseSensitive>
     <RegularExpression>Регулярные выражения</RegularExpression>
     <LinesFoundX>Найдено строк: {0}</LinesFoundX>
-    <Delete>Удалить</Delete>
+    <Remove>Удалить</Remove>
     <Add>Добавить</Add>
     <Update>Обновить</Update>
     <Enabled>Вкл.</Enabled>

@@ -1411,7 +1411,7 @@ Fortsätta?</SubtitleAppendPrompt>
     <CaseSensitive>Skiftlägeskänslig</CaseSensitive>
     <RegularExpression>Vanligt uttryck</RegularExpression>
     <LinesFoundX>Rader hittades: {0}</LinesFoundX>
-    <Delete>Radera</Delete>
+    <Remove>Radera</Remove>
     <Add>Lägg till</Add>
     <Update>Uppdatera</Update>
     <Enabled>Aktiverad</Enabled>

@@ -997,7 +997,7 @@ con el archivo de vídeo, al subtítulo actual cargado.
     <CaseSensitive>Sensible a mayúsculas</CaseSensitive>
     <RegularExpression>Expresión regular</RegularExpression>
     <LinesFoundX>Líneas encontradas: {0}</LinesFoundX>
-    <Delete>Eliminar</Delete>
+    <Remove>Eliminar</Remove>
     <Add>Añadir</Add>
     <Update>Act&amp;ualizar</Update>
     <Enabled>Habilitado</Enabled>

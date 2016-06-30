@@ -1193,7 +1193,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <CaseSensitive>大小文字区別</CaseSensitive>
     <RegularExpression>正規表現</RegularExpression>
     <LinesFoundX>見つかった行: {0}</LinesFoundX>
-    <Delete>削除</Delete>
+    <Remove>削除</Remove>
     <Add>追加</Add>
     <Update>更新(&amp;U)</Update>
     <Enabled>有効</Enabled>

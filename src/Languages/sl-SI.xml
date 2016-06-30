@@ -1376,7 +1376,7 @@ Nadaljujem?</SubtitleAppendPrompt>
     <CaseSensitive>Posebni primeri</CaseSensitive>
     <RegularExpression>Pravilni izrazi</RegularExpression>
     <LinesFoundX>Najdeno vrstic: {0}</LinesFoundX>
-    <Delete>Izbriši</Delete>
+    <Remove>Izbriši</Remove>
     <Add>Dodaj</Add>
     <Update>Osveži</Update>
     <Enabled>Omogočeno</Enabled>

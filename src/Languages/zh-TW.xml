@@ -1413,7 +1413,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <CaseSensitive>區分大小寫</CaseSensitive>
     <RegularExpression>正則表達式</RegularExpression>
     <LinesFoundX>找到行數: {0}</LinesFoundX>
-    <Delete>刪除</Delete>
+    <Remove>刪除</Remove>
     <Add>加入</Add>
     <Update>更新(&amp;U)</Update>
     <Enabled>啟用</Enabled>

@@ -1494,7 +1494,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CaseSensitive>Чутливий регістр</CaseSensitive>
     <RegularExpression>Регулярний вираз</RegularExpression>
     <LinesFoundX>Знайдено рядків: {0}</LinesFoundX>
-    <Delete>Видалити</Delete>
+    <Remove>Видалити</Remove>
     <Add>&amp;Додати</Add>
     <Update>&amp;Оновити</Update>
     <Enabled>Увімкнено</Enabled>

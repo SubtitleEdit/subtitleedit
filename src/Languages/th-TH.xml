@@ -1415,7 +1415,7 @@
     <CaseSensitive>ลักษณะตัวพิมพ์สำคัญ</CaseSensitive>
     <RegularExpression>เรกูลาร์เอ็กซ์เพรสชัน</RegularExpression>
     <LinesFoundX>จำนวนบรรทัดที่พบ: {0}</LinesFoundX>
-    <Delete>ลบ</Delete>
+    <Remove>ลบ</Remove>
     <Add>เพิ่ม</Add>
     <Update>&amp;อัพเดต</Update>
     <Enabled>เปิดใช้</Enabled>

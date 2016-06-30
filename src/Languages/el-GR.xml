@@ -1416,7 +1416,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CaseSensitive>Διάκριση πεζών-κεφαλαίων</CaseSensitive>
     <RegularExpression>Τυπική έκφραση</RegularExpression>
     <LinesFoundX>Γραμμές που βρέθηκαν: {0}</LinesFoundX>
-    <Delete>Διαγραφή</Delete>
+    <Remove>Διαγραφή</Remove>
     <Add>Προσθήκη</Add>
     <Update>&amp;Ενημέρωση</Update>
     <Enabled>Ενεργοποίηση</Enabled>

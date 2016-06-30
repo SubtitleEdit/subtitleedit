@@ -1480,7 +1480,7 @@ la codifica ANSI andranno perse. Salvare comunque?</UnicodeCharactersAnsiWarning
     <CaseSensitive>Sensibile a MAIUSCOLE/minuscole</CaseSensitive>
     <RegularExpression>Espressione regolare</RegularExpression>
     <LinesFoundX>Linee trovate: {0}</LinesFoundX>
-    <Delete>Cancella</Delete>
+    <Remove>Cancella</Remove>
     <Add>Aggiungi</Add>
     <Update>&amp;Aggiorna</Update>
     <Enabled>Abilitato</Enabled>

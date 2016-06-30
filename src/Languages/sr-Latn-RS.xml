@@ -1193,7 +1193,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <CaseSensitive>&amp;Podudaranje</CaseSensitive>
     <RegularExpression>&amp;Regularan izraz</RegularExpression>
     <LinesFoundX>Pronađeno linija: {0}</LinesFoundX>
-    <Delete>Obriši</Delete>
+    <Remove>Obriši</Remove>
     <Add>&amp;Dodaj</Add>
     <Update>&amp;Ažuriraj</Update>
     <Enabled>Omogućeno</Enabled>

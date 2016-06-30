@@ -1507,7 +1507,7 @@ Indien u dit bestand met Subtitle Edit bewerkt hebt, kunt u een vorige versie vi
     <CaseSensitive>Hoofdlettergevoelig</CaseSensitive>
     <RegularExpression>Reguliere expressie</RegularExpression>
     <LinesFoundX>Gevonden teksten: {0}</LinesFoundX>
-    <Delete>Verwĳderen</Delete>
+    <Remove>Verwĳderen</Remove>
     <Add>Toevoegen</Add>
     <Update>Bĳwerken</Update>
     <Enabled>Ingeschakeld</Enabled>

@@ -1508,7 +1508,7 @@ Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung
     <CaseSensitive>Groß-/Kleinschreibung</CaseSensitive>
     <RegularExpression>Regulärer Ausdruck</RegularExpression>
     <LinesFoundX>Gefundene Zeilen: {0}</LinesFoundX>
-    <Delete>Löschen</Delete>
+    <Remove>Löschen</Remove>
     <Add>Hinzufügen</Add>
     <Update>&amp;Ändern</Update>
     <Enabled>Aktiv</Enabled>

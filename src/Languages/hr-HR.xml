@@ -1484,7 +1484,7 @@ koji bi trebao biti usklađen s video datotekom.
     <CaseSensitive>&amp;Podudaranje</CaseSensitive>
     <RegularExpression>&amp;Normalan izraz</RegularExpression>
     <LinesFoundX>Pronađeno linija: {0}</LinesFoundX>
-    <Delete>Obriši</Delete>
+    <Remove>Obriši</Remove>
     <Add>&amp;Dodaj</Add>
     <Update>&amp;Ažuriraj</Update>
     <Enabled>Omogućeno</Enabled>

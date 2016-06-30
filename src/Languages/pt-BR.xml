@@ -1488,7 +1488,7 @@ Se você editou este arquivo com o Subtitle Edit você poderá encontrar um back
     <CaseSensitive>Caso sensitivo</CaseSensitive>
     <RegularExpression>Expressão regular</RegularExpression>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
-    <Delete>Excluir</Delete>
+    <Remove>Excluir</Remove>
     <Add>&amp;Adicionar</Add>
     <Update>At&amp;ualizar</Update>
     <Enabled>Habilitado</Enabled>

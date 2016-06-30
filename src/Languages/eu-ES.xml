@@ -1487,7 +1487,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <CaseSensitive>Hizki larri-xehe artean</CaseSensitive>
     <RegularExpression>Esaera arrunta</RegularExpression>
     <LinesFoundX>Lerro aurkituta: {0}</LinesFoundX>
-    <Delete>Ezabatu</Delete>
+    <Remove>Ezabatu</Remove>
     <Add>&amp;Gehitu</Add>
     <Update>&amp;Eguneratu</Update>
     <Enabled>Gaituta</Enabled>

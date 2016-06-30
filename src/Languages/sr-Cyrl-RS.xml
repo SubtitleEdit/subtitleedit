@@ -988,7 +988,7 @@
     <CaseSensitive>&amp;Подударање</CaseSensitive>
     <RegularExpression>&amp;Регуларан израз</RegularExpression>
     <LinesFoundX>Пронађено линија: {0}</LinesFoundX>
-    <Delete>Обриши</Delete>
+    <Remove>Обриши</Remove>
     <Add>&amp;Додај</Add>
     <Update>&amp;Ажурирај</Update>
     <Enabled>Омогућено</Enabled>
