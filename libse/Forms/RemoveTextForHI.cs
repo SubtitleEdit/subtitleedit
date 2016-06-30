@@ -826,10 +826,13 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 doRepeat = false;
                 foreach (string s in _interjectionList)
                 {
-                    if (text.Contains(s))
+                    // Find *s its start position in text.
+                    int startIndex = text.IndexOf(s, StringComparison.Ordinal);
+                    if (startIndex >= 0)
                     {
                         var regex = new Regex("\\b" + Regex.Escape(s) + "\\b");
-                        var match = regex.Match(text);
+                        // Start regex search from previously found index.
+                        var match = regex.Match(text, startIndex);
                         if (match.Success)
                         {
                             int index = match.Index;
