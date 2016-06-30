@@ -1661,7 +1661,7 @@
             public string Groups { get; set; }
             public string RulesForGroupX { get; set; }
             public string GroupName { get; set; }
-            public string RenamGroup { get; set; }
+            public string RenameGroup { get; set; }
             public string NewGroup { get; set; }
         }
 

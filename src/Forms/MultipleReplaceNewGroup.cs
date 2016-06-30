@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else 
             {
-                Text = Configuration.Settings.Language.MultipleReplace.RenamGroup;
+                Text = Configuration.Settings.Language.MultipleReplace.RenameGroup;
             }
         }
 

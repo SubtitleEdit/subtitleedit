@@ -1527,7 +1527,7 @@ Se editou este ficheiro no Subtitle Edit é possível que encontre a cópia de s
     <Groups>Grupos</Groups>
     <RulesForGroupX>Regras do grupo "{0}"</RulesForGroupX>
     <GroupName>Nome do grupo</GroupName>
-    <RenamGroup>Renomear grupo...</RenamGroup>
+    <RenameGroup>Renomear grupo...</RenameGroup>
     <NewGroup>Novo grupo...</NewGroup>
   </MultipleReplace>
   <NetworkChat>

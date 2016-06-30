@@ -1521,7 +1521,7 @@ Hvis du har redigeret denne fil med Subtitle Edit du måske finde en backup via 
     <Groups>Grupper</Groups>
     <RulesForGroupX>Regler for gruppen "{0}"</RulesForGroupX>
     <GroupName>Gruppenavn</GroupName>
-    <RenamGroup>Omdøb gruppe...</RenamGroup>
+    <RenameGroup>Omdøb gruppe...</RenameGroup>
     <NewGroup>Ny gruppe...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
