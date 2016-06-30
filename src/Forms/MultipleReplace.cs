@@ -628,7 +628,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _currentGroup.Rules.Add(item);
             }
         }
-      
+
         private void MultipleReplace_Shown(object sender, EventArgs e)
         {
             _loading = false;
@@ -841,7 +841,7 @@ namespace Nikse.SubtitleEdit.Forms
                 e.Handled = true;
             }
             else if (e.KeyData == (Keys.Control | Keys.Up))
-            {             
+            {
                 moveUpToolStripMenuItem1_Click(sender, null);
                 e.Handled = true;
             }
@@ -923,7 +923,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (item != newToolStripMenuItem)
                     item.Visible = doShow;
-            }            
+            }
         }
 
     }

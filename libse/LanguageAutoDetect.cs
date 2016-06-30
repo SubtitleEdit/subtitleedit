@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Core
             count = GetCount(text, AutoDetectWordsCzechAndSlovak);
             if (count > bestCount)
             {
-                int czechWordsCount = GetCount(text, AutoDetectWordsCzech); 
+                int czechWordsCount = GetCount(text, AutoDetectWordsCzech);
                 int slovakWordsCount = GetCount(text, AutoDetectWordsSlovak);
                 if (czechWordsCount >= slovakWordsCount)
                     return "cs"; // Czech
