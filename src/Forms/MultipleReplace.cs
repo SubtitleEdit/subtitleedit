@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
             moveDownToolStripMenuItem1.Text = Configuration.Settings.Language.DvdSubRip.MoveDown;
             moveToTopToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToTop;
             moveToBottomToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToBottom;
-            toolStripMenuItemRename.Text = Configuration.Settings.Language.MultipleReplace.RenamGroup;
+            toolStripMenuItemRename.Text = Configuration.Settings.Language.MultipleReplace.RenameGroup;
             deleteToolStripMenuItem1.Text = Configuration.Settings.Language.MultipleReplace.Remove;
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;

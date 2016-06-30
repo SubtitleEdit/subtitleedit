@@ -4117,8 +4117,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "MultipleReplace/GroupName":
                     language.MultipleReplace.GroupName = reader.Value;
                     break;
-                case "MultipleReplace/RenamGroup":
-                    language.MultipleReplace.RenamGroup = reader.Value;
+                case "MultipleReplace/RenameGroup":
+                    language.MultipleReplace.RenameGroup = reader.Value;
                     break;
                 case "MultipleReplace/NewGroup":
                     language.MultipleReplace.NewGroup = reader.Value;

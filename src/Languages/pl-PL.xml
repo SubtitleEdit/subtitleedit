@@ -1524,7 +1524,7 @@ Jeśli edytowałeś ten plik w Subtitle Edit, to możesz odszukać kopię zapaso
     <Groups>Grupy</Groups>
     <RulesForGroupX>Zasady dla grupy "{0}"</RulesForGroupX>
     <GroupName>Nazwa grupy</GroupName>
-    <RenamGroup>Zmień nazwę grupy</RenamGroup>
+    <RenameGroup>Zmień nazwę grupy</RenameGroup>
     <NewGroup>Nowa grupa</NewGroup>
   </MultipleReplace>
   <NetworkChat>
