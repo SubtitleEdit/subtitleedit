@@ -1477,7 +1477,7 @@ Command line: {1} {2}
     <CaseSensitive>区分大小写</CaseSensitive>
     <RegularExpression>正则表达式</RegularExpression>
     <LinesFoundX>找到行数: {0}</LinesFoundX>
-    <Delete>删除</Delete>
+    <Remove>删除</Remove>
     <Add>添加</Add>
     <Update>更新(&amp;U)</Update>
     <Enabled>启用</Enabled>

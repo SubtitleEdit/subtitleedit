@@ -1517,7 +1517,7 @@ Si vous avez modifié ce fichier avec Subtitle Edit vous pourriez trouver une sa
     <CaseSensitive>Sensible à la casse</CaseSensitive>
     <RegularExpression>Expression régulière</RegularExpression>
     <LinesFoundX>Lignes trouvées: {0}</LinesFoundX>
-    <Delete>Effacer</Delete>
+    <Remove>Effacer</Remove>
     <Add>Ajouter</Add>
     <Update>&amp;Mise à jour</Update>
     <Enabled>Activé</Enabled>

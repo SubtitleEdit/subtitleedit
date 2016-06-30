@@ -998,7 +998,7 @@ Continue?</SubtitleAppendPrompt>
     <CaseSensitive>غلاف رقيق</CaseSensitive>
     <RegularExpression>التعبير المنتظم</RegularExpression>
     <LinesFoundX>{العثور على أسطر: {0</LinesFoundX>
-    <Delete>حذف</Delete>
+    <Remove>حذف</Remove>
     <Add>إضافة</Add>
     <Update>التحديث</Update>
     <Enabled>اتاحة</Enabled>

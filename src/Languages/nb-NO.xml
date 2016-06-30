@@ -1502,7 +1502,7 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <CaseSensitive>Sensitiv for store bokstaver</CaseSensitive>
     <RegularExpression>Vanlige uttrykk</RegularExpression>
     <LinesFoundX>Linjer funnet: {0}</LinesFoundX>
-    <Delete>Slett</Delete>
+    <Remove>Slett</Remove>
     <Add>&amp;Legg til</Add>
     <Update>&amp;Oppdater</Update>
     <Enabled>Skrudd på</Enabled>

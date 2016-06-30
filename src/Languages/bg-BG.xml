@@ -1486,7 +1486,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CaseSensitive>Отчитане регистъра</CaseSensitive>
     <RegularExpression>Обикновен израз</RegularExpression>
     <LinesFoundX>Намерени редове: {0}</LinesFoundX>
-    <Delete>Изтриване</Delete>
+    <Remove>Изтриване</Remove>
     <Add>Добавяне</Add>
     <Update>Обнови</Update>
     <Enabled>Избиране</Enabled>

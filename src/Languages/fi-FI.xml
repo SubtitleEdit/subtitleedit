@@ -1486,7 +1486,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <CaseSensitive>Huomioi kirjainkoko</CaseSensitive>
     <RegularExpression>Kyseessä on säännöllinen lauseke (RegExp)</RegularExpression>
     <LinesFoundX>Rivejä löytyi: {0}</LinesFoundX>
-    <Delete>Poista</Delete>
+    <Remove>Poista</Remove>
     <Add>Lisää</Add>
     <Update>Päivitys</Update>
     <Enabled>Käytössä</Enabled>

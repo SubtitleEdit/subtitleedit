@@ -1208,7 +1208,7 @@ Bạn có muốn bắt đầu từ phía trên cùng của tài liệu và tiế
     <CaseSensitive>Trường hợp nhảy cảm</CaseSensitive>
     <RegularExpression>Cụm từ thông dụng</RegularExpression>
     <LinesFoundX>Dòng được tìm thấy: {0}</LinesFoundX>
-    <Delete>Xóa</Delete>
+    <Remove>Xóa</Remove>
     <Add>Thêm</Add>
     <Update>&amp;Cập nhật</Update>
     <Enabled>Bật</Enabled>

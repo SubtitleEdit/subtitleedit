@@ -1007,7 +1007,7 @@ http://soft98.ir
     <CaseSensitive>مورد حقوقی حساس</CaseSensitive>
     <RegularExpression>بیان منظم</RegularExpression>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
-    <Delete>حذف</Delete>
+    <Remove>حذف</Remove>
     <Add>اضافه کردن</Add>
     <Update>و بروز</Update>
     <Enabled>کوکی ها</Enabled>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="Hungarian">
+<Language Name="magyar">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.13</Version>
@@ -1509,7 +1509,7 @@ Ha ezt a fájlt a Subtitle Edit programmal módosította, akkor lehet, hogy megt
     <CaseSensitive>Betűérzékeny</CaseSensitive>
     <RegularExpression>Reguláris kifejezés</RegularExpression>
     <LinesFoundX>Talált sorok: {0}</LinesFoundX>
-    <Delete>Törlés</Delete>
+    <Remove>Törlés</Remove>
     <Add>Hozzáadás</Add>
     <Update>Frissítés</Update>
     <Enabled>Engedélyezve</Enabled>

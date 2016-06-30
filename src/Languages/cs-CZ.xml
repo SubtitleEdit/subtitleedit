@@ -1500,7 +1500,7 @@ Pokud jste upravili tento soubor v Subtitle Edit, možná budete moci najít zá
     <CaseSensitive>Rozlišovat &amp;velikost písmen</CaseSensitive>
     <RegularExpression>&amp;Regulární výraz</RegularExpression>
     <LinesFoundX>Nalezeno řádků: {0}</LinesFoundX>
-    <Delete>Odstranit</Delete>
+    <Remove>Odstranit</Remove>
     <Add>&amp;Přidat</Add>
     <Update>&amp;Aktualizovat</Update>
     <Enabled>Povoleno</Enabled>

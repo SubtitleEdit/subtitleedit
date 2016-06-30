@@ -1504,7 +1504,7 @@ Dacă aveți de editat acest fișier cu SE ați putea descoperi un backup realiz
     <CaseSensitive>Caractere identice</CaseSensitive>
     <RegularExpression>Expresie uzuală</RegularExpression>
     <LinesFoundX>Linii găsite: {0}</LinesFoundX>
-    <Delete>Șterge</Delete>
+    <Remove>Șterge</Remove>
     <Add>Adaugă</Add>
     <Update>&amp;Actualizează</Update>
     <Enabled>Activat</Enabled>

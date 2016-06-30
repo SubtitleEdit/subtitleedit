@@ -1422,7 +1422,7 @@ Continue?</SubtitleAppendPrompt>
     <CaseSensitive>Harf duyarlılığı</CaseSensitive>
     <RegularExpression>Düzenli ifade</RegularExpression>
     <LinesFoundX>Satır bulundu: {0}</LinesFoundX>
-    <Delete>Sil</Delete>
+    <Remove>Sil</Remove>
     <Add>Ekle</Add>
     <Update>&amp;Güncelleştir</Update>
     <Enabled>Etkin</Enabled>

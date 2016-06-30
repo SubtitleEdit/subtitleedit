@@ -1494,7 +1494,7 @@ M'ho peus kemmet ar restr gant Subtitle Edit gellout a rafec'h kavout une enroll
     <CaseSensitive>Kizidik ouzh ar c'hombod</CaseSensitive>
     <RegularExpression>Tro-lavar reoliataet</RegularExpression>
     <LinesFoundX>Linennoù kavet : {0}</LinesFoundX>
-    <Delete>Lemmel kuit</Delete>
+    <Remove>Lemmel kuit</Remove>
     <Add>Ouzhpennañ</Add>
     <Update>&amp;Hizivadur</Update>
     <Enabled>Gweredekaet</Enabled>
