@@ -12003,6 +12003,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FindDoubleWordsToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (!IsSubtitleLoaded)
+            {
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
             var regex = new Regex(@"\b(\w+)\s+\1\b");
             _clearLastFind = true;
             if (_findHelper != null)
@@ -16876,7 +16881,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
                 {
-                    setVideoOffsetToolStripMenuItem.Text = string.Format("{0} [{1}]",_language.Menu.Video.SetVideoOffset, new TimeCode(Configuration.Settings.General.CurrentVideoOffsetInMs).ToShortDisplayString());
+                    setVideoOffsetToolStripMenuItem.Text = string.Format("{0} [{1}]", _language.Menu.Video.SetVideoOffset, new TimeCode(Configuration.Settings.General.CurrentVideoOffsetInMs).ToShortDisplayString());
                 }
                 else
                 {
@@ -17589,10 +17594,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolsToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 0 && _networkSession == null)
+            if (_subtitle?.Paragraphs.Count > 0 && _networkSession == null)
             {
                 toolStripSeparator23.Visible = true;
-                toolStripMenuItemMakeEmptyFromCurrent.Visible = _subtitle != null && _subtitle.Paragraphs.Count > 0 && !SubtitleListview1.IsAlternateTextColumnVisible;
+                toolStripMenuItemMakeEmptyFromCurrent.Visible = !SubtitleListview1.IsAlternateTextColumnVisible;
                 toolStripMenuItemShowOriginalInPreview.Checked = Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable;
             }
             else
@@ -17665,6 +17670,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FindDoubleLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
+            if (!IsSubtitleLoaded)
+            {
+                DisplaySubtitleNotLoadedMessage();
+                return;
+            }
             for (int i = FirstSelectedIndex + 1; i < _subtitle.Paragraphs.Count; i++)
             {
                 var current = _subtitle.GetParagraphOrDefault(i);
