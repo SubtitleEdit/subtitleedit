@@ -75,7 +75,6 @@ namespace Nikse.SubtitleEdit.Forms
                     labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait + "  " + args.ProgressPercentage + "%";
                 };
                 wc.DownloadDataAsync(new Uri(url));
-                Cursor = Cursors.Default;
             }
             catch (Exception exception)
             {
