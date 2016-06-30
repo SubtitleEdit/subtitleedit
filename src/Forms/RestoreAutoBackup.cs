@@ -9,7 +9,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class RestoreAutoBackup : PositionAndSizeForm
     {
-
+        //2011-12-13_20-19-18_title
+        private static readonly Regex RegexFileNamePattern = new Regex(@"^\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d", RegexOptions.Compiled);
         private string[] _files;
         public string AutoBackupFileName { get; set; }
 
@@ -41,15 +42,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RestoreAutoBackup_Shown(object sender, EventArgs e)
         {
-            //2011-12-13_20-19-18_title
-            var fileNamePattern = new Regex(@"^\d\d\d\d-\d\d-\d\d_\d\d-\d\d-\d\d", RegexOptions.Compiled);
             listViewBackups.Columns[2].Width = -2;
             if (Directory.Exists(Configuration.AutoBackupFolder))
             {
                 _files = Directory.GetFiles(Configuration.AutoBackupFolder, "*.*");
                 foreach (string fileName in _files)
                 {
-                    if (fileNamePattern.IsMatch(Path.GetFileName(fileName)))
+                    if (RegexFileNamePattern.IsMatch(Path.GetFileName(fileName)))
                         AddBackupToListView(fileName);
                 }
                 listViewBackups.Sorting = SortOrder.Descending;
@@ -76,18 +75,12 @@ namespace Nikse.SubtitleEdit.Forms
             var item = new ListViewItem(displayDate);
             item.UseItemStyleForSubItems = false;
             item.Tag = fileName;
-
-            var subItem = new ListViewItem.ListViewSubItem(item, Path.GetFileNameWithoutExtension(displayName));
-            item.SubItems.Add(subItem);
-
-            subItem = new ListViewItem.ListViewSubItem(item, Path.GetExtension(fileName));
-            item.SubItems.Add(subItem);
+            item.SubItems.Add(Path.GetFileNameWithoutExtension(displayName));
+            item.SubItems.Add(Path.GetExtension(fileName));
 
             try
             {
-                FileInfo fi = new FileInfo(fileName);
-                subItem = new ListViewItem.ListViewSubItem(item, fi.Length + " bytes");
-                item.SubItems.Add(subItem);
+                item.SubItems.Add(new FileInfo(fileName).Length + " bytes");
             }
             catch
             {
