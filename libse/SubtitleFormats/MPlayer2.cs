@@ -51,22 +51,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private static string RemoveIllegalSpacesAndFixEmptyCodes(string line)
         {
             int index = line.IndexOf(']');
-            if (index >= 0 && index < line.Length)
+            if (index >= 0 && index + 1 < line.Length)
             {
                 index = line.IndexOf(']', index + 1);
                 if (index >= 0 && index + 1 < line.Length)
                 {
                     var indexOfBrackets = line.IndexOf("[]", StringComparison.Ordinal);
-                    if (indexOfBrackets >= 0 && indexOfBrackets < index)
+                    if (indexOfBrackets >= 0 && indexOfBrackets + 1 < index)
                     {
                         line = line.Insert(indexOfBrackets + 1, "0"); // set empty time codes to zero
                         index++;
                     }
 
-                    while (line.Contains(' ') && line.IndexOf(' ') < index)
+                    int whiteSpaceIndex = line.IndexOf(' ', 0, index);
+                    while (whiteSpaceIndex >= 0)
                     {
-                        line = line.Remove(line.IndexOf(' '), 1);
-                        index--;
+                        line = line.Remove(whiteSpaceIndex, 1);
+                        whiteSpaceIndex = line.IndexOf(' ', 0, --index);
                     }
                 }
             }
@@ -76,30 +77,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
+            const string writeFormat = "[{0}][{1}]";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.Append('[');
-                sb.Append((int)(p.StartTime.TotalMilliseconds / 100));
-                sb.Append("][");
-                sb.Append(((int)(p.EndTime.TotalMilliseconds / 100)));
-                sb.Append(']');
-
-                var parts = p.Text.SplitToLines();
+                // [Start][End]
+                sb.AppendFormat(writeFormat, (int)Math.Round(p.StartTime.TotalMilliseconds / 100), (int)Math.Round(p.EndTime.TotalMilliseconds / 100));
                 int count = 0;
                 bool italicOn = false;
-                foreach (string line in parts)
+                foreach (string line in p.Text.SplitToLines())
                 {
                     if (count > 0)
                         sb.Append('|');
-
-                    if (line.StartsWith("<i>") || italicOn)
+                    // TODO: Use italic notation (/) for every line?
+                    if (!italicOn && line.StartsWith("<i>", StringComparison.Ordinal))
                     {
                         italicOn = true;
                         sb.Append('/');
                     }
 
-                    if (line.Contains("</i>"))
+                    if (italicOn && line.Contains("</i>"))
                         italicOn = false;
+                    // TODO: Remove SSA/ASS tags?
                     sb.Append(HtmlUtil.RemoveHtmlTags(line));
                     count++;
                 }
@@ -134,11 +132,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             string temp = s.Substring(0, textIndex - 1);
                             string[] frames = temp.Replace("][", ":").Replace("[", string.Empty).Replace("]", string.Empty).Split(':');
 
-                            double startSeconds = double.Parse(frames[0]) / 10;
-                            double endSeconds = double.Parse(frames[1]) / 10;
+                            double startSeconds = Math.Round(double.Parse(frames[0]) / 10);
+                            double endSeconds = Math.Round(double.Parse(frames[1]) / 10);
 
                             if (startSeconds == 0 && subtitle.Paragraphs.Count > 0)
-                                startSeconds = (subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds / 1000) + 0.1;
+                                startSeconds = (subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds / 1000) + (Configuration.Settings.General.MinimumMillisecondsBetweenLines / (100 * 10));
                             if (endSeconds == 0)
                                 endSeconds = startSeconds;
 
