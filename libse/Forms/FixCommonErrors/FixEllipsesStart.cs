@@ -16,33 +16,17 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (text.Contains("..") && callbacks.AllowFix(p, fixAction))
                 {
                     var oldText = text;
-                    if (!text.Contains(Environment.NewLine))
+                    string[] lines = text.SplitToLines();
+                    for (int k = 0; k < lines.Length; k++)
                     {
-                        text = Helper.FixEllipsesStartHelper(text);
-                        if (oldText != text)
-                        {
-                            p.Text = text;
-                            fixCount++;
-                            callbacks.AddFixToListView(p, fixAction, oldText, text);
-                        }
+                        lines[k] = Helper.FixEllipsesStartHelper(lines[k]);
                     }
-                    else
+                    text = string.Join(Environment.NewLine, lines);
+                    if (oldText.Length > text.Length)
                     {
-                        var lines = text.SplitToLines();
-                        var fixedParagraph = string.Empty;
-                        for (int k = 0; k < lines.Length; k++)
-                        {
-                            var line = lines[k];
-                            fixedParagraph += Environment.NewLine + Helper.FixEllipsesStartHelper(line);
-                            fixedParagraph = fixedParagraph.Trim();
-                        }
-
-                        if (fixedParagraph != text)
-                        {
-                            p.Text = fixedParagraph;
-                            fixCount++;
-                            callbacks.AddFixToListView(p, fixAction, oldText, fixedParagraph);
-                        }
+                        p.Text = text;
+                        fixCount++;
+                        callbacks.AddFixToListView(p, fixAction, oldText, text);
                     }
                 }
             }
