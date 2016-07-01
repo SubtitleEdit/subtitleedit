@@ -212,7 +212,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _openFileDialogOn;
         private bool _resetVideo = true;
         private bool _doAutoBreakOnTextChanged = true;
-        private static object _syncUndo = new object();
+        private static readonly object _syncUndo = new object();
         private string[] _dragAndDropFiles;
         private readonly Timer _dragAndDropTimer = new Timer(); // to prevent locking windows explorer
         public bool IsMenuOpen { get; private set; }
@@ -13470,7 +13470,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (_loading)
                 return;
 
-            panelVideoPlayer.Invalidate();
+            bool isPanelVisible = panelVideoPlayer?.Visible == true;
+            if (isPanelVisible)
+                panelVideoPlayer.Invalidate();
 
             MainResize();
 
@@ -13479,7 +13481,8 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             RestoreSubtitleListviewIndices();
 
-            panelVideoPlayer.Refresh();
+            if (isPanelVisible)
+                panelVideoPlayer.Refresh();
         }
 
         private void MainResize()
