@@ -1531,13 +1531,19 @@ https://github.com/SubtitleEdit/subtitleedit
     <Enabled>Вкл.</Enabled>
     <SearchType>Тип поиска</SearchType>
     <RemoveAll>Удалить все</RemoveAll>
-    <Import>Импорт...</Import>
-    <Export>Экспорт...</Export>
+    <Import>Импорт (открыть)...</Import>
+    <Export>Экспорт (сохранить)...</Export>
     <ImportRulesTitle>Импорт правил замен из...</ImportRulesTitle>
     <ExportRulesTitle>Экспорт правил замен в...</ExportRulesTitle>
     <Rules>Экспорт правил</Rules>
     <MoveToTop>Поднять на самый верх</MoveToTop>
     <MoveToBottom>Опустить в самый низ</MoveToBottom>
+    <MoveSelectedRulesToGroup>Добавить выбранные правила в группу</MoveSelectedRulesToGroup>
+    <Groups>Группы</Groups>
+    <RulesForGroupX>Правила для группы "{0}"</RulesForGroupX>
+    <GroupName>Название группы</GroupName>
+    <RenameGroup>Переименовать группу...</RenameGroup>
+    <NewGroup>Создать группу...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Чат</Title>
