@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
@@ -1079,17 +1079,17 @@ https://github.com/SubtitleEdit/subtitleedit
         <AutoDurationCurrentLine>Авто продолжительность (текущая строка)</AutoDurationCurrentLine>
         <SelectAll>Выделить все</SelectAll>
         <InsertFirstLine>Вставить строку</InsertFirstLine>
-        <InsertBefore>Вставить строку перед</InsertBefore>
-        <InsertAfter>Вставить строку после</InsertAfter>
-        <InsertSubtitleAfter>Вставить из файла после этой строки...</InsertSubtitleAfter>
+        <InsertBefore>✚ Вставить строку перед ↑</InsertBefore>
+        <InsertAfter>✚ Вставить строку после ↓</InsertAfter>
+        <InsertSubtitleAfter>✚ⓕ Вставить из файла после этой строки... ⇊</InsertSubtitleAfter>
         <CopyToClipboard>Копировать в буфер обмена как текст</CopyToClipboard>
         <Column>Колонка</Column>
         <ColumnDeleteText>Удалить текст</ColumnDeleteText>
         <ColumnDeleteTextAndShiftCellsUp>Удалить текст со сдвигом вверх</ColumnDeleteTextAndShiftCellsUp>
         <ColumnInsertEmptyTextAndShiftCellsDown>Вставить пустой текст со сдвигом вниз</ColumnInsertEmptyTextAndShiftCellsDown>
-        <ColumnInsertTextFromSubtitle>Вставить текст из субтитров...</ColumnInsertTextFromSubtitle>
+        <ColumnInsertTextFromSubtitle>✚ Вставить текст из субтитров... ▼Ⓢ</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Импорт текста со сдвигом вниз</ColumnImportTextAndShiftCellsDown>
-        <ColumnPasteFromClipboard>Вставить из буфера обмена...</ColumnPasteFromClipboard>
+        <ColumnPasteFromClipboard>✚ Вставить из буфера обмена... ⇅</ColumnPasteFromClipboard>
         <ColumnCopyOriginalTextToCurrent>Копировать текст из оригинала</ColumnCopyOriginalTextToCurrent>
         <Split>Разделить</Split>
         <MergeSelectedLines>Объединить выделенные строки</MergeSelectedLines>
@@ -1531,13 +1531,19 @@ https://github.com/SubtitleEdit/subtitleedit
     <Enabled>Вкл.</Enabled>
     <SearchType>Тип поиска</SearchType>
     <RemoveAll>Удалить все</RemoveAll>
-    <Import>Импорт...</Import>
-    <Export>Экспорт...</Export>
+    <Import>Импорт (открыть)...</Import>
+    <Export>Экспорт (сохранить)...</Export>
     <ImportRulesTitle>Импорт правил замен из...</ImportRulesTitle>
     <ExportRulesTitle>Экспорт правил замен в...</ExportRulesTitle>
     <Rules>Экспорт правил</Rules>
     <MoveToTop>Поднять на самый верх</MoveToTop>
     <MoveToBottom>Опустить в самый низ</MoveToBottom>
+    <MoveSelectedRulesToGroup>Добавить выбранные правила в группу</MoveSelectedRulesToGroup>
+    <Groups>Группы</Groups>
+    <RulesForGroupX>Правила для группы "{0}"</RulesForGroupX>
+    <GroupName>Название группы</GroupName>
+    <RenameGroup>Переименовать группу...</RenameGroup>
+    <NewGroup>Создать группу...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Чат</Title>
