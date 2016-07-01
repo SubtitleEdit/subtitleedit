@@ -164,7 +164,7 @@
             this.toolStripMenuItemDurationBridgeGaps = new System.Windows.Forms.ToolStripMenuItem();
             this.fixToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startNumberingFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeTextForHearImparedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeTextForHearImpairedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeCasingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoMergeShortLines = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMergeDuplicateText = new System.Windows.Forms.ToolStripMenuItem();
@@ -1567,7 +1567,7 @@
             this.toolStripMenuItemDurationBridgeGaps,
             this.fixToolStripMenuItem,
             this.startNumberingFromToolStripMenuItem,
-            this.removeTextForHearImparedToolStripMenuItem,
+            this.removeTextForHearImpairedToolStripMenuItem,
             this.ChangeCasingToolStripMenuItem,
             this.toolStripMenuItemAutoMergeShortLines,
             this.toolStripMenuItemMergeDuplicateText,
@@ -1628,14 +1628,14 @@
             this.startNumberingFromToolStripMenuItem.Text = "Start numbering from...";
             this.startNumberingFromToolStripMenuItem.Click += new System.EventHandler(this.StartNumberingFromToolStripMenuItemClick);
             // 
-            // removeTextForHearImparedToolStripMenuItem
+            // removeTextForHearImpairedToolStripMenuItem
             // 
-            this.removeTextForHearImparedToolStripMenuItem.Name = "removeTextForHearImparedToolStripMenuItem";
-            this.removeTextForHearImparedToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            this.removeTextForHearImpairedToolStripMenuItem.Name = "removeTextForHearImpairedToolStripMenuItem";
+            this.removeTextForHearImpairedToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.H)));
-            this.removeTextForHearImparedToolStripMenuItem.Size = new System.Drawing.Size(346, 22);
-            this.removeTextForHearImparedToolStripMenuItem.Text = "Remove text for hearing impaired...";
-            this.removeTextForHearImparedToolStripMenuItem.Click += new System.EventHandler(this.RemoveTextForHearImparedToolStripMenuItemClick);
+            this.removeTextForHearImpairedToolStripMenuItem.Size = new System.Drawing.Size(346, 22);
+            this.removeTextForHearImpairedToolStripMenuItem.Text = "Remove text for hearing impaired...";
+            this.removeTextForHearImpairedToolStripMenuItem.Click += new System.EventHandler(this.RemoveTextForHearImpairedToolStripMenuItemClick);
             // 
             // ChangeCasingToolStripMenuItem
             // 
@@ -4638,7 +4638,7 @@
         private System.Windows.Forms.ToolStripMenuItem adjustDisplayTimeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fixToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startNumberingFromToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem removeTextForHearImparedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeTextForHearImpairedToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem splitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem appendTextVisuallyToolStripMenuItem;

@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             s = s.Remove(0, 1);
                         }
 
-                        if (HasHearImparedTagsAtStartOrEnd(s))
+                        if (HasHearImpairedTagsAtStartOrEnd(s))
                         {
                             s = RemoveStartEndTags(s);
                             newText = newText.Substring(0, i + 1) + pre + " " + s;
@@ -1202,7 +1202,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return RemoveHearImpairedTags(text) != text;
         }
 
-        public bool HasHearImparedTagsAtStartOrEnd(string text)
+        public bool HasHearImpairedTagsAtStartOrEnd(string text)
         {
             return Settings.OnlyIfInSeparateLine ? StartsAndEndsWithHearImpairedTags(text) : HasHearImpairedText(text);
         }
