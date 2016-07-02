@@ -28,16 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.listViewBackups = new System.Windows.Forms.ListView();
             this.columnHeaderDateTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderExtension = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.restoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelInfo = new System.Windows.Forms.Label();
             this.linkLabelOpenContainingFolder = new System.Windows.Forms.LinkLabel();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.deleteAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -74,6 +80,7 @@
             this.columnHeaderFileName,
             this.columnHeaderExtension,
             this.columnHeaderSize});
+            this.listViewBackups.ContextMenuStrip = this.contextMenuStrip1;
             this.listViewBackups.FullRowSelect = true;
             this.listViewBackups.HideSelection = false;
             this.listViewBackups.Location = new System.Drawing.Point(12, 37);
@@ -99,6 +106,35 @@
             // 
             this.columnHeaderExtension.Text = "Extension";
             this.columnHeaderExtension.Width = 80;
+            // 
+            // columnHeaderSize
+            // 
+            this.columnHeaderSize.Text = "Size";
+            this.columnHeaderSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeaderSize.Width = 101;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.restoreToolStripMenuItem,
+            this.deleteToolStripMenuItem,
+            this.deleteAllToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 92);
+            // 
+            // restoreToolStripMenuItem
+            // 
+            this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
+            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.restoreToolStripMenuItem.Text = "Restore";
+            this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // labelInfo
             // 
@@ -131,11 +167,12 @@
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
             // 
-            // columnHeaderSize
+            // deleteAllToolStripMenuItem
             // 
-            this.columnHeaderSize.Text = "Size";
-            this.columnHeaderSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnHeaderSize.Width = 101;
+            this.deleteAllToolStripMenuItem.Name = "deleteAllToolStripMenuItem";
+            this.deleteAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.deleteAllToolStripMenuItem.Text = "Delete all";
+            this.deleteAllToolStripMenuItem.Click += new System.EventHandler(this.deleteAllToolStripMenuItem_Click);
             // 
             // RestoreAutoBackup
             // 
@@ -159,6 +196,7 @@
             this.ResizeEnd += new System.EventHandler(this.RestoreAutoBackup_ResizeEnd);
             this.SizeChanged += new System.EventHandler(this.RestoreAutoBackup_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RestoreAutoBackup_KeyDown);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -176,5 +214,9 @@
         private System.Windows.Forms.LinkLabel linkLabelOpenContainingFolder;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.ColumnHeader columnHeaderSize;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem restoreToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteAllToolStripMenuItem;
     }
 }

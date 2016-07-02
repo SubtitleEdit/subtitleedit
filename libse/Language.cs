@@ -1904,6 +1904,9 @@ can edit in same subtitle file (collaboration)",
                 FileName = "File name",
                 Extension = "Extension",
                 NoBackedUpFilesFound = "No backup files found!",
+                Restore = "Restore",
+                Delete = "Delete",
+                DeleteAll = "Delete all"
             };
 
             SeekSilence = new LanguageStructure.SeekSilence
