@@ -3656,16 +3656,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void comboBox3D_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBox3D.SelectedIndex == 0)
-            {
-                labelDepth.Enabled = false;
-                numericUpDownDepth3D.Enabled = false;
-            }
-            else
-            {
-                labelDepth.Enabled = true;
-                numericUpDownDepth3D.Enabled = true;
-            }
+            bool enable = comboBox3D.SelectedIndex > 0;
+            labelDepth.Enabled = enable;
+            numericUpDownDepth3D.Enabled = enable;
             subtitleListView1_SelectedIndexChanged(null, null);
         }
 
@@ -3849,24 +3842,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         p.Text = p.Text.Replace("<" + BoxMultiLineText + ">", string.Empty).Replace("</" + BoxMultiLineText + ">", string.Empty);
 
                         if (isSsa)
-                            p.Text = RemoveSsaStyle(p.Text);
+                            p.Text = Utilities.RemoveSsaTags(p.Text);
                         SubtitleListView1SetText(item.Index, p.Text);
                     }
                 }
             }
             subtitleListView1_SelectedIndexChanged(null, null);
-        }
-
-        private static string RemoveSsaStyle(string text)
-        {
-            int indexOfBegin = text.IndexOf('{');
-            while (indexOfBegin >= 0 && text.IndexOf('}') > indexOfBegin)
-            {
-                int indexOfEnd = text.IndexOf('}');
-                text = text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = text.IndexOf('{');
-            }
-            return text;
         }
 
         private void subtitleListView1_KeyDown(object sender, KeyEventArgs e)
