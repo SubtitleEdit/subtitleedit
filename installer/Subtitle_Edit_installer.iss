@@ -1,4 +1,4 @@
-;* Subtitle Edit - Installer script
+﻿;* Subtitle Edit - Installer script
 ;*
 ;* Copyright (C) 2010-2016 XhmikosR
 ;*
@@ -31,7 +31,7 @@
 #endif
 
 
-#define app_copyright "Copyright � 2001-2016, Nikse"
+#define app_copyright "Copyright © 2001-2016, Nikse"
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
@@ -95,7 +95,7 @@ SetupIconFile=..\src\Icons\SE.ico
 WizardImageFile=Icons\WizardImageFile.bmp
 WizardSmallImageFile=Icons\WizardSmallImageFile.bmp
 OutputDir=.
-OutputBaseFilename=SubtitleEdit-{#app_ver}-setup
+OutputBaseFilename=SubtitleEdit-{#app_ver}-Setup
 AllowNoIcons=yes
 Compression=lzma2/ultra
 InternalCompressLevel=ultra
