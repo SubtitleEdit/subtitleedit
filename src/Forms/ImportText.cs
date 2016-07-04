@@ -122,14 +122,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (_refreshTimer.Enabled)
-            {
                 _refreshTimer.Stop();
-                _refreshTimer.Start();
-            }
-            else
-            {
-                _refreshTimer.Start();
-            }
+            _refreshTimer.Start();
         }
 
         private void GeneratePreviewReal()
@@ -260,8 +254,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 p.EndTime.TotalMilliseconds = millisecondsIndex + p.Duration.TotalMilliseconds;
                 p.StartTime.TotalMilliseconds = millisecondsIndex;
-
-                millisecondsIndex += p.Duration.TotalMilliseconds + millisecondsInterval;
+                millisecondsIndex += (p.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) + millisecondsInterval;
             }
         }
 
