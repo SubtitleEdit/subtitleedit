@@ -260,8 +260,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 p.EndTime.TotalMilliseconds = millisecondsIndex + p.Duration.TotalMilliseconds;
                 p.StartTime.TotalMilliseconds = millisecondsIndex;
-
-                millisecondsIndex += p.Duration.TotalMilliseconds + millisecondsInterval;
+                millisecondsIndex += (p.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds) + millisecondsInterval;
             }
         }
 
