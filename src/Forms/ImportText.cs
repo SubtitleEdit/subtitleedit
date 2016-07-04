@@ -373,10 +373,7 @@ namespace Nikse.SubtitleEdit.Forms
                             third.Append(word);
                         }
                     }
-                    if (first.Length <= Configuration.Settings.General.SubtitleLineMaximumLength &&
-                        second.Length <= Configuration.Settings.General.SubtitleLineMaximumLength &&
-                        third.Length <= Configuration.Settings.General.SubtitleLineMaximumLength &&
-                        third.Length > 10)
+                    if (third.Length <= Configuration.Settings.General.SubtitleLineMaximumLength && third.Length > 10)
                     {
                         if (second.Length > 15)
                         {
