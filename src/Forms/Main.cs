@@ -3301,7 +3301,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return DialogResult.Cancel;
                     }
 
-                    using (var fs = new FileStream(_fileName, FileMode.Create, FileAccess.Write, FileShare.Read, 8, FileOptions.WriteThrough)) // use 'WriteThough' in order to try to avoid issue with power failure
+                    using (var fs = new FileStream(_fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
                     using (var sw = new StreamWriter(fs, currentEncoding))
                     {
                         sw.Write(allText);
