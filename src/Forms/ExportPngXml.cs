@@ -1415,11 +1415,25 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         param.Bitmap.Save(fileName, ImageFormat.Png);
                         imagesSavedCount++;
                         param.Saved = true;
+
+                        string verticalAlignment = "bottom";
+                        if (param.P.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an8}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an8}", StringComparison.Ordinal))
+                            verticalAlignment = "top";
+                        else if (param.P.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an6}", StringComparison.Ordinal))
+                                verticalAlignment = "center";
+
+                        string horizontalAlignment = "center";
+                        if (param.P.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an7}", StringComparison.Ordinal))
+                            horizontalAlignment = "left";
+                        else if (param.P.Text.StartsWith("{\\an3}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an6}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an9}", StringComparison.Ordinal))
+                            horizontalAlignment = "right";
+
+
                         sb.AppendLine("<Subtitle FadeDownTime=\"" + 0 + "\" FadeUpTime=\"" + 0 + "\" TimeOut=\"" + DCSubtitle.ConvertToTimeString(param.P.EndTime) + "\" TimeIn=\"" + DCSubtitle.ConvertToTimeString(param.P.StartTime) + "\" SpotNumber=\"" + param.P.Number + "\">");
                         if (param.Depth3D == 0)
-                            sb.AppendLine("<Image VPosition=\"9.7\" VAlign=\"bottom\" HAlign=\"center\">" + numberString + ".png" + "</Image>");
+                            sb.AppendLine("<Image VPosition=\"9.7\" VAlign=\"" + verticalAlignment + "\" HAlign=\"" + horizontalAlignment + "\">" + numberString + ".png" + "</Image>");
                         else
-                            sb.AppendLine("<Image VPosition=\"9.7\" ZPosition=\"" + param.Depth3D + "\" VAlign=\"bottom\" HAlign=\"center\">" + numberString + ".png" + "</Image>");
+                            sb.AppendLine("<Image VPosition=\"9.7\" ZPosition=\"" + param.Depth3D + "\" VAlign=\"" + verticalAlignment + "\" HAlign=\"" + horizontalAlignment + "\">" + numberString + ".png" + "</Image>");
                         sb.AppendLine("</Subtitle>");
                     }
                 }
