@@ -327,8 +327,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (checkBoxAutoBreak.Enabled && checkBoxAutoBreak.Checked)
                             text = Utilities.AutoBreakLine(text);
                         _subtitle.Paragraphs.Add(new Paragraph { Text = text });
+                        sb.Clear();
                     }
-                    sb = new StringBuilder();
                 }
                 else if (!ContainsLetters(line))
                 {
