@@ -1656,8 +1656,12 @@
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <ItemGroup>
-    <HunspellAssemblies Include="Hunspellx64.dll" />
-    <HunspellAssemblies Include="Hunspellx86.dll" />
+    <HunspellAssemblies Include="Hunspellx64.dll">
+      <InProject>false</InProject>
+    </HunspellAssemblies>
+    <HunspellAssemblies Include="Hunspellx86.dll">
+      <InProject>false</InProject>
+    </HunspellAssemblies>
   </ItemGroup>
   <Target Name="BeforeCompile">
     <XmlPeek XmlInputPath="$(PackagesConfig)" Query="//package[@id='NHunspell']/@version">
