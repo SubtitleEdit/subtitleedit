@@ -1655,6 +1655,10 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <ItemGroup>
+    <HunspellAssemblies Include="Hunspellx64.dll" />
+    <HunspellAssemblies Include="Hunspellx86.dll" />
+  </ItemGroup>
   <Target Name="BeforeCompile">
     <XmlPeek XmlInputPath="$(PackagesConfig)" Query="//package[@id='NHunspell']/@version">
       <Output TaskParameter="Result" PropertyName="HunspellVersion" />
