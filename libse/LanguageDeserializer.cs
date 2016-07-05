@@ -4363,6 +4363,15 @@ namespace Nikse.SubtitleEdit.Core
                 case "RestoreAutoBackup/NoBackedUpFilesFound":
                     language.RestoreAutoBackup.NoBackedUpFilesFound = reader.Value;
                     break;
+                case "RestoreAutoBackup/Restore":
+                    language.RestoreAutoBackup.Restore = reader.Value;
+                    break;
+                case "RestoreAutoBackup/Delete":
+                    language.RestoreAutoBackup.Delete = reader.Value;
+                    break;
+                case "RestoreAutoBackup/DeleteAll":
+                    language.RestoreAutoBackup.DeleteAll = reader.Value;
+                    break;
                 case "SeekSilence/Title":
                     language.SeekSilence.Title = reader.Value;
                     break;

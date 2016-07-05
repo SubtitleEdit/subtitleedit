@@ -1783,6 +1783,9 @@
             public string FileName { get; set; }
             public string Extension { get; set; }
             public string NoBackedUpFilesFound { get; set; }
+            public string Restore { get; set; }
+            public string Delete { get; set; }
+            public string  DeleteAll { get; set; }
         }
 
         public class SeekSilence

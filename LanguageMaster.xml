@@ -1630,6 +1630,9 @@ can edit in same subtitle file (collaboration)</Information>
     <FileName>File name</FileName>
     <Extension>Extension</Extension>
     <NoBackedUpFilesFound>No backup files found!</NoBackedUpFilesFound>
+    <Restore>Restore</Restore>
+    <Delete>Delete</Delete>
+    <DeleteAll>Delete all</DeleteAll>
   </RestoreAutoBackup>
   <SeekSilence>
     <Title>Seek silence</Title>

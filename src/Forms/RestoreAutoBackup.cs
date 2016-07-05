@@ -31,6 +31,11 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
+            // Generalize context menu.
+            restoreToolStripMenuItem.Text = l.Restore;
+            deleteToolStripMenuItem.Text = l.Delete;
+            deleteAllToolStripMenuItem.Text = l.DeleteAll;
+
             UiUtil.FixLargeFonts(this, buttonCancel);
         }
 
@@ -96,18 +101,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            if (listViewBackups.SelectedItems.Count == 1)
-                SetAutoBackupFileName();
+            RestoreSelectedAutoBackup();
             DialogResult = DialogResult.OK;
         }
 
         private void listViewBackups_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (listViewBackups.SelectedItems.Count == 1)
-            {
-                SetAutoBackupFileName();
+            if (RestoreSelectedAutoBackup())
                 DialogResult = DialogResult.OK;
-            }
         }
 
         private void RestoreAutoBackup_ResizeEnd(object sender, EventArgs e)
@@ -139,6 +140,54 @@ namespace Nikse.SubtitleEdit.Forms
                     System.Diagnostics.Process.Start(folderName);
                 }
             }
+        }
+
+        private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (RestoreSelectedAutoBackup())
+                DialogResult = DialogResult.OK;
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listViewBackups.SelectedItems.Count != 1)
+                return;
+            ListViewItem firstSelectedItem = listViewBackups.SelectedItems[0];
+            try
+            {
+                File.Delete((string)firstSelectedItem.Tag);
+            }
+            catch
+            {
+                // ignore error.
+            }
+            listViewBackups.Items.Remove(firstSelectedItem);
+        }
+
+        private void deleteAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (string file in Directory.GetFiles(Configuration.AutoBackupFolder, "*.*"))
+                {
+                    File.Delete(file);
+                }
+            }
+            catch
+            {
+                // Ignore errros.
+            }
+            listViewBackups.Items.Clear();
+        }
+
+        public bool RestoreSelectedAutoBackup()
+        {
+            if (listViewBackups.SelectedItems.Count == 1)
+            {
+                SetAutoBackupFileName();
+                return true;
+            }
+            return false;
         }
 
     }
