@@ -11,15 +11,14 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             if (text[index] != '.')
                 return false;
 
-            if (index - 3 > 0 && Utilities.AllLettersAndNumbers.Contains(text[index - 1]) && text[index - 2] == '.') // e.g: O.R.
+            if (index - 3 > 0 && char.IsLetterOrDigit(text[index - 1]) && text[index - 2] == '.') // e.g: O.R.
                 return true;
 
             var word = string.Empty;
             int i = index - 1;
-            while (i >= 0 && Utilities.AllLetters.Contains(text[i]))
+            while (i >= 0 && char.IsLetter(text[i]))
             {
-                word = text[i] + word;
-                i--;
+                word = text[i--] + word;
             }
 
             return callbacks.GetAbbreviations().Contains(word + ".");
