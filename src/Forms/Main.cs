@@ -11112,15 +11112,18 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeAutoDuration();
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.I) // watermak
+            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.I)
             {
                 using (var form = new ImportUnknownFormat(string.Empty))
                 {
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
-                        _subtitle = form.ImportedSubitle;
-                        _fileName = null;
-                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        if (form.ImportedSubitle?.Paragraphs.Count > 0)
+                        {
+                            _subtitle = form.ImportedSubitle;
+                            _fileName = null;
+                            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        }
                     }
                 }
                 e.SuppressKeyPress = true;
