@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             stream.WriteByte((byte)(i % 256));
         }
 
-        private byte[] GetSubImageBuffer(RunLengthTwoParts twoPartBuffer, NikseBitmap nbmp, Paragraph p, ContentAlignment alignment)
+        private byte[] GetSubImageBuffer(RunLengthTwoParts twoPartBuffer, NikseBitmap nbmp, Paragraph p, ContentAlignment alignment, Point? overridePosition)
         {
             var ms = new MemoryStream();
 
@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             WriteContrast(ms); // 3 bytes
 
             // Control command 5 = SetDisplayArea
-            WriteDisplayArea(ms, nbmp, alignment); // 7 bytes
+            WriteDisplayArea(ms, nbmp, alignment, overridePosition); // 7 bytes
 
             // Control command 6 = SetPixelDataAddress
             WritePixelDataAddress(ms, imageTopFieldDataAddress, imageBottomFieldDataAddress); // 5 bytes
@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             return ms.ToArray();
         }
 
-        public void WriteParagraph(Paragraph p, Bitmap bmp, ContentAlignment alignment) // inspired by code from SubtitleCreator
+        public void WriteParagraph(Paragraph p, Bitmap bmp, ContentAlignment alignment, Point? overridePosition = null) // inspired by code from SubtitleCreator
         {
             // timestamp: 00:00:33:900, filepos: 000000000
             _idx.AppendLine(string.Format("timestamp: {0:00}:{1:00}:{2:00}:{3:000}, filepos: {4}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds, _subFile.Position.ToString("X").PadLeft(9, '0').ToLower()));
@@ -148,7 +148,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             var nbmp = new NikseBitmap(bmp);
             _emphasis2 = nbmp.ConverToFourColors(_background, _pattern, _emphasis1, _useInnerAntialiasing);
             var twoPartBuffer = nbmp.RunLengthEncodeForDvd(_background, _pattern, _emphasis1, _emphasis2);
-            var imageBuffer = GetSubImageBuffer(twoPartBuffer, nbmp, p, alignment);
+            var imageBuffer = GetSubImageBuffer(twoPartBuffer, nbmp, p, alignment, overridePosition);
 
             int bufferIndex = 0;
             byte vobSubId = (byte)_languageStreamId;
@@ -279,7 +279,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             WriteEndianWord(imageBottomFieldDataAddress, stream);
         }
 
-        private void WriteDisplayArea(Stream stream, NikseBitmap nbmp, ContentAlignment alignment)
+        private void WriteDisplayArea(Stream stream, NikseBitmap nbmp, ContentAlignment alignment, Point? overridePosition)
         {
             stream.WriteByte(5);
 
@@ -302,6 +302,14 @@ namespace Nikse.SubtitleEdit.Core.VobSub
             if (alignment == ContentAlignment.TopRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.BottomRight)
             {
                 startX = (ushort)(_screenWidth - nbmp.Width - _leftRightMargin);
+            }
+
+            if (overridePosition != null &&
+                overridePosition.Value.X >= 0 && overridePosition.Value.X < _screenWidth &&
+                overridePosition.Value.Y >= 0 && overridePosition.Value.Y < _screenHeight)
+            {
+                startX = (ushort)overridePosition.Value.X;
+                startY = (ushort)overridePosition.Value.Y;
             }
 
             ushort endX = (ushort)(startX + nbmp.Width - 1);

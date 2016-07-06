@@ -49,6 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
             public int LeftRightMargin { get; set; }
             public bool Saved { get; set; }
             public ContentAlignment Alignment { get; set; }
+            public Point? OverridePosition { get; set; }
             public Color BackgroundColor { get; set; }
             public string SavDialogFileName { get; set; }
             public string Error { get; set; }
@@ -285,6 +286,14 @@ namespace Nikse.SubtitleEdit.Forms
                             if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
                                 top = param.ScreenHeight - (param.Bitmap.Height / 2);
 
+                            if (param.OverridePosition != null &&
+                                param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.ScreenWidth &&
+                                param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.ScreenHeight)
+                            {
+                                left = param.OverridePosition.Value.X;
+                                top = param.OverridePosition.Value.Y;
+                            }
+
                             using (var g = Graphics.FromImage(fullSize))
                             {
                                 g.DrawImage(bmp, left, top);
@@ -297,7 +306,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                param.Buffer = BluRaySupPicture.CreateSupFrame(brSub, param.Bitmap, param.FramesPerSeconds, param.BottomMargin, param.LeftRightMargin, param.Alignment);
+                param.Buffer = BluRaySupPicture.CreateSupFrame(brSub, param.Bitmap, param.FramesPerSeconds, param.BottomMargin, param.LeftRightMargin, param.Alignment, param.OverridePosition);
             }
         }
 
@@ -339,6 +348,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 parameter.P = _subtitle.Paragraphs[index];
                 parameter.Alignment = GetAlignmentFromParagraph(parameter, _format, _subtitle);
+                parameter.OverridePosition = GetAssPoint(parameter.P.Text);
                 parameter.Forced = subtitleListView1.Items[index].Checked;
 
                 if (_format.HasStyleSupport && !string.IsNullOrEmpty(parameter.P.Extra))
@@ -1095,6 +1105,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
                                             top = (param.ScreenHeight - param.Bitmap.Height) / 2;
 
+                                        if (param.OverridePosition.HasValue &&
+                                            param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.Bitmap.Width &&
+                                            param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.Bitmap.Height)
+                                        {
+                                            left = param.OverridePosition.Value.X;
+                                            top = param.OverridePosition.Value.Y;
+                                        }
+
                                         using (var g = Graphics.FromImage(fullSize))
                                         {
                                             g.DrawImage(bmp, left, top);
@@ -1127,6 +1145,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 top = param.BottomMargin;
                             if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
                                 top = (param.ScreenHeight - param.Bitmap.Height) / 2;
+
+                            if (param.OverridePosition.HasValue &&
+                                param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.Bitmap.Width &&
+                                param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.Bitmap.Height)
+                            {
+                                left = param.OverridePosition.Value.X;
+                                top = param.OverridePosition.Value.Y;
+                            }
+
                             sb.AppendLine(string.Format("{0} {1} {2} {3} {4} {5} {6}", Path.GetFileName(fileName), FormatFabTime(param.P.StartTime, param), FormatFabTime(param.P.EndTime, param), left, top, left + param.Bitmap.Width, top + param.Bitmap.Height));
                         }
                         param.Saved = true;
@@ -1267,6 +1294,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
                                             top = (param.ScreenHeight - param.Bitmap.Height) / 2;
 
+                                        if (param.OverridePosition.HasValue &&
+                                            param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.Bitmap.Width &&
+                                            param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.Bitmap.Height)
+                                        {
+                                            left = param.OverridePosition.Value.X;
+                                            top = param.OverridePosition.Value.Y;
+                                        }
+
                                         using (var g = Graphics.FromImage(outBitmap))
                                         {
                                             g.DrawImage(bmp, left, top);
@@ -1353,6 +1388,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
                             top = param.ScreenHeight - (param.Bitmap.Height / 2);
 
+                        if (param.OverridePosition.HasValue &&
+                            param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.Bitmap.Width &&
+                            param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.Bitmap.Height)
+                        {
+                            left = param.OverridePosition.Value.X;
+                            top = param.OverridePosition.Value.Y;
+                        }
+
                         string startTime = ToHHMMSSFF(param.P.StartTime);
                         string endTime = ToHHMMSSFF(param.P.EndTime);
                         sb.AppendLine(string.Format(paragraphWriteFormat, numberString, startTime, endTime, Path.GetFileName(fileName), left, top));
@@ -1420,7 +1463,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (param.P.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an8}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an8}", StringComparison.Ordinal))
                             verticalAlignment = "top";
                         else if (param.P.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an6}", StringComparison.Ordinal))
-                                verticalAlignment = "center";
+                            verticalAlignment = "center";
 
                         string horizontalAlignment = "center";
                         if (param.P.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an7}", StringComparison.Ordinal))
@@ -1535,6 +1578,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 x = width - param.Bitmap.Width - border;
                                 y = border;
                                 break;
+                        }
+
+                        if (param.OverridePosition.HasValue &&
+                            param.OverridePosition.Value.X >= 0 && param.OverridePosition.Value.X < param.Bitmap.Width &&
+                            param.OverridePosition.Value.Y >= 0 && param.OverridePosition.Value.Y < param.Bitmap.Height)
+                        {
+                            x = param.OverridePosition.Value.X;
+                            y = param.OverridePosition.Value.Y;
                         }
 
                         sb.AppendLine("  <Graphic Width=\"" + param.Bitmap.Width.ToString(CultureInfo.InvariantCulture) + "\" Height=\"" +
@@ -1732,6 +1783,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.LineHeight = (int)numericUpDownLineSpacing.Value;
             mbp.FullFrame = checkBoxFullFrameImage.Checked;
             mbp.FullFrameBackgroundcolor = panelFullFrameBackground.BackColor;
+            mbp.OverridePosition = GetAssPoint(p.Text);
 
             if (_format.HasStyleSupport && !string.IsNullOrEmpty(p.Extra))
             {
@@ -2175,7 +2227,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             string text = parameter.P.Text;
 
-            text = Utilities.RemoveSsaTags(text);
+            text = AssToHtmlTagsIfKnow(text);
 
             text = text.Replace("<I>", "<i>");
             text = text.Replace("</I>", "</i>");
@@ -2723,6 +2775,65 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     bmp.Dispose();
                 }
             }
+        }
+
+        private static Point? GetAssPoint(string s)
+        {
+            int k = s.IndexOf("{\\", StringComparison.Ordinal);
+            while (k >= 0)
+            {
+                int l = s.IndexOf('}', k + 1);
+                if (l < k)
+                    break;
+                var assTags = s.Substring(k + 1, l - k - 1).Split('\\');
+                foreach (var assTag in assTags)
+                {
+                    if (assTag.StartsWith("pos(", StringComparison.Ordinal))
+                    {
+                        var numbers = assTag.Remove(0, 4).TrimEnd(')').Trim().Split(',');
+                        if (numbers.Length == 2 && Utilities.IsInteger(numbers[0]) && Utilities.IsInteger(numbers[1]))
+                            return new Point(int.Parse(numbers[0]), int.Parse(numbers[1]));
+                    }
+                }
+                k = s.IndexOf("{\\", k + 1, StringComparison.Ordinal);
+            }
+            return null;
+        }
+
+        private static string AssToHtmlTagsIfKnow(string s)
+        {
+            int k = s.IndexOf("{\\", StringComparison.Ordinal);
+            while (k >= 0)
+            {
+                int l = s.IndexOf('}', k + 1);
+                if (l < k)
+                    break;
+                var assTags = s.Substring(k + 1, l - k - 1).Split('\\');
+                var sb = new StringBuilder();
+                foreach (var assTag in assTags)
+                {
+                    if (assTag == "i1")
+                    {
+                        sb.Append("<i>");
+                    }
+                    else if (assTag == "i" || assTag == "i0")
+                    {
+                        sb.Append("</i>");
+                    }
+                    else if (assTag == "b1" || assTag == "b2" || assTag == "b3" || assTag == "b4")
+                    {
+                        sb.Append("<b>");
+                    }
+                    else if (assTag == "b" || assTag == "b0")
+                    {
+                        sb.Append("</b>");
+                    }
+                }
+                s = s.Remove(k, l - k + 1);
+                s = s.Insert(k, sb.ToString());
+                k = s.IndexOf("{\\", k, StringComparison.Ordinal);
+            }
+            return s;
         }
 
         private static NikseBitmap Make3DTopBottom(MakeBitmapParameter parameter, NikseBitmap nbmp)
