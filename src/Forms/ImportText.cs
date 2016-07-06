@@ -327,8 +327,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (checkBoxAutoBreak.Enabled && checkBoxAutoBreak.Checked)
                             text = Utilities.AutoBreakLine(text);
                         _subtitle.Paragraphs.Add(new Paragraph { Text = text });
+                        sb.Clear();
                     }
-                    sb = new StringBuilder();
                 }
                 else if (!ContainsLetters(line))
                 {
@@ -373,10 +373,7 @@ namespace Nikse.SubtitleEdit.Forms
                             third.Append(word);
                         }
                     }
-                    if (first.Length <= Configuration.Settings.General.SubtitleLineMaximumLength &&
-                        second.Length <= Configuration.Settings.General.SubtitleLineMaximumLength &&
-                        third.Length <= Configuration.Settings.General.SubtitleLineMaximumLength &&
-                        third.Length > 10)
+                    if (third.Length <= Configuration.Settings.General.SubtitleLineMaximumLength && third.Length > 10)
                     {
                         if (second.Length > 15)
                         {
