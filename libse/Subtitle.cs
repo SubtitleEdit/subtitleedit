@@ -126,7 +126,6 @@ namespace Nikse.SubtitleEdit.Core
 
             _paragraphs = new List<Paragraph>();
 
-            var lines = new List<string>();
             StreamReader sr;
             if (useThisEncoding != null)
             {
@@ -164,8 +163,7 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             encoding = sr.CurrentEncoding;
-            while (!sr.EndOfStream)
-                lines.Add(sr.ReadLine());
+            var lines = sr.ReadToEnd().SplitToLines().ToList();
             sr.Close();
 
             foreach (SubtitleFormat subtitleFormat in SubtitleFormat.AllSubtitleFormats)
@@ -572,6 +570,8 @@ namespace Nikse.SubtitleEdit.Core
         public string GetFastHashCode()
         {
             var sb = new StringBuilder(Paragraphs.Count * 50);
+            if (Header != null)
+                sb.Append(Header.Trim());
             for (int i = 0; i < Paragraphs.Count; i++)
             {
                 var p = Paragraphs[i];
