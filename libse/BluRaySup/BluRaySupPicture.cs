@@ -269,8 +269,9 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         /// <param name="bottomMargin">Image bottom margin</param>
         /// <param name="leftOrRightMargin">Image left/right margin</param>
         /// <param name="alignment">Alignment of image</param>
+        /// <param name="overridePosition">Position that overrides alignment</param>
         /// <returns>Byte buffer containing the binary stream representation of one caption</returns>
-        public static byte[] CreateSupFrame(BluRaySupPicture pic, Bitmap bmp, double fps, int bottomMargin, int leftOrRightMargin, ContentAlignment alignment)
+        public static byte[] CreateSupFrame(BluRaySupPicture pic, Bitmap bmp, double fps, int bottomMargin, int leftOrRightMargin, ContentAlignment alignment, Point? overridePosition = null)
         {
             var bm = new NikseBitmap(bmp);
             var colorPalette = GetBitmapPalette(bm);
@@ -400,6 +401,14 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
                     pic.WindowXOffset = (pic.Width - bm.Width) / 2;
                     pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
                     break;
+            }
+
+            if (overridePosition != null &&
+                overridePosition.Value.X >= 0 && overridePosition.Value.X < bm.Width &&
+                overridePosition.Value.Y >= 0 && overridePosition.Value.Y < bm.Height)
+            {
+                pic.WindowXOffset = overridePosition.Value.X;
+                pic.WindowYOffset = overridePosition.Value.Y;
             }
 
             int yOfs = pic.WindowYOffset - Core.CropOfsY;
