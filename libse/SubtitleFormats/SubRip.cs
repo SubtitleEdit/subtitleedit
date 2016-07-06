@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private StringBuilder _errors;
         private int _lineNumber;
         private bool _isMsFrames;
+        private bool _isWsrt;
 
         private enum ExpectingLine
         {
@@ -73,7 +74,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errors = new StringBuilder();
             _lineNumber = 0;
             _isMsFrames = true;
-
+            _isWsrt = fileName != null && fileName.EndsWith(".wsrt", StringComparison.OrdinalIgnoreCase);
             _paragraph = new Paragraph();
             _expecting = ExpectingLine.Number;
             _errorCount = 0;
@@ -168,6 +169,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 case ExpectingLine.Text:
                     if (!string.IsNullOrWhiteSpace(line) || IsText(next))
                     {
+                        if (_isWsrt && !string.IsNullOrEmpty(line))
+                        {
+                            for (int i = 30; i < 40; i++)
+                            {
+                                line = line.Replace("<" + i + ">", "<i>");
+                                line = line.Replace("</" + i + ">", "</i>");
+                            }
+                        }
+
                         if (_paragraph.Text.Length > 0)
                             _paragraph.Text += Environment.NewLine;
                         _paragraph.Text += RemoveBadChars(line).TrimEnd().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
