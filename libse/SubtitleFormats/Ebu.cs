@@ -602,7 +602,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         tti.VerticalPosition = (byte)startRow; // bottom (vertical)
                     }
 
-                    tti.JustificationCode = EbuUiHelper.JustificationCode;
+                    tti.JustificationCode = EbuUiHelper.JustificationCode; // use default justification
                     if (p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an7}", StringComparison.Ordinal))
                     {
                         tti.JustificationCode = 1; // 01h=left-justified text
@@ -611,7 +611,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         tti.JustificationCode = 3; // 03h=right-justified
                     }
-                    else // If it's not left- or right-justified, it's centred.
+                    else if (p.Text.StartsWith("{\\an2}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an8}", StringComparison.Ordinal))
                     {
                         tti.JustificationCode = 2; // 02h=centred text
                     }
