@@ -77,17 +77,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 match = FixMissingSpacesReColon.Match(p.Text);
                 while (match.Success)
                 {
-                    int start = match.Index;
-                    start -= 4;
-                    if (start < 0)
-                        start = 0;
-                    int indexOfStartCodeTag = p.Text.IndexOf('{', start);
-                    int indexOfEndCodeTag = p.Text.IndexOf('}', start);
-                    if (indexOfStartCodeTag >= 0 && indexOfEndCodeTag >= 0 && indexOfStartCodeTag < match.Index)
-                    {
-                        // we are inside a tag: like indexOfEndCodeTag "{y:i}Is this italic?"
-                    }
-                    else if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
+                    // Do not add space if *match.Index is inside brackets. e.g: "{y:i}Is this italic?"
+                    if (allowFix && !IsBetweenBrackets(p.Text, match.Index) && !@"""<".Contains(p.Text[match.Index + 2]))
                     {
                         missingSpaces++;
                         string oldText = p.Text;
@@ -330,6 +321,19 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             }
 
             return text.Substring(startIndex, endIndex - startIndex + 1);
+        }
+
+        private static bool IsBetweenBrackets(string text, int colonIndex)
+        {
+            int startIdx = text.IndexOf('{', Math.Max(colonIndex - 4, 0));
+            if (startIdx >= 0)
+            {
+                int endIdx = text.IndexOf('}', startIdx + 1);
+                if (endIdx <= startIdx + 1)
+                    return false;
+                return startIdx < colonIndex && endIdx > colonIndex;
+            }
+            return false;
         }
 
     }
