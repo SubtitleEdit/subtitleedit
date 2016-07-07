@@ -25,6 +25,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.SpellCheck;
+using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -65,6 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
             get { return _videoFileName; }
             set { _videoFileName = value; }
         }
+        public bool SeparateVideoPath = false;
 
         private DateTime _fileDateTime;
         private string _title;
@@ -400,15 +402,25 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (args.Length >= 2)
                 {
-                    fileName = args[1];
-                    if (args.Length > 2 && args[2].StartsWith("/srcline:", StringComparison.OrdinalIgnoreCase))
+                    if (args[1].Equals("/load", StringComparison.OrdinalIgnoreCase))
                     {
-                        string srcLine = args[2].Remove(0, 9);
-                        if (!int.TryParse(srcLine, out srcLineNumber))
-                            srcLineNumber = -1;
+
+                        SeparateVideoPath = true;
+                        fileName = args[2];
+                        VideoFileName = args[3];
+                    }
+                    else
+                    {
+                        SeparateVideoPath = false;
+                        fileName = args[1];
+                        if (args.Length > 2 && args[2].StartsWith("/srcline:", StringComparison.OrdinalIgnoreCase))
+                        {
+                            string srcLine = args[2].Remove(0, 9);
+                            if (!int.TryParse(srcLine, out srcLineNumber))
+                                srcLineNumber = -1;
+                        }
                     }
                 }
-
                 labelAutoDuration.Visible = false;
                 mediaPlayer.SubtitleText = string.Empty;
                 comboBoxAutoContinue.SelectedIndex = 2;
@@ -439,8 +451,18 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (fileName.Length > 0 && File.Exists(fileName))
                 {
-                    fileName = Path.GetFullPath(fileName);
-                    OpenSubtitle(fileName, null);
+                    if (SeparateVideoPath)
+                    {
+                        fileName = Path.GetFullPath(fileName);
+                        VideoFileName = Path.GetFullPath(VideoFileName);
+                        OpenSubtitle(fileName,null,VideoFileName,null);
+                    }
+                    else
+                    {
+                        fileName = Path.GetFullPath(fileName);
+                        OpenSubtitle(fileName, null);
+                    }
+
                     if (srcLineNumber >= 0 && GetCurrentSubtitleFormat().GetType() == typeof(SubRip) && srcLineNumber < textBoxSource.Lines.Length)
                     {
                         int pos = 0;
@@ -3601,7 +3623,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private SubtitleFormat GetCurrentSubtitleFormat()
         {
-            return Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
+            // return Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
+            //TODO TEMPORARY only FAB FORMAT SAVE
+            return Utilities.GetSubtitleFormatByFriendlyName("FAB Subtitler (.txt)");
+
         }
 
         private void ShowSource()
@@ -19968,5 +19993,24 @@ namespace Nikse.SubtitleEdit.Forms
             IsMenuOpen = false;
         }
 
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBoxSubtitleFormats_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mediaPlayer_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

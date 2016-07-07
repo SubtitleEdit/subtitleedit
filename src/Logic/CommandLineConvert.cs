@@ -77,6 +77,12 @@ namespace Nikse.SubtitleEdit.Logic
                     Console.WriteLine();
                     Console.WriteLine("    example: SubtitleEdit /convert *.srt sami");
                     Console.WriteLine("    list available formats: SubtitleEdit /convert /list");
+                    Console.WriteLine();
+                    Console.WriteLine("Or load movie and subtitle different path.");
+                    Console.WriteLine("    example: SubtitleEdit  /load <SubFileWithPath> [<MovieFileWithPath>] ");
+                    Console.WriteLine();
+
+
                 }
                 Console.WriteLine();
 
