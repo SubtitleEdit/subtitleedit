@@ -32,11 +32,11 @@
     <Italic>Dőlt</Italic>
     <Underline>Aláhúzás</Underline>
     <Visible>Látható</Visible>
-    <FrameRate>Képarány</FrameRate>
+    <FrameRate>Kép/sec</FrameRate>
     <Name>Név</Name>
     <FileNameXAndSize>Fájlnév: {0} ({1})</FileNameXAndSize>
     <ResolutionX>Felbontás: {0}</ResolutionX>
-    <FrameRateX>Képarány: {0:0.0###}</FrameRateX>
+    <FrameRateX>Kép/sec: {0:0.0###}</FrameRateX>
     <TotalFramesX>Összes képkocka: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Videókódolás: {0}</VideoEncodingX>
     <SingleLineLengths>Egyetlen sor hossza:</SingleLineLengths>
@@ -211,12 +211,12 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <LinesFoundX>Talált sorok: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
-    <Title>Képarány módosítása</Title>
-    <ConvertFrameRateOfSubtitle>Felirat képarány átalakítása</ConvertFrameRateOfSubtitle>
+    <Title>Kép/sec. módosítása</Title>
+    <ConvertFrameRateOfSubtitle>Felirat Kép/sec. átalakítása</ConvertFrameRateOfSubtitle>
     <FromFrameRate>Forrás:</FromFrameRate>
     <ToFrameRate>Cél:</ToFrameRate>
-    <FrameRateNotCorrect>A képarány nem megfelelő</FrameRateNotCorrect>
-    <FrameRateNotChanged>A képarány megegyezik - nincs átalakítható</FrameRateNotChanged>
+    <FrameRateNotCorrect>A Kép/sec. nem megfelelő</FrameRateNotCorrect>
+    <FrameRateNotChanged>A Kép/sec. megegyezik - nincs átalakítható</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Sebesség beállítása százalékban</Title>
@@ -287,8 +287,8 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <ReelNumber>Tekercs száma</ReelNumber>
     <Language>Nyelv</Language>
     <IssueDate>Kiadás dátuma</IssueDate>
-    <EditRate>Arány szerkesztése</EditRate>
-    <TimeCodeRate>Időkód arány</TimeCodeRate>
+    <EditRate>Kép/sec. szerkesztése</EditRate>
+    <TimeCodeRate>Időkód Kép/sec.</TimeCodeRate>
     <StartTime>Kezdési idő</StartTime>
     <Font>Betűtípus</Font>
     <FontId>ID</FontId>
@@ -953,7 +953,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
         <StartNumberingFrom>Átszámozás...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Hallássérülteknek szánt szöveg eltávolítása...</RemoveTextForHearingImpaired>
         <ChangeCasing>Betűállás módosítása...</ChangeCasing>
-        <ChangeFrameRate>Képarány módosítása...</ChangeFrameRate>
+        <ChangeFrameRate>Kép/sec. módosítása...</ChangeFrameRate>
         <ChangeSpeedInPercent>Módosított sebesség (százalék)...</ChangeSpeedInPercent>
         <MergeShortLines>Rövid sorok összevonása...</MergeShortLines>
         <MergeDuplicateText>Azonos szövegű sorok összevonása...</MergeDuplicateText>
@@ -1208,8 +1208,8 @@ A felirat üresnek tűnik - próbálja meg újra elmenteni, ha egy érvényes fe
     <BeforeShowLater>A későbbi megjelenítés előtti állapotra</BeforeShowLater>
     <LineNumberX>Sorszám: {0:#,##0.##}</LineNumberX>
     <OpenVideoFile>Videófájl megnyitása...</OpenVideoFile>
-    <NewFrameRateUsedToCalculateTimeCodes>Új ({0}) képarány, a kezdési/befejezési időkódok kiszámításához használva</NewFrameRateUsedToCalculateTimeCodes>
-    <NewFrameRateUsedToCalculateFrameNumbers>Új ({0}) képarány, a kezdési/befejezési képkocka számok kiszámításához használva</NewFrameRateUsedToCalculateFrameNumbers>
+    <NewFrameRateUsedToCalculateTimeCodes>Új ({0}) Kép/sec., a kezdési/befejezési időkódok kiszámításához használva</NewFrameRateUsedToCalculateTimeCodes>
+    <NewFrameRateUsedToCalculateFrameNumbers>Új ({0}) Kép/sec., a kezdési/befejezési képkocka számok kiszámításához használva</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>A keresett elem nem található.
 Szeretné újra elindítani a keresést a dokumentum elejétől?</FindContinue>
     <FindContinueTitle>Keresés folytatása?</FindContinueTitle>
@@ -1323,9 +1323,9 @@ Folytatja?</SubtitleAppendPrompt>
     <CasingCompleteMessageNoNames>Módosított betűállású sorok száma: {0}/{1}</CasingCompleteMessageNoNames>
     <CasingCompleteMessageOnlyNames>Megváltozott írásmódú név sorok száma: {0}/{1}</CasingCompleteMessageOnlyNames>
     <CasingCompleteMessage>Megváltozott írásmódú sorok száma: {0}/{1}, módosított írásmódú nevek: {2}</CasingCompleteMessage>
-    <BeforeChangeFrameRate>A képarány módosítása előtti állapotra</BeforeChangeFrameRate>
+    <BeforeChangeFrameRate>A Kép/sec. módosítása előtti állapotra</BeforeChangeFrameRate>
     <BeforeAdjustSpeedInPercent>A sebesség százalékos beállítása előtti állapotra</BeforeAdjustSpeedInPercent>
-    <FrameRateChangedFromXToY>A képarány módosítva lett, erről: {0} erre: {1}</FrameRateChangedFromXToY>
+    <FrameRateChangedFromXToY>A Kép/sec. módosítva lett, erről: {0} erre: {1}</FrameRateChangedFromXToY>
     <IdxFileNotFoundWarning>{0} nem található! Mindenképp importálni szeretné a VobSub fájlt?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>A fejléc nem érvényes VobSub fájl: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>VobSub (sub/idx) felirat megnyitása...</OpenVobSubFile>
@@ -1382,7 +1382,7 @@ Folytatja?</SubtitleAppendPrompt>
     <BeforeSetEndAndVideoPosition>A befejezési idő beállítása a videó pozíciónál és az automatikus kiszámítás indítása előtti állapotra</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Folytatja a jelenlegi helyesírás-ellenőrzésével?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Karakter/mp: {0:0.00}</CharactersPerSecond>
-    <GetFrameRateFromVideoFile>Képarány kiolvasás a videófájlból</GetFrameRateFromVideoFile>
+    <GetFrameRateFromVideoFile>Kép/sec. kiolvasás a videófájlból</GetFrameRateFromVideoFile>
     <NetworkMessage>Új üzenet: {0} ({1}): {2}</NetworkMessage>
     <NetworkUpdate>Frissített sor: {0} ({1}): Index={2}, Szöveg={3}</NetworkUpdate>
     <NetworkInsert>Beszúrt sor: {0} ({1}): Index={2}, Szöveg={3}</NetworkInsert>
@@ -1638,7 +1638,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <PreviewLinesModifiedX>Előnézet - módosított feliratok: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Csak a módosított sorok megjelenítése</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum ezredmásodperc a sorok között</MinimumMillisecondsBetweenParagraphs>
-    <FrameInfo>Képarány információ</FrameInfo>
+    <FrameInfo>Kép információ</FrameInfo>
     <OneFrameXisYMilliseconds>Képkockánként {0:0.00} fps 1} ezredmásodperc</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
@@ -1670,8 +1670,8 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <SpellCheck>Helyesírás</SpellCheck>
     <SettingsName>Beállítások</SettingsName>
     <Help>Súgó</Help>
-    <ShowFrameRate>Képarány megjelenítése az eszköztáron</ShowFrameRate>
-    <DefaultFrameRate>Alapértelmezett képarány</DefaultFrameRate>
+    <ShowFrameRate>Kép/sec. megjelenítése az eszköztáron</ShowFrameRate>
+    <DefaultFrameRate>Alapértelmezett Kép/sec.</DefaultFrameRate>
     <DefaultFileEncoding>Alapértelmezett fájlkódolás</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>ANSI kódolás automatikus észlelése</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Felirat maximális hossza</SubtitleLineMaximumLength>
