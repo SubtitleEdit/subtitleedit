@@ -2333,5 +2333,9 @@ namespace Nikse.SubtitleEdit.Forms
             return true;
         }
 
+        private void Settings_Load(object sender, EventArgs e)
+        {
+            checkBoxCheckForUpdates.Checked = false;
+        }
     }
 }

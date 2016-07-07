@@ -494,6 +494,7 @@
             // checkBoxCheckForUpdates
             // 
             this.checkBoxCheckForUpdates.AutoSize = true;
+            this.checkBoxCheckForUpdates.Enabled = false;
             this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(441, 399);
             this.checkBoxCheckForUpdates.Name = "checkBoxCheckForUpdates";
             this.checkBoxCheckForUpdates.Size = new System.Drawing.Size(114, 17);
@@ -3711,6 +3712,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
+            this.Load += new System.EventHandler(this.Settings_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormSettings_KeyDown);
             this.tabControlSettings.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
