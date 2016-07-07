@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string end = node.Attributes["end"].InnerText;
                     string text = node.InnerText;
 
-                    if (allTwoCifferMs && (start.Length != 11 || end.Length != 11 || start[8] == ':' || end[8] == ':'))
+                    if (allTwoCifferMs && (start.Length != 11 || end.Length != 11 || start[8] != ':' || end[8] != ':'))
                     {
                         allTwoCifferMs = false;
                     }
