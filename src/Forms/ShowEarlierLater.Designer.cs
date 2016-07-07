@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonSelectedLinesOnly = new System.Windows.Forms.RadioButton();
             this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.radioButtonSelectedLineAndForward = new System.Windows.Forms.RadioButton();
+            this.buttonVideoSync = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // labelHourMinSecMilliSecond
@@ -53,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonShowLater
             // 
-            this.buttonShowLater.Location = new System.Drawing.Point(145, 53);
+            this.buttonShowLater.Location = new System.Drawing.Point(144, 66);
             this.buttonShowLater.Name = "buttonShowLater";
             this.buttonShowLater.Size = new System.Drawing.Size(119, 21);
             this.buttonShowLater.TabIndex = 20;
@@ -63,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonShowEarlier
             // 
-            this.buttonShowEarlier.Location = new System.Drawing.Point(145, 26);
+            this.buttonShowEarlier.Location = new System.Drawing.Point(144, 39);
             this.buttonShowEarlier.Name = "buttonShowEarlier";
             this.buttonShowEarlier.Size = new System.Drawing.Size(120, 21);
             this.buttonShowEarlier.TabIndex = 19;
@@ -115,8 +116,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownAdjust.Location = new System.Drawing.Point(12, 23);
             this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
-            this.timeUpDownAdjust.Size = new System.Drawing.Size(92, 25);
+            this.timeUpDownAdjust.Size = new System.Drawing.Size(96, 25);
             this.timeUpDownAdjust.TabIndex = 21;
+            this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // radioButtonSelectedLineAndForward
             // 
@@ -129,11 +131,22 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonSelectedLineAndForward.Text = "Selected line(s) and forward";
             this.radioButtonSelectedLineAndForward.UseVisualStyleBackColor = true;
             // 
+            // buttonVideoSync
+            // 
+            this.buttonVideoSync.Location = new System.Drawing.Point(144, 12);
+            this.buttonVideoSync.Name = "buttonVideoSync";
+            this.buttonVideoSync.Size = new System.Drawing.Size(120, 21);
+            this.buttonVideoSync.TabIndex = 42;
+            this.buttonVideoSync.Text = "Video sync";
+            this.buttonVideoSync.UseVisualStyleBackColor = true;
+            this.buttonVideoSync.Click += new System.EventHandler(this.buttonVideoSync_Click);
+            // 
             // ShowEarlierLater
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(301, 170);
+            this.Controls.Add(this.buttonVideoSync);
             this.Controls.Add(this.radioButtonSelectedLineAndForward);
             this.Controls.Add(this.radioButtonSelectedLinesOnly);
             this.Controls.Add(this.radioButtonAllLines);
@@ -168,5 +181,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.RadioButton radioButtonAllLines;
         private System.Windows.Forms.RadioButton radioButtonSelectedLinesOnly;
         private System.Windows.Forms.RadioButton radioButtonSelectedLineAndForward;
+        private System.Windows.Forms.Button buttonVideoSync;
     }
 }
