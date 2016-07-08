@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             public string Sound { get; set; } // 1 byte
             public string TotalNumberOfPages { get; set; } // 4 bytes
             public string ProgramDataAmount { get; set; } // 8 bytes
-            public string TimingPresent { get; set; } // 1 byte - Space: No, *: Yes 
+            public string TimingPresent { get; set; } // 1 byte - Space: No, *: Yes
             public string TimingType { get; set; } // 2 bytes
             public string TimingUnit { get; set; } // 1 byte - T: Time UnitF: Frame
 
@@ -137,7 +137,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 return GetTime(EraseTiming, SpecifiedTimingUnit);
             }
-
         }
 
         public class CaptionTextPageManagement

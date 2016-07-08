@@ -33,141 +33,140 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             const string xmpTemplate = @"<?xml version='1.0' encoding='UNICODE'?>
 <MediaTransData Version='1'>
-	<Settings Version='1'>
-		<Type></Type>
-		<Description Version='1'>
-			<Count>2</Count>
-			<Item1>For editing SDTV video</Item1>
-			<Item2>Standard PAL video (4:3interlaced)</Item2>
-		</Description>
-		<General Version='1'>
-			<EditingMode>SDTV</EditingMode>
-			<Timebase>25.00 fps</Timebase>
-			<DropFrame>True</DropFrame>
-			<Horizontal>720</Horizontal>
-			<Vertical>400</Vertical>
-			<ScreenAspectRatio>720/400</ScreenAspectRatio>
-			<PixelAspectRatio>D1/DV PAL (1.067)</PixelAspectRatio>
-			<Editor>
-				<LineSeparator>|</LineSeparator>
-			</Editor>
-		</General>
-		<Render Version='1'>
-			<Location>Default</Location>
-			<Name>Default</Name>
-			<Type>24Bit PNG</Type>
-			<Index>0001</Index>
-			<ExportPartial>False</ExportPartial>
-			<ServerData Version='1'>
-				<Track>0</Track>
-				<Field>1</Field>
-				<PAC>False</PAC>
-				<Category>Default</Category>
-				<Subtitle>FOX-HD-Malaysia</Subtitle>
-				<Timecode>Default</Timecode>
-				<NBJ>False</NBJ>
-			</ServerData>
-		</Render>
-		<TimecodeBase Version='1'>
-			<FramesPerSecTimesOneHundred>2500</FramesPerSecTimesOneHundred>
-			<UseTimecodeBaseOfFile>FALSE</UseTimecodeBaseOfFile>
-			<TimecodeBaseOfFile>00:00:00:00</TimecodeBaseOfFile>
-			<RepeatOfTimecodeBaseOfFile>1</RepeatOfTimecodeBaseOfFile>
-			<TimecodeBaseUserSupplied>09:59:35:00</TimecodeBaseUserSupplied>
-			<RepeatOfTimecodeBaseUserSupplied>1</RepeatOfTimecodeBaseUserSupplied>
-		</TimecodeBase>
-	</Settings>
-	<Movie Version='1'>
-		<Name>C:\Project\uknown.mpg</Name>
-		<Format>29.97DF</Format>
-	</Movie>
-	<Tracks Version='1'>
-		<Count>1</Count>
-		<Track1 Version='1'>
-			<Owner></Owner>
-			<Name>Track 1</Name>
-			<Enabled>True</Enabled>
-			<Locked>False</Locked>
-			<Password></Password>
-			<Columns Version='1'>
-				<Count>7</Count>
-				<Column1>
-					<Name>No</Name>
-					<Length>40</Length>
-					<Locked>False</Locked>
-					<Password></Password>
-					<NonText>False</NonText>
-				</Column1>
-				<Column2>
-					<Name>In</Name>
-					<Length>64</Length>
-					<Locked>False</Locked>
-					<Password></Password>
-					<NonText>False</NonText>
-				</Column2>
-				<Column3>
-					<Name>Out</Name>
-					<Length>66</Length>
-					<Locked>False</Locked>
-					<Password></Password>
-					<NonText>False</NonText>
-				</Column3>
-				<Column4>
-					<Name>Style</Name>
-					<Length>15</Length>
-					<Locked>False</Locked>
-					<Password></Password>
-					<NonText>False</NonText>
-				</Column4>
-				<Column5>
-					<Name>StyleEx</Name>
-					<Length>96</Length>
-					<Locked>False</Locked>
-					<Password></Password>
-					<NonText>False</NonText>
-				</Column5>
-				<Column6>
-					<Name>Comment</Name>
-					<Length>77</Length>
-					<Locked>False</Locked>
-					<Password></Password>
-					<NonText>False</NonText>
-				</Column6>
-				<Column7>
-					<Name>Language 01</Name>
-					<Length>349</Length>
-					<Locked>False</Locked>
-					<Password></Password>
-					<NonText>False</NonText>
-				</Column7>
-			</Columns>
-			<Rows Version='1'>
-				<Count>4096</Count>
-			</Rows>
-			<Data Version='1'>
-				<Count>[COUNT]</Count>
-	
-			</Data>
-			<Highlights Version='1'>
-				<Count>0</Count>
-			</Highlights>
-		</Track1>
-	</Tracks>
-</MediaTransData>
-";
+  <Settings Version='1'>
+    <Type></Type>
+    <Description Version='1'>
+      <Count>2</Count>
+      <Item1>For editing SDTV video</Item1>
+      <Item2>Standard PAL video (4:3interlaced)</Item2>
+    </Description>
+    <General Version='1'>
+      <EditingMode>SDTV</EditingMode>
+      <Timebase>25.00 fps</Timebase>
+      <DropFrame>True</DropFrame>
+      <Horizontal>720</Horizontal>
+      <Vertical>400</Vertical>
+      <ScreenAspectRatio>720/400</ScreenAspectRatio>
+      <PixelAspectRatio>D1/DV PAL (1.067)</PixelAspectRatio>
+      <Editor>
+        <LineSeparator>|</LineSeparator>
+      </Editor>
+    </General>
+    <Render Version='1'>
+      <Location>Default</Location>
+      <Name>Default</Name>
+      <Type>24Bit PNG</Type>
+      <Index>0001</Index>
+      <ExportPartial>False</ExportPartial>
+      <ServerData Version='1'>
+        <Track>0</Track>
+        <Field>1</Field>
+        <PAC>False</PAC>
+        <Category>Default</Category>
+        <Subtitle>FOX-HD-Malaysia</Subtitle>
+        <Timecode>Default</Timecode>
+        <NBJ>False</NBJ>
+      </ServerData>
+    </Render>
+    <TimecodeBase Version='1'>
+      <FramesPerSecTimesOneHundred>2500</FramesPerSecTimesOneHundred>
+      <UseTimecodeBaseOfFile>FALSE</UseTimecodeBaseOfFile>
+      <TimecodeBaseOfFile>00:00:00:00</TimecodeBaseOfFile>
+      <RepeatOfTimecodeBaseOfFile>1</RepeatOfTimecodeBaseOfFile>
+      <TimecodeBaseUserSupplied>09:59:35:00</TimecodeBaseUserSupplied>
+      <RepeatOfTimecodeBaseUserSupplied>1</RepeatOfTimecodeBaseUserSupplied>
+    </TimecodeBase>
+  </Settings>
+  <Movie Version='1'>
+    <Name>C:\Project\uknown.mpg</Name>
+    <Format>29.97DF</Format>
+  </Movie>
+  <Tracks Version='1'>
+    <Count>1</Count>
+    <Track1 Version='1'>
+      <Owner></Owner>
+      <Name>Track 1</Name>
+      <Enabled>True</Enabled>
+      <Locked>False</Locked>
+      <Password></Password>
+      <Columns Version='1'>
+        <Count>7</Count>
+        <Column1>
+          <Name>No</Name>
+          <Length>40</Length>
+          <Locked>False</Locked>
+          <Password></Password>
+          <NonText>False</NonText>
+        </Column1>
+        <Column2>
+          <Name>In</Name>
+          <Length>64</Length>
+          <Locked>False</Locked>
+          <Password></Password>
+          <NonText>False</NonText>
+        </Column2>
+        <Column3>
+          <Name>Out</Name>
+          <Length>66</Length>
+          <Locked>False</Locked>
+          <Password></Password>
+          <NonText>False</NonText>
+        </Column3>
+        <Column4>
+          <Name>Style</Name>
+          <Length>15</Length>
+          <Locked>False</Locked>
+          <Password></Password>
+          <NonText>False</NonText>
+        </Column4>
+        <Column5>
+          <Name>StyleEx</Name>
+          <Length>96</Length>
+          <Locked>False</Locked>
+          <Password></Password>
+          <NonText>False</NonText>
+        </Column5>
+        <Column6>
+          <Name>Comment</Name>
+          <Length>77</Length>
+          <Locked>False</Locked>
+          <Password></Password>
+          <NonText>False</NonText>
+        </Column6>
+        <Column7>
+          <Name>Language 01</Name>
+          <Length>349</Length>
+          <Locked>False</Locked>
+          <Password></Password>
+          <NonText>False</NonText>
+        </Column7>
+      </Columns>
+      <Rows Version='1'>
+        <Count>4096</Count>
+      </Rows>
+      <Data Version='1'>
+        <Count>[COUNT]</Count>
+      </Data>
+      <Highlights Version='1'>
+        <Count>0</Count>
+      </Highlights>
+    </Track1>
+  </Tracks>
+</MediaTransData>";
 
             const string paragraphTemplate = @"
-					<In>10:21:15:06</In>
-					<Out>10:21:16:18</Out>
-					<Style></Style>
-					<StyleEx></StyleEx>
-					<Comment></Comment>
-					<Fields Version='2'>
-						<Field1>
-							<Type>Text</Type>
-							<Data>Line1|Line2</Data>
-						</Field1>
-					</Fields>";
+<In>10:21:15:06</In>
+<Out>10:21:16:18</Out>
+<Style></Style>
+<StyleEx></StyleEx>
+<Comment></Comment>
+<Fields Version=""2"">
+  <Field1>
+    <Type>Text</Type>
+    <Data>Line1|Line2</Data>
+  </Field1>
+</Fields>";
+
             var xml = new XmlDocument();
             xml.LoadXml(xmpTemplate.Replace('\'', '"').Replace("[COUNT]", subtitle.Paragraphs.Count.ToString()));
             var paragraphInsertNode = xml.DocumentElement.SelectSingleNode("Tracks/Track1/Data");

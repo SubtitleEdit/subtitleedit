@@ -23,7 +23,7 @@
    * Fixed unwanted reset of header in format "Timed Text 1.0" - thx Krystian
    * Fixed crash in OCR - thx dreamday
    * Minor spell check fix - thx JC
-   * Better support for wsrt files - thx  serpico1
+   * Better support for wsrt files - thx serpico1
    * Fixed EBU justification so setting from UI is used - thx Lucas
    * Fix for "Remove text for HI" - thx Peta
    * Fixed issue in DCinema interop regarding italics - thx Marko

@@ -252,7 +252,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         /// <summary>
-        /// // split into lines
+        /// split into lines
         /// </summary>
         public static List<ImageSplitterItem> SplitVertical(NikseBitmap bmp, int minLineHeight, double averageLineHeight = -1)
         {
@@ -382,7 +382,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (leftX >= rightX)
                     {
                         allTransparent = true;
-                    }                   
+                    }
                 }
 
                 if (allTransparent)
@@ -408,7 +408,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
             if (size > 2)
-            {                
+            {
                 if (size == bmp.Height)
                 {
                     if (size > 100)

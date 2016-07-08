@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     sb.Append(" ");
                 }
-                else if (b >= 0x21 && b <= 0x7e) // GL - Graphic-set left   
+                else if (b >= 0x21 && b <= 0x7e) // GL - Graphic-set left
                 {
                     ParseGlArea(sb, b, ref pos, buffer);
                 }
