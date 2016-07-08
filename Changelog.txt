@@ -7,9 +7,12 @@
    * Updated Korean translation - thx domddol
    * Updated Portuguese translation - thx moob
    * Updated Hungarian translation - thx Zityi
+   * Updated Polish translation - thx Admas
+   * Updated Catalan translation - thx Juansa
    * Custom export now supports {newline}, {tab}, {lf} and {cr} - thx aaaxx
    * "Multiple replace" is now organized in groups - thx aaaxx
    * Text below video now supports bold and underline - thx Xenophon
+   * Updated mpv download link to latest version
 * FIXED:
    * Yet another fix for "Apply" / "OK" in "Remove text for HI" - thx Sami
    * Fixed crash in export of Final Cut Pro + image - thx imyourshadow
@@ -18,6 +21,8 @@
    * Fixed unwanted reset of header in format "Timed Text 1.0" - thx Krystian
    * Fixed crash in OCR - thx dreamday
    * Minor spell check fix - thx JC
+   * Better support for wsrt files - thx  serpico1
+   * Fixed EBU justification so setting from UI is used - thx Lucas
    * + Many minor fixes from ivandrofly and xylographe
 
 
