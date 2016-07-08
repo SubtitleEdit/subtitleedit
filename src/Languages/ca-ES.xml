@@ -1490,7 +1490,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CaseSensitive>Sensible majúscules</CaseSensitive>
     <RegularExpression>Expressió regular</RegularExpression>
     <LinesFoundX>S'han trobat: {0} línies</LinesFoundX>
-    <Delete>Suprimeix</Delete>
+    <Remove>Suprimeix</Remove>
     <Add>Afegeix</Add>
     <Update>Act&amp;ualitza</Update>
     <Enabled>Habilitat</Enabled>
@@ -2221,7 +2221,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Generate>Genera</Generate>
     <Remove>Suprimeix</Remove>
     <BeforeWatermark>Abans de la marca d'aigüa</BeforeWatermark>
-    <ErrorUnicodeEncodingOnly></ErrorUnicodeEncodingOnly>
   </Watermark>
   <Waveform>
     <ClickToAddWaveform>Clic afegeix ona wave</ClickToAddWaveform>
