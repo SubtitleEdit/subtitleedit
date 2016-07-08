@@ -718,6 +718,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Note>Nota: Fitxers deuen tenir ja el codis de temps correctes</Note>
   </JoinSubtitles>
   <LanguageNames>
+    <NotSpecified>No especificat</NotSpecified>
+    <UnknownCodeX>Desconegut ({0})</UnknownCodeX>
     <aaName>àfar</aaName>
     <abName>abkhaz</abName>
     <afName>afrikaans</afName>
@@ -729,6 +731,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <baName>baixkir</baName>
     <beName>bielorús</beName>
     <bgName>búlgar</bgName>
+    <bhName>Bihari</bhName>
     <biName>bislama</biName>
     <bnName>bengalí</bnName>
     <boName>tibetà</boName>
@@ -792,6 +795,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <mkName>macedoni</mkName>
     <mlName>malaiàlam</mlName>
     <mnName>mongol</mnName>
+    <moName>Moldau</moName>
     <mrName>marathi</mrName>
     <msName>malai</msName>
     <mtName>maltès</mtName>
@@ -976,6 +980,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <OpenDvd>Obri DVD...</OpenDvd>
         <ChooseAudioTrack>Escolliu pista d'audio</ChooseAudioTrack>
         <CloseVideo>Tanca fitxer de vídeo</CloseVideo>
+        <SetVideoOffset>Estableix offset de video...</SetVideoOffset>
         <ImportSceneChanges>Importa canvis d'escena</ImportSceneChanges>
         <RemoveSceneChanges>Suprimeix canvis d'escena</RemoveSceneChanges>
         <WaveformBatchGenerate>Fitxer de lots genera waveforms...</WaveformBatchGenerate>
@@ -1485,7 +1490,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CaseSensitive>Sensible majúscules</CaseSensitive>
     <RegularExpression>Expressió regular</RegularExpression>
     <LinesFoundX>S'han trobat: {0} línies</LinesFoundX>
-    <Remove>Suprimeix</Remove>
+    <Delete>Suprimeix</Delete>
     <Add>Afegeix</Add>
     <Update>Act&amp;ualitza</Update>
     <Enabled>Habilitat</Enabled>
@@ -1692,6 +1697,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DirectShowDescription>quartz.dll en carpeta system32</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home cinema</MpcHcDescription>
+    <MpvPlayer>mvp</MpvPlayer>
+    <MpvPlayerDescription>https://mpv.io/ - free, open source, and cross-platform media player</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll de VLC media player 1.1.0 o superior</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Ruta del VLC (Sols en cas d'emprar la versió portable de VLC)</VlcBrowseToLabel>
@@ -1860,11 +1867,22 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainFileSaveAll>Desa-ho tot</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>
     <UseDoNotBreakAfterList>Empra no-trenques-després-de-llistar (per auto-br)</UseDoNotBreakAfterList>
+    <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
+    <HowToSignUp>Com signar</HowToSignUp>
+    <ClientId>ID client</ClientId>
+    <ClientSecret>Secret client</ClientSecret>
   </Settings>
+  <SettingsMpv>
+    <Title>Configuració mvp</Title>
+    <DownloadMpv>Decàrrega lib mvp</DownloadMpv>
+    <DownloadMpvFailed>No pot descarregar-se mvp -proveu més tard!</DownloadMpvFailed>
+    <DownloadMpvOk>Ha estat descarregada la lib mvp i està llesta per a...</DownloadMpvOk>
+  </SettingsMpv>
   <SetVideoOffset>
     <Title>Estableix offset de vídeo</Title>
     <Description>Estableix offset de vídeo(subtítols no deuen seguir el temps real del vídeo, e.g. +10 hores)</Description>
     <RelativeToCurrentVideoPosition>Relatiu a la posició actual de vídeo</RelativeToCurrentVideoPosition>
+    <Reset>Reinicia</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Mostra selecció línies anterior/posterior</Title>
@@ -2194,6 +2212,17 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Estableix factor itàlica</Title>
     <Description>Ajusta el valor fins que l'estil del text siga normal i no itàlica. Vegeu que la imatge original deu ser itàlica.</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>Marca d'aigüa</Title>
+    <WatermarkX>Marca d'aigüa: {0}</WatermarkX>
+    <GenerateWatermarkTitle>Genera marca d'aigüa</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>Repartit pel subtítul</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>Només a la línia actual: {0}</CurrentLineOnlyX>
+    <Generate>Genera</Generate>
+    <Remove>Suprimeix</Remove>
+    <BeforeWatermark>Abans de la marca d'aigüa</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly></ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
     <ClickToAddWaveform>Clic afegeix ona wave</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Clic afegeix ona/espectrograma</ClickToAddWaveformAndSpectrogram>
