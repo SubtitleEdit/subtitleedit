@@ -1872,7 +1872,7 @@
             public string MainListViewVideoGoToPositionMinus1SecAndPlay { get; set; }
             public string MainListViewEditTextAndPause { get; set; }
             public string AutoBackup { get; set; }
-            
+
             public string AutoBackupEveryMinute { get; set; }
             public string AutoBackupEveryFiveMinutes { get; set; }
             public string AutoBackupEveryFifteenMinutes { get; set; }

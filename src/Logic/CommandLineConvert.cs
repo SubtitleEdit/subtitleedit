@@ -95,7 +95,6 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 var pattern = arguments[2].Trim();
 
-
                 var targetFormat = arguments[3].Trim().Replace(" ", string.Empty).ToLowerInvariant();
                 if (targetFormat == "ass")
                 {

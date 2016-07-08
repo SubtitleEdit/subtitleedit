@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (Paragraph p in _translatedSubtitle.Paragraphs)
                 p.Text = string.Empty;
 
-            _targetTwoLetterIsoLanguageName = (comboBoxTo.SelectedItem as ComboBoxItem).Value; 
+            _targetTwoLetterIsoLanguageName = (comboBoxTo.SelectedItem as ComboBoxItem).Value;
             if (!_googleTranslate)
             {
                 string from = (comboBoxFrom.SelectedItem as ComboBoxItem).Value;

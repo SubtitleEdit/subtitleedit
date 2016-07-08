@@ -163,7 +163,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         catch (Exception)
                         {
-                            // ignore                                
+                            // ignore
                         }
                     }
                 }

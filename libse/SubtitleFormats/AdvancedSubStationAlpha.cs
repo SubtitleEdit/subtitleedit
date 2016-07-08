@@ -776,7 +776,6 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     }
                     else if (!string.IsNullOrEmpty(rest))
                     {
-
                         unknownTags += "\\" + rest;
                         rest = string.Empty;
                     }
@@ -1599,7 +1598,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             }
                         }
                     }
-                    if (styleName != null && style.Name != null && (styleName.Equals(style.Name, StringComparison.OrdinalIgnoreCase) || 
+                    if (styleName != null && style.Name != null && (styleName.Equals(style.Name, StringComparison.OrdinalIgnoreCase) ||
                         (styleName.Equals("*Default", StringComparison.OrdinalIgnoreCase) && style.Name.Equals("Default", StringComparison.OrdinalIgnoreCase))))
                     {
                         style.LoadedFromHeader = true;
