@@ -863,6 +863,8 @@ namespace Nikse.SubtitleEdit.Core
         public string MainVideo500MsRight { get; set; }
         public string MainVideo1000MsLeft { get; set; }
         public string MainVideo1000MsRight { get; set; }
+        public string MainVideo5000MsLeft { get; set; }
+        public string MainVideo5000MsRight { get; set; }
         public string MainVideoFullscreen { get; set; }
         public string MainSpellCheck { get; set; }
         public string MainSpellCheckFindDoubleWords { get; set; }
@@ -980,6 +982,8 @@ namespace Nikse.SubtitleEdit.Core
             MainVideo500MsRight = "Alt+Right";
             MainVideo1000MsLeft = string.Empty;
             MainVideo1000MsRight = string.Empty;
+            MainVideo5000MsLeft = string.Empty;
+            MainVideo5000MsRight = string.Empty;
             MainVideoFullscreen = "Alt+Return";
             MainSpellCheck = "Control+Shift+S";
             MainSpellCheckFindDoubleWords = "Control+Shift+D";

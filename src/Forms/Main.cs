@@ -145,6 +145,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _video500MsRight = Keys.None;
         private Keys _video1000MsLeft = Keys.None;
         private Keys _video1000MsRight = Keys.None;
+        private Keys _video5000MsLeft = Keys.None;
+        private Keys _video5000MsRight = Keys.None;
         private Keys _videoPlayFirstSelected = Keys.None;
         private Keys _mainVideoFullscreen = Keys.None;
         private Keys _mainTextBoxSplitAtCursor = Keys.None;
@@ -11078,6 +11080,16 @@ namespace Nikse.SubtitleEdit.Forms
                 MoveVideoSeconds(1.0);
                 e.SuppressKeyPress = true;
             }
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video5000MsLeft)
+            {
+                MoveVideoSeconds(-5.0);
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video5000MsRight)
+            {
+                MoveVideoSeconds(5.0);
+                e.SuppressKeyPress = true;
+            }
             else if (_mainToolsBeamer == e.KeyData)
             {
                 var beamer = new Beamer(this, _subtitle, _subtitleListViewIndex);
@@ -14662,6 +14674,8 @@ namespace Nikse.SubtitleEdit.Forms
             _video500MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo500MsRight);
             _video1000MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsLeft);
             _video1000MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo1000MsRight);
+            _video5000MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo5000MsLeft);
+            _video5000MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo5000MsRight);
             _videoPlayFirstSelected = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralPlayFirstSelected);
             _mainVideoFullscreen = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
 

@@ -1856,6 +1856,8 @@ can edit in same subtitle file (collaboration)</Information>
     <GoForward500Milliseconds>500 ms forward</GoForward500Milliseconds>
     <GoBack1Second>One second back</GoBack1Second>
     <GoForward1Second>One second forward</GoForward1Second>
+    <GoBack5Seconds>Five seconds back</GoBack5Seconds>
+    <GoForward5Seconds>Five seconds forward</GoForward5Seconds>
     <TogglePlayPause>Toggle play/pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Fullscreen</Fullscreen>
