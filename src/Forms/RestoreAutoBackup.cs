@@ -141,5 +141,34 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        public static void CleanAutoBackupFolder(string autoBackupFolder, int autoBackupDeleteAfterMonths)
+        {
+            const int maxCount = 100; // to avoid locking computer
+            if (Directory.Exists(autoBackupFolder))
+            {
+                var targetDate = DateTime.Now.AddMonths(-autoBackupDeleteAfterMonths);
+                var files = Directory.GetFiles(autoBackupFolder, "*.*");
+                int filesDeleted = 0;
+                foreach (string fileName in files)
+                {
+                    var name = Path.GetFileName(fileName);
+                    if (name != null && RegexFileNamePattern.IsMatch(name) && Convert.ToDateTime(name.Substring(0, 10)) < targetDate)
+                    {
+                        try
+                        {
+                            File.Delete(fileName);
+                            filesDeleted++;
+                            if (filesDeleted > maxCount)
+                                return;
+                        }
+                        catch (Exception)
+                        {
+                            // ignore                                
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

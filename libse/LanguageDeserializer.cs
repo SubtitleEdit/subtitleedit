@@ -4588,6 +4588,18 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/AutoBackupEveryFifteenMinutes":
                     language.Settings.AutoBackupEveryFifteenMinutes = reader.Value;
                     break;
+                case "Settings/AutoBackupDeleteAfter":
+                    language.Settings.AutoBackupDeleteAfter = reader.Value;
+                    break;
+                case "Settings/AutoBackupDeleteAfterOneMonth":
+                    language.Settings.AutoBackupDeleteAfterOneMonth = reader.Value;
+                    break;
+                case "Settings/AutoBackupDeleteAfterThreeMonths":
+                    language.Settings.AutoBackupDeleteAfterThreeMonths = reader.Value;
+                    break;
+                case "Settings/AutoBackupDeleteAfterSixMonths":
+                    language.Settings.AutoBackupDeleteAfterSixMonths = reader.Value;
+                    break;
                 case "Settings/CheckForUpdates":
                     language.Settings.CheckForUpdates = reader.Value;
                     break;
