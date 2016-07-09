@@ -2018,6 +2018,8 @@
             public string GoForward500Milliseconds { get; set; }
             public string GoBack1Second { get; set; }
             public string GoForward1Second { get; set; }
+            public string GoBack5Seconds { get; set; }
+            public string GoForward5Seconds { get; set; }
             public string TogglePlayPause { get; set; }
             public string Pause { get; set; }
             public string Fullscreen { get; set; }
