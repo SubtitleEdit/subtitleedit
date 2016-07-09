@@ -2336,7 +2336,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return false;
             }
 
-            if (comboBoxShortcutKey.SelectedIndex == 0)
+            if (comboBoxShortcutKey.SelectedIndex == 0 && !checkBoxShortcutsControl.Checked && !checkBoxShortcutsAlt.Checked && !checkBoxShortcutsShift.Checked)
             {
                 return true;
             }
