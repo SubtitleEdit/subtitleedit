@@ -42,7 +42,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private string _spellCheckDictionaryName;
         private readonly string _threeLetterIsoLanguageName;
 
-        private static readonly Regex RegexAloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
         private static readonly Regex RegexAloneIasL = new Regex(@"\bl\b", RegexOptions.Compiled);
         private static readonly Regex RegexLowercaseL = new Regex("[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]l[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]", RegexOptions.Compiled);
         private static readonly Regex RegexUppercaseI = new Regex("[a-zæøåöääöéèàùâêîôûëï]I.", RegexOptions.Compiled);
@@ -424,7 +423,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) || _threeLetterIsoLanguageName == "eng")
                 {
                     string oldText = text;
-                    text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(RegexAloneI, oldText, text, 'i');
+                    text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(SubtitleEditRegex.LittleIRegex, oldText, text, 'i');
                     text = FixAloneLowercaseIToUppercaseI.FixAloneLowercaseIToUppercaseLine(RegexAloneIasL, oldText, text, 'l');
                 }
                 else if (_threeLetterIsoLanguageName == "fra")
