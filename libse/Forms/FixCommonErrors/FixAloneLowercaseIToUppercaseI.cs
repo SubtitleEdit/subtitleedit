@@ -5,9 +5,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixAloneLowercaseIToUppercaseI : IFixCommonError
     {
-
-        public static readonly Regex FixAloneLowercaseIToUppercaseIre = new Regex(@"\bi\b", RegexOptions.Compiled);
-
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
@@ -20,7 +17,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 string s = p.Text;
                 if (s.Contains('i'))
                 {
-                    s = FixAloneLowercaseIToUppercaseLine(FixAloneLowercaseIToUppercaseIre, oldText, s, 'i');
+                    s = FixAloneLowercaseIToUppercaseLine(SubtitleEditRegex.LittleIRegex, oldText, s, 'i');
                     if (s != oldText && callbacks.AllowFix(p, fixAction))
                     {
                         p.Text = s;
