@@ -1521,6 +1521,12 @@ Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung
     <Rules>Textersetzungsregeln</Rules>
     <MoveToTop>Zum Anfang</MoveToTop>
     <MoveToBottom>Zum Ende</MoveToBottom>
+    <MoveSelectedRulesToGroup>Ausgewählte Regeln verlegen</MoveSelectedRulesToGroup>
+    <Groups>Gruppen</Groups>
+    <RulesForGroupX>Regeln der Gruppe „{0}“</RulesForGroupX>
+    <GroupName>Gruppenname</GroupName>
+    <RenameGroup>Gruppenname ändern...</RenameGroup>
+    <NewGroup>Neue Gruppe...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1706,6 +1712,10 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <AutoBackupEveryMinute>Jede Minute</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Alle 5 Minuten</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Alle 15 Minuten</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Entfernen nach</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1 Monat</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 Monate</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 Monate</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Nach Aktualisierungen suchen</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Erlaube Bearbeitung des Original Untertitels</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Nachfrage beim Löschen von Texten</PromptDeleteLines>
@@ -1845,6 +1855,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <GoForward500Milliseconds>500 ms vor</GoForward500Milliseconds>
     <GoBack1Second>Eine Sekunde zurück</GoBack1Second>
     <GoForward1Second>Eine Sekunde vor</GoForward1Second>
+    <GoBack5Seconds>Fünf Sekunden zurück</GoBack5Seconds>
+    <GoForward5Seconds>Fünf Sekunden vor</GoForward5Seconds>
     <TogglePlayPause>Apspielen/Pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Vollbild</Fullscreen>
