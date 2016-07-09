@@ -526,6 +526,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool AutoContinueOn { get; set; }
         public bool SyncListViewWithVideoWhilePlaying { get; set; }
         public int AutoBackupSeconds { get; set; }
+        public int AutoBackupDeleteAfterMonths { get; set; }
         public string SpellChecker { get; set; }
         public bool AllowEditOfOriginalSubtitle { get; set; }
         public bool PromptDeleteLines { get; set; }
@@ -630,6 +631,7 @@ namespace Nikse.SubtitleEdit.Core
             AutoContinueOn = false;
             SyncListViewWithVideoWhilePlaying = false;
             AutoBackupSeconds = 60 * 15;
+            AutoBackupDeleteAfterMonths = 6;
             SpellChecker = "hunspell";
             AllowEditOfOriginalSubtitle = true;
             PromptDeleteLines = true;
@@ -1444,6 +1446,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("AutoBackupSeconds");
             if (subNode != null)
                 settings.General.AutoBackupSeconds = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("AutoBackupDeleteAfterMonths");
+            if (subNode != null)
+                settings.General.AutoBackupDeleteAfterMonths = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("SpellChecker");
             if (subNode != null)
                 settings.General.SpellChecker = subNode.InnerText;
@@ -2911,6 +2916,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("AutoContinueOn", settings.General.AutoContinueOn.ToString());
                 textWriter.WriteElementString("SyncListViewWithVideoWhilePlaying", settings.General.SyncListViewWithVideoWhilePlaying.ToString());
                 textWriter.WriteElementString("AutoBackupSeconds", settings.General.AutoBackupSeconds.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("AutoBackupDeleteAfterMonths", settings.General.AutoBackupDeleteAfterMonths.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SpellChecker", settings.General.SpellChecker);
                 textWriter.WriteElementString("AllowEditOfOriginalSubtitle", settings.General.AllowEditOfOriginalSubtitle.ToString());
                 textWriter.WriteElementString("PromptDeleteLines", settings.General.PromptDeleteLines.ToString());

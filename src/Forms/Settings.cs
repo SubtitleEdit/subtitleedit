@@ -307,7 +307,10 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxShowLineBreaksAs.Left = labelShowLineBreaksAs.Left + labelShowLineBreaksAs.Width;
             labelListViewDoubleClickEvent.Text = language.MainListViewDoubleClickAction;
             labelAutoBackup.Text = language.AutoBackup;
+            labelAutoBackupDeleteAfter.Text = language.AutoBackupDeleteAfter;
             comboBoxAutoBackup.Left = labelAutoBackup.Left + labelAutoBackup.Width + 3;
+            labelAutoBackupDeleteAfter.Left = comboBoxAutoBackup.Left + comboBoxAutoBackup.Width + 5;
+            comboBoxAutoBackupDeleteAfter.Left = labelAutoBackupDeleteAfter.Left + labelAutoBackupDeleteAfter.Width + 3;
             checkBoxCheckForUpdates.Text = language.CheckForUpdates;
             checkBoxAllowEditOfOriginalSubtitle.Text = language.AllowEditOfOriginalSubtitle;
             checkBoxPromptDeleteLines.Text = language.PromptDeleteLines;
@@ -323,6 +326,10 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxAutoBackup.Items[1] = language.AutoBackupEveryMinute;
             comboBoxAutoBackup.Items[2] = language.AutoBackupEveryFiveMinutes;
             comboBoxAutoBackup.Items[3] = language.AutoBackupEveryFifteenMinutes;
+
+            comboBoxAutoBackupDeleteAfter.Items[0] = language.AutoBackupDeleteAfterOneMonth;
+            comboBoxAutoBackupDeleteAfter.Items[1] = language.AutoBackupDeleteAfterThreeMonths;
+            comboBoxAutoBackupDeleteAfter.Items[2] = language.AutoBackupDeleteAfterSixMonths;
 
             groupBoxVideoEngine.Text = language.VideoEngine;
             radioButtonVideoPlayerDirectShow.Text = language.DirectShow;
@@ -502,6 +509,13 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxAutoBackup.SelectedIndex = 3;
             else
                 comboBoxAutoBackup.SelectedIndex = 0;
+
+            if (gs.AutoBackupDeleteAfterMonths == 3)
+                comboBoxAutoBackupDeleteAfter.SelectedIndex = 1;
+            else if (gs.AutoBackupDeleteAfterMonths == 1)
+                comboBoxAutoBackupDeleteAfter.SelectedIndex = 0;
+            else
+                comboBoxAutoBackupDeleteAfter.SelectedIndex = 2;
 
             checkBoxCheckForUpdates.Checked = gs.CheckForUpdates;
 
@@ -1084,6 +1098,13 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.AutoBackupSeconds = 60 * 15;
             else
                 gs.AutoBackupSeconds = 0;
+
+            if (comboBoxAutoBackupDeleteAfter.SelectedIndex == 2)
+                gs.AutoBackupDeleteAfterMonths = 3;
+            else if (comboBoxAutoBackupDeleteAfter.SelectedIndex == 1)
+                gs.AutoBackupDeleteAfterMonths = 1;
+            else
+                gs.AutoBackupDeleteAfterMonths = 6;
 
             gs.CheckForUpdates = checkBoxCheckForUpdates.Checked;
 

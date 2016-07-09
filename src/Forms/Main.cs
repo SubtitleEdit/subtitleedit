@@ -15037,6 +15037,7 @@ namespace Nikse.SubtitleEdit.Forms
                         catch (Exception exception)
                         {
                             MessageBox.Show(string.Format(_language.UnableToCreateBackupDirectory, Configuration.AutoBackupFolder, exception.Message));
+                            return;
                         }
                     }
                     string title = string.Empty;
@@ -15044,6 +15045,8 @@ namespace Nikse.SubtitleEdit.Forms
                         title = "_" + Path.GetFileNameWithoutExtension(_fileName);
                     string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}", Configuration.AutoBackupFolder, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, title, GetCurrentSubtitleFormat().Extension);
                     File.WriteAllText(fileName, currentText);
+
+                    RestoreAutoBackup.CleanAutoBackupFolder(Configuration.AutoBackupFolder, Configuration.Settings.General.AutoBackupDeleteAfterMonths);
                 }
             }
             _textAutoSave = currentText;

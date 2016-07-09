@@ -1871,9 +1871,14 @@
             public string MainListViewVideoGoToPositionMinus1SecAndPlay { get; set; }
             public string MainListViewEditTextAndPause { get; set; }
             public string AutoBackup { get; set; }
+            
             public string AutoBackupEveryMinute { get; set; }
             public string AutoBackupEveryFiveMinutes { get; set; }
             public string AutoBackupEveryFifteenMinutes { get; set; }
+            public string AutoBackupDeleteAfter { get; set; }
+            public string AutoBackupDeleteAfterOneMonth { get; set; }
+            public string AutoBackupDeleteAfterThreeMonths { get; set; }
+            public string AutoBackupDeleteAfterSixMonths { get; set; }
             public string CheckForUpdates { get; set; }
             public string AllowEditOfOriginalSubtitle { get; set; }
             public string PromptDeleteLines { get; set; }
