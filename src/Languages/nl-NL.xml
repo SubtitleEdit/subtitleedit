@@ -1520,6 +1520,12 @@ Indien u dit bestand met Subtitle Edit bewerkt hebt, kunt u een vorige versie vi
     <Rules>Tekstvervangingsregels</Rules>
     <MoveToTop>Naar begin</MoveToTop>
     <MoveToBottom>Naar einde</MoveToBottom>
+    <MoveSelectedRulesToGroup>Geselecteerde regels verplaatsen</MoveSelectedRulesToGroup>
+    <Groups>Groepen</Groups>
+    <RulesForGroupX>Regels voor groep ‘{0}’</RulesForGroupX>
+    <GroupName>Groepsnaam</GroupName>
+    <RenameGroup>Groepsnaam wĳzigen...</RenameGroup>
+    <NewGroup>Nieuwe groep...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1705,6 +1711,10 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <AutoBackupEveryMinute>Elke minuut</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Elke 5e minuut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Elke 15e minuut</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Verwĳderen na</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1 maand</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 maanden</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 maanden</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Naar updates zoeken</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Sta bewerking van de originele ondertitel toe</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Verwĳderen van tekst bevestigen</PromptDeleteLines>
@@ -1844,6 +1854,8 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <GoForward500Milliseconds>500 msec. vooruit</GoForward500Milliseconds>
     <GoBack1Second>Eén seconde terug</GoBack1Second>
     <GoForward1Second>Eén seconde vooruit</GoForward1Second>
+    <GoBack5Seconds>Vĳf seconden terug</GoBack5Seconds>
+    <GoForward5Seconds>Vĳf seconden vooruit</GoForward5Seconds>
     <TogglePlayPause>Verander tussen afspelen/pauze</TogglePlayPause>
     <Pause>Pauze</Pause>
     <Fullscreen>Volledig Scherm</Fullscreen>
