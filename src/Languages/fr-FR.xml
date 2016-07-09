@@ -1530,6 +1530,12 @@ Si vous avez modifié ce fichier avec Subtitle Edit vous pourriez trouver une sa
     <Rules>Règles de remplacement</Rules>
     <MoveToTop>Tout en haut</MoveToTop>
     <MoveToBottom>Tout en bas</MoveToBottom>
+    <MoveSelectedRulesToGroup>Déplacer les règles sélectionnées</MoveSelectedRulesToGroup>
+    <Groups>Groupes</Groups>
+    <RulesForGroupX>Règles de remplacement du groupe « {0} »</RulesForGroupX>
+    <GroupName>Nom de groupe</GroupName>
+    <RenameGroup>Renommer le groupe...</RenameGroup>
+    <NewGroup>Nouveau groupe...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Bavarder</Title>
@@ -1715,6 +1721,10 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <AutoBackupEveryMinute>Chaque minute</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Toutes les 5 minutes</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Toutes les 15 minutes</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Effacer après</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1 mois</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 mois</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 mois</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Rechercher des mises à jour</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Autoriser la modification du sous-titre original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmer la suppression des lignes</PromptDeleteLines>
@@ -1854,6 +1864,8 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <GoForward500Milliseconds>500 ms en avant</GoForward500Milliseconds>
     <GoBack1Second>Une seconde en arrière</GoBack1Second>
     <GoForward1Second>Une seconde en avant</GoForward1Second>
+    <GoBack5Seconds>Cinq secondes en arrière</GoBack5Seconds>
+    <GoForward5Seconds>Cinq secondes en avant</GoForward5Seconds>
     <TogglePlayPause>Alterner entre lecture et pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Plein écran</Fullscreen>
