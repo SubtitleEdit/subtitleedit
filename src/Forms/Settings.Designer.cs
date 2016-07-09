@@ -856,7 +856,7 @@
             "None",
             "Every minute",
             "Every 5 minutes",
-            "Evert 15 minutes"});
+            "Every 15 minutes"});
             this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 352);
             this.comboBoxAutoBackup.Name = "comboBoxAutoBackup";
             this.comboBoxAutoBackup.Size = new System.Drawing.Size(121, 21);
