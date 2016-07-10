@@ -1523,8 +1523,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Groups>그룹</Groups>
     <RulesForGroupX>그룹 "{0}"에 대한 규칙</RulesForGroupX>
     <GroupName>그룹 이름</GroupName>
-    <RenameGroup>그룹 이름 바꾸기</RenameGroup>
-    <NewGroup>새 그룹</NewGroup>
+    <RenameGroup>그룹 이름 변경...</RenameGroup>
+    <NewGroup>새 그룹...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>채팅</Title>
@@ -1710,6 +1710,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AutoBackupEveryMinute>1 분마다</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>5 분마다</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>15 분마다</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>백업 보존 기간</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1 개월</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 개월</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 개월</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>업데이트 확인</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>원본 자막의 편집을 허용</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>줄 삭제시 알림</PromptDeleteLines>
@@ -1849,6 +1853,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <GoForward500Milliseconds>0.5초 앞으로</GoForward500Milliseconds>
     <GoBack1Second>1초 뒤로</GoBack1Second>
     <GoForward1Second>1초 앞으로</GoForward1Second>
+    <GoBack5Seconds>5초 뒤로</GoBack5Seconds>
+    <GoForward5Seconds>5초 앞으로</GoForward5Seconds>
     <TogglePlayPause>재생 및 일시 중지</TogglePlayPause>
     <Pause>일시 중지</Pause>
     <Fullscreen>전체 화면</Fullscreen>
