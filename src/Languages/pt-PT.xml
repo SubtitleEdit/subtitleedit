@@ -1710,10 +1710,14 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>... para posição do vídeo - 0.5 seg e pausar</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>... para posição do vídeo - 1 seg e reproduzir</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>... para o quadro de edição de texto, e pausar na posição do vídeo</MainListViewEditTextAndPause>
-    <AutoBackup>Cópia de segurança automática</AutoBackup>
+    <AutoBackup>Cópia auto</AutoBackup>
     <AutoBackupEveryMinute>Cada minuto</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Cada 5 minutos</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Cada 15 minutos</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Eliminar após</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1 mês</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 meses</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 meses</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Verificar se há actualizações</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Permitir a edição da legenda original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmar eliminação de linhas</PromptDeleteLines>
@@ -1853,6 +1857,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoForward500Milliseconds>500 ms para a frente</GoForward500Milliseconds>
     <GoBack1Second>Um segundo para trás</GoBack1Second>
     <GoForward1Second>Um segundo para a frente</GoForward1Second>
+    <GoBack5Seconds>Cinco segundos para trás</GoBack5Seconds>
+    <GoForward5Seconds>Cinco segundos para a frente</GoForward5Seconds>
     <TogglePlayPause>Alternar reproduzir/pausar</TogglePlayPause>
     <Pause>Pausar</Pause>
     <Fullscreen>Ecrã inteiro</Fullscreen>
