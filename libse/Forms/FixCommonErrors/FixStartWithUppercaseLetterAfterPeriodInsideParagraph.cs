@@ -41,15 +41,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     while (start > 0 && start < text.Length)
                     {
                         char charAtPosition = text[start];
-                        // Allow fixing lowercase letter after recursive ??? or !!!.
-                        if (charAtPosition != '.') // Dot is not include 'cause I don't capitalize word after the ellipses (...), right?
+                        // Allow fixing lowercase 'i' after recursive ??? or !!!.
+                        if (charAtPosition != '.') // Dot is not include 'cause we don't capitalize word after the ellipses (...), right?
                         {
                             while (start + 1 < text.Length && text[start + 1] == charAtPosition)
                             {
                                 start++;
                             }
                         }
-                        if ((start + 3 < text.Length) && (text[start + 1] == ' ') && !IsAbbreviation(text, start, callbacks))
+                        if ((start + 2 < text.Length) && (text[start + 1] == ' ') && !IsAbbreviation(text, start, callbacks))
                         {
                             var subText = new StripableText(text.Substring(start + 2));
                             text = text.Substring(0, start + 2) + subText.CombineWithPrePost(ToUpperFirstLetter(subText.StrippedText, callbacks));
