@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonShowLater
             // 
-            this.buttonShowLater.Location = new System.Drawing.Point(144, 66);
+            this.buttonShowLater.Location = new System.Drawing.Point(169, 45);
             this.buttonShowLater.Name = "buttonShowLater";
             this.buttonShowLater.Size = new System.Drawing.Size(119, 21);
             this.buttonShowLater.TabIndex = 20;
@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonShowEarlier
             // 
-            this.buttonShowEarlier.Location = new System.Drawing.Point(144, 39);
+            this.buttonShowEarlier.Location = new System.Drawing.Point(168, 18);
             this.buttonShowEarlier.Name = "buttonShowEarlier";
             this.buttonShowEarlier.Size = new System.Drawing.Size(120, 21);
             this.buttonShowEarlier.TabIndex = 19;
@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonVideoSync
             // 
-            this.buttonVideoSync.Location = new System.Drawing.Point(144, 12);
+            this.buttonVideoSync.Location = new System.Drawing.Point(169, 80);
             this.buttonVideoSync.Name = "buttonVideoSync";
             this.buttonVideoSync.Size = new System.Drawing.Size(120, 21);
             this.buttonVideoSync.TabIndex = 42;
