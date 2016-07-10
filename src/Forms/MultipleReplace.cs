@@ -496,6 +496,10 @@ namespace Nikse.SubtitleEdit.Forms
             moveTopToolStripMenuItem.Visible = isVisible;
             moveBottomToolStripMenuItem.Visible = isVisible;
 
+            toolStripMenuItemExport.Visible = listViewRules.Items.Count > 0;
+            toolStripMenuItemRemoveAll.Visible = listViewRules.Items.Count > 0;
+            toolStripSeparator2.Visible = listViewRules.Items.Count > 0;
+
             deleteToolStripMenuItem.Visible = listViewRules.SelectedItems.Count >= 1;
 
             if (moreThanOneGroup && listViewRules.SelectedItems.Count >= 1)
