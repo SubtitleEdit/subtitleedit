@@ -2154,7 +2154,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     catch
                     {
-                        format = null;
+                        // ignore
                     }
                 }
 
@@ -2175,7 +2175,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     catch
                     {
-                        format = null;
+                        // ignore
                     }
                 }
 
@@ -2252,6 +2252,21 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         mtv.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = mtv;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+                if (format == null)
+                {
+                    var arib = new AribB36();
+                    if (arib.IsMine(null, fileName))
+                    {
+                        arib.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = arib;
                         SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
