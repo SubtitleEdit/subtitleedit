@@ -1027,8 +1027,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int firstSelectedIndex = 0;
                 if (subtitleListView1.SelectedItems.Count > 0)
                     firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
-
-                Paragraph p = GetParagraphOrDefault(firstSelectedIndex);
+                Paragraph p = _originalSubtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (p != null)
                 {
                     InitializeListViewEditBox(p);
@@ -1064,14 +1063,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private Paragraph GetParagraphOrDefault(int index)
-        {
-            if (_originalSubtitle.Paragraphs == null || _originalSubtitle.Paragraphs.Count <= index || index < 0)
-                return null;
-
-            return _originalSubtitle.Paragraphs[index];
-        }
-
         private void InitializeListViewEditBox(Paragraph p)
         {
             textBoxListViewText.TextChanged -= TextBoxListViewTextTextChanged;
@@ -1093,7 +1084,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
 
-                Paragraph currentParagraph = GetParagraphOrDefault(firstSelectedIndex);
+                Paragraph currentParagraph = _originalSubtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (currentParagraph != null)
                 {
                     UpdateOverlapErrors();
@@ -1115,11 +1106,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
 
-                Paragraph prevParagraph = GetParagraphOrDefault(firstSelectedIndex - 1);
+                Paragraph prevParagraph = _originalSubtitle.GetParagraphOrDefault(firstSelectedIndex - 1);
                 if (prevParagraph != null && prevParagraph.EndTime.TotalMilliseconds > startTime.TotalMilliseconds)
                     labelStartTimeWarning.Text = string.Format(_languageGeneral.OverlapPreviousLineX, (prevParagraph.EndTime.TotalMilliseconds - startTime.TotalMilliseconds) / TimeCode.BaseUnit);
 
-                Paragraph nextParagraph = GetParagraphOrDefault(firstSelectedIndex + 1);
+                Paragraph nextParagraph = _originalSubtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
                 if (nextParagraph != null)
                 {
                     double durationMilliSeconds = (double)numericUpDownDuration.Value * TimeCode.BaseUnit;
