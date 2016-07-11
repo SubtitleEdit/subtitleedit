@@ -1031,10 +1031,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = GetParagraphOrDefault(firstSelectedIndex);
                 if (p != null)
                 {
-                    textBoxListViewText.TextChanged -= TextBoxListViewTextTextChanged;
                     InitializeListViewEditBox(p);
-                    textBoxListViewText.TextChanged += TextBoxListViewTextTextChanged;
-
                     _subtitleListViewIndex = firstSelectedIndex;
                     UpdateOverlapErrors();
                     UpdateListViewTextInfo(p.Text);
