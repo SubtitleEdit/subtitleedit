@@ -286,13 +286,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     int j = 1;
                     while (j < newText.Length)
                     {
-                        if (@"!?:;".Contains(newText[j]))
+                        if (@"!?:;".Contains(newText[j]) && char.IsLetter(newText[j - 1]))
                         {
-                            if (Utilities.AllLetters.Contains(newText[j - 1]))
-                            {
-                                newText = newText.Insert(j, " ");
-                                j++;
-                            }
+                            newText = newText.Insert(j++, " ");
                         }
                         j++;
                     }
