@@ -228,7 +228,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             if (isPrevEndOfLine && prevText.Length > 5 && prevText.EndsWith('.') &&
                 prevText[prevText.Length - 3] == '.' &&
-                Utilities.AllLetters.Contains(prevText[prevText.Length - 2]))
+                char.IsLetter(prevText[prevText.Length - 2]))
                 isPrevEndOfLine = false;
             return isPrevEndOfLine;
         }
@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                 int newLineIdx = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                                 bool addSecondLine = idx < newLineIdx;
 
-                                if (addSecondLine && idx > 0 && Utilities.AllLetters.Contains(text[idx - 1]))
+                                if (addSecondLine && idx > 0 && char.IsLetter(text[idx - 1]))
                                     addSecondLine = false;
                                 if (addSecondLine)
                                 {
