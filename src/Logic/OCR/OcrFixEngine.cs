@@ -664,7 +664,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     return true;
             }
 
-            if (line.Length > 5 && line[line.Length - 3] == '.' && Utilities.AllLetters.Contains(line[line.Length - 2]))
+            if (line.Length > 5 && line[line.Length - 3] == '.' && char.IsLetter(line[line.Length - 2]))
                 return true;
 
             return false;
