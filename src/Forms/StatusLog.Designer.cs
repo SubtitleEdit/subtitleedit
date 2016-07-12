@@ -30,6 +30,7 @@
         {
             this.buttonOK = new System.Windows.Forms.Button();
             this.textBoxStatusLog = new System.Windows.Forms.TextBox();
+            this.buttonExportLog = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -56,11 +57,22 @@
             this.textBoxStatusLog.Size = new System.Drawing.Size(939, 388);
             this.textBoxStatusLog.TabIndex = 2;
             // 
+            // buttonExportLog
+            // 
+            this.buttonExportLog.Location = new System.Drawing.Point(770, 407);
+            this.buttonExportLog.Name = "buttonExportLog";
+            this.buttonExportLog.Size = new System.Drawing.Size(101, 21);
+            this.buttonExportLog.TabIndex = 3;
+            this.buttonExportLog.Text = "Export";
+            this.buttonExportLog.UseVisualStyleBackColor = true;
+            this.buttonExportLog.Click += new System.EventHandler(this.buttonExportLog_Click);
+            // 
             // StatusLog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(964, 440);
+            this.Controls.Add(this.buttonExportLog);
             this.Controls.Add(this.textBoxStatusLog);
             this.Controls.Add(this.buttonOK);
             this.KeyPreview = true;
@@ -82,5 +94,6 @@
 
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.TextBox textBoxStatusLog;
+        private System.Windows.Forms.Button buttonExportLog;
     }
 }
