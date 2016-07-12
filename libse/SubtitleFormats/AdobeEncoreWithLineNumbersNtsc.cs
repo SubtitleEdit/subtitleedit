@@ -42,11 +42,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var sb = new StringBuilder();
             int index = 1;
+            const string writeFormat = "{0} {1} {2} {3}";
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //00:03:15:22 00:03:23:10 This is line one.
                 //This is line two.
-                sb.AppendLine(string.Format("{0} {1} {2} {3}", index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(p.Text, true)));
+                sb.AppendLine(string.Format(writeFormat, index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(p.Text, true)));
                 index++;
             }
             return sb.ToString();
@@ -65,28 +66,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
+            char[] splitChar = { ';' };
+            Match match = null;
             foreach (string line in lines)
             {
-                if (RegexTimeCodes.IsMatch(line))
+                if (line.Length >= 25 && (match = RegexTimeCodes.Match(line)).Success)
                 {
                     string temp = line.Substring(line.IndexOf(' ')).Trim();
                     string start = temp.Substring(0, 11);
                     string end = temp.Substring(12, 11);
 
-                    string[] startParts = start.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    string[] endParts = end.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (startParts.Length == 4 && endParts.Length == 4)
+                    string[] startParts = start.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+                    string[] endParts = end.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
+                    try
                     {
-                        string text = line.Remove(0, RegexTimeCodes.Match(line).Length - 1).Trim();
+                        string text = line.Remove(0, match.Length - 1).Trim();
                         p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), DecodeTimeCodeFramesFourParts(endParts), text);
                         subtitle.Paragraphs.Add(p);
                     }
+                    catch
+                    {
+                        _errorCount++;
+                    }
                 }
-                else if (string.IsNullOrWhiteSpace(line))
-                {
-                    // skip these lines
-                }
-                else if (p != null)
+                else if (p != null && !string.IsNullOrWhiteSpace(line))
                 {
                     if (string.IsNullOrEmpty(p.Text))
                         p.Text = line;
