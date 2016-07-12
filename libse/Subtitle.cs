@@ -103,8 +103,12 @@ namespace Nikse.SubtitleEdit.Core
                 _format = format;
                 return format;
             }
+            bool flag = format != null;
             foreach (SubtitleFormat subtitleFormat in SubtitleFormat.AllSubtitleFormats)
             {
+                // Do not try format twice!
+                if (flag && subtitleFormat.Name == format.Name)
+                    continue;
                 if (subtitleFormat.IsMine(lines, fileName))
                 {
                     subtitleFormat.LoadSubtitle(this, lines, fileName);
