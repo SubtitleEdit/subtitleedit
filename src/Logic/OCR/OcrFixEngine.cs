@@ -695,14 +695,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             bool hasDotDot = input.Contains("..") || input.Contains(". .");
             if (hasDotDot)
             {
-                if (input.Length > 5 && input.StartsWith("..") && Utilities.AllLettersAndNumbers.Contains(input[2]))
+                if (input.Length > 5 && input.StartsWith("..", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(input[2]))
                     input = "..." + input.Remove(0, 2);
-                if (input.Length > 7 && input.StartsWith("<i>..") && Utilities.AllLettersAndNumbers.Contains(input[5]))
+                if (input.Length > 7 && input.StartsWith("<i>..", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(input[5]))
                     input = "<i>..." + input.Remove(0, 5);
 
                 if (input.Length > 5 && input.StartsWith(".. ") && Utilities.AllLettersAndNumbers.Contains(input[3]))
                     input = "..." + input.Remove(0, 3);
-                if (input.Length > 7 && input.StartsWith("<i>.. ") && Utilities.AllLettersAndNumbers.Contains(input[6]))
+                if (input.Length > 7 && input.StartsWith("<i>.. ", StringComparison.Ordinal) && Utilities.AllLettersAndNumbers.Contains(input[6]))
                     input = "<i>..." + input.Remove(0, 6);
                 if (input.Contains(Environment.NewLine + ".. "))
                     input = input.Replace(Environment.NewLine + ".. ", Environment.NewLine + "...");
@@ -744,7 +744,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     input = input.Remove(input.Length - 4, 4) + "...";
                 if (input.EndsWith(". . .", StringComparison.Ordinal))
                     input = input.Remove(input.Length - 5, 5) + "...";
-                if (input.EndsWith(". ..."))
+                if (input.EndsWith(". ...", StringComparison.Ordinal))
                     input = input.Remove(input.Length - 5, 5) + "...";
 
                 if (input.EndsWith(". ..</i>", StringComparison.Ordinal))
@@ -776,9 +776,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 input = input.Replace("....", "...");
                 input = input.Replace("....", "...");
 
-                if (input.StartsWith("- ...") && lastLine != null && lastLine.EndsWith("...") && !(input.Contains(Environment.NewLine + "-")))
+                if (input.StartsWith("- ...", StringComparison.Ordinal) && lastLine != null && lastLine.EndsWith("...", StringComparison.Ordinal) && !(input.Contains(Environment.NewLine + "-")))
                     input = input.Remove(0, 2);
-                if (input.StartsWith("-...") && lastLine != null && lastLine.EndsWith("...") && !(input.Contains(Environment.NewLine + "-")))
+                if (input.StartsWith("-...", StringComparison.Ordinal) && lastLine != null && lastLine.EndsWith("...", StringComparison.Ordinal) && !(input.Contains(Environment.NewLine + "-")))
                     input = input.Remove(0, 1);
             }
 
@@ -813,7 +813,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 lastLine = HtmlUtil.RemoveHtmlTags(lastLine);
                 var st = new StripableText(input);
-                if (lastLine == null || (!lastLine.EndsWith("...") && !EndsWithAbbreviation(lastLine, abbreviationList)))
+                if (lastLine == null || (!lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, abbreviationList)))
                 {
                     if (st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("..."))
                     {
@@ -822,12 +822,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             var uppercaseLetter = char.ToUpper(st.StrippedText[0]);
                             if (st.StrippedText.Length > 1 && uppercaseLetter == 'L' && @"abcdfghjklmnpqrstvwxz".Contains(st.StrippedText[1]))
                                 uppercaseLetter = 'I';
-                            if ((st.StrippedText.StartsWith("lo ") || st.StrippedText == "lo.") && _threeLetterIsoLanguageName == "ita")
+                            if ((st.StrippedText.StartsWith("lo ", StringComparison.Ordinal) || st.StrippedText.Equals("lo.", StringComparison.Ordinal)) && _threeLetterIsoLanguageName.Equals("ita", StringComparison.Ordinal))
                                 uppercaseLetter = 'I';
-                            if ((st.StrippedText.StartsWith("k ", StringComparison.Ordinal) || st.StrippedText.StartsWith("m ", StringComparison.Ordinal) || st.StrippedText.StartsWith("n ") || st.StrippedText.StartsWith("r ") || st.StrippedText.StartsWith("s ") || st.StrippedText.StartsWith("t ")) &&
-                                st.Pre.EndsWith('\'') && _threeLetterIsoLanguageName == "nld")
+                            if ((st.StrippedText.StartsWith("k ", StringComparison.Ordinal) || st.StrippedText.StartsWith("m ", StringComparison.Ordinal) || st.StrippedText.StartsWith("n ", StringComparison.Ordinal) || st.StrippedText.StartsWith("r ", StringComparison.Ordinal) || st.StrippedText.StartsWith("s ", StringComparison.Ordinal) || st.StrippedText.StartsWith("t ", StringComparison.Ordinal)) &&
+                                st.Pre.EndsWith('\'') && _threeLetterIsoLanguageName.Equals("nld", StringComparison.Ordinal))
                                 uppercaseLetter = st.StrippedText[0];
-                            if ((st.StrippedText.StartsWith("l-I'll ", StringComparison.Ordinal) || st.StrippedText.StartsWith("l-l'll ", StringComparison.Ordinal)) && _threeLetterIsoLanguageName == "eng")
+                            if ((st.StrippedText.StartsWith("l-I'll ", StringComparison.Ordinal) || st.StrippedText.StartsWith("l-l'll ", StringComparison.Ordinal)) && _threeLetterIsoLanguageName.Equals("eng", StringComparison.Ordinal))
                             {
                                 uppercaseLetter = 'I';
                                 st.StrippedText = "I-I" + st.StrippedText.Remove(0, 3);
@@ -841,7 +841,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             // lines ending with ". should often end at ... (of no other quotes exists near by)
             if ((lastLine == null || !lastLine.Contains('"')) &&
-                input.EndsWith("\".") && input.IndexOf('"') == input.LastIndexOf('"') && input.Length > 3)
+                input.EndsWith("\".", StringComparison.Ordinal) && input.IndexOf('"') == input.LastIndexOf('"') && input.Length > 3)
             {
                 var lastChar = input[input.Length - 3];
                 if (!char.IsDigit(lastChar))
@@ -872,9 +872,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 while (match.Success)
                 {
                     bool doFix = true;
-                    if (match.Index >= 1 && input.Substring(match.Index - 1).StartsWith("Mc"))
+                    if (match.Index >= 1 && input.Substring(match.Index - 1).StartsWith("Mc", StringComparison.Ordinal))
                         doFix = false;
-                    if (match.Index >= 2 && input.Substring(match.Index - 2).StartsWith("Mac"))
+                    if (match.Index >= 2 && input.Substring(match.Index - 2).StartsWith("Mac", StringComparison.Ordinal))
                         doFix = false;
 
                     if (doFix)
