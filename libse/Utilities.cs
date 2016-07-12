@@ -1882,17 +1882,15 @@ namespace Nikse.SubtitleEdit.Core
                     {
                         string before = string.Empty;
                         int k = idx - 1;
-                        while (k >= 0 && AllLettersAndNumbers.Contains(text[k]))
+                        while (k >= 0 && char.IsLetterOrDigit(text[k]))
                         {
-                            before = text[k] + before;
-                            k--;
+                            before = text[k--] + before;
                         }
                         string after = string.Empty;
                         k = idx + 2;
-                        while (k < text.Length && AllLetters.Contains(text[k]))
+                        while (k < text.Length && char.IsLetter(text[k]))
                         {
-                            after = after + text[k];
-                            k++;
+                            after = after + text[k++];
                         }
                         if (after.Length > 0 && after.Equals(before, StringComparison.OrdinalIgnoreCase))
                             text = text.Remove(idx + 1, 1);
@@ -1929,7 +1927,7 @@ namespace Nikse.SubtitleEdit.Core
                 int idxp = text.IndexOf('"');
 
                 //"Foo " bar.
-                if ((idxp >= 0 && idxp < idx) && AllLettersAndNumbers.Contains(text[idx - 1]) && !" \r\n".Contains(text[idxp + 1]))
+                if ((idxp >= 0 && idxp < idx) && char.IsLetterOrDigit(text[idx - 1]) && !" \r\n".Contains(text[idxp + 1]))
                 {
                     text = text.Remove(idx, 1);
                 }
@@ -1939,7 +1937,7 @@ namespace Nikse.SubtitleEdit.Core
                 idxp = text.IndexOf('"');
                 if (idxp >= 0 && idx > idxp)
                 {
-                    if (text[idxp + 1] == ' ' && AllLettersAndNumbers.Contains(text[idxp + 2]))
+                    if (text[idxp + 1] == ' ' && char.IsLetterOrDigit(text[idxp + 2]))
                     {
                         text = text.Remove(idxp + 1, 1);
                         idx--;

@@ -6494,12 +6494,12 @@ namespace Nikse.SubtitleEdit.Forms
                             else
                             {
                                 unItalicText = unItalicText.Replace("</i>", string.Empty);
-                                if (line.EndsWith("</i>") && unItalicText.EndsWith('.'))
+                                if (line.EndsWith("</i>", StringComparison.Ordinal) && unItalicText.EndsWith('.'))
                                 {
                                     line = line.Remove(line.Length - 4, 4);
                                     if (line.EndsWith('-'))
                                         line = line.TrimEnd('-') + ".";
-                                    if (Utilities.AllLetters.Contains(line.Substring(line.Length - 1)))
+                                    if (char.IsLetter(line[line.Length - 1]))
                                         line += ".";
                                     line += "</i>";
                                 }

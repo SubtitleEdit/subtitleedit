@@ -205,10 +205,9 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
             string word = string.Empty;
             int i = index - 1;
-            while (i >= 0 && Utilities.AllLetters.Contains(text[i]))
+            while (i >= 0 && char.IsLetter(text[i]))
             {
-                word = text[i] + word;
-                i--;
+                word = text[i--] + word;
             }
 
             //Common Spanish abbreviations
