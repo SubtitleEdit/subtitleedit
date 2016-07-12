@@ -1460,23 +1460,60 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         param.Saved = true;
 
                         string verticalAlignment = "bottom";
-                        if (param.P.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an8}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an8}", StringComparison.Ordinal))
-                            verticalAlignment = "top";
-                        else if (param.P.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an6}", StringComparison.Ordinal))
-                            verticalAlignment = "center";
-
                         string horizontalAlignment = "center";
-                        if (param.P.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an7}", StringComparison.Ordinal))
-                            horizontalAlignment = "left";
-                        else if (param.P.Text.StartsWith("{\\an3}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an6}", StringComparison.Ordinal) || param.P.Text.StartsWith("{\\an9}", StringComparison.Ordinal))
-                            horizontalAlignment = "right";
+                        string vPos = "9.7";
+                        string hPos = "0";
 
+                        switch (param.Alignment)
+                        {
+                            case ContentAlignment.BottomLeft:
+                                verticalAlignment = "bottom";
+                                horizontalAlignment = "left";
+                                hPos = "10";
+                                break;
+                            case ContentAlignment.BottomRight:
+                                verticalAlignment = "bottom";
+                                horizontalAlignment = "right";
+                                hPos = "10";
+                                break;
+                            case ContentAlignment.MiddleCenter:
+                                verticalAlignment = "center";
+                                vPos = "0";
+                                break;
+                            case ContentAlignment.MiddleLeft:
+                                verticalAlignment = "center";
+                                horizontalAlignment = "left";
+                                hPos = "10";
+                                vPos = "0";
+                                break;
+                            case ContentAlignment.MiddleRight:
+                                verticalAlignment = "center";
+                                horizontalAlignment = "right";
+                                hPos = "10";
+                                vPos = "0";
+                                break;
+                            case ContentAlignment.TopCenter:
+                                verticalAlignment = "top";
+                                break;
+                            case ContentAlignment.TopLeft:
+                                verticalAlignment = "top";
+                                horizontalAlignment = "left";
+                                hPos = "10";
+                                break;
+                            case ContentAlignment.TopRight:
+                                verticalAlignment = "top";
+                                horizontalAlignment = "right";
+                                hPos = "10";
+                                break;
+                        }
 
                         sb.AppendLine("<Subtitle FadeDownTime=\"" + 0 + "\" FadeUpTime=\"" + 0 + "\" TimeOut=\"" + DCSubtitle.ConvertToTimeString(param.P.EndTime) + "\" TimeIn=\"" + DCSubtitle.ConvertToTimeString(param.P.StartTime) + "\" SpotNumber=\"" + param.P.Number + "\">");
                         if (param.Depth3D == 0)
-                            sb.AppendLine("<Image VPosition=\"9.7\" VAlign=\"" + verticalAlignment + "\" HAlign=\"" + horizontalAlignment + "\">" + numberString + ".png" + "</Image>");
+
+                            sb.AppendLine("<Image VPosition=\"" + vPos + "\" HPosition=\"" + hPos + "\" VAlign=\"" + verticalAlignment + "\" HAlign=\"" + horizontalAlignment + "\">" + numberString + ".png" + "</Image>");
+
                         else
-                            sb.AppendLine("<Image VPosition=\"9.7\" ZPosition=\"" + param.Depth3D + "\" VAlign=\"" + verticalAlignment + "\" HAlign=\"" + horizontalAlignment + "\">" + numberString + ".png" + "</Image>");
+                            sb.AppendLine("<Image VPosition=\"" + vPos + "\" HPosition=\"" + hPos + "\" ZPosition=\"" + param.Depth3D + "\" VAlign=\"" + verticalAlignment + "\" HAlign=\"" + horizontalAlignment + "\">" + numberString + ".png" + "</Image>");
                         sb.AppendLine("</Subtitle>");
                     }
                 }
