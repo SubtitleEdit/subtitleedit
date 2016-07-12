@@ -39,15 +39,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
+            if (lines.Count > 0 && !lines[0].TrimStart().StartsWith("{\\rtf", StringComparison.Ordinal))
+            {
+                _errorCount++;
+                return;
+            }
+
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
 
             string rtf = sb.ToString().Trim();
-            if (!rtf.StartsWith("{\\rtf"))
-                return;
-
             var list = rtf.FromRtf().SplitToLines().ToList();
             base.LoadSubtitle(subtitle, list, fileName);
         }
