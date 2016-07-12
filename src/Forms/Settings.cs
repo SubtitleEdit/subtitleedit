@@ -1442,7 +1442,7 @@ namespace Nikse.SubtitleEdit.Forms
             var task = Task.Factory.StartNew(() =>
             {
                 // names etc
-                var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+                var namesList = NamesList.NamesListFactory(language);
                 _wordListNamesEtc = namesList.GetAllNames();
                 _wordListNamesEtc.Sort();
                 return _wordListNamesEtc;
@@ -1477,7 +1477,7 @@ namespace Nikse.SubtitleEdit.Forms
             string text = textBoxNameEtc.Text.RemoveControlCharacters().Trim();
             if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNamesEtc.Contains(text))
             {
-                var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+                var namesList = NamesList.NamesListFactory(language);
                 namesList.Add(text);
                 LoadNamesEtc(language, true);
                 labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
@@ -1526,7 +1526,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (result == DialogResult.Yes)
                 {
                     int removeCount = 0;
-                    var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+                    var namesList = NamesList.NamesListFactory(language);
                     for (int idx = listBoxNamesEtc.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
                         index = listBoxNamesEtc.SelectedIndices[idx];
