@@ -140,6 +140,19 @@ namespace Nikse.SubtitleEdit.Core
             return -1;
         }
 
+        public static int IndexOfAny(this string s, string[] words, int startIndex, StringComparison comparisonType)
+        {
+            if (words == null || string.IsNullOrEmpty(s) || startIndex < 0 || startIndex >= s.Length)
+                return -1;
+            for (int i = 0; i < words.Length; i++)
+            {
+                var idx = s.IndexOf(words[i], startIndex, comparisonType);
+                if (idx >= 0)
+                    return idx;
+            }
+            return -1;
+        }
+
         public static string FixExtraSpaces(this string s)
         {
             if (string.IsNullOrEmpty(s))

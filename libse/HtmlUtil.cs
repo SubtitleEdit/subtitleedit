@@ -413,7 +413,7 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 var tag = text.Substring(idx, endIdx - idx).ToLowerInvariant();
                 text = text.Remove(idx, endIdx - idx).Insert(idx, tag);
-                idx = text.IndexOfAny(UppercaseTags, StringComparison.Ordinal);
+                idx = text.IndexOfAny(UppercaseTags, idx + tag.Length, StringComparison.Ordinal);
             }
             return text;
         }
