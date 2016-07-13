@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Subtitle == null)
                 return;
-
+            Cursor.Current = Cursors.WaitCursor;
             _removeTextForHiLib.Settings = GetSettings();
             _removeTextForHiLib.Warnings = new List<int>();
             listViewFixes.BeginUpdate();
@@ -120,6 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(_language.LinesFoundX, count);
+            Cursor.Current = Cursors.Default;
         }
 
         private void AddToListView(Paragraph p, string newText)
@@ -188,16 +189,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void CheckBoxRemoveTextBetweenCheckedChanged(object sender, EventArgs e)
         {
-            Cursor = Cursors.WaitCursor;
             GeneratePreview();
-            Cursor = Cursors.Default;
         }
 
         private void checkBoxRemoveInterjections_CheckedChanged(object sender, EventArgs e)
         {
-            Cursor = Cursors.WaitCursor;
             GeneratePreview();
-            Cursor = Cursors.Default;
         }
 
         private void buttonEditInterjections_Click(object sender, EventArgs e)
@@ -211,9 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _removeTextForHiLib.ResetInterjections();
                     if (checkBoxRemoveInterjections.Checked)
                     {
-                        Cursor = Cursors.WaitCursor;
                         GeneratePreview();
-                        Cursor = Cursors.Default;
                     }
                 }
             }
@@ -250,16 +245,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             checkBoxRemoveTextBeforeColonOnlyUppercase.Enabled = checkBoxRemoveTextBeforeColon.Checked;
             checkBoxColonSeparateLine.Enabled = checkBoxRemoveTextBeforeColon.Checked;
-            Cursor = Cursors.WaitCursor;
             GeneratePreview();
-            Cursor = Cursors.Default;
         }
 
         private void checkBoxRemoveIfAllUppercase_CheckedChanged(object sender, EventArgs e)
         {
-            Cursor = Cursors.WaitCursor;
             GeneratePreview();
-            Cursor = Cursors.Default;
         }
 
         public RemoveTextForHISettings GetSettings()
