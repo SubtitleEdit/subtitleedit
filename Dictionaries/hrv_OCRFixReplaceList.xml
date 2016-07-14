@@ -1691,7 +1691,7 @@
     <RegEx find="Kajl" replaceWith="Kyle" />
     <RegEx find="Kavendiš" replaceWith="Cavendish" />
     <RegEx find="Kejleb" replaceWith="Caleb" />
-    <RegEx find="Kembridž" replaceWith="Cambridge" />    
+    <RegEx find="Kembridž" replaceWith="Cambridge" />
     <RegEx find="Kerol" replaceWith="Carol" />
     <RegEx find="Konn?ektik[eu]t" replaceWith="Connecticut" />
     <RegEx find="Korejan" replaceWith="Korej" />
