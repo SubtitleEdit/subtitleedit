@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                     "    </Font>" + Environment.NewLine +
                                     "</DCSubtitle>";
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
             xml.PreserveWhitespace = true;
 
@@ -120,31 +120,31 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             xml.DocumentElement.SelectSingleNode("Font").Attributes["EffectColor"].InnerText = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontEffectColor).TrimStart('#').ToUpper();
             xml.DocumentElement.SelectSingleNode("Font").Attributes["Size"].InnerText = ss.CurrentDCinemaFontSize.ToString();
 
-            XmlNode mainListFont = xml.DocumentElement.SelectSingleNode("Font");
+            var mainListFont = xml.DocumentElement.SelectSingleNode("Font");
             int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (!string.IsNullOrEmpty(p.Text))
                 {
-                    XmlNode subNode = xml.CreateElement("Subtitle");
+                    var subNode = xml.CreateElement("Subtitle");
 
-                    XmlAttribute id = xml.CreateAttribute("SpotNumber");
+                    var id = xml.CreateAttribute("SpotNumber");
                     id.InnerText = (no + 1).ToString();
                     subNode.Attributes.Append(id);
 
-                    XmlAttribute fadeUpTime = xml.CreateAttribute("FadeUpTime");
+                    var fadeUpTime = xml.CreateAttribute("FadeUpTime");
                     fadeUpTime.InnerText = Configuration.Settings.SubtitleSettings.DCinemaFadeUpTime.ToString();
                     subNode.Attributes.Append(fadeUpTime);
 
-                    XmlAttribute fadeDownTime = xml.CreateAttribute("FadeDownTime");
+                    var fadeDownTime = xml.CreateAttribute("FadeDownTime");
                     fadeDownTime.InnerText = Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime.ToString();
                     subNode.Attributes.Append(fadeDownTime);
 
-                    XmlAttribute start = xml.CreateAttribute("TimeIn");
+                    var start = xml.CreateAttribute("TimeIn");
                     start.InnerText = ConvertToTimeString(p.StartTime);
                     subNode.Attributes.Append(start);
 
-                    XmlAttribute end = xml.CreateAttribute("TimeOut");
+                    var end = xml.CreateAttribute("TimeOut");
                     end.InnerText = ConvertToTimeString(p.EndTime);
                     subNode.Attributes.Append(end);
 
@@ -180,23 +180,23 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     bool isItalic = false;
                     int fontNo = 0;
-                    Stack<string> fontColors = new Stack<string>();
+                    var fontColors = new Stack<string>();
                     foreach (string line in lines)
                     {
-                        XmlNode textNode = xml.CreateElement("Text");
+                        var textNode = xml.CreateElement("Text");
 
-                        XmlAttribute vPosition = xml.CreateAttribute("VPosition");
+                        var vPosition = xml.CreateAttribute("VPosition");
                         vPosition.InnerText = vPos.ToString();
                         textNode.Attributes.Append(vPosition);
 
-                        if (Configuration.Settings.SubtitleSettings.DCinemaZPosition != 0)
+                        if (Math.Abs(Configuration.Settings.SubtitleSettings.DCinemaZPosition) > 0.01)
                         {
-                            XmlAttribute zPosition = xml.CreateAttribute("ZPosition");
+                            var zPosition = xml.CreateAttribute("ZPosition");
                             zPosition.InnerText = string.Format(CultureInfo.InvariantCulture, "{0:0.00}", Configuration.Settings.SubtitleSettings.DCinemaZPosition);
                             textNode.Attributes.Append(zPosition);
                         }
 
-                        XmlAttribute vAlign = xml.CreateAttribute("VAlign");
+                        var vAlign = xml.CreateAttribute("VAlign");
                         if (alignVTop)
                             vAlign.InnerText = "top";
                         else if (alignVCenter)
@@ -205,7 +205,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             vAlign.InnerText = "bottom";
                         textNode.Attributes.Append(vAlign);
 
-                        XmlAttribute hAlign = xml.CreateAttribute("HAlign");
+                        var hAlign = xml.CreateAttribute("HAlign");
                         if (alignLeft)
                             hAlign.InnerText = "left";
                         else if (alignRight)
@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             hAlign.InnerText = "center";
                         textNode.Attributes.Append(hAlign);
 
-                        XmlAttribute direction = xml.CreateAttribute("Direction");
+                        var direction = xml.CreateAttribute("Direction");
                         direction.InnerText = "horizontal";
                         textNode.Attributes.Append(direction);
 
@@ -230,7 +230,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 {
                                     nodeTemp.InnerText = txt.ToString();
                                     html.Append(nodeTemp.InnerXml);
-                                    txt = new StringBuilder();
+                                    txt.Clear();
                                 }
                                 isItalic = true;
                                 i += 2;
@@ -239,22 +239,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 if (txt.Length > 0)
                                 {
-                                    XmlNode fontNode = xml.CreateElement("Font");
+                                    var fontNode = xml.CreateElement("Font");
 
-                                    XmlAttribute italic = xml.CreateAttribute("Italic");
+                                    var italic = xml.CreateAttribute("Italic");
                                     italic.InnerText = "yes";
                                     fontNode.Attributes.Append(italic);
 
                                     if (!string.IsNullOrEmpty(ss.CurrentDCinemaFontEffect))
                                     {
-                                        XmlAttribute fontEffect = xml.CreateAttribute("Effect");
+                                        var fontEffect = xml.CreateAttribute("Effect");
                                         fontEffect.InnerText = ss.CurrentDCinemaFontEffect;
                                         fontNode.Attributes.Append(fontEffect);
                                     }
 
                                     if (line.Length > i + 5 && line.Substring(i + 4).StartsWith("</font>"))
                                     {
-                                        XmlAttribute fontColor = xml.CreateAttribute("Color");
+                                        var fontColor = xml.CreateAttribute("Color");
                                         fontColor.InnerText = fontColors.Pop();
                                         fontNode.Attributes.Append(fontColor);
                                         fontNo--;
@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                                     fontNode.InnerText = HtmlUtil.RemoveHtmlTags(txt.ToString());
                                     html.Append(fontNode.OuterXml);
-                                    txt = new StringBuilder();
+                                    txt.Clear();
                                 }
                                 isItalic = false;
                                 i += 3;
@@ -275,7 +275,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 {
                                     nodeTemp.InnerText = txt.ToString();
                                     html.Append(nodeTemp.InnerXml);
-                                    txt = new StringBuilder();
+                                    txt.Clear();
                                 }
                                 string c = line.Substring(i + 12, endOfFont - (i + 12));
                                 c = c.Trim('"').Trim('\'').Trim();
@@ -289,15 +289,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             {
                                 if (txt.Length > 0)
                                 {
-                                    XmlNode fontNode = xml.CreateElement("Font");
+                                    var fontNode = xml.CreateElement("Font");
 
-                                    XmlAttribute fontColor = xml.CreateAttribute("Color");
+                                    var fontColor = xml.CreateAttribute("Color");
                                     fontColor.InnerText = fontColors.Pop();
                                     fontNode.Attributes.Append(fontColor);
 
                                     if (line.Length > i + 9 && line.Substring(i + 7).StartsWith("</i>"))
                                     {
-                                        XmlAttribute italic = xml.CreateAttribute("Italic");
+                                        var italic = xml.CreateAttribute("Italic");
                                         italic.InnerText = "yes";
                                         fontNode.Attributes.Append(italic);
                                         isItalic = false;
@@ -306,14 +306,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                                     if (!string.IsNullOrEmpty(ss.CurrentDCinemaFontEffect))
                                     {
-                                        XmlAttribute fontEffect = xml.CreateAttribute("Effect");
+                                        var fontEffect = xml.CreateAttribute("Effect");
                                         fontEffect.InnerText = ss.CurrentDCinemaFontEffect;
                                         fontNode.Attributes.Append(fontEffect);
                                     }
 
                                     fontNode.InnerText = HtmlUtil.RemoveHtmlTags(txt.ToString());
                                     html.Append(fontNode.OuterXml);
-                                    txt = new StringBuilder();
+                                    txt.Clear();
                                 }
                                 fontNo--;
                                 i += 6;
@@ -328,22 +328,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             if (txt.Length > 0)
                             {
-                                XmlNode fontNode = xml.CreateElement("Font");
+                                var fontNode = xml.CreateElement("Font");
 
-                                XmlAttribute fontColor = xml.CreateAttribute("Color");
+                                var fontColor = xml.CreateAttribute("Color");
                                 fontColor.InnerText = fontColors.Peek();
                                 fontNode.Attributes.Append(fontColor);
 
                                 if (isItalic)
                                 {
-                                    XmlAttribute italic = xml.CreateAttribute("Italic");
+                                    var italic = xml.CreateAttribute("Italic");
                                     italic.InnerText = "yes";
                                     fontNode.Attributes.Append(italic);
                                 }
 
                                 if (!string.IsNullOrEmpty(ss.CurrentDCinemaFontEffect))
                                 {
-                                    XmlAttribute fontEffect = xml.CreateAttribute("Effect");
+                                    var fontEffect = xml.CreateAttribute("Effect");
                                     fontEffect.InnerText = ss.CurrentDCinemaFontEffect;
                                     fontNode.Attributes.Append(fontEffect);
                                 }
@@ -353,29 +353,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                             else if (html.Length > 0 && html.ToString().StartsWith("<Font "))
                             {
-                                XmlDocument temp = new XmlDocument();
+                                var temp = new XmlDocument();
                                 temp.LoadXml("<root>" + html + "</root>");
-                                XmlNode fontNode = xml.CreateElement("Font");
+                                var fontNode = xml.CreateElement("Font");
                                 fontNode.InnerXml = temp.DocumentElement.SelectSingleNode("Font").InnerXml;
                                 foreach (XmlAttribute a in temp.DocumentElement.SelectSingleNode("Font").Attributes)
                                 {
-                                    XmlAttribute newA = xml.CreateAttribute(a.Name);
+                                    var newA = xml.CreateAttribute(a.Name);
                                     newA.InnerText = a.InnerText;
                                     fontNode.Attributes.Append(newA);
                                 }
 
-                                XmlAttribute fontColor = xml.CreateAttribute("Color");
+                                var fontColor = xml.CreateAttribute("Color");
                                 fontColor.InnerText = fontColors.Peek();
                                 fontNode.Attributes.Append(fontColor);
 
                                 if (!string.IsNullOrEmpty(ss.CurrentDCinemaFontEffect))
                                 {
-                                    XmlAttribute fontEffect = xml.CreateAttribute("Effect");
+                                    var fontEffect = xml.CreateAttribute("Effect");
                                     fontEffect.InnerText = ss.CurrentDCinemaFontEffect;
                                     fontNode.Attributes.Append(fontEffect);
                                 }
 
-                                html = new StringBuilder();
+                                html.Clear();
                                 html.Append(fontNode.OuterXml);
                             }
                         }
@@ -383,20 +383,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         {
                             if (txt.Length > 0)
                             {
-                                XmlNode fontNode = xml.CreateElement("Font");
+                                var fontNode = xml.CreateElement("Font");
 
-                                XmlAttribute italic = xml.CreateAttribute("Italic");
+                                var italic = xml.CreateAttribute("Italic");
                                 italic.InnerText = "yes";
                                 fontNode.Attributes.Append(italic);
 
                                 if (!string.IsNullOrEmpty(ss.CurrentDCinemaFontEffect))
                                 {
-                                    XmlAttribute fontEffect = xml.CreateAttribute("Effect");
+                                    var fontEffect = xml.CreateAttribute("Effect");
                                     fontEffect.InnerText = ss.CurrentDCinemaFontEffect;
                                     fontNode.Attributes.Append(fontEffect);
                                 }
 
-                                fontNode.InnerText = HtmlUtil.RemoveHtmlTags(line);
+                                fontNode.InnerText = HtmlUtil.RemoveHtmlTags(txt.ToString());
                                 html.Append(fontNode.OuterXml);
                             }
                         }
@@ -567,7 +567,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                                 pre = "{\\an3}";
                                         }
                                         string temp = pre + pText;
-                                        pText = new StringBuilder();
+                                        pText.Clear();
                                         pText.Append(temp);
                                     }
                                 }
@@ -666,9 +666,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static TimeCode GetTimeCode(string s)
         {
-            var parts = s.Split(new[] { ':', '.', ',' });
+            var parts = s.Split(':', '.', ',');
 
-            int milliseconds = (int)(int.Parse(parts[3]) * 4); // 000 to 249
+            int milliseconds = int.Parse(parts[3]) * 4; // 000 to 249
             if (s.Contains('.'))
                 milliseconds = int.Parse(parts[3].PadRight(3, '0'));
             if (milliseconds > 999)
