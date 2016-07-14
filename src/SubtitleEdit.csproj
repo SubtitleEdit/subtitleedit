@@ -1657,10 +1657,10 @@
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <ItemGroup>
     <HunspellAssemblies Include="Hunspellx64.dll">
-      <InProject>false</InProject>
+      <Visible>false</Visible>
     </HunspellAssemblies>
     <HunspellAssemblies Include="Hunspellx86.dll">
-      <InProject>false</InProject>
+      <Visible>false</Visible>
     </HunspellAssemblies>
   </ItemGroup>
   <Target Name="BeforeCompile">
