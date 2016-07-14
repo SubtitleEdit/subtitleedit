@@ -796,7 +796,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
         {
             if (buffer.Length < 2)
                 return 0;
-            return (buffer[index + 1]) + (buffer[index + 0] << 8);
+            return buffer[index + 1] | (buffer[index] << 8);
         }
 
         private static uint BigEndianInt32(byte[] buffer, int index)
