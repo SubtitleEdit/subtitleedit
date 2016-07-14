@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -532,6 +533,15 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                     if (s.Contains("<i>") && !s.Contains("</i>") && st.Post.Contains("</i>"))
                         st.Post = st.Post.Replace("</i>", string.Empty);
+
+                    if (lineNumber == parts.Length -1)
+                    {
+                        if (st.Post.Replace("♪", string.Empty).Replace("♫", string.Empty).Trim().Length == 0)
+                        {
+                            st.Post = string.Empty;
+                        }
+                    }
+
                 }
                 lineNumber++;
             }

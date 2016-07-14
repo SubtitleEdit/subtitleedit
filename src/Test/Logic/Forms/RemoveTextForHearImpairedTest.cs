@@ -30,7 +30,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -47,7 +47,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest2A()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -64,7 +64,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest2B()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -81,7 +81,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest3()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -98,7 +98,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest4()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -115,7 +115,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest5()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -132,7 +132,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest6()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -148,7 +148,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveColonTest7()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -164,7 +164,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveColonTest7A()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -180,7 +180,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveColonTest8()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -196,7 +196,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveColonTest9()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -216,7 +216,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIInsideLine()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -236,7 +236,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHI1()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.OnlyIfInSeparateLine = false;
             target.Settings.RemoveTextBetweenSquares = true;
@@ -255,7 +255,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHI2()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.OnlyIfInSeparateLine = false;
             target.Settings.RemoveTextBetweenSquares = true;
@@ -274,7 +274,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHINot()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.OnlyIfInSeparateLine = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
@@ -292,7 +292,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIMultilineItalic()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -312,7 +312,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIMultilineBold()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -332,7 +332,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHISecondLineDelay()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -348,7 +348,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIQuotes()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.OnlyIfInSeparateLine = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
@@ -363,7 +363,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIDouble()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.OnlyIfInSeparateLine = false;
             target.Settings.RemoveTextBetweenSquares = true;
@@ -379,7 +379,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveRemoveNameOfFirstLine()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = true;
@@ -396,7 +396,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveRemoveNameOfFirstLineBold()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = true;
@@ -413,7 +413,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -429,7 +429,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections2()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -445,7 +445,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections3()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -461,7 +461,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections4()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -477,7 +477,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections5()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -493,7 +493,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections6A()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -509,7 +509,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections6B()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -525,7 +525,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections6BItalic()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -541,7 +541,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections7()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -557,7 +557,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections8()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -573,7 +573,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections9()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -589,7 +589,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections10()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -605,7 +605,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections10Italic()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -621,7 +621,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections11()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -637,7 +637,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections12()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -653,7 +653,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections13()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -669,7 +669,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonOnlyOnSeparateLine()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = true;
@@ -686,7 +686,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveLineIfAllUppercase1()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = true;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = false;
@@ -703,7 +703,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveLineIfAllUppercase2()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = true;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = false;
@@ -720,7 +720,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveLineIfAllUppercase3()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = true;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = false;
@@ -738,7 +738,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveLineIfParentheses3()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = false;
@@ -756,7 +756,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextBeforeColonSecondLine()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = true;
@@ -773,7 +773,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextBeforeColonOnlyUpper1()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = true;
@@ -790,7 +790,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextBeforeColonOnlyUpper2()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = true;
@@ -807,7 +807,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextBeforeColonOnlyUpper3Negative()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = true;
@@ -824,7 +824,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextAss1()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = false;
@@ -842,7 +842,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextAss2()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = false;
@@ -860,7 +860,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextAss3Colon()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = false;
@@ -879,7 +879,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextBeforeColonTest1()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = false;
@@ -898,7 +898,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextRemoveDashBeforeSquareBrackets()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = false;
@@ -917,7 +917,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextRemoveDashInRemoveInterjections()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = false;
@@ -936,7 +936,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextRemoveSingleDash()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = false;
@@ -955,7 +955,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextBetweenQuestionMarks()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = false;
             target.Settings.RemoveTextBeforeColon = false;
@@ -975,7 +975,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjectionsItalicFirstLine()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveInterjections = true;
             string text = "<i>- Mm-hmm.</i>" + Environment.NewLine + "- In my spare time.";
             const string expected = "In my spare time.";
@@ -987,7 +987,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjectionsItalicSecondLine()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveInterjections = true;
             string text = "- In my spare time." + Environment.NewLine + "<i>- Mm-hmm.</i>";
             const string expected = "In my spare time.";
@@ -999,7 +999,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjectionsItalicBothLines()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveInterjections = true;
             string text = "<i>- In my spare time.</i>" + Environment.NewLine + "<i>- Mm-hmm.</i>";
             const string expected = "<i>In my spare time.</i>";
@@ -1011,7 +1011,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjectionsMDash()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveInterjections = true;
             const string text = "I'm sorry. I, mm-hmm—";
             const string expected = "I'm sorry. I—";
@@ -1023,7 +1023,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveFirstDashItalics()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = true;
             string text = "<i>- A man who wants to make his mark..." + Environment.NewLine + "- [ Coughing]</i>";
             const string expected = "<i>A man who wants to make his mark...</i>";
@@ -1035,7 +1035,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextIfUppercaseNotEmdash()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = true;
             string text = "- And you?" + Environment.NewLine + "- I—";
             string expected = "- And you?" + Environment.NewLine + "- I—";
@@ -1047,7 +1047,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextDontCrashOnEmptyString()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = true;
             string text = string.Empty;
             string actual = target.RemoveTextFromHearImpaired(text);
@@ -1057,7 +1057,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextKeepMusicSymbolsButRemoveHI()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveTextBetweenBrackets = true;
             target.Settings.RemoveIfTextContains = null;
@@ -1070,7 +1070,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextRemoveEmdash()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveTextBetweenBrackets = true;
             target.Settings.RemoveIfTextContains = null;
@@ -1084,7 +1084,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextIfUppercaseEmdashRemoveInDialogue()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveInterjections = true;
             string text = "- Uh—uh, my God!" + Environment.NewLine + "- Uh, my God.";
@@ -1096,7 +1096,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextIfUppercaseEmdashRemoveInDialogueWithSpaces()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveInterjections = true;
             string text = "- Uh — uh, my God!" + Environment.NewLine + "- Uh, my God.";
@@ -1109,7 +1109,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextEmdashComma()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveInterjections = true;
             string text = "- I just, uh —" + Environment.NewLine + "- What?";
@@ -1122,7 +1122,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextHiAndColon()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveTextBetweenParentheses = true;
             const string text = "I'm trying to! (MASTER): Faster now. evacuate.";
@@ -1135,7 +1135,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextDontLeaveDoubleDash()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveInterjections = true;
             string text = "- Mr. Harding?" + Environment.NewLine + "Uh--";
@@ -1148,7 +1148,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextDontLeaveDot()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveInterjections = true;
             string text = "- Mr. Harding?" + Environment.NewLine + "- Mm-hm. Oh.";
@@ -1161,7 +1161,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextDontLeaveExl()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveInterjections = true;
             string text = "-Sit down. Sit down." + Environment.NewLine + "-Oh! Oh!";
@@ -1174,7 +1174,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextRememberDialogueTag()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveInterjections = true;
             string text = "Oh." + Environment.NewLine + "-I'm awfully tired.";
@@ -1187,7 +1187,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextRemoveLineWithColon()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             const string text = "Before:";
@@ -1200,7 +1200,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextRemoveLineWithColon2()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             const string text = "COP 1: Call it in, code four. COP 4: Get him out of here.";
@@ -1213,7 +1213,7 @@ namespace Test.Logic.Forms
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextSpeakerWithColonPlusLineWithHyphen()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.RemoveInterjections = false;
@@ -1226,7 +1226,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextSpeakerWithColonPlusLineWithHyphenAlsoRemoveInterjections()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.RemoveInterjections = true;
@@ -1239,7 +1239,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextQuotesInFirstLine()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.RemoveInterjections = true;
@@ -1252,7 +1252,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextQuotesInFirstLine2()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveInterjections = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -1267,7 +1267,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiInDialogue1()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = true;
             string text = "-[gurgling]" + Environment.NewLine + "-Mom?";
             const string expected = "Mom?";
@@ -1278,7 +1278,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiInDialogue2()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = true;
             string text = "-[Ronnie laughs]" + Environment.NewLine + "-[sighs] Wow, Ronnie.";
             const string expected = "Wow, Ronnie.";
@@ -1289,7 +1289,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiRemoveFontTag()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = true;
             const string text = "<font color=\"#808080\">[Whistling]</font> Hallo everybody!";
             const string expected = "Hallo everybody!";
@@ -1300,7 +1300,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiRemoveFontTag2()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = true;
             const string text = "♪ <font color=\"#000000\">[LIGHT SWITCH CLICKS]</font>";
             const string expected = "♪";
@@ -1311,7 +1311,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiRemoveFontTag3()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = true;
             const string text = "Foobar <font color=\"#808080\">[CHAINS RATTLING]</font> Foobar";
             const string expected = "Foobar Foobar";
@@ -1322,7 +1322,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiRemoveInterjections()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = true;
             string text = "<i>- Here it is." + Environment.NewLine + "- Ahh!</i>";
             const string expected = "<i>Here it is.</i>";
@@ -1333,7 +1333,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiRemoveFirstLine()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = true;
             target.Settings.RemoveTextBetweenCustomTags = true;
             target.Settings.CustomStart = "♪";
@@ -1348,7 +1348,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiMultiLineCustomTags()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = true;
             target.Settings.RemoveTextBetweenCustomTags = true;
             target.Settings.CustomStart = "♪";
@@ -1363,7 +1363,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiMultiLineCustomTagsItalic()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = true;
             target.Settings.RemoveTextBetweenCustomTags = true;
             target.Settings.CustomStart = "♪";
@@ -1378,7 +1378,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiMultiLineCustomTagsInDialoque()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = true;
             target.Settings.RemoveTextBetweenCustomTags = true;
             target.Settings.CustomStart = "♪";
@@ -1393,7 +1393,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiSecondLineItalicAdvanced()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = true;
             target.Settings.RemoveTextBetweenCustomTags = true;
             target.Settings.CustomStart = "♪";
@@ -1408,7 +1408,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiInterjectionsEndDash()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             const string text = "Oh. Oh, yeah. Ahh —";
             const string expected = "Yeah —";
             string actual = target.RemoveInterjections(text);
@@ -1418,7 +1418,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiRemoveFirstBlankLineAlsoItalics()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             string text = "<i>Ow. Ow." + Environment.NewLine + "Ow, my head.</i>";
             const string expected = "<i>My head.</i>";
             string actual = target.RemoveInterjections(text);
@@ -1428,7 +1428,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveTextForHiDialogAddDashFirstLine()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             string text = "RECORDING: <i>Have you lost someone?</i>" + Environment.NewLine + "- What?";
             string expected = "<i>- Have you lost someone?</i>" + Environment.NewLine + "- What?";
             string actual = target.RemoveColon(text);
@@ -1438,7 +1438,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveInterjectionKeepDotDotDot()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             string text = "She uh..." + Environment.NewLine + "she disappeared.";
             string expected = "She..." + Environment.NewLine + "she disappeared.";
             string actual = target.RemoveInterjections(text);
@@ -1448,7 +1448,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveInterjectionKeepEndingQuestionMark()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             const string text = "So you mean that oh?";
             const string expected = "So you mean that?";
             string actual = target.RemoveInterjections(text);
@@ -1458,7 +1458,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveInterjectionKeepEndingEx()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             const string text = "So you mean that oh!";
             const string expected = "So you mean that!";
             string actual = target.RemoveInterjections(text);
@@ -1468,7 +1468,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveRemoveUppercaseLineNegativeOnlyNumbers()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = false;
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveInterjections = false;
@@ -1485,7 +1485,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveRemoveUppercase()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = false;
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveInterjections = false;
@@ -1502,7 +1502,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveAdvanced1()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = false;
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveInterjections = false;
@@ -1520,7 +1520,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveAdvanced2()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = false;
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveInterjections = false;
@@ -1539,7 +1539,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveAdvanced3()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenBrackets = false;
             target.Settings.RemoveTextBetweenCustomTags = false;
             target.Settings.RemoveInterjections = true;
@@ -1557,7 +1557,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveColonTestDash()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
             target.Settings.RemoveTextBeforeColon = true;
             target.Settings.OnlyIfInSeparateLine = false;
@@ -1573,7 +1573,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveInterjectionDotDotDot()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             string expected = "...alright.";
             string actual = target.RemoveInterjections("Oh... alright.");
             Assert.AreEqual(expected, actual);
@@ -1582,7 +1582,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveInterjectionDotDotDotItalic()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             string expected = "<i>...alright.</i>";
             string actual = target.RemoveInterjections("<i>Oh... alright.</i>");
             Assert.AreEqual(expected, actual);
@@ -1591,7 +1591,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveInterjectionDotDotDotSecondLineDialog()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             string expected = "- OK." + Environment.NewLine + "- ...alright.";
             string actual = target.RemoveInterjections("- OK." + Environment.NewLine + "- Oh... alright.");
             Assert.AreEqual(expected, actual);
@@ -1600,7 +1600,7 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveInterjectionDialogSecondLineEmDash()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenParentheses = true;
             target.Settings.RemoveInterjections = true;
             string expected = "- How many, sir?" + Environment.NewLine + "- 275.";
@@ -1611,12 +1611,36 @@ namespace Test.Logic.Forms
         [TestMethod]
         public void RemoveColonAfterHITags()
         {
-            RemoveTextForHI target = GetRemoveTextForHiLib();
+            var target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenParentheses = false;
             target.Settings.RemoveTextBetweenSquares = true;
             target.Settings.RemoveInterjections = false;
             string actual = target.RemoveTextFromHearImpaired("[scoffs]: Nice try.");
             Assert.AreEqual("Nice try.", actual);
+        }
+
+        [TestMethod]
+        public void RemoveSecondLineDialogAndItalicAndMusic()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenSquares = true;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenCustomTags = true;
+            target.Settings.CustomStart = "♪";
+            target.Settings.CustomEnd = "♪";
+            string actual = target.RemoveTextFromHearImpaired("- Ferguson, Kaz..." + Environment.NewLine + "- <i>♪ [Ominous tone plays] ♪</i>");
+            Assert.AreEqual("Ferguson, Kaz...", actual);
+        }
+
+        [TestMethod]
+        public void RemoveSecondLineDialogAndItalicAndMusic2()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenSquares = true;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            string actual = target.RemoveTextFromHearImpaired("- Ferguson, Kaz..." + Environment.NewLine + "- <i>♪ [Ominous tone plays] ♪</i>");
+            Assert.AreEqual("Ferguson, Kaz...", actual);
         }
 
         #region Additional test attributes
