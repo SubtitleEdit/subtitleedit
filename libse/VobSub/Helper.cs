@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.Core.VobSub
         public static int GetEndianWord(byte[] buffer, int index)
         {
             if (index + 1 < buffer.Length)
-                return (buffer[index] << 8) + buffer[index + 1];
+                return (buffer[index] << 8) | buffer[index + 1];
             return 0;
         }
 
