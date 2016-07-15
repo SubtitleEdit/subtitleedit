@@ -435,6 +435,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 s = s.Replace(Environment.NewLine + " <Font ", "<Font ");
                 s = s.Replace("</Font>" + Environment.NewLine, "</Font>");
                 s = s.Replace("><", "> <");
+                s = s.Replace("</Font> </Text>", "</Font></Text>");
+                s = s.Replace("horizontal\"> <Font", "horizontal\"><Font");
             }
             return s;
         }
