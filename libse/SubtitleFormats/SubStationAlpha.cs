@@ -86,6 +86,8 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             else if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]"))
             {
                 LoadStylesFromAdvancedSubstationAlpha(subtitle, title, subtitle.Header, headerNoStyles, sb);
+                isValidAssHeader = true;
+                styles = AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header);
             }
             else if (subtitle.Header != null && subtitle.Header.Contains("http://www.w3.org/ns/ttml"))
             {
