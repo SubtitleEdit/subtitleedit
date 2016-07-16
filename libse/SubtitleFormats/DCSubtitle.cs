@@ -431,8 +431,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 s = s.Replace("</Font>  ", "</Font> ");
                 s = s.Replace("  <Font ", " <Font ");
+                s = s.Replace("\r\n<Font ", "<Font ");
+                s = s.Replace("\r\n <Font ", "<Font ");
                 s = s.Replace(Environment.NewLine + "<Font ", "<Font ");
                 s = s.Replace(Environment.NewLine + " <Font ", "<Font ");
+                s = s.Replace("</Font>\r\n", "</Font>");
                 s = s.Replace("</Font>" + Environment.NewLine, "</Font>");
                 s = s.Replace("><", "> <");
                 s = s.Replace("</Font> </Text>", "</Font></Text>");
