@@ -18605,7 +18605,7 @@ namespace Nikse.SubtitleEdit.Forms
                             for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
                             {
                                 var p = _subtitle.Paragraphs[i];
-                                if (p.Extra == null || !styleList.Any(s => s.Equals(p.Extra, StringComparison.OrdinalIgnoreCase)))
+                                if (p.Extra == null || !styleList.Any(s => s.Equals(p.Extra == "*Default" ? "Default" : p.Extra, StringComparison.OrdinalIgnoreCase)))
                                 {
                                     p.Extra = styleList[0];
                                     SubtitleListview1.SetExtraText(i, p.Extra, SubtitleListview1.ForeColor);

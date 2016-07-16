@@ -12,6 +12,8 @@ using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -57,7 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
             public Color ShadowColor { get; set; }
             public int ShadowWidth { get; set; }
             public int ShadowAlpha { get; set; }
-            public Dictionary<string,int> LineHeight { get; set; }
+            public Dictionary<string, int> LineHeight { get; set; }
             public bool Forced { get; set; }
             public bool FullFrame { get; set; }
             public Color FullFrameBackgroundcolor { get; set; }
@@ -2208,7 +2210,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else
                             l2 = (int)Math.Round(((w - lineImage.Width) / 2.0));
 
-                        var lineHeight = parameter.LineHeight[GetStyleName(parameter.P)];
+                        var style = GetStyleName(parameter.P);
+                        var lineHeight = 25;
+                        if (parameter.LineHeight.ContainsKey(style))
+                            lineHeight = parameter.LineHeight[style];
+                        else if (parameter.LineHeight.Count > 0)
+                            lineHeight = parameter.LineHeight.First().Value;
                         if (lineHeight > lineImage.Height)
                         {
                             h += lineHeight - lineImage.Height;
@@ -2284,8 +2291,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             try
             {
                 font = SetFont(parameter, parameter.SubtitleFontSize);
-                var lineHeight = parameter.LineHeight; // (textSize.Height * 0.64f);
-
                 SizeF textSize;
                 using (var bmpTemp = new Bitmap(1, 1))
                 using (var g = Graphics.FromImage(bmpTemp))
@@ -2732,7 +2737,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 lastText.Append(sb);
                                 TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
-                                top += parameter.LineHeight[GetStyleName(parameter.P)];                                
+                                var style = GetStyleName(parameter.P);
+                                var lineHeight = (int)Math.Round(textSize.Height * 0.64f);
+                                if (parameter.LineHeight.ContainsKey(style))
+                                    lineHeight = parameter.LineHeight[style];
+                                top += lineHeight;
                                 newLine = true;
                                 i += Environment.NewLine.Length - 1;
                                 lineNumber++;
@@ -3518,6 +3527,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void subtitleListView1_SelectedIndexChanged(object sender, EventArgs e)
         {
             _previewTimer.Stop();
+            UpdateLineSpacing();
             _previewTimer.Start();
         }
 
@@ -3650,6 +3660,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void comboBoxSubtitleFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
+            UpdateLineSpacing();
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void UpdateLineSpacing()
+        {
             Bitmap bmp = new Bitmap(100, 100);
             using (Graphics g = Graphics.FromImage(bmp))
             {
@@ -3657,11 +3673,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 mbp.SubtitleFontName = _subtitleFontName;
                 mbp.SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
                 mbp.SubtitleFontBold = _subtitleFontBold;
-                var fontSize = g.DpiY * mbp.SubtitleFontSize / 72;
+                var fontSize = g.DpiY*mbp.SubtitleFontSize/72;
                 Font font = SetFont(mbp, fontSize);
 
                 SizeF textSize = g.MeasureString("Hj!", font);
-                int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
+                int lineHeight = (int)Math.Round(textSize.Height*0.64f);
 
                 var style = string.Empty;
                 if (subtitleListView1.SelectedIndices.Count > 0)
@@ -3673,7 +3689,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 else if (lineHeight > numericUpDownLineSpacing.Maximum)
                     numericUpDownLineSpacing.Value = numericUpDownLineSpacing.Maximum;
             }
-            subtitleListView1_SelectedIndexChanged(null, null);
         }
 
         private void comboBoxBorderWidth_SelectedIndexChanged(object sender, EventArgs e)
@@ -3935,7 +3950,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void numericUpDownLineSpacing_ValueChanged(object sender, EventArgs e)
         {
             var value = (int)numericUpDownLineSpacing.Value;
-            
+
             var style = string.Empty;
             if (subtitleListView1.SelectedIndices.Count > 0)
                 style = GetStyleName(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index]);
@@ -3947,9 +3962,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         }
 
         private static string GetStyleName(Paragraph paragraph)
-        {            
+        {
             if ((_formtName == AdvancedSubStationAlpha.NameOfFormat || _formtName == SubStationAlpha.NameOfFormat) && !string.IsNullOrEmpty(paragraph.Extra))
+            {
                 return paragraph.Extra;
+            }
+            
             return string.Empty;
         }
 
