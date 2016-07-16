@@ -8,7 +8,8 @@ using System.Text.RegularExpressions;
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     /// <summary>
-    /// ARIB B-36 - see http://www.arib.or.jp/english/html/overview/doc/2-STD-B36v2_3.pdf (japanese)
+    /// ARIB B-36 - see http://www.arib.or.jp/english/html/overview/doc/2-STD-B36v2_3.pdf (ARIB = Japan Association of Radio Industries and Businesses)
+    /// For the text decodinfg see http://www.arib.or.jp/english/html/overview/doc/6-STD-B24v5_2-1p3-E1.pdf
     /// Also see https://github.com/johnoneil/arib
     /// </summary>
     public class AribB36 : SubtitleFormat
@@ -190,7 +191,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public class AribText
         {
-            private static Regex _aTag = new Regex(@"\d+;\d+ a", RegexOptions.Compiled);
+            private static readonly Regex ATag = new Regex(@"\d+;\d+ a", RegexOptions.Compiled);
 
             public double DurationInSeconds { get; set; }
             public Point AreaSize { get; set; }
@@ -211,7 +212,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (b == 0x9b || i == length) // 0x9b = separator
                     {
                         var code = sb.ToString();
-                        var match = _aTag.Match(code);
+                        var match = ATag.Match(code);
                         if (match.Success)
                         {
                             code = match.Value;
@@ -219,10 +220,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             int x, y;
                             if (arr.Length == 2 && int.TryParse(arr[0], out x) && int.TryParse(arr[1], out y))
                             {
+                                int start = startBuffer + match.Length;
+                                int l = index + i - start;
+                                var decodedText = AribB24Decoder.AribToString(buffer, start, l);                                
                                 Texts.Add(new AribTextATag
                                 {
                                     Location = new Point(x, y),
-                                    Text = Encoding.GetEncoding(932).GetString(buffer, startBuffer, index + i - startBuffer)
+                                    Text = decodedText
                                 });
                             }
                         }
@@ -320,7 +324,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     unit.DataUnitSize = (buffer[unitIndex++] << 16) + (buffer[unitIndex++] << 8) + buffer[unitIndex++];
                     unit.AribText = new AribText(buffer, unitIndex, languageCode, unit.DataUnitSize);
                     unitIndex += unit.DataUnitSize;
-                    if (unit.UnitSeparator == 0x1f && unit.DataUnitParameter == 0x20) // DataUnitParameter 0x20=Text, 0x35=Bitmap data
+                    if (unit.UnitSeparator == 0x1f && unit.DataUnitParameter == 0x20 && unit.AribText.Texts.Count > 0) // DataUnitParameter 0x20=Text, 0x35=Bitmap data
                     {
                         CaptionTextUnits.Add(unit);
                     }
