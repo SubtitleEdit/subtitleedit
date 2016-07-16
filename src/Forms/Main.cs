@@ -3226,7 +3226,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var sub = GetSaveSubtitle(_subtitle);
 
-                string allText = sub.ToText(format);
+                string allText = string.Empty;
 
                 // Seungki begin
                 if (_splitDualSami && _subtitleAlternate != null)
@@ -3235,8 +3235,11 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (var p in _subtitleAlternate.Paragraphs)
                         s.Paragraphs.Add(p);
                     allText = s.ToText(format);
+                } // Seungki end
+                else
+                {
+                    allText = sub.ToText(format);
                 }
-                // Seungki end
 
                 var currentEncoding = GetCurrentEncoding();
                 bool isUnicode = currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.GetEncoding(12001) || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8;
