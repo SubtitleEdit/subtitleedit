@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
             public Color ShadowColor { get; set; }
             public int ShadowWidth { get; set; }
             public int ShadowAlpha { get; set; }
-            public int LineHeight { get; set; }
+            public Dictionary<string,int> LineHeight { get; set; }
             public bool Forced { get; set; }
             public bool FullFrame { get; set; }
             public Color FullFrameBackgroundcolor { get; set; }
@@ -70,6 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Subtitle _subtitle;
         private SubtitleFormat _format;
+        private static string _formtName;
         private Color _subtitleColor = Color.White;
         private string _subtitleFontName = "Verdana";
         private float _subtitleFontSize = 25.0f;
@@ -82,6 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
         private VobSubOcr _vobSubOcr;
         private readonly System.Windows.Forms.Timer _previewTimer = new System.Windows.Forms.Timer();
         private string _videoFileName;
+        private Dictionary<string, int> _lineHeights;
 
         private const string BoxMultiLineText = "BoxMultiLine";
         private const string BoxSingleLineText = "BoxSingleLine";
@@ -92,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var toolTip = new ToolTip { ShowAlways = true };
             toolTip.SetToolTip(panelFullFrameBackground, Configuration.Settings.Language.ExportPngXml.ChooseBackgroundColor);
-
+            _lineHeights = new Dictionary<string, int>();
             comboBoxImageFormat.SelectedIndex = 4;
             _subtitleColor = Configuration.Settings.Tools.ExportFontColor;
             _borderColor = Configuration.Settings.Tools.ExportBorderColor;
@@ -340,7 +342,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShadowColor = panelShadowColor.BackColor,
                 ShadowWidth = comboBoxShadowWidth.SelectedIndex,
                 ShadowAlpha = (int)numericUpDownShadowTransparency.Value,
-                LineHeight = (int)numericUpDownLineSpacing.Value,
+                LineHeight = _lineHeights,
                 FullFrame = checkBoxFullFrameImage.Checked,
                 FullFrameBackgroundcolor = panelFullFrameBackground.BackColor,
             };
@@ -1817,7 +1819,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.SubtitleColor = _subtitleColor;
             mbp.SubtitleFontSize = _subtitleFontSize;
             mbp.SubtitleFontBold = _subtitleFontBold;
-            mbp.LineHeight = (int)numericUpDownLineSpacing.Value;
+            mbp.LineHeight = _lineHeights;
             mbp.FullFrame = checkBoxFullFrameImage.Checked;
             mbp.FullFrameBackgroundcolor = panelFullFrameBackground.BackColor;
             mbp.OverridePosition = GetAssPoint(p.Text);
@@ -1873,7 +1875,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.ShadowWidth = comboBoxShadowWidth.SelectedIndex;
             mbp.ShadowAlpha = (int)numericUpDownShadowTransparency.Value;
             mbp.ShadowColor = panelShadowColor.BackColor;
-            mbp.LineHeight = (int)numericUpDownLineSpacing.Value;
+            mbp.LineHeight = _lineHeights;
             mbp.Forced = subtitleListView1.Items[_subtitle.GetIndex(p)].Checked;
             mbp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
             var bmp = GenerateImageFromTextWithStyle(mbp);
@@ -2206,13 +2208,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else
                             l2 = (int)Math.Round(((w - lineImage.Width) / 2.0));
 
-                        if (parameter.LineHeight > lineImage.Height)
+                        var lineHeight = parameter.LineHeight[GetStyleName(parameter.P)];
+                        if (lineHeight > lineImage.Height)
                         {
-                            h += parameter.LineHeight - lineImage.Height;
+                            h += lineHeight - lineImage.Height;
                             var largeImage = new Bitmap(w, h);
                             var g = Graphics.FromImage(largeImage);
                             g.DrawImageUnscaled(bmp, new Point(l1, 0));
-                            g.DrawImageUnscaled(lineImage, new Point(l2, bmp.Height + parameter.LineHeight - lineImage.Height));
+                            g.DrawImageUnscaled(lineImage, new Point(l2, bmp.Height + lineHeight - lineImage.Height));
                             bmp.Dispose();
                             bmp = largeImage;
                             g.Dispose();
@@ -2729,7 +2732,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 lastText.Append(sb);
                                 TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
-                                top += lineHeight;
+                                top += parameter.LineHeight[GetStyleName(parameter.P)];                                
                                 newLine = true;
                                 i += Environment.NewLine.Length - 1;
                                 lineNumber++;
@@ -3659,7 +3662,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 SizeF textSize = g.MeasureString("Hj!", font);
                 int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
-                if (lineHeight >= numericUpDownLineSpacing.Minimum && lineHeight <= numericUpDownLineSpacing.Maximum && lineHeight != numericUpDownLineSpacing.Value)
+
+                var style = string.Empty;
+                if (subtitleListView1.SelectedIndices.Count > 0)
+                    style = GetStyleName(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index]);
+                if (_lineHeights.ContainsKey(style))
+                    numericUpDownLineSpacing.Value = _lineHeights[style];
+                else if (lineHeight >= numericUpDownLineSpacing.Minimum && lineHeight <= numericUpDownLineSpacing.Maximum && lineHeight != numericUpDownLineSpacing.Value)
                     numericUpDownLineSpacing.Value = lineHeight;
                 else if (lineHeight > numericUpDownLineSpacing.Maximum)
                     numericUpDownLineSpacing.Value = numericUpDownLineSpacing.Maximum;
@@ -3707,6 +3716,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             _isLoading = false;
             subtitleListView1_SelectedIndexChanged(null, null);
+            _formtName = _format != null ? _format.Name : string.Empty;
         }
 
         private void comboBoxHAlign_SelectedIndexChanged(object sender, EventArgs e)
@@ -3924,7 +3934,23 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void numericUpDownLineSpacing_ValueChanged(object sender, EventArgs e)
         {
+            var value = (int)numericUpDownLineSpacing.Value;
+            
+            var style = string.Empty;
+            if (subtitleListView1.SelectedIndices.Count > 0)
+                style = GetStyleName(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index]);
+            if (_lineHeights.ContainsKey(style))
+                _lineHeights[style] = value;
+            else
+                _lineHeights.Add(style, value);
             subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private static string GetStyleName(Paragraph paragraph)
+        {            
+            if ((_formtName == AdvancedSubStationAlpha.NameOfFormat || _formtName == SubStationAlpha.NameOfFormat) && !string.IsNullOrEmpty(paragraph.Extra))
+                return paragraph.Extra;
+            return string.Empty;
         }
 
         private void ListViewToggleTag(string tag)
