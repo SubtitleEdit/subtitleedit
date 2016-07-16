@@ -167,9 +167,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     break;
                 case ExpectingLine.Text:
-                    if (!string.IsNullOrWhiteSpace(line) || IsText(next))
+                    if (!string.IsNullOrWhiteSpace(line))
                     {
-                        if (_isWsrt && !string.IsNullOrEmpty(line))
+                        if (_isWsrt && line.Contains('<'))
                         {
                             for (int i = 30; i < 40; i++)
                             {
@@ -177,24 +177,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 line = line.Replace("</" + i + ">", "</i>");
                             }
                         }
-
                         if (_paragraph.Text.Length > 0)
                             _paragraph.Text += Environment.NewLine;
                         _paragraph.Text += RemoveBadChars(line).TrimEnd().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     }
-                    else if (string.IsNullOrEmpty(line) && string.IsNullOrEmpty(_paragraph.Text))
+                    // Only store *paragraph if *next is not text.
+                    if (!IsText(next))
                     {
-                        _paragraph.Text = string.Empty;
-                        if (!string.IsNullOrEmpty(next) && (Utilities.IsInteger(next) || RegexTimeCodes.IsMatch(next)))
-                        {
-                            subtitle.Paragraphs.Add(_paragraph);
-                            _lastParagraph = _paragraph;
-                            _paragraph = new Paragraph();
-                            _expecting = ExpectingLine.Number;
-                        }
-                    }
-                    else
-                    {
+                        if (_paragraph.Text == null)
+                            _paragraph.Text = string.Empty;
                         subtitle.Paragraphs.Add(_paragraph);
                         _lastParagraph = _paragraph;
                         _paragraph = new Paragraph();
