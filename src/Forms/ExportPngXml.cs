@@ -13,7 +13,6 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -3673,11 +3672,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 mbp.SubtitleFontName = _subtitleFontName;
                 mbp.SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
                 mbp.SubtitleFontBold = _subtitleFontBold;
-                var fontSize = g.DpiY*mbp.SubtitleFontSize/72;
+                var fontSize = g.DpiY * mbp.SubtitleFontSize / 72;
                 Font font = SetFont(mbp, fontSize);
 
                 SizeF textSize = g.MeasureString("Hj!", font);
-                int lineHeight = (int)Math.Round(textSize.Height*0.64f);
+                int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
 
                 var style = string.Empty;
                 if (subtitleListView1.SelectedIndices.Count > 0)
@@ -3967,7 +3966,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 return paragraph.Extra;
             }
-            
+
             return string.Empty;
         }
 
