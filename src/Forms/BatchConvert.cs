@@ -787,11 +787,13 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         if (comboBoxSubtitleFormats.Text == AdvancedSubStationAlpha.NameOfFormat && _assStyle != null)
                         {
-                            sub.Header = _assStyle;
+                            if (!string.IsNullOrWhiteSpace(_assStyle))
+                                sub.Header = _assStyle;
                         }
                         else if (comboBoxSubtitleFormats.Text == SubStationAlpha.NameOfFormat && _ssaStyle != null)
                         {
-                            sub.Header = _ssaStyle;
+                            if (!string.IsNullOrWhiteSpace(_ssaStyle))
+                                sub.Header = _ssaStyle;
                         }
 
                         bool skip = CheckSkipFilter(fileName, format, sub);
