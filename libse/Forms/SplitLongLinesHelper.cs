@@ -40,7 +40,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
         {
             var splittedIndexes = new List<int>();
             var autoBreakedIndexes = new List<int>();
-            var splittedSubtitle = new Subtitle();
+            var splittedSubtitle = new Subtitle(subtitle);
+            splittedSubtitle.Paragraphs.Clear();
             string language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
