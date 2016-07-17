@@ -221,8 +221,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if (arr.Length == 2 && int.TryParse(arr[0], out x) && int.TryParse(arr[1], out y))
                             {
                                 int start = startBuffer + match.Length;
-                                int l = index + i - start;
-                                var decodedText = AribB24Decoder.AribToString(buffer, start, l);                                
+                                int len = index + i - start;
+                                var decodedText = AribB24Decoder.AribToString(buffer, start, len);
                                 Texts.Add(new AribTextATag
                                 {
                                     Location = new Point(x, y),

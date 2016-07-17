@@ -1,12 +1,12 @@
-﻿using System;
-using System.Text;
-using Nikse.SubtitleEdit.Core.TransportStream;
+﻿using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
 
     public static class AribB24Decoder
     {
+
+        private static readonly Encoding EncodingKanji = Encoding.GetEncoding("ISO-2022-JP");
 
         public static string AribToString(byte[] buffer, int index, int length)
         {
@@ -27,23 +27,22 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (b == 0x0d && pos < end && buffer[pos] == 0x0a) // Carriage Return/Line Feed (0D0A)
                 {
                     sb.AppendLine();
+                    pos++;
                 }
-                else if (b == 0x7f) // DEL - Delete character
-                {
-
-                }
-                else if (b == 0x20) // SP - Space character
-                {
-
-                }
-
                 else if (b <= 0x1f) // C0
                 {
                     ParseC0ControlSet(sb, b, ref pos, buffer);
                 }
+                else if (b == 0x20) // SP - Space character
+                {
+                    sb.Append(" ");
+                }
                 else if (b >= 0x21 && b <= 0x7e) // GL
                 {
-                    ParseGlArea(sb, ref pos, buffer);
+                    ParseGlArea(sb, b, ref pos, buffer);
+                }
+                else if (b == 0x7f) // DEL - Delete character
+                {
                 }
                 else if (b >= 0x80 && b <= 0x9f) // C1
                 {
@@ -51,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else if (b >= 0xc0) // GR
                 {
-                    ParseGrArea(sb, ref pos, buffer);
+                    ParseGrArea(sb, b, ref pos, buffer);
                 }
             }
             return sb.ToString();
@@ -61,28 +60,43 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             switch (b)
             {
-                case 0x07: // Bell
+                case 0x07: // BEL - Bell
                     break;
-                    //0x07 = BEL // Bell
-                    //0x08 = APB // Active position backward
-                    //0x09 = APF // Active position forward
-                    //0x0a = APD // Active position down
-                    //0x0b = APU // Active position up
-                    //0x0c = CS  // Clear screen
-                    //0x0d = APR // Active position return
-                    //0x0e = LS1 // Locking shift 1
-                    //0x0f = LS0 // Locking shift 0
+                case 0x08: // APB - Active position backward
+                    break;
+                case 0x09: // APF - Active position forward
+                    break;
+                case 0x0a: // APD - Active position down
+                    break;
+                case 0x0b: // APU - Active position up
+                    break;
+                case 0x0c: // CS  - Clear screen
+                    break;
+                case 0x0d: // APR - Active position return
+                    break;
+                case 0x0e: // LS1 - Locking shift 1
+                    break;
+                case 0x0f: // LS0 - Locking shift 0
+                    break;
 
-                    //0x16 = PAPF // Parameterized active position forward
+                case 0x16: // PAPF - Parameterized active position forward
+                    break;
 
-                    //0x18 = CAN // Cancel
-                    //0x19 = SS2 // Single shift 2
+                case 0x18: // CAN - Cancel
+                    break;
+                case 0x19: // SS2 - Single shift 2
+                    break;
 
-                    //0x1b = ESC // Escape
-                    //0x1c = APS // Active position set
-                    //0x1d = SS3 // Single shift 3
-                    //0x1e = RS // Record separator
-                    //0x1f = US // Unit separator
+                case 0x1b: // ESC - Escape
+                    break;
+                case 0x1c: // APS - Active position set
+                    break;
+                case 0x1d: // SS3 - Single shift 3
+                    break;
+                case 0x1e: // RS - Record separator
+                    break;
+                case 0x1f: // US - Unit separator
+                    break;
             }
         }
 
@@ -92,53 +106,75 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 case 0x80: //  BKF - Black Foreground
                     break;
-                //0x81 = RDF - Red Foreground
-                //0x82 = GRF - Green Foreground
-                case 0x83: // YLF - Yellow Foreground
-
+                case 0x81: // RDF - Red Foreground
                     break;
-                //0x84 = BLF - Blue Foreground
-                //0x85 = MGF - Magenta Foreground
-                //0x86 = CNF - Cyan Foreground
-                //0x87 = WHF - White Foreground
-                //0x88 = SSZ - Small Size
-                //0x89 = MSZ - Middle Size
-                //0x8a = NSZ - Normal Size
-                //0x8b = SZX - Character Size Controls
-
+                case 0x82: // GRF - Green Foreground
+                    break;
+                case 0x83: // YLF - Yellow Foreground
+                    break;
+                case 0x84: // BLF - Blue Foreground
+                    break;
+                case 0x85: // MGF - Magenta Foreground
+                    break;
+                case 0x86: // CNF - Cyan Foreground
+                    break;
+                case 0x87: // WHF - White Foreground
+                    break;
+                case 0x88: // SSZ - Small Size
+                    break;
+                case 0x89: // MSZ - Middle Size
+                    break;
+                case 0x8a: // NSZ - Normal Size
+                    break;
+                case 0x8b: // SZX - Character Size Controls
+                    break;
                 case 0x90: // = COL - Colour Controls
-                    b = buffer[pos];
+                    b = buffer[pos++];
                     if (b == 0x20)
                     {
                         pos++;
                     }
                     break;
-                //0x91 = FLC - Flashing control
-                //0x92 = CDC - Conceal Display Controls
-                //0x93 = POL - Pattern Polarity Controls
-                //0x94 = WMM - Writing Mode Modification
-                //0x95 = MACRO - Macro Command
+                case 0x91: // LC - Flashing control
+                    break;
+                case 0x92: // DC - Conceal Display Controls
+                    break;
+                case 0x93: // OL - Pattern Polarity Controls
+                    break;
+                case 0x94: // MM - Writing Mode Modification
+                    break;
+                case 0x95: // MACRO - Macro Command
+                    break;
 
-                //0x97 = HLC - Highlight Character Block
-                //0x98 = RPC - Repeat Character
-                //0x99 = SPL - Stop Lining
-                //0x9a = STL - Start Lining
-                //0x9b = CSI - Control Sequence Introducer
+                case 0x97: // HLC - Highlight Character Block
+                    break;
+                case 0x98: // RPC - Repeat Character
+                    break;
+                case 0x99: // SPL - Stop Lining
+                    break;
+                case 0x9a: // STL - Start Lining
+                    break;
+                case 0x9b: // CSI - Control Sequence Introducer
+                    break;
 
-                //0x9d = TIME - Time Controls
+                case 0x9d: // TIME - Time Controls
+                    break;
             }
-            pos++;
         }
 
-        private static void ParseGlArea(StringBuilder sb, ref int pos, byte[] buffer)
+        private static void ParseGlArea(StringBuilder sb, byte b, ref int pos, byte[] buffer)
         {
-            // Single-byte (Halfwidth) Characters
-            throw new NotImplementedException();
+            sb.Append(GetKanjiChar(b, buffer[pos++]));
         }
 
-        private static void ParseGrArea(StringBuilder sb, ref int pos, byte[] buffer)
+        private static void ParseGrArea(StringBuilder sb, byte b, ref int pos, byte[] buffer)
         {
-            throw new NotImplementedException();
+            sb.Append(GetKanjiChar(b, buffer[pos++]));
+        }
+
+        private static string GetKanjiChar(byte b1, byte b2)
+        {
+            return EncodingKanji.GetString(new byte[] { 0x1B, 0x24, 0x40, b1, b2, 0x1B, 0x28, 0x4A });
         }
 
     }
