@@ -1502,9 +1502,7 @@
     <RegEx find="oktobr([au]|om|ima)" replaceWith="listopad$1" />
     <RegEx find="decembr([au]|ima)" replaceWith="prosinc$1" />
     <!-- pridjevi optimalan, minimalan i maksimalan nemaju komparativ i superlativ. -->
-    <RegEx find="aj(optimaln)ij" replaceWith="$1" />
-    <RegEx find="aj(minimaln)ij" replaceWith="$1" />
-    <RegEx find="aj(maksimaln)ij" replaceWith="$1" />
+    <RegEx find="[Nn]aj(opt|min|maks)imalnij" replaceWith="$1imaln" />
     <!-- experimental -->
     <RegEx find="đž" replaceWith="dž" />
     <RegEx find="(?&lt;![ml])a([blcrnz])ić" replaceWith="a$1it ć" />
