@@ -548,6 +548,7 @@
     <Word from="zasedu" to="zasjedu" />
     <!-- imena -->
     <Word from="Abigejl" to="Abigail" />
+    <Word from="Ajron" to="Iron" />
     <Word from="Beverli" to="Beverly" />
     <Word from="Dru" to="Drew" />
     <Word from="Đošua" to="Joshua" />
@@ -1107,8 +1108,8 @@
     <RegEx find="\b([pP])o[dt]sj?eti([šmo]|l[aieo]|t[ei])?\b" replaceWith="$1odsjeti$2" />
     <RegEx find="([dDPp])odel" replaceWith="$1odjel" />
     <RegEx find="([dDPp])odj?eli([lto])" replaceWith="$1odijeli$2" />
-    <RegEx find="([pP])odretl" replaceWith="$1orijekl" />
-    <RegEx find="([pP])o(d?)seć" replaceWith="$1o$2sjeć" />
+    <RegEx find="odretl" replaceWith="orijekl" />
+    <RegEx find="o(d?)se([kć])" replaceWith="o$1sje$2" />
     <RegEx find="odu?hvat" replaceWith="othvat" />
     <RegEx find="poen([ei])" replaceWith="bodov$1" />
     <RegEx find="Poen([ei])" replaceWith="Bodov$1" />
@@ -1501,9 +1502,9 @@
     <RegEx find="oktobr([au]|om|ima)" replaceWith="listopad$1" />
     <RegEx find="decembr([au]|ima)" replaceWith="prosinc$1" />
     <!-- pridjevi optimalan, minimalan i maksimalan nemaju komparativ i superlativ. -->
-    <RegEx find="([nN])aj(optimaln)ij([aeiou])" replaceWith="$2$3" />
-    <RegEx find="([nN])aj(minimaln)ij([aeiou])" replaceWith="$2$3" />
-    <RegEx find="([nN])aj(maksimaln)ij([aeiou])" replaceWith="$2$3" />
+    <RegEx find="aj(optimaln)ij" replaceWith="$1" />
+    <RegEx find="aj(minimaln)ij" replaceWith="$1" />
+    <RegEx find="aj(maksimaln)ij" replaceWith="$1" />
     <!-- experimental -->
     <RegEx find="đž" replaceWith="dž" />
     <RegEx find="(?&lt;![ml])a([blcrnz])ić" replaceWith="a$1it ć" />
@@ -1525,7 +1526,7 @@
     <RegEx find="efiniši" replaceWith="efiniraj" />
     <RegEx find="efinišu" replaceWith="efiniraju" />
     <!-- bjegunac-->
-    <RegEx find="egun" replaceWith="jegun" />
+    <RegEx find="(?&lt;!j)egun" replaceWith="jegun" />
     <RegEx find="elokup" replaceWith="jelokup" />
     <RegEx find="erišu" replaceWith="eriraju" />
     <!-- bez j zbog nesvjestica npr. -->
@@ -1550,6 +1551,7 @@
     <RegEx find="omić" replaceWith="omit ć" />
     <RegEx find="luparenj" replaceWith="lupiranj" />
     <RegEx find="([mv])ešten" replaceWith="$1ješten" />
+    <RegEx find="mirić" replaceWith="mirit ć" />
     <RegEx find="mjenim" replaceWith="mijenim" />
     <RegEx find="nisa([nlot])" replaceWith="nira$1" />
     <RegEx find="(?&lt;!am)nesti" replaceWith="nijeti" />
@@ -1604,7 +1606,7 @@
     <RegEx find="trisa" replaceWith="trira" />
     <RegEx find="triši" replaceWith="triraj" />
     <RegEx find="trišu" replaceWith="triraju" />
-    <RegEx find="([tz])ueln" replaceWith="$1ualn" />
+    <RegEx find="ueln" replaceWith="ualn" />
     <RegEx find="tvd" replaceWith="tvrd" />
     <RegEx find="u([bd])ić" replaceWith="u$1it ć" />
     <RegEx find="u([cdtš])ać" replaceWith="u$1at ć" />
@@ -1632,7 +1634,6 @@
     <RegEx find="Afghanistan" replaceWith="Afganistan" />
     <RegEx find="Ajdah" replaceWith="Idah" />
     <RegEx find="Ajland" replaceWith="Island" />
-    <RegEx find="Ajron" replaceWith="Iron" />
     <RegEx find="([Aa])l[cz]h[ae]jmer" replaceWith="$1lzheimer" />
     <RegEx find="Avgani" replaceWith="Afgani" />
     <RegEx find="Belgijan" replaceWith="Belgij" />
@@ -1683,7 +1684,8 @@
     <RegEx find="Kajl" replaceWith="Kyle" />
     <RegEx find="Kavendiš" replaceWith="Cavendish" />
     <RegEx find="Kejleb" replaceWith="Caleb" />
-    <RegEx find="Kembridž" replaceWith="Cambridge" />
+    <RegEx find="Kembridž" replaceWith="Cambridge" />    
+    <RegEx find="Kerol" replaceWith="Carol" />
     <RegEx find="Konn?ektik[eu]t" replaceWith="Connecticut" />
     <RegEx find="Korejan" replaceWith="Korej" />
     <RegEx find="Losanđeles" replaceWith="Los Angeles" />
