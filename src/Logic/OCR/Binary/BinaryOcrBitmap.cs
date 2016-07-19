@@ -337,6 +337,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             {
                 return false;
             }
+            if ((double)Width * Height / NumberOfColoredPixels > 1.2)
+            {
+                return false;
+            }
+            if ((double)Height / Width < 2)
+            {
+                return false;
+            }
 
             return true;
         }

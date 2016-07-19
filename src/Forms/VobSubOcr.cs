@@ -3200,7 +3200,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return new CompareMatch(",", false, 0, null);
             }
-            if (bob.IsApostrophe())
+            if (maxDiff > 0 && bob.IsApostrophe())
             {
                 return new CompareMatch("'", false, 0, null);
             }
