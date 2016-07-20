@@ -4214,6 +4214,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+
+        private long _ocrCount;
+        private double _ocrHeight = 20;
+
         /// <summary>
         /// Ocr via binary (two color) image compare
         /// </summary>
@@ -4230,7 +4234,7 @@ namespace Nikse.SubtitleEdit.Forms
                 minLineHeight = _nocrLastLowercaseHeight;
             if (minLineHeight < 5)
                 minLineHeight = 6;
-            List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _ocrCount > 20 ? _ocrHeight : -1);
             int index = 0;
             bool expandSelection = false;
             bool shrinkSelection = false;
@@ -4291,6 +4295,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
+                    _ocrCount++;
+                    _ocrHeight += (item.NikseBitmap.Height - _ocrHeight) / _ocrCount;
                     CompareMatch bestGuess;
                     CompareMatch match = GetCompareMatchNew(item, out bestGuess, list, index);
                     if (match == null) // Try line OCR if no image compare match

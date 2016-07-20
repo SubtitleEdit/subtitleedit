@@ -144,7 +144,7 @@
             // labelExpandCount
             // 
             this.labelExpandCount.AutoSize = true;
-            this.labelExpandCount.Location = new System.Drawing.Point(6, 264);
+            this.labelExpandCount.Location = new System.Drawing.Point(6, 266);
             this.labelExpandCount.Name = "labelExpandCount";
             this.labelExpandCount.Size = new System.Drawing.Size(94, 13);
             this.labelExpandCount.TabIndex = 28;
@@ -153,7 +153,7 @@
             // checkBoxItalic
             // 
             this.checkBoxItalic.AutoSize = true;
-            this.checkBoxItalic.Location = new System.Drawing.Point(15, 61);
+            this.checkBoxItalic.Location = new System.Drawing.Point(15, 63);
             this.checkBoxItalic.Name = "checkBoxItalic";
             this.checkBoxItalic.Size = new System.Drawing.Size(59, 17);
             this.checkBoxItalic.TabIndex = 2;
@@ -163,7 +163,7 @@
             // labelDoubleSize
             // 
             this.labelDoubleSize.AutoSize = true;
-            this.labelDoubleSize.Location = new System.Drawing.Point(14, 172);
+            this.labelDoubleSize.Location = new System.Drawing.Point(14, 174);
             this.labelDoubleSize.Name = "labelDoubleSize";
             this.labelDoubleSize.Size = new System.Drawing.Size(93, 13);
             this.labelDoubleSize.TabIndex = 6;
@@ -172,7 +172,7 @@
             // pictureBox2
             // 
             this.pictureBox2.BackColor = System.Drawing.Color.Red;
-            this.pictureBox2.Location = new System.Drawing.Point(17, 188);
+            this.pictureBox2.Location = new System.Drawing.Point(17, 190);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(66, 73);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -202,7 +202,7 @@
             // labelImageInfo
             // 
             this.labelImageInfo.AutoSize = true;
-            this.labelImageInfo.Location = new System.Drawing.Point(12, 87);
+            this.labelImageInfo.Location = new System.Drawing.Point(12, 89);
             this.labelImageInfo.Name = "labelImageInfo";
             this.labelImageInfo.Size = new System.Drawing.Size(79, 13);
             this.labelImageInfo.TabIndex = 5;
@@ -210,9 +210,10 @@
             // 
             // textBoxText
             // 
+            this.textBoxText.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxText.Location = new System.Drawing.Point(14, 35);
             this.textBoxText.Name = "textBoxText";
-            this.textBoxText.Size = new System.Drawing.Size(100, 21);
+            this.textBoxText.Size = new System.Drawing.Size(100, 23);
             this.textBoxText.TabIndex = 1;
             this.textBoxText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxText_KeyDown);
             // 
@@ -220,7 +221,7 @@
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Red;
             this.pictureBox1.ContextMenuStrip = this.contextMenuStrip1;
-            this.pictureBox1.Location = new System.Drawing.Point(17, 104);
+            this.pictureBox1.Location = new System.Drawing.Point(17, 106);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(52, 52);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
