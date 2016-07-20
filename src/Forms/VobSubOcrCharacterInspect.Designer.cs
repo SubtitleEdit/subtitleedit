@@ -101,7 +101,7 @@
             // checkBoxItalic
             // 
             this.checkBoxItalic.AutoSize = true;
-            this.checkBoxItalic.Location = new System.Drawing.Point(15, 61);
+            this.checkBoxItalic.Location = new System.Drawing.Point(15, 63);
             this.checkBoxItalic.Name = "checkBoxItalic";
             this.checkBoxItalic.Size = new System.Drawing.Size(58, 17);
             this.checkBoxItalic.TabIndex = 2;
@@ -111,7 +111,7 @@
             // labelDoubleSize
             // 
             this.labelDoubleSize.AutoSize = true;
-            this.labelDoubleSize.Location = new System.Drawing.Point(14, 172);
+            this.labelDoubleSize.Location = new System.Drawing.Point(14, 174);
             this.labelDoubleSize.Name = "labelDoubleSize";
             this.labelDoubleSize.Size = new System.Drawing.Size(92, 13);
             this.labelDoubleSize.TabIndex = 6;
@@ -120,7 +120,7 @@
             // pictureBoxCompareBitmapDouble
             // 
             this.pictureBoxCompareBitmapDouble.BackColor = System.Drawing.Color.Red;
-            this.pictureBoxCompareBitmapDouble.Location = new System.Drawing.Point(17, 188);
+            this.pictureBoxCompareBitmapDouble.Location = new System.Drawing.Point(17, 190);
             this.pictureBoxCompareBitmapDouble.Name = "pictureBoxCompareBitmapDouble";
             this.pictureBoxCompareBitmapDouble.Size = new System.Drawing.Size(66, 73);
             this.pictureBoxCompareBitmapDouble.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -161,7 +161,7 @@
             // labelImageInfo
             // 
             this.labelImageInfo.AutoSize = true;
-            this.labelImageInfo.Location = new System.Drawing.Point(12, 87);
+            this.labelImageInfo.Location = new System.Drawing.Point(12, 89);
             this.labelImageInfo.Name = "labelImageInfo";
             this.labelImageInfo.Size = new System.Drawing.Size(76, 13);
             this.labelImageInfo.TabIndex = 5;
@@ -169,16 +169,16 @@
             // 
             // textBoxText
             // 
-            this.textBoxText.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxText.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxText.Location = new System.Drawing.Point(14, 35);
             this.textBoxText.Name = "textBoxText";
-            this.textBoxText.Size = new System.Drawing.Size(100, 21);
+            this.textBoxText.Size = new System.Drawing.Size(100, 23);
             this.textBoxText.TabIndex = 1;
             // 
             // pictureBoxCompareBitmap
             // 
             this.pictureBoxCompareBitmap.BackColor = System.Drawing.Color.Red;
-            this.pictureBoxCompareBitmap.Location = new System.Drawing.Point(17, 104);
+            this.pictureBoxCompareBitmap.Location = new System.Drawing.Point(17, 106);
             this.pictureBoxCompareBitmap.Name = "pictureBoxCompareBitmap";
             this.pictureBoxCompareBitmap.Size = new System.Drawing.Size(52, 52);
             this.pictureBoxCompareBitmap.TabIndex = 22;

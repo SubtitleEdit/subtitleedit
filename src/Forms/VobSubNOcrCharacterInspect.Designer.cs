@@ -34,6 +34,7 @@
             this.pictureBoxInspectItem = new System.Windows.Forms.PictureBox();
             this.listBoxInspectItems = new System.Windows.Forms.ListBox();
             this.groupBoxCurrentCompareImage = new System.Windows.Forms.GroupBox();
+            this.buttonEditDB = new System.Windows.Forms.Button();
             this.buttonZoomOut = new System.Windows.Forms.Button();
             this.buttonZoomIn = new System.Windows.Forms.Button();
             this.labelCharacters = new System.Windows.Forms.Label();
@@ -44,7 +45,6 @@
             this.buttonDelete = new System.Windows.Forms.Button();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.textBoxText = new System.Windows.Forms.TextBox();
-            this.buttonEditDB = new System.Windows.Forms.Button();
             this.groupBoxInspectItems.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).BeginInit();
             this.groupBoxCurrentCompareImage.SuspendLayout();
@@ -131,6 +131,17 @@
             this.groupBoxCurrentCompareImage.TabStop = false;
             this.groupBoxCurrentCompareImage.Text = "Current compare image";
             // 
+            // buttonEditDB
+            // 
+            this.buttonEditDB.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonEditDB.Location = new System.Drawing.Point(120, 125);
+            this.buttonEditDB.Name = "buttonEditDB";
+            this.buttonEditDB.Size = new System.Drawing.Size(140, 21);
+            this.buttonEditDB.TabIndex = 37;
+            this.buttonEditDB.Text = "Check other...";
+            this.buttonEditDB.UseVisualStyleBackColor = true;
+            this.buttonEditDB.Click += new System.EventHandler(this.buttonEditDB_Click);
+            // 
             // buttonZoomOut
             // 
             this.buttonZoomOut.Location = new System.Drawing.Point(89, 174);
@@ -184,7 +195,7 @@
             // checkBoxItalic
             // 
             this.checkBoxItalic.AutoSize = true;
-            this.checkBoxItalic.Location = new System.Drawing.Point(15, 61);
+            this.checkBoxItalic.Location = new System.Drawing.Point(15, 63);
             this.checkBoxItalic.Name = "checkBoxItalic";
             this.checkBoxItalic.Size = new System.Drawing.Size(58, 17);
             this.checkBoxItalic.TabIndex = 2;
@@ -224,21 +235,11 @@
             // 
             // textBoxText
             // 
+            this.textBoxText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxText.Location = new System.Drawing.Point(14, 35);
             this.textBoxText.Name = "textBoxText";
-            this.textBoxText.Size = new System.Drawing.Size(100, 20);
+            this.textBoxText.Size = new System.Drawing.Size(100, 22);
             this.textBoxText.TabIndex = 1;
-            // 
-            // buttonEditDB
-            // 
-            this.buttonEditDB.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonEditDB.Location = new System.Drawing.Point(120, 125);
-            this.buttonEditDB.Name = "buttonEditDB";
-            this.buttonEditDB.Size = new System.Drawing.Size(140, 21);
-            this.buttonEditDB.TabIndex = 37;
-            this.buttonEditDB.Text = "Check other...";
-            this.buttonEditDB.UseVisualStyleBackColor = true;
-            this.buttonEditDB.Click += new System.EventHandler(this.buttonEditDB_Click);
             // 
             // VobSubNOcrCharacterInspect
             // 
