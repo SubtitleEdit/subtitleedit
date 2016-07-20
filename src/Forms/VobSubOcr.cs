@@ -7614,6 +7614,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch
             {
+                var arr = LanguageString.Split(new char[] { '-', '_' });
+                if (arr.Length > 1 && arr[0].Length == 2)
+                {
+                    foreach (var x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+                    {
+                        if (string.Equals(x.TwoLetterISOLanguageName, arr[0], StringComparison.OrdinalIgnoreCase))
+                        {
+                            threeLetterISOLanguageName = x.ThreeLetterISOLanguageName;
+                            break;
+                        }
+                    }
+                }
             }
             LoadOcrFixEngine(threeLetterISOLanguageName, LanguageString);
         }

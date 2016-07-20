@@ -116,6 +116,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (culture.ThreeLetterISOLanguageName == threeLetterIsoLanguageName)
                 {
                     string dictionaryFileName = null;
+                    if (!string.IsNullOrEmpty(hunspellName) && hunspellName.StartsWith(culture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, hunspellName + ".dic")))
+                    {
+                        dictionaryFileName = Path.Combine(dictionaryFolder, hunspellName + ".dic");
+                        LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, culture, dictionaryFileName, true);
+                        return;
+                    }
                     foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
                     {
                         string name = Path.GetFileNameWithoutExtension(dic);
