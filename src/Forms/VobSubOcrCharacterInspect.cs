@@ -340,6 +340,24 @@ namespace Nikse.SubtitleEdit.Forms
                 listBoxInspectItems.SelectedIndex = index;
                 listBoxInspectItems_SelectedIndexChanged(null, null);
                 ShowCount();
+
+                // update other letters that are exact matches
+                for (int i = 0; i < _matches.Count; i++)
+                {
+                    if (i != index && i < _imageSources.Count && _matches[i].ExpandCount == 0)
+                    {
+                        var newMatch = _binOcrDb.FindExactMatch(new BinaryOcrBitmap(new NikseBitmap(_imageSources[i])));
+                        if (newMatch >= 0 && _binOcrDb.CompareImages[newMatch].Hash == bob.Hash)
+                        {
+                            _matches[i].Name = bob.Key;
+                            _matches[i].ExpandCount = 0;
+                            _matches[i].Italic = checkBoxItalic.Checked;
+                            _matches[i].Text = textBoxText.Text;
+                            listBoxInspectItems.Items[i] = textBoxText.Text;
+                        }
+                    }
+                }
+
                 return;
             }
 
