@@ -732,22 +732,16 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (!IsExtraColumnVisible)
             {
-                if (IsAlternateTextColumnVisible)
-                    ColumnIndexExtra = ColumnIndexTextAlternate + 1;
-                else
-                    ColumnIndexExtra = ColumnIndexTextAlternate;
-
                 Columns.Add(new ColumnHeader { Text = title, Width = 80 });
-
                 int length = Columns[ColumnIndexNumber].Width + Columns[ColumnIndexStart].Width + Columns[ColumnIndexEnd].Width + Columns[ColumnIndexDuration].Width;
                 int lengthAvailable = Width - length;
-
                 if (IsAlternateTextColumnVisible)
                 {
                     int part = lengthAvailable / 5;
+                    ColumnIndexExtra = ColumnIndexTextAlternate + 1;
                     Columns[ColumnIndexText].Width = part * 2;
                     Columns[ColumnIndexTextAlternate].Width = part * 2;
-                    Columns[ColumnIndexTextAlternate].Width = part;
+                    Columns[ColumnIndexExtra].Width = part;
                 }
                 else
                 {
@@ -764,12 +758,9 @@ namespace Nikse.SubtitleEdit.Controls
             if (IsExtraColumnVisible)
             {
                 IsExtraColumnVisible = false;
-
+                ColumnIndexExtra = ColumnIndexTextAlternate;
                 if (IsAlternateTextColumnVisible)
-                    ColumnIndexExtra = ColumnIndexTextAlternate + 1;
-                else
-                    ColumnIndexExtra = ColumnIndexTextAlternate;
-
+                    ColumnIndexExtra++;
                 for (int i = 0; i < Items.Count; i++)
                 {
                     if (Items[i].SubItems.Count == ColumnIndexExtra + 1)
@@ -786,20 +777,16 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (IsValidIndex(index))
             {
+                ColumnIndexExtra = ColumnIndexTextAlternate;
                 if (IsAlternateTextColumnVisible)
-                    ColumnIndexExtra = ColumnIndexTextAlternate + 1;
-                else
-                    ColumnIndexExtra = ColumnIndexTextAlternate;
+                    ColumnIndexExtra++;
                 if (!IsExtraColumnVisible)
                 {
                     ShowExtraColumn(string.Empty);
                 }
-                if (Items[index].SubItems.Count <= ColumnIndexExtra)
-                    Items[index].SubItems.Add(string.Empty);
-                if (Items[index].SubItems.Count <= ColumnIndexExtra)
+                while (ColumnIndexExtra >= Items[index].SubItems.Count)
                     Items[index].SubItems.Add(string.Empty);
                 Items[index].SubItems[ColumnIndexExtra].Text = text;
-
                 Items[index].UseItemStyleForSubItems = false;
                 Items[index].SubItems[ColumnIndexExtra].BackColor = Color.AntiqueWhite;
                 Items[index].SubItems[ColumnIndexExtra].ForeColor = color;
@@ -842,7 +829,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void UpdateFrames(Subtitle subtitle)
         {
-            if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            if (Configuration.Settings?.General.UseTimeFormatHHMMSSFF == true)
             {
                 BeginUpdate();
                 for (int i = 0; i < subtitle.Paragraphs.Count; i++)
@@ -944,15 +931,7 @@ namespace Nikse.SubtitleEdit.Controls
                 Columns[ColumnIndexEnd].Width = _settings.General.ListViewEndWidth;
                 Columns[ColumnIndexDuration].Width = _settings.General.ListViewDurationWidth;
                 Columns[ColumnIndexText].Width = _settings.General.ListViewTextWidth;
-
-                if (IsAlternateTextColumnVisible)
-                {
-                    Columns[ColumnIndexTextAlternate].Width = -2;
-                }
-                else
-                {
-                    Columns[ColumnIndexText].Width = -2;
-                }
+                Columns[IsAlternateTextColumnVisible ? ColumnIndexTextAlternate : ColumnIndexText].Width = -2;
                 return;
             }
 
