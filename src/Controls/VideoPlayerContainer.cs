@@ -354,6 +354,10 @@ namespace Nikse.SubtitleEdit.Controls
                         }
                         i += 3;
                     }
+                    else if (Configuration.Settings.General.VideoPlayerPreviewFontBold && text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase))
+                    {
+                        i += 3;
+                    }
                     else if (text.Substring(i).StartsWith("<u>", StringComparison.OrdinalIgnoreCase))
                     {
                         _subtitleTextBox.AppendText(sb.ToString());
