@@ -3,6 +3,10 @@
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
 
+    /// <summary>
+    /// ARIB B24 decoding
+    /// See https://github.com/johnoneil/arib/blob/master/analysis/analysis.txt + https://github.com/johnoneil/arib/blob/master/docs/arib_std_b-24_v5.2-E1_Data_Coding_for_Digital_Broadcast.pdf
+    /// </summary>
     public static class AribB24Decoder
     {
 
@@ -37,7 +41,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     sb.Append(" ");
                 }
-                else if (b >= 0x21 && b <= 0x7e) // GL
+                else if (b >= 0x21 && b <= 0x7e) // GL - Graphic-set left   
                 {
                     ParseGlArea(sb, b, ref pos, buffer);
                 }
@@ -48,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     ParseC1ControlSet(sb, b, ref pos, buffer);
                 }
-                else if (b >= 0xc0) // GR
+                else if (b >= 0xc0) // GR - Graphic-set right
                 {
                     ParseGrArea(sb, b, ref pos, buffer);
                 }
@@ -127,6 +131,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 case 0x8a: // NSZ - Normal Size
                     break;
                 case 0x8b: // SZX - Character Size Controls
+                    b = buffer[pos++];
+                    //SZX 06 / 0 : Tiny size (0x60)
+                    //SZX 04 / 1 : Double height (0x41)
+                    //SZX 04 / 4 : Double width (0x44)
+                    //SZX 04 / 5 : Double height and width (0x45)
+                    //SZX 06 / 11 : Special 1 (0x6b)
+                    //SZX 06 / 4 : Special 2 (0x64)
                     break;
                 case 0x90: // = COL - Colour Controls
                     b = buffer[pos++];
