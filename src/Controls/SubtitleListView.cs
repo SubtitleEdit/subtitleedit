@@ -407,25 +407,9 @@ namespace Nikse.SubtitleEdit.Controls
             Columns[Columns.Count - 1].Width = Width - (width + 25);
         }
 
-        private ListViewItem GetFirstVisibleItem()
-        {
-            foreach (ListViewItem item in Items)
-            {
-                if (ClientRectangle.Contains(new Rectangle(item.Bounds.Left, item.Bounds.Top, item.Bounds.Height, 10)))
-                {
-                    return item;
-                }
-            }
-            return null;
-        }
-
         public void SaveFirstVisibleIndex()
         {
-            ListViewItem first = GetFirstVisibleItem();
-            if (Items.Count > 0 && first != null)
-                FirstVisibleIndex = first.Index;
-            else
-                FirstVisibleIndex = -1;
+            FirstVisibleIndex = Items.Count > 0 ? TopItem.Index : -1;
         }
 
         private void RestoreFirstVisibleIndex()
