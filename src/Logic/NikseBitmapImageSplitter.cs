@@ -273,13 +273,13 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 if (allTransparent)
                 {
-                    if (size > 2 && size <= minLineHeight)
+                    if (size > 1 && size <= minLineHeight)
                     {
                         size++; // at least 'lineMinHeight' pixels, like top of 'i'
                     }
                     else
                     {
-                        if (size > 2)
+                        if (size > 1)
                         {
                             var part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1));
                             parts.Add(new ImageSplitterItem(0, startY, part));
@@ -293,7 +293,7 @@ namespace Nikse.SubtitleEdit.Logic
                     size++;
                 }
             }
-            if (size > 2)
+            if (size > 1)
             {
                 if (size == bmp.Height)
                 {
