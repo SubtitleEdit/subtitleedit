@@ -6863,18 +6863,11 @@ namespace Nikse.SubtitleEdit.Forms
                     var p = _subtitle.GetParagraphOrDefault(item.Index);
                     if (p != null)
                     {
-                        int indexOfEndBracket = p.Text.IndexOf('}');
-                        if (p.Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
-                            p.Text = p.Text.Remove(0, indexOfEndBracket + 1).TrimStart();
-
-                        // remove music symbols
+                        // Remove music symbols.
                         p.Text = p.Text.Replace("♪", string.Empty);
                         p.Text = p.Text.Replace("♫", string.Empty);
-
                         p.Text = HtmlUtil.RemoveHtmlTags(p.Text);
-
-                        if (isSsa)
-                            p.Text = Utilities.RemoveSsaTags(p.Text);
+                        p.Text = Utilities.RemoveSsaTags(p.Text).Trim();
                         SubtitleListview1.SetText(item.Index, p.Text);
 
                         if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
@@ -6882,10 +6875,10 @@ namespace Nikse.SubtitleEdit.Forms
                             var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
                             if (original != null)
                             {
-                                original.Text = HtmlUtil.RemoveHtmlTags(original.Text);
                                 original.Text = original.Text.Replace("♪", string.Empty);
-                                if (isSsa)
-                                    original.Text = Utilities.RemoveSsaTags(original.Text);
+                                original.Text = original.Text.Replace("♫", string.Empty);
+                                original.Text = HtmlUtil.RemoveHtmlTags(original.Text);
+                                original.Text = Utilities.RemoveSsaTags(original.Text).Trim();
                                 SubtitleListview1.SetAlternateText(item.Index, original.Text);
                             }
                         }
