@@ -13,6 +13,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             Text
         }
 
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d+,\d\d:\d\d:\d\d.\d+$", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".sub"; }
@@ -31,7 +33,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             var sbv = new YouTubeSbv();
-            if (sbv.IsMine(lines, fileName) && !String.Join(String.Empty, lines.ToArray()).Contains("[br]"))
+            if (sbv.IsMine(lines, fileName) && !string.Join(string.Empty, lines.ToArray()).Contains("[br]"))
                 return false;
 
             var subtitle = new Subtitle();
@@ -64,13 +66,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string text = p.Text.Replace(Environment.NewLine, "[br]");
                 text = text.Replace("<i>", "{\\i1}");
                 text = text.Replace("</i>", "{\\i0}");
-                text = text.Replace("</i>", "{\\i}");
                 text = text.Replace("<b>", "{\\b1}");
                 text = text.Replace("</b>", "{\\b0}");
-                text = text.Replace("</b>", "{\\b}");
                 text = text.Replace("<u>", "{\\u1}");
                 text = text.Replace("</u>", "{\\u0}");
-                text = text.Replace("</u>", "{\\u}");
 
                 sb.AppendLine(string.Format(paragraphWriteFormat,
                                         p.StartTime.Hours,
@@ -90,72 +89,65 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static int RoundTo2Cifres(int milliseconds)
         {
-            int rounded = (int)Math.Round((double)milliseconds / 10);
-            return rounded;
+            return (int)Math.Round(milliseconds / 10.0);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            var regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d+,\d\d:\d\d:\d\d.\d+$", RegexOptions.Compiled);
-
             var paragraph = new Paragraph();
-            ExpectingLine expecting = ExpectingLine.TimeCodes;
+            var expecting = ExpectingLine.TimeCodes;
             _errorCount = 0;
             char[] splitChars = { ':', ',', '.' };
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
-                if (regexTimeCodes.IsMatch(line))
+                if (expecting == ExpectingLine.TimeCodes && line.Length > 20 && RegexTimeCodes.IsMatch(line))
                 {
                     string[] parts = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 8)
                     {
                         try
                         {
-                            int startHours = int.Parse(parts[0]);
-                            int startMinutes = int.Parse(parts[1]);
-                            int startSeconds = int.Parse(parts[2]);
-                            int startMilliseconds = int.Parse(parts[3]);
-                            int endHours = int.Parse(parts[4]);
-                            int endMinutes = int.Parse(parts[5]);
-                            int endSeconds = int.Parse(parts[6]);
-                            int endMilliseconds = int.Parse(parts[7]);
-                            paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                            paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
+                            paragraph.StartTime = DecodeTimeCode(parts, 0);
+                            paragraph.EndTime = DecodeTimeCode(parts, 4);
                             expecting = ExpectingLine.Text;
                         }
                         catch
                         {
+                            _errorCount++;
                             expecting = ExpectingLine.TimeCodes;
                         }
                     }
                 }
-                else
+                else if (expecting == ExpectingLine.Text && line.Length > 0)
                 {
-                    if (expecting == ExpectingLine.Text)
-                    {
-                        if (line.Length > 0)
-                        {
-                            string text = line.Replace("[br]", Environment.NewLine);
-                            text = text.Replace("{\\i1}", "<i>");
-                            text = text.Replace("{\\i0}", "</i>");
-                            text = text.Replace("{\\i}", "</i>");
-                            text = text.Replace("{\\b1}", "<b>");
-                            text = text.Replace("{\\b0}", "</b>");
-                            text = text.Replace("{\\b}", "</b>");
-                            text = text.Replace("{\\u1}", "<u>");
-                            text = text.Replace("{\\u0}", "</u>");
-                            text = text.Replace("{\\u}", "</u>");
+                    string text = line.Replace("[br]", Environment.NewLine);
+                    text = text.Replace("{\\i1}", "<i>");
+                    text = text.Replace("{\\i0}", "</i>");
+                    text = text.Replace("{\\i}", "</i>");
+                    text = text.Replace("{\\b1}", "<b>");
+                    text = text.Replace("{\\b0}", "</b>");
+                    text = text.Replace("{\\b}", "</b>");
+                    text = text.Replace("{\\u1}", "<u>");
+                    text = text.Replace("{\\u0}", "</u>");
+                    text = text.Replace("{\\u}", "</u>");
 
-                            paragraph.Text = text;
-                            subtitle.Paragraphs.Add(paragraph);
-                            paragraph = new Paragraph();
-                            expecting = ExpectingLine.TimeCodes;
-                        }
-                    }
+                    paragraph.Text = text;
+                    subtitle.Paragraphs.Add(paragraph);
+                    paragraph = new Paragraph();
+                    expecting = ExpectingLine.TimeCodes;
                 }
             }
             subtitle.Renumber();
+        }
+
+        public static TimeCode DecodeTimeCode(string[] encodedTimeCode, int index)
+        {
+            // Hours, Minutes, Seconds, Milliseconds / 10.
+            return new TimeCode(int.Parse(encodedTimeCode[index]),
+                int.Parse(encodedTimeCode[index + 1]),
+                int.Parse(encodedTimeCode[index + 2]),
+                int.Parse(encodedTimeCode[index + 3]) * 10);
         }
     }
 }
