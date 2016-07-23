@@ -5,11 +5,12 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class SetVideoOffset : PositionAndSizeForm
+    public sealed partial class SetVideoOffset : PositionAndSizeForm
     {
         public bool FromCurrentVideoPosition { get; set; }
+        public bool DoNotaddVideoOffsetToTimeCodes { get; set; }
 
-        private TimeCode _videoOffset = new TimeCode(0);
+        private readonly TimeCode _videoOffset;
 
         public TimeCode VideoOffset
         {
@@ -27,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
         public SetVideoOffset()
         {
             InitializeComponent();
-
+            _videoOffset = new TimeCode(0);
             Text = Configuration.Settings.Language.SetVideoOffset.Title;
             labelDescription.Text = Configuration.Settings.Language.SetVideoOffset.Description;
             checkBoxFromCurrentPosition.Text = Configuration.Settings.Language.SetVideoOffset.RelativeToCurrentVideoPosition;
@@ -41,6 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             VideoOffset = timeUpDownVideoPosition.TimeCode;
             FromCurrentVideoPosition = checkBoxFromCurrentPosition.Checked;
+            DoNotaddVideoOffsetToTimeCodes = checkBoxKeepTimeCodes.Checked;
             DialogResult = DialogResult.OK;
         }
 

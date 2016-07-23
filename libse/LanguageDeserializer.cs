@@ -5182,6 +5182,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "SetVideoOffset/RelativeToCurrentVideoPosition":
                     language.SetVideoOffset.RelativeToCurrentVideoPosition = reader.Value;
                     break;
+                case "SetVideoOffset/KeepTimeCodes":
+                    language.SetVideoOffset.KeepTimeCodes = reader.Value;
+                    break;
                 case "SetVideoOffset/Reset":
                     language.SetVideoOffset.Reset = reader.Value;
                     break;

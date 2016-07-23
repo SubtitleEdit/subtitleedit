@@ -2201,6 +2201,7 @@ can edit in same subtitle file (collaboration)",
                 Title = "Set video offset",
                 Description = "Set video offset (subtitles should not follow real video time, but e.g. +10 hours)",
                 RelativeToCurrentVideoPosition = "Relative to current video position",
+                KeepTimeCodes = "Keep existing time codes (do not add video offset)",
                 Reset = "Reset",
             };
 
