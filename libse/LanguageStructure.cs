@@ -2080,6 +2080,7 @@
             public string Title { get; set; }
             public string Description { get; set; }
             public string RelativeToCurrentVideoPosition { get; set; }
+            public string KeepTimeCodes { get; set; }
             public string Reset { get; set; }
         }
 

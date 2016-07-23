@@ -1915,6 +1915,7 @@ can edit in same subtitle file (collaboration)</Information>
     <Title>Set video offset</Title>
     <Description>Set video offset (subtitles should not follow real video time, but e.g. +10 hours)</Description>
     <RelativeToCurrentVideoPosition>Relative to current video position</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>Keep existing time codes (do not add video offset)</KeepTimeCodes>
     <Reset>Reset</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
