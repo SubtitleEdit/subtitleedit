@@ -3161,7 +3161,9 @@ namespace Nikse.SubtitleEdit.Forms
             saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
             saveFileDialog1.AddExtension = true;
 
-            if (!string.IsNullOrEmpty(_videoFileName))
+            if (!string.IsNullOrEmpty(_fileName))
+                saveFileDialog1.FileName = _fileName;
+            else if (!string.IsNullOrEmpty(_videoFileName))
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
             else
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
@@ -5322,7 +5324,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (googleTranslate.ShowDialog(this) == DialogResult.OK)
                 {
                     _subtitleListViewIndex = -1;
-
+                    string oldFileName = _fileName;
                     MakeHistoryForUndo(_language.BeforeGoogleTranslation);
                     if (onlySelectedLines)
                     {
@@ -5356,10 +5358,9 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     ResetHistory();
                     RestoreSubtitleListviewIndices();
+                    _fileName = googleTranslate.GetFileNameWithTargetLanguage(oldFileName, _videoFileName, _subtitleAlternate,  GetCurrentSubtitleFormat());
                     _converted = true;
                     SetTitle();
-                    //if (googleTranslate.ScreenScrapingEncoding != null)
-                    //    SetEncoding(googleTranslate.ScreenScrapingEncoding);
                     SetEncoding(Encoding.UTF8);
                     if (!isAlternateVisible)
                     {

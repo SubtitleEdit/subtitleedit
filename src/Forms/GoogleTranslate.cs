@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -40,6 +41,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get { return _screenScrapingEncoding; }
         }
+
+        private string _targetTwoLetterIsoLanguageName;
 
         public class ComboBoxItem
         {
@@ -178,10 +181,11 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (Paragraph p in _translatedSubtitle.Paragraphs)
                 p.Text = string.Empty;
 
+            _targetTwoLetterIsoLanguageName = (comboBoxTo.SelectedItem as ComboBoxItem).Value; 
             if (!_googleTranslate)
             {
                 string from = (comboBoxFrom.SelectedItem as ComboBoxItem).Value;
-                string to = (comboBoxTo.SelectedItem as ComboBoxItem).Value;
+                string to = _targetTwoLetterIsoLanguageName;
                 if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientId) && !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientSecret))
                 {
                     try
@@ -254,7 +258,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Enabled = true;
                 buttonCancel.Enabled = true;
 
-                Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = (comboBoxTo.SelectedItem as ComboBoxItem).Value;
+                Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _targetTwoLetterIsoLanguageName;
             }
         }
 
@@ -1157,6 +1161,29 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListViewFrom.SelectIndexAndEnsureVisible(index);
                 }
             }
+        }
+
+        public string GetFileNameWithTargetLanguage(string oldFileName, string videoFileName, Subtitle oldSubtitle, SubtitleFormat subtitleFormat)
+        {
+            if (!string.IsNullOrEmpty(_targetTwoLetterIsoLanguageName))
+            {
+                if (!string.IsNullOrEmpty(videoFileName))
+                {
+                    return Path.GetFileNameWithoutExtension(videoFileName) + "." + _targetTwoLetterIsoLanguageName.ToLower() + subtitleFormat.Extension;
+                }
+                else if (!string.IsNullOrEmpty(oldFileName))
+                {
+                    var s = Path.GetFileNameWithoutExtension(oldFileName);
+                    if (oldSubtitle != null)
+                    {
+                        var lang = "." + LanguageAutoDetect.AutoDetectGoogleLanguage(oldSubtitle);
+                        if (lang.Length == 3 && s.EndsWith(lang, StringComparison.OrdinalIgnoreCase))
+                            s = s.Remove(s.Length - 3);
+                    }
+                    return s + "." + _targetTwoLetterIsoLanguageName.ToLower() + subtitleFormat.Extension;
+                }
+            }
+            return null;
         }
 
     }
