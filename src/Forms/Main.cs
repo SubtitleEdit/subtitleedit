@@ -2598,13 +2598,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _fileDateTime = File.GetLastWriteTime(fileName);
 
-                if (format != null && format.IsFrameBased)
-                    _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
-                else
-                    _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
-
                 if (format != null)
                 {
+                    if (format.IsFrameBased)
+                        _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                    else
+                        _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+
                     if (Configuration.Settings.General.RemoveBlankLinesWhenOpening)
                     {
                         _subtitle.RemoveEmptyLines();
