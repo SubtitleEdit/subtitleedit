@@ -82,6 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxToolbarFind.Checked = gs.ShowToolbarFind;
             checkBoxReplace.Checked = gs.ShowToolbarReplace;
             checkBoxTBFixCommonErrors.Checked = gs.ShowToolbarFixCommonErrors;
+            checkBoxTBRemoveTextForHi.Checked = gs.ShowToolbarRemoveTextForHi;
             checkBoxVisualSync.Checked = gs.ShowToolbarVisualSync;
             checkBoxSettings.Checked = gs.ShowToolbarSettings;
             checkBoxSpellCheck.Checked = gs.ShowToolbarSpellCheck;
@@ -246,6 +247,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelTBFind.Text = language.Find;
             labelTBReplace.Text = language.Replace;
             labelTBFixCommonErrors.Text = language.FixCommonerrors;
+            labelTBRemoveTextForHi.Text = language.RemoveTextForHi;
             labelTBVisualSync.Text = language.VisualSync;
             labelTBSpellCheck.Text = language.SpellCheck;
             labelTBSettings.Text = language.SettingsName;
@@ -257,6 +259,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxToolbarFind.Text = Configuration.Settings.Language.General.Visible;
             checkBoxReplace.Text = Configuration.Settings.Language.General.Visible;
             checkBoxTBFixCommonErrors.Text = Configuration.Settings.Language.General.Visible;
+            checkBoxTBRemoveTextForHi.Text = Configuration.Settings.Language.General.Visible;
             checkBoxVisualSync.Text = Configuration.Settings.Language.General.Visible;
             checkBoxSpellCheck.Text = Configuration.Settings.Language.General.Visible;
             checkBoxSettings.Text = Configuration.Settings.Language.General.Visible;
@@ -923,7 +926,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors,
+        public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors, Image removeTextForHi,
                                Image visualSync, Image spellCheck, Image settings, Image help)
         {
             Icon = (Icon)icon.Clone();
@@ -934,6 +937,7 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxFind.Image = (Image)find.Clone();
             pictureBoxReplace.Image = (Image)replace.Clone();
             pictureBoxTBFixCommonErrors.Image = (Image)fixCommonErrors.Clone();
+            pictureBoxTBRemoveTextForHi.Image = (Image)removeTextForHi.Clone();
             pictureBoxVisualSync.Image = (Image)visualSync.Clone();
             pictureBoxSpellCheck.Image = (Image)spellCheck.Clone();
             pictureBoxSettings.Image = (Image)settings.Clone();
@@ -1059,6 +1063,7 @@ namespace Nikse.SubtitleEdit.Forms
             gs.ShowToolbarFind = checkBoxToolbarFind.Checked;
             gs.ShowToolbarReplace = checkBoxReplace.Checked;
             gs.ShowToolbarFixCommonErrors = checkBoxTBFixCommonErrors.Checked;
+            gs.ShowToolbarRemoveTextForHi = checkBoxTBRemoveTextForHi.Checked;
             gs.ShowToolbarVisualSync = checkBoxVisualSync.Checked;
             gs.ShowToolbarSettings = checkBoxSettings.Checked;
             gs.ShowToolbarSpellCheck = checkBoxSpellCheck.Checked;
