@@ -6861,9 +6861,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MakeHistoryForUndo(_language.BeforeSettingFontToNormal);
                 var subFormatName = GetCurrentSubtitleFormat().Name;
-                bool isSsa = subFormatName == SubStationAlpha.NameOfFormat ||
-                             subFormatName == AdvancedSubStationAlpha.NameOfFormat;
-
                 foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                 {
                     var p = _subtitle.GetParagraphOrDefault(item.Index);
