@@ -1519,45 +1519,19 @@
     <None Include="Icons\connect.png" />
     <None Include="Icons\Donate.png" />
     <Content Include="Icons\SE.ico" />
-    <Content Include="Icons\Find.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\FixCommonErrors.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\Help.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\New.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\Open.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\Replace.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\Save.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\SaveAs.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\Settings.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\SpellCheck.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\VideoToggle.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\VisualSync.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\WaveformToggle.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Icons\Find.png" />
+    <Content Include="Icons\FixCommonErrors.png" />
+    <Content Include="Icons\Help.png" />
+    <Content Include="Icons\New.png" />
+    <Content Include="Icons\Open.png" />
+    <Content Include="Icons\Replace.png" />
+    <Content Include="Icons\Save.png" />
+    <Content Include="Icons\SaveAs.png" />
+    <Content Include="Icons\Settings.png" />
+    <Content Include="Icons\SpellCheck.png" />
+    <Content Include="Icons\VideoToggle.png" />
+    <Content Include="Icons\VisualSync.png" />
+    <Content Include="Icons\WaveformToggle.png" />
     <None Include="Resources\pictureBoxFS.Image.png" />
     <None Include="Resources\pictureBoxFSDown.Image.png" />
     <None Include="Resources\pictureBoxFSOver.Image.png" />
