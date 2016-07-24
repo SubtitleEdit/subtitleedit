@@ -1047,6 +1047,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <Find>Find</Find>
         <Replace>Replace</Replace>
         <FixCommonErrors>Fix common errors</FixCommonErrors>
+        <RemoveTextForHi>Remove text for hearing impaired</RemoveTextForHi>
         <VisualSync>Visual sync</VisualSync>
         <SpellCheck>Spell check</SpellCheck>
         <Settings>Settings</Settings>
@@ -1799,6 +1800,7 @@ can edit in same subtitle file (collaboration)</Information>
     <FirstPlusX>First + {0}</FirstPlusX>
     <LastMinusX>Last - {0}</LastMinusX>
     <FixCommonerrors>Fix common errors</FixCommonerrors>
+    <RemoveTextForHi>Remove text for HI</RemoveTextForHi>
     <MergeLinesShorterThan>Unbreak subtitles shorter than</MergeLinesShorterThan>
     <MusicSymbol>Music symbol</MusicSymbol>
     <MusicSymbolsToReplace>Music symbols to replace (separate by space)</MusicSymbolsToReplace>

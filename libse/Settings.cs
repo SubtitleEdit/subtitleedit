@@ -467,6 +467,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ShowToolbarFind { get; set; }
         public bool ShowToolbarReplace { get; set; }
         public bool ShowToolbarFixCommonErrors { get; set; }
+        public bool ShowToolbarRemoveTextForHi { get; set; }
         public bool ShowToolbarVisualSync { get; set; }
         public bool ShowToolbarSpellCheck { get; set; }
         public bool ShowToolbarSettings { get; set; }
@@ -1272,6 +1273,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ShowToolbarFixCommonErrors");
             if (subNode != null)
                 settings.General.ShowToolbarFixCommonErrors = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ShowToolbarRemoveTextForHi");
+            if (subNode != null)
+                settings.General.ShowToolbarRemoveTextForHi = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ShowToolbarVisualSync");
             if (subNode != null)
                 settings.General.ShowToolbarVisualSync = Convert.ToBoolean(subNode.InnerText);
@@ -2863,6 +2867,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ShowToolbarFind", settings.General.ShowToolbarFind.ToString());
                 textWriter.WriteElementString("ShowToolbarReplace", settings.General.ShowToolbarReplace.ToString());
                 textWriter.WriteElementString("ShowToolbarFixCommonErrors", settings.General.ShowToolbarFixCommonErrors.ToString());
+                textWriter.WriteElementString("ShowToolbarRemoveTextForHi", settings.General.ShowToolbarRemoveTextForHi.ToString());
                 textWriter.WriteElementString("ShowToolbarVisualSync", settings.General.ShowToolbarVisualSync.ToString());
                 textWriter.WriteElementString("ShowToolbarSpellCheck", settings.General.ShowToolbarSpellCheck.ToString());
                 textWriter.WriteElementString("ShowToolbarSettings", settings.General.ShowToolbarSettings.ToString());

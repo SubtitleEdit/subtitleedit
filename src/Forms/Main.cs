@@ -1173,6 +1173,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonFind.ToolTipText = _language.Menu.ToolBar.Find;
             toolStripButtonReplace.ToolTipText = _language.Menu.ToolBar.Replace;
             toolStripButtonFixCommonErrors.ToolTipText = _language.Menu.ToolBar.FixCommonErrors;
+            toolStripButtonRemoveTextForHi.ToolTipText = _language.Menu.ToolBar.RemoveTextForHi;
             toolStripButtonVisualSync.ToolTipText = _language.Menu.ToolBar.VisualSync;
             toolStripButtonSpellCheck.ToolTipText = _language.Menu.ToolBar.SpellCheck;
             toolStripButtonSettings.ToolTipText = _language.Menu.ToolBar.Settings;
@@ -3674,8 +3675,9 @@ namespace Nikse.SubtitleEdit.Forms
             var oldAllowEditOfOriginalSubtitle = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
             using (var settings = new Settings())
             {
-                settings.Initialize(this.Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image,
-                    toolStripButtonFind.Image, toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonVisualSync.Image, toolStripButtonSpellCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
+                settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image, 
+                                    toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonRemoveTextForHi.Image, toolStripButtonVisualSync.Image, 
+                                    toolStripButtonSpellCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
                 settings.ShowDialog(this);
             }
 
@@ -3889,6 +3891,7 @@ namespace Nikse.SubtitleEdit.Forms
             TryLoadIcon(toolStripButtonFind, "Find");
             TryLoadIcon(toolStripButtonReplace, "Replace");
             TryLoadIcon(toolStripButtonFixCommonErrors, "FixCommonErrors");
+            TryLoadIcon(toolStripButtonRemoveTextForHi, "RemoveTextForHi");
             TryLoadIcon(toolStripButtonVisualSync, "VisualSync");
             TryLoadIcon(toolStripButtonSpellCheck, "SpellCheck");
             TryLoadIcon(toolStripButtonSettings, "Settings");
@@ -3904,6 +3907,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonFind.Visible = gs.ShowToolbarFind;
             toolStripButtonReplace.Visible = gs.ShowToolbarReplace;
             toolStripButtonFixCommonErrors.Visible = gs.ShowToolbarFixCommonErrors;
+            toolStripButtonRemoveTextForHi.Visible = gs.ShowToolbarRemoveTextForHi;
+
             toolStripButtonVisualSync.Visible = gs.ShowToolbarVisualSync;
             toolStripButtonSpellCheck.Visible = gs.ShowToolbarSpellCheck;
             toolStripButtonSettings.Visible = gs.ShowToolbarSettings;
@@ -19844,6 +19849,11 @@ namespace Nikse.SubtitleEdit.Forms
             FixCommonErrors(false);
         }
 
+        private void toolStripButtonRemoveTextForHi_Click(object sender, EventArgs e)
+        {
+            RemoveTextForHearImpairedToolStripMenuItemClick(sender, e);
+        }
+
         private void toolStripMenuItemExportDcinemaInteropClick(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
@@ -19994,7 +20004,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void MenuClosed(object sender, EventArgs e)
         {
             IsMenuOpen = false;
-        }
+        }        
 
     }
 }

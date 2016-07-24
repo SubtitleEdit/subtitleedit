@@ -1410,6 +1410,7 @@
                     public string Find { get; set; }
                     public string Replace { get; set; }
                     public string FixCommonErrors { get; set; }
+                    public string RemoveTextForHi { get; set; }
                     public string VisualSync { get; set; }
                     public string SpellCheck { get; set; }
                     public string Settings { get; set; }
@@ -1961,6 +1962,7 @@
             public string FirstPlusX { get; set; }
             public string LastMinusX { get; set; }
             public string FixCommonerrors { get; set; }
+            public string RemoveTextForHi { get; set; }
             public string MergeLinesShorterThan { get; set; }
             public string MusicSymbol { get; set; }
             public string MusicSymbolsToReplace { get; set; }

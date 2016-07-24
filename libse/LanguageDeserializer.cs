@@ -3556,6 +3556,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/ToolBar/FixCommonErrors":
                     language.Main.Menu.ToolBar.FixCommonErrors = reader.Value;
                     break;
+                case "Main/Menu/ToolBar/RemoveTextForHi":
+                    language.Main.Menu.ToolBar.RemoveTextForHi = reader.Value;
+                    break;
                 case "Main/Menu/ToolBar/VisualSync":
                     language.Main.Menu.ToolBar.VisualSync = reader.Value;
                     break;
@@ -4845,6 +4848,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/FixCommonerrors":
                     language.Settings.FixCommonerrors = reader.Value;
+                    break;
+                case "Settings/RemoveTextForHi":
+                    language.Settings.RemoveTextForHi = reader.Value;
                     break;
                 case "Settings/MergeLinesShorterThan":
                     language.Settings.MergeLinesShorterThan = reader.Value;
