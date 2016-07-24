@@ -3873,32 +3873,9 @@ namespace Nikse.SubtitleEdit.Forms
             return UiUtil.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
         }
 
-        private static void TryLoadIcon(ToolStripButton button, string iconName)
-        {
-            string fullPath = Configuration.IconsFolder + iconName + ".png";
-            if (File.Exists(fullPath))
-                button.Image = new Bitmap(fullPath);
-        }
-
         private void InitializeToolbar()
         {
             var gs = Configuration.Settings.General;
-
-            TryLoadIcon(toolStripButtonFileNew, "New");
-            TryLoadIcon(toolStripButtonFileOpen, "Open");
-            TryLoadIcon(toolStripButtonSave, "Save");
-            TryLoadIcon(toolStripButtonSaveAs, "SaveAs");
-            TryLoadIcon(toolStripButtonFind, "Find");
-            TryLoadIcon(toolStripButtonReplace, "Replace");
-            TryLoadIcon(toolStripButtonFixCommonErrors, "FixCommonErrors");
-            TryLoadIcon(toolStripButtonRemoveTextForHi, "RemoveTextForHi");
-            TryLoadIcon(toolStripButtonVisualSync, "VisualSync");
-            TryLoadIcon(toolStripButtonSpellCheck, "SpellCheck");
-            TryLoadIcon(toolStripButtonSettings, "Settings");
-            TryLoadIcon(toolStripButtonHelp, "Help");
-
-            TryLoadIcon(toolStripButtonToggleWaveform, "WaveformToggle");
-            TryLoadIcon(toolStripButtonToggleVideo, "VideoToggle");
 
             toolStripButtonFileNew.Visible = gs.ShowToolbarNew;
             toolStripButtonFileOpen.Visible = gs.ShowToolbarOpen;
