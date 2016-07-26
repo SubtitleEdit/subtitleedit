@@ -220,19 +220,6 @@ Source: ..\Ocr\Latin.db; DestDir: {userappdata}\Subtitle Edit\Ocr; Flags: ignore
 Source: ..\Ocr\Latin.nocr; DestDir: {userappdata}\Subtitle Edit\Ocr; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
 Source: {#bindir}\Hunspellx64.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: {#bindir}\Hunspellx86.dll;                 DestDir: {app};                                    Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\Find.png;                  DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\FixCommonErrors.png;       DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\Help.png;                  DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\New.png;                   DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\Open.png;                  DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\Replace.png;               DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\Save.png;                  DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\SaveAs.png;                DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\Settings.png;              DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\SpellCheck.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\VideoToggle.png;           DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\VisualSync.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: {#bindir}\Icons\WaveformToggle.png;        DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 
 #ifdef localize
 Source: {#bindir}\Languages\ar-EG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
