@@ -373,6 +373,7 @@
     <Compile Include="SubtitleFormats\UnknownSubtitle3.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle30.cs" />
     <Compile Include="SubtitleFormats\DlDd.cs" />
+    <Compile Include="SubtitleFormats\MediaTransData.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle82.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle81.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle80.cs" />
