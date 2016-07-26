@@ -169,27 +169,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 						</Field1>
 					</Fields>";
             var xml = new XmlDocument();
-            var firstTimeCode = new TimeCode(0);
-            var lastTimeCode = new TimeCode(0);
-            if (subtitle.Paragraphs.Count > 0)
-            {
-                firstTimeCode = subtitle.Paragraphs[0].StartTime;
-                lastTimeCode = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].StartTime;
-            }
             xml.LoadXml(xmpTemplate.Replace('\'', '"').Replace("[COUNT]", subtitle.Paragraphs.Count.ToString()));
-
             var paragraphInsertNode = xml.DocumentElement.SelectSingleNode("Tracks/Track1/Data");
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string nodeName = "Data" + count;
+                string nodeName = "Data" + count++;
                 XmlNode paragraph = xml.CreateElement(nodeName);
                 paragraph.InnerXml = paragraphTemplate;
                 paragraph.SelectSingleNode("In").InnerText = p.StartTime.ToHHMMSSFF();
                 paragraph.SelectSingleNode("Out").InnerText = p.EndTime.ToHHMMSSFF();
                 paragraph.SelectSingleNode("Fields/Field1/Data").InnerText = string.Join("|", p.Text.SplitToLines());
                 paragraphInsertNode.AppendChild(paragraph);
-                count++;
             }
             return ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty);
         }
@@ -214,7 +205,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     try
                     {
                         var nodeType = node.SelectSingleNode("Type");
-                        if (nodeType != null && nodeType.InnerText == "Text")
+                        if (nodeType?.InnerText == "Text")
                         {
                             var timeCodeIn = DecodeTimeCodeFrames(node.ParentNode.ParentNode.SelectSingleNode("In").InnerText, SplitCharColon);
                             var timeCodeOut = DecodeTimeCodeFrames(node.ParentNode.ParentNode.SelectSingleNode("Out").InnerText, SplitCharColon);
