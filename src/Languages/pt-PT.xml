@@ -188,7 +188,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FilterSrtNoUtf8BOM>Ficheiros SubRip (.srt) sem o cabeçalho UTF-8 BOM</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>Mais de duas linhas numa legenda</FilterMoreThanTwoLines>
     <FilterContains>O texto contém...</FilterContains>
-    <FixCommonErrorsErrorX>Erros comuns corrigidos: {0}</FixCommonErrorsErrorX>
+    <FixCommonErrorsErrorX>Erros frequentes corrigidos: {0}</FixCommonErrorsErrorX>
     <MultipleReplaceErrorX>Múltiplas substituições: {0}</MultipleReplaceErrorX>
     <AutoBalanceErrorX>Balanço automático: {0}</AutoBalanceErrorX>
   </BatchConvert>
@@ -507,7 +507,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FindNext>Localizar &amp;seguinte</FindNext>
   </FindSubtitleLine>
   <FixCommonErrors>
-    <Title>Corrigir erros comuns</Title>
+    <Title>Corrigir erros frequentes</Title>
     <Step1>Fase 1/2 - Seleccione quais os erros a corrigir</Step1>
     <WhatToFix>O que corrigir</WhatToFix>
     <Example>Exemplo</Example>
@@ -541,8 +541,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Iniciar com maiúscula depois de ponto final dentro do parágrafo</StartWithUppercaseLetterAfterPeriodInsideParagraph>
     <StartWithUppercaseLetterAfterColon>Iniciar com maiúscula depois de ":" ou ";"</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>Corrigir "i" minúscula sozinha por "I" maiúscula (Inglês)</FixLowercaseIToUppercaseI>
-    <FixCommonOcrErrors>Corrigir erros comuns de OCR (usando lista de substituição OCR)</FixCommonOcrErrors>
-    <CommonOcrErrorsFixed>Erros comuns de OCR corrigidos (ficheiro OcrReplaceList usado): {0}</CommonOcrErrorsFixed>
+    <FixCommonOcrErrors>Corrigir erros frequentes de OCR (usando lista de substituição OCR)</FixCommonOcrErrors>
+    <CommonOcrErrorsFixed>Erros frequentes de OCR corrigidos (ficheiro OcrReplaceList usado): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Remover espaços entre números</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Corrigir diálogos numa linha</FixDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Eliminar espaços entre números corrigido: {0}</RemoveSpaceBetweenNumbersFixed>
@@ -950,7 +950,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <AdjustDisplayDuration>&amp;Ajustar as durações...</AdjustDisplayDuration>
         <ApplyDurationLimits>Aplicar limites de duração...</ApplyDurationLimits>
         <DurationsBridgeGap>Unir os intervalos nas durações...</DurationsBridgeGap>
-        <FixCommonErrors>&amp;Corrigir erros comuns...</FixCommonErrors>
+        <FixCommonErrors>&amp;Corrigir erros frequentes...</FixCommonErrors>
         <StartNumberingFrom>Renumerar...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Eliminar texto para surdos...</RemoveTextForHearingImpaired>
         <ChangeCasing>Alterar Maiúsculas/Minúsculas...</ChangeCasing>
@@ -1047,7 +1047,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <SaveAs>Guardar como</SaveAs>
         <Find>Localizar</Find>
         <Replace>Substituir</Replace>
-        <FixCommonErrors>Corrigir erros comuns</FixCommonErrors>
+        <FixCommonErrors>Corrigir erros frequentes</FixCommonErrors>
+        <RemoveTextForHi>Eliminar texto para Surdos</RemoveTextForHi>
         <VisualSync>Sincronia visual</VisualSync>
         <SpellCheck>Verificação ortográfica</SpellCheck>
         <Settings>Configurações</Settings>
@@ -1104,7 +1105,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft traduzir linha original</GoogleAndMicrosoftTranslateSelectedLine>
         <GoogleTranslateSelectedLines>Traduzir pelo Google as linhas seleccionadas</GoogleTranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Ajustar duração das linhas seleccionadas</AdjustDisplayDurationForSelectedLines>
-        <FixCommonErrorsInSelectedLines>Corrigir erros comuns nas linhas seleccionadas</FixCommonErrorsInSelectedLines>
+        <FixCommonErrorsInSelectedLines>Corrigir erros frequentes nas linhas seleccionadas</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Alterar Maiúsculas/Minúsculas nas linhas seleccionadas</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Guardar linhas seleccionadas como...</SaveSelectedLines>
         <WebVTTSetNewVoice>Definir nova voz</WebVTTSetNewVoice>
@@ -1238,9 +1239,9 @@ Gostaria de começar do início do documento a localizar e substituir?</ReplaceX
     <DisplayTimeAdjustedX>Duração ajustada: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Durações ajustadas: {0}</DisplayTimesAdjustedX>
     <StarTimeAdjustedX>Tempo inicial ajustado: {0}</StarTimeAdjustedX>
-    <BeforeCommonErrorFixes>Antes de corrigir erros comuns</BeforeCommonErrorFixes>
-    <CommonErrorsFixedInSelectedLines>Erros comuns corrigidos nas linhas seleccionadas</CommonErrorsFixedInSelectedLines>
-    <CommonErrorsFixed>Erros comuns corrigidos</CommonErrorsFixed>
+    <BeforeCommonErrorFixes>Antes de corrigir erros frequentes</BeforeCommonErrorFixes>
+    <CommonErrorsFixedInSelectedLines>Erros frequentes corrigidos nas linhas seleccionadas</CommonErrorsFixedInSelectedLines>
+    <CommonErrorsFixed>Erros frequentes corrigidos</CommonErrorsFixed>
     <BeforeRenumbering>Antes de renumerar</BeforeRenumbering>
     <RenumberedStartingFromX>Renumerar a partir de: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Antes de eliminar as mensagens de texto para surdos</BeforeRemovalOfTextingForHearingImpaired>
@@ -1799,11 +1800,12 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <EndSceneIndex>O parágrafo final da cena é</EndSceneIndex>
     <FirstPlusX>Primeiro + {0}</FirstPlusX>
     <LastMinusX>Último - {0}</LastMinusX>
-    <FixCommonerrors>Corrigir erros comuns</FixCommonerrors>
+    <FixCommonerrors>Corrigir erros frequentes</FixCommonerrors>
+    <RemoveTextForHi>Eliminar texto para Surdos</RemoveTextForHi>
     <MergeLinesShorterThan>Remover quebra em linha menor que...</MergeLinesShorterThan>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsToReplace>Símbolos musicais para substituir (separados por espaços)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros comuns de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros frequentes de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Corrigir o tempo curto de exibição - permitir o movimento do tempo inicial</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Ignorar a fase um (escolher regras de correcção)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Atalhos</Shortcuts>
@@ -1916,6 +1918,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Title>Definir o deslocamento do vídeo</Title>
     <Description>Definir o deslocamento do vídeo (A legenda não deve seguir o tempo real do vídeo, mas por ex. +10 horas)</Description>
     <RelativeToCurrentVideoPosition>Em relação à posição do vídeo actual</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>Manter os tempos existentes (não adicionar compensação de vídeo)</KeepTimeCodes>
     <Reset>Redefinir</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
