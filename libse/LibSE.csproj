@@ -354,7 +354,7 @@
     <Compile Include="SubtitleFormats\UnknownSubtitle13.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle14.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle15.cs" />
-    <Compile Include="SubtitleFormats\UnknownSubtitle16.cs" />
+    <Compile Include="SubtitleFormats\CavenaCIP.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle17.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle18.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle19.cs" />

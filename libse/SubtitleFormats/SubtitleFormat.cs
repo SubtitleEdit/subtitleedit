@@ -174,7 +174,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle13(),
                     new UnknownSubtitle14(),
                     new UnknownSubtitle15(),
-                    new UnknownSubtitle16(),
+                    new CavenaCIP(),
                     new UnknownSubtitle17(),
                     new UnknownSubtitle18(),
                     new UnknownSubtitle19(),
