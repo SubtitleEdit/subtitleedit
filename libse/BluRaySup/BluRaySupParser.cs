@@ -792,7 +792,7 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
         }
 
-        private static int BigEndianInt16(byte[] buffer, int index)
+        public static int BigEndianInt16(byte[] buffer, int index)
         {
             if (buffer.Length < 2)
                 return 0;

@@ -5363,7 +5363,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     ResetHistory();
                     RestoreSubtitleListviewIndices();
-                    _fileName = googleTranslate.GetFileNameWithTargetLanguage(oldFileName, _videoFileName, _subtitleAlternate,  GetCurrentSubtitleFormat());
+                    _fileName = googleTranslate.GetFileNameWithTargetLanguage(oldFileName, _videoFileName, _subtitleAlternate, GetCurrentSubtitleFormat());
                     _converted = true;
                     SetTitle();
                     SetEncoding(Encoding.UTF8);
@@ -9433,6 +9433,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.Paragraphs.Clear();
             var subtitles = new List<BluRaySupParser.PcsData>();
             var log = new StringBuilder();
+            var clusterStream = new MemoryStream();
             foreach (var p in sub)
             {
                 byte[] buffer = null;
@@ -9464,21 +9465,29 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     buffer = p.Data;
                 }
-                if (buffer != null && buffer.Length > 100)
+                if (buffer != null && buffer.Length > 2)
                 {
-                    var ms = new MemoryStream(buffer);
-                    var list = BluRaySupParser.ParseBluRaySup(ms, log, true);
-                    foreach (var sup in list)
+                    clusterStream.Write(buffer, 0, buffer.Length);
+                    if (ContainsBlueEndSegment(buffer))
                     {
-                        sup.StartTime = (long)((p.Start - 1) * 90.0);
-                        sup.EndTime = (long)((p.End - 1) * 90.0);
-                        subtitles.Add(sup);
+                        if (subtitles.Count > 0 && subtitles[subtitles.Count - 1].StartTime == subtitles[subtitles.Count - 1].EndTime)
+                        {
+                            subtitles[subtitles.Count - 1].EndTime = (long)((p.Start - 1) * 90.0);
+                        }
+                        clusterStream.Position = 0;
+                        var list = BluRaySupParser.ParseBluRaySup(clusterStream, log, true);
+                        foreach (var sup in list)
+                        {
+                            sup.StartTime = (long)((p.Start - 1) * 90.0);
+                            sup.EndTime = (long)((p.End - 1) * 90.0);
+                            subtitles.Add(sup);
 
-                        // fix overlapping
-                        if (subtitles.Count > 1 && sub[subtitles.Count - 2].End > sub[subtitles.Count - 1].Start)
-                            subtitles[subtitles.Count - 2].EndTime = subtitles[subtitles.Count - 1].StartTime - 1;
+                            // fix overlapping
+                            if (subtitles.Count > 1 && sub[subtitles.Count - 2].End > sub[subtitles.Count - 1].Start)
+                                subtitles[subtitles.Count - 2].EndTime = subtitles[subtitles.Count - 1].StartTime - 1;
+                        }
+                        clusterStream = new MemoryStream();
                     }
-                    ms.Close();
                 }
                 else if (subtitles.Count > 0)
                 {
@@ -9531,6 +9540,21 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.Save();
                     return true;
                 }
+            }
+            return false;
+        }
+
+        private bool ContainsBlueEndSegment(byte[] buffer)
+        {
+            var position = 0;
+            int length  = 0;
+            while (position + 3 <= buffer.Length)
+            {
+                var segmentType = buffer[position];
+                if (segmentType == 0x80)
+                    return true;
+                length = BluRaySupParser.BigEndianInt16(buffer, position + 1) + 3;
+                position += length;
             }
             return false;
         }
