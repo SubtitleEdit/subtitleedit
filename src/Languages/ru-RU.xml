@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
@@ -1054,6 +1054,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <Find>Найти</Find>
         <Replace>Заменить</Replace>
         <FixCommonErrors>Исправить типичные ошибки</FixCommonErrors>
+        <RemoveTextForHi>Очистить текст для слабослышащих</RemoveTextForHi>
         <VisualSync>Визуальная синхронизация</VisualSync>
         <SpellCheck>Проверка орфографии</SpellCheck>
         <Settings>Настройки</Settings>
@@ -1079,17 +1080,17 @@ https://github.com/SubtitleEdit/subtitleedit
         <AutoDurationCurrentLine>Авто продолжительность (текущая строка)</AutoDurationCurrentLine>
         <SelectAll>Выделить все</SelectAll>
         <InsertFirstLine>Вставить строку</InsertFirstLine>
-        <InsertBefore>Вставить строку перед</InsertBefore>
-        <InsertAfter>Вставить строку после</InsertAfter>
-        <InsertSubtitleAfter>Вставить из файла после этой строки...</InsertSubtitleAfter>
+        <InsertBefore>✚ Вставить строку перед ↑</InsertBefore>
+        <InsertAfter>✚ Вставить строку после ↓</InsertAfter>
+        <InsertSubtitleAfter>✚ Вставить из файла после этой строки... ↨ⓕ</InsertSubtitleAfter>
         <CopyToClipboard>Копировать в буфер обмена как текст</CopyToClipboard>
         <Column>Колонка</Column>
         <ColumnDeleteText>Удалить текст</ColumnDeleteText>
         <ColumnDeleteTextAndShiftCellsUp>Удалить текст со сдвигом вверх</ColumnDeleteTextAndShiftCellsUp>
-        <ColumnInsertEmptyTextAndShiftCellsDown>Вставить пустой текст со сдвигом вниз</ColumnInsertEmptyTextAndShiftCellsDown>
-        <ColumnInsertTextFromSubtitle>Вставить текст из субтитров...</ColumnInsertTextFromSubtitle>
+        <ColumnInsertEmptyTextAndShiftCellsDown>✚ Вставить пустой текст со сдвигом вниз</ColumnInsertEmptyTextAndShiftCellsDown>
+        <ColumnInsertTextFromSubtitle>✚ Вставить текст из субтитров... ▼Ⓢ</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Импорт текста со сдвигом вниз</ColumnImportTextAndShiftCellsDown>
-        <ColumnPasteFromClipboard>Вставить из буфера обмена...</ColumnPasteFromClipboard>
+        <ColumnPasteFromClipboard>✚ Вставить из буфера обмена... ⇅</ColumnPasteFromClipboard>
         <ColumnCopyOriginalTextToCurrent>Копировать текст из оригинала</ColumnCopyOriginalTextToCurrent>
         <Split>Разделить</Split>
         <MergeSelectedLines>Объединить выделенные строки</MergeSelectedLines>
@@ -1533,12 +1534,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveAll>Удалить все</RemoveAll>
     <Import>Импорт (открыть)...</Import>
     <Export>Экспорт (сохранить)...</Export>
-    <ImportRulesTitle>Импорт правил замен из...</ImportRulesTitle>
-    <ExportRulesTitle>Экспорт правил замен в...</ExportRulesTitle>
+    <ImportRulesTitle>Импорт (откр.) правил замен из...</ImportRulesTitle>
+    <ExportRulesTitle>Экспорт (сохр.) правил замен в...</ExportRulesTitle>
     <Rules>Экспорт правил</Rules>
     <MoveToTop>Поднять на самый верх</MoveToTop>
     <MoveToBottom>Опустить в самый низ</MoveToBottom>
-    <MoveSelectedRulesToGroup>Добавить выбранные правила в группу</MoveSelectedRulesToGroup>
+    <MoveSelectedRulesToGroup>Применить выбранные правила к группе</MoveSelectedRulesToGroup>
     <Groups>Группы</Groups>
     <RulesForGroupX>Правила для группы "{0}"</RulesForGroupX>
     <GroupName>Название группы</GroupName>
@@ -1729,6 +1730,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <AutoBackupEveryMinute>Каждую минуту</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Каждые 5 минут</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Каждые 15 минут</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Удалять по истечении</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1 месяца</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 месяцев</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 месяцев</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Проверка обновлений</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Разрешить редактировать исходные субтитры</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Выдать запрос перед удаление строк</PromptDeleteLines>
@@ -1812,6 +1817,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FirstPlusX>Первый + {0}</FirstPlusX>
     <LastMinusX>Последний - {0}</LastMinusX>
     <FixCommonerrors>Исправить ошибки</FixCommonerrors>
+    <RemoveTextForHi>Убрать текст для слабослышащих</RemoveTextForHi>
     <MergeLinesShorterThan>Объединить строки короче, чем</MergeLinesShorterThan>
     <MusicSymbol>Заменить музыкальным символом:</MusicSymbol>
     <MusicSymbolsToReplace>Музыкальные символы для замены (разделяйте пробелом)</MusicSymbolsToReplace>
@@ -1868,8 +1874,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoForward100Milliseconds>100 мс вперед</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 мс назад</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 мс вперед</GoForward500Milliseconds>
-    <GoBack1Second>1 сек. назад</GoBack1Second>
-    <GoForward1Second>1 сек. вперед</GoForward1Second>
+    <GoBack1Second>← 1 сек. назад</GoBack1Second>
+    <GoForward1Second>1 сек. вперед →</GoForward1Second>
+    <GoBack5Seconds>← 5 секунд назад</GoBack5Seconds>
+    <GoForward5Seconds>5 секунд вперед →</GoForward5Seconds>
     <TogglePlayPause>Вкл./Откл. Воспроизведение/Пауза</TogglePlayPause>
     <Pause>Пауза</Pause>
     <Fullscreen>Во весь экран</Fullscreen>
@@ -1928,6 +1936,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Установить смещение видео</Title>
     <Description>Задать смещение видео (субтитры не должны следовать в реальном времени видео, а, например, +10 часов)</Description>
     <RelativeToCurrentVideoPosition>Относительно текущей позиции видео</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>Оставить как есть (не добавляйте видео задержку)</KeepTimeCodes>
     <Reset>Сбросить</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
