@@ -58,20 +58,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private string GetVideoFileName(string title)
         {
-            string fileNameNoExt = null;
-            if (_fileName != null)
+            string fileNameNoExt = Path.GetFileNameWithoutExtension(_fileName);
+            if (fileNameNoExt != null)
             {
-                fileNameNoExt = _fileName.Substring(0, _fileName.Length - Path.GetExtension(_fileName).Length);
-            }
-            foreach (var ext in Utilities.GetMovieFileExtensions())
-            {
-                if (!string.IsNullOrEmpty(fileNameNoExt) && File.Exists(Path.Combine(fileNameNoExt, ext)))
+                foreach (var ext in Utilities.GetMovieFileExtensions())
                 {
-                    return Path.Combine(fileNameNoExt, ext);
-                }
-                if (!string.IsNullOrEmpty(title) && File.Exists(Path.Combine(title, ext)))
-                {
-                    return Path.Combine(title, ext);
+                    string fullPath = Path.Combine(fileNameNoExt, ext);
+                    if (File.Exists(fullPath))
+                    {
+                        return fullPath;
+                    }
+                    fullPath = Path.Combine(title, ext);
+                    if (File.Exists(fullPath))
+                    {
+                        return fullPath;
+                    }
                 }
             }
             if (string.IsNullOrEmpty(title))
