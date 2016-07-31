@@ -192,6 +192,7 @@
     <Compile Include="Subtitle.cs" />
     <Compile Include="SubtitleFormats\AribB36.cs" />
     <Compile Include="SubtitleFormats\AribB24Decoder.cs" />
+    <Compile Include="SubtitleFormats\NetflixTimedText.cs" />
     <Compile Include="SubtitleFormats\JsonType7.cs" />
     <Compile Include="SubtitleFormats\SamiAvDicPlayer.cs" />
     <Compile Include="SubtitleFormats\SpuImage.cs" />

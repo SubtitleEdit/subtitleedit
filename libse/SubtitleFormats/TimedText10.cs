@@ -60,6 +60,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
                         var nds = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
                         var paragraphs = nds.SelectNodes("//ttml:p", nsmgr);
+
+                        if (paragraphs.Count > 0 && new NetflixTimedText().IsMine(lines, fileName))
+                            return false;
+
                         return paragraphs.Count > 0;
                     }
                     catch (Exception ex)
