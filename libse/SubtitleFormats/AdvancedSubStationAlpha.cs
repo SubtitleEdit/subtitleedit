@@ -1119,7 +1119,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             if (s.StartsWith('h') && s.Length == 9)
             {
                 int alpha;
-                if (Int32.TryParse(s.Substring(1, 2), NumberStyles.HexNumber, null, out alpha))
+                if (int.TryParse(s.Substring(1, 2), NumberStyles.HexNumber, null, out alpha))
                 {
                     alpha = 255 - alpha; // ASS stores alpha in reverse (0=full itentity and 255=fully transparent)
                 }

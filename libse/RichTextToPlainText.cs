@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Core
                     string brace = match.Groups[5].Value;
                     string tchar = match.Groups[6].Value;
 
-                    if (!String.IsNullOrEmpty(brace))
+                    if (!string.IsNullOrEmpty(brace))
                     {
                         curskip = 0;
                         if (brace == "{")
@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Core
                             ignorable = entry.Ignorable;
                         }
                     }
-                    else if (!String.IsNullOrEmpty(character)) // \x (not a letter)
+                    else if (!string.IsNullOrEmpty(character)) // \x (not a letter)
                     {
                         curskip = 0;
                         if (character == "~")
@@ -171,7 +171,7 @@ namespace Nikse.SubtitleEdit.Core
                             ignorable = true;
                         }
                     }
-                    else if (!String.IsNullOrEmpty(word)) // \foo
+                    else if (!string.IsNullOrEmpty(word)) // \foo
                     {
                         curskip = 0;
                         if (Destinations.Contains(word))
@@ -187,20 +187,20 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         else if (word == "uc")
                         {
-                            ucskip = Int32.Parse(arg);
+                            ucskip = int.Parse(arg);
                         }
                         else if (word == "u")
                         {
-                            int c = Int32.Parse(arg);
+                            int c = int.Parse(arg);
                             if (c < 0)
                             {
                                 c += 0x10000;
                             }
-                            outList.Add(Char.ConvertFromUtf32(c));
+                            outList.Add(char.ConvertFromUtf32(c));
                             curskip = ucskip;
                         }
                     }
-                    else if (!String.IsNullOrEmpty(hex)) // \'xx
+                    else if (!string.IsNullOrEmpty(hex)) // \'xx
                     {
                         if (curskip > 0)
                         {
@@ -208,11 +208,11 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         else if (!ignorable)
                         {
-                            int c = Int32.Parse(hex, System.Globalization.NumberStyles.HexNumber);
-                            outList.Add(Char.ConvertFromUtf32(c));
+                            int c = int.Parse(hex, System.Globalization.NumberStyles.HexNumber);
+                            outList.Add(char.ConvertFromUtf32(c));
                         }
                     }
-                    else if (!String.IsNullOrEmpty(tchar))
+                    else if (!string.IsNullOrEmpty(tchar))
                     {
                         if (curskip > 0)
                         {
@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Core
                     }
                 }
             }
-            return String.Join(String.Empty, outList.ToArray());
+            return string.Join(string.Empty, outList.ToArray());
         }
 
         internal static string ConvertToRtf(string value)

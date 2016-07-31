@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 var index = 0;
                 var fileLength = fs.Length;
-                if (fileLength > Int32.MaxValue)
+                if (fileLength > int.MaxValue)
                     throw new IOException("File too long");
                 var count = (int)fileLength;
                 var bytes = new byte[count];
