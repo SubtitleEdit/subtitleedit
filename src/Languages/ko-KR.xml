@@ -160,7 +160,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Style>스타일...</Style>
     <ConvertOptions>변환 옵션</ConvertOptions>
     <RemoveFormatting>서식 태그 제거</RemoveFormatting>
-    <RemoveTextForHI>청각 장애인용 텍스트 제거</RemoveTextForHI>
+    <RemoveTextForHI>청각 장애인용 텍스트 삭제</RemoveTextForHI>
     <OverwriteOriginalFiles>원본 파일 덮어쓰기 (형식이 변경된 경우)</OverwriteOriginalFiles>
     <RedoCasing>대/소문자 구분</RedoCasing>
     <Convert>변환</Convert>
@@ -1043,6 +1043,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <Find>찾기</Find>
         <Replace>바꾸기</Replace>
         <FixCommonErrors>일반적인 오류 수정</FixCommonErrors>
+        <RemoveTextForHi>청각 장애인용 텍스트 삭제</RemoveTextForHi>
         <VisualSync>시각 동기화</VisualSync>
         <SpellCheck>맞춤법 검사</SpellCheck>
         <Settings>환경 설정</Settings>
@@ -1796,6 +1797,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FirstPlusX>시작 +{0}</FirstPlusX>
     <LastMinusX>종료 -{0}</LastMinusX>
     <FixCommonerrors>일반 오류 수정</FixCommonerrors>
+    <RemoveTextForHi>청각 장애인용 텍스트 삭제</RemoveTextForHi>
     <MergeLinesShorterThan>다음보다 짧은 줄은 줄바꿈 제거</MergeLinesShorterThan>
     <MusicSymbol>음표</MusicSymbol>
     <MusicSymbolsToReplace>대체 음표 (공백으로 구분)</MusicSymbolsToReplace>
@@ -1912,6 +1914,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Title>비디오 오프셋 설정</Title>
     <Description>비디오 오프셋 설정 (자막이 실제 비디오 시간을 따를 필요는 없다, 하지만 +10시간이라면...)</Description>
     <RelativeToCurrentVideoPosition>현재 비디오 위치 기준</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>기존 타임코드 유지 (비디오 오프셋을 추가하지 마시오!)</KeepTimeCodes>
     <Reset>초기화</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
