@@ -112,7 +112,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtractingMinutes>Wyodrębnione audio: {0:0.0} min.</ExtractingMinutes>
     <WaveFileNotFound>Nie można znaleźć wyodrębnionego pliku wave!
 Ta funkcja wymaga VLC media player 1.1.x lub nowszego ({0}-bit). Wiersz poleceń: {1} {2}</WaveFileNotFound>
-    <WaveFileMalformed>{0} nie był w stanie wyodrębnić danych audio do pliku wave!
+    <WaveFileMalformed>{0} nie był w stanie wyodrębnić danych audio do pliku wave! 
 
 Wiersz poleceń: {1} {2}
 
@@ -162,7 +162,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Style>Style...</Style>
     <ConvertOptions>Opcje konwersji</ConvertOptions>
     <RemoveFormatting>Usuń tagi formatujące</RemoveFormatting>
-    <RemoveTextForHI>Usuń tekst dla HI</RemoveTextForHI>
+    <RemoveTextForHI>Usuń tekst dla niedosłyszących (HI)</RemoveTextForHI>
     <OverwriteOriginalFiles>Nadpisz oryginalne pliki (nowe rozszerzenie, jeśli format jest zmieniany)</OverwriteOriginalFiles>
     <RedoCasing>Ponów wielkie litery</RedoCasing>
     <Convert>Konwertuj</Convert>
@@ -339,7 +339,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Title>Wybierz języka</Title>
     <ChooseLanguageStreamId>Wybierz język (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Nieznany język</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Obraz napisów</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -1045,6 +1045,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
         <Find>Znajdź</Find>
         <Replace>Zastąp</Replace>
         <FixCommonErrors>Popraw najczęstsze błędy</FixCommonErrors>
+        <RemoveTextForHi>Usuń tekst dla niedosłyszących</RemoveTextForHi>
         <VisualSync>Synchronizacja wizualna</VisualSync>
         <SpellCheck>Sprawdź pisownię</SpellCheck>
         <Settings>Ustawienia</Settings>
@@ -1797,6 +1798,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <FirstPlusX>Pierwsza + {0}</FirstPlusX>
     <LastMinusX>Ostatnia - {0}</LastMinusX>
     <FixCommonerrors>Popraw błędy</FixCommonerrors>
+    <RemoveTextForHi>Usuń tekst dla HI</RemoveTextForHi>
     <MergeLinesShorterThan>Połącz linie krótsze, niż</MergeLinesShorterThan>
     <MusicSymbol>Symbole muzyczne</MusicSymbol>
     <MusicSymbolsToReplace>Symbole muzyczne do zastąpienia (oddzielone spacją)</MusicSymbolsToReplace>
@@ -1914,6 +1916,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <Title>Ustaw przesunięcie wideo</Title>
     <Description>Ustaw przesunięcie wideo (napisy nie powinny śledzić rzeczywistego czasu wideo, ale np. +10 godzin)</Description>
     <RelativeToCurrentVideoPosition>W odniesieniu do aktualnej pozycji wideo</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>Zachowaj istniejące kody czasowe (nie dodawaj przesunięcia wideo)</KeepTimeCodes>
     <Reset>Resetuj</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
