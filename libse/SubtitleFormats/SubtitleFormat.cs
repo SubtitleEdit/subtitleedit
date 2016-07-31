@@ -91,6 +91,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new MidwayInscriberCGX(),
                     new MPlayer2(),
                     new NciTimedRollUpCaptions(),
+                    new NetflixTimedText(),
                     new OpenDvt(),
                     new Oresme(),
                     new OresmeDocXDocument(),
