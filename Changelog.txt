@@ -39,6 +39,7 @@
    * Fix for choosing OCR dictionary in combobox - thx Edouard
    * Fixed reading of split Blu-ray sup packages from mkv - thx Sinnlosvoll
    * Minor improvement for line split in "Binary image compare" OCR
+   * Fixed Blu-ray composition number when writing .sup files - thx mbcd
    * + Many minor fixes from ivandrofly and xylographe
 
 
