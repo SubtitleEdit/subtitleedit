@@ -264,7 +264,8 @@ namespace Nikse.SubtitleEdit.Forms
                 EndTime = (long)param.P.EndTime.TotalMilliseconds,
                 Width = param.ScreenWidth,
                 Height = param.ScreenHeight,
-                IsForced = param.Forced
+                IsForced = param.Forced,
+                CompositionNumber = param.P.Number * 2
             };
             if (param.FullFrame)
             {
