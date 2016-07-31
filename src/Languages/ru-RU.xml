@@ -1936,7 +1936,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Установить смещение видео</Title>
     <Description>Задать смещение видео (субтитры не должны следовать в реальном времени видео, а, например, +10 часов)</Description>
     <RelativeToCurrentVideoPosition>Относительно текущей позиции видео</RelativeToCurrentVideoPosition>
-    <KeepTimeCodes>Оставить как есть (не добавляйте видео задержку)</KeepTimeCodes>
+    <KeepTimeCodes>Оставить как есть (не добавлять видео задержку)</KeepTimeCodes>
     <Reset>Сбросить</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
