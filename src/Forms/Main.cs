@@ -2618,7 +2618,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _subtitleListViewIndex = -1;
                     Configuration.Settings.General.CurrentVideoOffsetInMs = 0;
+
+                    var oldSaveFormat = Configuration.Settings.General.LastSaveAsFormat;
                     SetCurrentFormat(format);
+                    Configuration.Settings.General.LastSaveAsFormat = oldSaveFormat;
+
                     _subtitleAlternateFileName = null;
                     if (LoadAlternateSubtitleFile(originalFileName))
                         _subtitleAlternateFileName = originalFileName;
@@ -3151,10 +3155,11 @@ namespace Nikse.SubtitleEdit.Forms
         private DialogResult FileSaveAs(bool allowUsingLastSaveAsFormat)
         {
             SubtitleFormat currentFormat = null;
+            var oldSubtitleFormat = GetCurrentSubtitleFormat();
             if (allowUsingLastSaveAsFormat && !string.IsNullOrEmpty(Configuration.Settings.General.LastSaveAsFormat))
                 currentFormat = Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.LastSaveAsFormat);
             if (currentFormat == null)
-                currentFormat = GetCurrentSubtitleFormat();
+                currentFormat = oldSubtitleFormat;
 
             UiUtil.SetSaveDialogFilter(saveFileDialog1, currentFormat);
 
@@ -3163,7 +3168,13 @@ namespace Nikse.SubtitleEdit.Forms
             saveFileDialog1.AddExtension = true;
 
             if (!string.IsNullOrEmpty(_fileName))
+            {
                 saveFileDialog1.FileName = _fileName;
+                if (_fileName.EndsWith(oldSubtitleFormat.Extension, StringComparison.OrdinalIgnoreCase))
+                {
+                    saveFileDialog1.FileName = _fileName.Substring(0, _fileName.Length - _oldSubtitleFormat.Extension.Length);
+                }
+            }
             else if (!string.IsNullOrEmpty(_videoFileName))
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
             else
