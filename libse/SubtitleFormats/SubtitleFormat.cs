@@ -242,6 +242,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new UnknownSubtitle80(),
                     new UnknownSubtitle81(),
                     new UnknownSubtitle82(),
+                    new UnknownSubtitle83(),
                 };
 
                 string path = Configuration.PluginsDirectory;

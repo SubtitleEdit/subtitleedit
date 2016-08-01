@@ -364,6 +364,7 @@
     <Compile Include="SubtitleFormats\UnknownSubtitle21.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle22.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle23.cs" />
+    <Compile Include="SubtitleFormats\UnknownSubtitle83.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle24.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle25.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle26.cs" />
