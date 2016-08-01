@@ -226,6 +226,15 @@ namespace Nikse.SubtitleEdit.Core
                 return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds + 1, 0);
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
         }
+        
+        public string ToSSFF()
+        {
+            var ts = TimeSpan;
+            var frames = Math.Round(ts.Milliseconds / (BaseUnit / Configuration.Settings.General.CurrentFrameRate));
+            if (frames >= Configuration.Settings.General.CurrentFrameRate - 0.001)
+                return string.Format("{0:00}:{1:00}", ts.Seconds + 1, 0);
+            return string.Format("{0:00}:{1:00}", ts.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
+        }
 
         public string ToHHMMSSPeriodFF()
         {
