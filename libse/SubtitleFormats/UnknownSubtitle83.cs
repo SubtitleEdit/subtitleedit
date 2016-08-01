@@ -92,6 +92,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         return;
                 }
             }
+            if (p != null)
+            {
+                subtitle.Paragraphs.Add(p);
+            }
             subtitle.Renumber();
         }
 
