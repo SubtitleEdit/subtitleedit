@@ -1080,8 +1080,8 @@ https://github.com/SubtitleEdit/subtitleedit
         <AutoDurationCurrentLine>Авто продолжительность (текущая строка)</AutoDurationCurrentLine>
         <SelectAll>Выделить все</SelectAll>
         <InsertFirstLine>Вставить строку</InsertFirstLine>
-        <InsertBefore>Вставить строку перед ˄</InsertBefore>
-        <InsertAfter>Вставить строку после ˅</InsertAfter>
+        <InsertBefore>Вставить строку перед</InsertBefore>
+        <InsertAfter>Вставить строку после</InsertAfter>
         <InsertSubtitleAfter>Вставить из файла после этой строки...</InsertSubtitleAfter>
         <CopyToClipboard>Копировать в буфер обмена как текст</CopyToClipboard>
         <Column>Колонка</Column>
@@ -1874,10 +1874,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoForward100Milliseconds>100 мс вперед</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 мс назад</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 мс вперед</GoForward500Milliseconds>
-    <GoBack1Second><= 1 сек. назад</GoBack1Second>
-    <GoForward1Second>1 сек. вперед =></GoForward1Second>
-    <GoBack5Seconds><= 5 секунд назад</GoBack5Seconds>
-    <GoForward5Seconds>5 секунд вперед =></GoForward5Seconds>
+    <GoBack1Second>1 сек. назад</GoBack1Second>
+    <GoForward1Second>1 сек. вперед</GoForward1Second>
+    <GoBack5Seconds>5 секунд назад</GoBack5Seconds>
+    <GoForward5Seconds>5 секунд вперед</GoForward5Seconds>
     <TogglePlayPause>Вкл./Откл. Воспроизведение/Пауза</TogglePlayPause>
     <Pause>Пауза</Pause>
     <Fullscreen>Во весь экран</Fullscreen>
