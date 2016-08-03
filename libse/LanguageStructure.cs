@@ -762,6 +762,7 @@
             public string Frames { get; set; }
             public string Seconds { get; set; }
             public string Milliseconds { get; set; }
+            public string GetSceneChangesWithFfmpeg { get; set; }
         }
 
         public class ImportText

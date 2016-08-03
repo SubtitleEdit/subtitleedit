@@ -886,6 +886,7 @@ namespace Nikse.SubtitleEdit.Core
                 Frames = "Frames",
                 Seconds = "Seconds",
                 Milliseconds = "Milliseconds",
+                GetSceneChangesWithFfmpeg = "Get scene changes with FFMPEG"
             };
 
             ImportText = new LanguageStructure.ImportText
