@@ -3167,7 +3167,7 @@ namespace Nikse.SubtitleEdit.Forms
             saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
             saveFileDialog1.AddExtension = true;
 
-            if (!string.IsNullOrEmpty(_fileName))
+            if (_fileName?.Length > _oldSubtitleFormat?.Extension.Length)
             {
                 saveFileDialog1.FileName = _fileName;
                 if (_fileName.EndsWith(oldSubtitleFormat.Extension, StringComparison.OrdinalIgnoreCase))
