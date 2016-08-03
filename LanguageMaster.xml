@@ -1833,6 +1833,8 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToPrevious>Go to previous line</GoToPrevious>
     <GoToCurrentSubtitleStart>Go to current line start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Go to current line end</GoToCurrentSubtitleEnd>
+    <GoToNextSubtitleAndFocusVideo>Go to next line and set video position</GoToNextSubtitleAndFocusVideo>
+    <ExtendCurrentSubtitle>Extend current line to next subtitle or max duration</ExtendCurrentSubtitle>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
     <Alignment>Alignment (selected lines)</Alignment>

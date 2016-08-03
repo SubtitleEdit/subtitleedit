@@ -820,6 +820,8 @@ namespace Nikse.SubtitleEdit.Core
         public string GeneralGoToPrevSubtitle { get; set; }
         public string GeneralGoToStartOfCurrentSubtitle { get; set; }
         public string GeneralGoToEndOfCurrentSubtitle { get; set; }
+        public string GeneralGoToNextSubtitleAndFocusVideo { get; set; }
+        public string GeneralExtendCurrentSubtitle { get; set; }
         public string GeneralPlayFirstSelected { get; set; }
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
@@ -1032,6 +1034,8 @@ namespace Nikse.SubtitleEdit.Core
             WaveformVerticalZoomOut = "Shift+Subtract";
             WaveformPlaySelection = string.Empty;
             WaveformPlaySelectionEnd = string.Empty;
+            GeneralGoToNextSubtitleAndFocusVideo = string.Empty;
+            GeneralExtendCurrentSubtitle = string.Empty;
             GeneralPlayFirstSelected = string.Empty;
             WaveformSearchSilenceForward = string.Empty;
             WaveformSearchSilenceBack = string.Empty;
@@ -2410,7 +2414,13 @@ namespace Nikse.SubtitleEdit.Core
                     settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle = subNode.InnerText;
                 subNode = node.SelectSingleNode("GeneralGoToStartOfCurrentSubtitle");
                 if (subNode != null)
-                    settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle = subNode.InnerText;
+                    settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralGoToNextSubtitleAndFocusVideo");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralExtendCurrentSubtitle");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralExtendCurrentSubtitle = subNode.InnerText;
                 subNode = node.SelectSingleNode("GeneralPlayFirstSelected");
                 if (subNode != null)
                     settings.Shortcuts.GeneralPlayFirstSelected = subNode.InnerText;
@@ -3265,6 +3275,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("GeneralGoToPrevSubtitle", settings.Shortcuts.GeneralGoToPrevSubtitle);
                 textWriter.WriteElementString("GeneralGoToEndOfCurrentSubtitle", settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle);
                 textWriter.WriteElementString("GeneralGoToStartOfCurrentSubtitle", settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
+                textWriter.WriteElementString("GeneralGoToNextSubtitleAndFocusVideo", settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo);
+                textWriter.WriteElementString("GeneralExtendCurrentSubtitle", settings.Shortcuts.GeneralExtendCurrentSubtitle);
                 textWriter.WriteElementString("GeneralPlayFirstSelected", settings.Shortcuts.GeneralPlayFirstSelected);
                 textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
                 textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
