@@ -687,6 +687,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Frames>Frames</Frames>
     <Seconds>Seconds</Seconds>
     <Milliseconds>Milliseconds</Milliseconds>
+    <GetSceneChangesWithFfmpeg>Get scene changes with FFMPEG</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Import plain text</Title>

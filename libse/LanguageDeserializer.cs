@@ -1795,6 +1795,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "ImportSceneChanges/Milliseconds":
                     language.ImportSceneChanges.Milliseconds = reader.Value;
                     break;
+                case "ImportSceneChanges/GetSceneChangesWithFfmpeg":
+                    language.ImportSceneChanges.GetSceneChangesWithFfmpeg = reader.Value;
+                    break;
                 case "ImportText/Title":
                     language.ImportText.Title = reader.Value;
                     break;
