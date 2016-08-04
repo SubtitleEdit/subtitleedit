@@ -1119,6 +1119,7 @@ namespace Nikse.SubtitleEdit.Forms
             closeVideoToolStripMenuItem.Text = _language.Menu.Video.CloseVideo;
 
             toolStripMenuItemImportSceneChanges.Text = _language.Menu.Video.ImportSceneChanges;
+            toolStripMenuItemRemoveSceneChanges.Text = _language.Menu.Video.RemoveSceneChanges;
 
             toolStripMenuItemAddWaveformBatch.Text = _language.Menu.Video.WaveformBatchGenerate;
 
