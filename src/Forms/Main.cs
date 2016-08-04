@@ -13183,6 +13183,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     audioVisualizer.WavePeaks = WavePeakData.FromDisk(peakWaveFileName);
                     audioVisualizer.Spectrogram = SpectrogramData.FromDisk(spectrogramFolder);
+                    audioVisualizer.SceneChanges = SceneChangeHelper.FromDisk(_videoFileName);
                     toolStripComboBoxWaveform_SelectedIndexChanged(null, null);
                     SetWaveformPosition(0, 0, 0);
                     timerWaveform.Start();
@@ -19668,6 +19669,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     audioVisualizer.SceneChanges = form.SceneChangesInSeconds;
+                    SceneChangeHelper.SaveSceneChangesInSeconds(_videoFileName, audioVisualizer.SceneChanges);
                     ShowStatus(string.Format(_language.XSceneChangesImported, form.SceneChangesInSeconds.Count));
                 }
             }
@@ -19676,7 +19678,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemRemoveSceneChanges_Click(object sender, EventArgs e)
         {
             if (audioVisualizer != null && audioVisualizer.SceneChanges != null)
+            {
                 audioVisualizer.SceneChanges = new List<double>();
+                SceneChangeHelper.DeleteSceneChangesInSeconds(_videoFileName);
+            }
         }
 
         private void toolStripMenuItemDurationBridgeGaps_Click(object sender, EventArgs e)
