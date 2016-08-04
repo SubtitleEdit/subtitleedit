@@ -180,6 +180,7 @@
     <Compile Include="RealFFT.cs" />
     <Compile Include="RegistryUtil.cs" />
     <Compile Include="RichTextToPlainText.cs" />
+    <Compile Include="SceneChangeHelper.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Interfaces\IDoSpell.cs" />
     <Compile Include="SpellCheck\SpellCheckWord.cs" />
