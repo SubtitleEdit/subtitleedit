@@ -8,12 +8,17 @@ namespace Nikse.SubtitleEdit.Core
     public static class SceneChangeHelper
     {
 
-        public static string GetSceneChangesFileName(string videoFileName)
+        private static string GetSceneChangesFileName(string videoFileName)
         {
             var fileName = WavePeakGenerator.GetPeakWaveFileName(videoFileName);
             return Path.GetFileNameWithoutExtension(fileName) + ".scenechanges";
         }
 
+        /// <summary>
+        /// Load scene changes from file
+        /// </summary>
+        /// <param name="videoFileName">Video file name</param>
+        /// <returns>List of scene changes in seconds</returns>
         public static List<double> FromDisk(string videoFileName)
         {
             var list = new List<double>();
@@ -31,7 +36,12 @@ namespace Nikse.SubtitleEdit.Core
             return list;
         }
 
-        public static void SaveSceneChangesInSeconds(string videoFileName, List<double> list)
+        /// <summary>
+        /// Saves scene changes
+        /// </summary>
+        /// <param name="videoFileName">Video file name</param>
+        /// <param name="list">List of scene changes in seconds</param>
+        public static void SaveSceneChanges(string videoFileName, List<double> list)
         {
             var sb = new StringBuilder();
             foreach (var d in list)
@@ -41,7 +51,11 @@ namespace Nikse.SubtitleEdit.Core
             File.WriteAllText(GetSceneChangesFileName(videoFileName), sb.ToString().Trim());
         }
 
-        public static void DeleteSceneChangesInSeconds(string videoFileName)
+        /// <summary>
+        /// Delete scene changes file associated with video file
+        /// </summary>
+        /// <param name="videoFileName">Video file name</param>
+        public static void DeleteSceneChanges(string videoFileName)
         {
             var sceneChangesFileName = GetSceneChangesFileName(videoFileName);
             if (File.Exists(sceneChangesFileName))
