@@ -3158,11 +3158,10 @@ namespace Nikse.SubtitleEdit.Forms
         private DialogResult FileSaveAs(bool allowUsingLastSaveAsFormat)
         {
             SubtitleFormat currentFormat = null;
-            var oldSubtitleFormat = GetCurrentSubtitleFormat();
             if (allowUsingLastSaveAsFormat && !string.IsNullOrEmpty(Configuration.Settings.General.LastSaveAsFormat))
                 currentFormat = Utilities.GetSubtitleFormatByFriendlyName(Configuration.Settings.General.LastSaveAsFormat);
             if (currentFormat == null)
-                currentFormat = oldSubtitleFormat;
+                currentFormat = GetCurrentSubtitleFormat();
 
             UiUtil.SetSaveDialogFilter(saveFileDialog1, currentFormat);
 
@@ -3170,21 +3169,19 @@ namespace Nikse.SubtitleEdit.Forms
             saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
             saveFileDialog1.AddExtension = true;
 
-            if (_fileName?.Length > _oldSubtitleFormat?.Extension.Length)
+            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+
+            if (!string.IsNullOrWhiteSpace(_fileName))
             {
-                saveFileDialog1.FileName = _fileName;
-                if (_fileName.EndsWith(oldSubtitleFormat.Extension, StringComparison.OrdinalIgnoreCase))
-                {
-                    saveFileDialog1.FileName = _fileName.Substring(0, _fileName.Length - _oldSubtitleFormat.Extension.Length);
-                }
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+                saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
             }
             else if (!string.IsNullOrEmpty(_videoFileName))
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
             else
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
 
-            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
-                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
 
             var result = saveFileDialog1.ShowDialog(this);
             if (result == DialogResult.OK)
