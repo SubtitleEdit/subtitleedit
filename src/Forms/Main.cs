@@ -9482,7 +9482,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (buffer != null && buffer.Length > 2)
                 {
                     clusterStream.Write(buffer, 0, buffer.Length);
-                    if (ContainsBlueEndSegment(buffer))
+                    if (ContainsBluRayStartSegment(buffer))
                     {
                         if (subtitles.Count > 0 && subtitles[subtitles.Count - 1].StartTime == subtitles[subtitles.Count - 1].EndTime)
                         {
@@ -9558,16 +9558,16 @@ namespace Nikse.SubtitleEdit.Forms
             return false;
         }
 
-        private bool ContainsBlueEndSegment(byte[] buffer)
+        private bool ContainsBluRayStartSegment(byte[] buffer)
         {
+            const int epochStart = 0x80;
             var position = 0;
-            int length  = 0;
             while (position + 3 <= buffer.Length)
             {
                 var segmentType = buffer[position];
-                if (segmentType == 0x80)
+                if (segmentType == epochStart)
                     return true;
-                length = BluRaySupParser.BigEndianInt16(buffer, position + 1) + 3;
+                int length = BluRaySupParser.BigEndianInt16(buffer, position + 1) + 3;
                 position += length;
             }
             return false;
@@ -19669,7 +19669,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     audioVisualizer.SceneChanges = form.SceneChangesInSeconds;
-                    SceneChangeHelper.SaveSceneChangesInSeconds(_videoFileName, audioVisualizer.SceneChanges);
+                    SceneChangeHelper.SaveSceneChanges(_videoFileName, audioVisualizer.SceneChanges);
                     ShowStatus(string.Format(_language.XSceneChangesImported, form.SceneChangesInSeconds.Count));
                 }
             }
@@ -19680,7 +19680,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (audioVisualizer != null && audioVisualizer.SceneChanges != null)
             {
                 audioVisualizer.SceneChanges = new List<double>();
-                SceneChangeHelper.DeleteSceneChangesInSeconds(_videoFileName);
+                SceneChangeHelper.DeleteSceneChanges(_videoFileName);
             }
         }
 
