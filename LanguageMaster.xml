@@ -687,7 +687,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Frames>Frames</Frames>
     <Seconds>Seconds</Seconds>
     <Milliseconds>Milliseconds</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Get scene changes with FFMPEG</GetSceneChangesWithFfmpeg>
+    <GetSceneChangesWithFfmpeg>Get scene changes with FFmpeg</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Import plain text</Title>
@@ -1853,6 +1853,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformPlayNewSelectionEnd>Play end of selection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Play first selected subtitle</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus list view</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>Go to next scene change</WaveformGoToNextSceneChange>
     <GoBack1Frame>One frame back</GoBack1Frame>
     <GoForward1Frame>One frame forward</GoForward1Frame>
     <GoBack100Milliseconds>100 ms back</GoBack100Milliseconds>
@@ -2282,6 +2283,8 @@ Keep changes?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Show waveform and spectrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Show waveform only</ShowWaveformOnly>
     <ShowSpectrogramOnly>Show spectrogram only</ShowSpectrogramOnly>
+    <AddSceneChange>Add scene change</AddSceneChange>
+    <RemoveSceneChange>Remove scene change</RemoveSceneChange>
     <GuessTimeCodes>Guess time codes...</GuessTimeCodes>
     <SeekSilence>Seek silence...</SeekSilence>
   </Waveform>

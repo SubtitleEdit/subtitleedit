@@ -508,14 +508,21 @@ namespace Nikse.SubtitleEdit.Controls
                 // scene changes
                 if (_sceneChanges != null)
                 {
-                    foreach (double time in _sceneChanges)
+                    try
                     {
-                        int pos = SecondsToXPosition(time - StartPositionSeconds);
-                        if (pos > 0 && pos < Width)
+                        foreach (double time in _sceneChanges)
                         {
-                            using (var p = new Pen(Color.AntiqueWhite))
-                                graphics.DrawLine(p, pos, 0, pos, Height);
+                            int pos = SecondsToXPosition(time - StartPositionSeconds);
+                            if (pos > 0 && pos < Width)
+                            {
+                                using (var p = new Pen(Color.AntiqueWhite))
+                                    graphics.DrawLine(p, pos, 0, pos, Height);
+                            }
                         }
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
                     }
                 }
 

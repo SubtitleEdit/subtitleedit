@@ -524,16 +524,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             get { return true; }
         }
 
-        public static void Save(string fileName, Subtitle subtitle)
+        public static bool Save(string fileName, Subtitle subtitle)
         {
-            Save(fileName, subtitle, false);
+            return Save(fileName, subtitle, false);
         }
 
-        public static void Save(string fileName, Subtitle subtitle, bool batchMode)
+        public static bool Save(string fileName, Subtitle subtitle, bool batchMode)
         {
             var header = new EbuGeneralSubtitleInformation();
             if (EbuUiHelper == null)
-                return;
+                return false;
 
             if (subtitle.Header != null && subtitle.Header.Length == 1024 && (subtitle.Header.Contains("STL24") || subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL29") || subtitle.Header.Contains("STL30")))
             {
@@ -546,7 +546,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
 
             if (!batchMode && !EbuUiHelper.ShowDialogOk())
-                return;
+                return false;
 
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
@@ -637,6 +637,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     subtitleNumber++;
                 }
             }
+            return true;
         }
 
         public override bool IsMine(List<string> lines, string fileName)
@@ -689,6 +690,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             byte lastExtensionBlockNumber = 0xff;
             JustificationCodes = new List<int>();
             VerticalPositions = new List<int>();
+            Configuration.Settings.General.CurrentFrameRate = header.FrameRate;
             foreach (EbuTextTimingInformation tti in ReadTextAndTiming(buffer, header))
             {
                 if (tti.ExtensionBlockNumber != 0xfe) // FEh : Reserved for User Data
@@ -1058,12 +1060,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 tti.TimeCodeInHours = buffer[index + 5 + 0];
                 tti.TimeCodeInMinutes = buffer[index + 5 + 1];
                 tti.TimeCodeInSeconds = buffer[index + 5 + 2];
-                tti.TimeCodeInMilliseconds = (int)Math.Round(TimeCode.BaseUnit / (header.FrameRate / buffer[index + 5 + 3]));
+                tti.TimeCodeInMilliseconds = FramesToMillisecondsMax999(buffer[index + 5 + 3]);
 
                 tti.TimeCodeOutHours = buffer[index + 9 + 0];
                 tti.TimeCodeOutMinutes = buffer[index + 9 + 1];
                 tti.TimeCodeOutSeconds = buffer[index + 9 + 2];
-                tti.TimeCodeOutMilliseconds = (int)Math.Round(TimeCode.BaseUnit / (header.FrameRate / buffer[index + 9 + 3]));
+                tti.TimeCodeOutMilliseconds = FramesToMillisecondsMax999(buffer[index + 9 + 3]);
 
                 tti.VerticalPosition = buffer[index + 13];
                 VerticalPositions.Add(tti.VerticalPosition);

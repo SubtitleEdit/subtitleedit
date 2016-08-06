@@ -167,7 +167,7 @@
             this.buttonImportWithFfmpeg.Name = "buttonImportWithFfmpeg";
             this.buttonImportWithFfmpeg.Size = new System.Drawing.Size(319, 21);
             this.buttonImportWithFfmpeg.TabIndex = 2;
-            this.buttonImportWithFfmpeg.Text = "Get scene changes with FFMPEG";
+            this.buttonImportWithFfmpeg.Text = "Get scene changes with FFmpeg";
             this.buttonImportWithFfmpeg.UseVisualStyleBackColor = true;
             this.buttonImportWithFfmpeg.Click += new System.EventHandler(this.buttonImportWithFfmpeg_Click);
             // 

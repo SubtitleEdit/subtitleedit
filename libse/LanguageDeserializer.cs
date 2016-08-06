@@ -5008,6 +5008,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformFocusListView":
                     language.Settings.WaveformFocusListView = reader.Value;
                     break;
+                case "Settings/WaveformGoToNextSceneChange":
+                    language.Settings.WaveformGoToNextSceneChange = reader.Value;
+                    break;
                 case "Settings/GoBack1Frame":
                     language.Settings.GoBack1Frame = reader.Value;
                     break;
@@ -6144,6 +6147,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Waveform/ShowSpectrogramOnly":
                     language.Waveform.ShowSpectrogramOnly = reader.Value;
+                    break;
+                case "Waveform/AddSceneChange":
+                    language.Waveform.AddSceneChange = reader.Value;
+                    break;
+                case "Waveform/RemoveSceneChange":
+                    language.Waveform.RemoveSceneChange = reader.Value;
                     break;
                 case "Waveform/GuessTimeCodes":
                     language.Waveform.GuessTimeCodes = reader.Value;

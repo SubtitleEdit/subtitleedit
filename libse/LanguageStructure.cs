@@ -2015,6 +2015,7 @@
             public string WaveformPlayNewSelectionEnd { get; set; }
             public string WaveformPlayFirstSelectedSubtitle { get; set; }
             public string WaveformFocusListView { get; set; }
+            public string WaveformGoToNextSceneChange { get; set; }
             public string GoBack1Frame { get; set; }
             public string GoForward1Frame { get; set; }
             public string GoBack100Milliseconds { get; set; }
@@ -2489,8 +2490,11 @@
             public string ShowWaveformAndSpectrogram { get; set; }
             public string ShowWaveformOnly { get; set; }
             public string ShowSpectrogramOnly { get; set; }
+            public string AddSceneChange { get; set; }
+            public string RemoveSceneChange { get; set; }
             public string GuessTimeCodes { get; set; }
             public string SeekSilence { get; set; }
+            
         }
 
         public class WaveformGenerateTimeCodes
