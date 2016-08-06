@@ -10,8 +10,15 @@ namespace Nikse.SubtitleEdit.Core
 
         private static string GetSceneChangesFileName(string videoFileName)
         {
-            var fileName = WavePeakGenerator.GetPeakWaveFileName(videoFileName);
-            return Path.GetFileNameWithoutExtension(fileName) + ".scenechanges";
+            var dir = Configuration.SceneChangesFolder.TrimEnd(Path.DirectorySeparatorChar);
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            var file = new FileInfo(videoFileName);
+            var newFileName = Utilities.Sha256Hash(file.Name + file.Length + file.CreationTimeUtc.ToShortDateString()) + ".scenechanges";
+            newFileName = newFileName.Replace("=", string.Empty).Replace("/", string.Empty).Replace(",", string.Empty).Replace("?", string.Empty).Replace("*", string.Empty).Replace("+", string.Empty).Replace("\\", string.Empty);
+            newFileName = Path.Combine(dir, newFileName);
+            return newFileName;
         }
 
         /// <summary>
