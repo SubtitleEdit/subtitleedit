@@ -19,10 +19,6 @@
     <Word from="jel" to="je l'" />
     <Word from="Jel" to="Je l'" />
     <Word from="nedaj" to="ne daj" />
-    <Word from="odkad" to="otkad" />
-    <Word from="Odkad" to="Otkad" />
-    <Word from="odkako" to="otkako" />
-    <Word from="Odkako" to="Otkako" />
     <Word from="Rješit" to="Riješit" />
     <Word from="smjeo" to="smio" />
     <Word from="uopče" to="uopće" />
@@ -107,12 +103,13 @@
     <RegEx find="\b([nN])ezna([šm]o?|t[ei]|ju|jući|vši)?\b" replaceWith="$1e zna$2" />
     <RegEx find="najcijenjen" replaceWith="najcjenjen" />
     <RegEx find="N[jJ]u Jork" replaceWith="Njujork" />
+    <RegEx find="([oO])d([kp])" replaceWith="$1t$2" />
     <RegEx find="([oO])ružij([aeu])" replaceWith="$1ružj$2" />
     <RegEx find="([oO])sječa" replaceWith="$1sjeća" />
     <RegEx find="([pPdD])onje([lt])" replaceWith="$1onije$2" />
     <RegEx find="([pP])objedi([mšto])" replaceWith="$1obijedi$2" />
-    <RegEx find="([pP])redamnom" replaceWith="$1reda mnom" />
-    <RegEx find="([pP])redpostav" replaceWith="$1retpostav" />
+    <RegEx find="redamnom" replaceWith="reda mnom" />
+    <RegEx find="redpostav" replaceWith="retpostav" />
     <RegEx find="([pP])rimjeti" replaceWith="$1rimijeti" />
     <RegEx find="([pP])romjeni([mštol])" replaceWith="$1romijeni$2" />
     <RegEx find="([rR])azumijeć" replaceWith="$1azumjeć" />
