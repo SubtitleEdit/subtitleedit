@@ -129,6 +129,14 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static string SceneChangesFolder
+        {
+            get
+            {
+                return DataDirectory + "SceneChanges" + Path.DirectorySeparatorChar;
+            }
+        }
+
         public static string AutoBackupFolder
         {
             get
