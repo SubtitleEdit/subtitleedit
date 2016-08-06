@@ -35,6 +35,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonSeconds.Text = Configuration.Settings.Language.ImportSceneChanges.Seconds;
             radioButtonMilliseconds.Text = Configuration.Settings.Language.ImportSceneChanges.Milliseconds;
             groupBoxTimeCodes.Text = Configuration.Settings.Language.ImportSceneChanges.TimeCodes;
+            buttonImportWithFfmpeg.Text = Configuration.Settings.Language.ImportSceneChanges.GetSceneChangesWithFfmpeg;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);

@@ -886,7 +886,7 @@ namespace Nikse.SubtitleEdit.Core
                 Frames = "Frames",
                 Seconds = "Seconds",
                 Milliseconds = "Milliseconds",
-                GetSceneChangesWithFfmpeg = "Get scene changes with FFMPEG"
+                GetSceneChangesWithFfmpeg = "Get scene changes with FFmpeg"
             };
 
             ImportText = new LanguageStructure.ImportText
@@ -2135,6 +2135,7 @@ can edit in same subtitle file (collaboration)",
                 WaveformPlayNewSelectionEnd = "Play end of selection",
                 WaveformPlayFirstSelectedSubtitle = "Play first selected subtitle",
                 WaveformFocusListView = "Focus list view",
+                WaveformGoToNextSceneChange = "Go to next scene change",
                 GoBack1Frame = "One frame back",
                 GoForward1Frame = "One frame forward",
                 GoBack100Milliseconds = "100 ms back",
@@ -2612,6 +2613,8 @@ Keep changes?",
                 ShowWaveformAndSpectrogram = "Show waveform and spectrogram",
                 ShowWaveformOnly = "Show waveform only",
                 ShowSpectrogramOnly = "Show spectrogram only",
+                AddSceneChange = "Add scene change",
+                RemoveSceneChange = "Remove scene change",
                 SeekSilence = "Seek silence...",
                 GuessTimeCodes = "Guess time codes...",
             };
