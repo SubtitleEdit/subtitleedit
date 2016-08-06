@@ -1328,7 +1328,7 @@
     <RegEx find="\b([sS])vetl" replaceWith="$1vjetl" />
     <RegEx find="\b([sS])vešteni" replaceWith="$1većeni" />
     <RegEx find="([sS])vež([aeiu]|e[mg]|[io]m|oj|in[aeiou]|inom)?\b" replaceWith="$1vjež$2" />
-    <RegEx find="\b([sS])vj?et([au]|om)?\b(?!\s+([A-ZČĐŠŽ]|vod|stvari?|čovj?ek|pism))" replaceWith="$1vijet$2" />
+    <RegEx find="\b([sS])vj?et([au]|om)?\b(?!\s+([A-ZČĐŠŽ]|vod|stvari?|čovj?ek|pism|zemlj))" replaceWith="$1vijet$2" />
     <RegEx find="([sS])vi?j?etsk" replaceWith="$1vjetsk" />
     <RegEx find="šar?garep" replaceWith="mrkv" />
     <RegEx find="Šar?garep" replaceWith="Mrkv" />
