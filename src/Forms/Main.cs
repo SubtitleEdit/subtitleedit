@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _videoPlayFirstSelected = Keys.None;
         private Keys _mainVideoFullscreen = Keys.None;
         private Keys _mainGoToNextSubtitleAndFocusVideo = Keys.None;
-        private Keys _mainExtendCurrentSubtitle = Keys.None;
+        private Keys _mainAdjustExtendCurrentSubtitle = Keys.None;
         private Keys _mainTextBoxSplitAtCursor = Keys.None;
         private Keys _mainTextBoxMoveLastWordDown = Keys.None;
         private Keys _mainTextBoxMoveFirstWordFromNextUp = Keys.None;
@@ -201,6 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _waveformAddTextAtHereFromClipboard = Keys.None;
         private Keys _waveformFocusListView = Keys.None;
         private Keys _waveformGoToNextSceneChange = Keys.None;
+        private Keys _waveformToggleSceneChange = Keys.None;        
         private Keys _mainTranslateCustomSearch1 = Keys.None;
         private Keys _mainTranslateCustomSearch2 = Keys.None;
         private Keys _mainTranslateCustomSearch3 = Keys.None;
@@ -10872,7 +10873,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (_mainGeneralGoToStartOfCurrentSubtitle == e.KeyData)
+            else if (_mainGoToNextSubtitleAndFocusVideo == e.KeyData)
             {
                 int newIndex = _subtitleListViewIndex + 1;
                 if (newIndex < _subtitle.Paragraphs.Count)
@@ -10888,27 +10889,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowSubtitle();
                     e.SuppressKeyPress = true;
                 }
-            }
-            else if (_mainExtendCurrentSubtitle == e.KeyData)
-            {
-                if (SubtitleListview1.SelectedItems.Count == 1)
-                {
-                    var idx = SubtitleListview1.SelectedItems[0].Index;
-                    var p = _subtitle.Paragraphs[idx];
-                    var next = _subtitle.GetParagraphOrDefault(idx + 1);
-                    if (next == null || next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
-                    {
-                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-                    }
-                    else if (next != null && next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds)
-                    {
-                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                    }
-                    RefreshSelectedParagraph();
-                    e.SuppressKeyPress = true;
-                }
-                e.SuppressKeyPress = true;
-            }
+            }       
             else if (_mainGeneralFileSaveAll == e.KeyData)
             {
                 ToolStripButtonSaveClick(sender, e);
@@ -11289,7 +11270,8 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyData == _mainVideoFullscreen) // fullscreen
             {
                 GoFullscreen();
-            }
+                e.SuppressKeyPress = true;
+            }        
             else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _waveformAddTextAtHere)
             {
                 addParagraphHereToolStripMenuItem_Click(null, null);
@@ -11317,7 +11299,29 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 e.SuppressKeyPress = true;
-            }            
+            }
+            else if (audioVisualizer.SceneChanges != null && mediaPlayer.IsPaused && e.KeyData == _waveformToggleSceneChange)
+            {
+                var cp = mediaPlayer.CurrentPosition;
+                var idx = GetSceneChangeIndex(cp);
+                if (idx >= 0)
+                { // remove scene change
+                    if (idx < audioVisualizer.SceneChanges.Count)
+                    {
+                        audioVisualizer.SceneChanges[idx] = -1;
+                        SceneChangeHelper.SaveSceneChanges(_videoFileName, audioVisualizer.SceneChanges.Where(p => p > 0).ToList());
+                    }
+                }
+                else
+                { // add scene change
+                    var list = audioVisualizer.SceneChanges.Where(p => p > 0).ToList();
+                    list.Add(cp);
+                    list.Sort();
+                    audioVisualizer.SceneChanges = list;
+                    SceneChangeHelper.SaveSceneChanges(_videoFileName, list);
+                }
+                e.SuppressKeyPress = true;
+            }
             else if (audioVisualizer.Focused && e.KeyCode == Keys.Delete)
             {
                 ToolStripMenuItemDeleteClick(null, null);
@@ -11380,6 +11384,26 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (_mainAdjustSetEndAndOffsetTheRestAndGoToNext == e.KeyData)
                     {
                         SetEndAndOffsetTheRest(true);
+                        e.SuppressKeyPress = true;
+                    }
+                    else if (_mainAdjustExtendCurrentSubtitle == e.KeyData)
+                    {
+                        if (SubtitleListview1.SelectedItems.Count == 1)
+                        {
+                            var idx = SubtitleListview1.SelectedItems[0].Index;
+                            var p = _subtitle.Paragraphs[idx];
+                            var next = _subtitle.GetParagraphOrDefault(idx + 1);
+                            if (next == null || next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                            {
+                                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                            }
+                            else if (next != null && next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds)
+                            {
+                                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            }
+                            RefreshSelectedParagraph();
+                            e.SuppressKeyPress = true;
+                        }
                         e.SuppressKeyPress = true;
                     }
                     else if (_mainAdjustSetEndAndGotoNext == e.KeyData)
@@ -11492,7 +11516,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         double videoPosition = mediaPlayer.CurrentPosition;
                         if (!mediaPlayer.IsPaused)
-                            videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
+                            videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay/TimeCode.BaseUnit;
                         int index = SubtitleListview1.SelectedItems[0].Index;
                         MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
 
@@ -14884,7 +14908,7 @@ namespace Nikse.SubtitleEdit.Forms
             _video5000MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo5000MsRight);
             _videoPlayFirstSelected = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralPlayFirstSelected);
             _mainGoToNextSubtitleAndFocusVideo = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo);
-            _mainExtendCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralExtendCurrentSubtitle);
+            _mainAdjustExtendCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralExtendCurrentSubtitle);
             _mainVideoFullscreen = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
 
             spellCheckToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);
@@ -14955,6 +14979,8 @@ namespace Nikse.SubtitleEdit.Forms
             _waveformAddTextAtHereFromClipboard = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHereFromClipboard);
             _waveformFocusListView = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformFocusListView);
             _waveformGoToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToNextSceneChange);
+            _waveformToggleSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformToggleSceneChange);
+            
             _mainTranslateCustomSearch1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1);
             _mainTranslateCustomSearch2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2);
             _mainTranslateCustomSearch3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3);

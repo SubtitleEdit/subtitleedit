@@ -1836,7 +1836,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToCurrentSubtitleStart>Ir para o início da linha actual</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ir para o final da linha actual</GoToCurrentSubtitleEnd>
     <GoToNextSubtitleAndFocusVideo>Ir para a próxima linha e definir a posição de vídeo</GoToNextSubtitleAndFocusVideo>
-    <ExtendCurrentSubtitle>Alongar a linha actual até à próxima linha ou até à máxima duração</ExtendCurrentSubtitle>
+    <AdjustExtendCurrentSubtitle>Alongar a linha actual até à próxima linha ou até à máxima duração</AdjustExtendCurrentSubtitle>
     <ToggleFocus>Alternar o realce entre a caixa de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
     <ToggleDialogDashes>Alternar hífens de diálogo</ToggleDialogDashes>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>

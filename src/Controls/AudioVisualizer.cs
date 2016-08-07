@@ -505,18 +505,35 @@ namespace Nikse.SubtitleEdit.Controls
                     DrawTimeLine(graphics, waveformHeight);
                 }
 
+
+                int currentPositionPos = SecondsToXPosition(_currentVideoPositionSeconds - StartPositionSeconds);
+                bool currentPosDone = false;
+
                 // scene changes
                 if (_sceneChanges != null)
                 {
                     try
                     {
-                        foreach (double time in _sceneChanges)
+                        int index = 0;
+                        while (index < _sceneChanges.Count)
                         {
+                            double time = _sceneChanges[index++];
                             int pos = SecondsToXPosition(time - StartPositionSeconds);
                             if (pos > 0 && pos < Width)
                             {
-                                using (var p = new Pen(Color.AntiqueWhite))
-                                    graphics.DrawLine(p, pos, 0, pos, Height);
+                                if (Math.Abs(currentPositionPos - pos) < 0.01)
+                                { // scene change and current pos is the save - draw 2 pixels + current pos dotted
+                                    currentPosDone = true;
+                                    using (var p = new Pen(Color.AntiqueWhite, 2))
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    using (var p = new Pen(Color.Turquoise, 2) { DashStyle = DashStyle.Dash })
+                                        graphics.DrawLine(p, currentPositionPos, 0, currentPositionPos, Height);
+                                }
+                                else
+                                {
+                                    using (var p = new Pen(Color.AntiqueWhite))
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                }
                             }
                         }
                     }
@@ -527,13 +544,12 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 // current video position
-                if (_currentVideoPositionSeconds > 0)
+                if (_currentVideoPositionSeconds > 0 && !currentPosDone)
                 {
-                    int pos = SecondsToXPosition(_currentVideoPositionSeconds - StartPositionSeconds);
-                    if (pos > 0 && pos < Width)
+                    if (currentPositionPos > 0 && currentPositionPos < Width)
                     {
                         using (var p = new Pen(Color.Turquoise))
-                            graphics.DrawLine(p, pos, 0, pos, Height);
+                            graphics.DrawLine(p, currentPositionPos, 0, currentPositionPos, Height);
                     }
                 }
 

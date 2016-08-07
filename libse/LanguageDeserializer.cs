@@ -4933,6 +4933,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/AdjustSetEndAndOffsetTheRestAndGoToNext":
                     language.Settings.AdjustSetEndAndOffsetTheRestAndGoToNext = reader.Value;
                     break;
+                case "Settings/AdjustExtendCurrentSubtitle":
+                    language.Settings.AdjustExtendCurrentSubtitle = reader.Value;
+                    break;
                 case "Settings/MainCreateStartDownEndUp":
                     language.Settings.MainCreateStartDownEndUp = reader.Value;
                     break;
@@ -4953,9 +4956,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/GoToNextSubtitleAndFocusVideo":
                     language.Settings.GoToNextSubtitleAndFocusVideo = reader.Value;
-                    break;
-                case "Settings/ExtendCurrentSubtitle":
-                    language.Settings.ExtendCurrentSubtitle = reader.Value;
                     break;
                 case "Settings/ToggleFocus":
                     language.Settings.ToggleFocus = reader.Value;
@@ -5010,6 +5010,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/WaveformGoToNextSceneChange":
                     language.Settings.WaveformGoToNextSceneChange = reader.Value;
+                    break;
+                case "Settings/WaveformToggleSceneChange":
+                    language.Settings.WaveformToggleSceneChange = reader.Value;
                     break;
                 case "Settings/GoBack1Frame":
                     language.Settings.GoBack1Frame = reader.Value;

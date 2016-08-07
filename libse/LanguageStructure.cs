@@ -1990,6 +1990,7 @@
             public string AdjustSetStartTimeKeepDuration { get; set; }
             public string AdjustSetEndAndOffsetTheRest { get; set; }
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
+            public string AdjustExtendCurrentSubtitle { get; set; }
             public string MainCreateStartDownEndUp { get; set; }
             public string MergeDialog { get; set; }
             public string GoToNext { get; set; }
@@ -1997,7 +1998,6 @@
             public string GoToCurrentSubtitleStart { get; set; }
             public string GoToCurrentSubtitleEnd { get; set; }
             public string GoToNextSubtitleAndFocusVideo { get; set; }
-            public string ExtendCurrentSubtitle { get; set; }
             public string ToggleFocus { get; set; }
             public string ToggleDialogDashes { get; set; }
             public string Alignment { get; set; }
@@ -2016,6 +2016,7 @@
             public string WaveformPlayFirstSelectedSubtitle { get; set; }
             public string WaveformFocusListView { get; set; }
             public string WaveformGoToNextSceneChange { get; set; }
+            public string WaveformToggleSceneChange { get; set; }
             public string GoBack1Frame { get; set; }
             public string GoForward1Frame { get; set; }
             public string GoBack100Milliseconds { get; set; }
