@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Core
         public int Export3DDepth { get; set; }
         public int ExportLastShadowTransparency { get; set; }
         public double ExportLastFrameRate { get; set; }
-        public bool ExportFullFrame { get; set; }        
+        public bool ExportFullFrame { get; set; }
         public string ExportPenLineJoin { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public bool FixCommonErrorsSkipStepOne { get; set; }
@@ -1167,7 +1167,7 @@ namespace Nikse.SubtitleEdit.Core
                     if (settings.General.AutoConvertToUtf8)
                         settings.General.DefaultEncoding = Encoding.UTF8.WebName;
                 }
-                catch (Exception exception)
+                catch
                 {
                     settings = new Settings();
                 }
