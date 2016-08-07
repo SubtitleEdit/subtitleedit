@@ -1872,7 +1872,7 @@
     <Word from="Allyou" to="All you" />
     <Word from="yourass" to="your ass" />
     <Word from="Yourbutt" to="Your butt" />
-    <Word from="iustiiggle" to="just jiggle" />    
+    <Word from="iustiiggle" to="just jiggle" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
