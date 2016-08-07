@@ -72,11 +72,11 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private SubtitleFormat _format;
         private static string _formtName;
-        private Color _subtitleColor = Color.White;
+        private Color _subtitleColor;
         private string _subtitleFontName = "Verdana";
         private float _subtitleFontSize = 25.0f;
         private bool _subtitleFontBold;
-        private Color _borderColor = Color.Black;
+        private Color _borderColor;
         private float _borderWidth = 2.0f;
         private bool _isLoading = true;
         private string _exportType = "BDNXML";
@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
         private VobSubOcr _vobSubOcr;
         private readonly System.Windows.Forms.Timer _previewTimer = new System.Windows.Forms.Timer();
         private string _videoFileName;
-        private Dictionary<string, int> _lineHeights;
+        private readonly Dictionary<string, int> _lineHeights;
 
         private const string BoxMultiLineText = "BoxMultiLine";
         private const string BoxSingleLineText = "BoxSingleLine";
@@ -101,6 +101,9 @@ namespace Nikse.SubtitleEdit.Forms
             _borderColor = Configuration.Settings.Tools.ExportBorderColor;
             _previewTimer.Tick += previewTimer_Tick;
             _previewTimer.Interval = 100;
+            labelLineHeightStyle.Text = string.Empty;
+            _subtitleColor = Color.White;
+            _borderColor = Color.Black;
         }
 
         private void previewTimer_Tick(object sender, EventArgs e)
@@ -3304,6 +3307,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 SetLastFrameRate(Configuration.Settings.Tools.ExportLastFrameRate);
             }
+            checkBoxFullFrameImage.Checked = Configuration.Settings.Tools.ExportFullFrame;
             panelShadowColor.BackColor = Configuration.Settings.Tools.ExportShadowColor;
 
             for (int i = 0; i < 1000; i++)
@@ -3412,6 +3416,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxLanguage.SelectedIndex = 0;
                 comboBoxLanguage.Visible = true;
                 labelLanguage.Visible = true;
+                if (Configuration.Settings.Tools.ExportFcpPalNtsc == "NTSC")
+                {
+                    comboBoxLanguage.SelectedIndex = 1;
+                }
             }
 
             comboBoxShadowWidth.SelectedIndex = 0;
@@ -3810,9 +3818,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (comboBoxImageFormat.SelectedItem != null)
                     Configuration.Settings.Tools.ExportFcpImageType = comboBoxImageFormat.SelectedItem.ToString();
                 Configuration.Settings.Tools.ExportFcpVideoResolution = res;
+                Configuration.Settings.Tools.ExportFcpPalNtsc = comboBoxLanguage.SelectedIndex == 0 ? "PAL" : "NTSC";
             }
             Configuration.Settings.Tools.ExportLastShadowTransparency = (int)numericUpDownShadowTransparency.Value;
             Configuration.Settings.Tools.ExportLastFrameRate = FrameRate;
+            Configuration.Settings.Tools.ExportFullFrame = checkBoxFullFrameImage.Checked;
             Configuration.Settings.Tools.ExportShadowColor = panelShadowColor.BackColor;
             Configuration.Settings.Tools.ExportFontColor = _subtitleColor;
             Configuration.Settings.Tools.ExportBorderColor = _borderColor;
@@ -3950,7 +3960,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void numericUpDownLineSpacing_ValueChanged(object sender, EventArgs e)
         {
             var value = (int)numericUpDownLineSpacing.Value;
-
             var style = string.Empty;
             if (subtitleListView1.SelectedIndices.Count > 0)
                 style = GetStyleName(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index]);
@@ -3958,6 +3967,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 _lineHeights[style] = value;
             else
                 _lineHeights.Add(style, value);
+            labelLineHeightStyle.Text = style;
             subtitleListView1_SelectedIndexChanged(null, null);
         }
 
