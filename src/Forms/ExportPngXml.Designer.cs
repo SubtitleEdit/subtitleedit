@@ -82,8 +82,8 @@
             this.checkBoxSkipEmptyFrameAtStart = new System.Windows.Forms.CheckBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxExportImage = new System.Windows.Forms.GroupBox();
-            this.panelVlcTemp = new System.Windows.Forms.Panel();
             this.linkLabelPreview = new System.Windows.Forms.LinkLabel();
+            this.panelVlcTemp = new System.Windows.Forms.Panel();
             this.timerPreview = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.normalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -96,6 +96,7 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.labelLineHeightStyle = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxImageSettings.SuspendLayout();
@@ -167,6 +168,7 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.labelLineHeightStyle);
             this.groupBoxImageSettings.Controls.Add(this.panelFullFrameBackground);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxLeftRightMargin);
             this.groupBoxImageSettings.Controls.Add(this.labelLeftRightMargin);
@@ -892,14 +894,6 @@
             this.groupBoxExportImage.TabIndex = 1;
             this.groupBoxExportImage.TabStop = false;
             // 
-            // panelVlcTemp
-            // 
-            this.panelVlcTemp.Location = new System.Drawing.Point(642, 52);
-            this.panelVlcTemp.Name = "panelVlcTemp";
-            this.panelVlcTemp.Size = new System.Drawing.Size(200, 100);
-            this.panelVlcTemp.TabIndex = 10;
-            this.panelVlcTemp.Visible = false;
-            // 
             // linkLabelPreview
             // 
             this.linkLabelPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -912,6 +906,14 @@
             this.linkLabelPreview.Text = "Preview";
             this.linkLabelPreview.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.linkLabelPreview.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelPreview_LinkClicked);
+            // 
+            // panelVlcTemp
+            // 
+            this.panelVlcTemp.Location = new System.Drawing.Point(642, 52);
+            this.panelVlcTemp.Name = "panelVlcTemp";
+            this.panelVlcTemp.Size = new System.Drawing.Size(200, 100);
+            this.panelVlcTemp.TabIndex = 10;
+            this.panelVlcTemp.Visible = false;
             // 
             // timerPreview
             // 
@@ -978,6 +980,15 @@
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
+            // 
+            // labelLineHeightStyle
+            // 
+            this.labelLineHeightStyle.AutoSize = true;
+            this.labelLineHeightStyle.Location = new System.Drawing.Point(775, 153);
+            this.labelLineHeightStyle.Name = "labelLineHeightStyle";
+            this.labelLineHeightStyle.Size = new System.Drawing.Size(103, 13);
+            this.labelLineHeightStyle.TabIndex = 59;
+            this.labelLineHeightStyle.Text = "labelLineHeightStyle";
             // 
             // ExportPngXml
             // 
@@ -1086,5 +1097,6 @@
         private System.Windows.Forms.ComboBox comboBoxLeftRightMargin;
         private System.Windows.Forms.Label labelLeftRightMargin;
         private System.Windows.Forms.Panel panelFullFrameBackground;
+        private System.Windows.Forms.Label labelLineHeightStyle;
     }
 }

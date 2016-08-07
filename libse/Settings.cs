@@ -137,6 +137,7 @@ namespace Nikse.SubtitleEdit.Core
         public string ExportFontNameOther { get; set; }
         public int ExportFcpFontSize { get; set; }
         public string ExportFcpImageType { get; set; }
+        public string ExportFcpPalNtsc { get; set; }
         public string ExportBdnXmlImageType { get; set; }
         public int ExportLastFontSize { get; set; }
         public int ExportLastLineHeight { get; set; }
@@ -155,6 +156,7 @@ namespace Nikse.SubtitleEdit.Core
         public int Export3DDepth { get; set; }
         public int ExportLastShadowTransparency { get; set; }
         public double ExportLastFrameRate { get; set; }
+        public bool ExportFullFrame { get; set; }        
         public string ExportPenLineJoin { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public bool FixCommonErrorsSkipStepOne { get; set; }
@@ -221,8 +223,10 @@ namespace Nikse.SubtitleEdit.Core
             Export3DDepth = 0;
             ExportLastShadowTransparency = 200;
             ExportLastFrameRate = 24.0d;
+            ExportFullFrame = false;
             ExportPenLineJoin = "Round";
             ExportFcpImageType = "Bmp";
+            ExportFcpPalNtsc = "PAL";
             ExportLastBorderWidth = 2;
             BridgeGapMilliseconds = 100;
             ExportCustomTemplates = "SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]ÆæMicroDVDÆÆ{{start}}{{end}}{text}\r\nÆffÆ||Æ";
@@ -1163,7 +1167,7 @@ namespace Nikse.SubtitleEdit.Core
                     if (settings.General.AutoConvertToUtf8)
                         settings.General.DefaultEncoding = Encoding.UTF8.WebName;
                 }
-                catch
+                catch (Exception exception)
                 {
                     settings = new Settings();
                 }
@@ -1775,6 +1779,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ExportFcpImageType");
             if (subNode != null)
                 settings.Tools.ExportFcpImageType = subNode.InnerText;
+            subNode = node.SelectSingleNode("ExportFcpPalNtsc");
+            if (subNode != null)
+                settings.Tools.ExportFcpPalNtsc = subNode.InnerText;
             subNode = node.SelectSingleNode("ExportBdnXmlImageType");
             if (subNode != null)
                 settings.Tools.ExportBdnXmlImageType = subNode.InnerText;
@@ -1829,6 +1836,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ExportLastFrameRate");
             if (subNode != null)
                 settings.Tools.ExportLastFrameRate = double.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            subNode = node.SelectSingleNode("ExportFullFrame");
+            if (subNode != null)
+                settings.Tools.ExportFullFrame = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportPenLineJoin");
             if (subNode != null)
                 settings.Tools.ExportPenLineJoin = subNode.InnerText;
@@ -3051,6 +3061,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ExportFontNameOther", settings.Tools.ExportFontNameOther);
                 textWriter.WriteElementString("ExportFcpFontSize", settings.Tools.ExportFcpFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportFcpImageType", settings.Tools.ExportFcpImageType);
+                textWriter.WriteElementString("ExportFcpPalNtsc", settings.Tools.ExportFcpPalNtsc);
                 textWriter.WriteElementString("ExportBdnXmlImageType", settings.Tools.ExportBdnXmlImageType);
                 textWriter.WriteElementString("ExportLastFontSize", settings.Tools.ExportLastFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastLineHeight", settings.Tools.ExportLastLineHeight.ToString(CultureInfo.InvariantCulture));
@@ -3069,6 +3080,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("Export3DDepth", settings.Tools.Export3DDepth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastShadowTransparency", settings.Tools.ExportLastShadowTransparency.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastFrameRate", settings.Tools.ExportLastFrameRate.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportFullFrame", settings.Tools.ExportFullFrame.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportPenLineJoin", settings.Tools.ExportPenLineJoin);
                 textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
                 textWriter.WriteElementString("FixCommonErrorsSkipStepOne", settings.Tools.FixCommonErrorsSkipStepOne.ToString());
