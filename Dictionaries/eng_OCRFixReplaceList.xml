@@ -1862,6 +1862,17 @@
     <Word from="lNTERVIEWER" to="INTERVIEWER" />
     <Word from="lNAUDIBLE" to="INAUDIBLE" />
     <Word from="SImpsons" to="Simpsons" />
+    <Word from="anotherjob" to="another job" />
+    <Word from="lfthere" to="If there" />
+    <Word from="descentinto" to="descent into" />
+    <Word from="ofthathere" to="of that here" />
+    <Word from="ofway" to="of way" />
+    <Word from="yourseat" to="your seat" />
+    <Word from="allyou" to="all you" />
+    <Word from="Allyou" to="All you" />
+    <Word from="yourass" to="your ass" />
+    <Word from="Yourbutt" to="Your butt" />
+    <Word from="iustiiggle" to="just jiggle" />    
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
