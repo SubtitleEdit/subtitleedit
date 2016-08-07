@@ -1828,6 +1828,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustSetStartTimeKeepDuration>Set start time, keep duration</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Set end, offset the rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>Extend current line to next subtitle or max duration</AdjustExtendCurrentSubtitle>
     <MainCreateStartDownEndUp>Create new at key-down, set end time at key-up</MainCreateStartDownEndUp>
     <MergeDialog>Merge dialog (insert dashes)</MergeDialog>
     <GoToNext>Go to next line</GoToNext>
@@ -1835,7 +1836,6 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToCurrentSubtitleStart>Go to current line start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Go to current line end</GoToCurrentSubtitleEnd>
     <GoToNextSubtitleAndFocusVideo>Go to next line and set video position</GoToNextSubtitleAndFocusVideo>
-    <ExtendCurrentSubtitle>Extend current line to next subtitle or max duration</ExtendCurrentSubtitle>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
     <Alignment>Alignment (selected lines)</Alignment>
@@ -1854,6 +1854,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformPlayFirstSelectedSubtitle>Play first selected subtitle</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus list view</WaveformFocusListView>
     <WaveformGoToNextSceneChange>Go to next scene change</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>Toggle scene change</WaveformToggleSceneChange>
     <GoBack1Frame>One frame back</GoBack1Frame>
     <GoForward1Frame>One frame forward</GoForward1Frame>
     <GoBack100Milliseconds>100 ms back</GoBack100Milliseconds>

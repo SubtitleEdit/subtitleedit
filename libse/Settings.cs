@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex, string videoFileName, string originalFileName, long videoOffset)
         {
-            var newList = new List<RecentFileEntry> { new RecentFileEntry { FileName = fileName, FirstVisibleIndex = firstVisibleIndex, FirstSelectedIndex = firstSelectedIndex, VideoFileName = videoFileName, OriginalFileName = originalFileName, VideoOffsetInMs =  videoOffset } };
+            var newList = new List<RecentFileEntry> { new RecentFileEntry { FileName = fileName, FirstVisibleIndex = firstVisibleIndex, FirstSelectedIndex = firstSelectedIndex, VideoFileName = videoFileName, OriginalFileName = originalFileName, VideoOffsetInMs = videoOffset } };
             int index = 0;
             foreach (var oldRecentFile in Files)
             {
@@ -933,6 +933,7 @@ namespace Nikse.SubtitleEdit.Core
         public string WaveformAddTextHereFromClipboard { get; set; }
         public string WaveformFocusListView { get; set; }
         public string WaveformGoToNextSceneChange { get; set; }
+        public string WaveformToggleSceneChange { get; set; }
         public string MainTranslateCustomSearch1 { get; set; }
         public string MainTranslateCustomSearch2 { get; set; }
         public string MainTranslateCustomSearch3 { get; set; }
@@ -2748,7 +2749,10 @@ namespace Nikse.SubtitleEdit.Core
                     settings.Shortcuts.WaveformFocusListView = subNode.InnerText;
                 subNode = node.SelectSingleNode("WaveformGoToNextSceneChange");
                 if (subNode != null)
-                    settings.Shortcuts.WaveformGoToNextSceneChange = subNode.InnerText;                
+                    settings.Shortcuts.WaveformGoToNextSceneChange = subNode.InnerText;
+                subNode = node.SelectSingleNode("WaveformToggleSceneChange");
+                if (subNode != null)
+                    settings.Shortcuts.WaveformToggleSceneChange = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainTranslateCustomSearch1");
                 if (subNode != null)
                     settings.Shortcuts.MainTranslateCustomSearch1 = subNode.InnerText;
@@ -3389,7 +3393,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("WaveformAddTextHere", settings.Shortcuts.WaveformAddTextHere);
                 textWriter.WriteElementString("WaveformAddTextHereFromClipboard", settings.Shortcuts.WaveformAddTextHereFromClipboard);
                 textWriter.WriteElementString("WaveformFocusListView", settings.Shortcuts.WaveformFocusListView);
-                textWriter.WriteElementString("WaveformGoToNextSceneChange", settings.Shortcuts.WaveformGoToNextSceneChange);                
+                textWriter.WriteElementString("WaveformGoToNextSceneChange", settings.Shortcuts.WaveformGoToNextSceneChange);
+                textWriter.WriteElementString("WaveformToggleSceneChange", settings.Shortcuts.WaveformToggleSceneChange);
                 textWriter.WriteElementString("MainTranslateCustomSearch1", settings.Shortcuts.MainTranslateCustomSearch1);
                 textWriter.WriteElementString("MainTranslateCustomSearch2", settings.Shortcuts.MainTranslateCustomSearch2);
                 textWriter.WriteElementString("MainTranslateCustomSearch3", settings.Shortcuts.MainTranslateCustomSearch3);
