@@ -2317,7 +2317,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     bmp = new Bitmap(sizeX, sizeY);
                 }
 
-                // align lines with gjpqy, a bit lower
+                // align lines with descenders, a bit lower
                 var lines = text.SplitToLines();
                 int baseLinePadding = 13;
                 if (parameter.SubtitleFontSize < 30)
@@ -2326,16 +2326,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     baseLinePadding = 9;
                 if (lines.Length > 0)
                 {
-                    var lastLine = lines[lines.Length - 1];
-                    if (lastLine.Contains(new[] { 'g', 'j', 'p', 'q', 'y', ',', 'ý', 'ę', 'ç', 'Ç' }))
-                    {
-                        var textNoBelow = lastLine.Replace('g', 'a').Replace('j', 'a').Replace('p', 'a').Replace('q', 'a').Replace('y', 'a').Replace(',', 'a').Replace('ý', 'a').Replace('ę', 'a').Replace('ç', 'a').Replace('Ç', 'a');
-                        baseLinePadding -= (int)Math.Round((TextDraw.MeasureTextHeight(font, lastLine, parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold)));
-                    }
-                    else
-                    {
-                        baseLinePadding += 1;
-                    }
+        			var lastLine = lines[lines.Length - 1];
+                    baseLinePadding -= (int)Math.Floor((TextDraw.MeasureTextHeight(font, lastLine, parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, "a,", parameter.SubtitleFontBold)));
                     if (baseLinePadding < 0)
                         baseLinePadding = 0;
                 }
