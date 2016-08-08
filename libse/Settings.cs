@@ -171,6 +171,14 @@ namespace Nikse.SubtitleEdit.Core
         public bool UseNoLineBreakAfter { get; set; }
         public string NoLineBreakAfterEnglish { get; set; }
         public List<string> FindHistory { get; set; }
+        public string ExportTextFormatText { get; set; }
+        public bool ExportTextRemoveStyling { get; set; }
+        public bool ExportTextShowLineNumbers { get; set; }
+        public bool ExportTextShowLineNumbersNewLine { get; set; }
+        public bool ExportTextShowTimeCodes { get; set; }
+        public bool ExportTextShowTimeCodesNewLine { get; set; }
+        public bool ExportTextNewLineAfterText { get; set; }
+        public bool ExportTextNewLineBetweenSubtitles { get; set; }
 
         public ToolsSettings()
         {
@@ -233,6 +241,12 @@ namespace Nikse.SubtitleEdit.Core
             UseNoLineBreakAfter = false;
             NoLineBreakAfterEnglish = " Mrs.; Ms.; Mr.; Dr.; a; an; the; my; my own; your; his; our; their; it's; is; are;'s; 're; would;'ll;'ve;'d; will; that; which; who; whom; whose; whichever; whoever; wherever; each; either; every; all; both; few; many; sevaral; all; any; most; been; been doing; none; some; my own; your own; his own; her own; our own; their own; I; she; he; as per; as regards; into; onto; than; where as; abaft; aboard; about; above; across; afore; after; against; along; alongside; amid; amidst; among; amongst; anenst; apropos; apud; around; as; aside; astride; at; athwart; atop; barring; before; behind; below; beneath; beside; besides; between; betwixt; beyond; but; by; circa; ca; concerning; despite; down; during; except; excluding; following; for; forenenst; from; given; in; including; inside; into; lest; like; minus; modulo; near; next; of; off; on; onto; opposite; out; outside; over; pace; past; per; plus; pro; qua; regarding; round; sans; save; since; than; through; thru; throughout; thruout; till; to; toward; towards; under; underneath; unlike; until; unto; up; upon; versus; vs; via; vice; with; within; without; considering; respecting; one; two; another; three; our; five; six; seven; eight; nine; ten; eleven; twelve; thirteen; fourteen; fifteen; sixteen; seventeen; eighteen; nineteen; twenty; thirty; forty; fifty; sixty; seventy; eighty; ninety; hundred; thousand; million; billion; trillion; while; however; what; zero; little; enough; after; although; and; as; if; though; although; because; before; both; but; even; how; than; nor; or; only; unless; until; yet; was; were";
             FindHistory = new List<string>();
+            ExportTextFormatText = "None";
+            ExportTextRemoveStyling = true;
+            ExportTextShowLineNumbersNewLine = true;
+            ExportTextShowTimeCodesNewLine = true;
+            ExportTextNewLineAfterText = true;
+            ExportTextNewLineBetweenSubtitles = true;
             ImportTextLineBreak = "|";
         }
 
@@ -1878,6 +1892,30 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("NoLineBreakAfterEnglish");
             if (subNode != null)
                 settings.Tools.NoLineBreakAfterEnglish = subNode.InnerText.Replace("  ", " ");
+            subNode = node.SelectSingleNode("ExportTextFormatText");
+            if (subNode != null)
+                settings.Tools.ExportTextFormatText = subNode.InnerText;
+            subNode = node.SelectSingleNode("ExportTextRemoveStyling");
+            if (subNode != null)
+                settings.Tools.ExportTextRemoveStyling = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportTextShowLineNumbers");
+            if (subNode != null)
+                settings.Tools.ExportTextShowLineNumbers = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportTextShowLineNumbersNewLine");
+            if (subNode != null)
+                settings.Tools.ExportTextShowLineNumbersNewLine = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportTextShowTimeCodes");
+            if (subNode != null)
+                settings.Tools.ExportTextShowTimeCodes = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportTextShowTimeCodesNewLine");
+            if (subNode != null)
+                settings.Tools.ExportTextShowTimeCodesNewLine = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportTextNewLineAfterText");
+            if (subNode != null)
+                settings.Tools.ExportTextNewLineAfterText = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportTextNewLineBetweenSubtitles");
+            if (subNode != null)
+                settings.Tools.ExportTextNewLineBetweenSubtitles = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -3094,6 +3132,14 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ChangeCasingChoice", settings.Tools.ChangeCasingChoice);
                 textWriter.WriteElementString("UseNoLineBreakAfter", settings.Tools.UseNoLineBreakAfter.ToString());
                 textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.NoLineBreakAfterEnglish);
+                textWriter.WriteElementString("UseNoLineBreakAfter", settings.Tools.ExportTextFormatText);
+                textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.ExportTextRemoveStyling.ToString());
+                textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.ExportTextShowLineNumbers.ToString());
+                textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.ExportTextShowLineNumbersNewLine.ToString());
+                textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.ExportTextShowTimeCodes.ToString());
+                textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.ExportTextShowTimeCodesNewLine.ToString());
+                textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.ExportTextNewLineAfterText.ToString());
+                textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.ExportTextNewLineBetweenSubtitles.ToString());
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
                     const int maximumFindHistoryItems = 10;
