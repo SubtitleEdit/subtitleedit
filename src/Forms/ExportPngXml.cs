@@ -2327,14 +2327,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (lines.Length > 0)
                 {
                     var lastLine = lines[lines.Length - 1];
-                    if (lastLine.Contains(new[] { 'g', 'j', 'p', 'q', 'y', ',', 'ý', 'ę', 'ç', 'Ç' }))
-                    {
-                        var textNoBelow = lastLine.Replace('g', 'a').Replace('j', 'a').Replace('p', 'a').Replace('q', 'a').Replace('y', 'a').Replace(',', 'a').Replace('ý', 'a').Replace('ę', 'a').Replace('ç', 'a').Replace('Ç', 'a');
+					char [] specialChars = { 'g', 'j', 'p', 'q', 'y', ',', ';', 'ý', 'ę', 'ç', 'Ç', 'ș', 'ț', '(', ')', 'Ą', 'ą', 'Ę', 'ę', 'Ķ', 'ķ', 'Ņ', 'ņ', 'Ŗ', 'Ų', 'Ş', 'ų', 'Ɣ' };
+                    if (lastLine.Contains(specialChars))                    {
+                        var textNoBelow = lastLine;
+						foreach (char c in specialChars)
+						{
+							textNoBelow = textNoBelow.Replace(c, 'a');
+						}
                         baseLinePadding -= (int)Math.Round((TextDraw.MeasureTextHeight(font, lastLine, parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold)));
                     }
                     else
                     {
-                        baseLinePadding += 1;
+                        baseLinePadding += 0;
                     }
                     if (baseLinePadding < 0)
                         baseLinePadding = 0;
