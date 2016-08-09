@@ -1094,6 +1094,12 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonStyles.Visible = true;
                 comboBoxEncoding.Enabled = false;
             }
+            else if (comboBoxSubtitleFormats.Text == Configuration.Settings.Language.BatchConvert.PlainText)
+            {
+                buttonStyles.Text = Configuration.Settings.Language.BatchConvert.Settings;
+                buttonStyles.Visible = true;
+                comboBoxEncoding.Enabled = true;
+            }
             else
             {
                 buttonStyles.Visible = false;
@@ -1120,6 +1126,18 @@ namespace Nikse.SubtitleEdit.Forms
             else if (comboBoxSubtitleFormats.Text == VobSubSubtitle)
             {
                 VobSubSettings();
+            }
+            else if (comboBoxSubtitleFormats.Text == Configuration.Settings.Language.BatchConvert.PlainText)
+            {
+                using (var form = new ExportText())
+                {
+                    var s = new Subtitle();
+                    s.Paragraphs.Add(new Paragraph("Test 123." + Environment.NewLine + "Test 456.", 0, 4000));
+                    s.Paragraphs.Add(new Paragraph("Test 789.", 5000, 9000));
+                    form.Initialize(s, null);
+                    form.PrepareForBatchSettings();
+                    form.ShowDialog(this);
+                }
             }
         }
 
