@@ -801,6 +801,28 @@ namespace Nikse.SubtitleEdit.Core
             return newTop;
         }
 
+        public int CalcBottomCropping(Color transparentColor)
+        {
+            int y = Height - 1;
+            int cropping = 0;
+            while (y > 0)
+            {
+                int x = 0;
+                while (x < Width)
+                {
+                    var c = GetPixel(x, y);
+                    if (c != transparentColor && c.A != 0)
+                    {
+                       return cropping;
+                    }
+                    x++;
+                }
+                y--;
+                cropping++;
+            }
+            return cropping;
+        }
+
         public void Fill(Color color)
         {
             var buffer = new byte[4];
