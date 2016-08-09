@@ -1897,7 +1897,19 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static int CalcWidthViaDraw(string text, MakeBitmapParameter parameter)
         {
-            //text = HtmlUtil.RemoveHtmlTags(text, true).Trim();
+            var nbmp = GenereateBitmapForCalc(text, parameter);
+            nbmp.CropTransparentSidesAndBottom(0, true);
+            return nbmp.Width;
+        }
+
+        private static int CalcButtomCropping(string text, MakeBitmapParameter parameter)
+        {
+            var nbmp = GenereateBitmapForCalc(text, parameter);
+            return nbmp.CalcBottomCropping(parameter.BorderColor);
+        }
+
+        private static NikseBitmap GenereateBitmapForCalc(string text, MakeBitmapParameter parameter)
+        {
             text = text.Trim();
             var path = new GraphicsPath();
             var sb = new StringBuilder();
@@ -1921,7 +1933,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
             Font font = SetFont(parameter, parameter.SubtitleFontSize);
-            Stack<Font> fontStack = new Stack<Font>();
+            var fontStack = new Stack<Font>();
             while (i < text.Length)
             {
                 if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
@@ -2143,11 +2155,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             g.Dispose();
 
             var nbmp = new NikseBitmap(bmp);
-            nbmp.CropTransparentSidesAndBottom(0, true);
             bmp.Dispose();
             font.Dispose();
             sf.Dispose();
-            return nbmp.Width;
+            return nbmp;
         }
 
         internal static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
@@ -2273,6 +2284,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return bmp;
         }
 
+        private static Dictionary<string, int> _paddingDictionary = new Dictionary<string, int>();
         private static Bitmap GenerateImageFromTextWithStyleInner(MakeBitmapParameter parameter)
         {
             string text = parameter.P.Text;
@@ -2317,19 +2329,27 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     bmp = new Bitmap(sizeX, sizeY);
                 }
 
-                // align lines with gjpqy, a bit lower
+                var paddingKey = font.Name + font.Size.ToString(CultureInfo.InvariantCulture);
+                int baseLinePadding;
+                if (_paddingDictionary.ContainsKey(paddingKey))
+                {
+                    baseLinePadding = _paddingDictionary[paddingKey];
+                }
+                else
+                {
+                    baseLinePadding = (int)Math.Round(TextDraw.MeasureTextHeight(font, "yjK)", parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, "ac", parameter.SubtitleFontBold));
+                    baseLinePadding += 2;
+                    _paddingDictionary.Add(paddingKey, baseLinePadding);
+                }
+
+                // align lines with "gjpqy,ýęçÇ/()[]" a bit lower    
                 var lines = text.SplitToLines();
-                int baseLinePadding = 13;
-                if (parameter.SubtitleFontSize < 30)
-                    baseLinePadding = 12;
-                if (parameter.SubtitleFontSize < 25)
-                    baseLinePadding = 9;
                 if (lines.Length > 0)
                 {
                     var lastLine = lines[lines.Length - 1];
-                    if (lastLine.Contains(new[] { 'g', 'j', 'p', 'q', 'y', ',', 'ý', 'ę', 'ç', 'Ç' }))
+                    if (lastLine.Contains(new[] { 'g', 'j', 'p', 'q', 'y', ',', 'ý', 'ę', 'ç', 'Ç', '/', '(', ')', '[', ']' }))
                     {
-                        var textNoBelow = lastLine.Replace('g', 'a').Replace('j', 'a').Replace('p', 'a').Replace('q', 'a').Replace('y', 'a').Replace(',', 'a').Replace('ý', 'a').Replace('ę', 'a').Replace('ç', 'a').Replace('Ç', 'a');
+                        var textNoBelow = lastLine.Replace('g', 'a').Replace('j', 'a').Replace('p', 'a').Replace('q', 'a').Replace('y', 'a').Replace(',', 'a').Replace('ý', 'a').Replace('ę', 'a').Replace('ç', 'a').Replace('Ç', 'a').Replace('/', 'a').Replace('(', 'a').Replace(')', 'a').Replace('[', 'a').Replace(']', 'a');
                         baseLinePadding -= (int)Math.Round((TextDraw.MeasureTextHeight(font, lastLine, parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold)));
                     }
                     else
@@ -2706,8 +2726,36 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     sb.Append(' ');
                                     sb.Append(t);
                                 }
-                                lastText.Append(sb);
-                                TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+
+                                if (sb.Length > 0)
+                                {
+                                    float addLeft = 0;
+                                    int oldPathPointIndex = path.PointCount - 1;
+                                    if (oldPathPointIndex < 0)
+                                        oldPathPointIndex = 0;
+                                    if (sb.Length > 0)
+                                    {
+                                        if (lastText.Length > 0 && left > 2)
+                                            left -= 1.5f;
+
+                                        lastText.Append(sb);
+                                        TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                    }
+
+                                    if (path.PointCount > 0)
+                                    {
+                                        var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
+                                        for (int k = oldPathPointIndex; k < list.Length; k++)
+                                        {
+                                            if (list[k].X > addLeft)
+                                                addLeft = list[k].X;
+                                        }
+                                    }
+                                    if (addLeft < 0.01)
+                                        addLeft = left + 2;
+                                    left = addLeft;
+                                }
+
                                 isItalic = false;
                                 i += 3;
                             }
@@ -2730,8 +2778,36 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     sb.Append(' ');
                                     sb.Append(t);
                                 }
-                                lastText.Append(sb);
-                                TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+
+                                if (sb.Length > 0)
+                                {
+                                    float addLeft = 0;
+                                    int oldPathPointIndex = path.PointCount - 1;
+                                    if (oldPathPointIndex < 0)
+                                        oldPathPointIndex = 0;
+                                    if (sb.Length > 0)
+                                    {
+                                        if (lastText.Length > 0 && left > 2)
+                                            left -= 1.5f;
+
+                                        lastText.Append(sb);
+                                        TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                    }
+
+                                    if (path.PointCount > 0)
+                                    {
+                                        var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
+                                        for (int k = oldPathPointIndex; k < list.Length; k++)
+                                        {
+                                            if (list[k].X > addLeft)
+                                                addLeft = list[k].X;
+                                        }
+                                    }
+                                    if (addLeft < 0.01)
+                                        addLeft = left + 2;
+                                    left = addLeft;
+                                }
+
                                 isBold = false;
                                 i += 3;
                             }
