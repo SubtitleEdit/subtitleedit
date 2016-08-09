@@ -76,13 +76,13 @@ namespace Nikse.SubtitleEdit.Core
 
                     float width = 0;
                     var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                    int index = System.Math.Max(list.Length - 42, 0);
+                    int index = System.Math.Max(list.Length - 100, 0);
                     for (int i = index; i < list.Length; i += 2)
                     {
                         if (list[i].X > width)
                             width = list[i].X;
                     }
-                    int max = System.Math.Min(52, list.Length);
+                    int max = System.Math.Min(100, list.Length);
                     for (int i = 0; i < max; i += 2)
                     {
                         if (list[i].X > width)
