@@ -197,5 +197,14 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ExportTextNewLineBetweenSubtitles = checkBoxAddNewLine2.Checked;
         }
 
+        public void PrepareForBatchSettings()
+        {
+            groupBoxTimeCodeFormat.Visible = false;
+            labelEncoding.Visible = false;
+            comboBoxEncoding.Visible = false;
+            buttonOK.Visible = false;
+            buttonCancel.Text = Configuration.Settings.Language.General.Ok;
+        }
+
     }
 }
