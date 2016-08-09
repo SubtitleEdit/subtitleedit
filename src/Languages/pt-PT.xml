@@ -688,7 +688,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Frames>Fotogramas</Frames>
     <Seconds>Segundos</Seconds>
     <Milliseconds>Milissegundos</Milliseconds>
-    <GetSceneChangesWithFfmpeg>Obter as alterações de cena com o FFMPEG</GetSceneChangesWithFfmpeg>
+    <GetSceneChangesWithFfmpeg>Obter as alterações de cena com o FFmpeg</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Importar texto sem formatação</Title>
@@ -1421,7 +1421,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <BeforeDisplaySubtitleJoin>Antes de juntar legendas</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Legendas unidas</SubtitlesJoined>
     <StatusLog>Estado do registo</StatusLog>
-    <XSceneChangesImported>{0} mudanças de cena importados</XSceneChangesImported>
+    <XSceneChangesImported>{0} mudanças de cena importadas</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' executado.</PluginXExecuted>
     <NotAValidXSubFile>Ficheiro XSub invalido!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Antes de combinar as linhas com o mesmo texto</BeforeMergeLinesWithSameText>
@@ -1829,6 +1829,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AdjustSetStartTimeKeepDuration>Definir a hora de início, manter a duração</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Defenir o fim, compensar o resto</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Definir o fim, compensar o resto e ir para a próxima</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>Alongar o tempo da linha actual até à próxima linha ou até à duração máxima</AdjustExtendCurrentSubtitle>
     <MainCreateStartDownEndUp>Criar novo na tecla para baixo, definir tempo final na tecla para cima</MainCreateStartDownEndUp>
     <MergeDialog>Combinar os diálogos (inserir hífens)</MergeDialog>
     <GoToNext>Ir para a linha seguinte</GoToNext>
@@ -1836,7 +1837,6 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToCurrentSubtitleStart>Ir para o início da linha actual</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ir para o final da linha actual</GoToCurrentSubtitleEnd>
     <GoToNextSubtitleAndFocusVideo>Ir para a próxima linha e definir a posição de vídeo</GoToNextSubtitleAndFocusVideo>
-    <AdjustExtendCurrentSubtitle>Alongar a linha actual até à próxima linha ou até à máxima duração</AdjustExtendCurrentSubtitle>
     <ToggleFocus>Alternar o realce entre a caixa de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
     <ToggleDialogDashes>Alternar hífens de diálogo</ToggleDialogDashes>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>
@@ -1854,6 +1854,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformPlayNewSelectionEnd>Reproduzir a partir do fim da selecção</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Destacar a lista de visualização</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>Ir para a próxima mudança de cena</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>Alternar a mudança de cena</WaveformToggleSceneChange>
     <GoBack1Frame>Um fotograma para atrás</GoBack1Frame>
     <GoForward1Frame>Um fotograma para a frente</GoForward1Frame>
     <GoBack100Milliseconds>100 ms atrás</GoBack100Milliseconds>
@@ -2283,6 +2285,8 @@ Manter as alterações?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Mostrar forma de onda e espectrograma</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Mostrar só forma de onda</ShowWaveformOnly>
     <ShowSpectrogramOnly>Mostrar só espectrograma</ShowSpectrogramOnly>
+    <AddSceneChange>Adicionar mudança de cena</AddSceneChange>
+    <RemoveSceneChange>Eliminar mudança de cena</RemoveSceneChange>
     <GuessTimeCodes>Adivinhar os tempos...</GuessTimeCodes>
     <SeekSilence>Localizar silêncio no áudio...</SeekSilence>
   </Waveform>
