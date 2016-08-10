@@ -179,6 +179,8 @@ namespace Nikse.SubtitleEdit.Core
         public bool ExportTextShowTimeCodesNewLine { get; set; }
         public bool ExportTextNewLineAfterText { get; set; }
         public bool ExportTextNewLineBetweenSubtitles { get; set; }
+        public bool VideoOffsetKeepTimeCodes { get; set; }
+        
 
         public ToolsSettings()
         {
@@ -1915,7 +1917,10 @@ namespace Nikse.SubtitleEdit.Core
                 settings.Tools.ExportTextNewLineAfterText = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportTextNewLineBetweenSubtitles");
             if (subNode != null)
-                settings.Tools.ExportTextNewLineBetweenSubtitles = Convert.ToBoolean(subNode.InnerText);
+                settings.Tools.ExportTextNewLineBetweenSubtitles = Convert.ToBoolean(subNode.InnerText);            
+            subNode = node.SelectSingleNode("VideoOffsetKeepTimeCodes");
+            if (subNode != null)
+                settings.Tools.VideoOffsetKeepTimeCodes = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("FindHistory");
             if (subNode != null)
             {
@@ -3133,13 +3138,15 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("UseNoLineBreakAfter", settings.Tools.UseNoLineBreakAfter.ToString());
                 textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.NoLineBreakAfterEnglish);
                 textWriter.WriteElementString("UseNoLineBreakAfter", settings.Tools.ExportTextFormatText);
-                textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.ExportTextRemoveStyling.ToString());
-                textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.ExportTextShowLineNumbers.ToString());
-                textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.ExportTextShowLineNumbersNewLine.ToString());
-                textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.ExportTextShowTimeCodes.ToString());
-                textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.ExportTextShowTimeCodesNewLine.ToString());
-                textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.ExportTextNewLineAfterText.ToString());
-                textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.ExportTextNewLineBetweenSubtitles.ToString());
+                textWriter.WriteElementString("ExportTextRemoveStyling", settings.Tools.ExportTextRemoveStyling.ToString());
+                textWriter.WriteElementString("ExportTextShowLineNumbers", settings.Tools.ExportTextShowLineNumbers.ToString());
+                textWriter.WriteElementString("ExportTextShowLineNumbersNewLine", settings.Tools.ExportTextShowLineNumbersNewLine.ToString());
+                textWriter.WriteElementString("ExportTextShowTimeCodes", settings.Tools.ExportTextShowTimeCodes.ToString());
+                textWriter.WriteElementString("ExportTextShowTimeCodesNewLine", settings.Tools.ExportTextShowTimeCodesNewLine.ToString());
+                textWriter.WriteElementString("ExportTextNewLineAfterText", settings.Tools.ExportTextNewLineAfterText.ToString());
+                textWriter.WriteElementString("ExportTextNewLineBetweenSubtitles", settings.Tools.ExportTextNewLineBetweenSubtitles.ToString());
+                textWriter.WriteElementString("VideoOffsetKeepTimeCodes", settings.Tools.VideoOffsetKeepTimeCodes.ToString());
+                
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
                     const int maximumFindHistoryItems = 10;
