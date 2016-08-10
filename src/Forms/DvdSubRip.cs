@@ -357,7 +357,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal static bool IsPrivateStream2(byte[] buffer, int index)
         {
-            return buffer.Length >= index + 3 &&
+            return buffer.Length > index + 3 &&
                    buffer[index + 0] == 0 &&
                    buffer[index + 1] == 0 &&
                    buffer[index + 2] == 1 &&
