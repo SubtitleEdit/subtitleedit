@@ -52,15 +52,10 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
         }
 
-        private TimeSpan GetSplitTime()
-        {
-            return splitTimeUpDownAdjust.TimeCode.TimeSpan;
-        }
-
         private void ButtonSplitClick(object sender, EventArgs e)
         {
-            var splitTime = GetSplitTime();
-            if (splitTime.TotalSeconds > 0)
+            var splitTimeTotalMilliseconds = splitTimeUpDownAdjust.TimeCode.TotalMilliseconds;
+            if (splitTimeTotalMilliseconds > 0)
             {
                 var part1 = new Subtitle();
                 var part2 = new Subtitle();
@@ -71,26 +66,26 @@ namespace Nikse.SubtitleEdit.Forms
 
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    if (p.StartTime.TotalMilliseconds < splitTime.TotalMilliseconds)
+                    if (p.StartTime.TotalMilliseconds < splitTimeTotalMilliseconds)
                     {
                         part1.Paragraphs.Add(new Paragraph(p));
                     }
 
-                    if (p.StartTime.TotalMilliseconds >= splitTime.TotalMilliseconds)
+                    if (p.StartTime.TotalMilliseconds >= splitTimeTotalMilliseconds)
                     {
                         part2.Paragraphs.Add(new Paragraph(p));
                     }
-                    else if (p.EndTime.TotalMilliseconds > splitTime.TotalMilliseconds)
+                    else if (p.EndTime.TotalMilliseconds > splitTimeTotalMilliseconds)
                     {
-                        part1.Paragraphs[part1.Paragraphs.Count - 1].EndTime = new TimeCode(splitTime.TotalMilliseconds);
-                        part2.Paragraphs.Add(new Paragraph(p) { StartTime = new TimeCode(splitTime.TotalMilliseconds) });
+                        part1.Paragraphs[part1.Paragraphs.Count - 1].EndTime = new TimeCode(splitTimeTotalMilliseconds);
+                        part2.Paragraphs.Add(new Paragraph(p) { StartTime = new TimeCode(splitTimeTotalMilliseconds) });
                     }
                 }
                 if (part1.Paragraphs.Count > 0 && part2.Paragraphs.Count > 0)
                 {
                     SavePart(part1, Configuration.Settings.Language.SplitSubtitle.SavePartOneAs, Configuration.Settings.Language.SplitSubtitle.Part1);
 
-                    part2.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-splitTime.TotalMilliseconds));
+                    part2.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-splitTimeTotalMilliseconds));
                     part2.Renumber();
                     SavePart(part2, Configuration.Settings.Language.SplitSubtitle.SavePartTwoAs, Configuration.Settings.Language.SplitSubtitle.Part2);
 
