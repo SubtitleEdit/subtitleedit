@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
         private VobSubOcr _vobSubOcr;
         private readonly System.Windows.Forms.Timer _previewTimer = new System.Windows.Forms.Timer();
         private string _videoFileName;
-        private readonly Dictionary<string, int> _lineHeights;
+        private readonly Dictionary<string, int> _lineHeights = new Dictionary<string, int>();
 
         private const string BoxMultiLineText = "BoxMultiLine";
         private const string BoxSingleLineText = "BoxSingleLine";
@@ -3753,7 +3753,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     var mbp = new MakeBitmapParameter();
                     mbp.SubtitleFontName = _subtitleFontName;
-                    mbp.SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
+                    if (comboBoxSubtitleFontSize.SelectedItem != null)
+                        mbp.SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
+                    else
+                        mbp.SubtitleFontSize = Configuration.Settings.Tools.ExportLastFontSize;
                     mbp.SubtitleFontBold = _subtitleFontBold;
                     var fontSize = g.DpiY * mbp.SubtitleFontSize / 72;
                     Font font = SetFont(mbp, fontSize);
@@ -3763,7 +3766,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     var style = string.Empty;
                     if (subtitleListView1.SelectedIndices.Count > 0)
                         style = GetStyleName(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index]);
-                    if (style != null && _lineHeights.ContainsKey(style))
+                    if (style != null && _lineHeights != null && _lineHeights.ContainsKey(style))
                         numericUpDownLineSpacing.Value = _lineHeights[style];
                     else if (lineHeight >= numericUpDownLineSpacing.Minimum && lineHeight <= numericUpDownLineSpacing.Maximum && lineHeight != numericUpDownLineSpacing.Value)
                         numericUpDownLineSpacing.Value = lineHeight;
