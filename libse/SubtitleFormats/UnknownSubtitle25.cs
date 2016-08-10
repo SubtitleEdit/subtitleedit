@@ -105,7 +105,7 @@ NOTE=
                 else if (!string.IsNullOrWhiteSpace(s))
                 {
                     if (subtitle.Paragraphs.Count == 0 && (s.StartsWith("TITLE=", StringComparison.Ordinal) || s.StartsWith("TITLE=", StringComparison.Ordinal) || s.StartsWith("FILE=", StringComparison.Ordinal) || s.StartsWith("AUTHOR=", StringComparison.Ordinal) ||
-                                                            s.StartsWith("TYPE=VIDEO") || s.StartsWith("FORMAT=", StringComparison.Ordinal) || s.StartsWith("NOTE=", StringComparison.Ordinal)))
+                                                            s.StartsWith("TYPE=VIDEO", StringComparison.Ordinal) || s.StartsWith("FORMAT=", StringComparison.Ordinal) || s.StartsWith("NOTE=", StringComparison.Ordinal)))
                     {
                     }
                     else
