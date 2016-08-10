@@ -15,13 +15,13 @@ namespace Nikse.SubtitleEdit
         private static void Main()
         {
             // Add the event handler for handling UI thread exceptions to the event.
-            //Application.ThreadException += Application_ThreadException;
+            Application.ThreadException += Application_ThreadException;
 
-            //// Set the unhandled exception mode to force all Windows Forms errors to go through our handler.
-            //Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+            // Set the unhandled exception mode to force all Windows Forms errors to go through our handler.
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 
-            //// Add the event handler for handling non-UI thread exceptions to the event.
-            //AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            // Add the event handler for handling non-UI thread exceptions to the event.
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
