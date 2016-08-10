@@ -20130,6 +20130,7 @@ namespace Nikse.SubtitleEdit.Forms
                 form.VideoOffset = new TimeCode(10, 0, 0, 0);
                 if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
                     form.VideoOffset = new TimeCode(Configuration.Settings.General.CurrentVideoOffsetInMs);
+                var oldVideoOffset = Configuration.Settings.General.CurrentVideoOffsetInMs;
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     if (form.FromCurrentVideoPosition && mediaPlayer.VideoPlayer != null)
@@ -20140,8 +20141,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         Configuration.Settings.General.CurrentVideoOffsetInMs = (long)(Math.Round(form.VideoOffset.TotalSeconds * 1000.0));
                     }
-                    _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
-                    _subtitleAlternate?.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
+                    if (form.DoNotaddVideoOffsetToTimeCodes)
+                    {
+                        if (form.Reset)
+                        {
+                            _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(oldVideoOffset));
+                            _subtitleAlternate?.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(oldVideoOffset));
+                        }
+                        else
+                        {
+                            _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
+                            _subtitleAlternate?.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-Configuration.Settings.General.CurrentVideoOffsetInMs));
+                        }
+                    }
                     SaveSubtitleListviewIndices();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     RefreshSelectedParagraph();

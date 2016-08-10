@@ -9,6 +9,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public bool FromCurrentVideoPosition { get; set; }
         public bool DoNotaddVideoOffsetToTimeCodes { get; set; }
+        public bool Reset { get; set; }
 
         private readonly TimeCode _videoOffset;
 
@@ -29,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
             _videoOffset = new TimeCode(0);
+            checkBoxKeepTimeCodes.Checked = Configuration.Settings.Tools.VideoOffsetKeepTimeCodes;
             Text = Configuration.Settings.Language.SetVideoOffset.Title;
             labelDescription.Text = Configuration.Settings.Language.SetVideoOffset.Description;
             checkBoxFromCurrentPosition.Text = Configuration.Settings.Language.SetVideoOffset.RelativeToCurrentVideoPosition;
@@ -55,8 +57,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonReset_Click(object sender, EventArgs e)
         {
             VideoOffset = new TimeCode(0);
+            DoNotaddVideoOffsetToTimeCodes = checkBoxKeepTimeCodes.Checked;
+            Reset = true;
             DialogResult = DialogResult.OK;
         }
 
+        private void SetVideoOffset_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Configuration.Settings.Tools.VideoOffsetKeepTimeCodes = checkBoxKeepTimeCodes.Checked;
+        }
     }
 }
