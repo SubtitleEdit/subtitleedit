@@ -522,18 +522,15 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_vobSubOcr != null)
                 {
                     int i = 0;
-                    foreach (Paragraph p in _subtitle.Paragraphs)
+                    while (i < _subtitle.Paragraphs.Count)
                     {
                         var mp = MakeMakeBitmapParameter(i, width, height);
-                        mp.Bitmap = _vobSubOcr.GetSubtitleBitmap(i);
-
+                        mp.Bitmap = _vobSubOcr.GetSubtitleBitmap(i++);
                         if (_exportType == "BLURAYSUP")
                         {
                             MakeBluRaySupImage(mp);
                         }
-
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, mp, i);
-                        i++;
                         progressBar1.Refresh();
                         Application.DoEvents();
                         if (i < progressBar1.Maximum)
@@ -3750,28 +3747,29 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void UpdateLineSpacing()
         {
-            Bitmap bmp = new Bitmap(100, 100);
-            using (Graphics g = Graphics.FromImage(bmp))
+            using (var bmp = new Bitmap(100, 100))
             {
-                var mbp = new MakeBitmapParameter();
-                mbp.SubtitleFontName = _subtitleFontName;
-                mbp.SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
-                mbp.SubtitleFontBold = _subtitleFontBold;
-                var fontSize = g.DpiY * mbp.SubtitleFontSize / 72;
-                Font font = SetFont(mbp, fontSize);
+                using (var g = Graphics.FromImage(bmp))
+                {
+                    var mbp = new MakeBitmapParameter();
+                    mbp.SubtitleFontName = _subtitleFontName;
+                    mbp.SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
+                    mbp.SubtitleFontBold = _subtitleFontBold;
+                    var fontSize = g.DpiY * mbp.SubtitleFontSize / 72;
+                    Font font = SetFont(mbp, fontSize);
+                    SizeF textSize = g.MeasureString("Hj!", font);
+                    int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
 
-                SizeF textSize = g.MeasureString("Hj!", font);
-                int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
-
-                var style = string.Empty;
-                if (subtitleListView1.SelectedIndices.Count > 0)
-                    style = GetStyleName(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index]);
-                if (_lineHeights.ContainsKey(style))
-                    numericUpDownLineSpacing.Value = _lineHeights[style];
-                else if (lineHeight >= numericUpDownLineSpacing.Minimum && lineHeight <= numericUpDownLineSpacing.Maximum && lineHeight != numericUpDownLineSpacing.Value)
-                    numericUpDownLineSpacing.Value = lineHeight;
-                else if (lineHeight > numericUpDownLineSpacing.Maximum)
-                    numericUpDownLineSpacing.Value = numericUpDownLineSpacing.Maximum;
+                    var style = string.Empty;
+                    if (subtitleListView1.SelectedIndices.Count > 0)
+                        style = GetStyleName(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index]);
+                    if (style != null && _lineHeights.ContainsKey(style))
+                        numericUpDownLineSpacing.Value = _lineHeights[style];
+                    else if (lineHeight >= numericUpDownLineSpacing.Minimum && lineHeight <= numericUpDownLineSpacing.Maximum && lineHeight != numericUpDownLineSpacing.Value)
+                        numericUpDownLineSpacing.Value = lineHeight;
+                    else if (lineHeight > numericUpDownLineSpacing.Maximum)
+                        numericUpDownLineSpacing.Value = numericUpDownLineSpacing.Maximum;
+                }
             }
         }
 
