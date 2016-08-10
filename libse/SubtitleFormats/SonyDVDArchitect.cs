@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (line.Length > 26 && line[2] == ':')
                     match = Regex.Match(line);
 
-                if (match != null && match.Success)
+                if (match?.Success == true)
                 {
                     string s = line.Substring(0, match.Length);
                     s = s.Replace(" - ", ":");
@@ -74,22 +74,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     string[] parts = s.Split(':');
                     if (parts.Length == 8)
                     {
-                        int hours = int.Parse(parts[0]);
-                        int minutes = int.Parse(parts[1]);
-                        int seconds = int.Parse(parts[2]);
-                        int milliseconds = int.Parse(parts[3]) * 10;
-                        var start = new TimeCode(hours, minutes, seconds, milliseconds);
-
-                        hours = int.Parse(parts[4]);
-                        minutes = int.Parse(parts[5]);
-                        seconds = int.Parse(parts[6]);
-                        milliseconds = int.Parse(parts[7]) * 10;
-                        var end = new TimeCode(hours, minutes, seconds, milliseconds);
-
                         string text = line.Substring(match.Length).TrimStart();
                         text = text.Replace("|", Environment.NewLine);
-
-                        lastParagraph = new Paragraph(start, end, text);
+                        lastParagraph = new Paragraph(DecodeTimeCode(parts, 0), DecodeTimeCode(parts, 4), text);
                         subtitle.Paragraphs.Add(lastParagraph);
                         success = true;
                     }
@@ -103,6 +90,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount++;
             }
             subtitle.Renumber();
+        }
+
+        public static TimeCode DecodeTimeCode(string[] timeParts, int index)
+        {
+            return new TimeCode(int.Parse(timeParts[index]),
+                int.Parse(timeParts[index + 1]), int.Parse(timeParts[index + 2]),
+                int.Parse(timeParts[index + 3]) * 10);
         }
     }
 }
