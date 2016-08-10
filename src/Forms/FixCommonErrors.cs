@@ -181,7 +181,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return _batchMode;
             }
-
             set
             {
                 _batchMode = value;
