@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             p.Text = sb.ToString().Trim();
                             subtitle.Paragraphs.Add(p);
                         }
-                        sb = new StringBuilder();
+                        sb.Clear();
                         string[] arr = s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         char[] splitChars = { ':', ';', ',', '.' };
                         if (arr.Length == 3)

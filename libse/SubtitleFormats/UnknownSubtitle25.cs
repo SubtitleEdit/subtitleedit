@@ -79,7 +79,7 @@ NOTE=
                             p.Text = sb.ToString().Trim();
                             subtitle.Paragraphs.Add(p);
                         }
-                        sb = new StringBuilder();
+                        sb.Clear();
                         string[] arr = s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         if (arr.Length == 2)
                         {
