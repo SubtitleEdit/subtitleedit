@@ -17818,13 +17818,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SetupAlternateEdit();
                 ResetHistory();
 
-                if (!isAlternateVisible)
-                {
-                    toolStripMenuItemShowOriginalInPreview.Checked = false;
-                    Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable = false;
-                    audioVisualizer.Invalidate();
-                }
-                else if (toolStripMenuItemShowOriginalInPreview.Checked)
+                if (!isAlternateVisible || toolStripMenuItemShowOriginalInPreview.Checked)
                 {
                     toolStripMenuItemShowOriginalInPreview.Checked = false;
                     Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable = false;
