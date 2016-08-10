@@ -432,7 +432,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             int count = 0;
             while (text.Contains("<font ") && count < 10)
             {
-                int start = text.IndexOf(@"<font ", StringComparison.Ordinal);
+                int start = text.IndexOf("<font ", StringComparison.Ordinal);
                 int end = text.IndexOf('>', start);
                 if (end > 0)
                 {
@@ -1556,7 +1556,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             }
                             else if (i == underlineIndex)
                             {
-                                style.Underline = f == "-1"|| f == "1";
+                                style.Underline = f == "-1" || f == "1";
                             }
                             else if (i == outlineIndex)
                             {

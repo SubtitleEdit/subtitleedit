@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 catch
                 {
                 }
-                if (!hasStyleHead  && (subtitle.Header.Contains("[V4+ Styles]") || subtitle.Header.Contains("[V4 Styles]")))
+                if (!hasStyleHead && (subtitle.Header.Contains("[V4+ Styles]") || subtitle.Header.Contains("[V4 Styles]")))
                 {
                     subtitle.Header = SubStationAlphaHeaderToTimedText(subtitle); // save new xml with styles in header
                     convertedFromSubStationAlpha = true;
@@ -355,7 +355,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string text = p.Text.RemoveControlCharactersButWhiteSpace();
 
             string region = GetEffect(p, "region");
-            if (text.StartsWith("{\\an8}") && string.IsNullOrEmpty(region))
+            if (text.StartsWith("{\\an8}", StringComparison.Ordinal) && string.IsNullOrEmpty(region))
             {
                 if (regions.Contains("top"))
                     region = "top";
@@ -383,7 +383,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         skipCount--;
                     }
-                    else if (line.Substring(i).StartsWith("<i>"))
+                    else if (line.Substring(i).StartsWith("<i>", StringComparison.Ordinal))
                     {
                         styles.Push(currentStyle);
                         currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
@@ -393,7 +393,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         currentStyle.Attributes.Append(attr);
                         skipCount = 2;
                     }
-                    else if (line.Substring(i).StartsWith("<b>"))
+                    else if (line.Substring(i).StartsWith("<b>", StringComparison.Ordinal))
                     {
                         currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
                         paragraph.AppendChild(currentStyle);
@@ -428,7 +428,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             skipCount = line.Length;
                         }
                     }
-                    else if (line.Substring(i).StartsWith("</i>") || line.Substring(i).StartsWith("</b>") || line.Substring(i).StartsWith("</font>"))
+                    else if (line.Substring(i).StartsWith("</i>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</b>", StringComparison.Ordinal) || line.Substring(i).StartsWith("</font>", StringComparison.Ordinal))
                     {
                         currentStyle = xml.CreateTextNode(string.Empty);
                         if (styles.Count > 0)
@@ -437,7 +437,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             currentStyle.InnerText = string.Empty;
                         }
                         paragraph.AppendChild(currentStyle);
-                        if (line.Substring(i).StartsWith("</font>"))
+                        if (line.Substring(i).StartsWith("</font>", StringComparison.Ordinal))
                             skipCount = 6;
                         else
                             skipCount = 3;
@@ -576,7 +576,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         var arr = frameRateMultiplier.InnerText.Split();
                         if (arr.Length == 2 && Utilities.IsInteger(arr[0]) && Utilities.IsInteger(arr[1]) && int.Parse(arr[1]) > 0)
                         {
-                            fr =  double.Parse(arr[0]) / double.Parse(arr[1]);
+                            fr = double.Parse(arr[0]) / double.Parse(arr[1]);
                             if (fr > 20 && fr < 100)
                                 Configuration.Settings.General.CurrentFrameRate = fr;
                         }
