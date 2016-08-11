@@ -107,14 +107,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             nsmgr.AddNamespace("tts", "http://www.w3.org/ns/10/ttml#style");
             nsmgr.AddNamespace("ttm", "http://www.w3.org/ns/10/ttml#metadata");
 
-            string xmlStructure =
-@"<?xml version='1.0' encoding='utf -8' ?>
+            const string xmlStructure = @"<?xml version='1.0' encoding='utf-8'?>
 <tt xmlns='http://www.w3.org/ns/ttml' xmlns:ttm='http://www.w3.org/ns/ttml#metadata' xmlns:tts='http://www.w3.org/ns/ttml#styling' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
     <head>
         <metadata>
             <ttm:title>Netflix Subtitle</ttm:title>
-        </metadata>     
-        <styling>     
+        </metadata>
+        <styling>
             <style tts:fontStyle='normal' tts:fontWeight='normal' xml:id='s1' tts:color='white' tts:fontFamily='Arial' tts:fontSize='100%'></style>
         </styling>
         <layout>
@@ -123,10 +122,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         </layout>
     </head>
     <body>
-        <div style='s1' xml:id='d1'>                                                                                                                                      
-        </div>                                                                                                                                      
+        <div style='s1' xml:id='d1'></div>
     </body>
-</tt>".Replace("'", "\"");
+</tt>";
            xml.LoadXml(xmlStructure);
             if (!string.IsNullOrWhiteSpace(title))
             {
@@ -307,8 +305,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             get
             {
-                return false; 
-                
+                return false;
             }
         }
 

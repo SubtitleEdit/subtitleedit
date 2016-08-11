@@ -2339,7 +2339,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     _paddingDictionary.Add(paddingKey, baseLinePadding);
                 }
 
-                // align lines with "gjpqy,ýęçÇ/()[]" a bit lower    
+                // align lines with "gjpqy,ýęçÇ/()[]" a bit lower
                 var lines = text.SplitToLines();
                 if (lines.Length > 0)
                 {

@@ -2495,7 +2495,6 @@
             public string RemoveSceneChange { get; set; }
             public string GuessTimeCodes { get; set; }
             public string SeekSilence { get; set; }
-            
         }
 
         public class WaveformGenerateTimeCodes

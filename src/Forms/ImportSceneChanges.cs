@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
                     // Parse string (HH:MM:SS.ms)
                     string[] timeParts = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (timeParts.Length == 2)
-                    {                        
+                    {
                         SceneChangesInSeconds.Add(new TimeSpan(0, 0, 0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1])).TotalSeconds);
                     }
                     else if (timeParts.Length == 3)

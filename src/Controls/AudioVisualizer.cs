@@ -522,7 +522,7 @@ namespace Nikse.SubtitleEdit.Controls
                             if (pos > 0 && pos < Width)
                             {
                                 if (Math.Abs(currentPositionPos - pos) < 0.01)
-                                { // scene change and current pos is the save - draw 2 pixels + current pos dotted
+                                { // scene change and current pos are the same - draw 2 pixels + current pos dotted
                                     currentPosDone = true;
                                     using (var p = new Pen(Color.AntiqueWhite, 2))
                                         graphics.DrawLine(p, pos, 0, pos, Height);
