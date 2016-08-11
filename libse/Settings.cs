@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ExportTextNewLineAfterText { get; set; }
         public bool ExportTextNewLineBetweenSubtitles { get; set; }
         public bool VideoOffsetKeepTimeCodes { get; set; }
-        
+
 
         public ToolsSettings()
         {
@@ -1917,7 +1917,7 @@ namespace Nikse.SubtitleEdit.Core
                 settings.Tools.ExportTextNewLineAfterText = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportTextNewLineBetweenSubtitles");
             if (subNode != null)
-                settings.Tools.ExportTextNewLineBetweenSubtitles = Convert.ToBoolean(subNode.InnerText);            
+                settings.Tools.ExportTextNewLineBetweenSubtitles = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("VideoOffsetKeepTimeCodes");
             if (subNode != null)
                 settings.Tools.VideoOffsetKeepTimeCodes = Convert.ToBoolean(subNode.InnerText);
@@ -3146,7 +3146,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ExportTextNewLineAfterText", settings.Tools.ExportTextNewLineAfterText.ToString());
                 textWriter.WriteElementString("ExportTextNewLineBetweenSubtitles", settings.Tools.ExportTextNewLineBetweenSubtitles.ToString());
                 textWriter.WriteElementString("VideoOffsetKeepTimeCodes", settings.Tools.VideoOffsetKeepTimeCodes.ToString());
-                
+
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
                     const int maximumFindHistoryItems = 10;

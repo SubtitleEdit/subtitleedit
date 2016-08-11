@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _waveformAddTextAtHereFromClipboard = Keys.None;
         private Keys _waveformFocusListView = Keys.None;
         private Keys _waveformGoToNextSceneChange = Keys.None;
-        private Keys _waveformToggleSceneChange = Keys.None;        
+        private Keys _waveformToggleSceneChange = Keys.None;
         private Keys _mainTranslateCustomSearch1 = Keys.None;
         private Keys _mainTranslateCustomSearch2 = Keys.None;
         private Keys _mainTranslateCustomSearch3 = Keys.None;
@@ -10889,7 +10889,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowSubtitle();
                     e.SuppressKeyPress = true;
                 }
-            }       
+            }
             else if (_mainGeneralFileSaveAll == e.KeyData)
             {
                 ToolStripButtonSaveClick(sender, e);
@@ -11271,7 +11271,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 GoFullscreen();
                 e.SuppressKeyPress = true;
-            }        
+            }
             else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _waveformAddTextAtHere)
             {
                 addParagraphHereToolStripMenuItem_Click(null, null);
@@ -14980,7 +14980,7 @@ namespace Nikse.SubtitleEdit.Forms
             _waveformFocusListView = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformFocusListView);
             _waveformGoToNextSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformGoToNextSceneChange);
             _waveformToggleSceneChange = UiUtil.GetKeys(Configuration.Settings.Shortcuts.WaveformToggleSceneChange);
-            
+
             _mainTranslateCustomSearch1 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1);
             _mainTranslateCustomSearch2 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2);
             _mainTranslateCustomSearch3 = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3);

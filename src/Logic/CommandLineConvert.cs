@@ -902,19 +902,19 @@ namespace Nikse.SubtitleEdit.Logic
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
                         Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
-                        File.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub, 
-                                                                                       Configuration.Settings.Tools.ExportTextShowLineNumbers, 
+                        File.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub,
+                                                                                       Configuration.Settings.Tools.ExportTextShowLineNumbers,
                                                                                        Configuration.Settings.Tools.ExportTextShowLineNumbersNewLine,
-                                                                                       Configuration.Settings.Tools.ExportTextShowTimeCodes, 
+                                                                                       Configuration.Settings.Tools.ExportTextShowTimeCodes,
                                                                                        Configuration.Settings.Tools.ExportTextShowTimeCodesNewLine,
-                                                                                       false, 
-                                                                                       Configuration.Settings.Tools.ExportTextShowTimeCodes, 
-                                                                                       string.Empty, 
+                                                                                       false,
+                                                                                       Configuration.Settings.Tools.ExportTextShowTimeCodes,
+                                                                                       string.Empty,
                                                                                        Configuration.Settings.Tools.ExportTextRemoveStyling,
-                                                                                        Configuration.Settings.Tools.ExportTextFormatText == "Unbreak",
-                                                                                       Configuration.Settings.Tools.ExportTextNewLineAfterText, 
+                                                                                       Configuration.Settings.Tools.ExportTextFormatText == "Unbreak",
+                                                                                       Configuration.Settings.Tools.ExportTextNewLineAfterText,
                                                                                        Configuration.Settings.Tools.ExportTextNewLineBetweenSubtitles,
-                                                                                        Configuration.Settings.Tools.ExportTextFormatText == "MergeAll"), targetEncoding);
+                                                                                       Configuration.Settings.Tools.ExportTextFormatText == "MergeAll"), targetEncoding);
                         Console.WriteLine(" done.");
                     }
                 }
