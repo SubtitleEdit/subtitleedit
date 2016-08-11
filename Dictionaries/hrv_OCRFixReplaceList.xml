@@ -569,6 +569,8 @@
     <Word from="varnicu" to="iskru" />
     <Word from="vidjeo" to="vidio" />
     <Word from="Vidjeo" to="Vidio" />
+    <Word from="zahtev" to="zahtjev" />
+    <Word from="Zahtev" to="Zahtjev" />
     <Word from="zaseda" to="zasjeda" />
     <Word from="zasede" to="zasjede" />
     <Word from="zasedi" to="zasjedi" />
@@ -1008,7 +1010,7 @@
     <RegEx find="igracion" replaceWith="igracijsk" />
     <RegEx find="([mM])islić" replaceWith="$1islit ć" />
     <RegEx find="([mM])išič" replaceWith="$1išić" />
-    <RegEx find="([mM])j?ešalic([aeiou]|ama)\b" replaceWith="$1iješalic$2" />
+    <RegEx find="([mM])j?ešalic" replaceWith="$1iješalic" />
     <RegEx find="([mM])j?eša([jmnšo]|n[aio]|no[mgj]|nima?|mo|ju|njem|nj[aeu]|l[aeio]|t[ei])?\b" replaceWith="$1iješa$2" />
     <RegEx find="([mM])edve([dđ])" replaceWith="$1edvje$2" />
     <RegEx find="minđuš" replaceWith="naušnic" />
@@ -1026,8 +1028,8 @@
     <RegEx find="([mM])rzeć([eu])" replaceWith="$1rzit ć$2" />
     <RegEx find="([mM])uva([mjovšlt])" replaceWith="$1ota$2" />
     <RegEx find="([mM])uv([eou])" replaceWith="$1uh$2" />
-    <RegEx find="muzik([au]|om)\b" replaceWith="glazb$1" />
-    <RegEx find="Muzik([au]|om)\b" replaceWith="Glazb$1" />
+    <RegEx find="muzik([aeu]|om)\b" replaceWith="glazb$1" />
+    <RegEx find="Muzik([aeu]|om)\b" replaceWith="Glazb$1" />
     <RegEx find="muzičk" replaceWith="glazben" />
     <RegEx find="Muzičk" replaceWith="Glazben" />
     <RegEx find="agovj?est" replaceWith="agovijest" />
@@ -1488,7 +1490,7 @@
     <RegEx find="\b([vV])rj?eme\b" replaceWith="$1rijeme" />
     <RegEx find="([vV])rtel([aeio])" replaceWith="$1rtjel$2" />
     <RegEx find="([zZ])ahtjeva([ojlmšt])" replaceWith="$1ahtijeva$2" />
-    <RegEx find="([zZ])ahtev([aeioun])?" replaceWith="$1ahtjev$2" />
+    <RegEx find="([zZ])ahtev([aeioun])" replaceWith="$1ahtjev$2" />
     <RegEx find="([zZ])amen" replaceWith="$1amjen" />
     <RegEx find="(?&lt;!k)amenj(uj|iv)" replaceWith="amjenj$1" />
     <RegEx find="\b([zZnN]a[mv])er" replaceWith="$1jer" />
