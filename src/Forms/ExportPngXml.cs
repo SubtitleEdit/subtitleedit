@@ -3755,8 +3755,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     mbp.SubtitleFontName = _subtitleFontName;
                     if (comboBoxSubtitleFontSize.SelectedItem != null)
                         mbp.SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
-                    else
+                    else if (Configuration.Settings.Tools.ExportLastFontSize > 0)
                         mbp.SubtitleFontSize = Configuration.Settings.Tools.ExportLastFontSize;
+                    else if (mbp.SubtitleFontSize < 1)
+                        mbp.SubtitleFontSize = 25;
                     mbp.SubtitleFontBold = _subtitleFontBold;
                     var fontSize = g.DpiY * mbp.SubtitleFontSize / 72;
                     Font font = SetFont(mbp, fontSize);
