@@ -683,6 +683,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Frames>프레임</Frames>
     <Seconds>초</Seconds>
     <Milliseconds>밀리초</Milliseconds>
+    <GetSceneChangesWithFfmpeg>FFmpeg으로 장면 전환 가져오기</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>일반 텍스트 파일로 새 자막 구성</Title>
@@ -985,7 +986,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <ChooseAudioTrack>오디오 트랙 선택하기</ChooseAudioTrack>
         <CloseVideo>비디오 파일 닫기</CloseVideo>
         <SetVideoOffset>비디오 오프셋 설정...</SetVideoOffset>
-        <ImportSceneChanges>장면 전환 가져오기...</ImportSceneChanges>
+        <ImportSceneChanges>장면 전환 가져오기</ImportSceneChanges>
         <RemoveSceneChanges>장면 전환 제거</RemoveSceneChanges>
         <WaveformBatchGenerate>파형 일괄 생성...</WaveformBatchGenerate>
         <ShowHideVideo>비디오 표시 | 숨김</ShowHideVideo>
@@ -1824,12 +1825,14 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AdjustSetStartTimeKeepDuration>시작 설정, 간격 유지</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>끝 설정, 나머지 보충</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>끝 설정, 나머지 보충하고 다음으로 이동</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>현재 줄을 다음 자막으로 확장하거나 표시시간 최대화</AdjustExtendCurrentSubtitle>
     <MainCreateStartDownEndUp>'↓'키로 새로 만들기, '↑'키로 종료 시간 설정</MainCreateStartDownEndUp>
     <MergeDialog>대화 병합 (대시 삽입)</MergeDialog>
     <GoToNext>다음 줄로 이동</GoToNext>
     <GoToPrevious>이전 줄로 이동</GoToPrevious>
     <GoToCurrentSubtitleStart>현재 줄의 시작 지점으로 이동</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>현재 줄의 끝 지점으로 이동</GoToCurrentSubtitleEnd>
+    <GoToNextSubtitleAndFocusVideo>다음 줄로 이동하고 비디오 위치 설정</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>목록 보기와 자막 텍스트 상자 간의 포커스 전환</ToggleFocus>
     <ToggleDialogDashes>대화의 대시('-') 전환</ToggleDialogDashes>
     <Alignment>정렬 (선택한 줄)</Alignment>
@@ -1847,6 +1850,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <WaveformPlayNewSelectionEnd>선택의 끝을 재생</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>처음 선택한 자막 재생</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>「자막 보기」로 이동</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>다음 장면 전환으로 이동</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>장면 전환</WaveformToggleSceneChange>
     <GoBack1Frame>1프레임 뒤로</GoBack1Frame>
     <GoForward1Frame>1프레임 앞으로</GoForward1Frame>
     <GoBack100Milliseconds>0.1초 뒤로</GoBack100Milliseconds>
@@ -2275,6 +2280,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ShowWaveformAndSpectrogram>파형 및 스펙트로그램 표시</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>파형만 표시</ShowWaveformOnly>
     <ShowSpectrogramOnly>스펙트로그램만 표시</ShowSpectrogramOnly>
+    <AddSceneChange>장면 전환 추가</AddSceneChange>
+    <RemoveSceneChange>장면 전환 제거</RemoveSceneChange>
     <GuessTimeCodes>타임코드 알아내기</GuessTimeCodes>
     <SeekSilence>무음 탐색...</SeekSilence>
   </Waveform>
