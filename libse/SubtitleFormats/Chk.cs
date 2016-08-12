@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (end - start > 0)
                     text = _codePage.GetString(buffer, start, end - start);
             }
-            if (text.Length > 4 && text[0] == 0x1f && text[1] == 'R' && text[4] == '.' && "0123456789".Contains(text[2]) && "0123456789".Contains(text[3]))
+            if (text.Length > 4 && text[0] == 0x1f && text[1] == 'R' && text[4] == '.' && CharUtils.IsDigit(text[2]) && CharUtils.IsDigit(text[3]))
             {
                 text = text.Remove(0, 5);
             }
