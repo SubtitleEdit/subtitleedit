@@ -5192,7 +5192,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void RemoveTextForHearImpaired(Subtitle subtitle)
+        internal void ReloadFromSubtitle(Subtitle subtitle)
         {
             _subtitle.Paragraphs.Clear();
             _subtitle.Paragraphs.AddRange(subtitle.Paragraphs);
