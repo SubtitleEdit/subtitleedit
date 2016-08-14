@@ -313,6 +313,12 @@ namespace Nikse.SubtitleEdit.Forms
                 InitializeComponent();
                 Icon = Properties.Resources.SubtitleEditFormIcon;
 
+                // Enable autocomplete functionality in combobox subtitle-format.
+                comboBoxSubtitleFormats.DropDownStyle = ComboBoxStyle.DropDown;
+                comboBoxSubtitleFormats.AutoCompleteSource = AutoCompleteSource.ListItems;
+                comboBoxSubtitleFormats.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                comboBoxSubtitleFormats.CausesValidation = false;
+
                 textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
                 labelAlternateCharactersPerSecond.Visible = false;
@@ -3741,9 +3747,28 @@ namespace Nikse.SubtitleEdit.Forms
                 _oldSubtitleFormat = format;
         }
 
+        private void ComboBoxSubtitleFormatsLeave(object sender, EventArgs e)
+        {
+            SubtitleFormat format = GetCurrentSubtitleFormat() ?? _oldSubtitleFormat;
+            if (format != _oldSubtitleFormat)
+            {
+                UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, format.FriendlyName);
+            }
+            else
+            {
+                comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
+                UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, _oldSubtitleFormat.FriendlyName);
+                comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
+            }
+            comboBoxSubtitleFormats.SelectionLength = 0;
+        }
+
         private SubtitleFormat GetCurrentSubtitleFormat()
         {
-            return Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
+            string selectedItem = comboBoxSubtitleFormats.SelectedItem?.ToString();
+            if (string.IsNullOrWhiteSpace(selectedItem))
+                return _oldSubtitleFormat;
+            return Utilities.GetSubtitleFormatByFriendlyName(selectedItem) ?? _oldSubtitleFormat;
         }
 
         private void ShowSource()
