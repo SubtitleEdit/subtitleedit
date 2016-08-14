@@ -3667,15 +3667,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     SubtitleListview1.HideExtraColumn();
                 }
-                // Recalculate time.
-                if (!_oldSubtitleFormat.IsFrameBased && format.IsFrameBased)
-                {
-                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate); // Milliseconds to frames
-                }
-                else if (_oldSubtitleFormat.IsFrameBased && !format.IsFrameBased)
-                {
-                    _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate); // Frame to Milliseconds.
-                }
             }
             ShowSource();
             SubtitleListview1.DisplayExtraFromExtra = false;
