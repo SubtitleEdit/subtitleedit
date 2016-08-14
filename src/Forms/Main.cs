@@ -3200,11 +3200,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ShowSubtitleTimer.Stop();
             Application.DoEvents();
-            foreach (var x in Configuration.Settings.RecentFiles.Files)
+            if (Configuration.Settings.General.RememberSelectedLine)
             {
-                if (fileName.Equals(x.FileName, StringComparison.OrdinalIgnoreCase))
+                foreach (var x in Configuration.Settings.RecentFiles.Files)
                 {
-                    if (Configuration.Settings.General.RememberSelectedLine)
+                    if (fileName.Equals(x.FileName, StringComparison.OrdinalIgnoreCase))
                     {
                         int sIndex = x.FirstSelectedIndex;
                         if (sIndex >= 0 && sIndex < SubtitleListview1.Items.Count)
@@ -3226,10 +3226,9 @@ namespace Nikse.SubtitleEdit.Forms
                             SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
                             SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
                         }
-
                         RefreshSelectedParagraph();
+                        break;
                     }
-                    break;
                 }
             }
             if (!_loading)
