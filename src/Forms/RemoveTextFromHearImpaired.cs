@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Subtitle.Renumber();
                 if (_mainForm != null)
                 {
-                    _mainForm.RemoveTextForHearImpaired(Subtitle);
+                    _mainForm.ReloadFromSubtitle(Subtitle);
                 }
             }
             DialogResult = DialogResult.OK;
@@ -316,7 +316,7 @@ namespace Nikse.SubtitleEdit.Forms
             Subtitle.Renumber();
             if (_mainForm != null)
             {
-                _mainForm.RemoveTextForHearImpaired(Subtitle);
+                _mainForm.ReloadFromSubtitle(Subtitle);
             }
             GeneratePreview();
         }
