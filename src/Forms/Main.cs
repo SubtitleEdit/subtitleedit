@@ -4407,58 +4407,54 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
                 int replaceCount = 0;
-                bool searchStringFound = true;
-                if (searchStringFound)
+                var searchStringFound = false;
+                int start = textBoxSource.SelectionStart;
+                if (isFirst)
                 {
-                    searchStringFound = false;
-                    int start = textBoxSource.SelectionStart;
-                    if (isFirst)
-                    {
-                        MakeHistoryForUndo(string.Format(_language.BeforeReplace, _findHelper.FindText));
-                        isFirst = false;
-                        _makeHistoryPaused = true;
-                        if (start >= 0)
-                            start--;
-                    }
-                    else
-                    {
-                        if (textBoxSource.SelectionLength > 0 && start > 0 && !replaceDialog.FindOnly)
-                            start--;
-                    }
+                    MakeHistoryForUndo(string.Format(_language.BeforeReplace, _findHelper.FindText));
+                    isFirst = false;
+                    _makeHistoryPaused = true;
+                    if (start >= 0)
+                        start--;
+                }
+                else
+                {
+                    if (textBoxSource.SelectionLength > 0 && start > 0 && !replaceDialog.FindOnly)
+                        start--;
+                }
 
-                    if (_findHelper.FindNext(textBoxSource.Text, start))
+                if (_findHelper.FindNext(textBoxSource.Text, start))
+                {
+                    textBoxSource.SelectionStart = _findHelper.SelectedIndex;
+                    textBoxSource.SelectionLength = _findHelper.FindTextLength;
+                    if (!replaceDialog.FindOnly)
+                        textBoxSource.SelectedText = _findHelper.ReplaceText;
+                    textBoxSource.ScrollToCaret();
+
+                    replaceCount++;
+                    searchStringFound = true;
+
+                    if (!replaceDialog.FindOnly)
                     {
-                        textBoxSource.SelectionStart = _findHelper.SelectedIndex;
-                        textBoxSource.SelectionLength = _findHelper.FindTextLength;
-                        if (!replaceDialog.FindOnly)
-                            textBoxSource.SelectedText = _findHelper.ReplaceText;
-                        textBoxSource.ScrollToCaret();
-
-                        replaceCount++;
-                        searchStringFound = true;
-
-                        if (!replaceDialog.FindOnly)
+                        if (_findHelper.FindNext(textBoxSource.Text, start))
                         {
-                            if (_findHelper.FindNext(textBoxSource.Text, start))
-                            {
-                                textBoxSource.SelectionStart = _findHelper.SelectedIndex;
-                                textBoxSource.SelectionLength = _findHelper.FindTextLength;
-                                textBoxSource.ScrollToCaret();
-                            }
-                            Replace(replaceDialog);
-                            return;
+                            textBoxSource.SelectionStart = _findHelper.SelectedIndex;
+                            textBoxSource.SelectionLength = _findHelper.FindTextLength;
+                            textBoxSource.ScrollToCaret();
                         }
-                    }
-                    if (replaceDialog.FindOnly)
-                    {
-                        if (searchStringFound)
-                            ShowStatus(string.Format(_language.MatchFoundX, _findHelper.FindText));
-                        else
-                            ShowStatus(string.Format(_language.NoMatchFoundX, _findHelper.FindText));
-
                         Replace(replaceDialog);
                         return;
                     }
+                }
+                if (replaceDialog.FindOnly)
+                {
+                    if (searchStringFound)
+                        ShowStatus(string.Format(_language.MatchFoundX, _findHelper.FindText));
+                    else
+                        ShowStatus(string.Format(_language.NoMatchFoundX, _findHelper.FindText));
+
+                    Replace(replaceDialog);
+                    return;
                 }
                 ReloadFromSourceView();
                 if (replaceCount == 0)
