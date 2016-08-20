@@ -262,6 +262,14 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+                if (p1 == null)
+                {
+                    sub1.Paragraphs.Insert(index, new Paragraph());
+                }
+                if (p2 == null)
+                {
+                    sub2.Paragraphs.Insert(index, new Paragraph());
+                }
                 index++;
                 p1 = sub1.GetParagraphOrDefault(index);
                 p2 = sub2.GetParagraphOrDefault(index);
