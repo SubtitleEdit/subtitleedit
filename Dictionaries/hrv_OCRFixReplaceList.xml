@@ -1614,11 +1614,10 @@
     <RegEx find="([oO])d([kp])" replaceWith="$1t$2" />
     <RegEx find="oćeju" replaceWith="oće" />
     <RegEx find="očeće" replaceWith="očet će" />
-    <RegEx find="odać(?!o)" replaceWith="odat ć" />
     <RegEx find="odsetni" replaceWith="odsjetni" />
     <RegEx find="oješć" replaceWith="ojest ć" />
     <RegEx find="(?&lt;![nt])opić" replaceWith="opit ć" />
-    <RegEx find="o([bjpv])ać" replaceWith="o$1at ć" />
+    <RegEx find="o([dbjpv])ać(?!o)" replaceWith="o$1at ć" />
     <RegEx find="podp" replaceWith="potp" />
     <RegEx find="\bpominj" replaceWith="spominj" />
     <RegEx find="primetn" replaceWith="primjetn" />
