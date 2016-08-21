@@ -276,6 +276,7 @@ namespace Nikse.SubtitleEdit.Forms
             p2 = sub2.GetParagraphOrDefault(index);
             int totalWords = 0;
             int wordsChanged = 0;
+            string emptyParagraphToString = new Paragraph().ToString();
             if (checkBoxOnlyListDifferencesInText.Checked)
             {
                 while (index < sub1.Paragraphs.Count || index < sub2.Paragraphs.Count)
@@ -286,12 +287,12 @@ namespace Nikse.SubtitleEdit.Forms
                         if (FixWhitespace(p1.ToString()) == FixWhitespace(p2.ToString()) && p1.Number == p2.Number)
                         { // no differences
                         }
-                        else if (p1.ToString() == new Paragraph().ToString())
+                        else if (p1.ToString() == emptyParagraphToString)
                         {
                             _differences.Add(index);
                             subtitleListView1.ColorOut(index, Color.Salmon);
                         }
-                        else if (p2.ToString() == new Paragraph().ToString())
+                        else if (p2.ToString() == emptyParagraphToString)
                         {
                             _differences.Add(index);
                             subtitleListView2.ColorOut(index, Color.Salmon);
@@ -328,11 +329,11 @@ namespace Nikse.SubtitleEdit.Forms
                         if (FixWhitespace(p1.ToString()) == FixWhitespace(p2.ToString()) && p1.Number == p2.Number)
                         { // no differences
                         }
-                        else if (p1.ToString() == new Paragraph().ToString())
+                        else if (p1.ToString() == emptyParagraphToString)
                         {
                             subtitleListView1.ColorOut(index, Color.Salmon);
                         }
-                        else if (p2.ToString() == new Paragraph().ToString())
+                        else if (p2.ToString() == emptyParagraphToString)
                         {
                             subtitleListView2.ColorOut(index, Color.Salmon);
                         }
