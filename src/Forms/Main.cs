@@ -758,7 +758,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (idx >= 0 && idx < audioVisualizer.SceneChanges.Count)
             {
                 audioVisualizer.SceneChanges[idx] = -1;
-                SceneChangeHelper.SaveSceneChanges(_videoFileName, audioVisualizer.SceneChanges.Where(p=>p > 0).ToList());
+                SceneChangeHelper.SaveSceneChanges(_videoFileName, audioVisualizer.SceneChanges.Where(p => p > 0).ToList());
             }
         }
 
@@ -3198,37 +3198,39 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetRecentIndices(string fileName)
         {
+            if (!Configuration.Settings.General.RememberSelectedLine)
+            {
+                return;
+            }
+
             ShowSubtitleTimer.Stop();
             Application.DoEvents();
             foreach (var x in Configuration.Settings.RecentFiles.Files)
             {
                 if (fileName.Equals(x.FileName, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (Configuration.Settings.General.RememberSelectedLine)
+                    int sIndex = x.FirstSelectedIndex;
+                    if (sIndex >= 0 && sIndex < SubtitleListview1.Items.Count)
                     {
-                        int sIndex = x.FirstSelectedIndex;
-                        if (sIndex >= 0 && sIndex < SubtitleListview1.Items.Count)
-                        {
-                            SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                            for (int i = 0; i < SubtitleListview1.Items.Count; i++)
-                                SubtitleListview1.Items[i].Selected = i == sIndex;
-                            _subtitleListViewIndex = -1;
-                            SubtitleListview1.EnsureVisible(sIndex);
-                            SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-                            SubtitleListview1.Items[sIndex].Focused = true;
-                        }
-
-                        int topIndex = x.FirstVisibleIndex;
-                        if (topIndex >= 0 && topIndex < SubtitleListview1.Items.Count)
-                        {
-                            // to fix bug in .net framework we have to set topitem 3 times... wtf!?
-                            SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
-                            SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
-                            SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
-                        }
-
-                        RefreshSelectedParagraph();
+                        SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                        for (int i = 0; i < SubtitleListview1.Items.Count; i++)
+                            SubtitleListview1.Items[i].Selected = i == sIndex;
+                        _subtitleListViewIndex = -1;
+                        SubtitleListview1.EnsureVisible(sIndex);
+                        SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                        SubtitleListview1.Items[sIndex].Focused = true;
                     }
+
+                    int topIndex = x.FirstVisibleIndex;
+                    if (topIndex >= 0 && topIndex < SubtitleListview1.Items.Count)
+                    {
+                        // to fix bug in .net framework we have to set topitem 3 times... wtf!?
+                        SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
+                        SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
+                        SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
+                    }
+
+                    RefreshSelectedParagraph();
                     break;
                 }
             }
@@ -11515,7 +11517,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         double videoPosition = mediaPlayer.CurrentPosition;
                         if (!mediaPlayer.IsPaused)
-                            videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay/TimeCode.BaseUnit;
+                            videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
                         int index = SubtitleListview1.SelectedItems[0].Index;
                         MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
 
