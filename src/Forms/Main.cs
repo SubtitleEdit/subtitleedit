@@ -5682,12 +5682,11 @@ namespace Nikse.SubtitleEdit.Forms
                         if (_subtitle.HistoryItems[_undoIndex].RedoParagraphs != null)
                         {
                             _subtitle.Paragraphs.Clear();
-                            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
-                                _subtitleAlternate.Paragraphs.Clear();
                             foreach (var p in _subtitle.HistoryItems[_undoIndex].RedoParagraphs)
                                 _subtitle.Paragraphs.Add(new Paragraph(p));
                             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
                             {
+                                _subtitleAlternate.Paragraphs.Clear();
                                 foreach (var p in _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate)
                                     _subtitleAlternate.Paragraphs.Add(new Paragraph(p));
                             }
