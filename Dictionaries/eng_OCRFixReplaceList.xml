@@ -2151,18 +2151,18 @@
     <LinePart from="! Lt " to="! It " />
     <LinePart from="? Lt " to="? It " />
     <LinePart from="SQMEWH ERE ELSE" to="SOMEWHERE ELSE" />
-    <LinePart from=" I,m " to=" I'm " />         
-    <LinePart from=" I,ve " to=" I've " />         
+    <LinePart from=" I,m " to=" I'm " />
+    <LinePart from=" I,ve " to=" I've " />
     <LinePart from=" you,re " to=" you're " />
     <LinePart from=" you,ll " to=" you'll " />
     <LinePart from=" doesn,t " to=" doesn't " />
-    <LinePart from=" let,s " to=" let's " />                 
-    <LinePart from=" he,s " to=" he's " />                 
-    <LinePart from=" it,s " to=" it's " />                 
-    <LinePart from=" can,t " to=" can't " />                 
+    <LinePart from=" let,s " to=" let's " />
+    <LinePart from=" he,s " to=" he's " />
+    <LinePart from=" it,s " to=" it's " />
+    <LinePart from=" can,t " to=" can't " />
     <LinePart from=" Can,t " to=" Can't " />
-    <LinePart from=" don,t " to=" don't " />                     
-    <LinePart from=" Don,t " to=" Don't " />                     
+    <LinePart from=" don,t " to=" don't " />
+    <LinePart from=" Don,t " to=" Don't " />
   </PartialLines>
   <PartialLinesAlways>
     <LinePart from="forbest act" to="for best act" />
@@ -2180,7 +2180,7 @@
     <Beginning from="T here " to="There " />
     <Beginning from="W here " to="Where " />
     <Beginning from="M aybe " to="Maybe " />
-    <Beginning from="S hould " to="Should " />    
+    <Beginning from="S hould " to="Should " />
     <Beginning from="|was" to="I was" />
     <Beginning from="|am " to="I am" />
     <Beginning from="No w, " to="Now, " />
