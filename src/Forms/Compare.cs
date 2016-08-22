@@ -230,10 +230,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (p1 != null && p2 != null && p1.ToString() != p2.ToString() && GetColumnsEqualExceptNumber(p1, p2) == 0)
                 {
-                    int oldIndex = index;
-                    for (int i = 1; oldIndex + i < max; i++)
+                    for (int i = index + 1; i < max; i++)
                     {
-                        if (GetColumnsEqualExceptNumber(sub1.GetParagraphOrDefault(index + i), p2) > 1)
+                        if (GetColumnsEqualExceptNumber(sub1.GetParagraphOrDefault(i), p2) > 1)
                         {
                             for (int j = 0; j < i; j++)
                             {
@@ -242,7 +241,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             break;
                         }
-                        if (GetColumnsEqualExceptNumber(p1, sub2.GetParagraphOrDefault(index + i)) > 1)
+                        if (GetColumnsEqualExceptNumber(p1, sub2.GetParagraphOrDefault(i)) > 1)
                         {
                             for (int j = 0; j < i; j++)
                             {
@@ -278,7 +277,7 @@ namespace Nikse.SubtitleEdit.Forms
             string emptyParagraphToString = new Paragraph().ToString();
             if (checkBoxOnlyListDifferencesInText.Checked)
             {
-                while (index < sub1.Paragraphs.Count || index < sub2.Paragraphs.Count)
+                while (index < max)
                 {
                     if (p1 != null && p2 != null)
                     {
@@ -317,7 +316,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                while (index < sub1.Paragraphs.Count || index < sub2.Paragraphs.Count)
+                while (index < max)
                 {
                     if (p1 != null && p2 != null)
                     {
@@ -338,8 +337,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            int columnsAlike = GetColumnsEqualExceptNumber(p1, p2);
-                            if (columnsAlike > 0)
+                            if (GetColumnsEqualExceptNumber(p1, p2) > 0) // columns alike.
                             {
                                 const double tolerance = 0.1;
 
@@ -415,7 +413,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView2.BeginUpdate();
                 if (max != _differences.Count)
                 {
-                    for (index = Math.Max(subtitleListView1.Items.Count, subtitleListView2.Items.Count); index >= 0; index--)
+                    for (index = max - 1; index >= 0; index--)
                     {
                         if (!_differences.Contains(index))
                         {
@@ -429,7 +427,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.EndUpdate();
                 subtitleListView2.EndUpdate();
                 _differences = new List<int>();
-                for (index = 0; index < Math.Max(subtitleListView1.Items.Count, subtitleListView2.Items.Count); index++)
+                for (index = 0; index < max; index++)
                     _differences.Add(index);
             }
             timer1.Start();
