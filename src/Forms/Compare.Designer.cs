@@ -267,7 +267,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView2.View = System.Windows.Forms.View.Details;
             this.subtitleListView2.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView2SelectedIndexChanged);
             this.subtitleListView2.DragDrop += new System.Windows.Forms.DragEventHandler(this.subtitleListView2_DragDrop);
-            this.subtitleListView2.DragEnter += new System.Windows.Forms.DragEventHandler(this.subtitleListView2_DragEnter);
+            this.subtitleListView2.DragEnter += new System.Windows.Forms.DragEventHandler(this.subtitleListViewDragEnter);
             // 
             // subtitleListView1
             // 
@@ -291,7 +291,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
             this.subtitleListView1.DragDrop += new System.Windows.Forms.DragEventHandler(this.subtitleListView1_DragDrop);
-            this.subtitleListView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.subtitleListView1_DragEnter);
+            this.subtitleListView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.subtitleListViewDragEnter);
             // 
             // Compare
             // 
