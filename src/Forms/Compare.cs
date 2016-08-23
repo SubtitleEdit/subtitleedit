@@ -588,7 +588,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             int maxLength = Math.Max(richTextBox1.Text.Length, richTextBox2.Text.Length);
-            for (int i = startCharactersOk; i <= maxLength; i++)
+            for (int i = startCharactersOk; i < maxLength; i++)
             {
                 if (i < richTextBox1.Text.Length)
                 {
@@ -632,7 +632,7 @@ namespace Nikse.SubtitleEdit.Forms
             // special situation - equal, but one has more chars
             if (richTextBox1.Text.Length > richTextBox2.Text.Length)
             {
-                if (richTextBox1.Text.StartsWith(richTextBox2.Text))
+                if (richTextBox1.Text.StartsWith(richTextBox2.Text, StringComparison.Ordinal))
                 {
                     richTextBox1.SelectionStart = richTextBox2.Text.Length;
                     richTextBox1.SelectionLength = richTextBox1.Text.Length - richTextBox2.Text.Length;
@@ -641,7 +641,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (richTextBox2.Text.Length > richTextBox1.Text.Length)
             {
-                if (richTextBox2.Text.StartsWith(richTextBox1.Text))
+                if (richTextBox2.Text.StartsWith(richTextBox1.Text, StringComparison.Ordinal))
                 {
                     richTextBox2.SelectionStart = richTextBox1.Text.Length;
                     richTextBox2.SelectionLength = richTextBox2.Text.Length - richTextBox1.Text.Length;
