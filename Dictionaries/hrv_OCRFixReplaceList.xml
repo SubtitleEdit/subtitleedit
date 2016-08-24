@@ -230,6 +230,8 @@
     <Word from="nemrem" to="ne mogu" />
     <Word from="nemogu" to="ne mogu" />
     <Word from="Nemogu" to="Ne mogu" />
+    <Word from="nemora" to="ne mora" />
+    <Word from="Nemora" to="Ne mora" />
     <Word from="nene" to="njene" />
     <Word from="nešo" to="nešto" />
     <Word from="nezi" to="njezi" />
@@ -290,13 +292,6 @@
     <Word from="plačanje" to="plaćanje" />
     <Word from="plačanjem" to="plaćanjem" />
     <Word from="plaćeš" to="plačeš" />
-    <Word from="prenos" to="prijenos" />
-    <Word from="prenosa" to="prijenosa" />
-    <Word from="prenosom" to="prijenosom" />
-    <Word from="prenosu" to="prijenosu" />
-    <Word from="pridonjeti" to="pridonijeti" />
-    <Word from="projekat" to="projekt" />
-    <Word from="Projekat" to="Projekt" />
     <Word from="podnesti" to="podnijeti" />
     <Word from="podstrekač" to="poticatelj" />
     <Word from="pomaći" to="pomaknuti" />
@@ -321,19 +316,29 @@
     <Word from="Pre" to="Prije" />
     <Word from="preći" to="prijeći" />
     <Word from="predame" to="preda me" />
+    <Word from="prenos" to="prijenos" />
+    <Word from="prenosa" to="prijenosa" />
+    <Word from="prenosom" to="prijenosom" />
+    <Word from="prenosu" to="prijenosu" />
     <Word from="preneo" to="prenio" />
+    <Word from="prenela" to="prenijela" />
+    <Word from="prenjela" to="prenijela" />
+    <Word from="preneli" to="prenijeli" />
+    <Word from="prenjeli" to="prenijeli" />
     <Word from="preneti" to="prenijeti" />
     <Word from="preporuča" to="preporučuje" />
-    <!-- nije za regex -->
     <Word from="preti" to="prijeti" />
     <Word from="pretrpeo" to="pretrpio" />
     <Word from="prevod" to="prijevod" />
+    <Word from="pridonjeti" to="pridonijeti" />
     <Word from="priije" to="prije" />
     <Word from="prijatan" to="ugodan" />
     <Word from="primedbi" to="primjedbi" />
     <Word from="primjete" to="primijete" />
     <Word from="prmda" to="iako" />
     <Word from="prodato" to="prodano" />
+    <Word from="projekat" to="projekt" />
+    <Word from="Projekat" to="Projekt" />
     <Word from="promijena" to="promjena" />
     <Word from="psihićki" to="psihički" />
     <Word from="računari" to="računala" />
@@ -459,6 +464,7 @@
     <Word from="umreti" to="umrijeti" />
     <Word from="Umret" to="Umrijet" />
     <Word from="univerzitet" to="sveučilište" />
+    <Word from="univerzitetu" to="sveučilištu" />
     <Word from="uprkos" to="usprkos" />
     <Word from="Uprkos" to="Usprkos" />
     <Word from="uradio" to="učinio" />
@@ -596,11 +602,13 @@
     <Word from="Džej" to="Jay" />
     <Word from="Džejn" to="Jane" />
     <Word from="Ejmi" to="Amy" />
+    <Word from="Ejpril" to="April" />
     <Word from="Ešli" to="Ashley" />
     <Word from="Grejs" to="Grace" />
     <Word from="Hju" to="Hugh" />
     <Word from="Hjuston" to="Houston" />
     <Word from="Kejsi" to="Casey" />
+    <Word from="Kerol" to="Carol" />
     <Word from="Kloe" to="Chloe" />
     <Word from="Lajf" to="Life" />
     <Word from="Lusi" to="Lucy" />
@@ -1625,6 +1633,7 @@
     <RegEx find="([te]|ku|pi|no)riše" replaceWith="$1rira" />
     <RegEx find="(?&lt;![Pp]r|[Nn])adje(?!(v|n(e|u[olt]))\b)" replaceWith="ađe" />
     <RegEx find="par nedj?elja" replaceWith="par tjedana" />
+    <RegEx find="pendov" replaceWith="pendir" />
     <RegEx find="rasčist" replaceWith="raščist" />
     <RegEx find="redić" replaceWith="rjedit ć" />
     <!-- preduzeti / preduzetnik -->
@@ -1718,7 +1727,6 @@
     <RegEx find="Džonson" replaceWith="Johnson" />
     <RegEx find="Džordž" replaceWith="George" />
     <RegEx find="Džulij" replaceWith="Juli" />
-    <RegEx find="Ejpril" replaceWith="April" />
     <RegEx find="[EA]jnštajn" replaceWith="Einstein" />
     <RegEx find="Endi" replaceWith="Andy" />
     <RegEx find="Endru" replaceWith="Andrew" />
@@ -1740,9 +1748,9 @@
     <RegEx find="Kavendiš" replaceWith="Cavendish" />
     <RegEx find="Kejleb" replaceWith="Caleb" />
     <RegEx find="Kembridž" replaceWith="Cambridge" />
-    <RegEx find="Kerol" replaceWith="Carol" />
     <RegEx find="Konn?ektik[aeu]t" replaceWith="Connecticut" />
     <RegEx find="Korejan" replaceWith="Korej" />
+    <RegEx find="Leri" replaceWith="Larry" />
     <RegEx find="Losanđeles" replaceWith="Los Angeles" />
     <RegEx find="Los Anđeles" replaceWith="Los Angeles" />
     <RegEx find="Majami" replaceWith="Miami" />
