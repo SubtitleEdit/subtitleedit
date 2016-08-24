@@ -1,6 +1,5 @@
 <p align="center">
- <a href="http://www.nikse.dk/SubtitleEdit" ><img src="https://github.com/diomed/subtitleedit/blob/master/subtitle_edit.png"></a>
-
+ <a href="http://www.nikse.dk/SubtitleEdit" ><img src="https://github.com/SubtitleEdit/subtitleedit/blob/master/subtitle_edit.png"></a>
 </p>
 #&nbsp;
 
