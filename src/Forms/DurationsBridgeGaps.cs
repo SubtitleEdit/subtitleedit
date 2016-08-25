@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             foreach (var index in fixedIndexes)
-                SubtitleListview1.SetBackgroundColor(index, Color.Green);
+                SubtitleListview1.SetBackgroundColor(index, Color.LightGreen);
             SubtitleListview1.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.DurationsBridgeGaps.GapsBridgedX, FixedCount);
 
