@@ -41,13 +41,12 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.InitializeSubtitleFont(subtitleListView1);
             UiUtil.InitializeSubtitleFont(subtitleListView2);
             UiUtil.FixLargeFonts(this, buttonOK);
+            subtitleListView1.UseSyntaxColoring = false;
+            subtitleListView2.UseSyntaxColoring = false;
         }
 
         public void Initialize(Subtitle subtitle1, string subtitleFileName1, string title)
         {
-            subtitleListView1.UseSyntaxColoring = false;
-            subtitleListView2.UseSyntaxColoring = false;
-
             Compare_Resize(null, null);
             labelStatus.Text = string.Empty;
             _subtitle1 = subtitle1;
