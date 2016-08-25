@@ -1655,12 +1655,11 @@ namespace Nikse.SubtitleEdit.Core
         {
             int i1 = 0;
             int i2 = 0;
-            int i = 0;
             int c = 0;
             var max = Math.Max(parts1.Length, parts2.Length);
-            while (i < max && i1 < parts1.Length && i2 < parts2.Length)
+            while (i1 < parts1.Length && i2 < parts2.Length)
             {
-                if (parts1[i1] == parts2[i2])
+                if (parts1[i1].Equals(parts2[i2], StringComparison.Ordinal))
                 {
                     i1++;
                     i2++;
@@ -1688,7 +1687,6 @@ namespace Nikse.SubtitleEdit.Core
                         c++;
                     }
                 }
-                i++;
             }
             if (i1 == parts1.Length && i2 == parts2.Length)
                 return c;
@@ -1700,7 +1698,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             for (; startIndex < parts.Length; startIndex++)
             {
-                if (s == parts[startIndex])
+                if (s.Equals(parts[startIndex], StringComparison.Ordinal))
                     return startIndex;
             }
             return int.MaxValue;
