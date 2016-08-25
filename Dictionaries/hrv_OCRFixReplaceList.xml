@@ -608,6 +608,7 @@
     <Word from="Hju" to="Hugh" />
     <Word from="Hjuston" to="Houston" />
     <Word from="Kejsi" to="Casey" />
+    <Word from="Kerol" to="Carol" />
     <Word from="Kloe" to="Chloe" />
     <Word from="Lajf" to="Life" />
     <Word from="Lusi" to="Lucy" />
@@ -1747,7 +1748,6 @@
     <RegEx find="Kavendiš" replaceWith="Cavendish" />
     <RegEx find="Kejleb" replaceWith="Caleb" />
     <RegEx find="Kembridž" replaceWith="Cambridge" />
-    <RegEx find="Kerol" replaceWith="Carol" />
     <RegEx find="Konn?ektik[aeu]t" replaceWith="Connecticut" />
     <RegEx find="Korejan" replaceWith="Korej" />
     <RegEx find="Leri" replaceWith="Larry" />
