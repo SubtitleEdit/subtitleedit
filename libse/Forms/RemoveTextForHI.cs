@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -659,25 +658,25 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             string removeText = "<i>- </i>" + Environment.NewLine + "-";
-            if (text.StartsWith(removeText))
+            if (text.StartsWith(removeText, StringComparison.Ordinal))
             {
                 text = text.Remove(0, removeText.Length).TrimStart(' ');
             }
 
             removeText = "<i>-</i>" + Environment.NewLine + "-";
-            if (text.StartsWith(removeText))
+            if (text.StartsWith(removeText, StringComparison.Ordinal))
             {
                 text = text.Remove(0, removeText.Length).TrimStart(' ');
             }
 
             removeText = "<i>-</i>" + Environment.NewLine + "<i>-";
-            if (text.StartsWith(removeText))
+            if (text.StartsWith(removeText, StringComparison.Ordinal))
             {
                 text = "<i>" + text.Remove(0, removeText.Length).TrimStart(' ');
             }
 
             removeText = "<i>- </i>" + Environment.NewLine + "<i>-";
-            if (text.StartsWith(removeText))
+            if (text.StartsWith(removeText, StringComparison.Ordinal))
             {
                 text = "<i>" + text.Remove(0, removeText.Length).TrimStart(' ');
             }
