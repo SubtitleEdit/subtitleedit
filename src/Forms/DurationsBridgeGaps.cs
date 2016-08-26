@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMinMsBetweenLines.Left = labelMinMsBetweenLines.Left + labelMinMsBetweenLines.Width + 4;
             radioButtonProlongEndTime.Text = Configuration.Settings.Language.DurationsBridgeGaps.ProlongEndTime;
             radioButtonDivideEven.Text = Configuration.Settings.Language.DurationsBridgeGaps.DivideEven;
-
+            SubtitleListview1.UseSyntaxColoring = false;
             _subtitle = subtitle;
             try
             {
