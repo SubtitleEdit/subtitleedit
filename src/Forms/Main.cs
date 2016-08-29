@@ -2736,13 +2736,24 @@ namespace Nikse.SubtitleEdit.Forms
                     if (Configuration.Settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles && format.GetType() == typeof(Sami) && Sami.GetStylesFromHeader(_subtitle.Header).Count == 2)
                     {
                         var classes = Sami.GetStylesFromHeader(_subtitle.Header);
-                        var s1 = new Subtitle(_subtitle);
-                        var s2 = new Subtitle(_subtitle);
-                        s1.Paragraphs.Clear();
-                        s2.Paragraphs.Clear();
+
+                        // Subtitle #1 
+                        var s1 = new Subtitle();
+                        s1.WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers;
+                        s1.Header = _subtitle.Header;
+                        s1.Footer = _subtitle.Footer;
+                        s1.FileName = _subtitle.FileName;
+
+                        // Subtitle #2
+                        var s2 = new Subtitle();
+                        s2.WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers;
+                        s2.Header = _subtitle.Header;
+                        s2.Footer = _subtitle.Footer;
+                        s2.FileName = _subtitle.FileName;
+
                         foreach (var p in _subtitle.Paragraphs)
                         {
-                            if (p.Extra != null && p.Extra.Equals(classes[0], StringComparison.OrdinalIgnoreCase))
+                            if (p.Extra?.Equals(classes[0], StringComparison.OrdinalIgnoreCase) == true)
                                 s1.Paragraphs.Add(p);
                             else
                                 s2.Paragraphs.Add(p);
