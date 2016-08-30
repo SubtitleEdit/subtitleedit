@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
 
             HeaderDataLength = buffer[index + 8];
 
-            if (buffer.Length < index + 9 + HeaderDataLength)
+            if (buffer.Length <= index + 9 + HeaderDataLength)
                 return;
 
             if (StreamId == 0xBD) // 10111101 binary = 189 decimal = 0xBD hex -> private_stream_1
@@ -68,26 +68,26 @@ namespace Nikse.SubtitleEdit.Core.TransportStream
                 if (id >= 0x20 && id <= 0x40) // x3f 0r x40 ?
                     SubPictureStreamId = id;
             }
-
-            int tempIndex = index + 9;
-            if (PresentationTimestampDecodeTimestampFlags == Helper.B00000010 ||
-                PresentationTimestampDecodeTimestampFlags == Helper.B00000011)
+            if (index + 9 + 4 < buffer.Length)
             {
-                PresentationTimestamp = (ulong)buffer[tempIndex + 4] >> 1;
-                PresentationTimestamp += (ulong)buffer[tempIndex + 3] << 7;
-                PresentationTimestamp += (ulong)(buffer[tempIndex + 2] & Helper.B11111110) << 14;
-                PresentationTimestamp += (ulong)buffer[tempIndex + 1] << 22;
-                PresentationTimestamp += (ulong)(buffer[tempIndex + 0] & Helper.B00001110) << 29;
+                int tempIndex = index + 9;
+                if (PresentationTimestampDecodeTimestampFlags == Helper.B00000010 || PresentationTimestampDecodeTimestampFlags == Helper.B00000011)
+                {
+                    PresentationTimestamp = (ulong)buffer[tempIndex + 4] >> 1;
+                    PresentationTimestamp += (ulong)buffer[tempIndex + 3] << 7;
+                    PresentationTimestamp += (ulong)(buffer[tempIndex + 2] & Helper.B11111110) << 14;
+                    PresentationTimestamp += (ulong)buffer[tempIndex + 1] << 22;
+                    PresentationTimestamp += (ulong)(buffer[tempIndex + 0] & Helper.B00001110) << 29;
+                }
+                if (PresentationTimestampDecodeTimestampFlags == Helper.B00000011)
+                {
+                    DecodeTimestamp = (ulong)buffer[tempIndex + 4] >> 1;
+                    DecodeTimestamp += (ulong)buffer[tempIndex + 3] << 7;
+                    DecodeTimestamp += (ulong)(buffer[tempIndex + 2] & Helper.B11111110) << 14;
+                    DecodeTimestamp += (ulong)buffer[tempIndex + 1] << 22;
+                    DecodeTimestamp += (ulong)(buffer[tempIndex + 0] & Helper.B00001110) << 29;
+                }
             }
-            if (PresentationTimestampDecodeTimestampFlags == Helper.B00000011)
-            {
-                DecodeTimestamp = (ulong)buffer[tempIndex + 4] >> 1;
-                DecodeTimestamp += (ulong)buffer[tempIndex + 3] << 7;
-                DecodeTimestamp += (ulong)(buffer[tempIndex + 2] & Helper.B11111110) << 14;
-                DecodeTimestamp += (ulong)buffer[tempIndex + 1] << 22;
-                DecodeTimestamp += (ulong)(buffer[tempIndex + 0] & Helper.B00001110) << 29;
-            }
-
             int dataIndex = index + HeaderDataLength + 24 - Mpeg2HeaderLength;
             int dataSize = Length - (4 + HeaderDataLength);
 
