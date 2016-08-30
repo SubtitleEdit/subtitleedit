@@ -916,7 +916,7 @@
     <RegEx find="ntezivn" replaceWith="ntenzivn" />
     <RegEx find="([iI])seče" replaceWith="$1zreže" />
     <RegEx find="spoljava" replaceWith="zražava" />
-    <RegEx find="([iI])spovj?ed" replaceWith="$1spovijed" />
+    <RegEx find="([iI])spovj?e(d|st)" replaceWith="$1spovije$2" />
     <RegEx find="([iI])zbe([gć])" replaceWith="$1zbje$2" />
     <RegEx find="sčez" replaceWith="ščez" />
     <RegEx find="spresj?ecan" replaceWith="spresijecan" />
@@ -1481,7 +1481,6 @@
     <RegEx find="([vV])enča" replaceWith="$1jenča" />
     <RegEx find="\b([vV])er([aeiou]|an|n[aeiou]|no[mgj]|nosti?|nošću|om|ama|nik|nik[aeu]|ni[ck]om|nic[aeiu]|nic[ai]ma|sk[aeiou]|sko[mgj]|ski[mh]|oval[aeio]|ovanja|ovanjima]|ovati)\b" replaceWith="$1jer$2" />
     <RegEx find="\b([nN])ever([aeioun])" replaceWith="$1evjer$2" />
-    <RegEx find="veroispovj?e" replaceWith="vjeroispovije" />
     <RegEx find="([vV])erova" replaceWith="$1jerova" />
     <RegEx find="([vV])j?ero[vj]at(a?)n" replaceWith="$1jerojat$2n" />
     <RegEx find="([vV])eruj" replaceWith="$1jeruj" />
@@ -1603,6 +1602,8 @@
     <!-- doktorica / profesorica -->
     <RegEx find="(kt|s)ork" replaceWith="$1oric" />
     <RegEx find="(?&lt;![Oo]b)([nl])izuj[eu]" replaceWith="$1izira" />
+    <RegEx find="\bl([čćžzvsmrtpdbgkn])" replaceWith="i$1" /> 
+    <RegEx find="\bL([čćžzvsmrtpdbgkn])" replaceWith="I$1" /> 
     <RegEx find="omić" replaceWith="omit ć" />
     <RegEx find="laćać" replaceWith="laćat ć" />
     <RegEx find="luparenj" replaceWith="lupiranj" />
@@ -1657,7 +1658,6 @@
     <RegEx find="ržać" replaceWith="ržat ć" />
     <RegEx find="sčup" replaceWith="ščup" />
     <RegEx find="seden" replaceWith="sjeden" />
-    <RegEx find="spovj?est" replaceWith="spovijest" />
     <RegEx find="stać(?!i)" replaceWith="stat ć" />
     <RegEx find="stovet" replaceWith="stovjet" />
     <RegEx find="struis" replaceWith="struir" />
@@ -1781,8 +1781,7 @@
     <RegEx find="Njuton" replaceWith="Newton" />
     <RegEx find="Rajan" replaceWith="Ryan" />
     <RegEx find="Rejčel" replaceWith="Rachel" />
-    <RegEx find="Ričard" replaceWith="Richard" />
-    <RegEx find="Ričmond" replaceWith="Richmond" />
+    <RegEx find="Rič" replaceWith="Rich" />
     <RegEx find="odže" replaceWith="oge" />
     <RegEx find="Sajmon" replaceWith="Simon" />
     <RegEx find="S[ae]mjuel" replaceWith="Samuel" />
