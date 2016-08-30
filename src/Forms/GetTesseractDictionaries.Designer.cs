@@ -60,7 +60,7 @@
             this.labelChooseLanguageAndClickDownload.AutoSize = true;
             this.labelChooseLanguageAndClickDownload.Location = new System.Drawing.Point(19, 52);
             this.labelChooseLanguageAndClickDownload.Name = "labelChooseLanguageAndClickDownload";
-            this.labelChooseLanguageAndClickDownload.Size = new System.Drawing.Size(202, 13);
+            this.labelChooseLanguageAndClickDownload.Size = new System.Drawing.Size(208, 13);
             this.labelChooseLanguageAndClickDownload.TabIndex = 23;
             this.labelChooseLanguageAndClickDownload.Text = "Choose your language and click download";
             // 
@@ -116,6 +116,7 @@
             this.Controls.Add(this.buttonDownload);
             this.Controls.Add(this.linkLabelOpenDictionaryFolder);
             this.Controls.Add(this.buttonOK);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
