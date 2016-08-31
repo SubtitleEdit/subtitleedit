@@ -1850,7 +1850,7 @@
             public string DurationMaximumMilliseconds { get; set; }
             public string MinimumGapMilliseconds { get; set; }
             public string MaximumLines { get; set; }
-            
+
             public string SubtitleFont { get; set; }
             public string SubtitleFontSize { get; set; }
             public string SubtitleBold { get; set; }
