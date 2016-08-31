@@ -1688,6 +1688,7 @@ can edit in same subtitle file (collaboration)</Information>
     <DurationMinimumMilliseconds>Min. duration, milliseconds</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. duration, milliseconds</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. gap between subtitles in ms</MinimumGapMilliseconds>
+    <MaximumLines>Max. number of lines</MaximumLines>
     <SubtitleFont>Subtitle font</SubtitleFont>
     <SubtitleFontSize>Subtitle font size</SubtitleFontSize>
     <SubtitleBold>Bold</SubtitleBold>
@@ -1879,7 +1880,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SyntaxColorDurationIfTooSmall>Color duration if too short</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Color duration if too long</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Color text if too long</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Color text if more than lines:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Color text if more {0} lines</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Color time code overlap</SyntaxColorOverlap>
     <SyntaxErrorColor>Error color</SyntaxErrorColor>
     <GoToFirstSelectedLine>Go to first selected line</GoToFirstSelectedLine>

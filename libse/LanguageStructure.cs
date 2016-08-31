@@ -1849,6 +1849,8 @@
             public string DurationMinimumMilliseconds { get; set; }
             public string DurationMaximumMilliseconds { get; set; }
             public string MinimumGapMilliseconds { get; set; }
+            public string MaximumLines { get; set; }
+            
             public string SubtitleFont { get; set; }
             public string SubtitleFontSize { get; set; }
             public string SubtitleBold { get; set; }
@@ -2041,7 +2043,7 @@
             public string SyntaxColorDurationIfTooSmall { get; set; }
             public string SyntaxColorDurationIfTooLarge { get; set; }
             public string SyntaxColorTextIfTooLong { get; set; }
-            public string SyntaxColorTextMoreThanXLines { get; set; }
+            public string SyntaxColorTextMoreThanMaxLines { get; set; }
             public string SyntaxColorOverlap { get; set; }
             public string SyntaxErrorColor { get; set; }
             public string GoToFirstSelectedLine { get; set; }

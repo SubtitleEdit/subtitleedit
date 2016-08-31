@@ -4513,6 +4513,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MinimumGapMilliseconds":
                     language.Settings.MinimumGapMilliseconds = reader.Value;
                     break;
+                case "Settings/MaximumLines":
+                    language.Settings.MaximumLines = reader.Value;
+                    break;
                 case "Settings/SubtitleFont":
                     language.Settings.SubtitleFont = reader.Value;
                     break;
@@ -5086,8 +5089,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/SyntaxColorTextIfTooLong":
                     language.Settings.SyntaxColorTextIfTooLong = reader.Value;
                     break;
-                case "Settings/SyntaxColorTextMoreThanXLines":
-                    language.Settings.SyntaxColorTextMoreThanXLines = reader.Value;
+                case "Settings/SyntaxColorTextMoreThanMaxLines":
+                    language.Settings.SyntaxColorTextMoreThanMaxLines = reader.Value;
                     break;
                 case "Settings/SyntaxColorOverlap":
                     language.Settings.SyntaxColorOverlap = reader.Value;
