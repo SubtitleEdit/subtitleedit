@@ -14,6 +14,8 @@ namespace Nikse.SubtitleEdit
         [STAThread]
         private static void Main()
         {
+
+#if !DEBUG
             // Add the event handler for handling UI thread exceptions to the event.
             Application.ThreadException += Application_ThreadException;
 
@@ -21,7 +23,8 @@ namespace Nikse.SubtitleEdit
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 
             // Add the event handler for handling non-UI thread exceptions to the event.
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException; 
+#endif
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
