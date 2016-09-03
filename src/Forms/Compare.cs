@@ -168,7 +168,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
                 labelSubtitle1.Text = openFileDialog1.FileName;
                 _language1 = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
-                if (_subtitle1.Paragraphs.Count > 0)
+                if (_subtitle1.Paragraphs.Count > 0 && _subtitle2?.Paragraphs.Count > 0)
                     CompareSubtitles();
             }
         }
@@ -210,7 +210,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
                 labelSubtitle2.Text = openFileDialog1.FileName;
-                if (_subtitle2.Paragraphs.Count > 0)
+                if (_subtitle2.Paragraphs.Count > 0 && _subtitle1?.Paragraphs.Count > 0)
                     CompareSubtitles();
             }
         }
@@ -225,17 +225,13 @@ namespace Nikse.SubtitleEdit.Forms
             Paragraph p1 = sub1.GetParagraphOrDefault(index);
             Paragraph p2 = sub2.GetParagraphOrDefault(index);
             int max = Math.Max(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
-            bool exitWhile = false;
             while (index < max)
             {
                 if (p1 != null && p2 != null && GetColumnsEqualExceptNumber(p1, p2) == 0)
                 {
                     for (int i = index + 1; i < max; i++)
                     {
-                        if (index + 1 == i)
-                        {
-                            exitWhile = true;
-                        }
+                        // Try to find atleast two matching properties.
                         if (GetColumnsEqualExceptNumber(sub1.GetParagraphOrDefault(i), p2) > 1)
                         {
                             for (int j = index; j < i; j++)
@@ -253,19 +249,6 @@ namespace Nikse.SubtitleEdit.Forms
                             break;
                         }
                     }
-                    // Exit while-loop if for-loop is ran.
-                    if (exitWhile)
-                    {
-                        break;
-                    }
-                }
-                if (p1 == null)
-                {
-                    sub1.Paragraphs.Insert(index, new Paragraph());
-                }
-                if (p2 == null)
-                {
-                    sub2.Paragraphs.Insert(index, new Paragraph());
                 }
                 index++;
                 p1 = sub1.GetParagraphOrDefault(index);
@@ -282,9 +265,12 @@ namespace Nikse.SubtitleEdit.Forms
             int totalWords = 0;
             int wordsChanged = 0;
             string emptyParagraphToString = new Paragraph().ToString();
+            max = Math.Max(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
+            int min = Math.Min(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
+
             if (checkBoxOnlyListDifferencesInText.Checked)
             {
-                while (index < max)
+                while (index < min)
                 {
                     Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter());
                     if (p1.ToString() == emptyParagraphToString)
@@ -309,7 +295,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                while (index < max)
+                const double tolerance = 0.1;
+                while (index < min)
                 {
                     Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter());
                     if (p1.ToString() == emptyParagraphToString)
@@ -328,7 +315,6 @@ namespace Nikse.SubtitleEdit.Forms
                         if (columnsAlike > 0 && columnsAlike < 4)
                         {
                             _differences.Add(index);
-                            const double tolerance = 0.1;
                             // Starttime.
                             if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) > tolerance)
                             {
@@ -360,7 +346,7 @@ namespace Nikse.SubtitleEdit.Forms
                             subtitleListView1.SetBackgroundColor(index, Color.FromArgb(255, 200, 100), SubtitleListView.ColumnIndexNumber);
                             subtitleListView2.SetBackgroundColor(index, Color.FromArgb(255, 200, 100), SubtitleListView.ColumnIndexNumber);
                             // Add index to list _differences if is not already present.
-                            if (_differences[_differences.Count - 1] != index)
+                            if (_differences.Count > 0 && _differences[_differences.Count - 1] != index)
                             {
                                 _differences.Add(index);
                             }
