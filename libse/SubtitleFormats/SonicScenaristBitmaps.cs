@@ -31,9 +31,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 return false;
 
             var subtitle = new Subtitle();
-            var sb = new StringBuilder();
-            foreach (string line in lines)
-                sb.AppendLine(line);
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
         }
