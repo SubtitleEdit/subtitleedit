@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Forms
             p2 = sub2.GetParagraphOrDefault(index);
             int totalWords = 0;
             int wordsChanged = 0;
-            string emptyParagraphToString = new Paragraph().ToString();
+            string emptyParagraphAsString = new Paragraph().ToString();
             max = Math.Max(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
             int min = Math.Min(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
 
@@ -273,12 +273,12 @@ namespace Nikse.SubtitleEdit.Forms
                 while (index < min)
                 {
                     Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter());
-                    if (p1.ToString() == emptyParagraphToString)
+                    if (p1.ToString() == emptyParagraphAsString)
                     {
                         _differences.Add(index);
                         subtitleListView1.ColorOut(index, Color.Salmon);
                     }
-                    else if (p2.ToString() == emptyParagraphToString)
+                    else if (p2.ToString() == emptyParagraphAsString)
                     {
                         _differences.Add(index);
                         subtitleListView2.ColorOut(index, Color.Salmon);
@@ -299,14 +299,15 @@ namespace Nikse.SubtitleEdit.Forms
                 while (index < min)
                 {
                     Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter());
-                    if (p1.ToString() == emptyParagraphToString)
+                    bool addIndexToDifferences = false;
+                    if (p1.ToString() == emptyParagraphAsString)
                     {
-                        _differences.Add(index);
+                        addIndexToDifferences = true;
                         subtitleListView1.ColorOut(index, Color.Salmon);
                     }
-                    else if (p2.ToString() == emptyParagraphToString)
+                    else if (p2.ToString() == emptyParagraphAsString)
                     {
-                        _differences.Add(index);
+                        addIndexToDifferences = true;
                         subtitleListView2.ColorOut(index, Color.Salmon);
                     }
                     else
@@ -314,7 +315,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int columnsAlike = GetColumnsEqualExceptNumber(p1, p2);
                         if (columnsAlike > 0 && columnsAlike < 4)
                         {
-                            _differences.Add(index);
+                            addIndexToDifferences = true;
                             // Starttime.
                             if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) > tolerance)
                             {
@@ -343,14 +344,14 @@ namespace Nikse.SubtitleEdit.Forms
                         // Number.
                         if (p1.Number != p2.Number)
                         {
+                            addIndexToDifferences = true;
                             subtitleListView1.SetBackgroundColor(index, Color.FromArgb(255, 200, 100), SubtitleListView.ColumnIndexNumber);
                             subtitleListView2.SetBackgroundColor(index, Color.FromArgb(255, 200, 100), SubtitleListView.ColumnIndexNumber);
-                            // Add index to list _differences if is not already present.
-                            if (_differences.Count > 0 && _differences[_differences.Count - 1] != index)
-                            {
-                                _differences.Add(index);
-                            }
                         }
+                    }
+                    if (addIndexToDifferences)
+                    {
+                        _differences.Add(index);
                     }
                     index++;
                     p1 = sub1.GetParagraphOrDefault(index);
