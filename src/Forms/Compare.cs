@@ -855,8 +855,14 @@ namespace Nikse.SubtitleEdit.Forms
                     string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
             string filePath = files[0];
+            if (FileUtil.IsDirectory(filePath))
+            {
+                MessageBox.Show(Configuration.Settings.Language.Main.ErrorDirectoryDropNotAllowed,
+                    string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var listExt = new List<string>();
             foreach (var s in Utilities.GetOpenDialogFilter().Split(new[] { '*' }, StringSplitOptions.RemoveEmptyEntries))
             {
