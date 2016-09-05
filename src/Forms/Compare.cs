@@ -43,6 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonOK);
             subtitleListView1.UseSyntaxColoring = false;
             subtitleListView2.UseSyntaxColoring = false;
+            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
         }
 
         public void Initialize(Subtitle subtitle1, string subtitleFileName1, string title)
@@ -65,8 +66,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                 }
             }
-
-            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             subtitleListView1.SelectIndexAndEnsureVisible(0);
             _language1 = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
         }
@@ -86,7 +85,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!string.IsNullOrEmpty(subtitleFileName1) && File.Exists(subtitleFileName1))
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(subtitleFileName1);
-            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             subtitleListView1.SelectIndexAndEnsureVisible(0);
             subtitleListView2.SelectIndexAndEnsureVisible(0);
         }
@@ -857,8 +855,14 @@ namespace Nikse.SubtitleEdit.Forms
                     string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
             string filePath = files[0];
+            if (FileUtil.IsDirectory(filePath))
+            {
+                MessageBox.Show(Configuration.Settings.Language.Main.ErrorDirectoryDropNotAllowed,
+                    string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var listExt = new List<string>();
             foreach (var s in Utilities.GetOpenDialogFilter().Split(new[] { '*' }, StringSplitOptions.RemoveEmptyEntries))
             {
