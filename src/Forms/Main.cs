@@ -15062,7 +15062,6 @@ namespace Nikse.SubtitleEdit.Forms
             var path = Configuration.PluginsDirectory;
             if (!Directory.Exists(path))
                 return;
-            var pluginFiles = Directory.GetFiles(path, "*.DLL");
 
             int filePluginCount = 0;
             int toolsPluginCount = 0;
@@ -15099,7 +15098,7 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemAutoTranslate.DropDownItems.Remove(x);
             }
 
-            foreach (var pluginFileName in pluginFiles)
+            foreach (var pluginFileName in Directory.EnumerateFiles(path, "*.DLL"))
             {
                 try
                 {
