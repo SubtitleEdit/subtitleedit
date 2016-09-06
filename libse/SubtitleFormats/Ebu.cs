@@ -586,38 +586,39 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else if (header.DisplayStandardCode == "0" && header.MaximumNumberOfDisplayableRows == "02") // open subtitling
                         rows = 15;
 
-                    if (p.Text.StartsWith("{\\an7}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an8}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal))
+                    var text = p.Text.Trim(new char[] { '\r', '\n' });
+                    if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
                     {
                         tti.VerticalPosition = 1; // top (vertical)
                     }
-                    else if (p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal))
+                    else if (text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal))
                     {
                         tti.VerticalPosition = (byte)(rows / 2); // middle (vertical)
                     }
                     else
                     {
-                        int startRow = (rows - 1) - Utilities.CountTagInText(p.Text, Environment.NewLine) * 2;
+                        int startRow = (rows - 1) - Utilities.CountTagInText(text, Environment.NewLine) * 2;
                         if (startRow < 0)
                             startRow = 0;
                         tti.VerticalPosition = (byte)startRow; // bottom (vertical)
                     }
 
                     tti.JustificationCode = EbuUiHelper.JustificationCode; // use default justification
-                    if (p.Text.StartsWith("{\\an1}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an4}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an7}", StringComparison.Ordinal))
+                    if (text.StartsWith("{\\an1}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an7}", StringComparison.Ordinal))
                     {
                         tti.JustificationCode = 1; // 01h=left-justified text
                     }
-                    else if (p.Text.StartsWith("{\\an3}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an6}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an9}", StringComparison.Ordinal))
+                    else if (text.StartsWith("{\\an3}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
                     {
                         tti.JustificationCode = 3; // 03h=right-justified
                     }
-                    else if (p.Text.StartsWith("{\\an2}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an5}", StringComparison.Ordinal) || p.Text.StartsWith("{\\an8}", StringComparison.Ordinal))
+                    else if (text.StartsWith("{\\an2}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal))
                     {
                         tti.JustificationCode = 2; // 02h=centred text
                     }
 
                     tti.SubtitleNumber = (ushort)subtitleNumber;
-                    tti.TextField = p.Text;
+                    tti.TextField = text;
                     int startTag = tti.TextField.IndexOf('}');
                     if (tti.TextField.StartsWith("{\\", StringComparison.Ordinal) && startTag > 0 && startTag < 10)
                     {
