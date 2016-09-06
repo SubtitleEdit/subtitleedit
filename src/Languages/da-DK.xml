@@ -684,6 +684,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <Frames>Rammer</Frames>
     <Seconds>Sekunder</Seconds>
     <Milliseconds>Millisekunder</Milliseconds>
+    <GetSceneChangesWithFfmpeg>Generer sceneskift med FFmpeg</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Importer tekst</Title>
@@ -1044,6 +1045,7 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
         <Find>Find</Find>
         <Replace>Erstat</Replace>
         <FixCommonErrors>Fix almindelige fejl</FixCommonErrors>
+        <RemoveTextForHi>Fjern tekst for hørehæmmede</RemoveTextForHi>
         <VisualSync>Visuel synkroniser</VisualSync>
         <SpellCheck>Stavekontrol</SpellCheck>
         <Settings>Indstillinger</Settings>
@@ -1681,6 +1683,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <DurationMinimumMilliseconds>Min. varighed, millisekunder</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. varighed, millisekunder</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. mellemrum mellem undertekster i ms</MinimumGapMilliseconds>
+    <MaximumLines>Max. antal linjer</MaximumLines>
     <SubtitleFont>undertekst skrifttype</SubtitleFont>
     <SubtitleFontSize>undertekst skriftstørrelse</SubtitleFontSize>
     <SubtitleBold>Fed</SubtitleBold>
@@ -1708,6 +1711,10 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AutoBackupEveryMinute>Hvert minut</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Hver 5. minut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Hver 15. minut</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Slet efter</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>En måned</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 måneder</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 måneder</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Tjek for opdateringer</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Tillad redigering af originale undertekst</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Spørg om slet af linjer</PromptDeleteLines>
@@ -1790,6 +1797,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <FirstPlusX>Første + {0}</FirstPlusX>
     <LastMinusX>Sidste - {0}</LastMinusX>
     <FixCommonerrors>Ret almindelige fejl</FixCommonerrors>
+    <RemoveTextForHi>Fjern tekst for svagthørende</RemoveTextForHi>
     <MergeLinesShorterThan>Flet linjer kortere end</MergeLinesShorterThan>
     <MusicSymbol>Musik symbol</MusicSymbol>
     <MusicSymbolsToReplace>Musik symboler der skal erstattes (adskilt af mellemrum)</MusicSymbolsToReplace>
@@ -1816,12 +1824,14 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <AdjustSetStartTimeKeepDuration>Sæt starttid, behold varighed</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Set sluttid, juster resten</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set sluttid, juster resten og gå til næste</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>Forlæng aktuelle linje til næste undertekster eller max varighed</AdjustExtendCurrentSubtitle>
     <MainCreateStartDownEndUp>Opret ny på tast-ned, sæt sluttid ved tast-op</MainCreateStartDownEndUp>
     <MergeDialog>Flet dialog (indsæt tankestreger)</MergeDialog>
     <GoToNext>Gå til næste linje</GoToNext>
     <GoToPrevious>Gå til forrige line</GoToPrevious>
     <GoToCurrentSubtitleStart>Gå til nuværende linje start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Gå til nuværende linje slut</GoToCurrentSubtitleEnd>
+    <GoToNextSubtitleAndFocusVideo>Gå til næste linje og sæt video position</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Skift fokus imellem liste visning og undertekst tekstboks</ToggleFocus>
     <ToggleDialogDashes>Toggle dialog tankestreger</ToggleDialogDashes>
     <Alignment>Justering (valgte linier)</Alignment>
@@ -1839,6 +1849,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <WaveformPlayNewSelectionEnd>Afspil slutningen af markering</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Spil første valgte undertekst</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Fokuser listevisning</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>Gå til næste sceneskift</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>Toggle sceneskift</WaveformToggleSceneChange>
     <GoBack1Frame>En frame tilbage</GoBack1Frame>
     <GoForward1Frame>En frame frem</GoForward1Frame>
     <GoBack100Milliseconds>100 ms tilbage</GoBack100Milliseconds>
@@ -1847,6 +1859,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <GoForward500Milliseconds>500 ms frem</GoForward500Milliseconds>
     <GoBack1Second>Et sekund tilbage</GoBack1Second>
     <GoForward1Second>Et sekund fremad</GoForward1Second>
+    <GoBack5Seconds>Fem sekunder tilbage</GoBack5Seconds>
+    <GoForward5Seconds>Fem sekunder frem</GoForward5Seconds>
     <TogglePlayPause>Skift mellem afspil og pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Fuldskærm</Fullscreen>
@@ -1861,7 +1875,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <SyntaxColorDurationIfTooSmall>Farve - varighed, hvis for kort</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Farve - varighed, hvis for længe</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Farve - tekst, hvis for lang</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Farve - tekst, hvis mere end linjer:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Farve - tekst, hvis mere end {0} linjer</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Farve - tidskode overlapper</SyntaxColorOverlap>
     <SyntaxErrorColor>Fejl farve</SyntaxErrorColor>
     <GoToFirstSelectedLine>Gå til første valgte linje</GoToFirstSelectedLine>
@@ -1905,6 +1919,7 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Title>Indstil video offset</Title>
     <Description>Indstil video offset (undertekster bør ikke følge real video tid, men fx +10 timer)</Description>
     <RelativeToCurrentVideoPosition>I forhold til aktuelle video position</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>Behold eksisterende tidskoder (tilføj ikke video offset)</KeepTimeCodes>
     <Reset>Reset</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
@@ -2264,6 +2279,8 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <ShowWaveformAndSpectrogram>Vis bølgeform og spektrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Vis kun bølgeform</ShowWaveformOnly>
     <ShowSpectrogramOnly>Vis kun spektrogram</ShowSpectrogramOnly>
+    <AddSceneChange>Tilføj sceneskift</AddSceneChange>
+    <RemoveSceneChange>Fjern sceneskift</RemoveSceneChange>
     <GuessTimeCodes>Gæt tidskoder...</GuessTimeCodes>
     <SeekSilence>Søg tavshed...</SeekSilence>
   </Waveform>
