@@ -2369,5 +2369,10 @@ namespace Nikse.SubtitleEdit.Forms
             return true;
         }
 
+        private void numericUpDownMaxNumberOfLines_ValueChanged(object sender, EventArgs e)
+        {
+           checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(Configuration.Settings.Language.Settings.SyntaxColorTextMoreThanMaxLines, numericUpDownMaxNumberOfLines.Value);
+        }
+
     }
 }
