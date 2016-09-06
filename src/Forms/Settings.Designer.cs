@@ -531,6 +531,7 @@
             0,
             0,
             0});
+            this.numericUpDownMaxNumberOfLines.ValueChanged += new System.EventHandler(this.numericUpDownMaxNumberOfLines_ValueChanged);
             // 
             // labelMaxLines
             // 
