@@ -1685,6 +1685,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <DurationMinimumMilliseconds>최소 표시시간 (밀리초)</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>최대 표시시간 (밀리초)</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>자막 사이의 최소 간격 (밀리초)</MinimumGapMilliseconds>
+    <MaximumLines>최대 줄 수</MaximumLines>
     <SubtitleFont>자막 글꼴</SubtitleFont>
     <SubtitleFontSize>글자 크기</SubtitleFontSize>
     <SubtitleBold>굵게</SubtitleBold>
@@ -1872,11 +1873,11 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <CustomSearch5>번역, 사용자 지정 검색 5</CustomSearch5>
     <CustomSearch6>번역, 사용자 지정 검색 6</CustomSearch6>
     <SyntaxColoring>구문 컬러링</SyntaxColoring>
-    <ListViewSyntaxColoring>자막 편집시 컬러링 규칙</ListViewSyntaxColoring>
+    <ListViewSyntaxColoring>「자막 보기」의 컬러링 규칙</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>너무 짧은 표시시간</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>너무 긴 표시시간</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>줄 당 문자수를 초과할 때</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>다음 줄 수보다 문자가 더 많을 때:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>문자가 {0} 줄 보다 많을 때</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>표시시간이 중복될 때</SyntaxColorOverlap>
     <SyntaxErrorColor>오류색 선택</SyntaxErrorColor>
     <GoToFirstSelectedLine>첫번째 선택한 줄로 이동</GoToFirstSelectedLine>
