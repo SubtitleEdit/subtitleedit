@@ -208,33 +208,27 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _namesEtcList = _namesList.GetNames();
             _namesEtcMultiWordList = _namesList.GetMultiNames();
             _namesEtcListUppercase = new HashSet<string>();
-            foreach (string name in _namesEtcList)
-                _namesEtcListUppercase.Add(name.ToUpper());
-
             _namesEtcListWithApostrophe = new HashSet<string>();
-            if (threeLetterIsoLanguageName.Equals("eng", StringComparison.OrdinalIgnoreCase))
+            _abbreviationList = new HashSet<string>();
+
+            bool isEnglish = threeLetterIsoLanguageName.Equals("eng", StringComparison.OrdinalIgnoreCase);
+            foreach (string name in _namesEtcList)
             {
-                foreach (string namesItem in _namesEtcList)
+                _namesEtcListUppercase.Add(name.ToUpper());
+                if (isEnglish)
                 {
-                    if (!namesItem.EndsWith('s'))
-                        _namesEtcListWithApostrophe.Add(namesItem + "'s");
+                    if (!name.EndsWith('s'))
+                        _namesEtcListWithApostrophe.Add(name + "'s");
                     else
-                        _namesEtcListWithApostrophe.Add(namesItem + "'");
+                        _namesEtcListWithApostrophe.Add(name + "'");
+                }
+                // Abbreviations.
+                if (name.EndsWith('.'))
+                {
+                    _abbreviationList.Add(name);
                 }
             }
-
-            // Load user words
-            _userWordList = new HashSet<string>();
-            _userWordListXmlFileName = Utilities.LoadUserWordList(_userWordList, _fiveLetterWordListLanguageName);
-
-            // Find abbreviations
-            _abbreviationList = new HashSet<string>();
-            foreach (string name in _namesEtcList)
-            {
-                if (name.EndsWith('.'))
-                    _abbreviationList.Add(name);
-            }
-            if (threeLetterIsoLanguageName.Equals("eng", StringComparison.OrdinalIgnoreCase))
+            if (isEnglish)
             {
                 if (!_abbreviationList.Contains("a.m."))
                     _abbreviationList.Add("a.m.");
@@ -243,7 +237,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (!_abbreviationList.Contains("o.r."))
                     _abbreviationList.Add("o.r.");
             }
-
+            // Load user words
+            _userWordList = new HashSet<string>();
+            _userWordListXmlFileName = Utilities.LoadUserWordList(_userWordList, _fiveLetterWordListLanguageName);
             foreach (string name in _userWordList)
             {
                 if (name.EndsWith('.'))
