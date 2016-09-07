@@ -403,7 +403,7 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string FixUpperTags(string text)
         {
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text) || !text.Contains('<'))
                 return text;
             var idx = text.IndexOfAny(UppercaseTags, StringComparison.Ordinal);
             while (idx >= 0)
