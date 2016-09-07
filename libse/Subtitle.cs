@@ -221,7 +221,7 @@ namespace Nikse.SubtitleEdit.Core
         }
 
         /// <summary>
-        /// Creates subtitle as text in it'snative format
+        /// Creates subtitle as text in its native format.
         /// </summary>
         /// <param name="format">Format to output</param>
         /// <returns>Native format as text string</returns>
