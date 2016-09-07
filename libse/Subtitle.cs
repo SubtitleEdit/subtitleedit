@@ -163,6 +163,10 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             encoding = sr.CurrentEncoding;
+            if (useThisEncoding == null)
+            {
+                return LoadSubtitle(fileName, out encoding, Encoding.Unicode);
+            }
             var lines = sr.ReadToEnd().SplitToLines().ToList();
             sr.Close();
 
@@ -181,10 +185,6 @@ namespace Nikse.SubtitleEdit.Core
                     return subtitleFormat;
                 }
             }
-
-            if (useThisEncoding == null)
-                return LoadSubtitle(fileName, out encoding, Encoding.Unicode);
-
             return null;
         }
 
