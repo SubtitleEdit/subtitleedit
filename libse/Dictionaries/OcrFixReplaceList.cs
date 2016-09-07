@@ -182,16 +182,14 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 {
                     if (s.Contains(from))
                     {
+                        string with = _beginLineReplaceList[from];
                         if (s.StartsWith(from, StringComparison.Ordinal))
-                            s = s.Remove(0, from.Length).Insert(0, _beginLineReplaceList[from]);
-                        s = s.Replace(". " + from, ". " + _beginLineReplaceList[from]);
-                        s = s.Replace("! " + from, "! " + _beginLineReplaceList[from]);
-                        s = s.Replace("? " + from, "? " + _beginLineReplaceList[from]);
-                        s = s.Replace(". " + Environment.NewLine + from, ". " + Environment.NewLine + _beginLineReplaceList[from]);
-                        s = s.Replace("! " + Environment.NewLine + from, "! " + Environment.NewLine + _beginLineReplaceList[from]);
-                        s = s.Replace("? " + Environment.NewLine + from, "? " + Environment.NewLine + _beginLineReplaceList[from]);
+                            s = s.Remove(0, from.Length).Insert(0, with);
+                        s = s.Replace(". " + from, ". " + with);
+                        s = s.Replace("! " + from, "! " + with);
+                        s = s.Replace("? " + from, "? " + with);
                         if (s.StartsWith("\"" + from, StringComparison.Ordinal) && !from.StartsWith('"'))
-                            s = s.Replace("\"" + from, "\"" + _beginLineReplaceList[from]);
+                            s = s.Replace("\"" + from, "\"" + with);
                     }
                 }
                 sb.AppendLine(s);
