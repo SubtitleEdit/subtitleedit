@@ -586,7 +586,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     else if (header.DisplayStandardCode == "0" && header.MaximumNumberOfDisplayableRows == "02") // open subtitling
                         rows = 15;
 
-                    var text = p.Text.Trim(new char[] { '\r', '\n' });
+                    var text = p.Text.Trim(Utilities.NewLineChars);
                     if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
                     {
                         tti.VerticalPosition = 1; // top (vertical)
