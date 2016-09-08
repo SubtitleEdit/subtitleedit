@@ -467,5 +467,39 @@ namespace Test.Logic
             Assert.AreEqual(Utilities.ReverseNumbers("Hallo 009 001 Bye"), "Hallo 900 100 Bye");
         }
 
+        [TestMethod]
+        public void RemoveWhiteSpaceAfterBreak1()
+        {
+            const string input = "foo     \r\nbar";
+            string output = Utilities.RemoveWhiteSpaceAfterBreak(input);
+            Assert.AreEqual("foo\r\nbar", output);
+        }
+
+        [TestMethod]
+        public void RemoveWhiteSpaceAfterBreak2()
+        {
+            const string input = "foo\r\n     bar";
+            string output = Utilities.RemoveWhiteSpaceAfterBreak(input);
+            Assert.AreEqual("foo\r\nbar", output);
+        }
+
+        [TestMethod]
+        public void RemoveWhiteSpaceAfterBreak3()
+        {
+            const string input = "foo \r\n\r\n bar";
+            string output = Utilities.RemoveRecursiveLineBreak(input);
+            output = Utilities.RemoveWhiteSpaceAfterBreak(output);
+            Assert.AreEqual("foo\r\nbar", output);
+        }
+
+        [TestMethod]
+        public void RemoveWhiteSpaceAfterBreak4()
+        {
+            const string input = "foo \r\n\r\n bar";
+            string output = output = Utilities.RemoveRecursiveLineBreak(input);
+            output = Utilities.RemoveWhiteSpaceAfterBreak(output);
+            Assert.AreEqual("foo\r\nbar", output);
+        }
+
     }
 }

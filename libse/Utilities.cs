@@ -2255,5 +2255,71 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static string RemoveWhiteSpaceAfterBreak(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+            // E.g: foo\r\n\r\nbar.
+            input = RemoveRecursiveLineBreak(input);
+            // Cache.
+            int nlLen = Environment.NewLine.Length;
+            char nlCh = Environment.NewLine[0];
+            for (int idx = input.Length - 1; idx >= 0; idx--)
+            {
+                if (input[idx] == nlCh)
+                {
+                    // Remove whitespace after newline.
+                    int p = idx + nlLen;
+                    while (p < input.Length && input[p] == ' ')
+                    {
+                        p++;
+                    }
+                    if (p != idx + nlLen)
+                    {
+                        input = input.Remove(idx + nlLen, p - (idx + nlLen));
+                    }
+                    // Remove whitespace before newline.
+                    int n = idx;
+                    while (n > 0 && input[n - 1] == ' ')
+                    {
+                        n--;
+                    }
+                    if (n != idx)
+                    {
+                        input = input.Remove(n, idx - n);
+                    }
+                }
+            }
+            return input;
+        }
+
+        public static string RemoveRecursiveLineBreak(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+            int nlLen = Environment.NewLine.Length;
+            char nlCh = Environment.NewLine[0];
+            int inpLen = input.Length;
+            for (int i = 0; i + nlLen < inpLen; i++)
+            {
+                if (input[i] == nlCh)
+                {
+                    int g = i + nlLen;
+                    while (g < inpLen && (input[g] == '\r' || input[g] == '\n'))
+                    {
+                        g++;
+                    }
+                    if (g > i + nlLen)
+                    {
+                        input = input.Remove(i + nlLen, g - (i + nlLen));
+                    }
+                }
+            }
+            return input;
+        }
     }
 }
