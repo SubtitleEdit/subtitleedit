@@ -234,19 +234,24 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                 //fix missing spaces in "The<i>Bombshell</i> will gone." to "The <i>Bombshell</i> will gone."
                 index = p.Text.IndexOf("<i>", StringComparison.OrdinalIgnoreCase);
-                if (index >= 0 && p.Text.Length > 5)
+                if (index > 0)
                 {
                     string newText = p.Text;
-                    while (index != -1)
+                    do
                     {
-                        if (newText.Length > index + 6 && index > 1)
+                        if (newText.Length > index + 3)
                         {
                             if (Utilities.AllLettersAndNumbers.Contains(newText[index + 3]) &&
                                 Utilities.AllLettersAndNumbers.Contains(newText[index - 1]))
                                 newText = newText.Insert(index, " ");
                         }
+                        else
+                        {
+                            break;
+                        }
                         index = newText.IndexOf("<i>", index + 3, StringComparison.OrdinalIgnoreCase);
-                    }
+                    } while (index > 0);
+
                     if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
                         missingSpaces++;
