@@ -333,6 +333,8 @@
     <Word from="preneti" to="prenijeti" />
     <Word from="preporuča" to="preporučuje" />
     <Word from="preti" to="prijeti" />
+    <Word from="pretećim" to="prijetećim" />
+    <Word from="pretećih" to="prijetećih" />
     <Word from="pretrpeo" to="pretrpio" />
     <Word from="prevod" to="prijevod" />
     <Word from="pridonjeti" to="pridonijeti" />
@@ -410,6 +412,7 @@
     <Word from="spasao" to="spasio" />
     <Word from="Spasao" to="Spasio" />
     <Word from="spasen" to="spašen" />
+    <Word from="spasli" to="spasili" />
     <Word from="spolja" to="izvana" />
     <Word from="srešću" to="srest ću" />
     <!-- nisu za regex - ne odgovaraju zbog dodatnog ju na kraju -->
@@ -477,6 +480,7 @@
     <Word from="Uprkos" to="Usprkos" />
     <Word from="uradio" to="učinio" />
     <Word from="Uredu" to="U redu" />
+    <Word from="usmere" to="usmjere" />
     <Word from="uspe" to="uspije" />
     <Word from="Uspe" to="Uspije" />
     <Word from="uspeju" to="uspiju" />
