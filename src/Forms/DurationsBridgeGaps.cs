@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms
             var columnsCount = SubtitleListview1.Columns.Count - 1;
             var lastColumnWidth = SubtitleListview1.Columns[columnsCount].Width;
             var width = 0;
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 width += SubtitleListview1.Columns[i].Width;
             }
