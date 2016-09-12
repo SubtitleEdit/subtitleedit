@@ -485,10 +485,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     if (removedDialogInFirstLine && stSub.Pre.Contains("- "))
                         stSub.Pre = stSub.Pre.Replace("- ", string.Empty);
 
-                    string newText = stSub.StrippedText;
-
-                    newText = RemoveHearImpairedTags(newText);
-
+                    string newText = RemoveHearImpairedTags(stSub.StrippedText);
                     if (stSub.StrippedText.Length - newText.Length > 2)
                     {
                         string removedText = GetRemovedString(stSub.StrippedText, newText);
@@ -503,7 +500,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     if (stSub.Pre == "<i>- " && newText.StartsWith("</i>", StringComparison.Ordinal))
                         sb.AppendLine("- " + newText.Remove(0, 4).Trim() + stSub.Post);
                     else
-                        sb.AppendLine(stSub.Pre + newText + stSub.Post);
+                        sb.AppendLine(stSub.CombineWithPrePost(newText));
                 }
                 else
                 {
@@ -545,7 +542,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 lineNumber++;
             }
 
-            text = st.Pre + sb.ToString().Trim() + st.Post;
+            text = st.CombineWithPrePost(sb.ToString().Trim());
             text = text.Replace("  ", " ").Trim();
             text = text.Replace("<i></i>", string.Empty);
             text = text.Replace("<i> </i>", " ");
@@ -582,7 +579,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                     int splitIndex = temp.StrippedText.LastIndexOfAny(splitChars);
                     if (splitIndex > 0)
                     {
-                        text = temp.Pre + temp.StrippedText.Insert(splitIndex + 1, Environment.NewLine) + temp.Post;
+                        text = temp.CombineWithPrePost(temp.StrippedText.Insert(splitIndex + 1, Environment.NewLine));
                     }
                 }
             }
@@ -607,7 +604,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             }
 
             if (!string.IsNullOrEmpty(text) || (st.Pre.Contains('♪') || st.Post.Contains('♪')))
-                text = st.Pre + text + st.Post;
+                text = st.CombineWithPrePost(text);
 
             if (oldText.TrimStart().StartsWith("- ", StringComparison.Ordinal) &&
                 text != null && !text.Contains(Environment.NewLine) &&
@@ -618,7 +615,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 if (text.StartsWith("<i>-", StringComparison.Ordinal))
                 {
-                    text = "<i>" + text.Remove(0,4).Trim();
+                    text = "<i>" + text.Remove(0, 4).Trim();
                 }
                 else
                 {
@@ -1179,22 +1176,18 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 preNewLine = Environment.NewLine;
             if (Settings.RemoveTextBetweenSquares)
             {
-                text = RemoveTextBetweenTags("[", "]:", text);
                 text = RemoveTextBetweenTags("[", "]", text);
             }
             if (Settings.RemoveTextBetweenBrackets)
             {
-                text = RemoveTextBetweenTags("{", "}:", text);
                 text = RemoveTextBetweenTags("{", "}", text);
             }
             if (Settings.RemoveTextBetweenParentheses)
             {
-                text = RemoveTextBetweenTags("(", "):", text);
                 text = RemoveTextBetweenTags("(", ")", text);
             }
             if (Settings.RemoveTextBetweenQuestionMarks)
             {
-                text = RemoveTextBetweenTags("?", "?:", text);
                 text = RemoveTextBetweenTags("?", "?", text);
             }
             if (Settings.RemoveTextBetweenCustomTags && Settings.CustomStart.Length > 0 && Settings.CustomEnd.Length > 0)
