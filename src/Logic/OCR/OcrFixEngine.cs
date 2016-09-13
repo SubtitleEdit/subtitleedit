@@ -794,16 +794,17 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 input = input.Insert(4, " ");
             }
 
+            int nlLen = Environment.NewLine.Length;
             int idx = input.IndexOf(Environment.NewLine + "-", StringComparison.Ordinal);
-            if (idx > 0 && idx + Environment.NewLine.Length + 1 < input.Length && char.IsUpper(input[idx + Environment.NewLine.Length + 1]))
+            if (idx > 0 && idx + nlLen + 1 < input.Length && char.IsUpper(input[idx + nlLen + 1]))
             {
                 input = input.Insert(idx + Environment.NewLine.Length + 1, " ");
             }
 
             idx = input.IndexOf(Environment.NewLine + "<i>-", StringComparison.Ordinal);
-            if (idx > 0 && char.IsUpper(input[idx + Environment.NewLine.Length + 4]))
+            if (idx > 0 && idx + nlLen + 4 < input.Length && char.IsUpper(input[idx + nlLen + 4]))
             {
-                input = input.Insert(idx + Environment.NewLine.Length + 4, " ");
+                input = input.Insert(idx + nlLen + 4, " ");
             }
 
             if (string.IsNullOrEmpty(lastLine) ||
