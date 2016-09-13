@@ -11521,11 +11521,19 @@ namespace Nikse.SubtitleEdit.Forms
                         int index = SubtitleListview1.SelectedItems[0].Index;
                         MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
 
-                        _subtitle.Paragraphs[index].EndTime = TimeCode.FromSeconds(videoPosition);
+                        var p = _subtitle.Paragraphs[index];
+                        p.EndTime = TimeCode.FromSeconds(videoPosition);
+                        if (p.Duration.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                        {
+                            var newEndTime = new TimeCode(p.EndTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines);
+                            double charactersPerSecond = Utilities.GetCharactersPerSecond(new Paragraph(p) { EndTime = newEndTime });
+                            if (charactersPerSecond <= Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                            {
+                                p.EndTime = newEndTime;
+                            }
+                        }
                         SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index]);
-
                         SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds);
-
                         ButtonInsertNewTextClick(null, null);
                     }
                 }
