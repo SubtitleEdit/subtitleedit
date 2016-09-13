@@ -577,6 +577,19 @@ namespace Test
         }
 
         [TestMethod]
+        public void FixOcrErrorsViaHardcodedRules2()
+        {
+            using (var form = new GoToLine())
+            {
+                Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
+                const string input = "Foobar\r\n<i>-";
+                var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "us_en", form);
+                var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", new HashSet<string>());
+                Assert.AreEqual(res, "Foobar\r\n<i>-");
+            }
+        }
+
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixOcrErrorsViaDoNotFixToUpper()
         {
