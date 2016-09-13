@@ -46,6 +46,8 @@
    * Fixed some minor issues in "Compare" - thx ivandrofly
    * Fixed Tesseract dictionaries download links
    * Fixed crash in import of .TS files - thx malgane/ivandrofly
+   * Fixed crash in OCR fix engine - thx ivandrofly
+   * Fixed a few issues with format "SubViewer 2.0" - thx fox
    * + Many minor fixes from ivandrofly and xylographe
 
 
