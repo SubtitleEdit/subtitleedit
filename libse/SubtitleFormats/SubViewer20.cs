@@ -60,7 +60,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //00:00:06.61,00:00:13.75
             //text1[br]text2
             var sb = new StringBuilder();
-            sb.AppendFormat(header, title);
+            if (subtitle.Header != null && subtitle.Header.Contains("[INFORMATION]"))
+            {
+                sb.AppendLine(subtitle.Header);
+            }
+            else
+            {
+                sb.AppendFormat(header, title);
+            }
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string text = p.Text.Replace(Environment.NewLine, "[br]");
@@ -99,11 +106,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             _errorCount = 0;
             char[] splitChars = { ':', ',', '.' };
             subtitle.Paragraphs.Clear();
+            var header = new StringBuilder();
             foreach (string line in lines)
             {
-                if (expecting == ExpectingLine.TimeCodes && line.Length > 20 && RegexTimeCodes.IsMatch(line))
+                if (subtitle.Paragraphs.Count == 0 && expecting == ExpectingLine.TimeCodes && line.StartsWith("["))
                 {
-                    string[] parts = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
+                    header.AppendLine(line);
+                }
+                else if (line.Length > 20 && RegexTimeCodes.IsMatch(line))
+                {
+                    var parts = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 8)
                     {
                         try
@@ -139,6 +151,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             subtitle.Renumber();
+            if (header.ToString().Contains("[INFORMATION]"))
+            {
+                subtitle.Header = header.ToString().TrimEnd();
+            }
         }
 
         public static TimeCode DecodeTimeCode(string[] encodedTimeCode, int index)
