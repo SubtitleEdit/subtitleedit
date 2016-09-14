@@ -522,7 +522,9 @@ namespace Nikse.SubtitleEdit.Forms
         public bool IsName(string candidate)
         {
             MakeSureNamesListIsLoaded();
-            return _namesEtcList.Contains(candidate);
+            // Irish name. e.g McInturff, MacInerney.
+            return _namesEtcList.Contains(candidate) || candidate.StartsWith("McI", StringComparison.Ordinal)
+                || candidate.StartsWith("MacI", StringComparison.Ordinal) || candidate.StartsWith("O'I", StringComparison.Ordinal);
         }
 
         private void MakeSureNamesListIsLoaded()

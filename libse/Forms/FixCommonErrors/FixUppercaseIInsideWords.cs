@@ -17,25 +17,25 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 string oldText = p.Text;
-
+                var st = new StripableText(p.Text);
                 Match match = ReAfterLowercaseLetter.Match(p.Text);
                 while (match.Success)
                 {
-                    if (!(match.Index > 1 && p.Text.Substring(match.Index - 1, 2) == "Mc") // irish names, McDonalds etc.
-                        && p.Text[match.Index + 1] == 'I'
-                        && callbacks.AllowFix(p, fixAction))
+                    string word = GetWholeWord(st.StrippedText, match.Index);
+                    if (!callbacks.IsName(word) && callbacks.AllowFix(p, fixAction))
                     {
-                        p.Text = p.Text.Substring(0, match.Index + 1) + "l";
-                        if (match.Index + 2 < oldText.Length)
-                            p.Text += oldText.Substring(match.Index + 2);
-
+                        oldText = oldText.Substring(0, match.Index + 1) + "l";
+                        if (match.Index + 2 < p.Text.Length)
+                        {
+                            oldText = p.Text.Substring(match.Index + 2);
+                        }
+                        p.Text = oldText;
                         uppercaseIsInsideLowercaseWords++;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                     match = match.NextMatch();
                 }
 
-                var st = new StripableText(p.Text);
                 match = ReBeforeLowercaseLetter.Match(st.StrippedText);
                 while (match.Success)
                 {
