@@ -686,6 +686,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <Frames>Beelden</Frames>
     <Seconds>Seconden</Seconds>
     <Milliseconds>Milliseconden</Milliseconds>
+    <GetSceneChangesWithFfmpeg>Scènewisselingen met FFmpeg bepalen</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Platte tekst importeren</Title>
@@ -1046,6 +1047,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
         <Find>Zoeken</Find>
         <Replace>Vervangen</Replace>
         <FixCommonErrors>Gangbare fouten corrigeren</FixCommonErrors>
+        <RemoveTextForHi>Tekst voor slechthorenden verwĳderen</RemoveTextForHi>
         <VisualSync>Visuele synchronisatie</VisualSync>
         <SpellCheck>Spellingcontrole</SpellCheck>
         <Settings>Voorkeuren</Settings>
@@ -1684,6 +1686,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <DurationMinimumMilliseconds>Min. tĳdsduur in milliseconden</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. tĳdsduur in milliseconden</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. ruimte tussen ondertitels in msec.</MinimumGapMilliseconds>
+    <MaximumLines>Max. aantal regels</MaximumLines>
     <SubtitleFont>Ondertitel lettertype</SubtitleFont>
     <SubtitleFontSize>Ondertitel lettergrootte</SubtitleFontSize>
     <SubtitleBold>Vet</SubtitleBold>
@@ -1797,6 +1800,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <FirstPlusX>Eerste + {0}</FirstPlusX>
     <LastMinusX>Laatste - {0}</LastMinusX>
     <FixCommonerrors>Fouten corrigeren</FixCommonerrors>
+    <RemoveTextForHi>D&amp;&amp;SH tekst verwĳderen</RemoveTextForHi>
     <MergeLinesShorterThan>Voeg regels samen korter dan</MergeLinesShorterThan>
     <MusicSymbol>Vervangend muzieksymbool</MusicSymbol>
     <MusicSymbolsToReplace>Te vervangen muzieksymbolen (gescheiden door spatie)</MusicSymbolsToReplace>
@@ -1823,12 +1827,14 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <AdjustSetStartTimeKeepDuration>Bepaal starttĳd, behoud duur</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Stel einde in, compenseer de rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Stel einde in, compenseer de rest en naar volgende</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>Tĳdsduur verlengen tot volgende tekst of maximale tĳdsduur</AdjustExtendCurrentSubtitle>
     <MainCreateStartDownEndUp>Maak nieuwe met pĳl omlaag , bepaal eindtĳd met pĳl omhoog</MainCreateStartDownEndUp>
     <MergeDialog>Samenvoegen dialoog (voeg koppelteken in)</MergeDialog>
     <GoToNext>Ga naar volgende regel</GoToNext>
     <GoToPrevious>Ga naar vorige regel</GoToPrevious>
     <GoToCurrentSubtitleStart>Naar start van huidige tekst</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Naar einde van huidige tekst</GoToCurrentSubtitleEnd>
+    <GoToNextSubtitleAndFocusVideo>Naar volgende tekst en positie instellen</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Tussen lĳstweergave en tekstvak wisselen</ToggleFocus>
     <ToggleDialogDashes>Dialoogstreepjes wisselen</ToggleDialogDashes>
     <Alignment>Uitlĳning (geselecteerde regels)</Alignment>
@@ -1846,6 +1852,8 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WaveformPlayNewSelectionEnd>Speel selectie-einde</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Speel eerste geselecteerde ondertitel</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus lĳstweergave</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>Naar volgende scène</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>Scènewisseling omkeren</WaveformToggleSceneChange>
     <GoBack1Frame>Eén frame terug</GoBack1Frame>
     <GoForward1Frame>Eén frame vooruit</GoForward1Frame>
     <GoBack100Milliseconds>100 msec. terug</GoBack100Milliseconds>
@@ -1870,7 +1878,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <SyntaxColorDurationIfTooSmall>Kleur tĳdsduur indien te kort</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Kleur tĳdsduur indien te lang</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Kleur tekst indien te lang</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Kleur tekst bĳ meer regels dan:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Kleur tekst bĳ meer dan {0} regels</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Kleur tĳdcode bĳ overlap</SyntaxColorOverlap>
     <SyntaxErrorColor>Foutkleur</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ga naar eerste geselecteerde regel</GoToFirstSelectedLine>
@@ -1915,6 +1923,7 @@ Probeer het later opnieuw a.u.b.</DownloadMpvFailed>
     <Title>Videotĳdsverschil instellen</Title>
     <Description>Videotĳdsverschil instellen (ondertitels moeten niet de echte videotĳd volgen, maar bĳvoorbeeld +10 uur)</Description>
     <RelativeToCurrentVideoPosition>Ten opzichte van de huidige videopositie</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>Tĳdcodes behouden (videotĳdsverschil niet toevoegen)</KeepTimeCodes>
     <Reset>Terugstellen</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
@@ -2276,6 +2285,8 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Golfvorm en spectrogram tonen</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Alleen golfvorm tonen</ShowWaveformOnly>
     <ShowSpectrogramOnly>Alleen spectrogram tonen</ShowSpectrogramOnly>
+    <AddSceneChange>Scènewisseling toevoegen</AddSceneChange>
+    <RemoveSceneChange>Scènewisseling verwĳderen</RemoveSceneChange>
     <GuessTimeCodes>Tĳdcodes schatten...</GuessTimeCodes>
     <SeekSilence>Stilte zoeken...</SeekSilence>
   </Waveform>
