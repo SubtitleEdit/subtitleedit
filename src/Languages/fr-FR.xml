@@ -687,6 +687,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <Frames>Frames</Frames>
     <Seconds>Secondes</Seconds>
     <Milliseconds>Millisecondes</Milliseconds>
+    <GetSceneChangesWithFfmpeg>Utiliser FFmpeg pour obtenir les changements de scène</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Importer texte</Title>
@@ -1047,6 +1048,7 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
         <Find>Rechercher</Find>
         <Replace>Remplacer</Replace>
         <FixCommonErrors>Corriger des erreurs courantes</FixCommonErrors>
+        <RemoveTextForHi>Supprimer texte surdité</RemoveTextForHi>
         <VisualSync>Synchronisation visuelle</VisualSync>
         <SpellCheck>Correcteur d'orthographe</SpellCheck>
         <Settings>Configuration</Settings>
@@ -1694,6 +1696,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <DurationMinimumMilliseconds>Durée mini. en millisecondes</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Durée maxi. en millisecondes</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Écart mini. en millisecondes</MinimumGapMilliseconds>
+    <MaximumLines>Longueur maxi. en lignes</MaximumLines>
     <SubtitleFont>Police de sous-titre</SubtitleFont>
     <SubtitleFontSize>Taille de police</SubtitleFontSize>
     <SubtitleBold>Gras</SubtitleBold>
@@ -1807,6 +1810,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <FirstPlusX>+ {0} ligne(s)</FirstPlusX>
     <LastMinusX>̶ {0} ligne(s)</LastMinusX>
     <FixCommonerrors>Corriger les erreurs</FixCommonerrors>
+    <RemoveTextForHi>Supprimer texte surdité</RemoveTextForHi>
     <MergeLinesShorterThan>Fusionner lignes inférieures à</MergeLinesShorterThan>
     <MusicSymbol>Symbole musical</MusicSymbol>
     <MusicSymbolsToReplace>Symboles musicaux à remplacer (séparer par des espaces)</MusicSymbolsToReplace>
@@ -1833,12 +1837,14 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <AdjustSetStartTimeKeepDuration>Définir le temps initial, conserver la durée</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Régler la fin, déplacer le reste</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Régler la fin, déplacer le reste et passer au suivant</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>Prolonger la durée au sous-titre suivant ou durée maximum</AdjustExtendCurrentSubtitle>
     <MainCreateStartDownEndUp>Créez la durée de démarrage du début à la fin</MainCreateStartDownEndUp>
     <MergeDialog>Participer à la conversation (Insert traits d'union)</MergeDialog>
     <GoToNext>Aller à la ligne suivante</GoToNext>
     <GoToPrevious>Aller à la ligne précédente</GoToPrevious>
     <GoToCurrentSubtitleStart>Aller au début de la ligne active</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Aller à la fin de la ligne active</GoToCurrentSubtitleEnd>
+    <GoToNextSubtitleAndFocusVideo>Aller à la ligne suivante et définir la position vidéo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Naviguer entre mode liste et zone de texte</ToggleFocus>
     <ToggleDialogDashes>Activer/Désactiver le son</ToggleDialogDashes>
     <Alignment>Aligner (lignes sélectionnées)</Alignment>
@@ -1856,6 +1862,8 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <WaveformPlayNewSelectionEnd>Lecture de la fin de la sélection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Lecture du premier sous-titre sélectionné</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus du mode liste</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>Aller au changement de scène suivant</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>Alterner changement de scène</WaveformToggleSceneChange>
     <GoBack1Frame>Une image arrière</GoBack1Frame>
     <GoForward1Frame>Une image avant</GoForward1Frame>
     <GoBack100Milliseconds>100 ms en arrière</GoBack100Milliseconds>
@@ -1880,7 +1888,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <SyntaxColorDurationIfTooSmall>Durée trop courte</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Durée trop longue</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Texte trop long</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Nombre de lignes supérieur à :</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Nombre de lignes supérieur à {0}</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Chevauchement de timecode</SyntaxColorOverlap>
     <SyntaxErrorColor>Couleur - Erreur</SyntaxErrorColor>
     <GoToFirstSelectedLine>Aller à la ligne sélectionnée en premier</GoToFirstSelectedLine>
@@ -1926,6 +1934,7 @@ Veuillez réessayer plus tard.</DownloadMpvFailed>
     <Title>Régler décalage vidéo</Title>
     <Description>Régler décalage vidéo (sous-titres ne devraient pas suivre la durée réelle de la vidéo, ex : +10 hours)</Description>
     <RelativeToCurrentVideoPosition>Par rapport à la position de la vidéo en cours</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>Conserver timecodes (ne pas ajouter le décalage vidéo)</KeepTimeCodes>
     <Reset>Réinitialiser</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
@@ -2285,6 +2294,8 @@ Veuillez réessayer plus tard.</DownloadMpvFailed>
     <ShowWaveformAndSpectrogram>Montrer forme d'onde et spectrogramme</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Montrer forme d'onde</ShowWaveformOnly>
     <ShowSpectrogramOnly>Montrer spectrogramme</ShowSpectrogramOnly>
+    <AddSceneChange>Ajouter changement de scène</AddSceneChange>
+    <RemoveSceneChange>Supprimer changement de scène</RemoveSceneChange>
     <GuessTimeCodes>Supposer timecode...</GuessTimeCodes>
     <SeekSilence>Recherche silence...</SeekSilence>
   </Waveform>
