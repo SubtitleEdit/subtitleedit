@@ -2605,6 +2605,12 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainVideo1000MsRight");
                 if (subNode != null)
                     settings.Shortcuts.MainVideo1000MsRight = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideo5000MsLeft");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideo5000MsLeft = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideo5000MsRight");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideo5000MsRight = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainVideoFullscreen");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoFullscreen = subNode.InnerText;
@@ -3393,6 +3399,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainVideo500MsRight", settings.Shortcuts.MainVideo500MsRight);
                 textWriter.WriteElementString("MainVideo1000MsLeft", settings.Shortcuts.MainVideo1000MsLeft);
                 textWriter.WriteElementString("MainVideo1000MsRight", settings.Shortcuts.MainVideo1000MsRight);
+                textWriter.WriteElementString("MainVideo5000MsLeft", settings.Shortcuts.MainVideo5000MsLeft);
+                textWriter.WriteElementString("MainVideo5000MsRight", settings.Shortcuts.MainVideo5000MsRight);
                 textWriter.WriteElementString("MainVideoFullscreen", settings.Shortcuts.MainVideoFullscreen);
                 textWriter.WriteElementString("MainSpellCheck", settings.Shortcuts.MainSpellCheck);
                 textWriter.WriteElementString("MainSpellCheckFindDoubleWords", settings.Shortcuts.MainSpellCheckFindDoubleWords);
