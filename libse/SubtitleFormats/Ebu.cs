@@ -1118,38 +1118,30 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         if (b <= 0x17)
                         {
-                            switch (b)
+                            switch (b & ~0x10)
                             {
                                 case 0x00:
-                                case 0x10:
                                     color = "Black";
                                     break;
                                 case 0x01:
-                                case 0x11:
                                     color = "Red";
                                     break;
                                 case 0x02:
-                                case 0x12:
                                     color = "Green";
                                     break;
                                 case 0x03:
-                                case 0x13:
                                     color = "Yellow";
                                     break;
                                 case 0x04:
-                                case 0x14:
                                     color = "Blue";
                                     break;
                                 case 0x05:
-                                case 0x15:
                                     color = "Magenta";
                                     break;
                                 case 0x06:
-                                case 0x16:
                                     color = "Cyan";
                                     break;
                                 case 0x07:
-                                case 0x17:
                                     color = "White";
                                     break;
                             }
