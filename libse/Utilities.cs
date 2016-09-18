@@ -1334,206 +1334,124 @@ namespace Nikse.SubtitleEdit.Core
             return sb.ToString().Trim();
         }
 
+        #region << Subscript/SuperScript >>
+        /// <summary>
+        /// Subscript/Superscript cached StringBuilder.
+        /// </summary>
+        private static StringBuilder Sb;
+
         public static string ToSuperscript(string text)
         {
-            var sb = new StringBuilder();
-            var superscript = new List<char>{
-                                              '⁰',
-                                              '¹',
-                                              '²',
-                                              '³',
-                                              '⁴',
-                                              '⁵',
-                                              '⁶',
-                                              '⁷',
-                                              '⁸',
-                                              '⁹',
-                                              '⁺',
-                                              '⁻',
-                                              '⁼',
-                                              '⁽',
-                                              '⁾',
-                                              'ᵃ',
-                                              'ᵇ',
-                                              'ᶜ',
-                                              'ᵈ',
-                                              'ᵉ',
-                                              'ᶠ',
-                                              'ᵍ',
-                                              'ʰ',
-                                              'ⁱ',
-                                              'ʲ',
-                                              'ᵏ',
-                                              'ˡ',
-                                              'ᵐ',
-                                              'ⁿ',
-                                              'ᵒ',
-                                              'ᵖ',
-                                              'ʳ',
-                                              'ˢ',
-                                              'ᵗ',
-                                              'ᵘ',
-                                              'ᵛ',
-                                              'ʷ',
-                                              'ˣ',
-                                              'ʸ',
-                                              'ᶻ',
-                                              'ᴬ',
-                                              'ᴮ',
-                                              'ᴰ',
-                                              'ᴱ',
-                                              'ᴳ',
-                                              'ᴴ',
-                                              'ᴵ',
-                                              'ᴶ',
-                                              'ᴷ',
-                                              'ᴸ',
-                                              'ᴹ',
-                                              'ᴺ',
-                                              'ᴼ',
-                                              'ᴾ',
-                                              'ᴿ',
-                                              'ᵀ',
-                                              'ᵁ',
-                                              'ᵂ'
-                                            };
-            var normal = new List<char>{
-                                         '0', // "⁰"
-                                         '1', // "¹"
-                                         '2', // "²"
-                                         '3', // "³"
-                                         '4', // "⁴"
-                                         '5', // "⁵"
-                                         '6', // "⁶"
-                                         '7', // "⁷"
-                                         '8', // "⁸"
-                                         '9', // "⁹"
-                                         '+', // "⁺"
-                                         '-', // "⁻"
-                                         '=', // "⁼"
-                                         '(', // "⁽"
-                                         ')', // "⁾"
-                                         'a', // "ᵃ"
-                                         'b', // "ᵇ"
-                                         'c', // "ᶜ"
-                                         'd', // "ᵈ"
-                                         'e', // "ᵉ"
-                                         'f', // "ᶠ"
-                                         'g', // "ᵍ"
-                                         'h', // "ʰ"
-                                         'i', // "ⁱ"
-                                         'j', // "ʲ"
-                                         'k', // "ᵏ"
-                                         'l', // "ˡ"
-                                         'm', // "ᵐ"
-                                         'n', // "ⁿ"
-                                         'o', // "ᵒ"
-                                         'p', // "ᵖ"
-                                         'r', // "ʳ"
-                                         's', // "ˢ"
-                                         't', // "ᵗ"
-                                         'u', // "ᵘ"
-                                         'v', // "ᵛ"
-                                         'w', // "ʷ"
-                                         'x', // "ˣ"
-                                         'y', // "ʸ"
-                                         'z', // "ᶻ"
-                                         'A', // "ᴬ"
-                                         'B', // "ᴮ"
-                                         'D', // "ᴰ"
-                                         'E', // "ᴱ"
-                                         'G', // "ᴳ"
-                                         'H', // "ᴴ"
-                                         'I', // "ᴵ"
-                                         'J', // "ᴶ"
-                                         'K', // "ᴷ"
-                                         'L', // "ᴸ"
-                                         'M', // "ᴹ"
-                                         'N', // "ᴺ"
-                                         'O', // "ᴼ"
-                                         'P', // "ᴾ"
-                                         'R', // "ᴿ"
-                                         'T', // "ᵀ"
-                                         'U', // "ᵁ"
-                                         'W', // "ᵂ"
-                                            };
+            if (Sb == null)
+            {
+                Sb = new StringBuilder();
+            }
+            Sb.Length = 0;
+
+            // Superscript minuscule/capital.
+            var charDictionary = new Dictionary<char, char>{
+            {'0', '⁰'}, {'1', '¹'}, {'2', '²'}, {'3', '³'}, {'4', '⁴'}, {'5', '⁵'},
+            {'6', '⁶'}, {'7', '⁷'}, {'8', '⁸'}, {'9', '⁹'}, {'+', '⁺'}, {'-', '⁻'},
+            {'=', '⁼'}, {'(', '⁽'}, {')', '⁾'}, {'a', 'ᵃ'}, {'b', 'ᵇ'}, {'c', 'ᶜ'},
+            {'d', 'ᵈ'}, {'e', 'ᵉ'}, {'f', 'ᶠ'}, {'g', 'ᵍ'}, {'h', 'ʰ'}, {'i', 'ⁱ'},
+            {'j', 'ʲ'}, {'k', 'ᵏ'}, {'l', 'ˡ'}, {'m', 'ᵐ'}, {'n', 'ⁿ'}, {'o', 'ᵒ'},
+            {'p', 'ᵖ'}, {'r', 'ʳ'}, {'s', 'ˢ'}, {'t', 'ᵗ'}, {'u', 'ᵘ'}, {'v', 'ᵛ'},
+            {'w', 'ʷ'}, {'x', 'ˣ'}, {'y', 'ʸ'}, {'z', 'ᶻ'}, {'A', 'ᴬ'}, {'B', 'ᴮ'},
+            {'D', 'ᴰ'}, {'E', 'ᴱ'}, {'G', 'ᴳ'}, {'H', 'ᴴ'}, {'I', 'ᴵ'}, {'J', 'ᴶ'},
+            {'K', 'ᴷ'}, {'L', 'ᴸ'}, {'M', 'ᴹ'}, {'N', 'ᴺ'}, {'O', 'ᴼ'}, {'P', 'ᴾ'},
+            {'R', 'ᴿ'}, {'T', 'ᵀ'}, {'U', 'ᵁ'}, { 'W','ᵂ'}};
+
+            bool htmlTagOn = false;
+            bool ssaTagOn = false;
             for (int i = 0; i < text.Length; i++)
             {
-                char s = text[i];
-                int index = normal.IndexOf(s);
-                if (index >= 0)
-                    sb.Append(superscript[index]);
+                char ch = text[i];
+                // Skip tags.
+                if (htmlTagOn || ssaTagOn)
+                {
+                    Sb.Append(ch);
+                    switch (ch)
+                    {
+                        case '>':
+                            htmlTagOn = false;
+                            break;
+                        case '}':
+                            ssaTagOn = false;
+                            break;
+                    }
+                }
+                else if (ch == '<')
+                {
+                    htmlTagOn = true;
+                    Sb.Append(ch);
+                }
+                else if (ch == '{')
+                {
+                    ssaTagOn = true;
+                    Sb.Append(ch);
+                }
                 else
-                    sb.Append(s);
+                {
+                    char subScriptChar;
+                    Sb.Append(charDictionary.TryGetValue(ch, out subScriptChar) ? subScriptChar : ch);
+                }
             }
-            return sb.ToString();
+            return Sb.ToString();
         }
 
         public static string ToSubscript(string text)
         {
-            var sb = new StringBuilder();
-            var subcript = new List<char>{
-                                           '₀',
-                                           '₁',
-                                           '₂',
-                                           '₃',
-                                           '₄',
-                                           '₅',
-                                           '₆',
-                                           '₇',
-                                           '₈',
-                                           '₉',
-                                           '₊',
-                                           '₋',
-                                           '₌',
-                                           '₍',
-                                           '₎',
-                                           'ₐ',
-                                           'ₑ',
-                                           'ᵢ',
-                                           'ₒ',
-                                           'ᵣ',
-                                           'ᵤ',
-                                           'ᵥ',
-                                           'ₓ',
-                                            };
-            var normal = new List<char>
-                             {
-                               '0',  // "₀"
-                               '1',  // "₁"
-                               '2',  // "₂"
-                               '3',  // "₃"
-                               '4',  // "₄"
-                               '5',  // "₅"
-                               '6',  // "₆"
-                               '7',  // "₇"
-                               '8',  // "₈"
-                               '9',  // "₉"
-                               '+',  // "₊"
-                               '-',  // "₋"
-                               '=',  // "₌"
-                               '(',  // "₍"
-                               ')',  // "₎"
-                               'a',  // "ₐ"
-                               'e',  // "ₑ"
-                               'i',  // "ᵢ"
-                               'o',  // "ₒ"
-                               'r',  // "ᵣ"
-                               'u',  // "ᵤ"
-                               'v',  // "ᵥ"
-                               'x',  // "ₓ"
-                             };
+            if (Sb == null)
+            {
+                Sb = new StringBuilder();
+            }
+            Sb.Length = 0;
+
+            // Subscript minuscule.
+            var charDictionary = new Dictionary<char, char>{
+            {'0', '₀'}, {'1', '₁'}, {'2', '₂'}, {'3', '₃'}, {'4', '₄'}, {'5', '₅'}, {'6', '₆'}, {'7', '₇'}, {'8', '₈'}, {'9', '₉'},
+            {'+', '₊'}, {'-', '₋'}, {'=', '₌'}, {'(', '₍'}, {')', '₎'},
+            {'a', 'ₐ'}, {'e', 'ₑ'}, {'h', 'ₕ'}, {'i', 'ᵢ'}, {'j', 'ⱼ'}, {'k', 'ₖ'}, {'l', 'ₗ'}, {'m', 'ₘ'}, {'n', 'ₙ'},
+            {'o', 'ₒ'}, {'p', 'ₚ'}, {'r', 'ᵣ'}, {'s', 'ₛ'}, {'t', 'ₜ'}, {'u', 'ᵤ'}, {'v', 'ᵥ'}, {'x', 'ₓ'}};
+
+            bool htmlTagOn = false;
+            bool ssaTagOn = false;
             for (int i = 0; i < text.Length; i++)
             {
-                char s = text[i];
-                int index = normal.IndexOf(s);
-                if (index >= 0)
-                    sb.Append(subcript[index]);
+                char ch = text[i];
+                // Skip tags.
+                if (htmlTagOn || ssaTagOn)
+                {
+                    Sb.Append(ch);
+                    switch (ch)
+                    {
+                        case '>':
+                            htmlTagOn = false;
+                            break;
+                        case '}':
+                            ssaTagOn = false;
+                            break;
+                    }
+                }
+                else if (ch == '<')
+                {
+                    htmlTagOn = true;
+                    Sb.Append(ch);
+                }
+                else if (ch == '{')
+                {
+                    ssaTagOn = true;
+                    Sb.Append(ch);
+                }
                 else
-                    sb.Append(s);
+                {
+                    char subScriptChar;
+                    Sb.Append(charDictionary.TryGetValue(ch, out subScriptChar) ? subScriptChar : ch);
+                }
             }
-            return sb.ToString();
+            return Sb.ToString();
         }
+        #endregion
 
         public static string FixQuotes(string text)
         {
