@@ -281,10 +281,18 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         {
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
+                // common Latin ligatures from legacy encodings;
+                // Unicode includes them only for compatibility and discourages their use
+                word = word.Replace("ﬀ", "ff");
                 word = word.Replace("ﬁ", "fi");
+                word = word.Replace("ﬂ", "fl");
+                word = word.Replace("ﬃ", "ffi");
+                word = word.Replace("ﬄ", "ffl");
+
                 word = word.Replace('ν', 'v'); // first 'v' is U+03BD GREEK SMALL LETTER NU
                 word = word.Replace('’', '\'');
                 word = word.Replace('`', '\'');
+                word = word.Replace('´', '\'');
                 word = word.Replace('‘', '\'');
                 word = word.Replace('—', '-');
                 while(word.Contains("--"))
