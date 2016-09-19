@@ -4,10 +4,9 @@ using System.IO;
 
 namespace Nikse.SubtitleEdit.Core
 {
-    public class TarReader : IDisposable
+    public class TarReader
     {
         public List<TarHeader> Files { get; private set; }
-        private Stream _stream;
 
         public TarReader(string fileName)
         {
@@ -22,12 +21,11 @@ namespace Nikse.SubtitleEdit.Core
 
         private void OpenTarFile(Stream stream)
         {
-            _stream = stream;
             Files = new List<TarHeader>();
             long length = stream.Length;
             long pos = 0;
             stream.Position = 0;
-            while (pos + 512 < length)
+            while (pos + TarHeader.HeaderSize < length)
             {
                 stream.Seek(pos, SeekOrigin.Begin);
                 var th = new TarHeader(stream);
@@ -35,21 +33,7 @@ namespace Nikse.SubtitleEdit.Core
                     Files.Add(th);
                 pos += TarHeader.HeaderSize + th.FileSizeInBytes;
                 if (pos % TarHeader.HeaderSize > 0)
-                    pos += 512 - (pos % TarHeader.HeaderSize);
-            }
-        }
-
-        public void Close()
-        {
-            _stream.Close();
-        }
-
-        public void Dispose()
-        {
-            if (_stream != null)
-            {
-                _stream.Dispose();
-                _stream = null;
+                    pos += TarHeader.HeaderSize - (pos % TarHeader.HeaderSize);
             }
         }
 

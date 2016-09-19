@@ -158,13 +158,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            using (var tr = new TarReader(tempFileName))
+            var tr = new TarReader(tempFileName);
+            foreach (var th in tr.Files)
             {
-                foreach (var th in tr.Files)
-                {
-                    string fn = Path.Combine(dictionaryFolder, Path.GetFileName(th.FileName.Trim()));
-                    th.WriteData(fn);
-                }
+                string fn = Path.Combine(dictionaryFolder, Path.GetFileName(th.FileName.Trim()));
+                th.WriteData(fn);
             }
             File.Delete(tempFileName);
 
