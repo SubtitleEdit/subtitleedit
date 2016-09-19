@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
                 word = word.Replace("ﬁ", "fi");
-                word = word.Replace('ν', 'v'); // NOTE: first 'v' is a special unicode character!!!!
+                word = word.Replace('ν', 'v'); // first 'v' is U+03BD GREEK SMALL LETTER NU
                 word = word.Replace('’', '\'');
                 word = word.Replace('`', '\'');
                 word = word.Replace('‘', '\'');
