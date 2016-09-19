@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonDownload.Enabled = false;
                 comboBoxDictionaries.Enabled = false;
                 Refresh();
-                Cursor = Cursors.WaitCursor;
+                Cursor.Current = Cursors.WaitCursor;
 
                 int index = comboBoxDictionaries.SelectedIndex;
                 string url = _dictionaryDownloadLinks[index];
@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             File.Delete(tempFileName);
 
-            Cursor = Cursors.Default;
+            Cursor.Current = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;
             buttonDownload.Enabled = true;
@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms
                     fs.Write(buffer, 0, nRead);
                 }
             }
-            Cursor = Cursors.Default;
+            Cursor.Current = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;
             buttonDownload.Enabled = true;
