@@ -38,15 +38,14 @@ namespace Nikse.SubtitleEdit.Forms
             _descriptions = new List<string>();
             _xmlName = xmlRessourceName;
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-            Stream strm = asm.GetManifestResourceStream(_xmlName);
-            if (strm != null)
+            Stream stream = asm.GetManifestResourceStream(_xmlName);
+            if (stream?.CanRead == true)
             {
                 comboBoxDictionaries.Items.Clear();
-                XmlDocument doc = new XmlDocument();
-                using (var rdr = new StreamReader(strm))
-                using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
+                var doc = new XmlDocument();
+                using (var zip = new GZipStream(stream, CompressionMode.Decompress))
                 {
-                    byte[] data = new byte[195000];
+                    byte[] data = new byte[stream.Length];
                     int bytesRead = zip.Read(data, 0, data.Length);
                     var s = System.Text.Encoding.UTF8.GetString(data, 0, bytesRead).Trim();
                     try
@@ -56,6 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
                     catch (Exception exception)
                     {
                         MessageBox.Show(exception.Message);
+                        return;
                     }
                 }
 
