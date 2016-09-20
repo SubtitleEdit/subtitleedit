@@ -1475,7 +1475,7 @@
     <None Include="Web References\SeNetworkService\SeService.disco" />
     <None Include="DLLs\Interop.QuartzTypeLib.dll" />
     <Content Include="..\Changelog.txt" />
-    <Content Include="..\gpl.txt" />
+    <Content Include="..\LICENSE.txt" />
     <EmbeddedResource Include="Controls\VideoPlayerContainer.resx">
       <DependentUpon>VideoPlayerContainer.cs</DependentUpon>
       <SubType>Designer</SubType>
