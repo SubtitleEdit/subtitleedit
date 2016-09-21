@@ -1869,7 +1869,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <SyntaxColorDurationIfTooSmall>Duração da cor muito curta</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Duração da cor muito longa</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Cor do texto muito longo</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Cor do texto se as linhas forem mais que:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Cor do texto se as forem mais que {0} linhas</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Cor do código de tempo sobreposto</SyntaxColorOverlap>
     <SyntaxErrorColor>Cor de erro</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ir para primeira linha selecionada</GoToFirstSelectedLine>

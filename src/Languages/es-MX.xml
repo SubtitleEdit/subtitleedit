@@ -1851,7 +1851,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <SyntaxColorDurationIfTooSmall>Colorear si la duración es demasiada corta</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Colorear si la duración es demasiada larga</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Colorear el texto si es muy largo</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Colorear el texto si las líneas son mayores a</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Colorear el texto si las líneas son mayores a {0}</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Colorear superposición de código de tiempo</SyntaxColorOverlap>
     <SyntaxErrorColor>Color de errores</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ir a la primera línea seleccionada</GoToFirstSelectedLine>

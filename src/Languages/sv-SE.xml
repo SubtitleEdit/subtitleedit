@@ -1745,7 +1745,7 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <SyntaxColorDurationIfTooSmall>Färg - längd, om för kort</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Färg - längd, om för lång</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Färg - text, om för länge</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Färg - text, om mer än rader:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Färg - text, om mer än {0} rader</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Färg - tidskod, överlappning</SyntaxColorOverlap>
     <SyntaxErrorColor>Färg vid fel</SyntaxErrorColor>
     <GoToFirstSelectedLine>Gå till första valda linjen</GoToFirstSelectedLine>

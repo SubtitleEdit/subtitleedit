@@ -1821,7 +1821,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <SyntaxColorDurationIfTooSmall>Colora durata se troppo corta</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Colora durata se troppo lunga</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Colora testo se troppo lungo</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Colora testo se più lungo di linee:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Colora testo se più lungo di {0} linee</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Colora sovrapposizione time code</SyntaxColorOverlap>
     <SyntaxErrorColor>Colore per errore</SyntaxErrorColor>
     <GoToFirstSelectedLine>Vai alla prima linea selezionata</GoToFirstSelectedLine>

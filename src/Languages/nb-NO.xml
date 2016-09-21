@@ -1849,7 +1849,7 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <SyntaxColorDurationIfTooSmall>Farg varigheten hvis den er for kort</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Farg varigheten hvis den er for lang</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Farg teksten hvis den er for lang</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Farg teksten hvis den har for mange linjer</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Farg teksten hvis den har mer enn {0} linjer</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Farg tidsangivelse-overlappinger</SyntaxColorOverlap>
     <SyntaxErrorColor>Farge for feil</SyntaxErrorColor>
     <GoToFirstSelectedLine>Hopp til først valgte linje</GoToFirstSelectedLine>
