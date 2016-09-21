@@ -197,6 +197,7 @@
     <Compile Include="SubtitleFormats\Csv4.cs" />
     <Compile Include="SubtitleFormats\NetflixTimedText.cs" />
     <Compile Include="SubtitleFormats\JsonType7.cs" />
+    <Compile Include="SubtitleFormats\PhoenixSubtitle.cs" />
     <Compile Include="SubtitleFormats\SamiAvDicPlayer.cs" />
     <Compile Include="SubtitleFormats\SpuImage.cs" />
     <Compile Include="SubtitleFormats\AbcIViewer.cs" />

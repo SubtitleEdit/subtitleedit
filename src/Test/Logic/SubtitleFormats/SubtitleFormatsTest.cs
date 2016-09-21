@@ -870,5 +870,28 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         }
         #endregion
 
+        #region Phoenix Subtitle
+
+        [TestMethod]
+        public void PhoenixSubtitleTest()
+        {
+            var phxSub = new PhoenixSubtitle();
+            var subtitle = new Subtitle();
+            const string text = @"2447,   2513, ""You should come to the Drama Club, too.""
+2513,   2594, ""Yeah.The Drama Club is worried|that you haven't been coming.""
+2603,   2675, ""I see. Sorry, I'll drop by next time.""";
+
+            // Test text.
+            phxSub.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), null);
+            Assert.AreEqual("You should come to the Drama Club, too.", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("Yeah.The Drama Club is worried\r\nthat you haven't been coming.", subtitle.Paragraphs[1].Text);
+
+            // Test timecode
+            Assert.AreEqual(2447 * .1 * TimeCode.BaseUnit, subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
+            Assert.AreEqual(2513 * .1 * TimeCode.BaseUnit, subtitle.Paragraphs[0].EndTime.TotalMilliseconds);
+        }
+
+        #endregion
+
     }
 }
