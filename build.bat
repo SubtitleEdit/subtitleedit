@@ -94,7 +94,7 @@ IF NOT EXIST "temp_zip\Tesseract"                  MD "temp_zip\Tesseract"
 IF NOT EXIST "temp_zip\Tesseract\tessdata"         MD "temp_zip\Tesseract\tessdata"
 IF NOT EXIST "temp_zip\Tesseract\tessdata\configs" MD "temp_zip\Tesseract\tessdata\configs"
 
-COPY /Y /V "..\..\..\gpl.txt"                            "temp_zip\"
+COPY /Y /V "..\..\..\LICENSE.txt"                        "temp_zip\"
 COPY /Y /V "..\..\..\Changelog.txt"                      "temp_zip\"
 COPY /Y /V "Hunspellx86.dll"                             "temp_zip\"
 COPY /Y /V "Hunspellx64.dll"                             "temp_zip\"
