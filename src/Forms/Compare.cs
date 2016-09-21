@@ -814,22 +814,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void subtitleListView1_DragEnter(object sender, DragEventArgs e)
+        private void subtitleListViewDragEnter(object sender, DragEventArgs e)
         {
-            VerifyDragEnter(e);
-        }
-
-        private void subtitleListView2_DragEnter(object sender, DragEventArgs e)
-        {
-            VerifyDragEnter(e);
-        }
-
-        private static void VerifyDragEnter(DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-                e.Effect = DragDropEffects.Copy;
-            else
-                e.Effect = DragDropEffects.None;
+            e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : e.Effect = DragDropEffects.None;
         }
 
         private void subtitleListView1_DragDrop(object sender, DragEventArgs e)
