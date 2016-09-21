@@ -285,7 +285,6 @@
     <Word from="nju jorški" to="njujorški" />
     <Word from="njegi" to="njezi" />
     <Word from="neželi" to="ne želi" />
-    <Word from="nho" to="nko" />
     <Word from="niej" to="nije" />
     <Word from="niije" to="nije" />
     <Word from="njie" to="nije" />
@@ -1703,6 +1702,7 @@
     <RegEx find="m([io])rić" replaceWith="m$1rit ć" />
     <RegEx find="mi?j?enić" replaceWith="mijenit ć" />
     <RegEx find="mjenim" replaceWith="mijenim" />
+    <RegEx find="nho" replaceWith="nko" />
     <RegEx find="nisa([nlot])" replaceWith="nira$1" />
     <RegEx find="(?&lt;!am)nesti" replaceWith="nijeti" />
     <RegEx find="(?&lt;!sit)niše([mš])" replaceWith="nira$1" />
