@@ -1689,7 +1689,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <SyntaxColorDurationIfTooSmall>Color si es demasiado corta duración</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Color de duración, si es demasiado largo</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Color de texto si es muy largo</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Color de texto si hay más líneas:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Color de texto si hay más de {0} líneas</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Color superposición de código de tiempo</SyntaxColorOverlap>
     <SyntaxErrorColor>Error colores</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ir a la primera línea seleccionada</GoToFirstSelectedLine>

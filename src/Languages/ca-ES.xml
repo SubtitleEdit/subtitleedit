@@ -1839,7 +1839,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SyntaxColorDurationIfTooSmall>Color durada massa curta</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Color durada massa llarga</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Color text massa llarg</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Color text més línies de:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Color text més de {0} línies</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Color codi temps sobrepossat</SyntaxColorOverlap>
     <SyntaxErrorColor>Color error</SyntaxErrorColor>
     <GoToFirstSelectedLine>Vés a la primera línia seleccionada</GoToFirstSelectedLine>
