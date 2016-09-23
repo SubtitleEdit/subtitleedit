@@ -85,6 +85,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             line = line.Trim(TrimChars);
                         }
 
+                        paragraph.Number = i + 1;
                         paragraph.Text = string.Join(Environment.NewLine, line.Split('|'));
                         subtitle.Paragraphs.Add(paragraph);
                         paragraph = new Paragraph();
@@ -99,7 +100,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     _errorCount++;
                 }
             }
-            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string encodedTime)
