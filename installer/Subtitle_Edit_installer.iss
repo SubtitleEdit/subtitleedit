@@ -290,7 +290,6 @@ Name: {#quick_launch}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; Wo
 Type: files;      Name: {userdesktop}\Subtitle Edit.lnk;   Check: not IsTaskSelected('desktopicon\user')   and IsUpgrade()
 Type: files;      Name: {commondesktop}\Subtitle Edit.lnk; Check: not IsTaskSelected('desktopicon\common') and IsUpgrade()
 Type: files;      Name: {#quick_launch}\Subtitle Edit.lnk; Check: not IsTaskSelected('quicklaunchicon')    and IsUpgrade(); OnlyBelowVersion: 6.01
-Type: files;      Name: {app}\DocumentIcons.dll;           Check: not IsTaskSelected('associate_srt')      and IsUpgrade()
 
 Type: files;      Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
 
@@ -308,7 +307,6 @@ Type: files;      Name: {app}\Dictionaries\en_US_user.xml;            Check: IsU
 Type: files;      Name: {app}\Dictionaries\eng_OCRFixReplaceList.xml; Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\names_etc.xml;             Check: IsUpgrade()
 Type: dirifempty; Name: {app}\Dictionaries;                           Check: IsUpgrade()
-Type: files;      Name: {app}\Icons\SubtitleEdit.srt.ico;             Check: IsUpgrade()
 Type: files;      Name: {app}\TessData\eng.DangAmbigs;                Check: IsUpgrade()
 Type: files;      Name: {app}\TessData\eng.freq-dawg;                 Check: IsUpgrade()
 Type: files;      Name: {app}\TessData\eng.inttemp;                   Check: IsUpgrade()
@@ -319,8 +317,11 @@ Type: files;      Name: {app}\TessData\eng.user-words;                Check: IsU
 Type: files;      Name: {app}\TessData\eng.word-dawg;                 Check: IsUpgrade()
 Type: dirifempty; Name: {app}\TessData;                               Check: IsUpgrade()
 Type: files;      Name: {app}\Tesseract\leptonlib.dll;                Check: IsUpgrade()
-Type: files;      Name: {app}\Settings.xml;                           Check: IsUpgrade()
 Type: files;      Name: {app}\tessnet2_32.dll;                        Check: IsUpgrade()
+Type: files;      Name: {app}\Icons\SubtitleEdit.srt.ico;             Check: IsUpgrade()
+Type: files;      Name: {app}\DocumentIcons.dll;                      Check: IsUpgrade()
+Type: files;      Name: {app}\Settings.xml;                           Check: IsUpgrade()
+Type: files;      Name: {app}\gpl.txt;                                Check: IsUpgrade()
 Type: files;      Name: {app}\uninstall.ico;                          Check: IsUpgrade()
 
 #ifdef localize
