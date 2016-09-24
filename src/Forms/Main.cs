@@ -1929,12 +1929,11 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_subtitle.HistoryItems.Count > 0 || _subtitle.Paragraphs.Count > 0)
                     MakeHistoryForUndo(string.Format(_language.BeforeLoadOf, Path.GetFileName(fileName)));
 
-                bool change = _changeSubtitleToString != _subtitle.GetFastHashCode();
-                if (change)
-                    change = _lastDoNotPrompt != _subtitle.GetFastHashCode();
+                string _subtitleHash = _subtitle.GetFastHashCode();
+                bool hasChanged = (_changeSubtitleToString != _subtitleHash) && (_lastDoNotPrompt != _subtitleHash);
 
                 SubtitleFormat format = _subtitle.LoadSubtitle(fileName, out encoding, encoding);
-                if (!change)
+                if (!hasChanged)
                     _changeSubtitleToString = _subtitle.GetFastHashCode();
 
                 ShowHideTextBasedFeatures(format);
