@@ -6,14 +6,16 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    // Specs: http://devel.aegisub.org/wiki/SubtitleFormats/PJS
+    /// <summary>
+    /// Implements https://web.archive.org/web/20080213213927/http://trac.annodex.net/wiki/PJS
+    /// https://github.com/SubtitleEdit/subtitleedit/pull/1964#issuecomment-249379407
+    /// </summary>
     public class PhoenixSubtitle : SubtitleFormat
     {
         //2447,   2513, "You should come to the Drama Club, too."
         //2513,   2594, "Yeah. The Drama Club is worried|that you haven't been coming."
         //2603,   2675, "I see. Sorry, I'll drop by next time."
 
-        // TODO: Build optimized regex to match time-codes with non-whites spaces.
         private static readonly Regex RegexTimeCodes = new Regex(@"^(\d+),\s+(\d+),", RegexOptions.Compiled);
         private static readonly char[] TrimChars = { ' ', '"' };
 
@@ -104,18 +106,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string encodedTime)
         {
-            // Format is timed in tenths of seconds. 2447
             int time;
             if (int.TryParse(encodedTime, out time))
             {
-                return new TimeCode(time * .1 * TimeCode.BaseUnit);
+                return new TimeCode(FramesToMilliseconds(time));
             }
             return new TimeCode(0);
-        }
-
-        private static string EncodeTimeCode(TimeCode tc)
-        {
-            return Convert.ToString((int)Math.Round(tc.TotalMilliseconds / 100.0));
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -124,10 +120,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             foreach (var p in subtitle.Paragraphs)
             {
-                string text = HtmlUtil.RemoveHtmlTags(p.Text, true).Trim(TrimChars);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 // Pipe character for forced line breaks.
                 text = text.Replace(Environment.NewLine, "|");
-                sb.AppendFormat(writeFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), text);
+                sb.AppendFormat(writeFormat, MillisecondsToFrames(p.StartTime.TotalMilliseconds),
+                    MillisecondsToFrames(p.EndTime.TotalMilliseconds), text);
             }
             return sb.ToString();
         }
