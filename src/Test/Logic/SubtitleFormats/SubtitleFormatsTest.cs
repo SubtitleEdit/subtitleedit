@@ -899,5 +899,34 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
 
         #endregion
 
+        #region MacSub
+
+        [TestMethod]
+        public void MacSubTest()
+        {
+            const string input = @"/3035
+Every satellite...
+/3077
+/3082
+every constellation...
+/3133
+/3138
+""souvenirs of space walks
+and astronauts.“...""
+/3205";
+            var macSub = new MacSub();
+            var subtitle = new Subtitle();
+            macSub.LoadSubtitle(subtitle, new List<string>(input.SplitToLines()), null);
+
+            // Test text.
+            Assert.AreEqual("Every satellite...", subtitle.Paragraphs[0].Text);
+            // Test line count.
+            Assert.AreEqual(2, subtitle.Paragraphs[2].NumberOfLines);
+            // Test frame.
+            Assert.AreEqual(3082, subtitle.Paragraphs[1].StartFrame);
+        }
+
+        #endregion
+
     }
 }
