@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var frames16 = int.Parse(parts[0]);
             var frames = int.Parse(parts[1]);
-            return new TimeCode(0, 0, 0, FramesToMilliseconds(16 * frames16 + frames));
+            return new TimeCode(0, 0, 0, (int)FramesToMilliseconds(16 * frames16 + frames));
         }
 
     }
