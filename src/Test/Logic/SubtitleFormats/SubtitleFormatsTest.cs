@@ -887,8 +887,8 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             Assert.AreEqual("Yeah. The Drama Club is worried\r\nthat you haven't been coming.", subtitle.Paragraphs[1].Text);
 
             // Test frames.
-            Assert.AreEqual(SubtitleFormat.FramesToMilliseconds(2447), subtitle.Paragraphs[0].StartTime.TotalMilliseconds);
-            Assert.AreEqual(SubtitleFormat.FramesToMilliseconds(2513), subtitle.Paragraphs[0].EndTime.TotalMilliseconds);
+            Assert.AreEqual(SubtitleFormat.FramesToMilliseconds(2447), SubtitleFormat.FramesToMilliseconds(subtitle.Paragraphs[0].StartFrame));
+            Assert.AreEqual(SubtitleFormat.FramesToMilliseconds(2513), SubtitleFormat.FramesToMilliseconds(subtitle.Paragraphs[0].EndFrame));
 
             // Test total lines.
             Assert.AreEqual(2, subtitle.Paragraphs[1].NumberOfLines);
