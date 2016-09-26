@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         //2513,   2594, "Yeah. The Drama Club is worried|that you haven't been coming."
         //2603,   2675, "I see. Sorry, I'll drop by next time."
 
-        private static readonly Regex RegexTimeCodes = new Regex(@"^(\d+),\s+(\d+),", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^(\d+),\s*(\d+),", RegexOptions.Compiled);
         private static readonly char[] TrimChars = { ' ', '"' };
 
         public override string Extension
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             get
             {
-                return true;
+                return false;
             }
         }
 
@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (fileName != null && !fileName.EndsWith(".pjs", StringComparison.OrdinalIgnoreCase))
+            if (fileName?.EndsWith(".pjs", StringComparison.OrdinalIgnoreCase) == false)
             {
                 return false;
             }
@@ -71,9 +71,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     try
                     {
-                        // Decode times.
-                        paragraph.StartTime = DecodeTimeCode(match.Groups[1].Value);
-                        paragraph.EndTime = DecodeTimeCode(match.Groups[2].Value);
+                        // Read frames.
+                        paragraph.StartFrame = int.Parse(match.Groups[1].Value);
+                        paragraph.EndFrame = int.Parse(match.Groups[2].Value);
 
                         // Decode text.
                         line = line.Substring(match.Value.Length).Trim();
@@ -104,19 +104,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        private static TimeCode DecodeTimeCode(string encodedTime)
-        {
-            int time;
-            if (int.TryParse(encodedTime, out time))
-            {
-                return new TimeCode(FramesToMilliseconds(time));
-            }
-            return new TimeCode(0);
-        }
-
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string writeFormat = "{0},   {1},  \"{2}\"\r\n";
+            const string writeFormat = "{0},{1},\"{2}\"{3}";
             var sb = new StringBuilder();
             foreach (var p in subtitle.Paragraphs)
             {
@@ -124,7 +114,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 // Pipe character for forced line breaks.
                 text = text.Replace(Environment.NewLine, "|");
                 sb.AppendFormat(writeFormat, MillisecondsToFrames(p.StartTime.TotalMilliseconds),
-                    MillisecondsToFrames(p.EndTime.TotalMilliseconds), text);
+                    MillisecondsToFrames(p.EndTime.TotalMilliseconds), text, Environment.NewLine);
             }
             return sb.ToString();
         }
