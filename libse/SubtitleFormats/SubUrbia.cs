@@ -81,12 +81,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 string extra = Json.ReadTag(s, "comment");
                 if (start != null && end != null && text != null)
                 {
-                    double startSeconds;
-                    double endSeconds;
-                    if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out startSeconds) &&
-                        double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out endSeconds))
+                    double startMilliseconds;
+                    double endMilliseconds;
+                    if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out startMilliseconds) &&
+                        double.TryParse(end, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out endMilliseconds))
                     {
-                        var p = new Paragraph(Json.DecodeJsonText(text), startSeconds, endSeconds);
+                        var p = new Paragraph(Json.DecodeJsonText(text), startMilliseconds, endMilliseconds);
                         if (!string.IsNullOrEmpty(extra))
                             p.Extra = extra;
                         subtitle.Paragraphs.Add(p);
