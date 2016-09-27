@@ -195,8 +195,7 @@
     <Compile Include="SubtitleFormats\AribB36.cs" />
     <Compile Include="SubtitleFormats\AribB24Decoder.cs" />
     <Compile Include="SubtitleFormats\Csv4.cs" />
-    <Compile Include="SubtitleFormats\MacSub.cs" />
-    <Compile Include="SubtitleFormats\NetflixTimedText.cs" />
+    <Compile Include="SubtitleFormats\MacSub.cs" />    <Compile Include="SubtitleFormats\SubUrbia.cs" />    <Compile Include="SubtitleFormats\NetflixTimedText.cs" />
     <Compile Include="SubtitleFormats\JsonType7.cs" />
     <Compile Include="SubtitleFormats\PhoenixSubtitle.cs" />
     <Compile Include="SubtitleFormats\SamiAvDicPlayer.cs" />
