@@ -221,8 +221,8 @@ namespace Nikse.SubtitleEdit.Core
             GenerateTimeCodePatterns = "HH:mm:ss;yyyy-MM-dd;dddd dd MMMM yyyy <br>HH:mm:ss;dddd dd MMMM yyyy <br>hh:mm:ss tt;s";
             MusicSymbolStyle = "Double"; // 'Double' or 'Single'
             ExportFontColor = Color.White;
-            ExportBorderColor = Color.Black;
-            ExportShadowColor = Color.Black;
+            ExportBorderColor = Color.FromArgb(255, 0, 0, 0);
+            ExportShadowColor = Color.FromArgb(255, 0, 0, 0);
             ExportBottomMargin = 15;
             ExportHorizontalAlignment = 1; // 1=center (0=left, 2=right)
             ExportVobSubSimpleRendering = true;
