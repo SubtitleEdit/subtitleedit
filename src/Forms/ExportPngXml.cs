@@ -103,7 +103,6 @@ namespace Nikse.SubtitleEdit.Forms
             _previewTimer.Interval = 100;
             labelLineHeightStyle.Text = string.Empty;
             _subtitleColor = Color.White;
-            _borderColor = Color.Black;
         }
 
         private void previewTimer_Tick(object sender, EventArgs e)
@@ -1802,8 +1801,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private Bitmap GenerateImageFromTextWithStyle(Paragraph p, out MakeBitmapParameter mbp)
         {
-            mbp = new MakeBitmapParameter();
-            mbp.P = p;
+            mbp = new MakeBitmapParameter { P = p };
 
             if (_vobSubOcr != null)
             {
