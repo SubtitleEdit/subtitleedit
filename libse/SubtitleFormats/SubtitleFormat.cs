@@ -126,6 +126,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new StructuredTitles(),
                     new SubStationAlpha(),
                     new SubtitleEditorProject(),
+                    new SubUrbia(),
                     new SubViewer10(),
                     new SubViewer20(),
                     new SwiftInterchange2(),
