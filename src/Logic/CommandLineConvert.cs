@@ -668,6 +668,8 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     var offsetSplitChars = new[] { ':', '.', ',' };
                     var parts = offset.Split(offsetSplitChars, StringSplitOptions.RemoveEmptyEntries);
+                    bool minus = offset.StartsWith('-');
+                    offset = offset.TrimStart('-');
                     while (parts.Length > 1 && parts.Length < 4)
                     {
                         offset = "0:" + offset;
@@ -678,7 +680,7 @@ namespace Nikse.SubtitleEdit.Logic
                         try
                         {
                             var ts = new TimeSpan(0, int.Parse(parts[0].TrimStart('-')), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
-                            if (parts[0].StartsWith('-'))
+                            if (minus)
                                 sub.AddTimeToAllParagraphs(ts.Negate());
                             else
                                 sub.AddTimeToAllParagraphs(ts);
