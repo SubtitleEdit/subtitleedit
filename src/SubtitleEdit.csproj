@@ -1639,7 +1639,7 @@
     </HunspellAssemblies>
   </ItemGroup>
   <Target Name="BeforeCompile">
-    <XmlPeek XmlInputPath="$(PackagesConfig)" Query="//package[@id='NHunspell']/@version">
+    <XmlPeek XmlInputPath="$(SolutionDir)\packages.config" Query="//package[@id='NHunspell']/@version">
       <Output TaskParameter="Result" PropertyName="HunspellVersion" />
     </XmlPeek>
     <PropertyGroup>
