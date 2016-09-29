@@ -3338,9 +3338,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format != null && !format.IsTextBased)
                 {
-                    if (format.GetType() == typeof(Ebu))
+                    var ebu = format as Ebu;
+                    if (ebu != null)
                     {
-                        if (Ebu.Save(_fileName, sub))
+                        if (ebu.Save(_fileName, sub))
                         {
                             Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
                             Configuration.Settings.Save();
@@ -18000,7 +18001,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += ebu.Extension;
                 }
-                Ebu.Save(fileName, GetSaveSubtitle(_subtitle));
+                new Ebu().Save(fileName, GetSaveSubtitle(_subtitle));
             }
         }
 

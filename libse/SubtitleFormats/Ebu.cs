@@ -4,13 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     /// <summary>
     /// EBU Subtitling data exchange format
     /// </summary>
-    public class Ebu : SubtitleFormat
+    public class Ebu : SubtitleFormat, IBinaryPersistableSubtitle
     {
 
         private const string LanguageCodeChinese = "75";
@@ -524,12 +525,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             get { return true; }
         }
 
-        public static bool Save(string fileName, Subtitle subtitle)
+        public bool Save(string fileName, Subtitle subtitle)
         {
             return Save(fileName, subtitle, false);
         }
 
-        public static bool Save(string fileName, Subtitle subtitle, bool batchMode)
+        public bool Save(string fileName, Subtitle subtitle, bool batchMode)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            {
+                return Save(fileName, fs, subtitle, batchMode);
+            }
+        }
+
+        public bool Save(string fileName, Stream stream, Subtitle subtitle, bool batchMode)
         {
             var header = new EbuGeneralSubtitleInformation();
             if (EbuUiHelper == null)
@@ -548,95 +557,92 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             if (!batchMode && !EbuUiHelper.ShowDialogOk())
                 return false;
 
-            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            header.TotalNumberOfSubtitles = subtitle.Paragraphs.Count.ToString("D5"); // seems to be 1 higher than actual number of subtitles
+            header.TotalNumberOfTextAndTimingInformationBlocks = header.TotalNumberOfSubtitles;
+
+            var today = string.Format("{0:yyMMdd}", DateTime.Now);
+            if (today.Length == 6)
             {
-                header.TotalNumberOfSubtitles = subtitle.Paragraphs.Count.ToString("D5"); // seems to be 1 higher than actual number of subtitles
-                header.TotalNumberOfTextAndTimingInformationBlocks = header.TotalNumberOfSubtitles;
+                header.CreationDate = today;
+                header.RevisionDate = today;
+            }
 
-                var today = string.Format("{0:yyMMdd}", DateTime.Now);
-                if (today.Length == 6)
+            var firstParagraph = subtitle.GetParagraphOrDefault(0);
+            if (firstParagraph != null)
+            {
+                var tc = firstParagraph.StartTime;
+                string firstTimeCode = string.Format("{0:00}{1:00}{2:00}{3:00}", tc.Hours, tc.Minutes, tc.Seconds, EbuTextTimingInformation.GetFrameFromMilliseconds(tc.Milliseconds, header.FrameRate));
+                if (firstTimeCode.Length == 8)
+                    header.TimeCodeFirstInCue = firstTimeCode;
+            }
+
+            byte[] buffer = Encoding.Default.GetBytes(header.ToString());
+            stream.Write(buffer, 0, buffer.Length);
+
+            int subtitleNumber = 0;
+            foreach (var p in subtitle.Paragraphs)
+            {
+                var tti = new EbuTextTimingInformation();
+
+                int rows;
+                if (!int.TryParse(header.MaximumNumberOfDisplayableRows, out rows))
+                    rows = 23;
+
+                if (header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2") // teletext
+                    rows = 23;
+                else if (header.DisplayStandardCode == "0" && header.MaximumNumberOfDisplayableRows == "02") // open subtitling
+                    rows = 15;
+
+                var text = p.Text.Trim(Utilities.NewLineChars);
+                if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
                 {
-                    header.CreationDate = today;
-                    header.RevisionDate = today;
+                    tti.VerticalPosition = 1; // top (vertical)
+                }
+                else if (text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal))
+                {
+                    tti.VerticalPosition = (byte)(rows / 2); // middle (vertical)
+                }
+                else
+                {
+                    int startRow = (rows - 1) - Utilities.CountTagInText(text, Environment.NewLine) * 2;
+                    if (startRow < 0)
+                        startRow = 0;
+                    tti.VerticalPosition = (byte)startRow; // bottom (vertical)
                 }
 
-                Paragraph firstParagraph = subtitle.GetParagraphOrDefault(0);
-                if (firstParagraph != null)
+                tti.JustificationCode = EbuUiHelper.JustificationCode; // use default justification
+                if (text.StartsWith("{\\an1}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an7}", StringComparison.Ordinal))
                 {
-                    TimeCode tc = firstParagraph.StartTime;
-                    string firstTimeCode = string.Format("{0:00}{1:00}{2:00}{3:00}", tc.Hours, tc.Minutes, tc.Seconds, EbuTextTimingInformation.GetFrameFromMilliseconds(tc.Milliseconds, header.FrameRate));
-                    if (firstTimeCode.Length == 8)
-                        header.TimeCodeFirstInCue = firstTimeCode;
+                    tti.JustificationCode = 1; // 01h=left-justified text
+                }
+                else if (text.StartsWith("{\\an3}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
+                {
+                    tti.JustificationCode = 3; // 03h=right-justified
+                }
+                else if (text.StartsWith("{\\an2}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal))
+                {
+                    tti.JustificationCode = 2; // 02h=centred text
                 }
 
-                byte[] buffer = Encoding.Default.GetBytes(header.ToString());
-                fs.Write(buffer, 0, buffer.Length);
-
-                int subtitleNumber = 0;
-                foreach (Paragraph p in subtitle.Paragraphs)
+                tti.SubtitleNumber = (ushort)subtitleNumber;
+                tti.TextField = text;
+                int startTag = tti.TextField.IndexOf('}');
+                if (tti.TextField.StartsWith("{\\", StringComparison.Ordinal) && startTag > 0 && startTag < 10)
                 {
-                    var tti = new EbuTextTimingInformation();
-
-                    int rows;
-                    if (!int.TryParse(header.MaximumNumberOfDisplayableRows, out rows))
-                        rows = 23;
-
-                    if (header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2") // teletext
-                        rows = 23;
-                    else if (header.DisplayStandardCode == "0" && header.MaximumNumberOfDisplayableRows == "02") // open subtitling
-                        rows = 15;
-
-                    var text = p.Text.Trim(Utilities.NewLineChars);
-                    if (text.StartsWith("{\\an7}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
-                    {
-                        tti.VerticalPosition = 1; // top (vertical)
-                    }
-                    else if (text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal))
-                    {
-                        tti.VerticalPosition = (byte)(rows / 2); // middle (vertical)
-                    }
-                    else
-                    {
-                        int startRow = (rows - 1) - Utilities.CountTagInText(text, Environment.NewLine) * 2;
-                        if (startRow < 0)
-                            startRow = 0;
-                        tti.VerticalPosition = (byte)startRow; // bottom (vertical)
-                    }
-
-                    tti.JustificationCode = EbuUiHelper.JustificationCode; // use default justification
-                    if (text.StartsWith("{\\an1}", StringComparison.Ordinal) || text.StartsWith("{\\an4}", StringComparison.Ordinal) || text.StartsWith("{\\an7}", StringComparison.Ordinal))
-                    {
-                        tti.JustificationCode = 1; // 01h=left-justified text
-                    }
-                    else if (text.StartsWith("{\\an3}", StringComparison.Ordinal) || text.StartsWith("{\\an6}", StringComparison.Ordinal) || text.StartsWith("{\\an9}", StringComparison.Ordinal))
-                    {
-                        tti.JustificationCode = 3; // 03h=right-justified
-                    }
-                    else if (text.StartsWith("{\\an2}", StringComparison.Ordinal) || text.StartsWith("{\\an5}", StringComparison.Ordinal) || text.StartsWith("{\\an8}", StringComparison.Ordinal))
-                    {
-                        tti.JustificationCode = 2; // 02h=centred text
-                    }
-
-                    tti.SubtitleNumber = (ushort)subtitleNumber;
-                    tti.TextField = text;
-                    int startTag = tti.TextField.IndexOf('}');
-                    if (tti.TextField.StartsWith("{\\", StringComparison.Ordinal) && startTag > 0 && startTag < 10)
-                    {
-                        tti.TextField = tti.TextField.Remove(0, startTag + 1);
-                    }
-
-                    tti.TimeCodeInHours = p.StartTime.Hours;
-                    tti.TimeCodeInMinutes = p.StartTime.Minutes;
-                    tti.TimeCodeInSeconds = p.StartTime.Seconds;
-                    tti.TimeCodeInMilliseconds = p.StartTime.Milliseconds;
-                    tti.TimeCodeOutHours = p.EndTime.Hours;
-                    tti.TimeCodeOutMinutes = p.EndTime.Minutes;
-                    tti.TimeCodeOutSeconds = p.EndTime.Seconds;
-                    tti.TimeCodeOutMilliseconds = p.EndTime.Milliseconds;
-                    buffer = tti.GetBytes(header);
-                    fs.Write(buffer, 0, buffer.Length);
-                    subtitleNumber++;
+                    tti.TextField = tti.TextField.Remove(0, startTag + 1);
                 }
+
+                tti.TimeCodeInHours = p.StartTime.Hours;
+                tti.TimeCodeInMinutes = p.StartTime.Minutes;
+                tti.TimeCodeInSeconds = p.StartTime.Seconds;
+                tti.TimeCodeInMilliseconds = p.StartTime.Milliseconds;
+                tti.TimeCodeOutHours = p.EndTime.Hours;
+                tti.TimeCodeOutMinutes = p.EndTime.Minutes;
+                tti.TimeCodeOutSeconds = p.EndTime.Seconds;
+                tti.TimeCodeOutMilliseconds = p.EndTime.Milliseconds;
+                buffer = tti.GetBytes(header);
+                stream.Write(buffer, 0, buffer.Length);
+                subtitleNumber++;
             }
             return true;
         }
