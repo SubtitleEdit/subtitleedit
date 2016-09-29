@@ -825,7 +825,7 @@ namespace Nikse.SubtitleEdit.Logic
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite);
                         Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
-                        Ebu.Save(outputFileName, sub, true);
+                        ebu.Save(outputFileName, sub, true);
                         Console.WriteLine(" done.");
                     }
                 }

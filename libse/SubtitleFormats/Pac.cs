@@ -831,38 +831,44 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             get { return true; }
         }
 
-        public void Save(string fileName, Subtitle subtitle)
+        public bool Save(string fileName, Subtitle subtitle, bool batchMode = false)
         {
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
-                _fileName = fileName;
-
-                // header
-                fs.WriteByte(1);
-                for (int i = 1; i < 23; i++)
-                    fs.WriteByte(0);
-                fs.WriteByte(0x60);
-
-                // paragraphs
-                int number = 0;
-                foreach (Paragraph p in subtitle.Paragraphs)
-                {
-                    WriteParagraph(fs, p, number, number + 1 == subtitle.Paragraphs.Count);
-                    number++;
-                }
-
-                // footer
-                fs.WriteByte(0xff);
-                for (int i = 0; i < 11; i++)
-                    fs.WriteByte(0);
-                fs.WriteByte(0x11);
-                fs.WriteByte(0);
-                byte[] footerBuffer = Encoding.ASCII.GetBytes("dummy end of file");
-                fs.Write(footerBuffer, 0, footerBuffer.Length);
+                return Save(fileName, fs, subtitle, batchMode);
             }
         }
 
-        private void WriteParagraph(FileStream fs, Paragraph p, int number, bool isLast)
+        public bool Save(string fileName, Stream stream, Subtitle subtitle, bool batchMode)
+        {
+            _fileName = fileName;
+
+            // header
+            stream.WriteByte(1);
+            for (int i = 1; i < 23; i++)
+                stream.WriteByte(0);
+            stream.WriteByte(0x60);
+
+            // paragraphs
+            int number = 0;
+            foreach (Paragraph p in subtitle.Paragraphs)
+            {
+                WriteParagraph(stream, p, number, number + 1 == subtitle.Paragraphs.Count);
+                number++;
+            }
+
+            // footer
+            stream.WriteByte(0xff);
+            for (int i = 0; i < 11; i++)
+                stream.WriteByte(0);
+            stream.WriteByte(0x11);
+            stream.WriteByte(0);
+            byte[] footerBuffer = Encoding.ASCII.GetBytes("dummy end of file");
+            stream.Write(footerBuffer, 0, footerBuffer.Length);
+            return true;
+        }
+
+        private void WriteParagraph(Stream fs, Paragraph p, int number, bool isLast)
         {
             WriteTimeCode(fs, p.StartTime);
             WriteTimeCode(fs, p.EndTime);
@@ -974,7 +980,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        internal static void WriteTimeCode(FileStream fs, TimeCode timeCode)
+        internal static void WriteTimeCode(Stream fs, TimeCode timeCode)
         {
             // write four bytes time code
             string highPart = string.Format("{0:00}", timeCode.Hours) + string.Format("{0:00}", timeCode.Minutes);

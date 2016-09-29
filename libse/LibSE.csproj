@@ -156,6 +156,7 @@
     <Compile Include="Forms\FixCommonErrors\FixUnneededSpaces.cs" />
     <Compile Include="Forms\FixCommonErrors\FixUppercaseIInsideWords.cs" />
     <Compile Include="Forms\FixCommonErrors\Helper.cs" />
+    <Compile Include="Interfaces\IBinaryPersistableSubtitle.cs" />
     <Compile Include="Interfaces\IFixCallbacks.cs" />
     <Compile Include="Interfaces\IFixCommonError.cs" />
     <Compile Include="Forms\FixCommonErrors\RemoveSpaceBetweenNumbers.cs" />
@@ -195,8 +196,8 @@
     <Compile Include="SubtitleFormats\AribB36.cs" />
     <Compile Include="SubtitleFormats\AribB24Decoder.cs" />
     <Compile Include="SubtitleFormats\Csv4.cs" />
-    <Compile Include="SubtitleFormats\MacSub.cs" /> 
-    <Compile Include="SubtitleFormats\SubUrbia.cs" />    
+    <Compile Include="SubtitleFormats\MacSub.cs" />
+    <Compile Include="SubtitleFormats\SubUrbia.cs" />
     <Compile Include="SubtitleFormats\NetflixTimedText.cs" />
     <Compile Include="SubtitleFormats\JsonType7.cs" />
     <Compile Include="SubtitleFormats\PhoenixSubtitle.cs" />
