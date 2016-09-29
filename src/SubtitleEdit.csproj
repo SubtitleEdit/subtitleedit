@@ -1292,7 +1292,7 @@
       <DependentUpon>SyncPointsSync.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="packages\packages.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -1639,7 +1639,7 @@
     </HunspellAssemblies>
   </ItemGroup>
   <Target Name="BeforeCompile">
-    <XmlPeek XmlInputPath="$(SolutionDir)\packages.config" Query="//package[@id='NHunspell']/@version">
+    <XmlPeek XmlInputPath="$(PackagesConfig)" Query="//package[@id='NHunspell']/@version">
       <Output TaskParameter="Result" PropertyName="HunspellVersion" />
     </XmlPeek>
     <PropertyGroup>
