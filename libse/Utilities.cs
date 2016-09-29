@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core
         /// <summary>
         /// Cached environment new line characters for faster lookup.
         /// </summary>
-        public static readonly char[] NewLineChars = Environment.NewLine.ToCharArray();
+        public static readonly char[] NewLineChars = { '\r', '\n' };    
 
         public static VideoInfo TryReadVideoInfoViaMatroskaHeader(string fileName)
         {
