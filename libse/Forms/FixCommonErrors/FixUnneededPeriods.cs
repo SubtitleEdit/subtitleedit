@@ -4,7 +4,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 {
     public class FixUnneededPeriods : IFixCommonError
     {
-
         public void Fix(Subtitle subtitle, IFixCallbacks callbacks)
         {
             var language = Configuration.Settings.Language.FixCommonErrors;
@@ -13,48 +12,61 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                var oldText = p.Text;
                 if (callbacks.AllowFix(p, fixAction))
                 {
-                    if (p.Text.Contains("!." + Environment.NewLine))
+                    var oldText = p.Text;
+                    var text = p.Text;
+
+                    if (text.Contains(Environment.NewLine))
                     {
-                        p.Text = p.Text.Replace("!." + Environment.NewLine, "!" + Environment.NewLine);
-                        unneededPeriodsFixed++;
+                        text = text.Replace("!." + Environment.NewLine, "!" + Environment.NewLine);
+                        text = text.Replace("?." + Environment.NewLine, "?" + Environment.NewLine);
                     }
-                    if (p.Text.Contains("?." + Environment.NewLine))
+                    text = FixInvalidDotsAfterQuestionOrExclamationMarks(text);
+                    if (text.Contains(". "))
                     {
-                        p.Text = p.Text.Replace("?." + Environment.NewLine, "?" + Environment.NewLine);
-                        unneededPeriodsFixed++;
-                    }
-                    if (p.Text.EndsWith("!.", StringComparison.Ordinal))
-                    {
-                        p.Text = p.Text.TrimEnd('.');
-                        unneededPeriodsFixed++;
-                    }
-                    if (p.Text.EndsWith("?.", StringComparison.Ordinal))
-                    {
-                        p.Text = p.Text.TrimEnd('.');
-                        unneededPeriodsFixed++;
+                        text = text.Replace("!. ", "! ");
+                        text = text.Replace("?. ", "? ");
                     }
 
-                    var len = p.Text.Length;
-                    if (p.Text.Contains("!. "))
+                    if (!text.Equals(oldText, StringComparison.Ordinal))
                     {
-                        p.Text = p.Text.Replace("!. ", "! ");
-                        unneededPeriodsFixed += len - p.Text.Length;
-                        len = p.Text.Length;
-                    }
-                    if (p.Text.Contains("?. "))
-                    {
-                        p.Text = p.Text.Replace("?. ", "? ");
-                        unneededPeriodsFixed += len - p.Text.Length;
-                    }
-
-                    if (p.Text != oldText)
+                        unneededPeriodsFixed += oldText.Length - text.Length;
+                        p.Text = text;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
                 }
             }
             callbacks.UpdateFixStatus(unneededPeriodsFixed, language.RemoveUnneededPeriods, string.Format(language.XUnneededPeriodsRemoved, unneededPeriodsFixed));
+        }
+
+        private static string FixInvalidDotsAfterQuestionOrExclamationMarks(string text)
+        {
+            if (!text.EndsWith('.'))
+            {
+                return text;
+            }
+            bool trimDots = false;
+            int j = text.Length - 1;
+            for (; j >= 0; j--)
+            {
+                char ch = text[j];
+                if (ch == '?' || ch == '!')
+                {
+                    trimDots = true;
+                    break;
+                }
+                // Exit without changing anything.
+                if (ch != '.')
+                {
+                    break;
+                }
+            }
+            if (trimDots)
+            {
+                text = text.Substring(0, j + 1);
+            }
+            return text;
         }
     }
 }
