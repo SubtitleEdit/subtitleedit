@@ -42,6 +42,7 @@
 
     <PropertyGroup>
         <PackagesConfig Condition="Exists('$(MSBuildProjectDirectory)\packages\packages.config')">$(MSBuildProjectDirectory)\packages\packages.config</PackagesConfig>
+        <PackagesConfig Condition="Exists('$(MSBuildProjectDirectory)\packages.config')">$(MSBuildProjectDirectory)\packages.config</PackagesConfig>
         <PackagesConfig Condition="Exists('$(PackagesProjectConfig)')">$(PackagesProjectConfig)</PackagesConfig>
     </PropertyGroup>
 
