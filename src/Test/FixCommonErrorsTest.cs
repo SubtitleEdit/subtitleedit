@@ -1800,5 +1800,39 @@ namespace Test
 
         #endregion
 
+        #region Fix Unneeded Periods
+
+        [TestMethod]
+        public void FixUneededPeriodsTest1()
+        {
+            var p = new Paragraph("Foobar!.\r\nWhat is it?", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new FixUnneededPeriods().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("Foobar!\r\nWhat is it?", p.Text);
+        }
+
+        [TestMethod]
+        public void FixUneededPeriodsTest2()
+        {
+            var p = new Paragraph("Foobar!. What is it?", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new FixUnneededPeriods().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("Foobar! What is it?", p.Text);
+        }
+
+        [TestMethod]
+        public void FixUneededPeriodsTest3()
+        {
+            var p = new Paragraph("Foobar! What is it!...", 1200, 5000);
+            var s = new Subtitle();
+            s.Paragraphs.Add(p);
+            new FixUnneededPeriods().Fix(s, new EmptyFixCallback());
+            Assert.AreEqual("Foobar! What is it!", p.Text);
+        }
+
+        #endregion
+
     }
 }
