@@ -132,8 +132,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
 
         private void TimerWebServiceTick(object sender, EventArgs e)
         {
-            if (OnUpdateTimerTick != null)
-                OnUpdateTimerTick.Invoke(sender, e);
+            OnUpdateTimerTick?.Invoke(sender, e);
         }
 
         public void TimerStop()
@@ -253,8 +252,10 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             }
 
             UpdateLog.Add(new UpdateLogEntry(0, user.UserName, pos, action));
-            if (updateUI && OnUpdateUserLogEntries != null)
-                OnUpdateUserLogEntries.Invoke(null, null);
+            if (updateUI)
+            {
+                OnUpdateUserLogEntries?.Invoke(null, null);
+            }
         }
 
         internal void Leave()
