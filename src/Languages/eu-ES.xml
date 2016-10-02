@@ -683,6 +683,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <Frames>Frame</Frames>
     <Seconds>Segundu</Seconds>
     <Milliseconds>Segundumilaen</Milliseconds>
+    <GetSceneChangesWithFfmpeg>Lortu agerraldi aldaketak FFmpeg-tik</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Inportatu idatzi laua</Title>
@@ -722,29 +723,34 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <Note>Oharra: agiriek jadanik denbora kode zuzenak izan behar dituzte</Note>
   </JoinSubtitles>
   <LanguageNames>
+    <NotSpecified>Adierazi gabea</NotSpecified>
+    <UnknownCodeX>Ezezaguna</UnknownCodeX>
+    <aaName>Afarera</aaName>
     <abName>abkhazera</abName>
-    <afName>afrikaansa</afName>
+    <afName>afrikaanera</afName>
     <amName>amharera</amName>
     <arName>arabiera</arName>
     <asName>assamera</asName>
     <ayName>aimara</ayName>
     <azName>azerbaijanera</azName>
     <baName>bashkirrera</baName>
-    <beName>bielorrusiera</beName>
+    <beName>belaerrusiera</beName>
     <bgName>bulgariera</bgName>
+    <bhName>Bihariera</bhName>
+    <biName>Bislamera</biName>
     <bnName>bengalera</bnName>
     <boName>tibetera</boName>
     <brName>bretoiera</brName>
-    <caName>katalana</caName>
+    <caName>kataluniera</caName>
     <coName>korsikera</coName>
     <csName>txekiera</csName>
     <cyName>galesera</cyName>
     <daName>daniera</daName>
-    <deName>alemana</deName>
-    <dzName>dzongkha</dzName>
+    <deName>alemaniera</deName>
+    <dzName>dzongkhera</dzName>
     <elName>greziera</elName>
-    <enName>ingelesa</enName>
-    <eoName>esperantoa</eoName>
+    <enName>ingelera</enName>
+    <eoName>esperantoera</eoName>
     <esName>espainiera</esName>
     <etName>estoniera</etName>
     <euName>euskara</euName>
@@ -752,22 +758,23 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <fiName>finlandiera</fiName>
     <fjName>fijiera</fjName>
     <foName>faroera</foName>
-    <frName>frantsesa</frName>
+    <frName>frantziera</frName>
     <fyName>frisiera</fyName>
-    <gaName>gaelikoa</gaName>
-    <gdName>eskoziako gaelikoa</gdName>
+    <gaName>gaeliera</gaName>
+    <gdName>eskoziar gaeliera</gdName>
     <glName>galiziera</glName>
     <gnName>guaraniera</gnName>
     <guName>gujaratera</guName>
-    <haName>hausa</haName>
-    <heName>hebreera</heName>
-    <hiName>hindia</hiName>
+    <haName>hausera</haName>
+    <heName>hebraiera</heName>
+    <hiName>hindiera</hiName>
     <hrName>kroaziera</hrName>
     <huName>hungariera</huName>
     <hyName>armeniera</hyName>
-    <iaName>Interlingua</iaName>
+    <iaName>Interlinguera</iaName>
     <idName>indonesiera</idName>
-    <ieName>interlingue</ieName>
+    <ieName>interlinguera</ieName>
+    <ikName>Inupiaqera</ikName>
     <isName>islandiera</isName>
     <itName>italiera</itName>
     <iuName>inuitera</iuName>
@@ -782,76 +789,80 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <ksName>kashmirera</ksName>
     <kuName>kurduera</kuName>
     <kyName>kirgizera</kyName>
-    <laName>latina</laName>
+    <laName>latinera</laName>
     <lbName>luxenburgera</lbName>
-    <lnName>lingala</lnName>
+    <lnName>lingalera</lnName>
     <loName>laosera</loName>
     <ltName>lituaniera</ltName>
     <lvName>letoniera</lvName>
-    <mgName>malagasyera</mgName>
+    <mgName>malagasiera</mgName>
     <miName>maoriera</miName>
     <mkName>mazedoniera</mkName>
     <mlName>malayalamera</mlName>
     <mnName>mongoliera</mnName>
+    <moName>Moldaviera</moName>
     <mrName>marathera</mrName>
     <msName>malaysiera</msName>
     <mtName>maltera</mtName>
     <myName>burmatarra</myName>
+    <naName>Nauruera</naName>
     <neName>nepalera</neName>
-    <nlName>nederlandera</nlName>
-    <noName>norvegiera</noName>
+    <nlName>herbeherera</nlName>
+    <noName>norbegiera</noName>
     <ocName>Okzitaniera</ocName>
     <omName>oromoera</omName>
     <orName>oriyera</orName>
     <paName>punjabera</paName>
     <plName>poloniera</plName>
     <psName>paxtuera</psName>
-    <ptName>portugesa</ptName>
+    <ptName>portugalera</ptName>
     <quName>quechuera</quName>
     <rmName>erromantxera</rmName>
     <rnName>rundiera</rnName>
     <roName>errumaniera</roName>
     <ruName>errusiera</ruName>
-    <rwName>kinyaruanda</rwName>
-    <saName>sanskritoa</saName>
-    <sdName>sindhia</sdName>
+    <rwName>kinyaruandera</rwName>
+    <saName>sanskritoera</saName>
+    <sdName>sindhiera</sdName>
     <sgName>sangoera</sgName>
     <shName>serbokroaziera</shName>
-    <siName>sinhala</siName>
-    <skName>eslovakiera</skName>
-    <slName>esloveniera</slName>
+    <siName>sinhalera</siName>
+    <skName>eslobakiera</skName>
+    <slName>eslobeniera</slName>
     <smName>samoera</smName>
     <snName>shonera</snName>
     <soName>somaliera</soName>
     <sqName>albaniera</sqName>
     <srName>serbiera</srName>
     <ssName>swatiera</ssName>
-    <stName>hegoaldeko sothoera</stName>
+    <stName>hego sothoera</stName>
     <suName>sundanera</suName>
     <svName>suediera</svName>
-    <swName>swahili</swName>
+    <swName>swahiliera</swName>
     <taName>tamilera</taName>
     <teName>teluguera</teName>
     <tgName>tajikistanera</tgName>
     <thName>thailandiera</thName>
     <tiName>tigriñera</tiName>
     <tkName>turkmeniera</tkName>
-    <tlName>tagalog</tlName>
+    <tlName>tagalogera</tlName>
     <tnName>tswanera</tnName>
     <toName>tongera</toName>
     <trName>turkiera</trName>
     <tsName>tsongera</tsName>
     <ttName>tatarera</ttName>
-    <twName>twia</twName>
+    <twName>twiaera</twName>
     <ugName>uigurrera</ugName>
     <ukName>ukrainera</ukName>
-    <urName>urdua</urName>
-    <uzName>uzbekera</uzName>
-    <viName>vietnamera</viName>
+    <urName>urduera</urName>
+    <uzName>uzbekiera</uzName>
+    <viName>vietnamiera</viName>
+    <voName>Volapükera</voName>
     <woName>wolofera</woName>
     <xhName>xhosera</xhName>
-    <yiName>Jiddisha</yiName>
+    <yiName>Jiddishera</yiName>
     <yoName>yorubera</yoName>
+    <zaName>Zhuangera</zaName>
     <zhName>txinera</zhName>
     <zuName>zuluera</zuName>
   </LanguageNames>
@@ -974,6 +985,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
         <OpenDvd>Ireki DVD-a...</OpenDvd>
         <ChooseAudioTrack>Hautatu audio bidea</ChooseAudioTrack>
         <CloseVideo>It&amp;xi bideo agiria</CloseVideo>
+        <SetVideoOffset>Ezarri bideo oreka...</SetVideoOffset>
         <ImportSceneChanges>I&amp;nportatu agerraldi aldaketak...</ImportSceneChanges>
         <RemoveSceneChanges>Kendu agerraldi aldaketak</RemoveSceneChanges>
         <WaveformBatchGenerate>Multzo uhinera sortzea...</WaveformBatchGenerate>
@@ -1032,6 +1044,7 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
         <Find>Bilatu</Find>
         <Replace>Ordeztu</Replace>
         <FixCommonErrors>Zuzendu akats arruntak</FixCommonErrors>
+        <RemoveTextForHi>Kendu gorrentzako idazkia</RemoveTextForHi>
         <VisualSync>Ikus aldiberetzea</VisualSync>
         <SpellCheck>Idaz-egiaztapena</SpellCheck>
         <Settings>Ezarpenak</Settings>
@@ -1487,7 +1500,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <CaseSensitive>Hizki larri-xehe artean</CaseSensitive>
     <RegularExpression>Esaera arrunta</RegularExpression>
     <LinesFoundX>Lerro aurkituta: {0}</LinesFoundX>
-    <Remove>Ezabatu</Remove>
+    <Remove>Kendu</Remove>
     <Add>&amp;Gehitu</Add>
     <Update>&amp;Eguneratu</Update>
     <Enabled>Gaituta</Enabled>
@@ -1500,6 +1513,12 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <Rules>Esportatu arauak</Rules>
     <MoveToTop>Mugitu goren</MoveToTop>
     <MoveToBottom>Mugitu beheren</MoveToBottom>
+    <MoveSelectedRulesToGroup>Mugitu hautatutako arauak taldera</MoveSelectedRulesToGroup>
+    <Groups>Taldeak</Groups>
+    <RulesForGroupX>"{0}" taldearentzako arauak</RulesForGroupX>
+    <GroupName>Taldearen izena</GroupName>
+    <RenameGroup>Berrizendatu taldea...</RenameGroup>
+    <NewGroup>Talde berria</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Eztabaidagunea</Title>
@@ -1656,6 +1675,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <DurationMinimumMilliseconds>Gutx. iraupena segundumilaenetan:</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Geh. iraupena segundumilaenetan:</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Gutx. tartea azpidatzi artean sm-etan</MinimumGapMilliseconds>
+    <MaximumLines>Geh. lerro zenbatekoa</MaximumLines>
     <SubtitleFont>Azpidatzi hizkia:</SubtitleFont>
     <SubtitleFontSize>Azpidatzi hizki neurria:</SubtitleFontSize>
     <SubtitleBold>Lodia</SubtitleBold>
@@ -1683,6 +1703,10 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <AutoBackupEveryMinute>Minutuoro</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>5 minututik behin</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>15 minututik behin</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Kendu ondoren</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1 hilabete</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 hilabete</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 hilabete</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Egiaztatu eguneraketak</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Ahalbidetu jatorrizko azpidatzia editatzea</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Ohartu lerro ezabaketaz</PromptDeleteLines>
@@ -1694,6 +1718,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <DirectShowDescription>quartz.dll - system32 agiritegian</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
+    <MpvPlayer>mpv</MpvPlayer>
+    <MpvPlayerDescription>https://mpv.io/ -multimedia irakurgailu askea, iturburu irekikoa, eta plataforma-anitzerakoa</MpvPlayerDescription>
     <VlcMediaPlayer>VLC Irakurgailua</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll VLC Irakurgailua 1.1.0 edo berriagoa</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC helburua (VLC bertsio eramangarria erabiltzen ari bazara besterik ez da beharrezkoa)</VlcBrowseToLabel>
@@ -1763,6 +1789,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <FirstPlusX>Lehen + {0}</FirstPlusX>
     <LastMinusX>Azken - {0}</LastMinusX>
     <FixCommonerrors>Zuz. akats arruntak</FixCommonerrors>
+    <RemoveTextForHi>Kendu GR idazkia</RemoveTextForHi>
     <MergeLinesShorterThan>Batu hau baino labur. diren lerroak:</MergeLinesShorterThan>
     <MusicSymbol>Musika ikurrak:</MusicSymbol>
     <MusicSymbolsToReplace>Musika ikurrak ordezteko (tarte batez bananduta)</MusicSymbolsToReplace>
@@ -1789,12 +1816,14 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <AdjustSetStartTimeKeepDuration>Ezarri hasiera denbora, heutsi iraupenari</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Ezarri amaiera, orekatu gainontzekoa</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ezarri amaiera, orekatu gainontzekoa eta joan hurrengora</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>Hedatu oraingo lerroa hurrengo azpidatzira edo geh iraupenera</AdjustExtendCurrentSubtitle>
     <MainCreateStartDownEndUp>Sortu berria behera-tekla, ezarri amaiera denbora gora-tekla</MainCreateStartDownEndUp>
     <MergeDialog>Batu elkarrizketa (txertatu marratxoak)</MergeDialog>
     <GoToNext>Joan hurrengo lerrora</GoToNext>
     <GoToPrevious>Joan aurreko lerrora</GoToPrevious>
     <GoToCurrentSubtitleStart>Joan oraingo lerro hasierara</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Joan oraingo lerro amaierara</GoToCurrentSubtitleEnd>
+    <GoToNextSubtitleAndFocusVideo>Joan hurrengo lerrora eta ezarri bideo kokapena</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Aldatu fokoa zerrenda ikusi eta azpidatziaren idaz kutxa artean</ToggleFocus>
     <ToggleDialogDashes>Aldatu elkarrizketa marratxoak</ToggleDialogDashes>
     <Alignment>Lerrokapena (hautaturiko lerroak)</Alignment>
@@ -1812,6 +1841,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <WaveformPlayNewSelectionEnd>Irakurri hautapenaren amaiera</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Irakurri lehenik hautaturiko azpidatzia</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Fokutu zerrenda ikuspegia</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>Joan hurrengo agerraldi aldaketara</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>Aldatu agerraldi aldaketa</WaveformToggleSceneChange>
     <GoBack1Frame>Frame bat atzera</GoBack1Frame>
     <GoForward1Frame>Frame bat aurrera</GoForward1Frame>
     <GoBack100Milliseconds>100 sm atzera</GoBack100Milliseconds>
@@ -1820,6 +1851,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <GoForward500Milliseconds>500 sm aurrera</GoForward500Milliseconds>
     <GoBack1Second>Segundu bat atzera</GoBack1Second>
     <GoForward1Second>Segundu bat aurrera</GoForward1Second>
+    <GoBack5Seconds>Bost segundu atzera</GoBack5Seconds>
+    <GoForward5Seconds>Bost segundu aurrera</GoForward5Seconds>
     <TogglePlayPause>Aldatu irakurri/pausatu</TogglePlayPause>
     <Pause>Pausatu</Pause>
     <Fullscreen>Ikusleiho-osoan</Fullscreen>
@@ -1834,7 +1867,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SyntaxColorDurationIfTooSmall>Marg. iraup. labur. bada</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Margotu iraupena luzeegia bada</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Margotu idatzia luzeegia bada</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Margotu idatziak lerro gehiago baditu:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Margotu idatzia {0} lerro baino gehiago baditu</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Margotu denbora kode gainjarpena</SyntaxColorOverlap>
     <SyntaxErrorColor>Akats margoa</SyntaxErrorColor>
     <GoToFirstSelectedLine>Joan lehenik hautaturiko lerrora</GoToFirstSelectedLine>
@@ -1862,11 +1895,23 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <MainFileSaveAll>Gode denak</MainFileSaveAll>
     <Miscellaneous>Askotarikoa</Miscellaneous>
     <UseDoNotBreakAfterList>Erabili ez-hautsi zerrendaren ondoren (berez-hausterako)</UseDoNotBreakAfterList>
+    <MicrosoftBingTranslator>Microsoft Bing Itzultzailea</MicrosoftBingTranslator>
+    <HowToSignUp>Nola hasi saioa</HowToSignUp>
+    <ClientId>Bezero ID-a</ClientId>
+    <ClientSecret>Bezero sekretua</ClientSecret>
   </Settings>
+  <SettingsMpv>
+    <Title>mpv ezarpenak</Title>
+    <DownloadMpv>Jeitsi mpv lib</DownloadMpv>
+    <DownloadMpvFailed>Ezinezkoa mpv jeistea - mesedez saiatu berriro geroago!</DownloadMpvFailed>
+    <DownloadMpvOk>mpv lib jeitsi da eta erabiltzeko gertu dago</DownloadMpvOk>
+  </SettingsMpv>
   <SetVideoOffset>
     <Title>Ezarri bideo oreka</Title>
     <Description>Ezarri bideo oreka (azpidatziak ez du bideoaren egizko denbora jarraitu behar, baina adib. + 10 ordu)</Description>
     <RelativeToCurrentVideoPosition>Erlatiboa bideoaren oraingo kokapenarekin</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>Heutsi dauden denbora kodeei (ez gehitu bideo oreka)</KeepTimeCodes>
+    <Reset>Berrezarri</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Erakutsi hautaturiko lerroak lehenago/geroago</Title>
@@ -2197,6 +2242,17 @@ Gorde aldaketak?</KeepChangesMessage>
     <Title>Ezarri ez-etzana ezaugarria</Title>
     <Description>Zehaztu balioa idazkiaren estiloa arrunta izan arte eta ez etzana. Ohartu jatorrizko irudia etzana izan behar dela:</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>Urmarka</Title>
+    <WatermarkX>Urmarka: {0}</WatermarkX>
+    <GenerateWatermarkTitle>Sortu urmarka</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>Barreiatu azpidatzi guztian zehar</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>Oraingo lerroan bakarrik: {0}</CurrentLineOnlyX>
+    <Generate>Sortu</Generate>
+    <Remove>Kendu</Remove>
+    <BeforeWatermark>Urmarkaren aurretik</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>Urmarkak unicode agiri kodeaketarekin bakarrik egiten du lan</ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
     <ClickToAddWaveform>Klikatu uhinera gehitzeko</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klikatu uhinera/argilitza gehitzeko</ClickToAddWaveformAndSpectrogram>
@@ -2215,6 +2271,8 @@ Gorde aldaketak?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Erakutsi uhinera eta argilitza</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Erakutsi uhinera bakarrik</ShowWaveformOnly>
     <ShowSpectrogramOnly>Erakutsi argilitza bakarrik</ShowSpectrogramOnly>
+    <AddSceneChange>Gehitu agerraldi aldaketa</AddSceneChange>
+    <RemoveSceneChange>Kendu agerraldi aldaketa</RemoveSceneChange>
     <GuessTimeCodes>Ustezko denbora kodeak...</GuessTimeCodes>
     <SeekSilence>Bilatu isiltasuna</SeekSilence>
   </Waveform>
