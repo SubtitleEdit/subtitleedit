@@ -15002,6 +15002,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 audioVisualizer.InsertAtVideoPositionShortcut = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
             }
+
+            UiUtil.HelpKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralHelp);
+            helpToolStripMenuItem1.ShortcutKeys = UiUtil.HelpKeys;
         }
 
         public static object GetPropertiesAndDoAction(string pluginFileName, out string name, out string text, out decimal version, out string description, out string actionType, out string shortcut, out System.Reflection.MethodInfo mi)

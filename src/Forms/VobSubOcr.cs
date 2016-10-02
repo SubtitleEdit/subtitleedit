@@ -7104,7 +7104,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VobSubOcr_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.F1)
+            if (e.KeyCode == UiUtil.HelpKeys)
             {
                 Utilities.ShowHelp("#importvobsub");
                 e.SuppressKeyPress = true;

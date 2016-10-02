@@ -843,6 +843,8 @@ namespace Nikse.SubtitleEdit.Core
         public string GeneralGoToNextSubtitleAndFocusVideo { get; set; }
         public string GeneralExtendCurrentSubtitle { get; set; }
         public string GeneralPlayFirstSelected { get; set; }
+        public string GeneralHelp { get; set; }
+
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
         public string MainFileOpenKeepVideo { get; set; }
@@ -1059,6 +1061,7 @@ namespace Nikse.SubtitleEdit.Core
             GeneralGoToNextSubtitleAndFocusVideo = string.Empty;
             GeneralExtendCurrentSubtitle = string.Empty;
             GeneralPlayFirstSelected = string.Empty;
+            GeneralHelp = "F1";
             WaveformSearchSilenceForward = string.Empty;
             WaveformSearchSilenceBack = string.Empty;
             WaveformAddTextHere = string.Empty;
@@ -2479,6 +2482,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("GeneralPlayFirstSelected");
                 if (subNode != null)
                     settings.Shortcuts.GeneralPlayFirstSelected = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralHelp");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralHelp = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainFileNew");
                 if (subNode != null)
                     settings.Shortcuts.MainFileNew = subNode.InnerText;
@@ -3357,6 +3363,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("GeneralGoToNextSubtitleAndFocusVideo", settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo);
                 textWriter.WriteElementString("GeneralExtendCurrentSubtitle", settings.Shortcuts.GeneralExtendCurrentSubtitle);
                 textWriter.WriteElementString("GeneralPlayFirstSelected", settings.Shortcuts.GeneralPlayFirstSelected);
+                textWriter.WriteElementString("GeneralHelp", settings.Shortcuts.GeneralHelp);
                 textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
                 textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
                 textWriter.WriteElementString("MainFileOpenKeepVideo", settings.Shortcuts.MainFileOpenKeepVideo);
