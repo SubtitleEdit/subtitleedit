@@ -660,6 +660,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(generalNode, language.GoToCurrentSubtitleStart, nameof(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle));
             AddNode(generalNode, language.GoToCurrentSubtitleEnd, nameof(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle));
             AddNode(generalNode, language.GoToNextSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo));
+            AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp));
             treeViewShortcuts.Nodes.Add(generalNode);
 
             var fileNode = new TreeNode(Configuration.Settings.Language.Main.Menu.File.Title);
@@ -1276,7 +1277,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
-            else if (e.KeyCode == Keys.F1)
+            else if (e.KeyCode == UiUtil.HelpKeys)
             {
                 Utilities.ShowHelp("#Settings");
                 e.SuppressKeyPress = true;
@@ -1810,7 +1811,7 @@ namespace Nikse.SubtitleEdit.Forms
                 e.KeyCode == Keys.PageDown ||
                 e.KeyCode == Keys.PageUp ||
                 e.KeyCode == Keys.None ||
-                e.KeyCode == Keys.F1 ||
+                e.KeyCode == UiUtil.HelpKeys ||
                 e.KeyCode == Keys.Home ||
                 e.KeyCode == Keys.End)
                 return;

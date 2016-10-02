@@ -832,7 +832,7 @@ namespace Nikse.SubtitleEdit.Forms
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.F1)
+            else if (e.KeyCode == UiUtil.HelpKeys)
                 Utilities.ShowHelp("#translation");
             else if (e.Control && e.Shift && e.Alt && e.KeyCode == Keys.L)
             {
