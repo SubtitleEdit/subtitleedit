@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.SeNetworkService;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -10,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
     {
         public class ChatEntry
         {
-            public SeNetworkService.SeUser User { get; set; }
+            public SeUser User { get; set; }
             public string Message { get; set; }
         }
 
@@ -20,16 +21,16 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         private System.Windows.Forms.Timer _timerWebService;
         public List<UpdateLogEntry> UpdateLog = new List<UpdateLogEntry>();
         public List<ChatEntry> ChatLog = new List<ChatEntry>();
-        private SeNetworkService.SeService _seWs;
+        private SeService _seWs;
         private DateTime _seWsLastUpdate = DateTime.Now.AddYears(-1);
-        public SeNetworkService.SeUser CurrentUser { get; set; }
+        public SeUser CurrentUser { get; set; }
         public Subtitle LastSubtitle;
         public Subtitle Subtitle;
         public Subtitle OriginalSubtitle;
         public string SessionId;
         public string UserName;
         public string FileName;
-        public List<SeNetworkService.SeUser> Users;
+        public List<SeUser> Users;
         public StringBuilder Log;
 
         public string WebServiceUrl
@@ -59,10 +60,10 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             SessionId = sessionKey;
             UserName = userName;
             FileName = fileName;
-            var list = new List<SeNetworkService.SeSequence>();
+            var list = new List<SeSequence>();
             foreach (Paragraph p in Subtitle.Paragraphs)
             {
-                list.Add(new SeNetworkService.SeSequence
+                list.Add(new SeSequence
                 {
                     StartMilliseconds = (int)p.StartTime.TotalMilliseconds,
                     EndMilliseconds = (int)p.EndTime.TotalMilliseconds,
@@ -70,12 +71,12 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 });
             }
 
-            var originalSubtitle = new List<SeNetworkService.SeSequence>();
+            var originalSubtitle = new List<SeSequence>();
             if (OriginalSubtitle != null)
             {
                 foreach (Paragraph p in OriginalSubtitle.Paragraphs)
                 {
-                    originalSubtitle.Add(new SeNetworkService.SeSequence
+                    originalSubtitle.Add(new SeSequence
                     {
                         StartMilliseconds = (int)p.StartTime.TotalMilliseconds,
                         EndMilliseconds = (int)p.EndTime.TotalMilliseconds,
@@ -84,12 +85,12 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 }
             }
 
-            _seWs = new SeNetworkService.SeService();
+            _seWs = new SeService();
             _seWs.Url = webServiceUrl;
             _seWs.Proxy = Utilities.GetProxy();
-            SeNetworkService.SeUser user = _seWs.Start(sessionKey, userName, list.ToArray(), originalSubtitle.ToArray(), fileName, out message);
+            SeUser user = _seWs.Start(sessionKey, userName, list.ToArray(), originalSubtitle.ToArray(), fileName, out message);
             CurrentUser = user;
-            Users = new List<SeNetworkService.SeUser>();
+            Users = new List<SeUser>();
             Users.Add(user);
             if (message == "OK")
                 _timerWebService.Start();
@@ -98,10 +99,10 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         public bool Join(string webServiceUrl, string userName, string sessionKey, out string message)
         {
             SessionId = sessionKey;
-            _seWs = new SeNetworkService.SeService();
+            _seWs = new SeService();
             _seWs.Url = webServiceUrl;
             _seWs.Proxy = Utilities.GetProxy();
-            Users = new List<SeNetworkService.SeUser>();
+            Users = new List<SeUser>();
             var users = _seWs.Join(sessionKey, userName, out message);
             if (message != "OK")
                 return false;
@@ -145,9 +146,9 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             _timerWebService.Start();
         }
 
-        public List<SeNetworkService.SeUpdate> GetUpdates(out string message, out int numberOfLines)
+        public List<SeUpdate> GetUpdates(out string message, out int numberOfLines)
         {
-            List<SeNetworkService.SeUpdate> list = new List<SeNetworkService.SeUpdate>();
+            List<SeUpdate> list = new List<SeUpdate>();
             DateTime newUpdateTime;
             var updates = _seWs.GetUpdates(SessionId, CurrentUser.UserName, _seWsLastUpdate, out message, out newUpdateTime, out numberOfLines);
             if (updates != null)
@@ -209,7 +210,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
 
         internal void UpdateLine(int index, Paragraph paragraph)
         {
-            _seWs.UpdateLine(SessionId, index, new SeNetworkService.SeSequence
+            _seWs.UpdateLine(SessionId, index, new SeSequence
             {
                 StartMilliseconds = (int)paragraph.StartTime.TotalMilliseconds,
                 EndMilliseconds = (int)paragraph.EndTime.TotalMilliseconds,
@@ -240,7 +241,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             }
         }
 
-        public void AddToWsUserLog(SeNetworkService.SeUser user, int pos, string action, bool updateUI)
+        public void AddToWsUserLog(SeUser user, int pos, string action, bool updateUI)
         {
             for (int i = 0; i < UpdateLog.Count; i++)
             {
