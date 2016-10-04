@@ -76,6 +76,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     new FLVCoreCuePoints(),
                     new Footage(),
                     new GpacTtxt(),
+                    new Gremots(),
                     new ImageLogicAutocaption(),
                     new IssXml(),
                     new ItunesTimedText(),
