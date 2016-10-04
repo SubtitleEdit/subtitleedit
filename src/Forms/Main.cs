@@ -1797,14 +1797,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (ext == ".sub" && IsVobSubFile(fileName, false))
                 {
-                    if (MessageBox.Show(this, _language.ImportThisVobSubSubtitle, _title, MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        ImportAndOcrVobSubSubtitleNew(fileName, _loading);
-                    }
-                    else
-                    {
-                        _exitWhenLoaded = _loading;
-                    }
+                    ImportAndOcrVobSubSubtitleNew(fileName, _loading);
                     return;
                 }
 
@@ -1915,10 +1908,7 @@ namespace Nikse.SubtitleEdit.Forms
                     // retry vobsub (file with wrong extension)
                     if (IsVobSubFile(fileName, false))
                     {
-                        if (MessageBox.Show(this, _language.ImportThisVobSubSubtitle, _title, MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        {
-                            ImportAndOcrVobSubSubtitleNew(fileName, _loading);
-                        }
+                        ImportAndOcrVobSubSubtitleNew(fileName, _loading);
                         return;
                     }
 
@@ -2544,10 +2534,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // retry vobsub (file with wrong extension)
                 if (format == null && file.Length > 500 && IsVobSubFile(fileName, false))
                 {
-                    if (MessageBox.Show(this, _language.ImportThisVobSubSubtitle, _title, MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        ImportAndOcrVobSubSubtitleNew(fileName, _loading);
-                    }
+                    ImportAndOcrVobSubSubtitleNew(fileName, _loading);
                     return;
                 }
 

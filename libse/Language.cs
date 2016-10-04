@@ -1092,7 +1092,6 @@ namespace Nikse.SubtitleEdit.Core
                 BeforeVisualSync = "Before visual sync",
                 VisualSyncPerformedOnSelectedLines = "Visual sync performed on selected lines",
                 VisualSyncPerformed = "Visual sync performed",
-                ImportThisVobSubSubtitle = "Import this VobSub subtitle?",
                 FileXIsLargerThan10MB = "File is larger than 10 MB: {0}",
                 ContinueAnyway = "Continue anyway?",
                 BeforeLoadOf = "Before load of {0}",

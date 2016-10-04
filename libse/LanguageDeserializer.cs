@@ -2353,9 +2353,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/VisualSyncPerformed":
                     language.Main.VisualSyncPerformed = reader.Value;
                     break;
-                case "Main/ImportThisVobSubSubtitle":
-                    language.Main.ImportThisVobSubSubtitle = reader.Value;
-                    break;
                 case "Main/FileXIsLargerThan10MB":
                     language.Main.FileXIsLargerThan10MB = reader.Value;
                     break;
