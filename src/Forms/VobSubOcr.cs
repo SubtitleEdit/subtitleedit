@@ -5949,7 +5949,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (File.Exists(outputFileName))
                 {
-                    result = File.ReadAllText(outputFileName);
+                    result = File.ReadAllText(outputFileName, Encoding.UTF8);
                     result = ParseHocr(result);
                     File.Delete(outputFileName);
                 }
