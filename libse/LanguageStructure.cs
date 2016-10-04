@@ -971,7 +971,6 @@
             public string BeforeVisualSync { get; set; }
             public string VisualSyncPerformedOnSelectedLines { get; set; }
             public string VisualSyncPerformed { get; set; }
-            public string ImportThisVobSubSubtitle { get; set; }
             public string FileXIsLargerThan10MB { get; set; }
             public string ContinueAnyway { get; set; }
             public string BeforeLoadOf { get; set; }
