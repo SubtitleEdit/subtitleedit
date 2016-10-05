@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
@@ -694,6 +694,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Frames>Кадров</Frames>
     <Seconds>Секунд</Seconds>
     <Milliseconds>Миллисекунд</Milliseconds>
+    <GetSceneChangesWithFfmpeg>Получить сцены изменений с помощью FFmpeg</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Импорт простого текста</Title>
@@ -1054,7 +1055,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <Find>Найти</Find>
         <Replace>Заменить</Replace>
         <FixCommonErrors>Исправить типичные ошибки</FixCommonErrors>
-        <RemoveTextForHi>Очистить текст для слабослышащих</RemoveTextForHi>
+        <RemoveTextForHi>Очистка текста для слабослышащих</RemoveTextForHi>
         <VisualSync>Визуальная синхронизация</VisualSync>
         <SpellCheck>Проверка орфографии</SpellCheck>
         <Settings>Настройки</Settings>
@@ -1193,7 +1194,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <BeforeVisualSync>Перед визуальной синхронизацией</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Выполнена визуальная синхронизация для выбранных строк</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Выполнена визуальная синхронизация</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Импортировать выбранные субтитры VobSub?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Размер файла больше, чем 10 Mб: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Все равно продолжить?</ContinueAnyway>
     <BeforeLoadOf>Перед загрузкой {0}</BeforeLoadOf>
@@ -1703,6 +1703,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <DurationMinimumMilliseconds>Мин. продолжительность, мс</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Макс. продолжительность, мс</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Мин. разрыв между субтитрами в мс</MinimumGapMilliseconds>
+    <MaximumLines>Макс. количество строк</MaximumLines>
     <SubtitleFont>Шрифт субтитров</SubtitleFont>
     <SubtitleFontSize>Размер шрифта субтитров</SubtitleFontSize>
     <SubtitleBold>Полужирный</SubtitleBold>
@@ -1845,12 +1846,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <AdjustSetStartTimeKeepDuration>Установить начальное время, сохранить длительность</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Установить конец, сместить остаток</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Установить конец, сместить остаток и перейти к следующему субтитру</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>Продлить строку до след. субтитра/задать макс. длительность</AdjustExtendCurrentSubtitle>
     <MainCreateStartDownEndUp>Создать новый - ВНИЗ, установить конечное время - ВВЕРХ</MainCreateStartDownEndUp>
     <MergeDialog>Объединить диалог (вставить тире)</MergeDialog>
     <GoToNext>Перейти к следующей строке</GoToNext>
     <GoToPrevious>Перейти к предыдущей строке</GoToPrevious>
     <GoToCurrentSubtitleStart>Перейти к началу текущей строки</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Перейти к концу текущей строки</GoToCurrentSubtitleEnd>
+    <GoToNextSubtitleAndFocusVideo>перейти к следующей строке и установить позицию видео</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Переключить фокус между списком и полем ввода субтитра</ToggleFocus>
     <ToggleDialogDashes>Вкл./Откл. тире диалогов</ToggleDialogDashes>
     <Alignment>Выравнивание (выделенные строки)</Alignment>
@@ -1868,6 +1871,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformPlayNewSelectionEnd>Воспроизвести конец выделения</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Проиграть первый выделенный субтитр</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Фокус на списке</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>Перейти к следующему изменению сцены</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>Переключить изменение сцен</WaveformToggleSceneChange>
     <GoBack1Frame>1 кадр назад</GoBack1Frame>
     <GoForward1Frame>1 кадр вперед</GoForward1Frame>
     <GoBack100Milliseconds>100 мс назад</GoBack100Milliseconds>
@@ -1892,7 +1897,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SyntaxColorDurationIfTooSmall>Цвет для слишком короткой продолжительности</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Цвет для слишком длинной продолжительности</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Цвет для слишком длинного текста</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Цвет текста, если строк больше чем:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Подсвечивание текста, если он превышает {0} строк(и)</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Цвет наложения таймкода</SyntaxColorOverlap>
     <SyntaxErrorColor>Цвет ошибки</SyntaxErrorColor>
     <GoToFirstSelectedLine>Перейти к первой выделенной строке</GoToFirstSelectedLine>
@@ -2301,6 +2306,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <ShowWaveformAndSpectrogram>Показать форму сигнала и спектрограмму</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Показать только форму сигнала</ShowWaveformOnly>
     <ShowSpectrogramOnly>Показать только спектрограмму</ShowSpectrogramOnly>
+    <AddSceneChange>Добавить изменение сцены</AddSceneChange>
+    <RemoveSceneChange>Удалить изменение сцены</RemoveSceneChange>
     <GuessTimeCodes>Распознать таймкоды...</GuessTimeCodes>
     <SeekSilence>Поиск пауз...</SeekSilence>
   </Waveform>
