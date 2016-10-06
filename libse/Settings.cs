@@ -603,8 +603,8 @@ namespace Nikse.SubtitleEdit.Core
             ShowToolbarSettings = false;
             ShowToolbarHelp = true;
 
-            ShowVideoPlayer = false;
-            ShowAudioVisualizer = false;
+            ShowVideoPlayer = true;
+            ShowAudioVisualizer = true;
             ShowWaveform = true;
             ShowSpectrogram = true;
             ShowFrameRate = false;
