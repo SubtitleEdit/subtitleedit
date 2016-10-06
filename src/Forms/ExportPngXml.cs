@@ -3381,10 +3381,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             checkBoxFullFrameImage.Checked = Configuration.Settings.Tools.ExportFullFrame;
             panelShadowColor.BackColor = Configuration.Settings.Tools.ExportShadowColor;
 
+            comboBoxBottomMargin.Items.Clear();
             for (int i = 0; i < 1000; i++)
                 comboBoxBottomMargin.Items.Add(i);
             if (Configuration.Settings.Tools.ExportBottomMargin >= 0 && Configuration.Settings.Tools.ExportBottomMargin < comboBoxBottomMargin.Items.Count)
                 comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBottomMargin;
+
+            comboBoxLeftRightMargin.Items.Clear();
+            for (int i = 0; i < 1000; i++)
+                comboBoxLeftRightMargin.Items.Add(i);
+            if (Configuration.Settings.Tools.ExportLeftRightMargin >= 0 && Configuration.Settings.Tools.ExportLeftRightMargin < comboBoxBottomMargin.Items.Count)
+                comboBoxLeftRightMargin.SelectedIndex = Configuration.Settings.Tools.ExportLeftRightMargin;
 
             if (exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME" && Configuration.Settings.Tools.ExportBluRayBottomMargin >= 0 && Configuration.Settings.Tools.ExportBluRayBottomMargin < comboBoxBottomMargin.Items.Count)
                 comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBluRayBottomMargin;
@@ -3396,7 +3403,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 comboBoxLeftRightMargin.Visible = true;
                 labelLeftRightMargin.Visible = true;
-                comboBoxLeftRightMargin.SelectedIndex = 10;
             }
             else
             {
@@ -3907,6 +3913,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Configuration.Settings.Tools.ExportBluRayBottomMargin = comboBoxBottomMargin.SelectedIndex;
             else
                 Configuration.Settings.Tools.ExportBottomMargin = comboBoxBottomMargin.SelectedIndex;
+
+            Configuration.Settings.Tools.ExportLeftRightMargin = comboBoxLeftRightMargin.SelectedIndex;
 
             Configuration.Settings.Tools.ExportHorizontalAlignment = comboBoxHAlign.SelectedIndex;
             Configuration.Settings.Tools.Export3DType = comboBox3D.SelectedIndex;

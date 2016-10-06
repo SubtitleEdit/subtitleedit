@@ -37,6 +37,7 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.labelLineHeightStyle = new System.Windows.Forms.Label();
             this.panelFullFrameBackground = new System.Windows.Forms.Panel();
             this.comboBoxLeftRightMargin = new System.Windows.Forms.ComboBox();
             this.labelLeftRightMargin = new System.Windows.Forms.Label();
@@ -96,7 +97,6 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.labelLineHeightStyle = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxImageSettings.SuspendLayout();
@@ -219,6 +219,15 @@
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
             // 
+            // labelLineHeightStyle
+            // 
+            this.labelLineHeightStyle.AutoSize = true;
+            this.labelLineHeightStyle.Location = new System.Drawing.Point(775, 153);
+            this.labelLineHeightStyle.Name = "labelLineHeightStyle";
+            this.labelLineHeightStyle.Size = new System.Drawing.Size(103, 13);
+            this.labelLineHeightStyle.TabIndex = 59;
+            this.labelLineHeightStyle.Text = "labelLineHeightStyle";
+            // 
             // panelFullFrameBackground
             // 
             this.panelFullFrameBackground.BackColor = System.Drawing.Color.Transparent;
@@ -234,58 +243,6 @@
             // 
             this.comboBoxLeftRightMargin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxLeftRightMargin.FormattingEnabled = true;
-            this.comboBoxLeftRightMargin.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28",
-            "29",
-            "30",
-            "31",
-            "32",
-            "33",
-            "34",
-            "35",
-            "36",
-            "37",
-            "38",
-            "39",
-            "40",
-            "41",
-            "42",
-            "43",
-            "44",
-            "45",
-            "46",
-            "47",
-            "48",
-            "49",
-            "50"});
             this.comboBoxLeftRightMargin.Location = new System.Drawing.Point(100, 159);
             this.comboBoxLeftRightMargin.Name = "comboBoxLeftRightMargin";
             this.comboBoxLeftRightMargin.Size = new System.Drawing.Size(121, 21);
@@ -980,15 +937,6 @@
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
-            // 
-            // labelLineHeightStyle
-            // 
-            this.labelLineHeightStyle.AutoSize = true;
-            this.labelLineHeightStyle.Location = new System.Drawing.Point(775, 153);
-            this.labelLineHeightStyle.Name = "labelLineHeightStyle";
-            this.labelLineHeightStyle.Size = new System.Drawing.Size(103, 13);
-            this.labelLineHeightStyle.TabIndex = 59;
-            this.labelLineHeightStyle.Text = "labelLineHeightStyle";
             // 
             // ExportPngXml
             // 

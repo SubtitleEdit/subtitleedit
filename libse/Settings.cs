@@ -149,6 +149,7 @@ namespace Nikse.SubtitleEdit.Core
         public Color ExportBorderColor { get; set; }
         public Color ExportShadowColor { get; set; }
         public int ExportBottomMargin { get; set; }
+        public int ExportLeftRightMargin { get; set; }
         public int ExportHorizontalAlignment { get; set; }
         public int ExportBluRayBottomMargin { get; set; }
         public int ExportBluRayShadow { get; set; }
@@ -224,6 +225,7 @@ namespace Nikse.SubtitleEdit.Core
             ExportBorderColor = Color.FromArgb(255, 0, 0, 0);
             ExportShadowColor = Color.FromArgb(255, 0, 0, 0);
             ExportBottomMargin = 15;
+            ExportLeftRightMargin = 15;
             ExportHorizontalAlignment = 1; // 1=center (0=left, 2=right)
             ExportVobSubSimpleRendering = true;
             ExportVobAntiAliasingWithTransparency = true;
@@ -1834,6 +1836,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ExportBottomMargin");
             if (subNode != null)
                 settings.Tools.ExportBottomMargin = int.Parse(subNode.InnerText);
+            subNode = node.SelectSingleNode("ExportLeftRightMargin");
+            if (subNode != null)
+                settings.Tools.ExportLeftRightMargin = int.Parse(subNode.InnerText);
             subNode = node.SelectSingleNode("ExportHorizontalAlignment");
             if (subNode != null)
                 settings.Tools.ExportHorizontalAlignment = int.Parse(subNode.InnerText);
@@ -3128,6 +3133,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ExportBorderColor", settings.Tools.ExportBorderColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportShadowColor", settings.Tools.ExportShadowColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportBottomMargin", settings.Tools.ExportBottomMargin.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportLeftRightMargin", settings.Tools.ExportLeftRightMargin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportHorizontalAlignment", settings.Tools.ExportHorizontalAlignment.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportBluRayBottomMargin", settings.Tools.ExportBluRayBottomMargin.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportBluRayShadow", settings.Tools.ExportBluRayShadow.ToString(CultureInfo.InvariantCulture));
