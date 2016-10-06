@@ -1181,7 +1181,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <BeforeVisualSync>시각 동기화 전</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>시각 동기화가 선택한 줄에서 실행되었습니다.</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>시각 동기화가 실행되었습니다.</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>이 VobSub 자막을 가져오시겠습니까?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>파일이 10MB보다 큼: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>계속하시겠습니까?</ContinueAnyway>
     <BeforeLoadOf>{0} 로드 전</BeforeLoadOf>
@@ -1928,7 +1927,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <TitleAll>* 모든 줄 빠르게/느리게 표시</TitleAll>
     <ShowEarlier>빠르게</ShowEarlier>
     <ShowLater>느리게</ShowLater>
-    <TotalAdjustmentX>☞ 싱크 합계: {0} 초</TotalAdjustmentX>
+    <TotalAdjustmentX>☞ 싱크 조정 : {0} 초</TotalAdjustmentX>
     <AllLines>모든 줄</AllLines>
     <SelectedLinesOnly>선택한 줄</SelectedLinesOnly>
     <SelectedLinesAndForward>선택한 줄 이후</SelectedLinesAndForward>
