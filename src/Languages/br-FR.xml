@@ -1165,7 +1165,6 @@ Notenn : Gwiriekit spas an disk vak.</WaveFileMalformed>
     <BeforeVisualSync>A-raok ar goubredadenn weledel</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Goubredañ gweledel graet war al linennoù diuzet</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Goubredañ gweledel graet</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Enporzhiañ an istitl-mañ e VobSub ?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Restr uheloc'h evit 10 Mo : {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Kenderc'hel memestra ?</ContinueAnyway>
     <BeforeLoadOf>A-raok kargañ diouzh {0}</BeforeLoadOf>

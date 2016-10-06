@@ -1182,7 +1182,6 @@ Bemærk: Kontroller ledig diskplads.</WaveFileMalformed>
     <BeforeVisualSync>Før visuel synkroniser</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visual synkronisering udføres på udvalgte linjer</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visuel synkronisering udført</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Importer denne VobSub undertekst?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Filen er større end 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Fortsæt alligevel?</ContinueAnyway>
     <BeforeLoadOf>Før indlæsning af {0}</BeforeLoadOf>

@@ -1181,7 +1181,6 @@ Oharra: Egiaztatu diskako toki askea.</WaveFileMalformed>
     <BeforeVisualSync>Ikus aldiberetzearen aurretik</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Ikus aldiberetzea eginda hautaturiko lerroetan</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Ikus aldiberetzea eginda</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Inportatu VobSub azpidatzi hau?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Agiria 10 MB baino handiagoa da: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Jarraitu horrela ere?</ContinueAnyway>
     <BeforeLoadOf>Gertatu aurretik {0}</BeforeLoadOf>

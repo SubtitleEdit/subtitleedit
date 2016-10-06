@@ -1185,7 +1185,6 @@ Notă: Verifică spațiul liber al discului.</WaveFileMalformed>
     <BeforeVisualSync>Înaintea sincronizării vizuale</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Sincronizare vizuală realizată pe liniile selectate</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Sincronizare vizuală realizată</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Se importă această subtitrare VobSub?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Fișierul este mai mare decât 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Continui oricum?</ContinueAnyway>
     <BeforeLoadOf>Înaintea încărcării {0}</BeforeLoadOf>

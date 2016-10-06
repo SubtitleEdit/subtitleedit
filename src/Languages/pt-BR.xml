@@ -1181,7 +1181,6 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <BeforeVisualSync>Antes da sincronização visual</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Sincronização visual aplicada nas linhas selecionadas</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Sincronização visual realizada</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Importar esta legenda VobSub?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>O arquivo é maior que 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Continuar assim mesmo?</ContinueAnyway>
     <BeforeLoadOf>Antes de carregar {0}</BeforeLoadOf>

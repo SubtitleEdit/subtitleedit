@@ -1178,7 +1178,6 @@ Tips: Se om du har noe plass igjen på harddisken.</WaveFileMalformed>
     <BeforeVisualSync>Før visuell synk</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visuell synk på valgte linjer</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visuell synk utført</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Vil du importere denne VobSub-underteksten?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Filen er større enn 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Fortsett likevel?</ContinueAnyway>
     <BeforeLoadOf>Før innlasting av {0}</BeforeLoadOf>

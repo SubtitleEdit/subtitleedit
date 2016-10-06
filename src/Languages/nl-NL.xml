@@ -1184,7 +1184,6 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <BeforeVisualSync>Vóór visuele sync</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visuele sync uitgevoerd op tekstselectie</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visuele synchronisatie uitgevoerd</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Deze VobSub-ondertitel importeren?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Bestand is groter dan 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Toch doorgaan?</ContinueAnyway>
     <BeforeLoadOf>Vóór laden van {0}</BeforeLoadOf>

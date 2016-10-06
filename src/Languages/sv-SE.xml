@@ -1107,7 +1107,6 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeVisualSync>Före visuell synkronisering</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visuell synkronisera utförs på utvalda rader</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visuell synk utförs</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Import denna VobSub text?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Filen är större än 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Fortsätt ändå?</ContinueAnyway>
     <BeforeLoadOf>Innan du laddar {0}</BeforeLoadOf>

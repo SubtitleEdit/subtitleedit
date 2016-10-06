@@ -1183,7 +1183,6 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <BeforeVisualSync>Vizuális szinkronizálás előtti állapotra</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>A vizuális szinkronizálás végrehajtásra került a kiválasztott soroknál</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Vizuális szinkronizálás végrehajtva</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Importálja ezt a VobSub feliratot?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Fájl nagyobb, mint 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Mindenképp folytatja?</ContinueAnyway>
     <BeforeLoadOf>A(z) {0} betöltése előtti állapotra</BeforeLoadOf>
