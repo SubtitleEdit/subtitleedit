@@ -1184,7 +1184,6 @@ Command line: {1} {2}
     <BeforeVisualSync>影音对照同步之前</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>已对所选行执行影音对照同步</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>影音对照同步已执行</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>导入这个 VobSub 字幕吗？</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>文件大小超过 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>仍要继续吗？</ContinueAnyway>
     <BeforeLoadOf>加载 "{0}" 之前</BeforeLoadOf>

@@ -1168,7 +1168,6 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <BeforeVisualSync>Ennen visuaalista tahdistusa</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visuaalinen tahdistus tehty valituille riveille</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visualinen tahdistus valmis</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Tuodaanko tämä VobSub-tekstitys?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Tiedosto on suurempi kuin 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Haluatko jatkaa?</ContinueAnyway>
     <BeforeLoadOf>Ennen {0} latausta</BeforeLoadOf>

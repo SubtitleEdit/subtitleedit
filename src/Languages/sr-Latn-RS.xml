@@ -948,7 +948,6 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeVisualSync>Izvršeno vizualno usklađivanje</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Izvršeno je vizualno usklađivanje na odabranim linijama</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Vizuelno usklađivanje je izvršeno.</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Uvezi ovaj VobSub prevod?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Datoteka je veća od 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Ipak nastavi?</ContinueAnyway>
     <BeforeLoadOf>Pre učitavanja {0}</BeforeLoadOf>

@@ -1077,7 +1077,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeVisualSync>Sincronización visual antes</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Sincronización visual aplicada a las líneas seleccionadas</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Sincronización visual realizada</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>¿Importar este subtítulo VobSub?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>El archivo es mayor de 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>¿Continuar de todas formas?</ContinueAnyway>
     <BeforeLoadOf>Antes de carga de {0}</BeforeLoadOf>

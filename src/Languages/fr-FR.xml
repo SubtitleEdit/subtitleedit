@@ -1185,7 +1185,6 @@ Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
     <BeforeVisualSync>Avant synchronisation visuelle</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Synchronisation visuelle effectués sur des lignes sélectionnées</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Synchronisation visuelle effectuée</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Importer ce sous-titre VobSub ?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Fichier supérieure à 10 Mo: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Continuer malgré tout ?</ContinueAnyway>
     <BeforeLoadOf>Avant chargement de {0}</BeforeLoadOf>

@@ -1165,7 +1165,6 @@ Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
     <BeforeVisualSync>Izvršeno vizualno usklađivanje</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Izvršeno je vizualno usklađivanje na odabranim linijama</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Vizualno usklađivanje je izvršeno.</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Uvezi ovaj Vobsub podnaslov?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Datoteka je veća od 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Ipak nastaviti?</ContinueAnyway>
     <BeforeLoadOf>Prije učitavanja {0}</BeforeLoadOf>

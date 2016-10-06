@@ -1116,7 +1116,6 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeVisualSync>Görsel senk. den önce</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visual sync performed on selected lines</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Görsel senkron yapıldı</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Bu VobSub altyazısı içe aktarılsın mı?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Dosya 10 MB'den büyük: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Devam edilsin mi?</ContinueAnyway>
     <BeforeLoadOf>{0} yüklemesinden önce</BeforeLoadOf>

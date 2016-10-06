@@ -798,7 +798,6 @@ http://soft98.ir
     <BeforeVisualSync>قبل از همگام بصری</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>همگام سازی در انتخاب خطوط</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>همگام سازی انجام</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>؟VobSubواردات این نام</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>File is larger than 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>هر حال ادامه میدهید؟</ContinueAnyway>
     <BeforeLoadOf>Before load of {0}</BeforeLoadOf>

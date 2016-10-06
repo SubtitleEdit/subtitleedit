@@ -1185,7 +1185,6 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <BeforeVisualSync>Vor Visueller Anpassung</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visuelle Anpassung für ausgewählten Text ausgeführt</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visuelle Anpassung ausgeführt</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Diesen VobSub Untertitel importieren?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Datei ist größer als 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Trotzdem fortfahren?</ContinueAnyway>
     <BeforeLoadOf>Vor Laden von {0}</BeforeLoadOf>

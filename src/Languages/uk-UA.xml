@@ -1169,7 +1169,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeVisualSync>Перед візуальною синхронізацією</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Візуальну синхронізацію здійснено на вибраних рядках</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Візуальну синхронізацію здійснено</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Імпортувати цей субтитр VobSub?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Файл більший за 10 МБ: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Все одно продовжити?</ContinueAnyway>
     <BeforeLoadOf>Перед завантаженням {0}</BeforeLoadOf>
