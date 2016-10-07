@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Subtitle _subtitle;
         private SubtitleFormat _format;
-        private static string _formtName;
+        private static string _formatName;
         private Color _subtitleColor;
         private string _subtitleFontName = "Verdana";
         private float _subtitleFontSize = 25.0f;
@@ -3423,7 +3423,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
             }
             if (comboBoxSubtitleFont.SelectedIndex == -1)
-                comboBoxSubtitleFont.SelectedIndex = 0; // take first font if default font not found (e.g. linux)
+                comboBoxSubtitleFont.SelectedIndex = 0; // take first font if default font was not found (e.g. linux)
 
             if (videoInfo != null && videoInfo.Height > 0 && videoInfo.Width > 0)
             {
@@ -3820,7 +3820,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             _isLoading = false;
             subtitleListView1_SelectedIndexChanged(null, null);
-            _formtName = _format != null ? _format.Name : string.Empty;
+            _formatName = _format != null ? _format.Name : string.Empty;
         }
 
         private void comboBoxHAlign_SelectedIndexChanged(object sender, EventArgs e)
@@ -4056,11 +4056,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static string GetStyleName(Paragraph paragraph)
         {
-            if ((_formtName == AdvancedSubStationAlpha.NameOfFormat || _formtName == SubStationAlpha.NameOfFormat) && !string.IsNullOrEmpty(paragraph.Extra))
+            if ((_formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat) && !string.IsNullOrEmpty(paragraph.Extra))
             {
                 return paragraph.Extra;
             }
-
             return string.Empty;
         }
 
