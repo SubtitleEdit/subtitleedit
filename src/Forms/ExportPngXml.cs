@@ -1680,9 +1680,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void SetupImageParameters()
         {
-            if (_isLoading)
-                return;
-
             if (subtitleListView1.SelectedItems.Count > 0 && _format.HasStyleSupport)
             {
                 Paragraph p = _subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index];
@@ -3609,6 +3606,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void subtitleListView1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_isLoading) return;
             _previewTimer.Stop();
             UpdateLineSpacing();
             _previewTimer.Start();
@@ -3743,7 +3741,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void comboBoxSubtitleFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateLineSpacing();
             subtitleListView1_SelectedIndexChanged(null, null);
         }
 
@@ -4019,7 +4016,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void comboBoxSubtitleFont_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var bmp = new Bitmap(100, 100);
+            if (_isLoading) return;
+            using (var bmp = new Bitmap(100, 100))
             using (var g = Graphics.FromImage(bmp))
             {
                 var mbp = new MakeBitmapParameter
@@ -4036,7 +4034,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (lineHeight >= numericUpDownLineSpacing.Minimum && lineHeight <= numericUpDownLineSpacing.Maximum && lineHeight != numericUpDownLineSpacing.Value)
                     numericUpDownLineSpacing.Value = lineHeight;
             }
-            bmp.Dispose();
             subtitleListView1_SelectedIndexChanged(null, null);
         }
 
@@ -4488,6 +4485,5 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             buttonExport.Visible = false;
             subtitleListView1.CheckBoxes = false;
         }
-
     }
 }
