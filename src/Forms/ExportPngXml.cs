@@ -3236,8 +3236,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             SubtitleListView1AutoSizeAllColumns();
 
             _subtitle = new Subtitle(subtitle);
-            _subtitle.Header = subtitle.Header;
-            _subtitle.Footer = subtitle.Footer;
 
             panelColor.BackColor = _subtitleColor;
             panelBorderColor.BackColor = _borderColor;
