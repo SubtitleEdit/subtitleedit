@@ -272,22 +272,27 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 while (index < min)
                 {
+                    bool addIndexToDifferences = false;
                     Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter());
                     if (p1.ToString() == emptyParagraphAsString)
                     {
-                        _differences.Add(index);
+                        addIndexToDifferences = true;
                         subtitleListView1.ColorOut(index, Color.Salmon);
                     }
                     else if (p2.ToString() == emptyParagraphAsString)
                     {
-                        _differences.Add(index);
+                        addIndexToDifferences = true;
                         subtitleListView2.ColorOut(index, Color.Salmon);
                     }
                     else if (FixWhitespace(p1.Text) != FixWhitespace(p2.Text))
                     {
-                        _differences.Add(index);
+                        addIndexToDifferences = true;
                         subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexText);
                         subtitleListView2.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexText);
+                    }
+                    if (addIndexToDifferences)
+                    {
+                        _differences.Add(index);
                     }
                     index++;
                     p1 = sub1.GetParagraphOrDefault(index);
@@ -314,7 +319,16 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         int columnsAlike = GetColumnsEqualExceptNumber(p1, p2);
-                        if (columnsAlike >= 0 && columnsAlike < 4)
+                        // Not alike paragraphs
+                        if (columnsAlike == 0)
+                        {
+                            addIndexToDifferences = true;
+                            subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
+                            subtitleListView2.SetBackgroundColor(index, Color.LightGreen);
+                            subtitleListView1.SetBackgroundColor(index, subtitleListView1.BackColor, SubtitleListView.ColumnIndexNumber);
+                            subtitleListView2.SetBackgroundColor(index, subtitleListView2.BackColor, SubtitleListView.ColumnIndexNumber);
+                        }
+                        else if (columnsAlike < 4)
                         {
                             addIndexToDifferences = true;
                             // Start time
@@ -362,7 +376,7 @@ namespace Nikse.SubtitleEdit.Forms
             UpdatePreviousAndNextButtons();
 
             if (max > min) // color extra lines as has-difference 
-            {                
+            {
                 var listView = subtitleListView1.Items.Count > subtitleListView2.Items.Count ? subtitleListView1 : subtitleListView2;
                 for (int i = min; i < max; i++)
                 {
