@@ -53,6 +53,10 @@
     <Word from="Čerku" to="Kćer" />
     <Word from="ćerku" to="kćer" />
     <Word from="Ćerku" to="Kćer" />
+    <RegEx find="ćerkom" replaceWith="kćeri" />
+    <RegEx find="čerkom" replaceWith="kćeri" />
+    <RegEx find="kćerkom" replaceWith="kćeri" />
+    <RegEx find="kčerkom" replaceWith="kćeri" />
     <Word from="ćebe" to="deku" />
     <Word from="ćebetu" to="deki" />
     <Word from="čk" to="čak" />
@@ -165,6 +169,10 @@
     <Word from="kancera" to="raka" />
     <Word from="karmin" to="ruž" />
     <Word from="karminom" to="ružem" />
+    <RegEx find="kćerka" replaceWith="kći" />
+    <RegEx find="kčerka" replaceWith="kći" />
+    <RegEx find="Kćerka" replaceWith="Kći" />
+    <RegEx find="Kčerka" replaceWith="Kći" />
     <Word from="kćerkama" to="kćerima" />
     <Word from="ker" to="pas" />
     <Word from="Ker" to="Pas" />
@@ -576,6 +584,8 @@
     <Word from="tečnost" to="tekućina" />
     <Word from="tečnosti" to="tekućine" />
     <Word from="tečnošću" to="tekućinom" />
+    <Word from="tekšo" to="teško" />
+    <Word from="Tekšo" to="Teško" />
     <Word from="terajte" to="tjerajte" />
     <Word from="točak" to="kotač" />
     <Word from="Točak" to="Kotač" />
@@ -810,6 +820,8 @@
     <LinePart from="tamo je natrag" to="tamo je iza" />
     <LinePart from="Tamo je natrag" to="Tamo je iza" />
     <LinePart from="zato sto" to="zato što" />
+    <LinePart from="želim da budem" to="želim biti" />
+    <LinePart from="Želim da budem" to="Želim biti" />
   </PartialLines>
   <PartialLinesAlways />
   <BeginLines />
@@ -1059,9 +1071,8 @@
     <RegEx find="arantin" replaceWith="aranten" />
     <RegEx find="kašik" replaceWith="žlic" />
     <RegEx find="Kašik" replaceWith="Žlic" />
-    <RegEx find="([kK])[čć]erka\b" replaceWith="$1ći" />
-    <RegEx find="(k[ćč]|[ćč])erk([eio])" replaceWith="kćeri" />
-    <RegEx find="(K[ćč]|[ĆČ])erk([eio])" replaceWith="Kćeri" />
+    <RegEx find="(k[ćč]|[ćč])erk([eio](?!m))" replaceWith="kćeri" />
+    <RegEx find="(K[ćč]|[ĆČ])erk([eio](?!m))" replaceWith="Kćeri" />
     <RegEx find="\b([kK])[čć]erku\b" replaceWith="$1ćer" />
     <RegEx find="elner" replaceWith="onobar" />
     <RegEx find="\bkero?v?([aeiu]|om)\b" replaceWith="ps$1" />
@@ -1113,7 +1124,7 @@
     <RegEx find="([lL])j?eči([mštol])" replaceWith="$1iječi$2" />
     <RegEx find="([lL])j?e[čć]ni([cč])" replaceWith="$1iječni$2" />
     <RegEx find="([lL])j?e[čć]nik(?!i)" replaceWith="$1iječnik" />
-    <RegEx find="([lL])ekar([aeiou])?" replaceWith="$1iječnik$2" />
+    <RegEx find="\b([lL])ekar([aeiou])?" replaceWith="$1iječnik$2" />
     <RegEx find="\b([lL])j?ek([au]|om|ov[aei]|ovima)?\b" replaceWith="$1ijek$2" />
     <RegEx find="\b([iI]zl|[lL])j?ečen" replaceWith="$1iječen" />
     <RegEx find="\blenj?([aeiou]|om|osti?|ošću|ima?|čin[aieou]|činama)?\b" replaceWith="lijen$1" />
@@ -1677,6 +1688,7 @@
     <RegEx find="(?&lt;![dt])cj?enim" replaceWith="cijenim" />
     <RegEx find="ebać" replaceWith="ebat ć" />
     <RegEx find="edh" replaceWith="eth" />
+    <RegEx find="edp" replaceWith="etp" />
     <RegEx find="(?&lt;![NnJj])edać" replaceWith="edat ć" />
     <RegEx find="eizbež" replaceWith="eizbjež" />
     <RegEx find="efiniši" replaceWith="efiniraj" />
