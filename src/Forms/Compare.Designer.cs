@@ -167,13 +167,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyTextToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(169, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(168, 26);
             // 
             // copyTextToolStripMenuItem
             // 
             this.copyTextToolStripMenuItem.Name = "copyTextToolStripMenuItem";
             this.copyTextToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.copyTextToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.copyTextToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.copyTextToolStripMenuItem.Text = "Copy Text";
             this.copyTextToolStripMenuItem.Click += new System.EventHandler(this.copyTextToolStripMenuItem_Click);
             // 
@@ -194,13 +194,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyTextToolStripMenuItem1});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(169, 26);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(168, 26);
             // 
             // copyTextToolStripMenuItem1
             // 
             this.copyTextToolStripMenuItem1.Name = "copyTextToolStripMenuItem1";
             this.copyTextToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.copyTextToolStripMenuItem1.Size = new System.Drawing.Size(168, 22);
+            this.copyTextToolStripMenuItem1.Size = new System.Drawing.Size(167, 22);
             this.copyTextToolStripMenuItem1.Text = "Copy Text";
             this.copyTextToolStripMenuItem1.Click += new System.EventHandler(this.copyTextToolStripMenuItem1_Click);
             // 
@@ -220,6 +220,8 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.checkBoxOnlyListDifferencesInText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxOnlyListDifferencesInText.AutoSize = true;
+            this.checkBoxOnlyListDifferencesInText.Checked = true;
+            this.checkBoxOnlyListDifferencesInText.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxOnlyListDifferencesInText.Location = new System.Drawing.Point(330, 552);
             this.checkBoxOnlyListDifferencesInText.Name = "checkBoxOnlyListDifferencesInText";
             this.checkBoxOnlyListDifferencesInText.Size = new System.Drawing.Size(197, 17);
