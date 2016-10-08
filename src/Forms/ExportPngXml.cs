@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Subtitle _subtitle;
         private SubtitleFormat _format;
-        private static string _formtName;
+        private static string _formatName;
         private Color _subtitleColor;
         private string _subtitleFontName = "Verdana";
         private float _subtitleFontSize = 25.0f;
@@ -1680,9 +1680,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void SetupImageParameters()
         {
-            if (_isLoading)
-                return;
-
             if (subtitleListView1.SelectedItems.Count > 0 && _format.HasStyleSupport)
             {
                 Paragraph p = _subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index];
@@ -3236,8 +3233,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             SubtitleListView1AutoSizeAllColumns();
 
             _subtitle = new Subtitle(subtitle);
-            _subtitle.Header = subtitle.Header;
-            _subtitle.Footer = subtitle.Footer;
 
             panelColor.BackColor = _subtitleColor;
             panelBorderColor.BackColor = _borderColor;
@@ -3425,7 +3420,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
             }
             if (comboBoxSubtitleFont.SelectedIndex == -1)
-                comboBoxSubtitleFont.SelectedIndex = 0; // take first font if default font not found (e.g. linux)
+                comboBoxSubtitleFont.SelectedIndex = 0; // take first font if default font was not found (e.g. linux)
 
             if (videoInfo != null && videoInfo.Height > 0 && videoInfo.Width > 0)
             {
@@ -3611,6 +3606,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void subtitleListView1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_isLoading) return;
             _previewTimer.Stop();
             UpdateLineSpacing();
             _previewTimer.Start();
@@ -3745,7 +3741,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void comboBoxSubtitleFontSize_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateLineSpacing();
             subtitleListView1_SelectedIndexChanged(null, null);
         }
 
@@ -3822,7 +3817,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             _isLoading = false;
             subtitleListView1_SelectedIndexChanged(null, null);
-            _formtName = _format != null ? _format.Name : string.Empty;
+            _formatName = _format != null ? _format.Name : string.Empty;
         }
 
         private void comboBoxHAlign_SelectedIndexChanged(object sender, EventArgs e)
@@ -4021,7 +4016,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void comboBoxSubtitleFont_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var bmp = new Bitmap(100, 100);
+            if (_isLoading) return;
+            using (var bmp = new Bitmap(100, 100))
             using (var g = Graphics.FromImage(bmp))
             {
                 var mbp = new MakeBitmapParameter
@@ -4038,7 +4034,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (lineHeight >= numericUpDownLineSpacing.Minimum && lineHeight <= numericUpDownLineSpacing.Maximum && lineHeight != numericUpDownLineSpacing.Value)
                     numericUpDownLineSpacing.Value = lineHeight;
             }
-            bmp.Dispose();
             subtitleListView1_SelectedIndexChanged(null, null);
         }
 
@@ -4058,11 +4053,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static string GetStyleName(Paragraph paragraph)
         {
-            if ((_formtName == AdvancedSubStationAlpha.NameOfFormat || _formtName == SubStationAlpha.NameOfFormat) && !string.IsNullOrEmpty(paragraph.Extra))
+            if ((_formatName == AdvancedSubStationAlpha.NameOfFormat || _formatName == SubStationAlpha.NameOfFormat) && !string.IsNullOrEmpty(paragraph.Extra))
             {
                 return paragraph.Extra;
             }
-
             return string.Empty;
         }
 
@@ -4491,6 +4485,5 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             buttonExport.Visible = false;
             subtitleListView1.CheckBoxes = false;
         }
-
     }
 }
