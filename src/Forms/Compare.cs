@@ -64,6 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
+                    // ignored
                 }
             }
             subtitleListView1.SelectIndexAndEnsureVisible(0);
