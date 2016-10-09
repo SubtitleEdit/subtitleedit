@@ -811,7 +811,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (form.ShowDialog(this) == DialogResult.OK && form.GroupName.Length > 0)
                 {
-                    _currentGroup.Name = form.Name;
+                    _currentGroup.Name = form.GroupName;
                     UpdateViewFromModel(Configuration.Settings.MultipleSearchAndReplaceGroups, _currentGroup);
                 }
             }
