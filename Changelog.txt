@@ -7,6 +7,7 @@
    * Added "Netflix Timed Text" - thx Piotr
    * Added format "MediaTransData" - thx Alice
    * Added new subtitle format - thx emmanuel
+   * Added even more formats - thx ivandrofly + others
    * Auto detection of Czech and Slovak languages - thx mm6502
 * IMPROVED:
    * Updated Korean translation - thx domddol
@@ -16,6 +17,9 @@
    * Updated Catalan translation - thx Juansa
    * Updated French, Dutch and German translations - thx xylographe
    * Updated Brazil translation - thx Igor
+   * Updated Russian translation - thx Elheym
+   * Updated Basque translation - thx Xabier
+   * Updated simplified Chinese translation - thx Leon
    * Custom export now supports {newline}, {tab}, {lf} and {cr} - thx aaaxx/xylographe
    * "Multiple replace" is now organized in groups - thx aaaxx
    * Text below video now supports bold and underline - thx Xenophon
@@ -48,6 +52,11 @@
    * Fixed crash in import of .TS files - thx malgane/ivandrofly
    * Fixed crash in OCR fix engine - thx ivandrofly
    * Fixed a few issues with format "SubViewer 2.0" - thx fox
+   * Fixed opening AAC file as video - thx amn
+   * Some updates for "Cavena 890" character mapping - thx ghoogland
+   * Fixed bug in command line convert regarding negative offset - thx Jamakmake
+   * Fixed issue in export with border - thx Jamakmake
+   * Fixed Vob NTSC import time code sync - thx Jamakmake 
    * + Many minor fixes from ivandrofly and xylographe
 
 
