@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -51,7 +52,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOpenText_Click(object sender, EventArgs e)
         {
             openFileDialog1.Title = buttonOpenText.Text;
-            openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.scenechange|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+            openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt;*.scenechange"  +
+                                     "|Matroska xml chapter file|*.xml" + 
+                                     "|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -63,6 +66,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
+                var res = LoadFromMatroskaChapterFile(fileName);
+                if (!string.IsNullOrEmpty(res))
+                {
+                    textBoxText.Text = res;
+                    radioButtonHHMMSSMS.Checked = true;
+                    return;
+                }
+
                 var encoding = LanguageAutoDetect.GetEncodingFromFile(fileName);
                 string s = File.ReadAllText(fileName, encoding).Trim();
                 if (s.Contains('.'))
@@ -90,16 +101,48 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private string LoadFromMatroskaChapterFile(string fileName)
+        {
+            try
+            {
+                var x = new XmlDocument();
+                x.Load(fileName);
+                var xmlNodeList = x.SelectNodes("//ChapterAtom");
+                var sb = new StringBuilder();
+                if (xmlNodeList != null)
+                {
+                    foreach (XmlNode chapter in xmlNodeList)
+                    {
+                        var start = chapter.SelectSingleNode("ChapterTimeStart");
+                        string[] timeParts = start?.InnerText.Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
+                        if (timeParts?.Length == 4)
+                        {
+                            if (timeParts[3].Length > 3)
+                                timeParts[3] = timeParts[3].Substring(0, 3);
+                            var ts = new TimeSpan(0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1]), Convert.ToInt32(timeParts[2]), Convert.ToInt32(timeParts[3]));
+                            sb.AppendLine(new TimeCode(ts).ToShortStringHHMMSSFF());
+                        }
+                    }
+                }
+                return sb.ToString();
+            }
+            catch 
+            {
+                return null;
+            }
+        }
+
+        private static readonly char[] SplitChars = { ':', '.', ',' };
+
         private void buttonOK_Click(object sender, EventArgs e)
         {
             SceneChangesInSeconds = new List<double>();
-            char[] splitChars = { ':', '.', ',' };
             foreach (string line in textBoxText.Lines)
             {
                 if (radioButtonHHMMSSMS.Checked)
                 {
                     // Parse string (HH:MM:SS.ms)
-                    string[] timeParts = line.Split(splitChars, StringSplitOptions.RemoveEmptyEntries);
+                    string[] timeParts = line.Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
                     if (timeParts.Length == 2)
                     {
                         SceneChangesInSeconds.Add(new TimeSpan(0, 0, 0, Convert.ToInt32(timeParts[0]), Convert.ToInt32(timeParts[1])).TotalSeconds);
