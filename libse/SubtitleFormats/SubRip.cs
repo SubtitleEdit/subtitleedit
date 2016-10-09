@@ -83,8 +83,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             for (int i = 0; i < lines.Count; i++)
             {
                 _lineNumber++;
-                string line = lines[i].TrimEnd();
-                line = line.Trim('\u007F'); // 127=delete acscii
+                string line = lines[i].Replace("\u007F", string.Empty); // 127=delete acscii
+                if (_expecting == ExpectingLine.Number || _expecting == ExpectingLine.TimeCodes)
+                {
+                    line = line.Trim();
+                }
 
                 string next = string.Empty;
                 if (i + 1 < lines.Count)
@@ -180,7 +183,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                         if (_paragraph.Text.Length > 0)
                             _paragraph.Text += Environment.NewLine;
-                        _paragraph.Text += RemoveBadChars(line).TrimEnd().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                        _paragraph.Text += RemoveBadChars(line).Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     }
                     else if (string.IsNullOrEmpty(line) && string.IsNullOrEmpty(_paragraph.Text))
                     {
@@ -232,7 +235,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             // Removed stuff after timecodes - like subtitle position
             //  - example of position info: 00:02:26,407 --> 00:02:31,356  X1:100 X2:100 Y1:100 Y2:100
-            if (line.Length > 30 && line[29] == ' ')
+            if (line.Length > 30)
                 line = line.Substring(0, 29);
 
             // removes all extra spaces
