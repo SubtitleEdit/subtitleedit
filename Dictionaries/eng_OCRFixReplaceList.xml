@@ -1848,6 +1848,9 @@
     <Word from="yourass" to="your ass" />
     <Word from="Yourbutt" to="Your butt" />
     <Word from="iustiiggle" to="just jiggle" />
+    <Word from="iust" to="just" />
+    <Word from="CSi" to="CSI" />
+    <Word from="affernoon" to="afternoon" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
