@@ -895,7 +895,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <OpenOriginal>Открыть исходные субтитры (режим перевода)...</OpenOriginal>
         <SaveOriginal>Сохранить исходные субтитры</SaveOriginal>
         <CloseOriginal>Закрыть исходные субтитры</CloseOriginal>
-        <OpenContainingFolder>Открыть папку с субтитрами</OpenContainingFolder>
+        <OpenContainingFolder>Открыть папку с субтитрами (Обзор)</OpenContainingFolder>
         <Compare>Сравнить...</Compare>
         <Statistics>Статистика...</Statistics>
         <Plugins>Плагины...</Plugins>
@@ -1731,7 +1731,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AutoBackupEveryMinute>Каждую минуту</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Каждые 5 минут</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Каждые 15 минут</AutoBackupEveryFifteenMinutes>
-    <AutoBackupDeleteAfter>Удалять по истечении</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfter>Удалить по истечении:</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 месяца</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterThreeMonths>3 месяцев</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 месяцев</AutoBackupDeleteAfterSixMonths>
@@ -1853,7 +1853,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <GoToPrevious>Перейти к предыдущей строке</GoToPrevious>
     <GoToCurrentSubtitleStart>Перейти к началу текущей строки</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Перейти к концу текущей строки</GoToCurrentSubtitleEnd>
-    <GoToNextSubtitleAndFocusVideo>перейти к следующей строке и установить позицию видео</GoToNextSubtitleAndFocusVideo>
+    <GoToNextSubtitleAndFocusVideo>Перейти к следующей строке и установить позицию видео</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Переключить фокус между списком и полем ввода субтитра</ToggleFocus>
     <ToggleDialogDashes>Вкл./Откл. тире диалогов</ToggleDialogDashes>
     <Alignment>Выравнивание (выделенные строки)</Alignment>
