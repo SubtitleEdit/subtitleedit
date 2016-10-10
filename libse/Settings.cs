@@ -1121,8 +1121,23 @@ namespace Nikse.SubtitleEdit.Core
         }
     }
 
+    public class CompareSettings
+    {
+        public bool ShowOnlyDifferences { get; set; }
+        public bool OnlyLookForDifferenceInText { get; set; }
+        public bool IgnoreLineBreaks { get; set; }
+
+        public CompareSettings()
+        {
+            ShowOnlyDifferences = false;
+            OnlyLookForDifferenceInText = true;
+            IgnoreLineBreaks = false;
+        }
+    }
+
     public class Settings
     {
+        public CompareSettings Compare { get; set; }
         public RecentFilesSettings RecentFiles { get; set; }
         public GeneralSettings General { get; set; }
         public ToolsSettings Tools { get; set; }
@@ -1158,6 +1173,7 @@ namespace Nikse.SubtitleEdit.Core
             Shortcuts = new Shortcuts();
             RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
             SubtitleBeaming = new SubtitleBeaming();
+            Compare = new CompareSettings();
         }
 
         public void Save()
@@ -1253,6 +1269,21 @@ namespace Nikse.SubtitleEdit.Core
             stream.Close();
 
             var settings = new Settings();
+
+            XmlNode nodeCompare = doc.DocumentElement.SelectSingleNode("Compare");
+            settings.Compare = new CompareSettings();
+            if (nodeCompare != null)
+            {
+                XmlNode xnode = nodeCompare.SelectSingleNode("ShowOnlyDifferences");
+                if (xnode != null)
+                    settings.Compare.ShowOnlyDifferences = Convert.ToBoolean(xnode.InnerText);
+                xnode = nodeCompare.SelectSingleNode("ShowOnlyDifferences");
+                if (xnode != null)
+                    settings.Compare.OnlyLookForDifferenceInText = Convert.ToBoolean(xnode.InnerText);
+                xnode = nodeCompare.SelectSingleNode("ShowOnlyDifferences");
+                if (xnode != null)
+                    settings.Compare.IgnoreLineBreaks = Convert.ToBoolean(xnode.InnerText);
+            }
 
             settings.RecentFiles = new RecentFilesSettings();
             XmlNode node = doc.DocumentElement.SelectSingleNode("RecentFiles");
@@ -2927,6 +2958,12 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteStartDocument();
 
                 textWriter.WriteStartElement("Settings", string.Empty);
+
+                textWriter.WriteStartElement("Compare", string.Empty);
+                textWriter.WriteElementString("ShowOnlyDifferences", settings.Compare.ShowOnlyDifferences.ToString());
+                textWriter.WriteElementString("OnlyLookForDifferenceInText", settings.Compare.OnlyLookForDifferenceInText.ToString());
+                textWriter.WriteElementString("IgnoreLineBreaks", settings.Compare.IgnoreLineBreaks.ToString());
+                textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("RecentFiles", string.Empty);
                 textWriter.WriteStartElement("FileNames", string.Empty);
