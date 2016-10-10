@@ -89,27 +89,39 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             switch (_expecting)
             {
                 case ExpectingLine.Number:
-                    if (line.StartsWith("Subtitle number: "))
+                    if (line.StartsWith("Subtitle number: ", StringComparison.Ordinal))
                     {
                         _expecting = ExpectingLine.StartTime;
                     }
+                    else
+                    {
+                        _errorCount++;
+                    }
                     break;
                 case ExpectingLine.StartTime:
-                    if (line.StartsWith("Start time (or frames): "))
+                    if (line.StartsWith("Start time (or frames): ", StringComparison.Ordinal))
                     {
                         TryReadTimeCodesLine(line.Substring(23), _paragraph, true);
                         _expecting = ExpectingLine.EndTime;
                     }
+                    else
+                    {
+                        _errorCount++;
+                    }
                     break;
                 case ExpectingLine.EndTime:
-                    if (line.StartsWith("End time (or frames): "))
+                    if (line.StartsWith("End time (or frames): ", StringComparison.Ordinal))
                     {
                         TryReadTimeCodesLine(line.Substring(21), _paragraph, false);
                         _expecting = ExpectingLine.Text;
                     }
+                    else
+                    {
+                        _errorCount++;
+                    }
                     break;
                 case ExpectingLine.Text:
-                    if (line.StartsWith("Subtitle text: "))
+                    if (line.StartsWith("Subtitle text: ", StringComparison.Ordinal))
                     {
                         string text = line.Substring(14).Trim();
                         text = text.Replace("|", Environment.NewLine);
@@ -117,6 +129,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         subtitle.Paragraphs.Add(_paragraph);
                         _paragraph = new Paragraph();
                         _expecting = ExpectingLine.Number;
+                    }
+                    else
+                    {
+                        _errorCount++;
                     }
                     break;
             }
