@@ -1905,8 +1905,8 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <UseDoNotBreakAfterList>Utilizar «no saltar después de la lista» (para salto automático)</UseDoNotBreakAfterList>
     <MicrosoftBingTranslator>Traductor Microsoft Bing</MicrosoftBingTranslator>
     <HowToSignUp>Cómo inscribirse</HowToSignUp>
-    <ClientId>Usuario</ClientId>
-    <ClientSecret>Contraseña</ClientSecret>
+    <ClientId>ID del usuario</ClientId>
+    <ClientSecret>Clave secreta</ClientSecret>
   </Settings>
   <SettingsMpv>
     <Title>Ajustes para mpv</Title>
