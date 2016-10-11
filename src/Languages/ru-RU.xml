@@ -224,12 +224,12 @@ https://github.com/SubtitleEdit/subtitleedit
     <FrameRateNotChanged>Частота кадров одинакова - преобразовывать нечего</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
-    <Title>Настройка скорости в процентах</Title>
-    <TitleShort>Настройка скорости</TitleShort>
+    <Title>Настройка скорости в %</Title>
+    <TitleShort>Настр. скорости</TitleShort>
     <Info>Измените скорость субтитров в процентах</Info>
-    <Custom>Пользовательские</Custom>
+    <Custom>Пользоват-кие</Custom>
     <ToDropFrame>Удалить кадр</ToDropFrame>
-    <FromDropFrame>С пропуском кадров</FromDropFrame>
+    <FromDropFrame>С пропус. кадров</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Проверка обновления</Title>
@@ -1727,11 +1727,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Переход к позиции - 0.5 сек. и сделать паузу</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>Переход к позиции - 1 сек. и выполнить воспроизведение</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Переход в поле ввода текста и сделать паузу в позиции видео</MainListViewEditTextAndPause>
-    <AutoBackup>Автосохранение:</AutoBackup>
+    <AutoBackup>Автосохр-ние:</AutoBackup>
     <AutoBackupEveryMinute>Каждую минуту</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Каждые 5 минут</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Каждые 15 минут</AutoBackupEveryFifteenMinutes>
-    <AutoBackupDeleteAfter>Удалить по истечении:</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfter>Удал. после:</AutoBackupDeleteAfter>
     <AutoBackupDeleteAfterOneMonth>1 месяца</AutoBackupDeleteAfterOneMonth>
     <AutoBackupDeleteAfterThreeMonths>3 месяцев</AutoBackupDeleteAfterThreeMonths>
     <AutoBackupDeleteAfterSixMonths>6 месяцев</AutoBackupDeleteAfterSixMonths>
@@ -1818,13 +1818,13 @@ https://github.com/SubtitleEdit/subtitleedit
     <FirstPlusX>Первый + {0}</FirstPlusX>
     <LastMinusX>Последний - {0}</LastMinusX>
     <FixCommonerrors>Исправить ошибки</FixCommonerrors>
-    <RemoveTextForHi>Убрать текст для слабослышащих</RemoveTextForHi>
+    <RemoveTextForHi>Убрать текст для
+слабослышащих</RemoveTextForHi>
     <MergeLinesShorterThan>Объединить строки короче, чем</MergeLinesShorterThan>
     <MusicSymbol>Заменить музыкальным символом:</MusicSymbol>
     <MusicSymbolsToReplace>Музыкальные символы для замены (разделяйте пробелом)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Исправить ошибки OCR - применить жесткие правила</FixCommonOcrErrorsUseHardcodedRules>
-    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Исправить короткое время отображения
-(разрешить изменение начального времени)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Испр. корот. время отображ. (разреш. измен. начал. времени)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Пропустить 1-й шаг (выбрать правила исправления)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Клавишные команды</Shortcuts>
     <Shortcut>Команда:</Shortcut>
@@ -1946,7 +1946,7 @@ https://github.com/SubtitleEdit/subtitleedit
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Сдвиг выбранных строк по времени</Title>
-    <TitleAll>Сдвиг всех строк по времени</TitleAll>
+    <TitleAll>Врем. сдвиг всех строк</TitleAll>
     <ShowEarlier>Сдвинуть назад</ShowEarlier>
     <ShowLater>Сдвинуть вперед</ShowLater>
     <TotalAdjustmentX>Общий сдвиг: {0}</TotalAdjustmentX>
