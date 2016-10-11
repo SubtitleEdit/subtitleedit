@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _language1;
         private readonly Color _backDifferenceColor = Color.FromArgb(255, 90, 90);
         private readonly Color _foregroundDifferenceColor = Color.FromArgb(225, 0, 0);
+        private bool _loadingConfig = true;
 
         public Compare()
         {
@@ -217,6 +218,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void CompareSubtitles()
         {
+            if (_loadingConfig || _subtitle2 == null || _subtitle2.Paragraphs.Count == 0)
+            {
+                return;
+            }
             timer1.Stop();
             var sub1 = new Subtitle(_subtitle1);
             var sub2 = new Subtitle(_subtitle2);
@@ -982,6 +987,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxShowOnlyDifferences.Checked = config.ShowOnlyDifferences;
             checkBoxOnlyListDifferencesInText.Checked = config.OnlyLookForDifferenceInText;
             checkBoxIgnoreLineBreaks.Checked = config.IgnoreLineBreaks;
+            _loadingConfig = false;
         }
 
         private void SaveConfigurations()
