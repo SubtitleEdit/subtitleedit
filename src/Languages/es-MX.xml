@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Español (México)">
   <General>
     <Title>Subtitle Edit</Title>
@@ -280,12 +280,12 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <GenerateId>Generar ID</GenerateId>
     <MovieTitle>Título de la película</MovieTitle>
     <ReelNumber>Carrete número</ReelNumber>
-    <Language>Language</Language>
-    <IssueDate>Issue date</IssueDate>
+    <Language>Idioma</Language>
+    <IssueDate>Fecha del problema</IssueDate>
     <EditRate>Tasa Edit</EditRate>
     <TimeCodeRate>Tasa de códigos de tiempo</TimeCodeRate>
     <StartTime>Tiempo de inicio</StartTime>
-    <Font>Font</Font>
+    <Font>Fuente</Font>
     <FontId>ID</FontId>
     <FontUri>URI</FontUri>
     <FontColor>Color</FontColor>
@@ -682,6 +682,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <Frames>Fotogramas</Frames>
     <Seconds>Segundos</Seconds>
     <Milliseconds>Milisegundos</Milliseconds>
+    <GetSceneChangesWithFfmpeg>Obtener cambios de escena con FFmpeg</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Importar texto plano</Title>
@@ -721,144 +722,148 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
     <Note>Nota: Los archivos ya debe tener los códigos de tiempo correctos</Note>
   </JoinSubtitles>
   <LanguageNames>
-    <aaName>afar</aaName>
-    <abName>abjasio</abName>
-    <afName>afrikáans</afName>
-    <amName>amárico</amName>
-    <arName>árabe</arName>
-    <asName>asamés</asName>
-    <ayName>aimara</ayName>
-    <azName>azerbaiyano</azName>
-    <baName>bashkir</baName>
-    <beName>bielorruso</beName>
-    <bgName>búlgaro</bgName>
-    <biName>bislama</biName>
-    <bnName>bengalí</bnName>
-    <boName>tibetano</boName>
-    <brName>bretón</brName>
-    <caName>catalán</caName>
-    <coName>corso</coName>
-    <csName>checo</csName>
-    <cyName>galés</cyName>
-    <daName>danés</daName>
-    <deName>alemán</deName>
-    <dzName>dzongkha</dzName>
-    <elName>griego</elName>
-    <enName>inglés</enName>
-    <eoName>esperanto</eoName>
-    <esName>español</esName>
-    <etName>estonio</etName>
-    <euName>euskera</euName>
-    <faName>persa</faName>
-    <fiName>finés</fiName>
-    <fjName>fiyiano</fjName>
-    <foName>feroés</foName>
-    <frName>francés</frName>
-    <fyName>frisón occidental</fyName>
-    <gaName>irlandés</gaName>
-    <gdName>gaélico escocés</gdName>
-    <glName>gallego</glName>
-    <gnName>guaraní</gnName>
-    <guName>gujarati</guName>
-    <haName>hausa</haName>
-    <heName>hebreo</heName>
-    <hiName>hindi</hiName>
-    <hrName>croata</hrName>
-    <huName>húngaro</huName>
-    <hyName>armenio</hyName>
-    <iaName>interlingua</iaName>
-    <idName>indonesio</idName>
-    <ieName>interlingue</ieName>
-    <ikName>inupiaq</ikName>
-    <isName>islandés</isName>
-    <itName>italiano</itName>
-    <iuName>inuktitut</iuName>
-    <jaName>japonés</jaName>
-    <jvName>javanés</jvName>
-    <kaName>georgiano</kaName>
-    <kkName>kazajo</kkName>
-    <klName>groenlandés</klName>
-    <kmName>jemer</kmName>
-    <knName>canarés</knName>
-    <koName>coreano</koName>
-    <ksName>cachemiro</ksName>
-    <kuName>kurdo</kuName>
-    <kyName>kirguís</kyName>
-    <laName>latín</laName>
-    <lbName>luxemburgués</lbName>
-    <lnName>lingala</lnName>
-    <loName>laosiano</loName>
-    <ltName>lituano</ltName>
-    <lvName>letón</lvName>
-    <mgName>malgache</mgName>
-    <miName>maorí</miName>
-    <mkName>macedonio</mkName>
-    <mlName>malayalam</mlName>
-    <mnName>mongol</mnName>
-    <mrName>maratí</mrName>
-    <msName>malayo</msName>
-    <mtName>maltés</mtName>
-    <myName>birmano</myName>
-    <naName>nauruano</naName>
-    <neName>nepalí</neName>
-    <nlName>neerlandés</nlName>
-    <noName>noruego</noName>
-    <ocName>occitano</ocName>
-    <omName>oromo</omName>
-    <orName>oriya</orName>
-    <paName>panyabí</paName>
-    <plName>polaco</plName>
-    <psName>pastún</psName>
-    <ptName>portugués</ptName>
-    <quName>quechua</quName>
-    <rmName>retorrománico</rmName>
-    <rnName>kiroundi</rnName>
-    <roName>rumano</roName>
-    <ruName>ruso</ruName>
-    <rwName>kinyarwanda</rwName>
-    <saName>sánscrito</saName>
-    <sdName>sindhi</sdName>
-    <sgName>sango</sgName>
-    <shName>serbocroata</shName>
-    <siName>cingalés</siName>
-    <skName>eslovaco</skName>
-    <slName>esloveno</slName>
-    <smName>samoano</smName>
-    <snName>shona</snName>
-    <soName>somalí</soName>
-    <sqName>albanés</sqName>
-    <srName>serbio</srName>
-    <ssName>siswati</ssName>
-    <stName>sesotho meridional</stName>
-    <suName>sundanés</suName>
-    <svName>sueco</svName>
-    <swName>suajili</swName>
-    <taName>tamil</taName>
-    <teName>telugu</teName>
-    <tgName>tayiko</tgName>
-    <thName>tailandés</thName>
-    <tiName>tigriña</tiName>
-    <tkName>turcomano</tkName>
-    <tlName>tagalo</tlName>
-    <tnName>setchwana</tnName>
-    <toName>tongano</toName>
-    <trName>turco</trName>
-    <tsName>tsonga</tsName>
-    <ttName>tártaro</ttName>
-    <twName>twi</twName>
-    <ugName>uyghur</ugName>
-    <ukName>ucraniano</ukName>
-    <urName>urdu</urName>
-    <uzName>uzbeko</uzName>
-    <viName>vietnamita</viName>
-    <voName>volapük</voName>
-    <woName>wolof</woName>
-    <xhName>xhosa</xhName>
-    <yiName>yídish</yiName>
-    <yoName>yoruba</yoName>
-    <zaName>zhuang</zaName>
-    <zhName>chino</zhName>
-    <zuName>zulú</zuName>
+    <NotSpecified>No especificado</NotSpecified>
+    <UnknownCodeX>Desconocido ({0})</UnknownCodeX>
+    <aaName>Afar</aaName>
+    <abName>Abjazia</abName>
+    <afName>Afrikaans</afName>
+    <amName>Amárico</amName>
+    <arName>Árabe</arName>
+    <asName>Asamés</asName>
+    <ayName>Aimará</ayName>
+    <azName>Azerbaiyano</azName>
+    <baName>Bashkir</baName>
+    <beName>Bielorruso</beName>
+    <bgName>Búlgaro</bgName>
+    <bhName>Bihari</bhName>
+    <biName>Bislama</biName>
+    <bnName>Bengalí</bnName>
+    <boName>Tibetano</boName>
+    <brName>Bretón</brName>
+    <caName>Catalán</caName>
+    <coName>Corsa</coName>
+    <csName>Checo</csName>
+    <cyName>Galés</cyName>
+    <daName>Danés</daName>
+    <deName>Alemán</deName>
+    <dzName>Dzongkha</dzName>
+    <elName>Griego</elName>
+    <enName>Inglés</enName>
+    <eoName>Esperanto</eoName>
+    <esName>Español</esName>
+    <etName>Estonio</etName>
+    <euName>Vasco</euName>
+    <faName>Persa</faName>
+    <fiName>Finlandés</fiName>
+    <fjName>Fiyiano</fjName>
+    <foName>Feroesa</foName>
+    <frName>Francés</frName>
+    <fyName>Frisón</fyName>
+    <gaName>Irlandés</gaName>
+    <gdName>Escocés</gdName>
+    <glName>Gallego</glName>
+    <gnName>Guaraní</gnName>
+    <guName>Gujarati</guName>
+    <haName>Hausa</haName>
+    <heName>Hebreo</heName>
+    <hiName>Hindi</hiName>
+    <hrName>Croata</hrName>
+    <huName>Húngaro</huName>
+    <hyName>Armenio</hyName>
+    <iaName>Interlingua</iaName>
+    <idName>Indonesio</idName>
+    <ieName>Interlingue</ieName>
+    <ikName>Inupiak</ikName>
+    <isName>Islandés</isName>
+    <itName>Italiano</itName>
+    <iuName>Inuktitut</iuName>
+    <jaName>Japonés</jaName>
+    <jvName>Javanés</jvName>
+    <kaName>Georgiano</kaName>
+    <kkName>Kazaja</kkName>
+    <klName>Kalaallisut</klName>
+    <kmName>Khmer</kmName>
+    <knName>Canarés</knName>
+    <koName>Coreano</koName>
+    <ksName>Cachemira</ksName>
+    <kuName>Kurdo</kuName>
+    <kyName>Kirguisa</kyName>
+    <laName>Latín</laName>
+    <lbName>Luxemburgués</lbName>
+    <lnName>Lingala</lnName>
+    <loName>Lao</loName>
+    <ltName>Lituano</ltName>
+    <lvName>Letonio</lvName>
+    <mgName>Malgache</mgName>
+    <miName>Maorí</miName>
+    <mkName>Macedonio</mkName>
+    <mlName>Malayalam</mlName>
+    <mnName>Mongol</mnName>
+    <moName>Moldavo</moName>
+    <mrName>Marathi</mrName>
+    <msName>Malayo</msName>
+    <mtName>Maltés</mtName>
+    <myName>Burmese</myName>
+    <naName>Nauru</naName>
+    <neName>Nepalí</neName>
+    <nlName>Holandés</nlName>
+    <noName>Noruego</noName>
+    <ocName>Occitano</ocName>
+    <omName>Oromo</omName>
+    <orName>Oriya</orName>
+    <paName>Punjabi</paName>
+    <plName>Polaco</plName>
+    <psName>Afgano</psName>
+    <ptName>Portugués</ptName>
+    <quName>Quechua</quName>
+    <rmName>Romanche</rmName>
+    <rnName>Kirundi</rnName>
+    <roName>Rumano</roName>
+    <ruName>Ruso</ruName>
+    <rwName>Kinyarwanda</rwName>
+    <saName>Sánscrito</saName>
+    <sdName>Sindhi</sdName>
+    <sgName>Sango</sgName>
+    <shName>Servocroata</shName>
+    <siName>Cingalés</siName>
+    <skName>Eslovaco</skName>
+    <slName>Esloveno</slName>
+    <smName>Samoano</smName>
+    <snName>Shona</snName>
+    <soName>Somalí</soName>
+    <sqName>Albanés</sqName>
+    <srName>Serbio</srName>
+    <ssName>Swati</ssName>
+    <stName>Sesotho meridional</stName>
+    <suName>Sudanés</suName>
+    <svName>Sueco</svName>
+    <swName>Swahili</swName>
+    <taName>Tamil</taName>
+    <teName>Telugu</teName>
+    <tgName>Tayiko</tgName>
+    <thName>Tailandés</thName>
+    <tiName>Tigrinya </tiName>
+    <tkName>Turkmeno</tkName>
+    <tlName>Tagalo</tlName>
+    <tnName>Tsuano</tnName>
+    <toName>Tongo</toName>
+    <trName>Turco</trName>
+    <tsName>Tsongo</tsName>
+    <ttName>Tártaro</ttName>
+    <twName>Twi</twName>
+    <ugName>Uigur</ugName>
+    <ukName>Ucraniano</ukName>
+    <urName>Urdu</urName>
+    <uzName>Uzbeko</uzName>
+    <viName>Vietnamita</viName>
+    <voName>Volapük</voName>
+    <woName>Wolof</woName>
+    <xhName>Xhosa</xhName>
+    <yiName>Yiddish</yiName>
+    <yoName>Yoruba</yoName>
+    <zaName>Zhuang</zaName>
+    <zhName>Chino</zhName>
+    <zuName>Zulu</zuName>
   </LanguageNames>
   <Main>
     <Menu>
@@ -919,8 +924,8 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
         <InsertUnicodeControlCharacters>Insertar caracteres de control Unicode</InsertUnicodeControlCharacters>
         <InsertUnicodeControlCharactersLRM>Marca de izquierda a derecha (LRM)</InsertUnicodeControlCharactersLRM>
         <InsertUnicodeControlCharactersRLM>Marca de derecha a izquierda (RLM)</InsertUnicodeControlCharactersRLM>
-        <InsertUnicodeControlCharactersLRE>Incrustación inicial de izquierda a derecha (LRE)</InsertUnicodeControlCharactersLRE>
-        <InsertUnicodeControlCharactersRLE>Incrustación inicial de derecha a izquierda (LRE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRE>Incrustación inicial de izquierda a derecha (LRE) </InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Incrustación inicial de derecha a izquierda (LRE) </InsertUnicodeControlCharactersRLE>
         <InsertUnicodeControlCharactersLRO>Anulación inicial de izquierda a derecha (LRO)</InsertUnicodeControlCharactersLRO>
         <InsertUnicodeControlCharactersRLO>Anulación inicial de derecha a izquierda (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>Buscar</Find>
@@ -979,6 +984,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
         <OpenDvd>Abrir DVD...</OpenDvd>
         <ChooseAudioTrack>Seleccionar pista de audio</ChooseAudioTrack>
         <CloseVideo>Cerrar archivo de video</CloseVideo>
+        <SetVideoOffset>Ajustar desplazamiento de video...</SetVideoOffset>
         <ImportSceneChanges>Importar cambios de escena...</ImportSceneChanges>
         <RemoveSceneChanges>Eliminar cambios de escena</RemoveSceneChanges>
         <WaveformBatchGenerate>Generando formas de onda por lotes...</WaveformBatchGenerate>
@@ -1037,6 +1043,7 @@ Nota: comprobar el espacio libre en disco.</WaveFileMalformed>
         <Find>Buscar</Find>
         <Replace>Reemplazar</Replace>
         <FixCommonErrors>Corregir errores</FixCommonErrors>
+        <RemoveTextForHi>Eliminar texto para personas con discapacidad auditiva</RemoveTextForHi>
         <VisualSync>Sincronización visual</VisualSync>
         <SpellCheck>Ortografía</SpellCheck>
         <Settings>Ajustes</Settings>
@@ -1512,6 +1519,12 @@ Si ha editado este archivo con Subtitle Edit es posible que pueda encontrar una 
     <Rules>Normas de exportación</Rules>
     <MoveToTop>Mover al inicio</MoveToTop>
     <MoveToBottom>Mover al final</MoveToBottom>
+    <MoveSelectedRulesToGroup>Mover reglas seleccionadas al grupo</MoveSelectedRulesToGroup>
+    <Groups>Grupos</Groups>
+    <RulesForGroupX>Reglas para el grupo "{0}"</RulesForGroupX>
+    <GroupName>Nombre del grupo</GroupName>
+    <RenameGroup>Renombrar grupo...</RenameGroup>
+    <NewGroup>Nuevo grupo...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1670,6 +1683,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <DurationMinimumMilliseconds>Duración mínima, milisegundos</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Duración máxima, milisegundos</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Espacio mín. entre subtítulos en ms</MinimumGapMilliseconds>
+    <MaximumLines>Número máx. de líneas</MaximumLines>
     <SubtitleFont>Fuente del subtítulo</SubtitleFont>
     <SubtitleFontSize>Tamaño de fuente del subtítulo</SubtitleFontSize>
     <SubtitleBold>Negrita</SubtitleBold>
@@ -1697,6 +1711,10 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <AutoBackupEveryMinute>cada minuto</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>cada 5 minutos</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>cada 15 minutos</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Eliminar después de</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1 mes</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 meses</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 meses</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Buscar actualizaciones</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Permitir la edición del subtítulo original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmar la eliminación de líneas</PromptDeleteLines>
@@ -1779,6 +1797,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <FirstPlusX>Primero + {0}</FirstPlusX>
     <LastMinusX>Último - {0}</LastMinusX>
     <FixCommonerrors>Corregir errores comunes</FixCommonerrors>
+    <RemoveTextForHi>Eliminar texto para sordos</RemoveTextForHi>
     <MergeLinesShorterThan>Combinar líneas menores de</MergeLinesShorterThan>
     <MusicSymbol>Símbolos musicales</MusicSymbol>
     <MusicSymbolsToReplace>Símbolos musicales a reemplazar (separados por espacios)</MusicSymbolsToReplace>
@@ -1805,12 +1824,14 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <AdjustSetStartTimeKeepDuration>Establecer hora de inicio, mantener hora de finalización</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Ajustar final, compensar al resto</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ajustar final, compensar el resto e ir al siguiente</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>Extender línea actual al siguiente subtítulo o la duración máx.</AdjustExtendCurrentSubtitle>
     <MainCreateStartDownEndUp>Crear inicio con la tecla-abajo, ajustar final con la tecla-arriba</MainCreateStartDownEndUp>
     <MergeDialog>Unir diálogo (guiones de inserción)</MergeDialog>
     <GoToNext>Ir a la línea siguiente</GoToNext>
     <GoToPrevious>Ir a la línea anterior</GoToPrevious>
     <GoToCurrentSubtitleStart>Ir al inicio de la línea actual</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ir al final de la línea actual</GoToCurrentSubtitleEnd>
+    <GoToNextSubtitleAndFocusVideo>Ir a la siguiente línea y definir la posición del video</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Alternar el enfoque entre la vista de lista y cuadro de texto del subtítulo</ToggleFocus>
     <ToggleDialogDashes>Cambiar guiones del diálogo</ToggleDialogDashes>
     <Alignment>Alineación (líneas seleccionadas)</Alignment>
@@ -1828,6 +1849,8 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <WaveformPlayNewSelectionEnd>Reproducir final de la selección</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Reproducir primer subtítulo seleccionado</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Vista de lista de enfoque</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>Ir al siguiente cambio de escena</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>Alternar cambio de escena</WaveformToggleSceneChange>
     <GoBack1Frame>Un cuadro atrás</GoBack1Frame>
     <GoForward1Frame>Un cuadro adelante</GoForward1Frame>
     <GoBack100Milliseconds>100 ms atrás</GoBack100Milliseconds>
@@ -1836,6 +1859,8 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <GoForward500Milliseconds>500 ms adelante</GoForward500Milliseconds>
     <GoBack1Second>Un segundo atrás</GoBack1Second>
     <GoForward1Second>Un segundo adelante</GoForward1Second>
+    <GoBack5Seconds>Cinco segundos atrás</GoBack5Seconds>
+    <GoForward5Seconds>Cinco segundos adelante</GoForward5Seconds>
     <TogglePlayPause>Tecla play/pausa</TogglePlayPause>
     <Pause>Pausa</Pause>
     <Fullscreen>Pantalla Completa</Fullscreen>
@@ -1850,7 +1875,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <SyntaxColorDurationIfTooSmall>Colorear si la duración es demasiada corta</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Colorear si la duración es demasiada larga</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Colorear el texto si es muy largo</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanMaxLines>Colorear el texto si las líneas son mayores a {0}</SyntaxColorTextMoreThanMaxLines>
+    <SyntaxColorTextMoreThanMaxLines>Colorear el texto si hay más de {0} líneas</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Colorear superposición de código de tiempo</SyntaxColorOverlap>
     <SyntaxErrorColor>Color de errores</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ir a la primera línea seleccionada</GoToFirstSelectedLine>
@@ -1878,6 +1903,10 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <MainFileSaveAll>Guardar todo</MainFileSaveAll>
     <Miscellaneous>Otros</Miscellaneous>
     <UseDoNotBreakAfterList>Utilizar «no saltar después de la lista» (para salto automático)</UseDoNotBreakAfterList>
+    <MicrosoftBingTranslator>Traductor Microsoft Bing</MicrosoftBingTranslator>
+    <HowToSignUp>Cómo inscribirse</HowToSignUp>
+    <ClientId>ID del usuario</ClientId>
+    <ClientSecret>Clave secreta</ClientSecret>
   </Settings>
   <SettingsMpv>
     <Title>Ajustes para mpv</Title>
@@ -1889,6 +1918,8 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <Title>Ajustar desplazamiendo del video</Title>
     <Description>Ajustar desplazamiento del video (los subtítulos no deben seguir el tiempo real del video, pero por ejemplo, +10 horas)</Description>
     <RelativeToCurrentVideoPosition>Relativa a la posición actual del video</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>Mantener los códigos de tiempo existente (no añadir desplazamiento de video)</KeepTimeCodes>
+    <Reset>Restablecer</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Mostrar líneas seleccionadas antes/después</Title>
@@ -2220,6 +2251,17 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <Title>Ajustar el factor anti-cursiva</Title>
     <Description>Ajusta el valor hasta que el estilo del texto es normal y no en cursiva. Tenga en cuenta que la imagen original debe ser cursiva.</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>Marca de agua</Title>
+    <WatermarkX>Marca de agua: {0}</WatermarkX>
+    <GenerateWatermarkTitle>Generar marca de agua</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>Repartidas en todo el subtítulo</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>Solo en la línea actual: {0}</CurrentLineOnlyX>
+    <Generate>Generar</Generate>
+    <Remove>Eliminar</Remove>
+    <BeforeWatermark>Antes de la marca de agua</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>La marca de agua solo funciona con la codificación de archivo Unicode.</ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
     <ClickToAddWaveform>Clic para añadir forma de onda</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Clic para añadir forma de onda/espectrograma</ClickToAddWaveformAndSpectrogram>
@@ -2238,6 +2280,8 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <ShowWaveformAndSpectrogram>Mostrar forma de onda y espectrograma</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Mostrar solo forma de onda</ShowWaveformOnly>
     <ShowSpectrogramOnly>Mostrar solo espectrograma</ShowSpectrogramOnly>
+    <AddSceneChange>Añadir cambio de escena</AddSceneChange>
+    <RemoveSceneChange>Eliminar cambio de escena</RemoveSceneChange>
     <GuessTimeCodes>Adivinar códigos de tiempo...</GuessTimeCodes>
     <SeekSilence>Buscar silencio...</SeekSilence>
   </Waveform>
