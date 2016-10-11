@@ -1270,8 +1270,8 @@ namespace Nikse.SubtitleEdit.Core
 
             var settings = new Settings();
 
+            // Compare
             XmlNode nodeCompare = doc.DocumentElement.SelectSingleNode("Compare");
-            settings.Compare = new CompareSettings();
             if (nodeCompare != null)
             {
                 XmlNode xnode = nodeCompare.SelectSingleNode("ShowOnlyDifferences");
@@ -1285,7 +1285,7 @@ namespace Nikse.SubtitleEdit.Core
                     settings.Compare.IgnoreLineBreaks = Convert.ToBoolean(xnode.InnerText);
             }
 
-            settings.RecentFiles = new RecentFilesSettings();
+            // Recent files
             XmlNode node = doc.DocumentElement.SelectSingleNode("RecentFiles");
             foreach (XmlNode listNode in node.SelectNodes("FileNames/FileName"))
             {
@@ -1312,7 +1312,7 @@ namespace Nikse.SubtitleEdit.Core
                 settings.RecentFiles.Files.Add(new RecentFileEntry { FileName = listNode.InnerText, FirstVisibleIndex = int.Parse(firstVisibleIndex), FirstSelectedIndex = int.Parse(firstSelectedIndex), VideoFileName = videoFileName, OriginalFileName = originalFileName, VideoOffsetInMs = videoOffset });
             }
 
-            settings.General = new GeneralSettings();
+            // General
             node = doc.DocumentElement.SelectSingleNode("General");
             XmlNode subNode = node.SelectSingleNode("ShowToolbarNew");
             if (subNode != null)
@@ -1637,7 +1637,7 @@ namespace Nikse.SubtitleEdit.Core
             if (subNode != null)
                 settings.General.MoveVideo100Or500MsPlaySmallSample = Convert.ToBoolean(subNode.InnerText.Trim());
 
-            settings.Tools = new ToolsSettings();
+            // Tools
             node = doc.DocumentElement.SelectSingleNode("Tools");
             subNode = node.SelectSingleNode("StartSceneIndex");
             if (subNode != null)
@@ -1972,7 +1972,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
 
-            settings.SubtitleSettings = new SubtitleSettings();
+            // Subtitle
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
             if (node != null)
             {
@@ -2059,7 +2059,7 @@ namespace Nikse.SubtitleEdit.Core
                     settings.SubtitleSettings.Cavena890StartOfMessage = subNode.InnerText;
             }
 
-            settings.Proxy = new ProxySettings();
+            // Proxy
             node = doc.DocumentElement.SelectSingleNode("Proxy");
             subNode = node.SelectSingleNode("ProxyAddress");
             if (subNode != null)
@@ -2074,7 +2074,7 @@ namespace Nikse.SubtitleEdit.Core
             if (subNode != null)
                 settings.Proxy.Domain = subNode.InnerText;
 
-            settings.WordLists = new WordListSettings();
+            // Word List
             node = doc.DocumentElement.SelectSingleNode("WordLists");
             subNode = node.SelectSingleNode("LastLanguage");
             if (subNode != null)
@@ -2086,7 +2086,7 @@ namespace Nikse.SubtitleEdit.Core
             if (subNode != null)
                 settings.WordLists.UseOnlineNamesEtc = Convert.ToBoolean(subNode.InnerText);
 
-            settings.CommonErrors = new FixCommonErrorsSettings();
+            // Fix Common Errors
             node = doc.DocumentElement.SelectSingleNode("CommonErrors");
             subNode = node.SelectSingleNode("StartPosition");
             if (subNode != null)
@@ -2194,7 +2194,7 @@ namespace Nikse.SubtitleEdit.Core
             if (subNode != null)
                 settings.CommonErrors.FixMusicNotationTicked = Convert.ToBoolean(subNode.InnerText);
 
-            settings.VideoControls = new VideoControlsSettings();
+            // Video Controls
             node = doc.DocumentElement.SelectSingleNode("VideoControls");
             subNode = node.SelectSingleNode("CustomSearchText1");
             if (subNode != null)
@@ -2307,7 +2307,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
 
-            settings.NetworkSettings = new NetworkSettings();
+            // Network
             node = doc.DocumentElement.SelectSingleNode("NetworkSettings");
             if (node != null)
             {
@@ -2328,7 +2328,7 @@ namespace Nikse.SubtitleEdit.Core
                     settings.NetworkSettings.NewMessageSound = subNode.InnerText;
             }
 
-            settings.VobSubOcr = new VobSubOcrSettings();
+            // VobSub Ocr
             node = doc.DocumentElement.SelectSingleNode("VobSubOcr");
             subNode = node.SelectSingleNode("XOrMorePixelsMakesSpace");
             if (subNode != null)
@@ -2472,7 +2472,7 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
 
-            settings.Shortcuts = new Shortcuts();
+            // Shortcuts
             node = doc.DocumentElement.SelectSingleNode("Shortcuts");
             if (node != null)
             {
@@ -2874,7 +2874,7 @@ namespace Nikse.SubtitleEdit.Core
                     settings.Shortcuts.MainTranslateCustomSearch6 = subNode.InnerText;
             }
 
-            settings.RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
+            // Remove text for Hearing Impaired
             node = doc.DocumentElement.SelectSingleNode("RemoveTextForHearingImpaired");
             if (node != null)
             {
@@ -2925,7 +2925,7 @@ namespace Nikse.SubtitleEdit.Core
                     settings.RemoveTextForHearingImpaired.RemoveIfContainsText = subNode.InnerText;
             }
 
-            settings.SubtitleBeaming = new SubtitleBeaming();
+            // Subtitle Beaming
             node = doc.DocumentElement.SelectSingleNode("SubtitleBeaming");
             if (node != null)
             {
