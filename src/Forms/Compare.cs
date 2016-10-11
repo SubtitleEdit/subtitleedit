@@ -990,8 +990,6 @@ namespace Nikse.SubtitleEdit.Forms
             config.ShowOnlyDifferences = checkBoxShowOnlyDifferences.Checked;
             config.OnlyLookForDifferenceInText = checkBoxOnlyListDifferencesInText.Checked;
             config.IgnoreLineBreaks = checkBoxIgnoreLineBreaks.Checked;
-            // Call Save configurations right away?
-            //Configuration.Settings.Save();
         }
 
     }
