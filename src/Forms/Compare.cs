@@ -44,6 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.UseSyntaxColoring = false;
             subtitleListView2.UseSyntaxColoring = false;
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
+            LoadConfigurations();
         }
 
         public void Initialize(Subtitle subtitle1, string subtitleFileName1, string title)
@@ -823,6 +824,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void Compare_FormClosing(object sender, FormClosingEventArgs e)
         {
             timer1.Stop();
+            SaveConfigurations();
         }
 
         private void checkBoxShowOnlyDifferences_CheckedChanged(object sender, EventArgs e)
@@ -972,6 +974,24 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
             Clipboard.SetText(sender.Text);
+        }
+
+        private void LoadConfigurations()
+        {
+            var config = Configuration.Settings.Compare;
+            checkBoxShowOnlyDifferences.Checked = config.ShowOnlyDifferences;
+            checkBoxOnlyListDifferencesInText.Checked = config.OnlyLookForDifferenceInText;
+            checkBoxIgnoreLineBreaks.Checked = config.IgnoreLineBreaks;
+        }
+
+        private void SaveConfigurations()
+        {
+            var config = Configuration.Settings.Compare;
+            config.ShowOnlyDifferences = checkBoxShowOnlyDifferences.Checked;
+            config.OnlyLookForDifferenceInText = checkBoxOnlyListDifferencesInText.Checked;
+            config.IgnoreLineBreaks = checkBoxIgnoreLineBreaks.Checked;
+            // Call Save configurations right away?
+            //Configuration.Settings.Save();
         }
 
     }
