@@ -3105,6 +3105,11 @@ namespace Nikse.SubtitleEdit.Forms
                                 break;
                             }
                         }
+                        else
+                        {
+                            ok = false;
+                            break;
+                        }
                     }
                     if (ok)
                     {

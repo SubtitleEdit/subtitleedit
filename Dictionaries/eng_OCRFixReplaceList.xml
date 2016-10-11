@@ -1851,6 +1851,18 @@
     <Word from="iust" to="just" />
     <Word from="CSi" to="CSI" />
     <Word from="affernoon" to="afternoon" />
+    <Word from="orpersecution" to="or persecution" />
+    <Word from="theirpetty" to="their petty" />
+    <Word from="Fourpercent" to="Four percent" />
+    <Word from="fourpercent" to="four percent" />
+    <Word from="willjust" to="will just" />
+    <Word from="Ifyou're" to="If you're" />
+    <Word from="ourplanet" to="our planet" />
+    <Word from="lsolation" to="Isolation" />
+    <Word from="yourprimitive" to="your primitive" />
+    <Word from="yourplanet" to="your planet" />
+    <Word from="matteryour" to="matter your" />
+    <Word from="Yourplace" to="Your place" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
