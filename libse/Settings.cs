@@ -1263,10 +1263,10 @@ namespace Nikse.SubtitleEdit.Core
         private static Settings CustomDeserialize(string fileName)
         {
             var doc = new XmlDocument { PreserveWhitespace = true };
-
-            var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            doc.Load(stream);
-            stream.Close();
+            using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                doc.Load(stream);
+            }
 
             var settings = new Settings();
 
