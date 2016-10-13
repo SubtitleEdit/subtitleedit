@@ -1277,10 +1277,10 @@ namespace Nikse.SubtitleEdit.Core
                 XmlNode xnode = nodeCompare.SelectSingleNode("ShowOnlyDifferences");
                 if (xnode != null)
                     settings.Compare.ShowOnlyDifferences = Convert.ToBoolean(xnode.InnerText);
-                xnode = nodeCompare.SelectSingleNode("ShowOnlyDifferences");
+                xnode = nodeCompare.SelectSingleNode("OnlyLookForDifferenceInText");
                 if (xnode != null)
                     settings.Compare.OnlyLookForDifferenceInText = Convert.ToBoolean(xnode.InnerText);
-                xnode = nodeCompare.SelectSingleNode("ShowOnlyDifferences");
+                xnode = nodeCompare.SelectSingleNode("IgnoreLineBreaks");
                 if (xnode != null)
                     settings.Compare.IgnoreLineBreaks = Convert.ToBoolean(xnode.InnerText);
             }
