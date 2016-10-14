@@ -837,61 +837,6 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
-        private static void AddExtension(StringBuilder sb, string extension)
-        {
-            if (!sb.ToString().Contains("*" + extension + ";", StringComparison.OrdinalIgnoreCase))
-            {
-                sb.Append('*');
-                sb.Append(extension.TrimStart('*'));
-                sb.Append(';');
-            }
-        }
-
-        public static string GetOpenDialogFilter()
-        {
-            var sb = new StringBuilder();
-            sb.Append(Configuration.Settings.Language.General.SubtitleFiles + "|");
-            foreach (SubtitleFormat s in SubtitleFormat.AllSubtitleFormats)
-            {
-                AddExtension(sb, s.Extension);
-                foreach (string ext in s.AlternateExtensions)
-                    AddExtension(sb, ext);
-            }
-            AddExtension(sb, new Pac().Extension);
-            AddExtension(sb, new Cavena890().Extension);
-            AddExtension(sb, new Spt().Extension);
-            AddExtension(sb, new Wsb().Extension);
-            AddExtension(sb, new CheetahCaption().Extension);
-            AddExtension(sb, ".chk");
-            AddExtension(sb, new CaptionsInc().Extension);
-            AddExtension(sb, new Ultech130().Extension);
-            AddExtension(sb, new ELRStudioClosedCaption().Extension);
-            AddExtension(sb, ".uld"); // Ultech drop frame
-            AddExtension(sb, new SonicScenaristBitmaps().Extension);
-            AddExtension(sb, ".mks");
-            AddExtension(sb, ".mxf");
-            AddExtension(sb, ".sup");
-            AddExtension(sb, ".dost");
-            AddExtension(sb, new Ayato().Extension);
-            AddExtension(sb, new PacUnicode().Extension);
-
-            if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
-            {
-                var extraExtensions = Configuration.Settings.General.OpenSubtitleExtraExtensions.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string ext in extraExtensions)
-                {
-                    if (ext.StartsWith("*.", StringComparison.Ordinal) && !sb.ToString().Contains(ext, StringComparison.OrdinalIgnoreCase))
-                        AddExtension(sb, ext);
-                }
-            }
-            AddExtension(sb, ".son");
-
-            sb.Append('|');
-            sb.Append(Configuration.Settings.Language.General.AllFiles);
-            sb.Append("|*.*");
-            return sb.ToString();
-        }
-
         public static bool IsValidRegex(string testPattern)
         {
             if (string.IsNullOrEmpty(testPattern))
