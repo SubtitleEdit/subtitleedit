@@ -3138,8 +3138,11 @@ namespace Nikse.SubtitleEdit.Forms
                 RecentFileEntry rfe = null;
                 foreach (var file in Configuration.Settings.RecentFiles.Files)
                 {
-                    if (file.FileName == item.Text)
+                    if (file.FileName.Equals(item.Text, StringComparison.OrdinalIgnoreCase))
+                    {
                         rfe = file;
+                        break;
+                    }
                 }
                 if (rfe == null)
                 {
