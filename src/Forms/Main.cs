@@ -3141,7 +3141,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (file.FileName == item.Text)
                         rfe = file;
                 }
-                SubtitleListview1.BeginUpdate();
                 if (rfe == null)
                 {
                     OpenSubtitle(item.Text, null);
@@ -3159,7 +3158,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 GotoSubPosAndPause();
                 SetRecentIndices(item.Text);
-                SubtitleListview1.EndUpdate();
                 if (rfe != null && !string.IsNullOrEmpty(rfe.VideoFileName))
                 {
                     var p = _subtitle.GetParagraphOrDefault(rfe.FirstSelectedIndex);
