@@ -100,12 +100,12 @@
             this.groupBoxInput.SuspendLayout();
             this.contextMenuStripFiles.SuspendLayout();
             this.SuspendLayout();
-            //
+            // 
             // buttonConvert
             // 
             this.buttonConvert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonConvert.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonConvert.Location = new System.Drawing.Point(857, 564);
+            this.buttonConvert.Location = new System.Drawing.Point(817, 578);
             this.buttonConvert.Name = "buttonConvert";
             this.buttonConvert.Size = new System.Drawing.Size(98, 21);
             this.buttonConvert.TabIndex = 2;
@@ -117,7 +117,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(961, 564);
+            this.buttonCancel.Location = new System.Drawing.Point(921, 578);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 3;
@@ -126,8 +126,8 @@
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // groupBoxConvertOptions
-            //
-            this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.groupBoxConvertOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxConvertOptions.Controls.Add(this.groupBoxSpeed);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxSplitLongLines);
@@ -143,15 +143,15 @@
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxFixCasing);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxRemoveTextForHI);
             this.groupBoxConvertOptions.Controls.Add(this.checkBoxRemoveFormatting);
-            this.groupBoxConvertOptions.Location = new System.Drawing.Point(473, 19);
+            this.groupBoxConvertOptions.Location = new System.Drawing.Point(439, 19);
             this.groupBoxConvertOptions.Name = "groupBoxConvertOptions";
-            this.groupBoxConvertOptions.Size = new System.Drawing.Size(545, 210);
+            this.groupBoxConvertOptions.Size = new System.Drawing.Size(539, 210);
             this.groupBoxConvertOptions.TabIndex = 11;
             this.groupBoxConvertOptions.TabStop = false;
             this.groupBoxConvertOptions.Text = "Convert options";
-            //
+            // 
             // groupBoxSpeed
-            //
+            // 
             this.groupBoxSpeed.Controls.Add(this.radioButtonToDropFrame);
             this.groupBoxSpeed.Controls.Add(this.radioButtonSpeedFromDropFrame);
             this.groupBoxSpeed.Controls.Add(this.radioButtonSpeedCustom);
@@ -163,9 +163,9 @@
             this.groupBoxSpeed.TabIndex = 12;
             this.groupBoxSpeed.TabStop = false;
             this.groupBoxSpeed.Text = "Change speed";
-            //
+            // 
             // radioButtonToDropFrame
-            //
+            // 
             this.radioButtonToDropFrame.AutoSize = true;
             this.radioButtonToDropFrame.Location = new System.Drawing.Point(6, 91);
             this.radioButtonToDropFrame.Name = "radioButtonToDropFrame";
@@ -174,9 +174,9 @@
             this.radioButtonToDropFrame.Text = "To drop frame";
             this.radioButtonToDropFrame.UseVisualStyleBackColor = true;
             this.radioButtonToDropFrame.CheckedChanged += new System.EventHandler(this.radioButtonToDropFrame_CheckedChanged);
-            //
+            // 
             // radioButtonSpeedFromDropFrame
-            //
+            // 
             this.radioButtonSpeedFromDropFrame.AutoSize = true;
             this.radioButtonSpeedFromDropFrame.Location = new System.Drawing.Point(6, 68);
             this.radioButtonSpeedFromDropFrame.Name = "radioButtonSpeedFromDropFrame";
@@ -185,9 +185,9 @@
             this.radioButtonSpeedFromDropFrame.Text = "From drop frame";
             this.radioButtonSpeedFromDropFrame.UseVisualStyleBackColor = true;
             this.radioButtonSpeedFromDropFrame.CheckedChanged += new System.EventHandler(this.radioButtonSpeedFromDropFrame_CheckedChanged);
-            //
+            // 
             // radioButtonSpeedCustom
-            //
+            // 
             this.radioButtonSpeedCustom.AutoSize = true;
             this.radioButtonSpeedCustom.Checked = true;
             this.radioButtonSpeedCustom.Location = new System.Drawing.Point(6, 45);
@@ -198,9 +198,9 @@
             this.radioButtonSpeedCustom.Text = "Custom";
             this.radioButtonSpeedCustom.UseVisualStyleBackColor = true;
             this.radioButtonSpeedCustom.CheckedChanged += new System.EventHandler(this.radioButtonSpeedCustom_CheckedChanged);
-            //
+            // 
             // numericUpDownPercent
-            //
+            // 
             this.numericUpDownPercent.DecimalPlaces = 5;
             this.numericUpDownPercent.Location = new System.Drawing.Point(6, 19);
             this.numericUpDownPercent.Maximum = new decimal(new int[] {
@@ -221,9 +221,9 @@
             0,
             0,
             0});
-            //
+            // 
             // labelPercent
-            //
+            // 
             this.labelPercent.AutoSize = true;
             this.labelPercent.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.labelPercent.Location = new System.Drawing.Point(87, 22);
@@ -231,9 +231,9 @@
             this.labelPercent.Size = new System.Drawing.Size(15, 13);
             this.labelPercent.TabIndex = 12;
             this.labelPercent.Text = "%";
-            //
+            // 
             // checkBoxSplitLongLines
-            //
+            // 
             this.checkBoxSplitLongLines.AutoSize = true;
             this.checkBoxSplitLongLines.Location = new System.Drawing.Point(15, 145);
             this.checkBoxSplitLongLines.Name = "checkBoxSplitLongLines";
@@ -329,7 +329,7 @@
             this.groupBoxChangeFrameRate.Text = "Change frame rate";
             // 
             // comboBoxFrameRateTo
-            //
+            // 
             this.comboBoxFrameRateTo.FormattingEnabled = true;
             this.comboBoxFrameRateTo.Location = new System.Drawing.Point(132, 46);
             this.comboBoxFrameRateTo.Name = "comboBoxFrameRateTo";
@@ -346,7 +346,7 @@
             this.labelToFrameRate.Text = "To frame rate";
             // 
             // comboBoxFrameRateFrom
-            //
+            // 
             this.comboBoxFrameRateFrom.FormattingEnabled = true;
             this.comboBoxFrameRateFrom.Location = new System.Drawing.Point(132, 17);
             this.comboBoxFrameRateFrom.Name = "comboBoxFrameRateFrom";
@@ -376,7 +376,7 @@
             this.groupBoxOffsetTimeCodes.Text = "Offset time codes";
             // 
             // radioButtonShowLater
-            //
+            // 
             this.radioButtonShowLater.AutoSize = true;
             this.radioButtonShowLater.Checked = true;
             this.radioButtonShowLater.Location = new System.Drawing.Point(9, 89);
@@ -388,7 +388,7 @@
             this.radioButtonShowLater.UseVisualStyleBackColor = true;
             // 
             // radioButtonShowEarlier
-            //
+            // 
             this.radioButtonShowEarlier.AutoSize = true;
             this.radioButtonShowEarlier.Location = new System.Drawing.Point(9, 66);
             this.radioButtonShowEarlier.Name = "radioButtonShowEarlier";
@@ -406,6 +406,7 @@
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
             this.timeUpDownAdjust.Size = new System.Drawing.Size(96, 24);
             this.timeUpDownAdjust.TabIndex = 1;
+            this.timeUpDownAdjust.UseVideoOffset = false;
             // 
             // labelHourMinSecMilliSecond
             // 
@@ -462,9 +463,9 @@
             this.groupBoxOutput.Controls.Add(this.labelChooseOutputFolder);
             this.groupBoxOutput.Controls.Add(this.buttonChooseFolder);
             this.groupBoxOutput.Controls.Add(this.textBoxOutputFolder);
-            this.groupBoxOutput.Location = new System.Drawing.Point(12, 316);
+            this.groupBoxOutput.Location = new System.Drawing.Point(12, 330);
             this.groupBoxOutput.Name = "groupBoxOutput";
-            this.groupBoxOutput.Size = new System.Drawing.Size(1027, 235);
+            this.groupBoxOutput.Size = new System.Drawing.Size(987, 235);
             this.groupBoxOutput.TabIndex = 1;
             this.groupBoxOutput.TabStop = false;
             this.groupBoxOutput.Text = "Output";
@@ -483,7 +484,7 @@
             // linkLabelOpenOutputFolder
             // 
             this.linkLabelOpenOutputFolder.AutoSize = true;
-            this.linkLabelOpenOutputFolder.Location = new System.Drawing.Point(425, 74);
+            this.linkLabelOpenOutputFolder.Location = new System.Drawing.Point(385, 74);
             this.linkLabelOpenOutputFolder.Name = "linkLabelOpenOutputFolder";
             this.linkLabelOpenOutputFolder.Size = new System.Drawing.Size(42, 13);
             this.linkLabelOpenOutputFolder.TabIndex = 4;
@@ -560,7 +561,7 @@
             // 
             // buttonChooseFolder
             // 
-            this.buttonChooseFolder.Location = new System.Drawing.Point(393, 69);
+            this.buttonChooseFolder.Location = new System.Drawing.Point(353, 68);
             this.buttonChooseFolder.Name = "buttonChooseFolder";
             this.buttonChooseFolder.Size = new System.Drawing.Size(26, 23);
             this.buttonChooseFolder.TabIndex = 3;
@@ -572,7 +573,7 @@
             // 
             this.textBoxOutputFolder.Location = new System.Drawing.Point(11, 71);
             this.textBoxOutputFolder.Name = "textBoxOutputFolder";
-            this.textBoxOutputFolder.Size = new System.Drawing.Size(376, 20);
+            this.textBoxOutputFolder.Size = new System.Drawing.Size(336, 20);
             this.textBoxOutputFolder.TabIndex = 2;
             // 
             // groupBoxInput
@@ -590,7 +591,7 @@
             this.groupBoxInput.Controls.Add(this.listViewInputFiles);
             this.groupBoxInput.Location = new System.Drawing.Point(15, 12);
             this.groupBoxInput.Name = "groupBoxInput";
-            this.groupBoxInput.Size = new System.Drawing.Size(1024, 298);
+            this.groupBoxInput.Size = new System.Drawing.Size(984, 312);
             this.groupBoxInput.TabIndex = 0;
             this.groupBoxInput.TabStop = false;
             this.groupBoxInput.Text = "Input";
@@ -598,7 +599,7 @@
             // textBoxFilter
             // 
             this.textBoxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBoxFilter.Location = new System.Drawing.Point(422, 269);
+            this.textBoxFilter.Location = new System.Drawing.Point(422, 283);
             this.textBoxFilter.Name = "textBoxFilter";
             this.textBoxFilter.Size = new System.Drawing.Size(158, 20);
             this.textBoxFilter.TabIndex = 13;
@@ -607,7 +608,7 @@
             // 
             this.labelFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelFilter.AutoSize = true;
-            this.labelFilter.Location = new System.Drawing.Point(11, 272);
+            this.labelFilter.Location = new System.Drawing.Point(11, 286);
             this.labelFilter.Name = "labelFilter";
             this.labelFilter.Size = new System.Drawing.Size(29, 13);
             this.labelFilter.TabIndex = 11;
@@ -623,7 +624,7 @@
             "SubRip .srt files without BOM header",
             "Files with subtitle with more than two lines",
             "Files that contains..."});
-            this.comboBoxFilter.Location = new System.Drawing.Point(81, 269);
+            this.comboBoxFilter.Location = new System.Drawing.Point(81, 283);
             this.comboBoxFilter.Name = "comboBoxFilter";
             this.comboBoxFilter.Size = new System.Drawing.Size(335, 21);
             this.comboBoxFilter.TabIndex = 12;
@@ -635,7 +636,7 @@
             this.checkBoxScanFolderRecursive.AutoSize = true;
             this.checkBoxScanFolderRecursive.Checked = true;
             this.checkBoxScanFolderRecursive.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxScanFolderRecursive.Location = new System.Drawing.Point(788, 16);
+            this.checkBoxScanFolderRecursive.Location = new System.Drawing.Point(748, 16);
             this.checkBoxScanFolderRecursive.Name = "checkBoxScanFolderRecursive";
             this.checkBoxScanFolderRecursive.Size = new System.Drawing.Size(74, 17);
             this.checkBoxScanFolderRecursive.TabIndex = 0;
@@ -645,7 +646,7 @@
             // buttonSearchFolder
             // 
             this.buttonSearchFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSearchFolder.Location = new System.Drawing.Point(868, 12);
+            this.buttonSearchFolder.Location = new System.Drawing.Point(828, 12);
             this.buttonSearchFolder.Name = "buttonSearchFolder";
             this.buttonSearchFolder.Size = new System.Drawing.Size(116, 23);
             this.buttonSearchFolder.TabIndex = 1;
@@ -656,7 +657,7 @@
             // buttonInputBrowse
             // 
             this.buttonInputBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonInputBrowse.Location = new System.Drawing.Point(989, 41);
+            this.buttonInputBrowse.Location = new System.Drawing.Point(949, 41);
             this.buttonInputBrowse.Name = "buttonInputBrowse";
             this.buttonInputBrowse.Size = new System.Drawing.Size(26, 23);
             this.buttonInputBrowse.TabIndex = 3;
@@ -689,7 +690,7 @@
             this.listViewInputFiles.HideSelection = false;
             this.listViewInputFiles.Location = new System.Drawing.Point(6, 41);
             this.listViewInputFiles.Name = "listViewInputFiles";
-            this.listViewInputFiles.Size = new System.Drawing.Size(978, 222);
+            this.listViewInputFiles.Size = new System.Drawing.Size(938, 236);
             this.listViewInputFiles.TabIndex = 2;
             this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
@@ -748,27 +749,27 @@
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(15, 573);
+            this.progressBar1.Location = new System.Drawing.Point(15, 587);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(833, 10);
+            this.progressBar1.Size = new System.Drawing.Size(793, 10);
             this.progressBar1.TabIndex = 8;
             // 
             // labelStatus
             // 
             this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(12, 557);
+            this.labelStatus.Location = new System.Drawing.Point(12, 571);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus";
-            //
+            // 
             // BatchConvert
-            //
+            // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1048, 597);
+            this.ClientSize = new System.Drawing.Size(1008, 611);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.groupBoxOutput);
