@@ -1409,6 +1409,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // OCR fix words
                 LoadOcrFixList(true);
 
+                // Names/Ignore list
                 LoadNamesEtc(language, true);
             }
         }
@@ -1419,12 +1420,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (cb == null)
                 return;
 
-            if (reloadListBox)
-                listBoxOcrFixList.Items.Clear();
             _ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(cb.CultureInfo.ThreeLetterISOLanguageName);
             if (reloadListBox)
             {
                 listBoxOcrFixList.BeginUpdate();
+                listBoxOcrFixList.Items.Clear();
                 foreach (var pair in _ocrFixReplaceList.WordReplaceList)
                 {
                     listBoxOcrFixList.Items.Add(pair.Key + " --> " + pair.Value);
@@ -1446,10 +1446,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (reloadListBox)
             {
-                listBoxUserWordLists.Items.Clear();
                 listBoxUserWordLists.BeginUpdate();
+                listBoxUserWordLists.Items.Clear();
                 foreach (string name in _userWordList)
                     listBoxUserWordLists.Items.Add(name);
+                listBoxUserWordLists.Sorted = true;
                 listBoxUserWordLists.EndUpdate();
             }
         }
@@ -1471,15 +1472,22 @@ namespace Nikse.SubtitleEdit.Forms
                 var uiContext = TaskScheduler.FromCurrentSynchronizationContext();
                 task.ContinueWith(originalTask =>
                 {
-                    listBoxNamesEtc.BeginUpdate();
-                    listBoxNamesEtc.Items.Clear();
-                    foreach (var name in originalTask.Result)
-                    {
-                        listBoxNamesEtc.Items.Add(name);
-                    }
-                    listBoxNamesEtc.EndUpdate();
+                    UpdateListBoxNameList(originalTask.Result);
                 }, uiContext);
             }
+            // NOTE: What if reloadListBox == false? (nameList should be re/loaded)?
+        }
+
+        private void UpdateListBoxNameList(IEnumerable<string> names)
+        {
+            if (names == null) return;
+            listBoxNamesEtc.BeginUpdate();
+            listBoxNamesEtc.Items.Clear();
+            foreach (var name in names)
+            {
+                listBoxNamesEtc.Items.Add(name);
+            }
+            listBoxNamesEtc.EndUpdate();
         }
 
         private string GetCurrentWordListLanguage()
@@ -1496,7 +1504,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
                 namesList.Add(text);
-                LoadNamesEtc(language, true);
+                UpdateListBoxNameList(namesList.GetAllNames());
                 labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
                 textBoxNameEtc.Text = string.Empty;
                 textBoxNameEtc.Focus();
@@ -1555,8 +1563,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (removeCount > 0)
                     {
-                        LoadNamesEtc(language, true); // reload
-
+                        UpdateListBoxNameList(namesList.GetAllNames());
                         if (index < listBoxNamesEtc.Items.Count)
                             listBoxNamesEtc.SelectedIndex = index;
                         else if (listBoxNamesEtc.Items.Count > 0)
