@@ -164,16 +164,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxCustomSearch1.Text = Configuration.Settings.VideoControls.CustomSearchText1;
             comboBoxCustomSearch2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
-            comboBoxCustomSearch3.Text = Configuration.Settings.VideoControls.CustomSearchText3;
-            comboBoxCustomSearch4.Text = Configuration.Settings.VideoControls.CustomSearchText4;
-            comboBoxCustomSearch5.Text = Configuration.Settings.VideoControls.CustomSearchText5;
-            comboBoxCustomSearch6.Text = Configuration.Settings.VideoControls.CustomSearchText6;
             textBoxCustomSearchUrl1.Text = Configuration.Settings.VideoControls.CustomSearchUrl1;
             textBoxCustomSearchUrl2.Text = Configuration.Settings.VideoControls.CustomSearchUrl2;
-            textBoxCustomSearchUrl3.Text = Configuration.Settings.VideoControls.CustomSearchUrl3;
-            textBoxCustomSearchUrl4.Text = Configuration.Settings.VideoControls.CustomSearchUrl4;
-            textBoxCustomSearchUrl5.Text = Configuration.Settings.VideoControls.CustomSearchUrl5;
-            textBoxCustomSearchUrl6.Text = Configuration.Settings.VideoControls.CustomSearchUrl6;
 
             foreach (var x in FontFamily.Families)
             {
@@ -1156,16 +1148,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             Configuration.Settings.VideoControls.CustomSearchText1 = comboBoxCustomSearch1.Text;
             Configuration.Settings.VideoControls.CustomSearchText2 = comboBoxCustomSearch2.Text;
-            Configuration.Settings.VideoControls.CustomSearchText3 = comboBoxCustomSearch3.Text;
-            Configuration.Settings.VideoControls.CustomSearchText4 = comboBoxCustomSearch4.Text;
-            Configuration.Settings.VideoControls.CustomSearchText5 = comboBoxCustomSearch5.Text;
-            Configuration.Settings.VideoControls.CustomSearchText6 = comboBoxCustomSearch6.Text;
             Configuration.Settings.VideoControls.CustomSearchUrl1 = textBoxCustomSearchUrl1.Text;
             Configuration.Settings.VideoControls.CustomSearchUrl2 = textBoxCustomSearchUrl2.Text;
-            Configuration.Settings.VideoControls.CustomSearchUrl3 = textBoxCustomSearchUrl3.Text;
-            Configuration.Settings.VideoControls.CustomSearchUrl4 = textBoxCustomSearchUrl4.Text;
-            Configuration.Settings.VideoControls.CustomSearchUrl5 = textBoxCustomSearchUrl5.Text;
-            Configuration.Settings.VideoControls.CustomSearchUrl6 = textBoxCustomSearchUrl6.Text;
 
             int maxLength = (int)numericUpDownSubtitleLineMaximumLength.Value;
             if (maxLength > 9 && maxLength < 1000)
@@ -1860,14 +1844,6 @@ namespace Nikse.SubtitleEdit.Forms
             var tb = textBoxCustomSearchUrl1;
             if (cb == comboBoxCustomSearch2)
                 tb = textBoxCustomSearchUrl2;
-            else if (cb == comboBoxCustomSearch3)
-                tb = textBoxCustomSearchUrl3;
-            else if (cb == comboBoxCustomSearch4)
-                tb = textBoxCustomSearchUrl4;
-            else if (cb == comboBoxCustomSearch5)
-                tb = textBoxCustomSearchUrl5;
-            else if (cb == comboBoxCustomSearch6)
-                tb = textBoxCustomSearchUrl6;
 
             if (cb.SelectedIndex >= 0)
             {

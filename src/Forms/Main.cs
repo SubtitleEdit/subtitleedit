@@ -11554,26 +11554,6 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                     RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl2);
                 }
-                else if (_mainTranslateCustomSearch3 == e.KeyData)
-                {
-                    e.SuppressKeyPress = true;
-                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl3);
-                }
-                else if (_mainTranslateCustomSearch4 == e.KeyData)
-                {
-                    e.SuppressKeyPress = true;
-                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl4);
-                }
-                else if (_mainTranslateCustomSearch5 == e.KeyData)
-                {
-                    e.SuppressKeyPress = true;
-                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl5);
-                }
-                else if (_mainTranslateCustomSearch6 == e.KeyData)
-                {
-                    e.SuppressKeyPress = true;
-                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl6);
-                }
             }
             // put new entries above tabs
         }
