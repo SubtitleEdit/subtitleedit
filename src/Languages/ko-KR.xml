@@ -1731,7 +1731,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MpvPlayerDescription>https://mpv.io/ - 무료, 오픈 소스, 크로스 플랫폼 미디어 플레이어</MpvPlayerDescription>
     <VlcMediaPlayer>VLC 미디어 플레이어</VlcMediaPlayer>
     <VlcMediaPlayerDescription>VLC 미디어 플레이어 1.1.0 이후의 libvlc.dll</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC 경로 (VLC 포터블 버전을 사용하는 경우)</VlcBrowseToLabel>
     <ShowStopButton>정지 버튼 표시</ShowStopButton>
     <ShowMuteButton>음소거 버튼 표시</ShowMuteButton>
     <ShowFullscreenButton>전체 화면 버튼 표시</ShowFullscreenButton>

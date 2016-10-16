@@ -1704,7 +1704,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <VlcMediaPlayer>Медіа-програвач VLC</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll з програвача VLC 1.1.0 або новішого</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>Шлях до VLC (потрібен лише якщо ви використовуєте портативну версію VLC)</VlcBrowseToLabel>
     <ShowStopButton>Показувати кнопку "Зупинити"</ShowStopButton>
     <ShowMuteButton>Показувати кнопку "Вимкнути звук"</ShowMuteButton>
     <ShowFullscreenButton>Показувати кнопку "Повний екран"</ShowFullscreenButton>

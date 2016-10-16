@@ -1734,7 +1734,6 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <MpvPlayerDescription>https://mpv.io/ - sursă gratuită, deschisă și multi-platformă ptr. media player</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll de la VLC media player 1.1.0 sau mai recent</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>&gt; Calea VLC (doar dacă folosești versiunea portabilă a VLC)</VlcBrowseToLabel>
     <ShowStopButton>Arată butonul Stop</ShowStopButton>
     <ShowMuteButton>Arată butonul Mut</ShowMuteButton>
     <ShowFullscreenButton>Arată butonul Ecran complet</ShowFullscreenButton>

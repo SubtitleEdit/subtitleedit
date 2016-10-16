@@ -1728,7 +1728,6 @@ Command line: {1} {2}
     <MpvPlayerDescription>https://mpv.io/ - 免费、开源、跨平台的播放器</MpvPlayerDescription>
     <VlcMediaPlayer>VLC 媒体播放器</VlcMediaPlayer>
     <VlcMediaPlayerDescription>使用 VLC 媒体播放器 1.1.0 或更新版本的 libvlc.dll</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC程序路径 (仅在使用便携版VLC时有用)</VlcBrowseToLabel>
     <ShowStopButton>显示「停止」按钮</ShowStopButton>
     <ShowMuteButton>显示静音按钮</ShowMuteButton>
     <ShowFullscreenButton>显示全屏幕按钮</ShowFullscreenButton>

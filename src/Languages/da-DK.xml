@@ -1729,7 +1729,6 @@ kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <MpvPlayerDescription>https://mpv.io/ - gratis, open source og cross-platform medie afspiller</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll fra VLC media player 1.1.0 eller nyere</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC sti (kun nødvendig, hvis du bruger den portable version af VLC)</VlcBrowseToLabel>
     <ShowStopButton>Vis stop-knap</ShowStopButton>
     <ShowMuteButton>Vis mute-knap</ShowMuteButton>
     <ShowFullscreenButton>Vis fuldskærm knap</ShowFullscreenButton>

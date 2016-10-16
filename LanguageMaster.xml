@@ -1734,7 +1734,6 @@ can edit in same subtitle file (collaboration)</Information>
     <MpvPlayerDescription>https://mpv.io/ - free, open source, and cross-platform media player</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll from VLC media player 1.1.0 or newer</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC path (only needed if you're using the portable version of VLC)</VlcBrowseToLabel>
     <ShowStopButton>Show stop button</ShowStopButton>
     <ShowMuteButton>Show mute button</ShowMuteButton>
     <ShowFullscreenButton>Show fullscreen button</ShowFullscreenButton>

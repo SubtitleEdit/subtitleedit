@@ -1614,7 +1614,6 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <DirectShowDescription>Quartz.dll i system32-mappen</DirectShowDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>Libvlc.dll från VLC media player 1.1.0 eller senare</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC sökväg (behövs endast om du använder den bärbara versionen av VLC)</VlcBrowseToLabel>
     <ShowStopButton>Visa stoppknapp</ShowStopButton>
     <ShowMuteButton>Visa mute-knapp</ShowMuteButton>
     <ShowFullscreenButton>Visa helskärms knapp</ShowFullscreenButton>

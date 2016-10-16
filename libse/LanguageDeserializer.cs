@@ -4651,9 +4651,6 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/VlcMediaPlayerDescription":
                     language.Settings.VlcMediaPlayerDescription = reader.Value;
                     break;
-                case "Settings/VlcBrowseToLabel":
-                    language.Settings.VlcBrowseToLabel = reader.Value;
-                    break;
                 case "Settings/ShowStopButton":
                     language.Settings.ShowStopButton = reader.Value;
                     break;

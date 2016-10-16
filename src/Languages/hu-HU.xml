@@ -1721,7 +1721,6 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <MpvPlayerDescription>https://mpv.io/ - Ingyenes, nyílt forráskódú, platformfüggetlen médialejátszó</MpvPlayerDescription>
     <VlcMediaPlayer>VLC médialejátszó</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll az 1.1.0 VLC verzióból vagy újabb</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC helye (csak a hordozható VLC használata esetén szükséges)</VlcBrowseToLabel>
     <ShowStopButton>Leállítás gomb megjelenítése</ShowStopButton>
     <ShowMuteButton>Némítás gomb megjelenítése</ShowMuteButton>
     <ShowFullscreenButton>Teljes képernyőre állító gomb megjelenítése</ShowFullscreenButton>

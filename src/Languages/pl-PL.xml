@@ -1731,7 +1731,6 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <MpvPlayerDescription>https://mpv.io/ - darmowy, open source i wieloplatformowy odtwarzacz multimedialny</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll z VLC media player 1.1.0 lub nowszego</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>Ścieżka do VLC (potrzebna tylko wtedy, gdy używasz wersji portable VLC)</VlcBrowseToLabel>
     <ShowStopButton>Pokaż przycisk "Stop"</ShowStopButton>
     <ShowMuteButton>Pokaż przycisk "Wycisz"</ShowMuteButton>
     <ShowFullscreenButton>Pokaż przycisk "Pełny ekran"</ShowFullscreenButton>

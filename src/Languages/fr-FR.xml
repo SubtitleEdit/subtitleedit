@@ -1742,7 +1742,6 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <MpvPlayerDescription>https://mpv.io/ - lecteur multimédia multiplateforme, libre et à code source ouvert</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll de VLC media player 1.1.0 ou plus récent</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>Chemin uniquement pour la version portable de VLC :</VlcBrowseToLabel>
     <ShowStopButton>Afficher touche stop</ShowStopButton>
     <ShowMuteButton>Afficher touche sourdine</ShowMuteButton>
     <ShowFullscreenButton>Afficher touche plein écran</ShowFullscreenButton>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
@@ -1751,7 +1751,6 @@ https://github.com/SubtitleEdit/subtitleedit
 с открытым исходным кодом, кроссплатформенный медиа проигрыватель</MpvPlayerDescription>
     <VlcMediaPlayer>VLC медиа проигрыватель</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll из VLC media player 1.1.0 или новее</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>Путь к VLC (только для переносной версии VLC)</VlcBrowseToLabel>
     <ShowStopButton>Показывать кнопку "Стоп"</ShowStopButton>
     <ShowMuteButton>Показывать кнопку "Заглушить"</ShowMuteButton>
     <ShowFullscreenButton>Показывать кнопку "Во весь экран"</ShowFullscreenButton>

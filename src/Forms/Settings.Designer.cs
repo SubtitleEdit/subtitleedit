@@ -157,9 +157,6 @@
             this.labelMpvSettings = new System.Windows.Forms.Label();
             this.buttonMpvSettings = new System.Windows.Forms.Button();
             this.labelPlatform = new System.Windows.Forms.Label();
-            this.buttonVlcPathBrowse = new System.Windows.Forms.Button();
-            this.textBoxVlcPath = new System.Windows.Forms.TextBox();
-            this.labelVlcPath = new System.Windows.Forms.Label();
             this.labelVideoPlayerVLC = new System.Windows.Forms.Label();
             this.radioButtonVideoPlayerVLC = new System.Windows.Forms.RadioButton();
             this.labelVideoPlayerMPlayer = new System.Windows.Forms.Label();
@@ -1861,9 +1858,6 @@
             this.groupBoxVideoEngine.Controls.Add(this.labelMpvSettings);
             this.groupBoxVideoEngine.Controls.Add(this.buttonMpvSettings);
             this.groupBoxVideoEngine.Controls.Add(this.labelPlatform);
-            this.groupBoxVideoEngine.Controls.Add(this.buttonVlcPathBrowse);
-            this.groupBoxVideoEngine.Controls.Add(this.textBoxVlcPath);
-            this.groupBoxVideoEngine.Controls.Add(this.labelVlcPath);
             this.groupBoxVideoEngine.Controls.Add(this.labelVideoPlayerVLC);
             this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerVLC);
             this.groupBoxVideoEngine.Controls.Add(this.labelVideoPlayerMPlayer);
@@ -1911,34 +1905,6 @@
             this.labelPlatform.Text = "x-bit";
             this.labelPlatform.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // buttonVlcPathBrowse
-            // 
-            this.buttonVlcPathBrowse.Location = new System.Drawing.Point(778, 44);
-            this.buttonVlcPathBrowse.Name = "buttonVlcPathBrowse";
-            this.buttonVlcPathBrowse.Size = new System.Drawing.Size(29, 21);
-            this.buttonVlcPathBrowse.TabIndex = 26;
-            this.buttonVlcPathBrowse.Text = "...";
-            this.buttonVlcPathBrowse.UseVisualStyleBackColor = true;
-            this.buttonVlcPathBrowse.Click += new System.EventHandler(this.buttonVlcPathBrowse_Click);
-            // 
-            // textBoxVlcPath
-            // 
-            this.textBoxVlcPath.Location = new System.Drawing.Point(382, 45);
-            this.textBoxVlcPath.MaxLength = 1000;
-            this.textBoxVlcPath.Name = "textBoxVlcPath";
-            this.textBoxVlcPath.Size = new System.Drawing.Size(390, 21);
-            this.textBoxVlcPath.TabIndex = 25;
-            this.textBoxVlcPath.MouseLeave += new System.EventHandler(this.textBoxVlcPath_MouseLeave);
-            // 
-            // labelVlcPath
-            // 
-            this.labelVlcPath.AutoSize = true;
-            this.labelVlcPath.Location = new System.Drawing.Point(379, 29);
-            this.labelVlcPath.Name = "labelVlcPath";
-            this.labelVlcPath.Size = new System.Drawing.Size(315, 13);
-            this.labelVlcPath.TabIndex = 24;
-            this.labelVlcPath.Text = "VLC path (only needed if you using the  portable version of VLC)";
-            // 
             // labelVideoPlayerVLC
             // 
             this.labelVideoPlayerVLC.AutoSize = true;
@@ -1960,6 +1926,7 @@
             this.radioButtonVideoPlayerVLC.TabStop = true;
             this.radioButtonVideoPlayerVLC.Text = "VLC";
             this.radioButtonVideoPlayerVLC.UseVisualStyleBackColor = true;
+            this.radioButtonVideoPlayerVLC.MouseClick += new System.Windows.Forms.MouseEventHandler(this.radioButtonVideoPlayerVLC_MouseClick);
             // 
             // labelVideoPlayerMPlayer
             // 
@@ -2026,6 +1993,7 @@
             this.radioButtonVideoPlayerMpcHc.TabStop = true;
             this.radioButtonVideoPlayerMpcHc.Text = "MPC-HC";
             this.radioButtonVideoPlayerMpcHc.UseVisualStyleBackColor = true;
+            this.radioButtonVideoPlayerMpcHc.MouseClick += new System.Windows.Forms.MouseEventHandler(this.radioButtonVideoPlayerMpcHc_MouseClick);
             // 
             // tabPageWaveform
             // 
@@ -4176,9 +4144,6 @@
         private System.Windows.Forms.PictureBox pictureBoxTBFixCommonErrors;
         private System.Windows.Forms.CheckBox checkBoxTBFixCommonErrors;
         private System.Windows.Forms.CheckBox checkBoxFixShortDisplayTimesAllowMoveStartTime;
-        private System.Windows.Forms.Button buttonVlcPathBrowse;
-        private System.Windows.Forms.TextBox textBoxVlcPath;
-        private System.Windows.Forms.Label labelVlcPath;
         private System.Windows.Forms.GroupBox groupBoxToolsMisc;
         private System.Windows.Forms.CheckBox checkBoxUseDoNotBreakAfterList;
         private System.Windows.Forms.Button buttonEditDoNotBreakAfterList;

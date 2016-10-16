@@ -1618,7 +1618,6 @@
     <DirectShowDescription>quartz.dll ในโฟลเดอร์ system32</DirectShowDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll จาก VLC Media Player 1.1.0 หรือใหม่กว่า</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>พาธของ VLC (เฉพาะตอนที่ใช้ VLC รุ่นพอร์ตเอเบิ้ล)</VlcBrowseToLabel>
     <ShowStopButton>แสดงปุ่มหยุด</ShowStopButton>
     <ShowMuteButton>แสดงปุ่มเงียบ</ShowMuteButton>
     <ShowFullscreenButton>แสดงปุ่มเต็มจอ</ShowFullscreenButton>

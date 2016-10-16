@@ -1618,7 +1618,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <DirectShowDescription>quartz.dll 在 System32 資料夾中</DirectShowDescription>
     <VlcMediaPlayer>VLC 媒體播放器</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll 來自 VLC 媒體播放器 1.1.0 或更新</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC 程式路徑 (僅在您使用便攜式版本時方需設定)</VlcBrowseToLabel>
     <ShowStopButton>顯示停止按鈕</ShowStopButton>
     <ShowMuteButton>顯示靜音按鈕</ShowMuteButton>
     <ShowFullscreenButton>顯示全螢幕幕按鈕</ShowFullscreenButton>

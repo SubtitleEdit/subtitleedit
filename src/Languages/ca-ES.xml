@@ -1700,7 +1700,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MpvPlayerDescription>https://mpv.io/ - free, open source, and cross-platform media player</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll de VLC media player 1.1.0 o superior</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>Ruta del VLC (Sols en cas d'emprar la versió portable de VLC)</VlcBrowseToLabel>
     <ShowStopButton>Mostra botó d'aturada</ShowStopButton>
     <ShowMuteButton>Mostra botó silencia</ShowMuteButton>
     <ShowFullscreenButton>Mostra botó pantalla sencera</ShowFullscreenButton>

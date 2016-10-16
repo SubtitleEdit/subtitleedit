@@ -1691,7 +1691,6 @@ određeni podnaslov s drugim ljudima.</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll iz VLC media player-a 1.1.0 ili novijeg izdanja</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC putanja (potrebno samo ako se koristi prijenosna verzija VLC)</VlcBrowseToLabel>
     <ShowStopButton>&amp;Gumb za zaustavljanje</ShowStopButton>
     <ShowMuteButton>Pokaži gumb za isključivanje zvuka</ShowMuteButton>
     <ShowFullscreenButton>Prikaži gumb za puni ekran</ShowFullscreenButton>
