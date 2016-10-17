@@ -54,12 +54,12 @@
     <Word from="Čerku" to="Kćer" />
     <Word from="ćerku" to="kćer" />
     <Word from="Ćerku" to="Kćer" />
-    <RegEx find="ćerkama" replaceWith="kćerima" />
-    <RegEx find="čerkama" replaceWith="kćerima" />
-    <RegEx find="ćerkom" replaceWith="kćeri" />
-    <RegEx find="čerkom" replaceWith="kćeri" />
-    <RegEx find="kćerkom" replaceWith="kćeri" />
-    <RegEx find="kčerkom" replaceWith="kćeri" />
+    <Word from="ćerkama" to="kćerima" />
+    <Word from="čerkama" to="kćerima" />
+    <Word from="ćerkom" to="kćeri" />
+    <Word from="čerkom" to="kćeri" />
+    <Word from="kćerkom" to="kćeri" />
+    <Word from="kčerkom" to="kćeri" />
     <Word from="ćebe" to="deku" />
     <Word from="ćebetu" to="deki" />
     <Word from="čk" to="čak" />
@@ -116,6 +116,7 @@
     <Word from="Eksperti" to="Stručnjaci" />
     <Word from="ekspertima" to="stručnjacima" />
     <Word from="en" to="ne" />
+    <Word from="emituje" to="emitira" />
     <Word from="familijama" to="obiteljima" />
     <Word from="familiji" to="obitelji" />
     <Word from="foka" to="tuljan" />
@@ -175,10 +176,10 @@
     <Word from="kancera" to="raka" />
     <Word from="karmin" to="ruž" />
     <Word from="karminom" to="ružem" />
-    <RegEx find="kćerka" replaceWith="kći" />
-    <RegEx find="kčerka" replaceWith="kći" />
-    <RegEx find="Kćerka" replaceWith="Kći" />
-    <RegEx find="Kčerka" replaceWith="Kći" />
+    <Word from="kćerka" to="kći" />
+    <Word from="kčerka" to="kći" />
+    <Word from ="Kćerka" to="Kći" />
+    <Word from ="Kčerka" to="Kći" />
     <Word from="kćerkama" to="kćerima" />
     <Word from="ker" to="pas" />
     <Word from="Ker" to="Pas" />
@@ -251,6 +252,7 @@
     <Word from="mere" to="mjere" />
     <Word from="mešane" to="miješane" />
     <Word from="mešavine" to="mješavine" />
+    <Word from="mešavinu" to="mješavinu" />
     <Word from="minut" to="minutu" />
     <Word from="moč" to="moć" />
     <Word from="muzejem" to="muzejom" />
@@ -1739,6 +1741,7 @@
     <RegEx find="\bl([čćžzvsmrtpdbgkn])" replaceWith="i$1" />
     <RegEx find="\bL([čćžzvsmrtpdbgkn])" replaceWith="I$1" />
     <RegEx find="(?&lt;![Hh])omić" replaceWith="omit ć" />
+    <RegEx find="lepš" replaceWith="ljepš" />
     <RegEx find="laćać" replaceWith="laćat ć" />
     <RegEx find="ljubc" replaceWith="ljupc" />
     <RegEx find="luparenj" replaceWith="lupiranj" />
@@ -1843,6 +1846,7 @@
     <RegEx find="(?&lt;![ČčĆć])vorić" replaceWith="vorit ć" />
     <!-- mijenja u korist češće riječi -->
     <RegEx find="([vV])rača" replaceWith="$1raća" />
+    <RegEx find="vršić" replaceWith="vršit ć" />
     <RegEx find="zleči" replaceWith="zliječi" />
     <RegEx find="(?&lt;![Oo]bra|o)zova([lton])" replaceWith="zira$1" />
     <RegEx find="zuslov" replaceWith="zuvjet" />
