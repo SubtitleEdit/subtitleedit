@@ -920,7 +920,7 @@
     <RegEx find="\b([dD])a[čć]([eu])" replaceWith="$1at ć$2" />
     <RegEx find="ejstv(?!o)" replaceWith="jelovanj" />
     <RegEx find="ejstvo" replaceWith="jelo" />
-    <RegEx find="\b([dD])el([aou]?!x|ić|ić[aeiu]|ima)" replaceWith="$1jel$2" />
+    <RegEx find="\b([dD])el([aou](?!x)|ić|ić[aeiu]|ima)" replaceWith="$1jel$2" />
     <RegEx find="([dD])elova([lnt])" replaceWith="$1jelova$2" />
     <RegEx find="\b([dD])j?eli([mšo]|mo|l[aeio]|t[ei])\b" replaceWith="$1ijeli$2" />
     <RegEx find="\b([bBdD])j?el([ei])\b" replaceWith="$1ijel$2" />
