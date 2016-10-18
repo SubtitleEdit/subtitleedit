@@ -26,7 +26,7 @@
   </Dictionary>
   <Dictionary>
     <EnglishName>Catalan</EnglishName>
-    <NativeName>català</NativeName>
+    <NativeName>Català</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/ca_ES.zip</DownloadLink>
     <Description>Spelling dictionary for Catalan language</Description>
   </Dictionary>
@@ -188,7 +188,7 @@
   </Dictionary>
   <Dictionary>
     <EnglishName>Ndebele, South</EnglishName>
-    <NativeName>isiNdebele</NativeName>
+    <NativeName>IsiNdebele</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/nr_ZA.zip</DownloadLink>
     <Description>Ndebele (South) spell checker</Description>
   </Dictionary>
@@ -224,7 +224,7 @@
   </Dictionary>
   <Dictionary>
     <EnglishName>Polish</EnglishName>
-    <NativeName>polski</NativeName>
+    <NativeName>Polski</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/pl_PL.zip</DownloadLink>
     <Description>Polish Dictionary Pack</Description>
   </Dictionary>
@@ -242,7 +242,7 @@
   </Dictionary>
   <Dictionary>
     <EnglishName>Romanian</EnglishName>
-    <NativeName>română</NativeName>
+    <NativeName>Română</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/ro_RO.zip</DownloadLink>
     <Description>Romanian Dictionaries</Description>
   </Dictionary>
@@ -254,13 +254,13 @@
   </Dictionary>
   <Dictionary>
     <EnglishName>Slovak</EnglishName>
-    <NativeName>slovenčina</NativeName>
+    <NativeName>Slovenčina</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/sk_SK.zip</DownloadLink>
     <Description>Slovak dictionary package / Slovenské slovníky</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Slovenian</EnglishName>
-    <NativeName>slovenščina</NativeName>
+    <NativeName>Slovenščina</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/sl_SI.zip</DownloadLink>
     <Description>OdprtiTezaver - Slovenian Thesaurus</Description>
   </Dictionary>
@@ -362,7 +362,7 @@
   </Dictionary>
   <Dictionary>
     <EnglishName>Zulu</EnglishName>
-    <NativeName>isiZulu</NativeName>
+    <NativeName>IsiZulu</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/zu_ZA.zip</DownloadLink>
     <Description>Zulu spell checker</Description>
   </Dictionary>
