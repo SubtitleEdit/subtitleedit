@@ -52,6 +52,11 @@ namespace Nikse.SubtitleEdit.Forms
                     byte[] data2 = new byte[read];
                     Buffer.BlockCopy(data, 0, data2, 0, read);
                     string s = System.Text.Encoding.UTF8.GetString(data2).Trim();
+                    // Remove UTF-8 BOM if present (XmlDocument doesn't seem to support it).
+                    if (s[0] == 0xfeff || s[0] == 0xfffe)
+                    {
+                        s = s.Remove(0, 1);
+                    }
                     doc.LoadXml(s);
                 }
 
