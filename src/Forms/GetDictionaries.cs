@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private List<string> _dictionaryDownloadLinks = new List<string>();
         private List<string> _descriptions = new List<string>();
-        private string _xmlName = null;
+        private string _xmlName;
 
         public GetDictionaries()
         {
@@ -39,20 +39,16 @@ namespace Nikse.SubtitleEdit.Forms
             _descriptions = new List<string>();
             _xmlName = xmlRessourceName;
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-            Stream strm = asm.GetManifestResourceStream(_xmlName);
+            var strm = asm.GetManifestResourceStream(_xmlName);
             if (strm != null)
             {
                 comboBoxDictionaries.Items.Clear();
-                XmlDocument doc = new XmlDocument();
+                var doc = new XmlDocument();
                 using (var rdr = new StreamReader(strm))
                 using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
+                using (var reader = XmlReader.Create(zip, new XmlReaderSettings { IgnoreProcessingInstructions = true }))
                 {
-                    byte[] data = new byte[275000];
-                    int read = zip.Read(data, 0, 275000);
-                    byte[] data2 = new byte[read];
-                    Buffer.BlockCopy(data, 0, data2, 0, read);
-                    string s = System.Text.Encoding.UTF8.GetString(data2).Trim();
-                    doc.LoadXml(s);
+                    doc.Load(reader);
                 }
 
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("Dictionary"))
