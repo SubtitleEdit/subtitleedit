@@ -409,7 +409,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SaveFirstVisibleIndex()
         {
-            FirstVisibleIndex = Items.Count > 0 ? TopItem.Index : -1;
+            if (TopItem != null)
+                FirstVisibleIndex = Items.Count > 0 ? TopItem.Index : -1;
         }
 
         private void RestoreFirstVisibleIndex()
