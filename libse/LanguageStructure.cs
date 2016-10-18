@@ -1992,6 +1992,7 @@
             public string AdjustSetEndAndOffsetTheRest { get; set; }
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
             public string AdjustExtendCurrentSubtitle { get; set; }
+            public string RecalculateDurationOfCurrentSubtitle { get; set; }
             public string MainCreateStartDownEndUp { get; set; }
             public string MergeDialog { get; set; }
             public string GoToNext { get; set; }
@@ -2052,6 +2053,8 @@
             public string ToggleTranslationMode { get; set; }
             public string SwitchOriginalAndTranslation { get; set; }
             public string MergeOriginalAndTranslation { get; set; }
+            public string MergeWithNext { get; set; }
+            public string MergeWithPrevious { get; set; }
             public string ShortcutIsAlreadyDefinedX { get; set; }
             public string ToggleTranslationAndOriginalInPreviews { get; set; }
             public string ListViewColumnDelete { get; set; }
@@ -2070,7 +2073,7 @@
             public string MainFileSaveAll { get; set; }
             public string Miscellaneous { get; set; }
             public string UseDoNotBreakAfterList { get; set; }
-            public string MicrosoftBingTranslator    { get; set; }
+            public string MicrosoftBingTranslator { get; set; }
             public string HowToSignUp { get; set; }
             public string ClientId { get; set; }
             public string ClientSecret { get; set; }

@@ -127,6 +127,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainGeneralToggleTranslationMode = Keys.None;
         private Keys _mainGeneralSwitchTranslationAndOriginal = Keys.None;
         private Keys _mainGeneralMergeTranslationAndOriginal = Keys.None;
+        private Keys _mainGeneralMergeWithNext = Keys.None;
+        private Keys _mainGeneralMergeWithPrevious = Keys.None;
         private Keys _mainGeneralGoToNextSubtitle = Keys.None;
         private Keys _mainGeneralGoToPrevSubtitle = Keys.None;
         private Keys _mainGeneralGoToStartOfCurrentSubtitle = Keys.None;
@@ -151,6 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainVideoFullscreen = Keys.None;
         private Keys _mainGoToNextSubtitleAndFocusVideo = Keys.None;
         private Keys _mainAdjustExtendCurrentSubtitle = Keys.None;
+        private Keys _mainAutoCalcCurrentDuration = Keys.None;
         private Keys _mainTextBoxSplitAtCursor = Keys.None;
         private Keys _mainTextBoxMoveLastWordDown = Keys.None;
         private Keys _mainTextBoxMoveFirstWordFromNextUp = Keys.None;
@@ -10933,6 +10936,32 @@ namespace Nikse.SubtitleEdit.Forms
                     MergeSelectedLinesOnlyFirstText();
                 }
             }
+            else if (_mainGeneralMergeWithNext == e.KeyData)
+            {
+                if (SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    var idx = SubtitleListview1.SelectedItems[0].Index;
+                    if (idx >= 0 && _subtitle.Paragraphs.Count > idx + 1)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(idx);
+                        MergeAfterToolStripMenuItemClick(null, null);
+                        e.SuppressKeyPress = true;
+                    }
+                }
+            }
+            else if (_mainGeneralMergeWithPrevious == e.KeyData)
+            {
+                if (SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    var idx = SubtitleListview1.SelectedItems[0].Index;
+                    if (idx > 0)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(idx - 1);
+                        MergeAfterToolStripMenuItemClick(null, null);
+                        e.SuppressKeyPress = true;
+                    }
+                }
+            }
             else if (_mainGeneralToggleTranslationMode == e.KeyData)
             { // toggle translator mode
                 EditToolStripMenuItemDropDownOpening(null, null);
@@ -11344,8 +11373,38 @@ namespace Nikse.SubtitleEdit.Forms
                 MoveFirstWordInNextUp();
                 e.SuppressKeyPress = true;
             }
+            else if (_mainAutoCalcCurrentDuration == e.KeyData && (tabControlButtons.SelectedTab == tabPageAdjust || tabControlButtons.SelectedTab == tabPageCreate))
+            {
+                e.SuppressKeyPress = true;
+                if (SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    var idx = SubtitleListview1.SelectedItems[0].Index;
+                    _subtitle.RecalculateDisplayTime(Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds, idx);
+                    SetDurationInSeconds(_subtitle.Paragraphs[idx].Duration.TotalSeconds);
+                }
+            }
+            else if (_mainAdjustExtendCurrentSubtitle == e.KeyData && (tabControlButtons.SelectedTab == tabPageAdjust || tabControlButtons.SelectedTab == tabPageCreate))
+            {
+                if (SubtitleListview1.SelectedItems.Count == 1)
+                {
+                    var idx = SubtitleListview1.SelectedItems[0].Index;
+                    var p = _subtitle.Paragraphs[idx];
+                    var next = _subtitle.GetParagraphOrDefault(idx + 1);
+                    if (next == null || next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
+                    {
+                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                    }
+                    else if (next != null && next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds)
+                    {
+                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                    }
+                    RefreshSelectedParagraph();
+                    e.SuppressKeyPress = true;
+                }
+                e.SuppressKeyPress = true;
+            }
 
-            // TABS - MUST BE LAST
+            // TABS - MUST BE LAST            
             else if (tabControlButtons.SelectedTab == tabPageAdjust)
             {
                 if (_mainAdjustSelected100MsForward == e.KeyData)
@@ -11373,26 +11432,6 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (_mainAdjustSetEndAndOffsetTheRestAndGoToNext == e.KeyData)
                     {
                         SetEndAndOffsetTheRest(true);
-                        e.SuppressKeyPress = true;
-                    }
-                    else if (_mainAdjustExtendCurrentSubtitle == e.KeyData)
-                    {
-                        if (SubtitleListview1.SelectedItems.Count == 1)
-                        {
-                            var idx = SubtitleListview1.SelectedItems[0].Index;
-                            var p = _subtitle.Paragraphs[idx];
-                            var next = _subtitle.GetParagraphOrDefault(idx + 1);
-                            if (next == null || next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines)
-                            {
-                                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-                            }
-                            else if (next != null && next.StartTime.TotalMilliseconds > p.EndTime.TotalMilliseconds)
-                            {
-                                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                            }
-                            RefreshSelectedParagraph();
-                            e.SuppressKeyPress = true;
-                        }
                         e.SuppressKeyPress = true;
                     }
                     else if (_mainAdjustSetEndAndGotoNext == e.KeyData)
@@ -14853,6 +14892,8 @@ namespace Nikse.SubtitleEdit.Forms
             _mainGeneralToggleTranslationMode = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode);
             _mainGeneralSwitchTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
             _mainGeneralMergeTranslationAndOriginal = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation);
+            _mainGeneralMergeWithNext = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithNext);
+            _mainGeneralMergeWithPrevious = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeWithPrevious);
             _mainGeneralGoToNextSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
             _mainGeneralGoToPrevSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
             _mainGeneralGoToStartOfCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
@@ -14906,6 +14947,8 @@ namespace Nikse.SubtitleEdit.Forms
             _videoPlayFirstSelected = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralPlayFirstSelected);
             _mainGoToNextSubtitleAndFocusVideo = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo);
             _mainAdjustExtendCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralExtendCurrentSubtitle);
+            _mainAutoCalcCurrentDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDuration);
+
             _mainVideoFullscreen = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
 
             spellCheckToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainSpellCheck);

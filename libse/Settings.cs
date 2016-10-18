@@ -835,6 +835,8 @@ namespace Nikse.SubtitleEdit.Core
         public string GeneralGoToNextEmptyLine { get; set; }
         public string GeneralMergeSelectedLines { get; set; }
         public string GeneralMergeSelectedLinesOnlyFirstText { get; set; }
+        public string GeneralMergeWithNext { get; set; }
+        public string GeneralMergeWithPrevious { get; set; }
         public string GeneralToggleTranslationMode { get; set; }
         public string GeneralSwitchOriginalAndTranslation { get; set; }
         public string GeneralMergeOriginalAndTranslation { get; set; }
@@ -844,6 +846,7 @@ namespace Nikse.SubtitleEdit.Core
         public string GeneralGoToEndOfCurrentSubtitle { get; set; }
         public string GeneralGoToNextSubtitleAndFocusVideo { get; set; }
         public string GeneralExtendCurrentSubtitle { get; set; }
+        public string GeneralAutoCalcCurrentDuration { get; set; }
         public string GeneralPlayFirstSelected { get; set; }
         public string GeneralHelp { get; set; }
 
@@ -1062,6 +1065,7 @@ namespace Nikse.SubtitleEdit.Core
             WaveformPlaySelectionEnd = string.Empty;
             GeneralGoToNextSubtitleAndFocusVideo = string.Empty;
             GeneralExtendCurrentSubtitle = string.Empty;
+            GeneralAutoCalcCurrentDuration = string.Empty;
             GeneralPlayFirstSelected = string.Empty;
             GeneralHelp = "F1";
             WaveformSearchSilenceForward = string.Empty;
@@ -2488,6 +2492,12 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("GeneralMergeSelectedLinesOnlyFirstText");
                 if (subNode != null)
                     settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralMergeWithNext");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralMergeWithNext = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralMergeWithPrevious");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralMergeWithPrevious = subNode.InnerText;
                 subNode = node.SelectSingleNode("GeneralToggleTranslationMode");
                 if (subNode != null)
                     settings.Shortcuts.GeneralToggleTranslationMode = subNode.InnerText;
@@ -2515,6 +2525,9 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("GeneralExtendCurrentSubtitle");
                 if (subNode != null)
                     settings.Shortcuts.GeneralExtendCurrentSubtitle = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralAutoCalcCurrentDuration");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralAutoCalcCurrentDuration = subNode.InnerText;
                 subNode = node.SelectSingleNode("GeneralPlayFirstSelected");
                 if (subNode != null)
                     settings.Shortcuts.GeneralPlayFirstSelected = subNode.InnerText;
@@ -3396,6 +3409,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("GeneralGoToNextEmptyLine", settings.Shortcuts.GeneralGoToNextEmptyLine);
                 textWriter.WriteElementString("GeneralMergeSelectedLines", settings.Shortcuts.GeneralMergeSelectedLines);
                 textWriter.WriteElementString("GeneralMergeSelectedLinesOnlyFirstText", settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
+                textWriter.WriteElementString("GeneralMergeWithNext", settings.Shortcuts.GeneralMergeWithNext);
+                textWriter.WriteElementString("GeneralMergeWithPrevious", settings.Shortcuts.GeneralMergeWithPrevious);
                 textWriter.WriteElementString("GeneralToggleTranslationMode", settings.Shortcuts.GeneralToggleTranslationMode);
                 textWriter.WriteElementString("GeneralSwitchOriginalAndTranslation", settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
                 textWriter.WriteElementString("GeneralMergeOriginalAndTranslation", settings.Shortcuts.GeneralMergeOriginalAndTranslation);
@@ -3405,6 +3420,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("GeneralGoToStartOfCurrentSubtitle", settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle);
                 textWriter.WriteElementString("GeneralGoToNextSubtitleAndFocusVideo", settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo);
                 textWriter.WriteElementString("GeneralExtendCurrentSubtitle", settings.Shortcuts.GeneralExtendCurrentSubtitle);
+                textWriter.WriteElementString("GeneralAutoCalcCurrentDuration", settings.Shortcuts.GeneralAutoCalcCurrentDuration);
                 textWriter.WriteElementString("GeneralPlayFirstSelected", settings.Shortcuts.GeneralPlayFirstSelected);
                 textWriter.WriteElementString("GeneralHelp", settings.Shortcuts.GeneralHelp);
                 textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);

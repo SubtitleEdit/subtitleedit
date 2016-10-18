@@ -4936,6 +4936,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/AdjustExtendCurrentSubtitle":
                     language.Settings.AdjustExtendCurrentSubtitle = reader.Value;
                     break;
+                case "Settings/RecalculateDurationOfCurrentSubtitle":
+                    language.Settings.RecalculateDurationOfCurrentSubtitle = reader.Value;
+                    break;
                 case "Settings/MainCreateStartDownEndUp":
                     language.Settings.MainCreateStartDownEndUp = reader.Value;
                     break;
@@ -5115,6 +5118,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/MergeOriginalAndTranslation":
                     language.Settings.MergeOriginalAndTranslation = reader.Value;
+                    break;
+                case "Settings/MergeWithNext":
+                    language.Settings.MergeWithNext = reader.Value;
+                    break;
+                case "Settings/MergeWithPrevious":
+                    language.Settings.MergeWithPrevious = reader.Value;
                     break;
                 case "Settings/ShortcutIsAlreadyDefinedX":
                     language.Settings.ShortcutIsAlreadyDefinedX = reader.Value;

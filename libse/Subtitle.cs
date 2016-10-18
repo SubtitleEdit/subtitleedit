@@ -371,23 +371,31 @@ namespace Nikse.SubtitleEdit.Core
             {
                 if (selectedIndexes == null || selectedIndexes.Contains(i))
                 {
-                    Paragraph p = _paragraphs[i];
-                    double duration = Utilities.GetOptimalDisplayMilliseconds(p.Text);
-                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
-                    while (Utilities.GetCharactersPerSecond(p) > maxCharactersPerSecond)
-                    {
-                        duration++;
-                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
-                    }
-
-                    Paragraph next = GetParagraphOrDefault(i + 1);
-                    if (next != null && p.StartTime.TotalMilliseconds + duration + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
-                    {
-                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                        if (p.Duration.TotalMilliseconds <= 0)
-                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
-                    }
+                    RecalculateDisplayTime(maxCharactersPerSecond, i);
                 }
+            }
+        }
+
+        public void RecalculateDisplayTime(double maxCharactersPerSecond, int index)
+        {
+            Paragraph p = GetParagraphOrDefault(index);
+            if (p == null)
+                return;
+
+            double duration = Utilities.GetOptimalDisplayMilliseconds(p.Text);
+            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
+            while (Utilities.GetCharactersPerSecond(p) > maxCharactersPerSecond)
+            {
+                duration++;
+                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
+            }
+
+            Paragraph next = GetParagraphOrDefault(index + 1);
+            if (next != null && p.StartTime.TotalMilliseconds + duration + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
+            {
+                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                if (p.Duration.TotalMilliseconds <= 0)
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
             }
         }
 
