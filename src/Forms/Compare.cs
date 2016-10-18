@@ -259,6 +259,13 @@ namespace Nikse.SubtitleEdit.Forms
                 p1 = sub1.GetParagraphOrDefault(index);
                 p2 = sub2.GetParagraphOrDefault(index);
             }
+
+            var minSub = sub1.Paragraphs.Count < sub2.Paragraphs.Count ? sub1 : sub2;
+            for (var idx = minSub.Paragraphs.Count; idx < max; idx++)
+            {
+                minSub.Paragraphs.Insert(idx, new Paragraph());
+            }
+
             subtitleListView1.Fill(sub1);
             subtitleListView2.Fill(sub2);
 
