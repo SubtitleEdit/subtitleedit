@@ -5,7 +5,7 @@
     <Version>3.4.13</Version>
     <TranslatedBy>------------------------------------------------------------------------------------------------
 Traduzido para Português de Portugal, por moob
-Email: mailto:imhotepimhotep8@gmail.com</TranslatedBy>
+Email: mailto:moob42341@gmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -166,7 +166,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Style>Estilo...</Style>
     <ConvertOptions>Opções de conversão</ConvertOptions>
     <RemoveFormatting>Remover etiquetas de formatação</RemoveFormatting>
-    <RemoveTextForHI>Eliminar texto para Surdos</RemoveTextForHI>
+    <RemoveTextForHI>Eliminar texto para Deficientes Auditivos</RemoveTextForHI>
     <OverwriteOriginalFiles>Substituir os ficheiros originais (nova extensão se o formato for alterado)</OverwriteOriginalFiles>
     <RedoCasing>Refazer Maiúsculas/Minúsculas</RedoCasing>
     <Convert>Converter</Convert>
@@ -953,7 +953,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <DurationsBridgeGap>Unir os intervalos nas durações...</DurationsBridgeGap>
         <FixCommonErrors>&amp;Corrigir erros frequentes...</FixCommonErrors>
         <StartNumberingFrom>Renumerar...</StartNumberingFrom>
-        <RemoveTextForHearingImpaired>Eliminar texto para surdos...</RemoveTextForHearingImpaired>
+        <RemoveTextForHearingImpaired>Eliminar texto para Deficientes Auditivos...</RemoveTextForHearingImpaired>
         <ChangeCasing>Alterar Maiúsculas/Minúsculas...</ChangeCasing>
         <ChangeFrameRate>Alterar taxa de fotogramas...</ChangeFrameRate>
         <ChangeSpeedInPercent>Alterar a velocidade (percentagem)...</ChangeSpeedInPercent>
@@ -1049,7 +1049,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
         <Find>Localizar</Find>
         <Replace>Substituir</Replace>
         <FixCommonErrors>Corrigir erros frequentes</FixCommonErrors>
-        <RemoveTextForHi>Eliminar texto para Surdos</RemoveTextForHi>
+        <RemoveTextForHi>Eliminar texto para Deficientes Auditivos</RemoveTextForHi>
         <VisualSync>Sincronia visual</VisualSync>
         <SpellCheck>Verificação ortográfica</SpellCheck>
         <Settings>Configurações</Settings>
@@ -1244,9 +1244,9 @@ Gostaria de começar do início do documento a localizar e substituir?</ReplaceX
     <CommonErrorsFixed>Erros frequentes corrigidos</CommonErrorsFixed>
     <BeforeRenumbering>Antes de renumerar</BeforeRenumbering>
     <RenumberedStartingFromX>Renumerar a partir de: {0}</RenumberedStartingFromX>
-    <BeforeRemovalOfTextingForHearingImpaired>Antes de eliminar as mensagens de texto para surdos</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Eliminadas as mensagens de texto para surdos: Uma linha</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Eliminadas as mensagens de texto para surdos: {0} linhas</TextingForHearingImpairedRemovedXLines>
+    <BeforeRemovalOfTextingForHearingImpaired>Antes de eliminar as mensagens de texto para deficientes auditivos</BeforeRemovalOfTextingForHearingImpaired>
+    <TextingForHearingImpairedRemovedOneLine>Eliminadas as mensagens de texto para deficientes auditivos: Uma linha</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Eliminadas as mensagens de texto para deficientes auditivos: {0} linhas</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Legenda foi dividida</SubtitleSplitted>
     <SubtitleAppendPrompt>Isto irá acrescentar uma legenda existente à legenda já carregada que deve
 já estar em sincronia com o vídeo.
@@ -1597,7 +1597,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <NotInCharacterGroup>Fora do grupo de caracteres ([^teste])</NotInCharacterGroup>
   </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
-    <Title>Eliminar texto para surdos</Title>
+    <Title>Eliminar texto para Deficientes Auditivos</Title>
     <RemoveTextConditions>Condições de texto a eliminar</RemoveTextConditions>
     <RemoveTextBetween>Eliminar texto entre</RemoveTextBetween>
     <SquareBrackets>'[' e ']'</SquareBrackets>
@@ -1802,7 +1802,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <FirstPlusX>Primeiro + {0}</FirstPlusX>
     <LastMinusX>Último - {0}</LastMinusX>
     <FixCommonerrors>Corrigir erros frequentes</FixCommonerrors>
-    <RemoveTextForHi>Eliminar texto para Surdos</RemoveTextForHi>
+    <RemoveTextForHi>Eliminar texto para Deficientes Auditivos</RemoveTextForHi>
     <MergeLinesShorterThan>Remover quebra em linha menor que...</MergeLinesShorterThan>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsToReplace>Símbolos musicais para substituir (separados por espaços)</MusicSymbolsToReplace>
@@ -1823,14 +1823,15 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AdjustSetEndTimeAndGoToNext>Definir o fim e ir para a seguinte</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Definir início da Auto duração e ir para o seguinte</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Definir o fim, a seguir início e ir para o seguinte</AdjustSetEndNextStartAndGoToNext>
-    <AdjustStartDownEndUpAndGoToNext>Tecla para baixo=definir início, tecla para cima=definir final e ir para o seguinte</AdjustStartDownEndUpAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>Tecla "Page Down"=definir início, tecla "Page Up"=definir final e ir para o seguinte</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Adiantar as linhas seleccionadas 100 ms</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Atrasar as linhas seleccionadas 100 ms</AdjustSelected100MsBack>
     <AdjustSetStartTimeKeepDuration>Definir a hora de início, manter a duração</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Defenir o fim, compensar o resto</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Definir o fim, compensar o resto e ir para a próxima</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Alongar o tempo da linha actual até à próxima linha ou até à duração máxima</AdjustExtendCurrentSubtitle>
-    <MainCreateStartDownEndUp>Criar novo na tecla para baixo, definir tempo final na tecla para cima</MainCreateStartDownEndUp>
+    <RecalculateDurationOfCurrentSubtitle>Recalcular a duração da linha actual</RecalculateDurationOfCurrentSubtitle>
+    <MainCreateStartDownEndUp>Criar novo na tecla "Page Down", definir tempo final na tecla "Page Up"</MainCreateStartDownEndUp>
     <MergeDialog>Combinar os diálogos (inserir hífens)</MergeDialog>
     <GoToNext>Ir para a linha seguinte</GoToNext>
     <GoToPrevious>Ir para a linha anterior</GoToPrevious>
@@ -1890,6 +1891,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ToggleTranslationMode>Alternar o modo de tradução</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Mudar entre original e tradução</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Combinar o orginal com o traduzido</MergeOriginalAndTranslation>
+    <MergeWithNext>Combinar com a próxima</MergeWithNext>
+    <MergeWithPrevious>Combinar com a anterior</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Atalho já definido: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Alternar tradução e original na pré-visualização vídeo/áudio</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Coluna, eliminar texto</ListViewColumnDelete>
