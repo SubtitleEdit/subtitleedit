@@ -27,7 +27,6 @@ namespace Test.Logic.Forms
         /// A test for RemoveColon
         /// </summary>
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest()
         {
             var target = GetRemoveTextForHiLib();
@@ -44,7 +43,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest2A()
         {
             var target = GetRemoveTextForHiLib();
@@ -61,7 +59,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest2B()
         {
             var target = GetRemoveTextForHiLib();
@@ -78,7 +75,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest3()
         {
             var target = GetRemoveTextForHiLib();
@@ -95,7 +91,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest4()
         {
             var target = GetRemoveTextForHiLib();
@@ -112,7 +107,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest5()
         {
             var target = GetRemoveTextForHiLib();
@@ -129,7 +123,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest6()
         {
             var target = GetRemoveTextForHiLib();
@@ -213,7 +206,6 @@ namespace Test.Logic.Forms
         /// A test for RemoveHIInsideLine
         /// </summary>
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIInsideLine()
         {
             var target = GetRemoveTextForHiLib();
@@ -233,7 +225,6 @@ namespace Test.Logic.Forms
         /// A test for RemoveHI
         /// </summary>
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHI1()
         {
             var target = GetRemoveTextForHiLib();
@@ -252,7 +243,6 @@ namespace Test.Logic.Forms
         /// A test for RemoveHI
         /// </summary>
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHI2()
         {
             var target = GetRemoveTextForHiLib();
@@ -271,7 +261,6 @@ namespace Test.Logic.Forms
         /// A test for no removal
         /// </summary>
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHINot()
         {
             var target = GetRemoveTextForHiLib();
@@ -289,7 +278,6 @@ namespace Test.Logic.Forms
         /// A test for RemoveHI
         /// </summary>
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIMultilineItalic()
         {
             var target = GetRemoveTextForHiLib();
@@ -309,7 +297,6 @@ namespace Test.Logic.Forms
         /// A test for RemoveHI
         /// </summary>
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIMultilineBold()
         {
             var target = GetRemoveTextForHiLib();
@@ -329,7 +316,6 @@ namespace Test.Logic.Forms
         /// A test for RemoveHI
         /// </summary>
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHISecondLineDelay()
         {
             var target = GetRemoveTextForHiLib();
@@ -345,7 +331,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIQuotes()
         {
             var target = GetRemoveTextForHiLib();
@@ -360,7 +345,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIDouble()
         {
             var target = GetRemoveTextForHiLib();
@@ -376,7 +360,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveRemoveNameOfFirstLine()
         {
             var target = GetRemoveTextForHiLib();
@@ -393,7 +376,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveRemoveNameOfFirstLineBold()
         {
             var target = GetRemoveTextForHiLib();
@@ -410,7 +392,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections()
         {
             var target = GetRemoveTextForHiLib();
@@ -426,7 +407,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections2()
         {
             var target = GetRemoveTextForHiLib();
@@ -442,7 +422,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections3()
         {
             var target = GetRemoveTextForHiLib();
@@ -458,7 +437,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections4()
         {
             var target = GetRemoveTextForHiLib();
@@ -474,7 +452,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections5()
         {
             var target = GetRemoveTextForHiLib();
@@ -490,7 +467,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections6A()
         {
             var target = GetRemoveTextForHiLib();
@@ -506,7 +482,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections6B()
         {
             var target = GetRemoveTextForHiLib();
@@ -522,7 +497,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections6BItalic()
         {
             var target = GetRemoveTextForHiLib();
@@ -538,7 +512,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections7()
         {
             var target = GetRemoveTextForHiLib();
@@ -554,7 +527,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections8()
         {
             var target = GetRemoveTextForHiLib();
@@ -570,7 +542,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections9()
         {
             var target = GetRemoveTextForHiLib();
@@ -586,7 +557,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections10()
         {
             var target = GetRemoveTextForHiLib();
@@ -602,7 +572,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections10Italic()
         {
             var target = GetRemoveTextForHiLib();
@@ -618,7 +587,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections11()
         {
             var target = GetRemoveTextForHiLib();
@@ -634,7 +602,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections12()
         {
             var target = GetRemoveTextForHiLib();
@@ -650,7 +617,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections13()
         {
             var target = GetRemoveTextForHiLib();
@@ -666,7 +632,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonOnlyOnSeparateLine()
         {
             var target = GetRemoveTextForHiLib();
@@ -683,7 +648,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveLineIfAllUppercase1()
         {
             var target = GetRemoveTextForHiLib();
@@ -700,7 +664,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveLineIfAllUppercase2()
         {
             var target = GetRemoveTextForHiLib();
@@ -717,7 +680,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveLineIfAllUppercase3()
         {
             var target = GetRemoveTextForHiLib();
@@ -735,7 +697,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveLineIfParentheses3()
         {
             var target = GetRemoveTextForHiLib();
@@ -753,7 +714,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextBeforeColonSecondLine()
         {
             var target = GetRemoveTextForHiLib();
@@ -770,7 +730,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextBeforeColonOnlyUpper1()
         {
             var target = GetRemoveTextForHiLib();
@@ -787,7 +746,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextBeforeColonOnlyUpper2()
         {
             var target = GetRemoveTextForHiLib();
@@ -804,7 +762,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextBeforeColonOnlyUpper3Negative()
         {
             var target = GetRemoveTextForHiLib();
@@ -821,7 +778,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextAss1()
         {
             var target = GetRemoveTextForHiLib();
@@ -839,7 +795,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextAss2()
         {
             var target = GetRemoveTextForHiLib();
@@ -857,7 +812,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextAss3Colon()
         {
             var target = GetRemoveTextForHiLib();
@@ -876,7 +830,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextBeforeColonTest1()
         {
             var target = GetRemoveTextForHiLib();
@@ -895,7 +848,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextRemoveDashBeforeSquareBrackets()
         {
             var target = GetRemoveTextForHiLib();
@@ -914,7 +866,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextRemoveDashInRemoveInterjections()
         {
             var target = GetRemoveTextForHiLib();
@@ -933,7 +884,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextRemoveSingleDash()
         {
             var target = GetRemoveTextForHiLib();
@@ -952,7 +902,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextBetweenQuestionMarks()
         {
             var target = GetRemoveTextForHiLib();
@@ -972,7 +921,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjectionsItalicFirstLine()
         {
             var target = GetRemoveTextForHiLib();
@@ -984,7 +932,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjectionsItalicSecondLine()
         {
             var target = GetRemoveTextForHiLib();
@@ -996,7 +943,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjectionsItalicBothLines()
         {
             var target = GetRemoveTextForHiLib();
@@ -1008,7 +954,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjectionsMDash()
         {
             var target = GetRemoveTextForHiLib();
@@ -1020,7 +965,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveFirstDashItalics()
         {
             var target = GetRemoveTextForHiLib();
@@ -1032,7 +976,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextIfUppercaseNotEmdash()
         {
             var target = GetRemoveTextForHiLib();
@@ -1044,7 +987,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextDontCrashOnEmptyString()
         {
             var target = GetRemoveTextForHiLib();
@@ -1106,7 +1048,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextEmdashComma()
         {
             var target = GetRemoveTextForHiLib();
@@ -1119,7 +1060,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextHiAndColon()
         {
             var target = GetRemoveTextForHiLib();
@@ -1132,7 +1072,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextDontLeaveDoubleDash()
         {
             var target = GetRemoveTextForHiLib();
@@ -1145,7 +1084,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextDontLeaveDot()
         {
             var target = GetRemoveTextForHiLib();
@@ -1158,7 +1096,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextDontLeaveExl()
         {
             var target = GetRemoveTextForHiLib();
@@ -1171,7 +1108,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextRememberDialogueTag()
         {
             var target = GetRemoveTextForHiLib();
@@ -1184,7 +1120,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextRemoveLineWithColon()
         {
             var target = GetRemoveTextForHiLib();
@@ -1197,7 +1132,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextRemoveLineWithColon2()
         {
             var target = GetRemoveTextForHiLib();
@@ -1210,7 +1144,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextSpeakerWithColonPlusLineWithHyphen()
         {
             var target = GetRemoveTextForHiLib();
