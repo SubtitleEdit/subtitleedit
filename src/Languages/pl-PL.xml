@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="polski">
+<Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.13</Version>
@@ -339,7 +339,7 @@ Uwaga: Sprawdź wolne miejsce na dysku.</WaveFileMalformed>
     <Title>Wybierz języka</Title>
     <ChooseLanguageStreamId>Wybierz język (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Nieznany język</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Obraz napisów</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -1685,6 +1685,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <DurationMinimumMilliseconds>Minimalny czas trwania, w ms</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Maksymalny czas trwania, w ms</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. odstęp między napisami, w ms</MinimumGapMilliseconds>
+    <MaximumLines>Max. liczba linii</MaximumLines>
     <SubtitleFont>Czcionka napisów</SubtitleFont>
     <SubtitleFontSize>Rozmiar czcionki napisów</SubtitleFontSize>
     <SubtitleBold>Pogrubienie</SubtitleBold>
@@ -1827,6 +1828,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <AdjustSetEndAndOffsetTheRest>Ustaw koniec, przesuń pozostałe</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ustaw koniec, przesuń pozostałe i przejdź do następnej</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Rozciągnij bieżącą linię do następnych napisów lub do maks. czasu trwania</AdjustExtendCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitle>Wylicz ponownie czas trwania aktualnych napisów</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Klawisz Down - utwórz nowy, Klawisz Up - ustaw czas zakończenia</MainCreateStartDownEndUp>
     <MergeDialog>Połącz dialogi (wstaw myślniki)</MergeDialog>
     <GoToNext>Przejdź do następnej linii</GoToNext>
@@ -1877,7 +1879,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <SyntaxColorDurationIfTooSmall>Koloruj czas trwania, jeśli jest zbyt krótki</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Koloruj czas trwania, jeśli jest zbyt długi</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Koloruj tekst, jeśli jest zbyt długi</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Koloruj tekst, jeśli jest więcej linii niż:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Koloruj tekst, jeśli więcej niż {0} linii</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Koloruj nakładające się kody czasowe</SyntaxColorOverlap>
     <SyntaxErrorColor>Kolor błędu</SyntaxErrorColor>
     <GoToFirstSelectedLine>Przejdź do pierwszej zaznaczonej linii</GoToFirstSelectedLine>
@@ -1887,6 +1889,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <ToggleTranslationMode>Przełączanie trybu tłumaczenia</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Przełącz oryginał i tłumaczenie</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Połącz oryginał i tłumaczenie</MergeOriginalAndTranslation>
+    <MergeWithNext>Połącz z następnymi</MergeWithNext>
+    <MergeWithPrevious>Połącz z poprzednimi</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Skrót już jest zdefiniowany:{0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Przełącz tłumaczenie i oryginał w podglądzie wideo/audio</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Kolumna, usuń tekst</ListViewColumnDelete>
