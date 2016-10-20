@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
             var p = new Paragraph();
-            for (int i = 0; i < lines.Count; i++)
+            for (int i = 0, lineNumber = 1; i < lines.Count; i++)
             {
                 string line = lines[i].Trim();
                 string nextLine = null;
@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             if ((nextLine == null) || (nextLine.Length > 0 && nextLine[0] == '/'))
                             {
                                 expecting = Expecting.EndFrame;
-                                p.Number = i;
+                                p.Number = lineNumber++;
                             }
                             break;
 
