@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core
 {
-    public class TarHeader
+    public class TarHeader : IDisposable
     {
         public const int HeaderSize = 512;
 
@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core
         public long FileSizeInBytes { get; set; }
         public long FilePosition { get; set; }
 
-        private readonly Stream _stream;
+        private Stream _stream;
 
         public TarHeader(Stream stream)
         {
@@ -36,5 +36,13 @@ namespace Nikse.SubtitleEdit.Core
             File.WriteAllBytes(fileName, buffer);
         }
 
+        public void Dispose()
+        {
+            if (_stream != null)
+            {
+                _stream.Dispose();
+                _stream = null;
+            }
+        }
     }
 }
