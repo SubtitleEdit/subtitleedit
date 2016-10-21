@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -203,7 +204,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 if (startWithUppercase && StrippedText.Length > 0 && !Pre.Contains("..."))
                 {
-                    StrippedText = char.ToUpper(StrippedText[0]) + StrippedText.Substring(1);
+                    StrippedText = StrippedText.CapitalizeFirstLetter();
                 }
             }
 
@@ -213,21 +214,22 @@ namespace Nikse.SubtitleEdit.Core
                 const string expectedChars = "\"`´'()<>!?.- \r\n";
                 var sb = new StringBuilder();
                 bool lastWasBreak = false;
-                for (int i = 0; i < StrippedText.Length; i++)
+                var sf = new StringInfo(StrippedText);
+                for (int i = 0; i < sf.LengthInTextElements; i++)
                 {
-                    var s = StrippedText[i];
+                    string s = sf.SubstringByTextElements(i, 1);
                     if (lastWasBreak)
                     {
-                        if (expectedChars.Contains(s))
+                        if (s.Length == 1 && expectedChars.Contains(s))
                         {
                             sb.Append(s);
                         }
-                        else if ((sb.EndsWith('<') || sb.ToString().EndsWith("</", StringComparison.Ordinal)) && i + 1 < StrippedText.Length && StrippedText[i + 1] == '>')
+                        else if ((sb.EndsWith('<') || sb.ToString().EndsWith("</", StringComparison.Ordinal)) && i + 1 < sf.LengthInTextElements && string.CompareOrdinal(sf.SubstringByTextElements(i + 1, 1), ">") == 0)
                         { // tags
                             sb.Append(s);
                         }
-                        else if (sb.EndsWith('<') && s == '/' && i + 2 < StrippedText.Length && StrippedText[i + 2] == '>')
-                        { // tags
+                        else if (sb.EndsWith('<') && string.CompareOrdinal(s, "/") == 0 && i + 2 < sf.LengthInTextElements && string.CompareOrdinal(sf.SubstringByTextElements(i + 2, 1), ">") == 0)
+                        {// tags
                             sb.Append(s);
                         }
                         else if (sb.ToString().EndsWith("... ", StringComparison.Ordinal))
@@ -237,24 +239,24 @@ namespace Nikse.SubtitleEdit.Core
                         }
                         else
                         {
-                            if (breakAfterChars.Contains(s))
+                            if (s.Length == 1 && breakAfterChars.Contains(s))
                             {
                                 sb.Append(s);
                             }
                             else
                             {
                                 lastWasBreak = false;
-                                sb.Append(char.ToUpper(s));
+                                sb.Append(s.CapitalizeFirstLetter());
                             }
                         }
                     }
                     else
                     {
                         sb.Append(s);
-                        if (breakAfterChars.Contains(s))
+                        if (s.Length == 1 && breakAfterChars.Contains(s))
                         {
                             var idx = sb.ToString().IndexOf('[');
-                            if (s == ']' && idx > 1)
+                            if (string.CompareOrdinal(s, "]") == 0 && idx > 1)
                             { // I [Motor roaring] love you!
                                 string temp = sb.ToString(0, idx - 1).Trim();
                                 if (temp.Length > 0 && !char.IsLower(temp[temp.Length - 1]))
