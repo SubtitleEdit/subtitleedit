@@ -1602,14 +1602,18 @@ namespace Nikse.SubtitleEdit.Core
                 int i = 0;
                 while (i < s.Length)
                 {
-                    if (s.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
+                    if (s[i] == '\r' || s[i] == '\n')
                     {
                         if (word.Length > 0)
+                        {
                             list.Add(word.ToString());
-                        word.Clear();
+                            word.Clear();
+                        }
                         if (!ignoreLineBreaks)
-                            list.Add(Environment.NewLine);
-                        i += Environment.NewLine.Length;
+                        {
+                            list.Add(s[i].ToString());
+                        }
+                        i++;
                     }
                     else if (s[i] == ' ')
                     {
