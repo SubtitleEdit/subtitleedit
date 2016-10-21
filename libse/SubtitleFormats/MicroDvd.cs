@@ -67,11 +67,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         line = line.Insert(indexOfBrackets + 1, "0"); // set empty time codes to zero
                         index++;
                     }
-
-                    while (line.Contains(' ') && line.IndexOf(' ') < index)
+                    int whiteSpaceIndex = line.IndexOf(' ', 0, index);
+                    while (whiteSpaceIndex >= 0)
                     {
-                        line = line.Remove(line.IndexOf(' '), 1);
-                        index--;
+                        line = line.Remove(whiteSpaceIndex, 1);
+                        if (index - 1 <= 0)
+                            break;
+                        whiteSpaceIndex = line.IndexOf(' ', 0, --index);
                     }
                 }
             }
