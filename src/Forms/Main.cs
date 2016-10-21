@@ -7740,8 +7740,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (currentParagraph.StartTime.IsMaxTime && currentParagraph.EndTime.IsMaxTime)
                 {
-                    newParagraph.StartTime = TimeCode.MaxTime;
-                    newParagraph.EndTime = TimeCode.MaxTime;
+                    newParagraph.StartTime = TimeCode.MaxReadOnlyTimeCode.MaxTimeCode;
+                    newParagraph.EndTime = TimeCode.MaxReadOnlyTimeCode.MaxTimeCode;
                 }
                 else
                 {

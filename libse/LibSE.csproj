@@ -168,6 +168,7 @@
     <Compile Include="IfoParser.cs" />
     <Compile Include="ImageSplitterItem.cs" />
     <Compile Include="Interfaces\IRtfTextConverter.cs" />
+    <Compile Include="Interfaces\IReadOnlyTimeCode.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="LanguageAutoDetect.cs" />
     <Compile Include="LanguageDeserializer.cs" />

@@ -151,8 +151,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    p.StartTime.TotalMilliseconds = TimeCode.MaxTime.TotalMilliseconds;
-                    p.EndTime.TotalMilliseconds = TimeCode.MaxTime.TotalMilliseconds;
+                    p.StartTime.TotalMilliseconds = TimeCode.MaxReadOnlyTimeCode.TotalMilliseconds;
+                    p.EndTime.TotalMilliseconds = TimeCode.MaxReadOnlyTimeCode.TotalMilliseconds;
                 }
             }
 

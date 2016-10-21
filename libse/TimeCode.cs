@@ -4,9 +4,9 @@ using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Core
 {
-    public class TimeCode
+    public class TimeCode : IReadOnlyTimeCode
     {
-        public static readonly TimeCode MaxTime = new TimeCode(99, 59, 59, 999);
+        public static readonly IReadOnlyTimeCode MaxReadOnlyTimeCode = new TimeCode(99, 59, 59, 999);
 
         public const double BaseUnit = 1000.0; // Base unit of time
         private double _totalMilliseconds;
@@ -15,7 +15,18 @@ namespace Nikse.SubtitleEdit.Core
         {
             get
             {
-                return Math.Abs(_totalMilliseconds - MaxTime.TotalMilliseconds) < 0.01;
+                return Math.Abs(_totalMilliseconds - MaxReadOnlyTimeCode.TotalMilliseconds) < 0.01;
+            }
+        }
+
+        /// <summary>
+        /// Creates and return new instance of TimeCode.
+        /// </summary>
+        TimeCode IReadOnlyTimeCode.MaxTimeCode
+        {
+            get
+            {
+                return new TimeCode(MaxReadOnlyTimeCode.TotalMilliseconds);
             }
         }
 
