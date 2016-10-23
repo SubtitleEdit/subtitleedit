@@ -35,14 +35,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void GeneratePreview()
         {
             if (_refreshTimer.Enabled)
-            {
                 _refreshTimer.Stop();
-                _refreshTimer.Start();
-            }
-            else
-            {
-                _refreshTimer.Start();
-            }
+            _refreshTimer.Start();
         }
 
         private void GeneratePreviewReal()
