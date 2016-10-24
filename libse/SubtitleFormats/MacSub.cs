@@ -5,14 +5,11 @@ using System.Text;
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
     /// <summary>
-    /// Implements MacSub (reading/writing).
+    /// MacSub (reading/writing).
     /// http://devel.aegisub.org/wiki/SubtitleFormats/Macsub
     /// </summary>
     public class MacSub : SubtitleFormat
     {
-        /// <summary>
-        /// Enum expecting line.
-        /// </summary>
         private enum Expecting
         {
             StartFrame,
@@ -46,11 +43,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            // Filter by extension, do not allow (.json, .xml, .srt...)
-            if (fileName == null || !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
-            {
-                return false;
-            }
             var macSub = new Subtitle();
             LoadSubtitle(macSub, lines, fileName);
             return macSub.Paragraphs.Count > _errorCount;
