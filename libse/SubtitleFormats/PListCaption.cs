@@ -42,6 +42,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            if (fileName == null || !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+                return false;
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string xmlAsString = sb.ToString().Trim();

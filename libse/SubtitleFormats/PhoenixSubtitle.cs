@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (fileName?.EndsWith(".pjs", StringComparison.OrdinalIgnoreCase) == false)
+            if (fileName?.EndsWith(Extension, StringComparison.OrdinalIgnoreCase) == false)
             {
                 return false;
             }
