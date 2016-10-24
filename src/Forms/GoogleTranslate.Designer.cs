@@ -152,8 +152,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListViewTo.Name = "subtitleListViewTo";
             this.subtitleListViewTo.OwnerDraw = true;
             this.subtitleListViewTo.Size = new System.Drawing.Size(428, 459);
+            this.subtitleListViewTo.SubtitleFontBold = false;
+            this.subtitleListViewTo.SubtitleFontName = "Tahoma";
+            this.subtitleListViewTo.SubtitleFontSize = 8;
             this.subtitleListViewTo.TabIndex = 2;
             this.subtitleListViewTo.UseCompatibleStateImageBehavior = false;
+            this.subtitleListViewTo.UseSyntaxColoring = true;
             this.subtitleListViewTo.View = System.Windows.Forms.View.Details;
             this.subtitleListViewTo.Click += new System.EventHandler(this.subtitleListViewTo_DoubleClick);
             this.subtitleListViewTo.DoubleClick += new System.EventHandler(this.subtitleListViewTo_DoubleClick);
@@ -170,8 +174,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListViewFrom.Name = "subtitleListViewFrom";
             this.subtitleListViewFrom.OwnerDraw = true;
             this.subtitleListViewFrom.Size = new System.Drawing.Size(430, 459);
+            this.subtitleListViewFrom.SubtitleFontBold = false;
+            this.subtitleListViewFrom.SubtitleFontName = "Tahoma";
+            this.subtitleListViewFrom.SubtitleFontSize = 8;
             this.subtitleListViewFrom.TabIndex = 0;
             this.subtitleListViewFrom.UseCompatibleStateImageBehavior = false;
+            this.subtitleListViewFrom.UseSyntaxColoring = true;
             this.subtitleListViewFrom.View = System.Windows.Forms.View.Details;
             this.subtitleListViewFrom.Click += new System.EventHandler(this.subtitleListViewFrom_DoubleClick);
             this.subtitleListViewFrom.DoubleClick += new System.EventHandler(this.subtitleListViewFrom_DoubleClick);
@@ -195,7 +203,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.labelFrom);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
-            this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(900, 500);
             this.Name = "GoogleTranslate";
