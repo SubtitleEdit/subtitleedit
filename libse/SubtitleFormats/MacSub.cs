@@ -46,6 +46,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            // Filter by extension, do not allow (.json, .xml, .srt...)
+            if (fileName == null || !fileName.EndsWith(Extension, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
             var macSub = new Subtitle();
             LoadSubtitle(macSub, lines, fileName);
             return macSub.Paragraphs.Count > _errorCount;
@@ -56,6 +61,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var expecting = Expecting.StartFrame;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
+            char[] trimChar = { '/' };
             var p = new Paragraph();
             for (int i = 0; i < lines.Count; i++)
             {
@@ -70,8 +76,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     switch (expecting)
                     {
                         case Expecting.StartFrame:
-                            p.StartFrame = int.Parse(line.TrimStart('/'));
-                            expecting = Expecting.Text;
+                            // 10  = length of int.MaxValues (2147483647); +1 = if contain '/'
+                            if (line.Length <= 10 + 1 && (CharUtils.IsDigit(line[0]) || line[0] == '/'))
+                            {
+                                p.StartFrame = int.Parse(line.TrimStart(trimChar));
+                                expecting = Expecting.Text;
+                            }
+                            else
+                            {
+                                _errorCount++;
+                            }
                             break;
 
                         case Expecting.Text:
@@ -86,7 +100,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             break;
 
                         case Expecting.EndFrame:
-                            p.EndFrame = int.Parse(line.TrimStart('/'));
+                            p.EndFrame = int.Parse(line.TrimStart(trimChar));
                             subtitle.Paragraphs.Add(p);
                             // Prepare for next reading.
                             p = new Paragraph();
