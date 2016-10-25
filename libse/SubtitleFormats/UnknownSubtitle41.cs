@@ -36,11 +36,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             Configuration.Settings.General.CurrentFrameRate = 24.0;
-            const string paragraphWriteFormat = "{0}\r\n{1}\r\n{2}\r\n";
+            const string paragraphWriteFormat = "{0}{3}{1}{3}{2}/{3}";
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), p.Text, EncodeTimeCode(p.EndTime)));
+                sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), p.Text, EncodeTimeCode(p.EndTime), Environment.NewLine));
             }
             return sb.ToString().Trim();
         }
