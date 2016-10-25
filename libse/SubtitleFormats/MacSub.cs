@@ -68,8 +68,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     switch (expecting)
                     {
                         case Expecting.StartFrame:
-                            // 10  = length of int.MaxValues (2147483647); +1 = if contain '/'
-                            if (line.Length <= 10 + 1 && (CharUtils.IsDigit(line[0]) || line[0] == '/'))
+                            if (ContainsOnlyNumber(line))
                             {
                                 p.StartFrame = int.Parse(line.TrimStart(trimChar));
                                 expecting = Expecting.Text;
@@ -92,11 +91,18 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             break;
 
                         case Expecting.EndFrame:
-                            p.EndFrame = int.Parse(line.TrimStart(trimChar));
-                            subtitle.Paragraphs.Add(p);
-                            // Prepare for next reading.
-                            p = new Paragraph();
-                            expecting = Expecting.StartFrame;
+                            if (ContainsOnlyNumber(line))
+                            {
+                                p.EndFrame = int.Parse(line.TrimStart(trimChar));
+                                subtitle.Paragraphs.Add(p);
+                                // Prepare for next reading.
+                                p = new Paragraph();
+                                expecting = Expecting.StartFrame;
+                            }
+                            else
+                            {
+                                _errorCount++;
+                            }
                             break;
                     }
                 }
@@ -121,6 +127,21 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     MillisecondsToFrames(p.EndTime.TotalMilliseconds), Environment.NewLine);
             }
             return sb.ToString();
+        }
+
+        public static bool ContainsOnlyNumber(string inp)
+        {
+            int len = inp.Length;
+            // 10 = length of int.MaxValue (2147483647); +1 if starts with '/'
+            if (len == 0 || len > 11 || inp[0] != '/')
+                return false;
+            int halfLen = len / 2;
+            for (int i = 1; i <= halfLen; i++) // /10.0 (Do not parse double)
+            {
+                if (!(CharUtils.IsDigit(inp[i]) && CharUtils.IsDigit(inp[len - i])))
+                    return false;
+            }
+            return true;
         }
     }
 }
