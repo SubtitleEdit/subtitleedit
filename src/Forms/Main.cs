@@ -6767,12 +6767,12 @@ namespace Nikse.SubtitleEdit.Forms
                         showSource = true;
                     }
 
-                    TimeCode startTime = timeUpDownStartTime.TimeCode;
+                    var startTime = timeUpDownStartTime.TimeCode;
                     if (startTime != null)
                     {
-                        if (last.StartTime.TotalMilliseconds != startTime.TotalMilliseconds)
+                        if (Math.Abs(last.StartTime.TotalMilliseconds - startTime.TotalMilliseconds) > 0.5)
                         {
-                            double dur = last.Duration.TotalMilliseconds;
+                            var dur = last.Duration.TotalMilliseconds;
                             last.StartTime.TotalMilliseconds = startTime.TotalMilliseconds;
                             last.EndTime.TotalMilliseconds = startTime.TotalMilliseconds + dur;
                             SubtitleListview1.SetStartTimeAndDuration(_subtitleListViewIndex, last);
@@ -6780,7 +6780,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    double duration = GetDurationInMilliseconds();
+                    var duration = GetDurationInMilliseconds();
                     if (duration > 0 && duration < 100000 && duration != last.Duration.TotalMilliseconds)
                     {
                         last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + duration;
