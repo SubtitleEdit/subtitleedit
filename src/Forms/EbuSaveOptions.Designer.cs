@@ -733,6 +733,7 @@
             this.textBoxErrors.Location = new System.Drawing.Point(6, 26);
             this.textBoxErrors.Multiline = true;
             this.textBoxErrors.Name = "textBoxErrors";
+            this.textBoxErrors.ReadOnly = true;
             this.textBoxErrors.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxErrors.Size = new System.Drawing.Size(729, 386);
             this.textBoxErrors.TabIndex = 13;
