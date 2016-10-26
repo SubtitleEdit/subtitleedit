@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-
+                int preLen = p.Text.Length;
                 // missing space after comma ","
                 Match match = FixMissingSpacesReComma.Match(p.Text);
                 while (match.Success)
@@ -35,7 +35,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                     if (doFix && callbacks.AllowFix(p, fixAction))
                     {
-                        missingSpaces++;
                         string oldText = p.Text;
                         p.Text = p.Text.Replace(match.Value, match.Value[0] + ", " + match.Value[match.Value.Length - 1]);
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
@@ -51,7 +50,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
                     {
-                        missingSpaces++;
                         string oldText = p.Text;
                         p.Text = p.Text.Replace(match.Value, match.Value[0] + "? " + match.Value[match.Value.Length - 1]);
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
@@ -65,7 +63,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
                     {
-                        missingSpaces++;
                         string oldText = p.Text;
                         p.Text = p.Text.Replace(match.Value, match.Value[0] + "! " + match.Value[match.Value.Length - 1]);
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
@@ -89,7 +86,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     else if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
                     {
-                        missingSpaces++;
                         string oldText = p.Text;
                         p.Text = p.Text.Replace(match.Value, match.Value[0] + ": " + match.Value[match.Value.Length - 1]);
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
@@ -119,7 +115,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
 
                         if (!isMatchAbbreviation && callbacks.AllowFix(p, fixAction))
                         {
-                            missingSpaces++;
                             string oldText = p.Text;
                             p.Text = p.Text.Replace(match.Value, match.Value.Replace(".", ". "));
                             callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
@@ -144,7 +139,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         string newText = arr[0] + Environment.NewLine + arr[1];
                         if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                         {
-                            missingSpaces++;
                             string oldText = p.Text;
                             p.Text = newText;
                             callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
@@ -180,7 +174,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         }
                         if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                         {
-                            missingSpaces++;
                             string oldText = p.Text;
                             p.Text = newText;
                             callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
@@ -201,7 +194,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         newText = newText.Insert(newText.Length - 1, " ");
                     if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
-                        missingSpaces++;
                         string oldText = p.Text;
                         p.Text = newText;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
@@ -225,7 +217,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
-                        missingSpaces++;
                         string oldText = p.Text;
                         p.Text = newText;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
@@ -249,7 +240,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
-                        missingSpaces++;
                         string oldText = p.Text;
                         p.Text = newText;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
@@ -273,7 +263,6 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
-                        missingSpaces++;
                         string oldText = p.Text;
                         p.Text = newText;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
@@ -294,12 +283,12 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     }
                     if (newText != p.Text && callbacks.AllowFix(p, fixAction))
                     {
-                        missingSpaces++;
                         string oldText = p.Text;
                         p.Text = newText;
                         callbacks.AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
+                missingSpaces += (p.Text.Length - preLen);
             }
             callbacks.UpdateFixStatus(missingSpaces, language.FixMissingSpaces, string.Format(language.XMissingSpacesAdded, missingSpaces));
         }
