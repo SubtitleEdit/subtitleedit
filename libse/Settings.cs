@@ -662,7 +662,7 @@ namespace Nikse.SubtitleEdit.Core
             UndockedVideoPosition = "-32000;-32000";
             UndockedWaveformPosition = "-32000;-32000";
             UndockedVideoControlsPosition = "-32000;-32000";
-            WaveformUpdateIntervalMs = 30;
+            WaveformUpdateIntervalMs = 40;
             SmallDelayMilliseconds = 500;
             LargeDelayMilliseconds = 5000;
             OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;*.ts"; // matroska/mp4/m4v files (can contain subtitles)
