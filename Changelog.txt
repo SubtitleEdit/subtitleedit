@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.4.14 (xth September 2016) BETA
+3.5 (26th October 2016) BETA
 * NEW:
    * Can now generate scene changes via FFmpeg + other scene changes improvements
    * New shortcuts
@@ -57,6 +57,7 @@
    * Fixed bug in command line convert regarding negative offset - thx Jamakmake
    * Fixed issue in export with border - thx Jamakmake
    * Fixed Vob NTSC import time code sync - thx Jamakmake 
+   * Minor fixes for auto-translate - Rhodi/Keiter
    * + Many minor fixes from ivandrofly and xylographe
 
 
