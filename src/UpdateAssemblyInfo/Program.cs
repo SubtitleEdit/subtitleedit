@@ -11,6 +11,7 @@ namespace UpdateAssemblyInfo
     internal class Program
     {
         private static readonly Regex LongGitTagRegex; // e.g.: 3.4.8-226-g7037fef
+        private static readonly Regex ShortGitTagRegex; // e.g.: 3.4.8-226-g7037fef
         private static readonly Regex LongVersionRegex; // e.g.: 3.4.8.226
         private static readonly Regex ShortVersionRegex; // e.g.: 3.4.8 (w/o build number)
         private static readonly Regex TemplateFileVersionRegex; // e.g.: [assembly: AssemblyVersion("3.4.8.[REVNO]")]
@@ -20,6 +21,7 @@ namespace UpdateAssemblyInfo
         {
             var options = RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.CultureInvariant;
             LongGitTagRegex = new Regex(@"\A(?<major>[0-9]+)\.(?<minor>[0-9]+)\.(?<maintenance>[0-9]+)-(?<build>[0-9]+)-g[0-9a-z]+\z", options);
+            ShortGitTagRegex = new Regex(@"\A(?<major>[0-9]+)\.(?<minor>[0-9]+)-(?<build>[0-9]+)-g[0-9a-z]+\z", options);
             LongVersionRegex = new Regex(@"\A(?<major>[0-9]+)\.(?<minor>[0-9]+)\.(?<maintenance>[0-9]+)\.(?<build>[0-9]+)\z", options);
             ShortVersionRegex = new Regex(@"\A(?<major>[0-9]+)\.(?<minor>[0-9]+)\.(?<maintenance>[0-9]+)\z", options);
             options |= RegexOptions.Multiline;
@@ -64,6 +66,8 @@ namespace UpdateAssemblyInfo
                 var match = LongGitTagRegex.Match(version);
                 if (!match.Success)
                     match = LongVersionRegex.Match(version);
+                if (!match.Success)
+                    match = ShortGitTagRegex.Match(version);
                 if (!match.Success || string.IsNullOrWhiteSpace(guid))
                 {
                     Build = UnknownBuild;
@@ -80,7 +84,7 @@ namespace UpdateAssemblyInfo
                     throw new ArgumentException("Invalid version identifier: '" + version + "'");
                 Major = int.Parse(match.Groups["major"].Value, NumberStyles.None, CultureInfo.InvariantCulture);
                 Minor = int.Parse(match.Groups["minor"].Value, NumberStyles.None, CultureInfo.InvariantCulture);
-                Maintenance = int.Parse(match.Groups["maintenance"].Value, NumberStyles.None, CultureInfo.InvariantCulture);
+                Maintenance = string.IsNullOrEmpty(match.Groups["maintenance"].Value) ? 0 : int.Parse(match.Groups["maintenance"].Value, NumberStyles.None, CultureInfo.InvariantCulture);
             }
 
             public int CompareTo(VersionInfo vi)
@@ -182,7 +186,7 @@ namespace UpdateAssemblyInfo
             var gitPath = GetGitPath();
             if (clrHash.RunCommandAndGetOutput(gitPath, "rev-parse --verify HEAD", workingDirectory) && clrTags.RunCommandAndGetOutput(gitPath, "describe --long --tags", workingDirectory))
             {
-                if (!LongGitTagRegex.IsMatch(clrTags.Result))
+                if (!LongGitTagRegex.IsMatch(clrTags.Result) && !ShortGitTagRegex.IsMatch(clrTags.Result))
                 {
                     throw new Exception("Invalid Git version tag: '" + clrTags.Result + "' (major.minor.maintenance-build expected)");
                 }
@@ -194,7 +198,7 @@ namespace UpdateAssemblyInfo
             }
             if (clrHash.RunCommandAndGetOutput(gitPath, "rev-parse --verify refs/heads/master", workingDirectory) && clrTags.RunCommandAndGetOutput(gitPath, "describe --long --tags refs/heads/master", workingDirectory))
             {
-                if (!LongGitTagRegex.IsMatch(clrTags.Result))
+                if (!LongGitTagRegex.IsMatch(clrTags.Result) && !ShortGitTagRegex.IsMatch(clrTags.Result))
                 {
                     throw new Exception("Invalid Git version tag: '" + clrTags.Result + "' (major.minor.maintenance-build expected)");
                 }
