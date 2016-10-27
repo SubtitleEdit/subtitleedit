@@ -117,8 +117,6 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             /// <returns>bitmap of the decoded caption</returns>
             public static Bitmap DecodeImage(PcsObject pcs, IList<OdsData> data, List<PaletteInfo> palettes)
             {
-                long ticks = DateTime.Now.Ticks;
-
                 if (pcs == null || data == null || data.Count == 0)
                     return new Bitmap(1, 1);
 
