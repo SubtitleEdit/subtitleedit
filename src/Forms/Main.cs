@@ -9207,7 +9207,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.WasLoadedWithFrameNumbers = false;
             if (matroska.Path.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || matroska.Path.EndsWith(".mks", StringComparison.OrdinalIgnoreCase))
             {
-                _fileName = matroska.Path.Remove(matroska.Path.Length - 4);
+                _fileName = matroska.Path.Remove(matroska.Path.Length - 4) + GetCurrentSubtitleFormat().Extension;
                 Text = Title + " - " + _fileName;
             }
             else
@@ -10233,13 +10233,21 @@ namespace Nikse.SubtitleEdit.Forms
                                     subtitleChooser.Initialize(subtitleList);
                                     if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
                                     {
-                                        LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], matroska, false);
+                                        if (LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], matroska, false) &&
+                                            ext.Equals(".mkv", StringComparison.Ordinal))
+                                        {
+                                            OpenVideo(fileName);
+                                        }
                                     }
                                 }
                             }
                             else
                             {
-                                LoadMatroskaSubtitle(subtitleList[0], matroska, false);
+                                if (LoadMatroskaSubtitle(subtitleList[0], matroska, false) &&
+                                    ext.Equals(".mkv", StringComparison.Ordinal))
+                                {
+                                    OpenVideo(fileName);
+                                }
                             }
                             return;
                         }
