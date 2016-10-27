@@ -117,8 +117,6 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             /// <returns>bitmap of the decoded caption</returns>
             public static Bitmap DecodeImage(PcsObject pcs, IList<OdsData> data, List<PaletteInfo> palettes)
             {
-                long ticks = DateTime.Now.Ticks;
-
                 if (pcs == null || data == null || data.Count == 0)
                     return new Bitmap(1, 1);
 
@@ -792,11 +790,11 @@ namespace Nikse.SubtitleEdit.Core.BluRaySup
             }
         }
 
-        private static int BigEndianInt16(byte[] buffer, int index)
+        public static int BigEndianInt16(byte[] buffer, int index)
         {
             if (buffer.Length < 2)
                 return 0;
-            return (buffer[index + 1]) + (buffer[index + 0] << 8);
+            return buffer[index + 1] | (buffer[index] << 8);
         }
 
         private static uint BigEndianInt32(byte[] buffer, int index)

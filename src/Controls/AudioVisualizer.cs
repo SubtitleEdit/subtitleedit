@@ -505,28 +505,51 @@ namespace Nikse.SubtitleEdit.Controls
                     DrawTimeLine(graphics, waveformHeight);
                 }
 
+
+                int currentPositionPos = SecondsToXPosition(_currentVideoPositionSeconds - StartPositionSeconds);
+                bool currentPosDone = false;
+
                 // scene changes
                 if (_sceneChanges != null)
                 {
-                    foreach (double time in _sceneChanges)
+                    try
                     {
-                        int pos = SecondsToXPosition(time - StartPositionSeconds);
-                        if (pos > 0 && pos < Width)
+                        int index = 0;
+                        while (index < _sceneChanges.Count)
                         {
-                            using (var p = new Pen(Color.AntiqueWhite))
-                                graphics.DrawLine(p, pos, 0, pos, Height);
+                            double time = _sceneChanges[index++];
+                            int pos = SecondsToXPosition(time - StartPositionSeconds);
+                            if (pos > 0 && pos < Width)
+                            {
+                                if (Math.Abs(currentPositionPos - pos) < 0.01)
+                                { // scene change and current pos are the same - draw 2 pixels + current pos dotted
+                                    currentPosDone = true;
+                                    using (var p = new Pen(Color.AntiqueWhite, 2))
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    using (var p = new Pen(Color.Turquoise, 2) { DashStyle = DashStyle.Dash })
+                                        graphics.DrawLine(p, currentPositionPos, 0, currentPositionPos, Height);
+                                }
+                                else
+                                {
+                                    using (var p = new Pen(Color.AntiqueWhite))
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                }
+                            }
                         }
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
                     }
                 }
 
                 // current video position
-                if (_currentVideoPositionSeconds > 0)
+                if (_currentVideoPositionSeconds > 0 && !currentPosDone)
                 {
-                    int pos = SecondsToXPosition(_currentVideoPositionSeconds - StartPositionSeconds);
-                    if (pos > 0 && pos < Width)
+                    if (currentPositionPos > 0 && currentPositionPos < Width)
                     {
                         using (var p = new Pen(Color.Turquoise))
-                            graphics.DrawLine(p, pos, 0, pos, Height);
+                            graphics.DrawLine(p, currentPositionPos, 0, currentPositionPos, Height);
                     }
                 }
 
@@ -756,7 +779,7 @@ namespace Nikse.SubtitleEdit.Controls
             _firstMove = true;
             if (e.Button == MouseButtons.Left)
             {
-                _buttonDownTimeTicks = DateTime.Now.Ticks;
+                _buttonDownTimeTicks = DateTime.UtcNow.Ticks;
 
                 Cursor = Cursors.VSplit;
                 double seconds = RelativeXPositionToSeconds(e.X);
@@ -1446,7 +1469,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (e.Button == MouseButtons.Left && OnSingleClick != null)
             {
                 int diff = Math.Abs(_mouseMoveStartX - e.X);
-                if (_mouseMoveStartX == -1 || _mouseMoveEndX == -1 || diff < 10 && TimeSpan.FromTicks(DateTime.Now.Ticks - _buttonDownTimeTicks).TotalSeconds < 0.25)
+                if (_mouseMoveStartX == -1 || _mouseMoveEndX == -1 || diff < 10 && TimeSpan.FromTicks(DateTime.UtcNow.Ticks - _buttonDownTimeTicks).TotalSeconds < 0.25)
                 {
                     if (ModifierKeys == Keys.Shift && _selectedParagraph != null)
                     {

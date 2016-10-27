@@ -37,6 +37,8 @@
             this.radioButtonFrames = new System.Windows.Forms.RadioButton();
             this.radioButtonHHMMSSMS = new System.Windows.Forms.RadioButton();
             this.groupBoxImportText = new System.Windows.Forms.GroupBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.buttonImportWithFfmpeg = new System.Windows.Forms.Button();
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.buttonOpenText = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -139,6 +141,8 @@
             // 
             this.groupBoxImportText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImportText.Controls.Add(this.progressBar1);
+            this.groupBoxImportText.Controls.Add(this.buttonImportWithFfmpeg);
             this.groupBoxImportText.Controls.Add(this.textBoxText);
             this.groupBoxImportText.Controls.Add(this.buttonOpenText);
             this.groupBoxImportText.Location = new System.Drawing.Point(12, 12);
@@ -147,6 +151,25 @@
             this.groupBoxImportText.TabIndex = 5;
             this.groupBoxImportText.TabStop = false;
             this.groupBoxImportText.Text = "Import scene changes";
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(6, 317);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(319, 23);
+            this.progressBar1.TabIndex = 3;
+            this.progressBar1.Visible = false;
+            // 
+            // buttonImportWithFfmpeg
+            // 
+            this.buttonImportWithFfmpeg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonImportWithFfmpeg.Location = new System.Drawing.Point(6, 290);
+            this.buttonImportWithFfmpeg.Name = "buttonImportWithFfmpeg";
+            this.buttonImportWithFfmpeg.Size = new System.Drawing.Size(319, 21);
+            this.buttonImportWithFfmpeg.TabIndex = 2;
+            this.buttonImportWithFfmpeg.Text = "Get scene changes with FFmpeg";
+            this.buttonImportWithFfmpeg.UseVisualStyleBackColor = true;
+            this.buttonImportWithFfmpeg.Click += new System.EventHandler(this.buttonImportWithFfmpeg_Click);
             // 
             // textBoxText
             // 
@@ -158,7 +181,7 @@
             this.textBoxText.Multiline = true;
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxText.Size = new System.Drawing.Size(319, 297);
+            this.textBoxText.Size = new System.Drawing.Size(319, 188);
             this.textBoxText.TabIndex = 1;
             // 
             // buttonOpenText
@@ -217,5 +240,7 @@
         private System.Windows.Forms.TextBox textBoxText;
         private System.Windows.Forms.Button buttonOpenText;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button buttonImportWithFfmpeg;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }

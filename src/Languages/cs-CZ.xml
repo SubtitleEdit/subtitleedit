@@ -2,7 +2,7 @@
 <Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Překlad do češtiny: Trottel</TranslatedBy>
     <CultureName>cs-CZ</CultureName>
     <HelpFile />
@@ -1174,7 +1174,6 @@ Poznámka: Zkontrolujte volné místo na disku.</WaveFileMalformed>
     <BeforeVisualSync>Před vizuální synchronizací</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Provedena vizuální synchronizace na vybraných řádcích</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Provedena vizuální synchronizace</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Importovat tyto titulky VobSub?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Soubor je větší než 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Přesto pokračovat?</ContinueAnyway>
     <BeforeLoadOf>Před načtením {0}</BeforeLoadOf>

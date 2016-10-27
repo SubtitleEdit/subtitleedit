@@ -2,7 +2,7 @@
 <Language Name="English">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Translated by Nikse</TranslatedBy>
     <CultureName>en-US</CultureName>
     <HelpFile />
@@ -687,6 +687,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Frames>Frames</Frames>
     <Seconds>Seconds</Seconds>
     <Milliseconds>Milliseconds</Milliseconds>
+    <GetSceneChangesWithFfmpeg>Get scene changes with FFmpeg</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Import plain text</Title>
@@ -1047,6 +1048,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <Find>Find</Find>
         <Replace>Replace</Replace>
         <FixCommonErrors>Fix common errors</FixCommonErrors>
+        <RemoveTextForHi>Remove text for hearing impaired</RemoveTextForHi>
         <VisualSync>Visual sync</VisualSync>
         <SpellCheck>Spell check</SpellCheck>
         <Settings>Settings</Settings>
@@ -1183,7 +1185,6 @@ Note: Do check free disk space.</WaveFileMalformed>
     <BeforeVisualSync>Before visual sync</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visual sync performed on selected lines</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visual sync performed</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Import this VobSub subtitle?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>File is larger than 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Continue anyway?</ContinueAnyway>
     <BeforeLoadOf>Before load of {0}</BeforeLoadOf>
@@ -1686,6 +1687,7 @@ can edit in same subtitle file (collaboration)</Information>
     <DurationMinimumMilliseconds>Min. duration, milliseconds</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. duration, milliseconds</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. gap between subtitles in ms</MinimumGapMilliseconds>
+    <MaximumLines>Max. number of lines</MaximumLines>
     <SubtitleFont>Subtitle font</SubtitleFont>
     <SubtitleFontSize>Subtitle font size</SubtitleFontSize>
     <SubtitleBold>Bold</SubtitleBold>
@@ -1713,6 +1715,10 @@ can edit in same subtitle file (collaboration)</Information>
     <AutoBackupEveryMinute>Every minute</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Every 5th minute</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Every 15th minute</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Delete after</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1 month</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 months</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 months</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Check for updates</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Allow edit of original subtitle</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Prompt for delete lines</PromptDeleteLines>
@@ -1795,6 +1801,7 @@ can edit in same subtitle file (collaboration)</Information>
     <FirstPlusX>First + {0}</FirstPlusX>
     <LastMinusX>Last - {0}</LastMinusX>
     <FixCommonerrors>Fix common errors</FixCommonerrors>
+    <RemoveTextForHi>Remove text for HI</RemoveTextForHi>
     <MergeLinesShorterThan>Unbreak subtitles shorter than</MergeLinesShorterThan>
     <MusicSymbol>Music symbol</MusicSymbol>
     <MusicSymbolsToReplace>Music symbols to replace (separate by space)</MusicSymbolsToReplace>
@@ -1821,12 +1828,15 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustSetStartTimeKeepDuration>Set start time, keep duration</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Set end, offset the rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>Extend current line to next subtitle or max duration</AdjustExtendCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitle>Re-calculate duration of current subtitle</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Create new at key-down, set end time at key-up</MainCreateStartDownEndUp>
     <MergeDialog>Merge dialog (insert dashes)</MergeDialog>
     <GoToNext>Go to next line</GoToNext>
     <GoToPrevious>Go to previous line</GoToPrevious>
     <GoToCurrentSubtitleStart>Go to current line start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Go to current line end</GoToCurrentSubtitleEnd>
+    <GoToNextSubtitleAndFocusVideo>Go to next line and set video position</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
     <Alignment>Alignment (selected lines)</Alignment>
@@ -1844,6 +1854,8 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformPlayNewSelectionEnd>Play end of selection</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Play first selected subtitle</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus list view</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>Go to next scene change</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>Toggle scene change</WaveformToggleSceneChange>
     <GoBack1Frame>One frame back</GoBack1Frame>
     <GoForward1Frame>One frame forward</GoForward1Frame>
     <GoBack100Milliseconds>100 ms back</GoBack100Milliseconds>
@@ -1852,6 +1864,8 @@ can edit in same subtitle file (collaboration)</Information>
     <GoForward500Milliseconds>500 ms forward</GoForward500Milliseconds>
     <GoBack1Second>One second back</GoBack1Second>
     <GoForward1Second>One second forward</GoForward1Second>
+    <GoBack5Seconds>Five seconds back</GoBack5Seconds>
+    <GoForward5Seconds>Five seconds forward</GoForward5Seconds>
     <TogglePlayPause>Toggle play/pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Fullscreen</Fullscreen>
@@ -1866,7 +1880,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SyntaxColorDurationIfTooSmall>Color duration if too short</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Color duration if too long</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Color text if too long</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Color text if more than lines:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Color text if more than {0} lines</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Color time code overlap</SyntaxColorOverlap>
     <SyntaxErrorColor>Error color</SyntaxErrorColor>
     <GoToFirstSelectedLine>Go to first selected line</GoToFirstSelectedLine>
@@ -1876,6 +1890,8 @@ can edit in same subtitle file (collaboration)</Information>
     <ToggleTranslationMode>Toggle translation mode</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Switch original and translation</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Merge original and translation</MergeOriginalAndTranslation>
+    <MergeWithNext>Merge with next</MergeWithNext>
+    <MergeWithPrevious>Merge with previous</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Shortcut already defined: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Toggle translation and original in video/audio preview</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Column, delete text</ListViewColumnDelete>
@@ -1909,6 +1925,7 @@ can edit in same subtitle file (collaboration)</Information>
     <Title>Set video offset</Title>
     <Description>Set video offset (subtitles should not follow real video time, but e.g. +10 hours)</Description>
     <RelativeToCurrentVideoPosition>Relative to current video position</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>Keep existing time codes (do not add video offset)</KeepTimeCodes>
     <Reset>Reset</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
@@ -2270,6 +2287,8 @@ Keep changes?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Show waveform and spectrogram</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Show waveform only</ShowWaveformOnly>
     <ShowSpectrogramOnly>Show spectrogram only</ShowSpectrogramOnly>
+    <AddSceneChange>Add scene change</AddSceneChange>
+    <RemoveSceneChange>Remove scene change</RemoveSceneChange>
     <GuessTimeCodes>Guess time codes...</GuessTimeCodes>
     <SeekSilence>Seek silence...</SeekSilence>
   </Waveform>

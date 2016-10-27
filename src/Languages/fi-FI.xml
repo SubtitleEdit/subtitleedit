@@ -2,7 +2,7 @@
 <Language Name="suomi">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [30-03-2016]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile />
@@ -1168,7 +1168,6 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <BeforeVisualSync>Ennen visuaalista tahdistusa</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visuaalinen tahdistus tehty valituille riveille</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visualinen tahdistus valmis</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Tuodaanko tämä VobSub-tekstitys?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Tiedosto on suurempi kuin 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Haluatko jatkaa?</ContinueAnyway>
     <BeforeLoadOf>Ennen {0} latausta</BeforeLoadOf>

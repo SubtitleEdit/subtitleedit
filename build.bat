@@ -52,7 +52,7 @@ IF /I "%BUILDTYPE%" == "Clean" GOTO END
 
 ECHO.
 ECHO ILRepack...
-"packages\ILRepack.2.0.10\tools\ILRepack.exe" /parallel /internalize /targetplatform:v4 /out:"bin\Release\SubtitleEdit.exe" "bin\Release\SubtitleEdit.exe" "bin\Release\libse.dll" "bin\Release\zlib.net.dll" "bin\Release\NHunspell.dll" "DLLs\Interop.QuartzTypeLib.dll"
+"packages\ILRepack.2.0.11\tools\ILRepack.exe" /parallel /internalize /targetplatform:v4 /out:"bin\Release\SubtitleEdit.exe" "bin\Release\SubtitleEdit.exe" "bin\Release\libse.dll" "bin\Release\zlib.net.dll" "bin\Release\NHunspell.dll" "DLLs\Interop.QuartzTypeLib.dll"
 ECHO.
 ECHO.
 POPD
@@ -94,7 +94,7 @@ IF NOT EXIST "temp_zip\Tesseract"                  MD "temp_zip\Tesseract"
 IF NOT EXIST "temp_zip\Tesseract\tessdata"         MD "temp_zip\Tesseract\tessdata"
 IF NOT EXIST "temp_zip\Tesseract\tessdata\configs" MD "temp_zip\Tesseract\tessdata\configs"
 
-COPY /Y /V "..\..\..\gpl.txt"                            "temp_zip\"
+COPY /Y /V "..\..\..\LICENSE.txt"                        "temp_zip\"
 COPY /Y /V "..\..\..\Changelog.txt"                      "temp_zip\"
 COPY /Y /V "Hunspellx86.dll"                             "temp_zip\"
 COPY /Y /V "Hunspellx64.dll"                             "temp_zip\"

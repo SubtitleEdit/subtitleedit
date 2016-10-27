@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private Subtitle _subtitle;
         private string _fileName;
+        private bool _loading;
 
         public ExportText()
         {
@@ -38,6 +39,20 @@ namespace Nikse.SubtitleEdit.Forms
             labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.Main.Menu.File.SaveAs;
+            _loading = true;
+            if (Configuration.Settings.Tools.ExportTextFormatText == "None")
+                radioButtonFormatNone.Checked = true;
+            else if (Configuration.Settings.Tools.ExportTextFormatText == "Unbreak")
+                radioButtonFormatUnbreak.Checked = true;
+            else
+                radioButtonFormatMergeAll.Checked = true;
+            checkBoxRemoveStyling.Checked = Configuration.Settings.Tools.ExportTextRemoveStyling;
+            checkBoxShowLineNumbers.Checked = Configuration.Settings.Tools.ExportTextShowLineNumbers;
+            checkBoxAddNewlineAfterLineNumber.Checked = Configuration.Settings.Tools.ExportTextShowLineNumbersNewLine;
+            checkBoxShowTimeCodes.Checked = Configuration.Settings.Tools.ExportTextShowTimeCodes;
+            checkBoxAddNewlineAfterTimeCodes.Checked = Configuration.Settings.Tools.ExportTextShowTimeCodesNewLine;
+            checkBoxAddAfterText.Checked = Configuration.Settings.Tools.ExportTextNewLineAfterText;
+            checkBoxAddNewLine2.Checked = Configuration.Settings.Tools.ExportTextNewLineBetweenSubtitles;
         }
 
         internal void Initialize(Subtitle subtitle, string fileName)
@@ -46,6 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
             _fileName = fileName;
             textBoxText.ReadOnly = true;
             comboBoxTimeCodeSeparator.SelectedIndex = 0;
+            _loading = false;
             GeneratePreview();
 
             UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
@@ -53,6 +69,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreview()
         {
+            if (_loading)
+                return;
+
             groupBoxTimeCodeFormat.Enabled = checkBoxShowTimeCodes.Checked;
             checkBoxAddAfterText.Enabled = !radioButtonFormatMergeAll.Checked;
             checkBoxAddNewLine2.Enabled = !radioButtonFormatMergeAll.Checked;
@@ -159,6 +178,32 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
+        }
+
+        private void ExportText_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (radioButtonFormatNone.Checked)
+                Configuration.Settings.Tools.ExportTextFormatText = "None";
+            else if (radioButtonFormatUnbreak.Checked)
+                Configuration.Settings.Tools.ExportTextFormatText = "Unbreak";
+            else
+                Configuration.Settings.Tools.ExportTextFormatText = "MergeAll";
+            Configuration.Settings.Tools.ExportTextRemoveStyling = checkBoxRemoveStyling.Checked;
+            Configuration.Settings.Tools.ExportTextShowLineNumbers = checkBoxShowLineNumbers.Checked;
+            Configuration.Settings.Tools.ExportTextShowLineNumbersNewLine = checkBoxAddNewlineAfterLineNumber.Checked;
+            Configuration.Settings.Tools.ExportTextShowTimeCodes = checkBoxShowTimeCodes.Checked;
+            Configuration.Settings.Tools.ExportTextShowTimeCodesNewLine = checkBoxAddNewlineAfterTimeCodes.Checked;
+            Configuration.Settings.Tools.ExportTextNewLineAfterText = checkBoxAddAfterText.Checked;
+            Configuration.Settings.Tools.ExportTextNewLineBetweenSubtitles = checkBoxAddNewLine2.Checked;
+        }
+
+        public void PrepareForBatchSettings()
+        {
+            groupBoxTimeCodeFormat.Visible = false;
+            labelEncoding.Visible = false;
+            comboBoxEncoding.Visible = false;
+            buttonOK.Visible = false;
+            buttonCancel.Text = Configuration.Settings.Language.General.Ok;
         }
 
     }

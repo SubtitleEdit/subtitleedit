@@ -2,7 +2,7 @@
 <Language Name="Nederlands">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Vertaald door Quetsbeek en minouhse 11082014</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile />
@@ -686,6 +686,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <Frames>Beelden</Frames>
     <Seconds>Seconden</Seconds>
     <Milliseconds>Milliseconden</Milliseconds>
+    <GetSceneChangesWithFfmpeg>Scènewisselingen met FFmpeg bepalen</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Platte tekst importeren</Title>
@@ -1046,6 +1047,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
         <Find>Zoeken</Find>
         <Replace>Vervangen</Replace>
         <FixCommonErrors>Gangbare fouten corrigeren</FixCommonErrors>
+        <RemoveTextForHi>Tekst voor slechthorenden verwĳderen</RemoveTextForHi>
         <VisualSync>Visuele synchronisatie</VisualSync>
         <SpellCheck>Spellingcontrole</SpellCheck>
         <Settings>Voorkeuren</Settings>
@@ -1182,7 +1184,6 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <BeforeVisualSync>Vóór visuele sync</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visuele sync uitgevoerd op tekstselectie</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visuele synchronisatie uitgevoerd</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Deze VobSub-ondertitel importeren?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Bestand is groter dan 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Toch doorgaan?</ContinueAnyway>
     <BeforeLoadOf>Vóór laden van {0}</BeforeLoadOf>
@@ -1520,6 +1521,12 @@ Indien u dit bestand met Subtitle Edit bewerkt hebt, kunt u een vorige versie vi
     <Rules>Tekstvervangingsregels</Rules>
     <MoveToTop>Naar begin</MoveToTop>
     <MoveToBottom>Naar einde</MoveToBottom>
+    <MoveSelectedRulesToGroup>Geselecteerde regels verplaatsen</MoveSelectedRulesToGroup>
+    <Groups>Groepen</Groups>
+    <RulesForGroupX>Regels voor groep ‘{0}’</RulesForGroupX>
+    <GroupName>Groepsnaam</GroupName>
+    <RenameGroup>Groepsnaam wĳzigen...</RenameGroup>
+    <NewGroup>Nieuwe groep...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1678,6 +1685,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <DurationMinimumMilliseconds>Min. tĳdsduur in milliseconden</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. tĳdsduur in milliseconden</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. ruimte tussen ondertitels in msec.</MinimumGapMilliseconds>
+    <MaximumLines>Max. aantal regels</MaximumLines>
     <SubtitleFont>Ondertitel lettertype</SubtitleFont>
     <SubtitleFontSize>Ondertitel lettergrootte</SubtitleFontSize>
     <SubtitleBold>Vet</SubtitleBold>
@@ -1705,6 +1713,10 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <AutoBackupEveryMinute>Elke minuut</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Elke 5e minuut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Elke 15e minuut</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Verwĳderen na</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1 maand</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 maanden</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 maanden</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Naar updates zoeken</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Sta bewerking van de originele ondertitel toe</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Verwĳderen van tekst bevestigen</PromptDeleteLines>
@@ -1787,6 +1799,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <FirstPlusX>Eerste + {0}</FirstPlusX>
     <LastMinusX>Laatste - {0}</LastMinusX>
     <FixCommonerrors>Fouten corrigeren</FixCommonerrors>
+    <RemoveTextForHi>D&amp;&amp;SH tekst verwĳderen</RemoveTextForHi>
     <MergeLinesShorterThan>Voeg regels samen korter dan</MergeLinesShorterThan>
     <MusicSymbol>Vervangend muzieksymbool</MusicSymbol>
     <MusicSymbolsToReplace>Te vervangen muzieksymbolen (gescheiden door spatie)</MusicSymbolsToReplace>
@@ -1813,12 +1826,14 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <AdjustSetStartTimeKeepDuration>Bepaal starttĳd, behoud duur</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Stel einde in, compenseer de rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Stel einde in, compenseer de rest en naar volgende</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>Tĳdsduur verlengen tot volgende tekst of maximale tĳdsduur</AdjustExtendCurrentSubtitle>
     <MainCreateStartDownEndUp>Maak nieuwe met pĳl omlaag , bepaal eindtĳd met pĳl omhoog</MainCreateStartDownEndUp>
     <MergeDialog>Samenvoegen dialoog (voeg koppelteken in)</MergeDialog>
     <GoToNext>Ga naar volgende regel</GoToNext>
     <GoToPrevious>Ga naar vorige regel</GoToPrevious>
     <GoToCurrentSubtitleStart>Naar start van huidige tekst</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Naar einde van huidige tekst</GoToCurrentSubtitleEnd>
+    <GoToNextSubtitleAndFocusVideo>Naar volgende tekst en positie instellen</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Tussen lĳstweergave en tekstvak wisselen</ToggleFocus>
     <ToggleDialogDashes>Dialoogstreepjes wisselen</ToggleDialogDashes>
     <Alignment>Uitlĳning (geselecteerde regels)</Alignment>
@@ -1836,6 +1851,8 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WaveformPlayNewSelectionEnd>Speel selectie-einde</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Speel eerste geselecteerde ondertitel</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Focus lĳstweergave</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>Naar volgende scène</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>Scènewisseling omkeren</WaveformToggleSceneChange>
     <GoBack1Frame>Eén frame terug</GoBack1Frame>
     <GoForward1Frame>Eén frame vooruit</GoForward1Frame>
     <GoBack100Milliseconds>100 msec. terug</GoBack100Milliseconds>
@@ -1844,6 +1861,8 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <GoForward500Milliseconds>500 msec. vooruit</GoForward500Milliseconds>
     <GoBack1Second>Eén seconde terug</GoBack1Second>
     <GoForward1Second>Eén seconde vooruit</GoForward1Second>
+    <GoBack5Seconds>Vĳf seconden terug</GoBack5Seconds>
+    <GoForward5Seconds>Vĳf seconden vooruit</GoForward5Seconds>
     <TogglePlayPause>Verander tussen afspelen/pauze</TogglePlayPause>
     <Pause>Pauze</Pause>
     <Fullscreen>Volledig Scherm</Fullscreen>
@@ -1858,7 +1877,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <SyntaxColorDurationIfTooSmall>Kleur tĳdsduur indien te kort</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Kleur tĳdsduur indien te lang</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Kleur tekst indien te lang</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Kleur tekst bĳ meer regels dan:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Kleur tekst bĳ meer dan {0} regels</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Kleur tĳdcode bĳ overlap</SyntaxColorOverlap>
     <SyntaxErrorColor>Foutkleur</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ga naar eerste geselecteerde regel</GoToFirstSelectedLine>
@@ -1903,6 +1922,7 @@ Probeer het later opnieuw a.u.b.</DownloadMpvFailed>
     <Title>Videotĳdsverschil instellen</Title>
     <Description>Videotĳdsverschil instellen (ondertitels moeten niet de echte videotĳd volgen, maar bĳvoorbeeld +10 uur)</Description>
     <RelativeToCurrentVideoPosition>Ten opzichte van de huidige videopositie</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>Tĳdcodes behouden (videotĳdsverschil niet toevoegen)</KeepTimeCodes>
     <Reset>Terugstellen</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
@@ -2264,6 +2284,8 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Golfvorm en spectrogram tonen</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Alleen golfvorm tonen</ShowWaveformOnly>
     <ShowSpectrogramOnly>Alleen spectrogram tonen</ShowSpectrogramOnly>
+    <AddSceneChange>Scènewisseling toevoegen</AddSceneChange>
+    <RemoveSceneChange>Scènewisseling verwĳderen</RemoveSceneChange>
     <GuessTimeCodes>Tĳdcodes schatten...</GuessTimeCodes>
     <SeekSilence>Stilte zoeken...</SeekSilence>
   </Waveform>

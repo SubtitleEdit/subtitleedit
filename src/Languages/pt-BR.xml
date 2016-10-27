@@ -2,7 +2,7 @@
 <Language Name="português (Brasil)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Tradução (Português do Brasil): Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
     <HelpFile />
@@ -137,7 +137,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <SetAsPercent>Ajustar como porcentagem de duração</SetAsPercent>
     <Note>Nota: A duração não pode se sobrepor ao tempo de início do próximo texto</Note>
     <PleaseSelectAValueFromTheDropDownList>Por favor, selecione um valor da lista abaixo</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose> - Por favor, selecione - </PleaseChoose>
+    <PleaseChoose>- Por favor, selecione -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Aplicar limites de duração</Title>
@@ -218,6 +218,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Ajustar velocidade em porcentagem</Title>
+    <TitleShort>Ajustar velocidade</TitleShort>
     <Info>Alterar velocidade da legenda em porcentagem</Info>
     <Custom>Personalizado</Custom>
     <ToDropFrame>Para drop frame</ToDropFrame>
@@ -366,6 +367,9 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <Import>Importar...</Import>
     <TextAndTimingInformation>Informação de texto e temporização</TextAndTimingInformation>
     <JustificationCode>Código de justificativa</JustificationCode>
+    <Teletext>Teletexto</Teletext>
+    <UseBox>Usar caixa ao redor do texto</UseBox>
+    <DoubleHeight>Usar altura dupla para texto</DoubleHeight>
     <Errors>Erros</Errors>
     <ErrorsX>Erros: {0}</ErrorsX>
     <MaxLengthError>Linha {0} excede compr. máx. ({1}) por {2}: {3}</MaxLengthError>
@@ -488,6 +492,10 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <Normal>Normal</Normal>
     <CaseSensitive>Caso sensitivo</CaseSensitive>
     <RegularExpression>Expressão regular</RegularExpression>
+    <WholeWord>Palavra inteira</WholeWord>
+    <Count>Contagem</Count>
+    <XNumberOfMatches>{0:#,##0} correspondências</XNumberOfMatches>
+    <OneMatch>Uma correspondência</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Localizar linha da legenda</Title>
@@ -664,6 +672,8 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <ImageFiles>Arquivos de imagem</ImageFiles>
     <Input>Entrada</Input>
     <InputDescription>Escolha os arquivos de entrada (procure ou arraste)</InputDescription>
+    <Remove>Remover</Remove>
+    <RemoveAll>Remover todos</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Importar alterações de cena</Title>
@@ -713,144 +723,148 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <Note>Nota: Os arquivos devem ter os códigos de tempo corretos</Note>
   </JoinSubtitles>
   <LanguageNames>
-    <aaName>afar</aaName>
-    <abName>abcázio</abName>
-    <afName>africâner</afName>
-    <amName>amárico</amName>
-    <arName>árabe</arName>
-    <asName>assamês</asName>
-    <ayName>aimara</ayName>
-    <azName>azerbaijano</azName>
-    <baName>bashkir</baName>
-    <beName>bielorrusso</beName>
-    <bgName>búlgaro</bgName>
-    <biName>bislamá</biName>
-    <bnName>bengali</bnName>
-    <boName>tibetano</boName>
-    <brName>bretão</brName>
-    <caName>catalão</caName>
-    <coName>córsico</coName>
-    <csName>tcheco</csName>
-    <cyName>galês</cyName>
-    <daName>dinamarquês</daName>
-    <deName>alemão</deName>
-    <dzName>dzonga</dzName>
-    <elName>grego</elName>
-    <enName>inglês</enName>
-    <eoName>esperanto</eoName>
-    <esName>espanhol</esName>
-    <etName>estoniano</etName>
-    <euName>basco</euName>
-    <faName>persa</faName>
-    <fiName>finlandês</fiName>
-    <fjName>fijiano</fjName>
-    <foName>feroês</foName>
-    <frName>francês</frName>
-    <fyName>frísio ocidental</fyName>
-    <gaName>irlandês</gaName>
-    <gdName>gaélico escocês</gdName>
-    <glName>galego</glName>
-    <gnName>guarani</gnName>
-    <guName>guzerate</guName>
-    <haName>hauçá</haName>
-    <heName>hebraico</heName>
-    <hiName>híndi</hiName>
-    <hrName>croata</hrName>
-    <huName>húngaro</huName>
-    <hyName>armênio</hyName>
-    <iaName>interlíngua</iaName>
-    <idName>indonésio</idName>
-    <ieName>interlingue</ieName>
-    <ikName>inupiaque</ikName>
-    <isName>islandês</isName>
-    <itName>italiano</itName>
-    <iuName>inuktitut</iuName>
-    <jaName>japonês</jaName>
-    <jvName>javanês</jvName>
-    <kaName>georgiano</kaName>
-    <kkName>cazaque</kkName>
-    <klName>groenlandês</klName>
-    <kmName>khmer</kmName>
-    <knName>canarês</knName>
-    <koName>coreano</koName>
-    <ksName>caxemira</ksName>
-    <kuName>curdo</kuName>
-    <kyName>quirguiz</kyName>
-    <laName>latim</laName>
-    <lbName>luxemburguês</lbName>
-    <lnName>lingala</lnName>
-    <loName>laosiano</loName>
-    <ltName>lituano</ltName>
-    <lvName>letão</lvName>
-    <mgName>malgaxe</mgName>
-    <miName>maori</miName>
-    <mkName>macedônio</mkName>
-    <mlName>malaiala</mlName>
-    <mnName>mongol</mnName>
-    <mrName>marata</mrName>
-    <msName>malaio</msName>
-    <mtName>maltês</mtName>
-    <myName>birmanês</myName>
-    <naName>nauruano</naName>
-    <neName>nepali</neName>
-    <nlName>holandês</nlName>
-    <noName>norueguês</noName>
-    <ocName>occitânico</ocName>
-    <omName>oromo</omName>
-    <orName>oriya</orName>
-    <paName>panjabi</paName>
-    <plName>polonês</plName>
-    <psName>pashto</psName>
-    <ptName>português</ptName>
-    <quName>quíchua</quName>
-    <rmName>romanche</rmName>
-    <rnName>rundi</rnName>
-    <roName>romeno</roName>
-    <ruName>russo</ruName>
-    <rwName>quiniaruanda</rwName>
-    <saName>sânscrito</saName>
-    <sdName>sindi</sdName>
-    <sgName>sango</sgName>
-    <shName>servo-croata</shName>
-    <siName>cingalês</siName>
-    <skName>eslovaco</skName>
-    <slName>esloveno</slName>
-    <smName>samoano</smName>
-    <snName>shona</snName>
-    <soName>somali</soName>
-    <sqName>albanês</sqName>
-    <srName>sérvio</srName>
-    <ssName>swati</ssName>
-    <stName>soto do sul</stName>
-    <suName>sundanês</suName>
-    <svName>sueco</svName>
-    <swName>suaíli</swName>
-    <taName>tâmil</taName>
-    <teName>telugu</teName>
-    <tgName>tajique</tgName>
-    <thName>tailandês</thName>
-    <tiName>tigrínia</tiName>
-    <tkName>turcomeno</tkName>
-    <tlName>tagalo</tlName>
-    <tnName>tswana</tnName>
-    <toName>tonganês</toName>
-    <trName>turco</trName>
-    <tsName>tsonga</tsName>
-    <ttName>tatar</ttName>
-    <twName>twi</twName>
-    <ugName>uigur</ugName>
-    <ukName>ucraniano</ukName>
-    <urName>urdu</urName>
-    <uzName>usbeque</uzName>
-    <viName>vietnamita</viName>
-    <voName>volapuque</voName>
-    <woName>uólofe</woName>
-    <xhName>xosa</xhName>
-    <yiName>iídiche</yiName>
-    <yoName>ioruba</yoName>
-    <zaName>zhuang</zaName>
-    <zhName>chinês</zhName>
-    <zuName>zulu</zuName>
+    <NotSpecified>Não Especificado</NotSpecified>
+    <UnknownCodeX>Desconhecido ({0})</UnknownCodeX>
+    <aaName>Afar</aaName>
+    <abName>Abkhazian</abName>
+    <afName>Africano</afName>
+    <amName>Amárico</amName>
+    <arName>Árabe</arName>
+    <asName>Assamese</asName>
+    <ayName>Aymara</ayName>
+    <azName>Azerbaidjano</azName>
+    <baName>Bashkir</baName>
+    <beName>Bielorrusso</beName>
+    <bgName>Búlgaro</bgName>
+    <bhName>Bihari</bhName>
+    <biName>Bislama</biName>
+    <bnName>Bengali</bnName>
+    <boName>Tibetano</boName>
+    <brName>Breton</brName>
+    <caName>Catalão</caName>
+    <coName>Corso</coName>
+    <csName>Checo</csName>
+    <cyName>Galês</cyName>
+    <daName>Dinamarquês</daName>
+    <deName>Alemão</deName>
+    <dzName>Dzongkha</dzName>
+    <elName>Grego</elName>
+    <enName>Inglês</enName>
+    <eoName>Esperanto</eoName>
+    <esName>Espanhol</esName>
+    <etName>Estoniano</etName>
+    <euName>Basco</euName>
+    <faName>Persa</faName>
+    <fiName>Finlandês</fiName>
+    <fjName>Fijiano</fjName>
+    <foName>Faroese</foName>
+    <frName>Francês</frName>
+    <fyName>Frísio Ocidental</fyName>
+    <gaName>Irlandês</gaName>
+    <gdName>Gaélico Escocês</gdName>
+    <glName>Galego</glName>
+    <gnName>Guarani</gnName>
+    <guName>Gujarati</guName>
+    <haName>Hausa</haName>
+    <heName>Hebraico</heName>
+    <hiName>Hindi</hiName>
+    <hrName>Croata</hrName>
+    <huName>Húngaro</huName>
+    <hyName>Armênio</hyName>
+    <iaName>Interlingua</iaName>
+    <idName>Indonêsio</idName>
+    <ieName>Interlingue</ieName>
+    <ikName>Inupiaq</ikName>
+    <isName>Islandês</isName>
+    <itName>Italiano</itName>
+    <iuName>Inuktitut</iuName>
+    <jaName>Japonês</jaName>
+    <jvName>Javanês</jvName>
+    <kaName>Georgiano</kaName>
+    <kkName>Kazakh</kkName>
+    <klName>Kalaallisut</klName>
+    <kmName>Khmer</kmName>
+    <knName>Kannada</knName>
+    <koName>Coreano</koName>
+    <ksName>Kashmiri</ksName>
+    <kuName>Curdo</kuName>
+    <kyName>Quirguistão</kyName>
+    <laName>Latim</laName>
+    <lbName>Luxemburguês</lbName>
+    <lnName>Lingala</lnName>
+    <loName>Lao</loName>
+    <ltName>Lituano</ltName>
+    <lvName>Letão</lvName>
+    <mgName>Malagasy</mgName>
+    <miName>Maori</miName>
+    <mkName>Macedônio</mkName>
+    <mlName>Malayalam</mlName>
+    <mnName>Mongolian</mnName>
+    <moName>Moldavo</moName>
+    <mrName>Marathi</mrName>
+    <msName>Malaio</msName>
+    <mtName>Maltês</mtName>
+    <myName>Birmanês</myName>
+    <naName>Nauru</naName>
+    <neName>Nepali</neName>
+    <nlName>Holandês</nlName>
+    <noName>Norueguês</noName>
+    <ocName>Occitan</ocName>
+    <omName>Oromo</omName>
+    <orName>Oriya</orName>
+    <paName>Punjabi</paName>
+    <plName>Polonês</plName>
+    <psName>Pashto</psName>
+    <ptName>Português</ptName>
+    <quName>Quechua</quName>
+    <rmName>Romansh</rmName>
+    <rnName>Rundi</rnName>
+    <roName>Romeno</roName>
+    <ruName>Russo</ruName>
+    <rwName>Kinyarwanda</rwName>
+    <saName>Sânscrito</saName>
+    <sdName>Sindhi</sdName>
+    <sgName>Sango</sgName>
+    <shName>Servo-Croata</shName>
+    <siName>Sinhala</siName>
+    <skName>Eslovaco</skName>
+    <slName>Esloveno</slName>
+    <smName>Samoan</smName>
+    <snName>Shona</snName>
+    <soName>Somali</soName>
+    <sqName>Albanês</sqName>
+    <srName>Sérvio</srName>
+    <ssName>Swati</ssName>
+    <stName>Soto do Sul</stName>
+    <suName>Sudanês</suName>
+    <svName>Sueco</svName>
+    <swName>Swahili</swName>
+    <taName>Tamil</taName>
+    <teName>Telugu</teName>
+    <tgName>Tajik</tgName>
+    <thName>Tailandês</thName>
+    <tiName>Tigrinya</tiName>
+    <tkName>Turkmen</tkName>
+    <tlName>Tagalog</tlName>
+    <tnName>Tswana</tnName>
+    <toName>Tonganês</toName>
+    <trName>Turco</trName>
+    <tsName>Tsonga</tsName>
+    <ttName>Tatar</ttName>
+    <twName>Twi</twName>
+    <ugName>Uyghur</ugName>
+    <ukName>Ucraniano</ukName>
+    <urName>Urdu</urName>
+    <uzName>Uzbek</uzName>
+    <viName>Vietnamita</viName>
+    <voName>Volapuque</voName>
+    <woName>Wolof</woName>
+    <xhName>Xhosa</xhName>
+    <yiName>Ídiche</yiName>
+    <yoName>Yoruba</yoName>
+    <zaName>Zhuang</zaName>
+    <zhName>Chinês</zhName>
+    <zuName>Zulu</zuName>
   </LanguageNames>
   <Main>
     <Menu>
@@ -971,6 +985,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
         <OpenDvd>Abrir DVD...</OpenDvd>
         <ChooseAudioTrack>Selecione a faixa de áudio</ChooseAudioTrack>
         <CloseVideo>Fechar arquivo de vídeo</CloseVideo>
+        <SetVideoOffset>Definir desloc. vídeo...</SetVideoOffset>
         <ImportSceneChanges>Importar alterações de cena...</ImportSceneChanges>
         <RemoveSceneChanges>Remover alterações de cena</RemoveSceneChanges>
         <WaveformBatchGenerate>Gerar formas de onda em lote...</WaveformBatchGenerate>
@@ -1029,6 +1044,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
         <Find>Localizar</Find>
         <Replace>Substituir</Replace>
         <FixCommonErrors>Corrigir erros comuns</FixCommonErrors>
+        <RemoveTextForHi>Remover texto para deficientes auditivos</RemoveTextForHi>
         <VisualSync>Sincronização visual</VisualSync>
         <SpellCheck>Ortografia</SpellCheck>
         <Settings>Ajustes</Settings>
@@ -1071,7 +1087,7 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
         <MergeSelectedLinesAsDialog>Combinar linhas selecionadas como diálogo</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Combinar com linha anterior</MergeWithLineBefore>
         <MergeWithLineAfter>Combinar com linha seguinte</MergeWithLineAfter>
-        <Normal>Normal</Normal>
+        <Normal>Normal (remover formatação)</Normal>
         <Underline>Sublinhado</Underline>
         <Color>Cor...</Color>
         <FontName>Fonte...</FontName>
@@ -1165,7 +1181,6 @@ Nota: Verifique o espaço livre em disco.</WaveFileMalformed>
     <BeforeVisualSync>Antes da sincronização visual</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Sincronização visual aplicada nas linhas selecionadas</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Sincronização visual realizada</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Importar esta legenda VobSub?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>O arquivo é maior que 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Continuar assim mesmo?</ContinueAnyway>
     <BeforeLoadOf>Antes de carregar {0}</BeforeLoadOf>
@@ -1405,6 +1420,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <BeforeMergeLinesWithSameText>Antes de unir linhas com o mesmo texto</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>A legenda com códigos de tempo possui um número de linhas ({0}) diferente que a legenda atual ({1}). Continuar assim mesmo?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analisando fluxo de transporte - aguarde...</ParsingTransportStream>
+    <XPercentCompleted>{0}% concluído</XPercentCompleted>
     <ErrorLoadIdx>Impossível ler/editar arquivos. idx. Arquivos idx são parte de um par de arquivos idx/sub (também chamado VobSub), e o Subtitle Edit pode abrir o arquivo .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Este arquivo parece ser um arquivo RAR compactado. O Subtitle Edit não consegue abrir arquivos compactados.</ErrorLoadRar>
     <ErrorLoadZip>Este arquivo parece ser um arquivo ZIP compactado. O Subtitle Edit não consegue abrir arquivos compactados</ErrorLoadZip>
@@ -1412,8 +1428,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ErrorLoadJpg>Este arquivo parece ser uma imagem JPG. O Subtitle Edit não pode abrir arquivos JPG.</ErrorLoadJpg>
     <ErrorLoadSrr>Este arquivo parece ser um arquivo .srr ReScene - não é uma legenda.</ErrorLoadSrr>
     <ErrorLoadTorrent>Este arquivo parece ser um arquivo BitTorrent - não é uma legenda.</ErrorLoadTorrent>
-    <ErrorLoadBinaryZeroes>Desculpe, este zrquivo contém somente zeros binários!
-Se você editou este arquivo com o Subtitle Edit você poderá encontrar um backup pelo menu -&gt; Restaurar auto-backup...</ErrorLoadBinaryZeroes>
+    <ErrorLoadBinaryZeroes>Desculpe, este arquivo contém somente zeros binários!
+Se você editou este arquivo com o Subtitle Edit você poderá encontrar um backup pelo menu Arquivo -&gt; Restaurar auto-backup...</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Soltar uma pasta não é suportado aqui.</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Conteúdo VobSub criptografado não é suportado.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Arquivos sup Blu-ray não são suportados aqui.</NoSupportHereBluRaySup>
@@ -1449,7 +1465,7 @@ Se você editou este arquivo com o Subtitle Edit você poderá encontrar um back
   </MergeDoubleLines>
   <MergedShortLines>
     <Title>Combinar linhas curtas</Title>
-    <MaximumCharacters>Número máximo de caracteres em un parágrafo</MaximumCharacters>
+    <MaximumCharacters>Número máximo de caracteres em um parágrafo</MaximumCharacters>
     <MaximumMillisecondsBetween>Máximo de milissegundos entre linhas</MaximumMillisecondsBetween>
     <NumberOfMergesX>Número de combinações: {0}</NumberOfMergesX>
     <MergedText>Texto combinado</MergedText>
@@ -1488,7 +1504,7 @@ Se você editou este arquivo com o Subtitle Edit você poderá encontrar um back
     <CaseSensitive>Caso sensitivo</CaseSensitive>
     <RegularExpression>Expressão regular</RegularExpression>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
-    <Remove>Excluir</Remove>
+    <Remove>Remover</Remove>
     <Add>&amp;Adicionar</Add>
     <Update>At&amp;ualizar</Update>
     <Enabled>Habilitado</Enabled>
@@ -1501,6 +1517,12 @@ Se você editou este arquivo com o Subtitle Edit você poderá encontrar um back
     <Rules>Exportar regras</Rules>
     <MoveToTop>Mover para o início</MoveToTop>
     <MoveToBottom>Mover para o final</MoveToBottom>
+    <MoveSelectedRulesToGroup>Mover regras selecionadas para grupo</MoveSelectedRulesToGroup>
+    <Groups>Grupos</Groups>
+    <RulesForGroupX>Regras do grupo "{0}"</RulesForGroupX>
+    <GroupName>Nome do grupo</GroupName>
+    <RenameGroup>Renomear grupo...</RenameGroup>
+    <NewGroup>Novo grupo...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1637,6 +1659,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <Tools>Ferramentas</Tools>
     <WordLists>Listas de palavras</WordLists>
     <SsaStyle>Estilo SSA</SsaStyle>
+    <Network>Rede</Network>
     <ShowToolBarButtons>Mostrar botões da barra de ferramentas</ShowToolBarButtons>
     <New>Novo</New>
     <Open>Abrir</Open>
@@ -1685,6 +1708,10 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <AutoBackupEveryMinute>Cada minuto</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Cada 5 minutos</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Cada 15 minutos</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Excluir após</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1mês</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 meses</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 meses</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Verificar atualizações</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Permitir a edição da legenda original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmar eliminação de linhas</PromptDeleteLines>
@@ -1696,6 +1723,8 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <DirectShowDescription>quartz.dll na pasta system32</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
+    <MpvPlayer>mpv</MpvPlayer>
+    <MpvPlayerDescription>https://mpv.io/ - player de mídia de código aberto gratuito, multiplataforma</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll do VLC media player 1.1.0 ou superior</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Caminho do VLC (somente se estiver usando a versão portable)</VlcBrowseToLabel>
@@ -1757,17 +1786,21 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <ProxyUserName>Usuário</ProxyUserName>
     <ProxyPassword>Senha</ProxyPassword>
     <ProxyDomain>Domínio</ProxyDomain>
+    <NetworkSessionSettings>Configurações da sessão de rede</NetworkSessionSettings>
+    <NetworkSessionNewSound>Reproduzir arquivo de som ao receber nova mensagem</NetworkSessionNewSound>
     <PlayXSecondsAndBack>Reproduzir X segundos e voltar, X é</PlayXSecondsAndBack>
     <StartSceneIndex>O parágrafo de início da cena é</StartSceneIndex>
     <EndSceneIndex>O parágrafo final da cena é</EndSceneIndex>
     <FirstPlusX>Primeiro + {0}</FirstPlusX>
     <LastMinusX>Último - {0}</LastMinusX>
     <FixCommonerrors>Corrigir erros comuns</FixCommonerrors>
+    <RemoveTextForHi>Remover texto para PCD</RemoveTextForHi>
     <MergeLinesShorterThan>Combinar linhas menores que</MergeLinesShorterThan>
     <MusicSymbol>Símbolo musical</MusicSymbol>
     <MusicSymbolsToReplace>Símbolos musicais para substituir (separados por espaços)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Corrigir erros comuns de OCR - também utilizar regras codificadas</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Corrigir exibição curta - permitir mover tempo inicial</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>Ignorar passo um (escolher regras de correção)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Atalhos</Shortcuts>
     <Shortcut>Atalho</Shortcut>
     <Control>Ctrl</Control>
@@ -1806,7 +1839,9 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <WaveformSeekSilenceForward>Procurar silêncio adiante</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Procurar silêncio atrás</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Adicionar texto aqui (para nova seleção)</WaveformAddTextHere>
-    <WaveformPlayNewSelection>Tocar nova seleção</WaveformPlayNewSelection>
+    <WaveformAddTextHereFromClipboard>Adicione texto aqui (para nova seleção da área de transferência)</WaveformAddTextHereFromClipboard>
+    <WaveformPlayNewSelection>Tocar seleção</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>Tocar final da seleção</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Tocar primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Foco da visualização em lista</WaveformFocusListView>
     <GoBack1Frame>Um quadro para trás</GoBack1Frame>
@@ -1817,6 +1852,8 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <GoForward500Milliseconds>500 ms adiante</GoForward500Milliseconds>
     <GoBack1Second>Um segundo para trás</GoBack1Second>
     <GoForward1Second>Um segundo para frente</GoForward1Second>
+    <GoBack5Seconds>5 segundos para trás</GoBack5Seconds>
+    <GoForward5Seconds>5 segundos para frente</GoForward5Seconds>
     <TogglePlayPause>Alternar tocar/pausar</TogglePlayPause>
     <Pause>Pausar</Pause>
     <Fullscreen>Tela cheia</Fullscreen>
@@ -1831,7 +1868,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <SyntaxColorDurationIfTooSmall>Duração da cor muito curta</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Duração da cor muito longa</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Cor do texto muito longo</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Cor do texto se as linhas forem mais que:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Cor do texto se as forem mais que {0} linhas</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Cor do código de tempo sobreposto</SyntaxColorOverlap>
     <SyntaxErrorColor>Cor de erro</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ir para primeira linha selecionada</GoToFirstSelectedLine>
@@ -1859,11 +1896,23 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <MainFileSaveAll>Salvar tudo</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>
     <UseDoNotBreakAfterList>Usar lista não-quebrar-após (para auto-br)</UseDoNotBreakAfterList>
+    <MicrosoftBingTranslator>Microsoft Bing Translator</MicrosoftBingTranslator>
+    <HowToSignUp>Como fazer login</HowToSignUp>
+    <ClientId>ID do Cliente</ClientId>
+    <ClientSecret>Segrado do cliente</ClientSecret>
   </Settings>
+  <SettingsMpv>
+    <Title>Configurações do mpv</Title>
+    <DownloadMpv>Baixar mpv lib</DownloadMpv>
+    <DownloadMpvFailed>Não foi possível baixar o mpv - tente novamente mais tarde!</DownloadMpvFailed>
+    <DownloadMpvOk>O mpv lib foi baixado e está pronto para ser usado.</DownloadMpvOk>
+  </SettingsMpv>
   <SetVideoOffset>
     <Title>Definir deslocamento do vídeo</Title>
     <Description>Definir deslocamento do vídeo (legendas não devem seguir o tempo real do vídeo, mas, por exemplo: +10 horas)</Description>
     <RelativeToCurrentVideoPosition>Relativo à posição atual do vídeo</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>Manter códigos de tempo existentes (não adicionar deslocamento de vídeo)</KeepTimeCodes>
+    <Reset>Redefinir</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Mostrar linhas selec. antes/depois</Title>
@@ -1955,7 +2004,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
   <StartNumberingFrom>
     <Title>Iniciar numeração a partir de...</Title>
     <StartFromNumber>Iniciar pelo número:</StartFromNumber>
-    <PleaseEnterAValidNumber>Por favor, introduza um número</PleaseEnterAValidNumber>
+    <PleaseEnterAValidNumber>Por favor, entre um número válido</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <Statistics>
     <Title>Estatísticas</Title>
@@ -2137,7 +2186,7 @@ Manter as alterações?</KeepChangesMessage>
     <TransparentMinAlpha>Valor alpha mín. (0 = transparente, 255 = totalmente visível)</TransparentMinAlpha>
     <TransportStream>Fluxo de transporte</TransportStream>
     <TransportStreamGrayscale>Escala de cinza</TransportStreamGrayscale>
-    <TransportStreamGetColor>Usar cor (irá incluir alguma divisão de linhas)</TransportStreamGetColor>
+    <TransportStreamGetColor>Usar cor (pode ocorrer divisão de linhas)</TransportStreamGetColor>
     <PromptForUnknownWords>Confirmar palavras desconhecidas</PromptForUnknownWords>
     <TryToGuessUnkownWords>Tentar adivinhar palavras desconhecidas</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Quebra de parágrafo automático se forem mais que duas linhas</AutoBreakSubtitleIfMoreThanTwoLines>
@@ -2185,6 +2234,7 @@ Manter as alterações?</KeepChangesMessage>
     <Title>Inspecionar coincidências para a imagem atual</Title>
     <InspectItems>Inspecionar itens</InspectItems>
     <AddBetterMatch>Adicionar a melhor coincidência</AddBetterMatch>
+    <Add>Adicionar</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nova pasta</Title>
@@ -2194,6 +2244,17 @@ Manter as alterações?</KeepChangesMessage>
     <Title>Definir fator não-itálico</Title>
     <Description>Ajuste o valor até o estilo do texto for normal e não itálico. Note que a imagem original deve ser itálica.</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>Marca d'água</Title>
+    <WatermarkX>Marca d'água: {0}</WatermarkX>
+    <GenerateWatermarkTitle>Criar marca d'água</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>Espalhar por toda a legenda</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>Somente na linha atual: {0}</CurrentLineOnlyX>
+    <Generate>Criar</Generate>
+    <Remove>Remover</Remove>
+    <BeforeWatermark>Antes da Marca D'água</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>A marca d'água funciona somente com arquivos com codificação Unicode.</ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
     <ClickToAddWaveform>Clique para adicionar forma de onda</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Clique para adicionar forma de onda/espectrograma</ClickToAddWaveformAndSpectrogram>

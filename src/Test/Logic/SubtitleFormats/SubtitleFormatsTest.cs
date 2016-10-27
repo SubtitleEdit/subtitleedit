@@ -347,6 +347,19 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void AssSizeAndOtherTags()
+        {
+            var target = new AdvancedSubStationAlpha();
+            var subtitle = new Subtitle();
+            target.LoadSubtitle(subtitle, GetAssLines(@"{\fs20\pos(1,1)\blur5}Bla-bla-bla"), null);
+            string actual = subtitle.Paragraphs[0].Text;
+            const string expected = "<font size=\"20\">{\\pos(1,1)\\blur5}Bla-bla-bla</font>";
+            Assert.AreEqual(expected, actual);
+        }
+
+
+
         #endregion Advanced Sub Station alpha (.ass)
 
         #region Sub Station Alpha (.ssa)
@@ -855,6 +868,64 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
                 }
             }
         }
+        #endregion
+
+        #region Phoenix Subtitle
+
+        [TestMethod]
+        public void PhoenixSubtitleTest()
+        {
+            var phxSub = new PhoenixSubtitle();
+            var subtitle = new Subtitle();
+            const string text = @"2447,   2513, ""You should come to the Drama Club, too.""
+2513,   2594, ""Yeah. The Drama Club is worried|that you haven't been coming.""
+2603,   2675, """"I see. Sorry, ""I'll drop"" by next time.""""";
+
+            // Test text.
+            phxSub.LoadSubtitle(subtitle, new List<string>(text.SplitToLines()), null);
+            Assert.AreEqual("You should come to the Drama Club, too.", subtitle.Paragraphs[0].Text);
+            Assert.AreEqual("Yeah. The Drama Club is worried\r\nthat you haven't been coming.", subtitle.Paragraphs[1].Text);
+
+            // Test frames.
+            Assert.AreEqual(SubtitleFormat.FramesToMilliseconds(2447), SubtitleFormat.FramesToMilliseconds(subtitle.Paragraphs[0].StartFrame));
+            Assert.AreEqual(SubtitleFormat.FramesToMilliseconds(2513), SubtitleFormat.FramesToMilliseconds(subtitle.Paragraphs[0].EndFrame));
+
+            // Test total lines.
+            Assert.AreEqual(2, subtitle.Paragraphs[1].NumberOfLines);
+
+            // Test quote inside/beginning of text.
+            Assert.AreEqual("\"I see. Sorry, \"I'll drop\" by next time.\"", subtitle.Paragraphs[2].Text);
+        }
+
+        #endregion
+
+        #region MacSub
+
+        [TestMethod]
+        public void MacSubTest()
+        {
+            const string input = @"/3035
+Every satellite...
+/3077
+/3082
+every constellation...
+/3133
+/3138
+""souvenirs of space walks
+and astronauts.“...""
+/3205";
+            var macSub = new MacSub();
+            var subtitle = new Subtitle();
+            macSub.LoadSubtitle(subtitle, new List<string>(input.SplitToLines()), null);
+
+            // Test text.
+            Assert.AreEqual("Every satellite...", subtitle.Paragraphs[0].Text);
+            // Test line count.
+            Assert.AreEqual(2, subtitle.Paragraphs[2].NumberOfLines);
+            // Test frame.
+            Assert.AreEqual(3082, subtitle.Paragraphs[1].StartFrame);
+        }
+
         #endregion
 
     }

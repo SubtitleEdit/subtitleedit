@@ -168,7 +168,7 @@ namespace Nikse.SubtitleEdit.Core.ContainerFormats.Matroska
             bool isSubtitle = false;
             var trackNumber = 0;
             string name = string.Empty;
-            string language = string.Empty;
+            string language = "eng"; // default value
             string codecId = string.Empty;
             string codecPrivate = string.Empty;
             //var biCompression = string.Empty;

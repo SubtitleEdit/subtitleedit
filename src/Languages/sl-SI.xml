@@ -2,7 +2,7 @@
 <Language Name="slovenski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Prevedel: Hawk</TranslatedBy>
     <CultureName>sl-SI</CultureName>
     <HelpFile />
@@ -1083,7 +1083,6 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <BeforeVisualSync>Pred vizualno sinh</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Izvedena vizualna sinh na izbranih vrsticah</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Izvedena vizualna sinh</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Uvozi ta VobSub podnapis?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Datoteka je večja kot 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Nadaljujem?</ContinueAnyway>
     <BeforeLoadOf>Pred nalaganjem {0}</BeforeLoadOf>

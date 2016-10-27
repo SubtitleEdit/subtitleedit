@@ -2,7 +2,7 @@
 <Language Name="한국어">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>☞ 한글화: 도움돌 (domddol@gmail.com)</TranslatedBy>
     <CultureName>ko-KR</CultureName>
     <HelpFile />
@@ -160,7 +160,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Style>스타일...</Style>
     <ConvertOptions>변환 옵션</ConvertOptions>
     <RemoveFormatting>서식 태그 제거</RemoveFormatting>
-    <RemoveTextForHI>청각 장애인용 텍스트 제거</RemoveTextForHI>
+    <RemoveTextForHI>청각 장애인용 텍스트 삭제</RemoveTextForHI>
     <OverwriteOriginalFiles>원본 파일 덮어쓰기 (형식이 변경된 경우)</OverwriteOriginalFiles>
     <RedoCasing>대/소문자 구분</RedoCasing>
     <Convert>변환</Convert>
@@ -683,6 +683,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Frames>프레임</Frames>
     <Seconds>초</Seconds>
     <Milliseconds>밀리초</Milliseconds>
+    <GetSceneChangesWithFfmpeg>FFmpeg으로 장면 전환 가져오기</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>일반 텍스트 파일로 새 자막 구성</Title>
@@ -985,7 +986,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <ChooseAudioTrack>오디오 트랙 선택하기</ChooseAudioTrack>
         <CloseVideo>비디오 파일 닫기</CloseVideo>
         <SetVideoOffset>비디오 오프셋 설정...</SetVideoOffset>
-        <ImportSceneChanges>장면 전환 가져오기...</ImportSceneChanges>
+        <ImportSceneChanges>장면 전환 가져오기</ImportSceneChanges>
         <RemoveSceneChanges>장면 전환 제거</RemoveSceneChanges>
         <WaveformBatchGenerate>파형 일괄 생성...</WaveformBatchGenerate>
         <ShowHideVideo>비디오 표시 | 숨김</ShowHideVideo>
@@ -1043,6 +1044,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <Find>찾기</Find>
         <Replace>바꾸기</Replace>
         <FixCommonErrors>일반적인 오류 수정</FixCommonErrors>
+        <RemoveTextForHi>청각 장애인용 텍스트 삭제</RemoveTextForHi>
         <VisualSync>시각 동기화</VisualSync>
         <SpellCheck>맞춤법 검사</SpellCheck>
         <Settings>환경 설정</Settings>
@@ -1179,7 +1181,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <BeforeVisualSync>시각 동기화 전</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>시각 동기화가 선택한 줄에서 실행되었습니다.</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>시각 동기화가 실행되었습니다.</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>이 VobSub 자막을 가져오시겠습니까?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>파일이 10MB보다 큼: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>계속하시겠습니까?</ContinueAnyway>
     <BeforeLoadOf>{0} 로드 전</BeforeLoadOf>
@@ -1523,8 +1524,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Groups>그룹</Groups>
     <RulesForGroupX>그룹 "{0}"에 대한 규칙</RulesForGroupX>
     <GroupName>그룹 이름</GroupName>
-    <RenameGroup>그룹 이름 바꾸기</RenameGroup>
-    <NewGroup>새 그룹</NewGroup>
+    <RenameGroup>그룹 이름 변경...</RenameGroup>
+    <NewGroup>새 그룹...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>채팅</Title>
@@ -1683,6 +1684,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <DurationMinimumMilliseconds>최소 표시시간 (밀리초)</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>최대 표시시간 (밀리초)</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>자막 사이의 최소 간격 (밀리초)</MinimumGapMilliseconds>
+    <MaximumLines>최대 줄 수</MaximumLines>
     <SubtitleFont>자막 글꼴</SubtitleFont>
     <SubtitleFontSize>글자 크기</SubtitleFontSize>
     <SubtitleBold>굵게</SubtitleBold>
@@ -1710,6 +1712,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AutoBackupEveryMinute>1 분마다</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>5 분마다</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>15 분마다</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>백업 보존 기간</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1 개월</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 개월</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 개월</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>업데이트 확인</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>원본 자막의 편집을 허용</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>줄 삭제시 알림</PromptDeleteLines>
@@ -1792,6 +1798,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FirstPlusX>시작 +{0}</FirstPlusX>
     <LastMinusX>종료 -{0}</LastMinusX>
     <FixCommonerrors>일반 오류 수정</FixCommonerrors>
+    <RemoveTextForHi>청각 장애인용 텍스트 삭제</RemoveTextForHi>
     <MergeLinesShorterThan>다음보다 짧은 줄은 줄바꿈 제거</MergeLinesShorterThan>
     <MusicSymbol>음표</MusicSymbol>
     <MusicSymbolsToReplace>대체 음표 (공백으로 구분)</MusicSymbolsToReplace>
@@ -1818,12 +1825,15 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AdjustSetStartTimeKeepDuration>시작 설정, 간격 유지</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>끝 설정, 나머지 보충</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>끝 설정, 나머지 보충하고 다음으로 이동</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>현재 줄을 다음 자막으로 확장하거나 표시시간 최대화</AdjustExtendCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitle>현재 자막의 표시시간 다시 계산</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>'↓'키로 새로 만들기, '↑'키로 종료 시간 설정</MainCreateStartDownEndUp>
     <MergeDialog>대화 병합 (대시 삽입)</MergeDialog>
     <GoToNext>다음 줄로 이동</GoToNext>
     <GoToPrevious>이전 줄로 이동</GoToPrevious>
     <GoToCurrentSubtitleStart>현재 줄의 시작 지점으로 이동</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>현재 줄의 끝 지점으로 이동</GoToCurrentSubtitleEnd>
+    <GoToNextSubtitleAndFocusVideo>다음 줄로 이동하고 비디오 위치 설정</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>목록 보기와 자막 텍스트 상자 간의 포커스 전환</ToggleFocus>
     <ToggleDialogDashes>대화의 대시('-') 전환</ToggleDialogDashes>
     <Alignment>정렬 (선택한 줄)</Alignment>
@@ -1841,6 +1851,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <WaveformPlayNewSelectionEnd>선택의 끝을 재생</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>처음 선택한 자막 재생</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>「자막 보기」로 이동</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>다음 장면 전환으로 이동</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>장면 전환</WaveformToggleSceneChange>
     <GoBack1Frame>1프레임 뒤로</GoBack1Frame>
     <GoForward1Frame>1프레임 앞으로</GoForward1Frame>
     <GoBack100Milliseconds>0.1초 뒤로</GoBack100Milliseconds>
@@ -1849,6 +1861,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <GoForward500Milliseconds>0.5초 앞으로</GoForward500Milliseconds>
     <GoBack1Second>1초 뒤로</GoBack1Second>
     <GoForward1Second>1초 앞으로</GoForward1Second>
+    <GoBack5Seconds>5초 뒤로</GoBack5Seconds>
+    <GoForward5Seconds>5초 앞으로</GoForward5Seconds>
     <TogglePlayPause>재생 및 일시 중지</TogglePlayPause>
     <Pause>일시 중지</Pause>
     <Fullscreen>전체 화면</Fullscreen>
@@ -1859,11 +1873,11 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <CustomSearch5>번역, 사용자 지정 검색 5</CustomSearch5>
     <CustomSearch6>번역, 사용자 지정 검색 6</CustomSearch6>
     <SyntaxColoring>구문 컬러링</SyntaxColoring>
-    <ListViewSyntaxColoring>자막 편집시 컬러링 규칙</ListViewSyntaxColoring>
+    <ListViewSyntaxColoring>「자막 보기」의 컬러링 규칙</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>너무 짧은 표시시간</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>너무 긴 표시시간</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>줄 당 문자수를 초과할 때</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>다음 줄 수보다 문자가 더 많을 때:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>문자가 {0} 줄 보다 많을 때</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>표시시간이 중복될 때</SyntaxColorOverlap>
     <SyntaxErrorColor>오류색 선택</SyntaxErrorColor>
     <GoToFirstSelectedLine>첫번째 선택한 줄로 이동</GoToFirstSelectedLine>
@@ -1873,6 +1887,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ToggleTranslationMode>번역 모드 전환</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>원본과 번역본 바꾸기</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>원본과 번역본 병합</MergeOriginalAndTranslation>
+    <MergeWithNext>다음과 병합</MergeWithNext>
+    <MergeWithPrevious>이전과 병합</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>이미 정의된 단축키: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>비디오/오디오 미리 보기에서 번역본 및 원본 전환</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>문자열, 텍스트 삭제</ListViewColumnDelete>
@@ -1906,6 +1922,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Title>비디오 오프셋 설정</Title>
     <Description>비디오 오프셋 설정 (자막이 실제 비디오 시간을 따를 필요는 없다, 하지만 +10시간이라면...)</Description>
     <RelativeToCurrentVideoPosition>현재 비디오 위치 기준</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>기존 타임코드 유지 (비디오 오프셋을 추가하지 마시오!)</KeepTimeCodes>
     <Reset>초기화</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
@@ -1913,7 +1930,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <TitleAll>* 모든 줄 빠르게/느리게 표시</TitleAll>
     <ShowEarlier>빠르게</ShowEarlier>
     <ShowLater>느리게</ShowLater>
-    <TotalAdjustmentX>☞ 싱크 합계: {0} 초</TotalAdjustmentX>
+    <TotalAdjustmentX>☞ 싱크 조정 : {0} 초</TotalAdjustmentX>
     <AllLines>모든 줄</AllLines>
     <SelectedLinesOnly>선택한 줄</SelectedLinesOnly>
     <SelectedLinesAndForward>선택한 줄 이후</SelectedLinesAndForward>
@@ -2266,6 +2283,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ShowWaveformAndSpectrogram>파형 및 스펙트로그램 표시</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>파형만 표시</ShowWaveformOnly>
     <ShowSpectrogramOnly>스펙트로그램만 표시</ShowSpectrogramOnly>
+    <AddSceneChange>장면 전환 추가</AddSceneChange>
+    <RemoveSceneChange>장면 전환 제거</RemoveSceneChange>
     <GuessTimeCodes>타임코드 알아내기</GuessTimeCodes>
     <SeekSilence>무음 탐색...</SeekSilence>
   </Waveform>

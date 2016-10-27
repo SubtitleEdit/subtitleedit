@@ -82,6 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxToolbarFind.Checked = gs.ShowToolbarFind;
             checkBoxReplace.Checked = gs.ShowToolbarReplace;
             checkBoxTBFixCommonErrors.Checked = gs.ShowToolbarFixCommonErrors;
+            checkBoxTBRemoveTextForHi.Checked = gs.ShowToolbarRemoveTextForHi;
             checkBoxVisualSync.Checked = gs.ShowToolbarVisualSync;
             checkBoxSettings.Checked = gs.ShowToolbarSettings;
             checkBoxSpellCheck.Checked = gs.ShowToolbarSpellCheck;
@@ -221,7 +222,11 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxColorDurationTooLarge.Checked = Configuration.Settings.Tools.ListViewSyntaxColorDurationBig;
             checkBoxSyntaxColorTextTooLong.Checked = Configuration.Settings.Tools.ListViewSyntaxColorLongLines;
             checkBoxSyntaxColorTextMoreThanTwoLines.Checked = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines;
-            numericUpDownSyntaxColorTextMoreThanXLines.Value = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
+            if (Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX >= numericUpDownMaxNumberOfLines.Minimum &&
+                Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX <= numericUpDownMaxNumberOfLines.Maximum)
+            {
+                numericUpDownMaxNumberOfLines.Value = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
+            }
             checkBoxSyntaxOverlap.Checked = Configuration.Settings.Tools.ListViewSyntaxColorOverlap;
             panelListViewSyntaxColorError.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
 
@@ -246,6 +251,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelTBFind.Text = language.Find;
             labelTBReplace.Text = language.Replace;
             labelTBFixCommonErrors.Text = language.FixCommonerrors;
+            labelTBRemoveTextForHi.Text = language.RemoveTextForHi;
             labelTBVisualSync.Text = language.VisualSync;
             labelTBSpellCheck.Text = language.SpellCheck;
             labelTBSettings.Text = language.SettingsName;
@@ -257,6 +263,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxToolbarFind.Text = Configuration.Settings.Language.General.Visible;
             checkBoxReplace.Text = Configuration.Settings.Language.General.Visible;
             checkBoxTBFixCommonErrors.Text = Configuration.Settings.Language.General.Visible;
+            checkBoxTBRemoveTextForHi.Text = Configuration.Settings.Language.General.Visible;
             checkBoxVisualSync.Text = Configuration.Settings.Language.General.Visible;
             checkBoxSpellCheck.Text = Configuration.Settings.Language.General.Visible;
             checkBoxSettings.Text = Configuration.Settings.Language.General.Visible;
@@ -274,6 +281,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelMinDuration.Text = language.DurationMinimumMilliseconds;
             labelMaxDuration.Text = language.DurationMaximumMilliseconds;
             labelMinGapMs.Text = language.MinimumGapMilliseconds;
+            labelMaxLines.Text = language.MaximumLines;
             if (labelSubMaxLen.Left + labelSubMaxLen.Width > numericUpDownSubtitleLineMaximumLength.Left)
                 numericUpDownSubtitleLineMaximumLength.Left = labelSubMaxLen.Left + labelSubMaxLen.Width + 3;
             if (labelMaxCharsPerSecond.Left + labelMaxCharsPerSecond.Width > numericUpDownMaxCharsSec.Left)
@@ -307,7 +315,10 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxShowLineBreaksAs.Left = labelShowLineBreaksAs.Left + labelShowLineBreaksAs.Width;
             labelListViewDoubleClickEvent.Text = language.MainListViewDoubleClickAction;
             labelAutoBackup.Text = language.AutoBackup;
+            labelAutoBackupDeleteAfter.Text = language.AutoBackupDeleteAfter;
             comboBoxAutoBackup.Left = labelAutoBackup.Left + labelAutoBackup.Width + 3;
+            labelAutoBackupDeleteAfter.Left = comboBoxAutoBackup.Left + comboBoxAutoBackup.Width + 5;
+            comboBoxAutoBackupDeleteAfter.Left = labelAutoBackupDeleteAfter.Left + labelAutoBackupDeleteAfter.Width + 3;
             checkBoxCheckForUpdates.Text = language.CheckForUpdates;
             checkBoxAllowEditOfOriginalSubtitle.Text = language.AllowEditOfOriginalSubtitle;
             checkBoxPromptDeleteLines.Text = language.PromptDeleteLines;
@@ -323,6 +334,10 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxAutoBackup.Items[1] = language.AutoBackupEveryMinute;
             comboBoxAutoBackup.Items[2] = language.AutoBackupEveryFiveMinutes;
             comboBoxAutoBackup.Items[3] = language.AutoBackupEveryFifteenMinutes;
+
+            comboBoxAutoBackupDeleteAfter.Items[0] = language.AutoBackupDeleteAfterOneMonth;
+            comboBoxAutoBackupDeleteAfter.Items[1] = language.AutoBackupDeleteAfterThreeMonths;
+            comboBoxAutoBackupDeleteAfter.Items[2] = language.AutoBackupDeleteAfterSixMonths;
 
             groupBoxVideoEngine.Text = language.VideoEngine;
             radioButtonVideoPlayerDirectShow.Text = language.DirectShow;
@@ -503,6 +518,13 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 comboBoxAutoBackup.SelectedIndex = 0;
 
+            if (gs.AutoBackupDeleteAfterMonths == 3)
+                comboBoxAutoBackupDeleteAfter.SelectedIndex = 1;
+            else if (gs.AutoBackupDeleteAfterMonths == 1)
+                comboBoxAutoBackupDeleteAfter.SelectedIndex = 0;
+            else
+                comboBoxAutoBackupDeleteAfter.SelectedIndex = 2;
+
             checkBoxCheckForUpdates.Checked = gs.CheckForUpdates;
 
             comboBoxSpellChecker.SelectedIndex = gs.SpellChecker.Contains("word", StringComparison.OrdinalIgnoreCase) ? 1 : 0;
@@ -628,6 +650,8 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(generalNode, language.MergeSelectedLines, nameof(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines));
             AddNode(generalNode, language.MergeSelectedLinesOnlyFirstText, nameof(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText));
             AddNode(generalNode, language.MergeOriginalAndTranslation, nameof(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation));
+            AddNode(generalNode, language.MergeWithPrevious, nameof(Configuration.Settings.Shortcuts.GeneralMergeWithPrevious));
+            AddNode(generalNode, language.MergeWithNext, nameof(Configuration.Settings.Shortcuts.GeneralMergeWithNext));
             AddNode(generalNode, language.ToggleTranslationMode, nameof(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode));
             AddNode(generalNode, language.SwitchOriginalAndTranslation, nameof(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation));
             AddNode(generalNode, language.WaveformPlayFirstSelectedSubtitle, nameof(Configuration.Settings.Shortcuts.GeneralPlayFirstSelected));
@@ -637,6 +661,8 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(generalNode, language.GoToPrevious, nameof(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle));
             AddNode(generalNode, language.GoToCurrentSubtitleStart, nameof(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle));
             AddNode(generalNode, language.GoToCurrentSubtitleEnd, nameof(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle));
+            AddNode(generalNode, language.GoToNextSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo));
+            AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp));
             treeViewShortcuts.Nodes.Add(generalNode);
 
             var fileNode = new TreeNode(Configuration.Settings.Language.Main.Menu.File.Title);
@@ -688,6 +714,8 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(videoNode, language.GoForward500Milliseconds, nameof(Configuration.Settings.Shortcuts.MainVideo500MsRight));
             AddNode(videoNode, language.GoBack1Second, nameof(Configuration.Settings.Shortcuts.MainVideo1000MsLeft));
             AddNode(videoNode, language.GoForward1Second, nameof(Configuration.Settings.Shortcuts.MainVideo1000MsRight));
+            AddNode(videoNode, language.GoBack5Seconds, nameof(Configuration.Settings.Shortcuts.MainVideo5000MsLeft));
+            AddNode(videoNode, language.GoForward5Seconds, nameof(Configuration.Settings.Shortcuts.MainVideo5000MsRight));
             AddNode(videoNode, language.Fullscreen, nameof(Configuration.Settings.Shortcuts.MainVideoFullscreen));
             treeViewShortcuts.Nodes.Add(videoNode);
 
@@ -767,6 +795,8 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(adjustNode, language.AdjustSelected100MsBack, nameof(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack));
             AddNode(adjustNode, language.AdjustSetEndAndOffsetTheRest, nameof(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest));
             AddNode(adjustNode, language.AdjustSetEndAndOffsetTheRestAndGoToNext, nameof(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext));
+            AddNode(adjustNode, language.AdjustExtendCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.GeneralExtendCurrentSubtitle));
+            AddNode(adjustNode, language.RecalculateDurationOfCurrentSubtitle, nameof(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDuration));
             treeViewShortcuts.Nodes.Add(adjustNode);
 
             var audioVisualizerNode = new TreeNode(language.WaveformAndSpectrogram);
@@ -782,6 +812,8 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(audioVisualizerNode, language.WaveformPlayNewSelectionEnd, nameof(Configuration.Settings.Shortcuts.WaveformPlaySelectionEnd));
             AddNode(audioVisualizerNode, Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition, nameof(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition));
             AddNode(audioVisualizerNode, language.WaveformFocusListView, nameof(Configuration.Settings.Shortcuts.WaveformFocusListView));
+            AddNode(audioVisualizerNode, language.WaveformGoToNextSceneChange, nameof(Configuration.Settings.Shortcuts.WaveformGoToNextSceneChange));
+            AddNode(audioVisualizerNode, language.WaveformToggleSceneChange, nameof(Configuration.Settings.Shortcuts.WaveformToggleSceneChange));
             treeViewShortcuts.Nodes.Add(audioVisualizerNode);
 
             foreach (TreeNode node in treeViewShortcuts.Nodes)
@@ -813,8 +845,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxColorDurationTooSmall.Text = language.SyntaxColorDurationIfTooSmall;
             checkBoxSyntaxColorDurationTooLarge.Text = language.SyntaxColorDurationIfTooLarge;
             checkBoxSyntaxColorTextTooLong.Text = language.SyntaxColorTextIfTooLong;
-            checkBoxSyntaxColorTextMoreThanTwoLines.Text = language.SyntaxColorTextMoreThanXLines;
-            numericUpDownSyntaxColorTextMoreThanXLines.Left = checkBoxSyntaxColorTextMoreThanTwoLines.Left + checkBoxSyntaxColorTextMoreThanTwoLines.Width + 4;
+            checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(language.SyntaxColorTextMoreThanMaxLines, Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX);
             checkBoxSyntaxOverlap.Text = language.SyntaxColorOverlap;
             buttonListViewSyntaxColorError.Text = language.SyntaxErrorColor;
 
@@ -907,7 +938,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors,
+        public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors, Image removeTextForHi,
                                Image visualSync, Image spellCheck, Image settings, Image help)
         {
             Icon = (Icon)icon.Clone();
@@ -918,6 +949,7 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxFind.Image = (Image)find.Clone();
             pictureBoxReplace.Image = (Image)replace.Clone();
             pictureBoxTBFixCommonErrors.Image = (Image)fixCommonErrors.Clone();
+            pictureBoxTBRemoveTextForHi.Image = (Image)removeTextForHi.Clone();
             pictureBoxVisualSync.Image = (Image)visualSync.Clone();
             pictureBoxSpellCheck.Image = (Image)spellCheck.Clone();
             pictureBoxSettings.Image = (Image)settings.Clone();
@@ -1043,6 +1075,7 @@ namespace Nikse.SubtitleEdit.Forms
             gs.ShowToolbarFind = checkBoxToolbarFind.Checked;
             gs.ShowToolbarReplace = checkBoxReplace.Checked;
             gs.ShowToolbarFixCommonErrors = checkBoxTBFixCommonErrors.Checked;
+            gs.ShowToolbarRemoveTextForHi = checkBoxTBRemoveTextForHi.Checked;
             gs.ShowToolbarVisualSync = checkBoxVisualSync.Checked;
             gs.ShowToolbarSettings = checkBoxSettings.Checked;
             gs.ShowToolbarSpellCheck = checkBoxSpellCheck.Checked;
@@ -1084,6 +1117,13 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.AutoBackupSeconds = 60 * 15;
             else
                 gs.AutoBackupSeconds = 0;
+
+            if (comboBoxAutoBackupDeleteAfter.SelectedIndex == 2)
+                gs.AutoBackupDeleteAfterMonths = 3;
+            else if (comboBoxAutoBackupDeleteAfter.SelectedIndex == 1)
+                gs.AutoBackupDeleteAfterMonths = 1;
+            else
+                gs.AutoBackupDeleteAfterMonths = 6;
 
             gs.CheckForUpdates = checkBoxCheckForUpdates.Checked;
 
@@ -1201,7 +1241,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ListViewSyntaxColorDurationBig = checkBoxSyntaxColorDurationTooLarge.Checked;
             Configuration.Settings.Tools.ListViewSyntaxColorLongLines = checkBoxSyntaxColorTextTooLong.Checked;
             Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines = checkBoxSyntaxColorTextMoreThanTwoLines.Checked;
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = (int)numericUpDownSyntaxColorTextMoreThanXLines.Value;
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = (int)numericUpDownMaxNumberOfLines.Value;
             Configuration.Settings.Tools.ListViewSyntaxColorOverlap = checkBoxSyntaxOverlap.Checked;
             Configuration.Settings.Tools.ListViewSyntaxErrorColor = panelListViewSyntaxColorError.BackColor;
 
@@ -1240,7 +1280,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
-            else if (e.KeyCode == Keys.F1)
+            else if (e.KeyCode == UiUtil.HelpKeys)
             {
                 Utilities.ShowHelp("#Settings");
                 e.SuppressKeyPress = true;
@@ -1774,7 +1814,7 @@ namespace Nikse.SubtitleEdit.Forms
                 e.KeyCode == Keys.PageDown ||
                 e.KeyCode == Keys.PageUp ||
                 e.KeyCode == Keys.None ||
-                e.KeyCode == Keys.F1 ||
+                e.KeyCode == UiUtil.HelpKeys ||
                 e.KeyCode == Keys.Home ||
                 e.KeyCode == Keys.End)
                 return;
@@ -2313,7 +2353,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return false;
             }
 
-            if (comboBoxShortcutKey.SelectedIndex == 0)
+            if (comboBoxShortcutKey.SelectedIndex == 0 && !checkBoxShortcutsControl.Checked && !checkBoxShortcutsAlt.Checked && !checkBoxShortcutsShift.Checked)
             {
                 return true;
             }
@@ -2331,6 +2371,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return true;
+        }
+
+        private void numericUpDownMaxNumberOfLines_ValueChanged(object sender, EventArgs e)
+        {
+           checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(Configuration.Settings.Language.Settings.SyntaxColorTextMoreThanMaxLines, numericUpDownMaxNumberOfLines.Value);
         }
 
     }

@@ -2,7 +2,7 @@
 <Language Name="Español (Argentina)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Traducido por Marcelo1ar, correcciones por walterh78</TranslatedBy>
     <CultureName>es-AR</CultureName>
     <HelpFile>http://www.nikse.dk/SubtitleEdit/HelpEs</HelpFile>
@@ -1077,7 +1077,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeVisualSync>Sincronización visual antes</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Sincronización visual aplicada a las líneas seleccionadas</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Sincronización visual realizada</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>¿Importar este subtítulo VobSub?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>El archivo es mayor de 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>¿Continuar de todas formas?</ContinueAnyway>
     <BeforeLoadOf>Antes de carga de {0}</BeforeLoadOf>
@@ -1689,7 +1688,7 @@ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <SyntaxColorDurationIfTooSmall>Color si es demasiado corta duración</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Color de duración, si es demasiado largo</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Color de texto si es muy largo</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Color de texto si hay más líneas:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Color de texto si hay más de {0} líneas</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Color superposición de código de tiempo</SyntaxColorOverlap>
     <SyntaxErrorColor>Error colores</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ir a la primera línea seleccionada</GoToFirstSelectedLine>

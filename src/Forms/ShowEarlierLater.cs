@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Close();
             }
-            else if (e.KeyCode == Keys.F1)
+            else if (e.KeyCode == UiUtil.HelpKeys)
             {
                 Utilities.ShowHelp("#sync");
                 e.SuppressKeyPress = true;

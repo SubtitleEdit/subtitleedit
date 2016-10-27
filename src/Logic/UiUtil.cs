@@ -265,6 +265,8 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         private static readonly Dictionary<string, Keys> AllKeys = new Dictionary<string, Keys>();
+        private static Keys _helpKeys;
+
         public static Keys GetKeys(string keysInString)
         {
             if (string.IsNullOrEmpty(keysInString))
@@ -294,6 +296,17 @@ namespace Nikse.SubtitleEdit.Logic
                     resultKeys = resultKeys | AllKeys[k];
             }
             return resultKeys;
+        }
+
+        public static Keys HelpKeys
+        {
+            get
+            {
+                if (_helpKeys == Keys.None)
+                    _helpKeys = GetKeys(Configuration.Settings.Shortcuts.GeneralHelp);
+                return _helpKeys;                 
+            }
+            set { _helpKeys = value; }
         }
 
         public static void SetButtonHeight(Control control, int newHeight, int level)

@@ -9,6 +9,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -21,8 +23,8 @@ namespace Nikse.SubtitleEdit.Forms
         private MicrosoftTranslationService.SoapService _microsoftTranslationService;
         private string _bingAccessToken;
         private bool _googleApiNotWorking;
-        private const string SplitterString = " == ";
-        private const string NewlineString = " __ ";
+        private const string SplitterString = "\n\n\n";
+        private const string NewlineString = "\n";
 
         private enum FormattingType
         {
@@ -40,6 +42,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get { return _screenScrapingEncoding; }
         }
+
+        private string _targetTwoLetterIsoLanguageName;
 
         public class ComboBoxItem
         {
@@ -178,10 +182,11 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (Paragraph p in _translatedSubtitle.Paragraphs)
                 p.Text = string.Empty;
 
+            _targetTwoLetterIsoLanguageName = (comboBoxTo.SelectedItem as ComboBoxItem).Value;
             if (!_googleTranslate)
             {
                 string from = (comboBoxFrom.SelectedItem as ComboBoxItem).Value;
-                string to = (comboBoxTo.SelectedItem as ComboBoxItem).Value;
+                string to = _targetTwoLetterIsoLanguageName;
                 if (!string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientId) && !string.IsNullOrEmpty(Configuration.Settings.Tools.MicrosoftBingClientSecret))
                 {
                     try
@@ -222,7 +227,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph p = _subtitle.Paragraphs[i];
                     string text = SetFormattingTypeAndSplitting(i, p.Text, (comboBoxFrom.SelectedItem as ComboBoxItem).Value.StartsWith("zh"));
-                    text = string.Format("{1} {0} |", text, SplitterString);
+                    text = string.Format("{1} {0}", text, SplitterString);
                     if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index - 1);
@@ -254,7 +259,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Enabled = true;
                 buttonCancel.Enabled = true;
 
-                Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = (comboBoxTo.SelectedItem as ComboBoxItem).Value;
+                Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = _targetTwoLetterIsoLanguageName;
             }
         }
 
@@ -302,11 +307,10 @@ namespace Nikse.SubtitleEdit.Forms
                     int indexOfP = cleanText.IndexOf(SplitterString.Trim(), StringComparison.Ordinal);
                     if (indexOfP >= 0 && indexOfP < 4)
                         cleanText = cleanText.Remove(0, indexOfP);
-                    cleanText = cleanText.Replace(SplitterString.Trim(), string.Empty).Trim();
+                    cleanText = cleanText.Replace(SplitterString, string.Empty).Trim();
                     if (cleanText.Contains('\n') && !cleanText.Contains('\r'))
                         cleanText = cleanText.Replace("\n", Environment.NewLine);
                     cleanText = cleanText.Replace(" ...", "...");
-                    cleanText = cleanText.Replace(NewlineString.Trim(), Environment.NewLine);
                     cleanText = cleanText.Replace("<br/>", Environment.NewLine);
                     cleanText = cleanText.Replace("<br />", Environment.NewLine);
                     cleanText = cleanText.Replace("<br / >", Environment.NewLine);
@@ -332,6 +336,14 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         cleanText = Utilities.AutoBreakLine(cleanText);
                     }
+                    if (Utilities.GetNumberOfLines(cleanText) == 1 && Utilities.GetNumberOfLines(_subtitle.Paragraphs[index].Text) == 2)
+                    {
+                        if (!_autoSplit[index])
+                        {
+                            cleanText = Utilities.AutoBreakLine(cleanText);
+                        }
+                    }
+
                     if (_formattingTypes[index] == FormattingType.ItalicTwoLines || _formattingTypes[index] == FormattingType.Italic)
                     {
                         _translatedSubtitle.Paragraphs[index].Text = "<i>" + cleanText + "</i>";
@@ -485,11 +497,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// <returns>Translated to String</returns>
         public static string TranslateTextViaScreenScraping(string input, string languagePair, Encoding encoding, bool romanji)
         {
-            input = input.Replace(Environment.NewLine, NewlineString);
-            //input = input.Replace("'", "&apos;");
-
-            //string url = String.Format("https://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}", HttpUtility.UrlEncode(input), languagePair);
-            string url = String.Format("https://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
+            string url = string.Format("https://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
             var result = Utilities.DownloadString(url, encoding);
 
             var sb = new StringBuilder();
@@ -520,6 +528,8 @@ namespace Nikse.SubtitleEdit.Forms
                     while (startIndex > 0)
                     {
                         startIndex = result.IndexOf('>', startIndex);
+                        while (startIndex > 0 && result.Substring(startIndex-3, 4) =="<br>")
+                            startIndex = result.IndexOf('>', startIndex + 1);
                         if (startIndex > 0)
                         {
                             startIndex++;
@@ -533,6 +543,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             string res = sb.ToString();
+            res = res.Replace("<br><br><br>", "|");
+            res = res.Replace("\r\n", "\n");
+            res = res.Replace("\r", "\n");
             res = res.Replace(NewlineString, Environment.NewLine);
             res = res.Replace("<BR>", Environment.NewLine);
             res = res.Replace("<BR />", Environment.NewLine);
@@ -544,7 +557,9 @@ namespace Nikse.SubtitleEdit.Forms
             res = res.Replace(" <br/>", Environment.NewLine);
             res = res.Replace("<br/>", Environment.NewLine);
             res = res.Replace("<br />", Environment.NewLine);
+            res = res.Replace("<br>", Environment.NewLine);
             res = res.Replace("  ", " ").Trim();
+            res = res.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
             res = res.Replace(Environment.NewLine + " ", Environment.NewLine);
             res = res.Replace(" " + Environment.NewLine, Environment.NewLine);
@@ -828,7 +843,7 @@ namespace Nikse.SubtitleEdit.Forms
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.F1)
+            else if (e.KeyCode == UiUtil.HelpKeys)
                 Utilities.ShowHelp("#translation");
             else if (e.Control && e.Shift && e.Alt && e.KeyCode == Keys.L)
             {
@@ -1087,7 +1102,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = string.Format("{0} +-+", SetFormattingTypeAndSplitting(index, p.Text, from.StartsWith("zh")));
+                    string text = string.Format("{0} +-+ ", SetFormattingTypeAndSplitting(index, p.Text, from.StartsWith("zh")));
                     if (!overQuota)
                     {
                         if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
@@ -1135,28 +1150,52 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void subtitleListViewFrom_DoubleClick(object sender, EventArgs e)
+        private void SyncListViews(ListView listViewSelected, SubtitleListView listViewOther)
         {
-            if (subtitleListViewFrom.SelectedItems.Count > 0)
+            if (listViewSelected.SelectedItems.Count > 0)
             {
-                int index = subtitleListViewFrom.SelectedItems[0].Index;
-                if (index < subtitleListViewTo.Items.Count)
+                var first = listViewSelected.TopItem.Index;
+                int index = listViewSelected.SelectedItems[0].Index;
+                if (index < listViewOther.Items.Count)
                 {
-                    subtitleListViewTo.SelectIndexAndEnsureVisible(index);
+                    listViewOther.SelectIndexAndEnsureVisible(index, false);
+                    if (first >= 0)
+                        listViewOther.TopItem = listViewOther.Items[first];
                 }
             }
         }
 
+        private void subtitleListViewFrom_DoubleClick(object sender, EventArgs e)
+        {
+            SyncListViews(subtitleListViewFrom, subtitleListViewTo);
+        }
+
         private void subtitleListViewTo_DoubleClick(object sender, EventArgs e)
         {
-            if (subtitleListViewTo.SelectedItems.Count > 0)
+            SyncListViews(subtitleListViewTo, subtitleListViewFrom);
+        }
+
+        public string GetFileNameWithTargetLanguage(string oldFileName, string videoFileName, Subtitle oldSubtitle, SubtitleFormat subtitleFormat)
+        {
+            if (!string.IsNullOrEmpty(_targetTwoLetterIsoLanguageName))
             {
-                int index = subtitleListViewTo.SelectedItems[0].Index;
-                if (index < subtitleListViewFrom.Items.Count)
+                if (!string.IsNullOrEmpty(videoFileName))
                 {
-                    subtitleListViewFrom.SelectIndexAndEnsureVisible(index);
+                    return Path.GetFileNameWithoutExtension(videoFileName) + "." + _targetTwoLetterIsoLanguageName.ToLower() + subtitleFormat.Extension;
+                }
+                else if (!string.IsNullOrEmpty(oldFileName))
+                {
+                    var s = Path.GetFileNameWithoutExtension(oldFileName);
+                    if (oldSubtitle != null)
+                    {
+                        var lang = "." + LanguageAutoDetect.AutoDetectGoogleLanguage(oldSubtitle);
+                        if (lang.Length == 3 && s.EndsWith(lang, StringComparison.OrdinalIgnoreCase))
+                            s = s.Remove(s.Length - 3);
+                    }
+                    return s + "." + _targetTwoLetterIsoLanguageName.ToLower() + subtitleFormat.Extension;
                 }
             }
+            return null;
         }
 
     }

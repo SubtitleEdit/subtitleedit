@@ -2,7 +2,7 @@
 <Language Name="Tiếng Việt">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Dịch qua Tiếng Việt bởi by everytime
 Mọi góp ý về bản dịch vui lòng gửi thư tới hộp thư: handes1990@gmail.com
 Cảm ơn rất nhiều</TranslatedBy>
@@ -963,7 +963,6 @@ Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
     <BeforeVisualSync>Đồng bộ khi xem trước đó</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Xem đồng bộ thực hiện trên các dòng được lựa chọn</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Thực hiện đồng bộ hiển thị</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Nhập vào phụ đề VobSub này?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Tập tin lớn hơn 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Tiếp tục không?</ContinueAnyway>
     <BeforeLoadOf>Trước khi tải trọng của {0}</BeforeLoadOf>

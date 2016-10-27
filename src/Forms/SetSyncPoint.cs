@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
-            else if (e.KeyCode == Keys.F1)
+            else if (e.KeyCode == UiUtil.HelpKeys)
                 Utilities.ShowHelp(string.Empty);
             else if (e.KeyCode == Keys.S && e.Modifiers == Keys.Control)
             {
@@ -247,7 +247,7 @@ namespace Nikse.SubtitleEdit.Forms
                 GoBackSeconds(-0.1, videoPlayerContainer1.VideoPlayer);
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.F1)
+            else if (e.KeyCode == UiUtil.HelpKeys)
             {
                 Utilities.ShowHelp("#sync");
                 e.SuppressKeyPress = true;

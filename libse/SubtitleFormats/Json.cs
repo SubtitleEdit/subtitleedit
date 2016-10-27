@@ -163,6 +163,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     endIndex = endAlternate;
                 else if (endAlternate > 0 && endAlternate < endIndex)
                     endIndex = endAlternate;
+                if (endIndex < 0 && res.EndsWith("\""))
+                    endIndex = res.Length - 1;
                 if (endIndex < 0)
                     return null;
                 if (res.Length > 1)

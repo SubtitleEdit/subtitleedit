@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using Nikse.SubtitleEdit.Core.Interfaces;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    public class Cavena890 : SubtitleFormat
+    public class Cavena890 : SubtitleFormat, IBinaryPersistableSubtitle
     {
         public const int LanguageIdDanish = 0x07;
         public const int LanguageIdEnglish = 0x09;
@@ -190,230 +191,236 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         private int _languageIdLine1 = LanguageIdEnglish;
         private int _languageIdLine2 = LanguageIdEnglish;
 
-        public void Save(string fileName, Subtitle subtitle)
+        public bool Save(string fileName, Subtitle subtitle, bool batchMode = false)
         {
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
-                int russianCount = 0;
-                char[] logoGrams = { '的', '是', '啊', '吧', '好', '吧', '亲', '爱', '的', '早', '上' };
-                char[] russianChars = { 'я', 'д', 'й', 'л', 'щ', 'ж', 'ц', 'ф', 'ы' };
-                foreach (Paragraph p in subtitle.Paragraphs)
+                return Save(fileName, fs, subtitle, batchMode);
+            }
+        }
+
+        public bool Save(string fileName, Stream stream, Subtitle subtitle, bool batchMode)
+        {
+            int russianCount = 0;
+            char[] logoGrams = { '的', '是', '啊', '吧', '好', '吧', '亲', '爱', '的', '早', '上' };
+            char[] russianChars = { 'я', 'д', 'й', 'л', 'щ', 'ж', 'ц', 'ф', 'ы' };
+            foreach (Paragraph p in subtitle.Paragraphs)
+            {
+                if (p.Text.Contains(logoGrams))
                 {
-                    if (p.Text.Contains(logoGrams))
+                    _languageIdLine1 = LanguageIdChineseSimplified;
+                    _languageIdLine2 = LanguageIdChineseSimplified;
+                    break;
+                }
+                if (p.Text.Contains(russianChars))
+                {
+                    russianCount++;
+                    if (russianCount > 10)
                     {
+                        _languageIdLine1 = LanguageIdRussian;
+                        _languageIdLine2 = LanguageIdRussian; // or 0x09?
+                        break;
+                    }
+                }
+            }
+
+            if (Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId > 0)
+            {
+                _languageIdLine1 = Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId;
+                _languageIdLine2 = Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId;
+            }
+            else
+            {
+                var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
+                switch (language)
+                {
+                    case "he":
+                        _languageIdLine1 = LanguageIdHebrew;
+                        _languageIdLine2 = LanguageIdHebrew; // or 0x09
+                        break;
+                    case "ru":
+                        _languageIdLine1 = LanguageIdRussian;
+                        _languageIdLine2 = LanguageIdRussian; // or 0x09?
+                        break;
+                    case "zh":
                         _languageIdLine1 = LanguageIdChineseSimplified;
                         _languageIdLine2 = LanguageIdChineseSimplified;
                         break;
-                    }
-                    if (p.Text.Contains(russianChars))
-                    {
-                        russianCount++;
-                        if (russianCount > 10)
-                        {
-                            _languageIdLine1 = LanguageIdRussian;
-                            _languageIdLine2 = LanguageIdRussian; // or 0x09?
-                            break;
-                        }
-                    }
-                }
-
-                if (Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId > 0)
-                {
-                    _languageIdLine1 = Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId;
-                    _languageIdLine2 = Configuration.Settings.SubtitleSettings.CurrentCavena89LanguageId;
-                }
-                else
-                {
-                    var language = LanguageAutoDetect.AutoDetectGoogleLanguage(subtitle);
-                    switch (language)
-                    {
-                        case "he":
-                            _languageIdLine1 = LanguageIdHebrew;
-                            _languageIdLine2 = LanguageIdHebrew; // or 0x09
-                            break;
-                        case "ru":
-                            _languageIdLine1 = LanguageIdRussian;
-                            _languageIdLine2 = LanguageIdRussian; // or 0x09?
-                            break;
-                        case "zh":
-                            _languageIdLine1 = LanguageIdChineseSimplified;
-                            _languageIdLine2 = LanguageIdChineseSimplified;
-                            break;
-                        case "da":
-                            _languageIdLine1 = LanguageIdDanish;
-                            _languageIdLine2 = LanguageIdDanish;
-                            break;
-                    }
-                }
-
-                // prompt???
-                //if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine1 >= 0)
-                //    _languageIdLine1 = Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine1;
-                //if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2 >= 0)
-                //    _languageIdLine2 = Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2;
-
-                // write file header (some fields are known, some are not...)
-
-                fs.WriteByte(0); // ?
-                fs.WriteByte(0); // ?
-
-                // tape number (20 bytes)
-                for (int i = 0; i < 20; i++)
-                    fs.WriteByte(0);
-
-                // ?
-                for (int i = 0; i < 18; i++)
-                    fs.WriteByte(0);
-
-                // translated programme title (28 bytes)
-                string title = Path.GetFileNameWithoutExtension(fileName) ?? string.Empty;
-                if (title.Length > 28)
-                    title = title.Substring(0, 28);
-                if (!string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.CurrentCavena89Title) && Configuration.Settings.SubtitleSettings.CurrentCavena89Title.Length <= 28)
-                    title = Configuration.Settings.SubtitleSettings.CurrentCavena89Title;
-                var buffer = Encoding.ASCII.GetBytes(title);
-                fs.Write(buffer, 0, buffer.Length);
-                for (int i = 0; i < 28 - buffer.Length; i++)
-                    fs.WriteByte(0);
-
-                // translator (28 bytes)
-                if (!string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.CurrentCavena890Translator) && Configuration.Settings.SubtitleSettings.CurrentCavena890Translator.Length <= 28)
-                {
-                    buffer = Encoding.ASCII.GetBytes(Configuration.Settings.SubtitleSettings.CurrentCavena890Translator);
-                    fs.Write(buffer, 0, buffer.Length);
-                    for (int i = 0; i < 28 - buffer.Length; i++)
-                        fs.WriteByte(0);
-                }
-                else
-                {
-                    for (int i = 0; i < 28; i++)
-                        fs.WriteByte(0);
-                }
-
-                // ?
-                for (int i = 0; i < 9; i++)
-                    fs.WriteByte(0);
-
-                // translated episode title (11 bytes)
-                for (int i = 0; i < 11; i++)
-                    fs.WriteByte(0);
-
-                // ?
-                for (int i = 0; i < 18; i++)
-                    fs.WriteByte(0);
-
-                // ? + language codes
-                buffer = new byte[] { 0xA0, 0x05, 0x04, 0x03, 0x06, 0x06, 0x08, 0x90, 0x00, 0x00, 0x00, 0x00, (byte)_languageIdLine1, (byte)_languageIdLine2 };
-                fs.Write(buffer, 0, buffer.Length);
-
-                // comments (24 bytes)
-                buffer = Encoding.ASCII.GetBytes("");
-                if (!string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.CurrentCavena89Comment) && Configuration.Settings.SubtitleSettings.CurrentCavena89Comment.Length <= 24)
-                    buffer = Encoding.ASCII.GetBytes(Configuration.Settings.SubtitleSettings.CurrentCavena89Comment);
-
-                fs.Write(buffer, 0, buffer.Length);
-                for (int i = 0; i < 24 - buffer.Length; i++)
-                    fs.WriteByte(0);
-
-                // ??
-                buffer = new byte[] { 0x08, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00 };
-                fs.Write(buffer, 0, buffer.Length);
-
-                // number of subtitles
-                fs.WriteByte((byte)(subtitle.Paragraphs.Count % 256));
-                fs.WriteByte((byte)(subtitle.Paragraphs.Count / 256));
-
-                // write font - prefix with binary zeroes
-                buffer = GetFontBytesFromLanguageId(_languageIdLine1); // also TBX308VFONTL.V for english...
-                for (int i = 0; i < 14 - buffer.Length; i++)
-                    fs.WriteByte(0);
-                fs.Write(buffer, 0, buffer.Length);
-
-                // ?
-                for (int i = 0; i < 13; i++)
-                    fs.WriteByte(0);
-
-                // number of subtitles again
-                fs.WriteByte((byte)(subtitle.Paragraphs.Count % 256));
-                fs.WriteByte((byte)(subtitle.Paragraphs.Count / 256));
-
-
-                // number of subtitles again again
-                fs.WriteByte((byte)(subtitle.Paragraphs.Count % 256));
-                fs.WriteByte((byte)(subtitle.Paragraphs.Count / 256));
-
-                // ?
-                for (int i = 0; i < 6; i++)
-                    fs.WriteByte(0);
-
-                // original programme title (28 chars)
-                if (!string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.CurrentCavena890riginalTitle) && Configuration.Settings.SubtitleSettings.CurrentCavena890riginalTitle.Length <= 28)
-                {
-                    buffer = Encoding.ASCII.GetBytes(Configuration.Settings.SubtitleSettings.CurrentCavena890riginalTitle);
-                    fs.Write(buffer, 0, buffer.Length);
-                    for (int i = 0; i < 28 - buffer.Length; i++)
-                        fs.WriteByte(0);
-                }
-                else
-                {
-                    for (int i = 0; i < 28; i++)
-                        fs.WriteByte(0);
-                }
-
-                // write font (use same font id from line 1)
-                buffer = GetFontBytesFromLanguageId(_languageIdLine1);
-                fs.Write(buffer, 0, buffer.Length);
-
-                // ?
-                fs.WriteByte(0x3d);
-                fs.WriteByte(0x8d);
-
-                // start of message time
-                string startOfMessage = "10:00:00:00";
-                if (Configuration.Settings.SubtitleSettings.Cavena890StartOfMessage != null &&
-                    Configuration.Settings.SubtitleSettings.Cavena890StartOfMessage.Length == startOfMessage.Length)
-                    startOfMessage = Configuration.Settings.SubtitleSettings.Cavena890StartOfMessage;
-                buffer = Encoding.ASCII.GetBytes(startOfMessage);
-                fs.Write(buffer, 0, buffer.Length);
-
-                buffer = new byte[]
-                {
-                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x54, 0x44
-                };
-                fs.Write(buffer, 0, buffer.Length);
-
-                for (int i = 0; i < 92; i++)
-                    fs.WriteByte(0);
-
-                // paragraphs
-                int number = 16;
-                foreach (Paragraph p in subtitle.Paragraphs)
-                {
-                    // number
-                    fs.WriteByte((byte)(number / 256));
-                    fs.WriteByte((byte)(number % 256));
-
-                    WriteTime(fs, p.StartTime);
-                    WriteTime(fs, p.EndTime);
-
-                    if (p.Text.StartsWith("{\\an1}"))
-                        fs.WriteByte(0x50); // left
-                    else if (p.Text.StartsWith("{\\an3}"))
-                        fs.WriteByte(0x52); // left
-                    else
-                        fs.WriteByte(0x54); // center
-
-                    buffer = new byte[] { 0, 0, 0, 0, 0, 0, 0 }; // 0x16 }; -- the last two bytes might be something with vertical alignment...
-                    fs.Write(buffer, 0, buffer.Length);
-
-                    bool hasBox = Utilities.RemoveSsaTags(p.Text).StartsWith("<box>");
-                    var text = p.Text.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
-                    text = HtmlUtil.RemoveOpenCloseTags(Utilities.RemoveSsaTags(text), HtmlUtil.TagBold, HtmlUtil.TagFont, HtmlUtil.TagBold);
-                    WriteText(fs, text, p == subtitle.Paragraphs[subtitle.Paragraphs.Count - 1], _languageIdLine1, hasBox);
-
-                    number += 16;
+                    case "da":
+                        _languageIdLine1 = LanguageIdDanish;
+                        _languageIdLine2 = LanguageIdDanish;
+                        break;
                 }
             }
+
+            // prompt???
+            //if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine1 >= 0)
+            //    _languageIdLine1 = Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine1;
+            //if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2 >= 0)
+            //    _languageIdLine2 = Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2;
+
+            // write file header (some fields are known, some are not...)
+
+            stream.WriteByte(0); // ?
+            stream.WriteByte(0); // ?
+
+            // tape number (20 bytes)
+            for (int i = 0; i < 20; i++)
+                stream.WriteByte(0);
+
+            // ?
+            for (int i = 0; i < 18; i++)
+                stream.WriteByte(0);
+
+            // translated programme title (28 bytes)
+            string title = Path.GetFileNameWithoutExtension(fileName) ?? string.Empty;
+            if (title.Length > 28)
+                title = title.Substring(0, 28);
+            if (!string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.CurrentCavena89Title) && Configuration.Settings.SubtitleSettings.CurrentCavena89Title.Length <= 28)
+                title = Configuration.Settings.SubtitleSettings.CurrentCavena89Title;
+            var buffer = Encoding.ASCII.GetBytes(title);
+            stream.Write(buffer, 0, buffer.Length);
+            for (int i = 0; i < 28 - buffer.Length; i++)
+                stream.WriteByte(0);
+
+            // translator (28 bytes)
+            if (!string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.CurrentCavena890Translator) && Configuration.Settings.SubtitleSettings.CurrentCavena890Translator.Length <= 28)
+            {
+                buffer = Encoding.ASCII.GetBytes(Configuration.Settings.SubtitleSettings.CurrentCavena890Translator);
+                stream.Write(buffer, 0, buffer.Length);
+                for (int i = 0; i < 28 - buffer.Length; i++)
+                    stream.WriteByte(0);
+            }
+            else
+            {
+                for (int i = 0; i < 28; i++)
+                    stream.WriteByte(0);
+            }
+
+            // ?
+            for (int i = 0; i < 9; i++)
+                stream.WriteByte(0);
+
+            // translated episode title (11 bytes)
+            for (int i = 0; i < 11; i++)
+                stream.WriteByte(0);
+
+            // ?
+            for (int i = 0; i < 18; i++)
+                stream.WriteByte(0);
+
+            // ? + language codes
+            buffer = new byte[] { 0xA0, 0x05, 0x04, 0x03, 0x06, 0x06, 0x08, 0x90, 0x00, 0x00, 0x00, 0x00, (byte)_languageIdLine1, (byte)_languageIdLine2 };
+            stream.Write(buffer, 0, buffer.Length);
+
+            // comments (24 bytes)
+            buffer = Encoding.ASCII.GetBytes("");
+            if (!string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.CurrentCavena89Comment) && Configuration.Settings.SubtitleSettings.CurrentCavena89Comment.Length <= 24)
+                buffer = Encoding.ASCII.GetBytes(Configuration.Settings.SubtitleSettings.CurrentCavena89Comment);
+
+            stream.Write(buffer, 0, buffer.Length);
+            for (int i = 0; i < 24 - buffer.Length; i++)
+                stream.WriteByte(0);
+
+            // ??
+            buffer = new byte[] { 0x08, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00 };
+            stream.Write(buffer, 0, buffer.Length);
+
+            // number of subtitles
+            stream.WriteByte((byte)(subtitle.Paragraphs.Count % 256));
+            stream.WriteByte((byte)(subtitle.Paragraphs.Count / 256));
+
+            // write font - prefix with binary zeroes
+            buffer = GetFontBytesFromLanguageId(_languageIdLine1); // also TBX308VFONTL.V for english...
+            for (int i = 0; i < 14 - buffer.Length; i++)
+                stream.WriteByte(0);
+            stream.Write(buffer, 0, buffer.Length);
+
+            // ?
+            for (int i = 0; i < 13; i++)
+                stream.WriteByte(0);
+
+            // number of subtitles again
+            stream.WriteByte((byte)(subtitle.Paragraphs.Count % 256));
+            stream.WriteByte((byte)(subtitle.Paragraphs.Count / 256));
+
+
+            // number of subtitles again again
+            stream.WriteByte((byte)(subtitle.Paragraphs.Count % 256));
+            stream.WriteByte((byte)(subtitle.Paragraphs.Count / 256));
+
+            // ?
+            for (int i = 0; i < 6; i++)
+                stream.WriteByte(0);
+
+            // original programme title (28 chars)
+            if (!string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.CurrentCavena890riginalTitle) && Configuration.Settings.SubtitleSettings.CurrentCavena890riginalTitle.Length <= 28)
+            {
+                buffer = Encoding.ASCII.GetBytes(Configuration.Settings.SubtitleSettings.CurrentCavena890riginalTitle);
+                stream.Write(buffer, 0, buffer.Length);
+                for (int i = 0; i < 28 - buffer.Length; i++)
+                    stream.WriteByte(0);
+            }
+            else
+            {
+                for (int i = 0; i < 28; i++)
+                    stream.WriteByte(0);
+            }
+
+            // write font (use same font id from line 1)
+            buffer = GetFontBytesFromLanguageId(_languageIdLine1);
+            stream.Write(buffer, 0, buffer.Length);
+
+            // ?
+            stream.WriteByte(0x3d);
+            stream.WriteByte(0x8d);
+
+            // start of message time
+            string startOfMessage = "10:00:00:00";
+            if (Configuration.Settings.SubtitleSettings.Cavena890StartOfMessage != null &&
+                Configuration.Settings.SubtitleSettings.Cavena890StartOfMessage.Length == startOfMessage.Length)
+                startOfMessage = Configuration.Settings.SubtitleSettings.Cavena890StartOfMessage;
+            buffer = Encoding.ASCII.GetBytes(startOfMessage);
+            stream.Write(buffer, 0, buffer.Length);
+
+            buffer = new byte[]
+            {
+                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x54, 0x44
+            };
+            stream.Write(buffer, 0, buffer.Length);
+
+            for (int i = 0; i < 92; i++)
+                stream.WriteByte(0);
+
+            // paragraphs
+            int number = 16;
+            foreach (Paragraph p in subtitle.Paragraphs)
+            {
+                // number
+                stream.WriteByte((byte)(number / 256));
+                stream.WriteByte((byte)(number % 256));
+
+                WriteTime(stream, p.StartTime);
+                WriteTime(stream, p.EndTime);
+
+                if (p.Text.StartsWith("{\\an1}"))
+                    stream.WriteByte(0x50); // left
+                else if (p.Text.StartsWith("{\\an3}"))
+                    stream.WriteByte(0x52); // left
+                else
+                    stream.WriteByte(0x54); // center
+
+                buffer = new byte[] { 0, 0, 0, 0, 0, 0, 0 }; // 0x16 }; -- the last two bytes might be something with vertical alignment...
+                stream.Write(buffer, 0, buffer.Length);
+
+                bool hasBox = Utilities.RemoveSsaTags(p.Text).StartsWith("<box>");
+                var text = p.Text.Replace("<box>", string.Empty).Replace("</box>", string.Empty);
+                text = HtmlUtil.RemoveOpenCloseTags(Utilities.RemoveSsaTags(text), HtmlUtil.TagBold, HtmlUtil.TagFont, HtmlUtil.TagBold);
+                WriteText(stream, text, p == subtitle.Paragraphs[subtitle.Paragraphs.Count - 1], _languageIdLine1, hasBox);
+
+                number += 16;
+            }
+            return true;
         }
 
         private static byte[] GetFontBytesFromLanguageId(int languageId)
@@ -554,50 +561,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             buffer[index] = 0x5C;
                         else if (current == 'Å')
                             buffer[index] = 0x5D;
-                        else if (current == 'Ä')
-                            AddTwo(buffer, ref index, 0x86, 0x41);
-                        else if (current == 'ä')
-                            AddTwo(buffer, ref index, 0x86, 0x61);
-                        else if (current == 'Ö')
-                            AddTwo(buffer, ref index, 0x86, 0x4F);
-                        else if (current == 'ö')
-                            AddTwo(buffer, ref index, 0x86, 0x6F);
-                        else if (current == 'Ë')
-                            AddTwo(buffer, ref index, 0x86, 0x45);
-                        else if (current == 'ë')
-                            AddTwo(buffer, ref index, 0x86, 0x65);
-                        else if (current == 'Ï')
-                            AddTwo(buffer, ref index, 0x86, 0x49);
-                        else if (current == 'ï')
-                            AddTwo(buffer, ref index, 0x86, 0x69);
-                        else if (current == 'Ü')
-                            AddTwo(buffer, ref index, 0x86, 0x55);
-                        else if (current == 'ü')
-                            AddTwo(buffer, ref index, 0x86, 0x75);
 
-                        // different language setting?
-                        //else if (current == 'å')
-                        //{
-                        //    buffer[index] = 0x8C;
-                        //    index++;
-                        //    buffer[index] = 0x61;
-                        //}
-                        //else if (current == 'Å')
-                        //{
-                        //    buffer[index] = 0x8C;
-                        //    index++;
-                        //    buffer[index] = 0x41;
-                        //}
-
-                        // ăĂ îÎ şŞ ţŢ âÂ (romanian)
+                        // ăĂ şŞ ţŢ (romanian)
                         else if (current == 'ă')
                             AddTwo(buffer, ref index, 0x89, 0x61);
                         else if (current == 'Ă')
                             AddTwo(buffer, ref index, 0x89, 0x41);
-                        else if (current == 'î')
-                            AddTwo(buffer, ref index, 0x83, 0x69);
-                        else if (current == 'Î')
-                            AddTwo(buffer, ref index, 0x83, 0x49);
                         else if (current == 'ş')
                             AddTwo(buffer, ref index, 0x87, 0x73);
                         else if (current == 'Ş')
@@ -606,18 +575,254 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             AddTwo(buffer, ref index, 0x87, 0x74);
                         else if (current == 'Ţ')
                             AddTwo(buffer, ref index, 0x87, 0x54);
-                        else if (current == 'â')
-                            AddTwo(buffer, ref index, 0x83, 0x61);
-                        else if (current == 'Â')
-                            AddTwo(buffer, ref index, 0x83, 0x41);
-                        else if (current == 'è')
-                            AddTwo(buffer, ref index, 0x81, 0x65);
-                        else if (current == 'é')
-                            AddTwo(buffer, ref index, 0x82, 0x65);
-                        else if (current == 'É')
-                            AddTwo(buffer, ref index, 0x82, 0x45);
+
+                        // Next mapping of diacritics is reverse engineered,
+                        // and currently only maps characters from latin alphabets according to https://en.wikipedia.org/wiki/Latin_alphabets
+
+                        // capitals with accent grave
+                        else if (current == 'À')
+                            AddTwo(buffer, ref index, 0x81, 0x41);
                         else if (current == 'È')
                             AddTwo(buffer, ref index, 0x81, 0x45);
+                        else if (current == 'Ì')
+                            AddTwo(buffer, ref index, 0x81, 0x49);
+                        else if (current == 'Ò')
+                            AddTwo(buffer, ref index, 0x81, 0x4F);
+                        else if (current == 'Ù')
+                            AddTwo(buffer, ref index, 0x81, 0x55);
+                        else if (current == 'Ẁ')
+                            AddTwo(buffer, ref index, 0x81, 0x57);
+
+                        // lowercase with accent grave
+                        else if (current == 'à')
+                            AddTwo(buffer, ref index, 0x81, 0x61);
+                        else if (current == 'è')
+                            AddTwo(buffer, ref index, 0x81, 0x65);
+                        else if (current == 'ì')
+                            AddTwo(buffer, ref index, 0x81, 0x69);
+                        else if (current == 'ò')
+                            AddTwo(buffer, ref index, 0x81, 0x6F);
+                        else if (current == 'ù')
+                            AddTwo(buffer, ref index, 0x81, 0x75);
+                        else if (current == 'ẁ')
+                            AddTwo(buffer, ref index, 0x81, 0x75);
+
+                        // capitals with accent aigu
+                        else if (current == 'Á')
+                            AddTwo(buffer, ref index, 0x82, 0x41);
+                        else if (current == 'Ć')
+                            AddTwo(buffer, ref index, 0x82, 0x43);
+                        else if (current == 'É')
+                            AddTwo(buffer, ref index, 0x82, 0x45);
+                        else if (current == 'Í')
+                            AddTwo(buffer, ref index, 0x82, 0x49);
+                        else if (current == 'Ĺ')
+                            AddTwo(buffer, ref index, 0x82, 0x4C);
+                        else if (current == 'Ń')
+                            AddTwo(buffer, ref index, 0x82, 0x4E);
+                        else if (current == 'Ó')
+                            AddTwo(buffer, ref index, 0x82, 0x4F);
+                        else if (current == 'Ŕ')
+                            AddTwo(buffer, ref index, 0x82, 0x52);
+                        else if (current == 'Ś')
+                            AddTwo(buffer, ref index, 0x82, 0x53);
+                        else if (current == 'Ú')
+                            AddTwo(buffer, ref index, 0x82, 0x55);
+                        else if (current == 'Ẃ')
+                            AddTwo(buffer, ref index, 0x82, 0x57);
+                        else if (current == 'Ý')
+                            AddTwo(buffer, ref index, 0x82, 0x59);
+                        else if (current == 'Ź')
+                            AddTwo(buffer, ref index, 0x82, 0x5A);
+
+                        // lowercase with accent aigu
+                        else if (current == 'á')
+                            AddTwo(buffer, ref index, 0x82, 0x61);
+                        else if (current == 'ć')
+                            AddTwo(buffer, ref index, 0x82, 0x63);
+                        else if (current == 'é')
+                            AddTwo(buffer, ref index, 0x82, 0x65);
+                        else if (current == 'í')
+                            AddTwo(buffer, ref index, 0x82, 0x69);
+                        else if (current == 'ĺ')
+                            AddTwo(buffer, ref index, 0x82, 0x6C);
+                        else if (current == 'ń')
+                            AddTwo(buffer, ref index, 0x82, 0x6E);
+                        else if (current == 'ó')
+                            AddTwo(buffer, ref index, 0x82, 0x6F);
+                        else if (current == 'ŕ')
+                            AddTwo(buffer, ref index, 0x82, 0x72);
+                        else if (current == 'ś')
+                            AddTwo(buffer, ref index, 0x82, 0x73);
+                        else if (current == 'ú')
+                            AddTwo(buffer, ref index, 0x82, 0x75);
+                        else if (current == 'ẃ')
+                            AddTwo(buffer, ref index, 0x82, 0x77);
+                        else if (current == 'ý')
+                            AddTwo(buffer, ref index, 0x82, 0x79);
+                        else if (current == 'ź')
+                            AddTwo(buffer, ref index, 0x82, 0x7A);
+
+                        // capitals with accent circonflexe
+                        else if (current == 'Â')
+                            AddTwo(buffer, ref index, 0x83, 0x41);
+                        else if (current == 'Ĉ')
+                            AddTwo(buffer, ref index, 0x83, 0x43);
+                        else if (current == 'Ê')
+                            AddTwo(buffer, ref index, 0x83, 0x45);
+                        else if (current == 'Ĝ')
+                            AddTwo(buffer, ref index, 0x83, 0x47);
+                        else if (current == 'Ĥ')
+                            AddTwo(buffer, ref index, 0x83, 0x48);
+                        else if (current == 'Î')
+                            AddTwo(buffer, ref index, 0x83, 0x49);
+                        else if (current == 'Ĵ')
+                            AddTwo(buffer, ref index, 0x83, 0x4A);
+                        else if (current == 'Ô')
+                            AddTwo(buffer, ref index, 0x83, 0x4F);
+                        else if (current == 'Ŝ')
+                            AddTwo(buffer, ref index, 0x83, 0x53);
+                        else if (current == 'Û')
+                            AddTwo(buffer, ref index, 0x83, 0x55);
+                        else if (current == 'Ŵ')
+                            AddTwo(buffer, ref index, 0x83, 0x57);
+                        else if (current == 'Ŷ')
+                            AddTwo(buffer, ref index, 0x83, 0x59);
+
+                        // lowercase with accent circonflexe
+                        else if (current == 'â')
+                            AddTwo(buffer, ref index, 0x83, 0x61);
+                        else if (current == 'ĉ')
+                            AddTwo(buffer, ref index, 0x83, 0x63);
+                        else if (current == 'ê')
+                            AddTwo(buffer, ref index, 0x83, 0x65);
+                        else if (current == 'ĝ')
+                            AddTwo(buffer, ref index, 0x83, 0x67);
+                        else if (current == 'ĥ')
+                            AddTwo(buffer, ref index, 0x83, 0x68);
+                        else if (current == 'î')
+                            AddTwo(buffer, ref index, 0x83, 0x69);
+                        else if (current == 'ĵ')
+                            AddTwo(buffer, ref index, 0x83, 0x6A);
+                        else if (current == 'ô')
+                            AddTwo(buffer, ref index, 0x83, 0x6F);
+                        else if (current == 'ŝ')
+                            AddTwo(buffer, ref index, 0x83, 0x73);
+                        else if (current == 'û')
+                            AddTwo(buffer, ref index, 0x83, 0x75);
+                        else if (current == 'ŵ')
+                            AddTwo(buffer, ref index, 0x83, 0x77);
+                        else if (current == 'ŷ')
+                            AddTwo(buffer, ref index, 0x83, 0x79);
+
+                        // capitals with caron
+                        else if (current == 'Ǎ')
+                            AddTwo(buffer, ref index, 0x84, 0x41);
+                        else if (current == 'Č')
+                            AddTwo(buffer, ref index, 0x84, 0x43);
+                        else if (current == 'Ď')
+                            AddTwo(buffer, ref index, 0x84, 0x44);
+                        else if (current == 'Ě')
+                            AddTwo(buffer, ref index, 0x84, 0x45);
+                        else if (current == 'Ǧ')
+                            AddTwo(buffer, ref index, 0x84, 0x47);
+                        else if (current == 'Ǐ')
+                            AddTwo(buffer, ref index, 0x84, 0x49);
+                        else if (current == 'Ľ')
+                            AddTwo(buffer, ref index, 0x84, 0x4C);
+                        else if (current == 'Ň')
+                            AddTwo(buffer, ref index, 0x84, 0x4E);
+                        else if (current == 'Ř')
+                            AddTwo(buffer, ref index, 0x84, 0x52);
+                        else if (current == 'Š')
+                            AddTwo(buffer, ref index, 0x84, 0x53);
+                        else if (current == 'Ť')
+                            AddTwo(buffer, ref index, 0x84, 0x54);
+                        else if (current == 'Ž')
+                            AddTwo(buffer, ref index, 0x84, 0x5A);
+
+                        // lowercase with caron
+                        else if (current == 'ǎ')
+                            AddTwo(buffer, ref index, 0x84, 0x61);
+                        else if (current == 'č')
+                            AddTwo(buffer, ref index, 0x84, 0x63);
+                        else if (current == 'ď')
+                            AddTwo(buffer, ref index, 0x84, 0x64);
+                        else if (current == 'ě')
+                            AddTwo(buffer, ref index, 0x84, 0x65);
+                        else if (current == 'ǧ')
+                            AddTwo(buffer, ref index, 0x84, 0x67);
+                        else if (current == 'ǐ')
+                            AddTwo(buffer, ref index, 0x84, 0x69);
+                        else if (current == 'ľ')
+                            AddTwo(buffer, ref index, 0x84, 0x6C);
+                        else if (current == 'ň')
+                            AddTwo(buffer, ref index, 0x84, 0x6E);
+                        else if (current == 'ř')
+                            AddTwo(buffer, ref index, 0x84, 0x72);
+                        else if (current == 'š')
+                            AddTwo(buffer, ref index, 0x84, 0x73);
+                        else if (current == 'ť')
+                            AddTwo(buffer, ref index, 0x84, 0x74);
+                        else if (current == 'ž')
+                            AddTwo(buffer, ref index, 0x84, 0x7A);
+
+                        // capitals with tilde
+                        else if (current == 'Ã')
+                            AddTwo(buffer, ref index, 0x85, 0x41);
+                        else if (current == 'Ĩ')
+                            AddTwo(buffer, ref index, 0x85, 0x49);
+                        else if (current == 'Ñ')
+                            AddTwo(buffer, ref index, 0x85, 0x4E);
+                        else if (current == 'Õ')
+                            AddTwo(buffer, ref index, 0x85, 0x4F);
+                        else if (current == 'Ũ')
+                            AddTwo(buffer, ref index, 0x85, 0x55);
+
+                        // lowercase with tilde
+                        else if (current == 'ã')
+                            AddTwo(buffer, ref index, 0x85, 0x61);
+                        else if (current == 'ĩ')
+                            AddTwo(buffer, ref index, 0x85, 0x69);
+                        else if (current == 'ñ')
+                            AddTwo(buffer, ref index, 0x85, 0x6E);
+                        else if (current == 'õ')
+                            AddTwo(buffer, ref index, 0x85, 0x6F);
+                        else if (current == 'ũ')
+                            AddTwo(buffer, ref index, 0x85, 0x75);
+
+                        // capitals with trema
+                        else if (current == 'Ä')
+                            AddTwo(buffer, ref index, 0x86, 0x41);
+                        else if (current == 'Ë')
+                            AddTwo(buffer, ref index, 0x86, 0x45);
+                        else if (current == 'Ï')
+                            AddTwo(buffer, ref index, 0x86, 0x49);
+                        else if (current == 'Ö')
+                            AddTwo(buffer, ref index, 0x86, 0x4F);
+                        else if (current == 'Ü')
+                            AddTwo(buffer, ref index, 0x86, 0x55);
+                        else if (current == 'Ẅ')
+                            AddTwo(buffer, ref index, 0x86, 0x57);
+                        else if (current == 'Ÿ')
+                            AddTwo(buffer, ref index, 0x86, 0x59);
+
+                        // lowercase with trema
+                        else if (current == 'ä')
+                            AddTwo(buffer, ref index, 0x86, 0x61);
+                        else if (current == 'ë')
+                            AddTwo(buffer, ref index, 0x86, 0x65);
+                        else if (current == 'ï')
+                            AddTwo(buffer, ref index, 0x86, 0x69);
+                        else if (current == 'ö')
+                            AddTwo(buffer, ref index, 0x86, 0x6F);
+                        else if (current == 'ü')
+                            AddTwo(buffer, ref index, 0x86, 0x75);
+                        else if (current == 'ẅ')
+                            AddTwo(buffer, ref index, 0x86, 0x77);
+                        else if (current == 'ÿ')
+                            AddTwo(buffer, ref index, 0x86, 0x79);
+
                         else if (i + 3 < text.Length && text.Substring(i, 3) == "<i>")
                         {
                             buffer[index] = 0x88;
@@ -647,7 +852,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             buffer[index] = b2;
         }
 
-        private static void WriteTime(FileStream fs, TimeCode timeCode)
+        private static void WriteTime(Stream fs, TimeCode timeCode)
         {
             double totalMilliseconds = timeCode.TotalMilliseconds;
             int frames = (int)Math.Round(totalMilliseconds / (TimeCode.BaseUnit / Configuration.Settings.General.CurrentFrameRate));
@@ -875,40 +1080,150 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 text = text.Replace(encoding.GetString(new byte[] { 0x5C }), "Ø");
                 text = text.Replace(encoding.GetString(new byte[] { 0x5D }), "Å");
 
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x41 }), "Ä");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x61 }), "ä");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x4F }), "Ö");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x6F }), "ö");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x45 }), "Ë");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x65 }), "ë");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x49 }), "Ï");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x69 }), "ï");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x55 }), "Ü");
-                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x75 }), "ü");
+                // capitals with accent grave
+                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x41 }), "À");
+                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x45 }), "È");
+                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x49 }), "Ì");
+                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x4f }), "Ò");
+                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x55 }), "Ù");
 
+                // lowercase with accent grave
+                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x61 }), "à");
+                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x65 }), "è");
+                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x69 }), "ì");
+                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x6F }), "ò");
+                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x75 }), "ù");
+
+                // capitals with accent aigu
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x41 }), "Á");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x43 }), "Ć");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x45 }), "É");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x49 }), "Í");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x4C }), "Ĺ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x4E }), "Ń");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x4F }), "Ó");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x52 }), "Ŕ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x53 }), "Ś");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x55 }), "Ú");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x57 }), "Ẃ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x59 }), "Ý");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x5A }), "Ź");
+
+                // lowercase with accent aigu
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x61 }), "á");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x63 }), "ć");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x65 }), "é");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x69 }), "í");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x6C }), "ĺ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x6E }), "ń");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x6F }), "ó");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x72 }), "ŕ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x73 }), "ś");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x75 }), "ú");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x77 }), "ẃ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x79 }), "ý");
+                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x7A }), "ź");
+
+                // capitals with accent circonflexe
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x41 }), "Â");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x43 }), "Ĉ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x45 }), "Ê");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x47 }), "Ĝ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x48 }), "Ĥ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x49 }), "Î");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x4A }), "Ĵ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x4F }), "Ô");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x53 }), "Ŝ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x55 }), "Û");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x57 }), "Ŵ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x59 }), "Ŷ");
+
+                // lowercase with accent circonflexe
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x61 }), "â");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x63 }), "ĉ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x65 }), "ê");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x67 }), "ĝ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x68 }), "ĥ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x69 }), "î");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x6A }), "ĵ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x6F }), "ô");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x73 }), "ŝ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x75 }), "û");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x77 }), "ŵ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x79 }), "ŷ");
+
+                // capitals with caron
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x41 }), "Ǎ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x43 }), "Č");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x44 }), "Ď");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x45 }), "Ě");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x47 }), "Ǧ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x49 }), "Ǐ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x4C }), "Ľ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x4E }), "Ň");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x52 }), "Ř");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x53 }), "Š");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x54 }), "Ť");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x5A }), "Ž");
+
+                // lowercase with caron
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x61 }), "ǎ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x63 }), "č");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x64 }), "ď");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x65 }), "ě");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x67 }), "ǧ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x69 }), "ǐ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x6C }), "ľ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x6E }), "ň");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x72 }), "ř");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x73 }), "š");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x74 }), "ť");
+                text = text.Replace(encoding.GetString(new byte[] { 0x84, 0x7A }), "ž");
+
+                // capitals with tilde
+                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x41 }), "Ã");
+                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x49 }), "Ĩ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x4E }), "Ñ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x4F }), "Õ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x55 }), "Ũ");
+
+                // lowercase with tilde
+                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x61 }), "ã");
+                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x69 }), "ĩ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x6E }), "ñ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x6F }), "õ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x85, 0x75 }), "ũ");
+
+                // capitals with trema
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x41 }), "Ä");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x45 }), "Ë");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x49 }), "Ï");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x4F }), "Ö");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x55 }), "Ü");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x59 }), "Ÿ");
+
+                // lowercase with trema
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x61 }), "ä");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x65 }), "ë");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x69 }), "ï");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x6F }), "ö");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x75 }), "ü");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x79 }), "ÿ");
+
+                // with ring
                 text = text.Replace(encoding.GetString(new byte[] { 0x8C, 0x61 }), "å");
                 text = text.Replace(encoding.GetString(new byte[] { 0x8C, 0x41 }), "Å");
-
-                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x65 }), "è");
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x65 }), "é");
-
-                text = text.Replace(encoding.GetString(new byte[] { 0x82, 0x45 }), "É");
-                text = text.Replace(encoding.GetString(new byte[] { 0x81, 0x65 }), "È");
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x88 }), "<i>");
                 text = text.Replace(encoding.GetString(new byte[] { 0x98 }), "</i>");
 
-                //ăĂ îÎ şŞ ţŢ âÂ (romanian)
+                // ăĂ şŞ ţŢ (romanian)
                 text = text.Replace(encoding.GetString(new byte[] { 0x89, 0x61 }), "ă");
                 text = text.Replace(encoding.GetString(new byte[] { 0x89, 0x41 }), "Ă");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x69 }), "î");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x49 }), "Î");
                 text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x73 }), "ş");
                 text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x53 }), "Ş");
                 text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x74 }), "ţ");
                 text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x54 }), "Ţ");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x61 }), "â");
-                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x41 }), "Â");
 
                 if (text.Contains("<i></i>"))
                     text = text.Replace("<i></i>", "<i>");

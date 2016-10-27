@@ -183,7 +183,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _action = SpellCheckAction.Abort;
                 DialogResult = DialogResult.Cancel;
             }
-            else if (e.KeyCode == Keys.F1)
+            else if (e.KeyCode == UiUtil.HelpKeys)
             {
                 Utilities.ShowHelp("#spellcheck");
                 e.SuppressKeyPress = true;

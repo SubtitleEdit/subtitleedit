@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _language1;
         private readonly Color _backDifferenceColor = Color.FromArgb(255, 90, 90);
         private readonly Color _foregroundDifferenceColor = Color.FromArgb(225, 0, 0);
+        private bool _loadingConfig = true;
 
         public Compare()
         {
@@ -41,13 +42,14 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.InitializeSubtitleFont(subtitleListView1);
             UiUtil.InitializeSubtitleFont(subtitleListView2);
             UiUtil.FixLargeFonts(this, buttonOK);
+            subtitleListView1.UseSyntaxColoring = false;
+            subtitleListView2.UseSyntaxColoring = false;
+            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
+            LoadConfigurations();
         }
 
         public void Initialize(Subtitle subtitle1, string subtitleFileName1, string title)
         {
-            subtitleListView1.UseSyntaxColoring = false;
-            subtitleListView2.UseSyntaxColoring = false;
-
             Compare_Resize(null, null);
             labelStatus.Text = string.Empty;
             _subtitle1 = subtitle1;
@@ -64,10 +66,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
+                    // ignored
                 }
             }
-
-            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             subtitleListView1.SelectIndexAndEnsureVisible(0);
             _language1 = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
         }
@@ -85,9 +86,8 @@ namespace Nikse.SubtitleEdit.Forms
             _language1 = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
             CompareSubtitles();
 
-            if (!string.IsNullOrEmpty(subtitleFileName1))
+            if (!string.IsNullOrEmpty(subtitleFileName1) && File.Exists(subtitleFileName1))
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(subtitleFileName1);
-            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             subtitleListView1.SelectIndexAndEnsureVisible(0);
             subtitleListView2.SelectIndexAndEnsureVisible(0);
         }
@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
                 labelSubtitle1.Text = openFileDialog1.FileName;
                 _language1 = LanguageAutoDetect.AutoDetectGoogleLanguage(_subtitle1);
-                if (_subtitle1.Paragraphs.Count > 0)
+                if (_subtitle1.Paragraphs.Count > 0 && _subtitle2?.Paragraphs.Count > 0)
                     CompareSubtitles();
             }
         }
@@ -211,13 +211,17 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
                 labelSubtitle2.Text = openFileDialog1.FileName;
-                if (_subtitle2.Paragraphs.Count > 0)
+                if (_subtitle2.Paragraphs.Count > 0 && _subtitle1?.Paragraphs.Count > 0)
                     CompareSubtitles();
             }
         }
 
         private void CompareSubtitles()
         {
+            if (_loadingConfig || _subtitle2 == null || _subtitle2.Paragraphs.Count == 0)
+            {
+                return;
+            }
             timer1.Stop();
             var sub1 = new Subtitle(_subtitle1);
             var sub2 = new Subtitle(_subtitle2);
@@ -228,37 +232,26 @@ namespace Nikse.SubtitleEdit.Forms
             int max = Math.Max(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
             while (index < max)
             {
-                if (p1 != null && p2 != null)
+                if (p1 != null && p2 != null && GetColumnsEqualExceptNumberAndDuration(p1, p2) == 0)
                 {
-                    if (p1.ToString() == p2.ToString())
+                    for (int i = index + 1; i < max; i++)
                     {
-                    }
-                    else
-                    {
-                        if (GetColumnsEqualExceptNumber(p1, p2) == 0)
+                        // Try to find atleast two matching properties
+                        if (GetColumnsEqualExceptNumber(sub1.GetParagraphOrDefault(i), p2) > 1)
                         {
-                            int oldIndex = index;
-                            for (int i = 1; oldIndex + i < max; i++)
+                            for (int j = index; j < i; j++)
                             {
-                                if (GetColumnsEqualExceptNumber(sub1.GetParagraphOrDefault(index + i), p2) > 1)
-                                {
-                                    for (int j = 0; j < i; j++)
-                                    {
-                                        sub2.Paragraphs.Insert(index, new Paragraph());
-                                        index++;
-                                    }
-                                    break;
-                                }
-                                if (GetColumnsEqualExceptNumber(p1, sub2.GetParagraphOrDefault(index + i)) > 1)
-                                {
-                                    for (int j = 0; j < i; j++)
-                                    {
-                                        sub1.Paragraphs.Insert(index, new Paragraph());
-                                        index++;
-                                    }
-                                    break;
-                                }
+                                sub2.Paragraphs.Insert(index++, new Paragraph());
                             }
+                            break;
+                        }
+                        if (GetColumnsEqualExceptNumber(p1, sub2.GetParagraphOrDefault(i)) > 1)
+                        {
+                            for (int j = index; j < i; j++)
+                            {
+                                sub1.Paragraphs.Insert(index++, new Paragraph());
+                            }
+                            break;
                         }
                     }
                 }
@@ -266,6 +259,13 @@ namespace Nikse.SubtitleEdit.Forms
                 p1 = sub1.GetParagraphOrDefault(index);
                 p2 = sub2.GetParagraphOrDefault(index);
             }
+
+            var minSub = sub1.Paragraphs.Count < sub2.Paragraphs.Count ? sub1 : sub2;
+            for (var idx = minSub.Paragraphs.Count; idx < max; idx++)
+            {
+                minSub.Paragraphs.Insert(idx, new Paragraph());
+            }
+
             subtitleListView1.Fill(sub1);
             subtitleListView2.Fill(sub2);
 
@@ -276,38 +276,35 @@ namespace Nikse.SubtitleEdit.Forms
             p2 = sub2.GetParagraphOrDefault(index);
             int totalWords = 0;
             int wordsChanged = 0;
-            if (checkBoxOnlyListDifferencesInText.Checked)
+            string emptyParagraphAsString = new Paragraph().ToString();
+            max = Math.Max(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
+            int min = Math.Min(sub1.Paragraphs.Count, sub2.Paragraphs.Count);
+            var onlyTextDiff = checkBoxOnlyListDifferencesInText.Checked;
+
+            if (onlyTextDiff)
             {
-                while (index < sub1.Paragraphs.Count || index < sub2.Paragraphs.Count)
+                while (index < min)
                 {
-                    if (p1 != null && p2 != null)
+                    bool addIndexToDifferences = false;
+                    Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter());
+                    if (p1.ToString() == emptyParagraphAsString)
                     {
-                        Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter());
-                        if (FixWhitespace(p1.ToString()) == FixWhitespace(p2.ToString()) && p1.Number == p2.Number)
-                        { // no differences
-                        }
-                        else if (p1.ToString() == new Paragraph().ToString())
-                        {
-                            _differences.Add(index);
-                            subtitleListView1.ColorOut(index, Color.Salmon);
-                        }
-                        else if (p2.ToString() == new Paragraph().ToString())
-                        {
-                            _differences.Add(index);
-                            subtitleListView2.ColorOut(index, Color.Salmon);
-                        }
-                        else if (FixWhitespace(p1.Text) != FixWhitespace(p2.Text))
-                        {
-                            _differences.Add(index);
-                            subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexText);
-                        }
+                        addIndexToDifferences = true;
+                        subtitleListView1.ColorOut(index, Color.Salmon);
                     }
-                    else
+                    else if (p2.ToString() == emptyParagraphAsString)
                     {
-                        if (p1 != null && p1.Text != null)
-                            totalWords += Utilities.SplitForChangedCalc(p1.Text, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter()).Length;
-                        else if (p2 != null && p2.Text != null)
-                            totalWords += Utilities.SplitForChangedCalc(p2.Text, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter()).Length;
+                        addIndexToDifferences = true;
+                        subtitleListView2.ColorOut(index, Color.Salmon);
+                    }
+                    else if (FixWhitespace(p1.Text) != FixWhitespace(p2.Text))
+                    {
+                        addIndexToDifferences = true;
+                        subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexText);
+                        subtitleListView2.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexText);
+                    }
+                    if (addIndexToDifferences)
+                    {
                         _differences.Add(index);
                     }
                     index++;
@@ -317,67 +314,71 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                while (index < sub1.Paragraphs.Count || index < sub2.Paragraphs.Count)
+                const double tolerance = 0.1;
+                while (index < min)
                 {
-                    if (p1 != null && p2 != null)
+                    Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter());
+                    bool addIndexToDifferences = false;
+                    if (p1.ToString() == emptyParagraphAsString)
                     {
-                        Utilities.GetTotalAndChangedWords(p1.Text, p2.Text, ref totalWords, ref wordsChanged, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter());
-                        if (FixWhitespace(p1.ToString()) != FixWhitespace(p2.ToString()))
-                            _differences.Add(index);
-
-                        if (FixWhitespace(p1.ToString()) == FixWhitespace(p2.ToString()) && p1.Number == p2.Number)
-                        { // no differences
-                        }
-                        else if (p1.ToString() == new Paragraph().ToString())
-                        {
-                            subtitleListView1.ColorOut(index, Color.Salmon);
-                        }
-                        else if (p2.ToString() == new Paragraph().ToString())
-                        {
-                            subtitleListView2.ColorOut(index, Color.Salmon);
-                        }
-                        else
-                        {
-                            int columnsAlike = GetColumnsEqualExceptNumber(p1, p2);
-                            if (columnsAlike > 0)
-                            {
-                                const double tolerance = 0.1;
-
-                                if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) > tolerance)
-                                {
-                                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexStart);
-                                    subtitleListView2.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexStart);
-                                }
-                                if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) > tolerance)
-                                {
-                                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexEnd);
-                                    subtitleListView2.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexEnd);
-                                }
-                                if (Math.Abs(p1.Duration.TotalMilliseconds - p2.Duration.TotalMilliseconds) > tolerance)
-                                {
-                                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexDuration);
-                                    subtitleListView2.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexDuration);
-                                }
-                                if (FixWhitespace(p1.Text.Trim()) != FixWhitespace(p2.Text.Trim()))
-                                {
-                                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexText);
-                                    subtitleListView2.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexText);
-                                }
-
-                                if (p1.Number != p2.Number)
-                                {
-                                    subtitleListView1.SetBackgroundColor(index, Color.FromArgb(255, 200, 100), SubtitleListView.ColumnIndexNumber);
-                                    subtitleListView2.SetBackgroundColor(index, Color.FromArgb(255, 200, 100), SubtitleListView.ColumnIndexNumber);
-                                }
-                            }
-                        }
+                        addIndexToDifferences = true;
+                        subtitleListView1.ColorOut(index, Color.Salmon);
+                    }
+                    else if (p2.ToString() == emptyParagraphAsString)
+                    {
+                        addIndexToDifferences = true;
+                        subtitleListView2.ColorOut(index, Color.Salmon);
                     }
                     else
                     {
-                        if (p1 != null && p1.Text != null)
-                            totalWords += Utilities.SplitForChangedCalc(p1.Text, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter()).Length;
-                        else if (p2 != null && p2.Text != null)
-                            totalWords += Utilities.SplitForChangedCalc(p2.Text, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter()).Length;
+                        int columnsAlike = GetColumnsEqualExceptNumber(p1, p2);
+                        // Not alike paragraphs
+                        if (columnsAlike == 0)
+                        {
+                            addIndexToDifferences = true;
+                            subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
+                            subtitleListView2.SetBackgroundColor(index, Color.LightGreen);
+                            subtitleListView1.SetBackgroundColor(index, subtitleListView1.BackColor, SubtitleListView.ColumnIndexNumber);
+                            subtitleListView2.SetBackgroundColor(index, subtitleListView2.BackColor, SubtitleListView.ColumnIndexNumber);
+                        }
+                        else if (columnsAlike < 4)
+                        {
+                            addIndexToDifferences = true;
+                            // Start time
+                            if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) > tolerance)
+                            {
+                                subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexStart);
+                                subtitleListView2.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexStart);
+                            }
+                            // End time
+                            if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) > tolerance)
+                            {
+                                subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexEnd);
+                                subtitleListView2.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexEnd);
+                            }
+                            // Duration
+                            if (Math.Abs(p1.Duration.TotalMilliseconds - p2.Duration.TotalMilliseconds) > tolerance)
+                            {
+                                subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexDuration);
+                                subtitleListView2.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexDuration);
+                            }
+                            // Text
+                            if (FixWhitespace(p1.Text.Trim()) != FixWhitespace(p2.Text.Trim()))
+                            {
+                                subtitleListView1.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexText);
+                                subtitleListView2.SetBackgroundColor(index, Color.LightGreen, SubtitleListView.ColumnIndexText);
+                            }
+                        }
+                        // Number
+                        if (p1.Number != p2.Number)
+                        {
+                            addIndexToDifferences = true;
+                            subtitleListView1.SetBackgroundColor(index, Color.FromArgb(255, 200, 100), SubtitleListView.ColumnIndexNumber);
+                            subtitleListView2.SetBackgroundColor(index, Color.FromArgb(255, 200, 100), SubtitleListView.ColumnIndexNumber);
+                        }
+                    }
+                    if (addIndexToDifferences)
+                    {
                         _differences.Add(index);
                     }
                     index++;
@@ -387,7 +388,23 @@ namespace Nikse.SubtitleEdit.Forms
             }
             UpdatePreviousAndNextButtons();
 
-            if (max == _differences.Count)
+            if (max > min) // color extra lines as has-difference 
+            {
+                var listView = subtitleListView1.Items.Count > subtitleListView2.Items.Count ? subtitleListView1 : subtitleListView2;
+                for (int i = min; i < max; i++)
+                {
+                    if (!onlyTextDiff)
+                    {
+                        listView.SetBackgroundColor(i, Color.FromArgb(255, 200, 100), SubtitleListView.ColumnIndexNumber);
+                        listView.SetBackgroundColor(i, Color.LightGreen, SubtitleListView.ColumnIndexStart);
+                        listView.SetBackgroundColor(i, Color.LightGreen, SubtitleListView.ColumnIndexEnd);
+                        listView.SetBackgroundColor(i, Color.LightGreen, SubtitleListView.ColumnIndexDuration);
+                    }
+                    listView.SetBackgroundColor(i, Color.LightGreen, SubtitleListView.ColumnIndexText);
+                }
+            }
+
+            if (_differences.Count >= min)
             {
                 labelStatus.Text = Configuration.Settings.Language.CompareSubtitles.SubtitlesNotAlike;
                 labelStatus.Font = new Font(labelStatus.Font.FontFamily, labelStatus.Font.Size, FontStyle.Bold);
@@ -413,9 +430,9 @@ namespace Nikse.SubtitleEdit.Forms
             { // Remove all lines with no difference
                 subtitleListView1.BeginUpdate();
                 subtitleListView2.BeginUpdate();
-                if (max != _differences.Count)
+                if (_differences.Count < min)
                 {
-                    for (index = Math.Max(subtitleListView1.Items.Count, subtitleListView2.Items.Count); index >= 0; index--)
+                    for (index = Math.Max(subtitleListView1.Items.Count, subtitleListView2.Items.Count) - 1; index >= 0; index--)
                     {
                         if (!_differences.Contains(index))
                         {
@@ -429,7 +446,8 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.EndUpdate();
                 subtitleListView2.EndUpdate();
                 _differences = new List<int>();
-                for (index = 0; index < Math.Max(subtitleListView1.Items.Count, subtitleListView2.Items.Count); index++)
+                max = Math.Max(subtitleListView1.Items.Count, subtitleListView2.Items.Count);
+                for (index = 0; index < max; index++)
                     _differences.Add(index);
             }
             timer1.Start();
@@ -470,6 +488,26 @@ namespace Nikse.SubtitleEdit.Forms
                 columnsEqual++;
 
             if (Math.Abs(p1.Duration.TotalMilliseconds - p2.Duration.TotalMilliseconds) < tolerance)
+                columnsEqual++;
+
+            if (p1.Text.Trim() == p2.Text.Trim())
+                columnsEqual++;
+
+            return columnsEqual;
+        }
+
+        private static int GetColumnsEqualExceptNumberAndDuration(Paragraph p1, Paragraph p2)
+        {
+            if (p1 == null || p2 == null)
+                return 0;
+
+            const double tolerance = 0.1;
+
+            int columnsEqual = 0;
+            if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) < tolerance)
+                columnsEqual++;
+
+            if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) < tolerance)
                 columnsEqual++;
 
             if (p1.Text.Trim() == p2.Text.Trim())
@@ -590,7 +628,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             int maxLength = Math.Max(richTextBox1.Text.Length, richTextBox2.Text.Length);
-            for (int i = startCharactersOk; i <= maxLength; i++)
+            for (int i = startCharactersOk; i < maxLength; i++)
             {
                 if (i < richTextBox1.Text.Length)
                 {
@@ -634,7 +672,7 @@ namespace Nikse.SubtitleEdit.Forms
             // special situation - equal, but one has more chars
             if (richTextBox1.Text.Length > richTextBox2.Text.Length)
             {
-                if (richTextBox1.Text.StartsWith(richTextBox2.Text))
+                if (richTextBox1.Text.StartsWith(richTextBox2.Text, StringComparison.Ordinal))
                 {
                     richTextBox1.SelectionStart = richTextBox2.Text.Length;
                     richTextBox1.SelectionLength = richTextBox1.Text.Length - richTextBox2.Text.Length;
@@ -643,7 +681,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (richTextBox2.Text.Length > richTextBox1.Text.Length)
             {
-                if (richTextBox2.Text.StartsWith(richTextBox1.Text))
+                if (richTextBox2.Text.StartsWith(richTextBox1.Text, StringComparison.Ordinal))
                 {
                     richTextBox2.SelectionStart = richTextBox1.Text.Length;
                     richTextBox2.SelectionLength = richTextBox2.Text.Length - richTextBox1.Text.Length;
@@ -798,6 +836,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void Compare_FormClosing(object sender, FormClosingEventArgs e)
         {
             timer1.Stop();
+            SaveConfigurations();
         }
 
         private void checkBoxShowOnlyDifferences_CheckedChanged(object sender, EventArgs e)
@@ -854,10 +893,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void VerifyDragEnter(DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-                e.Effect = DragDropEffects.Copy;
-            else
-                e.Effect = DragDropEffects.None;
+            e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
         }
 
         private void subtitleListView1_DragDrop(object sender, DragEventArgs e)
@@ -883,8 +919,14 @@ namespace Nikse.SubtitleEdit.Forms
                     string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
             string filePath = files[0];
+            if (FileUtil.IsDirectory(filePath))
+            {
+                MessageBox.Show(Configuration.Settings.Language.Main.ErrorDirectoryDropNotAllowed,
+                    string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var listExt = new List<string>();
             foreach (var s in Utilities.GetOpenDialogFilter().Split(new[] { '*' }, StringSplitOptions.RemoveEmptyEntries))
             {
@@ -945,5 +987,23 @@ namespace Nikse.SubtitleEdit.Forms
             }
             Clipboard.SetText(sender.Text);
         }
+
+        private void LoadConfigurations()
+        {
+            var config = Configuration.Settings.Compare;
+            checkBoxShowOnlyDifferences.Checked = config.ShowOnlyDifferences;
+            checkBoxOnlyListDifferencesInText.Checked = config.OnlyLookForDifferenceInText;
+            checkBoxIgnoreLineBreaks.Checked = config.IgnoreLineBreaks;
+            _loadingConfig = false;
+        }
+
+        private void SaveConfigurations()
+        {
+            var config = Configuration.Settings.Compare;
+            config.ShowOnlyDifferences = checkBoxShowOnlyDifferences.Checked;
+            config.OnlyLookForDifferenceInText = checkBoxOnlyListDifferencesInText.Checked;
+            config.IgnoreLineBreaks = checkBoxIgnoreLineBreaks.Checked;
+        }
+
     }
 }

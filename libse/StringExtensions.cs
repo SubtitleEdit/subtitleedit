@@ -153,13 +153,14 @@ namespace Nikse.SubtitleEdit.Core
 
         public static bool ContainsLetter(this string s)
         {
-            if (string.IsNullOrWhiteSpace(s))
-                return false;
-
-            foreach (var c in s)
+            if (s != null)
             {
-                if (char.IsLetter(c))
-                    return true;
+                foreach (var index in StringInfo.ParseCombiningCharacters(s))
+                {
+                    var uc = CharUnicodeInfo.GetUnicodeCategory(s, index);
+                    if (uc == UnicodeCategory.LowercaseLetter || uc == UnicodeCategory.UppercaseLetter || uc == UnicodeCategory.TitlecaseLetter || uc == UnicodeCategory.ModifierLetter || uc == UnicodeCategory.OtherLetter)
+                        return true;
+                }
             }
             return false;
         }

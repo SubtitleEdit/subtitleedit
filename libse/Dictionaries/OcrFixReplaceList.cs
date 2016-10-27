@@ -182,16 +182,14 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
                 {
                     if (s.Contains(from))
                     {
+                        string with = _beginLineReplaceList[from];
                         if (s.StartsWith(from, StringComparison.Ordinal))
-                            s = s.Remove(0, from.Length).Insert(0, _beginLineReplaceList[from]);
-                        s = s.Replace(". " + from, ". " + _beginLineReplaceList[from]);
-                        s = s.Replace("! " + from, "! " + _beginLineReplaceList[from]);
-                        s = s.Replace("? " + from, "? " + _beginLineReplaceList[from]);
-                        s = s.Replace(". " + Environment.NewLine + from, ". " + Environment.NewLine + _beginLineReplaceList[from]);
-                        s = s.Replace("! " + Environment.NewLine + from, "! " + Environment.NewLine + _beginLineReplaceList[from]);
-                        s = s.Replace("? " + Environment.NewLine + from, "? " + Environment.NewLine + _beginLineReplaceList[from]);
+                            s = s.Remove(0, from.Length).Insert(0, with);
+                        s = s.Replace(". " + from, ". " + with);
+                        s = s.Replace("! " + from, "! " + with);
+                        s = s.Replace("? " + from, "? " + with);
                         if (s.StartsWith("\"" + from, StringComparison.Ordinal) && !from.StartsWith('"'))
-                            s = s.Replace("\"" + from, "\"" + _beginLineReplaceList[from]);
+                            s = s.Replace("\"" + from, "\"" + with);
                     }
                 }
                 sb.AppendLine(s);
@@ -283,10 +281,18 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
         {
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
+                // common Latin ligatures from legacy encodings;
+                // Unicode includes them only for compatibility and discourages their use
+                word = word.Replace("ﬀ", "ff");
                 word = word.Replace("ﬁ", "fi");
-                word = word.Replace('ν', 'v'); // NOTE: first 'v' is a special unicode character!!!!
+                word = word.Replace("ﬂ", "fl");
+                word = word.Replace("ﬃ", "ffi");
+                word = word.Replace("ﬄ", "ffl");
+
+                word = word.Replace('ν', 'v'); // first 'v' is U+03BD GREEK SMALL LETTER NU
                 word = word.Replace('’', '\'');
                 word = word.Replace('`', '\'');
+                word = word.Replace('´', '\'');
                 word = word.Replace('‘', '\'');
                 word = word.Replace('—', '-');
                 while(word.Contains("--"))

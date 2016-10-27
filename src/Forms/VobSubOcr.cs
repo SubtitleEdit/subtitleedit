@@ -3105,6 +3105,11 @@ namespace Nikse.SubtitleEdit.Forms
                                 break;
                             }
                         }
+                        else
+                        {
+                            ok = false;
+                            break;
+                        }
                     }
                     if (ok)
                     {
@@ -3200,7 +3205,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 return new CompareMatch(",", false, 0, null);
             }
-            if (bob.IsApostrophe())
+            if (maxDiff > 0 && bob.IsApostrophe())
             {
                 return new CompareMatch("'", false, 0, null);
             }
@@ -4214,6 +4219,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+
+        private long _ocrCount;
+        private double _ocrHeight = 20;
+
         /// <summary>
         /// Ocr via binary (two color) image compare
         /// </summary>
@@ -4230,7 +4239,7 @@ namespace Nikse.SubtitleEdit.Forms
                 minLineHeight = _nocrLastLowercaseHeight;
             if (minLineHeight < 5)
                 minLineHeight = 6;
-            List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+            var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, _numericUpDownPixelsIsSpace, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight, _ocrCount > 20 ? _ocrHeight : -1);
             int index = 0;
             bool expandSelection = false;
             bool shrinkSelection = false;
@@ -4291,6 +4300,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
+                    _ocrCount++;
+                    _ocrHeight += (item.NikseBitmap.Height - _ocrHeight) / _ocrCount;
                     CompareMatch bestGuess;
                     CompareMatch match = GetCompareMatchNew(item, out bestGuess, list, index);
                     if (match == null) // Try line OCR if no image compare match
@@ -6494,12 +6505,12 @@ namespace Nikse.SubtitleEdit.Forms
                             else
                             {
                                 unItalicText = unItalicText.Replace("</i>", string.Empty);
-                                if (line.EndsWith("</i>") && unItalicText.EndsWith('.'))
+                                if (line.EndsWith("</i>", StringComparison.Ordinal) && unItalicText.EndsWith('.'))
                                 {
                                     line = line.Remove(line.Length - 4, 4);
                                     if (line.EndsWith('-'))
                                         line = line.TrimEnd('-') + ".";
-                                    if (Utilities.AllLetters.Contains(line.Substring(line.Length - 1)))
+                                    if (char.IsLetter(line[line.Length - 1]))
                                         line += ".";
                                     line += "</i>";
                                 }
@@ -7098,7 +7109,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VobSubOcr_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.F1)
+            if (e.KeyCode == UiUtil.HelpKeys)
             {
                 Utilities.ShowHelp("#importvobsub");
                 e.SuppressKeyPress = true;
@@ -7614,6 +7625,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch
             {
+                var arr = LanguageString.Split(new char[] { '-', '_' });
+                if (arr.Length > 1 && arr[0].Length == 2)
+                {
+                    foreach (var x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+                    {
+                        if (string.Equals(x.TwoLetterISOLanguageName, arr[0], StringComparison.OrdinalIgnoreCase))
+                        {
+                            threeLetterISOLanguageName = x.ThreeLetterISOLanguageName;
+                            break;
+                        }
+                    }
+                }
             }
             LoadOcrFixEngine(threeLetterISOLanguageName, LanguageString);
         }

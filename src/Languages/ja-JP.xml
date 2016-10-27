@@ -2,7 +2,7 @@
 <Language Name="日本語">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Nardog</TranslatedBy>
     <CultureName>ja-JP</CultureName>
     <HelpFile />
@@ -948,7 +948,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <BeforeVisualSync>視覚同期前</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>視覚同期が選択された行で実行されました</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>視覚同期が実行されました</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>この VobSub 字幕をインポートしますか?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>ファイルが 10 MB より大きいです: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>そのまま続行しますか?</ContinueAnyway>
     <BeforeLoadOf>{0} の読み込み前</BeforeLoadOf>

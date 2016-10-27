@@ -762,6 +762,7 @@
             public string Frames { get; set; }
             public string Seconds { get; set; }
             public string Milliseconds { get; set; }
+            public string GetSceneChangesWithFfmpeg { get; set; }
         }
 
         public class ImportText
@@ -970,7 +971,6 @@
             public string BeforeVisualSync { get; set; }
             public string VisualSyncPerformedOnSelectedLines { get; set; }
             public string VisualSyncPerformed { get; set; }
-            public string ImportThisVobSubSubtitle { get; set; }
             public string FileXIsLargerThan10MB { get; set; }
             public string ContinueAnyway { get; set; }
             public string BeforeLoadOf { get; set; }
@@ -1410,6 +1410,7 @@
                     public string Find { get; set; }
                     public string Replace { get; set; }
                     public string FixCommonErrors { get; set; }
+                    public string RemoveTextForHi { get; set; }
                     public string VisualSync { get; set; }
                     public string SpellCheck { get; set; }
                     public string Settings { get; set; }
@@ -1847,6 +1848,8 @@
             public string DurationMinimumMilliseconds { get; set; }
             public string DurationMaximumMilliseconds { get; set; }
             public string MinimumGapMilliseconds { get; set; }
+            public string MaximumLines { get; set; }
+
             public string SubtitleFont { get; set; }
             public string SubtitleFontSize { get; set; }
             public string SubtitleBold { get; set; }
@@ -1871,9 +1874,14 @@
             public string MainListViewVideoGoToPositionMinus1SecAndPlay { get; set; }
             public string MainListViewEditTextAndPause { get; set; }
             public string AutoBackup { get; set; }
+
             public string AutoBackupEveryMinute { get; set; }
             public string AutoBackupEveryFiveMinutes { get; set; }
             public string AutoBackupEveryFifteenMinutes { get; set; }
+            public string AutoBackupDeleteAfter { get; set; }
+            public string AutoBackupDeleteAfterOneMonth { get; set; }
+            public string AutoBackupDeleteAfterThreeMonths { get; set; }
+            public string AutoBackupDeleteAfterSixMonths { get; set; }
             public string CheckForUpdates { get; set; }
             public string AllowEditOfOriginalSubtitle { get; set; }
             public string PromptDeleteLines { get; set; }
@@ -1956,6 +1964,7 @@
             public string FirstPlusX { get; set; }
             public string LastMinusX { get; set; }
             public string FixCommonerrors { get; set; }
+            public string RemoveTextForHi { get; set; }
             public string MergeLinesShorterThan { get; set; }
             public string MusicSymbol { get; set; }
             public string MusicSymbolsToReplace { get; set; }
@@ -1982,12 +1991,15 @@
             public string AdjustSetStartTimeKeepDuration { get; set; }
             public string AdjustSetEndAndOffsetTheRest { get; set; }
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
+            public string AdjustExtendCurrentSubtitle { get; set; }
+            public string RecalculateDurationOfCurrentSubtitle { get; set; }
             public string MainCreateStartDownEndUp { get; set; }
             public string MergeDialog { get; set; }
             public string GoToNext { get; set; }
             public string GoToPrevious { get; set; }
             public string GoToCurrentSubtitleStart { get; set; }
             public string GoToCurrentSubtitleEnd { get; set; }
+            public string GoToNextSubtitleAndFocusVideo { get; set; }
             public string ToggleFocus { get; set; }
             public string ToggleDialogDashes { get; set; }
             public string Alignment { get; set; }
@@ -2005,6 +2017,8 @@
             public string WaveformPlayNewSelectionEnd { get; set; }
             public string WaveformPlayFirstSelectedSubtitle { get; set; }
             public string WaveformFocusListView { get; set; }
+            public string WaveformGoToNextSceneChange { get; set; }
+            public string WaveformToggleSceneChange { get; set; }
             public string GoBack1Frame { get; set; }
             public string GoForward1Frame { get; set; }
             public string GoBack100Milliseconds { get; set; }
@@ -2013,6 +2027,8 @@
             public string GoForward500Milliseconds { get; set; }
             public string GoBack1Second { get; set; }
             public string GoForward1Second { get; set; }
+            public string GoBack5Seconds { get; set; }
+            public string GoForward5Seconds { get; set; }
             public string TogglePlayPause { get; set; }
             public string Pause { get; set; }
             public string Fullscreen { get; set; }
@@ -2027,7 +2043,7 @@
             public string SyntaxColorDurationIfTooSmall { get; set; }
             public string SyntaxColorDurationIfTooLarge { get; set; }
             public string SyntaxColorTextIfTooLong { get; set; }
-            public string SyntaxColorTextMoreThanXLines { get; set; }
+            public string SyntaxColorTextMoreThanMaxLines { get; set; }
             public string SyntaxColorOverlap { get; set; }
             public string SyntaxErrorColor { get; set; }
             public string GoToFirstSelectedLine { get; set; }
@@ -2037,6 +2053,8 @@
             public string ToggleTranslationMode { get; set; }
             public string SwitchOriginalAndTranslation { get; set; }
             public string MergeOriginalAndTranslation { get; set; }
+            public string MergeWithNext { get; set; }
+            public string MergeWithPrevious { get; set; }
             public string ShortcutIsAlreadyDefinedX { get; set; }
             public string ToggleTranslationAndOriginalInPreviews { get; set; }
             public string ListViewColumnDelete { get; set; }
@@ -2055,7 +2073,7 @@
             public string MainFileSaveAll { get; set; }
             public string Miscellaneous { get; set; }
             public string UseDoNotBreakAfterList { get; set; }
-            public string MicrosoftBingTranslator    { get; set; }
+            public string MicrosoftBingTranslator { get; set; }
             public string HowToSignUp { get; set; }
             public string ClientId { get; set; }
             public string ClientSecret { get; set; }
@@ -2073,6 +2091,7 @@
             public string Title { get; set; }
             public string Description { get; set; }
             public string RelativeToCurrentVideoPosition { get; set; }
+            public string KeepTimeCodes { get; set; }
             public string Reset { get; set; }
         }
 
@@ -2476,6 +2495,8 @@
             public string ShowWaveformAndSpectrogram { get; set; }
             public string ShowWaveformOnly { get; set; }
             public string ShowSpectrogramOnly { get; set; }
+            public string AddSceneChange { get; set; }
+            public string RemoveSceneChange { get; set; }
             public string GuessTimeCodes { get; set; }
             public string SeekSilence { get; set; }
         }

@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             p.EndTime = GetTimeCode(buffer, i + 4);
                             i += 7;
                         }
-                        if (p.EndTime.TotalMilliseconds == 0)
+                        if (Math.Abs(p.EndTime.TotalMilliseconds) < 0.001)
                         {
                             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 2000;
                         }

@@ -37,6 +37,7 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.labelLineHeightStyle = new System.Windows.Forms.Label();
             this.panelFullFrameBackground = new System.Windows.Forms.Panel();
             this.comboBoxLeftRightMargin = new System.Windows.Forms.ComboBox();
             this.labelLeftRightMargin = new System.Windows.Forms.Label();
@@ -82,8 +83,8 @@
             this.checkBoxSkipEmptyFrameAtStart = new System.Windows.Forms.CheckBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxExportImage = new System.Windows.Forms.GroupBox();
-            this.panelVlcTemp = new System.Windows.Forms.Panel();
             this.linkLabelPreview = new System.Windows.Forms.LinkLabel();
+            this.panelVlcTemp = new System.Windows.Forms.Panel();
             this.timerPreview = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.normalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -167,6 +168,7 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.labelLineHeightStyle);
             this.groupBoxImageSettings.Controls.Add(this.panelFullFrameBackground);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxLeftRightMargin);
             this.groupBoxImageSettings.Controls.Add(this.labelLeftRightMargin);
@@ -217,6 +219,15 @@
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
             // 
+            // labelLineHeightStyle
+            // 
+            this.labelLineHeightStyle.AutoSize = true;
+            this.labelLineHeightStyle.Location = new System.Drawing.Point(775, 153);
+            this.labelLineHeightStyle.Name = "labelLineHeightStyle";
+            this.labelLineHeightStyle.Size = new System.Drawing.Size(103, 13);
+            this.labelLineHeightStyle.TabIndex = 59;
+            this.labelLineHeightStyle.Text = "labelLineHeightStyle";
+            // 
             // panelFullFrameBackground
             // 
             this.panelFullFrameBackground.BackColor = System.Drawing.Color.Transparent;
@@ -232,58 +243,6 @@
             // 
             this.comboBoxLeftRightMargin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxLeftRightMargin.FormattingEnabled = true;
-            this.comboBoxLeftRightMargin.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28",
-            "29",
-            "30",
-            "31",
-            "32",
-            "33",
-            "34",
-            "35",
-            "36",
-            "37",
-            "38",
-            "39",
-            "40",
-            "41",
-            "42",
-            "43",
-            "44",
-            "45",
-            "46",
-            "47",
-            "48",
-            "49",
-            "50"});
             this.comboBoxLeftRightMargin.Location = new System.Drawing.Point(100, 159);
             this.comboBoxLeftRightMargin.Name = "comboBoxLeftRightMargin";
             this.comboBoxLeftRightMargin.Size = new System.Drawing.Size(121, 21);
@@ -892,14 +851,6 @@
             this.groupBoxExportImage.TabIndex = 1;
             this.groupBoxExportImage.TabStop = false;
             // 
-            // panelVlcTemp
-            // 
-            this.panelVlcTemp.Location = new System.Drawing.Point(642, 52);
-            this.panelVlcTemp.Name = "panelVlcTemp";
-            this.panelVlcTemp.Size = new System.Drawing.Size(200, 100);
-            this.panelVlcTemp.TabIndex = 10;
-            this.panelVlcTemp.Visible = false;
-            // 
             // linkLabelPreview
             // 
             this.linkLabelPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -912,6 +863,14 @@
             this.linkLabelPreview.Text = "Preview";
             this.linkLabelPreview.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.linkLabelPreview.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelPreview_LinkClicked);
+            // 
+            // panelVlcTemp
+            // 
+            this.panelVlcTemp.Location = new System.Drawing.Point(642, 52);
+            this.panelVlcTemp.Name = "panelVlcTemp";
+            this.panelVlcTemp.Size = new System.Drawing.Size(200, 100);
+            this.panelVlcTemp.TabIndex = 10;
+            this.panelVlcTemp.Visible = false;
             // 
             // timerPreview
             // 
@@ -1086,5 +1045,6 @@
         private System.Windows.Forms.ComboBox comboBoxLeftRightMargin;
         private System.Windows.Forms.Label labelLeftRightMargin;
         private System.Windows.Forms.Panel panelFullFrameBackground;
+        private System.Windows.Forms.Label labelLineHeightStyle;
     }
 }

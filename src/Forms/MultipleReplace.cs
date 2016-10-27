@@ -171,7 +171,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
                 buttonCancel_Click(null, null);
-            else if (e.KeyCode == Keys.F1)
+            else if (e.KeyCode == UiUtil.HelpKeys)
                 Utilities.ShowHelp("#multiple_replace");
         }
 
@@ -496,6 +496,10 @@ namespace Nikse.SubtitleEdit.Forms
             moveTopToolStripMenuItem.Visible = isVisible;
             moveBottomToolStripMenuItem.Visible = isVisible;
 
+            toolStripMenuItemExport.Visible = listViewRules.Items.Count > 0;
+            toolStripMenuItemRemoveAll.Visible = listViewRules.Items.Count > 0;
+            toolStripSeparator2.Visible = listViewRules.Items.Count > 0;
+
             deleteToolStripMenuItem.Visible = listViewRules.SelectedItems.Count >= 1;
 
             if (moreThanOneGroup && listViewRules.SelectedItems.Count >= 1)
@@ -807,7 +811,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (form.ShowDialog(this) == DialogResult.OK && form.GroupName.Length > 0)
                 {
-                    _currentGroup.Name = form.Name;
+                    _currentGroup.Name = form.GroupName;
                     UpdateViewFromModel(Configuration.Settings.MultipleSearchAndReplaceGroups, _currentGroup);
                 }
             }

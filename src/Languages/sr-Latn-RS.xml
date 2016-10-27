@@ -2,7 +2,7 @@
 <Language Name="srpski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Prevod: Misa Forger</TranslatedBy>
     <CultureName>sr-Latn-RS</CultureName>
     <HelpFile />
@@ -948,7 +948,6 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeVisualSync>Izvršeno vizualno usklađivanje</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Izvršeno je vizualno usklađivanje na odabranim linijama</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Vizuelno usklađivanje je izvršeno.</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Uvezi ovaj VobSub prevod?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Datoteka je veća od 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Ipak nastavi?</ContinueAnyway>
     <BeforeLoadOf>Pre učitavanja {0}</BeforeLoadOf>

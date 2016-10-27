@@ -46,6 +46,7 @@
     <Compile Include="BluRaySup\PaletteInfo.cs" />
     <Compile Include="BluRaySup\ToolBox.cs" />
     <Compile Include="BmpReader.cs" />
+    <Compile Include="CharUtils.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ContainerFormats\AviRiffData.cs" />
     <Compile Include="ContainerFormats\Ebml\Element.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="Forms\FixCommonErrors\FixUnneededSpaces.cs" />
     <Compile Include="Forms\FixCommonErrors\FixUppercaseIInsideWords.cs" />
     <Compile Include="Forms\FixCommonErrors\Helper.cs" />
+    <Compile Include="Interfaces\IBinaryPersistableSubtitle.cs" />
     <Compile Include="Interfaces\IFixCallbacks.cs" />
     <Compile Include="Interfaces\IFixCommonError.cs" />
     <Compile Include="Forms\FixCommonErrors\RemoveSpaceBetweenNumbers.cs" />
@@ -180,6 +182,7 @@
     <Compile Include="RealFFT.cs" />
     <Compile Include="RegistryUtil.cs" />
     <Compile Include="RichTextToPlainText.cs" />
+    <Compile Include="SceneChangeHelper.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Interfaces\IDoSpell.cs" />
     <Compile Include="SpellCheck\SpellCheckWord.cs" />
@@ -190,7 +193,16 @@
     <Compile Include="StripableText.cs" />
     <Compile Include="SubtitleEditRegex.cs" />
     <Compile Include="Subtitle.cs" />
+    <Compile Include="SubtitleFormats\AribB36.cs" />
+    <Compile Include="SubtitleFormats\AribB24Decoder.cs" />
+    <Compile Include="SubtitleFormats\Csv4.cs" />
+    <Compile Include="SubtitleFormats\Gremots.cs" />
+    <Compile Include="SubtitleFormats\JsonType8.cs" />
+    <Compile Include="SubtitleFormats\MacSub.cs" />
+    <Compile Include="SubtitleFormats\SubUrbia.cs" />
+    <Compile Include="SubtitleFormats\NetflixTimedText.cs" />
     <Compile Include="SubtitleFormats\JsonType7.cs" />
+    <Compile Include="SubtitleFormats\PhoenixSubtitle.cs" />
     <Compile Include="SubtitleFormats\SamiAvDicPlayer.cs" />
     <Compile Include="SubtitleFormats\SpuImage.cs" />
     <Compile Include="SubtitleFormats\AbcIViewer.cs" />
@@ -361,6 +373,7 @@
     <Compile Include="SubtitleFormats\UnknownSubtitle21.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle22.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle23.cs" />
+    <Compile Include="SubtitleFormats\UnknownSubtitle83.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle24.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle25.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle26.cs" />
@@ -371,6 +384,7 @@
     <Compile Include="SubtitleFormats\UnknownSubtitle3.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle30.cs" />
     <Compile Include="SubtitleFormats\DlDd.cs" />
+    <Compile Include="SubtitleFormats\MediaTransData.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle82.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle81.cs" />
     <Compile Include="SubtitleFormats\UnknownSubtitle80.cs" />

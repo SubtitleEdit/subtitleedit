@@ -1292,7 +1292,7 @@
       <DependentUpon>SyncPointsSync.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="packages\packages.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -1357,6 +1357,7 @@
     <None Include="Resources\Transparent Background.png" />
     <Content Include="DLLs\Voikkox64.dll" />
     <Content Include="DLLs\Voikkox86.dll" />
+    <Content Include="Icons\RemoveTextForHI.png" />
     <Content Include="Languages\ar-EG.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1474,7 +1475,7 @@
     <None Include="Web References\SeNetworkService\SeService.disco" />
     <None Include="DLLs\Interop.QuartzTypeLib.dll" />
     <Content Include="..\Changelog.txt" />
-    <Content Include="..\gpl.txt" />
+    <Content Include="..\LICENSE.txt" />
     <EmbeddedResource Include="Controls\VideoPlayerContainer.resx">
       <DependentUpon>VideoPlayerContainer.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1518,45 +1519,19 @@
     <None Include="Icons\connect.png" />
     <None Include="Icons\Donate.png" />
     <Content Include="Icons\SE.ico" />
-    <Content Include="Icons\Find.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\FixCommonErrors.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\Help.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\New.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\Open.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\Replace.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\Save.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\SaveAs.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\Settings.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\SpellCheck.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\VideoToggle.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\VisualSync.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Icons\WaveformToggle.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Icons\Find.png" />
+    <Content Include="Icons\FixCommonErrors.png" />
+    <Content Include="Icons\Help.png" />
+    <Content Include="Icons\New.png" />
+    <Content Include="Icons\Open.png" />
+    <Content Include="Icons\Replace.png" />
+    <Content Include="Icons\Save.png" />
+    <Content Include="Icons\SaveAs.png" />
+    <Content Include="Icons\Settings.png" />
+    <Content Include="Icons\SpellCheck.png" />
+    <Content Include="Icons\VideoToggle.png" />
+    <Content Include="Icons\VisualSync.png" />
+    <Content Include="Icons\WaveformToggle.png" />
     <None Include="Resources\pictureBoxFS.Image.png" />
     <None Include="Resources\pictureBoxFSDown.Image.png" />
     <None Include="Resources\pictureBoxFSOver.Image.png" />
@@ -1657,10 +1632,10 @@
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <ItemGroup>
     <HunspellAssemblies Include="Hunspellx64.dll">
-      <InProject>false</InProject>
+      <Visible>false</Visible>
     </HunspellAssemblies>
     <HunspellAssemblies Include="Hunspellx86.dll">
-      <InProject>false</InProject>
+      <Visible>false</Visible>
     </HunspellAssemblies>
   </ItemGroup>
   <Target Name="BeforeCompile">

@@ -11,11 +11,14 @@ namespace Test
     [TestClass]
     public class XmlDictionariesTest
     {
+        private const string DictionaryFolder = @"..\..\..\..\Dictionaries";
+
         [TestMethod]
-        [DeploymentItem("..\\Dictionaries")]
+        [DeploymentItem(DictionaryFolder)]
         public void DictionariesValidXml()
         {
             var xmlFileNames = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.xml");
+            Assert.IsTrue(xmlFileNames.Length > 0);
             foreach (var xmlFileName in xmlFileNames)
             {
                 TestXmlWellFormedness(xmlFileName);
@@ -23,7 +26,7 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("..\\Dictionaries")]
+        [DeploymentItem(DictionaryFolder)]
         public void DictionariesValidReplaceListRegEx()
         {
             var xmlFileNames = Directory.GetFiles(Directory.GetCurrentDirectory(), "???_OCRFixReplaceList.xml");

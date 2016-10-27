@@ -1795,6 +1795,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "ImportSceneChanges/Milliseconds":
                     language.ImportSceneChanges.Milliseconds = reader.Value;
                     break;
+                case "ImportSceneChanges/GetSceneChangesWithFfmpeg":
+                    language.ImportSceneChanges.GetSceneChangesWithFfmpeg = reader.Value;
+                    break;
                 case "ImportText/Title":
                     language.ImportText.Title = reader.Value;
                     break;
@@ -2349,9 +2352,6 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/VisualSyncPerformed":
                     language.Main.VisualSyncPerformed = reader.Value;
-                    break;
-                case "Main/ImportThisVobSubSubtitle":
-                    language.Main.ImportThisVobSubSubtitle = reader.Value;
                     break;
                 case "Main/FileXIsLargerThan10MB":
                     language.Main.FileXIsLargerThan10MB = reader.Value;
@@ -3556,6 +3556,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/ToolBar/FixCommonErrors":
                     language.Main.Menu.ToolBar.FixCommonErrors = reader.Value;
                     break;
+                case "Main/Menu/ToolBar/RemoveTextForHi":
+                    language.Main.Menu.ToolBar.RemoveTextForHi = reader.Value;
+                    break;
                 case "Main/Menu/ToolBar/VisualSync":
                     language.Main.Menu.ToolBar.VisualSync = reader.Value;
                     break;
@@ -4507,6 +4510,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MinimumGapMilliseconds":
                     language.Settings.MinimumGapMilliseconds = reader.Value;
                     break;
+                case "Settings/MaximumLines":
+                    language.Settings.MaximumLines = reader.Value;
+                    break;
                 case "Settings/SubtitleFont":
                     language.Settings.SubtitleFont = reader.Value;
                     break;
@@ -4587,6 +4593,18 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/AutoBackupEveryFifteenMinutes":
                     language.Settings.AutoBackupEveryFifteenMinutes = reader.Value;
+                    break;
+                case "Settings/AutoBackupDeleteAfter":
+                    language.Settings.AutoBackupDeleteAfter = reader.Value;
+                    break;
+                case "Settings/AutoBackupDeleteAfterOneMonth":
+                    language.Settings.AutoBackupDeleteAfterOneMonth = reader.Value;
+                    break;
+                case "Settings/AutoBackupDeleteAfterThreeMonths":
+                    language.Settings.AutoBackupDeleteAfterThreeMonths = reader.Value;
+                    break;
+                case "Settings/AutoBackupDeleteAfterSixMonths":
+                    language.Settings.AutoBackupDeleteAfterSixMonths = reader.Value;
                     break;
                 case "Settings/CheckForUpdates":
                     language.Settings.CheckForUpdates = reader.Value;
@@ -4834,6 +4852,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/FixCommonerrors":
                     language.Settings.FixCommonerrors = reader.Value;
                     break;
+                case "Settings/RemoveTextForHi":
+                    language.Settings.RemoveTextForHi = reader.Value;
+                    break;
                 case "Settings/MergeLinesShorterThan":
                     language.Settings.MergeLinesShorterThan = reader.Value;
                     break;
@@ -4912,6 +4933,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/AdjustSetEndAndOffsetTheRestAndGoToNext":
                     language.Settings.AdjustSetEndAndOffsetTheRestAndGoToNext = reader.Value;
                     break;
+                case "Settings/AdjustExtendCurrentSubtitle":
+                    language.Settings.AdjustExtendCurrentSubtitle = reader.Value;
+                    break;
+                case "Settings/RecalculateDurationOfCurrentSubtitle":
+                    language.Settings.RecalculateDurationOfCurrentSubtitle = reader.Value;
+                    break;
                 case "Settings/MainCreateStartDownEndUp":
                     language.Settings.MainCreateStartDownEndUp = reader.Value;
                     break;
@@ -4929,6 +4956,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/GoToCurrentSubtitleEnd":
                     language.Settings.GoToCurrentSubtitleEnd = reader.Value;
+                    break;
+                case "Settings/GoToNextSubtitleAndFocusVideo":
+                    language.Settings.GoToNextSubtitleAndFocusVideo = reader.Value;
                     break;
                 case "Settings/ToggleFocus":
                     language.Settings.ToggleFocus = reader.Value;
@@ -4981,6 +5011,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformFocusListView":
                     language.Settings.WaveformFocusListView = reader.Value;
                     break;
+                case "Settings/WaveformGoToNextSceneChange":
+                    language.Settings.WaveformGoToNextSceneChange = reader.Value;
+                    break;
+                case "Settings/WaveformToggleSceneChange":
+                    language.Settings.WaveformToggleSceneChange = reader.Value;
+                    break;
                 case "Settings/GoBack1Frame":
                     language.Settings.GoBack1Frame = reader.Value;
                     break;
@@ -5004,6 +5040,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/GoForward1Second":
                     language.Settings.GoForward1Second = reader.Value;
+                    break;
+                case "Settings/GoBack5Seconds":
+                    language.Settings.GoBack5Seconds = reader.Value;
+                    break;
+                case "Settings/GoForward5Seconds":
+                    language.Settings.GoForward5Seconds = reader.Value;
                     break;
                 case "Settings/TogglePlayPause":
                     language.Settings.TogglePlayPause = reader.Value;
@@ -5047,8 +5089,8 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/SyntaxColorTextIfTooLong":
                     language.Settings.SyntaxColorTextIfTooLong = reader.Value;
                     break;
-                case "Settings/SyntaxColorTextMoreThanXLines":
-                    language.Settings.SyntaxColorTextMoreThanXLines = reader.Value;
+                case "Settings/SyntaxColorTextMoreThanMaxLines":
+                    language.Settings.SyntaxColorTextMoreThanMaxLines = reader.Value;
                     break;
                 case "Settings/SyntaxColorOverlap":
                     language.Settings.SyntaxColorOverlap = reader.Value;
@@ -5076,6 +5118,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/MergeOriginalAndTranslation":
                     language.Settings.MergeOriginalAndTranslation = reader.Value;
+                    break;
+                case "Settings/MergeWithNext":
+                    language.Settings.MergeWithNext = reader.Value;
+                    break;
+                case "Settings/MergeWithPrevious":
+                    language.Settings.MergeWithPrevious = reader.Value;
                     break;
                 case "Settings/ShortcutIsAlreadyDefinedX":
                     language.Settings.ShortcutIsAlreadyDefinedX = reader.Value;
@@ -5163,6 +5211,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "SetVideoOffset/RelativeToCurrentVideoPosition":
                     language.SetVideoOffset.RelativeToCurrentVideoPosition = reader.Value;
+                    break;
+                case "SetVideoOffset/KeepTimeCodes":
+                    language.SetVideoOffset.KeepTimeCodes = reader.Value;
                     break;
                 case "SetVideoOffset/Reset":
                     language.SetVideoOffset.Reset = reader.Value;
@@ -6108,6 +6159,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Waveform/ShowSpectrogramOnly":
                     language.Waveform.ShowSpectrogramOnly = reader.Value;
+                    break;
+                case "Waveform/AddSceneChange":
+                    language.Waveform.AddSceneChange = reader.Value;
+                    break;
+                case "Waveform/RemoveSceneChange":
+                    language.Waveform.RemoveSceneChange = reader.Value;
                     break;
                 case "Waveform/GuessTimeCodes":
                     language.Waveform.GuessTimeCodes = reader.Value;

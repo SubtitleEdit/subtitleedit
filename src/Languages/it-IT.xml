@@ -2,7 +2,7 @@
 <Language Name="italiano">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Traduzione Italiana SilverDrake (giurdi@katamail.com)</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
@@ -1159,7 +1159,6 @@ Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
     <BeforeVisualSync>Prima di Sincronizzazione visiva</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Sincronizzazione visiva eseguita sulle linee selezionate</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Sincronizzazione visiva eseguita</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Importare questo sottotitolo VobSub?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Il file è più grande di10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Continuare ugualmente?</ContinueAnyway>
     <BeforeLoadOf>Prima di caricare {0}</BeforeLoadOf>
@@ -1821,7 +1820,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <SyntaxColorDurationIfTooSmall>Colora durata se troppo corta</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Colora durata se troppo lunga</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Colora testo se troppo lungo</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Colora testo se più lungo di linee:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Colora testo se più lungo di {0} linee</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Colora sovrapposizione time code</SyntaxColorOverlap>
     <SyntaxErrorColor>Colore per errore</SyntaxErrorColor>
     <GoToFirstSelectedLine>Vai alla prima linea selezionata</GoToFirstSelectedLine>

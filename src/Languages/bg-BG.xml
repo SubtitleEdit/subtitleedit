@@ -2,7 +2,7 @@
 <Language Name="Български">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Превод на български: Ivo Ivanov и JJD</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
@@ -1167,7 +1167,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeVisualSync>Преди визуалната синхронизация</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Визуалната синхронизация се отнася за избраните редове</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Визуалната синхронизация е направена</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Да се внесат ли тези VobSub субтитри?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Файлът е по-голям от 10 МВ: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Искате ли да продължите?</ContinueAnyway>
     <BeforeLoadOf>Преди зареждането на {0}</BeforeLoadOf>

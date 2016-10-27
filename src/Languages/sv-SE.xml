@@ -2,7 +2,7 @@
 <Language Name="svenska">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Översätt av Ted</TranslatedBy>
     <CultureName>sv-SE</CultureName>
     <HelpFile />
@@ -1107,7 +1107,6 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeVisualSync>Före visuell synkronisering</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visuell synkronisera utförs på utvalda rader</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visuell synk utförs</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Import denna VobSub text?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Filen är större än 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Fortsätt ändå?</ContinueAnyway>
     <BeforeLoadOf>Innan du laddar {0}</BeforeLoadOf>
@@ -1745,7 +1744,7 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <SyntaxColorDurationIfTooSmall>Färg - längd, om för kort</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Färg - längd, om för lång</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Färg - text, om för länge</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Färg - text, om mer än rader:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Färg - text, om mer än {0} rader</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Färg - tidskod, överlappning</SyntaxColorOverlap>
     <SyntaxErrorColor>Färg vid fel</SyntaxErrorColor>
     <GoToFirstSelectedLine>Gå till första valda linjen</GoToFirstSelectedLine>

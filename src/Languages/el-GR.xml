@@ -2,7 +2,7 @@
 <Language Name="Ελληνικά">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Μετάφραση από: CrazyRabbit - Κλεάνθης Μανωλόπουλος
 Σχόλια για τη μετάφραση στο: mailto:akis_manolopoulos@hotmail.com</TranslatedBy>
     <CultureName>el-GR</CultureName>
@@ -1111,7 +1111,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeVisualSync>Πριν από οπτικό συγχρονισμό</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Εκτελέστηκε οπτικός συγχρονισμός στις επιλεγμένες γραμμές</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Εκτελέστηκε οπτικός συγχρονισμός</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Εισαγωγή αυτού του υπότιτλου VobSub;</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Το αρχείο {0} είναι μεγαλύτερο από 10 MB</FileXIsLargerThan10MB>
     <ContinueAnyway>Θέλετε να συνεχίσετε;</ContinueAnyway>
     <BeforeLoadOf>Πριν από τη φόρτωση του {0}</BeforeLoadOf>

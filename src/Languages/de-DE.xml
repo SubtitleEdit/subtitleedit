@@ -2,7 +2,7 @@
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Nobody.</TranslatedBy>
     <CultureName>de-DE</CultureName>
     <HelpFile />
@@ -451,7 +451,8 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <SavePremiereEdlAs>Premiere EDL Dateiname wählen</SavePremiereEdlAs>
     <SaveFcpAs>Final Cut Pro xml Dateiname wählen</SaveFcpAs>
     <SaveDostAs>DoStudio dost Dateiname wählen</SaveDostAs>
-    <SomeLinesWereTooLongX>Einige Zeilen sind zu lang: {0}</SomeLinesWereTooLongX>
+    <SomeLinesWereTooLongX>Einige Zeilen sind zu lang:
+{0}</SomeLinesWereTooLongX>
     <LineHeight>Zeilenhöhe</LineHeight>
     <BoxSingleLine>Box - Einzeilig</BoxSingleLine>
     <BoxMultiLine>Box - Mehrzeilig</BoxMultiLine>
@@ -686,6 +687,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <Frames>Bilder</Frames>
     <Seconds>Sekunden</Seconds>
     <Milliseconds>Millisekunden</Milliseconds>
+    <GetSceneChangesWithFfmpeg>Szenenwechsel mit FFmpeg erstellen</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Text importieren</Title>
@@ -1046,6 +1048,7 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
         <Find>Suchen</Find>
         <Replace>Ersetzen</Replace>
         <FixCommonErrors>Fehler korrigieren</FixCommonErrors>
+        <RemoveTextForHi>Untertitel für Hörgeschädigte entfernen</RemoveTextForHi>
         <VisualSync>Anpassung</VisualSync>
         <SpellCheck>Rechtschreibung</SpellCheck>
         <Settings>Einstellungen</Settings>
@@ -1182,7 +1185,6 @@ Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
     <BeforeVisualSync>Vor Visueller Anpassung</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visuelle Anpassung für ausgewählten Text ausgeführt</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visuelle Anpassung ausgeführt</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Diesen VobSub Untertitel importieren?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Datei ist größer als 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Trotzdem fortfahren?</ContinueAnyway>
     <BeforeLoadOf>Vor Laden von {0}</BeforeLoadOf>
@@ -1521,6 +1523,12 @@ Falls Sie diese Datei mit Subtitle Edit bearbeitet haben, dürfte eine Sicherung
     <Rules>Textersetzungsregeln</Rules>
     <MoveToTop>Zum Anfang</MoveToTop>
     <MoveToBottom>Zum Ende</MoveToBottom>
+    <MoveSelectedRulesToGroup>Ausgewählte Regeln verlegen</MoveSelectedRulesToGroup>
+    <Groups>Gruppen</Groups>
+    <RulesForGroupX>Regeln der Gruppe „{0}“</RulesForGroupX>
+    <GroupName>Gruppenname</GroupName>
+    <RenameGroup>Gruppenname ändern...</RenameGroup>
+    <NewGroup>Neue Gruppe...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1679,6 +1687,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <DurationMinimumMilliseconds>Min. Länge, Millisekunden</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. Länge, Millisekunden</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. Abstand zwischen Texten in Ms</MinimumGapMilliseconds>
+    <MaximumLines>Max. Zeilenanzahl</MaximumLines>
     <SubtitleFont>Untertitel Schriftart</SubtitleFont>
     <SubtitleFontSize>Untertitel Schriftgröße</SubtitleFontSize>
     <SubtitleBold>Fett</SubtitleBold>
@@ -1706,6 +1715,10 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <AutoBackupEveryMinute>Jede Minute</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Alle 5 Minuten</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Alle 15 Minuten</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Entfernen nach</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1 Monat</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 Monate</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 Monate</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Nach Aktualisierungen suchen</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Erlaube Bearbeitung des Original Untertitels</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Nachfrage beim Löschen von Texten</PromptDeleteLines>
@@ -1788,6 +1801,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <FirstPlusX>Erstes + {0}</FirstPlusX>
     <LastMinusX>Letztes - {0}</LastMinusX>
     <FixCommonerrors>Fehler korrigieren</FixCommonerrors>
+    <RemoveTextForHi>Text für HI entfernen</RemoveTextForHi>
     <MergeLinesShorterThan>Verbinde Texte die kürzer sind als</MergeLinesShorterThan>
     <MusicSymbol>Musik Symbol</MusicSymbol>
     <MusicSymbolsToReplace>Zu ersetzende Musik Symbole (durch Leerzeichen trennen)</MusicSymbolsToReplace>
@@ -1814,12 +1828,14 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <AdjustSetStartTimeKeepDuration>Startzeit anpassen, behalte Dauer</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Ende setzen, Rest verschieben</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ende setzen, Rest verschieben und zum Nächsten</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>Zum nächsten Text oder maximale Länge erweitern</AdjustExtendCurrentSubtitle>
     <MainCreateStartDownEndUp>Neue Startzeit mit Pfeil unten, Endzeit mit Pfeil hoch setzen</MainCreateStartDownEndUp>
     <MergeDialog>Dialoge verbinden ('-' einfügen)</MergeDialog>
     <GoToNext>Zum nächsten Text</GoToNext>
     <GoToPrevious>Zum vorherigen Text</GoToPrevious>
     <GoToCurrentSubtitleStart>Zum aktuellen Textstart</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Zum aktuellen Textende</GoToCurrentSubtitleEnd>
+    <GoToNextSubtitleAndFocusVideo>Zum nächsten Text und Videoposition setzen</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Zwischen Listenansicht und Textbox umschalten</ToggleFocus>
     <ToggleDialogDashes>Dialog Striche umschalten</ToggleDialogDashes>
     <Alignment>Ausrichtung (gewählte Zeilen)</Alignment>
@@ -1837,6 +1853,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformPlayNewSelectionEnd>Ende der Auswahl abspielen</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Ersten gewählten Untertitel abspielen</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Listenansicht fokussieren</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>Zum nächsten Szenenwechsel</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>Szenenwechsel umschalten</WaveformToggleSceneChange>
     <GoBack1Frame>Ein Bild zurück</GoBack1Frame>
     <GoForward1Frame>Ein Bild vor</GoForward1Frame>
     <GoBack100Milliseconds>100 ms zurück</GoBack100Milliseconds>
@@ -1845,7 +1863,9 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <GoForward500Milliseconds>500 ms vor</GoForward500Milliseconds>
     <GoBack1Second>Eine Sekunde zurück</GoBack1Second>
     <GoForward1Second>Eine Sekunde vor</GoForward1Second>
-    <TogglePlayPause>Apspielen/Pause</TogglePlayPause>
+    <GoBack5Seconds>Fünf Sekunden zurück</GoBack5Seconds>
+    <GoForward5Seconds>Fünf Sekunden vor</GoForward5Seconds>
+    <TogglePlayPause>Abspielen/Pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Vollbild</Fullscreen>
     <CustomSearch1>Übersetzen, definierte Suche 1</CustomSearch1>
@@ -1859,7 +1879,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <SyntaxColorDurationIfTooSmall>Farbe Dauer zu kurz</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Farbe Dauer zu lang</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Farbe Text zu lang</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Farbe Text mehr Zeilen als:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Farbe Text mehr als {0} Zeilen</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Farbe Zeitstempel Überlappung</SyntaxColorOverlap>
     <SyntaxErrorColor>Farbe Fehler</SyntaxErrorColor>
     <GoToFirstSelectedLine>Zur ersten ausgewählten Zeile</GoToFirstSelectedLine>
@@ -1904,6 +1924,7 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
     <Title>Video Ausgleich</Title>
     <Description>Video Ausgleich einstellen (Falls Untertitel nicht der Videozeit folgen, z.B. +10 Sekunden)</Description>
     <RelativeToCurrentVideoPosition>Relativ zur aktuellen Videoposition</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>Zeitstempel erhalten (Video Ausgleich nicht hinzufügen)</KeepTimeCodes>
     <Reset>Rücksetzen</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
@@ -2265,6 +2286,8 @@ Bitte versuchen Sie es später noch einmal.</DownloadMpvFailed>
     <ShowWaveformAndSpectrogram>Wellenform/Spektogramm anzeigen</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Nur Wellenform anzeigen</ShowWaveformOnly>
     <ShowSpectrogramOnly>Nur Spektogramm anzeigen</ShowSpectrogramOnly>
+    <AddSceneChange>Szenenwechsel einfügen</AddSceneChange>
+    <RemoveSceneChange>Szenenwechsel entfernen</RemoveSceneChange>
     <GuessTimeCodes>Zeitstempel ermitteln...</GuessTimeCodes>
     <SeekSilence>Stille suchen...</SeekSilence>
   </Waveform>

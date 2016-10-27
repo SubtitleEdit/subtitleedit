@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="magyar">
+<Language Name="Hungarian">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>Fordító: Zityi's Translator Team (http://szoftverforditasok.hu)</TranslatedBy>
     <CultureName>hu-HU</CultureName>
     <HelpFile />
@@ -687,6 +687,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <Frames>Képkockák</Frames>
     <Seconds>Másodperc</Seconds>
     <Milliseconds>Ezredmásodperc</Milliseconds>
+    <GetSceneChangesWithFfmpeg>Jelenet változások lekérése az FFmpeg-gel</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Egyszerű szöveg importálása</Title>
@@ -1047,6 +1048,7 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
         <Find>Keresés</Find>
         <Replace>Csere</Replace>
         <FixCommonErrors>Gyakori hibák javítása</FixCommonErrors>
+        <RemoveTextForHi>Szöveg eltávolítása halláskárosultak esetén</RemoveTextForHi>
         <VisualSync>Vizuális szinkronizálás</VisualSync>
         <SpellCheck>Helyesírás-ellenőrzés</SpellCheck>
         <Settings>Beállítások</Settings>
@@ -1183,7 +1185,6 @@ Megjegyzés: Ellenőrizze a szabad merevlemez területet.</WaveFileMalformed>
     <BeforeVisualSync>Vizuális szinkronizálás előtti állapotra</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>A vizuális szinkronizálás végrehajtásra került a kiválasztott soroknál</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Vizuális szinkronizálás végrehajtva</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Importálja ezt a VobSub feliratot?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Fájl nagyobb, mint 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Mindenképp folytatja?</ContinueAnyway>
     <BeforeLoadOf>A(z) {0} betöltése előtti állapotra</BeforeLoadOf>
@@ -1509,7 +1510,7 @@ Ha ezt a fájlt a Subtitle Edit programmal módosította, akkor lehet, hogy megt
     <CaseSensitive>Betűérzékeny</CaseSensitive>
     <RegularExpression>Reguláris kifejezés</RegularExpression>
     <LinesFoundX>Talált sorok: {0}</LinesFoundX>
-    <Remove>Törlés</Remove>
+    <Remove>Eltávolítás</Remove>
     <Add>Hozzáadás</Add>
     <Update>Frissítés</Update>
     <Enabled>Engedélyezve</Enabled>
@@ -1522,6 +1523,12 @@ Ha ezt a fájlt a Subtitle Edit programmal módosította, akkor lehet, hogy megt
     <Rules>Keresése és szabályok cseréje</Rules>
     <MoveToTop>Áthelyezés felülre</MoveToTop>
     <MoveToBottom>Áthelyezés alulra</MoveToBottom>
+    <MoveSelectedRulesToGroup>A kijelölt szabályok áthelyezése csoportba</MoveSelectedRulesToGroup>
+    <Groups>Csoportok</Groups>
+    <RulesForGroupX>"{0}" csoport szabályai</RulesForGroupX>
+    <GroupName>Csoport neve</GroupName>
+    <RenameGroup>Csoport átnevezése...</RenameGroup>
+    <NewGroup>Új csoport...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Csevegés</Title>
@@ -1680,6 +1687,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <DurationMinimumMilliseconds>Min. időtartam ezredmásodpercben</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. időtartam ezredmásodpercben</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Feliratok közti min. szünet ezredmp-ben</MinimumGapMilliseconds>
+    <MaximumLines>Sorok maximális száma</MaximumLines>
     <SubtitleFont>Felirat betűtípusa</SubtitleFont>
     <SubtitleFontSize>Felirat betűmérete</SubtitleFontSize>
     <SubtitleBold>Félkövér</SubtitleBold>
@@ -1707,6 +1715,10 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <AutoBackupEveryMinute>Percenként</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>5 percenként</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>15 percenként</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Törlés ezt követően:</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1 hónap</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3 hónap</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6 hónap</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Frissítések ellenőrzése</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Eredeti felirat szerkesztésének engedélyezése</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Kérdezzen rá a sorok törlésére</PromptDeleteLines>
@@ -1789,6 +1801,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <FirstPlusX>Első + {0}</FirstPlusX>
     <LastMinusX>Utolsó - {0}</LastMinusX>
     <FixCommonerrors>Hibák javítása</FixCommonerrors>
+    <RemoveTextForHi>Szöveg eltávolítása halláskárosultak esetén</RemoveTextForHi>
     <MergeLinesShorterThan>Tördeletlen feliratok rövidebbek, mint</MergeLinesShorterThan>
     <MusicSymbol>Zene szimbólum</MusicSymbol>
     <MusicSymbolsToReplace>Zenei szimbólumok a cseréhez (elválasztva szóközökkel)</MusicSymbolsToReplace>
@@ -1815,12 +1828,15 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <AdjustSetStartTimeKeepDuration>Kezdési idő beállítása, időtartam megtartása</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>A befejezés és a többi eltolás beállítása</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>A befejezés és a többi eltolás beállítása és ugrás a következőre</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>Az aktuális sor kibővítése a következő feliratra vagy max időtartamra</AdjustExtendCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitle>Az aktuális felirat időtartamának újraszámolása</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Új létrehozása a le gombbal, befejezési idő beállítása a fel gombbal</MainCreateStartDownEndUp>
     <MergeDialog>Párbeszéd egyesítése (gondolatjelek beszúrása)</MergeDialog>
     <GoToNext>Ugrás a következő sorra</GoToNext>
     <GoToPrevious>Ugrás az előző sorra</GoToPrevious>
     <GoToCurrentSubtitleStart>Ugrás a jelenlegi sor elejére</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ugrás a jelenlegi sor végére</GoToCurrentSubtitleEnd>
+    <GoToNextSubtitleAndFocusVideo>Ugrás a következő sorra és videó pozíció beállítása</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Fókuszváltás a listanézet és felirat szövegdoboz között</ToggleFocus>
     <ToggleDialogDashes>Párbeszéd gondolatjel váltó</ToggleDialogDashes>
     <Alignment>Igazítás (kijelölt sorok)</Alignment>
@@ -1838,6 +1854,8 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <WaveformPlayNewSelectionEnd>Kijelölés végének lejátszása</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Az első kiválasztott felirat lejátszása</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Listanézet fókusz</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>Ugrás a következő jelenet váltásra</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>Jelenet váltás kapcsoló</WaveformToggleSceneChange>
     <GoBack1Frame>Egy képkocka vissza</GoBack1Frame>
     <GoForward1Frame>Egy képkocka előre</GoForward1Frame>
     <GoBack100Milliseconds>100 ezredmásodperc vissza</GoBack100Milliseconds>
@@ -1846,6 +1864,8 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <GoForward500Milliseconds>500 ezredmásodperc előre</GoForward500Milliseconds>
     <GoBack1Second>Egy másodperc vissza</GoBack1Second>
     <GoForward1Second>Egy másodperc előre</GoForward1Second>
+    <GoBack5Seconds>Öt másodperc vissza</GoBack5Seconds>
+    <GoForward5Seconds>Öt másodperc előre</GoForward5Seconds>
     <TogglePlayPause>Lejátszás/szünet kapcsoló</TogglePlayPause>
     <Pause>Szünet</Pause>
     <Fullscreen>Teljes képernyős</Fullscreen>
@@ -1860,7 +1880,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <SyntaxColorDurationIfTooSmall>Időtartam színezése, ha túl rövid</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Időtartam színezése, ha túl hosszú</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Szöveg színezése, ha túl hosszú</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Szöveg színezése, ha több, mint (sor):</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Szöveg színezése, ha több, mint {0} sor</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Színes időkód átfedés</SyntaxColorOverlap>
     <SyntaxErrorColor>Hiba színe</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ugrás az első kijelölt sorra</GoToFirstSelectedLine>
@@ -1870,6 +1890,8 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ToggleTranslationMode>Fordítási mód váltó</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Az eredeti és a fordítás váltása</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Az eredeti és a fordítás egyesítése</MergeOriginalAndTranslation>
+    <MergeWithNext>Egyesítés a következővel</MergeWithNext>
+    <MergeWithPrevious>Egyesítés az előzővel</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>A gyorsbillentyű már meg van adva: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Váltás az eredeti és lefordított állomány között a videó/audió előnézetben</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Oszlop, szöveg törlése</ListViewColumnDelete>
@@ -1903,6 +1925,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <Title>Videó eltolás beállítása</Title>
     <Description>Videó eltolás beállítása (a feliratoknak nem kell követniük a valós videó időt, pl. +10 óra)</Description>
     <RelativeToCurrentVideoPosition>Az aktuális videó pozícióhoz képest</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>Meglévő idő kódok megtartása (ne adjon hozzá videóeltolást)</KeepTimeCodes>
     <Reset>Visszaállítás</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
@@ -2264,6 +2287,8 @@ Megtartja a módosításokat?</KeepChangesMessage>
     <ShowWaveformAndSpectrogram>Hullámforma és spektogram megjelenítése</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Hullámforma megjelenítése</ShowWaveformOnly>
     <ShowSpectrogramOnly>Spektogram megjelenítése</ShowSpectrogramOnly>
+    <AddSceneChange>Jelenet váltás hozzáadása</AddSceneChange>
+    <RemoveSceneChange>Jelenet váltás eltávolítása</RemoveSceneChange>
     <GuessTimeCodes>Időkódok becslése...</GuessTimeCodes>
     <SeekSilence>Csend keresése...</SeekSilence>
   </Waveform>

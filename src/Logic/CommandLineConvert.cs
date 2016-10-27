@@ -15,11 +15,15 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public static class CommandLineConvert
     {
+        private readonly static bool _isWindows = !(Configuration.IsRunningOnMac() || Configuration.IsRunningOnLinux());
+
         public static void Convert(string title, string[] arguments) // E.g.: /convert *.txt SubRip
         {
             const int ATTACH_PARENT_PROCESS = -1;
-            if (!Configuration.IsRunningOnMac() && !Configuration.IsRunningOnLinux())
+            if (_isWindows)
+            {
                 NativeMethods.AttachConsole(ATTACH_PARENT_PROCESS);
+            }
 
             var currentFolder = Directory.GetCurrentDirectory();
 
@@ -79,12 +83,7 @@ namespace Nikse.SubtitleEdit.Logic
                     Console.WriteLine("    list available formats: SubtitleEdit /convert /list");
                 }
                 Console.WriteLine();
-
-                if (!Configuration.IsRunningOnMac() && !Configuration.IsRunningOnLinux())
-                {
-                    Console.Write(currentFolder + ">");
-                    NativeMethods.FreeConsole();
-                }
+                DetachedConsole(currentFolder);
                 Environment.Exit(1);
             }
 
@@ -94,7 +93,6 @@ namespace Nikse.SubtitleEdit.Logic
             try
             {
                 var pattern = arguments[2].Trim();
-
 
                 var targetFormat = arguments[3].Trim().Replace(" ", string.Empty).ToLowerInvariant();
                 if (targetFormat == "ass")
@@ -538,12 +536,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Console.WriteLine();
             }
 
-            if (!Configuration.IsRunningOnMac() && !Configuration.IsRunningOnLinux())
-            {
-                Console.Write(currentFolder + ">");
-                NativeMethods.FreeConsole();
-            }
-
+            DetachedConsole(currentFolder);
             if (count == converted && errors == 0)
                 Environment.Exit(0);
             else
@@ -667,6 +660,8 @@ namespace Nikse.SubtitleEdit.Logic
                 // adjust offset
                 if (!string.IsNullOrWhiteSpace(offset))
                 {
+                    bool minus = offset.StartsWith('-');
+                    offset = offset.TrimStart('-');
                     var offsetSplitChars = new[] { ':', '.', ',' };
                     var parts = offset.Split(offsetSplitChars, StringSplitOptions.RemoveEmptyEntries);
                     while (parts.Length > 1 && parts.Length < 4)
@@ -678,8 +673,8 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         try
                         {
-                            var ts = new TimeSpan(0, int.Parse(parts[0].TrimStart('-')), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
-                            if (parts[0].StartsWith('-'))
+                            var ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
+                            if (minus)
                                 sub.AddTimeToAllParagraphs(ts.Negate());
                             else
                                 sub.AddTimeToAllParagraphs(ts);
@@ -830,7 +825,7 @@ namespace Nikse.SubtitleEdit.Logic
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite);
                         Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
-                        Ebu.Save(outputFileName, sub, true);
+                        ebu.Save(outputFileName, sub, true);
                         Console.WriteLine(" done.");
                     }
                 }
@@ -903,7 +898,19 @@ namespace Nikse.SubtitleEdit.Logic
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
                         Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
-                        File.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub, false, false, false, false, false, false, string.Empty, true, false, true, true, false), targetEncoding);
+                        File.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub,
+                                                                                       Configuration.Settings.Tools.ExportTextShowLineNumbers,
+                                                                                       Configuration.Settings.Tools.ExportTextShowLineNumbersNewLine,
+                                                                                       Configuration.Settings.Tools.ExportTextShowTimeCodes,
+                                                                                       Configuration.Settings.Tools.ExportTextShowTimeCodesNewLine,
+                                                                                       false,
+                                                                                       Configuration.Settings.Tools.ExportTextShowTimeCodes,
+                                                                                       string.Empty,
+                                                                                       Configuration.Settings.Tools.ExportTextRemoveStyling,
+                                                                                       Configuration.Settings.Tools.ExportTextFormatText == "Unbreak",
+                                                                                       Configuration.Settings.Tools.ExportTextNewLineAfterText,
+                                                                                       Configuration.Settings.Tools.ExportTextNewLineBetweenSubtitles,
+                                                                                       Configuration.Settings.Tools.ExportTextFormatText == "MergeAll"), targetEncoding);
                         Console.WriteLine(" done.");
                     }
                 }
@@ -999,5 +1006,11 @@ namespace Nikse.SubtitleEdit.Logic
             return outputFileName;
         }
 
+        private static void DetachedConsole(string cwd)
+        {
+            if (!_isWindows) return;
+            Console.Write(cwd + ">");
+            NativeMethods.FreeConsole();
+        }
     }
 }

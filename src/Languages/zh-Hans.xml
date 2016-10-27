@@ -2,7 +2,7 @@
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.13</Version>
+    <Version>3.5.0</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
     <HelpFile />
@@ -219,6 +219,7 @@ Command line: {1} {2}
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>调整速度百分比</Title>
+    <TitleShort>调整速度</TitleShort>
     <Info>调整字幕速度百分比</Info>
     <Custom>自定义</Custom>
     <ToDropFrame>至丢失帧</ToDropFrame>
@@ -367,6 +368,9 @@ Command line: {1} {2}
     <Import>导入...</Import>
     <TextAndTimingInformation>文本和计时信息</TextAndTimingInformation>
     <JustificationCode>调整代码</JustificationCode>
+    <Teletext>文字电视广播</Teletext>
+    <UseBox>使用文字背景框</UseBox>
+    <DoubleHeight>使用双倍字高</DoubleHeight>
     <Errors>错误</Errors>
     <ErrorsX>错误: {0}</ErrorsX>
     <MaxLengthError>行 {0} 超出了最大长度 ({1}) by {2}: {3}</MaxLengthError>
@@ -490,6 +494,10 @@ Command line: {1} {2}
     <Normal>正常</Normal>
     <CaseSensitive>区分大小写</CaseSensitive>
     <RegularExpression>正则表达式</RegularExpression>
+    <WholeWord>全词匹配</WholeWord>
+    <Count>计数</Count>
+    <XNumberOfMatches>{0:#,##0} matches</XNumberOfMatches>
+    <OneMatch>单条匹配</OneMatch>
   </FindDialog>
   <FindSubtitleLine>
     <Title>查找字幕行</Title>
@@ -666,6 +674,8 @@ Command line: {1} {2}
     <ImageFiles>图像文件</ImageFiles>
     <Input>输入</Input>
     <InputDescription>选择输入文件 (浏览或拖放)</InputDescription>
+    <Remove>移除</Remove>
+    <RemoveAll>全部移除</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
     <Title>导入场景变更</Title>
@@ -676,6 +686,7 @@ Command line: {1} {2}
     <Frames>帧</Frames>
     <Seconds>秒</Seconds>
     <Milliseconds>毫秒</Milliseconds>
+    <GetSceneChangesWithFfmpeg>使用 FFmpeg 获取场景变化</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>导入纯文本</Title>
@@ -715,144 +726,148 @@ Command line: {1} {2}
     <Note>注意：须先保证文件的时间码无误。</Note>
   </JoinSubtitles>
   <LanguageNames>
-    <aaName>阿法文</aaName>
-    <abName>阿布哈西亚文</abName>
-    <afName>南非荷兰文</afName>
-    <amName>阿姆哈拉文</amName>
-    <arName>阿拉伯文</arName>
-    <asName>阿萨姆文</asName>
-    <ayName>艾马拉文</ayName>
-    <azName>阿塞拜疆文</azName>
-    <baName>巴什客尔文</baName>
-    <beName>白俄罗斯文</beName>
-    <bgName>保加利亚文</bgName>
-    <biName>比斯拉马文</biName>
-    <bnName>孟加拉文</bnName>
-    <boName>藏文</boName>
-    <brName>布里多尼文</brName>
-    <caName>加泰罗尼亚文</caName>
-    <coName>科西嘉文</coName>
-    <csName>捷克文</csName>
-    <cyName>威尔士文</cyName>
-    <daName>丹麦文</daName>
-    <deName>德文</deName>
-    <dzName>不丹文</dzName>
-    <elName>希腊文</elName>
-    <enName>英文</enName>
-    <eoName>世界文</eoName>
-    <esName>西班牙文</esName>
-    <etName>爱沙尼亚文</etName>
-    <euName>巴斯克文</euName>
-    <faName>波斯文</faName>
-    <fiName>芬兰文</fiName>
-    <fjName>斐济文</fjName>
-    <foName>法罗文</foName>
-    <frName>法文</frName>
-    <fyName>西弗里西亚文</fyName>
-    <gaName>爱尔兰文</gaName>
-    <gdName>苏格兰盖尔文</gdName>
-    <glName>加利西亚文</glName>
-    <gnName>瓜拉尼文</gnName>
-    <guName>古吉拉特文</guName>
-    <haName>豪萨文</haName>
-    <heName>希伯来文</heName>
-    <hiName>印地文</hiName>
-    <hrName>克罗地亚文</hrName>
-    <huName>匈牙利文</huName>
-    <hyName>亚美尼亚文</hyName>
-    <iaName>国际文字</iaName>
-    <idName>印度尼西亚文</idName>
-    <ieName>国际文字（E）</ieName>
-    <ikName>依奴皮维克文</ikName>
-    <isName>冰岛文</isName>
-    <itName>意大利文</itName>
-    <iuName>因纽特文</iuName>
-    <jaName>日文</jaName>
-    <jvName>爪哇文</jvName>
-    <kaName>格鲁吉亚文</kaName>
-    <kkName>哈萨克文</kkName>
-    <klName>格陵兰文</klName>
-    <kmName>高棉文</kmName>
-    <knName>卡纳达文</knName>
-    <koName>韩文</koName>
-    <ksName>克什米尔文</ksName>
-    <kuName>库尔德文</kuName>
-    <kyName>吉尔吉斯文</kyName>
-    <laName>拉丁文</laName>
-    <lbName>卢森堡文</lbName>
-    <lnName>林加拉文</lnName>
-    <loName>老挝文</loName>
-    <ltName>立陶宛文</ltName>
-    <lvName>拉脱维亚文</lvName>
-    <mgName>马尔加什文</mgName>
-    <miName>毛利文</miName>
-    <mkName>马其顿文</mkName>
-    <mlName>马拉雅拉姆文</mlName>
-    <mnName>蒙古文</mnName>
-    <mrName>马拉地文</mrName>
-    <msName>马来文</msName>
-    <mtName>马耳他文</mtName>
-    <myName>缅甸文</myName>
-    <naName>瑙鲁文</naName>
-    <neName>尼泊尔文</neName>
-    <nlName>荷兰文</nlName>
-    <noName>挪威文</noName>
-    <ocName>奥克西唐文</ocName>
-    <omName>奥洛莫文</omName>
-    <orName>奥里亚文</orName>
-    <paName>旁遮普文</paName>
-    <plName>波兰文</plName>
-    <psName>普什图文</psName>
-    <ptName>葡萄牙文</ptName>
-    <quName>盖丘亚文</quName>
-    <rmName>罗曼什文</rmName>
-    <rnName>基隆迪文</rnName>
-    <roName>罗马尼亚文</roName>
-    <ruName>俄文</ruName>
-    <rwName>卢旺达文</rwName>
-    <saName>梵文</saName>
-    <sdName>信德文</sdName>
-    <sgName>桑戈文</sgName>
-    <shName>塞尔维亚-克罗地亚文</shName>
-    <siName>僧伽罗文</siName>
-    <skName>斯洛伐克文</skName>
-    <slName>斯洛文尼亚文</slName>
-    <smName>萨摩亚文</smName>
-    <snName>绍纳文</snName>
-    <soName>索马里文</soName>
-    <sqName>阿尔巴尼亚文</sqName>
-    <srName>塞尔维亚文</srName>
-    <ssName>斯瓦特文</ssName>
-    <stName>南索托文</stName>
-    <suName>巽他文</suName>
-    <svName>瑞典文</svName>
-    <swName>斯瓦希里文</swName>
-    <taName>泰米尔文</taName>
-    <teName>泰卢固文</teName>
-    <tgName>塔吉克文</tgName>
-    <thName>泰文</thName>
-    <tiName>提格里尼亚文</tiName>
-    <tkName>土库曼文</tkName>
-    <tlName>塔加洛文</tlName>
-    <tnName>塞茨瓦纳文</tnName>
-    <toName>汤加文</toName>
-    <trName>土耳其文</trName>
-    <tsName>宗加文</tsName>
-    <ttName>塔塔尔文</ttName>
-    <twName>特威文</twName>
-    <ugName>维吾尔文</ugName>
-    <ukName>乌克兰文</ukName>
-    <urName>乌尔都文</urName>
-    <uzName>乌兹别克文</uzName>
-    <viName>越南文</viName>
-    <voName>沃拉普克文</voName>
-    <woName>沃洛夫文</woName>
-    <xhName>科萨文</xhName>
-    <yiName>依地文</yiName>
-    <yoName>约鲁巴文</yoName>
-    <zaName>壮文</zaName>
-    <zhName>中文</zhName>
-    <zuName>祖鲁文</zuName>
+    <NotSpecified>未指定</NotSpecified>
+    <UnknownCodeX>未知 ({0})</UnknownCodeX>
+    <aaName>阿法尔语</aaName>
+    <abName>阿布哈西亚语</abName>
+    <afName>南非语</afName>
+    <amName>阿姆哈拉语</amName>
+    <arName>阿拉伯语</arName>
+    <asName>阿萨姆语</asName>
+    <ayName>艾马拉语</ayName>
+    <azName>阿塞拜疆语</azName>
+    <baName>巴什基尔语</baName>
+    <beName>白俄罗斯语</beName>
+    <bgName>保加利亚语</bgName>
+    <bhName>比哈尔语</bhName>
+    <biName>比斯拉马语</biName>
+    <bnName>孟加拉语</bnName>
+    <boName>藏语</boName>
+    <brName>布列塔尼语</brName>
+    <caName>加泰罗尼亚语</caName>
+    <coName>科西嘉语</coName>
+    <csName>捷克语</csName>
+    <cyName>威尔士语</cyName>
+    <daName>丹麦语</daName>
+    <deName>德语</deName>
+    <dzName>宗卡语</dzName>
+    <elName>希腊语</elName>
+    <enName>英语</enName>
+    <eoName>世界语</eoName>
+    <esName>西班牙语</esName>
+    <etName>爱沙尼亚语</etName>
+    <euName>巴斯克语</euName>
+    <faName>波斯语</faName>
+    <fiName>芬兰语</fiName>
+    <fjName>斐济语</fjName>
+    <foName>法罗语</foName>
+    <frName>法语</frName>
+    <fyName>西弗里西亚语</fyName>
+    <gaName>爱尔兰语</gaName>
+    <gdName>苏格兰盖力语</gdName>
+    <glName>加里西亚语</glName>
+    <gnName>瓜拉尼语</gnName>
+    <guName>古吉拉特语</guName>
+    <haName>豪萨语</haName>
+    <heName>希伯来语</heName>
+    <hiName>印地语</hiName>
+    <hrName>克罗地亚语</hrName>
+    <huName>匈牙利语</huName>
+    <hyName>美语</hyName>
+    <iaName>国际语1</iaName>
+    <idName>印尼语</idName>
+    <ieName>国际语2</ieName>
+    <ikName>伊努皮克语</ikName>
+    <isName>冰岛语</isName>
+    <itName>意大利语</itName>
+    <iuName>因纽特语</iuName>
+    <jaName>日语</jaName>
+    <jvName>爪哇语</jvName>
+    <kaName>格鲁吉亚语</kaName>
+    <kkName>哈萨克语</kkName>
+    <klName>格陵兰语</klName>
+    <kmName>高棉语</kmName>
+    <knName>加拿达语</knName>
+    <koName>韩语</koName>
+    <ksName>克什米尔语</ksName>
+    <kuName>库尔德语</kuName>
+    <kyName>吉尔吉斯语</kyName>
+    <laName>拉丁语</laName>
+    <lbName>卢森堡语</lbName>
+    <lnName>林加拉语</lnName>
+    <loName>老挝语</loName>
+    <ltName>立陶宛语</ltName>
+    <lvName>拉脱维亚语</lvName>
+    <mgName>马达加斯加语</mgName>
+    <miName>毛利语</miName>
+    <mkName>马其顿人</mkName>
+    <mlName>马拉雅拉姆语</mlName>
+    <mnName>蒙古语</mnName>
+    <moName>摩尔达维亚语</moName>
+    <mrName>马拉地语</mrName>
+    <msName>马来语</msName>
+    <mtName>马耳他语</mtName>
+    <myName>缅甸语</myName>
+    <naName>瑙鲁语</naName>
+    <neName>尼泊尔语</neName>
+    <nlName>荷兰语</nlName>
+    <noName>挪威语</noName>
+    <ocName>奥克西唐语</ocName>
+    <omName>奥罗莫语</omName>
+    <orName>奥里雅语</orName>
+    <paName>旁遮普语</paName>
+    <plName>波兰语</plName>
+    <psName>普什图语</psName>
+    <ptName>葡萄牙语</ptName>
+    <quName>盖丘亚语</quName>
+    <rmName>罗曼什语</rmName>
+    <rnName>隆迪语</rnName>
+    <roName>罗马尼亚语</roName>
+    <ruName>俄语</ruName>
+    <rwName>卢旺达语</rwName>
+    <saName>梵语</saName>
+    <sdName>信德语</sdName>
+    <sgName>桑戈语</sgName>
+    <shName>塞尔维亚-克罗地亚语</shName>
+    <siName>僧伽罗语</siName>
+    <skName>斯洛伐克语</skName>
+    <slName>斯洛文尼亚语</slName>
+    <smName>萨摩亚语</smName>
+    <snName>修纳语</snName>
+    <soName>索马里语</soName>
+    <sqName>阿尔巴尼亚语</sqName>
+    <srName>塞尔维亚语</srName>
+    <ssName>斯瓦蒂语</ssName>
+    <stName>南索托语</stName>
+    <suName>巽他语</suName>
+    <svName>瑞典语</svName>
+    <swName>斯瓦西里语</swName>
+    <taName>泰米尔语</taName>
+    <teName>泰卢固语</teName>
+    <tgName>塔吉克语</tgName>
+    <thName>泰语</thName>
+    <tiName>提格利尼亚语</tiName>
+    <tkName>土库曼语</tkName>
+    <tlName>菲律宾语</tlName>
+    <tnName>茨瓦纳语</tnName>
+    <toName>唐佳语</toName>
+    <trName>土耳其语</trName>
+    <tsName>聪加语</tsName>
+    <ttName>鞑靼语</ttName>
+    <twName>契维语</twName>
+    <ugName>维吾尔语</ugName>
+    <ukName>乌克兰语</ukName>
+    <urName>乌尔都语</urName>
+    <uzName>乌兹别克语</uzName>
+    <viName>越南语</viName>
+    <voName>沃拉普克语</voName>
+    <woName>沃洛夫语</woName>
+    <xhName>科萨语</xhName>
+    <yiName>意第绪语</yiName>
+    <yoName>约鲁巴语</yoName>
+    <zaName>壮语</zaName>
+    <zhName>汉语</zhName>
+    <zuName>祖鲁语</zuName>
   </LanguageNames>
   <Main>
     <Menu>
@@ -973,6 +988,7 @@ Command line: {1} {2}
         <OpenDvd>打开 DVD...</OpenDvd>
         <ChooseAudioTrack>选择音轨...</ChooseAudioTrack>
         <CloseVideo>关闭视频文件</CloseVideo>
+        <SetVideoOffset>设置视频偏移...</SetVideoOffset>
         <ImportSceneChanges>导入场景变更...</ImportSceneChanges>
         <RemoveSceneChanges>移除场景变更</RemoveSceneChanges>
         <WaveformBatchGenerate>批量生成波形...</WaveformBatchGenerate>
@@ -1031,6 +1047,7 @@ Command line: {1} {2}
         <Find>查找</Find>
         <Replace>替换</Replace>
         <FixCommonErrors>修正常规错误</FixCommonErrors>
+        <RemoveTextForHi>移除听力障碍文本</RemoveTextForHi>
         <VisualSync>影音对照同步</VisualSync>
         <SpellCheck>拼写检查</SpellCheck>
         <Settings>设置</Settings>
@@ -1167,7 +1184,6 @@ Command line: {1} {2}
     <BeforeVisualSync>影音对照同步之前</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>已对所选行执行影音对照同步</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>影音对照同步已执行</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>导入这个 VobSub 字幕吗？</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>文件大小超过 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>仍要继续吗？</ContinueAnyway>
     <BeforeLoadOf>加载 "{0}" 之前</BeforeLoadOf>
@@ -1348,6 +1364,7 @@ Command line: {1} {2}
     <BeforeMergeShortLines>合并短行之前</BeforeMergeShortLines>
     <BeforeSplitLongLines>分割长行之前</BeforeSplitLongLines>
     <MergedShortLinesX>已合并行数: {0}</MergedShortLinesX>
+    <BeforeDurationsBridgeGap>在桥接短间隙之前</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>设置段间最小显示时间之前</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>已更改段间最小显示时间的行数: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>导入纯文本之前</BeforeImportText>
@@ -1404,11 +1421,23 @@ Command line: {1} {2}
     <BeforeMergeLinesWithSameText>在合并相同文本行之前</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>带时间码的字幕与当前文件 ({1}) 的行数相差 ({0}) - 仍要继续吗?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>正在解析传送流，请稍候...</ParsingTransportStream>
+    <XPercentCompleted>{0}% 已完成</XPercentCompleted>
     <ErrorLoadIdx>无法读取或编辑 .idx 文件。Idx 文件是 idx/sub 文件对中的一部分 (也称为VobSub), Subtitle Edit 无法打开 .sub 文件。</ErrorLoadIdx>
     <ErrorLoadRar>此文件是一个 .rar 压缩文件。Subtitle Edit 无法打开压缩文件。</ErrorLoadRar>
     <ErrorLoadZip>此文件是一个 .zip 压缩文件，Subtitle Edit 无法打开压缩文件。</ErrorLoadZip>
-    <ErrorLoadPng>这个文件是 PNG 图像文件，Subtitle Edit 无法打开 PNG 文件。</ErrorLoadPng>
-    <ErrorLoadSrr>此文件是 ReScene .srr 文件，而不是字幕文件。</ErrorLoadSrr>
+    <ErrorLoadPng>此文件是 PNG 图像文件，Subtitle Edit 无法打开 PNG 文件。</ErrorLoadPng>
+    <ErrorLoadJpg>此文件是一个 JPG 图像文件。Subtitle Edit 无法打开 JPG 文件。</ErrorLoadJpg>
+    <ErrorLoadSrr>此文件是一个 ReScene .srr 文件，而不是字幕文件。</ErrorLoadSrr>
+    <ErrorLoadTorrent>此文件是一个 BitTorrent 文件，而不是字幕文件。</ErrorLoadTorrent>
+    <ErrorLoadBinaryZeroes>对不起，此文件只包含二进制零！
+
+如果你已经使用Subtitle Edit 编辑了此文件，你或许可以通过菜单项“文件” - “还原自动备份...” 找到一个备份。</ErrorLoadBinaryZeroes>
+    <ErrorDirectoryDropNotAllowed>此处不支持直接拖放操作。</ErrorDirectoryDropNotAllowed>
+    <NoSupportEncryptedVobSub>不支持加密的 VobSub 内容。</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>此处不支持 Blu-ray sup 文件。</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>此处不支持 DVD sup 文件。</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>此处不支持 VobSub 文件。</NoSupportHereVobSub>
+    <NoSupportHereDivx>此处不支持 Divx 文件。</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件选择字幕</Title>
@@ -1477,7 +1506,7 @@ Command line: {1} {2}
     <CaseSensitive>区分大小写</CaseSensitive>
     <RegularExpression>正则表达式</RegularExpression>
     <LinesFoundX>找到行数: {0}</LinesFoundX>
-    <Remove>删除</Remove>
+    <Remove>移除</Remove>
     <Add>添加</Add>
     <Update>更新(&amp;U)</Update>
     <Enabled>启用</Enabled>
@@ -1490,6 +1519,12 @@ Command line: {1} {2}
     <Rules>导出规则</Rules>
     <MoveToTop>移到顶部</MoveToTop>
     <MoveToBottom>移到底部</MoveToBottom>
+    <MoveSelectedRulesToGroup>将选定的规则移动到组</MoveSelectedRulesToGroup>
+    <Groups>组</Groups>
+    <RulesForGroupX>用于组 "{0}" 的规则</RulesForGroupX>
+    <GroupName>组名称</GroupName>
+    <RenameGroup>重命名组...</RenameGroup>
+    <NewGroup>新建组...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>聊天</Title>
@@ -1624,6 +1659,7 @@ Command line: {1} {2}
     <Tools>工具</Tools>
     <WordLists>词汇表</WordLists>
     <SsaStyle>SSA 样式</SsaStyle>
+    <Network>网络</Network>
     <ShowToolBarButtons>显示工具栏按钮</ShowToolBarButtons>
     <New>新建</New>
     <Open>打开</Open>
@@ -1645,6 +1681,7 @@ Command line: {1} {2}
     <DurationMinimumMilliseconds>最小时长，毫秒</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>最大时长，毫秒</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>字幕间最小间隔，单位毫秒</MinimumGapMilliseconds>
+    <MaximumLines>最多行数</MaximumLines>
     <SubtitleFont>字幕字体</SubtitleFont>
     <SubtitleFontSize>字幕字体大小</SubtitleFontSize>
     <SubtitleBold>粗体</SubtitleBold>
@@ -1672,6 +1709,10 @@ Command line: {1} {2}
     <AutoBackupEveryMinute>每隔 1 分钟</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>每隔 5 分钟</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>每隔 15 分钟</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>超过此时间后删除</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>1个月</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>3个月</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>6个月</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>检查更新</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>允许编辑原始字幕</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>删除行时提示</PromptDeleteLines>
@@ -1683,6 +1724,8 @@ Command line: {1} {2}
     <DirectShowDescription>使用 System32 文件夹中的 quartz.dll</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
+    <MpvPlayer>mpv</MpvPlayer>
+    <MpvPlayerDescription>https://mpv.io/ - 免费、开源、跨平台的播放器</MpvPlayerDescription>
     <VlcMediaPlayer>VLC 媒体播放器</VlcMediaPlayer>
     <VlcMediaPlayerDescription>使用 VLC 媒体播放器 1.1.0 或更新版本的 libvlc.dll</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC程序路径 (仅在使用便携版VLC时有用)</VlcBrowseToLabel>
@@ -1744,17 +1787,21 @@ Command line: {1} {2}
     <ProxyUserName>用户名</ProxyUserName>
     <ProxyPassword>密码</ProxyPassword>
     <ProxyDomain>域</ProxyDomain>
+    <NetworkSessionSettings>网络会话设置</NetworkSessionSettings>
+    <NetworkSessionNewSound>当有新消息到达时播放声音文件</NetworkSessionNewSound>
     <PlayXSecondsAndBack>播放 X 秒后返回，X 为</PlayXSecondsAndBack>
     <StartSceneIndex>起始场景段落为</StartSceneIndex>
     <EndSceneIndex>末尾场景段落为</EndSceneIndex>
     <FirstPlusX>开头 + {0}</FirstPlusX>
     <LastMinusX>最后 - {0}</LastMinusX>
     <FixCommonerrors>修复常规错误</FixCommonerrors>
+    <RemoveTextForHi>移除听力障碍文本</RemoveTextForHi>
     <MergeLinesShorterThan>合并小于此长度的行</MergeLinesShorterThan>
     <MusicSymbol>音符</MusicSymbol>
     <MusicSymbolsToReplace>替换音符 (用空格分隔)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>修复 OCR 常规错误 - 同时使用硬编码规则</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>修正较短的显示时间 - 允许移动起始时间</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonErrorsSkipStepOne>设置结束点并转到下一条</FixCommonErrorsSkipStepOne>
     <Shortcuts>快捷键</Shortcuts>
     <Shortcut>快捷键</Shortcut>
     <Control>Ctrl</Control>
@@ -1766,6 +1813,7 @@ Command line: {1} {2}
     <ToggleDockUndockOfVideoControls>切换 停靠/不停靠 视频控件</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>设置终点，添加新点并转到新点</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>通过结束位置调整并转到下一个</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>设置结束点并转到下一个</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>调整设置时长起点及转到下个文本</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>设置终点及下个起点并转到下一个</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>向下方向键=设置起点，向上方向键=设置终点，并转到下一个</AdjustStartDownEndUpAndGoToNext>
@@ -1774,26 +1822,33 @@ Command line: {1} {2}
     <AdjustSetStartTimeKeepDuration>设置结束时间，偏移其后的所有值</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>设置结束时间，偏移其后的所有时间</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>设置结束时间，偏移其后的所有时间并转到下一行</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>将当前行延伸至下一条字幕或最大间隔</AdjustExtendCurrentSubtitle>
     <MainCreateStartDownEndUp>用向下方向键创建新的开始时间，用向上方向键设置结束时间</MainCreateStartDownEndUp>
     <MergeDialog>合并对话 (插入破折号)</MergeDialog>
     <GoToNext>转到下一行</GoToNext>
     <GoToPrevious>转到上一行</GoToPrevious>
     <GoToCurrentSubtitleStart>转到当前行的起始时间点</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>转到当前行尾</GoToCurrentSubtitleEnd>
+    <GoToNextSubtitleAndFocusVideo>转到下一行并设置视频位置</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>在列表视图和文本窗口之间切换焦点</ToggleFocus>
     <ToggleDialogDashes>开关对话前的破折号</ToggleDialogDashes>
     <Alignment>排列 (所选行)</Alignment>
-    <CopyTextOnly>仅复制文本 (所选行)</CopyTextOnly>
+    <CopyTextOnly>仅将文本复制到剪贴板 (所选行)</CopyTextOnly>
+    <CopyTextOnlyFromOriginalToCurrent>将文本从原内容复制到当前内容</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>自动时长 (所选行)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>反转 RTL 开始/结束</ReverseStartAndEndingForRTL>
     <VerticalZoom>纵向缩小</VerticalZoom>
     <VerticalZoomOut>纵向放大</VerticalZoomOut>
     <WaveformSeekSilenceForward>向前搜索静音</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>向后搜索静音</WaveformSeekSilenceBack>
-    <WaveformAddTextHere>添加文本到此处 (用于新选)</WaveformAddTextHere>
+    <WaveformAddTextHere>添加文本到此处 (用于选中的内容)</WaveformAddTextHere>
+    <WaveformAddTextHereFromClipboard>将文本添加到此处（用剪贴板内容替换选中的内容）</WaveformAddTextHereFromClipboard>
     <WaveformPlayNewSelection>播放新的选中行</WaveformPlayNewSelection>
+    <WaveformPlayNewSelectionEnd>播放选中内容的末尾</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>播放首个选中行</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>操作焦点位于列表视图</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>转到下一处场景变动</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>切换场景变动</WaveformToggleSceneChange>
     <GoBack1Frame>退回一帧</GoBack1Frame>
     <GoForward1Frame>前进一帧</GoForward1Frame>
     <GoBack100Milliseconds>退回 100 毫秒</GoBack100Milliseconds>
@@ -1802,6 +1857,8 @@ Command line: {1} {2}
     <GoForward500Milliseconds>前进 500 毫秒</GoForward500Milliseconds>
     <GoBack1Second>退回一秒</GoBack1Second>
     <GoForward1Second>前进一秒</GoForward1Second>
+    <GoBack5Seconds>退回 5 秒</GoBack5Seconds>
+    <GoForward5Seconds>前进 5 秒</GoForward5Seconds>
     <TogglePlayPause>切换 播放/暂停</TogglePlayPause>
     <Pause>暂停</Pause>
     <Fullscreen>全屏幕</Fullscreen>
@@ -1811,12 +1868,12 @@ Command line: {1} {2}
     <CustomSearch4>翻译、自定义搜索 4</CustomSearch4>
     <CustomSearch5>翻译、自定义搜索 5</CustomSearch5>
     <CustomSearch6>翻译、自定义搜索 6</CustomSearch6>
-    <SyntaxColoring>语法涂色</SyntaxColoring>
-    <ListViewSyntaxColoring>列表视图语法涂色</ListViewSyntaxColoring>
-    <SyntaxColorDurationIfTooSmall>若时长太短则涂色</SyntaxColorDurationIfTooSmall>
-    <SyntaxColorDurationIfTooLarge>若时长太长则涂色</SyntaxColorDurationIfTooLarge>
-    <SyntaxColorTextIfTooLong>若文本太长则涂色</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>文本涂色若行数大于:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColoring>语法标注色</SyntaxColoring>
+    <ListViewSyntaxColoring>列表视图语法标注色</ListViewSyntaxColoring>
+    <SyntaxColorDurationIfTooSmall>若时长太短则用颜色标注</SyntaxColorDurationIfTooSmall>
+    <SyntaxColorDurationIfTooLarge>若时长太长则用颜色标注</SyntaxColorDurationIfTooLarge>
+    <SyntaxColorTextIfTooLong>若文本太长则用颜色标注</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextMoreThanMaxLines>若文本长度超过 {0} 则用颜色标注</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>时间码重叠涂色</SyntaxColorOverlap>
     <SyntaxErrorColor>错误项颜色</SyntaxErrorColor>
     <GoToFirstSelectedLine>转到首个所选行</GoToFirstSelectedLine>
@@ -1839,16 +1896,29 @@ Command line: {1} {2}
     <MainTextBoxMoveFirstWordFromNextUp>将下一行的第一个单词移到上一行</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>选中的内容转小写</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>选中的内容转大写</MainTextBoxSelectionToUpper>
+    <MainTextBoxToggleAutoDuration>切换自动间隔</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>文本自动换行</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>取消换行</MainTextBoxUnbreak>
     <MainFileSaveAll>显示全部</MainFileSaveAll>
     <Miscellaneous>杂项</Miscellaneous>
     <UseDoNotBreakAfterList>使用不在后面断行的列表</UseDoNotBreakAfterList>
+    <MicrosoftBingTranslator>微软 Bing 翻译引擎</MicrosoftBingTranslator>
+    <HowToSignUp>如何注册</HowToSignUp>
+    <ClientId>客户 ID</ClientId>
+    <ClientSecret>客户密码</ClientSecret>
   </Settings>
+  <SettingsMpv>
+    <Title>mpv 设置</Title>
+    <DownloadMpv>下载 mpv 库</DownloadMpv>
+    <DownloadMpvFailed>无法下载 mpv - 请稍后重试!</DownloadMpvFailed>
+    <DownloadMpvOk>mpv 库下载完成,等待使用.</DownloadMpvOk>
+  </SettingsMpv>
   <SetVideoOffset>
     <Title>设置视频偏移</Title>
     <Description>设置视频偏移 (字幕不与视频时间同步播放, 而是偏移某段时间)</Description>
     <RelativeToCurrentVideoPosition>相对于当前的视频位置</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>保留现有时间码(不要添加视频偏移)</KeepTimeCodes>
+    <Reset>重置</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>提前/推后 显示所选行</Title>
@@ -2168,6 +2238,7 @@ Command line: {1} {2}
     <Title>为当前图像检查比较匹配数</Title>
     <InspectItems>检查项目</InspectItems>
     <AddBetterMatch>添加最佳匹配</AddBetterMatch>
+    <Add>添加</Add>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>新建文件夹</Title>
@@ -2177,6 +2248,17 @@ Command line: {1} {2}
     <Title>设置非倾斜因数</Title>
     <Description>调节此值，直到文本样式为正常且不倾斜为止。注意：原始图像应为倾斜样式。</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>水印</Title>
+    <WatermarkX>水印:{0}</WatermarkX>
+    <GenerateWatermarkTitle>生成水印</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>覆盖整个字幕</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>仅对当前行: [0]</CurrentLineOnlyX>
+    <Generate>生成</Generate>
+    <Remove>移除</Remove>
+    <BeforeWatermark>在水印前</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>水印仅可使用 unicode 文件编码</ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
     <ClickToAddWaveform>点击以添加波形</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>点击以添加 波形/频谱图</ClickToAddWaveformAndSpectrogram>
@@ -2195,6 +2277,8 @@ Command line: {1} {2}
     <ShowWaveformAndSpectrogram>保存波形和频谱图</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>仅显示波形</ShowWaveformOnly>
     <ShowSpectrogramOnly>仅显示频谱图</ShowSpectrogramOnly>
+    <AddSceneChange>添加场景变动</AddSceneChange>
+    <RemoveSceneChange>移除场景变动</RemoveSceneChange>
     <GuessTimeCodes>猜测时间码...</GuessTimeCodes>
     <SeekSilence>搜索静音...</SeekSilence>
   </Waveform>
