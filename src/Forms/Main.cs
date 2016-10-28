@@ -4379,12 +4379,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 replaceDialog = new ReplaceDialog();
                 replaceDialog.SetIcon(toolStripButtonReplace.Image as Bitmap);
-                if (_findHelper == null)
-                {
-                    _findHelper = replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
-                    _findHelper.WindowPositionLeft = Left + (Width / 2) - (replaceDialog.Width / 2);
-                    _findHelper.WindowPositionTop = Top + (Height / 2) - (replaceDialog.Height / 2);
-                }
+                _findHelper = _findHelper ?? replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
             }
             else
                 isFirst = false;
@@ -4520,12 +4515,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 replaceDialog = new ReplaceDialog();
                 replaceDialog.SetIcon(toolStripButtonReplace.Image as Bitmap);
-                if (_findHelper == null)
-                {
-                    _findHelper = replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
-                    _findHelper.WindowPositionLeft = Left + (Width / 2) - (replaceDialog.Width / 2);
-                    _findHelper.WindowPositionTop = Top + (Height / 2) - (replaceDialog.Height / 2);
-                }
+                _findHelper = _findHelper ?? replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
                 int index = 0;
 
                 if (SubtitleListview1.SelectedItems.Count > 0)
@@ -12294,7 +12284,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _clearLastFindType = _findHelper.FindType;
                 _clearLastFindText = _findHelper.FindText;
             }
-            _findHelper = new FindReplaceDialogHelper(FindType.RegEx, false, string.Format(_language.DoubleWordsViaRegEx, regex), regex, string.Empty, 0, 0, _subtitleListViewIndex);
+            _findHelper = new FindReplaceDialogHelper(FindType.RegEx, false, string.Format(_language.DoubleWordsViaRegEx, regex), regex, string.Empty, _subtitleListViewIndex);
 
             ReloadFromSourceView();
             FindNext();

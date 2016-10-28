@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class FindDialog : Form
+    public sealed partial class FindDialog : PositionAndSizeForm
     {
         private Regex _regEx;
         private readonly Subtitle _subtitle;
@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public FindReplaceDialogHelper GetFindDialogHelper(int startLineIndex)
         {
-            return new FindReplaceDialogHelper(FindType, checkBoxWholeWord.Checked, FindText, _regEx, string.Empty, 200, 300, startLineIndex);
+            return new FindReplaceDialogHelper(FindType, checkBoxWholeWord.Checked, FindText, _regEx, string.Empty, startLineIndex);
         }
 
         private void FormFindDialog_KeyDown(object sender, KeyEventArgs e)
