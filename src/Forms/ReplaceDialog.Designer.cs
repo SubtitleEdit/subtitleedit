@@ -161,12 +161,10 @@
             this.MinimizeBox = false;
             this.Name = "ReplaceDialog";
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Replace";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ReplaceDialog_FormClosing);
-            this.Shown += new System.EventHandler(this.FormReplaceDialog_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormReplaceDialog_KeyDown);
-            this.Move += new System.EventHandler(this.FormReplaceDialog_Move);
             this.ResumeLayout(false);
             this.PerformLayout();
 
