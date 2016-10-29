@@ -56,7 +56,7 @@ namespace Test.Logic
         [TestMethod]
         public void TestAdjust3()
         {
-            var p = new Paragraph { Text = string.Empty, StartTime = new TimeCode(0, 0, 0, 0) };
+            var p = new Paragraph { Text = string.Empty, StartTime = new TimeCode() };
             p.Adjust(1, 1);
             Assert.AreEqual(1, p.StartTime.TotalSeconds);
         }

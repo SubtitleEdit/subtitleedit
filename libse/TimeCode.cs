@@ -58,6 +58,10 @@ namespace Nikse.SubtitleEdit.Core
             return 0;
         }
 
+        public TimeCode() : this(0)
+        {
+        }
+
         public TimeCode(TimeSpan timeSpan)
         {
             _totalMilliseconds = timeSpan.TotalMilliseconds;

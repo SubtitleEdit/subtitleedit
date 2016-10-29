@@ -333,7 +333,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelVideoInfo.Text = string.Empty;
                 labelSingleLine.Text = string.Empty;
                 Text = Title;
-                timeUpDownStartTime.TimeCode = new TimeCode(0, 0, 0, 0);
+                timeUpDownStartTime.TimeCode = new TimeCode();
                 timeUpDownStartTime.UseVideoOffset = true;
                 timeUpDownVideoPosition.UseVideoOffset = true;
                 timeUpDownVideoPositionAdjust.UseVideoOffset = true;
@@ -422,8 +422,8 @@ namespace Nikse.SubtitleEdit.Forms
                 labelAutoDuration.Visible = false;
                 mediaPlayer.SubtitleText = string.Empty;
                 comboBoxAutoContinue.SelectedIndex = 2;
-                timeUpDownVideoPosition.TimeCode = new TimeCode(0, 0, 0, 0);
-                timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(0, 0, 0, 0);
+                timeUpDownVideoPosition.TimeCode = new TimeCode();
+                timeUpDownVideoPositionAdjust.TimeCode = new TimeCode();
                 timeUpDownVideoPosition.TimeCodeChanged += VideoPositionChanged;
                 timeUpDownVideoPositionAdjust.TimeCodeChanged += VideoPositionChanged;
                 timeUpDownVideoPosition.Enabled = false;
@@ -8744,7 +8744,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 tc = tc.Substring(0, 13);
                                 var timeCode = tc.Split(new[] { ':', '.', ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                var realTC = new TimeCode(0, 0, 0, 0);
+                                var realTC = new TimeCode();
                                 try
                                 {
                                     realTC = new TimeCode(int.Parse(timeCode[1]), int.Parse(timeCode[2]), int.Parse(timeCode[3]), int.Parse(timeCode[4]) * 10);
