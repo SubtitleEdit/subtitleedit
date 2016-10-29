@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(XmlNode node)
         {
-            var tc = new TimeCode(0, 0, 0, 0);
+            var tc = new TimeCode();
             if (node != null)
             {
                 string[] arr = node.InnerText.Split(new[] { ':', '.', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);

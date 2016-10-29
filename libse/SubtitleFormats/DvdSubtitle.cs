@@ -73,8 +73,8 @@ LICENSE=
             _errorCount = 0;
             bool textOn = false;
             string text = string.Empty;
-            TimeCode start = new TimeCode(0);
-            TimeCode end = new TimeCode(0);
+            TimeCode start = new TimeCode();
+            TimeCode end = new TimeCode();
             foreach (string line in lines)
             {
                 if (textOn)
@@ -89,8 +89,8 @@ LICENSE=
                         subtitle.Paragraphs.Add(p);
 
                         text = string.Empty;
-                        start = new TimeCode(0);
-                        end = new TimeCode(0);
+                        start = new TimeCode();
+                        end = new TimeCode();
                         textOn = false;
                     }
                     else
