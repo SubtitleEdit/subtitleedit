@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             comboBoxDateTimeFormats.SelectedIndex = 0;
             labelVideoFileName.Text = string.Empty;
-            timeUpDownStartTime.TimeCode = new TimeCode(0, 0, 0, 0);
+            timeUpDownStartTime.TimeCode = new TimeCode();
             timeUpDownDuration.TimeCode = new TimeCode(1, 0, 0, 0);
             comboBoxDateTimeFormats.Items.Clear();
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;

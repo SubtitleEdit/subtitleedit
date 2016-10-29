@@ -705,7 +705,7 @@ namespace Nikse.SubtitleEdit.Core
             }
             catch
             {
-                return new TimeCode(0, 0, 0, 0);
+                return new TimeCode();
             }
         }
 

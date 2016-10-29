@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
         public SetVideoOffset()
         {
             InitializeComponent();
-            _videoOffset = new TimeCode(0);
+            _videoOffset = new TimeCode();
             checkBoxKeepTimeCodes.Checked = Configuration.Settings.Tools.VideoOffsetKeepTimeCodes;
             Text = Configuration.Settings.Language.SetVideoOffset.Title;
             labelDescription.Text = Configuration.Settings.Language.SetVideoOffset.Description;
@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonReset_Click(object sender, EventArgs e)
         {
-            VideoOffset = new TimeCode(0);
+            VideoOffset = new TimeCode();
             DoNotaddVideoOffsetToTimeCodes = checkBoxKeepTimeCodes.Checked;
             Reset = true;
             DialogResult = DialogResult.OK;

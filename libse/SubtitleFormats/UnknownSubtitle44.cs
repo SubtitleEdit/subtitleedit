@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     {
                         try
                         {
-                            p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), new TimeCode(0, 0, 0, 0), text);
+                            p = new Paragraph(DecodeTimeCodeFramesFourParts(startParts), new TimeCode(), text);
                             subtitle.Paragraphs.Add(p);
                         }
                         catch (Exception exception)
