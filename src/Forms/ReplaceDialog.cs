@@ -8,11 +8,9 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class ReplaceDialog : Form
+    public sealed partial class ReplaceDialog : PositionAndSizeForm
     {
         private Regex _regEx;
-        private int _left;
-        private int _top;
         private bool _userAction;
 
         public ReplaceDialog()
@@ -49,7 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public FindReplaceDialogHelper GetFindDialogHelper(int startLineIndex)
         {
-            return new FindReplaceDialogHelper(GetFindType(), false, textBoxFind.Text, _regEx, textBoxReplace.Text, _left, _top, startLineIndex);
+            return new FindReplaceDialogHelper(GetFindType(), false, textBoxFind.Text, _regEx, textBoxReplace.Text, startLineIndex);
         }
 
         private void FormReplaceDialog_KeyDown(object sender, KeyEventArgs e)
@@ -65,9 +63,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (selectedText == findHelper.FindText)
                 textBoxReplace.Text = findHelper.ReplaceText;
             textBoxFind.SelectAll();
-            _left = findHelper.WindowPositionLeft;
-            _top = findHelper.WindowPositionTop;
-
             if (findHelper.FindType == FindType.RegEx)
                 radioButtonRegEx.Checked = true;
             else if (findHelper.FindType == FindType.CaseSensitive)
@@ -129,29 +124,6 @@ namespace Nikse.SubtitleEdit.Forms
             FindOnly = true;
 
             Validate(textBoxFind.Text);
-        }
-
-        private void FormReplaceDialog_Shown(object sender, EventArgs e)
-        {
-            if (_left > 0 && _top > 0)
-            {
-                Left = _left;
-                Top = _top;
-            }
-            else
-            {
-                _left = Left;
-                _top = Top;
-            }
-        }
-
-        private void FormReplaceDialog_Move(object sender, EventArgs e)
-        {
-            if (Left > 0 && Top > 0)
-            {
-                _left = Left;
-                _top = Top;
-            }
         }
 
         private void RadioButtonCheckedChanged(object sender, EventArgs e)
