@@ -4219,35 +4219,19 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
                 if (tabControlSubtitle.SelectedIndex == TabControlListView)
                 {
-                    int selectedIndex = -1;
-                    //set the starting selectedIndex if a row is highlighted
-                    if (SubtitleListview1.SelectedItems.Count > 0)
-                        selectedIndex = SubtitleListview1.SelectedItems[0].Index;
-
+                    bool found = _findHelper.Find(_subtitle, _subtitleAlternate, _subtitleListViewIndex);
                     //if we fail to find the text, we might want to start searching from the top of the file.
-                    bool foundIt = false;
-                    if (_findHelper.Find(_subtitle, _subtitleAlternate, selectedIndex))
-                    {
-                        foundIt = true;
-                    }
-                    else if (_findHelper.StartLineIndex >= 1)
+                    if (!found && _findHelper.StartLineIndex >= 1)
                     {
                         if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
-                            selectedIndex = -1;
-                            if (_findHelper.Find(_subtitle, _subtitleAlternate, selectedIndex))
-                                foundIt = true;
+                            found = _findHelper.Find(_subtitle, _subtitleAlternate, -1);
                         }
                     }
-
-                    if (foundIt)
+                    if (found)
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex);
-                        TextBox tb;
-                        if (_findHelper.MatchInOriginal)
-                            tb = textBoxListViewTextAlternate;
-                        else
-                            tb = textBoxListViewText;
+                        TextBox tb = _findHelper.MatchInOriginal ? textBoxListViewTextAlternate : textBoxListViewText;
                         tb.Focus();
                         tb.SelectionStart = _findHelper.SelectedPosition;
                         tb.SelectionLength = _findHelper.FindTextLength;
