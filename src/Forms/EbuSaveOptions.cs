@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception)
             {
-                timeUpDownStartTime.TimeCode = new TimeCode(0);
+                timeUpDownStartTime.TimeCode = new TimeCode();
             }
 
             int number;

@@ -1536,7 +1536,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         fullSize.Save(fileName2, ImageFormat.Png);
                         fullSize.Dispose();
 
-                        string line = string.Format("{0:000}  {1}  V     C        {2} {3} {4} {5}", i, fileName1, new TimeCode(0).ToHHMMSSFF(), param.P.Duration.ToHHMMSSFF(), param.P.StartTime.ToHHMMSSFF(), param.P.EndTime.ToHHMMSSFF());
+                        string line = string.Format("{0:000}  {1}  V     C        {2} {3} {4} {5}", i, fileName1, new TimeCode().ToHHMMSSFF(), param.P.Duration.ToHHMMSSFF(), param.P.StartTime.ToHHMMSSFF(), param.P.EndTime.ToHHMMSSFF());
                         sb.AppendLine(line);
                         sb.AppendLine();
 

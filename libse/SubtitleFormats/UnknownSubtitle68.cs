@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             TimeCode start = DecodeTimeCodeFrames(timeParts[0].Substring(0, 11), splitChars);
                             if (p != null && Math.Abs(p.EndTime.TotalMilliseconds) < 0.001)
                                 p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
-                            TimeCode end = new TimeCode(0, 0, 0, 0);
+                            TimeCode end = new TimeCode();
                             p = MakeTextParagraph(text, p, start, end);
                             subtitle.Paragraphs.Add(p);
                             text = new StringBuilder();
