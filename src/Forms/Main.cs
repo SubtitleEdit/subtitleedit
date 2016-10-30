@@ -6353,17 +6353,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void BoldToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ListViewToggleTag("b");
+            ListViewToggleTag(HtmlUtil.TagBold);
         }
 
         private void ItalicToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ListViewToggleTag("i");
+            ListViewToggleTag(HtmlUtil.TagItalic);
         }
 
         private void UnderlineToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ListViewToggleTag("u");
+            ListViewToggleTag(HtmlUtil.TagUnderline);
         }
 
         private void ListViewToggleTag(string tag)
