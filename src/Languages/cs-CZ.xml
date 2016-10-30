@@ -1710,7 +1710,6 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll z VLC media player 1.1.0 nebo novějšího</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>Cesta k VLC (pouze pokud používáte přenosnou verzi VLC)</VlcBrowseToLabel>
     <ShowStopButton>Zobrazit tlačítko zastavení</ShowStopButton>
     <ShowMuteButton>Zobrazit tlačítko ztlumení</ShowMuteButton>
     <ShowFullscreenButton>Zobrazit tlačítko na celou obrazovku</ShowFullscreenButton>

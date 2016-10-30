@@ -1727,7 +1727,6 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <MpvPlayerDescription>https://mpv.io/ - player de mídia de código aberto gratuito, multiplataforma</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll do VLC media player 1.1.0 ou superior</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>Caminho do VLC (somente se estiver usando a versão portable)</VlcBrowseToLabel>
     <ShowStopButton>Mostrar botão parar</ShowStopButton>
     <ShowMuteButton>Exibir botão Mudo</ShowMuteButton>
     <ShowFullscreenButton>Exibir botão Tela Cheia</ShowFullscreenButton>

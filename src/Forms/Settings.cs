@@ -145,12 +145,6 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonVideoPlayerMpcHc.Enabled = false;
             RefreshMpvSettings();
 
-            textBoxVlcPath.Text = gs.VlcLocation;
-            textBoxVlcPath.Left = labelVideoPlayerVLC.Left + labelVideoPlayerVLC.Width + 5;
-            textBoxVlcPath.Width = buttonVlcPathBrowse.Left - textBoxVlcPath.Left - 5;
-
-            labelVlcPath.Text = Configuration.Settings.Language.Settings.VlcBrowseToLabel;
-
             checkBoxVideoPlayerShowStopButton.Checked = gs.VideoPlayerShowStopButton;
             checkBoxVideoPlayerShowMuteButton.Checked = gs.VideoPlayerShowMuteButton;
             checkBoxVideoPlayerShowFullscreenButton.Checked = gs.VideoPlayerShowFullscreenButton;
@@ -353,7 +347,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelMpvSettings.Left = buttonMpvSettings.Left + buttonMpvSettings.Width + 5;
             radioButtonVideoPlayerVLC.Text = language.VlcMediaPlayer;
             labelVideoPlayerVLC.Text = language.VlcMediaPlayerDescription;
-            gs.VlcLocation = textBoxVlcPath.Text;
 
             checkBoxVideoPlayerShowStopButton.Text = language.ShowStopButton;
             checkBoxVideoPlayerShowMuteButton.Text = language.ShowMuteButton;
@@ -1148,8 +1141,6 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.VideoPlayer = "VLC";
             else
                 gs.VideoPlayer = "DirectShow";
-
-            gs.VlcLocation = textBoxVlcPath.Text;
 
             gs.VideoPlayerShowStopButton = checkBoxVideoPlayerShowStopButton.Checked;
             gs.VideoPlayerShowMuteButton = checkBoxVideoPlayerShowMuteButton.Checked;
@@ -2222,10 +2213,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void EnableVlc(string fileName)
         {
-            textBoxVlcPath.Text = Path.GetDirectoryName(fileName);
-            Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
-            Configuration.Settings.General.VlcLocationRelative = GetRelativePath(textBoxVlcPath.Text);
+            Configuration.Settings.General.VlcLocation = Path.GetDirectoryName(fileName);
+            Configuration.Settings.General.VlcLocationRelative = GetRelativePath(fileName);
             radioButtonVideoPlayerVLC.Enabled = LibVlcDynamic.IsInstalled;
+        }
+
+        private void EnableMpcHc(string fileName)
+        {
+            Configuration.Settings.General.MpcHcLocation = Path.GetDirectoryName(fileName);
+            radioButtonVideoPlayerMpcHc.Checked = true;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -2250,22 +2246,6 @@ namespace Nikse.SubtitleEdit.Forms
                 Directory.CreateDirectory(dictionaryFolder);
 
             Process.Start(dictionaryFolder);
-        }
-
-        private void textBoxVlcPath_MouseLeave(object sender, EventArgs e)
-        {
-            try
-            {
-                var path = textBoxVlcPath.Text.Trim('\"');
-                if (path.Length > 3 && Path.IsPathRooted(path) && Path.GetFileName(path).Equals("vlc.exe", StringComparison.OrdinalIgnoreCase) && File.Exists(path))
-                {
-                    EnableVlc(path);
-                }
-            }
-            catch
-            {
-                // ignored
-            }
         }
 
         private void buttonNetworkSessionNewMessageSound_Click(object sender, EventArgs e)
@@ -2375,8 +2355,52 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void numericUpDownMaxNumberOfLines_ValueChanged(object sender, EventArgs e)
         {
-           checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(Configuration.Settings.Language.Settings.SyntaxColorTextMoreThanMaxLines, numericUpDownMaxNumberOfLines.Value);
+            checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(Configuration.Settings.Language.Settings.SyntaxColorTextMoreThanMaxLines, numericUpDownMaxNumberOfLines.Value);
         }
 
+        private void radioButtonVideoPlayerMpcHc_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Clicks != 2 || radioButtonVideoPlayerMpcHc.Enabled)
+            {
+                return;
+            }
+            openFileDialogFFmpeg.Filter = "(mpc-hc.exe/mpc-hc64.exe)|*.exe";
+            if (openFileDialogFFmpeg.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+            string fileName = openFileDialogFFmpeg.SafeFileName;
+            bool enable = false;
+            // x64 bit Architecture
+            if (IntPtr.Size == 8)
+            {
+                enable = fileName.Equals("mpc-hc64.exe", StringComparison.OrdinalIgnoreCase);
+            }
+            else
+            {
+                enable = fileName.Equals("mpc-hc.exe", StringComparison.OrdinalIgnoreCase);
+            }
+            if (enable)
+            {
+                EnableMpcHc(openFileDialogFFmpeg.FileName);
+            }
+        }
+
+        private void radioButtonVideoPlayerVLC_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Clicks != 2 || radioButtonVideoPlayerVLC.Enabled)
+            {
+                return;
+            }
+            openFileDialogFFmpeg.Filter = "vlc.exe|vlc.exe";
+            if (openFileDialogFFmpeg.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+            if (openFileDialogFFmpeg.SafeFileName.Equals("vlc.exe", StringComparison.OrdinalIgnoreCase))
+            {
+                EnableVlc(openFileDialogFFmpeg.FileName);
+            }
+        }
     }
 }

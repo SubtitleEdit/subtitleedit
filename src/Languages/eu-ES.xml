@@ -1721,7 +1721,6 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <MpvPlayerDescription>https://mpv.io/ -multimedia irakurgailu askea, iturburu irekikoa, eta plataforma-anitzerakoa</MpvPlayerDescription>
     <VlcMediaPlayer>VLC Irakurgailua</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll VLC Irakurgailua 1.1.0 edo berriagoa</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC helburua (VLC bertsio eramangarria erabiltzen ari bazara besterik ez da beharrezkoa)</VlcBrowseToLabel>
     <ShowStopButton>Erakutsi gelditu botoia</ShowStopButton>
     <ShowMuteButton>Erakutsi mututu botoia</ShowMuteButton>
     <ShowFullscreenButton>Erakutsi ikusleiho-osoa botoia</ShowFullscreenButton>

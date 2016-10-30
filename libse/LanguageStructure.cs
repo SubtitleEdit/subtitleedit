@@ -1897,7 +1897,6 @@
             public string MpvPlayerDescription { get; set; }
             public string VlcMediaPlayer { get; set; }
             public string VlcMediaPlayerDescription { get; set; }
-            public string VlcBrowseToLabel { get; set; }
             public string ShowStopButton { get; set; }
             public string ShowMuteButton { get; set; }
             public string ShowFullscreenButton { get; set; }

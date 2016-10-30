@@ -1710,7 +1710,6 @@ Hvis du har redigert denne filen i Subtitle Edit, kan du kanskje finne en backup
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll fra VLC Media Player 1.1.0 eller nyere</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC-filbane (behøves kun hvis du bruker direktefil uten installering for VLC)</VlcBrowseToLabel>
     <ShowStopButton>Vis Stopp-knappen</ShowStopButton>
     <ShowMuteButton>Vis Stille-knappen</ShowMuteButton>
     <ShowFullscreenButton>Vis fullskjermsknappen</ShowFullscreenButton>

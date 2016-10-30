@@ -1734,7 +1734,6 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MpvPlayerDescription>https://mpv.io/ – Kostenloser, quelloffener und plattformübergreifender Medienabspieler</MpvPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll von VLC Media Player 1.1.0 oder höher</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC Pfad (nur bei Verwendung der portablen VLC Version benötigt)</VlcBrowseToLabel>
     <ShowStopButton>Stop Knopf anzeigen</ShowStopButton>
     <ShowMuteButton>Ton aus Knopf anzeigen</ShowMuteButton>
     <ShowFullscreenButton>Vollbild Knopf anzeigen</ShowFullscreenButton>

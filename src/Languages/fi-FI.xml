@@ -1696,7 +1696,6 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <MpvPlayerDescription>https://mpv.io/ - ilmainen, vapaan lähdekoodin monialustainen mediasoitin</MpvPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>VLC Media Player 1.1.0 libvlc.dll (tai uudempi)</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC:n sijainti (tarvitaan vain mikäli käytössä on siirrettävä VLC-versio)</VlcBrowseToLabel>
     <ShowStopButton>Näytä pysäytyspainike</ShowStopButton>
     <ShowMuteButton>Näytä vaimennuspainike</ShowMuteButton>
     <ShowFullscreenButton>Näytä kokonäytön painike</ShowFullscreenButton>

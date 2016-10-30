@@ -1687,7 +1687,6 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll da VLC media player 1.1.0 o successivo</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>Percorso di VLC (necessaria solo se si sta utilizzando la versione portatile di VLC)</VlcBrowseToLabel>
     <ShowStopButton>Mostra pulsante stop</ShowStopButton>
     <ShowMuteButton>Mostra pulsante muto</ShowMuteButton>
     <ShowFullscreenButton>Mostra pulsante schermo intero</ShowFullscreenButton>

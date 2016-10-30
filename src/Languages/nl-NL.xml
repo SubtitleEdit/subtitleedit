@@ -1732,7 +1732,6 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <MpvPlayerDescription>https://mpv.io/ - vrĳ te gebruiken multiplatform mediaspeler met open broncode</MpvPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll van VLC media player 1.1.0 of nieuwer</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC pad (alleen nodig als u met de draagbare versie van VLC werkt)</VlcBrowseToLabel>
     <ShowStopButton>Toon stopknop</ShowStopButton>
     <ShowMuteButton>Toon mute-knop</ShowMuteButton>
     <ShowFullscreenButton>Toon volledig scherm knop</ShowFullscreenButton>
