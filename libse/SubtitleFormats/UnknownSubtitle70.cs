@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            var trimmedLines = new List<string>();
+            int totalRead = 0;
             int errors = 0;
             foreach (string line in lines)
             {
@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
                     if (RegexMicroDvdLine.IsMatch(s))
-                        trimmedLines.Add(s);
+                        totalRead++;
                     else
                         errors++;
                 }
@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
             Errors = null;
-            return trimmedLines.Count > errors;
+            return totalRead > errors;
         }
 
         private static string RemoveIllegalSpacesAndFixEmptyCodes(string line)
