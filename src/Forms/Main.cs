@@ -7119,7 +7119,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    TextBoxListViewToggleTag("i");
+                    TextBoxListViewToggleTag(HtmlUtil.TagItalic);
                 }
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
@@ -16128,17 +16128,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void BoldToolStripMenuItem1Click(object sender, EventArgs e)
         {
-            TextBoxListViewToggleTag("b");
+            TextBoxListViewToggleTag(HtmlUtil.TagBold);
         }
 
         private void ItalicToolStripMenuItem1Click(object sender, EventArgs e)
         {
-            TextBoxListViewToggleTag("i");
+            TextBoxListViewToggleTag(HtmlUtil.TagItalic);
         }
 
         private void UnderlineToolStripMenuItem1Click(object sender, EventArgs e)
         {
-            TextBoxListViewToggleTag("u");
+            TextBoxListViewToggleTag(HtmlUtil.TagUnderline);
         }
 
         private void ColorToolStripMenuItem1Click(object sender, EventArgs e)
@@ -17300,7 +17300,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    TextBoxListViewToggleTag("i");
+                    TextBoxListViewToggleTag(HtmlUtil.TagItalic);
                 }
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
