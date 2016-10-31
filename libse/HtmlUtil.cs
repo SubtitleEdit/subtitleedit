@@ -675,8 +675,9 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string ToggleTag(string text, string tag)
         {
-            if (text.Contains("<" + tag + ">"))
+            if (text.LastIndexOf(tag + '>', StringComparison.OrdinalIgnoreCase) > 0)
             {
+                text = FixUpperTags(text);
                 text = text.Replace("<" + tag + ">", string.Empty);
                 text = text.Replace("</" + tag + ">", string.Empty);
             }
