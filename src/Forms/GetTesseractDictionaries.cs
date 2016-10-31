@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            string dictionaryFolder = Configuration.TesseractDataFolder;
+            string dictionaryFolder = Configuration.TesseractDataDirectory;
             if (!Directory.Exists(dictionaryFolder))
                 Directory.CreateDirectory(dictionaryFolder);
 
@@ -185,7 +185,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            string dictionaryFolder = Configuration.TesseractDataFolder;
+            string dictionaryFolder = Configuration.TesseractDataDirectory;
             if (!Directory.Exists(dictionaryFolder))
                 Directory.CreateDirectory(dictionaryFolder);
 
@@ -212,7 +212,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelOpenDictionaryFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string dictionaryFolder = Configuration.TesseractDataFolder;
+            string dictionaryFolder = Configuration.TesseractDataDirectory;
             if (!Directory.Exists(dictionaryFolder))
                 Directory.CreateDirectory(dictionaryFolder);
 

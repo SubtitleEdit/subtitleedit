@@ -533,7 +533,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string languageTwoLetterCode = LanguageAutoDetect.AutoDetectGoogleLanguage(Subtitle);
 
                 // Will contains both one word names and multi names
-                var namesList = new NamesList(Configuration.DictionariesFolder, languageTwoLetterCode, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+                var namesList = new NamesList(Configuration.DictionariesDirectory, languageTwoLetterCode, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
                 _namesEtcList = namesList.GetAllNames();
             }
         }

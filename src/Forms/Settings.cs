@@ -879,8 +879,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InitializeWaveformsAndSpectrogramsFolderEmpty(LanguageStructure.Settings language)
         {
-            string waveformsFolder = Configuration.WaveformsFolder.TrimEnd(Path.DirectorySeparatorChar);
-            string spectrogramsFolder = Configuration.SpectrogramsFolder.TrimEnd(Path.DirectorySeparatorChar);
+            string waveformsFolder = Configuration.WaveformsDirectory.TrimEnd(Path.DirectorySeparatorChar);
+            string spectrogramsFolder = Configuration.SpectrogramsDirectory.TrimEnd(Path.DirectorySeparatorChar);
             long bytes = 0;
             int count = 0;
 
@@ -1459,7 +1459,7 @@ namespace Nikse.SubtitleEdit.Forms
             var task = Task.Factory.StartNew(() =>
             {
                 // names etc
-                var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+                var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
                 _wordListNamesEtc = namesList.GetAllNames();
                 _wordListNamesEtc.Sort();
                 return _wordListNamesEtc;
@@ -1494,7 +1494,7 @@ namespace Nikse.SubtitleEdit.Forms
             string text = textBoxNameEtc.Text.RemoveControlCharacters().Trim();
             if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNamesEtc.Contains(text))
             {
-                var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+                var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
                 namesList.Add(text);
                 LoadNamesEtc(language, true);
                 labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
@@ -1543,7 +1543,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (result == DialogResult.Yes)
                 {
                     int removeCount = 0;
-                    var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+                    var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
                     for (int idx = listBoxNamesEtc.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
                         index = listBoxNamesEtc.SelectedIndices[idx];
@@ -1940,7 +1940,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonWaveformsFolderEmpty_Click(object sender, EventArgs e)
         {
-            string waveformsFolder = Configuration.WaveformsFolder.TrimEnd(Path.DirectorySeparatorChar);
+            string waveformsFolder = Configuration.WaveformsDirectory.TrimEnd(Path.DirectorySeparatorChar);
             if (Directory.Exists(waveformsFolder))
             {
                 var di = new DirectoryInfo(waveformsFolder);
@@ -1958,7 +1958,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            string spectrogramsFolder = Configuration.SpectrogramsFolder.TrimEnd(Path.DirectorySeparatorChar);
+            string spectrogramsFolder = Configuration.SpectrogramsDirectory.TrimEnd(Path.DirectorySeparatorChar);
             if (Directory.Exists(spectrogramsFolder))
             {
                 var di = new DirectoryInfo(spectrogramsFolder);
@@ -2375,7 +2375,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void numericUpDownMaxNumberOfLines_ValueChanged(object sender, EventArgs e)
         {
-           checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(Configuration.Settings.Language.Settings.SyntaxColorTextMoreThanMaxLines, numericUpDownMaxNumberOfLines.Value);
+            checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(Configuration.Settings.Language.Settings.SyntaxColorTextMoreThanMaxLines, numericUpDownMaxNumberOfLines.Value);
         }
 
     }

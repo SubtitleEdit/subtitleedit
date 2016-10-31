@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Core.Dictionaries
 
         public static OcrFixReplaceList FromLanguageId(string languageId)
         {
-            return new OcrFixReplaceList(Configuration.DictionariesFolder + languageId + "_OCRFixReplaceList.xml");
+            return new OcrFixReplaceList(Configuration.DictionariesDirectory + languageId + "_OCRFixReplaceList.xml");
         }
 
         private static Dictionary<string, string> LoadReplaceList(XmlDocument doc, string name)
