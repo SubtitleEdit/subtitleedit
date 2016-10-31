@@ -673,7 +673,7 @@ namespace Nikse.SubtitleEdit.Core
             return text;
         }
 
-        public static string ToogleTag(string text, string tag)
+        public static string ToggleTag(string text, string tag)
         {
             if (text.Contains("<" + tag + ">"))
             {

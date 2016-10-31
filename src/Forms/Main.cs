@@ -6385,11 +6385,11 @@ namespace Nikse.SubtitleEdit.Forms
                         var original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
                         if (original != null)
                         {
-                            original.Text = HtmlUtil.ToogleTag(original.Text, tag);
+                            original.Text = HtmlUtil.ToggleTag(original.Text, tag);
                             SubtitleListview1.SetAlternateText(i, original.Text);
                         }
                     }
-                    _subtitle.Paragraphs[i].Text = HtmlUtil.ToogleTag(_subtitle.Paragraphs[i].Text, tag);
+                    _subtitle.Paragraphs[i].Text = HtmlUtil.ToggleTag(_subtitle.Paragraphs[i].Text, tag);
                     SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
                 }
                 SubtitleListview1.EndUpdate();
