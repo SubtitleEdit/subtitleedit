@@ -4,10 +4,6 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
-    //Subtitle number: 1
-    //Start time (or frames): 00:00:48,862:0000001222
-    //End time (or frames): 00:00:50,786:0000001270
-    //Subtitle text: In preajma lacului Razel,
     public class UnknownSubtitle3 : SubtitleFormat
     {
         private static readonly char[] SplitChar = { '|' };
