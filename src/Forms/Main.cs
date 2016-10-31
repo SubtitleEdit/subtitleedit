@@ -15977,89 +15977,39 @@ namespace Nikse.SubtitleEdit.Forms
             if (tb.SelectedText.Length == 0)
             {
                 text = tb.Text;
+
                 // Split lines (split a subtitle into its lines).
                 var lines = text.SplitToLines();
-                // Get current line index (the line where the cursor is).
-                int selectedLineNumber = tb.GetLineFromCharIndex(tb.SelectionStart);
 
-                Boolean isDialog = false;
-                int lineNumber = 0;
-                string templine = string.Empty;
-                var lineSb = new StringBuilder();
-                int tagLength = 0;
-                // See if lines start with "-".
-                foreach (var line in lines)
-                {
-                    // Append line break in every line except the first one
-                    if (lineNumber > 0)
-                        lineSb.Append(Environment.NewLine);
-                    templine = line;
+                // Get current line index (the line where the cursor is current located).
+                int selectedLineIdx = tb.GetLineFromCharIndex(tb.SelectionStart);
 
-                    string positionTag = string.Empty;
-                    int indexOfEndBracket = templine.IndexOf('}');
-                    if (templine.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
-                    {
-                        // Find position tag and remove it from string.
-                        positionTag = templine.Substring(0, indexOfEndBracket + 1);
-                        templine = templine.Remove(0, indexOfEndBracket + 1);
-                    }
+                // Get line from index.
+                string selectedLine = lines[selectedLineIdx];
 
-                    if (templine.StartsWith('-') || templine.StartsWith("<" + tag + ">-"))
-                    {
-                        isDialog = true;
-                        // Apply tags to current line (it is the selected line). Or remove them.
-                        if (selectedLineNumber == lineNumber)
-                        {
-                            // Remove tags if present.
-                            if (templine.Contains("<" + tag + ">"))
-                            {
-                                templine = templine.Replace("<" + tag + ">", string.Empty);
-                                templine = templine.Replace("</" + tag + ">", string.Empty);
-                                tagLength = -3;
-                            }
-                            else
-                            {
-                                // Add tags.
-                                templine = string.Format("<{0}>{1}</{0}>", tag, templine);
-                                tagLength = 3;
-                            }
-                        }
-                    }
-                    lineSb.Append(positionTag + templine);
-                    lineNumber++;
-                }
+                // Test if line at where cursor is current at is a dialog.
+                bool isDialog = selectedLine.StartsWith('-') ||
+                    selectedLine.StartsWith("<" + tag + ">-", StringComparison.OrdinalIgnoreCase);
+
+                // Will be used keep cursor in its previous location after toggle/untoggle.
+                int textLen = text.Length;
+
+                // 1st set the cursor position to zero.
+                tb.SelectionStart = 0;
+
+                // If is dialog, only toggle/Untoggle line where caret/cursor is current at.
                 if (isDialog)
                 {
-                    text = lineSb.ToString();
-                    tb.Text = text;
-                    tb.SelectionStart = selectionStart + tagLength;
-                    tb.SelectionLength = 0;
+                    lines[selectedLineIdx] = HtmlUtil.ToggleTag(selectedLine, tag);
+                    text = string.Join(Environment.NewLine, lines);
                 }
-                // There are no dialog lines present.
                 else
                 {
-                    // Remove tags if present.
-                    if (text.Contains("<" + tag + ">"))
-                    {
-                        text = text.Replace("<" + tag + ">", string.Empty);
-                        text = text.Replace("</" + tag + ">", string.Empty);
-                        tb.Text = text;
-                        tb.SelectionStart = selectionStart - 3;
-                        tb.SelectionLength = 0;
-                    }
-                    else
-                    {
-                        // Add tags.
-                        int indexOfEndBracket = text.IndexOf('}');
-                        if (text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
-                            text = string.Format("{2}<{0}>{1}</{0}>", tag, text.Remove(0, indexOfEndBracket + 1), text.Substring(0, indexOfEndBracket + 1));
-                        else
-                            text = string.Format("<{0}>{1}</{0}>", tag, text);
-                        tb.Text = text;
-                        tb.SelectionStart = selectionStart + 3;
-                        tb.SelectionLength = 0;
-                    }
+                    text = HtmlUtil.ToggleTag(text, tag);
                 }
+                tb.Text = text;
+                // Note: Math.Max will prevent blowing if caret is at the begining and tag was untoggled.
+                tb.SelectionStart = textLen > text.Length ? Math.Max(selectionStart - 3, 0) : selectionStart + 3;
             }
             else
             {
@@ -16090,26 +16040,7 @@ namespace Nikse.SubtitleEdit.Forms
                         text = text.Remove(0, 2);
                     }
                 }
-
-                // Remove tags if present.
-                if (text.Contains("<" + tag + ">"))
-                {
-                    text = text.Replace("<" + tag + ">", string.Empty);
-                    text = text.Replace("</" + tag + ">", string.Empty);
-                }
-                else
-                {
-                    // Add tags.
-                    int indexOfEndBracket = text.IndexOf('}');
-                    if (text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
-                    {
-                        text = string.Format("{2}<{0}>{1}</{0}>", tag, text.Remove(0, indexOfEndBracket + 1), text.Substring(0, indexOfEndBracket + 1));
-                    }
-                    else
-                    {
-                        text = string.Format("<{0}>{1}</{0}>", tag, text);
-                    }
-                }
+                text = HtmlUtil.ToggleTag(text, tag);
                 // Update text and maintain selection.
                 if (pre.Length > 0)
                 {
