@@ -1183,7 +1183,7 @@ namespace Nikse.SubtitleEdit.Core
         public void Save()
         {
             //this is too slow: Serialize(Configuration.SettingsFileName, this);
-            CustomSerialize(Configuration.SettingsFileName, this);
+            CustomSerialize(Configuration.SettingFileName, this);
         }
 
         //private static void Serialize(string fileName, Settings settings)
@@ -1197,7 +1197,7 @@ namespace Nikse.SubtitleEdit.Core
         public static Settings GetSettings()
         {
             var settings = new Settings();
-            var settingsFileName = Configuration.SettingsFileName;
+            var settingsFileName = Configuration.SettingFileName;
             if (File.Exists(settingsFileName))
             {
                 try
