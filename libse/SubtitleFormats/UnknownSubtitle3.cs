@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override bool IsTimeBased
         {
-            get { return true; }
+            get { return false; }
         }
 
         public override bool IsMine(List<string> lines, string fileName)
