@@ -319,21 +319,8 @@ namespace Nikse.SubtitleEdit.Core
 
         public void AdjustDisplayTimeUsingPercent(double percent, List<int> selectedIndexes)
         {
-            for (int i = 0; i < _paragraphs.Count; i++)
-            {
-                if (selectedIndexes == null || selectedIndexes.Contains(i))
-                {
-                    double nextStartMilliseconds = double.MaxValue;
-                    if (i + 1 < _paragraphs.Count)
-                        nextStartMilliseconds = _paragraphs[i + 1].StartTime.TotalMilliseconds;
-
-                    double newEndMilliseconds = _paragraphs[i].EndTime.TotalMilliseconds;
-                    newEndMilliseconds = _paragraphs[i].StartTime.TotalMilliseconds + (((newEndMilliseconds - _paragraphs[i].StartTime.TotalMilliseconds) * percent) / 100);
-                    if (newEndMilliseconds > nextStartMilliseconds)
-                        newEndMilliseconds = nextStartMilliseconds - 1;
-                    _paragraphs[i].EndTime.TotalMilliseconds = newEndMilliseconds;
-                }
-            }
+            double adjustFactorInSeconds = percent % 100.00 / 100.00;
+            AdjustDisplayTimeUsingSeconds(adjustFactorInSeconds, selectedIndexes);
         }
 
         public void AdjustDisplayTimeUsingSeconds(double seconds, List<int> selectedIndexes)
@@ -350,12 +337,9 @@ namespace Nikse.SubtitleEdit.Core
                     if (newEndMilliseconds > nextStartMilliseconds)
                         newEndMilliseconds = nextStartMilliseconds - 1;
 
-                    if (seconds < 0)
+                    if (seconds < 0 && _paragraphs[i].StartTime.TotalMilliseconds + 100 > newEndMilliseconds)
                     {
-                        if (_paragraphs[i].StartTime.TotalMilliseconds + 100 > newEndMilliseconds)
-                            _paragraphs[i].EndTime.TotalMilliseconds = _paragraphs[i].StartTime.TotalMilliseconds + 100;
-                        else
-                            _paragraphs[i].EndTime.TotalMilliseconds = newEndMilliseconds;
+                        _paragraphs[i].EndTime.TotalMilliseconds = _paragraphs[i].StartTime.TotalMilliseconds + 100;
                     }
                     else
                     {
