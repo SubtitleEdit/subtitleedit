@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 fileNameNoExt = _fileName.Substring(0, _fileName.Length - Path.GetExtension(_fileName).Length);
             }
-            foreach (var ext in Utilities.GetMovieFileExtensions())
+            foreach (var ext in Utilities.VideoFileExtensions)
             {
                 if (!string.IsNullOrEmpty(fileNameNoExt) && File.Exists(Path.Combine(fileNameNoExt, ext)))
                 {

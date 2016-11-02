@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     string ext = Path.GetExtension(fileName).ToLower();
-                    if (Utilities.GetMovieFileExtensions().Contains(ext))
+                    if (Utilities.VideoFileExtensions.Contains(ext))
                     {
                         var fi = new FileInfo(fileName);
                         if (ext == ".mkv" && FileUtil.IsVobSub(fileName))
