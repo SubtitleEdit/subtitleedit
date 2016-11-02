@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.5.0</Version>
-    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [30-03-2016]</TranslatedBy>
+    <TranslatedBy>Suomentanut vm, päivittänyt Teijo S. [02-11-2016]</TranslatedBy>
     <CultureName>fi-FI</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
@@ -355,6 +355,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <SubtitleListReferenceCode>Tekstitysluettelon viitekoodi</SubtitleListReferenceCode>
     <CountryOfOrigin>Alkuperämaa</CountryOfOrigin>
     <TimeCodeStatus>Aikakoodin tila</TimeCodeStatus>
+    <TimeCodeStartOfProgramme>Aikakoodi: Ohjelman alku</TimeCodeStartOfProgramme>
     <RevisionNumber>Muunnosnumero</RevisionNumber>
     <MaxNoOfDisplayableChars>Enintään merkkiä rivillä</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Enintään riviä</MaxNumberOfDisplayableRows>
@@ -363,6 +364,9 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <Import>Tuo</Import>
     <TextAndTimingInformation>Teksti- ja ajoitustietoja</TextAndTimingInformation>
     <JustificationCode>Rivintasauskoodi</JustificationCode>
+    <Teletext>Teleteksti</Teletext>
+    <UseBox>Käytä taustaväriä</UseBox>
+    <DoubleHeight>Tekstin kaksinkertainen korkeus</DoubleHeight>
     <Errors>Virheet</Errors>
     <ErrorsX>Virheitä: {0}</ErrorsX>
     <MaxLengthError>Rivinpituus {0} on suurempi kuin enimmäispituus ({1}) {2}: {3}</MaxLengthError>
@@ -418,6 +422,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <ShadowWidth>Varjon leveys</ShadowWidth>
     <Transparency>Alfakanava</Transparency>
     <ImageFormat>Kuvaformaatti</ImageFormat>
+    <FullFrameImage>Koko kehyksen kuva</FullFrameImage>
     <SimpleRendering>Yksinkertainen renderöinti</SimpleRendering>
     <AntiAliasingWithTransparency>Läpikuultavasti pehmennetty</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
@@ -677,6 +682,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <Frames>Kehyksiä</Frames>
     <Seconds>Sekuntia</Seconds>
     <Milliseconds>Millisekuntia</Milliseconds>
+    <GetSceneChangesWithFfmpeg>Kohtausten vaihdot FFmpeg:llä</GetSceneChangesWithFfmpeg>
   </ImportSceneChanges>
   <ImportText>
     <Title>Tuo pelkkä teksti</Title>
@@ -716,45 +722,48 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <Note>HUOM! Tiedostoissa pitää olla valmiiksi kelvolliset aikakoodit</Note>
   </JoinSubtitles>
   <LanguageNames>
-    <aaName>afar</aaName>
+    <NotSpecified>Ei määritetty</NotSpecified>
+    <UnknownCodeX>Tuntematon {{0}}</UnknownCodeX>
+    <aaName>afari</aaName>
     <abName>abhaasi</abName>
     <afName>afrikaans</afName>
-    <amName>amhara</amName>
+    <amName>amharia</amName>
     <arName>arabia</arName>
     <asName>assami</asName>
     <ayName>aimara</ayName>
     <azName>azeri</azName>
-    <baName>baškiiri</baName>
+    <baName>baškiir</baName>
     <beName>valkovenäjä</beName>
     <bgName>bulgaria</bgName>
+    <bhName>bihari </bhName>
     <biName>bislama</biName>
     <bnName>bengali</bnName>
     <boName>tiibet</boName>
-    <brName>bretoni</brName>
+    <brName>breton</brName>
     <caName>katalaani</caName>
     <coName>korsika</coName>
-    <csName>tšekki</csName>
-    <cyName>kymri</cyName>
+    <csName>tsekki</csName>
+    <cyName>wales</cyName>
     <daName>tanska</daName>
     <deName>saksa</deName>
-    <dzName>dzongkha</dzName>
+    <dzName>dzongha</dzName>
     <elName>kreikka</elName>
     <enName>englanti</enName>
     <eoName>esperanto</eoName>
     <esName>espanja</esName>
-    <etName>viro</etName>
+    <etName>eesti</etName>
     <euName>baski</euName>
-    <faName>farsi</faName>
+    <faName>persia</faName>
     <fiName>suomi</fiName>
-    <fjName>fidži</fjName>
+    <fjName>fidzi</fjName>
     <foName>fääri</foName>
     <frName>ranska</frName>
     <fyName>länsifriisi</fyName>
-    <gaName>iiri</gaName>
+    <gaName>iirii</gaName>
     <gdName>gaeli</gdName>
-    <glName>galicia</glName>
+    <glName>galego</glName>
     <gnName>guarani</gnName>
-    <guName>gudžarati</guName>
+    <guName>gurajati</guName>
     <haName>hausa</haName>
     <heName>heprea</heName>
     <hiName>hindi</hiName>
@@ -762,21 +771,21 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <huName>unkari</huName>
     <hyName>armenia</hyName>
     <iaName>interlingua</iaName>
-    <idName>indonesia</idName>
+    <idName>indoneesi</idName>
     <ieName>interlingue</ieName>
-    <ikName>inupiaq</ikName>
+    <ikName>inupiak</ikName>
     <isName>islanti</isName>
     <itName>italia</itName>
-    <iuName>inuktitut</iuName>
+    <iuName>eskimo</iuName>
     <jaName>japani</jaName>
     <jvName>jaava</jvName>
     <kaName>georgia</kaName>
-    <kkName>kazakki</kkName>
-    <klName>kalaallisut</klName>
+    <kkName>kasakki</kkName>
+    <klName>grönlanti</klName>
     <kmName>khmer</kmName>
     <knName>kannada</knName>
     <koName>korea</koName>
-    <ksName>kašmiri</ksName>
+    <ksName>kashmiri</ksName>
     <kuName>kurdi</kuName>
     <kyName>kirgiisi</kyName>
     <laName>latina</laName>
@@ -785,11 +794,12 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <loName>lao</loName>
     <ltName>liettua</ltName>
     <lvName>latvia</lvName>
-    <mgName>malagassi</mgName>
+    <mgName>malagasi</mgName>
     <miName>maori</miName>
     <mkName>makedonia</mkName>
     <mlName>malajalam</mlName>
-    <mnName>mongoli</mnName>
+    <mnName>mongilia</mnName>
+    <moName>moldavia</moName>
     <mrName>marathi</mrName>
     <msName>malaiji</msName>
     <mtName>malta</mtName>
@@ -801,33 +811,33 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <ocName>oksitaani</ocName>
     <omName>oromo</omName>
     <orName>orija</orName>
-    <paName>pandžabi</paName>
+    <paName>punjabi</paName>
     <plName>puola</plName>
     <psName>paštu</psName>
     <ptName>portugali</ptName>
-    <quName>ketšua</quName>
+    <quName>ketsua</quName>
     <rmName>retoromaani</rmName>
     <rnName>rundi</rnName>
     <roName>romania</roName>
     <ruName>venäjä</ruName>
     <rwName>ruanda</rwName>
-    <saName>sanskrit</saName>
+    <saName>sanskriitti</saName>
     <sdName>sindhi</sdName>
     <sgName>sango</sgName>
-    <shName>serbokroaatti</shName>
+    <shName>serbokroatia</shName>
     <siName>sinhala</siName>
     <skName>slovakki</skName>
     <slName>sloveeni</slName>
     <smName>samoa</smName>
-    <snName>šona</snName>
+    <snName>shona</snName>
     <soName>somali</soName>
     <sqName>albania</sqName>
     <srName>serbia</srName>
-    <ssName>swazi</ssName>
-    <stName>eteläsotho</stName>
+    <ssName>swati</ssName>
+    <stName>sotho</stName>
     <suName>sunda</suName>
     <svName>ruotsi</svName>
-    <swName>swahili</swName>
+    <swName>suahili</swName>
     <taName>tamili</taName>
     <teName>telugu</teName>
     <tgName>tadžikki</tgName>
@@ -835,7 +845,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <tiName>tigrinja</tiName>
     <tkName>turkmeeni</tkName>
     <tlName>tagalog</tlName>
-    <tnName>tswana</tnName>
+    <tnName>tšwana</tnName>
     <toName>tonga</toName>
     <trName>turkki</trName>
     <tsName>tsonga</tsName>
@@ -849,9 +859,9 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
     <voName>volapük</voName>
     <woName>wolof</woName>
     <xhName>xhosa</xhName>
-    <yiName>jiddiš</yiName>
+    <yiName>jiddi</yiName>
     <yoName>joruba</yoName>
-    <zaName>zhuang</zaName>
+    <zaName>tšuang</zaName>
     <zhName>kiina</zhName>
     <zuName>zulu</zuName>
   </LanguageNames>
@@ -974,6 +984,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <OpenDvd>Avaa DVD</OpenDvd>
         <ChooseAudioTrack>Valitse ääniraita</ChooseAudioTrack>
         <CloseVideo>Sulje videotiedosto</CloseVideo>
+        <SetVideoOffset>Aseta videosiirtymä...</SetVideoOffset>
         <ImportSceneChanges>Tuo kohtausmuutokset</ImportSceneChanges>
         <RemoveSceneChanges>Poista kohtausmuutokset</RemoveSceneChanges>
         <WaveformBatchGenerate>Luo aaltomuodot eräajona</WaveformBatchGenerate>
@@ -1032,6 +1043,7 @@ HUOM! Tarkista vapaa levytila.</WaveFileMalformed>
         <Find>Etsi</Find>
         <Replace>Korvaa</Replace>
         <FixCommonErrors>Korjaa yleisimmät virheet</FixCommonErrors>
+        <RemoveTextForHi>Poista äänitekstitys</RemoveTextForHi>
         <VisualSync>Visuaalinen tahdistus</VisualSync>
         <SpellCheck>Oikoluku</SpellCheck>
         <Settings>Asetukset</Settings>
@@ -1498,6 +1510,12 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Rules>Korvaussäännöt</Rules>
     <MoveToTop>Siirrä yläreunaan</MoveToTop>
     <MoveToBottom>Siirrä alareunaan</MoveToBottom>
+    <MoveSelectedRulesToGroup>Siirrä valitut säännöt ryhmään</MoveSelectedRulesToGroup>
+    <Groups>Ryhmät</Groups>
+    <RulesForGroupX>Ryhmän "{0}" säännöt</RulesForGroupX>
+    <GroupName>Ryhmän nimi</GroupName>
+    <RenameGroup>Uudelleennimeä ryhmä...</RenameGroup>
+    <NewGroup>Uusi ryhmä...</NewGroup>
   </MultipleReplace>
   <NetworkChat>
     <Title>Keskustelupalsta</Title>
@@ -1654,6 +1672,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <DurationMinimumMilliseconds>Pienin kesto, millisekuntia</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Suurin kesto, millisekuntia</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Tekstitysten pienin väli, msek.</MinimumGapMilliseconds>
+    <MaximumLines>Rivien enimmäismäärä</MaximumLines>
     <SubtitleFont>Tekstitysfontti</SubtitleFont>
     <SubtitleFontSize>Tekstityksen fonttikoko</SubtitleFontSize>
     <SubtitleBold>Lihavoitu</SubtitleBold>
@@ -1681,6 +1700,10 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <AutoBackupEveryMinute>Joka minuutti</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Joka viides minuutti</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>15 minuutin välein</AutoBackupEveryFifteenMinutes>
+    <AutoBackupDeleteAfter>Poista kun kulunut</AutoBackupDeleteAfter>
+    <AutoBackupDeleteAfterOneMonth>kuukausi</AutoBackupDeleteAfterOneMonth>
+    <AutoBackupDeleteAfterThreeMonths>kaksi kuukautta</AutoBackupDeleteAfterThreeMonths>
+    <AutoBackupDeleteAfterSixMonths>puoli vuotta</AutoBackupDeleteAfterSixMonths>
     <CheckForUpdates>Tarkista päivitykset</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Salli alkuperäisen tekstityksen muokkaaminen</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Rivien poiston vahvistus</PromptDeleteLines>
@@ -1763,6 +1786,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <FirstPlusX>Ensimmäinen + {0}</FirstPlusX>
     <LastMinusX>Viimeinen - {0}</LastMinusX>
     <FixCommonerrors>Virhekorjaukset</FixCommonerrors>
+    <RemoveTextForHi>Poista äänitekstitys</RemoveTextForHi>
     <MergeLinesShorterThan>Yhdistä rivit lyhyempiä kuin</MergeLinesShorterThan>
     <MusicSymbol>Musiikkisymboli</MusicSymbol>
     <MusicSymbolsToReplace>Korvattavat nuotit (erota välilyönnillä)</MusicSymbolsToReplace>
@@ -1789,12 +1813,15 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <AdjustSetStartTimeKeepDuration>Aseta aloitusaika, säilytä kesto</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Aseta loppu, liu'uta muita</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Aseta loppu, liu'uta muita ja siirry seuraavaan</AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustExtendCurrentSubtitle>Laajenna nykyinen rivi suraavaan tekstitykseen taienimmäiskestoon</AdjustExtendCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitle>Laske uudelleen nykyisen tekstityksen kesto</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Luo uusi alasnuolella, aseta loppuaika ylösnuolella</MainCreateStartDownEndUp>
     <MergeDialog>Yhdistä vuoropuhelu (lisää viivoja)</MergeDialog>
     <GoToNext>Siirry seuraavalle riville</GoToNext>
     <GoToPrevious>Siirry edelliselle riville</GoToPrevious>
     <GoToCurrentSubtitleStart>Siirry nykyisen rivin alkuun</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Siirry nykyisen rivin loppuun</GoToCurrentSubtitleEnd>
+    <GoToNextSubtitleAndFocusVideo>Siirry seuraavalle riville ja aseta sijainti</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Vaihda listanäkymän ja tekstitysruudun välillä</ToggleFocus>
     <ToggleDialogDashes>Vaihda vuoropuhelun katkoviivat</ToggleDialogDashes>
     <Alignment>Tasaus (valitut rivit)</Alignment>
@@ -1812,6 +1839,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <WaveformPlayNewSelectionEnd>Toista valinnan loppu</WaveformPlayNewSelectionEnd>
     <WaveformPlayFirstSelectedSubtitle>Toista ensimmäinen valittu tekstitys</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Tarkennusluettelonäkymä</WaveformFocusListView>
+    <WaveformGoToNextSceneChange>Siirry seuraavaan kohtauksen vaihtoon</WaveformGoToNextSceneChange>
+    <WaveformToggleSceneChange>Kohtauksen vaihto päälle / pois</WaveformToggleSceneChange>
     <GoBack1Frame>Yksi kehys takaisin</GoBack1Frame>
     <GoForward1Frame>Yksi kehys eteenpäin</GoForward1Frame>
     <GoBack100Milliseconds>100 ms takaisin</GoBack100Milliseconds>
@@ -1820,6 +1849,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <GoForward500Milliseconds>500 ms eteenpäin</GoForward500Milliseconds>
     <GoBack1Second>Sekunti takaisin</GoBack1Second>
     <GoForward1Second>Sekunti eteenpäin</GoForward1Second>
+    <GoBack5Seconds>Viisi sekuntia takaisin</GoBack5Seconds>
+    <GoForward5Seconds>Viisi sekuntia eteenpäin</GoForward5Seconds>
     <TogglePlayPause>Vaihda toisto/tauko</TogglePlayPause>
     <Pause>Tauko</Pause>
     <Fullscreen>Kokonäyttö</Fullscreen>
@@ -1834,7 +1865,7 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <SyntaxColorDurationIfTooSmall>Korosta kesto, jos se on liian lyhyt</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Korosta kesto, josse on  liian pitkä</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Korosta teksti, jos se on liian pitkä</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Väritä teksti, jos rivejä enemmän kuin</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorTextMoreThanMaxLines>Korosta teksti jos sen rivimäärä yli {0}</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Korosta aikaleimojen päällekkäisyys</SyntaxColorOverlap>
     <SyntaxErrorColor>Korostusväri</SyntaxErrorColor>
     <GoToFirstSelectedLine>Siirry ensimmäiselle valitulle riville</GoToFirstSelectedLine>
@@ -1844,6 +1875,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ToggleTranslationMode>Vaihda käännöksen tila</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Vaihda alkuperäinen ja käännös</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Yhdistä alkuperäinen ja käännös</MergeOriginalAndTranslation>
+    <MergeWithNext>Yhdistä seuraavaan</MergeWithNext>
+    <MergeWithPrevious>Yhdistä edelliseen</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Pikanäppäin on jo määritelty: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Vaihda esikatselussa käännös ja alkuperäinen kuva/ääni</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Sarake, poista teksti</ListViewColumnDelete>
@@ -1877,6 +1910,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Title>Videosiirtymäasetukset</Title>
     <Description>Aseta videosiirtymä (tekstityksen tulee olla +10 yksikköä edellä)</Description>
     <RelativeToCurrentVideoPosition>Suhteessa nykyiseen videokohtaan</RelativeToCurrentVideoPosition>
+    <KeepTimeCodes>Säilytä aikakoodit (ei siirtymää)</KeepTimeCodes>
+    <Reset>Palauta</Reset>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Näytä valitut rivit aikaisemmin/myöhemmin</Title>
@@ -2206,6 +2241,17 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <Title>Säädä kursivoinninpoistoa</Title>
     <Description>Säädä tekstitystä normaaliksi, ei kursivoiduksi (HUOM Alkuperäinen kuva säilyy kursivoituna)</Description>
   </VobSubOcrSetItalicFactor>
+  <Watermark>
+    <Title>Vesileima</Title>
+    <WatermarkX>Vesileima: {0}</WatermarkX>
+    <GenerateWatermarkTitle>Luo vesileima</GenerateWatermarkTitle>
+    <SpreadOverEntireSubtitle>Yli koko tekstityksen</SpreadOverEntireSubtitle>
+    <CurrentLineOnlyX>Vain nykyiselle riville {0}</CurrentLineOnlyX>
+    <Generate>Luo</Generate>
+    <Remove>Poista</Remove>
+    <BeforeWatermark>Ennen vesileimaa</BeforeWatermark>
+    <ErrorUnicodeEncodingOnly>Lisää vesileima vain Unicode-koodattuihin tekstityksiin</ErrorUnicodeEncodingOnly>
+  </Watermark>
   <Waveform>
     <ClickToAddWaveform>Lisää aaltomuoto napsauttamalla</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Lisää aaltomuoto tai taajuusanalyysi napsauttamalla</ClickToAddWaveformAndSpectrogram>
@@ -2224,6 +2270,8 @@ Mikäli tiedostoa on muokattu Subtitle Edit:llä, varmuuskopio voi olla käytett
     <ShowWaveformAndSpectrogram>Näytä aaltomuoto ja taajuusanalyysi</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Näytä vain aaltomuoto</ShowWaveformOnly>
     <ShowSpectrogramOnly>Näytä vain taajuusanalyysi</ShowSpectrogramOnly>
+    <AddSceneChange>Lisää kohtauksen vaihto</AddSceneChange>
+    <RemoveSceneChange>Poista kohtauksen vaihto</RemoveSceneChange>
     <GuessTimeCodes>Arvaa aikaleimat</GuessTimeCodes>
     <SeekSilence>Etsi hiljaisuutta</SeekSilence>
   </Waveform>
