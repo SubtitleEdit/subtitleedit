@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 {
-    public class MpcHc : VideoPlayer, IDisposable
+    public class MpcHc : IVideoPlayer, IDisposable
     {
         private const string ModePlay = "0";
         private const string ModePause = "1";
@@ -32,14 +32,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         private Timer _hideMpcTimer = new Timer();
         private int _hideMpcTimerCount;
 
-        public override string PlayerName
+        public string PlayerName
         {
             get { return "MPC-HC"; }
         }
 
         private int _volume = 75;
 
-        public override int Volume
+        public int Volume
         {
             get
             {
@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             }
         }
 
-        public override double Duration
+        public double Duration
         {
             get
             {
@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             }
         }
 
-        public override double CurrentPosition
+        public double CurrentPosition
         {
             get
             {
@@ -75,39 +75,41 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             }
         }
 
-        public override void Play()
+        public void Play()
         {
             _playMode = ModePlay;
             SendMpcMessage(MpcHcCommand.Play);
         }
 
-        public override void Pause()
+        public void Pause()
         {
             _playMode = ModePause;
             SendMpcMessage(MpcHcCommand.Pause);
         }
 
-        public override void Stop()
+        public void Stop()
         {
             SendMpcMessage(MpcHcCommand.Stop);
         }
 
-        public override bool IsPaused
+        public bool IsPaused
         {
             get { return _playMode == ModePause; }
         }
 
-        public override bool IsPlaying
+        public bool IsPlaying
         {
             get { return _playMode == ModePlay; }
         }
 
-        public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        public void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             if (ownerControl == null)
                 return;
 
-            VideoFileName = videoFileName;
+            // TODO: Find way to subscrive to Resized in VideoPlayerContainer vie "ownerControl"
+
+            _videoFileName = videoFileName;
             OnVideoLoaded = onVideoLoaded;
             OnVideoEnded = onVideoEnded;
 
@@ -263,7 +265,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             return false;
         }
 
-        public override void Resize(int width, int height)
+        public void Resize(int width, int height)
         {
             NativeMethods.ShowWindow(_process.MainWindowHandle, NativeMethods.ShowWindowCommands.ShowNoActivate);
             NativeMethods.SetWindowPos(_videoHandle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, 0, 0, width, height, NativeMethods.SetWindowPosFlags.SWP_NOREPOSITION);
@@ -377,14 +379,35 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             get { return true; }
         }
 
-        public override void DisposeVideoPlayer()
+        public string VideoFileName
+        {
+            get
+            {
+                return _videoFileName;
+            }
+        }
+
+        public double PlayRate
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public void DisposeVideoPlayer()
         {
             Dispose();
         }
 
-        public override event EventHandler OnVideoLoaded;
+        public event EventHandler OnVideoLoaded;
 
-        public override event EventHandler OnVideoEnded;
+        public event EventHandler OnVideoEnded;
 
         private void ReleaseUnmangedResources()
         {

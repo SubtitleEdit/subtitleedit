@@ -292,7 +292,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void GoBackSeconds(double seconds, VideoPlayer mediaPlayer)
+        private void GoBackSeconds(double seconds, IVideoPlayer mediaPlayer)
         {
             if (mediaPlayer != null)
             {

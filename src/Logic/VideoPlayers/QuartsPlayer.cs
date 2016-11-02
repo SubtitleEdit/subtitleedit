@@ -10,10 +10,10 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    public class QuartsPlayer : VideoPlayer, IDisposable
+    public class QuartsPlayer : IVideoPlayer, IDisposable
     {
-        public override event EventHandler OnVideoLoaded;
-        public override event EventHandler OnVideoEnded;
+        public event EventHandler OnVideoLoaded;
+        public event EventHandler OnVideoEnded;
 
         private IVideoWindow _quartzVideo;
         private FilgraphManager _quartzFilgraphManager;
@@ -25,13 +25,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private int _sourceWidth;
         private int _sourceHeight;
 
-        public override string PlayerName { get { return "DirectShow"; } }
+        public string PlayerName { get { return "DirectShow"; } }
 
         /// <summary>
         /// In DirectX -10000 is silent and 0 is full volume.
         /// Also, -3500 to 0 seems to be all you can hear! Not much use for -3500 to -9999...
         /// </summary>
-        public override int Volume
+        public int Volume
         {
             get
             {
@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override double Duration
+        public double Duration
         {
             get
             {
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override double CurrentPosition
+        public double CurrentPosition
         {
             get
             {
@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override double PlayRate
+        public double PlayRate
         {
             get { return _mediaPosition.Rate; }
             set
@@ -104,25 +104,25 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override void Play()
+        public void Play()
         {
             _quartzFilgraphManager.Run();
             _isPaused = false;
         }
 
-        public override void Pause()
+        public void Pause()
         {
             _quartzFilgraphManager.Pause();
             _isPaused = true;
         }
 
-        public override void Stop()
+        public void Stop()
         {
             _quartzFilgraphManager.Stop();
             _isPaused = true;
         }
 
-        public override bool IsPaused
+        public bool IsPaused
         {
             get
             {
@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override bool IsPlaying
+        public bool IsPlaying
         {
             get
             {
@@ -138,7 +138,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        public string VideoFileName { get; private set; }
+
+        public void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             const int wsChild = 0x40000000;
 
@@ -276,7 +278,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _quartzVideo.Top = (_owner.Height - _quartzVideo.Height) / 2;
         }
 
-        public override void DisposeVideoPlayer()
+        public void DisposeVideoPlayer()
         {
             System.Threading.ThreadPool.QueueUserWorkItem(DisposeQuarts, _quartzFilgraphManager);
         }

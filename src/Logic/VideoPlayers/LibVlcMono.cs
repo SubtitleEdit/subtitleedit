@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    internal class LibVlcMono : VideoPlayer, IDisposable
+    public class LibVlcMono : IVideoPlayer, IDisposable
     {
         private Timer _videoLoadedTimer;
         private Timer _videoEndTimer;
@@ -14,13 +14,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private IntPtr _mediaPlayer;
         private Control _ownerControl;
         private Form _parentForm;
+        private string _videoFileName;
 
-        public override string PlayerName
+        public string PlayerName
         {
             get { return "VLC Lib Mono"; }
         }
 
-        public override int Volume
+        public int Volume
         {
             get
             {
@@ -32,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override double Duration
+        public double Duration
         {
             get
             {
@@ -40,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override double CurrentPosition
+        public double CurrentPosition
         {
             get
             {
@@ -52,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override double PlayRate
+        public double PlayRate
         {
             get
             {
@@ -65,23 +66,23 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override void Play()
+        public void Play()
         {
             NativeMethods.libvlc_media_player_play(_mediaPlayer);
         }
 
-        public override void Pause()
+        public void Pause()
         {
             if (!IsPaused)
                 NativeMethods.libvlc_media_player_pause(_mediaPlayer);
         }
 
-        public override void Stop()
+        public void Stop()
         {
             NativeMethods.libvlc_media_player_stop(_mediaPlayer);
         }
 
-        public override bool IsPaused
+        public bool IsPaused
         {
             get
             {
@@ -91,7 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override bool IsPlaying
+        public bool IsPlaying
         {
             get
             {
@@ -118,6 +119,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             set
             {
                 NativeMethods.libvlc_audio_set_track(_mediaPlayer, value + 1);
+            }
+        }
+
+        public string VideoFileName
+        {
+            get
+            {
+                return _videoFileName;
             }
         }
 
@@ -174,12 +183,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 OnVideoLoaded.Invoke(_mediaPlayer, new EventArgs());
         }
 
-        public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        public void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             _ownerControl = ownerControl;
             if (ownerControl != null)
                 _parentForm = ownerControl.FindForm();
 
+            _videoFileName = videoFileName;
             OnVideoLoaded = onVideoLoaded;
             OnVideoEnded = onVideoEnded;
 
@@ -224,7 +234,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override void DisposeVideoPlayer()
+        public void DisposeVideoPlayer()
         {
             if (_videoLoadedTimer != null)
                 _videoLoadedTimer.Stop();
@@ -240,9 +250,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             ReleaseUnmangedResources();
         }
 
-        public override event EventHandler OnVideoLoaded;
+        public event EventHandler OnVideoLoaded;
 
-        public override event EventHandler OnVideoEnded;
+        public event EventHandler OnVideoEnded;
 
         ~LibVlcMono()
         {

@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static VideoPlayer GetVideoPlayer()
+        public static IVideoPlayer GetVideoPlayer()
         {
             GeneralSettings gs = Configuration.Settings.General;
 

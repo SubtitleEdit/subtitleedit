@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    public class LibVlcDynamic : VideoPlayer, IDisposable
+    public class LibVlcDynamic : IVideoPlayer, IDisposable
     {
         private Timer _videoLoadedTimer;
         private Timer _videoEndTimer;
@@ -152,6 +152,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int libvlc_video_set_spu(IntPtr mediaPlayer, int trackNumber);
         private libvlc_video_set_spu _libvlc_video_set_spu;
+        private string _videoFileName;
 
         //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         //public unsafe delegate void* LockEventHandler(void* opaque, void** plane);
@@ -279,12 +280,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override string PlayerName
+        public string PlayerName
         {
             get { return "VLC Lib Dynamic"; }
         }
 
-        public override int Volume
+        public int Volume
         {
             get
             {
@@ -296,7 +297,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override double Duration
+        public double Duration
         {
             get
             {
@@ -304,7 +305,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override double CurrentPosition
+        public double CurrentPosition
         {
             get
             {
@@ -324,7 +325,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override double PlayRate
+        public double PlayRate
         {
             get
             {
@@ -350,13 +351,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override void Play()
+        public void Play()
         {
             _libvlc_media_player_play(_mediaPlayer);
             _pausePosition = null;
         }
 
-        public override void Pause()
+        public void Pause()
         {
             int i = 0;
             _libvlc_media_player_set_pause(_mediaPlayer, 1);
@@ -370,13 +371,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _libvlc_media_player_set_pause(_mediaPlayer, 1);
         }
 
-        public override void Stop()
+        public void Stop()
         {
             _libvlc_media_player_stop(_mediaPlayer);
             _pausePosition = null;
         }
 
-        public override bool IsPaused
+        public bool IsPaused
         {
             get
             {
@@ -386,7 +387,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override bool IsPlaying
+        public bool IsPlaying
         {
             get
             {
@@ -424,6 +425,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             get
             {
                 return _libvlc_audio_get_delay(_mediaPlayer) / 1000; // converts microseconds to milliseconds
+            }
+        }
+
+        public string VideoFileName
+        {
+            get
+            {
+                return _videoFileName;
             }
         }
 
@@ -616,7 +625,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             return true;
         }
 
-        public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        public void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             _ownerControl = ownerControl;
             if (ownerControl != null)
@@ -633,6 +642,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 return;
             }
 
+            _videoFileName = videoFileName;
             OnVideoLoaded = onVideoLoaded;
             OnVideoEnded = onVideoEnded;
 
@@ -733,14 +743,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override void DisposeVideoPlayer()
+        public void DisposeVideoPlayer()
         {
             Dispose();
         }
 
-        public override event EventHandler OnVideoLoaded;
+        public event EventHandler OnVideoLoaded;
 
-        public override event EventHandler OnVideoEnded;
+        public event EventHandler OnVideoEnded;
 
         private void ReleaseUnmangedResources()
         {
@@ -807,6 +817,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
             ReleaseUnmangedResources();
         }
-
+        
     }
 }
