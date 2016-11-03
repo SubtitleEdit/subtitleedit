@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string movieFileName = null;
 
-            foreach (string extension in Utilities.GetMovieFileExtensions())
+            foreach (string extension in Utilities.VideoFileExtensions)
             {
                 movieFileName = fileNameNoExtension + extension;
                 if (File.Exists(movieFileName))
