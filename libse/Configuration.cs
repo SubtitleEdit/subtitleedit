@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Core
         public static readonly string PluginsDirectory = DataDirectory + "Plugins" + Path.DirectorySeparatorChar;
         public static readonly string IconsDirectory = BaseDirectory + "Icons" + Path.DirectorySeparatorChar;
         public static readonly string OcrDirectory = DataDirectory + "Ocr" + Path.DirectorySeparatorChar;
-        public static readonly string SettingFileName = DataDirectory + "Settings.xml";
+        public static readonly string SettingsFileName = DataDirectory + "Settings.xml";
         public static readonly string TesseractDataDirectory = GetTesseractDataDirectory();
 
 
