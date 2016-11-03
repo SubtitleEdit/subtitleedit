@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             radioButtonRegEx.Left = radioButtonText.Left + radioButtonText.Width + 10;
-            foreach (string fileName in Directory.GetFiles(Configuration.DictionariesFolder, "*_NoBreakAfterList.xml"))
+            foreach (string fileName in Directory.GetFiles(Configuration.DictionariesDirectory, "*_NoBreakAfterList.xml"))
             {
                 try
                 {

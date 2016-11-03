@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Core
 
         private static string GetSceneChangesFileName(string videoFileName)
         {
-            var dir = Configuration.SceneChangesFolder.TrimEnd(Path.DirectorySeparatorChar);
+            var dir = Configuration.SceneChangesDirectory.TrimEnd(Path.DirectorySeparatorChar);
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 

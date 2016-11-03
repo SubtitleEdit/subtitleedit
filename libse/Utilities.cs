@@ -719,7 +719,7 @@ namespace Nikse.SubtitleEdit.Core
         {
             get
             {
-                return Configuration.DictionariesFolder;
+                return Configuration.DictionariesDirectory;
             }
         }
 

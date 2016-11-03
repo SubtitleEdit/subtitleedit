@@ -336,7 +336,7 @@ namespace Nikse.SubtitleEdit.Core
     {
         public static string GetPeakWaveFileName(string videoFileName)
         {
-            var dir = Configuration.WaveformsFolder.TrimEnd(Path.DirectorySeparatorChar);
+            var dir = Configuration.WaveformsDirectory.TrimEnd(Path.DirectorySeparatorChar);
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
@@ -804,7 +804,7 @@ namespace Nikse.SubtitleEdit.Core
 
             public static string GetSpectrogramFolder(string videoFileName)
             {
-                var dir = Configuration.SpectrogramsFolder.TrimEnd(Path.DirectorySeparatorChar);
+                var dir = Configuration.SpectrogramsDirectory.TrimEnd(Path.DirectorySeparatorChar);
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
 

@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_binOcrDb == null)
             {
                 ImageCompareDocument = new XmlDocument();
-                _directoryPath = Configuration.VobSubCompareFolder + databaseFolderName + Path.DirectorySeparatorChar;
+                _directoryPath = Configuration.VobSubCompareDirectory + databaseFolderName + Path.DirectorySeparatorChar;
                 if (!File.Exists(_directoryPath + "Images.xml"))
                     ImageCompareDocument.LoadXml("<OcrBitmaps></OcrBitmaps>");
                 else

@@ -43,9 +43,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void RestoreAutoBackup_Shown(object sender, EventArgs e)
         {
             listViewBackups.Columns[2].Width = -2;
-            if (Directory.Exists(Configuration.AutoBackupFolder))
+            if (Directory.Exists(Configuration.AutoBackupDirectory))
             {
-                _files = Directory.GetFiles(Configuration.AutoBackupFolder, "*.*");
+                _files = Directory.GetFiles(Configuration.AutoBackupDirectory, "*.*");
                 foreach (string fileName in _files)
                 {
                     if (RegexFileNamePattern.IsMatch(Path.GetFileName(fileName)))
@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void linkLabelOpenContainingFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string folderName = Configuration.AutoBackupFolder;
+            string folderName = Configuration.AutoBackupDirectory;
             if (Utilities.IsRunningOnMono())
             {
                 System.Diagnostics.Process.Start(folderName);
