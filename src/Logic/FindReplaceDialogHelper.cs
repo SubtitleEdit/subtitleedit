@@ -126,9 +126,21 @@ namespace Nikse.SubtitleEdit.Logic
                 Paragraph p = subtitle.Paragraphs[startIndex];
                 int pos = -1;
                 bool matchedInOriginal = false;
+
+                // When the 1st textbox/listview is empty
+                if (p.Text.Length < position)
+                    position = 0;
+
+                // Jump to next paragraph.
+                if (p.Text.Length == position)
+                {
+                    continue;
+                }
+
                 if (!MatchInOriginal)
                 {
                     pos = FindPositionInText(p.Text, position);
+                    position = 0;
                 }
                 if (pos < 0 && allowEditOfOriginalSubtitle)
                 {
@@ -146,7 +158,6 @@ namespace Nikse.SubtitleEdit.Logic
                     SelectedPosition = pos;
                     return Success = true;
                 }
-                position = 0;
             }
             return false;
         }

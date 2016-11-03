@@ -4270,31 +4270,33 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_findHelper != null)
             {
-                TextBox tb;
-                if (_findHelper.MatchInOriginal)
-                    tb = textBoxListViewTextAlternate;
-                else
-                    tb = textBoxListViewText;
+                // Smells: Something is not okay here!
+                TextBox tb = _findHelper.MatchInOriginal ? textBoxListViewTextAlternate : textBoxListViewText;
 
                 if (tabControlSubtitle.SelectedIndex == TabControlListView)
                 {
-                    int selectedIndex = -1;
-                    if (SubtitleListview1.SelectedItems.Count > 0)
-                        selectedIndex = SubtitleListview1.SelectedItems[0].Index;
-
                     int textBoxStart = tb.SelectionStart;
                     if (_findHelper.SelectedPosition - 1 == tb.SelectionStart && tb.SelectionLength > 0)
                     {
                         textBoxStart = tb.SelectionStart + 1;
                     }
-
-                    if (_findHelper.FindNext(_subtitle, _subtitleAlternate, selectedIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
+                    if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _subtitleListViewIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                         ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
-                        tb.Focus();
-                        tb.SelectionStart = _findHelper.SelectedPosition;
-                        tb.SelectionLength = _findHelper.FindTextLength;
+                        if (_findHelper.MatchInOriginal)
+                        {
+                            textBoxListViewTextAlternate.Focus();
+                            textBoxListViewTextAlternate.SelectionStart = _findHelper.SelectedPosition;
+                            textBoxListViewTextAlternate.SelectionLength = _findHelper.FindTextLength;
+                        }
+                        else
+                        {
+                            textBoxListViewText.Focus();
+                            textBoxListViewText.SelectionStart = _findHelper.SelectedPosition;
+                            textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
+                        };
+                        // Next search start position!
                         _findHelper.SelectedPosition++;
                     }
                     else
