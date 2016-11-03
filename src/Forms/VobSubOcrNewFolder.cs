@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    string fullName = Configuration.VobSubCompareFolder + folderName;
+                    string fullName = Configuration.VobSubCompareDirectory + folderName;
                     Directory.CreateDirectory(fullName);
                     FolderName = folderName;
                     DialogResult = DialogResult.OK;

@@ -3988,7 +3988,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void TryLoadIcon(ToolStripButton button, string iconName)
         {
-            string fullPath = Configuration.IconsFolder + iconName + ".png";
+            string fullPath = Configuration.IconsDirectory + iconName + ".png";
             if (File.Exists(fullPath))
                 button.Image = new Bitmap(fullPath);
         }
@@ -15305,25 +15305,25 @@ namespace Nikse.SubtitleEdit.Forms
                     _textAutoSave = _changeSubtitleToString;
                 if (!string.IsNullOrEmpty(_textAutoSave) && currentText.Trim() != _textAutoSave.Trim() && !string.IsNullOrWhiteSpace(currentText))
                 {
-                    if (!Directory.Exists(Configuration.AutoBackupFolder))
+                    if (!Directory.Exists(Configuration.AutoBackupDirectory))
                     {
                         try
                         {
-                            Directory.CreateDirectory(Configuration.AutoBackupFolder);
+                            Directory.CreateDirectory(Configuration.AutoBackupDirectory);
                         }
                         catch (Exception exception)
                         {
-                            MessageBox.Show(string.Format(_language.UnableToCreateBackupDirectory, Configuration.AutoBackupFolder, exception.Message));
+                            MessageBox.Show(string.Format(_language.UnableToCreateBackupDirectory, Configuration.AutoBackupDirectory, exception.Message));
                             return;
                         }
                     }
                     string title = string.Empty;
                     if (!string.IsNullOrEmpty(_fileName))
                         title = "_" + Path.GetFileNameWithoutExtension(_fileName);
-                    string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}", Configuration.AutoBackupFolder, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, title, GetCurrentSubtitleFormat().Extension);
+                    string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}", Configuration.AutoBackupDirectory, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, title, GetCurrentSubtitleFormat().Extension);
                     File.WriteAllText(fileName, currentText);
 
-                    RestoreAutoBackup.CleanAutoBackupFolder(Configuration.AutoBackupFolder, Configuration.Settings.General.AutoBackupDeleteAfterMonths);
+                    RestoreAutoBackup.CleanAutoBackupFolder(Configuration.AutoBackupDirectory, Configuration.Settings.General.AutoBackupDeleteAfterMonths);
                 }
             }
             _textAutoSave = currentText;
@@ -15337,11 +15337,11 @@ namespace Nikse.SubtitleEdit.Forms
                         _textAutoSaveOriginal = _changeSubtitleToString;
                     if (!string.IsNullOrEmpty(_textAutoSaveOriginal) && currentTextAlternate.Trim() != _textAutoSaveOriginal.Trim() && !string.IsNullOrWhiteSpace(currentTextAlternate))
                     {
-                        if (!Directory.Exists(Configuration.AutoBackupFolder))
+                        if (!Directory.Exists(Configuration.AutoBackupDirectory))
                         {
                             try
                             {
-                                Directory.CreateDirectory(Configuration.AutoBackupFolder);
+                                Directory.CreateDirectory(Configuration.AutoBackupDirectory);
                             }
                             catch
                             {
@@ -15350,7 +15350,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string title = string.Empty;
                         if (!string.IsNullOrEmpty(_subtitleAlternateFileName))
                             title = "_" + Path.GetFileNameWithoutExtension(_subtitleAlternateFileName);
-                        string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}", Configuration.AutoBackupFolder, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, "_Original" + title, GetCurrentSubtitleFormat().Extension);
+                        string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}", Configuration.AutoBackupDirectory, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, "_Original" + title, GetCurrentSubtitleFormat().Extension);
                         File.WriteAllText(fileName, currentTextAlternate);
                     }
                 }
@@ -18967,7 +18967,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (ContinueNewOrExit())
                     {
                         OpenSubtitle(restoreAutoBackup.AutoBackupFileName, null);
-                        _fileName = _fileName.Remove(0, Configuration.AutoBackupFolder.Length).TrimStart(Path.DirectorySeparatorChar);
+                        _fileName = _fileName.Remove(0, Configuration.AutoBackupDirectory.Length).TrimStart(Path.DirectorySeparatorChar);
                         _converted = true;
                         SetTitle();
                     }

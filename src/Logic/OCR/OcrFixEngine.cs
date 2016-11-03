@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             // Load names etc list (names/noise words)
-            _namesList = new NamesList(Configuration.DictionariesFolder, _fiveLetterWordListLanguageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+            _namesList = new NamesList(Configuration.DictionariesDirectory, _fiveLetterWordListLanguageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
             _namesEtcList = _namesList.GetNames();
             _namesEtcMultiWordList = _namesList.GetMultiNames();
             _namesEtcListUppercase = new HashSet<string>();

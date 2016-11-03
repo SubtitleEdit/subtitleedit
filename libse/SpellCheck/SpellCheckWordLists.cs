@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
 
             _languageName = languageName;
             _doSpell = doSpell;
-            _namesList = new NamesList(Configuration.DictionariesFolder, languageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+            _namesList = new NamesList(Configuration.DictionariesDirectory, languageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
             _namesEtcList = _namesList.GetNames();
             var namesEtcMultiWordList = _namesList.GetMultiNames();
 
@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Core.SpellCheck
             if (!word.EndsWith('\''))
                 _namesEtcListWithApostrophe.Add(word + "'");
 
-            var namesList = new NamesList(Configuration.DictionariesFolder, _languageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+            var namesList = new NamesList(Configuration.DictionariesDirectory, _languageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
             namesList.Add(word);
             return true;
         }

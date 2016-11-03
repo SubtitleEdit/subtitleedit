@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelImageInfo.Text = string.Empty;
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
 
-            _directoryPath = Configuration.VobSubCompareFolder + databaseFolderName + Path.DirectorySeparatorChar;
+            _directoryPath = Configuration.VobSubCompareDirectory + databaseFolderName + Path.DirectorySeparatorChar;
             if (!File.Exists(_directoryPath + "Images.xml"))
                 _compareDoc.LoadXml("<OcrBitmaps></OcrBitmaps>");
             else
