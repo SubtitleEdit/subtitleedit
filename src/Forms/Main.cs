@@ -4270,20 +4270,18 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_findHelper != null)
             {
-                // Smells: Something is not okay here!
-                TextBox tb = _findHelper.MatchInOriginal ? textBoxListViewTextAlternate : textBoxListViewText;
-
                 if (tabControlSubtitle.SelectedIndex == TabControlListView)
                 {
-                    int textBoxStart = tb.SelectionStart;
-                    if (_findHelper.SelectedPosition - 1 == tb.SelectionStart && tb.SelectionLength > 0)
+                    int textBoxStart = textBoxListViewText.SelectionStart;
+                    if (_findHelper.SelectedPosition - 1 == textBoxListViewText.SelectionStart && textBoxListViewText.SelectionLength > 0)
                     {
-                        textBoxStart = tb.SelectionStart + 1;
+                        textBoxStart = textBoxListViewText.SelectionLength;
                     }
                     if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _subtitleListViewIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                         ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
+                        // Focus and select whichever textbox text was found in.
                         if (_findHelper.MatchInOriginal)
                         {
                             textBoxListViewTextAlternate.Focus();
@@ -4296,7 +4294,7 @@ namespace Nikse.SubtitleEdit.Forms
                             textBoxListViewText.SelectionStart = _findHelper.SelectedPosition;
                             textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
                         };
-                        // Next search start position!
+                        // Next search start position.
                         _findHelper.SelectedPosition++;
                     }
                     else
@@ -4308,11 +4306,29 @@ namespace Nikse.SubtitleEdit.Forms
                                 _findHelper.StartLineIndex = 0;
                                 if (_findHelper.Find(_subtitle, _subtitleAlternate, 0))
                                 {
+<<<<<<< 4d49ee662a2cd2ce3619a045bc6a97683f6fefdd
                                     SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                                     tb.Focus();
                                     tb.SelectionStart = _findHelper.SelectedPosition;
                                     tb.SelectionLength = _findHelper.FindTextLength;
+=======
+                                    SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex);
+>>>>>>> Work in progress part 2.
                                     ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
+                                    // Focus and select whichever textbox text was found in.
+                                    if (_findHelper.MatchInOriginal)
+                                    {
+                                        textBoxListViewTextAlternate.Focus();
+                                        textBoxListViewTextAlternate.SelectionStart = _findHelper.SelectedPosition;
+                                        textBoxListViewTextAlternate.SelectionLength = _findHelper.FindTextLength;
+                                    }
+                                    else
+                                    {
+                                        textBoxListViewText.Focus();
+                                        textBoxListViewText.SelectionStart = _findHelper.SelectedPosition;
+                                        textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
+                                    };
+                                    // Next search start position.
                                     _findHelper.SelectedPosition++;
                                     return;
                                 }
