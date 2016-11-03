@@ -13424,7 +13424,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string movieFileName = null;
 
-            foreach (var extension in Utilities.GetMovieFileExtensions())
+            foreach (var extension in Utilities.VideoFileExtensions)
             {
                 var fileName = fileNameNoExtension + extension;
                 if (File.Exists(fileName))
@@ -15801,7 +15801,7 @@ namespace Nikse.SubtitleEdit.Forms
             string ext = Path.GetExtension(fileName).ToLowerInvariant();
             if (ext != ".wav" || !WavePeakGenerator.IsFileValidForVisualizer(fileName))
             {
-                if (audioVisualizer.WavePeaks == null && (Utilities.GetMovieFileExtensions().Contains(ext) || ext == ".wav" || ext == ".mp3" || ext == ".mka" || ext == ".m4a" || ext == ".wma"))
+                if (audioVisualizer.WavePeaks == null && (Utilities.VideoFileExtensions.Contains(ext) || ext == ".wav" || ext == ".mp3" || ext == ".mka" || ext == ".m4a" || ext == ".wma"))
                 {
                     _videoFileName = fileName;
                     AudioWaveform_Click(null, null);

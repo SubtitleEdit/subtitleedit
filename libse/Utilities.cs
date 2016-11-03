@@ -116,17 +116,16 @@ namespace Nikse.SubtitleEdit.Core
             return info;
         }
 
-        public static List<string> GetMovieFileExtensions()
-        {
-            return new List<string> { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".m2ts", ".avs", ".mxf" };
-        }
+        // TODO: Change to IReadonlyList in .net >= 4.5
+        public static ICollection<string> VideoFileExtensions { get; } = new List<string>
+        { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv",".mov", ".m4v", ".vob", ".ogv", ".webm", ".ts", ".m2ts", ".avs", ".mxf" };
 
         public static string GetVideoFileFilter(bool includeAudioFiles)
         {
             var sb = new StringBuilder();
             sb.Append(Configuration.Settings.Language.General.VideoFiles + "|");
             int i = 0;
-            foreach (string extension in GetMovieFileExtensions())
+            foreach (string extension in VideoFileExtensions)
             {
                 if (i > 0)
                     sb.Append(';');
