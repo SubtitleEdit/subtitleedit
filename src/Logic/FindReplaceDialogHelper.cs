@@ -23,6 +23,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int StartLineIndex { get; set; }
         public bool MatchInOriginal { get; set; }
 
+        // TODO: Remove. (Text length can easily be accesed through FindText).
         public int FindTextLength
         {
             get
@@ -128,15 +129,6 @@ namespace Nikse.SubtitleEdit.Logic
                 int pos = -1;
                 bool matchedInOriginal = false;
 
-                // When the 1st textbox/listview is empty
-                //if (p.Text.Length < position)
-                //    position = 0;
-
-                // Jump to next paragraph.
-                //if (p.Text.Length == position)
-                //{
-                //    continue;
-                //}
                 if (MatchInOriginal)
                 {
                     pos = FindPositionInText(p.Text, 0);
@@ -146,7 +138,6 @@ namespace Nikse.SubtitleEdit.Logic
                     pos = FindPositionInText(p.Text, position);
                     position = 0;
                 }
-                //position = 0;
                 if (pos < 0 && allowEditOfOriginalSubtitle)
                 {
                     p = originalSubtitle?.GetParagraphOrDefault(startIndex);

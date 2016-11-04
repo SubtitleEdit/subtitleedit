@@ -4277,7 +4277,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         textBoxStart = textBoxListViewText.SelectionLength;
                     }
-                    // If already matched in original/alternate textbox/listview.
+                    // If already matched in original/alternate.
                     if (_findHelper.MatchInOriginal && _findHelper.FindText.Length > 0)
                     {
                         textBoxStart = _findHelper.FindText.Length;
