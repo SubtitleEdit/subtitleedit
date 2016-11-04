@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    public class MPlayer : IVideoPlayer, IDisposable
+    public class MPlayer : IVideoPlayer
     {
         private Process _mplayer;
         private Timer _timer;

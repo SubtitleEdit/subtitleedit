@@ -10,7 +10,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    public class LibMpvDynamic : IVideoPlayer, IDisposable
+    public class LibMpvDynamic : IVideoPlayer
     {
 
         #region mpv dll methods
@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private IntPtr _libMpvDll;
         private IntPtr _mpvHandle;
         private Timer _videoLoadedTimer;
-        //        private Timer _videoEndedTimer;
+        // private Timer _videoEndedTimer;
 
         public event EventHandler OnVideoLoaded;
         public event EventHandler OnVideoEnded;
@@ -494,6 +494,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 DoMpvCommand("quit");
             ReleaseUnmangedResources();
         }
-        
+
     }
 }

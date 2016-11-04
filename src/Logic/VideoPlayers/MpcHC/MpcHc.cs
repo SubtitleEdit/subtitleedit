@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 {
-    public class MpcHc : IVideoPlayer, IDisposable
+    public class MpcHc : IVideoPlayer
     {
         private const string ModePlay = "0";
         private const string ModePause = "1";

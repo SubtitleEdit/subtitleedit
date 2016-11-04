@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    public class LibVlcDynamic : IVideoPlayer, IDisposable
+    public class LibVlcDynamic : IVideoPlayer
     {
         private Timer _videoLoadedTimer;
         private Timer _videoEndTimer;

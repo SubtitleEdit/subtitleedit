@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    public class QuartsPlayer : IVideoPlayer, IDisposable
+    public class QuartsPlayer : IVideoPlayer
     {
         public event EventHandler OnVideoLoaded;
         public event EventHandler OnVideoEnded;

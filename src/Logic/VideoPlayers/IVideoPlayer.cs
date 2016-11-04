@@ -3,10 +3,12 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    public interface IVideoPlayer
+    public interface IVideoPlayer : IDisposable
     {
+        event EventHandler OnVideoLoaded;
+        event EventHandler OnVideoEnded;
         string PlayerName { get; }
-        string VideoFileName { get; } // TODO: protected set; 
+        string VideoFileName { get; } // TODO: protected set;
         int Volume { get; set; }
         double Duration { get; }
         double CurrentPosition { get; set; }
@@ -23,7 +25,5 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         bool IsPlaying { get; }
         void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded);
         void DisposeVideoPlayer();
-        event EventHandler OnVideoLoaded;
-        event EventHandler OnVideoEnded;
     }
 }
