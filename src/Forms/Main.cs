@@ -4277,6 +4277,11 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         textBoxStart = textBoxListViewText.SelectionLength;
                     }
+                    // If already matched in original/alternate textbox/listview.
+                    if (_findHelper.MatchInOriginal && _findHelper.FindText.Length > 0)
+                    {
+                        textBoxStart = _findHelper.FindText.Length;
+                    }
                     if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _subtitleListViewIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
@@ -4304,6 +4309,8 @@ namespace Nikse.SubtitleEdit.Forms
                             if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                             {
                                 _findHelper.StartLineIndex = 0;
+                                _findHelper.SelectedPosition = 0;
+                                _findHelper.MatchInOriginal = true;
                                 if (_findHelper.Find(_subtitle, _subtitleAlternate, 0))
                                 {
 <<<<<<< 4d49ee662a2cd2ce3619a045bc6a97683f6fefdd

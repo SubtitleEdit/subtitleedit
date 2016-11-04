@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Logic
         public FindType FindType { get; set; }
         public bool MatchWholeWord { get; set; }
         public int SelectedIndex { get; set; }
-        public int SelectedPosition { get; set; }
+        public int SelectedPosition { get; set; } // TODO: Rename this to SelectionStart
         public int StartLineIndex { get; set; }
         public bool MatchInOriginal { get; set; }
 
@@ -121,6 +121,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (position < 0)
                 position = 0;
             Success = false;
+            StartLineIndex = startIndex;
             for (; startIndex < subtitle.Paragraphs.Count; startIndex++)
             {
                 Paragraph p = subtitle.Paragraphs[startIndex];
@@ -128,20 +129,24 @@ namespace Nikse.SubtitleEdit.Logic
                 bool matchedInOriginal = false;
 
                 // When the 1st textbox/listview is empty
-                if (p.Text.Length < position)
-                    position = 0;
+                //if (p.Text.Length < position)
+                //    position = 0;
 
                 // Jump to next paragraph.
-                if (p.Text.Length == position)
+                //if (p.Text.Length == position)
+                //{
+                //    continue;
+                //}
+                if (MatchInOriginal)
                 {
-                    continue;
+                    pos = FindPositionInText(p.Text, 0);
                 }
-
-                if (!MatchInOriginal)
+                else
                 {
                     pos = FindPositionInText(p.Text, position);
                     position = 0;
                 }
+                //position = 0;
                 if (pos < 0 && allowEditOfOriginalSubtitle)
                 {
                     p = originalSubtitle?.GetParagraphOrDefault(startIndex);
