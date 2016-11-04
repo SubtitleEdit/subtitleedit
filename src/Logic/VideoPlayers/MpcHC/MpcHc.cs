@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 {
-    public class MpcHc : IVideoPlayer
+    public class MpcHc : Control, IVideoPlayer
     {
         private double _playRate = 1.0;
         private const string ModePlay = "0";
@@ -22,12 +22,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         private IntPtr _videoPanelHandle = IntPtr.Zero;
         private ProcessStartInfo _startInfo;
         private Process _process;
-        private IntPtr _messageHandlerHandle = IntPtr.Zero;
         private string _videoFileName;
         private Timer _positionTimer;
         private double _positionInSeconds;
         private double _durationInSeconds;
-        private MessageHandlerWindow _form;
         private int _initialWidth;
         private int _initialHeight;
         private Timer _hideMpcTimer = new Timer();
@@ -35,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 
         public MpcHc(INotifyOnResize videoPlayerContainer)
         {
-            videoPlayerContainer.Resized += Resize;
+            videoPlayerContainer.Resized += CustomResize;
         }
 
         public string PlayerName
@@ -129,24 +127,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             if (ownerControl == null)
                 return;
 
-            // TODO: Find way to subscrive to Resized in VideoPlayerContainer vie "ownerControl"
-
             _videoFileName = videoFileName;
             OnVideoLoaded = onVideoLoaded;
             OnVideoEnded = onVideoEnded;
 
             _initialWidth = ownerControl.Width;
             _initialHeight = ownerControl.Height;
-            _form = new MessageHandlerWindow();
-            _form.OnCopyData += OnCopyData;
-            _form.Show();
-            _form.Hide();
             _videoPanelHandle = ownerControl.Handle;
-            _messageHandlerHandle = _form.Handle;
             _videoFileName = videoFileName;
             _startInfo = new ProcessStartInfo();
             _startInfo.FileName = GetMpcHcFileName();
-            _startInfo.Arguments = "/new /minimized /slave " + _messageHandlerHandle;
+            _startInfo.Arguments = "/new /minimized /slave " + this.Handle;
             _process = Process.Start(_startInfo);
             if (_process != null)
                 _process.WaitForInputIdle();
@@ -204,7 +195,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                             _durationInSeconds = d;
 
                         Pause();
-                        Resize(_initialWidth, _initialHeight);
+                        CustomResize(_initialWidth, _initialHeight);
                         if (OnVideoLoaded != null)
                             OnVideoLoaded.Invoke(this, new EventArgs());
                         SendMpcMessage(MpcHcCommand.SetSubtitleTrack, "-1");
@@ -241,8 +232,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             }
         }
 
-        private void HideMpcPlayerWindow()
+        private void HideMpcPlayerWindow(bool check = true)
         {
+            if (check && (_process == null || _process.MainWindowHandle == IntPtr.Zero))
+                return;
             NativeMethods.ShowWindow(_process.MainWindowHandle, NativeMethods.ShowWindowCommands.Hide);
             NativeMethods.SetWindowPos(_process.MainWindowHandle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, -9999, -9999, 0, 0, NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
         }
@@ -287,11 +280,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             return false;
         }
 
-        public void Resize(int width, int height)
+        // TODO: Maybe change the name/"use Control.Resize"?
+        public void CustomResize(int width, int height)
         {
+            if (_process == null || _process.MainWindowHandle == IntPtr.Zero)
+                return;
             NativeMethods.ShowWindow(_process.MainWindowHandle, NativeMethods.ShowWindowCommands.ShowNoActivate);
             NativeMethods.SetWindowPos(_videoHandle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, 0, 0, width, height, NativeMethods.SetWindowPosFlags.SWP_NOREPOSITION);
-            HideMpcPlayerWindow();
+            HideMpcPlayerWindow(false);
         }
 
         public static string GetMpcHcFileName()
@@ -442,13 +438,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             Dispose(false);
         }
 
-        public void Dispose()
+        public new void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             try
             {
@@ -467,14 +463,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         _hideMpcTimer.Dispose();
                         _hideMpcTimer = null;
                     }
-
-                    if (_form != null)
-                    {
-                        _form.OnCopyData -= OnCopyData;
-                        //_form.Dispose(); this gives an error when doing File -> Exit...
-                        _form = null;
-                    }
-
                     if (_process != null)
                     {
                         _process.Dispose();
@@ -497,7 +485,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 
         private void SendMpcMessage(uint command, string parameter)
         {
-            if (_mpcHandle == IntPtr.Zero || _messageHandlerHandle == IntPtr.Zero)
+            if (_mpcHandle == IntPtr.Zero)
                 return;
 
             parameter += (char)0;
@@ -505,7 +493,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             cds.dwData = (UIntPtr)command;
             cds.cbData = parameter.Length * Marshal.SystemDefaultCharSize;
             cds.lpData = Marshal.StringToCoTaskMemAuto(parameter);
-            NativeMethods.SendMessage(_mpcHandle, NativeMethods.WindowsMessageCopyData, _messageHandlerHandle, ref cds);
+            NativeMethods.SendMessage(_mpcHandle, NativeMethods.WindowsMessageCopyData, this.Handle, ref cds);
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == NativeMethods.WindowsMessageCopyData)
+                OnCopyData(m, EventArgs.Empty);
+            base.WndProc(ref m);
         }
 
     }
