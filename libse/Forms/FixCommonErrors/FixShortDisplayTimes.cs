@@ -56,13 +56,14 @@
                     }
                 }
 
-                double charactersPerSecond = Utilities.GetCharactersPerSecond(p);
-                if (!skip && charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                double charsPerSecond = Utilities.GetCharactersPerSecond(p);
+                double maxCharsPerSecond = Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds;
+                if (!skip && charsPerSecond > maxCharsPerSecond)
                 {
                     var temp = new Paragraph(p);
-                    while (Utilities.GetCharactersPerSecond(temp) > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                    if (charsPerSecond > maxCharsPerSecond)
                     {
-                        temp.EndTime.TotalMilliseconds++;
+                        temp.EndTime.TotalMilliseconds = temp.StartTime.TotalMilliseconds + (charsPerSecond - maxCharsPerSecond) * p.Duration.Seconds * TimeCode.BaseUnit;
                     }
                     Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
                     Paragraph nextNext = subtitle.GetParagraphOrDefault(i + 2);
