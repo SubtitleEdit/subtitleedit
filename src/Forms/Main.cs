@@ -4282,6 +4282,11 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         textBoxStart = _findHelper.FindText.Length;
                     }
+
+                    // Clear previous selection heighlight.
+                    textBoxListViewText.SelectionLength = 0;
+                    textBoxListViewTextAlternate.SelectionLength = 0;
+
                     if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _subtitleListViewIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);

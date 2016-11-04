@@ -123,6 +123,11 @@ namespace Nikse.SubtitleEdit.Logic
                 position = 0;
             Success = false;
             StartLineIndex = startIndex;
+            // UNDONE: This will always increment starIndex.
+            if (MatchInOriginal && SelectedPosition >= startIndex)
+            {
+                startIndex++;
+            }
             for (; startIndex < subtitle.Paragraphs.Count; startIndex++)
             {
                 Paragraph p = subtitle.Paragraphs[startIndex];
