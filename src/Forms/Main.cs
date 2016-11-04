@@ -4277,17 +4277,18 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         textBoxStart = textBoxListViewText.SelectionLength;
                     }
+
                     // If already matched in original/alternate.
                     if (_findHelper.MatchInOriginal && _findHelper.FindText.Length > 0)
                     {
-                        textBoxStart = _findHelper.FindText.Length;
+                        textBoxStart = _findHelper.FindText.Length; // TODO: Remove this!
                     }
 
                     // Clear previous selection heighlight.
                     textBoxListViewText.SelectionLength = 0;
                     textBoxListViewTextAlternate.SelectionLength = 0;
 
-                    if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _subtitleListViewIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
+                    if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _subtitleListViewIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                         ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
@@ -4341,7 +4342,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
                                     };
                                     // Next search start position.
-                                    _findHelper.SelectedPosition++;
+                                     // _findHelper.SelectedPosition++;
                                     return;
                                 }
                             }
