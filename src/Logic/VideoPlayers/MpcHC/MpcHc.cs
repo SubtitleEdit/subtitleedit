@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 {
     public class MpcHc : IVideoPlayer
     {
+        private double _playRate = 1.0;
         private const string ModePlay = "0";
         private const string ModePause = "1";
         private string _playMode = string.Empty;
@@ -84,6 +85,22 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         {
             _playMode = ModePlay;
             SendMpcMessage(MpcHcCommand.Play);
+        }
+
+        public double PlayRate
+        {
+            get
+            {
+                return _playRate;
+            }
+            set
+            {
+                if (value != 0.0)
+                {
+                    _playRate = value;
+                    SendMpcMessage(MpcHcCommand.PlayRate, _playRate.ToString());
+                }
+            }
         }
 
         public void Pause()
@@ -389,19 +406,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             get
             {
                 return _videoFileName;
-            }
-        }
-
-        public double PlayRate
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
             }
         }
 

@@ -866,6 +866,7 @@
     <Compile Include="Logic\UiGetPacEncoding.cs" />
     <Compile Include="Logic\UiGetYouTubeAnnotationStyles.cs" />
     <Compile Include="Logic\UiUtil.cs" />
+    <Compile Include="Logic\VideoPlayers\INotifyOnResize.cs" />
     <Compile Include="Logic\VideoPlayers\LibMpvDynamic.cs" />
     <Compile Include="Logic\VideoPlayers\LibVlcDynamic.cs" />
     <Compile Include="Logic\VideoPlayers\LibVlcMono.cs" />

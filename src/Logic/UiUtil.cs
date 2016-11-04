@@ -220,6 +220,7 @@ namespace Nikse.SubtitleEdit.Logic
                 videoPlayerContainer.EnableMouseWheelStep();
                 videoPlayerContainer.VideoWidth = videoInfo.Width;
                 videoPlayerContainer.VideoHeight = videoInfo.Height;
+                // UNDONE!
                 videoPlayerContainer.VideoPlayerContainerResize(null, EventArgs.Empty);
                 // videoPlayerContainer.VideoPlayer.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
             }
