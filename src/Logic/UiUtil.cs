@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static IVideoPlayer GetVideoPlayer()
+        public static IVideoPlayer GetVideoPlayer(INotifyOnResize videoPlayerContainer)
         {
             GeneralSettings gs = Configuration.Settings.General;
 
@@ -196,13 +196,14 @@ namespace Nikse.SubtitleEdit.Logic
             //                return new MPlayer();
 
             if (gs.VideoPlayer == "MPC-HC" && VideoPlayers.MpcHC.MpcHc.IsInstalled)
-                return new VideoPlayers.MpcHC.MpcHc();
+                return new VideoPlayers.MpcHC.MpcHc(videoPlayerContainer);
 
             if (IsQuartsDllInstalled)
                 return new QuartsPlayer();
             //if (IsWmpAvailable)
             //    return new WmpPlayer();
 
+            // TODO: Localize exceptino message (also include MPC-HC).
             throw new NotSupportedException("You need DirectX, VLC media player 1.1.x, or MPlayer2 installed as well as Subtitle Edit dll files in order to use the video player!");
         }
 
@@ -210,7 +211,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             try
             {
-                videoPlayerContainer.VideoPlayer = GetVideoPlayer();
+                videoPlayerContainer.VideoPlayer = GetVideoPlayer(videoPlayerContainer);
                 videoPlayerContainer.VideoPlayer.Initialize(videoPlayerContainer.PanelPlayer, fileName, onVideoLoaded, onVideoEnded);
                 videoPlayerContainer.ShowStopButton = Configuration.Settings.General.VideoPlayerShowStopButton;
                 videoPlayerContainer.ShowFullscreenButton = false;
@@ -219,7 +220,8 @@ namespace Nikse.SubtitleEdit.Logic
                 videoPlayerContainer.EnableMouseWheelStep();
                 videoPlayerContainer.VideoWidth = videoInfo.Width;
                 videoPlayerContainer.VideoHeight = videoInfo.Height;
-                videoPlayerContainer.VideoPlayer.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
+                videoPlayerContainer.VideoPlayerContainerResize(null, EventArgs.Empty);
+                // videoPlayerContainer.VideoPlayer.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
             }
             catch (Exception exception)
             {

@@ -32,6 +32,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         private Timer _hideMpcTimer = new Timer();
         private int _hideMpcTimerCount;
 
+        public MpcHc(INotifyOnResize videoPlayerContainer)
+        {
+            videoPlayerContainer.Resized += Resize;
+        }
+
         public string PlayerName
         {
             get { return "MPC-HC"; }

@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
 {
-    public sealed class VideoPlayerContainer : Panel
+    public sealed class VideoPlayerContainer : Panel, INotifyOnResize
     {
         public class RichTextBoxViewOnly : RichTextBox
         {
