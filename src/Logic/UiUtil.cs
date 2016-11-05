@@ -16,6 +16,8 @@ namespace Nikse.SubtitleEdit.Logic
 {
     internal static class UiUtil
     {
+        public static readonly Lazy<string> SubtitleExtensionFilter = new Lazy<string>(GetOpenDialogFilter);
+
         public static VideoInfo GetVideoInfo(string fileName)
         {
             VideoInfo info = Utilities.TryReadVideoInfoViaAviHeader(fileName);
@@ -606,7 +608,17 @@ namespace Nikse.SubtitleEdit.Logic
             return c == UnicodeCategory.SpaceSeparator || c == UnicodeCategory.Control || c == UnicodeCategory.LineSeparator || c == UnicodeCategory.ParagraphSeparator;
         }
 
-        public static string GetOpenDialogFilter()
+        private static void AddExtension(StringBuilder sb, string extension)
+        {
+            if (!sb.ToString().Contains("*" + extension + ";", StringComparison.OrdinalIgnoreCase))
+            {
+                sb.Append('*');
+                sb.Append(extension.TrimStart('*'));
+                sb.Append(';');
+            }
+        }
+
+        private static string GetOpenDialogFilter()
         {
             var sb = new StringBuilder();
             sb.Append(Configuration.Settings.Language.General.SubtitleFiles + "|");
@@ -649,16 +661,6 @@ namespace Nikse.SubtitleEdit.Logic
             sb.Append(Configuration.Settings.Language.General.AllFiles);
             sb.Append("|*.*");
             return sb.ToString();
-        }
-
-        private static void AddExtension(StringBuilder sb, string extension)
-        {
-            if (!sb.ToString().Contains("*" + extension + ";", StringComparison.OrdinalIgnoreCase))
-            {
-                sb.Append('*');
-                sb.Append(extension.TrimStart('*'));
-                sb.Append(';');
-            }
         }
 
     }
