@@ -1714,7 +1714,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             openFileDialog1.Title = _languageGeneral.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = UiUtil.GetOpenDialogFilter();
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 RemoveAlternate(true);
@@ -5258,7 +5258,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.Title = _language.OpenSubtitleToAppend;
                 openFileDialog1.FileName = string.Empty;
-                openFileDialog1.Filter = UiUtil.GetOpenDialogFilter();
+                openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
                 if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
                 {
                     bool success = false;
@@ -10307,7 +10307,7 @@ namespace Nikse.SubtitleEdit.Forms
             ReloadFromSourceView();
             openFileDialog1.Title = _language.OpenAnsiSubtitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = UiUtil.GetOpenDialogFilter();
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 var chooseEncoding = new ChooseEncoding();
@@ -12860,7 +12860,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.Title = _language.OpenOtherSubtitle;
                 openFileDialog1.FileName = string.Empty;
-                openFileDialog1.Filter = UiUtil.GetOpenDialogFilter();
+                openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
                 if (openFileDialog1.ShowDialog() == DialogResult.OK && File.Exists(openFileDialog1.FileName))
                 {
                     var file = new FileInfo(openFileDialog1.FileName);
@@ -13009,7 +13009,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             openFileDialog1.Title = _languageGeneral.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = UiUtil.GetOpenDialogFilter();
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 Encoding encoding;
@@ -13093,7 +13093,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SaveSubtitleListviewIndices();
                 openFileDialog1.Title = _languageGeneral.OpenOriginalSubtitleFile;
                 openFileDialog1.FileName = string.Empty;
-                openFileDialog1.Filter = UiUtil.GetOpenDialogFilter();
+                openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
                 if (openFileDialog1.ShowDialog(this) != DialogResult.OK)
                     return;
 
@@ -16969,7 +16969,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.Title = _languageGeneral.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = UiUtil.GetOpenDialogFilter();
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 if (!File.Exists(openFileDialog1.FileName))
@@ -19382,7 +19382,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.Title = _languageGeneral.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = UiUtil.GetOpenDialogFilter();
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 if (!File.Exists(openFileDialog1.FileName))

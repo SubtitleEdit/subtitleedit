@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
             UiUtil.FixLargeFonts(this, buttonOK);
             subtitleListView1.UseSyntaxColoring = false;
             subtitleListView2.UseSyntaxColoring = false;
-            openFileDialog1.Filter = UiUtil.GetOpenDialogFilter();
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             LoadConfigurations();
         }
 
@@ -928,7 +928,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var listExt = new List<string>();
-            foreach (var s in UiUtil.GetOpenDialogFilter().Split(new[] { '*' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var s in UiUtil.SubtitleExtensionFilter.Value.Split(new[] { '*' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 if (s.EndsWith(';'))
                     listExt.Add(s.Trim(';'));
