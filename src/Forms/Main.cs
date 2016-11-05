@@ -14826,6 +14826,34 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_exitWhenLoaded)
                 Application.Exit();
+
+            // UNDONE!
+            if (Configuration.Settings.General.ShowBetaStuff)
+            {
+                var toolStripMenuItemImport = new ToolStripMenuItem("Import");
+                toolStripMenuItemImport.Name = nameof(toolStripMenuItemImport);
+                int insertIndex = -1;
+                for (int i = fileToolStripMenuItem.DropDownItems.Count - 1; i >= 0; i--)
+                {
+                    ToolStripItem tsItem = fileToolStripMenuItem.DropDownItems[i];
+                    if (tsItem.Text.StartsWith("Import", StringComparison.Ordinal))
+                    {
+                        // Note: just calling toolStripMenuItemImport.DropDownItems.Add will remove tsItem from its owner
+                        // But removing it 'manually' saves us from some checking done internally :)
+                        fileToolStripMenuItem.DropDownItems.RemoveAt(i);
+                        toolStripMenuItemImport.DropDownItems.Add(tsItem);
+                        insertIndex = i;
+                    }
+                    else if (insertIndex != -1)
+                    {
+                        break;
+                    }
+                }
+                if (insertIndex != -1)
+                {
+                    fileToolStripMenuItem.DropDownItems.Insert(insertIndex, toolStripMenuItemImport);
+                }
+            }
         }
 
         private void TimerCheckForUpdatesTick(object sender, EventArgs e)
