@@ -11,47 +11,44 @@ namespace Nikse.SubtitleEdit.Core.Forms
     {
         private List<string> _interjectionList;
 
+        // Contains words/interjections that must be skipped.
+        private HashSet<string> _skipSet;
+
         public RemoveInterjections()
+            : this(Configuration.Settings.Tools.Interjections.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
         {
-            Load();
         }
 
-        private void Load()
+        public RemoveInterjections(IList<string> interjections)
         {
-            var interjectionList = new HashSet<string>();
-            foreach (var s in Configuration.Settings.Tools.Interjections.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+            Load(interjections);
+        }
+
+        public void Load(IList<string> interjections)
+        {
+            _interjectionList = new List<string>(interjections.Count);
+            foreach (var s in interjections)
             {
                 if (s.Length > 0)
                 {
-                    interjectionList.Add(s);
+                    _interjectionList.Add(s);
                     var upper = s.ToUpper();
-                    interjectionList.Add(upper);
+                    _interjectionList.Add(upper);
                     var lower = s.ToLower();
-                    interjectionList.Add(lower);
-                    interjectionList.Add(lower.CapitalizeFirstLetter());
+                    _interjectionList.Add(lower);
+                    _interjectionList.Add(lower.CapitalizeFirstLetter());
                 }
             }
-            _interjectionList = new List<string>(interjectionList);
-            interjectionList.Clear();
-            interjectionList.TrimExcess();
-            _interjectionList.Sort(CompareLength);
+            _interjectionList.Sort((a, b) => b.Length.CompareTo(a.Length)); // TODO: Or a.Length.CompareTo(b.Length);
         }
 
-        public void Reset()
+        public void ReloadFromCSVString(string csvString)
         {
-            _interjectionList = null;
-        }
-
-        private static int CompareLength(string a, string b)
-        {
-            return b.Length.CompareTo(a.Length);
+            Load(csvString.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
         }
 
         public string Remove(string text)
         {
-            if (_interjectionList == null)
-                Load();
-
             string oldText = text;
             bool doRepeat = true;
             while (doRepeat)
@@ -66,51 +63,51 @@ namespace Nikse.SubtitleEdit.Core.Forms
                         if (match.Success)
                         {
                             int index = match.Index;
-                            string temp = text.Remove(index, s.Length);
-                            while (index == 0 && temp.StartsWith("... ", StringComparison.Ordinal))
+                            string interjection = text.Remove(index, s.Length);
+                            while (index == 0 && interjection.StartsWith("... ", StringComparison.Ordinal))
                             {
-                                temp = temp.Remove(3, 1);
+                                interjection = interjection.Remove(3, 1);
                             }
-                            while (index == 3 && temp.StartsWith("<i>... ", StringComparison.Ordinal))
+                            while (index == 3 && interjection.StartsWith("<i>... ", StringComparison.Ordinal))
                             {
-                                temp = temp.Remove(6, 1);
+                                interjection = interjection.Remove(6, 1);
                             }
-                            while (index > 2 && (" \r\n".Contains(text.Substring(index - 1, 1))) && temp.Substring(index).StartsWith("... ", StringComparison.Ordinal))
+                            while (index > 2 && (" \r\n".Contains(text.Substring(index - 1, 1))) && interjection.Substring(index).StartsWith("... ", StringComparison.Ordinal))
                             {
-                                temp = temp.Remove(index + 3, 1);
+                                interjection = interjection.Remove(index + 3, 1);
                             }
 
-                            if (temp.Remove(0, index) == " —" && temp.EndsWith("—  —", StringComparison.Ordinal))
+                            if (interjection.Remove(0, index) == " —" && interjection.EndsWith("—  —", StringComparison.Ordinal))
                             {
-                                temp = temp.Remove(temp.Length - 3);
-                                if (temp.EndsWith(Environment.NewLine + "—", StringComparison.Ordinal))
-                                    temp = temp.Remove(temp.Length - 1).TrimEnd();
+                                interjection = interjection.Remove(interjection.Length - 3);
+                                if (interjection.EndsWith(Environment.NewLine + "—", StringComparison.Ordinal))
+                                    interjection = interjection.Remove(interjection.Length - 1).TrimEnd();
                             }
-                            else if (temp.Remove(0, index) == " —" && temp.EndsWith("-  —", StringComparison.Ordinal))
+                            else if (interjection.Remove(0, index) == " —" && interjection.EndsWith("-  —", StringComparison.Ordinal))
                             {
-                                temp = temp.Remove(temp.Length - 3);
-                                if (temp.EndsWith(Environment.NewLine + "-", StringComparison.Ordinal))
-                                    temp = temp.Remove(temp.Length - 1).TrimEnd();
+                                interjection = interjection.Remove(interjection.Length - 3);
+                                if (interjection.EndsWith(Environment.NewLine + "-", StringComparison.Ordinal))
+                                    interjection = interjection.Remove(interjection.Length - 1).TrimEnd();
                             }
-                            else if (index == 2 && temp.StartsWith("-  —", StringComparison.Ordinal))
+                            else if (index == 2 && interjection.StartsWith("-  —", StringComparison.Ordinal))
                             {
-                                temp = temp.Remove(2, 2);
+                                interjection = interjection.Remove(2, 2);
                             }
-                            else if (index == 2 && temp.StartsWith("- —", StringComparison.Ordinal))
+                            else if (index == 2 && interjection.StartsWith("- —", StringComparison.Ordinal))
                             {
-                                temp = temp.Remove(2, 1);
+                                interjection = interjection.Remove(2, 1);
                             }
-                            else if (index == 0 && temp.StartsWith(" —", StringComparison.Ordinal))
+                            else if (index == 0 && interjection.StartsWith(" —", StringComparison.Ordinal))
                             {
-                                temp = temp.Remove(0, 2);
+                                interjection = interjection.Remove(0, 2);
                             }
-                            else if (index == 0 && temp.StartsWith('—'))
+                            else if (index == 0 && interjection.StartsWith('—'))
                             {
-                                temp = temp.Remove(0, 1);
+                                interjection = interjection.Remove(0, 1);
                             }
-                            else if (index > 3 && (temp.Substring(index - 2) == ".  —" || temp.Substring(index - 2) == "!  —" || temp.Substring(index - 2) == "?  —"))
+                            else if (index > 3 && (interjection.Substring(index - 2) == ".  —" || interjection.Substring(index - 2) == "!  —" || interjection.Substring(index - 2) == "?  —"))
                             {
-                                temp = temp.Remove(index - 2, 1).Replace("  ", " ");
+                                interjection = interjection.Remove(index - 2, 1).Replace("  ", " ");
                             }
                             string pre = string.Empty;
                             if (index > 0)
@@ -120,69 +117,69 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                             if (index > s.Length)
                             {
-                                if (temp.Length > index - s.Length + 3)
+                                if (interjection.Length > index - s.Length + 3)
                                 {
                                     int subIndex = index - s.Length + 1;
-                                    string subTemp = temp.Substring(subIndex, 3);
+                                    string subTemp = interjection.Substring(subIndex, 3);
                                     if (subTemp == ", !" || subTemp == ", ?" || subTemp == ", .")
                                     {
-                                        temp = temp.Remove(subIndex, 2);
+                                        interjection = interjection.Remove(subIndex, 2);
                                         removeAfter = false;
                                     }
                                 }
-                                if (removeAfter && temp.Length > index - s.Length + 2)
+                                if (removeAfter && interjection.Length > index - s.Length + 2)
                                 {
                                     int subIndex = index - s.Length;
-                                    string subTemp = temp.Substring(subIndex, 3);
+                                    string subTemp = interjection.Substring(subIndex, 3);
                                     if (subTemp == ", !" || subTemp == ", ?" || subTemp == ", .")
                                     {
-                                        temp = temp.Remove(subIndex, 2);
+                                        interjection = interjection.Remove(subIndex, 2);
                                         removeAfter = false;
                                     }
                                     else
                                     {
-                                        subTemp = temp.Substring(subIndex);
+                                        subTemp = interjection.Substring(subIndex);
                                         if (subTemp.StartsWith(", -—", StringComparison.Ordinal))
                                         {
-                                            temp = temp.Remove(subIndex, 3);
+                                            interjection = interjection.Remove(subIndex, 3);
                                             removeAfter = false;
                                         }
                                         else if (subTemp.StartsWith(", --", StringComparison.Ordinal))
                                         {
-                                            temp = temp.Remove(subIndex, 2);
+                                            interjection = interjection.Remove(subIndex, 2);
                                             removeAfter = false;
                                         }
                                         else if (index > 2 && subTemp.StartsWith("-  —", StringComparison.Ordinal))
                                         {
-                                            temp = temp.Remove(subIndex + 2, 2).Replace("  ", " ");
+                                            interjection = interjection.Remove(subIndex + 2, 2).Replace("  ", " ");
                                             removeAfter = false;
                                         }
                                     }
                                 }
-                                if (removeAfter && temp.Length > index - s.Length + 2)
+                                if (removeAfter && interjection.Length > index - s.Length + 2)
                                 {
                                     int subIndex = index - s.Length + 1;
-                                    string subTemp = temp.Substring(subIndex, 2);
+                                    string subTemp = interjection.Substring(subIndex, 2);
                                     if (subTemp == "-!" || subTemp == "-?" || subTemp == "-.")
                                     {
-                                        temp = temp.Remove(subIndex, 1);
+                                        interjection = interjection.Remove(subIndex, 1);
                                         removeAfter = false;
                                     }
-                                    subTemp = temp.Substring(subIndex);
+                                    subTemp = interjection.Substring(subIndex);
                                     if (subTemp == " !" || subTemp == " ?" || subTemp == " .")
                                     {
-                                        temp = temp.Remove(subIndex, 1);
+                                        interjection = interjection.Remove(subIndex, 1);
                                         removeAfter = false;
                                     }
                                 }
                             }
 
-                            if (index > 3 && index - 2 < temp.Length)
+                            if (index > 3 && index - 2 < interjection.Length)
                             {
-                                string subTemp = temp.Substring(index - 2);
+                                string subTemp = interjection.Substring(index - 2);
                                 if (subTemp.StartsWith(",  —", StringComparison.Ordinal) || subTemp.StartsWith(", —", StringComparison.Ordinal))
                                 {
-                                    temp = temp.Remove(index - 2, 1);
+                                    interjection = interjection.Remove(index - 2, 1);
                                     index--;
                                 }
                                 if (subTemp.StartsWith("- ...", StringComparison.Ordinal))
@@ -195,60 +192,62 @@ namespace Nikse.SubtitleEdit.Core.Forms
                             {
                                 if (index == 0)
                                 {
-                                    if (temp.StartsWith('-'))
-                                        temp = temp.Remove(0, 1).Trim();
+                                    if (interjection.StartsWith('-'))
+                                        interjection = interjection.Remove(0, 1).Trim();
                                 }
-                                else if (index == 3 && temp.StartsWith("<i>-", StringComparison.Ordinal))
+                                else if (index == 3 && interjection.StartsWith("<i>-", StringComparison.Ordinal))
                                 {
-                                    temp = temp.Remove(3, 1);
+                                    interjection = interjection.Remove(3, 1);
                                 }
-                                else if (index > 0 && temp.Length > index)
+                                else if (index > 0 && interjection.Length > index)
                                 {
                                     pre = text.Substring(0, index);
-                                    temp = temp.Remove(0, index);
-                                    if (temp.StartsWith('-') && pre.EndsWith('-'))
-                                        temp = temp.Remove(0, 1);
-                                    if (temp.StartsWith('-') && pre.EndsWith("- ", StringComparison.Ordinal))
-                                        temp = temp.Remove(0, 1);
+                                    interjection = interjection.Remove(0, index);
+                                    if (interjection.StartsWith('-') && pre.EndsWith('-'))
+                                        interjection = interjection.Remove(0, 1);
+                                    if (interjection.StartsWith('-') && pre.EndsWith("- ", StringComparison.Ordinal))
+                                        interjection = interjection.Remove(0, 1);
                                 }
 
-                                if (temp.StartsWith("..."))
+                                if (interjection.StartsWith("..."))
                                 {
                                     pre = pre.Trim();
                                 }
                                 else
                                 {
-                                    while (temp.Length > 0 && " ,.?!".Contains(temp[0]))
+                                    while (interjection.Length > 0 && " ,.?!".Contains(interjection[0]))
                                     {
-                                        temp = temp.Remove(0, 1);
+                                        interjection = interjection.Remove(0, 1);
                                         doRepeat = true;
                                     }
                                 }
-                                if (temp.Length > 0 && s[0].ToString(CultureInfo.InvariantCulture) != s[0].ToString(CultureInfo.InvariantCulture).ToLower())
+                                if (interjection.Length > 0 && s[0].ToString(CultureInfo.InvariantCulture) != s[0].ToString(CultureInfo.InvariantCulture).ToLower())
                                 {
-                                    temp = char.ToUpper(temp[0]) + temp.Substring(1);
+                                    interjection = char.ToUpper(interjection[0]) + interjection.Substring(1);
                                     doRepeat = true;
                                 }
 
-                                if (temp.StartsWith('-') && pre.EndsWith(' '))
-                                    temp = temp.Remove(0, 1);
+                                if (interjection.StartsWith('-') && pre.EndsWith(' '))
+                                    interjection = interjection.Remove(0, 1);
 
-                                if (temp.StartsWith('—') && pre.EndsWith(','))
+                                if (interjection.StartsWith('—') && pre.EndsWith(','))
                                     pre = pre.TrimEnd(',') + " ";
-                                temp = pre + temp;
+                                interjection = pre + interjection;
                             }
 
-                            if (temp.EndsWith(Environment.NewLine + "- ", StringComparison.Ordinal))
-                                temp = temp.Remove(temp.Length - 2).TrimEnd();
+                            if (interjection.EndsWith(Environment.NewLine + "- ", StringComparison.Ordinal))
+                                interjection = interjection.Remove(interjection.Length - 2).TrimEnd();
 
-                            var st = new StripableText(temp);
+                            var st = new StripableText(interjection);
                             if (st.StrippedText.Length == 0)
                                 return string.Empty;
 
-                            if (temp.StartsWith('-') && !temp.Contains(Environment.NewLine) && text.Contains(Environment.NewLine))
-                                temp = temp.Remove(0, 1).Trim();
+                            if (interjection.StartsWith('-') && !interjection.Contains(Environment.NewLine) && text.Contains(Environment.NewLine))
+                                interjection = interjection.Remove(0, 1).Trim();
 
-                            text = temp;
+                            // TODO: Check if not in _skipSet (optimzie by checking above before going this far)?
+                            if (!_skipSet.Contains(interjection)) // O(1)
+                                text = interjection;
                         }
                     }
                 }

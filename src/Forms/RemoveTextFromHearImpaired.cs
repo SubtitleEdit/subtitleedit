@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
         public Subtitle Subtitle;
         private readonly LanguageStructure.RemoveTextFromHearImpaired _language;
         private readonly RemoveTextForHI _removeTextForHiLib;
+        private readonly RemoveInterjections _removeInterjections;
         private Dictionary<Paragraph, string> _fixes;
         private int _removeCount;
         private readonly Main _mainForm;
@@ -25,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _mainForm = main;
             _removeTextForHiLib = new RemoveTextForHI(GetSettings());
-
+            _removeInterjections = new RemoveInterjections();
             checkBoxRemoveTextBetweenSquares.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenBrackets;
             checkBoxRemoveTextBetweenParentheses.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenParentheses;
             checkBoxRemoveTextBetweenBrackets.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBetweenCurlyBrackets;
@@ -110,8 +111,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = Subtitle.Paragraphs[index];
                 _removeTextForHiLib.WarningIndex = index - 1;
-                string newText = _removeTextForHiLib.RemoveTextFromHearImpaired(p.Text);
-                if (p.Text.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty))
+                string oldText = p.Text;
+                string newText = oldText;
+
+                // Remove interjections.
+                if (checkBoxRemoveInterjections.Checked)
+                    newText = _removeInterjections.Remove(newText);
+                
+                newText = _removeTextForHiLib.RemoveTextFromHearImpaired(newText);
+                if (oldText.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty))
                 {
                     count++;
                     AddToListView(p, newText);
@@ -205,7 +213,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (editInterjections.ShowDialog(this) == DialogResult.OK)
                 {
                     Configuration.Settings.Tools.Interjections = editInterjections.GetInterjectionsSemiColonSeperatedString();
-                    _removeTextForHiLib.ResetInterjections();
+                    _removeInterjections.ReloadFromCSVString(Configuration.Settings.Tools.Interjections);
                     if (checkBoxRemoveInterjections.Checked)
                     {
                         GeneratePreview();
