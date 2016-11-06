@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonInputBrowse.Enabled = false;
             openFileDialog1.Title = Configuration.Settings.Language.General.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             openFileDialog1.Multiselect = true;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
