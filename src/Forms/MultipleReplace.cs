@@ -550,6 +550,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (_currentGroup == null)
                 return;
 
+            listViewRules.ItemChecked -= ListViewRulesItemChecked;
+
             var temp = _currentGroup.Rules[index];
             _currentGroup.Rules[index] = _currentGroup.Rules[index2];
             _currentGroup.Rules[index2] = temp;
@@ -574,6 +576,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewRules.Items[index].Selected = false;
             listViewRules.Items[index2].Selected = true;
             GeneratePreview();
+            listViewRules.ItemChecked += ListViewRulesItemChecked;
         }
 
         private void moveDownToolStripMenuItem_Click(object sender, EventArgs e)
@@ -591,7 +594,14 @@ namespace Nikse.SubtitleEdit.Forms
             if (index == 0)
                 return;
 
-            SwapRules(0, index);
+            if (_currentGroup == null)
+                return;
+            
+            var temp = _currentGroup.Rules[index];
+            _currentGroup.Rules.Remove(temp);
+            _currentGroup.Rules.Insert(0, temp);
+            listViewGroups_SelectedIndexChanged(null, null);
+            GeneratePreview();
         }
 
         private void moveBottomToolStripMenuItem_Click(object sender, EventArgs e)
@@ -601,7 +611,14 @@ namespace Nikse.SubtitleEdit.Forms
             if (index == bottomIndex)
                 return;
 
-            SwapRules(bottomIndex, index);
+            var temp = _currentGroup.Rules[index];
+            _currentGroup.Rules.Remove(temp);
+            _currentGroup.Rules.Add(temp);
+            listViewGroups_SelectedIndexChanged(null, null);
+            listViewRules.Items[0].Selected = false;
+            listViewRules.Items[bottomIndex].Selected = true;
+            listViewRules.Items[bottomIndex].Focused = true;
+            GeneratePreview();
         }
 
         private void ImportRulesFile(string fileName)
@@ -904,7 +921,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (index == 0)
                 return;
 
-            SwapGroups(0, index);
+            var temp = Configuration.Settings.MultipleSearchAndReplaceGroups[index];
+            Configuration.Settings.MultipleSearchAndReplaceGroups.Remove(temp);
+            Configuration.Settings.MultipleSearchAndReplaceGroups.Insert(0, temp);
+            UpdateViewFromModel(Configuration.Settings.MultipleSearchAndReplaceGroups, _currentGroup);
+            GeneratePreview();
         }
 
         private void moveToBottomToolStripMenuItem_Click(object sender, EventArgs e)
@@ -917,7 +938,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (index == bottomIndex)
                 return;
 
-            SwapGroups(0, bottomIndex);
+            var temp = Configuration.Settings.MultipleSearchAndReplaceGroups[index];
+            Configuration.Settings.MultipleSearchAndReplaceGroups.Remove(temp);
+            Configuration.Settings.MultipleSearchAndReplaceGroups.Insert(bottomIndex, temp);
+            UpdateViewFromModel(Configuration.Settings.MultipleSearchAndReplaceGroups, temp);
+            GeneratePreview();
         }
 
         private void contextMenuStripGroups_Opening(object sender, System.ComponentModel.CancelEventArgs e)
