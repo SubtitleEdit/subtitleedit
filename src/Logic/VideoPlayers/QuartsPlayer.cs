@@ -278,17 +278,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _quartzVideo.Top = (_owner.Height - _quartzVideo.Height) / 2;
         }
 
-        public void DisposeVideoPlayer()
-        {
-            System.Threading.ThreadPool.QueueUserWorkItem(DisposeQuarts, _quartzFilgraphManager);
-        }
-
         private void DisposeQuarts(object player)
         {
             Dispose();
         }
 
-        private void ReleaseUnmangedResources()
+        private void ReleaseUnmangedResources(object obj)
         {
             try
             {
@@ -335,7 +330,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     _videoLoader = null;
                 }
             }
-            ReleaseUnmangedResources();
+            System.Threading.ThreadPool.QueueUserWorkItem(ReleaseUnmangedResources);
         }
 
     }

@@ -385,16 +385,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _waitForChange = false;
         }
 
-        public void DisposeVideoPlayer()
-        {
-            _timer.Stop();
-            if (_mplayer != null)
-            {
-                _mplayer.OutputDataReceived -= MPlayerOutputDataReceived;
-                _mplayer.StandardInput.WriteLine("quit");
-            }
-        }
-
         public event EventHandler OnVideoLoaded;
 
         public event EventHandler OnVideoEnded;
@@ -409,8 +399,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             if (disposing)
             {
+                _timer.Stop();
                 if (_mplayer != null)
                 {
+                    _mplayer.OutputDataReceived -= MPlayerOutputDataReceived;
+                    _mplayer.StandardInput.WriteLine("quit");
                     _mplayer.Dispose();
                     _mplayer = null;
                 }

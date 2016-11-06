@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (videoPlayerContainer1.VideoPlayer != null)
                 {
                     videoPlayerContainer1.Pause();
-                    videoPlayerContainer1.VideoPlayer.DisposeVideoPlayer();
+                    videoPlayerContainer1.VideoPlayer.Dispose();
                 }
 
                 VideoInfo videoInfo = UiUtil.GetVideoInfo(fileName);
@@ -288,7 +288,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (videoPlayerContainer1.VideoPlayer != null) // && videoPlayerContainer1.VideoPlayer.GetType() == typeof(QuartsPlayer))
             {
-                videoPlayerContainer1.VideoPlayer.DisposeVideoPlayer();
+                videoPlayerContainer1.VideoPlayer.Dispose();
             }
         }
 

@@ -136,12 +136,12 @@ namespace Nikse.SubtitleEdit.Forms
                 if (MediaPlayerStart.VideoPlayer != null)
                 {
                     MediaPlayerStart.Pause();
-                    MediaPlayerStart.VideoPlayer.DisposeVideoPlayer();
+                    MediaPlayerStart.VideoPlayer.Dispose();
                 }
                 if (MediaPlayerEnd.VideoPlayer != null)
                 {
                     MediaPlayerEnd.Pause();
-                    MediaPlayerEnd.VideoPlayer.DisposeVideoPlayer();
+                    MediaPlayerEnd.VideoPlayer.Dispose();
                 }
 
                 VideoInfo videoInfo = ShowVideoInfo(fileName);
@@ -724,12 +724,12 @@ namespace Nikse.SubtitleEdit.Forms
             if (MediaPlayerStart.VideoPlayer != null) // && MediaPlayerStart.VideoPlayer.GetType() == typeof(QuartsPlayer))
             {
                 MediaPlayerStart.VideoPlayer.Pause();
-                MediaPlayerStart.VideoPlayer.DisposeVideoPlayer();
+                MediaPlayerStart.VideoPlayer.Dispose();
             }
             if (MediaPlayerEnd.VideoPlayer != null) // && MediaPlayerEnd.VideoPlayer.GetType() == typeof(QuartsPlayer))
             {
                 MediaPlayerEnd.VideoPlayer.Pause();
-                MediaPlayerEnd.VideoPlayer.DisposeVideoPlayer();
+                MediaPlayerEnd.VideoPlayer.Dispose();
             }
         }
 

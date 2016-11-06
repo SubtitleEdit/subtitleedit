@@ -234,22 +234,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public void DisposeVideoPlayer()
-        {
-            if (_videoLoadedTimer != null)
-                _videoLoadedTimer.Stop();
-
-            if (_videoEndTimer != null)
-                _videoEndTimer.Stop();
-
-            System.Threading.ThreadPool.QueueUserWorkItem(DisposeVLC, this);
-        }
-
-        private void DisposeVLC(object player)
-        {
-            ReleaseUnmangedResources();
-        }
-
         public event EventHandler OnVideoLoaded;
 
         public event EventHandler OnVideoEnded;
@@ -259,7 +243,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Dispose(false);
         }
 
-        private void ReleaseUnmangedResources()
+        private void ReleaseUnmangedResources(object obj)
         {
             try
             {
@@ -293,16 +277,18 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 if (_videoLoadedTimer != null)
                 {
+                    _videoLoadedTimer.Stop();
                     _videoLoadedTimer.Dispose();
                     _videoLoadedTimer = null;
                 }
                 if (_videoEndTimer != null)
                 {
+                    _videoEndTimer.Stop();
                     _videoEndTimer.Dispose();
                     _videoEndTimer = null;
                 }
             }
-            ReleaseUnmangedResources();
+            System.Threading.ThreadPool.QueueUserWorkItem(ReleaseUnmangedResources);
         }
 
     }

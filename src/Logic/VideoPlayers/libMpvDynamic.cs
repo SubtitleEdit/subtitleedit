@@ -447,11 +447,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         //{
         //}
 
-        public void DisposeVideoPlayer()
-        {
-            Dispose();
-        }
-
         private void ReleaseUnmangedResources()
         {
             try

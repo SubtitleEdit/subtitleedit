@@ -743,11 +743,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public void DisposeVideoPlayer()
-        {
-            Dispose();
-        }
-
         public event EventHandler OnVideoLoaded;
 
         public event EventHandler OnVideoEnded;
