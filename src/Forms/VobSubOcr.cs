@@ -7729,7 +7729,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.Title = Configuration.Settings.Language.General.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 string fileName = openFileDialog1.FileName;
@@ -8816,7 +8816,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.Title = Configuration.Settings.Language.General.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 string fileName = openFileDialog1.FileName;
