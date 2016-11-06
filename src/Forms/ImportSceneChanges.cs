@@ -251,9 +251,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var match = TimeRegex.Match(outLine.Data);
                 if (match.Success)
                 {
-                    var timeCode = match.Value.Replace("pts_time:", string.Empty);
-                    var seconds = double.Parse(timeCode);
-                    if (seconds > 0.2)
+                    var timeCode = match.Value.Replace("pts_time:", string.Empty).Replace(",", ".");
+                    double seconds;
+                    if (double.TryParse(timeCode, out seconds) && seconds > 0.2)
                     {
                         _timeCodes.AppendLine(TimeCode.FromSeconds(seconds).ToShortDisplayString());
                         _lastSeconds = seconds;
