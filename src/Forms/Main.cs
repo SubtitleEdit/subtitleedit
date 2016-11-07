@@ -2752,7 +2752,10 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxSource.Text = _subtitle.ToText(format);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     if (SubtitleListview1.Items.Count > 0)
+                    {
                         SubtitleListview1.Items[0].Selected = true;
+                        SubtitleListview1.Items[0].Focused = true;
+                    }
                     _findHelper = null;
                     _spellCheckForm = null;
 
@@ -3203,12 +3206,9 @@ namespace Nikse.SubtitleEdit.Forms
                     if (sIndex >= 0 && sIndex < SubtitleListview1.Items.Count)
                     {
                         SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                        for (int i = 0; i < SubtitleListview1.Items.Count; i++)
-                            SubtitleListview1.Items[i].Selected = i == sIndex;
+                        SubtitleListview1.SelectIndexAndEnsureVisible(sIndex, true);
                         _subtitleListViewIndex = -1;
-                        SubtitleListview1.EnsureVisible(sIndex);
                         SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-                        SubtitleListview1.Items[sIndex].Focused = true;
                     }
 
                     int topIndex = x.FirstVisibleIndex;
@@ -3219,7 +3219,6 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
                         SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
                     }
-
                     RefreshSelectedParagraph();
                     break;
                 }
