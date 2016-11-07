@@ -60,7 +60,7 @@ namespace Test.Logic
             Configuration.Settings.General.SubtitleLineMaximumLength = 43;
             const string s1 = "Oh, snap, we're still saying the same thing. This is amazing!";
             string s2 = Utilities.AutoBreakLine(s1);
-            string target = "Oh, snap, we're still saying the" + Environment.NewLine + "same thing. This is amazing!";
+            string target = "Oh, snap, we're still saying" + Environment.NewLine + "the same thing. This is amazing!";
             Assert.AreEqual(target, s2);
         }
 
