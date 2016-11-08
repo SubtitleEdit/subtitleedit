@@ -123,7 +123,6 @@ namespace Test
         #region Merge short lines
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesNormal()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -135,7 +134,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesLong()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -147,7 +145,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesNormalItalic()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -159,7 +156,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesDialog()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -171,7 +167,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesDialogItalic()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -183,7 +178,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesDialogItalicTwo()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -195,7 +189,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesDoNotMergeMusicSymbols()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -208,7 +201,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void MergeShortLinesHearingImpaired()
         {
             string input = "[engine roaring]" + Environment.NewLine + "[cluck]";
@@ -226,7 +218,6 @@ namespace Test
         #region Fix Italics
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsBeginOnly()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -238,7 +229,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsFirstLineEndMissing()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -250,7 +240,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsStartInMiddle()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -262,7 +251,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsEmptyStart()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -274,7 +262,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsSecondLineMissingEnd()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -286,7 +273,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsBadEnding()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -298,7 +284,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsBadEnding2()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -310,7 +295,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsBadEnding3()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -322,7 +306,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsBadEnding4()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -334,7 +317,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsLine1BadEnding()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -346,7 +328,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsLine1BadEndingDouble()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -362,7 +343,6 @@ namespace Test
         #region Fix Missing Periods At End Of Line
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingPeriodsAtEndOfLineNone()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -374,7 +354,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingPeriodsAtEndOfLineItalicAndMissing()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -386,7 +365,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingPeriodsAtEndOfLineItalicAndMissing2()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -398,7 +376,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingPeriodsAtEndOfLineWithSpace()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -414,7 +391,6 @@ namespace Test
         #region Fix Hyphens (add dash)
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensAddDash1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -426,7 +402,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensAddDash2()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -438,7 +413,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensAddDash2Italic()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -450,7 +424,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensAddDash3NoChange()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -462,7 +435,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensAddDash4NoChange()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -474,7 +446,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensAddDashButNotInFirst()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -486,7 +457,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensDontCrash()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -503,7 +473,6 @@ namespace Test
         #region Fix OCR errors
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixCommonOcrErrorsSlashMakesTwoWords()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -515,7 +484,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixCommonOcrErrorsSlashIsL() // requires hardcoded rules enabled
         {
             using (var target = GetFixCommonErrorsLib())
@@ -527,7 +495,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixCommonOcrErrorsDashedWords()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -539,7 +506,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixCommonOcrErrorsNoStartWithLargeAfterThreePeriods()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -551,7 +517,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixOcrErrorsNoChange()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -563,7 +528,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixOcrErrorsViaHardcodedRules1()
         {
             using (var form = new GoToLine())
@@ -590,7 +554,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixOcrErrorsViaDoNotFixToUpper()
         {
             using (var form = new FixCommonErrors())
@@ -604,7 +567,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixOcrErrorsUrl()
         {
             using (var form = new GoToLine())
@@ -622,7 +584,6 @@ namespace Test
         #region Fix missing spaces
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesItalicBegin()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -634,7 +595,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesItalicEnd()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -646,7 +606,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesBeforePeriod1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -658,7 +617,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesBeforePeriod2()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -670,7 +628,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesNoChange1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -682,7 +639,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesChange2()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -694,7 +650,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesNoChange2()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -706,7 +661,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesNoChange3()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -718,7 +672,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesNoChange4()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -730,7 +683,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesNoChange5Greek()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -742,7 +694,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesNoChange6()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -753,7 +704,6 @@ namespace Test
             }
         }
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesNoChange7()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -765,7 +715,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesNoChange8()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -778,7 +727,6 @@ namespace Test
 
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesOneLetterPlusDotDotDot()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -943,7 +891,6 @@ namespace Test
         #region Fix EmptyLines
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEmptyLinesTest1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -955,7 +902,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEmptyLinesTest2()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -971,7 +917,6 @@ namespace Test
         #region Fix missing periods at end of line
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void AddPeriodWhereNextLineStartsWithUppercaseLetter()
         {
             var s = new Subtitle();
@@ -982,7 +927,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void AddPeriodWhereNextLineStartsWithUppercaseLetter2()
         {
             var s = new Subtitle();
@@ -997,7 +941,6 @@ namespace Test
         #region Start with uppercase after paragraph
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphMusic1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1009,7 +952,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormal1()
         {
             var s = new Subtitle();
@@ -1020,7 +962,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormal2()
         {
             var s = new Subtitle();
@@ -1031,7 +972,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormal3()
         {
             var prev = new Paragraph("<i>Bye.</i>", 0, 1000);
@@ -1044,7 +984,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormal4()
         {
             var prev = new Paragraph("Bye.", 0, 1000);
@@ -1057,7 +996,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormalNoChange1()
         {
             var prev = new Paragraph("Bye,", 0, 1000);
@@ -1070,7 +1008,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormalDialog1()
         {
             var prev = new Paragraph("Bye.", 0, 1000);
@@ -1083,7 +1020,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormalDialog2()
         {
             var prev = new Paragraph("Bye.", 0, 1000);
@@ -1096,7 +1032,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormalDialog3()
         {
             var prev = new Paragraph("Bye.", 0, 1000);
@@ -1109,7 +1044,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormalDialog4()
         {
             var prev = new Paragraph("Bye.", 0, 1000);
@@ -1122,7 +1056,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormalNoChange2()
         {
             var prev = new Paragraph("Bye", 0, 1000);
@@ -1135,7 +1068,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormalDialogNoChange1()
         {
             var prev = new Paragraph("Bye -", 0, 1000);
@@ -1148,7 +1080,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormalDialogNoChange2()
         {
             var prev = new Paragraph("Bye -", 0, 1000);
@@ -1165,7 +1096,6 @@ namespace Test
         #region Fix Spanish question and exclamation marks
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixSpanishNormalQuestion1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1177,7 +1107,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixSpanishNormalExclamationMark1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1189,7 +1118,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixSpanishExclamationMarkDouble()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1201,7 +1129,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixSpanishExclamationMarkTriple()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1213,7 +1140,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixSpanishExclamationMarkAndQuestionMark()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1225,7 +1151,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixSpanishExclamationMarkAndQuestionMarkManyTagsDoubleExcl()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1237,7 +1162,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixSpanishExclamationMarkAndQuestionMarkOneOfEach()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1253,7 +1177,6 @@ namespace Test
         #region FixHyphens (remove dash)
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixSingleLineDash1Italic()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1265,7 +1188,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixSingleLineDash1Font()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1277,7 +1199,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixSingleLineDash1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1289,7 +1210,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixSingleLineDash3()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1301,7 +1221,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixSingleLineDash4()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1313,7 +1232,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixDashWithPreviousEndsWithDashDash()
         {
             var subtitle = new Subtitle();
@@ -1329,7 +1247,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixDashDontRemoveWhiteSpaceWithItalic()
         {
             var subtitle = new Subtitle();
@@ -1349,7 +1266,6 @@ namespace Test
         #region Ellipses start
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartNormal1()
         {
             var result = Helper.FixEllipsesStartHelper("...But that is true.");
@@ -1357,7 +1273,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartNormal2()
         {
             var result = Helper.FixEllipsesStartHelper("... But that is true.");
@@ -1365,7 +1280,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartNormal3()
         {
             var result = Helper.FixEllipsesStartHelper("Kurt: ... true but bad.");
@@ -1373,7 +1287,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartNormal4()
         {
             var result = Helper.FixEllipsesStartHelper("Kurt: ... true but bad.");
@@ -1381,7 +1294,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartItalic1()
         {
             var result = Helper.FixEllipsesStartHelper("<i>...But that is true.</i>");
@@ -1389,7 +1301,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartItalic2()
         {
             var result = Helper.FixEllipsesStartHelper("<i>... But that is true.</i>");
@@ -1397,7 +1308,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartItalic3()
         {
             var result = Helper.FixEllipsesStartHelper("<i>Kurt: ... true but bad.</i>");
@@ -1405,7 +1315,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartItalic4()
         {
             var result = Helper.FixEllipsesStartHelper("<i>Kurt: ... true but bad.</i>");
@@ -1413,7 +1322,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartItalic5()
         {
             var result = Helper.FixEllipsesStartHelper("WOMAN 2: <i>...24 hours a day at BabyC.</i>");
@@ -1421,7 +1329,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartFont1()
         {
             var result = Helper.FixEllipsesStartHelper("<font color=\"#000000\">... true but bad.</font>");
@@ -1429,7 +1336,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartFont2()
         {
             var result = Helper.FixEllipsesStartHelper("<font color=\"#000000\"><i>Kurt: ... true but bad.</i></font>");
@@ -1437,7 +1343,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartFont3()
         {
             var result = Helper.FixEllipsesStartHelper("<i><font color=\"#000000\">Kurt: ...true but bad.</font></i>");
@@ -1445,7 +1350,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartQuote()
         {
             var actual = "\"...Foobar\"";
@@ -1455,7 +1359,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartQuote2()
         {
             var actual = "\"... Foobar\"";
@@ -1465,7 +1368,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartQuote3()
         {
             var actual = "\" . . . Foobar\"";
@@ -1475,7 +1377,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartDontChange()
         {
             const string input = "- I...";
@@ -1488,7 +1389,6 @@ namespace Test
         #region FixDoubleGreater
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixDoubleGreaterThanTest2()
         {
             const string input1 = "<i>>>Hello world!</i>\r\n<i>>>Hello</i>";
@@ -1530,7 +1430,6 @@ namespace Test
         #region Fix uppercase I inside words
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUppercaseIInsideWords1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1542,7 +1441,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUppercaseIInsideWords2()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1558,7 +1456,6 @@ namespace Test
         #region Fix dialogs on one line
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixDialogsOnOneLine1()
         {
             const string source = "- I was here, putting our child to sleep-- - Emma.";
@@ -1568,7 +1465,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixDialogsOnOneLine2()
         {
             const string source = "- Seriously, though. Are you being bullied? - Nope.";
@@ -1578,7 +1474,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixDialogsOnOneLine3()
         {
             string source = "- Having sexual relationships" + Environment.NewLine + "with other women. - A'ight.";
@@ -1592,7 +1487,6 @@ namespace Test
         #region FixDoubleDash
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixDoubleDashTest1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -1605,7 +1499,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixDoubleDashTest2()
         {
             using (var target = GetFixCommonErrorsLib())
