@@ -114,11 +114,13 @@ namespace Nikse.SubtitleEdit.Forms
                 string oldText = p.Text;
                 string newText = oldText;
 
+                newText = _removeTextForHiLib.RemoveTextFromHearImpaired(newText);
+
                 // Remove interjections.
                 if (checkBoxRemoveInterjections.Checked)
+                {
                     newText = _removeInterjections.Remove(newText);
-                
-                newText = _removeTextForHiLib.RemoveTextFromHearImpaired(newText);
+                }
                 if (oldText.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty))
                 {
                     count++;
