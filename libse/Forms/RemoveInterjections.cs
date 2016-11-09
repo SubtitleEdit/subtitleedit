@@ -79,6 +79,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
                             if (index > s.Length)
                             {
+                                // foobar, Ahhhh!
                                 if (newText.Length > index - s.Length + 3)
                                 {
                                     int subIndex = index - s.Length + 1;
@@ -357,5 +358,89 @@ namespace Nikse.SubtitleEdit.Core.Forms
             return text;
         }
 
+        private static string ProcessNewText(string text, int idx)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return text;
+
+            // idx = 0;
+            if (idx == 0)
+            {
+                int j = idx;
+                while (text.Length > 0 && text[idx] == '?' && text[idx] == '!' && text[idx] == '.')
+                {
+                    j++;
+                }
+                if (j > idx)
+                {
+                    return text.Remove(idx, j).TrimStart();
+                }
+            }
+
+            // idx = 1;
+            if (idx == 1)
+            {
+                string pre = string.Empty;
+                int j = idx;
+                if (text[idx - 1] == '-') // TODO: Add more chars which must be removed when it's at index position 0. i.e: music symbols
+                {
+                    pre = text[idx - 1].ToString();
+                }
+                while (j < text.Length && (text[j] == ',' || text[j] == ' ' || text[idx] == '?' && text[idx] == '!' && text[idx] == '.'))
+                {
+                    j++;
+                }
+                if (j < text.Length)
+                {
+                    return pre + text.Substring(j);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+
+            // idx >= 2
+            if (idx >= 2)
+            {
+                // Fo[,!?]\s*([.?!]|Fooar) (include other punctuations) or use char.ispunctiation*
+                int j = idx;
+                int k = idx;
+
+                // White spaces before interjection.
+                if (text[j - 1] == ' ')
+                {
+                    j--;
+                }
+
+                // Punctuation before and after interjection.
+                if (char.IsPunctuation(text[j - 1]))
+                {
+                    // TODO: Filter some chars. ie '['.
+                    while (k < text.Length && char.IsPunctuation(text[k])) k++;
+
+                    // ie: "Foobar, !" => Foobar!
+                    if (k == text.Length)
+                    {
+                        text = text.Remove(j - 1, k - (j + 2));
+                    }
+                    else
+                    {
+                        text = text.Remove(j, k - j);
+                    }
+                }
+                else
+                {
+                    while (k < text.Length && text[k] == ' ') k++;
+                    if (text[j] == ' ')
+                    {
+                        j++;
+                    }
+                    text = text.Remove(j, k - j);
+                }
+            }
+
+            return text;
+        }
     }
 }
