@@ -363,18 +363,20 @@ namespace Nikse.SubtitleEdit.Core.Forms
             if (string.IsNullOrWhiteSpace(text))
                 return text;
 
+            // NOTE: Only remove '.' if is not ellipses '...'
+
+            // Cache text length.
+            int len = text.Length;
+
             // idx = 0;
             if (idx == 0)
             {
-                int j = idx;
-                while (text.Length > 0 && text[idx] == '?' && text[idx] == '!' && text[idx] == '.')
-                {
-                    j++;
-                }
-                if (j > idx)
-                {
-                    return text.Remove(idx, j).TrimStart();
-                }
+                int k = idx;
+                while (k < len && (text[idx] == '?' || text[idx] == '!' || text[idx] == '.')) k++;
+                if (text[idx] == '.' && (idx + 3 >= len || text[idx + 1] != '.' || text[idx + 2] != '.'))
+                    k = idx; // Review!
+
+                if (k > idx) return text.Remove(idx, k).TrimStart();
             }
 
             // idx = 1;
@@ -386,11 +388,11 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 {
                     pre = text[idx - 1].ToString();
                 }
-                while (j < text.Length && (text[j] == ',' || text[j] == ' ' || text[idx] == '?' && text[idx] == '!' && text[idx] == '.'))
+                while (j < len && (text[j] == ',' || text[j] == ' ' || text[idx] == '?' && text[idx] == '!' && text[idx] == '.'))
                 {
                     j++;
                 }
-                if (j < text.Length)
+                if (j < len)
                 {
                     return pre + text.Substring(j);
                 }
@@ -417,10 +419,10 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 if (char.IsPunctuation(text[j - 1]))
                 {
                     // TODO: Filter some chars. ie '['.
-                    while (k < text.Length && char.IsPunctuation(text[k])) k++;
+                    while (k < len && char.IsPunctuation(text[k])) k++;
 
                     // ie: "Foobar, !" => Foobar!
-                    if (k == text.Length)
+                    if (k == len)
                     {
                         text = text.Remove(j - 1, k - (j + 2));
                     }
@@ -431,7 +433,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
                 else
                 {
-                    while (k < text.Length && text[k] == ' ') k++;
+                    while (k < len && text[k] == ' ') k++;
                     if (text[j] == ' ')
                     {
                         j++;
