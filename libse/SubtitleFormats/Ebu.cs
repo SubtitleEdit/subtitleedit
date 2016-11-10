@@ -537,6 +537,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var ok = Save(fileName, ms, subtitle, batchMode);
                 if (ok)
                 {
+                    ms.Position = 0;
                     using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
                     {
                         ms.CopyTo(fs);
