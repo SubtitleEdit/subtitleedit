@@ -144,11 +144,41 @@ namespace Nikse.SubtitleEdit.Core
         {
             if (string.IsNullOrEmpty(s))
                 return s;
+            int len = s.Length;
+            int k = -1;
+            for (int i = len - 1; i >= 0; i--)
+            {
+                char ch = s[i];
+                if (k < 2)
+                {
+                    if (ch == 0x20)
+                    {
+                        k = i + 1;
+                    }
+                }
+                else if (ch != 0x20)
+                {
+                    // Two or more white-spaces found!
+                    if (k - (i + 1) > 1)
+                    {
+                        // Keep only one white-space.
+                        s = s.Remove(i + 1, k - (i + 2));
+                    }
 
-            while (s.Contains("  "))
-                s = s.Replace("  ", " ");
-            s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
-            return s.Replace(Environment.NewLine + " ", Environment.NewLine);
+                    // No white-space after/before line break.
+                    if ((ch == '\n' || ch == '\r') && i + 1 < s.Length && s[i + 1] == 0x20)
+                    {
+                        s = s.Remove(i + 1, 1);
+                    }
+                    // Reset remove length.
+                    k = -1;
+                }
+                if (ch == 0x20 && i + 1 < s.Length && (s[i + 1] == '\n' || s[i + 1] == '\r'))
+                {
+                    s = s.Remove(i, 1);
+                }
+            }
+            return s;
         }
 
         public static bool ContainsLetter(this string s)
