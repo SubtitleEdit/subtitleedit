@@ -40,36 +40,26 @@
             // 
             // buttonDownload
             // 
-            if (!Configuration.IsRunningOnLinux())
-            {
-                this.buttonDownload.Location = new System.Drawing.Point(12, 24);
-                this.buttonDownload.Name = "buttonDownload";
-                this.buttonDownload.Size = new System.Drawing.Size(186, 23);
-                this.buttonDownload.TabIndex = 0;
-                this.buttonDownload.Text = "Download mpv dll";
-                this.buttonDownload.UseVisualStyleBackColor = true;
-                this.buttonDownload.Click += new System.EventHandler(this.buttonDownload_Click_1);
-            }
+           
+            this.buttonDownload.Location = new System.Drawing.Point(12, 24);
+            this.buttonDownload.Name = "buttonDownload";
+            this.buttonDownload.Size = new System.Drawing.Size(186, 23);
+            this.buttonDownload.TabIndex = 0;
+            this.buttonDownload.Text = "Download mpv dll";
+            this.buttonDownload.UseVisualStyleBackColor = true;
+            this.buttonDownload.Click += new System.EventHandler(this.buttonDownload_Click_1);
+            
+            
             // 
             // comboBoxVideoOutput
             // 
             this.comboBoxVideoOutput.FormattingEnabled = true;
-            if (Configuration.IsRunningOnLinux())
-            {
-                this.comboBoxVideoOutput.Items.AddRange(new object[] {
-                "sdl",
-                "vaapi",
-                "vdpau"});
-            }
-            else
-            {
-                this.comboBoxVideoOutput.Items.AddRange(new object[] {
-                "direct3d_shaders",
-                "direct3d ",
-                "sdl",
-                "vaapi",
-                "vdpau"});
-            }
+            this.comboBoxVideoOutput.Items.AddRange(new object[] {
+            "direct3d_shaders",
+            "direct3d ",
+            "sdl",
+            "vaapi",
+            "vdpau"});
             
             this.comboBoxVideoOutput.Location = new System.Drawing.Point(12, 109);
             this.comboBoxVideoOutput.Name = "comboBoxVideoOutput";

@@ -2327,10 +2327,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void RefreshMpvSettings()
         {
             radioButtonVideoPlayerMPV.Enabled = LibMpvDynamic.IsInstalled;
-            if (!Configuration.IsRunningOnLinux())
-                labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutput;
-            else
+            if (Configuration.IsRunningOnLinux() && (Configuration.Settings.General.MpvVideoOutput == "direct3d_shaders"))
                 labelMpvSettings.Text = "--vo=vaapi";
+            else
+                labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutput;
         }
 
         private void linkLabelBingSubscribe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
