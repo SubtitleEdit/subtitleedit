@@ -366,6 +366,7 @@ namespace Nikse.SubtitleEdit.Forms
                         parameter.SubtitleFontBold = style.Bold;
                         parameter.SubtitleFontSize = style.FontSize;
                         parameter.SubtitleFontName = style.FontName;
+                        parameter.BottomMargin = style.MarginVertical;
                         if (style.BorderStyle == "3")
                         {
                             parameter.BackgroundColor = style.Background;
@@ -378,6 +379,7 @@ namespace Nikse.SubtitleEdit.Forms
                         parameter.SubtitleFontBold = style.Bold;
                         parameter.SubtitleFontSize = style.FontSize;
                         parameter.SubtitleFontName = style.FontName;
+                        parameter.BottomMargin = style.MarginVertical;
                         if (style.BorderStyle == "3")
                         {
                             parameter.BackgroundColor = style.Outline;
@@ -1829,6 +1831,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     mbp.SubtitleColor = style.Primary;
                     mbp.SubtitleFontBold = style.Bold;
                     mbp.SubtitleFontSize = style.FontSize;
+                    mbp.BottomMargin = style.MarginVertical;
                     if (style.BorderStyle == "3")
                     {
                         mbp.BackgroundColor = style.Background;
@@ -1840,6 +1843,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     mbp.SubtitleColor = style.Primary;
                     mbp.SubtitleFontBold = style.Bold;
                     mbp.SubtitleFontSize = style.FontSize;
+                    mbp.BottomMargin = style.MarginVertical;
                     if (style.BorderStyle == "3")
                     {
                         mbp.BackgroundColor = style.Outline;
