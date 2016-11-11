@@ -3266,16 +3266,25 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
                 saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
 
-            if (!string.IsNullOrWhiteSpace(_fileName))
+            if (!string.IsNullOrWhiteSpace(_fileName) && File.Exists(_fileName) && !string.IsNullOrEmpty(_videoFileName))
+            { 
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_videoFileName);
+            }
+            else if (!string.IsNullOrWhiteSpace(_fileName))
             {
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
             }
             else if (!string.IsNullOrEmpty(_videoFileName))
+            {
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
+                saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_videoFileName);
+            }
             else
+            {
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
-
+            }
 
             var result = saveFileDialog1.ShowDialog(this);
             if (result == DialogResult.OK)
