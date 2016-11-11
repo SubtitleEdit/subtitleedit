@@ -1,5 +1,7 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
+    using Nikse.SubtitleEdit.Core;
+
     sealed partial class SettingsMpv
     {
         /// <summary>
@@ -38,23 +40,37 @@
             // 
             // buttonDownload
             // 
-            this.buttonDownload.Location = new System.Drawing.Point(12, 24);
-            this.buttonDownload.Name = "buttonDownload";
-            this.buttonDownload.Size = new System.Drawing.Size(186, 23);
-            this.buttonDownload.TabIndex = 0;
-            this.buttonDownload.Text = "Download mpv dll";
-            this.buttonDownload.UseVisualStyleBackColor = true;
-            this.buttonDownload.Click += new System.EventHandler(this.buttonDownload_Click_1);
+            if (!Configuration.IsRunningOnLinux())
+            {
+                this.buttonDownload.Location = new System.Drawing.Point(12, 24);
+                this.buttonDownload.Name = "buttonDownload";
+                this.buttonDownload.Size = new System.Drawing.Size(186, 23);
+                this.buttonDownload.TabIndex = 0;
+                this.buttonDownload.Text = "Download mpv dll";
+                this.buttonDownload.UseVisualStyleBackColor = true;
+                this.buttonDownload.Click += new System.EventHandler(this.buttonDownload_Click_1);
+            }
             // 
             // comboBoxVideoOutput
             // 
             this.comboBoxVideoOutput.FormattingEnabled = true;
-            this.comboBoxVideoOutput.Items.AddRange(new object[] {
-            "direct3d_shaders",
-            "direct3d ",
-            "sdl",
-            "vaapi",
-            "vdpau"});
+            if (Configuration.IsRunningOnLinux())
+            {
+                this.comboBoxVideoOutput.Items.AddRange(new object[] {
+                "sdl",
+                "vaapi",
+                "vdpau"});
+            }
+            else
+            {
+                this.comboBoxVideoOutput.Items.AddRange(new object[] {
+                "direct3d_shaders",
+                "direct3d ",
+                "sdl",
+                "vaapi",
+                "vdpau"});
+            }
+            
             this.comboBoxVideoOutput.Location = new System.Drawing.Point(12, 109);
             this.comboBoxVideoOutput.Name = "comboBoxVideoOutput";
             this.comboBoxVideoOutput.Size = new System.Drawing.Size(186, 21);
@@ -113,7 +129,8 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBoxVideoOutput);
-            this.Controls.Add(this.buttonDownload);
+            if (!Configuration.IsRunningOnLinux())
+                this.Controls.Add(this.buttonDownload);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;

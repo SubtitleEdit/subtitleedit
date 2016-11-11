@@ -13,11 +13,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
             labelPleaseWait.Text = string.Empty;
-            comboBoxVideoOutput.Text = Configuration.Settings.General.MpvVideoOutput;
+            if (!Configuration.IsRunningOnLinux())
+                comboBoxVideoOutput.Text = Configuration.Settings.General.MpvVideoOutput;
+            else
+                comboBoxVideoOutput.Text = "vaapi";
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             Text = Configuration.Settings.Language.SettingsMpv.Title;
-            buttonDownload.Text = Configuration.Settings.Language.SettingsMpv.DownloadMpv;
+            if (!Configuration.IsRunningOnLinux())
+                buttonDownload.Text = Configuration.Settings.Language.SettingsMpv.DownloadMpv;
         }
 
         private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
@@ -27,7 +31,8 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvFailed);
                 labelPleaseWait.Text = string.Empty;
                 buttonOK.Enabled = true;
-                buttonDownload.Enabled = true;
+                if (!Configuration.IsRunningOnLinux())
+                    buttonDownload.Enabled = true;
                 Cursor = Cursors.Default;
                 return;
             }
@@ -53,7 +58,8 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;
-            buttonDownload.Enabled = true;
+            if (!Configuration.IsRunningOnLinux())
+                buttonDownload.Enabled = true;
             MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvOk);
         }
 
@@ -63,7 +69,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
                 buttonOK.Enabled = false;
-                buttonDownload.Enabled = false;
+                if (!Configuration.IsRunningOnLinux())
+                    buttonDownload.Enabled = false;
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
@@ -80,7 +87,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelPleaseWait.Text = string.Empty;
                 buttonOK.Enabled = true;
-                buttonDownload.Enabled = true;
+                if (!Configuration.IsRunningOnLinux())
+                    buttonDownload.Enabled = true;
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
             }

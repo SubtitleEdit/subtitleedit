@@ -174,7 +174,7 @@ namespace Nikse.SubtitleEdit.Logic
             GeneralSettings gs = Configuration.Settings.General;
 
             if (Configuration.IsRunningOnLinux())
-                return new MPlayer();
+				return new LibMpvMono();
 
             // Mono on OS X is 32 bit and thus requires 32 bit VLC. Place VLC in the same
             // folder as Subtitle Edit and add this to the app.config inside the

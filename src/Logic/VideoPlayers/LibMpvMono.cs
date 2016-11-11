@@ -8,61 +8,63 @@ using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
+
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    public class LibMpvDynamic : VideoPlayer, IDisposable
+    public class LibMpvMono : VideoPlayer, IDisposable
     {
 
+
         #region mpv dll methods
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate IntPtr MpvCreate();
-        private MpvCreate _mpvCreate;
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr mpv_create();
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int MpvInitialize(IntPtr mpvHandle);
-        private MpvInitialize _mpvInitialize;
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int MpvCommand(IntPtr mpvHandle, IntPtr utf8Strings);
-        private MpvCommand _mpvCommand;
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int mpv_initialize(IntPtr mpvHandle);
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int MpvTerminateDestroy(IntPtr mpvHandle);
-        private MpvTerminateDestroy _mpvTerminateDestroy;
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate IntPtr MpvWaitEvent(IntPtr mpvHandle, double wait);
-        private MpvWaitEvent _mpvWaitEvent;
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int mpv_command(IntPtr mpvHandle, IntPtr utf8Strings);
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int MpvSetOption(IntPtr mpvHandle, byte[] name, int format, ref long data);
-        private MpvSetOption _mpvSetOption;
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int MpvSetOptionString(IntPtr mpvHandle, byte[] name, byte[] value);
-        private MpvSetOptionString _mpvSetOptionString;
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int mpv_terminate_destroy(IntPtr mpvHandle);
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int MpvGetPropertystring(IntPtr mpvHandle, byte[] name, int format, ref IntPtr data);
-        private MpvGetPropertystring _mpvGetPropertyString;
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int MpvGetPropertyDouble(IntPtr mpvHandle, byte[] name, int format, ref double data);
-        private MpvGetPropertyDouble _mpvGetPropertyDouble;
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr mpv_wait_event(IntPtr mpvHandle, double wait);
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate int MpvSetProperty(IntPtr mpvHandle, byte[] name, int format, ref byte[] data);
-        private MpvSetProperty _mpvSetProperty;
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate void MpvFree(IntPtr data);
-        private MpvFree _mpvFree;
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int mpv_set_option(IntPtr mpvHandle, byte[] name, int format, ref long data);
+
+
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int mpv_set_option_string(IntPtr mpvHandle, byte[] name, byte[] value);
+
+
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr mpv_get_property_string(IntPtr mpvHandle, byte[] name);
+
+
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int mpv_get_property(IntPtr mpvHandle, byte[] name, int format, ref double data);
+
+
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int mpv_set_property(IntPtr mpvHandle, byte[] name, int format, ref byte[] data);
+
+
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        private static extern int mpv_free(IntPtr data);
+
         #endregion
 
         private IntPtr _libMpvDll;
         private IntPtr _mpvHandle;
         private Timer _videoLoadedTimer;
-//        private Timer _videoEndedTimer;
+        //        private Timer _videoEndedTimer;
 
         public override event EventHandler OnVideoLoaded;
         public override event EventHandler OnVideoEnded;
@@ -79,34 +81,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             return null;
         }
 
-        private void LoadLibVlcDynamic()
-        {
-            _mpvCreate = (MpvCreate)GetDllType(typeof(MpvCreate), "mpv_create");
-            _mpvInitialize = (MpvInitialize)GetDllType(typeof(MpvInitialize), "mpv_initialize");
-            _mpvTerminateDestroy = (MpvTerminateDestroy)GetDllType(typeof(MpvTerminateDestroy), "mpv_terminate_destroy");
-            _mpvWaitEvent = (MpvWaitEvent)GetDllType(typeof(MpvWaitEvent), "mpv_wait_event");
-            _mpvCommand = (MpvCommand)GetDllType(typeof(MpvCommand), "mpv_command");
-            _mpvSetOption = (MpvSetOption)GetDllType(typeof(MpvSetOption), "mpv_set_option");
-            _mpvSetOptionString = (MpvSetOptionString)GetDllType(typeof(MpvSetOptionString), "mpv_set_option_string");
-            _mpvGetPropertyString = (MpvGetPropertystring)GetDllType(typeof(MpvGetPropertystring), "mpv_get_property");
-            _mpvGetPropertyDouble = (MpvGetPropertyDouble)GetDllType(typeof(MpvGetPropertyDouble), "mpv_get_property");
-            _mpvSetProperty = (MpvSetProperty)GetDllType(typeof(MpvSetProperty), "mpv_set_property");
-            _mpvFree = (MpvFree)GetDllType(typeof(MpvFree), "mpv_free");
-        }
-
-        private bool IsAllMethodsLoaded()
-        {
-            return _mpvCreate != null &&
-                   _mpvInitialize != null &&
-                   _mpvWaitEvent != null &&
-                   _mpvCommand != null &&
-                   _mpvSetOption != null &&
-                   _mpvSetOptionString != null &&
-                   _mpvGetPropertyString != null &&
-                   _mpvGetPropertyDouble != null &&
-                   _mpvSetProperty != null &&
-                   _mpvFree != null;
-        }
 
         private static byte[] GetUtf8Bytes(string s)
         {
@@ -136,7 +110,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             IntPtr[] byteArrayPointers;
             var mainPtr = AllocateUtf8IntPtrArrayWithSentinel(args, out byteArrayPointers);
-            _mpvCommand(_mpvHandle, mainPtr);
+            mpv_command(_mpvHandle, mainPtr);
             foreach (var ptr in byteArrayPointers)
             {
                 Marshal.FreeHGlobal(ptr);
@@ -146,7 +120,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override string PlayerName
         {
-            get { return "MPV Lib"; }
+            get { return "MPV Player"; }
         }
 
         private int _volume = 75;
@@ -172,7 +146,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 int mpvFormatDouble = 5;
                 double d = 0;
-                _mpvGetPropertyDouble(_mpvHandle, GetUtf8Bytes("duration"), mpvFormatDouble, ref d);
+                mpv_get_property(_mpvHandle, GetUtf8Bytes("duration"), mpvFormatDouble, ref d);
                 return d;
             }
         }
@@ -186,7 +160,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 int mpvFormatDouble = 5;
                 double d = 0;
-                _mpvGetPropertyDouble(_mpvHandle, GetUtf8Bytes("time-pos"), mpvFormatDouble, ref d);
+                mpv_get_property(_mpvHandle, GetUtf8Bytes("time-pos"), mpvFormatDouble, ref d);
                 return d;
             }
             set
@@ -198,7 +172,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        private double _playRate = 1.0;
+        private double _playRate = 2.0;
         public override double PlayRate
         {
             get
@@ -234,7 +208,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 return;
 
             var bytes = GetUtf8Bytes("no");
-            _mpvSetProperty(_mpvHandle, GetUtf8Bytes("pause"), MpvFormatString, ref bytes);
+            mpv_set_property(_mpvHandle, GetUtf8Bytes("pause"), MpvFormatString, ref bytes);
         }
 
         public override void Pause()
@@ -243,7 +217,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 return;
 
             var bytes = GetUtf8Bytes("yes");
-            _mpvSetProperty(_mpvHandle, GetUtf8Bytes("pause"), MpvFormatString, ref bytes);
+            mpv_set_property(_mpvHandle, GetUtf8Bytes("pause"), MpvFormatString, ref bytes);
         }
 
         public override void Stop()
@@ -259,10 +233,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 if (_mpvHandle == IntPtr.Zero)
                     return true;
 
-                var lpBuffer = IntPtr.Zero;
-                _mpvGetPropertyString(_mpvHandle, GetUtf8Bytes("pause"), MpvFormatString, ref lpBuffer);
-                var isPaused = Marshal.PtrToStringAnsi(lpBuffer) == "yes";
-                _mpvFree(lpBuffer);
+                var lpBuffer = mpv_get_property_string(_mpvHandle, GetUtf8Bytes("pause"));
+                string s = Marshal.PtrToStringAnsi(lpBuffer);
+                bool isPaused = s == "yes";
+                mpv_free(lpBuffer);
                 return isPaused;
             }
         }
@@ -280,8 +254,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 if (_audioTrackIds == null)
                 {
                     _audioTrackIds = new List<string>();
-                    var lpBuffer = IntPtr.Zero;
-                    _mpvGetPropertyString(_mpvHandle, GetUtf8Bytes("track-list"), MpvFormatString, ref lpBuffer);
+                    var lpBuffer = mpv_get_property_string(_mpvHandle, GetUtf8Bytes("track-list"));
                     string trackListJson = Marshal.PtrToStringAnsi(lpBuffer);
                     foreach (var json in Json.ReadObjectArray(trackListJson))
                     {
@@ -292,7 +265,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                             _audioTrackIds.Add(id);
                         }
                     }
-                    _mpvFree(lpBuffer);
+                    mpv_free(lpBuffer);
                 }
                 return _audioTrackIds.Count;
             }
@@ -302,15 +275,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                var lpBuffer = IntPtr.Zero;
-                _mpvGetPropertyString(_mpvHandle, GetUtf8Bytes("aid"), MpvFormatString, ref lpBuffer);
+                var lpBuffer = mpv_get_property_string(_mpvHandle, GetUtf8Bytes("aid"));
                 string str = Marshal.PtrToStringAnsi(lpBuffer);
                 int number = 0;
                 if (AudioTrackCount > 1 && _audioTrackIds.Contains(str))
                 {
                     number = _audioTrackIds.IndexOf(str);
                 }
-                _mpvFree(lpBuffer);
+                mpv_free(lpBuffer);
                 return number;
             }
             set
@@ -328,23 +300,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                try
-                {
-                    string dllFile = GetMpvPath("mpv-1.dll");
-                    return File.Exists(dllFile);
-                }
-                catch
-                {
-                    return false;
-                }
+                return true;
             }
         }
 
         public static string GetMpvPath(string fileName)
         {
-            if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
-                return null;
-
             var path = Path.Combine(Configuration.DataDirectory, fileName);
             if (File.Exists(path))
                 return path;
@@ -354,42 +315,27 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
-            string dllFile = GetMpvPath("mpv-1.dll");
-            if (File.Exists(dllFile))
-            {
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(dllFile));
-                _libMpvDll = NativeMethods.LoadLibrary(dllFile);
-                LoadLibVlcDynamic();
-                if (!IsAllMethodsLoaded())
-                {
-                    throw new Exception("MPV - not all needed methods found in dll file");
-                }
-                _mpvHandle = _mpvCreate.Invoke();
-            }
-            else if (!Directory.Exists(videoFileName))
-            {
-                return;
-            }
-
+            _mpvHandle = mpv_create();
             OnVideoLoaded = onVideoLoaded;
             OnVideoEnded = onVideoEnded;
 
             if (!string.IsNullOrEmpty(videoFileName))
             {
-                _mpvInitialize.Invoke(_mpvHandle);
+                //Mono.Unix.
+                mpv_initialize(_mpvHandle);
 
                 string videoOutput = "vaapi";
                 if (!string.IsNullOrWhiteSpace(Configuration.Settings.General.MpvVideoOutput))
                     videoOutput = Configuration.Settings.General.MpvVideoOutput;
-                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("vo"), GetUtf8Bytes(videoOutput)); // "direct3d_shaders" is default, "direct3d" could be used for compabality with old systems
+                mpv_set_option_string(_mpvHandle, GetUtf8Bytes("vo"), GetUtf8Bytes(videoOutput)); // "direct3d_shaders" is default, "direct3d" could be used for compabality with old systems
 
-                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("keep-open"), GetUtf8Bytes("always")); // don't auto close video
-                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("no-sub"), GetUtf8Bytes("")); // don't load subtitles
+                mpv_set_option_string(_mpvHandle, GetUtf8Bytes("keep-open"), GetUtf8Bytes("always")); // don't auto close video
+                mpv_set_option_string(_mpvHandle, GetUtf8Bytes("no-sub"), GetUtf8Bytes("")); // don't load subtitles
                 if (ownerControl != null)
                 {
                     int mpvFormatInt64 = 4;
                     var windowId = ownerControl.Handle.ToInt64();
-                    _mpvSetOption(_mpvHandle, GetUtf8Bytes("wid"), mpvFormatInt64, ref windowId);
+                    mpv_set_option(_mpvHandle, GetUtf8Bytes("wid"), mpvFormatInt64, ref windowId);
                 }
                 DoMpvCommand("loadfile", videoFileName);
 
@@ -411,7 +357,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     if (_mpvHandle != IntPtr.Zero)
                     {
-                        var eventIdHandle = _mpvWaitEvent(_mpvHandle, 0);
+                        var eventIdHandle = mpv_wait_event(_mpvHandle, 0);
                         var eventId = Convert.ToInt64(Marshal.PtrToStructure(eventIdHandle, typeof(int)));
                         if (eventId == mpvEventFileLoaded)
                         {
@@ -432,9 +378,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Pause();
         }
 
-        //private void VideoEndedTimer_Tick(object sender, EventArgs e)
-        //{
-        //}
 
         public override void DisposeVideoPlayer()
         {
@@ -449,7 +392,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     if (_mpvHandle != IntPtr.Zero)
                     {
-                        _mpvTerminateDestroy(_mpvHandle);
+                        mpv_terminate_destroy(_mpvHandle);
                         _mpvHandle = IntPtr.Zero;
                     }
 
@@ -466,7 +409,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        ~LibMpvDynamic()
+        ~LibMpvMono()
         {
             Dispose(false);
         }
