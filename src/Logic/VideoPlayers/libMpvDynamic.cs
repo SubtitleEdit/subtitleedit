@@ -10,7 +10,7 @@ using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    public class LibMpvDynamic : VideoPlayer, IDisposable
+    public class LibMpvDynamic : IVideoPlayer
     {
 
         #region mpv dll methods
@@ -62,10 +62,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private IntPtr _libMpvDll;
         private IntPtr _mpvHandle;
         private Timer _videoLoadedTimer;
-//        private Timer _videoEndedTimer;
+        // private Timer _videoEndedTimer;
 
-        public override event EventHandler OnVideoLoaded;
-        public override event EventHandler OnVideoEnded;
+        public event EventHandler OnVideoLoaded;
+        public event EventHandler OnVideoEnded;
 
         private const int MpvFormatString = 1;
 
@@ -144,13 +144,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Marshal.FreeHGlobal(mainPtr);
         }
 
-        public override string PlayerName
+        public string PlayerName
         {
             get { return "MPV Lib"; }
         }
 
         private int _volume = 75;
-        public override int Volume
+        public int Volume
         {
             get
             {
@@ -163,7 +163,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override double Duration
+        public double Duration
         {
             get
             {
@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override double CurrentPosition
+        public double CurrentPosition
         {
             get
             {
@@ -199,7 +199,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         }
 
         private double _playRate = 1.0;
-        public override double PlayRate
+        public double PlayRate
         {
             get
             {
@@ -228,7 +228,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             DoMpvCommand("frame-back-step");
         }
 
-        public override void Play()
+        public void Play()
         {
             if (_mpvHandle == IntPtr.Zero)
                 return;
@@ -237,7 +237,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _mpvSetProperty(_mpvHandle, GetUtf8Bytes("pause"), MpvFormatString, ref bytes);
         }
 
-        public override void Pause()
+        public void Pause()
         {
             if (_mpvHandle == IntPtr.Zero)
                 return;
@@ -246,13 +246,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _mpvSetProperty(_mpvHandle, GetUtf8Bytes("pause"), MpvFormatString, ref bytes);
         }
 
-        public override void Stop()
+        public void Stop()
         {
             Pause();
             CurrentPosition = 0;
         }
 
-        public override bool IsPaused
+        public bool IsPaused
         {
             get
             {
@@ -267,12 +267,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override bool IsPlaying
+        public bool IsPlaying
         {
             get { return !IsPaused; }
         }
 
         private List<string> _audioTrackIds;
+        private string _videoFileName;
+
         public int AudioTrackCount
         {
             get
@@ -340,6 +342,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
+        public string VideoFileName
+        {
+            get
+            {
+                return _videoFileName;
+            }
+        }
+
         public static string GetMpvPath(string fileName)
         {
             if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
@@ -352,7 +362,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             return null;
         }
 
-        public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        public void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             string dllFile = GetMpvPath("mpv-1.dll");
             if (File.Exists(dllFile))
@@ -371,6 +381,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 return;
             }
 
+            _videoFileName = videoFileName;
             OnVideoLoaded = onVideoLoaded;
             OnVideoEnded = onVideoEnded;
 
@@ -435,11 +446,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         //private void VideoEndedTimer_Tick(object sender, EventArgs e)
         //{
         //}
-
-        public override void DisposeVideoPlayer()
-        {
-            Dispose();
-        }
 
         private void ReleaseUnmangedResources()
         {

@@ -2899,7 +2899,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!videoFileLoaded && mediaPlayer.VideoPlayer != null)
                 {
-                    mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+                    mediaPlayer.VideoPlayer.Dispose();
                     mediaPlayer.VideoPlayer = null;
                     timer1.Stop();
                 }
@@ -3609,7 +3609,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (mediaPlayer.VideoPlayer != null)
             {
-                mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+                mediaPlayer.VideoPlayer.Dispose();
                 mediaPlayer.VideoPlayer = null;
             }
 
@@ -8574,7 +8574,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (mediaPlayer.VideoPlayer != null)
                 {
-                    mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+                    mediaPlayer.VideoPlayer.Dispose();
                 }
             }
         }
@@ -13326,7 +13326,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (mediaPlayer.VideoPlayer != null)
                 {
                     mediaPlayer.Pause();
-                    mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+                    mediaPlayer.VideoPlayer.Dispose();
                 }
                 _endSeconds = -1;
 
@@ -17069,7 +17069,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (mediaPlayer.VideoPlayer != null)
             {
                 mediaPlayer.SubtitleText = string.Empty;
-                mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+                mediaPlayer.VideoPlayer.Dispose();
             }
             mediaPlayer.SetPlayerName(string.Empty);
             mediaPlayer.ResetTimeLabel();
@@ -19830,7 +19830,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (mediaPlayer.VideoPlayer != null)
                     {
                         mediaPlayer.Pause();
-                        mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+                        mediaPlayer.VideoPlayer.Dispose();
                     }
                     _endSeconds = -1;
 

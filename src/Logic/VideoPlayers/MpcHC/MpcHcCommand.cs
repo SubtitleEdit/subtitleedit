@@ -25,6 +25,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         public const UInt32 IncreaseVolume = 0xA0004003;
         public const UInt32 DecreaseVolume = 0xA0004004;
         public const UInt32 CloseApplication = 0xA0004006;
-        public const UInt32 SetSpeed = 0xA0004008;
+        public const UInt32 PlayRate = 0xA0004008;
     }
 }

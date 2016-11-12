@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    public class MPlayer : VideoPlayer, IDisposable
+    public class MPlayer : IVideoPlayer
     {
         private Process _mplayer;
         private Timer _timer;
@@ -27,14 +27,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private int _pauseCounts = 0;
         private double _speed = 1.0;
 
-        public override string PlayerName
+        public string PlayerName
         {
             get { return "MPlayer"; }
         }
 
         private float _volume;
 
-        public override int Volume
+        public int Volume
         {
             get
             {
@@ -50,14 +50,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override double Duration
+        public double Duration
         {
             get { return _lengthInSeconds.TotalSeconds; }
         }
 
         private double _timePosition;
 
-        public override double CurrentPosition
+        public double CurrentPosition
         {
             get
             {
@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override double PlayRate
+        public double PlayRate
         {
             get
             {
@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public override void Play()
+        public void Play()
         {
             _mplayer.StandardInput.WriteLine("pause");
             _pauseCounts = 0;
@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _pausePosition = null;
         }
 
-        public override void Pause()
+        public void Pause()
         {
             if (!_paused)
                 _mplayer.StandardInput.WriteLine("pause");
@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _paused = true;
         }
 
-        public override void Stop()
+        public void Stop()
         {
             CurrentPosition = 0;
             Pause();
@@ -122,17 +122,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _pausePosition = null;
         }
 
-        public override bool IsPaused
+        public bool IsPaused
         {
             get { return _paused; }
         }
 
-        public override bool IsPlaying
+        public bool IsPlaying
         {
             get { return !_paused; }
         }
 
-        public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        public void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             _loaded = false;
             _videoFileName = videoFileName;
@@ -345,6 +345,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
+        public string VideoFileName
+        {
+            get
+            {
+                return _videoFileName;
+            }
+        }
+
         private void GetProperty(string propertyName, bool keepPause)
         {
             if (keepPause)
@@ -377,19 +385,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _waitForChange = false;
         }
 
-        public override void DisposeVideoPlayer()
-        {
-            _timer.Stop();
-            if (_mplayer != null)
-            {
-                _mplayer.OutputDataReceived -= MPlayerOutputDataReceived;
-                _mplayer.StandardInput.WriteLine("quit");
-            }
-        }
+        public event EventHandler OnVideoLoaded;
 
-        public override event EventHandler OnVideoLoaded;
-
-        public override event EventHandler OnVideoEnded;
+        public event EventHandler OnVideoEnded;
 
         public void Dispose()
         {
@@ -401,8 +399,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             if (disposing)
             {
+                _timer.Stop();
                 if (_mplayer != null)
                 {
+                    _mplayer.OutputDataReceived -= MPlayerOutputDataReceived;
+                    _mplayer.StandardInput.WriteLine("quit");
                     _mplayer.Dispose();
                     _mplayer = null;
                 }
@@ -414,6 +415,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
             }
         }
-
+        
     }
 }

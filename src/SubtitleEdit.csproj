@@ -866,22 +866,19 @@
     <Compile Include="Logic\UiGetPacEncoding.cs" />
     <Compile Include="Logic\UiGetYouTubeAnnotationStyles.cs" />
     <Compile Include="Logic\UiUtil.cs" />
+    <Compile Include="Logic\VideoPlayers\INotifyOnResize.cs" />
     <Compile Include="Logic\VideoPlayers\LibMpvDynamic.cs" />
     <Compile Include="Logic\VideoPlayers\LibVlcDynamic.cs" />
     <Compile Include="Logic\VideoPlayers\LibVlcMono.cs" />
     <Compile Include="Logic\VideoPlayers\ManagedDirectXPlayer.cs" />
-    <Compile Include="Logic\VideoPlayers\MpcHC\MessageHandlerWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Logic\VideoPlayers\MpcHC\MessageHandlerWindow.Designer.cs">
-      <DependentUpon>MessageHandlerWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="Logic\VideoPlayers\MpcHC\MpcHcCommand.cs" />
-    <Compile Include="Logic\VideoPlayers\MpcHC\MpcHc.cs" />
+    <Compile Include="Logic\VideoPlayers\MpcHC\MpcHc.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Logic\VideoPlayers\MpcHC\NativeMethods.cs" />
     <Compile Include="Logic\VideoPlayers\MPlayer.cs" />
     <Compile Include="Logic\VideoPlayers\QuartsPlayer.cs" />
-    <Compile Include="Logic\VideoPlayers\VideoPlayer.cs" />
+    <Compile Include="Logic\VideoPlayers\IVideoPlayer.cs" />
     <Compile Include="Logic\VideoPlayers\WmpPlayer.cs" />
     <Compile Include="Logic\WordSpellChecker.cs" />
     <Compile Include="Program.cs" />
@@ -1270,9 +1267,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\YouTubeAnnotationsImport.resx">
       <DependentUpon>YouTubeAnnotationsImport.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Logic\VideoPlayers\MpcHC\MessageHandlerWindow.resx">
-      <DependentUpon>MessageHandlerWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

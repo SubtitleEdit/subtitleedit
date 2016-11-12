@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
 {
-    public sealed class VideoPlayerContainer : Panel
+    public sealed class VideoPlayerContainer : Panel, INotifyOnResize
     {
         public class RichTextBoxViewOnly : RichTextBox
         {
@@ -31,16 +31,21 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        /// <summary>
+        /// Notify subscribers when resized.
+        /// </summary>
+        public event Action<int, int> Resized;
+
         public event EventHandler OnButtonClicked;
         public Panel PanelPlayer { get; private set; }
         private Panel _panelSubtitle;
         private RichTextBoxViewOnly _subtitleTextBox;
         private string _subtitleText = string.Empty;
-        private VideoPlayer _videoPlayer;
+        private IVideoPlayer _videoPlayer;
 
         public float FontSizeFactor { get; set; }
 
-        public VideoPlayer VideoPlayer
+        public IVideoPlayer VideoPlayer
         {
             get { return _videoPlayer; }
             set
@@ -841,8 +846,9 @@ namespace Nikse.SubtitleEdit.Controls
             _controlsHeight = _pictureBoxBackground.Height;
             PanelPlayer.Height = Height - (_controlsHeight + SubtitlesHeight);
             PanelPlayer.Width = Width;
-            if (_videoPlayer != null)
-                _videoPlayer.Resize(PanelPlayer.Width, PanelPlayer.Height);
+
+            // Notify subscribers of resize by passing the height and width.
+            Resized?.Invoke(Width, Height);
 
             _panelSubtitle.Top = Height - (_controlsHeight + SubtitlesHeight);
             _panelSubtitle.Width = Width;
