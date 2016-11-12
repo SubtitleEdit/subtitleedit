@@ -429,24 +429,8 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             string s = RemoveLineBreaks(text);
-            string noTagText = HtmlUtil.RemoveHtmlTags(s, true);
-
-            if (noTagText.Length < mergeLinesShorterThan)
+            if (HtmlUtil.RemoveHtmlTags(s, true).Length < mergeLinesShorterThan)
             {
-                var noTagLines = noTagText.SplitToLines();
-                if (noTagLines.Length > 1)
-                {
-                    bool isDialog = true;
-                    foreach (string line in noTagLines)
-                    {
-                        var noTagLine = line.TrimStart();
-                        isDialog = isDialog && (noTagLine.StartsWith('-') || noTagLine.StartsWith('—'));
-                    }
-                    if (isDialog)
-                    {
-                        return text;
-                    }
-                }
                 return s;
             }
 
