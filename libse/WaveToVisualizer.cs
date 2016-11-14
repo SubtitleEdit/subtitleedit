@@ -807,12 +807,7 @@ namespace Nikse.SubtitleEdit.Core
                 var dir = Configuration.SpectrogramsDirectory.TrimEnd(Path.DirectorySeparatorChar);
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
-
-                var file = new FileInfo(videoFileName);
-                var name = Utilities.Sha256Hash(file.Name + file.Length + file.CreationTimeUtc.ToShortDateString());
-                name = name.Replace("=", string.Empty).Replace("/", string.Empty).Replace(",", string.Empty).Replace("?", string.Empty).Replace("*", string.Empty).Replace("+", string.Empty).Replace("\\", string.Empty);
-                name = Path.Combine(dir, name);
-                return name;
+                return Path.Combine(dir, Path.GetRandomFileName());
             }
 
             public SpectrogramDrawer(int nfft)
