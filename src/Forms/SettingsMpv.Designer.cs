@@ -119,8 +119,7 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBoxVideoOutput);
-            if (!Configuration.IsRunningOnLinux())
-                this.Controls.Add(this.buttonDownload);
+            this.Controls.Add(this.buttonDownload);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;
