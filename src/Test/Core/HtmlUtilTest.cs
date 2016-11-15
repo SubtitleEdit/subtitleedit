@@ -70,5 +70,65 @@ namespace Test.Core
             Assert.AreEqual("<i>foobar?</i>" + Environment.NewLine + "<i>foobar?</i>", HtmlUtil.FixInvalidItalicTags(s));
         }
 
+        #region <<Remove Empty Tags>>
+
+        [TestMethod]
+        public void RemoveEmptyTagsTest1()
+        {
+            const string expected = "Foobar.";
+            string output = HtmlUtil.RemoveEmptyTags("Foobar<b></b>.");
+            Assert.AreEqual(expected, output);
+        }
+
+        [TestMethod]
+        public void RemoveEmptyTagsTest2()
+        {
+            const string expected = "Foo bar.";
+            string output = HtmlUtil.RemoveEmptyTags("Foo <i></i>bar.");
+            Assert.AreEqual(expected, output);
+        }
+
+        [TestMethod]
+        public void RemoveEmptyTagsTest3()
+        {
+            const string expected = "Foobar.";
+            string output = HtmlUtil.RemoveEmptyTags("<font color=\"#000000\"></font>Foobar.<font color=\"#000000\"></font>");
+            Assert.AreEqual(expected, output);
+        }
+
+        //[TestMethod]
+        //public void RemoveEmptyTagsTest4()
+        //{
+        //    const string expected = "Foo bar.";
+        //    string output = HtmlUtil.RemoveEmptyTags("Foo<font color=\"#000000\"> </font>bar.");
+        //    Assert.AreEqual(expected, output);
+        //}
+
+        [TestMethod]
+        public void RemoveEmptyTagsTest5()
+        {
+            const string expected = "><Foobar.><";
+            string output = HtmlUtil.RemoveEmptyTags("><Foobar<b></b>.><");
+            Assert.AreEqual(expected, output);
+        }
+
+        [TestMethod]
+        public void RemoveEmptyTagsTest6()
+        {
+            const string expected =  "<i><Foobar";
+            string output = HtmlUtil.RemoveEmptyTags("<i><Foobar");
+            Assert.AreEqual(expected, output);
+        }
+
+        [TestMethod]
+        public void RemoveEmptyTagsTest7()
+        {
+            const string expected = "><.Foobar><";
+            string output = HtmlUtil.RemoveEmptyTags("><.<b></b>Foobar><");
+            Assert.AreEqual(expected, output);
+        }
+
+
+        #endregion
     }
 }

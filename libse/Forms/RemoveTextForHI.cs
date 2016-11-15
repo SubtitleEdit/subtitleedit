@@ -547,13 +547,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
             text = st.Pre + sb.ToString().Trim() + st.Post;
             text = text.Replace("  ", " ").Trim();
-            text = text.Replace("<i></i>", string.Empty);
-            text = text.Replace("<i> </i>", " ");
-            text = text.Replace("<b></b>", string.Empty);
-            text = text.Replace("<b> </b>", " ");
-            text = text.Replace("<u></u>", string.Empty);
-            text = text.Replace("<u> </u>", " ");
-            text = RemoveEmptyFontTag(text);
+            text = HtmlUtil.RemoveEmptyTags(text);
             text = text.Replace("  ", " ").Trim();
             text = RemoveColon(text);
             text = RemoveLineIfAllUppercase(text);
@@ -618,7 +612,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 if (text.StartsWith("<i>-", StringComparison.Ordinal))
                 {
-                    text = "<i>" + text.Remove(0,4).Trim();
+                    text = "<i>" + text.Remove(0, 4).Trim();
                 }
                 else
                 {
@@ -707,31 +701,6 @@ namespace Nikse.SubtitleEdit.Core.Forms
                 }
             }
             return text.Trim();
-        }
-
-        private string RemoveEmptyFontTag(string text)
-        {
-            int indexOfStartFont = text.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
-            if (indexOfStartFont >= 0)
-            {
-                int indexOfEndFont = text.IndexOf("</font>", StringComparison.OrdinalIgnoreCase);
-                if (indexOfEndFont > indexOfStartFont)
-                {
-                    int startTagBefore = text.Substring(0, indexOfEndFont).LastIndexOf('<');
-                    if (startTagBefore == indexOfStartFont)
-                    {
-                        var lastTwo = text.Substring(indexOfEndFont - 2, 2);
-                        if (lastTwo.TrimEnd().EndsWith('>'))
-                        {
-                            text = text.Remove(indexOfStartFont, indexOfEndFont + "</font>".Length - indexOfStartFont);
-                            if (lastTwo.EndsWith(' '))
-                                text = text.Insert(indexOfStartFont, " ");
-                            text = text.Replace("  ", " ");
-                        }
-                    }
-                }
-            }
-            return text;
         }
 
         private void AddWarning()
