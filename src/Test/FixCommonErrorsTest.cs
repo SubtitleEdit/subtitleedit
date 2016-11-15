@@ -1451,6 +1451,30 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixUppercaseIInsideWords3()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string candidate = "McInturff";
+                InitializeFixCommonErrorsLine(target, candidate);
+                new FixUppercaseIInsideWords().Fix(_subtitle, new CustomFixCallback());
+                Assert.AreEqual(candidate, _subtitle.Paragraphs[0].Text);
+            }
+        }
+
+        [TestMethod]
+        public void FixUppercaseIInsideWords4()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string candidate = "MacInerney";
+                InitializeFixCommonErrorsLine(target, candidate);
+                new FixUppercaseIInsideWords().Fix(_subtitle, new CustomFixCallback());
+                Assert.AreEqual(candidate, _subtitle.Paragraphs[0].Text);
+            }
+        }
+
         #endregion Fix uppercase I inside words
 
         #region Fix dialogs on one line

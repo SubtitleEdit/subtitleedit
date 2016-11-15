@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -49,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             set { _language = value; }
         }
 
-        public bool IsName(string candidate)
+        public virtual bool IsName(string candidate)
         {
             return false;
         }
@@ -67,5 +68,15 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             return new HashSet<string>();
         }
 
+    }
+
+    public class CustomFixCallback : EmptyFixCallback
+    {
+        public override bool IsName(string candidate)
+        {
+            // Irish name. e.g (McInturff, MacInerney.
+            return base.IsName(candidate) || candidate.StartsWith("McI", StringComparison.Ordinal) ||
+                candidate.StartsWith("MacI", StringComparison.Ordinal) || candidate.StartsWith("O'I", StringComparison.Ordinal);
+        }
     }
 }
