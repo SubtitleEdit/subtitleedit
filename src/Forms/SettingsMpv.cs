@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxVideoOutput.Items.Clear();
                 comboBoxVideoOutput.Items.AddRange(new object[] { "direct3d ", "sdl", "vaapi", "vdpau" });
+                Controls.Remove(this.buttonDownload);
             }
         }
 

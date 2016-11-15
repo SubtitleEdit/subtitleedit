@@ -25,11 +25,15 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.SpellCheck;
+using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Forms
 {
+    
     public sealed partial class Main : Form
     {
+        [DllImport("libc.so.6")]
+        private static extern IntPtr setlocale(int category,string locale);
 
         private class ComboBoxZoomItem
         {
@@ -311,6 +315,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Main()
         {
+            const int LC_NUMERIC = 1;
+            if(Configuration.IsRunningOnLinux())
+                setlocale(LC_NUMERIC, "C");
             try
             {
                 InitializeComponent();
