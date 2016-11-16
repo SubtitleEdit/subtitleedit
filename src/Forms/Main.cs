@@ -32,9 +32,6 @@ namespace Nikse.SubtitleEdit.Forms
     
     public sealed partial class Main : Form
     {
-        [DllImport("libc.so.6")]
-        private static extern IntPtr setlocale(int category,string locale);
-
         private class ComboBoxZoomItem
         {
             public string Text { get; set; }
@@ -315,9 +312,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Main()
         {
-            const int LC_NUMERIC = 1;
             if(Configuration.IsRunningOnLinux())
-                setlocale(LC_NUMERIC, "C");
+                NativeMethods.setlocale(NativeMethods.LC_NUMERIC, "C");
             try
             {
                 InitializeComponent();
