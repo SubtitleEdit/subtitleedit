@@ -17,12 +17,6 @@ namespace Nikse.SubtitleEdit.Logic
 {
     internal static class UiUtil
     {
-
-        [DllImport("libdl.so")]
-        static extern IntPtr dlopen(string filename, int flags);
-
-        [DllImport("libdl.so")]
-        static extern IntPtr dlclose(IntPtr handle);
         public static readonly Lazy<string> SubtitleExtensionFilter = new Lazy<string>(GetOpenDialogFilter);
 
         public static VideoInfo GetVideoInfo(string fileName)
@@ -185,10 +179,10 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (Configuration.IsRunningOnLinux())
             {
-                handle = dlopen("libmpv.so", RTLD_NOW|RTLD_GLOBAL);
+                handle = NativeMethods.dlopen("libmpv.so", RTLD_NOW|RTLD_GLOBAL);
                 if (handle != IntPtr.Zero)
                 { 
-					dlclose(handle);
+                    NativeMethods.dlclose(handle);
                     return new LibMpvMono();
                 }
                 else
