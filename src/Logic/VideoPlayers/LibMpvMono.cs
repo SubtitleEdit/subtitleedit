@@ -24,16 +24,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         private const int MpvFormatString = 1;
 
-        private object GetDllType(Type type, string name)
-        {
-            IntPtr address = NativeMethods.GetProcAddress(_libMpvDll, name);
-            if (address != IntPtr.Zero)
-            {
-                return Marshal.GetDelegateForFunctionPointer(address, type);
-            }
-            return null;
-        }
-
 
         private static byte[] GetUtf8Bytes(string s)
         {
