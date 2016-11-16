@@ -1,5 +1,24 @@
 ﻿Subtitle Edit Changelog
 
+3.5.1 (xth December 2016) BETA
+* NEW:
+   * "mpv" media player now works on Linux  - thx var1ap 
+* IMPROVED:
+   * Updated Hungarian translation - thx ZityiSoft Team
+   * Updated Russian translation - thx Elheym
+   * Updated Romanian translation - thx Mircea
+   * Updated Finnish translation - thx Teijo
+   * Updated French Translation - thx JM GBT
+* FIXED:
+   * Fixed possible crash when generating scene changes - thx Leemet
+   * Fixed issues with moving rules in "Multiple replace" - thx kristiaanvk
+   * Fixed list view issues regarding remember selected position - thx darnn
+   * EBU stl saves empty file if saving is cancelled - thx ivandrofly/jjtronics
+   * Fixed possible crash in textbox with italic - thx ivandrofly
+   * Fixed bug in file naming after extracting sub from mkv - thx mzso
+   * Fixed bottom margin in image export of SSA/ASS - thx maddox
+
+
 3.5 (26th October 2016)
 * NEW:
    * Can now generate scene changes via FFmpeg + other scene changes improvements

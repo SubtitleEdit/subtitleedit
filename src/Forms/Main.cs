@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    
+
     public sealed partial class Main : Form
     {
         private class ComboBoxZoomItem
@@ -312,7 +312,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Main()
         {
-            if(Configuration.IsRunningOnLinux())
+            if (Configuration.IsRunningOnLinux())
                 NativeMethods.setlocale(NativeMethods.LC_NUMERIC, "C");
             try
             {
@@ -3270,7 +3270,7 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
 
             if (!string.IsNullOrWhiteSpace(_fileName) && File.Exists(_fileName) && !string.IsNullOrEmpty(_videoFileName))
-            { 
+            {
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
                 saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_videoFileName);
             }

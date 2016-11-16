@@ -11,7 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -174,19 +173,17 @@ namespace Nikse.SubtitleEdit.Logic
         {
             int RTLD_NOW = 0x0001;
             int RTLD_GLOBAL = 0x0100;
-            IntPtr handle = IntPtr.Zero;
             GeneralSettings gs = Configuration.Settings.General;
 
             if (Configuration.IsRunningOnLinux())
             {
-                handle = NativeMethods.dlopen("libmpv.so", RTLD_NOW|RTLD_GLOBAL);
+                var handle = NativeMethods.dlopen("libmpv.so", RTLD_NOW | RTLD_GLOBAL);
                 if (handle != IntPtr.Zero)
-                { 
+                {
                     NativeMethods.dlclose(handle);
                     return new LibMpvMono();
                 }
-                else
-                    return new MPlayer();
+                return new MPlayer();
             }
             // Mono on OS X is 32 bit and thus requires 32 bit VLC. Place VLC in the same
             // folder as Subtitle Edit and add this to the app.config inside the
