@@ -126,6 +126,67 @@ namespace Nikse.SubtitleEdit.Logic
 
         #endregion VLC
 
+        #region MPV
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr mpv_create();
+
+
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int mpv_initialize(IntPtr mpvHandle);
+
+
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int mpv_command(IntPtr mpvHandle, IntPtr utf8Strings);
+
+
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int mpv_terminate_destroy(IntPtr mpvHandle);
+
+
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr mpv_wait_event(IntPtr mpvHandle, double wait);
+
+
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int mpv_set_option(IntPtr mpvHandle, byte[] name, int format, ref long data);
+
+
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int mpv_set_option_string(IntPtr mpvHandle, byte[] name, byte[] value);
+
+
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr mpv_get_property_string(IntPtr mpvHandle, byte[] name);
+
+
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int mpv_get_property(IntPtr mpvHandle, byte[] name, int format, ref double data);
+
+
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int mpv_set_property(IntPtr mpvHandle, byte[] name, int format, ref byte[] data);
+
+
+        [DllImport("mpv", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int mpv_free(IntPtr data);
+
+        #endregion MPV
+
+        #region System
+
+        internal const int LC_NUMERIC = 1;
+
+        [DllImport("libc.so.6")]
+        internal static extern IntPtr setlocale(int category, string locale);
+
+        [DllImport("libdl.so")]
+        internal static extern IntPtr dlopen(string filename, int flags);
+
+        [DllImport("libdl.so")]
+        internal static extern IntPtr dlclose(IntPtr handle);
+
+        #endregion
     }
+
 
 }
