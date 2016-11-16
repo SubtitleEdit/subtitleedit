@@ -2327,7 +2327,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void RefreshMpvSettings()
         {
             radioButtonVideoPlayerMPV.Enabled = LibMpvDynamic.IsInstalled;
-            labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutput;
+            if (Configuration.IsRunningOnLinux() && (Configuration.Settings.General.MpvVideoOutput == "direct3d_shaders"))
+                labelMpvSettings.Text = "--vo=vaapi";
+            else
+                labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutput;
         }
 
         private void linkLabelBingSubscribe_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -2377,6 +2380,5 @@ namespace Nikse.SubtitleEdit.Forms
         {
             checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(Configuration.Settings.Language.Settings.SyntaxColorTextMoreThanMaxLines, numericUpDownMaxNumberOfLines.Value);
         }
-
     }
 }
