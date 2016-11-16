@@ -9,9 +9,12 @@ namespace Nikse.SubtitleEdit.Controls
 {
     public sealed class VideoPlayerContainer : Panel
     {
-        public class RichTextBoxViewOnly : RichTextBox
+        /// <summary>
+        /// Used to display subtitles in Video player.
+        /// </summary>
+        public class RichTextBoxSubtitle : RichTextBox
         {
-            public RichTextBoxViewOnly()
+            public RichTextBoxSubtitle()
             {
                 ReadOnly = true;
                 BorderStyle = BorderStyle.None;
@@ -34,7 +37,7 @@ namespace Nikse.SubtitleEdit.Controls
         public event EventHandler OnButtonClicked;
         public Panel PanelPlayer { get; private set; }
         private Panel _panelSubtitle;
-        private RichTextBoxViewOnly _subtitleTextBox;
+        private RichTextBoxSubtitle _subtitleTextBox;
         private string _subtitleText = string.Empty;
         private VideoPlayer _videoPlayer;
 
@@ -51,7 +54,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public RichTextBoxViewOnly TextBox
+        public RichTextBoxSubtitle TextBox
         {
             get { return _subtitleTextBox; }
         }
@@ -243,7 +246,7 @@ namespace Nikse.SubtitleEdit.Controls
         private Control MakeSubtitlesPanel()
         {
             _panelSubtitle = new Panel { BackColor = _backgroundColor, Left = 0, Top = 0, Height = SubtitlesHeight + 1 };
-            _subtitleTextBox = new RichTextBoxViewOnly();
+            _subtitleTextBox = new RichTextBoxSubtitle();
             _panelSubtitle.Controls.Add(_subtitleTextBox);
             _subtitleTextBox.BackColor = _backgroundColor;
             _subtitleTextBox.ForeColor = Color.White;
