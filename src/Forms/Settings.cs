@@ -981,36 +981,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (!cultures.Contains(culture))
                                 cultures.Add(culture);
-                        }
-
-                        if (Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList.xml").Length == 1)
-                        {
-                            bool found = false;
-                            foreach (CultureInfo ci in cultures)
-                            {
-                                if (ci.ThreeLetterISOLanguageName == culture.ThreeLetterISOLanguageName)
-                                {
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if (!found)
-                                cultures.Add(culture);
-                        }
-                        else if (Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList_User.xml").Length == 1)
-                        {
-                            bool found = false;
-                            foreach (var ci in cultures)
-                            {
-                                if (ci.ThreeLetterISOLanguageName == culture.ThreeLetterISOLanguageName)
-                                {
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if (!found)
-                                cultures.Add(culture);
-                        }
+                        }                       
                     }
                 }
 
