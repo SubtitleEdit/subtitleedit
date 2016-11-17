@@ -981,39 +981,23 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (!cultures.Contains(culture))
                                 cultures.Add(culture);
-                        }                       
+                        }
                     }
                 }
 
                 foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
                 {
-                    if (Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList.xml").Length == 1)
+                    if (Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList.xml").Length == 1 ||
+                        Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList_User.xml").Length == 1)
                     {
-                        bool found = false;
                         foreach (var ci in cultures)
                         {
                             if (ci.ThreeLetterISOLanguageName == culture.ThreeLetterISOLanguageName)
                             {
-                                found = true;
+                                cultures.Add(culture);
                                 break;
                             }
                         }
-                        if (!found)
-                            cultures.Add(culture);
-                    }
-                    else if (Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList_User.xml").Length == 1)
-                    {
-                        bool found = false;
-                        foreach (var ci in cultures)
-                        {
-                            if (ci.ThreeLetterISOLanguageName == culture.ThreeLetterISOLanguageName)
-                            {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found)
-                            cultures.Add(culture);
                     }
                 }
 
