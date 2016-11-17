@@ -429,24 +429,8 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             string s = RemoveLineBreaks(text);
-            string noTagText = HtmlUtil.RemoveHtmlTags(s, true);
-
-            if (noTagText.Length < mergeLinesShorterThan)
+            if (HtmlUtil.RemoveHtmlTags(s, true).Length < mergeLinesShorterThan)
             {
-                var noTagLines = noTagText.SplitToLines();
-                if (noTagLines.Length > 1)
-                {
-                    bool isDialog = true;
-                    foreach (string line in noTagLines)
-                    {
-                        var noTagLine = line.TrimStart();
-                        isDialog = isDialog && (noTagLine.StartsWith('-') || noTagLine.StartsWith('—'));
-                    }
-                    if (isDialog)
-                    {
-                        return text;
-                    }
-                }
                 return s;
             }
 
@@ -456,14 +440,20 @@ namespace Nikse.SubtitleEdit.Core
             while (six < s.Length)
             {
                 var letter = s[six];
-                var tagFound = letter == '<' && (s.Substring(six).StartsWith("<font", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</font", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("<u", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</u", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("<b", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</b", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("<i", StringComparison.OrdinalIgnoreCase)
-                                                 || s.Substring(six).StartsWith("</i", StringComparison.OrdinalIgnoreCase));
+                bool tagFound = false;
+                if (letter == '<')
+                {
+                    string tagString = s.Substring(six);
+                    tagFound = tagString.StartsWith("<font", StringComparison.OrdinalIgnoreCase)
+                               || tagString.StartsWith("</font", StringComparison.OrdinalIgnoreCase)
+                               || tagString.StartsWith("<u", StringComparison.OrdinalIgnoreCase)
+                               || tagString.StartsWith("</u", StringComparison.OrdinalIgnoreCase)
+                               || tagString.StartsWith("<b", StringComparison.OrdinalIgnoreCase)
+                               || tagString.StartsWith("</b", StringComparison.OrdinalIgnoreCase)
+                               || tagString.StartsWith("<i", StringComparison.OrdinalIgnoreCase)
+                               || tagString.StartsWith("</i", StringComparison.OrdinalIgnoreCase);
+                }
+
                 int endIndex = -1;
                 if (tagFound)
                     endIndex = s.IndexOf('>', six + 1);
