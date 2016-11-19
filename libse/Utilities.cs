@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core
         /// <summary>
         /// Cached environment new line characters for faster lookup.
         /// </summary>
-        public static readonly char[] NewLineChars = { '\r', '\n' };    
+        public static readonly char[] NewLineChars = { '\r', '\n' };
 
         public static VideoInfo TryReadVideoInfoViaMatroskaHeader(string fileName)
         {
@@ -1074,30 +1074,37 @@ namespace Nikse.SubtitleEdit.Core
         {
             if (string.IsNullOrWhiteSpace(text))
                 return false;
-            if (!text.Contains(startTag) || !text.Contains(endTag))
+            if (!(text.Contains(startTag) && text.Contains(endTag)))
                 return false;
 
-            while (text.Contains("  "))
-                text = text.Replace("  ", " ");
+            int len = text.Length;
+            // [ -.]*<i>Foobar.
+            int j = 0;
+            while (j < len)
+            {
+                char ch = text[j];
+                if (!(ch == '-' || ch == ' ' || ch == '.'))
+                {
+                    break;
+                }
+                j++;
+            }
+            // Start must be true before checking the end!
+            if (j < len && text[j] != startTag[0]) return false;
 
-            var s1 = "- " + startTag;
-            var s2 = "-" + startTag;
-            var s3 = "- ..." + startTag;
-            var s4 = "- " + startTag + "..."; // - <i>...
-
-            var e1 = endTag + ".";
-            var e2 = endTag + "!";
-            var e3 = endTag + "?";
-            var e4 = endTag + "...";
-            var e5 = endTag + "-";
-
-            bool isStart = false;
-            bool isEnd = false;
-            if (text.StartsWith(startTag, StringComparison.Ordinal) || text.StartsWith(s1, StringComparison.Ordinal) || text.StartsWith(s2, StringComparison.Ordinal) || text.StartsWith(s3, StringComparison.Ordinal) || text.StartsWith(s4, StringComparison.Ordinal))
-                isStart = true;
-            if (text.EndsWith(endTag, StringComparison.Ordinal) || text.EndsWith(e1, StringComparison.Ordinal) || text.EndsWith(e2, StringComparison.Ordinal) || text.EndsWith(e3, StringComparison.Ordinal) || text.EndsWith(e4, StringComparison.Ordinal) || text.EndsWith(e5, StringComparison.Ordinal))
-                isEnd = true;
-            return isStart && isEnd;
+            // Foobar</i>[!?.-]*
+            int k = len;
+            while (k - 1 >= j)
+            {
+                char ch = text[k - 1];
+                if (!(ch == '.' || ch == '?' || ch == '!' || ch == '-'))
+                {
+                    break;
+                }
+                k--;
+            }
+            text = text.Substring(j, len - (j + (len - k)));
+            return text.StartsWith(startTag, StringComparison.Ordinal) && text.EndsWith(endTag, StringComparison.Ordinal);
         }
 
         public static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
