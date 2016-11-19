@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     string lastText = HtmlUtil.RemoveHtmlTags(last.Text);
                     if (lastText.EndsWith(':') || lastText.EndsWith(';'))
                     {
-                        var st = new StripableText(p.Text);
+                        var st = new StrippableText(p.Text);
                         if (st.StrippedText.Length > 0 && st.StrippedText[0] != char.ToUpper(st.StrippedText[0]))
                             p.Text = st.Pre + char.ToUpper(st.StrippedText[0]) + st.StrippedText.Substring(1) + st.Post;
                     }

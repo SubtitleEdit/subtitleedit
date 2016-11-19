@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLower())
                         {
-                            var st = new StripableText(text);
+                            var st = new StrippableText(text);
                             st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
                             text = st.MergedString;
                         }

@@ -642,7 +642,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     lastLine.EndsWith('!') ||
                     lastLine.EndsWith('?'))
                 {
-                    var st = new StripableText(l);
+                    var st = new StrippableText(l);
                     if (st.StrippedText.StartsWith('i') && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("...", StringComparison.Ordinal))
                     {
                         if (string.IsNullOrEmpty(lastLine) || (!lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, _abbreviationList)))
@@ -815,7 +815,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 lastLine.EndsWith('♪'))
             {
                 lastLine = HtmlUtil.RemoveHtmlTags(lastLine);
-                var st = new StripableText(input);
+                var st = new StrippableText(input);
                 if (lastLine == null || (!lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, abbreviationList)))
                 {
                     if (st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("..."))

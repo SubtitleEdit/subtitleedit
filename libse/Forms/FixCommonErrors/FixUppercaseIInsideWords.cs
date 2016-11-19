@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     match = match.NextMatch();
                 }
 
-                var st = new StripableText(p.Text);
+                var st = new StrippableText(p.Text);
                 match = ReBeforeLowercaseLetter.Match(st.StrippedText);
                 while (match.Success)
                 {

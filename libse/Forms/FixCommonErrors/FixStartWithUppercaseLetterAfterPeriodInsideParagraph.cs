@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 string oldText = p.Text;
                 if (p.Text.Length > 3 && callbacks.AllowFix(p, fixAction))
                 {
-                    var st = new StripableText(p.Text);
+                    var st = new StrippableText(p.Text);
                     string text = st.StrippedText;
                     int start = text.IndexOfAny(ExpectedChars);
                     while (start > 0 && start < text.Length)
@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         }
                         if ((start + 3 < text.Length) && (text[start + 1] == ' ') && !IsAbbreviation(text, start, callbacks))
                         {
-                            var subText = new StripableText(text.Substring(start + 2));
+                            var subText = new StrippableText(text.Substring(start + 2));
                             text = text.Substring(0, start + 2) + subText.CombineWithPrePost(ToUpperFirstLetter(subText.StrippedText, callbacks));
                         }
                         // Try to reach the last dot if char at *start is '.'.
