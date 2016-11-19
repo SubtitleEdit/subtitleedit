@@ -4474,7 +4474,7 @@
             this.textBoxSource.MaxLength = 0;
             this.textBoxSource.Multiline = true;
             this.textBoxSource.Name = "textBoxSource";
-            this.textBoxSource.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxSource.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxSource.Size = new System.Drawing.Size(724, 216);
             this.textBoxSource.TabIndex = 12;
             this.textBoxSource.WordWrap = false;
