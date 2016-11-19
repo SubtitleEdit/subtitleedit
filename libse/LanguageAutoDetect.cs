@@ -134,6 +134,8 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string[] AutoDetectWordsSlovak = { ".*[Ôô].*", ".*[ä].*",  "[Bb]yť", "[Ss]om",  "[Ss]i",  "[Jj]a", "[Mm]ať", "[Áá]no", "[Nn]ie", "[Nn]ič", "[Dd]eň", "[Ll]en", "[Čč]o", "[Aa]ko",
                                                                    "[Aa]?[Ll]ebo", "[Pp]ri", "[Pp]re", "([Íí]sť|[Ii](?:dem|de|deme|dú))", "[Pp]red.*", "[Mm]edzi", "[Ee]šte",  "[Čč]lovek", "[Pp]odľa", "[Ďď]alš(í|ia|ie)"  };
 
+        private static readonly string[] AutoDetectWordsLatvian = { "Paldies", "neesmu ", "nezinu", "viòð", "viņš", "viņu", "kungs", "esmu", "Viņš", "Velns", "viņa", "dievs", "Pagaidi", "varonis", "agrāk", "varbūt" };
+
         private static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
             int count = GetCount(text, AutoDetectWordsEnglish);
@@ -301,9 +303,12 @@ namespace Nikse.SubtitleEdit.Core
                 int slovakWordsCount = GetCount(text, AutoDetectWordsSlovak);
                 if (czechWordsCount >= slovakWordsCount)
                     return "cs"; // Czech
-                else
-                    return "sk"; // Slovak
+                return "sk"; // Slovak
             }
+
+            count = GetCount(text, AutoDetectWordsLatvian);
+            if (count > bestCount * 1.2)
+                return "lv"; 
 
             return string.Empty;
         }
@@ -550,6 +555,11 @@ namespace Nikse.SubtitleEdit.Core
                         break;
                     case "sk_SK": // Slovak
                         count = GetCount(text, AutoDetectWordsSlovak);
+                        if (count > bestCount)
+                            languageName = shortName;
+                        break;
+                    case "lv_LV": // Latvian
+                        count = GetCount(text, AutoDetectWordsLatvian);
                         if (count > bestCount)
                             languageName = shortName;
                         break;
