@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (merge && (p.Text.TrimEnd().EndsWith('!') || p.Text.TrimEnd().EndsWith('.')))
                     {
-                        var st = new StripableText(p.Text);
+                        var st = new StrippableText(p.Text);
                         if (st.StrippedText.Length > 0 && char.IsUpper(st.StrippedText[0]))
                             merge = false;
                     }

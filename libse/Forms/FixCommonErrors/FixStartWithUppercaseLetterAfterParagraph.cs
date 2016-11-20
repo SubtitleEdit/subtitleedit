@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 if (indexOfNewLine > 0)
                 {
                     string text = p.Text.Substring(indexOfNewLine + len);
-                    var st = new StripableText(text);
+                    var st = new StrippableText(text);
 
                     if (st.StrippedText.Length > 0 && Helper.IsTurkishLittleI(st.StrippedText[0], encoding, language) && !st.Pre.EndsWith('[') && !st.Pre.Contains("..."))
                     {

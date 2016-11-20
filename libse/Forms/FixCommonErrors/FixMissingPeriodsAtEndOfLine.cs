@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 {
                     if (p.Text != p.Text.ToUpper())
                     {
-                        var st = new StripableText(next.Text);
+                        var st = new StrippableText(next.Text);
                         if (st.StrippedText.Length > 0 && st.StrippedText != st.StrippedText.ToUpper() &&
                             char.IsUpper(st.StrippedText[0]))
                         {
@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         string oldText = p.Text;
 
                         string text = p.Text.Substring(0, indexOfNewLine);
-                        var st = new StripableText(text);
+                        var st = new StrippableText(text);
                         if (st.Pre.TrimEnd().EndsWith('¿')) // Spanish ¿
                             p.Text = p.Text.Insert(indexOfNewLine, "?");
                         else if (st.Pre.TrimEnd().EndsWith('¡')) // Spanish ¡

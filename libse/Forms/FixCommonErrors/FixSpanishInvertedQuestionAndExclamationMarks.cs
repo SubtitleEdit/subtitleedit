@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                                         part = part.Substring(speakerEnd + 1);
                                     }
 
-                                    var st = new StripableText(part);
+                                    var st = new StrippableText(part);
                                     if (j == 0 && mark == '!' && st.Pre == "¿" && Utilities.CountTagInText(p.Text, mark) == 1 && HtmlUtil.RemoveHtmlTags(p.Text).EndsWith(mark))
                                     {
                                         p.Text = inverseMark + p.Text;
