@@ -269,16 +269,16 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (remove)
                         {
                             int idx = text.IndexOf('-');
-                            var st = new StripableText(text);
+                            var st = new StrippableText(text);
                             if (idx < 5 && st.Pre.Length >= idx)
                             {
                                 text = text.Remove(idx, 1).TrimStart();
                                 idx = text.IndexOf('-');
-                                st = new StripableText(text);
+                                st = new StrippableText(text);
                                 if (idx < 5 && idx >= 0 && st.Pre.Length >= idx)
                                 {
                                     text = text.Remove(idx, 1).TrimStart();
-                                    st = new StripableText(text);
+                                    st = new StrippableText(text);
                                 }
                                 idx = text.IndexOf('-');
                                 if (idx < 5 && idx >= 0 && st.Pre.Length >= idx)
@@ -315,7 +315,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var prev = subtitle.GetParagraphOrDefault(i - 1);
                 if (prev == null || !HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
                 {
-                    var st = new StripableText(text);
+                    var st = new StrippableText(text);
                     if (st.Pre.EndsWith('-') || st.Pre.EndsWith("- ", StringComparison.Ordinal))
                     {
                         text = st.Pre.TrimEnd('-', ' ') + st.StrippedText + st.Post;

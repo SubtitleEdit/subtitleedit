@@ -61,7 +61,7 @@
     <Compile Include="Logic\TarFileTest.cs" />
     <Compile Include="Logic\TransportStream\TransportStreamTest.cs" />
     <Compile Include="Logic\ParagraphTest.cs" />
-    <Compile Include="Logic\StripableTextTest.cs" />
+    <Compile Include="Logic\StrippableTextTest.cs" />
     <Compile Include="Logic\TimeCodeTest.cs" />
     <Compile Include="Logic\VideoFormats\MatroskaTest.cs" />
     <Compile Include="Logic\VobSub\VobSubTest.cs" />
