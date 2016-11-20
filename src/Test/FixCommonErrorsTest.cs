@@ -725,7 +725,6 @@ namespace Test
             }
         }
 
-
         [TestMethod]
         public void FixMissingSpacesOneLetterPlusDotDotDot()
         {
@@ -737,6 +736,50 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixMissingSwedish()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "VD:n tycker det är bra.");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "sv" });
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "VD:n tycker det är bra.");
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingSwedish2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "MARCUS:tycker det är bra.");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "sv" });
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "MARCUS: tycker det är bra.");
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingFinnish()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "FBI:n");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "fi" });
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "FBI:n");
+            }
+        }
+
+        [TestMethod]
+        public void FixMissingFinnish2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "MARCUS:tycker det är bra.");
+                new FixMissingSpaces().Fix(_subtitle, new EmptyFixCallback { Language = "fi" });
+                Assert.AreEqual(_subtitle.Paragraphs[0].Text, "MARCUS: tycker det är bra.");
+            }
+        }
+        
         #endregion Fix missing spaces
 
         #region Fix unneeded spaces
@@ -1693,7 +1736,7 @@ namespace Test
 
         #endregion
 
-        #region << Fix unneeded periods after [?!] >>
+        #region Fix unneeded periods after [?!]
 
         [TestMethod]
         public void FixUnneededPeriodsTest1()
