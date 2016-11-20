@@ -64,9 +64,9 @@ namespace Nikse.SubtitleEdit.Logic
             MatchWholeWord = matchWholeWord;
         }
 
-        public bool Find(Subtitle subtitle, Subtitle originalSubtitle, int startIndex)
+        public bool Find(Subtitle subtitle, Subtitle originalSubtitle, int startIndex, int startPosition = 0)
         {
-            return FindNext(subtitle, originalSubtitle, startIndex, 0, Configuration.Settings.General.AllowEditOfOriginalSubtitle);
+            return FindNext(subtitle, originalSubtitle, startIndex, startPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle);
         }
 
         public bool Find(TextBox textBox, int startIndex)

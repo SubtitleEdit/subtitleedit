@@ -4230,7 +4230,8 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
                 if (tabControlSubtitle.SelectedIndex == TabControlListView)
                 {
-                    bool found = _findHelper.Find(_subtitle, _subtitleAlternate, _subtitleListViewIndex);
+                    int startPos = textBoxListViewText.SelectedText.Length > 0 ? textBoxListViewText.SelectionStart + 1 : textBoxListViewText.SelectionStart;
+                    bool found = _findHelper.Find(_subtitle, _subtitleAlternate, _subtitleListViewIndex, startPos);
                     //if we fail to find the text, we might want to start searching from the top of the file.
                     if (!found && _findHelper.StartLineIndex >= 1)
                     {
