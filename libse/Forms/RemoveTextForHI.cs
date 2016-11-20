@@ -102,7 +102,8 @@ namespace Nikse.SubtitleEdit.Core.Forms
             foreach (string line in lines)
             {
                 int indexOfColon = line.IndexOf(':');
-                if (indexOfColon <= 0 || IsInsideBrackets(line, indexOfColon))
+                bool isLastColon = count == lines.Length - 1 && !HtmlUtil.RemoveHtmlTags(line).TrimEnd(':').Contains(':');
+                if (indexOfColon <= 0 || IsInsideBrackets(line, indexOfColon) || (isLastColon && Utilities.CountTagInText(HtmlUtil.RemoveHtmlTags(line), ' ') > 1))
                 {
                     newText = (newText + Environment.NewLine + line).Trim();
 

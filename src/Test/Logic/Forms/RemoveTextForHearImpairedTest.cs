@@ -1576,6 +1576,29 @@ namespace Test.Logic.Forms
             Assert.AreEqual("Ferguson, Kaz...", actual);
         }
 
+
+        [TestMethod]
+        public void RemoveFirstLineOfTwoColons1()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenSquares = true;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            string actual = target.RemoveTextFromHearImpaired("KIRK:" + Environment.NewLine + "<i>Captain's log, stardate 1514. 1:</i>");
+            Assert.AreEqual("<i>Captain's log, stardate 1514. 1:</i>", actual);
+        }
+
+        [TestMethod]
+        public void RemoveFirstLineOfTwoColons2()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenSquares = true;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            string actual = target.RemoveTextFromHearImpaired("KIRK:" + Environment.NewLine + "Captain's log, stardate 1514. 1:");
+            Assert.AreEqual("Captain's log, stardate 1514. 1:", actual);
+        }
+
         #region Additional test attributes
 
         //
