@@ -29,27 +29,27 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             callbacks.UpdateFixStatus(removedCount, language.RemoveUnneededPeriods, string.Format(language.XUnneededPeriodsRemoved, removedCount));
         }
 
-        public static string RemoveDotAfterPunctuation(string inp)
+        public static string RemoveDotAfterPunctuation(string input)
         {
-            for (int i = inp.Length - 1; i > 0; i--)
+            for (int i = input.Length - 1; i > 0; i--)
             {
                 // Expecting pre characters: [?!]
-                if (inp[i] == '.' && (inp[i - 1] == '?' || inp[i - 1] == '!'))
+                if (input[i] == '.' && (input[i - 1] == '?' || input[i - 1] == '!'))
                 {
                     int j = i;
                     // Fix recursive dot after ?/!
-                    while (j + 1 < inp.Length && inp[j + 1] == '.')
+                    while (j + 1 < input.Length && input[j + 1] == '.')
                     {
                         j++;
                     }
                     // Expecting post characters: [\r\n ]
-                    if (j + 1 == inp.Length || inp[j + 1] == ' ' || inp[j + 1] == '\r' || inp[j + 1] == '\n')
+                    if (j + 1 == input.Length || input[j + 1] == ' ' || input[j + 1] == '\r' || input[j + 1] == '\n')
                     {
-                        inp = inp.Remove(i, j - i + 1);
+                        input = input.Remove(i, j - i + 1);
                     }
                 }
             }
-            return inp;
+            return input;
         }
 
     }
