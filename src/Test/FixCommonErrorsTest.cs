@@ -1693,5 +1693,32 @@ namespace Test
 
         #endregion
 
+        #region << Fix unneeded periods after [?!] >>
+
+        [TestMethod]
+        public void FixUnneededPeriodsTest1()
+        {
+            string processedText = FixUnneededPeriods.RemoveDotAfterPunctuation("Foobar?.\r\nFoobar!.\r\nFoobar");
+            Assert.AreEqual("Foobar?\r\nFoobar!\r\nFoobar", processedText);
+        }
+
+        [TestMethod]
+        public void FixUnneededPeriodsTest2()
+        {
+            string processedText = FixUnneededPeriods.RemoveDotAfterPunctuation("Foobar?.");
+            Assert.AreEqual("Foobar?", processedText);
+
+            processedText = FixUnneededPeriods.RemoveDotAfterPunctuation("Foobar!.");
+            Assert.AreEqual("Foobar!", processedText);
+        }
+
+        [TestMethod]
+        public void FixUnneededPeriodsTest3()
+        {
+            string processedText = FixUnneededPeriods.RemoveDotAfterPunctuation("Foobar?. Foobar!.... Foobar");
+            Assert.AreEqual("Foobar? Foobar! Foobar", processedText);
+        }
+
+        #endregion
     }
 }
