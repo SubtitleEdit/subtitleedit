@@ -123,9 +123,11 @@ namespace Nikse.SubtitleEdit.Core
         private static readonly string[] AutoDetectWordsRomanian2 = { "pentru", "oamenii", "decat", "[Tt]rebuie", "[Aa]cum", "Poate", "vrea", "soare", "nevoie", "daca", "echilibrul", "vorbesti", "zeului", "atunci", "memoria", "soarele" };
 
         // Czech and Slovak languages have many common words (especially when non flexed)
-        private static readonly string[] AutoDetectWordsCzechAndSlovak = { "[Aa]", "[Ss]", "[Zz]", "[Vv]", "[Nn]a", "[Oo]", "[Kk]", "i", "[Dd]o", "[Oo]d", "[Oo]n[ao]?", "[Tt]y", "[Jj]?si", "[Zz]a", "[Pp]o", "[Uu]ž",
-                                                                           "[Aa]le", "[Tt]en(to)?", "[Rr]ok", "[Tt]ak", "[Aa]by", "[Tt]am", "[Jj]ed(en|na|no)", "[Aa]ž", "[Nn]ež", "[Aa]ni", "[Čč]i", "[Bb]ez",
-                                                                           "[Dd]obr[ýáé]", "[Vv]šak", "[Cc]el[ýáé]", "[Nn]ov[ýáé]", "[Dd]ruh[ýáé]" };
+        private static readonly string[] AutoDetectWordsCzechAndSlovak = {  "[Oo]n[ao]?", "[Jj]?si",
+                                                                           "[Aa]le", "[Tt]en(to)?", "[Rr]ok", "[Tt]ak", "[Aa]by", "[Tt]am", "[Jj]ed(en|na|no)", "[Nn]ež", "[Aa]ni", "[Bb]ez",
+                                                                           "[Dd]obr[ýáé]", "[Vv]šak", "[Cc]el[ýáé]", "[Nn]ov[ýáé]", "[Dd]ruh[ýáé]",
+                                                                           "jsem", "poøádku", "Pojïme", "háje", "není", "Jdeme", "všecko", "jsme", "Prosím", "Vezmi", "když", "Takže", "Dìkuji",
+                                                                           "prechádzku", "všetko", "Poïme", "potom", "Takže", "Neviem", "budúcnosti", "trochu" };
 
         // differences between Czech and Slovak languages / Czech words / please keep the words aligned between these languages for better comparison
         private static readonly string[] AutoDetectWordsCzech =  { ".*[Řř].*", ".*[ůě].*", "[Bb]ýt", "[Jj]sem", "[Jj]si", "[Jj]á", "[Mm]ít", "[Aa]no", "[Nn]e",  "[Nn]ic", "[Dd]en", "[Jj]en", "[Cc]o", "[Jj]ak[o]?",
@@ -135,7 +137,7 @@ namespace Nikse.SubtitleEdit.Core
                                                                    "[Aa]?[Ll]ebo", "[Pp]ri", "[Pp]re", "([Íí]sť|[Ii](?:dem|de|deme|dú))", "[Pp]red.*", "[Mm]edzi", "[Ee]šte",  "[Čč]lovek", "[Pp]odľa", "[Ďď]alš(í|ia|ie)"  };
 
         private static readonly string[] AutoDetectWordsLatvian = { "Paldies", "neesmu ", "nezinu", "viòð", "viņš", "viņu", "kungs", "esmu", "Viņš", "Velns", "viņa", "dievs", "Pagaidi", "varonis", "agrāk", "varbūt" };
-        private static readonly string[] AutoDetectWordsLithuanian = { "tavęs", "veidai", "apie", "jums", "Veidai", "Kaip", "kaip", "reikia", "Šūdas", "frensis", "Ačiū", "vilsonai", "Palauk", "Veidas", "viskas", "Tikrai", "manęs", "Tačiau", "žmogau", "Flagai", "Prašau", "Džiune", "Nakties", "šviesybe" };
+        private static readonly string[] AutoDetectWordsLithuanian = { "tavęs", "veidai", "apie", "jums", "Veidai", "Kaip", "kaip", "reikia", "Šūdas", "frensis", "Ačiū", "vilsonai", "Palauk", "Veidas", "viskas", "Tikrai", "manęs", "Tačiau", "žmogau", "Flagai", "Prašau", "Džiune", "Nakties", "šviesybe", "Supratau", "komanda", "reikia", "apie", "Kodėl", "mūsų", "Ačiū", "vyksta" };
 
         private static string AutoDetectGoogleLanguage(string text, int bestCount)
         {
