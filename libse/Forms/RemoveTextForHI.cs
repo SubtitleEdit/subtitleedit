@@ -619,7 +619,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             {
                 if (text.StartsWith("<i>-", StringComparison.Ordinal))
                 {
-                    text = "<i>" + text.Remove(0,4).Trim();
+                    text = "<i>" + text.Remove(0, 4).Trim();
                 }
                 else
                 {
@@ -1168,43 +1168,74 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         public string RemoveHearImpairedTags(string text)
         {
-            string preAssTag = string.Empty;
-            if (text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}', 2) > 0)
+            int len = text.Length;
+
+            // Text must be greater than or equal to 2.
+            if (len < 2) return text;
+
+            string pre = string.Empty;
+            int j = 0;
+
+            // SSA/ASS tags
+            if (text.StartsWith("{\\", StringComparison.Ordinal))
             {
-                int indexOfEndBracketSuccessor = text.IndexOf('}', 3) + 1;
-                preAssTag = text.Substring(0, indexOfEndBracketSuccessor);
-                text = text.Remove(0, indexOfEndBracketSuccessor).TrimStart();
+                int endIdx = text.IndexOf('}', 2);
+                if (endIdx > 0)
+                {
+                    j = endIdx + 1;
+                }
             }
-            string preNewLine = string.Empty;
-            if (text.StartsWith(Environment.NewLine))
-                preNewLine = Environment.NewLine;
-            if (Settings.RemoveTextBetweenSquares)
+            // Skip [\r\n] at the beginning.
+            while (j < len)
             {
-                text = RemoveTextBetweenTags("[", "]:", text);
+                if (!(text[j] == '\n' || text[j] == '\r'))
+                {
+                    break;
+                }
+                j++;
+            }
+            if (j > 0)
+            {
+                pre = text.Substring(0, j);
+                text = text.Substring(j);
+            }
+
+            bool squarePresent = false;
+            bool bracketPresent = false;
+            bool parenthesePresent = false;
+            bool questionMarkPresent = false;
+
+            // Pre processing to detect type of tag present in text.
+            for (int i = text.Length - 2; i >= 0; i--)
+            {
+                char ch = text[i];
+                if (!squarePresent && ch == '[') squarePresent = true;
+                if (!bracketPresent && ch == '{') bracketPresent = true;
+                if (!parenthesePresent && ch == '(') parenthesePresent = true;
+                if (!questionMarkPresent && ch == '?') questionMarkPresent = true;
+            }
+
+            if (squarePresent && Settings.RemoveTextBetweenSquares)
+            {
                 text = RemoveTextBetweenTags("[", "]", text);
             }
-            if (Settings.RemoveTextBetweenBrackets)
+            if (bracketPresent && Settings.RemoveTextBetweenBrackets)
             {
-                text = RemoveTextBetweenTags("{", "}:", text);
                 text = RemoveTextBetweenTags("{", "}", text);
             }
-            if (Settings.RemoveTextBetweenParentheses)
+            if (parenthesePresent && Settings.RemoveTextBetweenParentheses)
             {
-                text = RemoveTextBetweenTags("(", "):", text);
                 text = RemoveTextBetweenTags("(", ")", text);
             }
-            if (Settings.RemoveTextBetweenQuestionMarks)
+            if (questionMarkPresent && Settings.RemoveTextBetweenQuestionMarks)
             {
-                text = RemoveTextBetweenTags("?", "?:", text);
                 text = RemoveTextBetweenTags("?", "?", text);
             }
             if (Settings.RemoveTextBetweenCustomTags && Settings.CustomStart.Length > 0 && Settings.CustomEnd.Length > 0)
             {
                 text = RemoveTextBetweenTags(Settings.CustomStart, Settings.CustomEnd, text);
             }
-            if (string.IsNullOrWhiteSpace(text))
-                return string.Empty;
-            return preAssTag + preNewLine + text.TrimStart();
+            return text.Length == 0 ? string.Empty : pre + text;
         }
 
         private bool HasHearImpairedText(string text)
@@ -1234,37 +1265,32 @@ namespace Nikse.SubtitleEdit.Core.Forms
 
         private static string RemoveTextBetweenTags(string startTag, string endTag, string text)
         {
-            text = text.Trim();
             if (startTag == "?" || endTag == "?")
             {
-                if (text.StartsWith(startTag, StringComparison.Ordinal) && text.EndsWith(endTag, StringComparison.Ordinal))
+                string tempText = text.Trim();
+                if (tempText.StartsWith(startTag, StringComparison.Ordinal) && tempText.EndsWith(endTag, StringComparison.Ordinal))
                     return string.Empty;
-                return text;
+                return tempText;
             }
-
-            int start = text.IndexOf(startTag, StringComparison.Ordinal);
-            if (start < 0 || text.Length - start - startTag.Length < endTag.Length)
-                return text;
-            do
+            int len = text.Length;
+            int startLen = startTag.Length;
+            int idx = text.IndexOf(startTag, StringComparison.Ordinal);
+            while (idx >= 0)
             {
-                int end = text.IndexOf(endTag, start + startTag.Length, StringComparison.Ordinal);
-                if (end < 0)
-                    break;
-                text = text.Remove(start, end - start + 1);
-                if (start > 3 && text.Length - start > 1 &&
-                    text[start] == ':' && text[start - 1] == ' ' && ".?!".Contains(text[start - 2]))
+                int endIdx = text.IndexOf(endTag, idx + startLen) + 1;
+                // No valid tag in text.
+                if (endIdx <= idx) break;
+                while (endIdx < text.Length && text[endIdx] == ':') endIdx++;
+                // Include whitespace before start-tag when removing.
+                if (idx >= 2 && text[idx - 1] == ' ' && (text[idx - 2] == '.' || text[idx - 2] == '?' || text[idx - 2] == '!'))
                 {
-                    text = text.Remove(start - 1, 2);
+                    idx--;
                 }
-                else if (start == 0 && text.Length > 1 && text[0] == ':')
-                {
-                    text = text.Remove(0, 1).TrimStart();
-                }
-                start = text.IndexOf(startTag, StringComparison.Ordinal);
+                text = text.Remove(idx, endIdx - idx);
+                idx = text.IndexOf(startTag, idx, StringComparison.Ordinal);
             }
-            while (start >= 0 && text.Length - start - startTag.Length >= endTag.Length);
-
-            return text.FixExtraSpaces().TrimEnd();
+            // No space fixing if text was unchanged.
+            return (text.Length != len) ? text.FixExtraSpaces().Trim() : text;
         }
 
         public string RemoveLineIfAllUppercase(string text)
