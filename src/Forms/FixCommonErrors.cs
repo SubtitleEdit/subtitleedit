@@ -1203,6 +1203,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFixesApplyClick(object sender, EventArgs e)
         {
+            buttonFixesApply.Enabled = false;
             _hasFixesBeenMade = true;
             Cursor = Cursors.WaitCursor;
             ShowStatus(_language.Analysing);
@@ -1230,11 +1231,6 @@ namespace Nikse.SubtitleEdit.Forms
             RunSelectedActions();
             _originalSubtitle = new Subtitle(Subtitle, false);
             subtitleListView1.Fill(_originalSubtitle);
-            RefreshFixes();
-            if (listViewFixes.Items.Count == 0)
-            {
-                subtitleListView1.SelectIndexAndEnsureVisible(firstSelectedIndex);
-            }
             if (_totalFixes == 0 && _totalErrors == 0)
                 ShowStatus(_language.NothingToFix);
             else if (_totalFixes > 0)
@@ -1242,11 +1238,18 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_totalErrors > 0)
                 ShowStatus(_language.NothingToFixBut);
 
+            RefreshFixes();
+            if (listViewFixes.Items.Count == 0)
+            {
+                subtitleListView1.SelectIndexAndEnsureVisible(firstSelectedIndex);
+            }
+
             Cursor = Cursors.Default;
             if (_numberOfImportantLogMessages == 0)
                 labelNumberOfImportantLogMessages.Text = string.Empty;
             else
                 labelNumberOfImportantLogMessages.Text = string.Format(_language.NumberOfImportantLogMessages, _numberOfImportantLogMessages);
+            buttonFixesApply.Enabled = true;
         }
 
         private void ButtonRefreshFixesClick(object sender, EventArgs e)
@@ -1281,6 +1284,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RefreshFixes()
         {
+            listViewFixes.BeginUpdate();
+
             // save de-seleced fixes
             var deSelectedFixes = new List<string>();
             foreach (ListViewItem item in listViewFixes.Items)
@@ -1299,6 +1304,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
                     item.Checked = false;
             }
+
+            listViewFixes.EndUpdate();
         }
 
         private void ButtonAutoBreakClick(object sender, EventArgs e)
