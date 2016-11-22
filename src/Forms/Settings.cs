@@ -1320,7 +1320,7 @@ namespace Nikse.SubtitleEdit.Forms
                     for (int i = 0; i < (int)numericUpDownSsaShadow.Value; i++)
                     {
                         var shadowPath = new GraphicsPath();
-                        sb = new StringBuilder();
+                        sb.Length = 0;
                         sb.Append("This is a test!");
                         int pathPointsStart2 = -1;
                         TextDraw.DrawText(font, sf, shadowPath, sb.ToString(), false, checkBoxSsaFontBold.Checked, false, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
