@@ -363,6 +363,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 text = text.Replace("ﬁ", "fi"); // fb01
                 text = text.Replace("ﬂ", "fl"); // fb02
                 text = text.Replace('ν', 'v'); // NOTE: first 'v' is a special unicode character!!!!
+                text = text.Replace('‚', ','); // #x201A (SINGLE LOW-9 QUOTATION MARK) to plain old comma
             }
 
             text = ReplaceWordsBeforeLineFixes(text);
