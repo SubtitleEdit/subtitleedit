@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                         g.FillRectangle(new SolidBrush(panelOutlineColor.BackColor), left, top, measuredWidth + 3, measuredHeight + 3);
                 }
 
-                TextDraw.DrawText(font, sf, path, sb, checkBoxFontItalic.Checked, checkBoxFontBold.Checked, checkBoxFontUnderline.Checked, left, top, ref newLine, leftMargin, ref pathPointsStart);
+                TextDraw.DrawText(font, sf, path, sb.ToString(), checkBoxFontItalic.Checked, checkBoxFontBold.Checked, checkBoxFontUnderline.Checked, left, top, ref newLine, leftMargin, ref pathPointsStart);
 
                 int outline = (int)numericUpDownOutline.Value;
 

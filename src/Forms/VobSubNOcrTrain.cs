@@ -207,7 +207,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (text.Substring(i).StartsWith(Environment.NewLine))
                 {
-                    TextDraw.DrawText(font, sf, path, sb, false, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    TextDraw.DrawText(font, sf, path, sb.ToString(), false, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
                     top += lineHeight;
                     newLine = true;
@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
             }
             if (sb.Length > 0)
-                TextDraw.DrawText(font, sf, path, sb, false, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                TextDraw.DrawText(font, sf, path, sb.ToString(), false, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
             sf.Dispose();
 
             if (_borderWidth > 0)

@@ -1942,7 +1942,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (sb.Length > 0)
                     {
                         lastText.Append(sb);
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                        TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     if (path.PointCount > 0)
                     {
@@ -2059,7 +2059,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                             lastText.Append(sb);
 
-                            TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                            TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                         }
                         if (path.PointCount > 0)
                         {
@@ -2094,7 +2094,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (sb.Length > 0)
                     {
                         lastText.Append(sb);
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                        TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     isItalic = true;
                     i += 2;
@@ -2109,7 +2109,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         sb.Append(t);
                     }
                     lastText.Append(sb);
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     isItalic = false;
                     i += 3;
                 }
@@ -2118,7 +2118,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (sb.Length > 0)
                     {
                         lastText.Append(sb);
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                        TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     isBold = true;
                     i += 2;
@@ -2133,7 +2133,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         sb.Append(t);
                     }
                     lastText.Append(sb);
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     isBold = false;
                     i += 3;
                 }
@@ -2144,7 +2144,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 i++;
             }
             if (sb.Length > 0)
-                TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
             DrawShadowAndPath(parameter, g, path);
             g.FillPath(new SolidBrush(c), path);
@@ -2554,7 +2554,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 if (sb.Length > 0)
                                 {
                                     lastText.Append(sb);
-                                    TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                    TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                 }
                                 if (path.PointCount > 0)
                                 {
@@ -2673,7 +2673,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                                         lastText.Append(sb);
 
-                                        TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                        TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                     }
                                     if (path.PointCount > 0)
                                     {
@@ -2708,7 +2708,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 if (sb.Length > 0)
                                 {
                                     lastText.Append(sb);
-                                    TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                    TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                 }
                                 isItalic = true;
                                 i += 2;
@@ -2735,7 +2735,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                             left -= 1.5f;
 
                                         lastText.Append(sb);
-                                        TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                        TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                     }
 
                                     if (path.PointCount > 0)
@@ -2760,7 +2760,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 if (sb.Length > 0)
                                 {
                                     lastText.Append(sb);
-                                    TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                    TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                 }
                                 isBold = true;
                                 i += 2;
@@ -2787,7 +2787,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                             left -= 1.5f;
 
                                         lastText.Append(sb);
-                                        TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                        TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                     }
 
                                     if (path.PointCount > 0)
@@ -2810,7 +2810,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             else if (text.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                             {
                                 lastText.Append(sb);
-                                TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
                                 var style = GetStyleName(parameter.P);
                                 var lineHeight = (int)Math.Round(textSize.Height * 0.64f);
@@ -2837,7 +2837,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             }
                         }
                         if (sb.Length > 0)
-                            TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                            TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
                         DrawShadowAndPath(parameter, g, path);
                         g.FillPath(new SolidBrush(c), path);
