@@ -65,13 +65,15 @@ namespace Nikse.SubtitleEdit.Forms
             // Longer names must be first
             namesEtc.Sort((s1, s2) => s2.Length.CompareTo(s1.Length));
 
+            bool fixLowercaseI = language.StartsWith("en", StringComparison.Ordinal) && radioButtonNormal.Checked;
+
             string lastLine = string.Empty;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 p.Text = FixCasing(p.Text, lastLine, namesEtc);
 
                 // fix casing of English alone i to I
-                if (radioButtonNormal.Checked && language.StartsWith("en", StringComparison.Ordinal))
+                if (fixLowercaseI)
                 {
                     p.Text = FixEnglishAloneILowerToUpper(p.Text);
                 }
