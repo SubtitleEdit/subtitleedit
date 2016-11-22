@@ -9,6 +9,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChangeCasing : PositionAndSizeForm
     {
+        private const string Pre = " >¡¿♪♫([";
+        private const string Post = " <!?.:;,♪♫)]";
         private int _noOfLinesChanged;
 
         public ChangeCasing()
@@ -84,13 +86,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string FixEnglishAloneILowerToUpper(string text)
         {
-            const string pre = " >¡¿♪♫([";
-            const string post = " <!?.:;,♪♫)]";
             for (var indexOfI = text.IndexOf('i'); indexOfI >= 0; indexOfI = text.IndexOf('i', indexOfI + 1))
             {
-                if (indexOfI == 0 || pre.Contains(text[indexOfI - 1]))
+                if (indexOfI == 0 || Pre.Contains(text[indexOfI - 1]))
                 {
-                    if (indexOfI + 1 == text.Length || post.Contains(text[indexOfI + 1]))
+                    if (indexOfI + 1 == text.Length || Post.Contains(text[indexOfI + 1]))
                     {
                         text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
                     }
