@@ -1202,24 +1202,51 @@ namespace Nikse.SubtitleEdit.Core
 
         private static string ReverseString(string s)
         {
-            var charArray = s.ToCharArray();
-            Array.Reverse(charArray);
-            return new string(charArray);
+            int len = s.Length;
+            if (len <= 1)
+            {
+                return s;
+            }
+            char[] chars = new char[len];
+            // O(n)
+            for (int i = 0; i < len; i++)
+            {
+                chars[i] = s[len - i - 1];
+            }
+            return new string(chars);
         }
 
         private static string ReverseParenthesis(string s)
         {
-            const string k = "@__<<>___@";
-
-            s = s.Replace("(", k);
-            s = s.Replace(')', '(');
-            s = s.Replace(k, ")");
-
-            s = s.Replace("[", k);
-            s = s.Replace(']', '[');
-            s = s.Replace(k, "]");
-
-            return s;
+            if (string.IsNullOrEmpty(s))
+            {
+                return s;
+            }
+            int len = s.Length;
+            char[] chars = new char[len];
+            // O(n)
+            for (int i = len - 1; i >= 0; i--)
+            {
+                char ch = s[i];
+                if (ch == '(')
+                {
+                    ch = ')';
+                }
+                else if (ch == ')')
+                {
+                    ch = '(';
+                }
+                else if (ch == '[')
+                {
+                    ch = ']';
+                }
+                else if (ch == ']')
+                {
+                    ch = '[';
+                }
+                chars[i] = ch;
+            }
+            return new string(chars);
         }
 
         public static string FixEnglishTextInRightToLeftLanguage(string text, string reverseChars)
