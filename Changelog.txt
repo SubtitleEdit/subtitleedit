@@ -9,6 +9,7 @@
    * Updated Romanian translation - thx Mircea
    * Updated Finnish translation - thx Teijo
    * Updated French Translation - thx JM GBT
+   * Language auto-detect now includes Latvian and Lithuanian - thx rhazor
 * FIXED:
    * Fixed possible crash when generating scene changes - thx Leemet
    * Fixed issues with moving rules in "Multiple replace" - thx kristiaanvk
@@ -17,6 +18,11 @@
    * Fixed possible crash in textbox with italic - thx ivandrofly
    * Fixed bug in file naming after extracting sub from mkv - thx mzso
    * Fixed bottom margin in image export of SSA/ASS - thx maddox
+   * "Find" always try to find the next occurrence - thx Boulder08
+   * Fixed "Remove text for HI" issue reagarding colons - thx Boulder08
+   * Fix "Fix missing spaces" issue regarding Finnish/Swedish colons - thx Boulder08
+   * Fix two issues with "Fix common errors" - thx Tronar
+   * OCR fix rules: fix for weird Unicode comma (#x201A) - thx djc
 
 
 3.5 (26th October 2016)
