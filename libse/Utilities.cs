@@ -1207,8 +1207,7 @@ namespace Nikse.SubtitleEdit.Core
             {
                 return s;
             }
-            char[] chars = new char[len];
-            // O(n)
+            var chars = new char[len];
             for (int i = 0; i < len; i++)
             {
                 chars[i] = s[len - i - 1];
@@ -1223,26 +1222,24 @@ namespace Nikse.SubtitleEdit.Core
                 return s;
             }
             int len = s.Length;
-            char[] chars = new char[len];
-            // O(n)
-            for (int i = len - 1; i >= 0; i--)
+            var chars = new char[len];
+            for (int i = 0; i < len; i++)
             {
                 char ch = s[i];
-                if (ch == '(')
+                switch (ch)
                 {
-                    ch = ')';
-                }
-                else if (ch == ')')
-                {
-                    ch = '(';
-                }
-                else if (ch == '[')
-                {
-                    ch = ']';
-                }
-                else if (ch == ']')
-                {
-                    ch = '[';
+                    case '(':
+                        ch = ')';
+                        break;
+                    case ')':
+                        ch = '(';
+                        break;
+                    case '[':
+                        ch = ']';
+                        break;
+                    case ']':
+                        ch = '[';
+                        break;
                 }
                 chars[i] = ch;
             }
