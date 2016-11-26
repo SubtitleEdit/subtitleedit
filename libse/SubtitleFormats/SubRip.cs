@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class SubRip : SubtitleFormat
     {
         public string Errors { get; private set; }
-        private StringBuilder _errors;
+        private static readonly StringBuilder _errors = new StringBuilder();
         private int _lineNumber;
         private bool _isMsFrames;
         private bool _isWsrt;
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             bool doRenum = false;
-            _errors = new StringBuilder();
+            _errors.Length = 0;
             _lineNumber = 0;
             _isMsFrames = true;
             _isWsrt = fileName != null && fileName.EndsWith(".wsrt", StringComparison.OrdinalIgnoreCase);
