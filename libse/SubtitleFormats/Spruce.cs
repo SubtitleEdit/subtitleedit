@@ -119,7 +119,7 @@ $ColorIndex4    = 3
 
             foreach (string line in lines)
             {
-                if (line.IndexOf(':') == 2 && timeCodeRegex.IsMatch(line))
+                if (line.Length >= 24 && timeCodeRegex.IsMatch(line))
                 {
                     string start = line.Substring(0, 11);
                     string end = line.Substring(12, 11);
