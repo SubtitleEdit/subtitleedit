@@ -135,18 +135,18 @@ $ColorIndex4    = 3
             }
         }
 
-        private static TimeCode DecodeTimeCode(string time)
+        private static TimeCode DecodeTimeCode(string timeStamp)
         {
             //00:01:54:19
-            string hour = time.Substring(0, 2);
-            string minutes = time.Substring(3, 2);
-            string seconds = time.Substring(6, 2);
-            string frames = time.Substring(9, 2);
+            int hours = int.Parse(timeStamp.Substring(0, 2));
+            int minutes = int.Parse(timeStamp.Substring(3, 2));
+            int seconds = int.Parse(timeStamp.Substring(6, 2));
+            int frames = int.Parse(timeStamp.Substring(9, 2));
 
-            int milliseconds = (int)((TimeCode.BaseUnit / 25.0) * int.Parse(frames));
+            int milliseconds = (int)((TimeCode.BaseUnit / 25.0) * frames);
             if (milliseconds > 999)
                 milliseconds = 999;
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
+            return new TimeCode(hours, minutes, seconds, milliseconds);
         }
 
         private static string DecodeText(string text)
