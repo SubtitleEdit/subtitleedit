@@ -117,6 +117,7 @@ $ColorIndex4    = 3
             if (fileName != null && fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase)) // allow empty text if extension is ".stl"...
                 timeCodeRegex = RegexTimeCodes2;
 
+            int number = 1;
             foreach (string line in lines)
             {
                 if (line.Length >= 24 && timeCodeRegex.IsMatch(line))
@@ -124,6 +125,7 @@ $ColorIndex4    = 3
                     string start = line.Substring(0, 11);
                     string end = line.Substring(12, 11);
                     var p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(24)));
+                    p.Number = number++;
                     subtitle.Paragraphs.Add(p);
                 }
                 else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//", StringComparison.Ordinal) && !line.StartsWith('$'))
@@ -131,7 +133,6 @@ $ColorIndex4    = 3
                     _errorCount++;
                 }
             }
-            subtitle.Renumber();
         }
 
         private static TimeCode DecodeTimeCode(string time)
