@@ -252,11 +252,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string[] tokens = line.Replace("-->", ":").Replace(" ", string.Empty).Split(':', ',');
             try
             {
-                int startHours = int.Parse(tokens[0]);
+                int startHours = Math.Abs(int.Parse(tokens[0]));
                 int startMinutes = int.Parse(tokens[1]);
                 int startSeconds = int.Parse(tokens[2]);
                 int startMilliseconds = int.Parse(tokens[3]);
-                int endHours = int.Parse(tokens[4]);
+                int endHours = Math.Abs(int.Parse(tokens[4]));
                 int endMinutes = int.Parse(tokens[5]);
                 int endSeconds = int.Parse(tokens[6]);
                 int endMilliseconds = int.Parse(tokens[7]);
