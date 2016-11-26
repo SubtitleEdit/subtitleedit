@@ -71,6 +71,19 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void TimeCodeDaysTest()
+        {
+            var tc = new TimeCode(24 * 3, 0, 0, 0)
+            {
+                Hours = 0,
+                Minutes = 0,
+                Seconds = 0,
+                Milliseconds = 0,
+            };
+            Assert.IsTrue(tc.TotalMilliseconds > 0);
+        }
+
+        [TestMethod]
         public void TimeCodeMilliseconds()
         {
             var tc = new TimeCode(1, 2, 3, 4) { Milliseconds = 9 };
