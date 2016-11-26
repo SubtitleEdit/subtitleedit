@@ -123,16 +123,8 @@ $ColorIndex4    = 3
                 {
                     string start = line.Substring(0, 11);
                     string end = line.Substring(12, 11);
-
-                    try
-                    {
-                        Paragraph p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(24)));
-                        subtitle.Paragraphs.Add(p);
-                    }
-                    catch
-                    {
-                        _errorCount++;
-                    }
+                    var p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(24)));
+                    subtitle.Paragraphs.Add(p);
                 }
                 else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//", StringComparison.Ordinal) && !line.StartsWith('$'))
                 {
