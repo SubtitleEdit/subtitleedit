@@ -86,16 +86,19 @@ $ColorIndex4    = 3
 
         private static string EncodeText(string text)
         {
-            text = HtmlUtil.FixUpperTags(text);
-            bool allItalic = text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1;
-            text = text.Replace("<b>", Bold);
-            text = text.Replace("</b>", Bold);
-            text = text.Replace("<i>", Italic);
-            text = text.Replace("</i>", Italic);
-            text = text.Replace("<u>", Underline);
-            text = text.Replace("</u>", Underline);
-            if (allItalic)
-                return text.Replace(Environment.NewLine, "|^I");
+            if (text.Contains('<'))
+            {
+                text = HtmlUtil.FixUpperTags(text);
+                bool allItalic = text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<i>") == 1;
+                text = text.Replace("<b>", Bold);
+                text = text.Replace("</b>", Bold);
+                text = text.Replace("<i>", Italic);
+                text = text.Replace("</i>", Italic);
+                text = text.Replace("<u>", Underline);
+                text = text.Replace("</u>", Underline);
+                if (allItalic)
+                    return text.Replace(Environment.NewLine, "|^I"); 
+            }
             return text.Replace(Environment.NewLine, "|");
         }
 
