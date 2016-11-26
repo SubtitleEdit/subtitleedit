@@ -249,29 +249,29 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 return false;
             }
-            string[] parts = line.Replace("-->", ":").Replace(" ", string.Empty).Split(':', ',');
+            string[] tokens = line.Replace("-->", ":").Replace(" ", string.Empty).Split(':', ',');
             try
             {
-                int startHours = int.Parse(parts[0]);
-                int startMinutes = int.Parse(parts[1]);
-                int startSeconds = int.Parse(parts[2]);
-                int startMilliseconds = int.Parse(parts[3]);
-                int endHours = int.Parse(parts[4]);
-                int endMinutes = int.Parse(parts[5]);
-                int endSeconds = int.Parse(parts[6]);
-                int endMilliseconds = int.Parse(parts[7]);
+                int startHours = int.Parse(tokens[0]);
+                int startMinutes = int.Parse(tokens[1]);
+                int startSeconds = int.Parse(tokens[2]);
+                int startMilliseconds = int.Parse(tokens[3]);
+                int endHours = int.Parse(tokens[4]);
+                int endMinutes = int.Parse(tokens[5]);
+                int endSeconds = int.Parse(tokens[6]);
+                int endMilliseconds = int.Parse(tokens[7]);
 
-                if (_isMsFrames && (parts[3].Length != 2 || startMilliseconds > 30 || parts[7].Length != 2 || endMilliseconds > 30))
+                if (_isMsFrames && (tokens[3].Length != 2 || startMilliseconds > 30 || tokens[7].Length != 2 || endMilliseconds > 30))
                 {
                     _isMsFrames = false;
                 }
 
                 paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                if (parts[0].StartsWith('-') && paragraph.StartTime.TotalMilliseconds > 0)
+                if (tokens[0].StartsWith('-') && paragraph.StartTime.TotalMilliseconds > 0)
                     paragraph.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds * -1;
 
                 paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
-                if (parts[4].StartsWith('-') && paragraph.EndTime.TotalMilliseconds > 0)
+                if (tokens[4].StartsWith('-') && paragraph.EndTime.TotalMilliseconds > 0)
                     paragraph.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds * -1;
 
                 return true;
