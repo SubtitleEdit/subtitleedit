@@ -329,6 +329,23 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void FixUnneededSpacesInvertedQuestionMarkTest()
+        {
+            const string expectedOuput = "Foobar ¿Foobar?";
+            Assert.AreEqual(expectedOuput, Utilities.RemoveUnneededSpaces("Foobar ¿ Foobar?", "en"));
+            Assert.AreEqual(expectedOuput, Utilities.RemoveUnneededSpaces("Foobar¿ Foobar?", "en"));
+        }
+
+
+        [TestMethod]
+        public void FixUnneededSpacesInvertedExclamationMarkTest()
+        {
+            const string expectedOutput = "Foobar ¡Foobar!";
+            Assert.AreEqual(expectedOutput, Utilities.RemoveUnneededSpaces("Foobar ¡ Foobar!", "en"));
+            Assert.AreEqual(expectedOutput, Utilities.RemoveUnneededSpaces("Foobar¡ Foobar!", "en"));
+        }
+
+        [TestMethod]
         public void CountTagInTextStringOneLetterString()
         {
             int count = Utilities.CountTagInText("HHH", "H");
