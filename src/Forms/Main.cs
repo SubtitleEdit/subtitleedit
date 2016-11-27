@@ -3468,19 +3468,6 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 var subAlt = GetSaveSubtitle(_subtitleAlternate);
-                string allText = subAlt.ToText(format).Trim();
-                var currentEncoding = GetCurrentEncoding();
-                bool isUnicode = currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8;
-                if (!isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
-                {
-                    if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNo) == DialogResult.No)
-                        return DialogResult.No;
-                }
-
-                if (!isUnicode)
-                {
-                    allText = NormalizeUnicode(allText);
-                }
 
                 bool containsNegativeTime = false;
                 foreach (var p in subAlt.Paragraphs)
@@ -3496,6 +3483,38 @@ namespace Nikse.SubtitleEdit.Forms
                     if (MessageBox.Show(_language.NegativeTimeWarning, Title, MessageBoxButtons.YesNo) == DialogResult.No)
                         return DialogResult.No;
                 }
+
+                if (format != null && !format.IsTextBased)
+                {
+                    var ebu = format as Ebu;
+                    if (ebu != null)
+                    {
+                        if (ebu.Save(_subtitleAlternateFileName, subAlt))
+                        {
+                            Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
+                            Configuration.Settings.Save();
+                            ShowStatus(string.Format(_language.SavedOriginalSubtitleX, _subtitleAlternateFileName));
+                            _changeAlternateSubtitleToString = _subtitleAlternate.ToText(new SubRip()).Trim();
+                            return DialogResult.OK;
+                        }
+                        return DialogResult.No;
+                    }
+                    MessageBox.Show("Ups - save original does not support this format - please go to Github and create an issue!");
+                }
+                
+                string allText = subAlt.ToText(format).Trim();
+                var currentEncoding = GetCurrentEncoding();
+                bool isUnicode = currentEncoding != null && (currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8);
+                if (!isUnicode && (allText.Contains(new[] { '♪', '♫', '♥', '—', '―', '…' }))) // ANSI & music/unicode symbols
+                {
+                    if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNo) == DialogResult.No)
+                        return DialogResult.No;
+                }
+
+                if (!isUnicode)
+                {
+                    allText = NormalizeUnicode(allText);
+                }               
 
                 File.WriteAllText(_subtitleAlternateFileName, allText, currentEncoding);
                 ShowStatus(string.Format(_language.SavedOriginalSubtitleX, _subtitleAlternateFileName));
@@ -17311,6 +17330,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _subtitleAlternateFileName = saveFileDialog1.FileName;
                 SaveOriginalSubtitle(GetCurrentSubtitleFormat());
+                SetTitle();
                 Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
             }
         }
