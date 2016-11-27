@@ -192,6 +192,9 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainListViewFocusWaveform = Keys.None;
         private Keys _mainListViewGoToNextError = Keys.None;
         private Keys _mainListViewCopyText = Keys.None;
+        private Keys _mainListViewToggleBookmark = Keys.None;
+        private Keys _mainListViewGoToNextBookmark = Keys.None;
+        private Keys _mainListViewGoToPreviousBookmark = Keys.None;
         private Keys _mainEditReverseStartAndEndingForRTL = Keys.None;
         private Keys _waveformVerticalZoom = Keys.None;
         private Keys _waveformVerticalZoomOut = Keys.None;
@@ -11996,19 +11999,51 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubtitleListview1KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.C && e.Modifiers == Keys.Control) //Ctrl+c = Copy to clipboard
+            if (e.KeyData == _mainListViewFocusWaveform)
             {
-                var tmp = new Subtitle();
-                foreach (int i in SubtitleListview1.SelectedIndices)
+                if (audioVisualizer.CanFocus)
                 {
-                    var p = _subtitle.GetParagraphOrDefault(i);
-                    if (p != null)
-                        tmp.Paragraphs.Add(new Paragraph(p));
+                    audioVisualizer.Focus();
+                    e.SuppressKeyPress = true;
                 }
-                if (tmp.Paragraphs.Count > 0)
+            }
+            else if (e.KeyData == _mainListViewAutoDuration)
+            {
+                MakeAutoDurationSelectedLines();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewGoToNextError)
+            {
+                GoToNextSynaxError();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainInsertBefore)
+            {
+                InsertBefore();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainInsertAfter)
+            {
+                InsertAfter();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewToggleBookmark)
+            {
+                int index = SubtitleListview1.Bookmark();
+                if (index >= 0)
                 {
-                    Clipboard.SetText(tmp.ToText(new SubRip()));
+                    SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, _subtitle.Paragraphs[index]);
                 }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewGoToNextBookmark)
+            {
+                SubtitleListview1.GotoNextBookmark();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == _mainListViewGoToPreviousBookmark)
+            {
+                SubtitleListview1.GotoPreviousBookmark();
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyData == _mainListViewCopyText)
@@ -12026,39 +12061,53 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyData == _mainListViewAutoDuration)
+            else if (e.KeyData == (Keys.Control | Keys.C)) // Ctrl+C : Copy to clipboard
             {
-                MakeAutoDurationSelectedLines();
-            }
-            else if (e.KeyData == _mainListViewFocusWaveform)
-            {
-                if (audioVisualizer.CanFocus)
+                var sub = new Subtitle();
+                foreach (int i in SubtitleListview1.SelectedIndices)
                 {
-                    audioVisualizer.Focus();
-                    e.SuppressKeyPress = true;
+                    var p = _subtitle.GetParagraphOrDefault(i);
+                    if (p != null)
+                        sub.Paragraphs.Add(new Paragraph(p));
                 }
-            }
-            else if (e.KeyData == _mainListViewGoToNextError)
-            {
-                GoToNextSynaxError();
+                if (sub.Paragraphs.Count > 0)
+                {
+                    Clipboard.SetText(sub.ToText(new SubRip()));
+                }
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+vPaste from clipboard
+            else if (e.KeyData == (Keys.Control | Keys.X)) // Ctrl+X : Cut to clipboard
+            {
+                var sub = new Subtitle();
+                foreach (int i in SubtitleListview1.SelectedIndices)
+                {
+                    var p = _subtitle.GetParagraphOrDefault(i);
+                    if (p != null)
+                        sub.Paragraphs.Add(new Paragraph(p));
+                }
+                if (sub.Paragraphs.Count > 0)
+                {
+                    _cutText = sub.ToText(new SubRip());
+                    ToolStripMenuItemDeleteClick(null, null);
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyData == (Keys.Control | Keys.V)) // Ctrl+V : Paste from clipboard
             {
                 if (Clipboard.ContainsText())
                 {
                     var text = Clipboard.GetText();
-                    var tmp = new Subtitle();
+                    var sub = new Subtitle();
                     var format = new SubRip();
                     var list = new List<string>(text.SplitToLines());
-                    format.LoadSubtitle(tmp, list, null);
-                    if (SubtitleListview1.SelectedItems.Count == 1 && tmp.Paragraphs.Count > 0)
+                    format.LoadSubtitle(sub, list, null);
+                    if (SubtitleListview1.SelectedItems.Count == 1 && sub.Paragraphs.Count > 0)
                     {
                         MakeHistoryForUndo(_language.BeforeInsertLine);
                         _makeHistoryPaused = true;
                         Paragraph lastParagraph = null;
                         Paragraph lastTempParagraph = null;
-                        foreach (var p in tmp.Paragraphs)
+                        foreach (var p in sub.Paragraphs)
                         {
                             InsertAfter();
                             textBoxListViewText.Text = p.Text;
@@ -12073,17 +12122,18 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         RestartHistory();
                     }
-                    else if (SubtitleListview1.Items.Count == 0 && tmp.Paragraphs.Count > 0)
-                    { // insert into empty subtitle
+                    else if (SubtitleListview1.Items.Count == 0 && sub.Paragraphs.Count > 0)
+                    {
+                        // insert into empty subtitle
                         MakeHistoryForUndo(_language.BeforeInsertLine);
-                        foreach (var p in tmp.Paragraphs)
+                        foreach (var p in sub.Paragraphs)
                         {
                             _subtitle.Paragraphs.Add(p);
                         }
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
                     }
-                    else if (SubtitleListview1.Items.Count > 1 && tmp.Paragraphs.Count > 0)
+                    else if (SubtitleListview1.Items.Count > 1 && sub.Paragraphs.Count > 0)
                     {
                         // multiple lines selected - first delete, then insert
                         int firstIndex = FirstSelectedIndex;
@@ -12093,7 +12143,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _makeHistoryPaused = true;
 
                             DeleteSelectedLines();
-                            foreach (var p in tmp.Paragraphs)
+                            foreach (var p in sub.Paragraphs)
                             {
                                 _subtitle.Paragraphs.Insert(firstIndex, p);
                                 firstIndex++;
@@ -12126,26 +12176,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.X && e.Modifiers == Keys.Control) //Ctrl+X = Cut to clipboard
-            {
-                var tmp = new Subtitle();
-                foreach (int i in SubtitleListview1.SelectedIndices)
-                {
-                    var p = _subtitle.GetParagraphOrDefault(i);
-                    if (p != null)
-                        tmp.Paragraphs.Add(new Paragraph(p));
-                }
-                e.SuppressKeyPress = true;
-                _cutText = tmp.ToText(new SubRip());
-                ToolStripMenuItemDeleteClick(null, null);
-            }
-            else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control) //SelectAll
+            else if (e.KeyData == (Keys.Control | Keys.A)) // Ctrl+A : SelectAll
             {
                 foreach (ListViewItem item in SubtitleListview1.Items)
                     item.Selected = true;
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control) //SelectFirstSelectedItemOnly
+            else if (e.KeyData == (Keys.Control | Keys.D)) // Ctrl+D : SelectFirstSelectedItemOnly
             {
                 if (SubtitleListview1.SelectedItems.Count > 0)
                 {
@@ -12160,32 +12197,22 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
-            else if (e.KeyCode == Keys.Delete && SubtitleListview1.SelectedItems.Count > 0) //Delete
-            {
-                ToolStripMenuItemDeleteClick(null, null);
-            }
-            else if (e.KeyData == _mainInsertBefore)
-            {
-                InsertBefore();
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyData == _mainInsertAfter)
-            {
-                InsertAfter();
-                e.SuppressKeyPress = true;
-            }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Home)
+            else if (e.KeyData == (Keys.Control | Keys.Home))
             {
                 SubtitleListview1.FirstVisibleIndex = -1;
                 SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.End)
+            else if (e.KeyData == (Keys.Control | Keys.End))
             {
                 SubtitleListview1.SelectIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1, true);
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter)
+            else if (e.KeyData == Keys.Delete && SubtitleListview1.SelectedItems.Count > 0) // Delete
+            {
+                ToolStripMenuItemDeleteClick(null, null);
+            }
+            else if (e.KeyData == Keys.Enter)
             {
                 SubtitleListview1_MouseDoubleClick(null, null);
             }
@@ -14968,6 +14995,9 @@ namespace Nikse.SubtitleEdit.Forms
             _mainListViewGoToNextError = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
             _mainEditReverseStartAndEndingForRTL = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             _mainListViewCopyText = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
+            _mainListViewToggleBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleBookmark);
+            _mainListViewGoToNextBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextBookmark);
+            _mainListViewGoToPreviousBookmark = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToPreviousBookmark);
             copyOriginalTextToCurrentToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent);
             toolStripMenuItemColumnDeleteText.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText);
             ShiftTextCellsDownToolStripMenuItem.ShortcutKeys = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnInsertText);

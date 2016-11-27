@@ -1883,6 +1883,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SyntaxColorTextMoreThanMaxLines>Color text if more than {0} lines</SyntaxColorTextMoreThanMaxLines>
     <SyntaxColorOverlap>Color time code overlap</SyntaxColorOverlap>
     <SyntaxErrorColor>Error color</SyntaxErrorColor>
+    <BookmarkColor>Bookmark color</BookmarkColor>
     <GoToFirstSelectedLine>Go to first selected line</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Go to next empty line</GoToNextEmptyLine>
     <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
@@ -1899,6 +1900,9 @@ can edit in same subtitle file (collaboration)</Information>
     <ListViewColumnPaste>Column, paste</ListViewColumnPaste>
     <ListViewFocusWaveform>Focus waveform/spectrogram</ListViewFocusWaveform>
     <ListViewGoToNextError>Go to next error</ListViewGoToNextError>
+    <ListViewToggleBookmark>Toggle bookmark</ListViewToggleBookmark>
+    <ListViewGoToNextBookmark>Go to next bookmark</ListViewGoToNextBookmark>
+    <ListViewGoToPreviousBookmark>Go to previous bookmark</ListViewGoToPreviousBookmark>
     <ShowBeamer>Start subtitle fullscreen beamer</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Move last word down to next subtitle line</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Move first word from next subtitle line up</MainTextBoxMoveFirstWordFromNextUp>

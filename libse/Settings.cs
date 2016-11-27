@@ -100,6 +100,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ListViewSyntaxMoreThanXLines { get; set; }
         public int ListViewSyntaxMoreThanXLinesX { get; set; }
         public Color ListViewSyntaxErrorColor { get; set; }
+        public Color ListViewBookmarkColor { get; set; }
         public Color ListViewUnfocusedSelectedColor { get; set; }
         public bool SplitAdvanced { get; set; }
         public string SplitOutputFolder { get; set; }
@@ -211,6 +212,7 @@ namespace Nikse.SubtitleEdit.Core
             ListViewSyntaxMoreThanXLines = true;
             ListViewSyntaxMoreThanXLinesX = 2;
             ListViewSyntaxErrorColor = Color.FromArgb(255, 180, 150);
+            ListViewBookmarkColor = Color.FromArgb(179, 255, 179);
             ListViewUnfocusedSelectedColor = Color.LightBlue;
             SplitAdvanced = false;
             SplitNumberOfParts = 3;
@@ -917,6 +919,9 @@ namespace Nikse.SubtitleEdit.Core
         public string MainListViewColumnPaste { get; set; }
         public string MainListViewFocusWaveform { get; set; }
         public string MainListViewGoToNextError { get; set; }
+        public string MainListViewToggleBookmark { get; set; }
+        public string MainListViewGoToNextBookmark { get; set; }
+        public string MainListViewGoToPreviousBookmark { get; set; }
         public string MainTextBoxItalic { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainTextBoxMoveLastWordDown { get; set; }
@@ -1028,6 +1033,9 @@ namespace Nikse.SubtitleEdit.Core
             MainSynchronizationPointSync = "Control+Shift+P";
             MainSynchronizationChangeFrameRate = string.Empty;
             MainListViewItalic = "Control+I";
+            MainListViewToggleBookmark = "Control+F2";
+            MainListViewGoToNextBookmark = "F2";
+            MainListViewGoToPreviousBookmark = "Shift+F2";
             MainEditReverseStartAndEndingForRTL = string.Empty;
             MainTextBoxItalic = "Control+I";
             MainTextBoxSplitAtCursor = "Control+Alt+V";
@@ -1730,6 +1738,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ListViewSyntaxErrorColor");
             if (subNode != null)
                 settings.Tools.ListViewSyntaxErrorColor = Color.FromArgb(int.Parse(subNode.InnerText));
+            subNode = node.SelectSingleNode("ListViewBookmarkColor");
+            if (subNode != null)
+                settings.Tools.ListViewBookmarkColor = Color.FromArgb(int.Parse(subNode.InnerText));
             subNode = node.SelectSingleNode("ListViewUnfocusedSelectedColor");
             if (subNode != null)
                 settings.Tools.ListViewUnfocusedSelectedColor = Color.FromArgb(int.Parse(subNode.InnerText));
@@ -2726,6 +2737,15 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("MainListViewGoToNextError");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewGoToNextError = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewToggleBookmark");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewToggleBookmark = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewGoToNextBookmark");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewGoToNextBookmark = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewGoToPreviousBookmark");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewGoToPreviousBookmark = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainEditReverseStartAndEndingForRTL");
                 if (subNode != null)
                     settings.Shortcuts.MainEditReverseStartAndEndingForRTL = subNode.InnerText;
@@ -3138,6 +3158,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ListViewSyntaxMoreThanXLinesX", settings.Tools.ListViewSyntaxMoreThanXLinesX.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString());
                 textWriter.WriteElementString("ListViewSyntaxErrorColor", settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewBookmarkColor", settings.Tools.ListViewBookmarkColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewUnfocusedSelectedColor", settings.Tools.ListViewUnfocusedSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SplitAdvanced", settings.Tools.SplitAdvanced.ToString());
                 textWriter.WriteElementString("SplitOutputFolder", settings.Tools.SplitOutputFolder);
@@ -3489,6 +3510,9 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("MainListViewColumnPaste", settings.Shortcuts.MainListViewColumnPaste);
                 textWriter.WriteElementString("MainListViewFocusWaveform", settings.Shortcuts.MainListViewFocusWaveform);
                 textWriter.WriteElementString("MainListViewGoToNextError", settings.Shortcuts.MainListViewGoToNextError);
+                textWriter.WriteElementString("MainListViewToggleBookmark", settings.Shortcuts.MainListViewToggleBookmark);
+                textWriter.WriteElementString("MainListViewGoToNextBookmark", settings.Shortcuts.MainListViewGoToNextBookmark);
+                textWriter.WriteElementString("MainListViewGoToPreviousBookmark", settings.Shortcuts.MainListViewGoToPreviousBookmark);
                 textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
                 textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
                 textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);

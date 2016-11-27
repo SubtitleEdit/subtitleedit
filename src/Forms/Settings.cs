@@ -229,6 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             checkBoxSyntaxOverlap.Checked = Configuration.Settings.Tools.ListViewSyntaxColorOverlap;
             panelListViewSyntaxColorError.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+            panelListViewBookmarkColor.BackColor = Configuration.Settings.Tools.ListViewBookmarkColor;
 
             // Language
             var language = Configuration.Settings.Language.Settings;
@@ -646,6 +647,7 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownWaveformBorderHitMs.Value = Configuration.Settings.VideoControls.WaveformBorderHitMs;
             checkBoxUseFFmpeg.Checked = gs.UseFFmpegForWaveExtraction;
             textBoxFFmpegPath.Text = gs.FFmpegLocation;
+
             var generalNode = new TreeNode(Configuration.Settings.Language.General.GeneralText);
             AddNode(generalNode, language.MergeSelectedLines, nameof(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines));
             AddNode(generalNode, language.MergeSelectedLinesOnlyFirstText, nameof(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText));
@@ -748,6 +750,9 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(listViewNode, language.ListViewColumnPaste, nameof(Configuration.Settings.Shortcuts.MainListViewColumnPaste), true);
             AddNode(listViewNode, language.ListViewFocusWaveform, nameof(Configuration.Settings.Shortcuts.MainListViewFocusWaveform));
             AddNode(listViewNode, language.ListViewGoToNextError, nameof(Configuration.Settings.Shortcuts.MainListViewGoToNextError));
+            AddNode(listViewNode, language.ListViewToggleBookmark, nameof(Configuration.Settings.Shortcuts.MainListViewToggleBookmark));
+            AddNode(listViewNode, language.ListViewGoToNextBookmark, nameof(Configuration.Settings.Shortcuts.MainListViewGoToNextBookmark));
+            AddNode(listViewNode, language.ListViewGoToPreviousBookmark, nameof(Configuration.Settings.Shortcuts.MainListViewGoToPreviousBookmark));
             treeViewShortcuts.Nodes.Add(listViewNode);
 
             var textBoxNode = new TreeNode(language.TextBox);
@@ -848,6 +853,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(language.SyntaxColorTextMoreThanMaxLines, Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX);
             checkBoxSyntaxOverlap.Text = language.SyntaxColorOverlap;
             buttonListViewSyntaxColorError.Text = language.SyntaxErrorColor;
+            buttonListViewBookmarkColor.Text = language.BookmarkColor;
 
             UiUtil.FixLargeFonts(this, buttonOK);
 
@@ -1199,6 +1205,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = (int)numericUpDownMaxNumberOfLines.Value;
             Configuration.Settings.Tools.ListViewSyntaxColorOverlap = checkBoxSyntaxOverlap.Checked;
             Configuration.Settings.Tools.ListViewSyntaxErrorColor = panelListViewSyntaxColorError.BackColor;
+            Configuration.Settings.Tools.ListViewBookmarkColor = panelListViewBookmarkColor.BackColor;
 
             Configuration.Settings.VideoControls.WaveformDrawGrid = checkBoxWaveformShowGrid.Checked;
             Configuration.Settings.VideoControls.WaveformGridColor = panelWaveformGridColor.BackColor;
@@ -2103,6 +2110,13 @@ namespace Nikse.SubtitleEdit.Forms
             colorDialogSSAStyle.Color = panelListViewSyntaxColorError.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
                 panelListViewSyntaxColorError.BackColor = colorDialogSSAStyle.Color;
+        }
+
+        private void buttonListViewBookmarkColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelListViewBookmarkColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+                panelListViewBookmarkColor.BackColor = colorDialogSSAStyle.Color;
         }
 
         private void comboBoxShortcutKey_KeyDown(object sender, KeyEventArgs e)

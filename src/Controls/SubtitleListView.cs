@@ -17,8 +17,9 @@ namespace Nikse.SubtitleEdit.Controls
         public const int ColumnIndexTextAlternate = 5;
         public int ColumnIndexExtra = 5;
 
-        private int _firstVisibleIndex = -1;
+        private readonly HashSet<string> _bookmarks = new HashSet<string>();
         private string _lineSeparatorString = " || ";
+        private int _firstVisibleIndex = -1;
 
         private Font _subtitleFont = new Font("Tahoma", 8.25F);
 
@@ -551,7 +552,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
 
-                if (_settings.Tools.ListViewSyntaxColorLongLines)
+                if (_settings.Tools.ListViewSyntaxColorLongLines && item.SubItems[ColumnIndexText].Tag == null)
                 {
                     int noOfLines = paragraph.Text.Split(Environment.NewLine[0]).Length;
                     string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
@@ -586,6 +587,66 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public int Bookmark()
+        {
+            var item = FocusedItem;
+            if (item != null)
+            {
+                var paragraph = item.Tag as Paragraph;
+                if (item.SubItems[ColumnIndexText].Tag != null)
+                {
+                    item.SubItems[ColumnIndexText].BackColor = BackColor;
+                    item.SubItems[ColumnIndexText].Tag = null;
+                    _bookmarks.Remove(paragraph.ID);
+                    return item.Index;
+                }
+                item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewBookmarkColor;
+                item.SubItems[ColumnIndexText].Tag = item;
+                _bookmarks.Add(paragraph.ID);
+            }
+            return -1;
+        }
+
+        public void GotoNextBookmark()
+        {
+            if (Items.Count > 0)
+            {
+                int startIndex = (FocusedItem != null) ? FocusedItem.Index : 0;
+                int index = startIndex;
+                do
+                {
+                    if (++index >= Items.Count)
+                        index = 0;
+                    if (Items[index].SubItems[ColumnIndexText].Tag != null)
+                    {
+                        SelectIndexAndEnsureVisible(index, focus: true);
+                        return;
+                    }
+                }
+                while (index != startIndex);
+            }
+        }
+
+        public void GotoPreviousBookmark()
+        {
+            if (Items.Count > 0)
+            {
+                int startIndex = (FocusedItem != null) ? FocusedItem.Index : 0;
+                int index = startIndex;
+                do
+                {
+                    if (--index < 0)
+                        index = Items.Count - 1;
+                    if (Items[index].SubItems[ColumnIndexText].Tag != null)
+                    {
+                        SelectIndexAndEnsureVisible(index, focus: true);
+                        return;
+                    }
+                }
+                while (index != startIndex);
+            }
+        }
+
         private string GetDisplayTime(TimeCode timeCode)
         {
             if (Configuration.Settings.General.CurrentVideoOffsetInMs > 0)
@@ -601,6 +662,11 @@ namespace Nikse.SubtitleEdit.Controls
             item.SubItems.Add(paragraph.Duration.ToShortDisplayString());
             item.SubItems.Add(paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString));
             item.Font = SubtitleFontBold ? new Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold) : new Font(_subtitleFontName, SubtitleFontSize);
+            if (_bookmarks.Contains(paragraph.ID))
+            {
+                item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewBookmarkColor;
+                item.SubItems[ColumnIndexText].Tag = item;
+            }
             Items.Add(item);
         }
 
@@ -946,5 +1012,6 @@ namespace Nikse.SubtitleEdit.Controls
         {
             return (index >= 0 && index < Items.Count);
         }
+
     }
 }

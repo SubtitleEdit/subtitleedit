@@ -2046,6 +2046,7 @@
             public string SyntaxColorTextMoreThanMaxLines { get; set; }
             public string SyntaxColorOverlap { get; set; }
             public string SyntaxErrorColor { get; set; }
+            public string BookmarkColor { get; set; }
             public string GoToFirstSelectedLine { get; set; }
             public string GoToNextEmptyLine { get; set; }
             public string MergeSelectedLines { get; set; }
@@ -2062,6 +2063,9 @@
             public string ListViewColumnPaste { get; set; }
             public string ListViewFocusWaveform { get; set; }
             public string ListViewGoToNextError { get; set; }
+            public string ListViewToggleBookmark { get; set; }
+            public string ListViewGoToNextBookmark { get; set; }
+            public string ListViewGoToPreviousBookmark { get; set; }
             public string ShowBeamer { get; set; }
             public string MainTextBoxMoveLastWordDown { get; set; }
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }

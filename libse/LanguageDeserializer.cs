@@ -5098,6 +5098,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/SyntaxErrorColor":
                     language.Settings.SyntaxErrorColor = reader.Value;
                     break;
+                case "Settings/BookmarkColor":
+                    language.Settings.BookmarkColor = reader.Value;
+                    break;
                 case "Settings/GoToFirstSelectedLine":
                     language.Settings.GoToFirstSelectedLine = reader.Value;
                     break;
@@ -5145,6 +5148,15 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/ListViewGoToNextError":
                     language.Settings.ListViewGoToNextError = reader.Value;
+                    break;
+                case "Settings/ListViewToggleBookmark":
+                    language.Settings.ListViewToggleBookmark = reader.Value;
+                    break;
+                case "Settings/ListViewGoToNextBookmark":
+                    language.Settings.ListViewGoToNextBookmark = reader.Value;
+                    break;
+                case "Settings/ListViewGoToPreviousBookmark":
+                    language.Settings.ListViewGoToPreviousBookmark = reader.Value;
                     break;
                 case "Settings/ShowBeamer":
                     language.Settings.ShowBeamer = reader.Value;
