@@ -9,6 +9,7 @@
    * Updated Romanian translation - thx Mircea
    * Updated Finnish translation - thx Teijo
    * Updated French Translation - thx JM GBT
+   * Updated Bulgarian Translation - thx Maknol
    * Language auto-detect now includes Latvian and Lithuanian - thx rhazor
 * FIXED:
    * Fixed possible crash when generating scene changes - thx Leemet
@@ -23,6 +24,7 @@
    * Fix "Fix missing spaces" issue regarding Finnish/Swedish colons - thx Boulder08
    * Fix two issues with "Fix common errors" - thx Tronar
    * OCR fix rules: fix for weird Unicode comma (#x201A) - thx djc
+   * Fixed some issues with "Save original as..." - thx Stefan
 
 
 3.5 (26th October 2016)
