@@ -1797,11 +1797,17 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
 
-            while (text.Contains("¿ "))
-                text = text.Replace("¿ ", "¿");
-
-            while (text.Contains("¡ "))
-                text = text.Replace("¡ ", "¡");
+            // Fix spaces after inverted exclamation/question mark.
+            for (int i = text.Length - 2; i >= 1; i--)
+            {
+                char ch = text[i];
+                if ((ch == '¿' || ch == '¡') && text[i + 1] == ' ')
+                {
+                    text = text.Remove(i + 1, 1);
+                    if (text[i - 1] != ' ')
+                        text = text.Insert(i, " ");
+                }
+            }
 
             // Italic
             if (text.Contains("<i>", StringComparison.OrdinalIgnoreCase) && text.Contains("</i>", StringComparison.OrdinalIgnoreCase))
