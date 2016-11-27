@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (formatUnbreak)
                 {
-                    sb.Append(s.Replace(Environment.NewLine, " ").Replace("  ", " "));
+                    sb.Append(Utilities.UnbreakLine(s));
                 }
                 else
                 {
