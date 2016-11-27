@@ -390,7 +390,7 @@ namespace Nikse.SubtitleEdit.Core.Forms
             else if (newText.Contains('-') && !newText.Contains(Environment.NewLine))
             {
                 var st = new StrippableText(newText);
-                if (st.Pre.Contains('-'))
+                if (st.Pre.Contains('-') && !st.Pre.Contains("--"))
                     newText = st.Pre.Replace("-", string.Empty) + st.StrippedText + st.Post;
             }
             else if (removedInSecondLine && !removedInFirstLine && Utilities.GetNumberOfLines(newText) == 2)

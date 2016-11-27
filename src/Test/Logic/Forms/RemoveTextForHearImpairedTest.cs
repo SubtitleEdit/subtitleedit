@@ -1599,6 +1599,39 @@ namespace Test.Logic.Forms
             Assert.AreEqual("Captain's log, stardate 1514. 1:", actual);
         }
 
+        [TestMethod]
+        public void DontRemoveDoubleDashInSecondLine()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenSquares = true;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            string actual = target.RemoveTextFromHearImpaired("BALOK[OVER RADIO]:" + Environment.NewLine + "<i>--and trespassed into our star systems.</i>");
+            Assert.AreEqual("<i>--and trespassed into our star systems.</i>", actual);
+        }
+
+        [TestMethod]
+        public void DontRemoveDoubleDashInSecondLine2()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenSquares = true;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            string actual = target.RemoveTextFromHearImpaired("BALOK[OVER RADIO]:" + Environment.NewLine + "--and trespassed into our star systems.");
+            Assert.AreEqual("--and trespassed into our star systems.", actual);
+        }
+
+        [TestMethod]
+        public void DontRemoveDoubleDashInSecondLine3()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenSquares = true;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            string actual = target.RemoveTextFromHearImpaired("BALOK[OVER RADIO]:" + Environment.NewLine + "<i>—and trespassed into our star systems.</i>");
+            Assert.AreEqual("<i>—and trespassed into our star systems.</i>", actual);
+        }
+
         #region Additional test attributes
 
         //
