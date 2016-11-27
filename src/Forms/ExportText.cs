@@ -138,8 +138,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (formatMergeAll)
             {
                 text = text.Replace(Environment.NewLine, " ");
-                text = text.Replace("  ", " ").Replace("  ", " ");
-            }
+                text = text.FixExtraSpaces();
+            }      
             return text;
         }
 
