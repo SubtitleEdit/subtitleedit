@@ -65,7 +65,7 @@
     <Advanced>Повече</Advanced>
     <Style>Стил</Style>
     <StyleLanguage>Стил / Език</StyleLanguage>
-    <Character>Сивол</Character>
+    <Character>Символ</Character>
     <Class>Клас</Class>
     <GeneralText>Основен</GeneralText>
     <LineNumber>Ред#</LineNumber>
@@ -158,7 +158,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertOptions>Опции на конвертирането</ConvertOptions>
     <RemoveFormatting>Премахване на форматни тагове</RemoveFormatting>
     <RemoveTextForHI>Премахване на текст за ГЛУХИ</RemoveTextForHI>
-    <OverwriteOriginalFiles>Презаписване на орииналните файлове (ново разширение ако формата е променен)</OverwriteOriginalFiles>
+    <OverwriteOriginalFiles>Презаписване на оригиналните файлове (ново разширение ако формата е променен)</OverwriteOriginalFiles>
     <RedoCasing>Редо рамка</RedoCasing>
     <Convert>Конвертиране</Convert>
     <NothingToConvert>Няма нищо за конвертиране!</NothingToConvert>
@@ -166,7 +166,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NotConverted>Провал</NotConverted>
     <Converted>Конвертирани</Converted>
     <Settings>Настройки</Settings>
-    <SplitLongLines>Резделяне на дълги редове</SplitLongLines>
+    <SplitLongLines>Разделяне на дълги редове</SplitLongLines>
     <AutoBalance>Авто балансиране на редовете</AutoBalance>
     <ScanFolder>Сканиране на папки...</ScanFolder>
     <ScanningFolder>Търсене {0} и под папки за субтитърни файлове</ScanningFolder>
@@ -256,7 +256,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShiftCellsDown>Местене клетка надолу</ShiftCellsDown>
     <TimeCodesOnly>Само тайм кодовете</TimeCodesOnly>
     <TextOnly>Само текста</TextOnly>
-    <OriginalTextOnly>Само оригигиналния текст</OriginalTextOnly>
+    <OriginalTextOnly>Само оригиналния текст</OriginalTextOnly>
   </ColumnPaste>
   <CompareSubtitles>
     <Title>Сравняване на субтитри</Title>
@@ -281,7 +281,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Language>Език</Language>
     <IssueDate>Дата на издаване</IssueDate>
     <EditRate>Редактирана част</EditRate>
-    <TimeCodeRate>тойност на тайм кода</TimeCodeRate>
+    <TimeCodeRate>Стойност на тайм кода</TimeCodeRate>
     <StartTime>Начално време</StartTime>
     <Font>Шрифт</Font>
     <FontId>ID</FontId>
@@ -412,7 +412,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Цвят на шрифта</FontColor>
     <BorderColor>Цвят на контура</BorderColor>
     <BorderWidth>Широчина на контура</BorderWidth>
-    <BorderStyle>Стил на ограждението</BorderStyle>
+    <BorderStyle>Стил на ограждането</BorderStyle>
     <BorderStyleOneBox>Едно ограждение</BorderStyleOneBox>
     <BorderStyleBoxForEachLine>Ограждение за всеки ред</BorderStyleBoxForEachLine>
     <BorderStyleNormalWidthX>Нормално, ширина={0}</BorderStyleNormalWidthX>
@@ -664,7 +664,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ImageFiles>Файлове с изображения</ImageFiles>
     <Input>Внасяне</Input>
     <InputDescription>Избор на файлове за внасяне (прелистване или влачене)</InputDescription>
-    <Remove>Преахване</Remove>
+    <Remove>Премахване</Remove>
     <RemoveAll>Премахване на всички</RemoveAll>
   </ImportImages>
   <ImportSceneChanges>
@@ -680,7 +680,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <ImportText>
     <Title>Внасяне на обикновен текст</Title>
     <OneSubtitleIsOneFile>Множество файлове - един файл е един субтитър</OneSubtitleIsOneFile>
-    <OpenTextFile>Отварряне на текстов файл...</OpenTextFile>
+    <OpenTextFile>Отваряне на текстов файл...</OpenTextFile>
     <OpenTextFiles>Отваряне на текстови файлове...</OpenTextFiles>
     <ImportOptions>Опции при внасяне</ImportOptions>
     <Splitting>Разделяне</Splitting>
@@ -714,146 +714,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TotalNumberOfLinesX>Общ брой редове: {0:#.###.###}</TotalNumberOfLinesX>
     <Note>Забележка: Файловете трябва да са с коректно тайм кодове</Note>
   </JoinSubtitles>
-  <LanguageNames>
-    <aaName>афар</aaName>
-    <abName>абхазки</abName>
-    <afName>африкаанс</afName>
-    <amName>амхарски</amName>
-    <arName>арабски</arName>
-    <asName>асамски</asName>
-    <ayName>аймара</ayName>
-    <azName>азербайджански</azName>
-    <baName>башкирски</baName>
-    <beName>беларуски</beName>
-    <bgName>български</bgName>
-    <biName>бислама</biName>
-    <bnName>бенгалски</bnName>
-    <boName>тибетски</boName>
-    <brName>бретонски</brName>
-    <caName>каталонски</caName>
-    <coName>корсикански</coName>
-    <csName>чешки</csName>
-    <cyName>уелски</cyName>
-    <daName>датски</daName>
-    <deName>немски</deName>
-    <dzName>дзонха</dzName>
-    <elName>гръцки</elName>
-    <enName>английски</enName>
-    <eoName>есперанто</eoName>
-    <esName>испански</esName>
-    <etName>естонски</etName>
-    <euName>баски</euName>
-    <faName>персийски</faName>
-    <fiName>фински</fiName>
-    <fjName>фиджийски</fjName>
-    <foName>фарьорски</foName>
-    <frName>френски</frName>
-    <fyName>фризийски</fyName>
-    <gaName>ирландски</gaName>
-    <gdName>шотландски галски</gdName>
-    <glName>галисийски</glName>
-    <gnName>гуарани</gnName>
-    <guName>гуджарати</guName>
-    <haName>хауза</haName>
-    <heName>иврит</heName>
-    <hiName>хинди</hiName>
-    <hrName>хърватски</hrName>
-    <huName>унгарски</huName>
-    <hyName>арменски</hyName>
-    <iaName>интерлингва</iaName>
-    <idName>индонезийски</idName>
-    <ieName>оксидентал</ieName>
-    <ikName>инупиак</ikName>
-    <isName>исландски</isName>
-    <itName>италиански</itName>
-    <iuName>инуктитут</iuName>
-    <jaName>японски</jaName>
-    <jvName>явански</jvName>
-    <kaName>грузински</kaName>
-    <kkName>казахски</kkName>
-    <klName>гренландски</klName>
-    <kmName>кхмерски</kmName>
-    <knName>каннада</knName>
-    <koName>корейски</koName>
-    <ksName>кашмирски</ksName>
-    <kuName>кюрдски</kuName>
-    <kyName>киргизки</kyName>
-    <laName>латински</laName>
-    <lbName>люксембургски</lbName>
-    <lnName>лингала</lnName>
-    <loName>лаоски</loName>
-    <ltName>литовски</ltName>
-    <lvName>латвийски</lvName>
-    <mgName>малгашки</mgName>
-    <miName>маорски</miName>
-    <mkName>македонски</mkName>
-    <mlName>малаялам</mlName>
-    <mnName>монголски</mnName>
-    <mrName>марати</mrName>
-    <msName>малайски</msName>
-    <mtName>малтийски</mtName>
-    <myName>бирмански</myName>
-    <naName>науру</naName>
-    <neName>непалски</neName>
-    <nlName>нидерландски</nlName>
-    <noName>норвежки</noName>
-    <ocName>окситански</ocName>
-    <omName>оромо</omName>
-    <orName>ория</orName>
-    <paName>пенджабски</paName>
-    <plName>полски</plName>
-    <psName>пущу</psName>
-    <ptName>португалски</ptName>
-    <quName>кечуа</quName>
-    <rmName>реторомански</rmName>
-    <rnName>рунди</rnName>
-    <roName>румънски</roName>
-    <ruName>руски</ruName>
-    <rwName>киняруанда</rwName>
-    <saName>санкскритски</saName>
-    <sdName>синдхи</sdName>
-    <sgName>санго</sgName>
-    <shName>сърбохърватски</shName>
-    <siName>синхалски</siName>
-    <skName>словашки</skName>
-    <slName>словенски</slName>
-    <smName>самоански</smName>
-    <snName>шона</snName>
-    <soName>сомалийски</soName>
-    <sqName>албански</sqName>
-    <srName>сръбски</srName>
-    <ssName>суази</ssName>
-    <stName>сесуто</stName>
-    <suName>сундански</suName>
-    <svName>шведски</svName>
-    <swName>суахили</swName>
-    <taName>тамилски</taName>
-    <teName>телугу</teName>
-    <tgName>таджикски</tgName>
-    <thName>тайски</thName>
-    <tiName>тигриня</tiName>
-    <tkName>туркменски</tkName>
-    <tlName>тагалог</tlName>
-    <tnName>тсвана</tnName>
-    <toName>тонга</toName>
-    <trName>турски</trName>
-    <tsName>тсонга</tsName>
-    <ttName>татарски</ttName>
-    <twName>туи</twName>
-    <ugName>уйгурски</ugName>
-    <ukName>украински</ukName>
-    <urName>урду</urName>
-    <uzName>узбекски</uzName>
-    <viName>виетнамски</viName>
-    <voName>волапюк</voName>
-    <woName>волоф</woName>
-    <xhName>ксоса</xhName>
-    <yiName>идиш</yiName>
-    <yoName>йоруба</yoName>
-    <zaName>зуанг</zaName>
-    <zhName>китайски</zhName>
-    <zuName>зулуски</zuName>
-  </LanguageNames>
   <Main>
     <Menu>
       <File>
@@ -942,7 +802,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeSpeedInPercent>Променена скорост (процент)...</ChangeSpeedInPercent>
         <MergeShortLines>Сливане на кратки редове...</MergeShortLines>
         <MergeDuplicateText>Обединяване на редове с еднакъв текст</MergeDuplicateText>
-        <MergeSameTimeCodes>Сливане на редове с еднакав тайм код</MergeSameTimeCodes>
+        <MergeSameTimeCodes>Сливане на редове с еднакъв тайм код</MergeSameTimeCodes>
         <SplitLongLines>Разделяне на дълги редове...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Минимално време за показване между субтитрите...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Сортиране по</SortBy>
@@ -973,8 +833,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <OpenDvd>Отваряне на DVD...</OpenDvd>
         <ChooseAudioTrack>Избор на аудио пътечка</ChooseAudioTrack>
         <CloseVideo>Затваряне на видео файла</CloseVideo>
-        <ImportSceneChanges>Внасяне на сценни промени</ImportSceneChanges>
-        <RemoveSceneChanges>Премахване на сценни промени</RemoveSceneChanges>
+        <ImportSceneChanges>Внасяне на сцени промени</ImportSceneChanges>
+        <RemoveSceneChanges>Премахване на сцени промени</RemoveSceneChanges>
         <WaveformBatchGenerate>Бач генериране на уейв форма...</WaveformBatchGenerate>
         <ShowHideVideo>Покажи/скрий видео</ShowHideVideo>
         <ShowHideWaveform>Покажи/скрий формата на звуковия сигнал</ShowHideWaveform>
@@ -1193,7 +1053,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FindContinue>Търсения елемент не е намерен.
 Желаете ли търсенето да започне от началото на документа и да се потърси още веднъж?</FindContinue>
     <FindContinueTitle>Искате ли да продължите търсенето?</FindContinueTitle>
-    <ReplaceContinueNotFound>Търсеното от вс на е намерено. Искате ли да започнете отначало на документа и да продължите с търсене и заместване?</ReplaceContinueNotFound>
+    <ReplaceContinueNotFound>Търсеното от вас на е намерено. Искате ли да започнете отначало на документа и да продължите с търсене и заместване?</ReplaceContinueNotFound>
     <ReplaceXContinue>Търсеното беше заменено {0} път/и. Искате ли да започнете отначало на документа и да продължите с търсене и заместване?</ReplaceXContinue>
     <ReplaceContinueTitle>Продължаване на "Замяна"?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Търсене на {0} от ред номер {1}...</SearchingForXFromLineY>
@@ -1218,7 +1078,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeCommonErrorFixes>Преди поправката на някои грешки</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Поправени някои грешки в избраните редове</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Поправени са някои грешки</CommonErrorsFixed>
-    <BeforeRenumbering>Преди преномерацията</BeforeRenumbering>
+    <BeforeRenumbering>Преди преномериранията</BeforeRenumbering>
     <RenumberedStartingFromX>Начало на преномерация от: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Преди изтриването на текста за увредени със слуха</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Изтрит текст за увредени със слуха: Един ред</TextingForHearingImpairedRemovedOneLine>
@@ -1305,7 +1165,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeAdjustSpeedInPercent>Преди настройване на скоростта в проценти</BeforeAdjustSpeedInPercent>
     <FrameRateChangedFromXToY>Честотата на кадри е променена от {0} към {1}</FrameRateChangedFromXToY>
     <IdxFileNotFoundWarning>{0} не е намерен! Да се внесе ли файла VobSub все пак?</IdxFileNotFoundWarning>
-    <InvalidVobSubHeader>Невалиден хедър на файла VobSub: {0}</InvalidVobSubHeader>
+    <InvalidVobSubHeader>Невалиден хийдър на файла VobSub: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Отваряне на субтитри VobSub (sub/idx)...</OpenVobSubFile>
     <VobSubFiles>Файл със субтитри VobSub</VobSubFiles>
     <OpenBluRaySupFile>Отваряне на файл Blu-ray .sup...</OpenBluRaySupFile>
@@ -1401,7 +1261,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NotAValidXSubFile>Невалиден XSub файл!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Преди сливането на редове с еднакъв текст</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Субтитри с различен тайм код имат ({0}) различни редове с ({1}), продължение?</ImportTimeCodesDifferentNumberOfLinesWarning>
-    <ParsingTransportStream>Анализ на странспортния стрийм, изчакайте, моля...</ParsingTransportStream>
+    <ParsingTransportStream>Анализ на транспортния стрийм, изчакайте, моля...</ParsingTransportStream>
     <XPercentCompleted>{0}% завършени</XPercentCompleted>
     <ErrorLoadIdx>Невъзможно да се прочете/редактира .idx файла. IDX файловете са част от idx/sub свързани файлове (наречени VodSub), а Subtitle Edit може да отвори .sub файла.</ErrorLoadIdx>
     <ErrorLoadRar>Изглежда това са архивни .rar файлове. Subtitle Edit не може да отваря архивни файлове.</ErrorLoadRar>
@@ -1410,7 +1270,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ErrorLoadJpg>Изглежда това е JPG файл. Subtitle Edit не може да отваря JPG файлове.</ErrorLoadJpg>
     <ErrorLoadSrr>Изглежда това е ReScene .srr файл - несубтитърен файл.</ErrorLoadSrr>
     <ErrorLoadTorrent>Изгежда файла е BitTorrent - несубтитърен файл.</ErrorLoadTorrent>
-    <ErrorLoadBinaryZeroes>За съжаление, този файл съдържа само бинарни нули! Ако сте го редактирали със Subtitle Edit, ожете да откриете бакъп от Меню -&gt; Файл -&gt; Възтановяване на авто-бакъп...</ErrorLoadBinaryZeroes>
+    <ErrorLoadBinaryZeroes>За съжаление, този файл съдържа само бинарни нули! Ако сте го редактирали със Subtitle Edit, можете да откриете бакъп от Меню -&gt; Файл -&gt; Възстановяване на авто-бакъп...</ErrorLoadBinaryZeroes>
     <ErrorDirectoryDropNotAllowed>Влаченето на папка тук, не е позволено</ErrorDirectoryDropNotAllowed>
     <NoSupportEncryptedVobSub>Encrypted VobSub съдържание не се поддържа</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Тук не се поддържат Blu-ray sup файлове</NoSupportHereBluRaySup>
@@ -1442,7 +1302,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <MergeDoubleLines>
     <Title>Обединяване на редове с еднакъв текст</Title>
     <MaxMillisecondsBetweenLines>Макс. милисекунди между субтитърите</MaxMillisecondsBetweenLines>
-    <IncludeIncrementing>Включително и увеличениете редове</IncludeIncrementing>
+    <IncludeIncrementing>Включително и увеличението редове</IncludeIncrementing>
   </MergeDoubleLines>
   <MergedShortLines>
     <Title>Сливане на кратки редове</Title>
@@ -1485,7 +1345,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CaseSensitive>Отчитане регистъра</CaseSensitive>
     <RegularExpression>Обикновен израз</RegularExpression>
     <LinesFoundX>Намерени редове: {0}</LinesFoundX>
-    <Remove>Изтриване</Remove>
+    <Delete>Изтриване</Delete>
     <Add>Добавяне</Add>
     <Update>Обнови</Update>
     <Enabled>Избиране</Enabled>
@@ -1550,8 +1410,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XPluginsUpdated>{0} приставка/и бяха обновени</XPluginsUpdated>
   </PluginsGet>
   <RegularExpressionContextMenu>
-    <WordBoundary>Разтояние между думи</WordBoundary>
-    <NonWordBoundary>Без разтояние между думи</NonWordBoundary>
+    <WordBoundary>Разстояние между думи</WordBoundary>
+    <NonWordBoundary>Без разстояние между думи</NonWordBoundary>
     <NewLine>Нов ред (\r\n)</NewLine>
     <NewLineShort>Нов ред (\n)</NewLineShort>
     <AnyDigit>Всяка цифра (\d)</AnyDigit>
@@ -1694,6 +1554,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DirectShowDescription>quartz.dll в папката system32</DirectShowDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
+    <MPlayer>MPlayer2/Mplayer</MPlayer>
+    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll от VLC media player 1.1.0 или по-нова</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC път (трябва само ако се ползва портабъл версията на VLC)</VlcBrowseToLabel>
@@ -1732,7 +1594,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ChooseColor>Избор на цвят</ChooseColor>
     <SsaOutline>Около</SsaOutline>
     <SsaShadow>Сянка</SsaShadow>
-    <SsaOpaqueBox>Обратнен фон</SsaOpaqueBox>
+    <SsaOpaqueBox>Обратен фон</SsaOpaqueBox>
     <Testing123>Тестване 123...</Testing123>
     <Language>Език</Language>
     <NamesIgnoreLists>Имена/списък с игнорирани</NamesIgnoreLists>
@@ -1768,7 +1630,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MusicSymbolsToReplace>Музикални символи, които да се заменят (разделени с интервал)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Поправяне на някои OCR грешки</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Поправка на краткотрайно време за показ - разрешение за промяна на началното време</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
-    <FixCommonErrorsSkipStepOne>Пропускане на първа стъпка (избор на правиа за поравка)</FixCommonErrorsSkipStepOne>
+    <FixCommonErrorsSkipStepOne>Пропускане на първа стъпка (избор на правила за поправка)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Клавишни комбинации</Shortcuts>
     <Shortcut>Клавиш</Shortcut>
     <Control>Ctrl</Control>
@@ -1777,6 +1639,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Key>Клавиш</Key>
     <TextBox>Текстово поле</TextBox>
     <UpdateShortcut>Обнови</UpdateShortcut>
+    <ShortcutIsNotValid>Невалиден пряк път</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Превключване положението на видео регулаторите</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Задайте край, добавете нов и идете на него</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Задай крайно време в позицията на курсора и премини към следващите субтитри</AdjustViaEndAutoStartAndGoToNext>
@@ -1803,7 +1666,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AutoDurationSelectedLines>Авто времетраене (избрания ред(ове))</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Смяна на посоката оДнЛ начало/край</ReverseStartAndEndingForRTL>
     <VerticalZoom>Вертикално увеличение</VerticalZoom>
-    <VerticalZoomOut>Верктикално отдалечаване</VerticalZoomOut>
+    <VerticalZoomOut>Вертикално отдалечаване</VerticalZoomOut>
     <WaveformSeekSilenceForward>Търсене на тишина напред</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Търсене тишина назад</WaveformSeekSilenceBack>
     <WaveformAddTextHere>Добавяне на текст тук (за ново избиране)</WaveformAddTextHere>
@@ -1898,7 +1761,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SkipAll>Пропусни всички</SkipAll>
     <AddToUserDictionary>Добави към речника</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Добави към имена/списък с игнорирани</AddToNamesAndIgnoreList>
-    <AddToOcrReplaceList>Add pair to OCR replace list</AddToOcrReplaceList>
+    <AddToOcrReplaceList>Добавяне на двойката в OCR списъка за заместване</AddToOcrReplaceList>
     <Abort>Прекрати</Abort>
     <Use>Използвай</Use>
     <UseAlways>Изпол. винаги</UseAlways>
@@ -2073,7 +1936,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <TransportStreamSubtitleChooser>
     <Title>Избор на транспортен стрийм - {0}</Title>
     <PidLine>Транспортен пакетен идентификатор (PID) = {0}, брой събтитъри = {1}</PidLine>
-    <SubLine>{0}: {1} -&gt; {2}, {3} избражение(я)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} изображение(я)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Неизвестен тип субтитри</Title>
