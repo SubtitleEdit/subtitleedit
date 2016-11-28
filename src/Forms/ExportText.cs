@@ -9,6 +9,22 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ExportText : Form
     {
+        public class ExportOptions
+        {
+            public bool ShowLineNumbers { get; set; }
+            public bool AddNewlineAfterLineNumber { get; set; }
+            public bool ShowTimecodes { get; set; }
+            public bool TimeCodeSrt { get; set; }
+            public bool TimeCodeHHMMSSFF { get; set; }
+            public bool AddNewlineAfterTimeCodes { get; set; }
+            public string TimeCodeSeparator { get; set; }
+            public bool RemoveStyling { get; set; }
+            public bool FormatUnbreak { get; set; }
+            public bool AddNewAfterText { get; set; }
+            public bool AddNewAfterText2 { get; set; }
+            public bool FormatMergeAll { get; set; }
+        }
+
         private Subtitle _subtitle;
         private string _fileName;
         private bool _loading;
@@ -78,67 +94,78 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAddNewlineAfterLineNumber.Enabled = checkBoxShowLineNumbers.Checked;
             checkBoxAddNewlineAfterTimeCodes.Enabled = checkBoxShowTimeCodes.Checked;
 
-            string text = GeneratePlainText(_subtitle, checkBoxShowLineNumbers.Checked, checkBoxAddNewlineAfterLineNumber.Checked, checkBoxShowTimeCodes.Checked,
-                                            radioButtonTimeCodeSrt.Checked, radioButtonTimeCodeHHMMSSFF.Checked, checkBoxAddNewlineAfterTimeCodes.Checked,
-                                            comboBoxTimeCodeSeparator.Text, checkBoxRemoveStyling.Checked, radioButtonFormatUnbreak.Checked, checkBoxAddAfterText.Checked,
-                                            checkBoxAddNewLine2.Checked, radioButtonFormatMergeAll.Checked);
+            var exportOptions = new ExportOptions
+            {
+                ShowLineNumbers = checkBoxShowLineNumbers.Checked,
+                AddNewlineAfterLineNumber = checkBoxAddNewlineAfterLineNumber.Checked,
+                ShowTimecodes = checkBoxShowTimeCodes.Checked,
+                TimeCodeSrt = radioButtonTimeCodeSrt.Checked,
+                TimeCodeHHMMSSFF = radioButtonTimeCodeHHMMSSFF.Checked,
+                AddNewlineAfterTimeCodes = checkBoxAddNewlineAfterTimeCodes.Checked,
+                TimeCodeSeparator = comboBoxTimeCodeSeparator.Text,
+                RemoveStyling = checkBoxRemoveStyling.Checked,
+                FormatUnbreak = radioButtonFormatUnbreak.Checked,
+                AddNewAfterText = checkBoxAddAfterText.Checked,
+                AddNewAfterText2 = checkBoxAddNewLine2.Checked,
+                FormatMergeAll = radioButtonFormatMergeAll.Checked
+            };
+
+            string text = GeneratePlainText(_subtitle, exportOptions);
             textBoxText.Text = text;
         }
 
-        public static string GeneratePlainText(Subtitle subtitle, bool showLineNumbers, bool addNewlineAfterLineNumber, bool showTimecodes,
-                                         bool timeCodeSrt, bool timeCodeHHMMSSFF, bool addNewlineAfterTimeCodes, string timeCodeSeparator,
-                                         bool removeStyling, bool formatUnbreak, bool addAfterText, bool checkBoxAddNewLine2, bool formatMergeAll)
+        public static string GeneratePlainText(Subtitle subtitle, ExportOptions exportOptions)
         {
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                if (showLineNumbers)
+                if (exportOptions.ShowLineNumbers)
                 {
                     sb.Append(p.Number);
-                    if (addNewlineAfterLineNumber)
+                    if (exportOptions.AddNewlineAfterLineNumber)
                         sb.AppendLine();
                     else
                         sb.Append(' ');
                 }
-                if (showTimecodes)
+                if (exportOptions.ShowTimecodes)
                 {
-                    if (timeCodeSrt)
-                        sb.Append(p.StartTime + timeCodeSeparator + p.EndTime);
-                    else if (timeCodeHHMMSSFF)
-                        sb.Append(p.StartTime.ToHHMMSSFF() + timeCodeSeparator + p.EndTime.ToHHMMSSFF());
+                    if (exportOptions.TimeCodeSrt)
+                        sb.Append(p.StartTime + exportOptions.TimeCodeSeparator + p.EndTime);
+                    else if (exportOptions.TimeCodeHHMMSSFF)
+                        sb.Append(p.StartTime.ToHHMMSSFF() + exportOptions.TimeCodeSeparator + p.EndTime.ToHHMMSSFF());
                     else
-                        sb.Append(p.StartTime.TotalMilliseconds + timeCodeSeparator + p.EndTime.TotalMilliseconds);
+                        sb.Append(p.StartTime.TotalMilliseconds + exportOptions.TimeCodeSeparator + p.EndTime.TotalMilliseconds);
 
-                    if (addNewlineAfterTimeCodes)
+                    if (exportOptions.AddNewlineAfterTimeCodes)
                         sb.AppendLine();
                     else
                         sb.Append(' ');
                 }
                 string s = p.Text;
-                if (removeStyling)
+                if (exportOptions.RemoveStyling)
                 {
                     s = HtmlUtil.RemoveHtmlTags(s, true);
                 }
-                if (formatUnbreak)
+                if (exportOptions.FormatUnbreak)
                 {
-                    sb.Append(s.Replace(Environment.NewLine, " ").Replace("  ", " "));
+                    sb.Append(Utilities.UnbreakLine(s));
                 }
                 else
                 {
                     sb.Append(s);
                 }
-                if (addAfterText)
+                if (exportOptions.AddNewAfterText)
                     sb.AppendLine();
-                if (checkBoxAddNewLine2)
+                if (exportOptions.AddNewAfterText2)
                     sb.AppendLine();
-                if (!addAfterText && !checkBoxAddNewLine2)
+                if (!exportOptions.AddNewAfterText && !exportOptions.AddNewAfterText2)
                     sb.Append(' ');
             }
             string text = sb.ToString().Trim();
-            if (formatMergeAll)
+            if (exportOptions.FormatMergeAll)
             {
                 text = text.Replace(Environment.NewLine, " ");
-                text = text.Replace("  ", " ").Replace("  ", " ");
+                text = text.FixExtraSpaces();
             }
             return text;
         }
