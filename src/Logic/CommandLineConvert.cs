@@ -983,6 +983,31 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         Console.WriteLine(" done.");
                     }
+                    else if (!targetFormatFound && targetFormat.StartsWith("CustomText:", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportCustomTemplates))
+                        {
+                            var arr = targetFormat.Split(':');
+                            if (arr.Length == 2)
+                            {
+                                foreach (string template in Configuration.Settings.Tools.ExportCustomTemplates.Split('æ'))
+                                {
+                                    if (template.StartsWith(arr[1] + "Æ", StringComparison.Ordinal))
+                                    {
+                                        targetFormatFound = true;
+                                        string title = string.Empty;
+                                        if (!string.IsNullOrEmpty(fileName))
+                                            title = Path.GetFileNameWithoutExtension(fileName);
+                                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
+                                        Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
+                                        File.WriteAllText(outputFileName, ExportCustomText.GenerateCustomText(sub, null, title, template), targetEncoding);
+                                        Console.WriteLine(" done.");
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 if (!targetFormatFound)
                 {

@@ -14,7 +14,9 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly Subtitle _subtitle;
         private readonly Subtitle _translated;
         private readonly string _title;
+        private bool _batchConvert;
         public string LogMessage { get; set; }
+        public string CurrentFormatName { get; set; }
 
         public ExportCustomText(Subtitle subtitle, Subtitle original, string title)
         {
@@ -61,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             newToolStripMenuItem.Text = l.New;
         }
 
-        public override sealed string Text
+        public sealed override string Text
         {
             get { return base.Text; }
             set { base.Text = value; }
@@ -177,6 +179,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
+            if (_batchConvert)
+            {
+                if (listViewTemplates.SelectedItems.Count == 1)
+                    CurrentFormatName = listViewTemplates.SelectedItems[0].Text;
+                DialogResult = DialogResult.OK;
+                return;
+            }
+
             saveFileDialog1.Title = Configuration.Settings.Language.ExportCustomText.SaveSubtitleAs;
             if (!string.IsNullOrEmpty(_title))
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_title) + ".txt";
@@ -209,37 +219,41 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 int idx = listViewTemplates.SelectedItems[0].Index;
-                var arr = _templates[idx].Split('Æ');
-                var sb = new StringBuilder();
-                sb.Append(ExportCustomTextFormat.GetHeaderOrFooter(title, subtitle, arr[1]));
-                string template = ExportCustomTextFormat.GetParagraphTemplate(arr[2]);
-                for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
-                {
-                    Paragraph p = _subtitle.Paragraphs[i];
-                    string start = ExportCustomTextFormat.GetTimeCode(p.StartTime, arr[3]);
-                    string end = ExportCustomTextFormat.GetTimeCode(p.EndTime, arr[3]);
-                    string text = ExportCustomTextFormat.GetText(p.Text, arr[4]);
-
-                    string translationText = string.Empty;
-                    if (translation != null && translation.Paragraphs != null && translation.Paragraphs.Count > 0)
-                    {
-                        var trans = Utilities.GetOriginalParagraph(idx, p, translation.Paragraphs);
-                        if (trans != null)
-                        {
-                            translationText = trans.Text;
-                        }
-                    }
-
-                    string paragraph = ExportCustomTextFormat.GetParagraph(template, start, end, text, translationText, i, p.Duration, arr[3]);
-                    sb.Append(paragraph);
-                }
-                sb.Append(ExportCustomTextFormat.GetHeaderOrFooter(title, subtitle, arr[5]));
-                return sb.ToString();
+                return GenerateCustomText(subtitle, translation, title, _templates[idx]);
             }
             catch (Exception exception)
             {
                 return exception.Message;
             }
+        }
+
+        internal static string GenerateCustomText(Subtitle subtitle, Subtitle translation, string title, string templateString)
+        {
+            var arr = templateString.Split('Æ');
+            var sb = new StringBuilder();
+            sb.Append(ExportCustomTextFormat.GetHeaderOrFooter(title, subtitle, arr[1]));
+            string template = ExportCustomTextFormat.GetParagraphTemplate(arr[2]);
+            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            {
+                Paragraph p = subtitle.Paragraphs[i];
+                string start = ExportCustomTextFormat.GetTimeCode(p.StartTime, arr[3]);
+                string end = ExportCustomTextFormat.GetTimeCode(p.EndTime, arr[3]);
+                string text = ExportCustomTextFormat.GetText(p.Text, arr[4]);
+
+                string translationText = string.Empty;
+                if (translation != null && translation.Paragraphs != null && translation.Paragraphs.Count > 0)
+                {
+                    var trans = Utilities.GetOriginalParagraph(i, p, translation.Paragraphs);
+                    if (trans != null)
+                    {
+                        translationText = trans.Text;
+                    }
+                }
+                string paragraph = ExportCustomTextFormat.GetParagraph(template, start, end, text, translationText, i, p.Duration, arr[3]);
+                sb.Append(paragraph);
+            }
+            sb.Append(ExportCustomTextFormat.GetHeaderOrFooter(title, subtitle, arr[5]));
+            return sb.ToString();
         }
 
         private void listViewTemplates_SelectedIndexChanged(object sender, EventArgs e)
@@ -313,6 +327,21 @@ namespace Nikse.SubtitleEdit.Forms
         private void listViewTemplates_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             Edit();
+        }
+
+        public void InitializeForBatchConvert(string customTextTemplate)
+        {
+            _batchConvert = true;
+            buttonSave.Text = Configuration.Settings.Language.General.Ok;
+
+            for (int index = 0; index < _templates.Count; index++)
+            {
+                var item = _templates[index];
+                if (item.StartsWith(customTextTemplate + "Æ", StringComparison.Ordinal))
+                {
+                    listViewTemplates.Items[index].Selected = true;
+                }
+            }
         }
 
     }
