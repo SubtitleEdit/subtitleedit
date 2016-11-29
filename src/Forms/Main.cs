@@ -12062,7 +12062,7 @@ namespace Nikse.SubtitleEdit.Forms
                 GoToNextSynaxError();
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+vPaste from clipboard
+            else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+V = Paste from clipboard
             {
                 if (Clipboard.ContainsText())
                 {
@@ -12077,8 +12077,12 @@ namespace Nikse.SubtitleEdit.Forms
                         _makeHistoryPaused = true;
                         Paragraph lastParagraph = null;
                         Paragraph lastTempParagraph = null;
+                        var selectedIndices = new List<int>();
+                        int firstIndex = FirstSelectedIndex;
                         foreach (var p in tmp.Paragraphs)
                         {
+                            firstIndex++;
+                            selectedIndices.Add(firstIndex);
                             InsertAfter();
                             textBoxListViewText.Text = p.Text;
                             if (lastParagraph != null)
@@ -12089,6 +12093,11 @@ namespace Nikse.SubtitleEdit.Forms
                             SetDurationInSeconds(p.Duration.TotalSeconds);
                             lastParagraph = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
                             lastTempParagraph = p;
+                        }
+                        SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndices[0], true);
+                        foreach (var idx in selectedIndices)
+                        {
+                            SubtitleListview1.Items[idx].Selected = true;
                         }
                         RestartHistory();
                     }
@@ -12112,14 +12121,19 @@ namespace Nikse.SubtitleEdit.Forms
                             _makeHistoryPaused = true;
 
                             DeleteSelectedLines();
+                            var selectedIndices = new List<int>();
                             foreach (var p in tmp.Paragraphs)
                             {
                                 _subtitle.Paragraphs.Insert(firstIndex, p);
+                                selectedIndices.Add(firstIndex);
                                 firstIndex++;
                             }
                             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                            SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-
+                            SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndices[0], true);
+                            foreach (var idx in selectedIndices)
+                            {
+                                SubtitleListview1.Items[idx].Selected = true;
+                            }
                             RestartHistory();
                         }
                     }
