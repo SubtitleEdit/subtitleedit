@@ -11,6 +11,7 @@
    * Updated French Translation - thx JM GBT
    * Updated Bulgarian Translation - thx Maknol
    * Language auto-detect now includes Latvian and Lithuanian - thx rhazor
+   * Added "Custom text format" in "Batch convert" - thx Chamallow
 * FIXED:
    * Fixed possible crash when generating scene changes - thx Leemet
    * Fixed issues with moving rules in "Multiple replace" - thx kristiaanvk
