@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     sb.Append("[\"");
                     sb.Append(times[j]);
                     sb.Append("\",\"");
-                    sb.Append(Json.EncodeJsonText(words[j]));
+                    Json.EncodeJsonText(words[j], sb);
                     sb.Append("\"]");
                     sb.Append(',');
                 }

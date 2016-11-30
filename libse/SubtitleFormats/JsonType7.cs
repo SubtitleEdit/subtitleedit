@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 sb.Append('"');
-                sb.Append(Json.EncodeJsonText(Utilities.UnbreakLine(p.Text)));
+                Json.EncodeJsonText(Utilities.UnbreakLine(p.Text), sb);
                 sb.Append('"');
                 if (i < subtitle.Paragraphs.Count - 1)
                     sb.Append(',');

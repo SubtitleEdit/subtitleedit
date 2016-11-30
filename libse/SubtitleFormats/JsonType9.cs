@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     foreach (var line in p.Text.SplitToLines())
                     {
                         sb.Append("\"");
-                        sb.Append(Json.EncodeJsonText(line));
+                        Json.EncodeJsonText(line, sb);
                         sb.Append("\"");
                     }
                 }

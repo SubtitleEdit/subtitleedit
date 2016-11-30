@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.Append(",\"et\":");
                 sb.Append(p.EndTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"tt\":\"");
-                sb.Append(Json.EncodeJsonText(p.Text));
+                Json.EncodeJsonText(p.Text, sb);
                 sb.Append("\"}");
                 count++;
             }

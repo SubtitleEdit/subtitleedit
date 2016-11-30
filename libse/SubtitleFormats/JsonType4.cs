@@ -46,7 +46,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.Append(",\"guid\":\"" + guid + "\",\"segmentTypeId\":\"" + segmentTypeId + "\",\"endTime\":");
                 sb.Append(p.EndTime.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"id\":\"" + id + "\",\"metadata\":{\"Text\":\"");
-                sb.Append(Json.EncodeJsonText(p.Text) + "\"");
+                Json.EncodeJsonText(p.Text, sb);
+                sb.Append('"');
 
                 sb.Append(",\"ID\":\"\",\"Language\":\"en\"}}");
                 count++;
