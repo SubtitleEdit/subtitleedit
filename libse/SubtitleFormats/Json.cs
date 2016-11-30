@@ -28,25 +28,24 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public static string EncodeJsonText(string text)
+        public static void EncodeJsonText(string text, StringBuilder sbJson)
         {
-            var sb = new StringBuilder();
             foreach (var c in text)
             {
-                if (c == '"')
+                switch (c)
                 {
-                    sb.Append("\\\"");
-                }
-                else if (c == '\\')
-                {
-                    sb.Append("\\\\");
-                }
-                else
-                {
-                    sb.Append(c);
+                    case '\\':
+                        sbJson.Append("\\\\");
+                        break;
+                    case '"':
+                        sbJson.Append("\\\"");
+                        break;
+                    default:
+                        sbJson.Append(c);
+                        break;
                 }
             }
-            return sb.ToString().Replace(Environment.NewLine, "<br />");
+            sbJson.Replace(Environment.NewLine, "<br />");
         }
 
         public static string DecodeJsonText(string text)
@@ -85,7 +84,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.Append(",\"end\":");
                 sb.Append(p.EndTime.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"text\":\"");
-                sb.Append(EncodeJsonText(p.Text));
+                EncodeJsonText(p.Text, sb);
                 sb.Append("\"}");
                 count++;
             }

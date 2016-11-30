@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 for (int j = 0; j < lines.Length; j++)
                 {
                     sb.Append('"');
-                    sb.Append(Json.EncodeJsonText(lines[j]));
+                    Json.EncodeJsonText(lines[j], sb);
                     sb.Append('"');
                     if (j < lines.Length - 1)
                         sb.Append(',');

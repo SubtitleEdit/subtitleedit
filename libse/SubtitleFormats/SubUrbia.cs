@@ -51,13 +51,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 sb.Append(p.EndTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
                 sb.Append(",\"text\":\"");
-                sb.Append(Json.EncodeJsonText(p.Text));
+                Json.EncodeJsonText(p.Text, sb);
                 sb.Append("\"}");
 
                 if (!string.IsNullOrWhiteSpace(p.Extra))
                 {
                     sb.Append(",\"comment\":\"");
-                    sb.Append(Json.EncodeJsonText(p.Extra));
+                    Json.EncodeJsonText(p.Extra, sb);
                     sb.Append("\"}");
                 }
 
