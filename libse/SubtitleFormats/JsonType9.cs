@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 {
+    /// <summary>
+    /// CBTNuggets, e.g. https://portal.cbtnuggets.com/mediav2/caption/54f4cf34fcb8f7d56e0001bf_10x.json
+    /// </summary>
     public class JsonType9 : SubtitleFormat
     {
         public override string Extension
@@ -68,10 +71,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             foreach (string s in lines)
                 sb.Append(s);
             var allText = sb.ToString().Trim();
-            if (!allText.StartsWith("[", StringComparison.Ordinal) || !allText.Contains("\"index\""))
+            if (!allText.StartsWith("[", StringComparison.Ordinal) || !allText.Contains("\"start\""))
                 return;
 
-            foreach (var line in Json.ReadObjectArray(allText)) //allText.Split('{', '}', '[', ']'))
+            foreach (var line in Json.ReadObjectArray(allText))
             {
                 var s = line.Trim();
                 if (s.Length > 10)
@@ -81,6 +84,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     var textLines = Json.ReadArray(s, "text");
                     try
                     {
+                        if (textLines.Count == 0)
+                        {
+                            _errorCount++;
+                        }
                         sb.Clear();
                         foreach (var textLine in textLines)
                         {
