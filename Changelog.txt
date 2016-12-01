@@ -3,6 +3,7 @@
 3.5.1 (xth December 2016) BETA
 * NEW:
    * "mpv" media player now works on Linux  - thx var1ap 
+   * Added new subtitle format - thx Siavash
 * IMPROVED:
    * Updated Hungarian translation - thx ZityiSoft Team
    * Updated Russian translation - thx Elheym
