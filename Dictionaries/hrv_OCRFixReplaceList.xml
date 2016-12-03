@@ -1386,7 +1386,7 @@
     <RegEx find="ustić([eu])" replaceWith="ustit ć$1" />
     <RegEx find="put[ae]?r" replaceWith="maslac" />
     <RegEx find="Put[ae]?r" replaceWith="Maslac" />
-    <RegEx find="([rR])a([dn])ić([eu])" replaceWith="$1a$2it ć$3" />
+    <RegEx find="(?&lt;!g)([rR])a([dn])ić([eu])" replaceWith="$1a$2it ć$3" />
     <RegEx find="atosilja" replaceWith="iješi" />
     <RegEx find="azme([nr])" replaceWith="azmje$1" />
     <RegEx find="azumi?j?eć" replaceWith="azumjet ć" />
@@ -1810,7 +1810,6 @@
     <RegEx find="(?&lt;!k)rimić" replaceWith="rimit ć" />
     <RegEx find="prostav" replaceWith="protstav" />
     <RegEx find="pulis" replaceWith="pulir" />
-    <RegEx find="(?&lt;!g)radić" replaceWith="radit ć" />
     <RegEx find="r([mv])isan" replaceWith="r$1iran" />
     <RegEx find="rviši" replaceWith="rviraj" />
     <RegEx find="ržać" replaceWith="ržat ć" />
