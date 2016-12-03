@@ -14,6 +14,7 @@
    * Language auto-detect now includes Latvian and Lithuanian - thx rhazor
    * Added "Custom text format" in "Batch convert" - thx Chamallow
 * FIXED:
+   * Fixed libre office spell checking urls - thx Massaguana
    * Fixed possible crash when generating scene changes - thx Leemet
    * Fixed issues with moving rules in "Multiple replace" - thx kristiaanvk
    * Fixed list view issues regarding remember selected position - thx darnn
