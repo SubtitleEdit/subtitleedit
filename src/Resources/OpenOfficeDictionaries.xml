@@ -8,7 +8,7 @@
   <Dictionary>
     <EnglishName>Arabic</EnglishName>
     <NativeName>عربي</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/arabic-spell-checker/releases/3.2/dict_ar-3.2.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/arabic-spell-checker/3.2/@@download/file/dict_ar-3.2.oxt</DownloadLink>
     <Description>Arabic spell checker 3.2</Description>
   </Dictionary>
   <Dictionary>
@@ -26,7 +26,7 @@
   <Dictionary>
     <EnglishName>Breton</EnglishName>
     <NativeName>Brezhoneg</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/an-drouizig-breton-spellchecker/releases/0.11/dict-br-0.11.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/an-drouizig-breton-spellchecker/0.8/@@download/file/dict-br_0.8.oxt</DownloadLink>
     <Description>An Drouizig Breton Spell Checker</Description>
   </Dictionary>
   <Dictionary>
@@ -62,7 +62,7 @@
   <Dictionary>
     <EnglishName>Danish</EnglishName>
     <NativeName>Dansk</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/stavekontrolden-danish-dictionary/pscreleasefolder.2011-09-30.0280139318/2.2/dict-da-2-2.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/stavekontrolden-danish-dictionary/2.3/@@download/file/dict-da-2-3.oxt</DownloadLink>
     <Description>Stavekontrolden version 2.2 - 2014-12-22</Description>
   </Dictionary>
   <Dictionary>
@@ -92,25 +92,25 @@
   <Dictionary>
     <EnglishName>French</EnglishName>
     <NativeName>Français</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/dictionnaires-francais/releases/5.3/lo-oo-ressources-linguistiques-fr-v5-3.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/dictionnaires-francais/5.3/@@download/file/lo-oo-ressources-linguistiques-fr-v5-3.oxt</DownloadLink>
     <Description>Dictionnaires francais 5.3 (28/02/2015)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>German (Austria)</EnglishName>
     <NativeName>Deutsch (Österreich)</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/german-de-at-frami-dictionaries/pscreleasefolder.2011-11-05.7614737245/2013.12.06/dict-de_at-frami_2013-12-06.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/german-de-at-frami-dictionaries/2015.12.28/@@download/file/dict-de_at-frami_2015-12-28.oxt</DownloadLink>
     <Description>German (de-AT frami) dictionaries 2013.12.06 (08/12/2013)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>German (Germany)</EnglishName>
     <NativeName>German (de-DE frami) dictionaries - [de] Deutsche (de-DE frami) Rechtschreibung</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/german-de-de-frami-dictionaries/releases/2015.12.28/dict-de_de-frami_2015-12-28.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/german-de-de-frami-dictionaries/2015.12.28/@@download/file/dict-de_de-frami_2015-12-28.oxt</DownloadLink>
     <Description>German (de-DE igerman98) dictionaries</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>German (Switzerland)</EnglishName>
     <NativeName>German (de-CH frami) dictionaries 2012.06.17</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/german-de-ch-frami-dictionaries/pscreleasefolder.2011-11-05.5296069116/2012.06.17/dict-de_ch-frami_2012-06-17.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/german-de-ch-frami-dictionaries/2015.12.28/@@download/file/dict-de_ch-frami_2015-12-28.oxt</DownloadLink>
     <Description>German (de-CH frami) dictionaries</Description>
   </Dictionary>
   <Dictionary>
@@ -122,7 +122,7 @@
   <Dictionary>
     <EnglishName>Hebrew</EnglishName>
     <NativeName>Hebrew (he) spell check dictionary 2012-08-15</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/hebrew-he-spell-check-dictionary/releases/2012-08-15/dict-he-2012-08-15.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/hebrew-he-spell-check-dictionary/2012-08-15/@@download/file/dict-he-2012-08-15.oxt</DownloadLink>
     <Description>Hebrew (he) spell check dictionary (Aug 15, 2012)</Description>
   </Dictionary>
   <Dictionary>
@@ -140,25 +140,25 @@
   <Dictionary>
     <EnglishName>Icelandic</EnglishName>
     <NativeName>íslenska</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/hunspell-is-the-icelandic-spelling-dictionary-project/releases/2013.05.11/hunspell-is-2013-05-11.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/hunspell-is-the-icelandic-spelling-dictionary-project/2013.05.11/@@download/file/hunspell-is-2013-05-11.oxt</DownloadLink>
     <Description>Icelandic spelling dictionary &amp; thesaurus 2013.05.11</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Indonesian</EnglishName>
     <NativeName>Indonesia</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/indonesian-dictionary-kamus-indonesia-by-benitius/releases/1.0/id.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/indonesian-dictionary-kamus-indonesia-by-benitius/2.0/@@download/file/id_id.oxt</DownloadLink>
     <Description>Indonesian dictionary - Kamus Indonesia 1.0</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Irish</EnglishName>
     <NativeName>Gaeilge</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/irish-language-spell-checker-thesaurus-and-hyphenation-patterns/pscreleasefolder.2012-11-26.4040334441/4.5/focloiri-gaeilge-4.5.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/irish-language-spell-checker-thesaurus-and-hyphenation-patterns/4.8/@@download/file/focloiri-gaeilge-4-8.oxt</DownloadLink>
     <Description>Irish language spell checker, thesaurus, and hyphenation patterns 4.5</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Italian</EnglishName>
     <NativeName>Italiano</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/italian-and-latin-spelling-dictionaries/pscreleasefolder.2011-11-05.8867113212/2013.03.31/dict-it-it_and_latin_2013-03-31.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/italian-dictionary-thesaurus-hyphenation-patterns/4.2/@@download/file/dict-it.oxt</DownloadLink>
     <Description>Italian and Latin spelling dictionaries 2013.03.31</Description>
   </Dictionary>
   <Dictionary>
@@ -176,7 +176,7 @@
   <Dictionary>
     <EnglishName>Korean</EnglishName>
     <NativeName>한글</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/korean-spellchecker/releases/0.5.6/korean_spell-checker-0-5-6_ooo.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/korean-spellchecker/0.5.6.1/@@download/file/korean_spell-checker-0-5-6-1_libo.oxt</DownloadLink>
     <Description>Korean spellchecker 0.5.6</Description>
   </Dictionary>
   <Dictionary>
@@ -188,25 +188,25 @@
   <Dictionary>
     <EnglishName>Latin</EnglishName>
     <NativeName>Latina</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/latin-spelling-and-hyphenation-dictionaries/pscreleasefolder.2011-11-05.0070960452/2013.03.31/dict-la_2013-03-31.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/latin-spelling-and-hyphenation-dictionaries/2013.03.31/@@download/file/dict-la_2013-03-31.oxt</DownloadLink>
     <Description>Latin spelling and hyphenation dictionaries 2013.03.31</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Latvian</EnglishName>
     <NativeName>Latviešu</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/latviesu-valodas-pareizrakstibas-parbaudes-modulis/releases/0.9.6/lv_lv-0-9-6.oxt</DownloadLink>
+    <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/hyph_lv_LV.zip</DownloadLink>
     <Description>Latviešu valodas pareizrakstības pārbaudes modulis 0.9.6</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Lithuanian</EnglishName>
     <NativeName>Lietuvių</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/lithuanian-spellcheck-and-hyphenation-dictionaries/releases/1.3/openoffice-spellcheck-lt-1.3.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/lithuanian-spellcheck-and-hyphenation-dictionaries/1.3/@@download/file/openoffice-spellcheck-lt-1.3.oxt</DownloadLink>
     <Description>Lithuanian spellcheck and hyphenation dictionaries 1.3</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Lower Sorbian</EnglishName>
     <NativeName>dolnoserbšćina</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/lower-sorbian-dictionary/releases/1.4.6/lower_sorbian_spelling_dictionary-1.4.6.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/lower-sorbian-dictionary/1.5/@@download/file/lower_sorbian_spelling_dictionary-1-5-0.oxt</DownloadLink>
     <Description>Lower Sorbian dictionary 1.4.6</Description>
   </Dictionary>
   <Dictionary>
@@ -230,7 +230,7 @@
   <Dictionary>
     <EnglishName>Norwegian</EnglishName>
     <NativeName>Norsk</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/norsk-stavekontroll-bokmal-og-nynorsk/pscreleasefolder.2012-01-18.6118770436/2.0.10/dictionary-no-no-1.0.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/norsk-stavekontroll-bokmal-og-nynorsk/2.0.10/@@download/file/dictionary-no-no-1.0.oxt</DownloadLink>
     <Description>Norsk stavekontroll (bokmål og nynorsk) 2.0.10</Description>
   </Dictionary>
   <Dictionary>
@@ -242,7 +242,7 @@
   <Dictionary>
     <EnglishName>Portuguese (Brazilian)</EnglishName>
     <NativeName>Português (do Brasil)</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/vero-verificador-ortografico-e-hifenizador-em-portugues-do-brasil/pscreleasefolder.2012-01-04.1563120832/2.1.2/vero_pt_br_v212aoc.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/vero-verificador-ortografico-e-hifenizador-em-portugues-do-brasil/2.1.2/@@download/file/vero_pt_br_v212aoc.oxt</DownloadLink>
     <Description>Brazilian Portuguese Spelling Dictionary - 1990 Spelling Agreement - V2.1.2</Description>
   </Dictionary>
   <Dictionary>
@@ -266,13 +266,13 @@
   <Dictionary>
     <EnglishName>Russian</EnglishName>
     <NativeName>Русский</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/russian-spellcheck-dictionary.-based-on-works-of-aot-group/pscreleasefolder.2011-09-06.6209385965/0.2.9/dict_ru_ru-aot-0-2-9.oxt</DownloadLink>
-    <Description>Russian spellcheck dictionary. Based on works of AOT group. 0.2.9</Description>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/russian-spellcheck-dictionary.-based-on-works-of-aot-group/0.4.0/@@download/file/dict_ru_ru-aot-0-4-0.oxt</DownloadLink>
+    <Description>Russian spellcheck dictionary. Based on works of AOT group. 0.4.0</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Serbian</EnglishName>
     <NativeName>српски</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/serbian-cyrillic-and-latin-spelling-and-hyphenation/releases/2013.07.15/dict-sr.oxt</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/serbian-cyrillic-and-latin-spelling-and-hyphenation/2013.07.15/@@download/file/dict-sr.oxt</DownloadLink>
     <Description>Serbian (Cyrillic and Latin) Spelling and Hyphenation 2013.07.15</Description>
   </Dictionary>
   <Dictionary>
@@ -290,37 +290,25 @@
   <Dictionary>
     <EnglishName>Spanish</EnglishName>
     <NativeName>España</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.8/es_es.oxt</DownloadLink>
-    <Description>Spanish dictionary v0.8 (17/04/2015)</Description>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/diccionario-espanol/1.0/@@download/file/spanish-dictionary.oxt</DownloadLink>
+    <Description>Diccionario del idioma español - 1.0 (Dec 28, 2011)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish</EnglishName>
     <NativeName>Español Genérico</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.8/es_any.oxt</DownloadLink>
-    <Description>Genérico (América latina y España) v0.8 (17/04/2015)</Description>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/spanish-dictionaries/2.1/@@download/file/es_any.oxt</DownloadLink>
+    <Description>Genérico v2.1 (Apr 05, 2016)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Spanish (Argentina)</EnglishName>
     <NativeName>Español (Argentina)</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.8/es_ar.oxt</DownloadLink>
-    <Description>Diccionario Español - Argentina (Sinónimos y Separación Silábica) v0.8 (17/04/2015)</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Spanish (Mexico)</EnglishName>
-    <NativeName>Español (México)</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.8/es_mx.oxt</DownloadLink>
-    <Description>Diccionario de corrección ortográfica en español (México) v0.8 (17/04/2015)</Description>
-  </Dictionary>
-  <Dictionary>
-    <EnglishName>Spanish (Venezuela)</EnglishName>
-    <NativeName>Español (Venezuela)</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/spanish-dictionaries/pscreleasefolder.2012-04-18.1033472248/0.8/es_ve.oxt</DownloadLink>
-    <Description>Diccionarios en Español para Venezuela v0.8 (17/04/2015)</Description>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/spanish-dictionaries/2.1/@@download/file1/es_ar.oxt</DownloadLink>
+    <Description>Diccionario Español - Argentina (Sinónimos y Separación Silábica) v2.1 (Apr 05, 2016)</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Swahili</EnglishName>
     <NativeName>Kiswahili</NativeName>
-    <DownloadLink>http://extensions.libreoffice.org/extension-center/swahili-dictionary/releases/2013.03.12/swahilidictionary-2013-03.12</DownloadLink>
+    <DownloadLink>https://extensions.libreoffice.org/extensions/swahili-dictionary/2013.03.12/@@download/file/swahilidictionary-2013-03.12</DownloadLink>
     <Description>Swahili Dictionary 2013.03.12</Description>
   </Dictionary>
   <Dictionary>
