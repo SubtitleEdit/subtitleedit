@@ -180,12 +180,6 @@
     <Description>Korean spellchecker 0.5.6</Description>
   </Dictionary>
   <Dictionary>
-    <EnglishName>Korean</EnglishName>
-    <NativeName>한글</NativeName>
-    <DownloadLink>https://spellcheck-ko.googlecode.com/files/ko-aff-dic-0.5.6.zip</DownloadLink>
-    <Description>Korean spellchecker</Description>
-  </Dictionary>
-  <Dictionary>
     <EnglishName>Latin</EnglishName>
     <NativeName>Latina</NativeName>
     <DownloadLink>https://extensions.libreoffice.org/extensions/latin-spelling-and-hyphenation-dictionaries/2013.03.31/@@download/file/dict-la_2013-03-31.oxt</DownloadLink>
