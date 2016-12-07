@@ -1074,11 +1074,11 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.AutoBackupSeconds = 0;
 
             if (comboBoxAutoBackupDeleteAfter.SelectedIndex == 2)
-                gs.AutoBackupDeleteAfterMonths = 3;
-            else if (comboBoxAutoBackupDeleteAfter.SelectedIndex == 1)
-                gs.AutoBackupDeleteAfterMonths = 1;
-            else
                 gs.AutoBackupDeleteAfterMonths = 6;
+            else if (comboBoxAutoBackupDeleteAfter.SelectedIndex == 1)
+                gs.AutoBackupDeleteAfterMonths = 3;
+            else
+                gs.AutoBackupDeleteAfterMonths = 1;
 
             gs.CheckForUpdates = checkBoxCheckForUpdates.Checked;
 
