@@ -29,6 +29,7 @@
    * OCR fix rules: fix for weird Unicode comma (#x201A) - thx djc
    * Fixed some issues with "Save original as..." - thx Stefan
    * Fix for "DVD Studio Pro" italic handling - thx Sean
+   * Fixed saving correct value in "Delete auto-backup after months" - thx  Elheym
 
 
 3.5 (26th October 2016)
