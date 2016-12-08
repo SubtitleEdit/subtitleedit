@@ -20190,7 +20190,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemExportEdlClick(object sender, EventArgs e)
+        private void ExportToEdlWithClipName(object sender, EventArgs e)
+        {
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "EDL_CLIPNAME", _fileName, _videoInfo, _videoFileName);
+                exportBdnXmlPng.ShowDialog(this);
+            }
+        }
+
+        private void ExportToEdl(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
