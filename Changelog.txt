@@ -4,6 +4,7 @@
 * NEW:
    * "mpv" media player now works on Linux  - thx var1ap 
    * Added new subtitle format - thx Siavash
+   * Added new export format "EDL/ClipName" - thx alex
 * IMPROVED:
    * Updated Hungarian translation - thx ZityiSoft Team
    * Updated Russian translation - thx Elheym

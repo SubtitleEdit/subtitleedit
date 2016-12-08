@@ -125,7 +125,7 @@
             this.toolStripMenuItemDost = new System.Windows.Forms.ToolStripMenuItem();
             this.DvdStudioProStl = new System.Windows.Forms.ToolStripMenuItem();
             this.eBUSTLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemEdlClipName = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportFcpIImage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImagePerFrame = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemTextTimeCodePair = new System.Windows.Forms.ToolStripMenuItem();
@@ -469,6 +469,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItemEdl = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1203,7 +1204,8 @@
             this.toolStripMenuItemDost,
             this.DvdStudioProStl,
             this.eBUSTLToolStripMenuItem,
-            this.toolStripMenuItem3,
+            this.toolStripMenuItemEdl,
+            this.toolStripMenuItemEdlClipName,
             this.toolStripMenuItemExportFcpIImage,
             this.toolStripMenuItemImagePerFrame,
             this.toolStripMenuItemTextTimeCodePair,
@@ -1317,12 +1319,12 @@
             this.eBUSTLToolStripMenuItem.Text = "EBU STL...";
             this.eBUSTLToolStripMenuItem.Click += new System.EventHandler(this.EBustlToolStripMenuItemClick);
             // 
-            // toolStripMenuItem3
+            // toolStripMenuItemEdlClipName
             // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(258, 22);
-            this.toolStripMenuItem3.Text = "EDL...";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItemExportEdlClick);
+            this.toolStripMenuItemEdlClipName.Name = "toolStripMenuItemEdlClipName";
+            this.toolStripMenuItemEdlClipName.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemEdlClipName.Text = "EDL/CLIPNAME...";
+            this.toolStripMenuItemEdlClipName.Click += new System.EventHandler(this.ExportToEdlWithClipName);
             // 
             // toolStripMenuItemExportFcpIImage
             // 
@@ -4554,6 +4556,13 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
+            // toolStripMenuItemEdl
+            // 
+            this.toolStripMenuItemEdl.Name = "toolStripMenuItemEdl";
+            this.toolStripMenuItemEdl.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemEdl.Text = "EDL...";
+            this.toolStripMenuItemEdl.Click += new System.EventHandler(this.ExportToEdl);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5057,7 +5066,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItemSplitterCheckForUpdates;
         private System.Windows.Forms.ToolStripMenuItem setVideoOffsetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEbuProperties;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEdlClipName;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAddWaveformBatch;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportBdTextSt;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelProgress;
@@ -5066,5 +5075,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonFixCommonErrors;
         private System.Windows.Forms.ToolStripMenuItem removeSceneChangeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addSceneChangeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEdl;
     }
 }
