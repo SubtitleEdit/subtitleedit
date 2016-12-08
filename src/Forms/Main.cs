@@ -99,6 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _textAutoSaveOriginal;
         private StringBuilder _statusLog = new StringBuilder();
         private bool _makeHistoryPaused;
+        private bool _saveAsCalled;
 
         private CheckForUpdatesHelper _checkForUpdatesHelper;
         private Timer _timerCheckForUpdates;
@@ -3238,6 +3239,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ReloadFromSourceView();
+            _saveAsCalled = false;
             SaveSubtitle(GetCurrentSubtitleFormat());
         }
 
@@ -3315,7 +3317,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 _fileName = _fileName.Substring(0, _fileName.Length - 1);
                             _fileName += format.Extension;
                         }
-
+                        _saveAsCalled = true;
                         if (SaveSubtitle(format) == DialogResult.OK)
                         {
                             Configuration.Settings.General.LastSaveAsFormat = format.Name;
@@ -3342,7 +3344,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var ebu = format as Ebu;
                     if (ebu != null)
                     {
-                        if (ebu.Save(_fileName, sub))
+                        if (ebu.Save(_fileName, sub, !_saveAsCalled))
                         {
                             Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
                             Configuration.Settings.Save();
@@ -4095,6 +4097,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             ReloadFromSourceView();
             bool oldChange = _changeSubtitleToString != _subtitle.GetFastHashCode();
+            _saveAsCalled = false;
             SaveSubtitle(GetCurrentSubtitleFormat());
 
             if (_subtitleAlternate != null && _changeAlternateSubtitleToString != _subtitleAlternate.ToText(new SubRip()).Trim() && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate.Paragraphs.Count > 0)
