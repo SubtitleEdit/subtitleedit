@@ -1545,7 +1545,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         sb.AppendLine(line);
                         if (_exportType == "EDL_CLIPNAME")
                         {
-                            sb.AppendLine("*FROM CLIP NAME: " + fileName1 + ".PNG");
+                            sb.AppendLine("* FROM CLIP NAME: " + fileName1 + ".PNG");
                         }
                         sb.AppendLine();
 
