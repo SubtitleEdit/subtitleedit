@@ -3344,8 +3344,14 @@ namespace Nikse.SubtitleEdit.Forms
                     var ebu = format as Ebu;
                     if (ebu != null)
                     {
-                        if (ebu.Save(_fileName, sub, !_saveAsCalled))
+                        var header = new Ebu.EbuGeneralSubtitleInformation();
+                        if (_subtitle != null && _subtitle.Header != null && (_subtitle.Header.Contains("STL2") || _subtitle.Header.Contains("STL3")))
                         {
+                            header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(_subtitle.Header));
+                        }
+                        if (ebu.Save(_fileName, sub, !_saveAsCalled, header))
+                        {
+                            _changeSubtitleToString = _subtitle.GetFastHashCode();
                             Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
                             Configuration.Settings.Save();
                         }
