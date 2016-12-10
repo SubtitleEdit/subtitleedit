@@ -530,11 +530,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return Save(fileName, subtitle, false);
         }
 
-        public bool Save(string fileName, Subtitle subtitle, bool batchMode)
+        public bool Save(string fileName, Subtitle subtitle, bool batchMode, EbuGeneralSubtitleInformation header = null)
         {
             using (var ms = new MemoryStream())
             {
-                var ok = Save(fileName, ms, subtitle, batchMode);
+                var ok = Save(fileName, ms, subtitle, batchMode, header);
                 if (ok)
                 {
                     ms.Position = 0;
@@ -547,9 +547,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             }
         }
 
-        public bool Save(string fileName, Stream stream, Subtitle subtitle, bool batchMode)
+        public bool Save(string fileName, Stream stream, Subtitle subtitle, bool batchMode, EbuGeneralSubtitleInformation header)
         {
-            var header = new EbuGeneralSubtitleInformation();
+            if (header == null)
+                header = new EbuGeneralSubtitleInformation();
+
             if (EbuUiHelper == null)
                 return false;
 
@@ -1256,6 +1258,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 return false;
             }
+        }
+
+        public bool Save(string fileName, Stream stream, Subtitle subtitle, bool batchMode)
+        {
+            return Save(fileName, stream, subtitle, batchMode, null);
         }
 
     }
