@@ -606,8 +606,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SelectNone()
         {
-            foreach (ListViewItem item in SelectedItems)
-                item.Selected = false;
+            for (int i=0; i<Items.Count; i++)
+                Items[i].Selected = false;
         }
 
         public void SelectIndexAndEnsureVisible(int index, bool focus)
