@@ -975,37 +975,36 @@ namespace Nikse.SubtitleEdit.Forms
                                 SetDurationInSeconds((double)durationInSeconds);
                             }
                         }
-
                     }
 
                     else if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.End)
-                {
-                    var next = _subtitle.GetParagraphOrDefault(index + 1);
-                    if (next != null)
                     {
-                        Paragraph originalNext = null;
-                        if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
-                            originalNext = Utilities.GetOriginalParagraph(index + 1, next, _subtitleAlternate.Paragraphs);
-
-                        next.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + (e.Paragraph.EndTime.TotalMilliseconds - beforeParagraph.EndTime.TotalMilliseconds);
-                        SubtitleListview1.SetStartTimeAndDuration(index + 1, next);
-                        audioVisualizer.Invalidate();
-
-                        if (originalNext != null)
+                        var next = _subtitle.GetParagraphOrDefault(index + 1);
+                        if (next != null)
                         {
-                            originalNext.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds;
-                        }
+                            Paragraph originalNext = null;
+                            if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
+                                originalNext = Utilities.GetOriginalParagraph(index + 1, next, _subtitleAlternate.Paragraphs);
 
-                        if (curIdx == index + 1)
-                        {
-                            timeUpDownStartTime.TimeCode = next.StartTime;
-                            var durationInSeconds = (decimal)(next.Duration.TotalSeconds);
-                            if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
+                            next.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + (e.Paragraph.EndTime.TotalMilliseconds - beforeParagraph.EndTime.TotalMilliseconds);
+                            SubtitleListview1.SetStartTimeAndDuration(index + 1, next);
+                            audioVisualizer.Invalidate();
+
+                            if (originalNext != null)
                             {
-                                SetDurationInSeconds((double)durationInSeconds);
+                                originalNext.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds;
+                            }
+
+                            if (curIdx == index + 1)
+                            {
+                                timeUpDownStartTime.TimeCode = next.StartTime;
+                                var durationInSeconds = (decimal)(next.Duration.TotalSeconds);
+                                if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
+                                {
+                                    SetDurationInSeconds((double)durationInSeconds);
+                                }
                             }
                         }
-
                     }
                 }
             }
