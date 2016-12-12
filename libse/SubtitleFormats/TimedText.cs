@@ -38,11 +38,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 var xml = new XmlDocument { XmlResolver = null };
                 try
                 {
-                    xml.LoadXml(xmlAsString);
+                    xml.LoadXml(xmlAsString.Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A"));
 
                     var nsmgr = new XmlNamespaceManager(xml.NameTable);
                     nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
-                    XmlNode div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
+                    var div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
                     if (div == null)
                         div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
                     int numberOfParagraphs = div.ChildNodes.Count;
@@ -135,12 +135,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument { XmlResolver = null };
-            xml.LoadXml(sb.ToString().RemoveControlCharactersButWhiteSpace().Trim());
+            xml.LoadXml(sb.ToString().Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A").RemoveControlCharactersButWhiteSpace().Trim());
 
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
 
-            XmlNode div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
+            var div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
             if (div == null)
                 div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
 
@@ -313,7 +313,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                 }
             }
-            else if (couldBeMillisecondsWithMissingLastDigit &&  Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource != "hh:mm:ss.ms-two-digits")
+            else if (couldBeMillisecondsWithMissingLastDigit && Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource != "hh:mm:ss.ms-two-digits")
             {
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
