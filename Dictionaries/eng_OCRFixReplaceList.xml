@@ -1,4 +1,5 @@
-﻿<OCRFixReplaceList>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OCRFixReplaceList>
   <WholeWords>
     <Word from="$COff$" to="scoffs" />
     <Word from="$ergei" to="Sergei" />
@@ -1863,6 +1864,60 @@
     <Word from="yourplanet" to="your planet" />
     <Word from="matteryour" to="matter your" />
     <Word from="Yourplace" to="Your place" />
+    <Word from="andjustice" to="and justice" />
+    <Word from="anotherpart" to="another part" />
+    <Word from="confiict" to="conflict" />
+    <Word from="growingjeopardy" to="growing jeopardy" />
+    <Word from="hasjust" to="has just" />
+    <Word from="havejust" to="have just" />
+    <Word from="herselfinto" to="herself into" />
+    <Word from="ifnecessary" to="if necessary" />
+    <Word from="we'vejust" to="we've just" />
+    <Word from="tojust" to="to just" />
+    <Word from="yourjudgment" to="your judgment" />
+    <Word from="yourjeans" to="your jeans" />
+    <Word from="Youjust" to="You just" />
+    <Word from="ajanitor" to="a janitor" />
+    <Word from="FIattery" to="Flattery" />
+    <Word from="myjournal" to="my journal" />
+    <Word from="myjudgment" to="my judgment" />
+    <Word from="offofmy" to="off of my" />
+    <Word from="offyour" to="off your" />
+    <Word from="ofgood" to="of good" />
+    <Word from="ofguilty" to="of guilty" />
+    <Word from="ofhaving" to="of having" />
+    <Word from="ofheart" to="of heart" />
+    <Word from="ofhonor" to="of honor" />
+    <Word from="oflove" to="of love" />
+    <Word from="ofmankind" to="of mankind" />
+    <Word from="ofmany" to="of many" />
+    <Word from="ofnormal" to="of normal" />
+    <Word from="ofpeople" to="of people" />
+    <Word from="ofpower" to="of power" />
+    <Word from="ofsuch" to="of such" />
+    <Word from="peoplejust" to="people just" />
+    <Word from="They'rejust" to="They're just" />
+    <Word from="tojeopardize" to="to jeopardize" />
+    <Word from="Yourplaces" to="Your places" />
+    <Word from="yourposition" to="your position" />
+    <Word from="yourselfa" to="yourself a" />
+    <Word from="yourselfright" to="yourself right" />
+    <Word from="thejob" to="the job" />
+    <Word from="thejanitors" to="the janitors" />
+    <Word from="alljust" to="all just" />
+    <Word from="forAmerica's" to="for America's" />
+    <Word from="Forpencils" to="For pencils" />
+    <Word from="forpondering" to="for pondering" />
+    <Word from="handwrittenjournals" to="handwritten journals" />
+    <Word from="herpursuit" to="her pursuit" />
+    <Word from="ofjust" to="of just" />
+    <Word from="oflanding" to="of landing" />
+    <Word from="oflife" to="of life" />
+    <Word from="outjust" to="out just" />
+    <Word from="Thejoke" to="The joke" />
+    <Word from="ourpatient" to="our patient" />
+    <Word from="oryou're" to="or you're" />
+    <Word from="ofyourself" to="of yourself" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
