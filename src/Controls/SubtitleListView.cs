@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
@@ -606,7 +607,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SelectNone()
         {
-            for (int i=0; i<Items.Count; i++)
+            for (var i = Items.Count - 1; i >= 0; i--)
                 Items[i].Selected = false;
         }
 
