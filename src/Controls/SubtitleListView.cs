@@ -45,10 +45,7 @@ namespace Nikse.SubtitleEdit.Controls
             set
             {
                 _subtitleFontBold = value;
-                if (SubtitleFontBold)
-                    _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold);
-                else
-                    _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize);
+                _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
             }
         }
 
@@ -60,10 +57,7 @@ namespace Nikse.SubtitleEdit.Controls
             set
             {
                 _subtitleFontSize = value;
-                if (SubtitleFontBold)
-                    _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold);
-                else
-                    _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize);
+                _subtitleFont = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
             }
         }
 
@@ -600,7 +594,7 @@ namespace Nikse.SubtitleEdit.Controls
             item.SubItems.Add(GetDisplayTime(paragraph.EndTime));
             item.SubItems.Add(paragraph.Duration.ToShortDisplayString());
             item.SubItems.Add(paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString));
-            item.Font = SubtitleFontBold ? new Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold) : new Font(_subtitleFontName, SubtitleFontSize);
+            item.Font = new Font(_subtitleFontName, SubtitleFontSize, GetFontStyle());
             Items.Add(item);
         }
 
@@ -946,5 +940,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             return (index >= 0 && index < Items.Count);
         }
+
+        private FontStyle GetFontStyle() => SubtitleFontBold ? FontStyle.Bold : FontStyle.Regular;
     }
 }
