@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.1 (xth December 2016) BETA
+3.5.1 (13th December 2016)
 * NEW:
    * "mpv" media player now works on Linux  - thx var1ap 
    * Added new subtitle format - thx Siavash
