@@ -385,6 +385,16 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     ConvertParagraphNodeToTTMLNode(child, ttmlXml, span);
                 }
+                else if (child.Name == "u")
+                {
+                    XmlNode span = ttmlXml.CreateElement("span");
+                    XmlAttribute attr = ttmlXml.CreateAttribute("tts:textDecoration", "http://www.w3.org/ns/10/ttml#style");
+                    attr.InnerText = "underline";
+                    span.Attributes.Append(attr);
+                    ttmlNode.AppendChild(span);
+
+                    ConvertParagraphNodeToTTMLNode(child, ttmlXml, span);
+                }
                 else if (child.Name == "font")
                 {
                     XmlNode span = ttmlXml.CreateElement("span");
@@ -607,21 +617,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 try
                 {
                     var pText = new StringBuilder();
-                    foreach (XmlNode innerNode in node.ChildNodes)
-                    {
-                        switch (innerNode.Name.Replace("tt:", string.Empty))
-                        {
-                            case "br":
-                                pText.AppendLine();
-                                break;
-                            case "span":
-                                ReadSpan(pText, innerNode, styles, headerStyleNodes);
-                                break;
-                            default:
-                                pText.Append(innerNode.InnerText);
-                                break;
-                        }
-                    }
+                    ReadParagraph(pText, node, styles, headerStyleNodes);
 
                     string start = string.Empty;
                     if (node.Attributes["begin"] != null)
@@ -821,77 +817,108 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return string.Format("{0} / {1}", style, lang);
         }
 
-        private static void ReadSpan(StringBuilder pText, XmlNode innerNode, List<string> styles, List<XmlNode> headerStyleNodes)
+        private static void ReadParagraph(StringBuilder pText, XmlNode node, List<string> styles, List<XmlNode> headerStyleNodes)
         {
-            bool italic = false;
-            bool font = false;
-            bool bold = false;
-            if (innerNode.Attributes != null)
+            foreach (XmlNode child in node.ChildNodes)
             {
-                var fs = innerNode.Attributes.GetNamedItem("tts:fontStyle");
-                if (fs != null && fs.Value == "italic")
+                if (child.NodeType == XmlNodeType.Text)
                 {
-                    italic = true;
-                    pText.Append("<i>");
+                    pText.Append(child.Value);
                 }
-
-                var fc = innerNode.Attributes.GetNamedItem("tts:color");
-                if (fc != null && fc.Value.Length > 0)
+                else if (child.Name == "br")
                 {
-                    pText.Append("<font color=\"" + fc.Value + "\">");
-                    font = true;
+                    pText.AppendLine();
                 }
-
-                var fw = innerNode.Attributes.GetNamedItem("tts:fontWeight");
-                if (fw != null && fw.Value == "bold")
+                else if (child.Name == "span")
                 {
-                    pText.Append("<b>");
-                    bold = true;
-                }
+                    bool isItalic = false;
+                    bool isBold = false;
+                    bool isUnderlined = false;
+                    string fontFamily = null;
+                    string color = null;
 
-                var style = innerNode.Attributes.GetNamedItem("style");
-                if (fc == null && fw == null && fs == null && style != null && styles.Contains(style.Value)) // && styles.Contains(fs.Value))
-                {
-                    if (IsStyleItalic(style.Value, headerStyleNodes))
+                    // Composing styles
+                    if (child.Attributes["tts:fontStyle"] != null && child.Attributes["tts:fontStyle"].Value == "italic")
                     {
-                        italic = true;
+                        isItalic = true;
+                    }
+
+                    if (child.Attributes["tts:fontWeight"] != null && child.Attributes["tts:fontWeight"].Value == "bold")
+                    {
+                        isBold = true;
+                    }
+
+                    if (child.Attributes["tts:textDecoration"] != null && child.Attributes["tts:textDecoration"].Value == "underline")
+                    {
+                        isUnderlined = true;
+                    }
+
+                    if (child.Attributes["tts:fontFamily"] != null)
+                    {
+                        fontFamily = child.Attributes["tts:fontFamily"].Value;
+                    }
+
+                    if (child.Attributes["tts:color"] != null)
+                    {
+                        color = child.Attributes["tts:color"].Value;
+                    }
+                    
+                    // Applying styles
+                    if (isItalic)
+                    {
                         pText.Append("<i>");
                     }
-                    else if (IsStyleBold(style.Value, headerStyleNodes))
+
+                    if (isBold)
                     {
                         pText.Append("<b>");
-                        bold = true;
+                    }
+
+                    if (isUnderlined)
+                    {
+                        pText.Append("<u>");
+                    }
+
+                    if (!string.IsNullOrEmpty(fontFamily) || !string.IsNullOrEmpty(color))
+                    {
+                        pText.Append("<font");
+
+                        if (!string.IsNullOrEmpty(fontFamily))
+                        {
+                            pText.Append(string.Format(" face=\"{0}\"", fontFamily));
+                        }
+
+                        if (!string.IsNullOrEmpty(color))
+                        {
+                            pText.Append(string.Format(" color=\"{0}\"", color));
+                        }
+
+                        pText.Append(">");
+                    }
+
+                    ReadParagraph(pText, child, styles, headerStyleNodes);
+
+                    if (!string.IsNullOrEmpty(fontFamily) || !string.IsNullOrEmpty(color))
+                    {
+                        pText.Append("</font>");
+                    }
+
+                    if (isUnderlined)
+                    {
+                        pText.Append("</u>");
+                    }
+
+                    if (isBold)
+                    {
+                        pText.Append("</b>");
+                    }
+
+                    if (isItalic)
+                    {
+                        pText.Append("</i>");
                     }
                 }
             }
-            if (innerNode.HasChildNodes)
-            {
-                foreach (XmlNode innerInnerNode in innerNode.ChildNodes)
-                {
-                    if (innerInnerNode.Name == "br" || innerInnerNode.Name == "tt:br")
-                    {
-                        pText.AppendLine();
-                    }
-                    else if (innerInnerNode.Name == "span" || innerInnerNode.Name == "tt:span")
-                    {
-                        ReadSpan(pText, innerInnerNode, styles, headerStyleNodes);
-                    }
-                    else
-                    {
-                        pText.Append(innerInnerNode.InnerText);
-                    }
-                }
-            }
-            else
-            {
-                pText.Append(innerNode.InnerText);
-            }
-            if (italic)
-                pText.Append("</i>");
-            if (font)
-                pText.Append("</font>");
-            if (bold)
-                pText.Append("</bold>");
         }
 
         public static TimeCode GetTimeCode(string s, bool frames)
