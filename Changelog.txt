@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.5.1 (xth December 2016) BETA
+3.5.1 (13th December 2016)
 * NEW:
    * "mpv" media player now works on Linux  - thx var1ap 
    * Added new subtitle format - thx Siavash
@@ -12,6 +12,7 @@
    * Updated Finnish translation - thx Teijo
    * Updated French Translation - thx JM GBT
    * Updated Bulgarian Translation - thx Maknol
+   * Updated Chinese translation - thx Leon/tinyboxvk
    * Language auto-detect now includes Latvian and Lithuanian - thx rhazor
    * Added "Custom text format" in "Batch convert" - thx Chamallow
    * "EBU stl" now only prompt for settings in "Save as..." - thx Debora
@@ -32,6 +33,8 @@
    * Fixed some issues with "Save original as..." - thx Stefan
    * Fix for "DVD Studio Pro" italic handling - thx Sean
    * Fixed saving correct value in "Delete auto-backup after months" - thx  Elheym
+   * Fixed buggy ELR time code parsing - thx darnn
+   * Fixed overlap bug in auto-duration - thx rebawest
 
 
 3.5 (26th October 2016)
