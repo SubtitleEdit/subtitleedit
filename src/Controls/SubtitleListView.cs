@@ -655,15 +655,12 @@ namespace Nikse.SubtitleEdit.Controls
 
             foreach (ListViewItem item in Items)
             {
-                if (item.Text == p.Number.ToString(CultureInfo.InvariantCulture) &&
-                    item.SubItems[ColumnIndexStart].Text == GetDisplayTime(p.StartTime) &&
-                    item.SubItems[ColumnIndexEnd].Text == GetDisplayTime(p.EndTime) &&
-                    item.SubItems[ColumnIndexText].Text == p.Text)
+                if (((Paragraph)item.Tag).ID.Equals(p.ID, StringComparison.Ordinal))
                 {
                     RestoreFirstVisibleIndex();
                     item.Selected = true;
                     item.EnsureVisible();
-                    return;
+                    break;
                 }
             }
         }
