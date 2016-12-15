@@ -155,24 +155,18 @@ namespace Nikse.SubtitleEdit.Forms
             richTextBoxParagraph.SelectionColor = Color.Black;
             richTextBoxParagraph.SelectionLength = 0;
 
-            for (int i = 0; i < 10; i++)
+            string text = richTextBoxParagraph.Text;
+            if (word.Text.Length > text.Length)
+                return;
+
+            int lowerBound = Math.Max(word.Index - 10, 0);
+            int upperBound = Math.Min(word.Index + 10 + word.Text.Length, text.Length);
+            int index = text.IndexOf(word.Text, lowerBound, upperBound - lowerBound);
+            if (index >= 0)
             {
-                int idx = word.Index - i;
-                if (idx >= 0 && idx < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
-                {
-                    richTextBoxParagraph.SelectionStart = idx;
-                    richTextBoxParagraph.SelectionLength = word.Text.Length;
-                    richTextBoxParagraph.SelectionColor = Color.Red;
-                    break;
-                }
-                idx = word.Index + i;
-                if (idx >= 0 && idx < richTextBoxParagraph.Text.Length && richTextBoxParagraph.Text.Substring(idx).StartsWith(word.Text))
-                {
-                    richTextBoxParagraph.SelectionStart = idx;
-                    richTextBoxParagraph.SelectionLength = word.Text.Length;
-                    richTextBoxParagraph.SelectionColor = Color.Red;
-                    break;
-                }
+                richTextBoxParagraph.SelectionStart = index;
+                richTextBoxParagraph.SelectionLength = word.Text.Length;
+                richTextBoxParagraph.SelectionColor = Color.Red;
             }
         }
 
@@ -645,7 +639,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     DoAction(SpellCheckAction.ChangeAll);
                                     return;
                                 }
-                                if (_currentWord.Length > 3 && _currentWord.StartsWith("mc", StringComparison.InvariantCultureIgnoreCase) && _spellCheckWordLists.HasName(char.ToUpper(_currentWord[0]) + _currentWord.Substring(1, 1 ) + char.ToUpper(_currentWord[2]) + _currentWord.Remove(0, 3)))
+                                if (_currentWord.Length > 3 && _currentWord.StartsWith("mc", StringComparison.InvariantCultureIgnoreCase) && _spellCheckWordLists.HasName(char.ToUpper(_currentWord[0]) + _currentWord.Substring(1, 1) + char.ToUpper(_currentWord[2]) + _currentWord.Remove(0, 3)))
                                 {
                                     ChangeWord = char.ToUpper(_currentWord[0]) + _currentWord.Substring(1, 1) + char.ToUpper(_currentWord[2]) + _currentWord.Remove(0, 3);
                                     DoAction(SpellCheckAction.ChangeAll);
