@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
         public bool AutoFixNames { get { return checkBoxAutoChangeNames.Checked; } }
 
         private SpellCheckWordLists _spellCheckWordLists;
-        private List<string> _skipAllList = new List<string>();
+        private HashSet<string> _skipAllList = new HashSet<string>();
         private Dictionary<string, string> _changeAllDictionary;
         private string _prefix = string.Empty;
         private string _postfix = string.Empty;
@@ -748,7 +748,7 @@ namespace Nikse.SubtitleEdit.Forms
             LanguageStructure.Main mainLanguage = Configuration.Settings.Language.Main;
             _mainWindow = mainWindow;
 
-            _skipAllList = new List<string>();
+            _skipAllList = new HashSet<string>();
 
             _noOfSkippedWords = 0;
             _noOfChangedWords = 0;
@@ -815,7 +815,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void LoadDictionaries(string dictionaryFolder, string dictionary, string languageName)
         {
             _changeAllDictionary = new Dictionary<string, string>();
-            _skipAllList = new List<string>();
+            _skipAllList = new HashSet<string>();
             _spellCheckWordLists = new SpellCheckWordLists(dictionaryFolder, languageName, this);
             LoadHunspell(dictionary);
         }
