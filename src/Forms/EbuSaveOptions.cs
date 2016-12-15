@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception)
             {
-                timeUpDownStartTime.TimeCode = new TimeCode(0);
+                timeUpDownStartTime.TimeCode = new TimeCode();
             }
 
             int number;
@@ -288,6 +288,11 @@ namespace Nikse.SubtitleEdit.Forms
             JustificationCode = (byte)comboBoxJustificationCode.SelectedIndex;
             Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox = checkBoxTeletextBox.Checked;
             Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = checkBoxTeletextDoubleHeight.Checked;
+
+            if (_subtitle != null && _subtitle.Header != null && (_subtitle.Header.Contains("STL2") || _subtitle.Header.Contains("STL3")))
+            {
+                _subtitle.Header = _header.ToString();
+            }
 
             DialogResult = DialogResult.OK;
         }

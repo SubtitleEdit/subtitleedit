@@ -898,19 +898,22 @@ namespace Nikse.SubtitleEdit.Logic
                         targetFormatFound = true;
                         outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
                         Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
-                        File.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub,
-                                                                                       Configuration.Settings.Tools.ExportTextShowLineNumbers,
-                                                                                       Configuration.Settings.Tools.ExportTextShowLineNumbersNewLine,
-                                                                                       Configuration.Settings.Tools.ExportTextShowTimeCodes,
-                                                                                       Configuration.Settings.Tools.ExportTextShowTimeCodesNewLine,
-                                                                                       false,
-                                                                                       Configuration.Settings.Tools.ExportTextShowTimeCodes,
-                                                                                       string.Empty,
-                                                                                       Configuration.Settings.Tools.ExportTextRemoveStyling,
-                                                                                       Configuration.Settings.Tools.ExportTextFormatText == "Unbreak",
-                                                                                       Configuration.Settings.Tools.ExportTextNewLineAfterText,
-                                                                                       Configuration.Settings.Tools.ExportTextNewLineBetweenSubtitles,
-                                                                                       Configuration.Settings.Tools.ExportTextFormatText == "MergeAll"), targetEncoding);
+                        var exportOptions = new ExportText.ExportOptions
+                        {
+                            ShowLineNumbers = Configuration.Settings.Tools.ExportTextShowLineNumbers,
+                            AddNewlineAfterLineNumber = Configuration.Settings.Tools.ExportTextShowLineNumbersNewLine,
+                            ShowTimecodes = Configuration.Settings.Tools.ExportTextShowTimeCodes,
+                            TimeCodeSrt = Configuration.Settings.Tools.ExportTextShowTimeCodesNewLine,
+                            TimeCodeHHMMSSFF = false,
+                            AddNewlineAfterTimeCodes = Configuration.Settings.Tools.ExportTextShowTimeCodes,
+                            TimeCodeSeparator = string.Empty,
+                            RemoveStyling = Configuration.Settings.Tools.ExportTextRemoveStyling,
+                            FormatUnbreak = Configuration.Settings.Tools.ExportTextFormatText == "Unbreak",
+                            AddNewAfterText = Configuration.Settings.Tools.ExportTextNewLineAfterText,
+                            AddNewAfterText2 = Configuration.Settings.Tools.ExportTextNewLineBetweenSubtitles,
+                            FormatMergeAll = Configuration.Settings.Tools.ExportTextFormatText == "MergeAll"
+                        };
+                        File.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub, exportOptions), targetEncoding);
                         Console.WriteLine(" done.");
                     }
                 }
@@ -979,6 +982,31 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                         }
                         Console.WriteLine(" done.");
+                    }
+                    else if (!targetFormatFound && targetFormat.StartsWith("CustomText:", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (!string.IsNullOrEmpty(Configuration.Settings.Tools.ExportCustomTemplates))
+                        {
+                            var arr = targetFormat.Split(':');
+                            if (arr.Length == 2)
+                            {
+                                foreach (string template in Configuration.Settings.Tools.ExportCustomTemplates.Split('æ'))
+                                {
+                                    if (template.StartsWith(arr[1] + "Æ", StringComparison.Ordinal))
+                                    {
+                                        targetFormatFound = true;
+                                        string title = string.Empty;
+                                        if (!string.IsNullOrEmpty(fileName))
+                                            title = Path.GetFileNameWithoutExtension(fileName);
+                                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
+                                        Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
+                                        File.WriteAllText(outputFileName, ExportCustomText.GenerateCustomText(sub, null, title, template), targetEncoding);
+                                        Console.WriteLine(" done.");
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 if (!targetFormatFound)

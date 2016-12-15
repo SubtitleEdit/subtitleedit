@@ -30,8 +30,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
+            Guid subtitleId;
+            if (subtitle.Header == null || !Guid.TryParse(subtitle.Header, out subtitleId))
+            {
+                subtitleId = Guid.NewGuid();
+            }
+
             var sb = new StringBuilder();
-            sb.Append("{\"header\": { \"subtitleId\": \"" + Guid.NewGuid() + "\" },");
+            sb.Append("{\"header\": { \"subtitleId\": \"" + subtitleId + "\" },");
             sb.Append("\"subtitles\": [");
 
             int count = 0;

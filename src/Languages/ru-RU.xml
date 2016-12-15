@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Русский">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.0</Version>
+    <Version>3.5.1</Version>
     <TranslatedBy>Перевод на русский: Leserg (mailto:leserg@ua.fm)
 Дополнения и последующие доработки перевода: Elheym (http://forum.hqclub.net/)</TranslatedBy>
     <CultureName>ru-RU</CultureName>
@@ -1847,6 +1847,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AdjustSetEndAndOffsetTheRest>Установить конец, сместить остаток</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Установить конец, сместить остаток и перейти к следующему субтитру</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Продлить строку до след. субтитра/задать макс. длительность</AdjustExtendCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitle>Пересчитать продолжительность текущих субтитров</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Создать новый - ВНИЗ, установить конечное время - ВВЕРХ</MainCreateStartDownEndUp>
     <MergeDialog>Объединить диалог (вставить тире)</MergeDialog>
     <GoToNext>Перейти к следующей строке</GoToNext>
@@ -1907,6 +1908,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <ToggleTranslationMode>Вкл./Откл. режим перевода</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Переключение оригинала и перевода</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Объединить оригинал и перевод</MergeOriginalAndTranslation>
+    <MergeWithNext>Объединить со следующим</MergeWithNext>
+    <MergeWithPrevious>Объединить с предыдущим</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Команда уже определена:
 {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Переключение перевода и оригинала в предпросмотре видео/аудио</ToggleTranslationAndOriginalInPreviews>

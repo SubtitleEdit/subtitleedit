@@ -833,7 +833,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
                 {
-                    string characterDatabasePath = Configuration.OcrFolder.TrimEnd(Path.DirectorySeparatorChar);
+                    string characterDatabasePath = Configuration.OcrDirectory.TrimEnd(Path.DirectorySeparatorChar);
                     if (!Directory.Exists(characterDatabasePath))
                         Directory.CreateDirectory(characterDatabasePath);
 
@@ -869,7 +869,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (_ocrMethodIndex == _ocrMethodImageCompare)
                 {
                     comboBoxCharacterDatabase.SelectedIndexChanged -= ComboBoxCharacterDatabaseSelectedIndexChanged;
-                    string characterDatabasePath = Configuration.VobSubCompareFolder.TrimEnd(Path.DirectorySeparatorChar);
+                    string characterDatabasePath = Configuration.VobSubCompareDirectory.TrimEnd(Path.DirectorySeparatorChar);
                     if (!Directory.Exists(characterDatabasePath))
                         Directory.CreateDirectory(characterDatabasePath);
 
@@ -911,7 +911,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
-                string db = Configuration.OcrFolder + comboBoxCharacterDatabase.SelectedItem + ".db";
+                string db = Configuration.OcrDirectory + comboBoxCharacterDatabase.SelectedItem + ".db";
                 _binaryOcrDb = new BinaryOcrDb(db, true);
             }
         }
@@ -919,7 +919,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void LoadOldCompareImages()
         {
             _compareBitmaps = new List<CompareItem>();
-            string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
+            string path = Configuration.VobSubCompareDirectory + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
             if (!File.Exists(path + "CompareDescription.xml"))
                 _compareDoc.LoadXml("<OcrBitmaps></OcrBitmaps>");
             else
@@ -3921,15 +3921,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string SaveCompareItem(NikseBitmap newTarget, string text, bool isItalic, int expandCount)
         {
-            string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
+            string path = Configuration.VobSubCompareDirectory + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
             string databaseName = path + "Images.db";
             FileStream f;
             long pos;
             if (!File.Exists(databaseName))
             {
-                if (!Directory.Exists(Configuration.OcrFolder))
+                if (!Directory.Exists(Configuration.OcrDirectory))
                 {
-                    Directory.CreateDirectory(Configuration.OcrFolder);
+                    Directory.CreateDirectory(Configuration.OcrDirectory);
                 }
 
                 using (f = new FileStream(databaseName, FileMode.Create))
@@ -5670,7 +5670,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_binaryOcrDb == null)
                 {
-                    _binaryOcrDbFileName = Configuration.OcrFolder + "Latin.db";
+                    _binaryOcrDbFileName = Configuration.OcrDirectory + "Latin.db";
                     _binaryOcrDb = new BinaryOcrDb(_binaryOcrDbFileName, true);
                 }
                 _nOcrDb = new NOcrDb(_binaryOcrDb.FileName.Replace(".db", ".nocr"));
@@ -5903,7 +5903,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var process = new Process())
             {
-                process.StartInfo = new ProcessStartInfo(Configuration.TesseractFolder + "tesseract.exe");
+                process.StartInfo = new ProcessStartInfo(Configuration.TesseractDirectory + "tesseract.exe");
                 process.StartInfo.UseShellExecute = true;
                 process.StartInfo.Arguments = "\"" + tempTiffFileName + "\" \"" + tempTextFileName + "\" -l " + language;
 
@@ -5924,7 +5924,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    process.StartInfo.WorkingDirectory = (Configuration.TesseractFolder);
+                    process.StartInfo.WorkingDirectory = (Configuration.TesseractDirectory);
                 }
 
                 try
@@ -5939,7 +5939,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        MessageBox.Show("Unable to start 'Tesseract' (" + Configuration.TesseractFolder + "tesseract.exe) - make sure tesseract-ocr 3.x is installed!");
+                        MessageBox.Show("Unable to start 'Tesseract' (" + Configuration.TesseractDirectory + "tesseract.exe) - make sure tesseract-ocr 3.x is installed!");
                     }
                     throw;
                 }
@@ -6880,16 +6880,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InitializeTesseract()
         {
-            if (!Directory.Exists(Configuration.TesseractFolder))
+            if (!Directory.Exists(Configuration.TesseractDirectory))
             {
-                Directory.CreateDirectory(Configuration.TesseractFolder);
+                Directory.CreateDirectory(Configuration.TesseractDirectory);
                 if (!Configuration.IsRunningOnLinux() && !Configuration.IsRunningOnMac())
                 {
                     Process process = new Process();
                     ProcessStartInfo startInfo = new ProcessStartInfo();
                     startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                     startInfo.FileName = "xcopy";
-                    startInfo.Arguments = "\"" + Path.Combine(Configuration.TesseractOriginalFolder, "*.*") + "\" \"" + Configuration.TesseractFolder + "\" /s";
+                    startInfo.Arguments = "\"" + Path.Combine(Configuration.TesseractOriginalDirectory, "*.*") + "\" \"" + Configuration.TesseractDirectory + "\" /s";
                     MessageBox.Show(startInfo.Arguments);
                     process.StartInfo = startInfo;
                     process.Start();
@@ -6897,7 +6897,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            string dir = Path.Combine(Configuration.TesseractFolder, "tessdata");
+            string dir = Path.Combine(Configuration.TesseractDirectory, "tessdata");
             if (Directory.Exists(dir))
             {
                 var list = new List<string>();
@@ -7027,7 +7027,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         try
                         {
-                            string fileName = Path.Combine(Configuration.OcrFolder, newFolder.FolderName + ".db");
+                            string fileName = Path.Combine(Configuration.OcrDirectory, newFolder.FolderName + ".db");
                             if (File.Exists(fileName))
                             {
                                 MessageBox.Show("OCR db already exists!");
@@ -7057,7 +7057,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_ocrMethodIndex == _ocrMethodBinaryImageCompare)
             {
-                _binaryOcrDbFileName = Configuration.OcrFolder + comboBoxCharacterDatabase.SelectedItem + ".db";
+                _binaryOcrDbFileName = Configuration.OcrDirectory + comboBoxCharacterDatabase.SelectedItem + ".db";
             }
 
             LoadImageCompareBitmaps();
@@ -7090,7 +7090,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         _compareDoc = formVobSubEditCharacters.ImageCompareDocument;
-                        string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
+                        string path = Configuration.VobSubCompareDirectory + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
                         _compareDoc.Save(path + "Images.xml");
                         Cursor = Cursors.WaitCursor;
                         if (formVobSubEditCharacters.ChangesMade)
@@ -7253,7 +7253,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxNOcrLanguage.Items.Clear();
                 int index = 0;
                 int selIndex = 0;
-                foreach (string fileName in Directory.GetFiles(Configuration.OcrFolder, "*.nocr"))
+                foreach (string fileName in Directory.GetFiles(Configuration.OcrDirectory, "*.nocr"))
                 {
                     string s = Path.GetFileNameWithoutExtension(fileName);
                     if (s == Configuration.Settings.VobSubOcr.LineOcrLastLanguages)
@@ -7286,7 +7286,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (comboBoxNOcrLanguage.SelectedIndex < 0)
                 return null;
 
-            return Configuration.OcrFolder + comboBoxNOcrLanguage.Items[comboBoxNOcrLanguage.SelectedIndex] + ".nocr";
+            return Configuration.OcrDirectory + comboBoxNOcrLanguage.Items[comboBoxNOcrLanguage.SelectedIndex] + ".nocr";
         }
 
         private void ShowOcrMethodGroupBox(GroupBox groupBox)
@@ -7729,7 +7729,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.Title = Configuration.Settings.Language.General.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 string fileName = openFileDialog1.FileName;
@@ -7903,7 +7903,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                     }
                     _compareDoc = inspect.ImageCompareDocument;
-                    string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
+                    string path = Configuration.VobSubCompareDirectory + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
                     _compareDoc.Save(path + "Images.xml");
                     LoadImageCompareBitmaps();
                     Cursor = Cursors.Default;
@@ -7928,7 +7928,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         _compareDoc = formVobSubEditCharacters.ImageCompareDocument;
-                        string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
+                        string path = Configuration.VobSubCompareDirectory + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
                         _compareDoc.Save(path + "Images.xml");
                     }
                 }
@@ -8573,7 +8573,7 @@ namespace Nikse.SubtitleEdit.Forms
                     s = s.Replace("?", string.Empty).Replace("/", string.Empty).Replace("*", string.Empty).Replace("\\", string.Empty);
                     if (string.IsNullOrEmpty(s))
                         return;
-                    if (File.Exists(Configuration.DictionariesFolder + "nOCR_" + newFolder.FolderName + ".xml"))
+                    if (File.Exists(Configuration.DictionariesDirectory + "nOCR_" + newFolder.FolderName + ".xml"))
                     {
                         MessageBox.Show("Line OCR language file already exists!");
                         return;
@@ -8816,7 +8816,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.Title = Configuration.Settings.Language.General.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 string fileName = openFileDialog1.FileName;

@@ -1,5 +1,42 @@
 ﻿Subtitle Edit Changelog
 
+3.5.1 (13th December 2016)
+* NEW:
+   * "mpv" media player now works on Linux  - thx var1ap 
+   * Added new subtitle format - thx Siavash
+   * Added new export format "EDL/ClipName" - thx alex
+* IMPROVED:
+   * Updated Hungarian translation - thx ZityiSoft Team
+   * Updated Russian translation - thx Elheym
+   * Updated Romanian translation - thx Mircea
+   * Updated Finnish translation - thx Teijo
+   * Updated French Translation - thx JM GBT
+   * Updated Bulgarian Translation - thx Maknol
+   * Updated Chinese translation - thx Leon/tinyboxvk
+   * Language auto-detect now includes Latvian and Lithuanian - thx rhazor
+   * Added "Custom text format" in "Batch convert" - thx Chamallow
+   * "EBU stl" now only prompt for settings in "Save as..." - thx Debora
+* FIXED:
+   * Fixed libre office spell checking urls - thx Massaguana
+   * Fixed possible crash when generating scene changes - thx Leemet
+   * Fixed issues with moving rules in "Multiple replace" - thx kristiaanvk
+   * Fixed list view issues regarding remember selected position - thx darnn
+   * EBU stl saves empty file if saving is cancelled - thx ivandrofly/jjtronics
+   * Fixed possible crash in textbox with italic - thx ivandrofly
+   * Fixed bug in file naming after extracting sub from mkv - thx mzso
+   * Fixed bottom margin in image export of SSA/ASS - thx maddox
+   * "Find" always try to find the next occurrence - thx Boulder08
+   * Fixed "Remove text for HI" issue reagarding colons - thx Boulder08
+   * Fix "Fix missing spaces" issue regarding Finnish/Swedish colons - thx Boulder08
+   * Fix two issues with "Fix common errors" - thx Tronar
+   * OCR fix rules: fix for weird Unicode comma (#x201A) - thx djc
+   * Fixed some issues with "Save original as..." - thx Stefan
+   * Fix for "DVD Studio Pro" italic handling - thx Sean
+   * Fixed saving correct value in "Delete auto-backup after months" - thx  Elheym
+   * Fixed buggy ELR time code parsing - thx darnn
+   * Fixed overlap bug in auto-duration - thx rebawest
+
+
 3.5 (26th October 2016)
 * NEW:
    * Can now generate scene changes via FFmpeg + other scene changes improvements

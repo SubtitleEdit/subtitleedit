@@ -158,10 +158,10 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                     string part0 = noTagLines[0];
                     string part1 = noTagLines[1];
                     if (part0.Length > 1 && "-—!?.\")]".Contains(part0[part0.Length - 1]) &&
-                        part1.Length > 1 && ("'" + Utilities.UppercaseLetters).Contains(part1[0]))
+                        part1.Length > 1 && (char.IsUpper(part1[0]) || part1[0] == '\''))
                     {
                         text = text.Replace(" - ", Environment.NewLine + "- ");
-                        if (Utilities.AllLettersAndNumbers.Contains(part0[0]))
+                        if (char.IsLetter((part0[0])) || CharUtils.IsDigit(part0[0]))
                         {
                             if (text.Length > 3 && text[0] == '<' && text[2] == '>')
                                 text = "<" + text[1] + ">" + "- " + text.Substring(3).TrimStart();
@@ -175,7 +175,8 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
             var idx = text.IndexOfAny(EndPlusDashList, StringComparison.Ordinal);
             if (idx >= 0)
             {
-                if (Utilities.GetNumberOfLines(text) == 2)
+                int lineCount = Utilities.GetNumberOfLines(text);
+                if (lineCount == 2)
                 {
                     string temp = Utilities.AutoBreakLine(text, 99, 33, language);
                     var arr = text.SplitToLines();
@@ -188,7 +189,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                             text = temp;
                     }
                 }
-                else if (Utilities.GetNumberOfLines(text) == 1)
+                else if (lineCount == 1)
                 {
                     string temp = Utilities.AutoBreakLine(text, language);
                     var arrTemp = temp.SplitToLines();
@@ -269,16 +270,16 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                         if (remove)
                         {
                             int idx = text.IndexOf('-');
-                            var st = new StripableText(text);
+                            var st = new StrippableText(text);
                             if (idx < 5 && st.Pre.Length >= idx)
                             {
                                 text = text.Remove(idx, 1).TrimStart();
                                 idx = text.IndexOf('-');
-                                st = new StripableText(text);
+                                st = new StrippableText(text);
                                 if (idx < 5 && idx >= 0 && st.Pre.Length >= idx)
                                 {
                                     text = text.Remove(idx, 1).TrimStart();
-                                    st = new StripableText(text);
+                                    st = new StrippableText(text);
                                 }
                                 idx = text.IndexOf('-');
                                 if (idx < 5 && idx >= 0 && st.Pre.Length >= idx)
@@ -315,7 +316,7 @@ namespace Nikse.SubtitleEdit.Core.Forms.FixCommonErrors
                 var prev = subtitle.GetParagraphOrDefault(i - 1);
                 if (prev == null || !HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
                 {
-                    var st = new StripableText(text);
+                    var st = new StrippableText(text);
                     if (st.Pre.EndsWith('-') || st.Pre.EndsWith("- ", StringComparison.Ordinal))
                     {
                         text = st.Pre.TrimEnd('-', ' ') + st.StrippedText + st.Post;

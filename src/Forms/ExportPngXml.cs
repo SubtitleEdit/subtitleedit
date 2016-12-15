@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
         private VobSubOcr _vobSubOcr;
         private readonly System.Windows.Forms.Timer _previewTimer = new System.Windows.Forms.Timer();
         private string _videoFileName;
-        private readonly Dictionary<string, int> _lineHeights = new Dictionary<string, int>();
+        private readonly Dictionary<string, int> _lineHeights;
 
         private const string BoxMultiLineText = "BoxMultiLine";
         private const string BoxSingleLineText = "BoxSingleLine";
@@ -97,12 +97,11 @@ namespace Nikse.SubtitleEdit.Forms
             toolTip.SetToolTip(panelFullFrameBackground, Configuration.Settings.Language.ExportPngXml.ChooseBackgroundColor);
             _lineHeights = new Dictionary<string, int>();
             comboBoxImageFormat.SelectedIndex = 4;
-            _subtitleColor = Configuration.Settings.Tools.ExportFontColor;
+            _subtitleColor = Color.FromArgb(byte.MaxValue, Configuration.Settings.Tools.ExportFontColor);
             _borderColor = Configuration.Settings.Tools.ExportBorderColor;
             _previewTimer.Tick += previewTimer_Tick;
             _previewTimer.Interval = 100;
             labelLineHeightStyle.Text = string.Empty;
-            _subtitleColor = Color.White;
         }
 
         private void previewTimer_Tick(object sender, EventArgs e)
@@ -366,6 +365,7 @@ namespace Nikse.SubtitleEdit.Forms
                         parameter.SubtitleFontBold = style.Bold;
                         parameter.SubtitleFontSize = style.FontSize;
                         parameter.SubtitleFontName = style.FontName;
+                        parameter.BottomMargin = style.MarginVertical;
                         if (style.BorderStyle == "3")
                         {
                             parameter.BackgroundColor = style.Background;
@@ -378,6 +378,7 @@ namespace Nikse.SubtitleEdit.Forms
                         parameter.SubtitleFontBold = style.Bold;
                         parameter.SubtitleFontSize = style.FontSize;
                         parameter.SubtitleFontName = style.FontName;
+                        parameter.BottomMargin = style.MarginVertical;
                         if (style.BorderStyle == "3")
                         {
                             parameter.BackgroundColor = style.Outline;
@@ -474,7 +475,7 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Xml files|*.xml";
             }
-            else if (_exportType == "EDL")
+            else if (_exportType == "EDL" || _exportType == "EDL_CLIPNAME")
             {
                 saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SavePremiereEdlAs;
                 saveFileDialog1.DefaultExt = "*.edl";
@@ -492,6 +493,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _exportType == "FCP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "DOST" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "DCINEMA_INTEROP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == "EDL_CLIPNAME" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "EDL" && saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 int width;
@@ -813,9 +815,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName)));
                 }
-                else if (_exportType == "EDL")
+                else if (_exportType == "EDL" || _exportType == "EDL_CLIPNAME")
                 {
-                    string header = "TITLE: ( no title )" + Environment.NewLine + Environment.NewLine;
+                    var title = Path.GetFileNameWithoutExtension(saveFileDialog1.FileName);
+                    if (string.IsNullOrEmpty(title))
+                        title = "( no title )";
+                    string header = "TITLE: " + title + Environment.NewLine + Environment.NewLine;
                     File.WriteAllText(saveFileDialog1.FileName, header + sb);
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
                 }
@@ -1520,7 +1525,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         sb.AppendLine("</Subtitle>");
                     }
                 }
-                else if (_exportType == "EDL")
+                else if (_exportType == "EDL" || _exportType == "EDL_CLIPNAME")
                 {
                     if (!param.Saved)
                     {
@@ -1536,8 +1541,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         fullSize.Save(fileName2, ImageFormat.Png);
                         fullSize.Dispose();
 
-                        string line = string.Format("{0:000}  {1}  V     C        {2} {3} {4} {5}", i, fileName1, new TimeCode(0).ToHHMMSSFF(), param.P.Duration.ToHHMMSSFF(), param.P.StartTime.ToHHMMSSFF(), param.P.EndTime.ToHHMMSSFF());
+                        string line = string.Format("{0:000}  {1}  V     C        {2} {3} {4} {5}", i, fileName1, new TimeCode().ToHHMMSSFF(), param.P.Duration.ToHHMMSSFF(), param.P.StartTime.ToHHMMSSFF(), param.P.EndTime.ToHHMMSSFF());
                         sb.AppendLine(line);
+                        if (_exportType == "EDL_CLIPNAME")
+                        {
+                            sb.AppendLine("* FROM CLIP NAME: " + fileName1 + ".PNG");
+                        }
                         sb.AppendLine();
 
                         imagesSavedCount++;
@@ -1829,6 +1838,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     mbp.SubtitleColor = style.Primary;
                     mbp.SubtitleFontBold = style.Bold;
                     mbp.SubtitleFontSize = style.FontSize;
+                    mbp.BottomMargin = style.MarginVertical;
                     if (style.BorderStyle == "3")
                     {
                         mbp.BackgroundColor = style.Background;
@@ -1840,6 +1850,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     mbp.SubtitleColor = style.Primary;
                     mbp.SubtitleFontBold = style.Bold;
                     mbp.SubtitleFontSize = style.FontSize;
+                    mbp.BottomMargin = style.MarginVertical;
                     if (style.BorderStyle == "3")
                     {
                         mbp.BackgroundColor = style.Outline;
@@ -3085,6 +3096,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Text = "DOST";
             else if (exportType == "EDL")
                 Text = "EDL";
+            else if (_exportType == "EDL_CLIPNAME")
+                Text = "EDL/CLIPNAME";
             else if (exportType == "DCINEMA_INTEROP")
                 Text = "DCinema interop/png";
             else
@@ -3391,7 +3404,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME" && Configuration.Settings.Tools.ExportBluRayBottomMargin >= 0 && Configuration.Settings.Tools.ExportBluRayBottomMargin < comboBoxBottomMargin.Items.Count)
                 comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBluRayBottomMargin;
 
-            if (_exportType == "BLURAYSUP" || _exportType == "VOBSUB" || _exportType == "IMAGE/FRAME" || _exportType == "BDNXML" || _exportType == "DOST" || _exportType == "FAB" || _exportType == "EDL")
+            if (_exportType == "BLURAYSUP" || _exportType == "VOBSUB" || _exportType == "IMAGE/FRAME" || _exportType == "BDNXML" || _exportType == "DOST" || _exportType == "FAB" || _exportType == "EDL" || _exportType == "EDL_CLIPNAME")
             {
                 comboBoxBottomMargin.Visible = true;
                 labelBottomMargin.Visible = true;
@@ -3495,7 +3508,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             comboBoxShadowWidth.SelectedIndex = 0;
-            bool shadowVisible = _exportType == "BDNXML" || _exportType == "BLURAYSUP" || _exportType == "DOST" || _exportType == "IMAGE/FRAME" || _exportType == "FCP" || _exportType == "DCINEMA_INTEROP" || _exportType == "EDL";
+            bool shadowVisible = _exportType == "BDNXML" || _exportType == "BLURAYSUP" || _exportType == "DOST" || _exportType == "IMAGE/FRAME" || _exportType == "FCP" || _exportType == "DCINEMA_INTEROP" || _exportType == "EDL" || _exportType == "EDL_CLIPNAME";
             labelShadowWidth.Visible = shadowVisible;
             buttonShadowColor.Visible = shadowVisible;
             comboBoxShadowWidth.Visible = shadowVisible;

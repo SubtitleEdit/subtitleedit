@@ -20,8 +20,6 @@ namespace Nikse.SubtitleEdit.Logic
         public bool MatchWholeWord { get; set; }
         public int SelectedIndex { get; set; }
         public int SelectedPosition { get; set; }
-        public int WindowPositionLeft { get; set; }
-        public int WindowPositionTop { get; set; }
         public int StartLineIndex { get; set; }
         public bool MatchInOriginal { get; set; }
 
@@ -49,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public FindReplaceDialogHelper(FindType findType, bool matchWholeWord, string findText, Regex regEx, string replaceText, int left, int top, int startLineIndex)
+        public FindReplaceDialogHelper(FindType findType, bool matchWholeWord, string findText, Regex regEx, string replaceText, int startLineIndex)
         {
             FindType = findType;
             _findText = findText;
@@ -62,15 +60,13 @@ namespace Nikse.SubtitleEdit.Logic
 
             _regEx = regEx;
             _findTextLenght = findText.Length;
-            WindowPositionLeft = left;
-            WindowPositionTop = top;
             StartLineIndex = startLineIndex;
             MatchWholeWord = matchWholeWord;
         }
 
-        public bool Find(Subtitle subtitle, Subtitle originalSubtitle, int startIndex)
+        public bool Find(Subtitle subtitle, Subtitle originalSubtitle, int startIndex, int startPosition = 0)
         {
-            return FindNext(subtitle, originalSubtitle, startIndex, 0, Configuration.Settings.General.AllowEditOfOriginalSubtitle);
+            return FindNext(subtitle, originalSubtitle, startIndex, startPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle);
         }
 
         public bool Find(TextBox textBox, int startIndex)

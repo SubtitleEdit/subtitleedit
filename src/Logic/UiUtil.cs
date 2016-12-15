@@ -16,6 +16,8 @@ namespace Nikse.SubtitleEdit.Logic
 {
     internal static class UiUtil
     {
+        public static readonly Lazy<string> SubtitleExtensionFilter = new Lazy<string>(GetOpenDialogFilter);
+
         public static VideoInfo GetVideoInfo(string fileName)
         {
             VideoInfo info = Utilities.TryReadVideoInfoViaAviHeader(fileName);
@@ -169,11 +171,20 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static VideoPlayer GetVideoPlayer()
         {
+            int RTLD_NOW = 0x0001;
+            int RTLD_GLOBAL = 0x0100;
             GeneralSettings gs = Configuration.Settings.General;
 
             if (Configuration.IsRunningOnLinux())
+            {
+                var handle = NativeMethods.dlopen("libmpv.so", RTLD_NOW | RTLD_GLOBAL);
+                if (handle != IntPtr.Zero)
+                {
+                    NativeMethods.dlclose(handle);
+                    return new LibMpvMono();
+                }
                 return new MPlayer();
-
+            }
             // Mono on OS X is 32 bit and thus requires 32 bit VLC. Place VLC in the same
             // folder as Subtitle Edit and add this to the app.config inside the
             // "configuration" element:
@@ -304,7 +315,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (_helpKeys == Keys.None)
                     _helpKeys = GetKeys(Configuration.Settings.Shortcuts.GeneralHelp);
-                return _helpKeys;                 
+                return _helpKeys;
             }
             set { _helpKeys = value; }
         }
@@ -604,6 +615,61 @@ namespace Nikse.SubtitleEdit.Logic
         private static bool IsSpaceCategory(UnicodeCategory c)
         {
             return c == UnicodeCategory.SpaceSeparator || c == UnicodeCategory.Control || c == UnicodeCategory.LineSeparator || c == UnicodeCategory.ParagraphSeparator;
+        }
+
+        private static void AddExtension(StringBuilder sb, string extension)
+        {
+            if (!sb.ToString().Contains("*" + extension + ";", StringComparison.OrdinalIgnoreCase))
+            {
+                sb.Append('*');
+                sb.Append(extension.TrimStart('*'));
+                sb.Append(';');
+            }
+        }
+
+        private static string GetOpenDialogFilter()
+        {
+            var sb = new StringBuilder();
+            sb.Append(Configuration.Settings.Language.General.SubtitleFiles + "|");
+            foreach (SubtitleFormat s in SubtitleFormat.AllSubtitleFormats)
+            {
+                AddExtension(sb, s.Extension);
+                foreach (string ext in s.AlternateExtensions)
+                    AddExtension(sb, ext);
+            }
+            AddExtension(sb, new Pac().Extension);
+            AddExtension(sb, new Cavena890().Extension);
+            AddExtension(sb, new Spt().Extension);
+            AddExtension(sb, new Wsb().Extension);
+            AddExtension(sb, new CheetahCaption().Extension);
+            AddExtension(sb, ".chk");
+            AddExtension(sb, new CaptionsInc().Extension);
+            AddExtension(sb, new Ultech130().Extension);
+            AddExtension(sb, new ELRStudioClosedCaption().Extension);
+            AddExtension(sb, ".uld"); // Ultech drop frame
+            AddExtension(sb, new SonicScenaristBitmaps().Extension);
+            AddExtension(sb, ".mks");
+            AddExtension(sb, ".mxf");
+            AddExtension(sb, ".sup");
+            AddExtension(sb, ".dost");
+            AddExtension(sb, new Ayato().Extension);
+            AddExtension(sb, new PacUnicode().Extension);
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
+            {
+                var extraExtensions = Configuration.Settings.General.OpenSubtitleExtraExtensions.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string ext in extraExtensions)
+                {
+                    if (ext.StartsWith("*.", StringComparison.Ordinal) && !sb.ToString().Contains(ext, StringComparison.OrdinalIgnoreCase))
+                        AddExtension(sb, ext);
+                }
+            }
+            AddExtension(sb, ".son");
+
+            sb.Append('|');
+            sb.Append(Configuration.Settings.Language.General.AllFiles);
+            sb.Append("|*.*");
+            return sb.ToString();
         }
 
     }

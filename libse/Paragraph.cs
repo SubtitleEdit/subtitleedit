@@ -94,8 +94,8 @@ namespace Nikse.SubtitleEdit.Core
 
         public Paragraph(int startFrame, int endFrame, string text)
         {
-            StartTime = new TimeCode(0, 0, 0, 0);
-            EndTime = new TimeCode(0, 0, 0, 0);
+            StartTime = new TimeCode();
+            EndTime = new TimeCode();
             StartFrame = startFrame;
             EndFrame = endFrame;
             Text = text;

@@ -2,7 +2,7 @@
 <Language Name="français">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.0</Version>
+    <Version>3.5.1</Version>
     <TranslatedBy>Traduction française par JM GBT</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
@@ -1837,6 +1837,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <AdjustSetEndAndOffsetTheRest>Régler la fin, déplacer le reste</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Régler la fin, déplacer le reste et passer au suivant</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>Prolonger la durée au sous-titre suivant ou durée maximum</AdjustExtendCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitle>Recalculer durée du sous-titre en cours</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>Créez la durée de démarrage du début à la fin</MainCreateStartDownEndUp>
     <MergeDialog>Participer à la conversation (Insert traits d'union)</MergeDialog>
     <GoToNext>Aller à la ligne suivante</GoToNext>
@@ -1897,6 +1898,8 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <ToggleTranslationMode>Basculer le mode de traduction</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Permuter original et traduction</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Fusionner original et traduction</MergeOriginalAndTranslation>
+    <MergeWithNext>Fusionner avec suivante</MergeWithNext>
+    <MergeWithPrevious>Fusionner avec précédente</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>Raccourci déjà défini:
 {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Basculer l'aperçu entre la traduction et l'original audio/vidéo</ToggleTranslationAndOriginalInPreviews>

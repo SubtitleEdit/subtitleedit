@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             // Load names etc list (names/noise words)
-            _namesList = new NamesList(Configuration.DictionariesFolder, _fiveLetterWordListLanguageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+            _namesList = new NamesList(Configuration.DictionariesDirectory, _fiveLetterWordListLanguageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
             _namesEtcList = _namesList.GetNames();
             _namesEtcMultiWordList = _namesList.GetMultiNames();
             _namesEtcListUppercase = new HashSet<string>();
@@ -363,6 +363,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 text = text.Replace("ﬁ", "fi"); // fb01
                 text = text.Replace("ﬂ", "fl"); // fb02
                 text = text.Replace('ν', 'v'); // NOTE: first 'v' is a special unicode character!!!!
+                text = text.Replace('‚', ','); // #x201A (SINGLE LOW-9 QUOTATION MARK) to plain old comma
             }
 
             text = ReplaceWordsBeforeLineFixes(text);
@@ -642,7 +643,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     lastLine.EndsWith('!') ||
                     lastLine.EndsWith('?'))
                 {
-                    var st = new StripableText(l);
+                    var st = new StrippableText(l);
                     if (st.StrippedText.StartsWith('i') && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("...", StringComparison.Ordinal))
                     {
                         if (string.IsNullOrEmpty(lastLine) || (!lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, _abbreviationList)))
@@ -815,7 +816,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 lastLine.EndsWith('♪'))
             {
                 lastLine = HtmlUtil.RemoveHtmlTags(lastLine);
-                var st = new StripableText(input);
+                var st = new StrippableText(input);
                 if (lastLine == null || (!lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, abbreviationList)))
                 {
                     if (st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("..."))

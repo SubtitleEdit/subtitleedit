@@ -122,6 +122,7 @@ namespace Nikse.SubtitleEdit.Core
         public string BatchConvertFormat { get; set; }
         public string BatchConvertAssStyles { get; set; }
         public string BatchConvertSsaStyles { get; set; }
+        public string BatchConvertExportCustomTextTemplate { get; set; }        
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
         public bool ModifySelectionCaseSensitive { get; set; }
@@ -668,7 +669,10 @@ namespace Nikse.SubtitleEdit.Core
             OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;*.ts"; // matroska/mp4/m4v files (can contain subtitles)
             ListViewColumnsRememberSize = true;
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
-            MpvVideoOutput = "direct3d_shaders"; // mpv "vo" option
+            if(Configuration.IsRunningOnLinux())
+                MpvVideoOutput = "vaapi"; // mpv "vo" option
+            else
+                MpvVideoOutput = "direct3d_shaders";
             UseTimeFormatHHMMSSFF = false;
             ClearStatusBarAfterSeconds = 10;
             MoveVideo100Or500MsPlaySmallSample = false;
@@ -1790,6 +1794,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("BatchConvertSsaStyles");
             if (subNode != null)
                 settings.Tools.BatchConvertSsaStyles = subNode.InnerText;
+            subNode = node.SelectSingleNode("BatchConvertExportCustomTextTemplate");
+            if (subNode != null)
+                settings.Tools.BatchConvertExportCustomTextTemplate = subNode.InnerText;
             subNode = node.SelectSingleNode("ModifySelectionRule");
             if (subNode != null)
                 settings.Tools.ModifySelectionRule = subNode.InnerText;
@@ -3156,6 +3163,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("BatchConvertFormat", settings.Tools.BatchConvertFormat);
                 textWriter.WriteElementString("BatchConvertAssStyles", settings.Tools.BatchConvertAssStyles);
                 textWriter.WriteElementString("BatchConvertSsaStyles", settings.Tools.BatchConvertSsaStyles);
+                textWriter.WriteElementString("BatchConvertExportCustomTextTemplate", settings.Tools.BatchConvertExportCustomTextTemplate);                
                 textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
                 textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
                 textWriter.WriteElementString("ModifySelectionCaseSensitive", settings.Tools.ModifySelectionCaseSensitive.ToString());

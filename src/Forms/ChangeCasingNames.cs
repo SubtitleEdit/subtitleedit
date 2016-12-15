@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLower())
                         {
-                            var st = new StripableText(text);
+                            var st = new StrippableText(text);
                             st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
                             text = st.MergedString;
                         }
@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(language))
                 language = "en_US";
 
-            var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+            var namesList = new NamesList(Configuration.DictionariesDirectory, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
 
             // Will contains both one word names and multi names
             var namesEtcList = namesList.GetAllNames();

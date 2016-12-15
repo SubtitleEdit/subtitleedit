@@ -67,6 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Ebu.EbuGeneralSubtitleInformation _ebuGeneralInformation;
         public const string BluRaySubtitle = "Blu-ray sup";
         public const string VobSubSubtitle = "VobSub";
+        private string _customTextTemplate;
 
         public BatchConvert(Icon icon)
         {
@@ -155,6 +156,7 @@ namespace Nikse.SubtitleEdit.Forms
             formatNames.Add(l.PlainText);
             formatNames.Add(BluRaySubtitle);
             formatNames.Add(VobSubSubtitle);
+            formatNames.Add(Configuration.Settings.Language.ExportCustomText.Title);
             UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, formatNames, Configuration.Settings.Tools.BatchConvertFormat);
 
             UiUtil.InitializeTextEncodingComboBox(comboBoxEncoding);
@@ -200,6 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _assStyle = Configuration.Settings.Tools.BatchConvertAssStyles;
             _ssaStyle = Configuration.Settings.Tools.BatchConvertSsaStyles;
+            _customTextTemplate = Configuration.Settings.Tools.BatchConvertExportCustomTextTemplate;
         }
 
         private void buttonChooseFolder_Click(object sender, EventArgs e)
@@ -216,7 +219,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonInputBrowse.Enabled = false;
             openFileDialog1.Title = Configuration.Settings.Language.General.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
+            openFileDialog1.Filter = UiUtil.SubtitleExtensionFilter.Value;
             openFileDialog1.Multiselect = true;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
@@ -1044,13 +1047,16 @@ namespace Nikse.SubtitleEdit.Forms
                     p.Subtitle.Header = _ebuGeneralInformation.ToString();
 
                 bool success;
+                var targetFormat = p.ToFormat;
+                if (targetFormat == Configuration.Settings.Language.ExportCustomText.Title)
+                    targetFormat = "CustomText:" + _customTextTemplate;
                 if (checkBoxOverwriteOriginalFiles.Checked)
                 {
-                    success = CommandLineConvert.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), Path.GetDirectoryName(p.FileName), _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, true, -1, null, null, false, false, false);
+                    success = CommandLineConvert.BatchConvertSave(targetFormat, null, GetCurrentEncoding(), Path.GetDirectoryName(p.FileName), _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, true, -1, null, null, false, false, false);
                 }
                 else
                 {
-                    success = CommandLineConvert.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), textBoxOutputFolder.Text, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, checkBoxOverwrite.Checked, -1, null, null, false, false, false);
+                    success = CommandLineConvert.BatchConvertSave(targetFormat, null, GetCurrentEncoding(), textBoxOutputFolder.Text, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, checkBoxOverwrite.Checked, -1, null, null, false, false, false);
                 }
                 if (success)
                 {
@@ -1089,6 +1095,12 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxEncoding.Enabled = false;
             }
             else if (comboBoxSubtitleFormats.Text == VobSubSubtitle)
+            {
+                buttonStyles.Text = Configuration.Settings.Language.BatchConvert.Settings;
+                buttonStyles.Visible = true;
+                comboBoxEncoding.Enabled = false;
+            }
+            else if (comboBoxSubtitleFormats.Text == Configuration.Settings.Language.ExportCustomText.Title)
             {
                 buttonStyles.Text = Configuration.Settings.Language.BatchConvert.Settings;
                 buttonStyles.Visible = true;
@@ -1138,6 +1150,23 @@ namespace Nikse.SubtitleEdit.Forms
                     form.PrepareForBatchSettings();
                     form.ShowDialog(this);
                 }
+            }
+            else if (comboBoxSubtitleFormats.Text == Configuration.Settings.Language.ExportCustomText.Title)
+            {
+                ShowExportCustomTextSettings();
+            }
+        }
+
+        private void ShowExportCustomTextSettings()
+        {
+            var s = new Subtitle();
+            s.Paragraphs.Add(new Paragraph("Test 123." + Environment.NewLine + "Test 456.", 0, 4000));
+            s.Paragraphs.Add(new Paragraph("Test 777." + Environment.NewLine + "Test 888.", 0, 4000));
+            using (var properties = new ExportCustomText(s, null, "Test"))
+            {
+                properties.InitializeForBatchConvert(_customTextTemplate);
+                if (properties.ShowDialog(this) == DialogResult.OK)
+                    _customTextTemplate = properties.CurrentFormatName;
             }
         }
 
@@ -1296,6 +1325,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertFormat = comboBoxSubtitleFormats.SelectedItem.ToString();
             Configuration.Settings.Tools.BatchConvertAssStyles = _assStyle;
             Configuration.Settings.Tools.BatchConvertSsaStyles = _ssaStyle;
+            Configuration.Settings.Tools.BatchConvertExportCustomTextTemplate = _customTextTemplate;
         }
 
         private void buttonMultipleReplaceSettings_Click(object sender, EventArgs e)

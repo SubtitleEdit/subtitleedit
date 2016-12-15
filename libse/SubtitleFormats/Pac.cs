@@ -1796,7 +1796,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                 return new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
             }
-            return new TimeCode(0, 0, 0, 0);
+            return new TimeCode();
         }
 
     }
