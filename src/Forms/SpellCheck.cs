@@ -406,9 +406,10 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case SpellCheckAction.SkipAll:
                     _noOfSkippedWords++;
-                    _skipAllList.Add(ChangeWord.ToUpper());
-                    if (ChangeWord.EndsWith('\'') || ChangeWord.StartsWith('\''))
-                        _skipAllList.Add(ChangeWord.ToUpper().Trim('\''));
+                    string changedWordUpperCase = ChangeWord.ToUpper();
+                    _skipAllList.Add(changedWordUpperCase);
+                    if (changedWordUpperCase.EndsWith('\'') || changedWordUpperCase.StartsWith('\''))
+                        _skipAllList.Add(changedWordUpperCase.Trim('\''));
                     break;
                 case SpellCheckAction.AddToDictionary:
                     if (_spellCheckWordLists.AddUserWord(ChangeWord))
@@ -971,12 +972,11 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle = _mainWindow.UndoFromSpellCheck(undo.Subtitle);
                         _changeAllDictionary.Remove(undo.CurrentWord);
                         break;
-                    case SpellCheckAction.Skip:
-                        break;
                     case SpellCheckAction.SkipAll:
-                        _skipAllList.Remove(undo.UndoWord.ToUpper());
-                        if (undo.UndoWord.EndsWith('\'') || undo.UndoWord.StartsWith('\''))
-                            _skipAllList.Remove(undo.UndoWord.ToUpper().Trim('\''));
+                        string undoWordUpperCase = undo.UndoWord.ToUpper();
+                        _skipAllList.Remove(undoWordUpperCase);
+                        if (undoWordUpperCase.EndsWith('\'') || undoWordUpperCase.StartsWith('\''))
+                            _skipAllList.Remove(undoWordUpperCase.Trim('\''));
                         break;
                     case SpellCheckAction.AddToDictionary:
                         _spellCheckWordLists.RemoveUserWord(undo.UndoWord);
