@@ -655,21 +655,20 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return sb.ToString().TrimEnd('\r', '\n');
         }
 
-        private static bool EndsWithAbbreviation(string line, HashSet<string> abbreviationList)
+        private static bool EndsWithAbbreviation(string line, IEnumerable<string> abbreviationList)
         {
             if (string.IsNullOrEmpty(line) || abbreviationList == null)
                 return false;
 
-            line = line.ToLower();
-            foreach (string abbreviation in abbreviationList)
-            {
-                if (line.EndsWith(" " + abbreviation.ToLower()))
-                    return true;
-            }
-
             if (line.Length > 5 && line[line.Length - 3] == '.' && char.IsLetter(line[line.Length - 2]))
                 return true;
 
+            int len = line.Length;
+            foreach (string abbreviation in abbreviationList)
+            {
+                if (abbreviation.Length < len && line.EndsWith(" " + abbreviation, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
             return false;
         }
 
