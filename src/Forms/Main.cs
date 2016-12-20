@@ -364,6 +364,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 UpdateRecentFilesUI();
                 InitializeToolbar();
+                UpdateNetflixGlyphCheckToolsVisibility();
                 UiUtil.InitializeSubtitleFont(textBoxSource);
                 UiUtil.InitializeSubtitleFont(textBoxListViewText);
                 UiUtil.InitializeSubtitleFont(textBoxListViewTextAlternate);
@@ -3416,6 +3417,11 @@ namespace Nikse.SubtitleEdit.Forms
                     currentEncoding = Encoding.UTF8;
                 }
 
+                if (format.GetType() == typeof(NetflixTimedText))
+                {
+                    NetflixGlyphCheck(false);
+                }
+
                 if (ModifierKeys == (Keys.Control | Keys.Shift))
                     allText = allText.Replace("\r\n", "\n");
 
@@ -3744,6 +3750,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             ShowHideTextBasedFeatures(format);
+
+            UpdateNetflixGlyphCheckToolsVisibility();
         }
 
         private static List<string> GetNuendoStyles()
@@ -4068,6 +4076,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStrip1.Visible = gs.ShowToolbarNew || gs.ShowToolbarOpen || gs.ShowToolbarSave || gs.ShowToolbarSaveAs || gs.ShowToolbarFind || gs.ShowToolbarReplace ||
                                  gs.ShowToolbarFixCommonErrors || gs.ShowToolbarVisualSync || gs.ShowToolbarSpellCheck || gs.ShowToolbarSettings || gs.ShowToolbarHelp;
+
+            UpdateNetflixGlyphCheckToolsVisibility();
         }
 
         private void ToolStripButtonFileNewClick(object sender, EventArgs e)
@@ -17864,15 +17874,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             styleToolStripMenuItem.Visible = format.HasStyleSupport;
-
-            if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(NetflixTimedText))
-            {
-                netflixGlyphCheckToolStripMenuItem.Visible = true;
-            }
-            else
-            {
-                netflixGlyphCheckToolStripMenuItem.Visible = false;
-            }
         }
 
         private void ContextMenuStripWaveformOpening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -20257,18 +20258,26 @@ namespace Nikse.SubtitleEdit.Forms
             IsMenuOpen = false;
         }
 
-        private void NetflixGlyphCheck(bool showSuccessMessage = true)
+        private void UpdateNetflixGlyphCheckToolsVisibility()
+        {
+            bool showTools = IsNetflixGlyphCheckAvailable();
+
+            netflixGlyphCheckToolStripMenuItem.Visible = showTools;
+            toolStripButtonNetflixGlyphCheck.Visible = showTools;
+        }
+
+        private bool IsNetflixGlyphCheckAvailable()
         {
             SubtitleFormat format = GetCurrentSubtitleFormat();
+            bool showTool = format.GetType() == typeof(TimedText10) || format.GetType() == typeof(NetflixTimedText);
+            return showTool;
+        }
 
-            if (format.GetType() != typeof(TimedText10) && format.GetType() != typeof(NetflixTimedText))
-            {
-                throw new NotSupportedException("Non supported subtitle format for Netflix glyph check");
-            }
-
+        private void NetflixGlyphCheck(bool showSuccessMessage = true)
+        {
             // Get subtitle
             ReloadFromSourceView();
-            string subtitle = _subtitle.ToText(format);
+            string subtitle = _subtitle.ToText(GetCurrentSubtitleFormat());
 
             // Check
             string report;
@@ -20291,6 +20300,11 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void netflixGlyphCheckToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NetflixGlyphCheck();
+        }
+
+        private void toolStripButtonNetflixGlyphCheck_Click(object sender, EventArgs e)
         {
             NetflixGlyphCheck();
         }
