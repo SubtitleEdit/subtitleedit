@@ -469,6 +469,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.netflixGlyphCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1593,6 +1594,7 @@
             this.toolStripMenuItemAutoSplitLongLines,
             this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem,
             this.toolStripMenuItem1,
+            this.netflixGlyphCheckToolStripMenuItem,
             this.toolStripSeparator23,
             this.toolStripMenuItemMakeEmptyFromCurrent,
             this.toolStripMenuItemBatchConvert,
@@ -4554,6 +4556,13 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
+            // netflixGlyphCheckToolStripMenuItem
+            // 
+            this.netflixGlyphCheckToolStripMenuItem.Name = "netflixGlyphCheckToolStripMenuItem";
+            this.netflixGlyphCheckToolStripMenuItem.Size = new System.Drawing.Size(346, 22);
+            this.netflixGlyphCheckToolStripMenuItem.Text = "Netflix glyph check...";
+            this.netflixGlyphCheckToolStripMenuItem.Click += new System.EventHandler(this.netflixGlyphCheckToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5066,5 +5075,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonFixCommonErrors;
         private System.Windows.Forms.ToolStripMenuItem removeSceneChangeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addSceneChangeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem netflixGlyphCheckToolStripMenuItem;
     }
 }

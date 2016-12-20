@@ -17848,6 +17848,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolsToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
+            SubtitleFormat format = GetCurrentSubtitleFormat();
+
             if (_subtitle?.Paragraphs.Count > 0 && _networkSession == null)
             {
                 toolStripSeparator23.Visible = true;
@@ -17860,7 +17862,17 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemMakeEmptyFromCurrent.Visible = false;
                 toolStripMenuItemShowOriginalInPreview.Checked = false;
             }
-            styleToolStripMenuItem.Visible = GetCurrentSubtitleFormat().HasStyleSupport;
+
+            styleToolStripMenuItem.Visible = format.HasStyleSupport;
+
+            if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(NetflixTimedText))
+            {
+                netflixGlyphCheckToolStripMenuItem.Visible = true;
+            }
+            else
+            {
+                netflixGlyphCheckToolStripMenuItem.Visible = false;
+            }
         }
 
         private void ContextMenuStripWaveformOpening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -20245,5 +20257,42 @@ namespace Nikse.SubtitleEdit.Forms
             IsMenuOpen = false;
         }
 
+        private void NetflixGlyphCheck(bool showSuccessMessage = true)
+        {
+            SubtitleFormat format = GetCurrentSubtitleFormat();
+
+            if (format.GetType() != typeof(TimedText10) && format.GetType() != typeof(NetflixTimedText))
+            {
+                throw new NotSupportedException("Non supported subtitle format for Netflix glyph check");
+            }
+
+            // Get subtitle
+            ReloadFromSourceView();
+            string subtitle = _subtitle.ToText(format);
+
+            // Check
+            string report;
+            bool checkSuccess = TimedText10.NetflixGlyphCheck(subtitle, out report);
+
+            // Show message, save report
+            if (!checkSuccess)
+            {
+                Directory.CreateDirectory("reports");
+                File.WriteAllText("reports\\netflixGlyphCheck.csv", report);
+
+                MessageBox.Show("Non-allowed glyphs from the Netflix Glyph List found in the input text. " +
+                    "Full report can be found at [TEMP_LOCATION]/[INPUT_FILE_NAME]_NetflixGlyphCheck.csv");
+            }
+
+            if (checkSuccess && showSuccessMessage)
+            {
+                MessageBox.Show("Netflix glyph check successfull");
+            }
+        }
+
+        private void netflixGlyphCheckToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NetflixGlyphCheck();
+        }
     }
 }
