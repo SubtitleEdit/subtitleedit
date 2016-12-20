@@ -1099,7 +1099,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return glyphs;
         }
 
-        private static bool NetflixGlyphCheck(string doc, out string report)
+        public static bool NetflixGlyphCheck(string doc, out string report)
         {
             StringBuilder reportBuilder = new StringBuilder();
             bool isAllOk = true;
