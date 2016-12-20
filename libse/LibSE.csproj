@@ -179,6 +179,11 @@
     <Compile Include="NoBreakAfterItem.cs" />
     <Compile Include="Paragraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="RealFFT.cs" />
     <Compile Include="RegistryUtil.cs" />
     <Compile Include="RichTextToPlainText.cs" />
@@ -501,6 +506,16 @@
     <Compile Include="XmlDeserializerGenerator.cs" />
     <Compile Include="XSub.cs" />
     <Compile Include="ZipExtractor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\codes.dat" />
+    <None Include="Resources\NetflixAllowedGlyphs.bin" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeCompile">

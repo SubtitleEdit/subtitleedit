@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -1078,5 +1079,75 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return list;
         }
 
+        private static int[] LoadNetflixGlyphs()
+        {
+            MemoryStream ms = new MemoryStream(Properties.Resources.NetflixAllowedGlyphs);
+            BinaryReader br = new BinaryReader(ms);
+
+            const int codepointSize = 4;
+            long n = ms.Length / codepointSize;
+            int[] glyphs = new int[n];
+
+            for (int i = 0; i < n; i++)
+            {
+                glyphs[i] = br.ReadInt32();
+            }
+
+            br.Close();
+            ms.Close();
+
+            return glyphs;
+        }
+
+        private static bool NetflixGlyphCheck(string doc, out string report)
+        {
+            StringBuilder reportBuilder = new StringBuilder();
+            bool isAllOk = true;
+
+
+            // Load allowed glyphs
+            int[] allowedGlyphsArr = LoadNetflixGlyphs();
+            HashSet<int> allowedGlyphsSet = new HashSet<int>(allowedGlyphsArr);
+
+
+
+            // Check document
+            string[] lines = doc.SplitToLines();
+            bool isInTag = false;
+
+            for (int lineNum = 0; lineNum < lines.Length; lineNum++)
+            {
+                string curLine = lines[lineNum];
+
+                for (int charNum = 0, actualCharNum = 0; charNum < curLine.Length;
+                    charNum += char.IsSurrogatePair(curLine, charNum) ? 2 : 1, actualCharNum++)
+                {
+                    if (curLine[charNum] == '<')
+                    {
+                        isInTag = true;
+                    }
+
+                    if (curLine[charNum] == '>')
+                    {
+                        isInTag = false;
+                    }
+
+                    if (!isInTag)
+                    {
+                        int curCodepoint = char.ConvertToUtf32(curLine, charNum);
+
+                        if (!allowedGlyphsSet.Contains(curCodepoint))
+                        {
+                            reportBuilder.Append(string.Format("Not allowed char U+{0:X4} at line {1}, col {2}.\n", curCodepoint, lineNum + 1, actualCharNum + 1));
+                            isAllOk = false;
+                        }
+                    }
+                }
+            }
+
+
+            report = reportBuilder.ToString();
+            return isAllOk;
+        }
     }
 }
