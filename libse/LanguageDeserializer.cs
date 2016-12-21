@@ -5350,6 +5350,15 @@ namespace Nikse.SubtitleEdit.Core
                 case "SpellCheck/UndoX":
                     language.SpellCheck.UndoX = reader.Value;
                     break;
+                case "NetflixGlyphCheck/CheckSuccessfull":
+                    language.NetflixGlyphCheck.CheckSuccessfull = reader.Value;
+                    break;
+                case "NetflixGlyphCheck/CheckWarning":
+                    language.NetflixGlyphCheck.CheckWarning = reader.Value;
+                    break;
+                case "NetflixGlyphCheck/NotAllowedGlyphReport":
+                    language.NetflixGlyphCheck.NotAllowedGlyphReport = reader.Value;
+                    break;
                 case "Split/Title":
                     language.Split.Title = reader.Value;
                     break;

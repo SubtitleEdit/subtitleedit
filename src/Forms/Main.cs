@@ -20296,13 +20296,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 File.WriteAllText(reportPath, report);
 
-                MessageBox.Show(string.Format("Non-allowed glyphs from the Netflix Glyph List found in the input text. " +
-                    "Full report can be found at {0}", reportPath));
+                MessageBox.Show(string.Format(Configuration.Settings.Language.NetflixGlyphCheck.CheckWarning, reportPath));
             }
 
             if (checkSuccess && showSuccessMessage)
             {
-                MessageBox.Show("Netflix glyph check successfull");
+                MessageBox.Show(Configuration.Settings.Language.NetflixGlyphCheck.CheckSuccessfull);
             }
         }
 

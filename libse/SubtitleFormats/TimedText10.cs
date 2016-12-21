@@ -1138,7 +1138,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                         if (!allowedGlyphsSet.Contains(curCodepoint))
                         {
-                            reportBuilder.Append(string.Format("Not allowed char U+{0:X4} at line {1}, col {2}.\n", curCodepoint, lineNum + 1, actualCharNum + 1));
+                            reportBuilder.Append(string.Format(Configuration.Settings.Language.NetflixGlyphCheck.NotAllowedGlyphReport + "\n",
+                                string.Format("U+{0:X4}", curCodepoint), lineNum + 1, actualCharNum + 1));
                             isAllOk = false;
                         }
                     }

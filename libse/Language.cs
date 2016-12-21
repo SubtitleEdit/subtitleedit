@@ -85,6 +85,7 @@ namespace Nikse.SubtitleEdit.Core
         public LanguageStructure.ShowEarlierLater ShowEarlierLater;
         public LanguageStructure.ShowHistory ShowHistory;
         public LanguageStructure.SpellCheck SpellCheck;
+        public LanguageStructure.NetflixGlyphCheck NetflixGlyphCheck;
         public LanguageStructure.Split Split;
         public LanguageStructure.SplitLongLines SplitLongLines;
         public LanguageStructure.SplitSubtitle SplitSubtitle;
@@ -2268,6 +2269,14 @@ can edit in same subtitle file (collaboration)",
                 SpellCheckCompleted = "Spell check completed",
                 SpellCheckAborted = "Spell check aborted",
                 UndoX = "Undo: {0}",
+            };
+
+            NetflixGlyphCheck = new LanguageStructure.NetflixGlyphCheck
+            {
+                CheckSuccessfull = "Netflix glyph check successfull",
+                CheckWarning = "Non-allowed glyphs from the Netflix Glyph List found in the input text. " +
+                    "Full report can be found at {0}",
+                NotAllowedGlyphReport = "Not allowed char {0} at line {1}, col {2}"
             };
 
             Split = new LanguageStructure.Split
