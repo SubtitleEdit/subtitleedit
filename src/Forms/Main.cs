@@ -1165,6 +1165,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAutoSplitLongLines.Text = _language.Menu.Tools.SplitLongLines;
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
             toolStripMenuItem1.Text = _language.Menu.Tools.SortBy;
+            toolStripButtonNetflixGlyphCheck.Text = _language.Menu.Tools.NetflixGlyphCheck;
 
             sortNumberToolStripMenuItem.Text = _language.Menu.Tools.Number;
             sortStartTimeToolStripMenuItem.Text = _language.Menu.Tools.StartTime;
@@ -1258,6 +1259,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonRemoveTextForHi.ToolTipText = _language.Menu.ToolBar.RemoveTextForHi;
             toolStripButtonVisualSync.ToolTipText = _language.Menu.ToolBar.VisualSync;
             toolStripButtonSpellCheck.ToolTipText = _language.Menu.ToolBar.SpellCheck;
+            toolStripButtonNetflixGlyphCheck.ToolTipText = _language.Menu.ToolBar.NetflixGlyphCheck;
             toolStripButtonSettings.ToolTipText = _language.Menu.ToolBar.Settings;
             toolStripButtonHelp.ToolTipText = _language.Menu.ToolBar.Help;
             toolStripButtonToggleWaveform.ToolTipText = _language.Menu.ToolBar.ShowHideWaveform;
@@ -20289,11 +20291,13 @@ namespace Nikse.SubtitleEdit.Forms
             // Show message, save report
             if (!checkSuccess)
             {
-                Directory.CreateDirectory("reports");
-                File.WriteAllText("reports\\netflixGlyphCheck.csv", report);
+                string fileName = string.IsNullOrEmpty(_fileName) ? "untitledSubtitle" : Path.GetFileNameWithoutExtension(_fileName);
+                string reportPath = Path.GetTempPath() + fileName + "_NetflixGlyphCheck.csv";
 
-                MessageBox.Show("Non-allowed glyphs from the Netflix Glyph List found in the input text. " +
-                    "Full report can be found at [TEMP_LOCATION]/[INPUT_FILE_NAME]_NetflixGlyphCheck.csv");
+                File.WriteAllText(reportPath, report);
+
+                MessageBox.Show(string.Format("Non-allowed glyphs from the Netflix Glyph List found in the input text. " +
+                    "Full report can be found at {0}", reportPath));
             }
 
             if (checkSuccess && showSuccessMessage)

@@ -1051,6 +1051,7 @@ Note: Do check free disk space.</WaveFileMalformed>
         <RemoveTextForHi>Remove text for hearing impaired</RemoveTextForHi>
         <VisualSync>Visual sync</VisualSync>
         <SpellCheck>Spell check</SpellCheck>
+        <NetflixGlyphCheck>Netflix glyph check</NetflixGlyphCheck>
         <Settings>Settings</Settings>
         <Help>Help</Help>
         <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
@@ -1675,6 +1676,7 @@ can edit in same subtitle file (collaboration)</Information>
     <Replace>Replace</Replace>
     <VisualSync>Visual sync</VisualSync>
     <SpellCheck>Spell check</SpellCheck>
+    <NetflixGlyphCheck>Netflix glyph check</NetflixGlyphCheck>
     <SettingsName>Settings</SettingsName>
     <Help>Help</Help>
     <ShowFrameRate>Show frame rate in toolbar</ShowFrameRate>

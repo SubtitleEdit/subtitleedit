@@ -1313,6 +1313,7 @@
                     public string SplitLongLines { get; set; }
                     public string MinimumDisplayTimeBetweenParagraphs { get; set; }
                     public string SortBy { get; set; }
+                    public string NetflixGlyphCheck { get; set; }
                     public string Number { get; set; }
                     public string StartTime { get; set; }
                     public string EndTime { get; set; }
@@ -1413,6 +1414,7 @@
                     public string RemoveTextForHi { get; set; }
                     public string VisualSync { get; set; }
                     public string SpellCheck { get; set; }
+                    public string NetflixGlyphCheck { get; set; }
                     public string Settings { get; set; }
                     public string Help { get; set; }
                     public string ShowHideWaveform { get; set; }
@@ -1836,6 +1838,7 @@
             public string Replace { get; set; }
             public string VisualSync { get; set; }
             public string SpellCheck { get; set; }
+            public string NetflixGlyphCheck { get; set; }
             public string SettingsName { get; set; }
             public string Help { get; set; }
             public string ShowFrameRate { get; set; }

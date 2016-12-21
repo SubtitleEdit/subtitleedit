@@ -255,6 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelTBRemoveTextForHi.Text = language.RemoveTextForHi;
             labelTBVisualSync.Text = language.VisualSync;
             labelTBSpellCheck.Text = language.SpellCheck;
+            labelTBNetflixGlyphCheck.Text = language.NetflixGlyphCheck;
             labelTBSettings.Text = language.SettingsName;
             labelTBHelp.Text = language.Help;
             checkBoxToolbarNew.Text = Configuration.Settings.Language.General.Visible;
