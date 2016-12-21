@@ -2151,6 +2151,13 @@
             public string UndoX { get; set; }
         }
 
+        public class NetflixGlyphCheck
+        {
+            public string CheckSuccessfull { get; set; }
+            public string CheckWarning { get; set; }
+            public string NotAllowedGlyphReport { get; set; }
+        }
+
         public class Split
         {
             public string Title { get; set; }

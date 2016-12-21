@@ -1977,6 +1977,11 @@ can edit in same subtitle file (collaboration)</Information>
     <SpellCheckAborted>Spell check aborted</SpellCheckAborted>
     <UndoX>Undo: {0}</UndoX>
   </SpellCheck>
+  <NetflixGlyphCheck>
+    <CheckSuccessfull>Netflix glyph check successfull</CheckSuccessfull>
+    <CheckWarning>Non-allowed glyphs from the Netflix Glyph List found in the input text. Full report can be found at {0}</CheckWarning>
+    <NotAllowedGlyphReport>Not allowed char {0} at line {1}, col {2}</NotAllowedGlyphReport>
+  </NetflixGlyphCheck>
   <Split>
     <Title>Split</Title>
     <SplitOptions>Split options</SplitOptions>
