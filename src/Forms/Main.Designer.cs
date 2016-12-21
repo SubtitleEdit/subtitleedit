@@ -57,6 +57,7 @@
             this.toolStripButtonRemoveTextForHi = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonVisualSync = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSpellCheck = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonNetflixGlyphCheck = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparatorHelp = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
@@ -188,6 +189,7 @@
             this.toolStripSeparatorAscOrDesc = new System.Windows.Forms.ToolStripSeparator();
             this.AscendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.descendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.netflixGlyphCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemMakeEmptyFromCurrent = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemBatchConvert = new System.Windows.Forms.ToolStripMenuItem();
@@ -461,8 +463,6 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.netflixGlyphCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripButtonNetflixGlyphCheck = new System.Windows.Forms.ToolStripButton();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.textBoxListViewTextAlternate = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
@@ -739,6 +739,17 @@
             this.toolStripButtonSpellCheck.Size = new System.Drawing.Size(36, 37);
             this.toolStripButtonSpellCheck.Text = "Spell check";
             this.toolStripButtonSpellCheck.Click += new System.EventHandler(this.ToolStripButtonSpellCheckClick);
+            // 
+            // toolStripButtonNetflixGlyphCheck
+            // 
+            this.toolStripButtonNetflixGlyphCheck.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonNetflixGlyphCheck.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonNetflixGlyphCheck.Image")));
+            this.toolStripButtonNetflixGlyphCheck.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonNetflixGlyphCheck.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonNetflixGlyphCheck.Name = "toolStripButtonNetflixGlyphCheck";
+            this.toolStripButtonNetflixGlyphCheck.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonNetflixGlyphCheck.Text = "Netflix glyph check";
+            this.toolStripButtonNetflixGlyphCheck.Click += new System.EventHandler(this.toolStripButtonNetflixGlyphCheck_Click);
             // 
             // toolStripButtonSettings
             // 
@@ -1821,6 +1832,13 @@
             this.descendingToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
             this.descendingToolStripMenuItem.Text = "Descending";
             this.descendingToolStripMenuItem.Click += new System.EventHandler(this.descendingToolStripMenuItem_Click);
+            // 
+            // netflixGlyphCheckToolStripMenuItem
+            // 
+            this.netflixGlyphCheckToolStripMenuItem.Name = "netflixGlyphCheckToolStripMenuItem";
+            this.netflixGlyphCheckToolStripMenuItem.Size = new System.Drawing.Size(346, 22);
+            this.netflixGlyphCheckToolStripMenuItem.Text = "Netflix glyph check";
+            this.netflixGlyphCheckToolStripMenuItem.Click += new System.EventHandler(this.netflixGlyphCheckToolStripMenuItem_Click);
             // 
             // toolStripSeparator23
             // 
@@ -4378,23 +4396,6 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
-            // 
-            // netflixGlyphCheckToolStripMenuItem
-            // 
-            this.netflixGlyphCheckToolStripMenuItem.Name = "netflixGlyphCheckToolStripMenuItem";
-            this.netflixGlyphCheckToolStripMenuItem.Size = new System.Drawing.Size(346, 22);
-            this.netflixGlyphCheckToolStripMenuItem.Text = "Netflix glyph check...";
-            this.netflixGlyphCheckToolStripMenuItem.Click += new System.EventHandler(this.netflixGlyphCheckToolStripMenuItem_Click);
-            // 
-            // toolStripButtonNetflixGlyphCheck
-            // 
-            this.toolStripButtonNetflixGlyphCheck.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonNetflixGlyphCheck.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonNetflixGlyphCheck.Image")));
-            this.toolStripButtonNetflixGlyphCheck.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonNetflixGlyphCheck.Name = "toolStripButtonNetflixGlyphCheck";
-            this.toolStripButtonNetflixGlyphCheck.Size = new System.Drawing.Size(23, 37);
-            this.toolStripButtonNetflixGlyphCheck.Text = "Netflix glyph check";
-            this.toolStripButtonNetflixGlyphCheck.Click += new System.EventHandler(this.toolStripButtonNetflixGlyphCheck_Click);
             // 
             // SubtitleListview1
             // 

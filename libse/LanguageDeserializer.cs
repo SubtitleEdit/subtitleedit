@@ -3346,6 +3346,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/Tools/SortBy":
                     language.Main.Menu.Tools.SortBy = reader.Value;
                     break;
+                case "Main/Menu/Tools/NetflixGlyphCheck":
+                    language.Main.Menu.Tools.NetflixGlyphCheck = reader.Value;
+                    break;
                 case "Main/Menu/Tools/Number":
                     language.Main.Menu.Tools.Number = reader.Value;
                     break;
@@ -3564,6 +3567,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/Menu/ToolBar/SpellCheck":
                     language.Main.Menu.ToolBar.SpellCheck = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/NetflixGlyphCheck":
+                    language.Main.Menu.ToolBar.NetflixGlyphCheck = reader.Value;
                     break;
                 case "Main/Menu/ToolBar/Settings":
                     language.Main.Menu.ToolBar.Settings = reader.Value;
@@ -4473,6 +4479,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/SpellCheck":
                     language.Settings.SpellCheck = reader.Value;
+                    break;
+                case "Settings/NetflixGlyphCheck":
+                    language.Settings.NetflixGlyphCheck = reader.Value;
                     break;
                 case "Settings/SettingsName":
                     language.Settings.SettingsName = reader.Value;
