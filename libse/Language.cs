@@ -2273,10 +2273,9 @@ can edit in same subtitle file (collaboration)",
 
             NetflixGlyphCheck = new LanguageStructure.NetflixGlyphCheck
             {
-                CheckSuccessfull = "Netflix glyph check successfull",
-                CheckWarning = "Non-allowed glyphs from the Netflix Glyph List found in the input text. " +
-                    "Full report can be found at {0}",
-                NotAllowedGlyphReport = "Not allowed char {0} at line {1}, col {2}"
+                CheckSuccessfull = "Character validation successful.",
+                CheckWarning = "Character validation failed. Refer to the Netflix Glyph List for valid characters. Please see the full report here: {0}.",
+                NotAllowedGlyphReport = "Invalid character {0} found at line {1}, column {2}."
             };
 
             Split = new LanguageStructure.Split

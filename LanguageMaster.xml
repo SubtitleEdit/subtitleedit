@@ -1978,9 +1978,9 @@ can edit in same subtitle file (collaboration)</Information>
     <UndoX>Undo: {0}</UndoX>
   </SpellCheck>
   <NetflixGlyphCheck>
-    <CheckSuccessfull>Netflix glyph check successfull</CheckSuccessfull>
-    <CheckWarning>Non-allowed glyphs from the Netflix Glyph List found in the input text. Full report can be found at {0}</CheckWarning>
-    <NotAllowedGlyphReport>Not allowed char {0} at line {1}, col {2}</NotAllowedGlyphReport>
+    <CheckSuccessfull>Character validation successful.</CheckSuccessfull>
+    <CheckWarning>Character validation failed. Refer to the Netflix Glyph List for valid characters. Please see the full report here: {0}.</CheckWarning>
+    <NotAllowedGlyphReport>Invalid character {0} found at line {1}, column {2}.</NotAllowedGlyphReport>
   </NetflixGlyphCheck>
   <Split>
     <Title>Split</Title>
