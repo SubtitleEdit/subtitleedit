@@ -493,6 +493,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool ShowToolbarRemoveTextForHi { get; set; }
         public bool ShowToolbarVisualSync { get; set; }
         public bool ShowToolbarSpellCheck { get; set; }
+        public bool ShowToolbarNetflixGlyphCheck { get; set; }
         public bool ShowToolbarSettings { get; set; }
         public bool ShowToolbarHelp { get; set; }
 
@@ -603,6 +604,7 @@ namespace Nikse.SubtitleEdit.Core
             ShowToolbarFixCommonErrors = false;
             ShowToolbarVisualSync = true;
             ShowToolbarSpellCheck = true;
+            ShowToolbarNetflixGlyphCheck = true;
             ShowToolbarSettings = false;
             ShowToolbarHelp = true;
 
@@ -1352,6 +1354,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("ShowToolbarSpellCheck");
             if (subNode != null)
                 settings.General.ShowToolbarSpellCheck = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ShowToolbarNetflixGlyphCheck");
+            if (subNode != null)
+                settings.General.ShowToolbarNetflixGlyphCheck = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ShowToolbarSettings");
             if (subNode != null)
                 settings.General.ShowToolbarSettings = Convert.ToBoolean(subNode.InnerText);
@@ -3015,6 +3020,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("ShowToolbarRemoveTextForHi", settings.General.ShowToolbarRemoveTextForHi.ToString());
                 textWriter.WriteElementString("ShowToolbarVisualSync", settings.General.ShowToolbarVisualSync.ToString());
                 textWriter.WriteElementString("ShowToolbarSpellCheck", settings.General.ShowToolbarSpellCheck.ToString());
+                textWriter.WriteElementString("ShowToolbarNetflixGlyphCheck", settings.General.ShowToolbarNetflixGlyphCheck.ToString()); 
                 textWriter.WriteElementString("ShowToolbarSettings", settings.General.ShowToolbarSettings.ToString());
                 textWriter.WriteElementString("ShowToolbarHelp", settings.General.ShowToolbarHelp.ToString());
                 textWriter.WriteElementString("ShowFrameRate", settings.General.ShowFrameRate.ToString());

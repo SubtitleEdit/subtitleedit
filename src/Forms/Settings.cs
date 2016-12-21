@@ -86,6 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxVisualSync.Checked = gs.ShowToolbarVisualSync;
             checkBoxSettings.Checked = gs.ShowToolbarSettings;
             checkBoxSpellCheck.Checked = gs.ShowToolbarSpellCheck;
+            checkBoxNetflixGlyphCheck.Checked = gs.ShowToolbarNetflixGlyphCheck;
             checkBoxHelp.Checked = gs.ShowToolbarHelp;
 
             comboBoxFrameRate.Items.Add((23.976).ToString(CultureInfo.CurrentCulture));
@@ -266,6 +267,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxTBRemoveTextForHi.Text = Configuration.Settings.Language.General.Visible;
             checkBoxVisualSync.Text = Configuration.Settings.Language.General.Visible;
             checkBoxSpellCheck.Text = Configuration.Settings.Language.General.Visible;
+            checkBoxNetflixGlyphCheck.Text = Configuration.Settings.Language.General.Visible;
             checkBoxSettings.Text = Configuration.Settings.Language.General.Visible;
             checkBoxHelp.Text = Configuration.Settings.Language.General.Visible;
 
@@ -939,7 +941,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors, Image removeTextForHi,
-                               Image visualSync, Image spellCheck, Image settings, Image help)
+                               Image visualSync, Image spellCheck, Image NetflixGlyphCheck, Image settings, Image help)
         {
             Icon = (Icon)icon.Clone();
             pictureBoxNew.Image = (Image)newFile.Clone();
@@ -952,6 +954,7 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxTBRemoveTextForHi.Image = (Image)removeTextForHi.Clone();
             pictureBoxVisualSync.Image = (Image)visualSync.Clone();
             pictureBoxSpellCheck.Image = (Image)spellCheck.Clone();
+            pictureBoxNetflixGlyphCheck.Image = (Image)NetflixGlyphCheck.Clone();
             pictureBoxSettings.Image = (Image)settings.Clone();
             pictureBoxHelp.Image = (Image)help.Clone();
         }
@@ -1034,6 +1037,7 @@ namespace Nikse.SubtitleEdit.Forms
             gs.ShowToolbarVisualSync = checkBoxVisualSync.Checked;
             gs.ShowToolbarSettings = checkBoxSettings.Checked;
             gs.ShowToolbarSpellCheck = checkBoxSpellCheck.Checked;
+            gs.ShowToolbarNetflixGlyphCheck = checkBoxNetflixGlyphCheck.Checked;
             gs.ShowToolbarHelp = checkBoxHelp.Checked;
 
             gs.ShowFrameRate = checkBoxShowFrameRate.Checked;

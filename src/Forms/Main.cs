@@ -3828,7 +3828,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
                                     toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonRemoveTextForHi.Image, toolStripButtonVisualSync.Image,
-                                    toolStripButtonSpellCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
+                                    toolStripButtonSpellCheck.Image, toolStripButtonNetflixGlyphCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
                 settings.ShowDialog(this);
             }
 
@@ -4045,6 +4045,7 @@ namespace Nikse.SubtitleEdit.Forms
             TryLoadIcon(toolStripButtonRemoveTextForHi, "RemoveTextForHi");
             TryLoadIcon(toolStripButtonVisualSync, "VisualSync");
             TryLoadIcon(toolStripButtonSpellCheck, "SpellCheck");
+            TryLoadIcon(toolStripButtonNetflixGlyphCheck, "NetflixGlyphCheck");
             TryLoadIcon(toolStripButtonSettings, "Settings");
             TryLoadIcon(toolStripButtonHelp, "Help");
 
@@ -4062,6 +4063,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripButtonVisualSync.Visible = gs.ShowToolbarVisualSync;
             toolStripButtonSpellCheck.Visible = gs.ShowToolbarSpellCheck;
+            toolStripButtonNetflixGlyphCheck.Visible = gs.ShowToolbarNetflixGlyphCheck;
             toolStripButtonSettings.Visible = gs.ShowToolbarSettings;
             toolStripButtonHelp.Visible = gs.ShowToolbarHelp;
 
@@ -4075,7 +4077,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripSeparatorHelp.Visible = gs.ShowToolbarHelp;
 
             toolStrip1.Visible = gs.ShowToolbarNew || gs.ShowToolbarOpen || gs.ShowToolbarSave || gs.ShowToolbarSaveAs || gs.ShowToolbarFind || gs.ShowToolbarReplace ||
-                                 gs.ShowToolbarFixCommonErrors || gs.ShowToolbarVisualSync || gs.ShowToolbarSpellCheck || gs.ShowToolbarSettings || gs.ShowToolbarHelp;
+                                 gs.ShowToolbarFixCommonErrors || gs.ShowToolbarVisualSync || gs.ShowToolbarSpellCheck || gs.ShowToolbarNetflixGlyphCheck ||
+                                 gs.ShowToolbarSettings || gs.ShowToolbarHelp;
 
             UpdateNetflixGlyphCheckToolsVisibility();
         }
@@ -20263,7 +20266,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool showTools = IsNetflixGlyphCheckAvailable();
 
             netflixGlyphCheckToolStripMenuItem.Visible = showTools;
-            toolStripButtonNetflixGlyphCheck.Visible = showTools;
+            toolStripButtonNetflixGlyphCheck.Visible = showTools && Configuration.Settings.General.ShowToolbarNetflixGlyphCheck;
         }
 
         private bool IsNetflixGlyphCheckAvailable()

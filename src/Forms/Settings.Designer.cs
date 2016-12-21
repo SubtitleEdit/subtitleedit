@@ -320,6 +320,9 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
+            this.labelTBNetflixGlyphCheck = new System.Windows.Forms.Label();
+            this.pictureBoxNetflixGlyphCheck = new System.Windows.Forms.PictureBox();
+            this.checkBoxNetflixGlyphCheck = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -387,6 +390,7 @@
             this.groupBoxShortcuts.SuspendLayout();
             this.tabPageSyntaxColoring.SuspendLayout();
             this.groupBoxListViewSyntaxColoring.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixGlyphCheck)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -1143,6 +1147,9 @@
             // 
             this.groupBoxShowToolBarButtons.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBNetflixGlyphCheck);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxNetflixGlyphCheck);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxNetflixGlyphCheck);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBRemoveTextForHi);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxTBRemoveTextForHi);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxTBRemoveTextForHi);
@@ -3814,6 +3821,33 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
+            // labelTBNetflixGlyphCheck
+            // 
+            this.labelTBNetflixGlyphCheck.AutoSize = true;
+            this.labelTBNetflixGlyphCheck.Location = new System.Drawing.Point(636, 136);
+            this.labelTBNetflixGlyphCheck.Name = "labelTBNetflixGlyphCheck";
+            this.labelTBNetflixGlyphCheck.Size = new System.Drawing.Size(97, 13);
+            this.labelTBNetflixGlyphCheck.TabIndex = 42;
+            this.labelTBNetflixGlyphCheck.Text = "Netflix glyph check";
+            // 
+            // pictureBoxNetflixGlyphCheck
+            // 
+            this.pictureBoxNetflixGlyphCheck.Location = new System.Drawing.Point(649, 155);
+            this.pictureBoxNetflixGlyphCheck.Name = "pictureBoxNetflixGlyphCheck";
+            this.pictureBoxNetflixGlyphCheck.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxNetflixGlyphCheck.TabIndex = 41;
+            this.pictureBoxNetflixGlyphCheck.TabStop = false;
+            // 
+            // checkBoxNetflixGlyphCheck
+            // 
+            this.checkBoxNetflixGlyphCheck.AutoSize = true;
+            this.checkBoxNetflixGlyphCheck.Location = new System.Drawing.Point(652, 195);
+            this.checkBoxNetflixGlyphCheck.Name = "checkBoxNetflixGlyphCheck";
+            this.checkBoxNetflixGlyphCheck.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxNetflixGlyphCheck.TabIndex = 40;
+            this.checkBoxNetflixGlyphCheck.Text = "Visible";
+            this.checkBoxNetflixGlyphCheck.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3928,6 +3962,7 @@
             this.tabPageSyntaxColoring.ResumeLayout(false);
             this.groupBoxListViewSyntaxColoring.ResumeLayout(false);
             this.groupBoxListViewSyntaxColoring.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixGlyphCheck)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -4227,5 +4262,8 @@
         private System.Windows.Forms.CheckBox checkBoxTBRemoveTextForHi;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxNumberOfLines;
         private System.Windows.Forms.Label labelMaxLines;
+        private System.Windows.Forms.Label labelTBNetflixGlyphCheck;
+        private System.Windows.Forms.PictureBox pictureBoxNetflixGlyphCheck;
+        private System.Windows.Forms.CheckBox checkBoxNetflixGlyphCheck;
     }
 }
