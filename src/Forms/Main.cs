@@ -25,6 +25,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.SpellCheck;
+using Nikse.SubtitleEdit.Core.NetflixQualityCheck;
 using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -1165,7 +1166,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAutoSplitLongLines.Text = _language.Menu.Tools.SplitLongLines;
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
             toolStripMenuItem1.Text = _language.Menu.Tools.SortBy;
-            toolStripButtonNetflixGlyphCheck.Text = _language.Menu.Tools.NetflixGlyphCheck;
+            toolStripButtonNetflixQualityCheck.Text = _language.Menu.Tools.NetflixQualityCheck;
 
             sortNumberToolStripMenuItem.Text = _language.Menu.Tools.Number;
             sortStartTimeToolStripMenuItem.Text = _language.Menu.Tools.StartTime;
@@ -1259,7 +1260,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonRemoveTextForHi.ToolTipText = _language.Menu.ToolBar.RemoveTextForHi;
             toolStripButtonVisualSync.ToolTipText = _language.Menu.ToolBar.VisualSync;
             toolStripButtonSpellCheck.ToolTipText = _language.Menu.ToolBar.SpellCheck;
-            toolStripButtonNetflixGlyphCheck.ToolTipText = _language.Menu.ToolBar.NetflixGlyphCheck;
+            toolStripButtonNetflixQualityCheck.ToolTipText = _language.Menu.ToolBar.NetflixQualityCheck;
             toolStripButtonSettings.ToolTipText = _language.Menu.ToolBar.Settings;
             toolStripButtonHelp.ToolTipText = _language.Menu.ToolBar.Help;
             toolStripButtonToggleWaveform.ToolTipText = _language.Menu.ToolBar.ShowHideWaveform;
@@ -3830,7 +3831,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
                                     toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonRemoveTextForHi.Image, toolStripButtonVisualSync.Image,
-                                    toolStripButtonSpellCheck.Image, toolStripButtonNetflixGlyphCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
+                                    toolStripButtonSpellCheck.Image, toolStripButtonNetflixQualityCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
                 settings.ShowDialog(this);
             }
 
@@ -4047,7 +4048,7 @@ namespace Nikse.SubtitleEdit.Forms
             TryLoadIcon(toolStripButtonRemoveTextForHi, "RemoveTextForHi");
             TryLoadIcon(toolStripButtonVisualSync, "VisualSync");
             TryLoadIcon(toolStripButtonSpellCheck, "SpellCheck");
-            TryLoadIcon(toolStripButtonNetflixGlyphCheck, "NetflixGlyphCheck");
+            TryLoadIcon(toolStripButtonNetflixQualityCheck, "NetflixGlyphCheck");
             TryLoadIcon(toolStripButtonSettings, "Settings");
             TryLoadIcon(toolStripButtonHelp, "Help");
 
@@ -4065,7 +4066,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripButtonVisualSync.Visible = gs.ShowToolbarVisualSync;
             toolStripButtonSpellCheck.Visible = gs.ShowToolbarSpellCheck;
-            toolStripButtonNetflixGlyphCheck.Visible = gs.ShowToolbarNetflixGlyphCheck;
+            toolStripButtonNetflixQualityCheck.Visible = gs.ShowToolbarNetflixGlyphCheck;
             toolStripButtonSettings.Visible = gs.ShowToolbarSettings;
             toolStripButtonHelp.Visible = gs.ShowToolbarHelp;
 
@@ -20267,8 +20268,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             bool showTools = IsNetflixGlyphCheckAvailable();
 
-            netflixGlyphCheckToolStripMenuItem.Visible = showTools;
-            toolStripButtonNetflixGlyphCheck.Visible = showTools && Configuration.Settings.General.ShowToolbarNetflixGlyphCheck;
+            netflixQualityCheckToolStripMenuItem.Visible = showTools;
+            toolStripButtonNetflixQualityCheck.Visible = showTools && Configuration.Settings.General.ShowToolbarNetflixGlyphCheck;
         }
 
         private bool IsNetflixGlyphCheckAvailable()
@@ -20285,23 +20286,43 @@ namespace Nikse.SubtitleEdit.Forms
             string subtitle = _subtitle.ToText(GetCurrentSubtitleFormat());
 
             // Check
-            string report;
-            bool checkSuccess = TimedText10.NetflixGlyphCheck(subtitle, out report);
+            NetflixQualityReportBuilder glyphCheckReport = new NetflixQualityReportBuilder();
+            NetflixGlyphChecker glyphChecker = new NetflixGlyphChecker();
+            glyphChecker.Check(_subtitle, glyphCheckReport);
 
-            // Show message, save report
-            if (!checkSuccess)
+            NetflixQualityReportBuilder whiteSpaceCheckReport = new NetflixQualityReportBuilder();
+            NetflixWhiteSpaceChecker whiteSpaceChecker = new NetflixWhiteSpaceChecker();
+            whiteSpaceChecker.Check(_subtitle, whiteSpaceCheckReport);
+
+            string fileName = string.IsNullOrEmpty(_fileName) ? "untitledSubtitle" : Path.GetFileNameWithoutExtension(_fileName);
+
+            List<string> messages = new List<string>();
+
+            if (!glyphCheckReport.IsEmpty)
             {
-                string fileName = string.IsNullOrEmpty(_fileName) ? "untitledSubtitle" : Path.GetFileNameWithoutExtension(_fileName);
                 string reportPath = Path.GetTempPath() + fileName + "_NetflixGlyphCheck.csv";
-
-                File.WriteAllText(reportPath, report);
-
-                MessageBox.Show(string.Format(Configuration.Settings.Language.NetflixGlyphCheck.CheckWarning, reportPath));
+                File.WriteAllText(reportPath, glyphCheckReport.ExportCSV());
+                messages.Add(string.Format(Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckFailed, reportPath));
+            }
+            else if (showSuccessMessage)
+            {
+                messages.Add(Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckSuccessfull);
             }
 
-            if (checkSuccess && showSuccessMessage)
+            if (!whiteSpaceCheckReport.IsEmpty)
             {
-                MessageBox.Show(Configuration.Settings.Language.NetflixGlyphCheck.CheckSuccessfull);
+                string reportPath = Path.GetTempPath() + fileName + "_NetflixWhiteSpaceCheck.csv";
+                File.WriteAllText(reportPath, whiteSpaceCheckReport.ExportCSV());
+                messages.Add(string.Format(Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckFailed, reportPath));
+            }
+            else if (showSuccessMessage)
+            {
+                messages.Add(Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckSuccessfull);
+            }
+
+            if (messages.Count != 0)
+            {
+                MessageBox.Show(String.Join("\n\n", messages.ToArray()));
             }
         }
 
