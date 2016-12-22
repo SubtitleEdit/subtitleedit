@@ -175,6 +175,10 @@
     <Compile Include="ManagedBitmap.cs" />
     <Compile Include="MurMurHash3.cs" />
     <Compile Include="NativeMethods.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixGlyphChecker.cs" />
+    <Compile Include="NetflixQualityCheck\INetflixQualityChecker.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixQualityReportBuilder.cs" />
+    <Compile Include="NetflixQualityCheck\NetflixWhiteSpaceChecker.cs" />
     <Compile Include="NikseBitmap.cs" />
     <Compile Include="NoBreakAfterItem.cs" />
     <Compile Include="Paragraph.cs" />

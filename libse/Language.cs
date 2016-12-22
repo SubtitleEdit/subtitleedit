@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Core
         public LanguageStructure.ShowEarlierLater ShowEarlierLater;
         public LanguageStructure.ShowHistory ShowHistory;
         public LanguageStructure.SpellCheck SpellCheck;
-        public LanguageStructure.NetflixGlyphCheck NetflixGlyphCheck;
+        public LanguageStructure.NetflixQualityCheck NetflixQualityCheck;
         public LanguageStructure.Split Split;
         public LanguageStructure.SplitLongLines SplitLongLines;
         public LanguageStructure.SplitSubtitle SplitSubtitle;
@@ -1550,7 +1550,7 @@ namespace Nikse.SubtitleEdit.Core
                         RemoveTextForHi = "Remove text for hearing impaired",
                         VisualSync = "Visual sync",
                         SpellCheck = "Spell check",
-                        NetflixGlyphCheck = "Netflix glyph check",
+                        NetflixQualityCheck = "Netflix quality check",
                         Settings = "Settings",
                         Help = "Help",
                         ShowHideWaveform = "Show/hide waveform",
@@ -1961,7 +1961,7 @@ can edit in same subtitle file (collaboration)",
                 Replace = "Replace",
                 VisualSync = "Visual sync",
                 SpellCheck = "Spell check",
-                NetflixGlyphCheck = "Netflix glyph check",
+                NetflixQualityCheck = "Netflix quality check",
                 SettingsName = "Settings",
                 Help = "Help",
                 ShowFrameRate = "Show frame rate in toolbar",
@@ -2271,11 +2271,15 @@ can edit in same subtitle file (collaboration)",
                 UndoX = "Undo: {0}",
             };
 
-            NetflixGlyphCheck = new LanguageStructure.NetflixGlyphCheck
+            NetflixQualityCheck = new LanguageStructure.NetflixQualityCheck
             {
-                CheckSuccessfull = "Character validation successful.",
-                CheckWarning = "Character validation failed. Refer to the Netflix Glyph List for valid characters. Please see the full report here: {0}.",
-                NotAllowedGlyphReport = "Invalid character {0} found at line {1}, column {2}."
+                GlyphCheckSuccessfull = "Character validation successful.",
+                GlyphCheckFailed = "Character validation failed. Refer to the Netflix Glyph List for valid characters. Please see the full report here: {0}.",
+                GlyphCheckReport = "Invalid character {0} found at column {1}.",
+
+                WhiteSpaceCheckSuccessfull = "White space validation successful.",
+                WhiteSpaceCheckFailed = "White space validation failed. Please see the full report here: {0}.",
+                WhiteSpaceCheckReport = "Invalid white space found at column {0}."
             };
 
             Split = new LanguageStructure.Split
