@@ -10,21 +10,23 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
     {
         private static int[] LoadNetflixGlyphs()
         {
-            MemoryStream ms = new MemoryStream(Properties.Resources.NetflixAllowedGlyphs);
-            BinaryReader br = new BinaryReader(ms);
+            int[] glyphs;
 
-            const int codepointSize = 4;
-            long n = ms.Length / codepointSize;
-            int[] glyphs = new int[n];
-
-            for (int i = 0; i < n; i++)
+            using (MemoryStream ms = new MemoryStream(Properties.Resources.NetflixAllowedGlyphs))
             {
-                glyphs[i] = br.ReadInt32();
+                using (BinaryReader br = new BinaryReader(ms))
+                {
+                    const int codepointSize = 4;
+                    long n = ms.Length / codepointSize;
+                    glyphs = new int[n];
+
+                    for (int i = 0; i < n; i++)
+                    {
+                        glyphs[i] = br.ReadInt32();
+                    }
+                }
             }
-
-            br.Close();
-            ms.Close();
-
+                
             return glyphs;
         }
 

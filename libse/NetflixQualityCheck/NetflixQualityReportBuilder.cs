@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             }
         }
 
-        public  List<Record> Records { get; set; }
+        public List<Record> Records { get; private set; }
 
         public NetflixQualityReportBuilder()
         {
