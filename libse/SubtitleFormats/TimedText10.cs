@@ -30,49 +30,61 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             get { return true; }
         }
 
-        public override bool IsMine(List<string> lines, string fileName)
+        private bool HasTTMLParagraphs(string xmlAsStr)
         {
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
-            string xmlAsString = sb.ToString().Trim();
+            XmlDocument xml = new XmlDocument { XmlResolver = null };
 
-            if (xmlAsString.Contains("xmlns:tts=\"http://www.w3.org/2006/04"))
-                return false;
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(xml.NameTable);
+            nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
 
-            if (xmlAsString.Contains("http://www.w3.org/ns/ttml"))
+            bool hasTTMLParagraphs = false;
+
+            try
             {
-                xmlAsString = xmlAsString.RemoveControlCharactersButWhiteSpace();
-                var xml = new XmlDocument { XmlResolver = null };
-                try
-                {
-                    xml.LoadXml(xmlAsString);
-                    var nsmgr = new XmlNamespaceManager(xml.NameTable);
-                    nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                    var nds = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
-                    var paragraphs = nds.SelectNodes("//ttml:p", nsmgr);
-                    return paragraphs.Count > 0;
-                }
-                catch
-                {
-                    try
-                    {
-                        xml.LoadXml(xmlAsString.Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A"));
-                        var nsmgr = new XmlNamespaceManager(xml.NameTable);
-                        nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                        var nds = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
-                        var paragraphs = nds.SelectNodes("//ttml:p", nsmgr);
+                xml.LoadXml(xmlAsStr);
+                var nds = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
+                var paragraphs = nds.SelectNodes("//ttml:p", nsmgr);
 
-                        if (paragraphs.Count > 0 && new NetflixTimedText().IsMine(lines, fileName))
-                            return false;
-
-                        return paragraphs.Count > 0;
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine(ex.Message);
-                    }
+                if (paragraphs.Count > 0)
+                {
+                    hasTTMLParagraphs = true;
                 }
             }
+            catch
+            {
+            }
+
+            return hasTTMLParagraphs;
+        }
+
+        public override bool IsMine(List<string> lines, string fileName)
+        {
+            string xmlAsString = String.Join(Environment.NewLine, lines);
+
+            if (xmlAsString.Contains("xmlns:tts=\"http://www.w3.org/2006/04"))
+            {
+                return false;
+            }
+
+            if (!xmlAsString.Contains("http://www.w3.org/ns/ttml"))
+            {
+                return false;
+            }
+
+            xmlAsString = xmlAsString.RemoveControlCharactersButWhiteSpace();
+
+            if (HasTTMLParagraphs(xmlAsString) && !new NetflixTimedText().IsMine(lines, fileName))
+            {
+                return true;
+            }
+
+            xmlAsString = xmlAsString.Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A");
+
+            if (HasTTMLParagraphs(xmlAsString) && !new NetflixTimedText().IsMine(lines, fileName))
+            {
+                return true;
+            }
+
             return false;
         }
 
@@ -447,7 +459,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 paragraphContent.LoadXml(string.Format("<root>{0}</root>", text));
                 ConvertParagraphNodeToTTMLNode(paragraphContent.DocumentElement, xml, paragraph);
             }
-            catch(Exception e)  // Wrong markup, clear it
+            catch  // Wrong markup, clear it
             {
                 text = Regex.Replace(text, "[<>]", "");
                 paragraph.AppendChild(xml.CreateTextNode(text));
@@ -542,58 +554,68 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            _errorCount = 0;
-            double startSeconds = 0;
-
-            var sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
+            // Load xml
+            string allText = String.Join(Environment.NewLine, lines);
+            
             var xml = new XmlDocument { XmlResolver = null };
+            var nsmgr = new XmlNamespaceManager(xml.NameTable);
+            nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+
             try
             {
-                xml.LoadXml(sb.ToString().RemoveControlCharactersButWhiteSpace().Trim());
+                xml.LoadXml(allText.RemoveControlCharactersButWhiteSpace().Trim());
             }
             catch
             {
-                xml.LoadXml(sb.ToString().Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A").RemoveControlCharactersButWhiteSpace().Trim());
+                xml.LoadXml(allText.Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A").RemoveControlCharactersButWhiteSpace().Trim());
             }
 
-            const string ns = "http://www.w3.org/ns/ttml";
-            var nsmgr = new XmlNamespaceManager(xml.NameTable);
-            nsmgr.AddNamespace("ttml", ns);
             XmlNode body = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
             if (body == null)
-                return;
-
-            var frameRateAttr = xml.DocumentElement.Attributes["ttp:frameRate"];
-            if (frameRateAttr != null)
             {
-                double fr;
-                if (double.TryParse(frameRateAttr.Value, out fr))
-                {
-                    if (fr > 20 && fr < 100)
-                        Configuration.Settings.General.CurrentFrameRate = fr;
+                return;
+            }
 
-                    var frameRateMultiplier = xml.DocumentElement.Attributes["ttp:frameRateMultiplier"];
-                    if (frameRateMultiplier != null)
+            // Extracting frame rate
+            var frameRateAttr = xml.DocumentElement.Attributes["ttp:frameRate"];
+            var frameRateMultiplierAttr = xml.DocumentElement.Attributes["ttp:frameRateMultiplier"];
+
+            double frameRate = Configuration.Settings.General.CurrentFrameRate;
+            double frameRateMultiplierNumerator = 1;
+            double frameRateMultiplierDenominator = 1;
+
+            int fr;
+            if (frameRateAttr != null && int.TryParse(frameRateAttr.Value, out fr))
+            {
+                if (frameRateMultiplierAttr != null)
+                {
+                    string[] nd = frameRateMultiplierAttr.InnerText.Split();
+                    int n, d;
+                    if (nd.Length == 2 && int.TryParse(nd[0], out n) && int.TryParse(nd[1], out d) && n > 0 && d > 0)
                     {
-                        var arr = frameRateMultiplier.InnerText.Split();
-                        if (arr.Length == 2 && Utilities.IsInteger(arr[0]) && Utilities.IsInteger(arr[1]) && int.Parse(arr[1]) > 0)
-                        {
-                            fr = double.Parse(arr[0]) / double.Parse(arr[1]);
-                            if (fr > 20 && fr < 100)
-                                Configuration.Settings.General.CurrentFrameRate = fr;
-                        }
+                        frameRateMultiplierNumerator = n;
+                        frameRateMultiplierDenominator = d;
                     }
                 }
             }
+
+            double frameRateMultiplier = frameRateMultiplierNumerator / frameRateMultiplierDenominator;
+            double resultFrameRate = frameRate * frameRateMultiplier;
+
+            if (resultFrameRate > 20 && resultFrameRate < 100)
+            {
+                Configuration.Settings.General.CurrentFrameRate = frameRate;
+            }
+
             if (BatchSourceFrameRate.HasValue)
             {
                 Configuration.Settings.General.CurrentFrameRate = BatchSourceFrameRate.Value;
             }
 
+            //
             Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = null;
-            subtitle.Header = sb.ToString();
-            var styles = GetStylesFromHeader(subtitle.Header);
+            subtitle.Header = allText;
+            List<string> styles = GetStylesFromHeader(subtitle.Header);
             string defaultStyle = null;
             if (body.Attributes["style"] != null)
                 defaultStyle = body.Attributes["style"].InnerText;
@@ -611,6 +633,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             catch
             {
             }
+
+            double startSeconds = 0;
+            string ns = "http://www.w3.org/ns/ttml";
 
             foreach (XmlNode node in body.SelectNodes("//ttml:p", nsmgr))
             {
@@ -732,12 +757,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     subtitle.Paragraphs.Add(p);
                 }
-                catch (Exception ex)
+                catch
                 {
-                    System.Diagnostics.Debug.WriteLine(ex.Message);
-                    _errorCount++;
                 }
             }
+
             subtitle.Renumber();
         }
 
