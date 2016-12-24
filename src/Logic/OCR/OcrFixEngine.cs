@@ -355,15 +355,37 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
             text = text.Trim();
 
-            var sb = new StringBuilder();
+            // Try to prevent resizing when fixing Ocr-hardcoded.
+            var sb = new StringBuilder(text.Length * 2);
             var word = new StringBuilder();
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
-                text = text.Replace("ﬁ", "fi"); // fb01
-                text = text.Replace("ﬂ", "fl"); // fb02
-                text = text.Replace('ν', 'v'); // NOTE: first 'v' is a special unicode character!!!!
-                text = text.Replace('‚', ','); // #x201A (SINGLE LOW-9 QUOTATION MARK) to plain old comma
+                int len = text.Length;
+                for (int i = 0; i < len; i++)
+                {
+                    char ch = text[i];
+                    switch (ch)
+                    {
+                        case 'ﬁ':
+                            sb.Append("fi");
+                            break;
+                        case 'ﬂ': // fb02
+                            sb.Append("fl");
+                            break;
+                        case 'ν': // NOTE: Special unicode character!
+                            sb.Append('v');
+                            break;
+                        case '‚': // #x201A (SINGLE LOW-9 QUOTATION MARK) to plain old comma
+                            sb.Append(',');
+                            break;
+                        default:
+                            sb.Append(ch);
+                            break;
+                    }
+                }
+                text = sb.ToString();
+                sb.Clear();
             }
 
             text = ReplaceWordsBeforeLineFixes(text);
