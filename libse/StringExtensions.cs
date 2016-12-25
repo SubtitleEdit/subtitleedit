@@ -181,6 +181,29 @@ namespace Nikse.SubtitleEdit.Core
             return s;
         }
 
+        public static string FixResursiveLineBreaks(this string input)
+        {
+            int len = input.Length;
+            char[] newChars = new char[len];
+            int count = 0;
+            for (int i = 0; i < len; i++)
+            {
+                char ch = input[i];
+                if (count > 0 && (newChars[count - 1] == '\n'))
+                {
+                    if (!(ch == '\n' || ch == '\r'))
+                    {
+                        newChars[count++] = ch;
+                    }
+                }
+                else
+                {
+                    newChars[count++] = ch;
+                }
+            }
+            return new string(newChars, 0, count);
+        }
+
         public static bool ContainsLetter(this string s)
         {
             if (s != null)
