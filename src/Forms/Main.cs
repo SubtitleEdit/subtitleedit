@@ -100,6 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _textAutoSaveOriginal;
         private StringBuilder _statusLog = new StringBuilder();
         private bool _makeHistoryPaused;
+        private bool _saveAsCalled;
 
         private CheckForUpdatesHelper _checkForUpdatesHelper;
         private Timer _timerCheckForUpdates;
@@ -947,7 +948,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MovePrevNext(AudioVisualizer.ParagraphEventArgs e, Paragraph beforeParagraph, int index)
         {
-            if (e.MovePreviousOrNext)
+            int curIdx = FirstSelectedIndex;
+            if (e.MovePreviousOrNext && curIdx >= 0)
             {
                 if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.Start)
                 {
@@ -966,24 +968,44 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             originalPrev.EndTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
                         }
-                    }
-                }
-                else if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.End)
-                {
-                    var next = _subtitle.GetParagraphOrDefault(index + 1);
-                    if (next != null)
-                    {
-                        Paragraph originalNext = null;
-                        if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
-                            originalNext = Utilities.GetOriginalParagraph(index + 1, next, _subtitleAlternate.Paragraphs);
 
-                        next.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + (e.Paragraph.EndTime.TotalMilliseconds - beforeParagraph.EndTime.TotalMilliseconds);
-                        SubtitleListview1.SetStartTimeAndDuration(index + 1, next);
-                        audioVisualizer.Invalidate();
-
-                        if (originalNext != null)
+                        if (curIdx == index - 1)
                         {
-                            originalNext.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds;
+                            var durationInSeconds = (decimal)(prev.Duration.TotalSeconds);
+                            if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
+                            {
+                                SetDurationInSeconds((double)durationInSeconds);
+                            }
+                        }
+                    }
+
+                    else if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.End)
+                    {
+                        var next = _subtitle.GetParagraphOrDefault(index + 1);
+                        if (next != null)
+                        {
+                            Paragraph originalNext = null;
+                            if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
+                                originalNext = Utilities.GetOriginalParagraph(index + 1, next, _subtitleAlternate.Paragraphs);
+
+                            next.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + (e.Paragraph.EndTime.TotalMilliseconds - beforeParagraph.EndTime.TotalMilliseconds);
+                            SubtitleListview1.SetStartTimeAndDuration(index + 1, next);
+                            audioVisualizer.Invalidate();
+
+                            if (originalNext != null)
+                            {
+                                originalNext.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds;
+                            }
+
+                            if (curIdx == index + 1)
+                            {
+                                timeUpDownStartTime.TimeCode = next.StartTime;
+                                var durationInSeconds = (decimal)(next.Duration.TotalSeconds);
+                                if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
+                                {
+                                    SetDurationInSeconds((double)durationInSeconds);
+                                }
+                            }
                         }
                     }
                 }
@@ -3242,6 +3264,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ReloadFromSourceView();
+            _saveAsCalled = false;
             SaveSubtitle(GetCurrentSubtitleFormat());
         }
 
@@ -3319,7 +3342,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 _fileName = _fileName.Substring(0, _fileName.Length - 1);
                             _fileName += format.Extension;
                         }
-
+                        _saveAsCalled = true;
                         if (SaveSubtitle(format) == DialogResult.OK)
                         {
                             Configuration.Settings.General.LastSaveAsFormat = format.Name;
@@ -3346,8 +3369,14 @@ namespace Nikse.SubtitleEdit.Forms
                     var ebu = format as Ebu;
                     if (ebu != null)
                     {
-                        if (ebu.Save(_fileName, sub))
+                        var header = new Ebu.EbuGeneralSubtitleInformation();
+                        if (_subtitle != null && _subtitle.Header != null && (_subtitle.Header.Contains("STL2") || _subtitle.Header.Contains("STL3")))
                         {
+                            header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(_subtitle.Header));
+                        }
+                        if (ebu.Save(_fileName, sub, !_saveAsCalled, header))
+                        {
+                            _changeSubtitleToString = _subtitle.GetFastHashCode();
                             Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
                             Configuration.Settings.Save();
                         }
@@ -3510,7 +3539,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     MessageBox.Show("Ups - save original does not support this format - please go to Github and create an issue!");
                 }
-                
+
                 string allText = subAlt.ToText(format).Trim();
                 var currentEncoding = GetCurrentEncoding();
                 bool isUnicode = currentEncoding != null && (currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8);
@@ -3523,7 +3552,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!isUnicode)
                 {
                     allText = NormalizeUnicode(allText);
-                }               
+                }
 
                 File.WriteAllText(_subtitleAlternateFileName, allText, currentEncoding);
                 ShowStatus(string.Format(_language.SavedOriginalSubtitleX, _subtitleAlternateFileName));
@@ -4111,6 +4140,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             ReloadFromSourceView();
             bool oldChange = _changeSubtitleToString != _subtitle.GetFastHashCode();
+            _saveAsCalled = false;
             SaveSubtitle(GetCurrentSubtitleFormat());
 
             if (_subtitleAlternate != null && _changeAlternateSubtitleToString != _subtitleAlternate.ToText(new SubRip()).Trim() && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate.Paragraphs.Count > 0)
@@ -14067,21 +14097,33 @@ namespace Nikse.SubtitleEdit.Forms
         private void timerAutoDuration_Tick(object sender, EventArgs e)
         {
             labelAutoDuration.Visible = !labelAutoDuration.Visible;
-            double duration = Utilities.GetOptimalDisplayMilliseconds(textBoxListViewText.Text);
-            SetDurationInSeconds(duration / TimeCode.BaseUnit);
-
-            // update _subtitle + listview
             if (SubtitleListview1.SelectedItems.Count > 0)
             {
                 try
                 {
                     int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
                     var currentParagraph = _subtitle.Paragraphs[firstSelectedIndex];
+                    var nextParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
+                    double duration = Utilities.GetOptimalDisplayMilliseconds(textBoxListViewText.Text);
+                    if (currentParagraph.StartTime.TotalMilliseconds + duration + Configuration.Settings.General.MinimumMillisecondsBetweenLines > nextParagraph?.StartTime.TotalMilliseconds)
+                    {
+                        var newEndTime = nextParagraph.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        if (newEndTime - currentParagraph.StartTime.TotalMilliseconds > 100)
+                        {
+                            duration = newEndTime - currentParagraph.StartTime.TotalMilliseconds;
+                        }
+                        else
+                        {
+                            return; // too close to next subtitle
+                        }
+                    }
+                    SetDurationInSeconds(duration / TimeCode.BaseUnit);
                     currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + duration;
                     SubtitleListview1.SetDuration(firstSelectedIndex, currentParagraph);
                 }
                 catch
                 {
+                    // ignore
                 }
             }
         }
@@ -20209,7 +20251,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemExportEdlClick(object sender, EventArgs e)
+        private void ExportToEdlWithClipName(object sender, EventArgs e)
+        {
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "EDL_CLIPNAME", _fileName, _videoInfo, _videoFileName);
+                exportBdnXmlPng.ShowDialog(this);
+            }
+        }
+
+        private void ExportToEdl(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {

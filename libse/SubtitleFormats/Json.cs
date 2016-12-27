@@ -30,20 +30,20 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static string EncodeJsonText(string text)
         {
-            var sb = new StringBuilder();
+            var sb = new StringBuilder(text.Length);
             foreach (var c in text)
             {
-                if (c == '"')
+                switch (c)
                 {
-                    sb.Append("\\\"");
-                }
-                else if (c == '\\')
-                {
-                    sb.Append("\\\\");
-                }
-                else
-                {
-                    sb.Append(c);
+                    case '\\':
+                        sb.Append("\\\\");
+                        break;
+                    case '"':
+                        sb.Append("\\\"");
+                        break;
+                    default:
+                        sb.Append(c);
+                        break;
                 }
             }
             return sb.ToString().Replace(Environment.NewLine, "<br />");
@@ -51,12 +51,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static string DecodeJsonText(string text)
         {
-            var sb = new StringBuilder();
             text = text.Replace("<br />", Environment.NewLine);
             text = text.Replace("<br>", Environment.NewLine);
             text = text.Replace("<br/>", Environment.NewLine);
             text = text.Replace("\\n", Environment.NewLine);
             bool keepNext = false;
+            var sb = new StringBuilder(text.Length);
             foreach (var c in text)
             {
                 if (c == '\\' && !keepNext)

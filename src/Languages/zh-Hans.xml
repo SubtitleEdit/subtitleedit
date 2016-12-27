@@ -2,7 +2,7 @@
 <Language Name="中文(简体)">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.5.0</Version>
+    <Version>3.5.1</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis</TranslatedBy>
     <CultureName>zh-Hans</CultureName>
     <HelpFile />
@@ -1047,7 +1047,7 @@ Command line: {1} {2}
         <Find>查找</Find>
         <Replace>替换</Replace>
         <FixCommonErrors>修正常规错误</FixCommonErrors>
-        <RemoveTextForHi>移除听力障碍文本</RemoveTextForHi>
+        <RemoveTextForHi>移除听障辅助内容</RemoveTextForHi>
         <VisualSync>影音对照同步</VisualSync>
         <SpellCheck>拼写检查</SpellCheck>
         <Settings>设置</Settings>
@@ -1795,7 +1795,7 @@ Command line: {1} {2}
     <FirstPlusX>开头 + {0}</FirstPlusX>
     <LastMinusX>最后 - {0}</LastMinusX>
     <FixCommonerrors>修复常规错误</FixCommonerrors>
-    <RemoveTextForHi>移除听力障碍文本</RemoveTextForHi>
+    <RemoveTextForHi>移除听障辅助内容</RemoveTextForHi>
     <MergeLinesShorterThan>合并小于此长度的行</MergeLinesShorterThan>
     <MusicSymbol>音符</MusicSymbol>
     <MusicSymbolsToReplace>替换音符 (用空格分隔)</MusicSymbolsToReplace>
@@ -1823,6 +1823,7 @@ Command line: {1} {2}
     <AdjustSetEndAndOffsetTheRest>设置结束时间，偏移其后的所有时间</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>设置结束时间，偏移其后的所有时间并转到下一行</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <AdjustExtendCurrentSubtitle>将当前行延伸至下一条字幕或最大间隔</AdjustExtendCurrentSubtitle>
+    <RecalculateDurationOfCurrentSubtitle>重新计算当前字幕时长</RecalculateDurationOfCurrentSubtitle>
     <MainCreateStartDownEndUp>用向下方向键创建新的开始时间，用向上方向键设置结束时间</MainCreateStartDownEndUp>
     <MergeDialog>合并对话 (插入破折号)</MergeDialog>
     <GoToNext>转到下一行</GoToNext>
@@ -1883,6 +1884,8 @@ Command line: {1} {2}
     <ToggleTranslationMode>切换翻译模式</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>切换原文和翻译</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>合并原文和翻译</MergeOriginalAndTranslation>
+    <MergeWithNext>合并到下一行</MergeWithNext>
+    <MergeWithPrevious>合并到上一行</MergeWithPrevious>
     <ShortcutIsAlreadyDefinedX>快捷键已经定义:
 {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>在 视频/音频 预览中切换翻译和原文</ToggleTranslationAndOriginalInPreviews>
