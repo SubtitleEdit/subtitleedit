@@ -3346,6 +3346,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Main/Menu/Tools/SortBy":
                     language.Main.Menu.Tools.SortBy = reader.Value;
                     break;
+                case "Main/Menu/Tools/NetflixQualityCheck":
+                    language.Main.Menu.Tools.NetflixQualityCheck = reader.Value;
+                    break;
                 case "Main/Menu/Tools/Number":
                     language.Main.Menu.Tools.Number = reader.Value;
                     break;
@@ -3564,6 +3567,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Main/Menu/ToolBar/SpellCheck":
                     language.Main.Menu.ToolBar.SpellCheck = reader.Value;
+                    break;
+                case "Main/Menu/ToolBar/NetflixQualityCheck":
+                    language.Main.Menu.ToolBar.NetflixQualityCheck = reader.Value;
                     break;
                 case "Main/Menu/ToolBar/Settings":
                     language.Main.Menu.ToolBar.Settings = reader.Value;
@@ -4474,6 +4480,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/SpellCheck":
                     language.Settings.SpellCheck = reader.Value;
                     break;
+                case "Settings/NetflixQualityCheck":
+                    language.Settings.NetflixQualityCheck = reader.Value;
+                    break;
                 case "Settings/SettingsName":
                     language.Settings.SettingsName = reader.Value;
                     break;
@@ -5340,6 +5349,24 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "SpellCheck/UndoX":
                     language.SpellCheck.UndoX = reader.Value;
+                    break;
+                case "NetflixQualityCheck/GlyphCheckSuccessfull":
+                    language.NetflixQualityCheck.GlyphCheckSuccessfull = reader.Value;
+                    break;
+                case "NetflixQualityCheck/GlyphCheckFailed":
+                    language.NetflixQualityCheck.GlyphCheckFailed = reader.Value;
+                    break;
+                case "NetflixQualityCheck/GlyphCheckReport":
+                    language.NetflixQualityCheck.GlyphCheckReport = reader.Value;
+                    break;
+                case "NetflixQualityCheck/WhiteSpaceCheckSuccessfull":
+                    language.NetflixQualityCheck.WhiteSpaceCheckSuccessfull = reader.Value;
+                    break;
+                case "NetflixQualityCheck/WhiteSpaceCheckFailed":
+                    language.NetflixQualityCheck.WhiteSpaceCheckFailed = reader.Value;
+                    break;
+                case "NetflixQualityCheck/WhiteSpaceCheckReport":
+                    language.NetflixQualityCheck.WhiteSpaceCheckReport = reader.Value;
                     break;
                 case "Split/Title":
                     language.Split.Title = reader.Value;
