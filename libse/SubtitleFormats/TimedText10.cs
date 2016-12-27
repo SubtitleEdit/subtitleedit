@@ -50,8 +50,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     hasTTMLParagraphs = true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
             }
 
             return hasTTMLParagraphs;
@@ -555,7 +556,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             // Load xml
-            string allText = String.Join(Environment.NewLine, lines);
+            string allText = String.Join(Environment.NewLine, lines).RemoveControlCharactersButWhiteSpace().Trim();
             
             var xml = new XmlDocument { XmlResolver = null };
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
@@ -563,17 +564,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             try
             {
-                xml.LoadXml(allText.RemoveControlCharactersButWhiteSpace().Trim());
+                xml.LoadXml(allText);
             }
             catch
             {
                 xml.LoadXml(allText.Replace(" & ", " &amp; ").Replace("Q&A", "Q&amp;A").RemoveControlCharactersButWhiteSpace().Trim());
-            }
-
-            XmlNode body = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
-            if (body == null)
-            {
-                return;
             }
 
             // Extracting frame rate
@@ -612,157 +607,135 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Configuration.Settings.General.CurrentFrameRate = BatchSourceFrameRate.Value;
             }
 
-            //
-            Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = null;
             subtitle.Header = allText;
-            List<string> styles = GetStylesFromHeader(subtitle.Header);
-            string defaultStyle = null;
-            if (body.Attributes["style"] != null)
-                defaultStyle = body.Attributes["style"].InnerText;
-            XmlNode lastDiv = null;
 
-            var headerStyleNodes = new List<XmlNode>();
-            try
-            {
-                XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
-                foreach (XmlNode node in head.SelectNodes("//ttml:style", nsmgr))
-                {
-                    headerStyleNodes.Add(node);
-                }
-            }
-            catch
-            {
-            }
+            Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = null;
 
-            double startSeconds = 0;
-            string ns = "http://www.w3.org/ns/ttml";
-
-            foreach (XmlNode node in body.SelectNodes("//ttml:p", nsmgr))
+            foreach (XmlNode pNode in xml.SelectNodes("//ttml:body//ttml:p", nsmgr))
             {
                 try
                 {
                     var pText = new StringBuilder();
-                    ReadParagraph(pText, node, styles, headerStyleNodes);
+                    ReadParagraph(pText, pNode);
 
-                    string start = string.Empty;
-                    if (node.Attributes["begin"] != null)
-                    {
-                        start = node.Attributes["begin"].InnerText;
-                    }
-                    else if (node.Attributes["begin", ns] != null)
-                    {
-                        start = node.Attributes["begin", ns].InnerText;
-                    }
+                    TimeCode begin, end;
+                    ExtractTimeCodes(pNode, subtitle, out begin, out end);
 
-                    string end = string.Empty;
-                    if (node.Attributes["end"] != null)
-                    {
-                        end = node.Attributes["end"].InnerText;
-                    }
-                    else if (node.Attributes["end", ns] != null)
-                    {
-                        end = node.Attributes["end", ns].InnerText;
-                    }
+                    var p = new Paragraph(begin, end, pText.ToString());
+                    p.Style = LookupForAttribute("style", pNode, nsmgr);
 
-                    string dur = string.Empty;
-                    if (node.Attributes["dur"] != null)
+                    List<string> effects = new List<string>();
+                    effects.Add("region");
+                    effects.Add("xml:space");
+                    effects.Add("tts:fontSize");
+                    effects.Add("tts:fontFamily");
+                    effects.Add("tts:backgroundColor");
+                    effects.Add("tts:color");
+                    effects.Add("tts:origin");
+                    effects.Add("tts:extent");
+                    effects.Add("tts:textAlign");
+
+                    foreach (string effect in effects)
                     {
-                        dur = node.Attributes["dur"].InnerText;
-                    }
-                    else if (node.Attributes["dur", ns] != null)
-                    {
-                        dur = node.Attributes["dur", ns].InnerText;
+                        string value = LookupForAttribute(effect, pNode, nsmgr);
+
+                        if (!string.IsNullOrWhiteSpace(value))
+                        {
+                            SetEffect(p, effect, value);
+                        }
                     }
 
-                    var startCode = TimeCode.FromSeconds(startSeconds);
-                    if (start.Length > 0)
+                    string region = GetEffect(p, "region");
+                    if (region == "top" || region == "topCenter")
                     {
-                        startCode = GetTimeCode(start, IsFrames(start));
+                        p.Text = "{\\an8}" + p.Text;
                     }
 
-                    TimeCode endCode;
-                    if (end.Length > 0)
+                    string lang = LookupForAttribute("xml:lang", pNode, nsmgr);
+                    if (lang == null)
                     {
-                        endCode = GetTimeCode(end, IsFrames(end));
+                        lang = LookupForAttribute("lang", pNode, nsmgr);
                     }
-                    else if (dur.Length > 0)
+                    if (lang != null)
                     {
-                        endCode = new TimeCode(GetTimeCode(dur, IsFrames(dur)).TotalMilliseconds + startCode.TotalMilliseconds);
-                    }
-                    else
-                    {
-                        endCode = new TimeCode(startCode.TotalMilliseconds + 3000);
-                    }
-                    startSeconds = endCode.TotalSeconds;
-
-                    var p = new Paragraph(startCode, endCode, pText.ToString().Replace("   ", " ").Replace("  ", " ")) { Style = defaultStyle };
-                    if (node.Attributes["style"] != null)
-                        p.Style = node.Attributes["style"].InnerText;
-
-                    if (node.Attributes["region"] != null)
-                    {
-                        string region = node.Attributes["region"].Value;
-                        if (region == "top" || region == "topCenter")
-                            p.Text = "{\\an8}" + p.Text;
-                        SetEffect(p, "region", region);
-                    }
-                    if (node.Attributes["xml:space"] != null)
-                    {
-                        SetEffect(p, "xml:space", node.Attributes["xml:space"].Value);
-                    }
-                    if (node.Attributes["tts:fontSize"] != null)
-                    {
-                        SetEffect(p, "tts:fontSize", node.Attributes["tts:fontSize"].Value);
-                    }
-                    if (node.Attributes["tts:fontFamily"] != null)
-                    {
-                        SetEffect(p, "tts:fontFamily", node.Attributes["tts:fontFamily"].Value);
-                    }
-                    if (node.Attributes["tts:backgroundColor"] != null)
-                    {
-                        SetEffect(p, "tts:backgroundColor", node.Attributes["tts:backgroundColor"].Value);
-                    }
-                    if (node.Attributes["tts:origin"] != null)
-                    {
-                        SetEffect(p, "tts:origin", node.Attributes["tts:origin"].Value);
-                    }
-                    if (node.Attributes["tts:extent"] != null)
-                    {
-                        SetEffect(p, "tts:extent", node.Attributes["tts:extent"].Value);
-                    }
-                    if (node.Attributes["tts:textAlign"] != null)
-                    {
-                        SetEffect(p, "tts:textAlign", node.Attributes["tts:textAlign"].Value);
-                    }
-
-                    if (node.ParentNode.Name == "div")
-                    {
-                        // check language
-                        if (node.ParentNode.Attributes["xml:lang"] != null)
-                            p.Language = node.ParentNode.Attributes["xml:lang"].InnerText;
-                        else if (node.ParentNode.Attributes["lang"] != null)
-                            p.Language = node.ParentNode.Attributes["lang"].InnerText;
-
-                        // check for new div
-                        if (lastDiv != null && node.ParentNode != lastDiv)
-                            p.NewSection = true;
-                        lastDiv = node.ParentNode;
+                        p.Language = lang;
                     }
 
                     p.Extra = SetExtra(p);
 
                     p.Text = p.Text.Trim();
                     while (p.Text.Contains(Environment.NewLine + Environment.NewLine))
+                    {
                         p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                    }
 
                     subtitle.Paragraphs.Add(p);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine(ex.ToString());
                 }
             }
 
             subtitle.Renumber();
+        }
+
+        private void ExtractTimeCodes(XmlNode paragraph, Subtitle subtitle, out TimeCode begin, out TimeCode end)
+        {
+            string beginAttr = TryGetAttribute(paragraph, "begin", "http://www.w3.org/ns/ttml");
+            string endAttr = TryGetAttribute(paragraph, "end", "http://www.w3.org/ns/ttml");
+            string durAttr = TryGetAttribute(paragraph, "dur", "http://www.w3.org/ns/ttml");
+
+            begin = new TimeCode();
+            if (beginAttr.Length > 0)
+            {
+                begin = GetTimeCode(beginAttr, IsFrames(beginAttr));
+            }
+            else if (subtitle.Paragraphs.Count > 0)
+            {
+                begin = new TimeCode(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.Milliseconds);
+            }
+
+            end = new TimeCode(begin.TotalMilliseconds + 3000);
+            if (endAttr.Length > 0)
+            {
+                end = GetTimeCode(endAttr, IsFrames(endAttr));
+            }
+            else if (durAttr.Length > 0)
+            {
+                end = new TimeCode(GetTimeCode(durAttr, IsFrames(durAttr)).TotalMilliseconds + begin.TotalMilliseconds);
+            }
+        }
+
+        private string TryGetAttribute(XmlNode node, string attr, string @namespace)
+        {
+            if (node.Attributes[attr] != null)
+            {
+                return node.Attributes[attr].InnerText;
+            }
+            else if (node.Attributes[attr, @namespace] != null)
+            {
+                return node.Attributes[attr, @namespace].InnerText;
+            }
+
+            return string.Empty;
+        }
+
+        private string LookupForAttribute(string attr, XmlNode node, XmlNamespaceManager nsmgr)
+        {
+            XmlNode currentNode = node;
+
+            while (currentNode != null && currentNode.NodeType != XmlNodeType.Document)
+            {
+                if (currentNode.Attributes[attr] != null)
+                {
+                    return currentNode.Attributes[attr].Value;
+                }
+
+                currentNode = currentNode.ParentNode;
+            }
+
+            return null;
         }
 
         private static void SetEffect(Paragraph paragraph, string tag, string value)
@@ -841,7 +814,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             return string.Format("{0} / {1}", style, lang);
         }
 
-        private static void ReadParagraph(StringBuilder pText, XmlNode node, List<string> styles, List<XmlNode> headerStyleNodes)
+        private static void ReadParagraph(StringBuilder pText, XmlNode node)
         {
             foreach (XmlNode child in node.ChildNodes)
             {
@@ -920,7 +893,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         pText.Append(">");
                     }
 
-                    ReadParagraph(pText, child, styles, headerStyleNodes);
+                    ReadParagraph(pText, child);
 
                     if (!string.IsNullOrEmpty(fontFamily) || !string.IsNullOrEmpty(color))
                     {
@@ -1009,102 +982,58 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         public static List<string> GetStylesFromHeader(string xmlAsString)
         {
-            var list = new List<string>();
+            var styles = new List<string>();
             var xml = new XmlDocument();
             try
             {
                 xml.LoadXml(xmlAsString);
                 var nsmgr = new XmlNamespaceManager(xml.NameTable);
                 nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
-                foreach (XmlNode node in head.SelectNodes("//ttml:style", nsmgr))
+                foreach (XmlNode node in xml.SelectNodes("//ttml:head//ttml:style", nsmgr))
                 {
                     if (node.Attributes["xml:id"] != null)
-                        list.Add(node.Attributes["xml:id"].Value);
-                    else if (node.Attributes["id"] != null)
-                        list.Add(node.Attributes["id"].Value);
-                }
-            }
-            catch
-            {
-            }
-            return list;
-        }
-
-        private static bool IsStyleItalic(string styleName, IEnumerable<XmlNode> headerStyleNodes)
-        {
-            try
-            {
-                foreach (XmlNode node in headerStyleNodes)
-                {
-                    string id = string.Empty;
-                    if (node.Attributes["xml:id"] != null)
-                        id = node.Attributes["xml:id"].Value;
-                    else if (node.Attributes["id"] != null)
-                        id = node.Attributes["id"].Value;
-                    if (!string.IsNullOrEmpty(id) && id == styleName)
                     {
-                        if (node.Attributes["tts:fontStyle"] != null && node.Attributes["tts:fontStyle"].Value == "italic")
-                            return true;
-                        if (node.Attributes["fontStyle"] != null && node.Attributes["fontStyle"].Value == "italic")
-                            return true;
+                        styles.Add(node.Attributes["xml:id"].Value);
+                    }
+                    else if (node.Attributes["id"] != null)
+                    {
+                        styles.Add(node.Attributes["id"].Value);
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
             }
-            return false;
-        }
-
-        private static bool IsStyleBold(string styleName, IEnumerable<XmlNode> headerStyleNodes)
-        {
-            try
-            {
-                foreach (XmlNode node in headerStyleNodes)
-                {
-                    string id = string.Empty;
-                    if (node.Attributes["xml:id"] != null)
-                        id = node.Attributes["xml:id"].Value;
-                    else if (node.Attributes["id"] != null)
-                        id = node.Attributes["id"].Value;
-                    if (!string.IsNullOrEmpty(id) && id == styleName)
-                    {
-                        if (node.Attributes["tts:fontWeight"] != null && node.Attributes["tts:fontWeight"].Value == "bold")
-                            return true;
-                        if (node.Attributes["fontWeight"] != null && node.Attributes["fontWeight"].Value == "bold")
-                            return true;
-                    }
-                }
-            }
-            catch
-            {
-            }
-            return false;
+            return styles;
         }
 
         public static List<string> GetRegionsFromHeader(string xmlAsString)
         {
-            var list = new List<string>();
+            var regions = new List<string>();
             var xml = new XmlDocument();
             try
             {
                 xml.LoadXml(xmlAsString);
                 var nsmgr = new XmlNamespaceManager(xml.NameTable);
                 nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-                XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
-                foreach (XmlNode node in head.SelectNodes("//ttml:region", nsmgr))
+                foreach (XmlNode node in xml.SelectNodes("//ttml:head//ttml:region", nsmgr))
                 {
                     if (node.Attributes["xml:id"] != null)
-                        list.Add(node.Attributes["xml:id"].Value);
+                    {
+                        regions.Add(node.Attributes["xml:id"].Value);
+                    }
                     else if (node.Attributes["id"] != null)
-                        list.Add(node.Attributes["id"].Value);
+                    {
+                        regions.Add(node.Attributes["id"].Value);
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
             }
-            return list;
+            return regions;
         }
 
         public static List<string> GetUsedLanguages(Subtitle subtitle)
