@@ -120,27 +120,27 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         {
             var styleNode = xml.CreateNode(XmlNodeType.Element, string.Empty, "style", nsmgr.LookupNamespace("ttml"));
 
-            XmlAttribute attr = xml.CreateAttribute("xml:id", "http://www.w3.org/ns/10/ttml#style");
+            XmlAttribute attr = xml.CreateAttribute("xml:id", "http://www.w3.org/ns/ttml#styling");
             attr.InnerText = name;
             styleNode.Attributes.Append(attr);
 
-            attr = xml.CreateAttribute("tts:fontFamily", "http://www.w3.org/ns/10/ttml#style");
+            attr = xml.CreateAttribute("tts:fontFamily", "http://www.w3.org/ns/ttml#styling");
             attr.InnerText = fontFamily;
             styleNode.Attributes.Append(attr);
 
-            attr = xml.CreateAttribute("tts:fontWeight", "http://www.w3.org/ns/10/ttml#style");
+            attr = xml.CreateAttribute("tts:fontWeight", "http://www.w3.org/ns/ttml#styling");
             attr.InnerText = fontWeight;
             styleNode.Attributes.Append(attr);
 
-            attr = xml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/10/ttml#style");
+            attr = xml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/ttml#styling");
             attr.InnerText = fontStyle;
             styleNode.Attributes.Append(attr);
 
-            attr = xml.CreateAttribute("tts:color", "http://www.w3.org/ns/10/ttml#style");
+            attr = xml.CreateAttribute("tts:color", "http://www.w3.org/ns/ttml#styling");
             attr.InnerText = color;
             styleNode.Attributes.Append(attr);
 
-            attr = xml.CreateAttribute("tts:fontSize", "http://www.w3.org/ns/10/ttml#style");
+            attr = xml.CreateAttribute("tts:fontSize", "http://www.w3.org/ns/ttml#styling");
             attr.InnerText = fontSize;
             styleNode.Attributes.Append(attr);
 
@@ -182,11 +182,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             var xml = new XmlDocument();
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-            nsmgr.AddNamespace("ttp", "http://www.w3.org/ns/10/ttml#parameter");
-            nsmgr.AddNamespace("tts", "http://www.w3.org/ns/10/ttml#style");
-            nsmgr.AddNamespace("ttm", "http://www.w3.org/ns/10/ttml#metadata");
+            nsmgr.AddNamespace("ttp", "http://www.w3.org/ns/ttml#parameter");
+            nsmgr.AddNamespace("tts", "http://www.w3.org/ns/ttml#styling");
+            nsmgr.AddNamespace("ttm", "http://www.w3.org/ns/ttml#metadata");
             string xmlStructure = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
-            "<tt xmlns=\"http://www.w3.org/ns/ttml\" xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" ttp:timeBase=\"media\" xmlns:tts=\"http://www.w3.org/ns/ttml#style\" xml:lang=\"en\" xmlns:ttm=\"http://www.w3.org/ns/ttml#metadata\">" + Environment.NewLine +
+            "<tt xmlns=\"http://www.w3.org/ns/ttml\" xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" ttp:timeBase=\"media\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\" xml:lang=\"en\" xmlns:ttm=\"http://www.w3.org/ns/ttml#metadata\">" + Environment.NewLine +
             "   <head>" + Environment.NewLine +
             "       <metadata>" + Environment.NewLine +
             "           <ttm:title></ttm:title>" + Environment.NewLine +
@@ -334,7 +334,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
             }
 
-            return ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty).Replace(" xmlns:tts=\"http://www.w3.org/ns/10/ttml#style\">", ">");
+            return ToUtf8XmlString(xml).Replace(" xmlns=\"\"", string.Empty).Replace(" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\">", ">");
         }
 
         public static string SubStationAlphaHeaderToTimedText(Subtitle subtitle)
@@ -381,7 +381,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (child.Name == "i")
                 {
                     XmlNode span = ttmlXml.CreateElement("span");
-                    XmlAttribute attr = ttmlXml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/10/ttml#style");
+                    XmlAttribute attr = ttmlXml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/ttml#styling");
                     attr.InnerText = "italic";
                     span.Attributes.Append(attr);
                     ttmlNode.AppendChild(span);
@@ -391,7 +391,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (child.Name == "b")
                 {
                     XmlNode span = ttmlXml.CreateElement("span");
-                    XmlAttribute attr = ttmlXml.CreateAttribute("tts:fontWeight", "http://www.w3.org/ns/10/ttml#style");
+                    XmlAttribute attr = ttmlXml.CreateAttribute("tts:fontWeight", "http://www.w3.org/ns/ttml#styling");
                     attr.InnerText = "bold";
                     span.Attributes.Append(attr);
                     ttmlNode.AppendChild(span);
@@ -401,7 +401,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (child.Name == "u")
                 {
                     XmlNode span = ttmlXml.CreateElement("span");
-                    XmlAttribute attr = ttmlXml.CreateAttribute("tts:textDecoration", "http://www.w3.org/ns/10/ttml#style");
+                    XmlAttribute attr = ttmlXml.CreateAttribute("tts:textDecoration", "http://www.w3.org/ns/ttml#styling");
                     attr.InnerText = "underline";
                     span.Attributes.Append(attr);
                     ttmlNode.AppendChild(span);
@@ -414,7 +414,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (child.Attributes["face"] != null)
                     {
-                        XmlAttribute attr = ttmlXml.CreateAttribute("tts:fontFamily", "http://www.w3.org/ns/10/ttml#style");
+                        XmlAttribute attr = ttmlXml.CreateAttribute("tts:fontFamily", "http://www.w3.org/ns/ttml#styling");
                         attr.InnerText = child.Attributes["face"].Value;
                         span.Attributes.Append(attr);
                     }
@@ -439,7 +439,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
         private static XmlNode MakeParagraph(Subtitle subtitle, XmlDocument xml, string defaultStyle, int no, List<string> headerStyles, List<string> regions, Paragraph p)
         {
-            XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/ns/ttml");
+            XmlNode paragraph = xml.CreateElement("p");
             string text = p.Text.RemoveControlCharactersButWhiteSpace();
 
             string region = GetEffect(p, "region");
@@ -496,7 +496,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string ttsFontSize = GetEffect(p, "tts:fontSize");
             if (!string.IsNullOrEmpty(ttsFontSize))
             {
-                XmlAttribute ttsFontSizeAttribute = xml.CreateAttribute("tts:fontSize", "http://www.w3.org/ns/10/ttml#style");
+                XmlAttribute ttsFontSizeAttribute = xml.CreateAttribute("tts:fontSize", "http://www.w3.org/ns/ttml#styling");
                 ttsFontSizeAttribute.InnerText = ttsFontSize;
                 paragraph.Attributes.Append(ttsFontSizeAttribute);
             }
@@ -504,7 +504,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string ttsFontFamily = GetEffect(p, "tts:fontFamily");
             if (!string.IsNullOrEmpty(ttsFontFamily))
             {
-                XmlAttribute ttsFontFamilyAttribute = xml.CreateAttribute("tts:fontFamily", "http://www.w3.org/ns/10/ttml#style");
+                XmlAttribute ttsFontFamilyAttribute = xml.CreateAttribute("tts:fontFamily", "http://www.w3.org/ns/ttml#styling");
                 ttsFontFamilyAttribute.InnerText = ttsFontFamily;
                 paragraph.Attributes.Append(ttsFontFamilyAttribute);
             }
@@ -512,7 +512,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string ttsBackgroundColor = GetEffect(p, "tts:backgroundColor");
             if (!string.IsNullOrEmpty(ttsBackgroundColor))
             {
-                XmlAttribute ttsBackgroundColorAttribute = xml.CreateAttribute("tts:backgroundColor", "http://www.w3.org/ns/10/ttml#style");
+                XmlAttribute ttsBackgroundColorAttribute = xml.CreateAttribute("tts:backgroundColor", "http://www.w3.org/ns/ttml#styling");
                 ttsBackgroundColorAttribute.InnerText = ttsBackgroundColor;
                 paragraph.Attributes.Append(ttsBackgroundColorAttribute);
             }
@@ -520,7 +520,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string ttsOrigin = GetEffect(p, "tts:origin");
             if (!string.IsNullOrEmpty(ttsOrigin))
             {
-                XmlAttribute ttsOriginAttribute = xml.CreateAttribute("tts:origin", "http://www.w3.org/ns/10/ttml#style");
+                XmlAttribute ttsOriginAttribute = xml.CreateAttribute("tts:origin", "http://www.w3.org/ns/ttml#styling");
                 ttsOriginAttribute.InnerText = ttsOrigin;
                 paragraph.Attributes.Append(ttsOriginAttribute);
             }
@@ -528,7 +528,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string ttsExtent = GetEffect(p, "tts:extent");
             if (!string.IsNullOrEmpty(ttsExtent))
             {
-                XmlAttribute ttsExtentAttribute = xml.CreateAttribute("tts:extent", "http://www.w3.org/ns/10/ttml#style");
+                XmlAttribute ttsExtentAttribute = xml.CreateAttribute("tts:extent", "http://www.w3.org/ns/ttml#styling");
                 ttsExtentAttribute.InnerText = ttsExtent;
                 paragraph.Attributes.Append(ttsExtentAttribute);
             }
@@ -536,7 +536,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             string ttsTextAlign = GetEffect(p, "tts:textAlign");
             if (!string.IsNullOrEmpty(ttsTextAlign))
             {
-                XmlAttribute ttsTextAlignAttribute = xml.CreateAttribute("tts:textAlign", "http://www.w3.org/ns/10/ttml#style");
+                XmlAttribute ttsTextAlignAttribute = xml.CreateAttribute("tts:textAlign", "http://www.w3.org/ns/ttml#styling");
                 ttsTextAlignAttribute.InnerText = ttsTextAlign;
                 paragraph.Attributes.Append(ttsTextAlignAttribute);
             }
