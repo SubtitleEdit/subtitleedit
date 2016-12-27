@@ -25,6 +25,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core.SpellCheck;
+using Nikse.SubtitleEdit.Core.NetflixQualityCheck;
+using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -364,6 +366,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 UpdateRecentFilesUI();
                 InitializeToolbar();
+                UpdateNetflixGlyphCheckToolsVisibility();
                 UiUtil.InitializeSubtitleFont(textBoxSource);
                 UiUtil.InitializeSubtitleFont(textBoxListViewText);
                 UiUtil.InitializeSubtitleFont(textBoxListViewTextAlternate);
@@ -386,8 +389,8 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.ShowSpectrogram = Configuration.Settings.General.ShowSpectrogram;
                 panelWaveformControls.Visible = Configuration.Settings.General.ShowAudioVisualizer;
                 trackBarWaveformPosition.Visible = Configuration.Settings.General.ShowAudioVisualizer;
-                toolStripButtonToggleWaveform.Checked = Configuration.Settings.General.ShowAudioVisualizer;
-                toolStripButtonToggleVideo.Checked = Configuration.Settings.General.ShowVideoPlayer;
+                toolStripButtonToggleWaveform.Visible = Configuration.Settings.General.ShowAudioVisualizer;
+                toolStripButtonToggleVideo.Visible = Configuration.Settings.General.ShowVideoPlayer;
 
                 if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                 {
@@ -1185,6 +1188,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAutoSplitLongLines.Text = _language.Menu.Tools.SplitLongLines;
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
             toolStripMenuItem1.Text = _language.Menu.Tools.SortBy;
+            toolStripButtonNetflixQualityCheck.Text = _language.Menu.Tools.NetflixQualityCheck;
 
             sortNumberToolStripMenuItem.Text = _language.Menu.Tools.Number;
             sortStartTimeToolStripMenuItem.Text = _language.Menu.Tools.StartTime;
@@ -1278,6 +1282,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonRemoveTextForHi.ToolTipText = _language.Menu.ToolBar.RemoveTextForHi;
             toolStripButtonVisualSync.ToolTipText = _language.Menu.ToolBar.VisualSync;
             toolStripButtonSpellCheck.ToolTipText = _language.Menu.ToolBar.SpellCheck;
+            toolStripButtonNetflixQualityCheck.ToolTipText = _language.Menu.ToolBar.NetflixQualityCheck;
             toolStripButtonSettings.ToolTipText = _language.Menu.ToolBar.Settings;
             toolStripButtonHelp.ToolTipText = _language.Menu.ToolBar.Help;
             toolStripButtonToggleWaveform.ToolTipText = _language.Menu.ToolBar.ShowHideWaveform;
@@ -3444,6 +3449,11 @@ namespace Nikse.SubtitleEdit.Forms
                     currentEncoding = Encoding.UTF8;
                 }
 
+                if (format.GetType() == typeof(NetflixTimedText))
+                {
+                    NetflixGlyphCheck(false);
+                }
+
                 if (ModifierKeys == (Keys.Control | Keys.Shift))
                     allText = allText.Replace("\r\n", "\n");
 
@@ -3772,6 +3782,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             ShowHideTextBasedFeatures(format);
+
+            UpdateNetflixGlyphCheckToolsVisibility();
         }
 
         private static List<string> GetNuendoStyles()
@@ -3848,7 +3860,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
                                     toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonRemoveTextForHi.Image, toolStripButtonVisualSync.Image,
-                                    toolStripButtonSpellCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
+                                    toolStripButtonSpellCheck.Image, toolStripButtonNetflixQualityCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
                 settings.ShowDialog(this);
             }
 
@@ -4065,6 +4077,7 @@ namespace Nikse.SubtitleEdit.Forms
             TryLoadIcon(toolStripButtonRemoveTextForHi, "RemoveTextForHi");
             TryLoadIcon(toolStripButtonVisualSync, "VisualSync");
             TryLoadIcon(toolStripButtonSpellCheck, "SpellCheck");
+            TryLoadIcon(toolStripButtonNetflixQualityCheck, "NetflixGlyphCheck");
             TryLoadIcon(toolStripButtonSettings, "Settings");
             TryLoadIcon(toolStripButtonHelp, "Help");
 
@@ -4082,6 +4095,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripButtonVisualSync.Visible = gs.ShowToolbarVisualSync;
             toolStripButtonSpellCheck.Visible = gs.ShowToolbarSpellCheck;
+            toolStripButtonNetflixQualityCheck.Visible = gs.ShowToolbarNetflixGlyphCheck;
             toolStripButtonSettings.Visible = gs.ShowToolbarSettings;
             toolStripButtonHelp.Visible = gs.ShowToolbarHelp;
 
@@ -4095,7 +4109,10 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripSeparatorHelp.Visible = gs.ShowToolbarHelp;
 
             toolStrip1.Visible = gs.ShowToolbarNew || gs.ShowToolbarOpen || gs.ShowToolbarSave || gs.ShowToolbarSaveAs || gs.ShowToolbarFind || gs.ShowToolbarReplace ||
-                                 gs.ShowToolbarFixCommonErrors || gs.ShowToolbarVisualSync || gs.ShowToolbarSpellCheck || gs.ShowToolbarSettings || gs.ShowToolbarHelp;
+                                 gs.ShowToolbarFixCommonErrors || gs.ShowToolbarVisualSync || gs.ShowToolbarSpellCheck || gs.ShowToolbarNetflixGlyphCheck ||
+                                 gs.ShowToolbarSettings || gs.ShowToolbarHelp;
+
+            UpdateNetflixGlyphCheckToolsVisibility();
         }
 
         private void ToolStripButtonFileNewClick(object sender, EventArgs e)
@@ -17889,6 +17906,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolsToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
+            SubtitleFormat format = GetCurrentSubtitleFormat();
+
             if (_subtitle?.Paragraphs.Count > 0 && _networkSession == null)
             {
                 toolStripSeparator23.Visible = true;
@@ -17901,7 +17920,8 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemMakeEmptyFromCurrent.Visible = false;
                 toolStripMenuItemShowOriginalInPreview.Checked = false;
             }
-            styleToolStripMenuItem.Visible = GetCurrentSubtitleFormat().HasStyleSupport;
+
+            styleToolStripMenuItem.Visible = format.HasStyleSupport;
         }
 
         private void ContextMenuStripWaveformOpening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -20295,5 +20315,76 @@ namespace Nikse.SubtitleEdit.Forms
             IsMenuOpen = false;
         }
 
+        private void UpdateNetflixGlyphCheckToolsVisibility()
+        {
+            bool showTools = IsNetflixGlyphCheckAvailable();
+
+            netflixQualityCheckToolStripMenuItem.Visible = showTools;
+            toolStripButtonNetflixQualityCheck.Visible = showTools && Configuration.Settings.General.ShowToolbarNetflixGlyphCheck;
+        }
+
+        private bool IsNetflixGlyphCheckAvailable()
+        {
+            SubtitleFormat format = GetCurrentSubtitleFormat();
+            bool showTool = format.GetType() == typeof(TimedText10) || format.GetType() == typeof(NetflixTimedText);
+            return showTool;
+        }
+
+        private void NetflixGlyphCheck(bool showSuccessMessage = true)
+        {
+            // Get subtitle
+            ReloadFromSourceView();
+            string subtitle = _subtitle.ToText(GetCurrentSubtitleFormat());
+
+            // Check
+            NetflixQualityReportBuilder glyphCheckReport = new NetflixQualityReportBuilder();
+            NetflixGlyphChecker glyphChecker = new NetflixGlyphChecker();
+            glyphChecker.Check(_subtitle, glyphCheckReport);
+
+            NetflixQualityReportBuilder whiteSpaceCheckReport = new NetflixQualityReportBuilder();
+            NetflixWhiteSpaceChecker whiteSpaceChecker = new NetflixWhiteSpaceChecker();
+            whiteSpaceChecker.Check(_subtitle, whiteSpaceCheckReport);
+
+            string fileName = string.IsNullOrEmpty(_fileName) ? "untitledSubtitle" : Path.GetFileNameWithoutExtension(_fileName);
+
+            List<string> messages = new List<string>();
+
+            if (!glyphCheckReport.IsEmpty)
+            {
+                string reportPath = Path.GetTempPath() + fileName + "_NetflixGlyphCheck.csv";
+                File.WriteAllText(reportPath, glyphCheckReport.ExportCSV());
+                messages.Add(string.Format(Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckFailed, reportPath));
+            }
+            else if (showSuccessMessage)
+            {
+                messages.Add(Configuration.Settings.Language.NetflixQualityCheck.GlyphCheckSuccessfull);
+            }
+
+            if (!whiteSpaceCheckReport.IsEmpty)
+            {
+                string reportPath = Path.GetTempPath() + fileName + "_NetflixWhiteSpaceCheck.csv";
+                File.WriteAllText(reportPath, whiteSpaceCheckReport.ExportCSV());
+                messages.Add(string.Format(Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckFailed, reportPath));
+            }
+            else if (showSuccessMessage)
+            {
+                messages.Add(Configuration.Settings.Language.NetflixQualityCheck.WhiteSpaceCheckSuccessfull);
+            }
+
+            if (messages.Count != 0)
+            {
+                MessageBox.Show(String.Join("\n\n", messages.ToArray()));
+            }
+        }
+
+        private void netflixGlyphCheckToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NetflixGlyphCheck();
+        }
+
+        private void toolStripButtonNetflixGlyphCheck_Click(object sender, EventArgs e)
+        {
+            NetflixGlyphCheck();
+        }
     }
 }

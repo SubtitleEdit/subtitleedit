@@ -89,6 +89,9 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxShowFrameRate = new System.Windows.Forms.CheckBox();
             this.groupBoxShowToolBarButtons = new System.Windows.Forms.GroupBox();
+            this.labelTBNetflixQualityCheck = new System.Windows.Forms.Label();
+            this.pictureBoxNetflixQualityCheck = new System.Windows.Forms.PictureBox();
+            this.checkBoxNetflixQualityCheck = new System.Windows.Forms.CheckBox();
             this.labelTBRemoveTextForHi = new System.Windows.Forms.Label();
             this.pictureBoxTBRemoveTextForHi = new System.Windows.Forms.PictureBox();
             this.checkBoxTBRemoveTextForHi = new System.Windows.Forms.CheckBox();
@@ -332,6 +335,7 @@
             this.tabPageToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBRemoveTextForHi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHelp)).BeginInit();
@@ -1143,6 +1147,9 @@
             // 
             this.groupBoxShowToolBarButtons.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBNetflixQualityCheck);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxNetflixQualityCheck);
+            this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxNetflixQualityCheck);
             this.groupBoxShowToolBarButtons.Controls.Add(this.labelTBRemoveTextForHi);
             this.groupBoxShowToolBarButtons.Controls.Add(this.pictureBoxTBRemoveTextForHi);
             this.groupBoxShowToolBarButtons.Controls.Add(this.checkBoxTBRemoveTextForHi);
@@ -1185,6 +1192,33 @@
             this.groupBoxShowToolBarButtons.TabIndex = 0;
             this.groupBoxShowToolBarButtons.TabStop = false;
             this.groupBoxShowToolBarButtons.Text = "Show toolbar buttons";
+            // 
+            // labelTBNetflixQualityCheck
+            // 
+            this.labelTBNetflixQualityCheck.AutoSize = true;
+            this.labelTBNetflixQualityCheck.Location = new System.Drawing.Point(636, 136);
+            this.labelTBNetflixQualityCheck.Name = "labelTBNetflixQualityCheck";
+            this.labelTBNetflixQualityCheck.Size = new System.Drawing.Size(103, 13);
+            this.labelTBNetflixQualityCheck.TabIndex = 42;
+            this.labelTBNetflixQualityCheck.Text = "Netflix quality check";
+            // 
+            // pictureBoxNetflixQualityCheck
+            // 
+            this.pictureBoxNetflixQualityCheck.Location = new System.Drawing.Point(649, 155);
+            this.pictureBoxNetflixQualityCheck.Name = "pictureBoxNetflixQualityCheck";
+            this.pictureBoxNetflixQualityCheck.Size = new System.Drawing.Size(32, 32);
+            this.pictureBoxNetflixQualityCheck.TabIndex = 41;
+            this.pictureBoxNetflixQualityCheck.TabStop = false;
+            // 
+            // checkBoxNetflixQualityCheck
+            // 
+            this.checkBoxNetflixQualityCheck.AutoSize = true;
+            this.checkBoxNetflixQualityCheck.Location = new System.Drawing.Point(652, 195);
+            this.checkBoxNetflixQualityCheck.Name = "checkBoxNetflixQualityCheck";
+            this.checkBoxNetflixQualityCheck.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxNetflixQualityCheck.TabIndex = 40;
+            this.checkBoxNetflixQualityCheck.Text = "Visible";
+            this.checkBoxNetflixQualityCheck.UseVisualStyleBackColor = true;
             // 
             // labelTBRemoveTextForHi
             // 
@@ -3848,6 +3882,7 @@
             this.groupBox2.PerformLayout();
             this.groupBoxShowToolBarButtons.ResumeLayout(false);
             this.groupBoxShowToolBarButtons.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNetflixQualityCheck)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBRemoveTextForHi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTBFixCommonErrors)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHelp)).EndInit();
@@ -4227,5 +4262,8 @@
         private System.Windows.Forms.CheckBox checkBoxTBRemoveTextForHi;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxNumberOfLines;
         private System.Windows.Forms.Label labelMaxLines;
+        private System.Windows.Forms.Label labelTBNetflixQualityCheck;
+        private System.Windows.Forms.PictureBox pictureBoxNetflixQualityCheck;
+        private System.Windows.Forms.CheckBox checkBoxNetflixQualityCheck;
     }
 }
