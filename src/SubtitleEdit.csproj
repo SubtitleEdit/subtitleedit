@@ -1303,8 +1303,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Resources\OpenOfficeDictionaries.xml.gz" />
     <EmbeddedResource Include="Resources\HunspellDictionaries.xml.gz" />
+    <EmbeddedResource Include="Resources\HunspellBackupDictionaries.xml.gz" />
     <EmbeddedResource Include="Resources\TesseractDictionaries.xml.gz" />
     <None Include="Resources\nOCR_TesseractHelper.xml.gz" />
     <None Include="Resources\SMPTE-428-7-2007-DCST.xsd">
@@ -1545,10 +1545,10 @@
     <Content Include="Resources\TesseractDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Resources\HunspellDictionaries.xml">
+    <Content Include="Resources\HunspellBackupDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Resources\OpenOfficeDictionaries.xml">
+    <Content Include="Resources\HunspellDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>

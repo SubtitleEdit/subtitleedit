@@ -399,27 +399,31 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonSyncClick(object sender, EventArgs e)
         {
-            double startPos = MediaPlayerStart.CurrentPosition;
-            double endPos = MediaPlayerEnd.CurrentPosition;
-            if (!(endPos > startPos))
+            // Video player current start and end position.
+            double videoPlayerCurrentStartPos = MediaPlayerStart.CurrentPosition;
+            double videoPlayerCurrentEndPos = MediaPlayerEnd.CurrentPosition;
+
+            // Subtitle start and end time in seconds.
+            double subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+            double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+
+            // Both end times must be greater than start time.
+            if (!(videoPlayerCurrentEndPos > videoPlayerCurrentStartPos && subEnd > videoPlayerCurrentStartPos))
             {
                 MessageBox.Show(_language.StartSceneMustComeBeforeEndScene, "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
-            SetSyncFactorLabel();
-
-            double subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
-            double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+            SetSyncFactorLabel(videoPlayerCurrentStartPos, videoPlayerCurrentEndPos);
 
             double subDiff = subEnd - subStart;
-            double realDiff = endPos - startPos;
+            double realDiff = videoPlayerCurrentEndPos - videoPlayerCurrentStartPos;
 
             // speed factor
             double factor = realDiff / subDiff;
 
             // adjust to starting position
-            double adjust = startPos - subStart * factor;
+            double adjust = videoPlayerCurrentStartPos - subStart * factor;
 
             foreach (Paragraph p in _paragraphs)
             {
@@ -752,27 +756,25 @@ namespace Nikse.SubtitleEdit.Forms
             timerProgressBarRefresh.Start();
         }
 
-        private void SetSyncFactorLabel()
+        private void SetSyncFactorLabel(double videoPlayerCurrentStartPos, double videoPlayerCurrentEndPos)
         {
-            _adjustInfo = string.Empty;
             if (string.IsNullOrWhiteSpace(VideoFileName))
                 return;
 
-            double startPos = MediaPlayerStart.CurrentPosition;
-            double endPos = MediaPlayerEnd.CurrentPosition;
-            if (endPos > startPos)
+            _adjustInfo = string.Empty;
+            if (videoPlayerCurrentEndPos > videoPlayerCurrentStartPos)
             {
                 double subStart = _paragraphs[comboBoxStartTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
                 double subEnd = _paragraphs[comboBoxEndTexts.SelectedIndex].StartTime.TotalMilliseconds / TimeCode.BaseUnit;
 
                 double subDiff = subEnd - subStart;
-                double realDiff = endPos - startPos;
+                double realDiff = videoPlayerCurrentEndPos - videoPlayerCurrentStartPos;
 
                 // speed factor
                 double factor = realDiff / subDiff;
 
                 // adjust to starting position
-                double adjust = startPos - subStart * factor;
+                double adjust = videoPlayerCurrentStartPos - subStart * factor;
 
                 if (Math.Abs(adjust) > 0.001 || (Math.Abs(1 - factor)) > 0.001)
                     _adjustInfo = string.Format("*{0:0.000}, {1:+0.000;-0.000}", factor, adjust);

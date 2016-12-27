@@ -289,6 +289,11 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox = checkBoxTeletextBox.Checked;
             Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = checkBoxTeletextDoubleHeight.Checked;
 
+            if (_subtitle != null && _subtitle.Header != null && (_subtitle.Header.Contains("STL2") || _subtitle.Header.Contains("STL3")))
+            {
+                _subtitle.Header = _header.ToString();
+            }
+
             DialogResult = DialogResult.OK;
         }
 
