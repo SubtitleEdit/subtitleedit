@@ -1246,7 +1246,7 @@ namespace Nikse.SubtitleEdit.Core
             return new string(chars);
         }
 
-        public static string FixEnglishTextInRightToLeftLanguage(string text, string reverseChars)
+        public static string FixEnglishTextInRightToLeftLanguage(string text, Predicate<char> charChecker)
         {
             var sb = new StringBuilder();
             var lines = text.SplitToLines();
@@ -1265,7 +1265,7 @@ namespace Nikse.SubtitleEdit.Core
                 string numbers = string.Empty;
                 for (int i = 0; i < s.Length; i++)
                 {
-                    if (numbersOn && reverseChars.Contains(s[i]))
+                    if (numbersOn && charChecker(s[i]))
                     {
                         numbers = s[i] + numbers;
                     }
@@ -1275,7 +1275,7 @@ namespace Nikse.SubtitleEdit.Core
                         s = s.Remove(i - numbers.Length, numbers.Length).Insert(i - numbers.Length, numbers);
                         numbers = string.Empty;
                     }
-                    else if (reverseChars.Contains(s[i]))
+                    else if (charChecker(s[i]))
                     {
                         numbers = s[i] + numbers;
                         numbersOn = true;

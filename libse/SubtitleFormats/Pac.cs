@@ -905,9 +905,9 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             byte[] textBuffer;
 
             if (_codePage == CodePageArabic)
-                textBuffer = GetArabicBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), alignment);
+                textBuffer = GetArabicBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, ch => CharUtils.IsAsciiLetterOrDigit(ch)), alignment);
             else if (_codePage == CodePageHebrew)
-                textBuffer = GetHebrewBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyz"), alignment);
+                textBuffer = GetHebrewBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, ch => CharUtils.IsDigit(ch) || (ch >= 'a' && ch <= 'z')), alignment);
             else if (_codePage == CodePageLatin)
                 textBuffer = GetLatinBytes(encoding, text, alignment);
             else if (_codePage == CodePageCyrillic)
@@ -1212,7 +1212,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             p.Text = p.Text.Replace("\0", string.Empty);
             p.Text = FixItalics(p.Text);
             if (_codePage == CodePageArabic)
-                p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+                p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text, ch => CharUtils.IsAsciiLetterOrDigit(ch));
 
             if (verticalAlignment < 5)
             {
