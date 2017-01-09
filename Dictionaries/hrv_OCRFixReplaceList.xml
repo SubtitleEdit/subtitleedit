@@ -32,6 +32,7 @@
     <Word from="bes" to="bijes" />
     <Word from="besa" to="bijesa" />
     <Word from="besan" to="bijesan" />
+    <Word from="besom" to="bijesom" />
     <Word from="besu" to="bijesu" />
     <Word from="beše" to="bješe" />
     <Word from="bi smo" to="bismo" />
@@ -402,6 +403,7 @@
     <Word from="pomeraj" to="miči" />
     <Word from="pomjeraj" to="miči" />
     <Word from="pomeraju" to="miču" />
+    <Word from="pomerala" to="micala" />
     <Word from="pomerati" to="micati" />
     <Word from="pomeriš" to="pomakneš" />
     <Word from="ponaosob" to="osobno" />
@@ -598,6 +600,8 @@
     <Word from="Takođe" to="Također" />
     <Word from="talas" to="val" />
     <Word from="Talas" to="Val" />
+    <Word from="talasa" to="valova" />
+    <Word from="talasima" to="valovima" />
     <Word from="talase" to="valove" />
     <Word from="talasi" to="valovi" />
     <Word from="Talasi" to="Valovi" />
@@ -1722,6 +1726,7 @@
     <RegEx find="edh" replaceWith="eth" />
     <RegEx find="edp" replaceWith="etp" />
     <RegEx find="(?&lt;![NnJj])edać" replaceWith="edat ć" />
+    <RegEx find="eide(?!n)" replaceWith="e ide" />
     <RegEx find="eizbež" replaceWith="eizbjež" />
     <RegEx find="efiniši" replaceWith="efiniraj" />
     <RegEx find="efinišu" replaceWith="efiniraju" />
@@ -1761,6 +1766,7 @@
     <RegEx find="lepš" replaceWith="ljepš" />
     <RegEx find="laćać" replaceWith="laćat ć" />
     <RegEx find="ljubc" replaceWith="ljupc" />
+    <RegEx find="ložić" replaceWith="ložit ć" />
     <RegEx find="luparenj" replaceWith="lupiranj" />
     <RegEx find="([mv])ešten" replaceWith="$1ješten" />
     <RegEx find="miniš[eu]" replaceWith="minira" />
