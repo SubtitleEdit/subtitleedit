@@ -3603,7 +3603,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ResetSubtitle()
         {
+            comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
             SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+            comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
 
             labelStartTimeWarning.Text = string.Empty;
             labelDurationWarning.Text = string.Empty;
@@ -3625,9 +3627,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             SubtitleListview1.HideExtraColumn();
             SubtitleListview1.DisplayExtraFromExtra = false;
-
-            ComboBoxSubtitleFormatsSelectedIndexChanged(null, null);
-
+            
             toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
 
             SetEncoding(Configuration.Settings.General.DefaultEncoding);
@@ -3692,7 +3692,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (ContinueNewOrExit())
             {
-                MakeHistoryForUndo(_language.BeforeNew);
+                if(IsSubtitleLoaded)
+                    MakeHistoryForUndo(_language.BeforeNew);
                 ResetSubtitle();
             }
         }
