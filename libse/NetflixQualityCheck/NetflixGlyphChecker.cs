@@ -35,6 +35,9 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
             // Load allowed glyphs
             int[] allowedGlyphsArr = LoadNetflixGlyphs();
             HashSet<int> allowedGlyphsSet = new HashSet<int>(allowedGlyphsArr);
+            // New line characters
+            allowedGlyphsSet.Add(13);
+            allowedGlyphsSet.Add(10);
 
             foreach (Paragraph paragraph in subtitle.Paragraphs)
             {
