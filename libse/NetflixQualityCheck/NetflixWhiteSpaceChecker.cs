@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Core.NetflixQualityCheck
         {
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                foreach (Match m in Regex.Matches(p.Text, "([ ]{2,}|(\n|\r\n){2,})"))
+                foreach (Match m in Regex.Matches(p.Text, "(\\s|\n|\r\n){2,}"))
                 {
                     string timecode = p.StartTime.ToHHMMSSFF();
                     string context = NetflixQualityReportBuilder.StringContext(p.Text, m.Index, 6);
