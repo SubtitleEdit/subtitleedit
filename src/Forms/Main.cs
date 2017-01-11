@@ -389,8 +389,8 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.ShowSpectrogram = Configuration.Settings.General.ShowSpectrogram;
                 panelWaveformControls.Visible = Configuration.Settings.General.ShowAudioVisualizer;
                 trackBarWaveformPosition.Visible = Configuration.Settings.General.ShowAudioVisualizer;
-                toolStripButtonToggleWaveform.Visible = Configuration.Settings.General.ShowAudioVisualizer;
-                toolStripButtonToggleVideo.Visible = Configuration.Settings.General.ShowVideoPlayer;
+                toolStripButtonToggleWaveform.Checked = Configuration.Settings.General.ShowAudioVisualizer;
+                toolStripButtonToggleVideo.Checked = Configuration.Settings.General.ShowVideoPlayer;
 
                 if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                 {
