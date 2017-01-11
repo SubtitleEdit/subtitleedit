@@ -151,7 +151,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _video5000MsLeft = Keys.None;
         private Keys _video5000MsRight = Keys.None;
         private Keys _videoPlayFirstSelected = Keys.None;
-        private Keys _mainVideoFullscreen = Keys.None;
+        private Keys _mainVideoFullscreen = Keys.None;        
+        private Keys _mainGoToPrevoiusSubtitleAndFocusVideo = Keys.None;
         private Keys _mainGoToNextSubtitleAndFocusVideo = Keys.None;
         private Keys _mainAdjustExtendCurrentSubtitle = Keys.None;
         private Keys _mainAutoCalcCurrentDuration = Keys.None;
@@ -10907,6 +10908,23 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
+            else if (_mainGoToPrevoiusSubtitleAndFocusVideo == e.KeyData)
+            {
+                int newIndex = _subtitleListViewIndex - 1;
+                if (newIndex >= 0)
+                {
+                    foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                        item.Selected = false;
+                    SubtitleListview1.Items[newIndex].Selected = true;
+                    SubtitleListview1.Items[newIndex].EnsureVisible();
+                    textBoxListViewText.Focus();
+                    textBoxListViewText.SelectAll();
+                    _subtitleListViewIndex = newIndex;
+                    GotoSubtitleIndex(newIndex);
+                    ShowSubtitle();
+                    e.SuppressKeyPress = true;
+                }
+            }
             else if (_mainGoToNextSubtitleAndFocusVideo == e.KeyData)
             {
                 int newIndex = _subtitleListViewIndex + 1;
@@ -15018,6 +15036,7 @@ namespace Nikse.SubtitleEdit.Forms
             _video5000MsLeft = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo5000MsLeft);
             _video5000MsRight = UiUtil.GetKeys(Configuration.Settings.Shortcuts.MainVideo5000MsRight);
             _videoPlayFirstSelected = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralPlayFirstSelected);
+            _mainGoToPrevoiusSubtitleAndFocusVideo = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo);
             _mainGoToNextSubtitleAndFocusVideo = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo);
             _mainAdjustExtendCurrentSubtitle = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralExtendCurrentSubtitle);
             _mainAutoCalcCurrentDuration = UiUtil.GetKeys(Configuration.Settings.Shortcuts.GeneralAutoCalcCurrentDuration);
