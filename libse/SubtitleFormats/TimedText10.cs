@@ -31,10 +31,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             get { return true; }
         }
 
-        private static string TTMLNamespace = "http://www.w3.org/ns/ttml";
-        private static string TTMLParameterNamespace = "http://www.w3.org/ns/ttml#parameter";
-        private static string TTMLStylingNamespace = "http://www.w3.org/ns/ttml#styling";
-        private static string TTMLMetadataNamespace = "http://www.w3.org/ns/ttml#metadata";
+        public static string TTMLNamespace = "http://www.w3.org/ns/ttml";
+        public static string TTMLParameterNamespace = "http://www.w3.org/ns/ttml#parameter";
+        public static string TTMLStylingNamespace = "http://www.w3.org/ns/ttml#styling";
+        public static string TTMLMetadataNamespace = "http://www.w3.org/ns/ttml#metadata";
 
         private bool HasTTMLParagraphs(string xmlAsStr)
         {

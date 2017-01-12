@@ -20373,7 +20373,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (messages.Count != 0)
             {
-                MessageBox.Show(String.Join("\n\n", messages.ToArray()));
+                MessageBox.Show(String.Join(Environment.NewLine, messages.ToArray()), Configuration.Settings.Language.Main.Menu.ToolBar.NetflixQualityCheck);
             }
         }
 
