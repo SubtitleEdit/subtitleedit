@@ -182,6 +182,7 @@
             this.buttonWaveformsFolderEmpty = new System.Windows.Forms.Button();
             this.labelWaveformsFolderInfo = new System.Windows.Forms.Label();
             this.groupBoxWaveformAppearence = new System.Windows.Forms.GroupBox();
+            this.checkBoxWaveformSetVideoPosMoveStartEnd = new System.Windows.Forms.CheckBox();
             this.labelWaveformTextSize = new System.Windows.Forms.Label();
             this.checkBoxWaveformTextBold = new System.Windows.Forms.CheckBox();
             this.comboBoxWaveformTextSize = new System.Windows.Forms.ComboBox();
@@ -2048,9 +2049,9 @@
             this.groupBox3.Controls.Add(this.textBoxFFmpegPath);
             this.groupBox3.Controls.Add(this.labelFFmpegPath);
             this.groupBox3.Controls.Add(this.checkBoxUseFFmpeg);
-            this.groupBox3.Location = new System.Drawing.Point(406, 325);
+            this.groupBox3.Location = new System.Drawing.Point(406, 345);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(419, 129);
+            this.groupBox3.Size = new System.Drawing.Size(419, 102);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             // 
@@ -2098,7 +2099,7 @@
             this.groupBoxSpectrogram.Controls.Add(this.labelSpectrogramAppearance);
             this.groupBoxSpectrogram.Controls.Add(this.comboBoxSpectrogramAppearance);
             this.groupBoxSpectrogram.Controls.Add(this.checkBoxGenerateSpectrogram);
-            this.groupBoxSpectrogram.Location = new System.Drawing.Point(6, 216);
+            this.groupBoxSpectrogram.Location = new System.Drawing.Point(6, 236);
             this.groupBoxSpectrogram.Name = "groupBoxSpectrogram";
             this.groupBoxSpectrogram.Size = new System.Drawing.Size(819, 103);
             this.groupBoxSpectrogram.TabIndex = 1;
@@ -2140,9 +2141,9 @@
             // 
             this.groupBox1.Controls.Add(this.buttonWaveformsFolderEmpty);
             this.groupBox1.Controls.Add(this.labelWaveformsFolderInfo);
-            this.groupBox1.Location = new System.Drawing.Point(6, 325);
+            this.groupBox1.Location = new System.Drawing.Point(6, 345);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(394, 129);
+            this.groupBox1.Size = new System.Drawing.Size(394, 102);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             // 
@@ -2169,6 +2170,7 @@
             // 
             this.groupBoxWaveformAppearence.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformSetVideoPosMoveStartEnd);
             this.groupBoxWaveformAppearence.Controls.Add(this.labelWaveformTextSize);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformTextBold);
             this.groupBoxWaveformAppearence.Controls.Add(this.comboBoxWaveformTextSize);
@@ -2192,15 +2194,25 @@
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformShowGrid);
             this.groupBoxWaveformAppearence.Location = new System.Drawing.Point(6, 6);
             this.groupBoxWaveformAppearence.Name = "groupBoxWaveformAppearence";
-            this.groupBoxWaveformAppearence.Size = new System.Drawing.Size(819, 203);
+            this.groupBoxWaveformAppearence.Size = new System.Drawing.Size(819, 224);
             this.groupBoxWaveformAppearence.TabIndex = 0;
             this.groupBoxWaveformAppearence.TabStop = false;
             this.groupBoxWaveformAppearence.Text = "Waveform appearance";
             // 
+            // checkBoxWaveformSetVideoPosMoveStartEnd
+            // 
+            this.checkBoxWaveformSetVideoPosMoveStartEnd.AutoSize = true;
+            this.checkBoxWaveformSetVideoPosMoveStartEnd.Location = new System.Drawing.Point(262, 73);
+            this.checkBoxWaveformSetVideoPosMoveStartEnd.Name = "checkBoxWaveformSetVideoPosMoveStartEnd";
+            this.checkBoxWaveformSetVideoPosMoveStartEnd.Size = new System.Drawing.Size(225, 17);
+            this.checkBoxWaveformSetVideoPosMoveStartEnd.TabIndex = 11;
+            this.checkBoxWaveformSetVideoPosMoveStartEnd.Text = "Set video position when moving start/end";
+            this.checkBoxWaveformSetVideoPosMoveStartEnd.UseVisualStyleBackColor = true;
+            // 
             // labelWaveformTextSize
             // 
             this.labelWaveformTextSize.AutoSize = true;
-            this.labelWaveformTextSize.Location = new System.Drawing.Point(259, 135);
+            this.labelWaveformTextSize.Location = new System.Drawing.Point(259, 154);
             this.labelWaveformTextSize.Name = "labelWaveformTextSize";
             this.labelWaveformTextSize.Size = new System.Drawing.Size(73, 13);
             this.labelWaveformTextSize.TabIndex = 23;
@@ -2209,7 +2221,7 @@
             // checkBoxWaveformTextBold
             // 
             this.checkBoxWaveformTextBold.AutoSize = true;
-            this.checkBoxWaveformTextBold.Location = new System.Drawing.Point(463, 136);
+            this.checkBoxWaveformTextBold.Location = new System.Drawing.Point(463, 155);
             this.checkBoxWaveformTextBold.Name = "checkBoxWaveformTextBold";
             this.checkBoxWaveformTextBold.Size = new System.Drawing.Size(46, 17);
             this.checkBoxWaveformTextBold.TabIndex = 18;
@@ -2235,7 +2247,7 @@
             "18",
             "19",
             "20"});
-            this.comboBoxWaveformTextSize.Location = new System.Drawing.Point(336, 132);
+            this.comboBoxWaveformTextSize.Location = new System.Drawing.Point(336, 151);
             this.comboBoxWaveformTextSize.Name = "comboBoxWaveformTextSize";
             this.comboBoxWaveformTextSize.Size = new System.Drawing.Size(121, 21);
             this.comboBoxWaveformTextSize.TabIndex = 17;
@@ -2243,7 +2255,7 @@
             // checkBoxListViewMouseEnterFocus
             // 
             this.checkBoxListViewMouseEnterFocus.AutoSize = true;
-            this.checkBoxListViewMouseEnterFocus.Location = new System.Drawing.Point(281, 96);
+            this.checkBoxListViewMouseEnterFocus.Location = new System.Drawing.Point(281, 115);
             this.checkBoxListViewMouseEnterFocus.Name = "checkBoxListViewMouseEnterFocus";
             this.checkBoxListViewMouseEnterFocus.Size = new System.Drawing.Size(214, 17);
             this.checkBoxListViewMouseEnterFocus.TabIndex = 16;
@@ -2253,7 +2265,7 @@
             // checkBoxWaveformHoverFocus
             // 
             this.checkBoxWaveformHoverFocus.AutoSize = true;
-            this.checkBoxWaveformHoverFocus.Location = new System.Drawing.Point(262, 78);
+            this.checkBoxWaveformHoverFocus.Location = new System.Drawing.Point(262, 96);
             this.checkBoxWaveformHoverFocus.Name = "checkBoxWaveformHoverFocus";
             this.checkBoxWaveformHoverFocus.Size = new System.Drawing.Size(149, 17);
             this.checkBoxWaveformHoverFocus.TabIndex = 15;
@@ -2264,7 +2276,7 @@
             // labelWaveformBorderHitMs2
             // 
             this.labelWaveformBorderHitMs2.AutoSize = true;
-            this.labelWaveformBorderHitMs2.Location = new System.Drawing.Point(454, 176);
+            this.labelWaveformBorderHitMs2.Location = new System.Drawing.Point(454, 195);
             this.labelWaveformBorderHitMs2.Name = "labelWaveformBorderHitMs2";
             this.labelWaveformBorderHitMs2.Size = new System.Drawing.Size(62, 13);
             this.labelWaveformBorderHitMs2.TabIndex = 14;
@@ -2272,7 +2284,7 @@
             // 
             // numericUpDownWaveformBorderHitMs
             // 
-            this.numericUpDownWaveformBorderHitMs.Location = new System.Drawing.Point(392, 174);
+            this.numericUpDownWaveformBorderHitMs.Location = new System.Drawing.Point(392, 193);
             this.numericUpDownWaveformBorderHitMs.Minimum = new decimal(new int[] {
             10,
             0,
@@ -2290,7 +2302,7 @@
             // labelWaveformBorderHitMs1
             // 
             this.labelWaveformBorderHitMs1.AutoSize = true;
-            this.labelWaveformBorderHitMs1.Location = new System.Drawing.Point(259, 176);
+            this.labelWaveformBorderHitMs1.Location = new System.Drawing.Point(259, 195);
             this.labelWaveformBorderHitMs1.Name = "labelWaveformBorderHitMs1";
             this.labelWaveformBorderHitMs1.Size = new System.Drawing.Size(127, 13);
             this.labelWaveformBorderHitMs1.TabIndex = 13;
@@ -2299,7 +2311,7 @@
             // checkBoxAllowOverlap
             // 
             this.checkBoxAllowOverlap.AutoSize = true;
-            this.checkBoxAllowOverlap.Location = new System.Drawing.Point(262, 55);
+            this.checkBoxAllowOverlap.Location = new System.Drawing.Point(262, 50);
             this.checkBoxAllowOverlap.Name = "checkBoxAllowOverlap";
             this.checkBoxAllowOverlap.Size = new System.Drawing.Size(212, 17);
             this.checkBoxAllowOverlap.TabIndex = 10;
@@ -2309,7 +2321,7 @@
             // checkBoxReverseMouseWheelScrollDirection
             // 
             this.checkBoxReverseMouseWheelScrollDirection.AutoSize = true;
-            this.checkBoxReverseMouseWheelScrollDirection.Location = new System.Drawing.Point(262, 31);
+            this.checkBoxReverseMouseWheelScrollDirection.Location = new System.Drawing.Point(262, 27);
             this.checkBoxReverseMouseWheelScrollDirection.Name = "checkBoxReverseMouseWheelScrollDirection";
             this.checkBoxReverseMouseWheelScrollDirection.Size = new System.Drawing.Size(202, 17);
             this.checkBoxReverseMouseWheelScrollDirection.TabIndex = 6;
@@ -4227,5 +4239,6 @@
         private System.Windows.Forms.CheckBox checkBoxTBRemoveTextForHi;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxNumberOfLines;
         private System.Windows.Forms.Label labelMaxLines;
+        private System.Windows.Forms.CheckBox checkBoxWaveformSetVideoPosMoveStartEnd;
     }
 }

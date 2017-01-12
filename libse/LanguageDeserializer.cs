@@ -4687,6 +4687,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformAllowOverlap":
                     language.Settings.WaveformAllowOverlap = reader.Value;
                     break;
+                case "Settings/WaveformSetVideoPosMoveStartEnd":
+                    language.Settings.WaveformSetVideoPosMoveStartEnd = reader.Value;
+                    break;
                 case "Settings/WaveformFocusMouseEnter":
                     language.Settings.WaveformFocusMouseEnter = reader.Value;
                     break;

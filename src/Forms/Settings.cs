@@ -371,6 +371,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxWaveformShowGrid.Text = language.WaveformShowGridLines;
             checkBoxReverseMouseWheelScrollDirection.Text = language.ReverseMouseWheelScrollDirection;
             checkBoxAllowOverlap.Text = language.WaveformAllowOverlap;
+            checkBoxWaveformSetVideoPosMoveStartEnd.Text = language.WaveformSetVideoPosMoveStartEnd;
             checkBoxWaveformHoverFocus.Text = language.WaveformFocusMouseEnter;
             checkBoxListViewMouseEnterFocus.Text = language.WaveformListViewFocusMouseEnter;
             labelWaveformBorderHitMs1.Text = language.WaveformBorderHitMs1;
@@ -638,6 +639,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxWaveformTextBold.Checked = Configuration.Settings.VideoControls.WaveformTextBold;
             checkBoxReverseMouseWheelScrollDirection.Checked = Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward;
             checkBoxAllowOverlap.Checked = Configuration.Settings.VideoControls.WaveformAllowOverlap;
+            checkBoxWaveformSetVideoPosMoveStartEnd.Checked = Configuration.Settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd;
             checkBoxWaveformHoverFocus.Checked = Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter;
             checkBoxListViewMouseEnterFocus.Checked = Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter;
             checkBoxListViewMouseEnterFocus.Enabled = Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter;
@@ -1214,6 +1216,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.WaveformTextBold = checkBoxWaveformTextBold.Checked;
             Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward = checkBoxReverseMouseWheelScrollDirection.Checked;
             Configuration.Settings.VideoControls.WaveformAllowOverlap = checkBoxAllowOverlap.Checked;
+            Configuration.Settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd = checkBoxWaveformSetVideoPosMoveStartEnd.Checked;
             Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter = checkBoxWaveformHoverFocus.Checked;
             Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter = checkBoxListViewMouseEnterFocus.Checked;
             Configuration.Settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(numericUpDownWaveformBorderHitMs.Value);
