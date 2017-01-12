@@ -1909,6 +1909,7 @@
             public string WaveformShowGridLines { get; set; }
             public string ReverseMouseWheelScrollDirection { get; set; }
             public string WaveformAllowOverlap { get; set; }
+            public string WaveformSetVideoPosMoveStartEnd { get; set; }            
             public string WaveformFocusMouseEnter { get; set; }
             public string WaveformListViewFocusMouseEnter { get; set; }
             public string WaveformBorderHitMs1 { get; set; }

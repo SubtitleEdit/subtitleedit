@@ -707,6 +707,7 @@ namespace Nikse.SubtitleEdit.Core
         public bool WaveformAllowOverlap { get; set; }
         public bool WaveformFocusOnMouseEnter { get; set; }
         public bool WaveformListViewFocusOnMouseEnter { get; set; }
+        public bool WaveformSetVideoPositionOnMoveStartEnd { get; set; }
         public int WaveformBorderHitMs { get; set; }
         public Color WaveformGridColor { get; set; }
         public Color WaveformColor { get; set; }
@@ -2263,6 +2264,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("WaveformListViewFocusOnMouseEnter");
             if (subNode != null)
                 settings.VideoControls.WaveformListViewFocusOnMouseEnter = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("WaveformSetVideoPositionOnMoveStartEnd");
+            if (subNode != null)
+                settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd = Convert.ToBoolean(subNode.InnerText);           
             subNode = node.SelectSingleNode("WaveformBorderHitMs");
             if (subNode != null)
                 settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(subNode.InnerText);
@@ -3343,6 +3347,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("WaveformAllowOverlap", settings.VideoControls.WaveformAllowOverlap.ToString());
                 textWriter.WriteElementString("WaveformFocusOnMouseEnter", settings.VideoControls.WaveformFocusOnMouseEnter.ToString());
                 textWriter.WriteElementString("WaveformListViewFocusOnMouseEnter", settings.VideoControls.WaveformListViewFocusOnMouseEnter.ToString());
+                textWriter.WriteElementString("WaveformSetVideoPositionOnMoveStartEnd", settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd.ToString());                
                 textWriter.WriteElementString("WaveformBorderHitMs", settings.VideoControls.WaveformBorderHitMs.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformGridColor", settings.VideoControls.WaveformGridColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformColor", settings.VideoControls.WaveformColor.ToArgb().ToString(CultureInfo.InvariantCulture));

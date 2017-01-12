@@ -942,6 +942,13 @@ namespace Nikse.SubtitleEdit.Forms
             beforeParagraph.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
             beforeParagraph.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
             _makeHistoryPaused = false;
+
+            if (Configuration.Settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd &&
+                (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.Start ||
+                 e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.End))
+            {
+                mediaPlayer.CurrentPosition = e.Seconds;
+            }
         }
 
         private void MovePrevNext(AudioVisualizer.ParagraphEventArgs e, Paragraph beforeParagraph, int index)
