@@ -113,7 +113,6 @@
             // 
             this.subtitleListView2.AllowDrop = true;
             this.subtitleListView2.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.subtitleListView2.DisplayExtraFromExtra = false;
             this.subtitleListView2.FirstVisibleIndex = -1;
             this.subtitleListView2.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListView2.FullRowSelect = true;
@@ -180,7 +179,6 @@
             this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SubtitleListview1.DisplayExtraFromExtra = false;
             this.SubtitleListview1.FirstVisibleIndex = -1;
             this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SubtitleListview1.FullRowSelect = true;

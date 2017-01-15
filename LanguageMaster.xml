@@ -24,6 +24,8 @@
     <StartTime>Start time</StartTime>
     <EndTime>End time</EndTime>
     <Duration>Duration</Duration>
+    <CharsPerSec>Chars/sec</CharsPerSec>
+    <WordsPerMin>Words/min</WordsPerMin>
     <NumberSymbol>#</NumberSymbol>
     <Number>Number</Number>
     <Text>Text</Text>
@@ -1703,6 +1705,8 @@ can edit in same subtitle file (collaboration)</Information>
     <RemoveBlankLinesWhenOpening>Remove blank lines when opening a subtitle</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Show line breaks in list view as</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Double-clicking line in main window list view will</MainListViewDoubleClickAction>
+    <MainListViewColumns>List view columns</MainListViewColumns>
+    <MainListViewColumnsInfo>Choose visible list view columns</MainListViewColumnsInfo>
     <MainListViewNothing>Nothing</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Go to video position and pause</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Go to video position and play</MainListViewVideoGoToPositionAndPlay>

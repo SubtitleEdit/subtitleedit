@@ -31,6 +31,9 @@ namespace Nikse.SubtitleEdit.Forms
         private OcrFixReplaceList _ocrFixReplaceList;
         private readonly string _oldVlcLocation;
         private readonly string _oldVlcLocationRelative;
+        private readonly bool _oldListViewShowCps;
+        private readonly bool _oldListViewShowWpm;
+
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
 
         private class ComboBoxLanguage
@@ -314,6 +317,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelShowLineBreaksAs.Text = language.ShowLineBreaksAs;
             textBoxShowLineBreaksAs.Left = labelShowLineBreaksAs.Left + labelShowLineBreaksAs.Width;
             labelListViewDoubleClickEvent.Text = language.MainListViewDoubleClickAction;
+            labelListviewColumns.Text = language.MainListViewColumns;
+            buttonListviewColumns.Text = GetListViewColumns();  
             labelAutoBackup.Text = language.AutoBackup;
             labelAutoBackupDeleteAfter.Text = language.AutoBackupDeleteAfter;
             comboBoxAutoBackup.Left = labelAutoBackup.Left + labelAutoBackup.Width + 3;
@@ -864,7 +869,25 @@ namespace Nikse.SubtitleEdit.Forms
             _oldVlcLocation = gs.VlcLocation;
             _oldVlcLocationRelative = gs.VlcLocationRelative;
 
+            _oldListViewShowCps = Configuration.Settings.Tools.ListViewShowColumnCharsPerSec;
+            _oldListViewShowWpm = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
+
             labelPlatform.Text = (IntPtr.Size * 8) + "-bit";
+        }
+
+        private string GetListViewColumns()
+        {
+            var sb = new StringBuilder();
+            sb.Append(Configuration.Settings.Language.General.NumberSymbol + ", ");
+            sb.Append(Configuration.Settings.Language.General.StartTime + ", ");
+            sb.Append(Configuration.Settings.Language.General.EndTime + ", ");
+            sb.Append(Configuration.Settings.Language.General.Duration + ", ");
+            if (Configuration.Settings.Tools.ListViewShowColumnCharsPerSec)
+                sb.Append(Configuration.Settings.Language.General.CharsPerSec + ", ");
+            if (Configuration.Settings.Tools.ListViewShowColumnWordsPerMin)
+                sb.Append(Configuration.Settings.Language.General.WordsPerMin + ", ");
+            sb.Append(Configuration.Settings.Language.General.Text + ", ");
+            return sb.ToString().TrimEnd().TrimEnd(',');
         }
 
         private void AddNode(TreeNode node, string text, string shortcut, bool isMenuItem = false)
@@ -2191,6 +2214,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Configuration.Settings.General.VlcLocation = _oldVlcLocation;
             Configuration.Settings.General.VlcLocationRelative = _oldVlcLocationRelative;
+            Configuration.Settings.Tools.ListViewShowColumnCharsPerSec = _oldListViewShowCps;
+            Configuration.Settings.Tools.ListViewShowColumnWordsPerMin = _oldListViewShowWpm;
+
             DialogResult = DialogResult.Cancel;
         }
 
@@ -2339,5 +2365,19 @@ namespace Nikse.SubtitleEdit.Forms
         {
             checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(Configuration.Settings.Language.Settings.SyntaxColorTextMoreThanMaxLines, numericUpDownMaxNumberOfLines.Value);
         }
+
+        private void buttonListviewColumns_Click(object sender, EventArgs e)
+        {
+            using (var form = new SettingsListViewColumns())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    Configuration.Settings.Tools.ListViewShowColumnCharsPerSec = form.ShowCps;
+                    Configuration.Settings.Tools.ListViewShowColumnWordsPerMin = form.ShowWpm;
+                    buttonListviewColumns.Text = GetListViewColumns();
+                }
+            }            
+        }
+
     }
 }

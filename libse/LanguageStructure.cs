@@ -28,6 +28,8 @@
             public string StartTime { get; set; }
             public string EndTime { get; set; }
             public string Duration { get; set; }
+            public string CharsPerSec { get; set; }
+            public string WordsPerMin { get; set; }
             public string NumberSymbol { get; set; }
             public string Number { get; set; }
             public string Text { get; set; }
@@ -1865,6 +1867,8 @@
             public string RemoveBlankLinesWhenOpening { get; set; }
             public string ShowLineBreaksAs { get; set; }
             public string MainListViewDoubleClickAction { get; set; }
+            public string MainListViewColumns { get; set; }
+            public string MainListViewColumnsInfo { get; set; }            
             public string MainListViewNothing { get; set; }
             public string MainListViewVideoGoToPositionAndPause { get; set; }
             public string MainListViewVideoGoToPositionAndPlay { get; set; }
