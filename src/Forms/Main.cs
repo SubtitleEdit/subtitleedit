@@ -3853,6 +3853,8 @@ namespace Nikse.SubtitleEdit.Forms
                                        Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb();
 
             var oldAllowEditOfOriginalSubtitle = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
+            var oldShowColumnCharsPerSec = Configuration.Settings.Tools.ListViewShowColumnCharsPerSec;
+            var oldShowWordsMinColumn = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
             using (var settings = new Settings())
             {
                 settings.Initialize(Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, toolStripButtonFind.Image,
@@ -3860,15 +3862,6 @@ namespace Nikse.SubtitleEdit.Forms
                                     toolStripButtonSpellCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
                 settings.ShowDialog(this);
             }
-
-            if (Configuration.Settings.Tools.ListViewShowColumnCharsPerSec)
-                SubtitleListview1.ShowCharsSecColumn(Configuration.Settings.Language.General.CharsPerSec);
-            else
-                SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
-            if (Configuration.Settings.Tools.ListViewShowColumnWordsPerMin)
-                SubtitleListview1.ShowWordsMinColumn(Configuration.Settings.Language.General.WordsPerMin);
-            else
-                SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
 
             try
             { // can have some problems with fonts...
@@ -3914,8 +3907,19 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.SubtitleFontSize +
                 Configuration.Settings.General.SubtitleFontColor.ToArgb() +
                 Configuration.Settings.General.SubtitleBackgroundColor.ToArgb() ||
-                oldSyntaxColoring != newSyntaxColoring)
+                oldSyntaxColoring != newSyntaxColoring ||
+                oldShowColumnCharsPerSec != Configuration.Settings.Tools.ListViewShowColumnCharsPerSec ||
+                oldShowWordsMinColumn != Configuration.Settings.Tools.ListViewShowColumnWordsPerMin)
             {
+                if (Configuration.Settings.Tools.ListViewShowColumnCharsPerSec)
+                    SubtitleListview1.ShowCharsSecColumn(Configuration.Settings.Language.General.CharsPerSec);
+                else
+                    SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.CharactersPerSeconds);
+                if (Configuration.Settings.Tools.ListViewShowColumnWordsPerMin)
+                    SubtitleListview1.ShowWordsMinColumn(Configuration.Settings.Language.General.WordsPerMin);
+                else
+                    SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.WordsPerMinute);
+
                 try
                 { // can have some problems with fonts...
                     UiUtil.InitializeSubtitleFont(textBoxListViewText);
