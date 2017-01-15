@@ -30,7 +30,6 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             UiUtil.InitializeSubtitleFont(SubtitleListview1);
             SubtitleListview1.ShowExtraColumn(Configuration.Settings.Language.DurationsBridgeGaps.GapToNext);
-            SubtitleListview1.DisplayExtraFromExtra = true;
             SubtitleListview1.AutoSizeAllColumns(this);
 
             labelBridgePart1.Text = Configuration.Settings.Language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart1;

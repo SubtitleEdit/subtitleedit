@@ -121,6 +121,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "General/Duration":
                     language.General.Duration = reader.Value;
                     break;
+                case "General/CharsPerSec":
+                    language.General.CharsPerSec = reader.Value;
+                    break;
+                case "General/WordsPerMin":
+                    language.General.WordsPerMin = reader.Value;
+                    break;
                 case "General/NumberSymbol":
                     language.General.NumberSymbol = reader.Value;
                     break;
@@ -4557,6 +4563,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/MainListViewDoubleClickAction":
                     language.Settings.MainListViewDoubleClickAction = reader.Value;
+                    break;
+                case "Settings/MainListViewColumns":
+                    language.Settings.MainListViewColumns = reader.Value;
+                    break;
+                case "Settings/MainListViewColumnsInfo":
+                    language.Settings.MainListViewColumnsInfo = reader.Value;
                     break;
                 case "Settings/MainListViewNothing":
                     language.Settings.MainListViewNothing = reader.Value;

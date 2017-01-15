@@ -33,6 +33,8 @@
             this.tabControlSettings = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
+            this.labelListviewColumns = new System.Windows.Forms.Label();
+            this.buttonListviewColumns = new System.Windows.Forms.Button();
             this.numericUpDownMaxNumberOfLines = new System.Windows.Forms.NumericUpDown();
             this.labelMaxLines = new System.Windows.Forms.Label();
             this.comboBoxAutoBackupDeleteAfter = new System.Windows.Forms.ComboBox();
@@ -394,7 +396,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(697, 502);
+            this.buttonOK.Location = new System.Drawing.Point(697, 513);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 0;
@@ -406,7 +408,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(778, 502);
+            this.buttonCancel.Location = new System.Drawing.Point(778, 513);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 1;
@@ -432,7 +434,7 @@
             this.tabControlSettings.Location = new System.Drawing.Point(13, 13);
             this.tabControlSettings.Name = "tabControlSettings";
             this.tabControlSettings.SelectedIndex = 0;
-            this.tabControlSettings.Size = new System.Drawing.Size(840, 483);
+            this.tabControlSettings.Size = new System.Drawing.Size(840, 494);
             this.tabControlSettings.TabIndex = 2;
             this.tabControlSettings.SelectedIndexChanged += new System.EventHandler(this.TabControlSettingsSelectedIndexChanged);
             // 
@@ -442,7 +444,7 @@
             this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGeneral.Size = new System.Drawing.Size(832, 457);
+            this.tabPageGeneral.Size = new System.Drawing.Size(832, 468);
             this.tabPageGeneral.TabIndex = 0;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
@@ -452,6 +454,8 @@
             this.groupBoxMiscellaneous.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxMiscellaneous.Controls.Add(this.labelListviewColumns);
+            this.groupBoxMiscellaneous.Controls.Add(this.buttonListviewColumns);
             this.groupBoxMiscellaneous.Controls.Add(this.numericUpDownMaxNumberOfLines);
             this.groupBoxMiscellaneous.Controls.Add(this.labelMaxLines);
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxAutoBackupDeleteAfter);
@@ -506,10 +510,29 @@
             this.groupBoxMiscellaneous.Controls.Add(this.labelDefaultFrameRate);
             this.groupBoxMiscellaneous.Location = new System.Drawing.Point(6, 6);
             this.groupBoxMiscellaneous.Name = "groupBoxMiscellaneous";
-            this.groupBoxMiscellaneous.Size = new System.Drawing.Size(819, 445);
+            this.groupBoxMiscellaneous.Size = new System.Drawing.Size(819, 456);
             this.groupBoxMiscellaneous.TabIndex = 0;
             this.groupBoxMiscellaneous.TabStop = false;
             this.groupBoxMiscellaneous.Text = "Miscellaneous";
+            // 
+            // labelListviewColumns
+            // 
+            this.labelListviewColumns.AutoSize = true;
+            this.labelListviewColumns.Location = new System.Drawing.Point(439, 342);
+            this.labelListviewColumns.Name = "labelListviewColumns";
+            this.labelListviewColumns.Size = new System.Drawing.Size(86, 13);
+            this.labelListviewColumns.TabIndex = 48;
+            this.labelListviewColumns.Text = "Listview columns";
+            // 
+            // buttonListviewColumns
+            // 
+            this.buttonListviewColumns.Location = new System.Drawing.Point(441, 358);
+            this.buttonListviewColumns.Name = "buttonListviewColumns";
+            this.buttonListviewColumns.Size = new System.Drawing.Size(372, 23);
+            this.buttonListviewColumns.TabIndex = 43;
+            this.buttonListviewColumns.Text = "#, Start time, End time, duration, cps, wpm, text";
+            this.buttonListviewColumns.UseVisualStyleBackColor = true;
+            this.buttonListviewColumns.Click += new System.EventHandler(this.buttonListviewColumns_Click);
             // 
             // numericUpDownMaxNumberOfLines
             // 
@@ -551,7 +574,7 @@
             "1 month",
             "3 months",
             "6 months"});
-            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(707, 352);
+            this.comboBoxAutoBackupDeleteAfter.Location = new System.Drawing.Point(707, 397);
             this.comboBoxAutoBackupDeleteAfter.Name = "comboBoxAutoBackupDeleteAfter";
             this.comboBoxAutoBackupDeleteAfter.Size = new System.Drawing.Size(88, 21);
             this.comboBoxAutoBackupDeleteAfter.TabIndex = 45;
@@ -559,7 +582,7 @@
             // labelAutoBackupDeleteAfter
             // 
             this.labelAutoBackupDeleteAfter.AutoSize = true;
-            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(639, 355);
+            this.labelAutoBackupDeleteAfter.Location = new System.Drawing.Point(639, 400);
             this.labelAutoBackupDeleteAfter.Name = "labelAutoBackupDeleteAfter";
             this.labelAutoBackupDeleteAfter.Size = new System.Drawing.Size(65, 13);
             this.labelAutoBackupDeleteAfter.TabIndex = 46;
@@ -568,7 +591,7 @@
             // checkBoxCheckForUpdates
             // 
             this.checkBoxCheckForUpdates.AutoSize = true;
-            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(441, 394);
+            this.checkBoxCheckForUpdates.Location = new System.Drawing.Point(441, 427);
             this.checkBoxCheckForUpdates.Name = "checkBoxCheckForUpdates";
             this.checkBoxCheckForUpdates.Size = new System.Drawing.Size(114, 17);
             this.checkBoxCheckForUpdates.TabIndex = 46;
@@ -895,7 +918,7 @@
             "Every minute",
             "Every 5 minutes",
             "Every 15 minutes"});
-            this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 352);
+            this.comboBoxAutoBackup.Location = new System.Drawing.Point(512, 397);
             this.comboBoxAutoBackup.Name = "comboBoxAutoBackup";
             this.comboBoxAutoBackup.Size = new System.Drawing.Size(121, 21);
             this.comboBoxAutoBackup.TabIndex = 44;
@@ -903,7 +926,7 @@
             // labelAutoBackup
             // 
             this.labelAutoBackup.AutoSize = true;
-            this.labelAutoBackup.Location = new System.Drawing.Point(438, 355);
+            this.labelAutoBackup.Location = new System.Drawing.Point(438, 400);
             this.labelAutoBackup.Name = "labelAutoBackup";
             this.labelAutoBackup.Size = new System.Drawing.Size(68, 13);
             this.labelAutoBackup.TabIndex = 43;
@@ -1114,7 +1137,7 @@
             this.tabPageToolBar.Location = new System.Drawing.Point(4, 22);
             this.tabPageToolBar.Name = "tabPageToolBar";
             this.tabPageToolBar.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageToolBar.Size = new System.Drawing.Size(832, 457);
+            this.tabPageToolBar.Size = new System.Drawing.Size(832, 468);
             this.tabPageToolBar.TabIndex = 7;
             this.tabPageToolBar.Text = "Toolbar ";
             this.tabPageToolBar.UseVisualStyleBackColor = true;
@@ -1126,7 +1149,7 @@
             this.groupBox2.Controls.Add(this.checkBoxShowFrameRate);
             this.groupBox2.Location = new System.Drawing.Point(7, 248);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(818, 200);
+            this.groupBox2.Size = new System.Drawing.Size(818, 214);
             this.groupBox2.TabIndex = 35;
             this.groupBox2.TabStop = false;
             // 
@@ -1519,7 +1542,7 @@
             this.tabPageVideoPlayer.Location = new System.Drawing.Point(4, 22);
             this.tabPageVideoPlayer.Name = "tabPageVideoPlayer";
             this.tabPageVideoPlayer.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageVideoPlayer.Size = new System.Drawing.Size(832, 457);
+            this.tabPageVideoPlayer.Size = new System.Drawing.Size(832, 468);
             this.tabPageVideoPlayer.TabIndex = 2;
             this.tabPageVideoPlayer.Text = "Video player";
             this.tabPageVideoPlayer.UseVisualStyleBackColor = true;
@@ -1549,7 +1572,7 @@
             this.groupBoxMainWindowVideoControls.Controls.Add(this.comboBoxCustomSearch1);
             this.groupBoxMainWindowVideoControls.Location = new System.Drawing.Point(7, 239);
             this.groupBoxMainWindowVideoControls.Name = "groupBoxMainWindowVideoControls";
-            this.groupBoxMainWindowVideoControls.Size = new System.Drawing.Size(819, 209);
+            this.groupBoxMainWindowVideoControls.Size = new System.Drawing.Size(819, 223);
             this.groupBoxMainWindowVideoControls.TabIndex = 15;
             this.groupBoxMainWindowVideoControls.TabStop = false;
             this.groupBoxMainWindowVideoControls.Text = "Main window video controls";
@@ -2036,7 +2059,7 @@
             this.tabPageWaveform.Controls.Add(this.groupBoxWaveformAppearence);
             this.tabPageWaveform.Location = new System.Drawing.Point(4, 22);
             this.tabPageWaveform.Name = "tabPageWaveform";
-            this.tabPageWaveform.Size = new System.Drawing.Size(832, 457);
+            this.tabPageWaveform.Size = new System.Drawing.Size(832, 468);
             this.tabPageWaveform.TabIndex = 6;
             this.tabPageWaveform.Text = "Waveform/spectrogram";
             this.tabPageWaveform.UseVisualStyleBackColor = true;
@@ -2049,7 +2072,7 @@
             this.groupBox3.Controls.Add(this.textBoxFFmpegPath);
             this.groupBox3.Controls.Add(this.labelFFmpegPath);
             this.groupBox3.Controls.Add(this.checkBoxUseFFmpeg);
-            this.groupBox3.Location = new System.Drawing.Point(406, 345);
+            this.groupBox3.Location = new System.Drawing.Point(406, 363);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(419, 102);
             this.groupBox3.TabIndex = 3;
@@ -2099,7 +2122,7 @@
             this.groupBoxSpectrogram.Controls.Add(this.labelSpectrogramAppearance);
             this.groupBoxSpectrogram.Controls.Add(this.comboBoxSpectrogramAppearance);
             this.groupBoxSpectrogram.Controls.Add(this.checkBoxGenerateSpectrogram);
-            this.groupBoxSpectrogram.Location = new System.Drawing.Point(6, 236);
+            this.groupBoxSpectrogram.Location = new System.Drawing.Point(6, 254);
             this.groupBoxSpectrogram.Name = "groupBoxSpectrogram";
             this.groupBoxSpectrogram.Size = new System.Drawing.Size(819, 103);
             this.groupBoxSpectrogram.TabIndex = 1;
@@ -2141,7 +2164,7 @@
             // 
             this.groupBox1.Controls.Add(this.buttonWaveformsFolderEmpty);
             this.groupBox1.Controls.Add(this.labelWaveformsFolderInfo);
-            this.groupBox1.Location = new System.Drawing.Point(6, 345);
+            this.groupBox1.Location = new System.Drawing.Point(6, 363);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(394, 102);
             this.groupBox1.TabIndex = 2;
@@ -2194,7 +2217,7 @@
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformShowGrid);
             this.groupBoxWaveformAppearence.Location = new System.Drawing.Point(6, 6);
             this.groupBoxWaveformAppearence.Name = "groupBoxWaveformAppearence";
-            this.groupBoxWaveformAppearence.Size = new System.Drawing.Size(819, 224);
+            this.groupBoxWaveformAppearence.Size = new System.Drawing.Size(819, 242);
             this.groupBoxWaveformAppearence.TabIndex = 0;
             this.groupBoxWaveformAppearence.TabStop = false;
             this.groupBoxWaveformAppearence.Text = "Waveform appearance";
@@ -2443,7 +2466,7 @@
             this.tabPageTools.Location = new System.Drawing.Point(4, 22);
             this.tabPageTools.Name = "tabPageTools";
             this.tabPageTools.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTools.Size = new System.Drawing.Size(832, 457);
+            this.tabPageTools.Size = new System.Drawing.Size(832, 468);
             this.tabPageTools.TabIndex = 5;
             this.tabPageTools.Text = "Tools";
             this.tabPageTools.UseVisualStyleBackColor = true;
@@ -2460,7 +2483,7 @@
             this.groupBoxBing.Controls.Add(this.label1);
             this.groupBoxBing.Location = new System.Drawing.Point(374, 259);
             this.groupBoxBing.Name = "groupBoxBing";
-            this.groupBoxBing.Size = new System.Drawing.Size(451, 189);
+            this.groupBoxBing.Size = new System.Drawing.Size(451, 203);
             this.groupBoxBing.TabIndex = 6;
             this.groupBoxBing.TabStop = false;
             this.groupBoxBing.Text = "Bing translator";
@@ -2523,7 +2546,7 @@
             this.groupBoxToolsMisc.Controls.Add(this.checkBoxUseDoNotBreakAfterList);
             this.groupBoxToolsMisc.Location = new System.Drawing.Point(7, 331);
             this.groupBoxToolsMisc.Name = "groupBoxToolsMisc";
-            this.groupBoxToolsMisc.Size = new System.Drawing.Size(361, 120);
+            this.groupBoxToolsMisc.Size = new System.Drawing.Size(361, 131);
             this.groupBoxToolsMisc.TabIndex = 4;
             this.groupBoxToolsMisc.TabStop = false;
             this.groupBoxToolsMisc.Text = "Misc";
@@ -2778,7 +2801,7 @@
             this.tabPageWordLists.Location = new System.Drawing.Point(4, 22);
             this.tabPageWordLists.Name = "tabPageWordLists";
             this.tabPageWordLists.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageWordLists.Size = new System.Drawing.Size(832, 457);
+            this.tabPageWordLists.Size = new System.Drawing.Size(832, 468);
             this.tabPageWordLists.TabIndex = 3;
             this.tabPageWordLists.Text = "Word lists";
             this.tabPageWordLists.UseVisualStyleBackColor = true;
@@ -2797,7 +2820,7 @@
             this.groupBoxWordLists.Controls.Add(this.comboBoxWordListLanguage);
             this.groupBoxWordLists.Location = new System.Drawing.Point(6, 6);
             this.groupBoxWordLists.Name = "groupBoxWordLists";
-            this.groupBoxWordLists.Size = new System.Drawing.Size(819, 445);
+            this.groupBoxWordLists.Size = new System.Drawing.Size(819, 456);
             this.groupBoxWordLists.TabIndex = 2;
             this.groupBoxWordLists.TabStop = false;
             this.groupBoxWordLists.Text = "Word lists";
@@ -2805,7 +2828,7 @@
             // linkLabelOpenDictionaryFolder
             // 
             this.linkLabelOpenDictionaryFolder.AutoSize = true;
-            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(6, 419);
+            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(6, 413);
             this.linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
             this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(126, 13);
             this.linkLabelOpenDictionaryFolder.TabIndex = 29;
@@ -3034,7 +3057,7 @@
             this.tabPageSsaStyle.Location = new System.Drawing.Point(4, 22);
             this.tabPageSsaStyle.Name = "tabPageSsaStyle";
             this.tabPageSsaStyle.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSsaStyle.Size = new System.Drawing.Size(832, 457);
+            this.tabPageSsaStyle.Size = new System.Drawing.Size(832, 468);
             this.tabPageSsaStyle.TabIndex = 1;
             this.tabPageSsaStyle.Text = "SSA style";
             this.tabPageSsaStyle.UseVisualStyleBackColor = true;
@@ -3049,7 +3072,7 @@
             this.groupBoxSsaStyle.Controls.Add(this.groupBoxPreview);
             this.groupBoxSsaStyle.Location = new System.Drawing.Point(6, 6);
             this.groupBoxSsaStyle.Name = "groupBoxSsaStyle";
-            this.groupBoxSsaStyle.Size = new System.Drawing.Size(819, 442);
+            this.groupBoxSsaStyle.Size = new System.Drawing.Size(819, 456);
             this.groupBoxSsaStyle.TabIndex = 0;
             this.groupBoxSsaStyle.TabStop = false;
             this.groupBoxSsaStyle.Text = "Sub Station Alpha style";
@@ -3299,7 +3322,7 @@
             this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
             this.groupBoxPreview.Location = new System.Drawing.Point(6, 114);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(807, 322);
+            this.groupBoxPreview.Size = new System.Drawing.Size(807, 336);
             this.groupBoxPreview.TabIndex = 10;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
@@ -3309,7 +3332,7 @@
             this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxPreview.Location = new System.Drawing.Point(3, 17);
             this.pictureBoxPreview.Name = "pictureBoxPreview";
-            this.pictureBoxPreview.Size = new System.Drawing.Size(801, 302);
+            this.pictureBoxPreview.Size = new System.Drawing.Size(801, 316);
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
             // 
@@ -3320,7 +3343,7 @@
             this.tabPageNetwork.Location = new System.Drawing.Point(4, 22);
             this.tabPageNetwork.Name = "tabPageNetwork";
             this.tabPageNetwork.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageNetwork.Size = new System.Drawing.Size(832, 457);
+            this.tabPageNetwork.Size = new System.Drawing.Size(832, 468);
             this.tabPageNetwork.TabIndex = 4;
             this.tabPageNetwork.Text = "Network";
             this.tabPageNetwork.UseVisualStyleBackColor = true;
@@ -3334,7 +3357,7 @@
             this.groupBoxNetworkSession.Controls.Add(this.labelNetworkSessionNewMessageSound);
             this.groupBoxNetworkSession.Location = new System.Drawing.Point(6, 189);
             this.groupBoxNetworkSession.Name = "groupBoxNetworkSession";
-            this.groupBoxNetworkSession.Size = new System.Drawing.Size(819, 259);
+            this.groupBoxNetworkSession.Size = new System.Drawing.Size(819, 273);
             this.groupBoxNetworkSession.TabIndex = 30;
             this.groupBoxNetworkSession.TabStop = false;
             this.groupBoxNetworkSession.Text = "Network session settings";
@@ -3465,7 +3488,7 @@
             this.tabPageShortcuts.Location = new System.Drawing.Point(4, 22);
             this.tabPageShortcuts.Name = "tabPageShortcuts";
             this.tabPageShortcuts.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageShortcuts.Size = new System.Drawing.Size(832, 457);
+            this.tabPageShortcuts.Size = new System.Drawing.Size(832, 468);
             this.tabPageShortcuts.TabIndex = 8;
             this.tabPageShortcuts.Text = "Shortcuts";
             this.tabPageShortcuts.UseVisualStyleBackColor = true;
@@ -3485,7 +3508,7 @@
             this.groupBoxShortcuts.Controls.Add(this.labelShortcut);
             this.groupBoxShortcuts.Location = new System.Drawing.Point(6, 6);
             this.groupBoxShortcuts.Name = "groupBoxShortcuts";
-            this.groupBoxShortcuts.Size = new System.Drawing.Size(819, 445);
+            this.groupBoxShortcuts.Size = new System.Drawing.Size(819, 456);
             this.groupBoxShortcuts.TabIndex = 2;
             this.groupBoxShortcuts.TabStop = false;
             this.groupBoxShortcuts.Text = "Shortcuts";
@@ -3629,7 +3652,7 @@
             "F22",
             "F23",
             "F24"});
-            this.comboBoxShortcutKey.Location = new System.Drawing.Point(353, 418);
+            this.comboBoxShortcutKey.Location = new System.Drawing.Point(353, 427);
             this.comboBoxShortcutKey.Name = "comboBoxShortcutKey";
             this.comboBoxShortcutKey.Size = new System.Drawing.Size(92, 21);
             this.comboBoxShortcutKey.TabIndex = 4;
@@ -3639,7 +3662,7 @@
             // labelShortcutKey
             // 
             this.labelShortcutKey.AutoSize = true;
-            this.labelShortcutKey.Location = new System.Drawing.Point(322, 420);
+            this.labelShortcutKey.Location = new System.Drawing.Point(322, 429);
             this.labelShortcutKey.Name = "labelShortcutKey";
             this.labelShortcutKey.Size = new System.Drawing.Size(25, 13);
             this.labelShortcutKey.TabIndex = 35;
@@ -3649,7 +3672,7 @@
             // 
             this.checkBoxShortcutsShift.AutoSize = true;
             this.checkBoxShortcutsShift.Enabled = false;
-            this.checkBoxShortcutsShift.Location = new System.Drawing.Point(245, 420);
+            this.checkBoxShortcutsShift.Location = new System.Drawing.Point(245, 429);
             this.checkBoxShortcutsShift.Name = "checkBoxShortcutsShift";
             this.checkBoxShortcutsShift.Size = new System.Drawing.Size(48, 17);
             this.checkBoxShortcutsShift.TabIndex = 3;
@@ -3661,7 +3684,7 @@
             // 
             this.checkBoxShortcutsAlt.AutoSize = true;
             this.checkBoxShortcutsAlt.Enabled = false;
-            this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(176, 420);
+            this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(176, 429);
             this.checkBoxShortcutsAlt.Name = "checkBoxShortcutsAlt";
             this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(39, 17);
             this.checkBoxShortcutsAlt.TabIndex = 2;
@@ -3673,7 +3696,7 @@
             // 
             this.checkBoxShortcutsControl.AutoSize = true;
             this.checkBoxShortcutsControl.Enabled = false;
-            this.checkBoxShortcutsControl.Location = new System.Drawing.Point(89, 420);
+            this.checkBoxShortcutsControl.Location = new System.Drawing.Point(89, 429);
             this.checkBoxShortcutsControl.Name = "checkBoxShortcutsControl";
             this.checkBoxShortcutsControl.Size = new System.Drawing.Size(61, 17);
             this.checkBoxShortcutsControl.TabIndex = 1;
@@ -3684,7 +3707,7 @@
             // buttonUpdateShortcut
             // 
             this.buttonUpdateShortcut.Enabled = false;
-            this.buttonUpdateShortcut.Location = new System.Drawing.Point(485, 417);
+            this.buttonUpdateShortcut.Location = new System.Drawing.Point(485, 426);
             this.buttonUpdateShortcut.Name = "buttonUpdateShortcut";
             this.buttonUpdateShortcut.Size = new System.Drawing.Size(111, 23);
             this.buttonUpdateShortcut.TabIndex = 5;
@@ -3700,14 +3723,14 @@
             this.treeViewShortcuts.HideSelection = false;
             this.treeViewShortcuts.Location = new System.Drawing.Point(16, 21);
             this.treeViewShortcuts.Name = "treeViewShortcuts";
-            this.treeViewShortcuts.Size = new System.Drawing.Size(797, 389);
+            this.treeViewShortcuts.Size = new System.Drawing.Size(797, 400);
             this.treeViewShortcuts.TabIndex = 0;
             this.treeViewShortcuts.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewShortcuts_AfterSelect);
             // 
             // labelShortcut
             // 
             this.labelShortcut.AutoSize = true;
-            this.labelShortcut.Location = new System.Drawing.Point(15, 420);
+            this.labelShortcut.Location = new System.Drawing.Point(15, 429);
             this.labelShortcut.Name = "labelShortcut";
             this.labelShortcut.Size = new System.Drawing.Size(52, 13);
             this.labelShortcut.TabIndex = 3;
@@ -3719,7 +3742,7 @@
             this.tabPageSyntaxColoring.Location = new System.Drawing.Point(4, 22);
             this.tabPageSyntaxColoring.Name = "tabPageSyntaxColoring";
             this.tabPageSyntaxColoring.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSyntaxColoring.Size = new System.Drawing.Size(832, 457);
+            this.tabPageSyntaxColoring.Size = new System.Drawing.Size(832, 468);
             this.tabPageSyntaxColoring.TabIndex = 9;
             this.tabPageSyntaxColoring.Text = "Syntax coloring";
             this.tabPageSyntaxColoring.UseVisualStyleBackColor = true;
@@ -3738,7 +3761,7 @@
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.panelListViewSyntaxColorError);
             this.groupBoxListViewSyntaxColoring.Location = new System.Drawing.Point(6, 6);
             this.groupBoxListViewSyntaxColoring.Name = "groupBoxListViewSyntaxColoring";
-            this.groupBoxListViewSyntaxColoring.Size = new System.Drawing.Size(820, 445);
+            this.groupBoxListViewSyntaxColoring.Size = new System.Drawing.Size(820, 456);
             this.groupBoxListViewSyntaxColoring.TabIndex = 0;
             this.groupBoxListViewSyntaxColoring.TabStop = false;
             this.groupBoxListViewSyntaxColoring.Text = "List view syntax coloring";
@@ -3816,7 +3839,7 @@
             // 
             this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(12, 510);
+            this.labelStatus.Location = new System.Drawing.Point(12, 521);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(60, 13);
             this.labelStatus.TabIndex = 3;
@@ -3830,7 +3853,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(865, 535);
+            this.ClientSize = new System.Drawing.Size(865, 546);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.tabControlSettings);
             this.Controls.Add(this.buttonCancel);
@@ -4240,5 +4263,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDownMaxNumberOfLines;
         private System.Windows.Forms.Label labelMaxLines;
         private System.Windows.Forms.CheckBox checkBoxWaveformSetVideoPosMoveStartEnd;
+        private System.Windows.Forms.Button buttonListviewColumns;
+        private System.Windows.Forms.Label labelListviewColumns;
     }
 }
