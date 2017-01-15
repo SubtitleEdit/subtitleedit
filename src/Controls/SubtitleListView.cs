@@ -447,8 +447,12 @@ namespace Nikse.SubtitleEdit.Controls
                 if (cw < 55 || column == SubtitleColumn.Extra || column == SubtitleColumn.Network)
                 {
                     cw = 55;
-                    if (column != SubtitleColumn.Number)
-                        cw = 120;
+                    if (column == SubtitleColumn.CharactersPerSeconds)
+                        cw = 65;
+                    else if (column == SubtitleColumn.WordsPerMinute)
+                        cw = 70;
+                    else if (column != SubtitleColumn.Number)
+                            cw = 120;
                     Columns[index].Width = cw;
                     Columns[index].Width = cw;
                     Columns[index].Width = cw;
@@ -534,27 +538,26 @@ namespace Nikse.SubtitleEdit.Controls
                 if (ColumnIndexDuration >= 0)
                 {
                     SubtitleColumns.Insert(ColumnIndexDuration + 1, SubtitleColumn.CharactersPerSeconds);
-                    Columns.Insert(ColumnIndexDuration + 1, new ColumnHeader { Text = title, Width = 90 });
+                    Columns.Insert(ColumnIndexDuration + 1, new ColumnHeader { Text = title });
                 }
                 else if (ColumnIndexEnd >= 0)
                 {
                     SubtitleColumns.Insert(ColumnIndexEnd + 1, SubtitleColumn.CharactersPerSeconds);
-                    Columns.Insert(ColumnIndexEnd + 1, new ColumnHeader { Text = title, Width = 90 });
+                    Columns.Insert(ColumnIndexEnd + 1, new ColumnHeader { Text = title });
                 }
                 else if (ColumnIndexStart >= 0)
                 {
                     SubtitleColumns.Insert(ColumnIndexStart + 1, SubtitleColumn.CharactersPerSeconds);
-                    Columns.Insert(ColumnIndexStart + 1, new ColumnHeader { Text = title, Width = 90 });
+                    Columns.Insert(ColumnIndexStart + 1, new ColumnHeader { Text = title });
                 }
                 else
                 {
                     SubtitleColumns.Add(SubtitleColumn.CharactersPerSeconds);
-                    Columns.Add(new ColumnHeader { Text = title, Width = 90 });
+                    Columns.Add(new ColumnHeader { Text = title });
                 }
                 UpdateColumnIndexes();
-                Columns[ColumnIndexCps].Width = 90;
-                Columns[ColumnIndexCps].Width = 90;
-                Columns[ColumnIndexCps].Width = 90;
+                Columns[ColumnIndexCps].Width = 65;
+                Columns[ColumnIndexCps].Width = 65;
                 AutoSizeAllColumns(null);
             }
         }
@@ -566,32 +569,31 @@ namespace Nikse.SubtitleEdit.Controls
                 if (ColumnIndexCps >= 0)
                 {
                     SubtitleColumns.Insert(ColumnIndexCps + 1, SubtitleColumn.WordsPerMinute);
-                    Columns.Insert(ColumnIndexCps + 1, new ColumnHeader { Text = title, Width = 120 });
+                    Columns.Insert(ColumnIndexCps + 1, new ColumnHeader { Text = title });
                 }
                 else if (ColumnIndexDuration >= 0)
                 {
                     SubtitleColumns.Insert(ColumnIndexDuration + 1, SubtitleColumn.WordsPerMinute);
-                    Columns.Insert(ColumnIndexDuration + 1, new ColumnHeader { Text = title, Width = 120 });
+                    Columns.Insert(ColumnIndexDuration + 1, new ColumnHeader { Text = title });
                 }
                 else if (ColumnIndexEnd >= 0)
                 {
                     SubtitleColumns.Insert(ColumnIndexEnd + 1, SubtitleColumn.WordsPerMinute);
-                    Columns.Insert(ColumnIndexEnd + 1, new ColumnHeader { Text = title, Width = 120 });
+                    Columns.Insert(ColumnIndexEnd + 1, new ColumnHeader { Text = title });
                 }
                 else if (ColumnIndexStart >= 0)
                 {
                     SubtitleColumns.Insert(ColumnIndexStart + 1, SubtitleColumn.WordsPerMinute);
-                    Columns.Insert(ColumnIndexStart + 1, new ColumnHeader { Text = title, Width = 120 });
+                    Columns.Insert(ColumnIndexStart + 1, new ColumnHeader { Text = title });
                 }
                 else
                 {
                     SubtitleColumns.Add(SubtitleColumn.CharactersPerSeconds);
-                    Columns.Add(new ColumnHeader { Text = title, Width = 120 });
+                    Columns.Add(new ColumnHeader { Text = title, Width = 70 });
                 }
                 UpdateColumnIndexes();
-                Columns[ColumnIndexWpm].Width = 120;
-                Columns[ColumnIndexWpm].Width = 120;
-                Columns[ColumnIndexWpm].Width = 120;
+                Columns[ColumnIndexWpm].Width = 70;
+                Columns[ColumnIndexWpm].Width = 70;
                 AutoSizeAllColumns(null);
             }
         }
