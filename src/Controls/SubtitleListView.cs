@@ -749,11 +749,14 @@ namespace Nikse.SubtitleEdit.Controls
                     double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
                     if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
-                        item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
-                        durationChanged = true;
                         if (ColumnIndexCps >= 0)
                         {
                             item.SubItems[ColumnIndexCps].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        }
+                        else
+                        {
+                            item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                            durationChanged = true;
                         }
                     }
                     else if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
