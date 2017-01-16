@@ -16,6 +16,7 @@
    * Fixed fast forward waveform scrolling with mouse wheel
    * Fix in "Fix common errors" regarding de-selected fixes - thx Tronar  
    * Fix for MPC-HC 32-bit - thx ZoneX
+   * Fixed issue with importing "Unknown 53" format - darnn
 
 
 3.5.1 (13th December 2016)
