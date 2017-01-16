@@ -15,6 +15,7 @@
    * Fixed bug in spell check "change word" regarding "¿?" - thx locotus
    * Fixed fast forward waveform scrolling with mouse wheel
    * Fix in "Fix common errors" regarding de-selected fixes - thx Tronar  
+   * Fix for MPC-HC 32-bit - thx ZoneX
 
 
 3.5.1 (13th December 2016)
