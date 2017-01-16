@@ -323,6 +323,8 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
+            this.checkBoxWaveformShowCps = new System.Windows.Forms.CheckBox();
+            this.checkBoxWaveformShowWpm = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -2193,6 +2195,8 @@
             // 
             this.groupBoxWaveformAppearence.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformShowWpm);
+            this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformShowCps);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformSetVideoPosMoveStartEnd);
             this.groupBoxWaveformAppearence.Controls.Add(this.labelWaveformTextSize);
             this.groupBoxWaveformAppearence.Controls.Add(this.checkBoxWaveformTextBold);
@@ -2228,7 +2232,7 @@
             this.checkBoxWaveformSetVideoPosMoveStartEnd.Location = new System.Drawing.Point(262, 73);
             this.checkBoxWaveformSetVideoPosMoveStartEnd.Name = "checkBoxWaveformSetVideoPosMoveStartEnd";
             this.checkBoxWaveformSetVideoPosMoveStartEnd.Size = new System.Drawing.Size(225, 17);
-            this.checkBoxWaveformSetVideoPosMoveStartEnd.TabIndex = 11;
+            this.checkBoxWaveformSetVideoPosMoveStartEnd.TabIndex = 22;
             this.checkBoxWaveformSetVideoPosMoveStartEnd.Text = "Set video position when moving start/end";
             this.checkBoxWaveformSetVideoPosMoveStartEnd.UseVisualStyleBackColor = true;
             // 
@@ -2247,7 +2251,7 @@
             this.checkBoxWaveformTextBold.Location = new System.Drawing.Point(463, 155);
             this.checkBoxWaveformTextBold.Name = "checkBoxWaveformTextBold";
             this.checkBoxWaveformTextBold.Size = new System.Drawing.Size(46, 17);
-            this.checkBoxWaveformTextBold.TabIndex = 18;
+            this.checkBoxWaveformTextBold.TabIndex = 31;
             this.checkBoxWaveformTextBold.Text = "Bold";
             this.checkBoxWaveformTextBold.UseVisualStyleBackColor = true;
             // 
@@ -2273,7 +2277,7 @@
             this.comboBoxWaveformTextSize.Location = new System.Drawing.Point(336, 151);
             this.comboBoxWaveformTextSize.Name = "comboBoxWaveformTextSize";
             this.comboBoxWaveformTextSize.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxWaveformTextSize.TabIndex = 17;
+            this.comboBoxWaveformTextSize.TabIndex = 30;
             // 
             // checkBoxListViewMouseEnterFocus
             // 
@@ -2281,7 +2285,7 @@
             this.checkBoxListViewMouseEnterFocus.Location = new System.Drawing.Point(281, 115);
             this.checkBoxListViewMouseEnterFocus.Name = "checkBoxListViewMouseEnterFocus";
             this.checkBoxListViewMouseEnterFocus.Size = new System.Drawing.Size(214, 17);
-            this.checkBoxListViewMouseEnterFocus.TabIndex = 16;
+            this.checkBoxListViewMouseEnterFocus.TabIndex = 24;
             this.checkBoxListViewMouseEnterFocus.Text = "Focus list view on list view mouse enter";
             this.checkBoxListViewMouseEnterFocus.UseVisualStyleBackColor = true;
             // 
@@ -2291,7 +2295,7 @@
             this.checkBoxWaveformHoverFocus.Location = new System.Drawing.Point(262, 96);
             this.checkBoxWaveformHoverFocus.Name = "checkBoxWaveformHoverFocus";
             this.checkBoxWaveformHoverFocus.Size = new System.Drawing.Size(149, 17);
-            this.checkBoxWaveformHoverFocus.TabIndex = 15;
+            this.checkBoxWaveformHoverFocus.TabIndex = 23;
             this.checkBoxWaveformHoverFocus.Text = "Set focus on mouse enter";
             this.checkBoxWaveformHoverFocus.UseVisualStyleBackColor = true;
             this.checkBoxWaveformHoverFocus.CheckedChanged += new System.EventHandler(this.checkBoxWaveformHoverFocus_CheckedChanged);
@@ -2315,7 +2319,7 @@
             0});
             this.numericUpDownWaveformBorderHitMs.Name = "numericUpDownWaveformBorderHitMs";
             this.numericUpDownWaveformBorderHitMs.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownWaveformBorderHitMs.TabIndex = 19;
+            this.numericUpDownWaveformBorderHitMs.TabIndex = 35;
             this.numericUpDownWaveformBorderHitMs.Value = new decimal(new int[] {
             18,
             0,
@@ -2337,7 +2341,7 @@
             this.checkBoxAllowOverlap.Location = new System.Drawing.Point(262, 50);
             this.checkBoxAllowOverlap.Name = "checkBoxAllowOverlap";
             this.checkBoxAllowOverlap.Size = new System.Drawing.Size(212, 17);
-            this.checkBoxAllowOverlap.TabIndex = 10;
+            this.checkBoxAllowOverlap.TabIndex = 21;
             this.checkBoxAllowOverlap.Text = "Allow overlap (when dragging/resizing)";
             this.checkBoxAllowOverlap.UseVisualStyleBackColor = true;
             // 
@@ -2347,7 +2351,7 @@
             this.checkBoxReverseMouseWheelScrollDirection.Location = new System.Drawing.Point(262, 27);
             this.checkBoxReverseMouseWheelScrollDirection.Name = "checkBoxReverseMouseWheelScrollDirection";
             this.checkBoxReverseMouseWheelScrollDirection.Size = new System.Drawing.Size(202, 17);
-            this.checkBoxReverseMouseWheelScrollDirection.TabIndex = 6;
+            this.checkBoxReverseMouseWheelScrollDirection.TabIndex = 20;
             this.checkBoxReverseMouseWheelScrollDirection.Text = "Reverse mouse wheel scroll direction";
             this.checkBoxReverseMouseWheelScrollDirection.UseVisualStyleBackColor = true;
             // 
@@ -3849,6 +3853,26 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
+            // checkBoxWaveformShowCps
+            // 
+            this.checkBoxWaveformShowCps.AutoSize = true;
+            this.checkBoxWaveformShowCps.Location = new System.Drawing.Point(16, 195);
+            this.checkBoxWaveformShowCps.Name = "checkBoxWaveformShowCps";
+            this.checkBoxWaveformShowCps.Size = new System.Drawing.Size(96, 17);
+            this.checkBoxWaveformShowCps.TabIndex = 6;
+            this.checkBoxWaveformShowCps.Text = "Show char/sec";
+            this.checkBoxWaveformShowCps.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxWaveformShowWpm
+            // 
+            this.checkBoxWaveformShowWpm.AutoSize = true;
+            this.checkBoxWaveformShowWpm.Location = new System.Drawing.Point(16, 218);
+            this.checkBoxWaveformShowWpm.Name = "checkBoxWaveformShowWpm";
+            this.checkBoxWaveformShowWpm.Size = new System.Drawing.Size(104, 17);
+            this.checkBoxWaveformShowWpm.TabIndex = 7;
+            this.checkBoxWaveformShowWpm.Text = "Show words/min";
+            this.checkBoxWaveformShowWpm.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4265,5 +4289,7 @@
         private System.Windows.Forms.CheckBox checkBoxWaveformSetVideoPosMoveStartEnd;
         private System.Windows.Forms.Button buttonListviewColumns;
         private System.Windows.Forms.Label labelListviewColumns;
+        private System.Windows.Forms.CheckBox checkBoxWaveformShowWpm;
+        private System.Windows.Forms.CheckBox checkBoxWaveformShowCps;
     }
 }

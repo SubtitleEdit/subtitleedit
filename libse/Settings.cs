@@ -710,6 +710,8 @@ namespace Nikse.SubtitleEdit.Core
         public string CustomSearchUrl6 { get; set; }
         public string LastActiveTab { get; set; }
         public bool WaveformDrawGrid { get; set; }
+        public bool WaveformDrawCps { get; set; }
+        public bool WaveformDrawWpm { get; set; }
         public bool WaveformAllowOverlap { get; set; }
         public bool WaveformFocusOnMouseEnter { get; set; }
         public bool WaveformListViewFocusOnMouseEnter { get; set; }
@@ -2276,6 +2278,12 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("WaveformDrawGrid");
             if (subNode != null)
                 settings.VideoControls.WaveformDrawGrid = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("WaveformDrawCps");
+            if (subNode != null)
+                settings.VideoControls.WaveformDrawCps = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("WaveformDrawWpm");
+            if (subNode != null)
+                settings.VideoControls.WaveformDrawWpm = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("WaveformAllowOverlap");
             if (subNode != null)
                 settings.VideoControls.WaveformAllowOverlap = Convert.ToBoolean(subNode.InnerText);
@@ -3370,6 +3378,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("CustomSearchUrl6", settings.VideoControls.CustomSearchUrl6);
                 textWriter.WriteElementString("LastActiveTab", settings.VideoControls.LastActiveTab);
                 textWriter.WriteElementString("WaveformDrawGrid", settings.VideoControls.WaveformDrawGrid.ToString());
+                textWriter.WriteElementString("WaveformDrawCps", settings.VideoControls.WaveformDrawCps.ToString());
+                textWriter.WriteElementString("WaveformDrawWpm", settings.VideoControls.WaveformDrawWpm.ToString());
                 textWriter.WriteElementString("WaveformAllowOverlap", settings.VideoControls.WaveformAllowOverlap.ToString());
                 textWriter.WriteElementString("WaveformFocusOnMouseEnter", settings.VideoControls.WaveformFocusOnMouseEnter.ToString());
                 textWriter.WriteElementString("WaveformListViewFocusOnMouseEnter", settings.VideoControls.WaveformListViewFocusOnMouseEnter.ToString());

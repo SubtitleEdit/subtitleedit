@@ -2032,6 +2032,8 @@ can edit in same subtitle file (collaboration)",
                 WaveformAppearance = "Waveform appearance",
                 WaveformGridColor = "Grid color",
                 WaveformShowGridLines = "Show grid lines",
+                WaveformShowCps = "Show chars/sec",
+                WaveformShowWpm = "Show words/min",
                 ReverseMouseWheelScrollDirection = "Reverse mouse wheel scroll direction",
                 WaveformAllowOverlap = "Allow overlap (when moving/resizing)",
                 WaveformSetVideoPosMoveStartEnd = "Set video position when moving start/end",
@@ -2627,6 +2629,8 @@ Keep changes?",
                 RemoveSceneChange = "Remove scene change",
                 SeekSilence = "Seek silence...",
                 GuessTimeCodes = "Guess time codes...",
+                CharsSecX = "CPS: {0:0.00}",
+                WordsMinX = "WPM: {0:0.00}",
             };
 
             WaveformGenerateTimeCodes = new LanguageStructure.WaveformGenerateTimeCodes
