@@ -4693,6 +4693,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformShowGridLines":
                     language.Settings.WaveformShowGridLines = reader.Value;
                     break;
+                case "Settings/WaveformShowCps":
+                    language.Settings.WaveformShowCps = reader.Value;
+                    break;
+                case "Settings/WaveformShowWpm":
+                    language.Settings.WaveformShowWpm = reader.Value;
+                    break;
                 case "Settings/ReverseMouseWheelScrollDirection":
                     language.Settings.ReverseMouseWheelScrollDirection = reader.Value;
                     break;
@@ -6189,6 +6195,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Waveform/SeekSilence":
                     language.Waveform.SeekSilence = reader.Value;
+                    break;
+                case "Waveform/CharsSecX":
+                    language.Waveform.CharsSecX = reader.Value;
+                    break;
+                case "Waveform/WordsMinX":
+                    language.Waveform.WordsMinX = reader.Value;
                     break;
                 case "WaveformGenerateTimeCodes/Title":
                     language.WaveformGenerateTimeCodes.Title = reader.Value;

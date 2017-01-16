@@ -749,8 +749,17 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     string text = "#" + paragraph.Number + "  " + paragraph.Duration.ToShortDisplayString();
                     if (n <= 51 || graphics.MeasureString(text, font).Width >= currentRegionWidth - padding - 1)
+                    {
                         text = "#" + paragraph.Number;
-                    drawStringOutlined(text, currentRegionLeft + padding, Height - 14 - (int)graphics.MeasureString("#", font).Height);
+                    }
+                    else if (n > 99)
+                    {
+                        if (Configuration.Settings.VideoControls.WaveformDrawWpm)
+                            text = string.Format(Configuration.Settings.Language.Waveform.WordsMinX, paragraph.WordsPerMinute) + Environment.NewLine + text;
+                        if (Configuration.Settings.VideoControls.WaveformDrawCps)
+                            text = string.Format(Configuration.Settings.Language.Waveform.CharsSecX, Utilities.GetCharactersPerSecond(paragraph)) + Environment.NewLine + text;
+                    }
+                    drawStringOutlined(text, currentRegionLeft + padding, Height - 14 - (int)graphics.MeasureString(text, font).Height);
                 }
             }
         }

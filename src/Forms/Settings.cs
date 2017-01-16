@@ -374,6 +374,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxWaveformAppearence.Text = language.WaveformAppearance;
             checkBoxWaveformShowGrid.Text = language.WaveformShowGridLines;
+            checkBoxWaveformShowCps.Text = language.WaveformShowCps;
+            checkBoxWaveformShowWpm.Text = language.WaveformShowWpm;
             checkBoxReverseMouseWheelScrollDirection.Text = language.ReverseMouseWheelScrollDirection;
             checkBoxAllowOverlap.Text = language.WaveformAllowOverlap;
             checkBoxWaveformSetVideoPosMoveStartEnd.Text = language.WaveformSetVideoPosMoveStartEnd;
@@ -633,6 +635,8 @@ namespace Nikse.SubtitleEdit.Forms
             ListWordListLanguages();
 
             checkBoxWaveformShowGrid.Checked = Configuration.Settings.VideoControls.WaveformDrawGrid;
+            checkBoxWaveformShowCps.Checked = Configuration.Settings.VideoControls.WaveformDrawCps;
+            checkBoxWaveformShowWpm.Checked = Configuration.Settings.VideoControls.WaveformDrawWpm;
             panelWaveformGridColor.BackColor = Configuration.Settings.VideoControls.WaveformGridColor;
             panelWaveformSelectedColor.BackColor = Configuration.Settings.VideoControls.WaveformSelectedColor;
             panelWaveformColor.BackColor = Configuration.Settings.VideoControls.WaveformColor;
@@ -1227,6 +1231,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ListViewSyntaxErrorColor = panelListViewSyntaxColorError.BackColor;
 
             Configuration.Settings.VideoControls.WaveformDrawGrid = checkBoxWaveformShowGrid.Checked;
+            Configuration.Settings.VideoControls.WaveformDrawCps = checkBoxWaveformShowCps.Checked;
+            Configuration.Settings.VideoControls.WaveformDrawWpm = checkBoxWaveformShowWpm.Checked;
             Configuration.Settings.VideoControls.WaveformGridColor = panelWaveformGridColor.BackColor;
             Configuration.Settings.VideoControls.WaveformSelectedColor = panelWaveformSelectedColor.BackColor;
             Configuration.Settings.VideoControls.WaveformColor = panelWaveformColor.BackColor;

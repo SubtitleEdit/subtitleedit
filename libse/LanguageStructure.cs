@@ -1911,6 +1911,8 @@
             public string WaveformAppearance { get; set; }
             public string WaveformGridColor { get; set; }
             public string WaveformShowGridLines { get; set; }
+            public string WaveformShowCps { get; set; }
+            public string WaveformShowWpm { get; set; }
             public string ReverseMouseWheelScrollDirection { get; set; }
             public string WaveformAllowOverlap { get; set; }
             public string WaveformSetVideoPosMoveStartEnd { get; set; }            
@@ -2505,6 +2507,8 @@
             public string RemoveSceneChange { get; set; }
             public string GuessTimeCodes { get; set; }
             public string SeekSilence { get; set; }
+            public string CharsSecX { get; set; }
+            public string WordsMinX { get; set; }
         }
 
         public class WaveformGenerateTimeCodes

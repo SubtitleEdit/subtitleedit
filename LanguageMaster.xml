@@ -1748,6 +1748,8 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformAppearance>Waveform appearance</WaveformAppearance>
     <WaveformGridColor>Grid color</WaveformGridColor>
     <WaveformShowGridLines>Show grid lines</WaveformShowGridLines>
+    <WaveformShowCps>Show chars/sec</WaveformShowCps>
+    <WaveformShowWpm>Show words/min</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Reverse mouse wheel scroll direction</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Allow overlap (when moving/resizing)</WaveformAllowOverlap>
     <WaveformSetVideoPosMoveStartEnd>Set video position when moving start/end</WaveformSetVideoPosMoveStartEnd>
@@ -2297,6 +2299,8 @@ Keep changes?</KeepChangesMessage>
     <RemoveSceneChange>Remove scene change</RemoveSceneChange>
     <GuessTimeCodes>Guess time codes...</GuessTimeCodes>
     <SeekSilence>Seek silence...</SeekSilence>
+    <CharsSecX>CPS: {0:0.00}</CharsSecX>
+    <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Guess time codes</Title>
