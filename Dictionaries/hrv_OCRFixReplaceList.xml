@@ -1653,7 +1653,7 @@
     <RegEx find="\b([vV])oz([au]|om|ov[ie]|ovima)?\b" replaceWith="$1lak$2" />
     <RegEx find="\b([vV])ozi[čć]([eu])" replaceWith="$1ozit ć$2" />
     <RegEx find="\b([vV])rj?ed(e|an|n[aeiou]|nih|nosti?|nošću)?\b" replaceWith="$1rijed$2" />
-    <RegEx find="([Bb])ezvrj?edb" replaceWith="$1ezvrijed" />
+    <RegEx find="([Bb])ezvrj?ed" replaceWith="$1ezvrijed" />
     <RegEx find="\b([vV])red([ei])" replaceWith="$1rijed$2" />
     <RegEx find="([vV])rj?eđa" replaceWith="$1rijeđa" />
     <RegEx find="vređen" replaceWith="vrijeđen" />
@@ -1897,6 +1897,7 @@
     <RegEx find="Čarls" replaceWith="Charles" />
     <RegEx find="Čikag" replaceWith="Chicag" />
     <RegEx find="Dajan([aeiou]|om)" replaceWith="Dian$1" />
+    <RegEx find="Dankan" replaceWith="Duncan" />
     <RegEx find="Darvin([aeiou]|om)?" replaceWith="Darwin$1" />
     <RegEx find="Dejv([au]|om)\b" replaceWith="Dave$1" />
     <RegEx find="Dejvi([ds])" replaceWith="Davi$1" />
