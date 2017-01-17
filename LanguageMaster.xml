@@ -1685,6 +1685,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AutoDetectAnsiEncoding>Auto detect ANSI encoding</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Single line max. length</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Max. chars/sec</MaximumCharactersPerSecond>
+    <MaximumWordssPerMinute>Max. words/min</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Auto-wrap while typing</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. duration, milliseconds</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. duration, milliseconds</DurationMaximumMilliseconds>
