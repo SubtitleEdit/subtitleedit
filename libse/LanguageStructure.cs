@@ -1846,6 +1846,7 @@
             public string AutoDetectAnsiEncoding { get; set; }
             public string SubtitleLineMaximumLength { get; set; }
             public string MaximumCharactersPerSecond { get; set; }
+            public string MaximumWordssPerMinute { get; set; }
             public string AutoWrapWhileTyping { get; set; }
             public string DurationMinimumMilliseconds { get; set; }
             public string DurationMaximumMilliseconds { get; set; }

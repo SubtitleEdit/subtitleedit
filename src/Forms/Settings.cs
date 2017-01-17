@@ -117,6 +117,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRememberWindowPosition.Checked = gs.StartRememberPositionAndSize;
             numericUpDownSubtitleLineMaximumLength.Value = gs.SubtitleLineMaximumLength;
             numericUpDownMaxCharsSec.Value = (decimal)gs.SubtitleMaximumCharactersPerSeconds;
+            numericUpDownMaxWordsMin.Value = (decimal)gs.SubtitleMaximumWordsPerMinute;
             checkBoxAutoWrapWhileTyping.Checked = gs.AutoWrapLineWhileTyping;
             textBoxShowLineBreaksAs.Text = gs.ListViewLineSeparatorString;
 
@@ -279,6 +280,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelAutoDetectAnsiEncoding.Text = language.AutoDetectAnsiEncoding;
             labelSubMaxLen.Text = language.SubtitleLineMaximumLength;
             labelMaxCharsPerSecond.Text = language.MaximumCharactersPerSecond;
+            labelMaxWordsPerMin.Text = language.MaximumWordssPerMinute;
             checkBoxAutoWrapWhileTyping.Text = language.AutoWrapWhileTyping;
 
             labelMinDuration.Text = language.DurationMinimumMilliseconds;
@@ -289,6 +291,8 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownSubtitleLineMaximumLength.Left = labelSubMaxLen.Left + labelSubMaxLen.Width + 3;
             if (labelMaxCharsPerSecond.Left + labelMaxCharsPerSecond.Width > numericUpDownMaxCharsSec.Left)
                 numericUpDownMaxCharsSec.Left = labelMaxCharsPerSecond.Left + labelMaxCharsPerSecond.Width + 3;
+            if (labelMaxWordsPerMin.Left + labelMaxWordsPerMin.Width > numericUpDownMaxWordsMin.Left)
+                numericUpDownMaxWordsMin.Left = labelMaxWordsPerMin.Left + labelMaxWordsPerMin.Width + 3;
             if (labelMinDuration.Left + labelMinDuration.Width > numericUpDownDurationMin.Left)
                 numericUpDownDurationMin.Left = labelMinDuration.Left + labelMinDuration.Width + 3;
             if (labelMaxDuration.Left + labelMaxDuration.Width > numericUpDownDurationMax.Left)
@@ -1164,6 +1168,7 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.SubtitleLineMaximumLength = 45;
 
             gs.SubtitleMaximumCharactersPerSeconds = (double)numericUpDownMaxCharsSec.Value;
+            gs.SubtitleMaximumWordsPerMinute = (double)numericUpDownMaxWordsMin.Value;
 
             gs.AutoWrapLineWhileTyping = checkBoxAutoWrapWhileTyping.Checked;
 

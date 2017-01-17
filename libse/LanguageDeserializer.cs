@@ -4504,6 +4504,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MaximumCharactersPerSecond":
                     language.Settings.MaximumCharactersPerSecond = reader.Value;
                     break;
+                case "Settings/MaximumWordssPerMinute":
+                    language.Settings.MaximumWordssPerMinute = reader.Value;
+                    break;
                 case "Settings/AutoWrapWhileTyping":
                     language.Settings.AutoWrapWhileTyping = reader.Value;
                     break;

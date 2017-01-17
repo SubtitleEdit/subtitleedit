@@ -297,17 +297,6 @@ namespace Nikse.SubtitleEdit.Controls
             e.DrawDefault = true;
         }
 
-        private bool IsVerticalScrollbarVisible()
-        {
-            if (Items.Count < 2)
-                return false;
-
-            int singleRowHeight = GetItemRect(0).Height;
-            int maxVisibleItems = (Height - TopItem.Bounds.Top) / singleRowHeight;
-
-            return Items.Count > maxVisibleItems;
-        }
-
         private void SubtitleListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
             Color backgroundColor = Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
