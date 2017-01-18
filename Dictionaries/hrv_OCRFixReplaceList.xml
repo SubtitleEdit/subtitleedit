@@ -877,7 +877,7 @@
     <RegEx find="\badvokatsk" replaceWith="odvjetničk" />
     <RegEx find="Advokatsk" replaceWith="Odvjetničk" />
     <RegEx find="ajsmiješnij" replaceWith="ajsmješnij" />
-    <RegEx find="([aA])kcion" replaceWith="$1kcijsk" />
+    <RegEx find="([aA])kcion(?!ar)" replaceWith="$1kcijsk" />
     <RegEx find="\b[aA]las([kc])" replaceWith="Aljas$1" />
     <RegEx find="([dnl])ijum" replaceWith="$1ij" />
     <RegEx find="ngažov" replaceWith="ngažir" />
