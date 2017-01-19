@@ -51,12 +51,12 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //Subtitle text: In preajma lacului Razel,
 
             const string paragraphWriteFormat = "Subtitle number: {0}\r\nStart time (or frames): {1}\r\nEnd time (or frames): {2}\r\nSubtitle text: {3}\r\n";
-
-            StringBuilder sb = new StringBuilder();
+            const string timeFormat = "{0:00}:{1:00}:{2:00},{3:00}:0000000000";
+            var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string startTime = string.Format("{0:00}:{1:00}:{2:00},{3:00}:0000000000", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
-                string timeOut = string.Format("{0:00}:{1:00}:{2:00},{3:00}:0000000000", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
+                string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
+                string timeOut = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
                 sb.AppendLine(string.Format(paragraphWriteFormat, p.Number, startTime, timeOut, p.Text.Replace(Environment.NewLine, "|")));
             }
             return sb.ToString().Trim();
@@ -89,27 +89,39 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             switch (_expecting)
             {
                 case ExpectingLine.Number:
-                    if (line.StartsWith("Subtitle number: "))
+                    if (line.StartsWith("Subtitle number: ", StringComparison.Ordinal))
                     {
                         _expecting = ExpectingLine.StartTime;
                     }
+                    else
+                    {
+                        _errorCount++;
+                    }
                     break;
                 case ExpectingLine.StartTime:
-                    if (line.StartsWith("Start time (or frames): "))
+                    if (line.StartsWith("Start time (or frames): ", StringComparison.Ordinal))
                     {
                         TryReadTimeCodesLine(line.Substring(23), _paragraph, true);
                         _expecting = ExpectingLine.EndTime;
                     }
+                    else
+                    {
+                        _errorCount++;
+                    }
                     break;
                 case ExpectingLine.EndTime:
-                    if (line.StartsWith("End time (or frames): "))
+                    if (line.StartsWith("End time (or frames): ", StringComparison.Ordinal))
                     {
                         TryReadTimeCodesLine(line.Substring(21), _paragraph, false);
                         _expecting = ExpectingLine.Text;
                     }
+                    else
+                    {
+                        _errorCount++;
+                    }
                     break;
                 case ExpectingLine.Text:
-                    if (line.StartsWith("Subtitle text: "))
+                    if (line.StartsWith("Subtitle text: ", StringComparison.Ordinal))
                     {
                         string text = line.Substring(14).Trim();
                         text = text.Replace("|", Environment.NewLine);
@@ -118,16 +130,19 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         _paragraph = new Paragraph();
                         _expecting = ExpectingLine.Number;
                     }
+                    else
+                    {
+                        _errorCount++;
+                    }
                     break;
             }
         }
 
-        private static bool TryReadTimeCodesLine(string line, Paragraph paragraph, bool start)
+        private void TryReadTimeCodesLine(string line, Paragraph paragraph, bool start)
         {
             line = line.Trim();
-
             //00:00:48,862:0000001222
-            line = line.Replace(",", ":");
+            line = line.Replace(',', ':');
             string[] parts = line.Split(':');
             try
             {
@@ -140,11 +155,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
                 else
                     paragraph.EndTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                return true;
             }
             catch
             {
-                return false;
+                _errorCount++;
             }
         }
     }
