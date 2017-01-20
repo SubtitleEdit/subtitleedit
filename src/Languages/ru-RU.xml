@@ -25,6 +25,8 @@
     <StartTime>Начало</StartTime>
     <EndTime>Конец</EndTime>
     <Duration>Длина</Duration>
+    <CharsPerSec>Симв./сек.</CharsPerSec>
+    <WordsPerMin>Слов/мин.</WordsPerMin>
     <NumberSymbol>№</NumberSymbol>
     <Number>Номер</Number>
     <Text>Текст</Text>
@@ -1699,6 +1701,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AutoDetectAnsiEncoding>Определение ANSI кодировки</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Макс. число символов в строке</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Макс. симв./сек</MaximumCharactersPerSecond>
+    <MaximumWordssPerMinute>Макс. слов/мин.</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Перенос по словам</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Мин. продолжительность, мс</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Макс. продолжительность, мс</DurationMaximumMilliseconds>
@@ -1719,6 +1722,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveBlankLinesWhenOpening>Удалить пустые строки при открытии субтитров</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Показывать перенос строки как:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>При двойном клике по строке в списке выполнить</MainListViewDoubleClickAction>
+    <MainListViewColumns>Просмотреть в виде списка столбцов</MainListViewColumns>
+    <MainListViewColumnsInfo>Выберите видимый список столбцов</MainListViewColumnsInfo>
     <MainListViewNothing>Ничего</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Переход к позиции и сделать паузу</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Переход к позиции и проиграть</MainListViewVideoGoToPositionAndPlay>
@@ -1761,8 +1766,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <WaveformAppearance>Внешний вид формы сигнала</WaveformAppearance>
     <WaveformGridColor>Цвет разметки</WaveformGridColor>
     <WaveformShowGridLines>Показывать разметку</WaveformShowGridLines>
+    <WaveformShowCps>Показать симв./сек.</WaveformShowCps>
+    <WaveformShowWpm>Показать слов/мин.</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Обратить направление прокрутки колесиком мышки</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Разрешить перекрытие (при перемещении/изменении размеров)</WaveformAllowOverlap>
+    <WaveformSetVideoPosMoveStartEnd>Установить позицию видео при перемещении начала/конца</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Установить фокус по курсору мышки</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Установить фокус на списке по курсору мышки</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Только в границах маркера</WaveformBorderHitMs1>
@@ -2314,6 +2322,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveSceneChange>Удалить изменение сцены</RemoveSceneChange>
     <GuessTimeCodes>Распознать таймкоды...</GuessTimeCodes>
     <SeekSilence>Поиск пауз...</SeekSilence>
+    <CharsSecX>Симв./сек.: {0:0.00}</CharsSecX>
+    <WordsMinX>Слов/мин.: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Распознавание таймкодов</Title>
