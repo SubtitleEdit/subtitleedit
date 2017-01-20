@@ -459,7 +459,35 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     Errors = "Error validating xml via SMPTE-428-7-2010-DCST.xsd: " + exception.Message;
                 }
             }
-            return result;
+            return FixDcsTextSameLine(result);
+        }
+
+        /// <summary>
+        /// All space characters present inside the content of a Text element shall be rendered
+        /// </summary>
+        internal static string FixDcsTextSameLine(string xml)
+        {
+            int index = xml.IndexOf("<dcst:Text", StringComparison.Ordinal);
+            while (index > 0)
+            {
+                int endIndex = xml.IndexOf("</dcst:Text>", index, StringComparison.Ordinal);
+                if (endIndex > 0)
+                {
+                    var part = xml.Substring(index, endIndex - index);
+                    if (part.Contains(Environment.NewLine))
+                    {
+                        part = part.Replace(Environment.NewLine, " ");
+                        while (part.Contains("  "))
+                        {
+                            part = part.Replace("  ", " ");
+                        }
+                        part = part.Replace("> <", "><");
+                    }
+                    xml = xml.Remove(index, endIndex - index).Insert(index, part);
+                    index = xml.IndexOf("<dcst:Text", endIndex, StringComparison.Ordinal);
+                }
+            }
+            return xml;
         }
 
         private void ValidationCallBack(object sender, ValidationEventArgs e)
