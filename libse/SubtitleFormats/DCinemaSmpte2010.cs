@@ -265,7 +265,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 {
                                     nodeTemp.InnerText = txt.ToString();
                                     html.Append(nodeTemp.InnerXml);
-                                    txt = new StringBuilder();
+                                    txt.Clear();
                                 }
                                 isItalic = true;
                                 i += 2;
@@ -291,7 +291,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                                     fontNode.InnerText = HtmlUtil.RemoveHtmlTags(txt.ToString());
                                     html.Append(fontNode.OuterXml);
-                                    txt = new StringBuilder();
+                                    txt.Clear();
                                 }
                                 isItalic = false;
                                 i += 3;
@@ -303,7 +303,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 {
                                     nodeTemp.InnerText = txt.ToString();
                                     html.Append(nodeTemp.InnerXml);
-                                    txt = new StringBuilder();
+                                    txt.Clear();
                                 }
                                 string c = line.Substring(i + 12, endOfFont - (i + 12));
                                 c = c.Trim('"').Trim('\'').Trim();
@@ -334,7 +334,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                                     fontNode.InnerText = HtmlUtil.RemoveHtmlTags(txt.ToString());
                                     html.Append(fontNode.OuterXml);
-                                    txt = new StringBuilder();
+                                    txt.Clear();
                                 }
                                 fontNo--;
                                 i += 6;
@@ -383,7 +383,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                 fontColor.InnerText = fontColors.Peek();
                                 fontNode.Attributes.Append(fontColor);
 
-                                html = new StringBuilder();
+                                html.Clear();
                                 html.Append(fontNode.OuterXml);
                             }
                         }
@@ -579,7 +579,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 try
                 {
-                    StringBuilder pText = new StringBuilder();
+                    var pText = new StringBuilder();
                     string lastVPosition = string.Empty;
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
@@ -647,7 +647,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                                                 pre = "{\\an3}";
                                         }
                                         string temp = pre + pText;
-                                        pText = new StringBuilder();
+                                        pText.Clear();
                                         pText.Append(temp);
                                     }
                                 }

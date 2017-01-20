@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index - 1);
-                        sb = new StringBuilder();
+                        sb.Clear();
                         progressBar1.Refresh();
                         Application.DoEvents();
                         start = index;
@@ -1049,7 +1049,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 MessageBox.Show("Sorry, Microsoft is closing their free api: " + exception.Message);
                                 overQuota = true;
                             }
-                            sb = new StringBuilder();
+                            sb.Clear();
                             progressBar1.Refresh();
                             Application.DoEvents();
                             start = index;
@@ -1116,7 +1116,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 MessageBox.Show(exception.Message);
                                 overQuota = true;
                             }
-                            sb = new StringBuilder();
+                            sb.Clear();
                             progressBar1.Refresh();
                             Application.DoEvents();
                             start = index;

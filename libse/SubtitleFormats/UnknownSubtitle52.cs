@@ -105,7 +105,7 @@ FILE_INFO_END";
                         started = true;
                         if (p != null)
                             p.Text = text.ToString().Trim();
-                        text = new StringBuilder();
+                        text.Clear();
                         string start = line.Substring(7, 11);
                         string end = line.Substring(19, 11);
                         p = new Paragraph(DecodeTimeCodeFrames(start, splitChar), DecodeTimeCodeFrames(end, splitChar), string.Empty);

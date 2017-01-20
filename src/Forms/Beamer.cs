@@ -290,7 +290,7 @@ namespace Nikse.SubtitleEdit.Forms
                     g.FillPath(new SolidBrush(c), path);
                     path.Reset();
                     path = new GraphicsPath();
-                    sb = new StringBuilder();
+                    sb.Clear();
 
                     int endIndex = text.Substring(i).IndexOf('>');
                     if (endIndex < 0)
@@ -365,8 +365,7 @@ namespace Nikse.SubtitleEdit.Forms
                             g.DrawPath(new Pen(_borderColor, _borderWidth), path);
                         g.FillPath(new SolidBrush(c), path);
                         path.Reset();
-                        //path = new GraphicsPath();
-                        sb = new StringBuilder();
+                        sb.Clear();
                         if (colorStack.Count > 0)
                             c = colorStack.Pop();
                     }

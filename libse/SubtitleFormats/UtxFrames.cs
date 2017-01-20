@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else
                 {
-                    text = new StringBuilder();
+                    text.Clear();
                 }
             }
             subtitle.Renumber();

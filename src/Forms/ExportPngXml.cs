@@ -1972,7 +1972,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     p2.Dispose();
                     path.Reset();
                     path = new GraphicsPath();
-                    sb = new StringBuilder();
+                    sb.Clear();
 
                     int endIndex = text.Substring(i).IndexOf('>');
                     if (endIndex < 0)
@@ -2698,7 +2698,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     DrawShadowAndPath(parameter, g, path);
                                     g.FillPath(new SolidBrush(c), path);
                                     path.Reset();
-                                    sb = new StringBuilder();
+                                    sb.Clear();
                                     if (colorStack.Count > 0)
                                         c = colorStack.Pop();
                                     if (left >= 3)
