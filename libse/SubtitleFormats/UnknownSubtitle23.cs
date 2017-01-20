@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             lines = rtf.FromRtf().SplitToLines().ToList();
             _errorCount = 0;
             Paragraph p = null;
-            sb = new StringBuilder();
+            sb.Clear();
             foreach (string line in lines)
             {
                 string s = line.TrimEnd();

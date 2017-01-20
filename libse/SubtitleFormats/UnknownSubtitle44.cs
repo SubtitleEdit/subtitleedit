@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 Paragraph next = subtitle.GetParagraphOrDefault(index);
                 if (next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 150)
                 {
-                    text = new StringBuilder();
+                    text.Clear();
                     while (text.Length < 34)
                         text.Append(' ');
                     sb.AppendLine(string.Format("{0}{1}", text, EncodeTimeCode(p.EndTime)));
