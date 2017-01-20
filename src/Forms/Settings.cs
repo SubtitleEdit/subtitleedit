@@ -1348,7 +1348,7 @@ namespace Nikse.SubtitleEdit.Forms
                     g.FillRectangle(new SolidBrush(Color.Black), left, top, measuredWidth + 3, measuredHeight + 3);
                 }
 
-                TextDraw.DrawText(font, sf, path, sb, false, checkBoxSsaFontBold.Checked, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
+                TextDraw.DrawText(font, sf, path, sb.ToString(), false, checkBoxSsaFontBold.Checked, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
 
                 int outline = (int)numericUpDownSsaOutline.Value;
 
@@ -1358,10 +1358,10 @@ namespace Nikse.SubtitleEdit.Forms
                     for (int i = 0; i < (int)numericUpDownSsaShadow.Value; i++)
                     {
                         var shadowPath = new GraphicsPath();
-                        sb = new StringBuilder();
+                        sb.Length = 0;
                         sb.Append("This is a test!");
                         int pathPointsStart2 = -1;
-                        TextDraw.DrawText(font, sf, shadowPath, sb, false, checkBoxSsaFontBold.Checked, false, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
+                        TextDraw.DrawText(font, sf, shadowPath, sb.ToString(), false, checkBoxSsaFontBold.Checked, false, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
                         g.FillPath(new SolidBrush(Color.FromArgb(200, Color.Black)), shadowPath);
                     }
                 }

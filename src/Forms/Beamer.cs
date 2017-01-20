@@ -270,7 +270,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (sb.Length > 0)
                     {
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                        TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     if (path.PointCount > 0)
                     {
@@ -346,7 +346,7 @@ namespace Nikse.SubtitleEdit.Forms
                             oldPathPointIndex = 0;
                         if (sb.Length > 0)
                         {
-                            TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                            TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                         }
                         if (path.PointCount > 0)
                         {
@@ -377,7 +377,7 @@ namespace Nikse.SubtitleEdit.Forms
                     italicFromStart = i == 0;
                     if (sb.Length > 0)
                     {
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                        TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     isItalic = true;
                     i += 2;
@@ -391,13 +391,13 @@ namespace Nikse.SubtitleEdit.Forms
                         sb.Append(' ');
                         sb.Append(t);
                     }
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     isItalic = false;
                     i += 3;
                 }
                 else if (text.Substring(i).StartsWith(Environment.NewLine))
                 {
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
                     top += lineHeight;
                     newLine = true;
@@ -418,7 +418,7 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
             }
             if (sb.Length > 0)
-                TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                TextDraw.DrawText(font, sf, path, sb.ToString(), isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
             sf.Dispose();
 
             if (_borderWidth > 0)
