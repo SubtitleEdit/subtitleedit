@@ -9,6 +9,7 @@
    * Added shortcut "Go to previous line and set video position" - thx Mia
 * IMPROVED:
    * Updated Russian translation - thx Elheym
+   * Updated Portuguese translation - thx moob
    * Minor improvements for format "Structured titles" - thx Yamato-ua
    * List view columns arrangable and non-clickable - thx Ingo
 * FIXED:
@@ -18,6 +19,7 @@
    * Fix for MPC-HC 32-bit - thx ZoneX
    * Fixed issue with importing "Unknown 53" format - thx darnn
    * Fixed italic rendering issue in format DCinema SMPTE - thx Miga
+   * Fixed bug in image export - thx marb99
 
 
 3.5.1 (13th December 2016)
