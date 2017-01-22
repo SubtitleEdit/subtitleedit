@@ -10,6 +10,8 @@
 * IMPROVED:
    * Updated Russian translation - thx Elheym
    * Updated Portuguese translation - thx moob
+   * Updated Polish translation - thx admas
+   * Updated Basque translation - thx Xabier
    * Minor improvements for format "Structured titles" - thx Yamato-ua
    * List view columns arrangable and non-clickable - thx Ingo
 * FIXED:
@@ -20,6 +22,7 @@
    * Fixed issue with importing "Unknown 53" format - thx darnn
    * Fixed italic rendering issue in format DCinema SMPTE - thx Miga
    * Fixed bug in image export - thx marb99
+   * Word spell check does not change format - thx Yamato-ua
 
 
 3.5.1 (13th December 2016)

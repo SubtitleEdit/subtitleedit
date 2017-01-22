@@ -15315,7 +15315,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 tss.Name = "PluginSepTranslate";
                                 toolStripMenuItemAutoTranslate.DropDownItems.Add(tss);
                             }
-                            item.Click += PluginToolClick;
+                            item.Click += PluginClickNoFormatChange;
                             toolStripMenuItemAutoTranslate.DropDownItems.Add(item);
                             syncPluginCount++;
                         }
@@ -15327,7 +15327,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 tss.Name = "PluginSepSpellCheck";
                                 toolStripMenuItemSpellCheckMain.DropDownItems.Add(tss);
                             }
-                            item.Click += PluginToolClick;
+                            item.Click += PluginClickNoFormatChange;
                             toolStripMenuItemSpellCheckMain.DropDownItems.Add(item);
                             syncPluginCount++;
                         }
@@ -15342,13 +15342,23 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PluginToolClick(object sender, EventArgs e)
         {
+            CallPlugin(sender, true);
+        }
+
+        private void PluginClickNoFormatChange(object sender, EventArgs e)
+        {
+            CallPlugin(sender, false);
+        }
+
+        private void CallPlugin(object sender, bool allowChangeFormat)
+        {
             try
             {
                 var item = (ToolStripItem)sender;
                 string name, description, text, shortcut, actionType;
                 decimal version;
                 System.Reflection.MethodInfo mi;
-                object pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out name, out text, out version, out description, out actionType, out shortcut, out mi);
+                var pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out name, out text, out version, out description, out actionType, out shortcut, out mi);
                 if (mi == null)
                 {
                     return;
@@ -15366,16 +15376,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 string pluginResult = (string)mi.Invoke(pluginObject,
-                                      new object[]
-                                      {
-                                        this,
-                                        _subtitle.ToText(new SubRip()),
-                                        Configuration.Settings.General.CurrentFrameRate,
-                                        Configuration.Settings.General.ListViewLineSeparatorString,
-                                        _fileName,
-                                        _videoFileName,
-                                        rawText
-                                      });
+                    new object[]
+                    {
+                        this,
+                        _subtitle.ToText(new SubRip()),
+                        Configuration.Settings.General.CurrentFrameRate,
+                        Configuration.Settings.General.ListViewLineSeparatorString,
+                        _fileName,
+                        _videoFileName,
+                        rawText
+                    });
 
                 if (!string.IsNullOrEmpty(pluginResult) && pluginResult.Length > 10 && text != pluginResult)
                 {
@@ -15385,7 +15395,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     var s = new Subtitle();
                     SubtitleFormat newFormat = null;
-                    foreach (SubtitleFormat subtitleFormat in SubtitleFormat.AllSubtitleFormats)
+                    foreach (var subtitleFormat in SubtitleFormat.AllSubtitleFormats)
                     {
                         if (subtitleFormat.IsMine(lines, null))
                         {
@@ -15397,12 +15407,25 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (newFormat != null)
                     {
-                        _subtitle.Paragraphs.Clear();
-                        _subtitle.Header = s.Header;
-                        _subtitle.Footer = s.Footer;
-                        foreach (var p in s.Paragraphs)
-                            _subtitle.Paragraphs.Add(p);
-                        SetCurrentFormat(newFormat);
+                        if (!allowChangeFormat && IsOnlyTextChanged(_subtitle, s))
+                        {
+                            for (int k = 0; k < s.Paragraphs.Count; k++)
+                            {
+                                _subtitle.Paragraphs[k].Text = s.Paragraphs[k].Text;
+                            }
+                        }
+                        else
+                        {
+                            _subtitle.Paragraphs.Clear();
+                            _subtitle.Header = s.Header;
+                            _subtitle.Footer = s.Footer;
+                            foreach (var p in s.Paragraphs)
+                                _subtitle.Paragraphs.Add(p);
+                        }
+
+                        if (allowChangeFormat)
+                            SetCurrentFormat(newFormat);
+
                         SaveSubtitleListviewIndices();
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         RestoreSubtitleListviewIndices();
@@ -15420,6 +15443,24 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(exception.Message);
             }
+        }
+
+        private bool IsOnlyTextChanged(Subtitle s1, Subtitle s2)
+        {
+            if (s1.Paragraphs.Count != s2.Paragraphs.Count)
+                return false;
+
+            for (int i = 0; i < s1.Paragraphs.Count; i++)
+            {
+                var p1 = s1.Paragraphs[i];
+                var p2 = s2.Paragraphs[i];
+                if (Math.Abs(p1.StartTime.TotalMilliseconds - p2.StartTime.TotalMilliseconds) > 0.01)
+                    return false;
+                if (Math.Abs(p1.EndTime.TotalMilliseconds - p2.EndTime.TotalMilliseconds) > 0.01)
+                    return false;
+            }
+
+            return true;
         }
 
         private void TimerAutoSaveTick(object sender, EventArgs e)
