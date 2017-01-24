@@ -119,8 +119,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             {
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
-                    p.StartTime.Milliseconds = FramesToMillisecondsMax999(p.StartTime.Milliseconds);
-                    p.EndTime.Milliseconds = FramesToMillisecondsMax999(p.EndTime.Milliseconds);
+                    p.StartTime.Milliseconds = FramesToMillisecondsMax999(p.StartTime.Milliseconds / 10.0);
+                    p.EndTime.Milliseconds = FramesToMillisecondsMax999(p.EndTime.Milliseconds / 10.0);
                 }
             }
 
@@ -253,13 +253,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     int startHours = int.Parse(parts[0]);
                     int startMinutes = int.Parse(parts[1]);
                     int startSeconds = int.Parse(parts[2]);
-                    int startMilliseconds = int.Parse(parts[3]);
+                    int startMilliseconds = int.Parse(parts[3].PadRight(3, '0'));
                     int endHours = int.Parse(parts[4]);
                     int endMinutes = int.Parse(parts[5]);
                     int endSeconds = int.Parse(parts[6]);
-                    int endMilliseconds = int.Parse(parts[7]);
+                    int endMilliseconds = int.Parse(parts[7].PadRight(3, '0'));
 
-                    if (_isMsFrames && (parts[3].Length != 2 || startMilliseconds > 30 || parts[7].Length != 2 || endMilliseconds > 30))
+                    if (_isMsFrames && (parts[3].Length != 2 || startMilliseconds > 300 || parts[7].Length != 2 || endMilliseconds > 300))
                     {
                         _isMsFrames = false;
                     }
