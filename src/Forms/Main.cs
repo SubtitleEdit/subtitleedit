@@ -230,7 +230,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool AutoRepeatContinueOn
         {
-            get { return tabControlButtons.SelectedIndex == 0; }
+            get { return tabControlButtons.SelectedIndex == 0 && checkBoxAutoContinue.Checked; }
+        }
+        private bool AutoRepeatOn
+        {
+            get { return tabControlButtons.SelectedIndex == 0 && checkBoxAutoRepeatOn.Checked; }
         }
 
         public string Title
@@ -10882,33 +10886,35 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt)
             {
-                if (AutoRepeatContinueOn)
+                if (AutoRepeatContinueOn || AutoRepeatOn)
                     Next();
                 else
                     ButtonNextClick(null, null);
             }
             else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt)
             {
-                if (AutoRepeatContinueOn)
+                if (AutoRepeatContinueOn || AutoRepeatOn)
                     PlayPrevious();
                 else
                     ButtonPreviousClick(null, null);
             }
             else if (_mainGeneralGoToNextSubtitle == e.KeyData)
             {
-                if (AutoRepeatContinueOn)
+                if (AutoRepeatContinueOn || AutoRepeatOn)
                     Next();
                 else
                     ButtonNextClick(null, null);
                 e.SuppressKeyPress = true;
+                e.Handled = true;
             }
             else if (_mainGeneralGoToPrevSubtitle == e.KeyData)
             {
-                if (AutoRepeatContinueOn)
+                if (AutoRepeatContinueOn || AutoRepeatOn)
                     PlayPrevious();
                 else
                     ButtonPreviousClick(null, null);
                 e.SuppressKeyPress = true;
+                e.Handled = true;
             }
             else if (_mainGeneralGoToStartOfCurrentSubtitle == e.KeyData)
             {
@@ -11054,6 +11060,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _endSeconds = -1;
                     mediaPlayer.TogglePlayPause();
                     e.SuppressKeyPress = true;
+                    e.Handled = true;
                 }
             }
             else if (e.KeyData == _videoPause)
@@ -11063,6 +11070,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _endSeconds = -1;
                     mediaPlayer.Pause();
                     e.SuppressKeyPress = true;
+                    e.Handled = true;
                 }
             }
             else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Right)
@@ -12705,7 +12713,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (Configuration.Settings.General.ListViewDoubleClickAction == 2)
             {
-                if (AutoRepeatContinueOn)
+                if (AutoRepeatContinueOn || AutoRepeatOn)
                     PlayCurrent();
                 else
                     buttonBeforeText_Click(null, null);
@@ -12720,7 +12728,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (Configuration.Settings.General.ListViewDoubleClickAction == 5)
             {
-                if (AutoRepeatContinueOn)
+                if (AutoRepeatContinueOn || AutoRepeatOn)
                     PlayCurrent();
                 else
                 {
@@ -13958,12 +13966,12 @@ namespace Nikse.SubtitleEdit.Forms
             if (mediaPlayer.VideoPlayer != null)
             {
                 double startSeconds = paragraph.StartTime.TotalSeconds;
-                if (startSeconds > 0.2)
-                    startSeconds -= 0.2; // go a little back
+                if (startSeconds > 0.05)
+                    startSeconds -= 0.05; // go a little back
 
                 _endSeconds = paragraph.EndTime.TotalSeconds;
-                if (mediaPlayer.Duration > _endSeconds + 0.2)
-                    _endSeconds += 0.2; // go a little forward
+                if (mediaPlayer.Duration > _endSeconds + 0.05)
+                    _endSeconds += 0.05; // go a little forward
 
                 mediaPlayer.CurrentPosition = startSeconds;
                 ShowSubtitle();
@@ -14396,14 +14404,14 @@ namespace Nikse.SubtitleEdit.Forms
                     timeUpDownVideoPosition.Enabled = false;
                     timeUpDownVideoPositionAdjust.Enabled = false;
 
-                    if (_endSeconds >= 0 && mediaPlayer.CurrentPosition > _endSeconds && !AutoRepeatContinueOn)
+                    if (_endSeconds >= 0 && mediaPlayer.CurrentPosition > _endSeconds && !(AutoRepeatContinueOn || AutoRepeatOn))
                     {
                         mediaPlayer.Pause();
                         mediaPlayer.CurrentPosition = _endSeconds + EndDelay;
                         _endSeconds = -1;
                     }
 
-                    if (AutoRepeatContinueOn)
+                    if (AutoRepeatContinueOn || AutoRepeatOn)
                     {
                         if (_endSeconds >= 0 && mediaPlayer.CurrentPosition > _endSeconds && checkBoxAutoRepeatOn.Checked)
                         {
@@ -14505,7 +14513,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void textBoxListViewText_MouseMove(object sender, MouseEventArgs e)
         {
-            if (AutoRepeatContinueOn && !textBoxSearchWord.Focused && textBoxListViewText.Focused)
+            if ((AutoRepeatContinueOn || AutoRepeatOn) && !textBoxSearchWord.Focused && textBoxListViewText.Focused)
             {
                 string selectedText = textBoxListViewText.SelectedText;
                 if (!string.IsNullOrEmpty(selectedText))
@@ -18060,7 +18068,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     textBoxListViewTextAlternate.DoDragDrop(textBoxListViewTextAlternate.Text, DragDropEffects.Copy);
             }
-            else if (AutoRepeatContinueOn && !textBoxSearchWord.Focused && textBoxListViewTextAlternate.Focused)
+            else if ((AutoRepeatContinueOn || AutoRepeatOn) && !textBoxSearchWord.Focused && textBoxListViewTextAlternate.Focused)
             {
                 string selectedText = textBoxListViewTextAlternate.SelectedText;
                 if (!string.IsNullOrEmpty(selectedText))
