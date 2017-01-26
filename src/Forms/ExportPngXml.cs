@@ -1951,15 +1951,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         lastText.Append(sb);
                         TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
-                    if (path.PointCount > 0)
-                    {
-                        var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                        for (int k = oldPathPointIndex; k < list.Length; k++)
-                        {
-                            if (list[k].X > addLeft)
-                                addLeft = list[k].X;
-                        }
-                    }
+
+                    addLeft = GetLastPositionFromPath(path, oldPathPointIndex, addLeft);
                     if (path.PointCount == 0)
                         addLeft = left;
                     else if (addLeft < 0.01)
@@ -1972,7 +1965,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     p2.Dispose();
                     path.Reset();
                     path = new GraphicsPath();
-                    sb = new StringBuilder();
+                    sb.Clear();
 
                     int endIndex = text.Substring(i).IndexOf('>');
                     if (endIndex < 0)
@@ -2068,15 +2061,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                             TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                         }
-                        if (path.PointCount > 0)
-                        {
-                            var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                            for (int k = oldPathPointIndex; k < list.Length; k++)
-                            {
-                                if (list[k].X > addLeft)
-                                    addLeft = list[k].X;
-                            }
-                        }
+
+                        addLeft = GetLastPositionFromPath(path, oldPathPointIndex, addLeft);
                         if (addLeft < 0.01)
                             addLeft = left + 2;
                         left = addLeft;
@@ -2563,15 +2549,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     lastText.Append(sb);
                                     TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                 }
-                                if (path.PointCount > 0)
-                                {
-                                    var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                                    for (int k = oldPathPointIndex; k < list.Length; k++)
-                                    {
-                                        if (list[k].X > addLeft)
-                                            addLeft = list[k].X;
-                                    }
-                                }
+
+                                addLeft = GetLastPositionFromPath(path, oldPathPointIndex, addLeft);
                                 if (path.PointCount == 0)
                                     addLeft = left;
                                 else if (addLeft < 0.01)
@@ -2682,15 +2661,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                                         TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                     }
-                                    if (path.PointCount > 0)
-                                    {
-                                        var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                                        for (int k = oldPathPointIndex; k < list.Length; k++)
-                                        {
-                                            if (list[k].X > addLeft)
-                                                addLeft = list[k].X;
-                                        }
-                                    }
+
+                                    addLeft = GetLastPositionFromPath(path, oldPathPointIndex, addLeft);
                                     if (addLeft < 0.01)
                                         addLeft = left + 2;
                                     left = addLeft;
@@ -2698,7 +2670,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     DrawShadowAndPath(parameter, g, path);
                                     g.FillPath(new SolidBrush(c), path);
                                     path.Reset();
-                                    sb = new StringBuilder();
+                                    sb.Clear();
                                     if (colorStack.Count > 0)
                                         c = colorStack.Pop();
                                     if (left >= 3)
@@ -2745,15 +2717,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         TextDraw.DrawText(font, sf, path, sb, isItalic, isBold || parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                     }
 
-                                    if (path.PointCount > 0)
-                                    {
-                                        var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                                        for (int k = oldPathPointIndex; k < list.Length; k++)
-                                        {
-                                            if (list[k].X > addLeft)
-                                                addLeft = list[k].X;
-                                        }
-                                    }
+                                    addLeft = GetLastPositionFromPath(path, oldPathPointIndex, addLeft);
                                     if (addLeft < 0.01)
                                         addLeft = left + 2;
                                     left = addLeft;
@@ -2797,15 +2761,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                     }
 
-                                    if (path.PointCount > 0)
-                                    {
-                                        var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                                        for (int k = oldPathPointIndex; k < list.Length; k++)
-                                        {
-                                            if (list[k].X > addLeft)
-                                                addLeft = list[k].X;
-                                        }
-                                    }
+                                    addLeft = GetLastPositionFromPath(path, oldPathPointIndex, addLeft);
                                     if (addLeft < 0.01)
                                         addLeft = left + 2;
                                     left = addLeft;
@@ -2906,6 +2862,20 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     bmp.Dispose();
                 }
             }
+        }
+
+        private static float GetLastPositionFromPath(GraphicsPath path, int oldPathPointIndex, float addLeft)
+        {
+            if (path.PointCount > 0)
+            {
+                var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
+                for (int k = oldPathPointIndex + 1; k < list.Length; k++)
+                {
+                    if (list[k].X > addLeft)
+                        addLeft = list[k].X;
+                }
+            }
+            return addLeft;
         }
 
         private static Point? GetAssPoint(string s)

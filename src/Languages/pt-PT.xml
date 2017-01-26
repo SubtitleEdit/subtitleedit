@@ -26,6 +26,8 @@ Email: mailto:moob42341@gmail.com</TranslatedBy>
     <StartTime>Tempo inicial</StartTime>
     <EndTime>Tempo final</EndTime>
     <Duration>Duração</Duration>
+    <CharsPerSec>Caracteres/seg</CharsPerSec>
+    <WordsPerMin>Palavras/min</WordsPerMin>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
     <Text>Texto</Text>
@@ -1586,11 +1588,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <NonWordBoundary>Sem delimitação de palavra (\B)</NonWordBoundary>
     <NewLine>Nova linha (\r\n)</NewLine>
     <NewLineShort>Nova linha (\n)</NewLineShort>
-    <AnyDigit>Qualquer dígito (\d)</AnyDigit>
-    <NonDigit>Sem ser dígito (\D)</NonDigit>
+    <AnyDigit>Qualquer número de 0 a 9 (\d)</AnyDigit>
+    <NonDigit>Sem ser número (\D)</NonDigit>
     <AnyCharacter>Qualquer caractere (.)</AnyCharacter>
     <AnyWhitespace>Qualquer espaço em branco (\s)</AnyWhitespace>
-    <NonSpaceCharacter>Sem ser Carácter de espaço (\S)</NonSpaceCharacter>
+    <NonSpaceCharacter>Sem ser espaço em espaço (\S)</NonSpaceCharacter>
     <ZeroOrMore>Zero ou mais (*)</ZeroOrMore>
     <OneOrMore>Um ou mais (+)</OneOrMore>
     <InCharacterGroup>Dentro do grupo de caracteres ([teste])</InCharacterGroup>
@@ -1683,10 +1685,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DefaultFileEncoding>Codificação padrão do ficheiro</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto detectar codificação ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Comprimento máximo de única linha</SubtitleLineMaximumLength>
-    <MaximumCharactersPerSecond>Máximo Caracteres/seg</MaximumCharactersPerSecond>
+    <MaximumCharactersPerSecond>Máximo caracteres/seg</MaximumCharactersPerSecond>
+	<MaximumWordssPerMinute>Máximo palavras/min</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Moldar o texto ao escrever</AutoWrapWhileTyping>
-    <DurationMinimumMilliseconds>Duração Mínima milissegundos</DurationMinimumMilliseconds>
-    <DurationMaximumMilliseconds>Duração Máxima milissegundos</DurationMaximumMilliseconds>
+    <DurationMinimumMilliseconds>Duração mínima milissegundos</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>Duração máxima milissegundos</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. de intervalo entre legendas em ms</MinimumGapMilliseconds>
     <MaximumLines>Número máximo de linhas</MaximumLines>
     <SubtitleFont>Tipo de letra</SubtitleFont>
@@ -1704,6 +1707,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <RemoveBlankLinesWhenOpening>Eliminar linhas em branco ao abrir a legenda</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Ver quebras de linha na "Lista" da janela principal como:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Ao clicar duas vezes na linha de texto na janela principal irá...</MainListViewDoubleClickAction>
+    <MainListViewColumns>Colunas da lista</MainListViewColumns>
+    <MainListViewColumnsInfo>Escolher as colunas visíveis da lista</MainListViewColumnsInfo>
     <MainListViewNothing>Não faz nada</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>... para posição do vídeo e pausar</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>... para posição do vídeo e reproduzir</MainListViewVideoGoToPositionAndPlay>
@@ -1745,8 +1750,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformAppearance>Aparência da forma de onda</WaveformAppearance>
     <WaveformGridColor>Cor da grelha</WaveformGridColor>
     <WaveformShowGridLines>Mostrar linhas na grelha</WaveformShowGridLines>
+    <WaveformShowCps>Mostrar caracteres/seg</WaveformShowCps>
+    <WaveformShowWpm>Mostrar palavras/min</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Inverter direcção da roda do rato</ReverseMouseWheelScrollDirection>
-    <WaveformAllowOverlap>Permitir sobreposição (ao mover / redimensionar)</WaveformAllowOverlap>
+    <WaveformAllowOverlap>Permitir sobreposição ao mover ou redimensionar</WaveformAllowOverlap>
+	<WaveformSetVideoPosMoveStartEnd>Definir a posição do vídeo ao mover o início ou fim</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Destacar a entrada do cursor do rato</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Destacar também a lista de visualização na entrada do cursor do rato</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>O acerto da marca do contorno deve estar dentro</WaveformBorderHitMs1>
@@ -1837,6 +1845,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <GoToPrevious>Ir para a linha anterior</GoToPrevious>
     <GoToCurrentSubtitleStart>Ir para o início da linha actual</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ir para o final da linha actual</GoToCurrentSubtitleEnd>
+	<GoToPreviousSubtitleAndFocusVideo>Ir para a linha anterior e definir a posição do vídeo</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Ir para a próxima linha e definir a posição de vídeo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Alternar o realce entre a caixa de texto da legenda e o separador (Lista) na janela principal</ToggleFocus>
     <ToggleDialogDashes>Alternar hífens de diálogo</ToggleDialogDashes>
@@ -2292,6 +2301,8 @@ Manter as alterações?</KeepChangesMessage>
     <RemoveSceneChange>Eliminar mudança de cena</RemoveSceneChange>
     <GuessTimeCodes>Adivinhar os tempos...</GuessTimeCodes>
     <SeekSilence>Localizar silêncio no áudio...</SeekSilence>
+    <CharsSecX>CPS: {0:0.00}</CharsSecX>
+    <WordsMinX>PPM: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Adivinhar os tempos</Title>

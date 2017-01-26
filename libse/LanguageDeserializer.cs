@@ -121,6 +121,12 @@ namespace Nikse.SubtitleEdit.Core
                 case "General/Duration":
                     language.General.Duration = reader.Value;
                     break;
+                case "General/CharsPerSec":
+                    language.General.CharsPerSec = reader.Value;
+                    break;
+                case "General/WordsPerMin":
+                    language.General.WordsPerMin = reader.Value;
+                    break;
                 case "General/NumberSymbol":
                     language.General.NumberSymbol = reader.Value;
                     break;
@@ -4507,6 +4513,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MaximumCharactersPerSecond":
                     language.Settings.MaximumCharactersPerSecond = reader.Value;
                     break;
+                case "Settings/MaximumWordssPerMinute":
+                    language.Settings.MaximumWordssPerMinute = reader.Value;
+                    break;
                 case "Settings/AutoWrapWhileTyping":
                     language.Settings.AutoWrapWhileTyping = reader.Value;
                     break;
@@ -4566,6 +4575,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/MainListViewDoubleClickAction":
                     language.Settings.MainListViewDoubleClickAction = reader.Value;
+                    break;
+                case "Settings/MainListViewColumns":
+                    language.Settings.MainListViewColumns = reader.Value;
+                    break;
+                case "Settings/MainListViewColumnsInfo":
+                    language.Settings.MainListViewColumnsInfo = reader.Value;
                     break;
                 case "Settings/MainListViewNothing":
                     language.Settings.MainListViewNothing = reader.Value;
@@ -4690,11 +4705,20 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/WaveformShowGridLines":
                     language.Settings.WaveformShowGridLines = reader.Value;
                     break;
+                case "Settings/WaveformShowCps":
+                    language.Settings.WaveformShowCps = reader.Value;
+                    break;
+                case "Settings/WaveformShowWpm":
+                    language.Settings.WaveformShowWpm = reader.Value;
+                    break;
                 case "Settings/ReverseMouseWheelScrollDirection":
                     language.Settings.ReverseMouseWheelScrollDirection = reader.Value;
                     break;
                 case "Settings/WaveformAllowOverlap":
                     language.Settings.WaveformAllowOverlap = reader.Value;
+                    break;
+                case "Settings/WaveformSetVideoPosMoveStartEnd":
+                    language.Settings.WaveformSetVideoPosMoveStartEnd = reader.Value;
                     break;
                 case "Settings/WaveformFocusMouseEnter":
                     language.Settings.WaveformFocusMouseEnter = reader.Value;
@@ -4965,6 +4989,9 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Settings/GoToCurrentSubtitleEnd":
                     language.Settings.GoToCurrentSubtitleEnd = reader.Value;
+                    break;
+                case "Settings/GoToPreviousSubtitleAndFocusVideo":
+                    language.Settings.GoToPreviousSubtitleAndFocusVideo = reader.Value;
                     break;
                 case "Settings/GoToNextSubtitleAndFocusVideo":
                     language.Settings.GoToNextSubtitleAndFocusVideo = reader.Value;
@@ -6198,6 +6225,12 @@ namespace Nikse.SubtitleEdit.Core
                     break;
                 case "Waveform/SeekSilence":
                     language.Waveform.SeekSilence = reader.Value;
+                    break;
+                case "Waveform/CharsSecX":
+                    language.Waveform.CharsSecX = reader.Value;
+                    break;
+                case "Waveform/WordsMinX":
+                    language.Waveform.WordsMinX = reader.Value;
                     break;
                 case "WaveformGenerateTimeCodes/Title":
                     language.WaveformGenerateTimeCodes.Title = reader.Value;

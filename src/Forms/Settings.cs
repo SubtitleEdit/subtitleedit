@@ -31,6 +31,9 @@ namespace Nikse.SubtitleEdit.Forms
         private OcrFixReplaceList _ocrFixReplaceList;
         private readonly string _oldVlcLocation;
         private readonly string _oldVlcLocationRelative;
+        private readonly bool _oldListViewShowCps;
+        private readonly bool _oldListViewShowWpm;
+
         private readonly Dictionary<ShortcutHelper, string> _newShortcuts = new Dictionary<ShortcutHelper, string>();
 
         private class ComboBoxLanguage
@@ -115,6 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRememberWindowPosition.Checked = gs.StartRememberPositionAndSize;
             numericUpDownSubtitleLineMaximumLength.Value = gs.SubtitleLineMaximumLength;
             numericUpDownMaxCharsSec.Value = (decimal)gs.SubtitleMaximumCharactersPerSeconds;
+            numericUpDownMaxWordsMin.Value = (decimal)gs.SubtitleMaximumWordsPerMinute;
             checkBoxAutoWrapWhileTyping.Checked = gs.AutoWrapLineWhileTyping;
             textBoxShowLineBreaksAs.Text = gs.ListViewLineSeparatorString;
 
@@ -279,6 +283,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelAutoDetectAnsiEncoding.Text = language.AutoDetectAnsiEncoding;
             labelSubMaxLen.Text = language.SubtitleLineMaximumLength;
             labelMaxCharsPerSecond.Text = language.MaximumCharactersPerSecond;
+            labelMaxWordsPerMin.Text = language.MaximumWordssPerMinute;
             checkBoxAutoWrapWhileTyping.Text = language.AutoWrapWhileTyping;
 
             labelMinDuration.Text = language.DurationMinimumMilliseconds;
@@ -289,6 +294,8 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownSubtitleLineMaximumLength.Left = labelSubMaxLen.Left + labelSubMaxLen.Width + 3;
             if (labelMaxCharsPerSecond.Left + labelMaxCharsPerSecond.Width > numericUpDownMaxCharsSec.Left)
                 numericUpDownMaxCharsSec.Left = labelMaxCharsPerSecond.Left + labelMaxCharsPerSecond.Width + 3;
+            if (labelMaxWordsPerMin.Left + labelMaxWordsPerMin.Width > numericUpDownMaxWordsMin.Left)
+                numericUpDownMaxWordsMin.Left = labelMaxWordsPerMin.Left + labelMaxWordsPerMin.Width + 3;
             if (labelMinDuration.Left + labelMinDuration.Width > numericUpDownDurationMin.Left)
                 numericUpDownDurationMin.Left = labelMinDuration.Left + labelMinDuration.Width + 3;
             if (labelMaxDuration.Left + labelMaxDuration.Width > numericUpDownDurationMax.Left)
@@ -317,6 +324,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelShowLineBreaksAs.Text = language.ShowLineBreaksAs;
             textBoxShowLineBreaksAs.Left = labelShowLineBreaksAs.Left + labelShowLineBreaksAs.Width;
             labelListViewDoubleClickEvent.Text = language.MainListViewDoubleClickAction;
+            labelListviewColumns.Text = language.MainListViewColumns;
+            buttonListviewColumns.Text = GetListViewColumns();  
             labelAutoBackup.Text = language.AutoBackup;
             labelAutoBackupDeleteAfter.Text = language.AutoBackupDeleteAfter;
             comboBoxAutoBackup.Left = labelAutoBackup.Left + labelAutoBackup.Width + 3;
@@ -372,8 +381,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxWaveformAppearence.Text = language.WaveformAppearance;
             checkBoxWaveformShowGrid.Text = language.WaveformShowGridLines;
+            checkBoxWaveformShowCps.Text = language.WaveformShowCps;
+            checkBoxWaveformShowWpm.Text = language.WaveformShowWpm;
             checkBoxReverseMouseWheelScrollDirection.Text = language.ReverseMouseWheelScrollDirection;
             checkBoxAllowOverlap.Text = language.WaveformAllowOverlap;
+            checkBoxWaveformSetVideoPosMoveStartEnd.Text = language.WaveformSetVideoPosMoveStartEnd;
             checkBoxWaveformHoverFocus.Text = language.WaveformFocusMouseEnter;
             checkBoxListViewMouseEnterFocus.Text = language.WaveformListViewFocusMouseEnter;
             labelWaveformBorderHitMs1.Text = language.WaveformBorderHitMs1;
@@ -630,6 +642,8 @@ namespace Nikse.SubtitleEdit.Forms
             ListWordListLanguages();
 
             checkBoxWaveformShowGrid.Checked = Configuration.Settings.VideoControls.WaveformDrawGrid;
+            checkBoxWaveformShowCps.Checked = Configuration.Settings.VideoControls.WaveformDrawCps;
+            checkBoxWaveformShowWpm.Checked = Configuration.Settings.VideoControls.WaveformDrawWpm;
             panelWaveformGridColor.BackColor = Configuration.Settings.VideoControls.WaveformGridColor;
             panelWaveformSelectedColor.BackColor = Configuration.Settings.VideoControls.WaveformSelectedColor;
             panelWaveformColor.BackColor = Configuration.Settings.VideoControls.WaveformColor;
@@ -641,6 +655,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxWaveformTextBold.Checked = Configuration.Settings.VideoControls.WaveformTextBold;
             checkBoxReverseMouseWheelScrollDirection.Checked = Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward;
             checkBoxAllowOverlap.Checked = Configuration.Settings.VideoControls.WaveformAllowOverlap;
+            checkBoxWaveformSetVideoPosMoveStartEnd.Checked = Configuration.Settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd;
             checkBoxWaveformHoverFocus.Checked = Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter;
             checkBoxListViewMouseEnterFocus.Checked = Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter;
             checkBoxListViewMouseEnterFocus.Enabled = Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter;
@@ -664,7 +679,8 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(generalNode, language.GoToPrevious, nameof(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle));
             AddNode(generalNode, language.GoToCurrentSubtitleStart, nameof(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle));
             AddNode(generalNode, language.GoToCurrentSubtitleEnd, nameof(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle));
-            AddNode(generalNode, language.GoToNextSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo));
+            AddNode(generalNode, language.GoToPreviousSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo));
+            AddNode(generalNode, language.GoToNextSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo));            
             AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp));
             treeViewShortcuts.Nodes.Add(generalNode);
 
@@ -864,7 +880,25 @@ namespace Nikse.SubtitleEdit.Forms
             _oldVlcLocation = gs.VlcLocation;
             _oldVlcLocationRelative = gs.VlcLocationRelative;
 
+            _oldListViewShowCps = Configuration.Settings.Tools.ListViewShowColumnCharsPerSec;
+            _oldListViewShowWpm = Configuration.Settings.Tools.ListViewShowColumnWordsPerMin;
+
             labelPlatform.Text = (IntPtr.Size * 8) + "-bit";
+        }
+
+        private string GetListViewColumns()
+        {
+            var sb = new StringBuilder();
+            sb.Append(Configuration.Settings.Language.General.NumberSymbol + ", ");
+            sb.Append(Configuration.Settings.Language.General.StartTime + ", ");
+            sb.Append(Configuration.Settings.Language.General.EndTime + ", ");
+            sb.Append(Configuration.Settings.Language.General.Duration + ", ");
+            if (Configuration.Settings.Tools.ListViewShowColumnCharsPerSec)
+                sb.Append(Configuration.Settings.Language.General.CharsPerSec + ", ");
+            if (Configuration.Settings.Tools.ListViewShowColumnWordsPerMin)
+                sb.Append(Configuration.Settings.Language.General.WordsPerMin + ", ");
+            sb.Append(Configuration.Settings.Language.General.Text + ", ");
+            return sb.ToString().TrimEnd().TrimEnd(',');
         }
 
         private void AddNode(TreeNode node, string text, string shortcut, bool isMenuItem = false)
@@ -1139,6 +1173,7 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.SubtitleLineMaximumLength = 45;
 
             gs.SubtitleMaximumCharactersPerSeconds = (double)numericUpDownMaxCharsSec.Value;
+            gs.SubtitleMaximumWordsPerMinute = (double)numericUpDownMaxWordsMin.Value;
 
             gs.AutoWrapLineWhileTyping = checkBoxAutoWrapWhileTyping.Checked;
 
@@ -1206,6 +1241,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ListViewSyntaxErrorColor = panelListViewSyntaxColorError.BackColor;
 
             Configuration.Settings.VideoControls.WaveformDrawGrid = checkBoxWaveformShowGrid.Checked;
+            Configuration.Settings.VideoControls.WaveformDrawCps = checkBoxWaveformShowCps.Checked;
+            Configuration.Settings.VideoControls.WaveformDrawWpm = checkBoxWaveformShowWpm.Checked;
             Configuration.Settings.VideoControls.WaveformGridColor = panelWaveformGridColor.BackColor;
             Configuration.Settings.VideoControls.WaveformSelectedColor = panelWaveformSelectedColor.BackColor;
             Configuration.Settings.VideoControls.WaveformColor = panelWaveformColor.BackColor;
@@ -1218,6 +1255,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.WaveformTextBold = checkBoxWaveformTextBold.Checked;
             Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward = checkBoxReverseMouseWheelScrollDirection.Checked;
             Configuration.Settings.VideoControls.WaveformAllowOverlap = checkBoxAllowOverlap.Checked;
+            Configuration.Settings.VideoControls.WaveformSetVideoPositionOnMoveStartEnd = checkBoxWaveformSetVideoPosMoveStartEnd.Checked;
             Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter = checkBoxWaveformHoverFocus.Checked;
             Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter = checkBoxListViewMouseEnterFocus.Checked;
             Configuration.Settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(numericUpDownWaveformBorderHitMs.Value);
@@ -1325,7 +1363,7 @@ namespace Nikse.SubtitleEdit.Forms
                     for (int i = 0; i < (int)numericUpDownSsaShadow.Value; i++)
                     {
                         var shadowPath = new GraphicsPath();
-                        sb = new StringBuilder();
+                        sb.Clear();
                         sb.Append("This is a test!");
                         int pathPointsStart2 = -1;
                         TextDraw.DrawText(font, sf, shadowPath, sb, false, checkBoxSsaFontBold.Checked, false, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
@@ -2192,6 +2230,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Configuration.Settings.General.VlcLocation = _oldVlcLocation;
             Configuration.Settings.General.VlcLocationRelative = _oldVlcLocationRelative;
+            Configuration.Settings.Tools.ListViewShowColumnCharsPerSec = _oldListViewShowCps;
+            Configuration.Settings.Tools.ListViewShowColumnWordsPerMin = _oldListViewShowWpm;
+
             DialogResult = DialogResult.Cancel;
         }
 
@@ -2340,5 +2381,19 @@ namespace Nikse.SubtitleEdit.Forms
         {
             checkBoxSyntaxColorTextMoreThanTwoLines.Text = string.Format(Configuration.Settings.Language.Settings.SyntaxColorTextMoreThanMaxLines, numericUpDownMaxNumberOfLines.Value);
         }
+
+        private void buttonListviewColumns_Click(object sender, EventArgs e)
+        {
+            using (var form = new SettingsListViewColumns())
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    Configuration.Settings.Tools.ListViewShowColumnCharsPerSec = form.ShowCps;
+                    Configuration.Settings.Tools.ListViewShowColumnWordsPerMin = form.ShowWpm;
+                    buttonListviewColumns.Text = GetListViewColumns();
+                }
+            }            
+        }
+
     }
 }

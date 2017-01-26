@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Core
         /// <summary>
         /// Cached environment new line characters for faster lookup.
         /// </summary>
-        public static readonly char[] NewLineChars = { '\r', '\n' };    
+        public static readonly char[] NewLineChars = { '\r', '\n' };
 
         public static VideoInfo TryReadVideoInfoViaMatroskaHeader(string fileName)
         {
@@ -1702,19 +1702,37 @@ namespace Nikse.SubtitleEdit.Core
         /// <returns>text with unneeded spaces removed</returns>
         public static string RemoveUnneededSpaces(string text, string language)
         {
-            const string zeroWidthSpace = "\u200B";
-            const string zeroWidthNoBreakSpace = "\uFEFF";
-            const string noBreakSpace = "\u00A0";
-            const string operatingSystemCommand = "\u009D";
+            const char zeroWidthSpace = '\u200B';
+            const char zeroWidthNoBreakSpace = '\uFEFF';
+            const char noBreakSpace = '\u00A0';
+            const char operatingSystemCommand = '\u009D';
 
             text = text.Trim();
-
-            text = text.Replace(zeroWidthSpace, string.Empty);
-            text = text.Replace(zeroWidthNoBreakSpace, string.Empty);
-            text = text.Replace(noBreakSpace, " ");
-            text = text.Replace(operatingSystemCommand, string.Empty);
-            text = text.Replace('\t', ' ');
-
+            int len = text.Length;
+            int count = 0;
+            char[] textChars = new char[len];
+            for (int i = 0; i < len; i++)
+            {
+                char ch = text[i];
+                switch (ch)
+                {
+                    // Ignore: \u200B, \uFEFF and \u009D.
+                    case zeroWidthSpace:
+                    case zeroWidthNoBreakSpace:
+                    case operatingSystemCommand:
+                        break;
+                    // Replace: \t or \u00A0 with white-space.
+                    case '\t':
+                    case noBreakSpace:
+                        textChars[count++] = ' ';
+                        break;
+                    default:
+                        textChars[count++] = ch;
+                        break;
+                }
+            }
+            // Construct new string from textChars.
+            text = new string(textChars, 0, count);
             text = text.FixExtraSpaces();
 
             if (text.EndsWith(' '))

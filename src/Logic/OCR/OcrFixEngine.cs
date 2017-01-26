@@ -588,7 +588,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             fixedWord = _ocrFixReplaceList.FixCommonWordErrorsQuick(word.ToString());
                         sb.Append(fixedWord);
                         lastWord = fixedWord;
-                        word = new StringBuilder();
+                        word.Clear();
                     }
                     sb.Append(text[i]);
                 }

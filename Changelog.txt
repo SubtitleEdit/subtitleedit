@@ -1,5 +1,30 @@
 ﻿Subtitle Edit Changelog
 
+
+3.5.2 (xth February 2016) BETA
+* NEW:
+   * Added optional list view columns "chars/sec" + "words/min"
+   * New setting for waveform: Set video position when moving start/end
+   * Added new json subtitle format - thx Zhiyi
+   * Added shortcut "Go to previous line and set video position" - thx Mia
+* IMPROVED:
+   * Updated Russian translation - thx Elheym
+   * Updated Portuguese translation - thx moob
+   * Updated Polish translation - thx admas
+   * Updated Basque translation - thx Xabier
+   * Minor improvements for format "Structured titles" - thx Yamato-ua
+   * List view columns arrangable and non-clickable - thx Ingo
+* FIXED:
+   * Fixed bug in spell check "change word" regarding "¿?" - thx locotus
+   * Fixed fast forward waveform scrolling with mouse wheel
+   * Fix in "Fix common errors" regarding de-selected fixes - thx Tronar  
+   * Fix for MPC-HC 32-bit - thx ZoneX
+   * Fixed issue with importing "Unknown 53" format - thx darnn
+   * Fixed italic rendering issue in format DCinema SMPTE - thx Miga
+   * Fixed bug in image export - thx marb99
+   * Word spell check does not change format - thx Yamato-ua
+
+
 3.5.1 (13th December 2016)
 * NEW:
    * "mpv" media player now works on Linux  - thx var1ap 
