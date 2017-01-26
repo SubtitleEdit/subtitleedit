@@ -15,14 +15,16 @@
    * Minor improvements for format "Structured titles" - thx Yamato-ua
    * List view columns arrangable and non-clickable - thx Ingo
 * FIXED:
-   * Fixed bug in spell check "change word" regarding "¿?" - thx locotus
+   * Fixed play current/selection not stopping - thx rhazor
    * Fixed fast forward waveform scrolling with mouse wheel
+   * Fixed bug in spell check "change word" regarding "¿?" - thx locotus
    * Fix in "Fix common errors" regarding de-selected fixes - thx Tronar  
    * Fix for MPC-HC 32-bit - thx ZoneX
    * Fixed issue with importing "Unknown 53" format - thx darnn
    * Fixed italic rendering issue in format DCinema SMPTE - thx Miga
    * Fixed bug in image export - thx marb99
    * Word spell check does not change format - thx Yamato-ua
+   * Better reading of top alignment in dfxp - thx Plazik
 
 
 3.5.1 (13th December 2016)

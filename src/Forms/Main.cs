@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _video5000MsLeft = Keys.None;
         private Keys _video5000MsRight = Keys.None;
         private Keys _videoPlayFirstSelected = Keys.None;
-        private Keys _mainVideoFullscreen = Keys.None;        
+        private Keys _mainVideoFullscreen = Keys.None;
         private Keys _mainGoToPrevoiusSubtitleAndFocusVideo = Keys.None;
         private Keys _mainGoToNextSubtitleAndFocusVideo = Keys.None;
         private Keys _mainAdjustExtendCurrentSubtitle = Keys.None;
@@ -256,7 +256,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void SetCurrentFormat(SubtitleFormat format)
-        {
+        {            
             if (format.IsVobSubIndexFile)
             {
                 UiUtil.InitializeSubtitleFormatComboBox(comboBoxSubtitleFormats, format);
@@ -11895,19 +11895,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MoveVideoSeconds(double seconds)
         {
+            var oldPosition = mediaPlayer.CurrentPosition;
+            var newPosition = oldPosition + seconds;
             if (mediaPlayer.IsPaused && Configuration.Settings.General.MoveVideo100Or500MsPlaySmallSample)
             {
-                double p = mediaPlayer.CurrentPosition + seconds;
-                mediaPlayer.CurrentPosition = p;
+                mediaPlayer.CurrentPosition = newPosition;
                 mediaPlayer.Play();
                 System.Threading.Thread.Sleep(99);
                 mediaPlayer.Stop();
-                mediaPlayer.CurrentPosition = p;
             }
-            else
-            {
-                mediaPlayer.CurrentPosition += seconds;
-            }
+            mediaPlayer.CurrentPosition = newPosition;
         }
 
         private void RunCustomSearch(string url)
