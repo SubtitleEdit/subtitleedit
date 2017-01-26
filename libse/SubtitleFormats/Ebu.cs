@@ -635,6 +635,11 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     tti.JustificationCode = 2; // 02h=centred text
                 }
 
+                // replace some unsupported characters
+                text = text.Replace("„", "\""); // lower quote
+                text = text.Replace("‚", "’"); // lower apostrophe
+                text = text.Replace("♫", "♪"); // only music single note supported
+
                 tti.SubtitleNumber = (ushort)subtitleNumber;
                 tti.TextField = text;
                 int startTag = tti.TextField.IndexOf('}');

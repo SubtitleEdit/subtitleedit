@@ -5046,7 +5046,7 @@ namespace Nikse.SubtitleEdit.Forms
                 line.Append(appendString);
                 wordNonItalics++;
             }
-            word = new StringBuilder();
+            word.Clear();
             lettersItalics = 0;
             lettersNonItalics = 0;
         }

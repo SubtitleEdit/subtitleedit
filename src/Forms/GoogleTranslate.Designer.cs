@@ -142,7 +142,6 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // subtitleListViewTo
             // 
-            this.subtitleListViewTo.DisplayExtraFromExtra = false;
             this.subtitleListViewTo.FirstVisibleIndex = -1;
             this.subtitleListViewTo.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListViewTo.FullRowSelect = true;
@@ -164,7 +163,6 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // subtitleListViewFrom
             // 
-            this.subtitleListViewFrom.DisplayExtraFromExtra = false;
             this.subtitleListViewFrom.FirstVisibleIndex = -1;
             this.subtitleListViewFrom.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListViewFrom.FullRowSelect = true;

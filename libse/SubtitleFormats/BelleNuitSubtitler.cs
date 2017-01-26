@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
             subtitle.Paragraphs.Clear();
             Paragraph paragraph = null;
-            sb = new StringBuilder();
+            sb.Clear();
             foreach (string line in text.Split(Utilities.NewLineChars))
             {
                 if (RegexTimeCode.IsMatch(line))

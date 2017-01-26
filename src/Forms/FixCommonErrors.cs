@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly StringBuilder _appliedLog = new StringBuilder();
         private int _numberOfImportantLogMessages;
         private List<int> _deleteIndices = new List<int>();
-        private HashSet<string> _notAllowedFixes;
+        private HashSet<string> _allowedFixes;
 
         public SubtitleFormat Format
         {
@@ -488,7 +488,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_onlyListFixes || _batchMode)
                 return true;
 
-            return !_notAllowedFixes.Contains(p.Number.ToString(CultureInfo.InvariantCulture) + "|" + action);
+            return _allowedFixes.Contains(p.Number.ToString(CultureInfo.InvariantCulture) + "|" + action);
         }
 
         public void ShowStatus(string message)
@@ -1213,14 +1213,14 @@ namespace Nikse.SubtitleEdit.Forms
             if (subtitleListView1.SelectedItems.Count > 0)
                 firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
 
-            _notAllowedFixes = new HashSet<string>();
+            _allowedFixes = new HashSet<string>();
             foreach (ListViewItem item in listViewFixes.Items)
             {
-                if (!item.Checked)
+                if (item.Checked)
                 {
                     string key = item.SubItems[1].Text + "|" + item.SubItems[2].Text;
-                    if (!_notAllowedFixes.Contains(key))
-                        _notAllowedFixes.Add(key);
+                    if (!_allowedFixes.Contains(key))
+                        _allowedFixes.Add(key);
                 }
             }
 

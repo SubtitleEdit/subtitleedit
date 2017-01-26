@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 try
                 {
                     Paragraph p = new Paragraph();
-                    StringBuilder pText = new StringBuilder();
+                    var pText = new StringBuilder();
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
                         switch (innerNode.Name)

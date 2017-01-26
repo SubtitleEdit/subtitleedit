@@ -237,7 +237,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     if (t != null)
                     {
                         p.StartTime = DecodeTimeCodeFrames(t.InnerText.Trim(), SplitCharColon);
-                        sb = new StringBuilder();
+                        sb.Clear();
                         foreach (XmlNode wrNode in node.SelectNodes("w:tc/w:p/w:r", nsmgr))
                         {
                             foreach (XmlNode child in wrNode.ChildNodes)

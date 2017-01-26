@@ -28,6 +28,8 @@
             public string StartTime { get; set; }
             public string EndTime { get; set; }
             public string Duration { get; set; }
+            public string CharsPerSec { get; set; }
+            public string WordsPerMin { get; set; }
             public string NumberSymbol { get; set; }
             public string Number { get; set; }
             public string Text { get; set; }
@@ -1847,6 +1849,7 @@
             public string AutoDetectAnsiEncoding { get; set; }
             public string SubtitleLineMaximumLength { get; set; }
             public string MaximumCharactersPerSecond { get; set; }
+            public string MaximumWordssPerMinute { get; set; }
             public string AutoWrapWhileTyping { get; set; }
             public string DurationMinimumMilliseconds { get; set; }
             public string DurationMaximumMilliseconds { get; set; }
@@ -1868,6 +1871,8 @@
             public string RemoveBlankLinesWhenOpening { get; set; }
             public string ShowLineBreaksAs { get; set; }
             public string MainListViewDoubleClickAction { get; set; }
+            public string MainListViewColumns { get; set; }
+            public string MainListViewColumnsInfo { get; set; }            
             public string MainListViewNothing { get; set; }
             public string MainListViewVideoGoToPositionAndPause { get; set; }
             public string MainListViewVideoGoToPositionAndPlay { get; set; }
@@ -1910,8 +1915,11 @@
             public string WaveformAppearance { get; set; }
             public string WaveformGridColor { get; set; }
             public string WaveformShowGridLines { get; set; }
+            public string WaveformShowCps { get; set; }
+            public string WaveformShowWpm { get; set; }
             public string ReverseMouseWheelScrollDirection { get; set; }
             public string WaveformAllowOverlap { get; set; }
+            public string WaveformSetVideoPosMoveStartEnd { get; set; }            
             public string WaveformFocusMouseEnter { get; set; }
             public string WaveformListViewFocusMouseEnter { get; set; }
             public string WaveformBorderHitMs1 { get; set; }
@@ -2002,6 +2010,7 @@
             public string GoToPrevious { get; set; }
             public string GoToCurrentSubtitleStart { get; set; }
             public string GoToCurrentSubtitleEnd { get; set; }
+            public string GoToPreviousSubtitleAndFocusVideo { get; set; }
             public string GoToNextSubtitleAndFocusVideo { get; set; }
             public string ToggleFocus { get; set; }
             public string ToggleDialogDashes { get; set; }
@@ -2513,6 +2522,8 @@
             public string RemoveSceneChange { get; set; }
             public string GuessTimeCodes { get; set; }
             public string SeekSilence { get; set; }
+            public string CharsSecX { get; set; }
+            public string WordsMinX { get; set; }
         }
 
         public class WaveformGenerateTimeCodes

@@ -603,6 +603,8 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             double frameRateMultiplier = frameRateMultiplierNumerator / frameRateMultiplierDenominator;
             double resultFrameRate = frameRate * frameRateMultiplier;
 
+            var topRegions = GetRegionsTopFromHeader(xml.OuterXml);
+
             if (resultFrameRate > 20 && resultFrameRate < 100)
             {
                 Configuration.Settings.General.CurrentFrameRate = frameRate;
@@ -652,7 +654,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
 
                     string region = GetEffect(p, "region");
-                    if (region == "top" || region == "topCenter")
+                    if (region == "top" || region == "topCenter" || topRegions.Contains(region))
                     {
                         p.Text = "{\\an8}" + p.Text;
                     }
@@ -1040,6 +1042,58 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 System.Diagnostics.Debug.WriteLine(ex.ToString());
             }
             return regions;
+        }
+
+        public static List<string> GetRegionsTopFromHeader(string xmlAsString)
+        {
+            var list = new List<string>();
+            var xml = new XmlDocument();
+            try
+            {
+                xml.LoadXml(xmlAsString);
+                var nsmgr = new XmlNamespaceManager(xml.NameTable);
+                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
+                foreach (XmlNode node in head.SelectNodes("//ttml:region", nsmgr))
+                {
+                    bool top = false;
+                    foreach (XmlNode styleNode in node.ChildNodes)
+                    {
+                        if (styleNode.Attributes != null)
+                        {
+                            var origin = string.Empty;
+                            if (styleNode.Attributes["tts:origin"] != null)
+                                origin = styleNode.Attributes["tts:origin"].Value;
+                            else if (styleNode.Attributes["origin"] != null)
+                                origin = styleNode.Attributes["origin"].Value;
+                            var arr = origin.Split(' ');
+                            if (arr.Length == 2 && arr[0].EndsWith("%") && arr[1].EndsWith("%"))
+                            {
+                                var n1 = Convert.ToDouble(arr[0].TrimEnd('%'), CultureInfo.InvariantCulture);
+                                var n2 = Convert.ToDouble(arr[1].TrimEnd('%'), CultureInfo.InvariantCulture);
+                                if (Math.Abs(n1 - 10) < 2 && Math.Abs(n2 - 10) < 5)
+                                {
+                                    top = true;
+                                    break;
+                                }
+                                break;
+                            }
+                        }
+                    }
+
+                    if (top)
+                    {
+                        if (node.Attributes["xml:id"] != null)
+                            list.Add(node.Attributes["xml:id"].Value);
+                        else if (node.Attributes["id"] != null)
+                            list.Add(node.Attributes["id"].Value);
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return list;
         }
 
         public static List<string> GetUsedLanguages(Subtitle subtitle)

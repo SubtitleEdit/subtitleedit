@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     }
                     p.StartTime.TotalMilliseconds = int.Parse(sb.ToString());
 
-                    sb = new StringBuilder();
+                    sb.Clear();
                     for (int i = pos1 + 7; i < line.Length && line[i] != '\''; i++)
                     {
                         sb.Append(line[i]);
