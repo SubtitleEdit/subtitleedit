@@ -94,6 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _numberOfImportantLogMessages;
         private List<int> _deleteIndices = new List<int>();
         private HashSet<string> _allowedFixes;
+        private bool _linesDeletedOrMerged;
 
         public SubtitleFormat Format
         {
@@ -615,7 +616,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonBack.Enabled = true;
             buttonNextFinish.Text = _languageGeneral.Ok;
-            buttonNextFinish.Enabled = _hasFixesBeenMade;
+            buttonNextFinish.Enabled = _hasFixesBeenMade || _linesDeletedOrMerged;
             groupBoxStep1.Visible = false;
             groupBox2.Visible = true;
             listViewFixes.Sort();
@@ -1331,8 +1332,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_originalSubtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
             {
+                _linesDeletedOrMerged = true;
                 _subtitleListViewIndex = -1;
-
                 var indexes = new List<int>();
                 foreach (ListViewItem item in subtitleListView1.SelectedItems)
                     indexes.Add(item.Index);
@@ -1385,6 +1386,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_originalSubtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
             {
+                _linesDeletedOrMerged = true;
                 int startNumber = _originalSubtitle.Paragraphs[0].Number;
                 int firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
 

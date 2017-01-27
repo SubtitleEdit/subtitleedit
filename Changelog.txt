@@ -25,6 +25,7 @@
    * Fixed bug in image export - thx marb99
    * Word spell check does not change format - thx Yamato-ua
    * Better reading of top alignment in dfxp - thx Plazik
+   * "Fix common errors" - delete/merge line only still enables "OK" button
 
 
 3.5.1 (13th December 2016)
