@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Nikse")]
 [assembly: AssemblyProduct("SubtitleEdit")]
-[assembly: AssemblyCopyright("Copyright 2001-2016, Nikse")]
+[assembly: AssemblyCopyright("Copyright 2001-2017, Nikse")]
 [assembly: AssemblyTrademark("Licensed under the GPL v3")]
 [assembly: AssemblyCulture("")]
 
