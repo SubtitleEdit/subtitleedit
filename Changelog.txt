@@ -25,7 +25,8 @@
    * Fixed bug in image export - thx marb99
    * Word spell check does not change format - thx Yamato-ua
    * Better reading of top alignment in dfxp - thx Plazik
-   * "Fix common errors" - delete/merge line only still enables "OK" button
+   * "Fix common errors" - only delete/merge line still enables "OK" button
+   * "Batch convert" - don't clear ASS/SSA style after format change - thx Thunderbolt8
 
 
 3.5.1 (13th December 2016)
