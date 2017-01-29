@@ -508,6 +508,7 @@ namespace Nikse.SubtitleEdit.Core
         public string DefaultSubtitleFormat { get; set; }
         public string DefaultEncoding { get; set; }
         public bool AutoConvertToUtf8 { get; set; }
+        public bool WriteUtf8Bom { get; set; }
         public bool AutoGuessAnsiEncoding { get; set; }
         public string SubtitleFontName { get; set; }
         public int SubtitleFontSize { get; set; }
@@ -630,6 +631,7 @@ namespace Nikse.SubtitleEdit.Core
             DefaultSubtitleFormat = "SubRip";
             DefaultEncoding = Encoding.UTF8.WebName;
             AutoConvertToUtf8 = false;
+            WriteUtf8Bom = true;
             AutoGuessAnsiEncoding = false;
             ShowRecentFiles = true;
             RememberSelectedLine = true;
@@ -1401,6 +1403,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("AutoConvertToUtf8");
             if (subNode != null)
                 settings.General.AutoConvertToUtf8 = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("WriteUtf8Bom");
+            if (subNode != null)
+                settings.General.WriteUtf8Bom = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("AutoGuessAnsiEncoding");
             if (subNode != null)
                 settings.General.AutoGuessAnsiEncoding = Convert.ToBoolean(subNode.InnerText);
@@ -3064,6 +3069,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("DefaultSubtitleFormat", settings.General.DefaultSubtitleFormat);
                 textWriter.WriteElementString("DefaultEncoding", settings.General.DefaultEncoding);
                 textWriter.WriteElementString("AutoConvertToUtf8", settings.General.AutoConvertToUtf8.ToString());
+                textWriter.WriteElementString("WriteUtf8Bom", settings.General.WriteUtf8Bom.ToString());                
                 textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString());
                 textWriter.WriteElementString("_subtitleFontName", settings.General.SubtitleFontName);
                 textWriter.WriteElementString("SubtitleFontSize", settings.General.SubtitleFontSize.ToString(CultureInfo.InvariantCulture));
