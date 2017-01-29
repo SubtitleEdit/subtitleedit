@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _onlyListFixes = true;
         private bool _batchMode;
         private string _autoDetectGoogleLanguage;
-        private List<string> _namesEtcList;
+        private ICollection<string> _namesEtcList;
         private HashSet<string> _abbreviationList;
         private readonly StringBuilder _newLog = new StringBuilder();
         private readonly StringBuilder _appliedLog = new StringBuilder();
@@ -522,19 +522,27 @@ namespace Nikse.SubtitleEdit.Forms
         public bool IsName(string candidate)
         {
             MakeSureNamesListIsLoaded();
-            return _namesEtcList.Contains(candidate);
+            return _namesEtcList.Contains(candidate); // O(1)
         }
 
         private void MakeSureNamesListIsLoaded()
         {
             if (_namesEtcList == null)
             {
-                _namesEtcList = new List<string>();
                 string languageTwoLetterCode = LanguageAutoDetect.AutoDetectGoogleLanguage(Subtitle);
-
                 // Will contains both one word names and multi names
                 var namesList = new NamesList(Configuration.DictionariesDirectory, languageTwoLetterCode, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
-                _namesEtcList = namesList.GetAllNames();
+                _namesEtcList = new HashSet<string>();
+                // Single word names.
+                foreach (var name in namesList.GetNames())
+                {
+                    _namesEtcList.Add(name);
+                }
+                // Multi word names.
+                foreach (var name in namesList.GetMultiNames())
+                {
+                    _namesEtcList.Add(name);
+                }
             }
         }
 
