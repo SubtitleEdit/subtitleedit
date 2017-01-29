@@ -65,14 +65,14 @@ namespace Nikse.SubtitleEdit.Forms
             public string Name { get; private set; }
             public string Example { get; private set; }
             public Action Action { get; private set; }
-            public bool DefaultChecked { get; private set; }
+            public bool Checked { get; private set; }
 
             public FixItem(string name, string example, Action action, bool selected)
             {
                 Name = name;
                 Example = example;
                 Action = action;
-                DefaultChecked = selected;
+                Checked = selected;
             }
         }
 
@@ -464,7 +464,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddFixActionItemToListView(FixItem fi)
         {
-            var item = new ListViewItem(string.Empty) { Tag = fi, Checked = fi.DefaultChecked };
+            var item = new ListViewItem(string.Empty) { Tag = fi, Checked = fi.Checked };
             item.SubItems.Add(fi.Name);
             item.SubItems.Add(fi.Example);
             listView1.Items.Add(item);
