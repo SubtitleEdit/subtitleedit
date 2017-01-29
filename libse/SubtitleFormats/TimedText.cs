@@ -302,7 +302,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
                     if (p.StartTime.Milliseconds > 30 || p.EndTime.Milliseconds > 30)
+                    {
                         all30OrBelow = false;
+                        break;
+                    }
                 }
                 if (all30OrBelow)
                 {
