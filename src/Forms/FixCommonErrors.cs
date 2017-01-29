@@ -452,11 +452,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var graphics = CreateGraphics())
             {
-                var textSize = graphics.MeasureString(buttonCancel.Text, Font);
+                var textSize = graphics.MeasureString(buttonCancel.Text, buttonCancel.Font);
                 if (textSize.Height > buttonCancel.Height - 4)
                 {
                     subtitleListView1.InitializeTimestampColumnWidths(this);
-                    var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                    var newButtonHeight = (int)(textSize.Height + 7.5);
                     UiUtil.SetButtonHeight(this, newButtonHeight, 1);
                 }
             }
