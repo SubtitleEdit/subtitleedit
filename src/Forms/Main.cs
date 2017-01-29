@@ -3467,7 +3467,7 @@ namespace Nikse.SubtitleEdit.Forms
                         file.Write(allText);
                     }
                 }
-                else if (currentEncoding == Encoding.UTF8 && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
+                else if (Equals(currentEncoding, Encoding.UTF8) && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
                 {
                     var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
                     using (var file = new StreamWriter(_fileName, false, outputEnc)) // open file with encoding
@@ -3481,12 +3481,23 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         MessageBox.Show(string.Format(_language.UnableToSaveSubtitleX, _fileName), String.Empty, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         return DialogResult.Cancel;
-                    }
-
-                    using (var fs = new FileStream(_fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
-                    using (var sw = new StreamWriter(fs, currentEncoding))
+                    }                                        
+                    if (Equals(currentEncoding, Encoding.UTF8) && !Configuration.Settings.General.WriteUtf8Bom)
                     {
-                        sw.Write(allText);
+                        var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                        using (var file = new StreamWriter(_fileName, false, outputEnc)) // open file with encoding
+                        {
+                            file.Write(allText);
+                        }
+                    }
+                    else
+                    {
+                        // create file - includes BOM for Unicode formats
+                        using (var fs = new FileStream(_fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
+                        using (var sw = new StreamWriter(fs, currentEncoding))
+                        {
+                            sw.Write(allText);
+                        }
                     }
                 }
                 Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
