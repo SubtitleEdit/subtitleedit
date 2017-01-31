@@ -384,6 +384,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 {
                     ttmlNode.AppendChild(ttmlXml.CreateTextNode(child.Value));
                 }
+                else if (child.Name == "br")
+                {
+                    XmlNode br = ttmlXml.CreateElement("br");
+                    ttmlNode.AppendChild(br);
+
+                    ConvertParagraphNodeToTTMLNode(child, ttmlXml, br);
+                }
                 else if (child.Name == "i")
                 {
                     XmlNode span = ttmlXml.CreateElement("span");
@@ -427,7 +434,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
 
                     if (child.Attributes["color"] != null)
                     {
-                        XmlAttribute attr = ttmlXml.CreateAttribute("tts:color", "http://www.w3.org/ns/10/ttml#style");
+                        XmlAttribute attr = ttmlXml.CreateAttribute("tts:color", TTMLStylingNamespace);
                         attr.InnerText = child.Attributes["color"].Value;
                         span.Attributes.Append(attr);
                     }
