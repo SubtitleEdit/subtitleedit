@@ -681,7 +681,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SubtitleListview1.SelectIndexAndEnsureVisible(index);
                 mediaPlayer.CurrentPosition = e.Seconds;
-                ButtonSetStartAndOffsetRestClick(null, null);
+                SetStartAndOffsetTheRest(e.Seconds);
             }
             audioVisualizer.Invalidate();
         }
@@ -14738,6 +14738,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonSetStartAndOffsetRestClick(object sender, EventArgs e)
         {
+            SetStartAndOffsetTheRest(mediaPlayer.CurrentPosition);
+        }
+
+        private void SetStartAndOffsetTheRest(double videoPosition)
+        {
             if (SubtitleListview1.SelectedItems.Count == 1)
             {
                 bool oldSync = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
@@ -14745,9 +14750,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
                 int index = SubtitleListview1.SelectedItems[0].Index;
-                double videoPosition = mediaPlayer.CurrentPosition;
                 if (!mediaPlayer.IsPaused)
-                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
+                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay/TimeCode.BaseUnit;
                 var tc = TimeCode.FromSeconds(videoPosition);
                 timeUpDownStartTime.TimeCode = tc;
 
