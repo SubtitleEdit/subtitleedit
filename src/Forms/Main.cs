@@ -13199,6 +13199,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemTranslationMode_Click(object sender, EventArgs e)
         {
+            if (_subtitle != null)
+                return;
+
             if (SubtitleListview1.IsAlternateTextColumnVisible)
             {
                 SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.TextAlternate);
