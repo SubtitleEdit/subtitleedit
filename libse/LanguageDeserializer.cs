@@ -952,6 +952,18 @@ namespace Nikse.SubtitleEdit.Core
                 case "EbuSaveOptions/JustificationCode":
                     language.EbuSaveOptions.JustificationCode = reader.Value;
                     break;
+                case "EbuSaveOptions/VerticalPosition":
+                    language.EbuSaveOptions.VerticalPosition = reader.Value;
+                    break;
+                case "EbuSaveOptions/MarginTop":
+                    language.EbuSaveOptions.MarginTop = reader.Value;
+                    break;
+                case "EbuSaveOptions/MarginBottom":
+                    language.EbuSaveOptions.MarginBottom = reader.Value;
+                    break;
+                case "EbuSaveOptions/NewLineRows":
+                    language.EbuSaveOptions.NewLineRows = reader.Value;
+                    break;
                 case "EbuSaveOptions/Teletext":
                     language.EbuSaveOptions.Teletext = reader.Value;
                     break;

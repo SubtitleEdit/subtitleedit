@@ -319,6 +319,11 @@ namespace Nikse.SubtitleEdit.Core
 
         public bool EbuStlTeletextUseBox { get; set; }
         public bool EbuStlTeletextUseDoubleHeight { get; set; }
+        public int EbuStlMarginTop { get; set; }
+        public int EbuStlMarginBottom { get; set; }
+        public int EbuStlNewLineRows { get; set; }
+
+
 
         public bool CheetahCaptionAlwayWriteEndTime { get; set; }
 
@@ -356,6 +361,9 @@ namespace Nikse.SubtitleEdit.Core
 
             EbuStlTeletextUseBox = true;
             EbuStlTeletextUseDoubleHeight = true;
+            EbuStlMarginTop = 0;
+            EbuStlMarginBottom = 2;
+            EbuStlNewLineRows = 2;
 
             SamiDisplayTwoClassesAsTwoSubtitles = true;
             SamiHtmlEncodeMode = 0;
@@ -2090,6 +2098,15 @@ namespace Nikse.SubtitleEdit.Core
                 subNode = node.SelectSingleNode("EbuStlTeletextUseDoubleHeight");
                 if (subNode != null)
                     settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("EbuStlMarginTop");
+                if (subNode != null)
+                    settings.SubtitleSettings.EbuStlMarginTop = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("EbuStlMarginBottom");
+                if (subNode != null)
+                    settings.SubtitleSettings.EbuStlMarginBottom = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("EbuStlNewLineRows");
+                if (subNode != null)
+                    settings.SubtitleSettings.EbuStlNewLineRows = Convert.ToInt32(subNode.InnerText);
                 subNode = node.SelectSingleNode("CheetahCaptionAlwayWriteEndTime");
                 if (subNode != null)
                     settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime = Convert.ToBoolean(subNode.InnerText);
@@ -3314,6 +3331,9 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("Cavena890StartOfMessage", settings.SubtitleSettings.Cavena890StartOfMessage);
                 textWriter.WriteElementString("EbuStlTeletextUseBox", settings.SubtitleSettings.EbuStlTeletextUseBox.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("EbuStlTeletextUseDoubleHeight", settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("EbuStlMarginTop", settings.SubtitleSettings.EbuStlMarginTop.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("EbuStlMarginBottom", settings.SubtitleSettings.EbuStlMarginBottom.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("EbuStlNewLineRows", settings.SubtitleSettings.EbuStlNewLineRows.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("CheetahCaptionAlwayWriteEndTime", settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NuendoCharacterListFile", settings.SubtitleSettings.NuendoCharacterListFile);
                 textWriter.WriteEndElement();
