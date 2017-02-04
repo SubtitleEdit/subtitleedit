@@ -363,8 +363,10 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     region = "topCenter";
             }
             text = Utilities.RemoveSsaTags(text);
+            text = HtmlUtil.FixInvalidItalicTags(text);
 
             bool first = true;
+            bool italicOn = false;
             foreach (string line in text.SplitToLines())
             {
                 if (!first)
@@ -377,6 +379,17 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 XmlNode currentStyle = xml.CreateTextNode(string.Empty);
                 paragraph.AppendChild(currentStyle);
                 int skipCount = 0;
+
+                if (!first && italicOn)
+                {
+                    styles.Push(currentStyle);
+                    currentStyle = xml.CreateNode(XmlNodeType.Element, "span", null);
+                    paragraph.AppendChild(currentStyle);
+                    XmlAttribute attr = xml.CreateAttribute("tts:fontStyle", "http://www.w3.org/ns/10/ttml#style");
+                    attr.InnerText = "italic";
+                    currentStyle.Attributes.Append(attr);
+                }
+
                 for (int i = 0; i < line.Length; i++)
                 {
                     if (skipCount > 0)
@@ -392,6 +405,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         attr.InnerText = "italic";
                         currentStyle.Attributes.Append(attr);
                         skipCount = 2;
+                        italicOn = true;
                     }
                     else if (line.Substring(i).StartsWith("<b>", StringComparison.Ordinal))
                     {
@@ -438,9 +452,14 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                         }
                         paragraph.AppendChild(currentStyle);
                         if (line.Substring(i).StartsWith("</font>", StringComparison.Ordinal))
+                        {
                             skipCount = 6;
+                        }
                         else
+                        {
                             skipCount = 3;
+                            italicOn = false;
+                        }
                     }
                     else
                     {
