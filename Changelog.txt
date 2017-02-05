@@ -14,6 +14,8 @@
    * Updated Basque translation - thx Xabier
    * Minor improvements for format "Structured titles" - thx Yamato-ua
    * List view columns arrangable and non-clickable - thx Ingo
+   * EBU STL: New settings regarding vertical position
+   * EBU STL: New color picker dialog
 * FIXED:
    * Fixed play current/selection not stopping - thx rhazor
    * Fixed fast forward waveform scrolling with mouse wheel
@@ -27,6 +29,8 @@
    * Better reading of top alignment in dfxp - thx Plazik
    * "Fix common errors" - only delete/merge line still enables "OK" button
    * "Batch convert" - don't clear ASS/SSA style after format change - thx Thunderbolt8
+   * Fix for multi-line italic in format TTML 1.0 - thx nathaniel1977
+   * EBU STL writing now works with multiple colors in samee line - thx George
 
 
 3.5.1 (13th December 2016)
