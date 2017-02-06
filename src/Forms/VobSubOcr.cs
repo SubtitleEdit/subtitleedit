@@ -6012,9 +6012,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (!_ocrFixEngine.IsDictionaryLoaded || !_ocrFixEngine.SpellCheckDictionaryName.StartsWith("en_"))
                 return false;
 
-            if (line.Contains('[') && line.Contains(']'))
-                line = line.Replace("[", string.Empty).Replace("]", string.Empty);
-
+            line = line.Replace("[", string.Empty);
+            line = line.Replace("]", string.Empty);
             line = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic);
 
             int count = 0;
@@ -6024,7 +6023,10 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string s in arr)
             {
                 if (s.Length == 1 && !@"♪♫-:'”1234567890&aAI""".Contains(s))
+                {
                     count++;
+                    break;
+                }
             }
             return count > 0;
         }
