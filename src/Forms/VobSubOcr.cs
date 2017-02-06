@@ -8447,32 +8447,25 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void vobSubToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var exportBdnXmlPng = new ExportPngXml())
-            {
-                _fromMenuItem = true;
-                exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "VOBSUB", FileName, this, _importLanguageString);
-                exportBdnXmlPng.ShowDialog(this);
-                _fromMenuItem = false;
-            }
+            ExportToPngXml("VOBSUB");
         }
 
         private void bluraySupToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var exportBdnXmlPng = new ExportPngXml())
-            {
-                _fromMenuItem = true;
-                exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BLURAYSUP", FileName, this, _importLanguageString);
-                exportBdnXmlPng.ShowDialog(this);
-                _fromMenuItem = false;
-            }
+            ExportToPngXml("BLURAYSUP");
         }
 
         private void bDNXMLToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ExportToPngXml("BDNXML");
+        }
+
+        private void ExportToPngXml(string exportType)
+        {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
                 _fromMenuItem = true;
-                exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BDNXML", FileName, this, _importLanguageString);
+                exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), exportType, FileName, this, _importLanguageString);
                 exportBdnXmlPng.ShowDialog(this);
                 _fromMenuItem = false;
             }
