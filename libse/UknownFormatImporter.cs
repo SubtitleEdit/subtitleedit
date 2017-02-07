@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Core
                         subtitle.Paragraphs.Add(p);
                     }
                     p = new Paragraph();
-                    sb = new StringBuilder();
+                    sb.Clear();
                     try
                     {
                         if (UseFrames)
@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Core
                                 subtitle.Paragraphs.Add(p);
                             }
                             p = new Paragraph();
-                            sb = new StringBuilder();
+                            sb.Clear();
                             try
                             {
                                 if (UseFrames)
@@ -210,7 +210,7 @@ namespace Nikse.SubtitleEdit.Core
                                 subtitle.Paragraphs.Add(p);
                             }
                             p = new Paragraph();
-                            sb = new StringBuilder();
+                            sb.Clear();
                             try
                             {
                                 if (UseFrames)
@@ -277,7 +277,7 @@ namespace Nikse.SubtitleEdit.Core
                             {
                                 p.Text = sb.ToString().Trim();
                                 subtitle.Paragraphs.Add(p);
-                                sb = new StringBuilder();
+                                sb.Clear();
                             }
                             p = new Paragraph { StartTime = DecodeTime(tc) };
                         }
@@ -368,7 +368,7 @@ namespace Nikse.SubtitleEdit.Core
                             subtitle.Paragraphs.Add(p);
                         }
                         p = new Paragraph();
-                        sb = new StringBuilder();
+                        sb.Clear();
                         p.StartTime = DecodeTime(start);
                         p.EndTime = DecodeTime(end);
                     }
@@ -452,7 +452,7 @@ namespace Nikse.SubtitleEdit.Core
                             subtitle.Paragraphs.Add(p);
                         }
                         p = new Paragraph();
-                        sb = new StringBuilder();
+                        sb.Clear();
                         p.StartTime = DecodeTime(start);
                         p.EndTime = DecodeTime(end);
                     }
@@ -508,7 +508,7 @@ namespace Nikse.SubtitleEdit.Core
                                 subtitle.Paragraphs.Add(p);
                             }
                             p = new Paragraph();
-                            sb = new StringBuilder();
+                            sb.Clear();
                             p.StartTime = DecodeTime(start);
                             p.EndTime = DecodeTime(end);
                         }
@@ -618,7 +618,7 @@ namespace Nikse.SubtitleEdit.Core
                                 subtitle.Paragraphs.Add(p);
                             }
                             p = new Paragraph();
-                            sb = new StringBuilder();
+                            sb.Clear();
                             p.StartTime = DecodeTime(start);
                             p.EndTime = DecodeTime(end);
                         }
@@ -650,7 +650,7 @@ namespace Nikse.SubtitleEdit.Core
                                 subtitle.Paragraphs.Add(p);
                             }
                             p = new Paragraph();
-                            sb = new StringBuilder();
+                            sb.Clear();
                             p.StartTime = DecodeTime(start);
                             p.EndTime = DecodeTime(end);
                         }

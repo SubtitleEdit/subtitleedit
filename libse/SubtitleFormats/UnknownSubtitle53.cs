@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
     public class UnknownSubtitle53 : SubtitleFormat
     {
 
-        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\:\d\d\:\d\d\:\d\d [^ ]+", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\:\d\d\:\d\d\:\d\d .+", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -108,6 +108,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 index++;
             }
             subtitle.RemoveEmptyLines();
+            subtitle.Renumber();
         }
 
     }

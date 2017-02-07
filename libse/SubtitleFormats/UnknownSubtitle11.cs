@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 bool italicOn = false;
                 bool boldOn = false;
                 bool underlineOn = false;
-                StringBuilder lineSb = new StringBuilder();
+                var lineSb = new StringBuilder();
                 foreach (string line in parts)
                 {
                     if (count > 0)
@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             string post = string.Empty;
                             string[] parts = text.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                             int count = 0;
-                            StringBuilder lineSb = new StringBuilder();
+                            var lineSb = new StringBuilder();
                             foreach (string s2 in parts)
                             {
                                 if (count > 0)

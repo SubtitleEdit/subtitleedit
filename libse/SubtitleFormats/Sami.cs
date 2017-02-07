@@ -361,7 +361,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                              tmp.StartsWith("</", StringComparison.Ordinal)))
                         {
                             total.Append(WebUtility.HtmlDecode(partial.ToString()));
-                            partial = new StringBuilder();
+                            partial.Clear();
                             tagOn = true;
                             total.Append('<');
                         }

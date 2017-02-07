@@ -53,16 +53,34 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
             //C1Y00 - Een agent heeft me geholpen.
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{0:0000} : {1},{2},10", index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
+                string numberOfLinesCode = "10"; // two lines
+                if (Utilities.GetNumberOfLines(p.Text) == 1)
+                    numberOfLinesCode = "11"; // two lines
+
+                sb.AppendLine(string.Format("{0:0000} : {1},{2},{3}", index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), numberOfLinesCode));
                 sb.AppendLine("80 80 80");
-                foreach (string line in p.Text.SplitToLines())
-                    sb.AppendLine("C1Y00 " + line.Trim());
+                for (int i = 0; i < p.Text.SplitToLines().Length; i++)
+                {
+                    string line = p.Text.SplitToLines()[i];
+                    sb.AppendLine(GetPositionCode(i, p.Extra) + " " + line.Trim());
+                }
                 sb.AppendLine();
                 index++;
             }
             sb.AppendLine(string.Format("{0:0000}", index + 1) + @" : --:--:--:--,--:--:--:--,-1
 80 80 80");
             return sb.ToString();
+        }
+
+        private static string GetPositionCode(int lineNumber, string extra)
+        {
+            if (!string.IsNullOrWhiteSpace(extra))
+            {
+                var arr = extra.Split(':');
+                if (lineNumber < arr.Length && arr[lineNumber].Length == 5)
+                    return arr[lineNumber];
+            }
+            return "C1Y00";
         }
 
         private static string EncodeTimeCode(TimeCode time)
@@ -97,9 +115,15 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 else if (p != null && RegexText.IsMatch(line))
                 {
                     if (string.IsNullOrEmpty(p.Text))
+                    {
+                        p.Extra = line.Substring(0, 5);
                         p.Text = line.Substring(5).Trim();
+                    }
                     else
+                    {
+                        p.Extra += ":" + line.Substring(0, 5);
                         p.Text += Environment.NewLine + line.Substring(5).Trim();
+                    }
                 }
                 else if (line.Length < 10 && RegexSomeCodes.IsMatch(line))
                 {

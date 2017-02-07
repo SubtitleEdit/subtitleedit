@@ -24,6 +24,8 @@
     <StartTime>Start time</StartTime>
     <EndTime>End time</EndTime>
     <Duration>Duration</Duration>
+    <CharsPerSec>Chars/sec</CharsPerSec>
+    <WordsPerMin>Words/min</WordsPerMin>
     <NumberSymbol>#</NumberSymbol>
     <Number>Number</Number>
     <Text>Text</Text>
@@ -369,6 +371,10 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Import>Import...</Import>
     <TextAndTimingInformation>Text and timing information</TextAndTimingInformation>
     <JustificationCode>Justification code</JustificationCode>
+    <VerticalPosition>Vertical position</VerticalPosition>
+    <MarginTop>Margin top (for top aligned subtitles)</MarginTop>
+    <MarginBottom>Margin bottom (for bottom aligned subtitles)</MarginBottom>
+    <NewLineRows>Number of rows added by a new line</NewLineRows>
     <Teletext>Teletext</Teletext>
     <UseBox>Use box around text</UseBox>
     <DoubleHeight>Use double height for text</DoubleHeight>
@@ -1685,6 +1691,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AutoDetectAnsiEncoding>Auto detect ANSI encoding</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Single line max. length</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Max. chars/sec</MaximumCharactersPerSecond>
+    <MaximumWordssPerMinute>Max. words/min</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Auto-wrap while typing</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. duration, milliseconds</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Max. duration, milliseconds</DurationMaximumMilliseconds>
@@ -1705,6 +1712,8 @@ can edit in same subtitle file (collaboration)</Information>
     <RemoveBlankLinesWhenOpening>Remove blank lines when opening a subtitle</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Show line breaks in list view as</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Double-clicking line in main window list view will</MainListViewDoubleClickAction>
+    <MainListViewColumns>List view columns</MainListViewColumns>
+    <MainListViewColumnsInfo>Choose visible list view columns</MainListViewColumnsInfo>
     <MainListViewNothing>Nothing</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Go to video position and pause</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Go to video position and play</MainListViewVideoGoToPositionAndPlay>
@@ -1746,8 +1755,11 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformAppearance>Waveform appearance</WaveformAppearance>
     <WaveformGridColor>Grid color</WaveformGridColor>
     <WaveformShowGridLines>Show grid lines</WaveformShowGridLines>
+    <WaveformShowCps>Show chars/sec</WaveformShowCps>
+    <WaveformShowWpm>Show words/min</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Reverse mouse wheel scroll direction</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Allow overlap (when moving/resizing)</WaveformAllowOverlap>
+    <WaveformSetVideoPosMoveStartEnd>Set video position when moving start/end</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Set focus on mouse enter</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Also set list view focus on mouse enter in list view</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Border marker hit must be within</WaveformBorderHitMs1>
@@ -1838,6 +1850,7 @@ can edit in same subtitle file (collaboration)</Information>
     <GoToPrevious>Go to previous line</GoToPrevious>
     <GoToCurrentSubtitleStart>Go to current line start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Go to current line end</GoToCurrentSubtitleEnd>
+    <GoToPreviousSubtitleAndFocusVideo>Go to previous line and set video position</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Go to next line and set video position</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
     <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
@@ -2301,6 +2314,8 @@ Keep changes?</KeepChangesMessage>
     <RemoveSceneChange>Remove scene change</RemoveSceneChange>
     <GuessTimeCodes>Guess time codes...</GuessTimeCodes>
     <SeekSilence>Seek silence...</SeekSilence>
+    <CharsSecX>CPS: {0:0.00}</CharsSecX>
+    <WordsMinX>WPM: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Guess time codes</Title>
