@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _video5000MsLeft = Keys.None;
         private Keys _video5000MsRight = Keys.None;
         private Keys _videoPlayFirstSelected = Keys.None;
-        private Keys _mainVideoFullscreen = Keys.None;        
+        private Keys _mainVideoFullscreen = Keys.None;
         private Keys _mainGoToPrevoiusSubtitleAndFocusVideo = Keys.None;
         private Keys _mainGoToNextSubtitleAndFocusVideo = Keys.None;
         private Keys _mainAdjustExtendCurrentSubtitle = Keys.None;
@@ -684,7 +684,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SubtitleListview1.SelectIndexAndEnsureVisible(index);
                 mediaPlayer.CurrentPosition = e.Seconds;
-                ButtonSetStartAndOffsetRestClick(null, null);
+                SetStartAndOffsetTheRest(e.Seconds);
             }
             audioVisualizer.Invalidate();
         }
@@ -3477,7 +3477,7 @@ namespace Nikse.SubtitleEdit.Forms
                         file.Write(allText);
                     }
                 }
-                else if (currentEncoding == Encoding.UTF8 && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
+                else if (Equals(currentEncoding, Encoding.UTF8) && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
                 {
                     var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
                     using (var file = new StreamWriter(_fileName, false, outputEnc)) // open file with encoding
@@ -3492,11 +3492,22 @@ namespace Nikse.SubtitleEdit.Forms
                         MessageBox.Show(string.Format(_language.UnableToSaveSubtitleX, _fileName), String.Empty, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         return DialogResult.Cancel;
                     }
-
-                    using (var fs = new FileStream(_fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
-                    using (var sw = new StreamWriter(fs, currentEncoding))
+                    if (Equals(currentEncoding, Encoding.UTF8) && !Configuration.Settings.General.WriteUtf8Bom)
                     {
-                        sw.Write(allText);
+                        var outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                        using (var file = new StreamWriter(_fileName, false, outputEnc)) // open file with encoding
+                        {
+                            file.Write(allText);
+                        }
+                    }
+                    else
+                    {
+                        // create file - includes BOM for Unicode formats
+                        using (var fs = new FileStream(_fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
+                        using (var sw = new StreamWriter(fs, currentEncoding))
+                        {
+                            sw.Write(allText);
+                        }
                     }
                 }
                 Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName, Configuration.Settings.General.CurrentVideoOffsetInMs);
@@ -8867,32 +8878,45 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
-                if (colorDialog1.ShowDialog(this) == DialogResult.OK)
+
+                string color;
+                if (GetCurrentSubtitleFormat().GetType() == typeof(Ebu))
                 {
-                    string color = Utilities.ColorToHex(colorDialog1.Color);
-
-                    MakeHistoryForUndo(_language.BeforeSettingColor);
-
-                    foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                    using (var form = new EbuColorPicker())
                     {
-                        var p = _subtitle.GetParagraphOrDefault(item.Index);
-                        if (p != null)
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                            return;
+                        color = form.Color;
+                    }
+                }
+                else
+                {
+                    if (colorDialog1.ShowDialog(this) != DialogResult.OK)
+                        return;
+                    color = Utilities.ColorToHex(colorDialog1.Color);
+                }
+
+                MakeHistoryForUndo(_language.BeforeSettingColor);
+                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                {
+                    var p = _subtitle.GetParagraphOrDefault(item.Index);
+                    if (p != null)
+                    {
+                        SetFontColor(p, color);
+                        SubtitleListview1.SetText(item.Index, p.Text);
+                        if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
                         {
-                            SetFontColor(p, color);
-                            SubtitleListview1.SetText(item.Index, p.Text);
-                            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && SubtitleListview1.IsAlternateTextColumnVisible)
+                            var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
+                            if (original != null)
                             {
-                                var original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
-                                if (original != null)
-                                {
-                                    SetFontColor(original, color);
-                                    SubtitleListview1.SetAlternateText(item.Index, original.Text);
-                                }
+                                SetFontColor(original, color);
+                                SubtitleListview1.SetAlternateText(item.Index, original.Text);
                             }
                         }
                     }
-                    RefreshSelectedParagraph();
                 }
+                RefreshSelectedParagraph();
+
             }
         }
 
@@ -11912,19 +11936,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MoveVideoSeconds(double seconds)
         {
+            var oldPosition = mediaPlayer.CurrentPosition;
+            var newPosition = oldPosition + seconds;
             if (mediaPlayer.IsPaused && Configuration.Settings.General.MoveVideo100Or500MsPlaySmallSample)
             {
-                double p = mediaPlayer.CurrentPosition + seconds;
-                mediaPlayer.CurrentPosition = p;
+                mediaPlayer.CurrentPosition = newPosition;
                 mediaPlayer.Play();
                 System.Threading.Thread.Sleep(99);
                 mediaPlayer.Stop();
-                mediaPlayer.CurrentPosition = p;
             }
-            else
-            {
-                mediaPlayer.CurrentPosition += seconds;
-            }
+            mediaPlayer.CurrentPosition = newPosition;
         }
 
         private void RunCustomSearch(string url)
@@ -13195,6 +13216,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemTranslationMode_Click(object sender, EventArgs e)
         {
+            if (_subtitle != null)
+                return;
+
             if (SubtitleListview1.IsAlternateTextColumnVisible)
             {
                 SubtitleListview1.HideColumn(SubtitleListView.SubtitleColumn.TextAlternate);
@@ -14731,6 +14755,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonSetStartAndOffsetRestClick(object sender, EventArgs e)
         {
+            SetStartAndOffsetTheRest(mediaPlayer.CurrentPosition);
+        }
+
+        private void SetStartAndOffsetTheRest(double videoPosition)
+        {
             if (SubtitleListview1.SelectedItems.Count == 1)
             {
                 bool oldSync = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
@@ -14738,9 +14767,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
                 int index = SubtitleListview1.SelectedItems[0].Index;
-                double videoPosition = mediaPlayer.CurrentPosition;
                 if (!mediaPlayer.IsPaused)
-                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
+                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay/TimeCode.BaseUnit;
                 var tc = TimeCode.FromSeconds(videoPosition);
                 timeUpDownStartTime.TimeCode = tc;
 
@@ -16268,48 +16296,59 @@ namespace Nikse.SubtitleEdit.Forms
         private void ColorToolStripMenuItem1Click(object sender, EventArgs e)
         {
             var tb = GetFocusedTextBox();
-
-            //color
             string text = tb.SelectedText;
             int selectionStart = tb.SelectionStart;
 
-            if (colorDialog1.ShowDialog(this) == DialogResult.OK)
+            string color;
+            if (GetCurrentSubtitleFormat().GetType() == typeof(Ebu))
             {
-                string color = Utilities.ColorToHex(colorDialog1.Color);
-                bool done = false;
-                string s = text;
-                if (s.StartsWith("<font "))
+                using (var form = new EbuColorPicker())
                 {
-                    int end = s.IndexOf('>');
-                    if (end > 0)
+                    if (form.ShowDialog(this) != DialogResult.OK)
+                        return;
+                    color = form.Color;
+                }
+            }
+            else
+            {
+                if (colorDialog1.ShowDialog(this) != DialogResult.OK)
+                    return;
+                color = Utilities.ColorToHex(colorDialog1.Color);
+            }
+
+            bool done = false;
+            string s = text;
+            if (s.StartsWith("<font "))
+            {
+                int end = s.IndexOf('>');
+                if (end > 0)
+                {
+                    string f = s.Substring(0, end);
+                    if (f.Contains(" face=") && !f.Contains(" color="))
                     {
-                        string f = s.Substring(0, end);
-                        if (f.Contains(" face=") && !f.Contains(" color="))
-                        {
-                            var start = s.IndexOf(" face=", StringComparison.Ordinal);
-                            s = s.Insert(start, string.Format(" color=\"{0}\"", color));
-                            text = s;
-                            done = true;
-                        }
-                        else if (f.Contains(" color="))
-                        {
-                            int colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
-                            if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
-                                end = s.IndexOf('"', colorStart + " color=".Length + 1);
-                            s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
-                            text = s;
-                            done = true;
-                        }
+                        var start = s.IndexOf(" face=", StringComparison.Ordinal);
+                        s = s.Insert(start, string.Format(" color=\"{0}\"", color));
+                        text = s;
+                        done = true;
+                    }
+                    else if (f.Contains(" color="))
+                    {
+                        int colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
+                        if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+                            end = s.IndexOf('"', colorStart + " color=".Length + 1);
+                        s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
+                        text = s;
+                        done = true;
                     }
                 }
-
-                if (!done)
-                    text = string.Format("<font color=\"{0}\">{1}</font>", color, text);
-
-                tb.SelectedText = text;
-                tb.SelectionStart = selectionStart;
-                tb.SelectionLength = text.Length;
             }
+
+            if (!done)
+                text = string.Format("<font color=\"{0}\">{1}</font>", color, text);
+
+            tb.SelectedText = text;
+            tb.SelectionStart = selectionStart;
+            tb.SelectionLength = text.Length;
         }
 
         private void FontNameToolStripMenuItemClick(object sender, EventArgs e)

@@ -371,6 +371,10 @@ Note: Do check free disk space.</WaveFileMalformed>
     <Import>Import...</Import>
     <TextAndTimingInformation>Text and timing information</TextAndTimingInformation>
     <JustificationCode>Justification code</JustificationCode>
+    <VerticalPosition>Vertical position</VerticalPosition>
+    <MarginTop>Margin top (for top aligned subtitles)</MarginTop>
+    <MarginBottom>Margin bottom (for bottom aligned subtitles)</MarginBottom>
+    <NewLineRows>Number of rows added by a new line</NewLineRows>
     <Teletext>Teletext</Teletext>
     <UseBox>Use box around text</UseBox>
     <DoubleHeight>Use double height for text</DoubleHeight>

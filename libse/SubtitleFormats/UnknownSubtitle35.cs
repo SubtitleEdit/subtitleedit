@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             }
                             else
                             {
-                                p = new Paragraph(DecodeTimeCodeFramesTwoParts(parts1), DecodeTimeCodeFramesTwoParts(parts2), string.Empty);
+                                p = new Paragraph(DecodeTimeCodeFramesTwoParts(new[] { parts1[0], parts1[1] }), DecodeTimeCodeFramesTwoParts(new[] { parts2[0], parts2[1] }), string.Empty);
                             }
                         }
                     }

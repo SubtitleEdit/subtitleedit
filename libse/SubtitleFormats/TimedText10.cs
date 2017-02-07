@@ -457,6 +457,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                     region = "topCenter";
             }
             text = Utilities.RemoveSsaTags(text);
+            text = HtmlUtil.FixInvalidItalicTags(text);
 
             // Trying to parse and convert pararagraph content
             try

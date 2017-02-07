@@ -2078,6 +2078,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     if (fontStack.Count > 0)
                     {
+                        font.Dispose();
                         font = fontStack.Pop();
                     }
                     i += 6;
@@ -2678,6 +2679,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 }
                                 if (fontStack.Count > 0)
                                 {
+                                    font.Dispose();
                                     font = fontStack.Pop();
                                 }
                                 i += 6;
@@ -3368,7 +3370,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             comboBoxLeftRightMargin.Items.Clear();
             for (int i = 0; i < 1000; i++)
                 comboBoxLeftRightMargin.Items.Add(i);
-            if (Configuration.Settings.Tools.ExportLeftRightMargin >= 0 && Configuration.Settings.Tools.ExportLeftRightMargin < comboBoxBottomMargin.Items.Count)
+            if (Configuration.Settings.Tools.ExportLeftRightMargin >= 0 && Configuration.Settings.Tools.ExportLeftRightMargin < comboBoxLeftRightMargin.Items.Count)
                 comboBoxLeftRightMargin.SelectedIndex = Configuration.Settings.Tools.ExportLeftRightMargin;
 
             if (exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME" && Configuration.Settings.Tools.ExportBluRayBottomMargin >= 0 && Configuration.Settings.Tools.ExportBluRayBottomMargin < comboBoxBottomMargin.Items.Count)
