@@ -1,5 +1,38 @@
 ﻿Subtitle Edit Changelog
 
+
+3.5.2 (xth February 2016) BETA
+* NEW:
+   * Added optional list view columns "chars/sec" + "words/min"
+   * New setting for waveform: Set video position when moving start/end
+   * Added new json subtitle format - thx Zhiyi
+   * Added shortcut "Go to previous line and set video position" - thx Mia
+* IMPROVED:
+   * Updated Russian translation - thx Elheym
+   * Updated Portuguese translation - thx moob
+   * Updated Polish translation - thx admas
+   * Updated Basque translation - thx Xabier
+   * Minor improvements for format "Structured titles" - thx Yamato-ua
+   * List view columns arrangable and non-clickable - thx Ingo
+   * EBU STL: New settings regarding vertical position
+   * EBU STL: New color picker dialog
+* FIXED:
+   * Fixed play current/selection not stopping - thx rhazor
+   * Fixed fast forward waveform scrolling with mouse wheel
+   * Fixed bug in spell check "change word" regarding "¿?" - thx locotus
+   * Fix in "Fix common errors" regarding de-selected fixes - thx Tronar  
+   * Fix for MPC-HC 32-bit - thx ZoneX
+   * Fixed issue with importing "Unknown 53" format - thx darnn
+   * Fixed italic rendering issue in format DCinema SMPTE - thx Miga
+   * Fixed bug in image export - thx marb99
+   * Word spell check does not change format - thx Yamato-ua
+   * Better reading of top alignment in dfxp - thx Plazik
+   * "Fix common errors" - only delete/merge line still enables "OK" button
+   * "Batch convert" - don't clear ASS/SSA style after format change - thx Thunderbolt8
+   * Fix for multi-line italic in format TTML 1.0 - thx nathaniel1977
+   * EBU STL writing now works with multiple colors in samee line - thx George
+
+
 3.5.1 (13th December 2016)
 * NEW:
    * "mpv" media player now works on Linux  - thx var1ap 

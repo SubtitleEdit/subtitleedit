@@ -61,7 +61,7 @@ $TapeOffset         =   FALSE
 \\Colour 6 = Cyan
 \\Colour 7 = White
 ";
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {

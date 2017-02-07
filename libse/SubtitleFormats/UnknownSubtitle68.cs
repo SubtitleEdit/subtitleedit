@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             TimeCode end = new TimeCode();
                             p = MakeTextParagraph(text, p, start, end);
                             subtitle.Paragraphs.Add(p);
-                            text = new StringBuilder();
+                            text.Clear();
                         }
                         catch
                         {
@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             TimeCode end = DecodeTimeCodeFrames(timeParts[1].Substring(0, 11), splitChars);
                             p = MakeTextParagraph(text, p, start, end);
                             subtitle.Paragraphs.Add(p);
-                            text = new StringBuilder();
+                            text.Clear();
                         }
                         catch
                         {
@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 }
                 else
                 {
-                    text = new StringBuilder();
+                    text.Clear();
                 }
             }
             subtitle.Header = header.ToString();

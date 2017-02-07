@@ -10,9 +10,9 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class Statistics : PositionAndSizeForm
     {
-        private Subtitle _subtitle;
-        private SubtitleFormat _format;
-        private LanguageStructure.Statistics _l;
+        private readonly Subtitle _subtitle;
+        private readonly SubtitleFormat _format;
+        private readonly LanguageStructure.Statistics _l;
         private string _mostUsedLines;
         private string _general;
         private string _mostUsedWords;
@@ -36,10 +36,7 @@ https://github.com/SubtitleEdit/subtitleedit
             _format = format;
 
             _l = Configuration.Settings.Language.Statistics;
-            if (string.IsNullOrEmpty(fileName))
-                Text = _l.Title;
-            else
-                Text = string.Format(_l.TitleWithFileName, fileName);
+            Text = string.IsNullOrEmpty(fileName) ? _l.Title : string.Format(_l.TitleWithFileName, fileName);
             groupBoxGeneral.Text = _l.GeneralStatistics;
             groupBoxMostUsed.Text = _l.MostUsed;
             labelMostUsedWords.Text = _l.MostUsedWords;
@@ -172,7 +169,7 @@ https://github.com/SubtitleEdit/subtitleedit
                 var endIdx = text.IndexOf('>', idx + 5);
                 if (endIdx < idx)
                 {
-                    error = !error;
+                    error = true;
                     break;
                 }
                 endIdx++;
@@ -316,12 +313,14 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private void buttonExport_Click(object sender, EventArgs e)
         {
-            var saveFile = new SaveFileDialog { Filter = "Text files (*.txt)|*.txt|NFO files (*.nfo)|*.nfo" };
-            if (saveFile.ShowDialog() == DialogResult.OK)
+            using (var saveFile = new SaveFileDialog { Filter = Configuration.Settings.Language.Main.TextFiles + " (*.txt)|*.txt|NFO files (*.nfo)|*.nfo" })
             {
-                string fileName = saveFile.FileName;
-                var statistic = string.Format(WriteFormat, _general, _mostUsedWords, _mostUsedLines);
-                System.IO.File.WriteAllText(fileName, statistic);
+                if (saveFile.ShowDialog() == DialogResult.OK)
+                {
+                    string fileName = saveFile.FileName;
+                    var statistic = string.Format(WriteFormat, _general, _mostUsedWords, _mostUsedLines);
+                    System.IO.File.WriteAllText(fileName, statistic);
+                }
             }
         }
 

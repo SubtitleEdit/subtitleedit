@@ -56,6 +56,14 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxJustificationCode.Items.Add(language.TextCenteredText);
             comboBoxJustificationCode.Items.Add(language.TextRightJustifiedText);
             groupBoxTeletext.Text = language.Teletext;
+            groupBoxVerticalPosition.Text = language.VerticalPosition;
+            labelMarginTop.Text = language.MarginTop;
+            labelMarginBottom.Text = language.MarginBottom;
+            labelNewLineRows.Text = language.NewLineRows;
+            int tempW = labelMarginTop.Left + 9 +  Math.Max(Math.Max(labelMarginTop.Width, labelMarginBottom.Width), labelNewLineRows.Width);
+            numericUpDownMarginTop.Left = tempW;
+            numericUpDownMarginBottom.Left = tempW;
+            numericUpDownNewLineRows.Left = tempW;
             checkBoxTeletextBox.Text = language.UseBox;
             checkBoxTeletextDoubleHeight.Text = language.DoubleHeight;
 
@@ -93,6 +101,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             comboBoxJustificationCode.SelectedIndex = justificationCode;
+            numericUpDownMarginTop.Value = Configuration.Settings.SubtitleSettings.EbuStlMarginTop;
+            numericUpDownMarginBottom.Value = Configuration.Settings.SubtitleSettings.EbuStlMarginBottom;
+            numericUpDownNewLineRows.Value = Configuration.Settings.SubtitleSettings.EbuStlNewLineRows;
             checkBoxTeletextBox.Checked = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox;
             checkBoxTeletextDoubleHeight.Checked = Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight;
 
@@ -286,10 +297,13 @@ namespace Nikse.SubtitleEdit.Forms
             _header.TotalNumberOfDisks = numericUpDownTotalNumberOfDiscs.Value.ToString(CultureInfo.InvariantCulture);
 
             JustificationCode = (byte)comboBoxJustificationCode.SelectedIndex;
+            Configuration.Settings.SubtitleSettings.EbuStlMarginTop = (int)Math.Round(numericUpDownMarginTop.Value);
+            Configuration.Settings.SubtitleSettings.EbuStlMarginBottom = (int)Math.Round(numericUpDownMarginBottom.Value);
+            Configuration.Settings.SubtitleSettings.EbuStlNewLineRows = (int)Math.Round(numericUpDownNewLineRows.Value);
             Configuration.Settings.SubtitleSettings.EbuStlTeletextUseBox = checkBoxTeletextBox.Checked;
             Configuration.Settings.SubtitleSettings.EbuStlTeletextUseDoubleHeight = checkBoxTeletextDoubleHeight.Checked;
 
-            if (_subtitle != null && _subtitle.Header != null && (_subtitle.Header.Contains("STL2") || _subtitle.Header.Contains("STL3")))
+            if (_subtitle != null)
             {
                 _subtitle.Header = _header.ToString();
             }

@@ -24,6 +24,8 @@
     <StartTime>Czas rozpoczęcia</StartTime>
     <EndTime>Czas zakończenia</EndTime>
     <Duration>Czas trwania</Duration>
+    <CharsPerSec>Znaków/sek.</CharsPerSec>
+    <WordsPerMin>Słów/min.</WordsPerMin>
     <NumberSymbol>Nr</NumberSymbol>
     <Number>Numer</Number>
     <Text>Tekst</Text>
@@ -1681,11 +1683,12 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <AutoDetectAnsiEncoding>Automatycznie wykryj kodowanie ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Maksymalna długość pojedynczej linii</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Maksymalnie znaków/sek.</MaximumCharactersPerSecond>
+    <MaximumWordssPerMinute>Maksymalnie słów/min.</MaximumWordssPerMinute>
     <AutoWrapWhileTyping>Automatycznie zawijaj wiersze podczas pisania</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Minimalny czas trwania, w ms</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Maksymalny czas trwania, w ms</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. odstęp między napisami, w ms</MinimumGapMilliseconds>
-    <MaximumLines>Max. liczba linii</MaximumLines>
+    <MaximumLines>Maksymalna liczba linii</MaximumLines>
     <SubtitleFont>Czcionka napisów</SubtitleFont>
     <SubtitleFontSize>Rozmiar czcionki napisów</SubtitleFontSize>
     <SubtitleBold>Pogrubienie</SubtitleBold>
@@ -1701,6 +1704,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <RemoveBlankLinesWhenOpening>Podczas otwierania napisów usuwaj puste linie</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Pokaż łamanie linii w Widoku listy jako</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Działanie po dwukrotnym kliknięciu na linii w głównym oknie</MainListViewDoubleClickAction>
+    <MainListViewColumns>Kolumny w "Widoku listy"</MainListViewColumns>
+    <MainListViewColumnsInfo>Wybierz widoczne kolumny w "Widoku listy" </MainListViewColumnsInfo>
     <MainListViewNothing>Nic nie rób</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>Przejdź do pozycji wideo i wstrzymaj</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Przejdź do pozycji wideo i odtwarzaj</MainListViewVideoGoToPositionAndPlay>
@@ -1742,8 +1747,11 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <WaveformAppearance>Wygląd wykresu falowego</WaveformAppearance>
     <WaveformGridColor>Kolor siatki</WaveformGridColor>
     <WaveformShowGridLines>Pokaż linie siatki</WaveformShowGridLines>
+    <WaveformShowCps>Pokaż ilość znaków/sek.</WaveformShowCps>
+    <WaveformShowWpm>Pokaż ilość słów/min.</WaveformShowWpm>
     <ReverseMouseWheelScrollDirection>Odwróć kierunek obrotu rolki myszki</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Zezwalaj na nakładanie (podczas przenoszenia/zmiany rozmiaru)</WaveformAllowOverlap>
+    <WaveformSetVideoPosMoveStartEnd>Ustaw pozycję wideo, gdy przesunięto start/koniec</WaveformSetVideoPosMoveStartEnd>
     <WaveformFocusMouseEnter>Koncentruj uwagę na wejście myszki</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Koncentruj także uwagę na "Widoku listy" po wejściu myszki na jej obszar</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Oznakowanie granic musi być w</WaveformBorderHitMs1>
@@ -1804,8 +1812,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <MusicSymbol>Symbole muzyczne</MusicSymbol>
     <MusicSymbolsToReplace>Symbole muzyczne do zastąpienia (oddzielone spacją)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw częste błędy OCR - także z użyciem sztywnych reguł</FixCommonOcrErrorsUseHardcodedRules>
-    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania
-(z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania (możliwe przes. czasu rozpocz.)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <FixCommonErrorsSkipStepOne>Pomiń pierwszy krok (wybór zasad poprawy)</FixCommonErrorsSkipStepOne>
     <Shortcuts>Skróty klawiszowe</Shortcuts>
     <Shortcut>Skrót</Shortcut>
@@ -1835,6 +1842,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <GoToPrevious>Przejdź do poprzedniej linii</GoToPrevious>
     <GoToCurrentSubtitleStart>Przejdź do początku aktualnej linii</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Przejdź do końca aktualnej linii</GoToCurrentSubtitleEnd>
+    <GoToPreviousSubtitleAndFocusVideo>Przejdź do poprzedniej linii i ustaw pozycję wideo</GoToPreviousSubtitleAndFocusVideo>
     <GoToNextSubtitleAndFocusVideo>Przejdź do następnej linii i ustaw pozycję wideo</GoToNextSubtitleAndFocusVideo>
     <ToggleFocus>Przełącz fokus między "Widokiem listy" i polem tekstowym napisów</ToggleFocus>
     <ToggleDialogDashes>Przełącz myślniki dialogów</ToggleDialogDashes>
@@ -2290,6 +2298,8 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <RemoveSceneChange>Usuń zmianę sceny</RemoveSceneChange>
     <GuessTimeCodes>Odgadnij kody czasowe...</GuessTimeCodes>
     <SeekSilence>Szukaj ciszy...</SeekSilence>
+    <CharsSecX>ZNS: {0:0.00}</CharsSecX>
+    <WordsMinX>SNM: {0:0.00}</WordsMinX>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Odgadnij kody czasowe</Title>

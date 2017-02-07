@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                             subtitle.Paragraphs.Add(p);
                         }
                         string[] arr = s.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
-                        text = new StringBuilder();
+                        text.Clear();
                         p = new Paragraph(DecodeTimeCode(arr[0]), DecodeTimeCode(arr[1]), "");
                     }
                     catch
