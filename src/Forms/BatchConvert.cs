@@ -887,6 +887,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
+                    // ignored
                 }
                 System.Threading.Thread.Sleep(100);
             }
@@ -1117,8 +1118,6 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonStyles.Visible = false;
                 comboBoxEncoding.Enabled = true;
             }
-            _assStyle = null;
-            _ssaStyle = null;
         }
 
         private void ButtonStylesClick(object sender, EventArgs e)
@@ -1241,10 +1240,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             finally
             {
-                if (form != null)
-                {
-                    form.Dispose();
-                }
+                form?.Dispose();
             }
         }
 
@@ -1489,6 +1485,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
+                    // ignored
                 }
             }
             if (checkBoxScanFolderRecursive.Checked)

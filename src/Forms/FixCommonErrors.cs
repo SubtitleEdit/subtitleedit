@@ -87,13 +87,14 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _onlyListFixes = true;
         private bool _batchMode;
         private string _autoDetectGoogleLanguage;
-        private List<string> _namesEtcList;
+        private HashSet<string> _namesEtcList;
         private HashSet<string> _abbreviationList;
         private readonly StringBuilder _newLog = new StringBuilder();
         private readonly StringBuilder _appliedLog = new StringBuilder();
         private int _numberOfImportantLogMessages;
         private List<int> _deleteIndices = new List<int>();
         private HashSet<string> _allowedFixes;
+        private bool _linesDeletedOrMerged;
 
         public SubtitleFormat Format
         {
@@ -522,19 +523,22 @@ namespace Nikse.SubtitleEdit.Forms
         public bool IsName(string candidate)
         {
             MakeSureNamesListIsLoaded();
-            return _namesEtcList.Contains(candidate);
+            return _namesEtcList.Contains(candidate); // O(1)
         }
 
         private void MakeSureNamesListIsLoaded()
         {
             if (_namesEtcList == null)
             {
-                _namesEtcList = new List<string>();
-                string languageTwoLetterCode = LanguageAutoDetect.AutoDetectGoogleLanguage(Subtitle);
-
+                string languageTwoLetterCode = LanguageAutoDetect.AutoDetectGoogleLanguage(Subtitle);                
                 // Will contains both one word names and multi names
                 var namesList = new NamesList(Configuration.DictionariesDirectory, languageTwoLetterCode, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
-                _namesEtcList = namesList.GetAllNames();
+                _namesEtcList = namesList.GetNames();
+                // Multi word names.
+                foreach (var name in namesList.GetMultiNames())
+                {
+                    _namesEtcList.Add(name);
+                }
             }
         }
 
@@ -615,7 +619,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonBack.Enabled = true;
             buttonNextFinish.Text = _languageGeneral.Ok;
-            buttonNextFinish.Enabled = _hasFixesBeenMade;
+            buttonNextFinish.Enabled = _hasFixesBeenMade || _linesDeletedOrMerged;
             groupBoxStep1.Visible = false;
             groupBox2.Visible = true;
             listViewFixes.Sort();
@@ -1331,8 +1335,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_originalSubtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
             {
+                _linesDeletedOrMerged = true;
                 _subtitleListViewIndex = -1;
-
                 var indexes = new List<int>();
                 foreach (ListViewItem item in subtitleListView1.SelectedItems)
                     indexes.Add(item.Index);
@@ -1385,6 +1389,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_originalSubtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
             {
+                _linesDeletedOrMerged = true;
                 int startNumber = _originalSubtitle.Paragraphs[0].Number;
                 int firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
 

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            Nikse.SubtitleEdit.Core.TimeCode timeCode2 = new Nikse.SubtitleEdit.Core.TimeCode();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -82,6 +83,13 @@
             this.textBoxOriginalProgramTitle = new System.Windows.Forms.TextBox();
             this.labelOriginalProgramTitle = new System.Windows.Forms.Label();
             this.tabPageTextAndTiming = new System.Windows.Forms.TabPage();
+            this.groupBoxVerticalPosition = new System.Windows.Forms.GroupBox();
+            this.numericUpDownNewLineRows = new System.Windows.Forms.NumericUpDown();
+            this.labelNewLineRows = new System.Windows.Forms.Label();
+            this.numericUpDownMarginBottom = new System.Windows.Forms.NumericUpDown();
+            this.labelMarginBottom = new System.Windows.Forms.Label();
+            this.numericUpDownMarginTop = new System.Windows.Forms.NumericUpDown();
+            this.labelMarginTop = new System.Windows.Forms.Label();
             this.groupBoxTeletext = new System.Windows.Forms.GroupBox();
             this.checkBoxTeletextDoubleHeight = new System.Windows.Forms.CheckBox();
             this.checkBoxTeletextBox = new System.Windows.Forms.CheckBox();
@@ -99,6 +107,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalNumberOfDiscs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRevisionNumber)).BeginInit();
             this.tabPageTextAndTiming.SuspendLayout();
+            this.groupBoxVerticalPosition.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNewLineRows)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginBottom)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginTop)).BeginInit();
             this.groupBoxTeletext.SuspendLayout();
             this.tabPageErrors.SuspendLayout();
             this.SuspendLayout();
@@ -253,6 +265,15 @@
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(96, 24);
             this.timeUpDownStartTime.TabIndex = 14;
+            timeCode2.Hours = 99;
+            timeCode2.Milliseconds = 999;
+            timeCode2.Minutes = 59;
+            timeCode2.Seconds = 59;
+            timeCode2.TimeSpan = System.TimeSpan.Parse("4.03:59:59.9990000");
+            timeCode2.TotalMilliseconds = 359999999D;
+            timeCode2.TotalSeconds = 359999.999D;
+            this.timeUpDownStartTime.TimeCode = timeCode2;
+            this.timeUpDownStartTime.UseVideoOffset = false;
             // 
             // comboBoxDisplayStandardCode
             // 
@@ -646,6 +667,7 @@
             // 
             // tabPageTextAndTiming
             // 
+            this.tabPageTextAndTiming.Controls.Add(this.groupBoxVerticalPosition);
             this.tabPageTextAndTiming.Controls.Add(this.groupBoxTeletext);
             this.tabPageTextAndTiming.Controls.Add(this.comboBoxJustificationCode);
             this.tabPageTextAndTiming.Controls.Add(this.labelJustificationCode);
@@ -656,6 +678,92 @@
             this.tabPageTextAndTiming.Text = "Text and timing information";
             this.tabPageTextAndTiming.UseVisualStyleBackColor = true;
             // 
+            // groupBoxVerticalPosition
+            // 
+            this.groupBoxVerticalPosition.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxVerticalPosition.Controls.Add(this.numericUpDownNewLineRows);
+            this.groupBoxVerticalPosition.Controls.Add(this.labelNewLineRows);
+            this.groupBoxVerticalPosition.Controls.Add(this.labelMarginTop);
+            this.groupBoxVerticalPosition.Controls.Add(this.numericUpDownMarginBottom);
+            this.groupBoxVerticalPosition.Controls.Add(this.numericUpDownMarginTop);
+            this.groupBoxVerticalPosition.Controls.Add(this.labelMarginBottom);
+            this.groupBoxVerticalPosition.Location = new System.Drawing.Point(9, 49);
+            this.groupBoxVerticalPosition.Name = "groupBoxVerticalPosition";
+            this.groupBoxVerticalPosition.Size = new System.Drawing.Size(727, 201);
+            this.groupBoxVerticalPosition.TabIndex = 46;
+            this.groupBoxVerticalPosition.TabStop = false;
+            this.groupBoxVerticalPosition.Text = "Vertical position";
+            // 
+            // numericUpDownNewLineRows
+            // 
+            this.numericUpDownNewLineRows.Location = new System.Drawing.Point(256, 78);
+            this.numericUpDownNewLineRows.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownNewLineRows.Name = "numericUpDownNewLineRows";
+            this.numericUpDownNewLineRows.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownNewLineRows.TabIndex = 54;
+            this.numericUpDownNewLineRows.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
+            // labelNewLineRows
+            // 
+            this.labelNewLineRows.AutoSize = true;
+            this.labelNewLineRows.Location = new System.Drawing.Point(13, 80);
+            this.labelNewLineRows.Name = "labelNewLineRows";
+            this.labelNewLineRows.Size = new System.Drawing.Size(179, 13);
+            this.labelNewLineRows.TabIndex = 53;
+            this.labelNewLineRows.Text = "Number of rows added by a new line";
+            // 
+            // numericUpDownMarginBottom
+            // 
+            this.numericUpDownMarginBottom.Location = new System.Drawing.Point(256, 52);
+            this.numericUpDownMarginBottom.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownMarginBottom.Name = "numericUpDownMarginBottom";
+            this.numericUpDownMarginBottom.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownMarginBottom.TabIndex = 52;
+            // 
+            // labelMarginBottom
+            // 
+            this.labelMarginBottom.AutoSize = true;
+            this.labelMarginBottom.Location = new System.Drawing.Point(13, 54);
+            this.labelMarginBottom.Name = "labelMarginBottom";
+            this.labelMarginBottom.Size = new System.Drawing.Size(208, 13);
+            this.labelMarginBottom.TabIndex = 51;
+            this.labelMarginBottom.Text = "Margin bottom (for bottom aligned subtitles)";
+            // 
+            // numericUpDownMarginTop
+            // 
+            this.numericUpDownMarginTop.Location = new System.Drawing.Point(256, 26);
+            this.numericUpDownMarginTop.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownMarginTop.Name = "numericUpDownMarginTop";
+            this.numericUpDownMarginTop.Size = new System.Drawing.Size(56, 20);
+            this.numericUpDownMarginTop.TabIndex = 48;
+            // 
+            // labelMarginTop
+            // 
+            this.labelMarginTop.AutoSize = true;
+            this.labelMarginTop.Location = new System.Drawing.Point(13, 28);
+            this.labelMarginTop.Name = "labelMarginTop";
+            this.labelMarginTop.Size = new System.Drawing.Size(174, 13);
+            this.labelMarginTop.TabIndex = 49;
+            this.labelMarginTop.Text = "Margin top (for top aligned subtitles)";
+            // 
             // groupBoxTeletext
             // 
             this.groupBoxTeletext.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -663,9 +771,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxTeletext.Controls.Add(this.checkBoxTeletextDoubleHeight);
             this.groupBoxTeletext.Controls.Add(this.checkBoxTeletextBox);
-            this.groupBoxTeletext.Location = new System.Drawing.Point(9, 54);
+            this.groupBoxTeletext.Location = new System.Drawing.Point(9, 256);
             this.groupBoxTeletext.Name = "groupBoxTeletext";
-            this.groupBoxTeletext.Size = new System.Drawing.Size(727, 392);
+            this.groupBoxTeletext.Size = new System.Drawing.Size(727, 190);
             this.groupBoxTeletext.TabIndex = 45;
             this.groupBoxTeletext.TabStop = false;
             this.groupBoxTeletext.Text = "Teletext";
@@ -772,6 +880,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRevisionNumber)).EndInit();
             this.tabPageTextAndTiming.ResumeLayout(false);
             this.tabPageTextAndTiming.PerformLayout();
+            this.groupBoxVerticalPosition.ResumeLayout(false);
+            this.groupBoxVerticalPosition.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNewLineRows)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginBottom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginTop)).EndInit();
             this.groupBoxTeletext.ResumeLayout(false);
             this.groupBoxTeletext.PerformLayout();
             this.tabPageErrors.ResumeLayout(false);
@@ -843,5 +956,12 @@
         private System.Windows.Forms.GroupBox groupBoxTeletext;
         private System.Windows.Forms.CheckBox checkBoxTeletextDoubleHeight;
         private System.Windows.Forms.CheckBox checkBoxTeletextBox;
+        private System.Windows.Forms.GroupBox groupBoxVerticalPosition;
+        private System.Windows.Forms.Label labelMarginBottom;
+        private System.Windows.Forms.NumericUpDown numericUpDownMarginTop;
+        private System.Windows.Forms.Label labelMarginTop;
+        private System.Windows.Forms.NumericUpDown numericUpDownNewLineRows;
+        private System.Windows.Forms.Label labelNewLineRows;
+        private System.Windows.Forms.NumericUpDown numericUpDownMarginBottom;
     }
 }

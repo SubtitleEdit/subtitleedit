@@ -6012,9 +6012,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (!_ocrFixEngine.IsDictionaryLoaded || !_ocrFixEngine.SpellCheckDictionaryName.StartsWith("en_"))
                 return false;
 
-            if (line.Contains('[') && line.Contains(']'))
-                line = line.Replace("[", string.Empty).Replace("]", string.Empty);
-
+            line = line.Replace("[", string.Empty);
+            line = line.Replace("]", string.Empty);
             line = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic);
 
             int count = 0;
@@ -6024,7 +6023,10 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string s in arr)
             {
                 if (s.Length == 1 && !@"♪♫-:'”1234567890&aAI""".Contains(s))
+                {
                     count++;
+                    break;
+                }
             }
             return count > 0;
         }
@@ -8445,32 +8447,25 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void vobSubToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var exportBdnXmlPng = new ExportPngXml())
-            {
-                _fromMenuItem = true;
-                exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "VOBSUB", FileName, this, _importLanguageString);
-                exportBdnXmlPng.ShowDialog(this);
-                _fromMenuItem = false;
-            }
+            ExportToPngXml("VOBSUB");
         }
 
         private void bluraySupToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var exportBdnXmlPng = new ExportPngXml())
-            {
-                _fromMenuItem = true;
-                exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BLURAYSUP", FileName, this, _importLanguageString);
-                exportBdnXmlPng.ShowDialog(this);
-                _fromMenuItem = false;
-            }
+            ExportToPngXml("BLURAYSUP");
         }
 
         private void bDNXMLToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ExportToPngXml("BDNXML");
+        }
+
+        private void ExportToPngXml(string exportType)
+        {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
                 _fromMenuItem = true;
-                exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BDNXML", FileName, this, _importLanguageString);
+                exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), exportType, FileName, this, _importLanguageString);
                 exportBdnXmlPng.ShowDialog(this);
                 _fromMenuItem = false;
             }
