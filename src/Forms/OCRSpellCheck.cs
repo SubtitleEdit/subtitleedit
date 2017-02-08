@@ -225,15 +225,12 @@ namespace Nikse.SubtitleEdit.Forms
             string s = textBoxWord.Text.Trim();
             if (s.Length == 0 || s.Contains(' '))
             {
+                // TODO: Localize!
                 MessageBox.Show("Word should be one single word");
+                ActionResult = Action.SkipOnce;
                 return;
             }
-
-            Word = s;
-            if (Word.Length == 0)
-                ActionResult = Action.SkipOnce;
-            else
-                ActionResult = Action.AddToUserDictionary;
+            ActionResult = Action.AddToUserDictionary;
             DialogResult = DialogResult.OK;
         }
 
