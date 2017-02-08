@@ -149,7 +149,13 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 if (line.StartsWith("# SUBTITLE"))
                 {
                     if (p != null)
+                    {
+                        if (p.Text.StartsWith(ItalicPrefix, StringComparison.Ordinal))
+                        {
+                            p.Text = "<i>" + p.Text.Remove(0, ItalicPrefix.Length).TrimStart() + "</i>";
+                        }
                         subtitle.Paragraphs.Add(p);
+                    }
                     p = new Paragraph();
                 }
                 else if (p != null && line.StartsWith("# TIMEIN"))
@@ -197,14 +203,6 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
                 subtitle.Paragraphs.Add(p);
             subtitle.RemoveEmptyLines();
             subtitle.Renumber();
-
-            foreach (var paragraph in subtitle.Paragraphs)
-            {
-                if (paragraph.Text.StartsWith(ItalicPrefix))
-                {
-                    paragraph.Text = "<i>" + paragraph.Text.Remove(0, ItalicPrefix.Length).TrimStart() + "</i>";
-                }
-            }
         }
 
         private static bool GetTimeCode(TimeCode timeCode, string timeString)
