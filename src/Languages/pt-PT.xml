@@ -373,6 +373,10 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <Import>Importar...</Import>
     <TextAndTimingInformation>Informação de tempo e texto</TextAndTimingInformation>
     <JustificationCode>Código de justificação</JustificationCode>
+    <VerticalPosition>Posição vertical</VerticalPosition>
+    <MarginTop>Margem superior (para linhas alinhadas no topo)</MarginTop>
+    <MarginBottom>Margem inferior (para linhas alinhadas em baixo)</MarginBottom>
+    <NewLineRows>Número de novas linhas adicionadas</NewLineRows>
     <Teletext>Teletexto</Teletext>
     <UseBox>Usar caixa à volta do texto</UseBox>
     <DoubleHeight>Usar o dobro da altura para o texto</DoubleHeight>
@@ -538,7 +542,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <RemoveLineBreaksAll>Remover quebras de linha em textos curtos (todos excepto diálogos)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Corrigir 'i' maiúscula em palavras em minúsculo (erro de OCR)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Substituir apóstrofe dupla ('') por aspas (")</FixDoubleApostrophes>
-    <AddPeriods>Adicionar ponto final depois de linhas quando a seguinte começar com maiúscula</AddPeriods>
+    <AddPeriods>Adicionar ponto final quando a linha seguinte começar com maiúscula</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Iniciar parágrafo com maiúscula</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Iniciar com maiúscula depois de ponto final dentro do parágrafo</StartWithUppercaseLetterAfterPeriodInsideParagraph>
     <StartWithUppercaseLetterAfterColon>Iniciar com maiúscula depois de ":" ou ";"</StartWithUppercaseLetterAfterColon>
@@ -553,8 +557,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <FixSpanishInvertedQuestionAndExclamationMarks>Corrigir sinais invertidos (interrogação e exclamação) do espanhol</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Adicionar aspa em falta (")</AddMissingQuote>
     <AddMissingQuotes>Adicionar aspas em falta (")</AddMissingQuotes>
-    <FixHyphens>Corrigir (remover hífen) em linhas que começam com hífen (-)</FixHyphens>
-    <FixHyphensAdd>Corrigir (adicionar hífen) em linhas duplas só com um hífen (-)</FixHyphensAdd>
+    <FixHyphens>Remover hífen em linhas que começam com hífen (-)</FixHyphens>
+    <FixHyphensAdd>Adicionar hífen em linhas duplas só com um hífen (-)</FixHyphensAdd>
     <FixHyphen>Corrigir linhas que começam com hífen (-)</FixHyphen>
     <XHyphensFixed>Hífens removidos: {0}</XHyphensFixed>
     <AddMissingQuotesExample>"Como estás -&gt; "Como estás?"</AddMissingQuotesExample>
@@ -577,7 +581,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <XLineBreaksAdded>{0} quebras de linha adicionadas</XLineBreaksAdded>
     <BreakLongLine>Dividir linha longa</BreakLongLine>
     <FixLongDisplayTime>Corrigir duração longa</FixLongDisplayTime>
-    <FixInvalidItalicTag>Corrigir tag itálica inválida</FixInvalidItalicTag>
+    <FixInvalidItalicTag>Corrigir etiqueta itálica inválida</FixInvalidItalicTag>
     <FixShortDisplayTime>Corrigir duração curta</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Corrigir tempo sobreposto</FixOverlappingDisplayTime>
     <FixInvalidItalicTagsExample>&lt;i&gt;E eu com isso.&lt;i&gt; -&gt; &lt;i&gt;E eu com isso.&lt;/i&gt;</FixInvalidItalicTagsExample>
@@ -621,15 +625,15 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <XFixMissingOpenBracket>{0} [ omitidos na linha corrigidos</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} nota musical na linha corrigida</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
-    <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; João: Sim, meu!' -&gt; 'João: Sim, meu!'</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>'... e depois nós' -&gt; 'e depois nós'</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>'ruído] Cuidado!' -&gt; '[ruído] Cuidado!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª bons sonhos são' -&gt; '♫ bons sonhos são'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} mensagens de log importantes!</NumberOfImportantLogMessages>
     <FixedOkXY>Corrigidos e OK - '{0}': {1}</FixedOkXY>
     <FixOcrErrorExample>NÃo -&gt; Não</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
-    <FixDialogsOneLineExample>Olá João! - Olá Ida! -&gt; Olá João!&lt;br /&gt;- Olá Ida!</FixDialogsOneLineExample>
+    <FixDialogsOneLineExample>Olá João! - Olá Olga! -&gt; Olá João!&lt;br /&gt;- Olá Olga!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Precisa de dicionários?</Title>
