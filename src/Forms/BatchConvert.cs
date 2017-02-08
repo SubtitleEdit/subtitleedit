@@ -312,6 +312,38 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (format == null)
                     {
+                        var f = new PacUnicode();
+                        if (f.IsMine(null, fileName))
+                        {
+                            format = f;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var f = new IaiSub();
+                        if (f.IsMine(null, fileName))
+                        {
+                            format = f;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var f = new DlDd();
+                        if (f.IsMine(null, fileName))
+                        {
+                            format = f;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var f = new Ted20();
+                        if (f.IsMine(null, fileName))
+                        {
+                            format = f;
+                        }
+                    }
+                    if (format == null)
+                    {
                         var capMakerPlus = new CapMakerPlus();
                         if (capMakerPlus.IsMine(null, fileName))
                         {
