@@ -361,6 +361,7 @@
             this.Controls.Add(this.GroupBoxEditWord);
             this.Controls.Add(this.groupBoxEditWholeText);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MinimumSize = new System.Drawing.Size(736, 512);
             this.Name = "OcrSpellCheck";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
