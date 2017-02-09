@@ -71,8 +71,8 @@ namespace Nikse.SubtitleEdit.Forms
                         _dictionaryDownloadLinks.Add(downloadLink);
                         _descriptions.Add(description);
                     }
-                    comboBoxDictionaries.SelectedIndex = 0;
                 }
+                comboBoxDictionaries.SelectedIndex = 0;
             }
         }
 
