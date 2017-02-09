@@ -8828,23 +8828,22 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                 }
 
-                Subtitle sub = new Subtitle();
+                var sub = new Subtitle();
                 Encoding encoding;
                 SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, null);
                 if (format == null)
                     return;
 
                 int index = 0;
-                foreach (Paragraph p in sub.Paragraphs)
+                int newSubCount = sub.Paragraphs.Count;
+                int currentSubCount = _subtitle.Paragraphs.Count;
+                while (index < newSubCount && index < currentSubCount)
                 {
-                    if (index < _subtitle.Paragraphs.Count)
-                    {
-                        Paragraph currentP = _subtitle.Paragraphs[index];
-                        currentP.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds;
-                        currentP.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds;
-                        subtitleListView1.SetStartTimeAndDuration(index, currentP);
-                    }
-                    index++;
+                    Paragraph newP = sub.Paragraphs[index];
+                    Paragraph currentP = _subtitle.Paragraphs[index];
+                    currentP.StartTime.TotalMilliseconds = newP.StartTime.TotalMilliseconds;
+                    currentP.EndTime.TotalMilliseconds = newP.EndTime.TotalMilliseconds;
+                    subtitleListView1.SetStartTimeAndDuration(index, currentP);
                 }
             }
         }
