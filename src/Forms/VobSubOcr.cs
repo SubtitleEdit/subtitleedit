@@ -6130,7 +6130,7 @@ namespace Nikse.SubtitleEdit.Forms
             // fix italics
             textWithOutFixes = FixItalics(textWithOutFixes);
 
-            int numberOfWords = textWithOutFixes.Split((" " + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
+            int numberOfWords = textWithOutFixes.Split(new[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Length;
 
             string line = textWithOutFixes.Trim();
             if (_ocrFixEngine.IsDictionaryLoaded)
