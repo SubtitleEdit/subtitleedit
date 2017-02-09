@@ -158,6 +158,7 @@
             this.comboBoxlVideoPlayerPreviewFontSize = new System.Windows.Forms.ComboBox();
             this.checkBoxVideoPlayerShowStopButton = new System.Windows.Forms.CheckBox();
             this.groupBoxVideoEngine = new System.Windows.Forms.GroupBox();
+            this.checkBoxMpvHandlesPreviewText = new System.Windows.Forms.CheckBox();
             this.labelMpvSettings = new System.Windows.Forms.Label();
             this.buttonMpvSettings = new System.Windows.Forms.Button();
             this.labelPlatform = new System.Windows.Forms.Label();
@@ -327,7 +328,6 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
-            this.checkBoxMpvHandlesPreviewText = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1943,6 +1943,16 @@
             this.groupBoxVideoEngine.TabStop = false;
             this.groupBoxVideoEngine.Text = "Video engine";
             // 
+            // checkBoxMpvHandlesPreviewText
+            // 
+            this.checkBoxMpvHandlesPreviewText.AutoSize = true;
+            this.checkBoxMpvHandlesPreviewText.Location = new System.Drawing.Point(570, 90);
+            this.checkBoxMpvHandlesPreviewText.Name = "checkBoxMpvHandlesPreviewText";
+            this.checkBoxMpvHandlesPreviewText.Size = new System.Drawing.Size(150, 17);
+            this.checkBoxMpvHandlesPreviewText.TabIndex = 31;
+            this.checkBoxMpvHandlesPreviewText.Text = "mpv handles preview text";
+            this.checkBoxMpvHandlesPreviewText.UseVisualStyleBackColor = true;
+            // 
             // labelMpvSettings
             // 
             this.labelMpvSettings.AutoSize = true;
@@ -2068,6 +2078,7 @@
             this.radioButtonVideoPlayerMPV.TabStop = true;
             this.radioButtonVideoPlayerMPV.Text = "mpv";
             this.radioButtonVideoPlayerMPV.UseVisualStyleBackColor = true;
+            this.radioButtonVideoPlayerMPV.CheckedChanged += new System.EventHandler(this.radioButtonVideoPlayerMPV_CheckedChanged);
             // 
             // radioButtonVideoPlayerDirectShow
             // 
@@ -3910,16 +3921,6 @@
             // openFileDialogFFmpeg
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
-            // 
-            // checkBoxMpvHandlesPreviewText
-            // 
-            this.checkBoxMpvHandlesPreviewText.AutoSize = true;
-            this.checkBoxMpvHandlesPreviewText.Location = new System.Drawing.Point(570, 90);
-            this.checkBoxMpvHandlesPreviewText.Name = "checkBoxMpvHandlesPreviewText";
-            this.checkBoxMpvHandlesPreviewText.Size = new System.Drawing.Size(150, 17);
-            this.checkBoxMpvHandlesPreviewText.TabIndex = 31;
-            this.checkBoxMpvHandlesPreviewText.Text = "mpv handles preview text";
-            this.checkBoxMpvHandlesPreviewText.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
