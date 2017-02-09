@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
     public class LibMpvDynamic : VideoPlayer, IDisposable
     {
 
-        #region mpv dll methods
+        #region mpv dll methods - see https://github.com/mpv-player/mpv/blob/master/libmpv/client.h
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate IntPtr MpvCreate();
         private MpvCreate _mpvCreate;
@@ -57,6 +57,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void MpvFree(IntPtr data);
         private MpvFree _mpvFree;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate UInt32 MpvClientApiVersion();
+        private MpvClientApiVersion _mpvClientApiVersion;        
+
         #endregion
 
         private IntPtr _libMpvDll;
@@ -92,6 +97,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _mpvGetPropertyDouble = (MpvGetPropertyDouble)GetDllType(typeof(MpvGetPropertyDouble), "mpv_get_property");
             _mpvSetProperty = (MpvSetProperty)GetDllType(typeof(MpvSetProperty), "mpv_set_property");
             _mpvFree = (MpvFree)GetDllType(typeof(MpvFree), "mpv_free");
+            _mpvClientApiVersion = (MpvClientApiVersion)GetDllType(typeof(MpvClientApiVersion), "mpv_client_api_version");
         }
 
         private bool IsAllMethodsLoaded()
@@ -144,10 +150,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Marshal.FreeHGlobal(mainPtr);
         }
 
-        public override string PlayerName
-        {
-            get { return "MPV Lib"; }
-        }
+        public override string PlayerName => "libmpv " + VersionNumber;
 
         private int _volume = 75;
         public override int Volume
@@ -324,6 +327,21 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
+        public string VersionNumber
+        {
+            get
+            {
+                if (_mpvHandle == IntPtr.Zero)
+                    return string.Empty;
+
+                var version = _mpvClientApiVersion();
+                var high = version >> 16;
+                var low = version & 0xff;
+                return high + "." + low;
+            }
+        }
+
+
         public static bool IsInstalled
         {
             get
@@ -357,7 +375,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             string dllFile = GetMpvPath("mpv-1.dll");
             if (File.Exists(dllFile))
             {
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(dllFile));
+                var path = Path.GetDirectoryName(dllFile);
+                if (path != null)
+                    Directory.SetCurrentDirectory(path);
                 _libMpvDll = NativeMethods.LoadLibrary(dllFile);
                 LoadLibVlcDynamic();
                 if (!IsAllMethodsLoaded())
@@ -378,10 +398,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 _mpvInitialize.Invoke(_mpvHandle);
 
-                string videoOutput = "direct3d_shaders";
+                string videoOutput = "opengl";
                 if (!string.IsNullOrWhiteSpace(Configuration.Settings.General.MpvVideoOutput))
                     videoOutput = Configuration.Settings.General.MpvVideoOutput;
-                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("vo"), GetUtf8Bytes(videoOutput)); // "direct3d_shaders" is default, "direct3d" could be used for compabality with old systems
+                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("vo"), GetUtf8Bytes(videoOutput)); // use "opengl" or "direct3d"
 
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("keep-open"), GetUtf8Bytes("always")); // don't auto close video
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("no-sub"), GetUtf8Bytes("")); // don't load subtitles
@@ -426,8 +446,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
             }
             Application.DoEvents();
-            if (OnVideoLoaded != null)
-                OnVideoLoaded.Invoke(this, null);
+            OnVideoLoaded?.Invoke(this, null);
             Application.DoEvents();
             Pause();
         }
@@ -453,11 +472,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         _mpvHandle = IntPtr.Zero;
                     }
 
-                    if (_libMpvDll != IntPtr.Zero)
-                    {
-                        NativeMethods.FreeLibrary(_libMpvDll);
-                        _libMpvDll = IntPtr.Zero;
-                    }
+                    //if (_libMpvDll != IntPtr.Zero) - hm, will make video hang on second video...
+                    //{
+                    //    NativeMethods.FreeLibrary(_libMpvDll);
+                    //    _libMpvDll = IntPtr.Zero;
+                    //}
                 }
             }
             catch
@@ -479,8 +498,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         protected virtual void Dispose(bool disposing)
         {
-            if (_mpvHandle != IntPtr.Zero)
-                DoMpvCommand("quit");
             ReleaseUnmangedResources();
         }
 

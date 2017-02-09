@@ -3865,6 +3865,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowSettings()
         {
             string oldVideoPlayer = Configuration.Settings.General.VideoPlayer;
+            string oldMpvVideoOutput = Configuration.Settings.General.MpvVideoOutput;
             string oldListViewLineSeparatorString = Configuration.Settings.General.ListViewLineSeparatorString;
             string oldSubtitleFontSettings = Configuration.Settings.General.SubtitleFontName +
                                              Configuration.Settings.General.SubtitleFontBold +
@@ -4043,7 +4044,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (!string.IsNullOrEmpty(_videoFileName) && oldVideoPlayer != Configuration.Settings.General.VideoPlayer && mediaPlayer.VideoPlayer != null)
+            if (!string.IsNullOrEmpty(_videoFileName) && 
+                (oldVideoPlayer != Configuration.Settings.General.VideoPlayer && mediaPlayer.VideoPlayer != null) ||
+                (oldMpvVideoOutput != Configuration.Settings.General.MpvVideoOutput && Configuration.Settings.General.VideoPlayer.Equals("MPV", StringComparison.OrdinalIgnoreCase))
+                )
             {
                 string vfn = _videoFileName;
                 CloseVideoToolStripMenuItemClick(null, null);
@@ -13567,6 +13571,7 @@ namespace Nikse.SubtitleEdit.Forms
                 GotoSubPositionAndPause();
             }
             mediaPlayer.Pause();
+            mediaPlayer.UpdatePlayerName();
         }
 
         private void VideoEnded(object sender, EventArgs e)
