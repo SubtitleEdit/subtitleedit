@@ -4672,6 +4672,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "Settings/MpvPlayerDescription":
                     language.Settings.MpvPlayerDescription = reader.Value;
                     break;
+                case "Settings/MpvHandlesPreviewText":
+                    language.Settings.MpvHandlesPreviewText = reader.Value;
+                    break;
                 case "Settings/VlcMediaPlayer":
                     language.Settings.VlcMediaPlayer = reader.Value;
                     break;

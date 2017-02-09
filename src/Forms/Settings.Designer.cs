@@ -327,6 +327,7 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
+            this.checkBoxMpvHandlesPreviewText = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1920,6 +1921,7 @@
             // 
             this.groupBoxVideoEngine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxVideoEngine.Controls.Add(this.checkBoxMpvHandlesPreviewText);
             this.groupBoxVideoEngine.Controls.Add(this.labelMpvSettings);
             this.groupBoxVideoEngine.Controls.Add(this.buttonMpvSettings);
             this.groupBoxVideoEngine.Controls.Add(this.labelPlatform);
@@ -3909,6 +3911,16 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
+            // checkBoxMpvHandlesPreviewText
+            // 
+            this.checkBoxMpvHandlesPreviewText.AutoSize = true;
+            this.checkBoxMpvHandlesPreviewText.Location = new System.Drawing.Point(570, 90);
+            this.checkBoxMpvHandlesPreviewText.Name = "checkBoxMpvHandlesPreviewText";
+            this.checkBoxMpvHandlesPreviewText.Size = new System.Drawing.Size(150, 17);
+            this.checkBoxMpvHandlesPreviewText.TabIndex = 31;
+            this.checkBoxMpvHandlesPreviewText.Text = "mpv handles preview text";
+            this.checkBoxMpvHandlesPreviewText.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4330,5 +4342,6 @@
         private System.Windows.Forms.CheckBox checkBoxWaveformShowCps;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxWordsMin;
         private System.Windows.Forms.Label labelMaxWordsPerMin;
+        private System.Windows.Forms.CheckBox checkBoxMpvHandlesPreviewText;
     }
 }

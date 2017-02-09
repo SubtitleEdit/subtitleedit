@@ -2,8 +2,10 @@
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -48,13 +50,19 @@ namespace Nikse.SubtitleEdit.Controls
                 _videoPlayer = value;
                 if (_videoPlayer != null)
                     SetPlayerName(_videoPlayer.PlayerName);
+                if (_videoPlayer is LibMpvDynamic && Configuration.Settings.General.MpvHandlesPreviewText)
+                {
+                    _subtitlesHeight = 0;
+                }
+                else
+                {
+                    _subtitlesHeight = 57;
+                }
+                _mpvTextFileName = null;
             }
         }
 
-        public RichTextBoxViewOnly TextBox
-        {
-            get { return _subtitleTextBox; }
-        }
+        public RichTextBoxViewOnly TextBox => _subtitleTextBox;
 
         public int VideoWidth { get; set; }
         public int VideoHeight { get; set; }
@@ -63,7 +71,8 @@ namespace Nikse.SubtitleEdit.Controls
         private double? _muteOldVolume;
         private readonly System.ComponentModel.ComponentResourceManager _resources;
         private int _controlsHeight = 47;
-        private const int SubtitlesHeight = 57;
+        private const int OriginalSubtitlesHeight = 57;
+        private int _subtitlesHeight = OriginalSubtitlesHeight;
         private readonly Color _backgroundColor = Color.FromArgb(18, 18, 18);
         private Panel _panelcontrols;
 
@@ -250,7 +259,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private Control MakeSubtitlesPanel()
         {
-            _panelSubtitle = new Panel { BackColor = _backgroundColor, Left = 0, Top = 0, Height = SubtitlesHeight + 1 };
+            _panelSubtitle = new Panel { BackColor = _backgroundColor, Left = 0, Top = 0, Height = _subtitlesHeight + 1 };
             _subtitleTextBox = new RichTextBoxViewOnly();
             _panelSubtitle.Controls.Add(_subtitleTextBox);
             _subtitleTextBox.BackColor = _backgroundColor;
@@ -280,10 +289,73 @@ namespace Nikse.SubtitleEdit.Controls
 
         public Paragraph LastParagraph { get; private set; }
 
-        public void SetSubtitleText(string text, Paragraph p)
+        public void SetSubtitleText(string text, Paragraph p, Subtitle subtitle)
         {
+            var mpv = VideoPlayer as LibMpvDynamic;
+            if (mpv != null && Configuration.Settings.General.MpvHandlesPreviewText)
+            {
+                RefreshMpv(mpv, subtitle);
+                if (_subtitleTextBox.Text.Length > 0)
+                    _subtitleTextBox.Text = string.Empty;
+                return;
+            }
             SubtitleText = text;
             LastParagraph = p;
+        }
+
+        private Subtitle _subtitlePrev;
+        private static string _mpvTextOld = string.Empty;
+        private string _mpvTextFileName;
+        private void RefreshMpv(LibMpvDynamic mpv, Subtitle subtitle)
+        {
+            if (subtitle == null)
+                return;
+
+            try
+            {
+                SubtitleFormat format;
+                if (subtitle.Header != null && subtitle.Header.Contains("[V4+ Styles]"))
+                    format = new AdvancedSubStationAlpha();
+                else
+                    format = new SubRip();
+                string text = subtitle.ToText(format);
+                if (text != _mpvTextOld || _mpvTextFileName == null)
+                {
+                    if (string.IsNullOrEmpty(_mpvTextFileName) || _subtitlePrev != subtitle)
+                    {
+                        DeleteTempMpvFileName();
+                        _mpvTextFileName = Path.GetTempFileName() + format.Extension;
+                        File.WriteAllText(_mpvTextFileName, text);
+                        mpv.LoadSubtitle(_mpvTextFileName);
+                    }
+                    else
+                    {
+                        File.WriteAllText(_mpvTextFileName, text);
+                        mpv.ReloadSubtitle();
+                    }
+                    _mpvTextOld = text;
+                }
+                _subtitlePrev = subtitle;
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
+        private void DeleteTempMpvFileName()
+        {
+            try
+            {
+                if (File.Exists(_mpvTextFileName))
+                {
+                    File.Delete(_mpvTextFileName);
+                }
+            }
+            catch
+            {
+                // ignored                
+            }
         }
 
         public string SubtitleText
@@ -847,12 +919,11 @@ namespace Nikse.SubtitleEdit.Controls
         public void VideoPlayerContainerResize(object sender, EventArgs e)
         {
             _controlsHeight = _pictureBoxBackground.Height;
-            PanelPlayer.Height = Height - (_controlsHeight + SubtitlesHeight);
+            PanelPlayer.Height = Height - (_controlsHeight + _subtitlesHeight);
             PanelPlayer.Width = Width;
-            if (_videoPlayer != null)
-                _videoPlayer.Resize(PanelPlayer.Width, PanelPlayer.Height);
+            _videoPlayer?.Resize(PanelPlayer.Width, PanelPlayer.Height);
 
-            _panelSubtitle.Top = Height - (_controlsHeight + SubtitlesHeight);
+            _panelSubtitle.Top = Height - (_controlsHeight + _subtitlesHeight);
             _panelSubtitle.Width = Width;
 
             _panelcontrols.Top = Height - _controlsHeight + 2;
@@ -865,6 +936,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _labelTimeCode.Left = Width - 170;
             _labelVideoPlayerName.Left = Width - _labelVideoPlayerName.Width - 3;
+            _mpvTextFileName = null;
         }
 
         #region PlayPauseButtons
@@ -1360,13 +1432,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public bool IsPaused
-        {
-            get
-            {
-                return VideoPlayer?.IsPaused == true;
-            }
-        }
+        public bool IsPaused => VideoPlayer?.IsPaused == true;
 
         public double Volume
         {
@@ -1461,6 +1527,12 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         #endregion VideoPlayer functions
+
+        protected override void Dispose(bool disposing)
+        {
+            DeleteTempMpvFileName();
+            base.Dispose(disposing);
+        }
 
     }
 }
