@@ -323,7 +323,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxShowLineBreaksAs.Left = labelShowLineBreaksAs.Left + labelShowLineBreaksAs.Width;
             labelListViewDoubleClickEvent.Text = language.MainListViewDoubleClickAction;
             labelListviewColumns.Text = language.MainListViewColumns;
-            buttonListviewColumns.Text = GetListViewColumns();  
+            buttonListviewColumns.Text = GetListViewColumns();
             labelAutoBackup.Text = language.AutoBackup;
             labelAutoBackupDeleteAfter.Text = language.AutoBackupDeleteAfter;
             comboBoxAutoBackup.Left = labelAutoBackup.Left + labelAutoBackup.Width + 3;
@@ -680,7 +680,7 @@ namespace Nikse.SubtitleEdit.Forms
             AddNode(generalNode, language.GoToCurrentSubtitleStart, nameof(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle));
             AddNode(generalNode, language.GoToCurrentSubtitleEnd, nameof(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle));
             AddNode(generalNode, language.GoToPreviousSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToPreviousSubtitleAndFocusVideo));
-            AddNode(generalNode, language.GoToNextSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo));            
+            AddNode(generalNode, language.GoToNextSubtitleAndFocusVideo, nameof(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitleAndFocusVideo));
             AddNode(generalNode, language.Help, nameof(Configuration.Settings.Shortcuts.GeneralHelp));
             treeViewShortcuts.Nodes.Add(generalNode);
 
@@ -1122,10 +1122,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (comboBoxTimeCodeMode.Visible)
                 gs.UseTimeFormatHHMMSSFF = comboBoxTimeCodeMode.SelectedIndex == 1;
 
-            if (comboBoxSpellChecker.SelectedIndex == 1)
-                gs.SpellChecker = "word";
-            else
-                gs.SpellChecker = "hunspell";
+            gs.SpellChecker = comboBoxSpellChecker.SelectedIndex == 1 ? "word" : "hunspell";
 
             gs.AllowEditOfOriginalSubtitle = checkBoxAllowEditOfOriginalSubtitle.Checked;
             gs.PromptDeleteLines = checkBoxPromptDeleteLines.Checked;
@@ -1290,8 +1287,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreviewReal()
         {
-            if (pictureBoxPreview.Image != null)
-                pictureBoxPreview.Image.Dispose();
+            pictureBoxPreview.Image?.Dispose();
             var bmp = new Bitmap(pictureBoxPreview.Width, pictureBoxPreview.Height);
 
             using (var g = Graphics.FromImage(bmp))
@@ -2318,8 +2314,17 @@ namespace Nikse.SubtitleEdit.Forms
         {
             using (var form = new SettingsMpv())
             {
-                form.ShowDialog(this);
-                RefreshMpvSettings();
+                var oldMpvEnabled = radioButtonVideoPlayerMPV.Enabled;
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    RefreshMpvSettings();
+                    if (radioButtonVideoPlayerMPV.Enabled && !oldMpvEnabled)
+                        radioButtonVideoPlayerMPV.Checked = true;
+                }
+                else
+                {
+                    RefreshMpvSettings();
+                }
             }
         }
 
@@ -2390,7 +2395,12 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.Tools.ListViewShowColumnWordsPerMin = form.ShowWpm;
                     buttonListviewColumns.Text = GetListViewColumns();
                 }
-            }            
+            }
+        }
+
+        private void radioButtonVideoPlayerMPV_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBoxMpvHandlesPreviewText.Enabled = radioButtonVideoPlayerMPV.Checked;
         }
 
     }
