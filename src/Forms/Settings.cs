@@ -148,6 +148,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Logic.VideoPlayers.MpcHC.MpcHc.GetMpcHcFileName() == null)
                 radioButtonVideoPlayerMpcHc.Enabled = false;
             RefreshMpvSettings();
+            checkBoxMpvHandlesPreviewText.Checked = gs.MpvHandlesPreviewText;
 
             textBoxVlcPath.Text = gs.VlcLocation;
             textBoxVlcPath.Left = labelVideoPlayerVLC.Left + labelVideoPlayerVLC.Width + 5;
@@ -360,6 +361,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelVideoPlayerMPlayer.Text = language.MpvPlayerDescription;
             buttonMpvSettings.Left = labelVideoPlayerMPlayer.Left + labelVideoPlayerMPlayer.Width + 5;
             labelMpvSettings.Left = buttonMpvSettings.Left + buttonMpvSettings.Width + 5;
+            checkBoxMpvHandlesPreviewText.Text = language.MpvHandlesPreviewText;
+
             radioButtonVideoPlayerVLC.Text = language.VlcMediaPlayer;
             labelVideoPlayerVLC.Text = language.VlcMediaPlayerDescription;
             gs.VlcLocation = textBoxVlcPath.Text;
@@ -1137,7 +1140,7 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.VideoPlayer = "VLC";
             else
                 gs.VideoPlayer = "DirectShow";
-
+            gs.MpvHandlesPreviewText = checkBoxMpvHandlesPreviewText.Checked;
             gs.VlcLocation = textBoxVlcPath.Text;
 
             gs.VideoPlayerShowStopButton = checkBoxVideoPlayerShowStopButton.Checked;
@@ -2323,7 +2326,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void RefreshMpvSettings()
         {
             radioButtonVideoPlayerMPV.Enabled = LibMpvDynamic.IsInstalled;
-            if (Configuration.IsRunningOnLinux() && (Configuration.Settings.General.MpvVideoOutput == "direct3d_shaders"))
+            if (Configuration.IsRunningOnLinux() && Configuration.Settings.General.MpvVideoOutput.StartsWith("direct3d"))
                 labelMpvSettings.Text = "--vo=vaapi";
             else
                 labelMpvSettings.Text = "--vo=" + Configuration.Settings.General.MpvVideoOutput;

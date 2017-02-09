@@ -192,9 +192,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     pos = videoPlayerContainer1.CurrentPosition;
                 }
-                if (pos != _lastPosition)
+                if (Math.Abs(pos - _lastPosition) > 0.01)
                 {
-                    UiUtil.ShowSubtitle(_subtitle.Paragraphs, videoPlayerContainer1);
+                    UiUtil.ShowSubtitle(_subtitle, videoPlayerContainer1);
                     timeUpDownLine.TimeCode = TimeCode.FromSeconds(pos);
                     _lastPosition = pos;
                 }

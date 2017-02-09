@@ -589,6 +589,7 @@ namespace Nikse.SubtitleEdit.Core
         public string VlcLocation { get; set; }
         public string VlcLocationRelative { get; set; }
         public string MpvVideoOutput { get; set; }
+        public bool MpvHandlesPreviewText { get; set; }
         public string MpcHcLocation { get; set; }
         public bool UseFFmpegForWaveExtraction { get; set; }
         public string FFmpegLocation { get; set; }
@@ -686,6 +687,7 @@ namespace Nikse.SubtitleEdit.Core
             ListViewColumnsRememberSize = true;
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
             MpvVideoOutput = Configuration.IsRunningOnLinux() ? "vaapi" : "opengl";
+            MpvHandlesPreviewText = true;
             UseTimeFormatHHMMSSFF = false;
             ClearStatusBarAfterSeconds = 10;
             MoveVideo100Or500MsPlaySmallSample = false;
@@ -1629,6 +1631,9 @@ namespace Nikse.SubtitleEdit.Core
             subNode = node.SelectSingleNode("MpvVideoOutput");
             if (subNode != null)
                 settings.General.MpvVideoOutput = subNode.InnerText.Trim();
+            subNode = node.SelectSingleNode("MpvHandlesPreviewText");
+            if (subNode != null)
+                settings.General.MpvHandlesPreviewText = Convert.ToBoolean(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("MpcHcLocation");
             if (subNode != null)
                 settings.General.MpcHcLocation = subNode.InnerText.Trim();
@@ -3156,6 +3161,7 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
                 textWriter.WriteElementString("VlcLocationRelative", settings.General.VlcLocationRelative);
                 textWriter.WriteElementString("MpvVideoOutput", settings.General.MpvVideoOutput);
+                textWriter.WriteElementString("MpvHandlesPreviewText", settings.General.MpvHandlesPreviewText.ToString());
                 textWriter.WriteElementString("MpcHcLocation", settings.General.MpcHcLocation);
                 textWriter.WriteElementString("UseFFmpegForWaveExtraction", settings.General.UseFFmpegForWaveExtraction.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FFmpegLocation", settings.General.FFmpegLocation);

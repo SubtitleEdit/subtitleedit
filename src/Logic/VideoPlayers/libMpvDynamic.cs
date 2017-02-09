@@ -341,6 +341,15 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
+        public void LoadSubtitle(string fileName)
+        {
+            DoMpvCommand("sub-add", fileName, "select");
+        }
+
+        public void ReloadSubtitle()
+        {
+            DoMpvCommand("sub-reload");
+        }
 
         public static bool IsInstalled
         {

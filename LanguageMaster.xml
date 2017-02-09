@@ -1741,6 +1741,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - free, open source, and cross-platform media player</MpvPlayerDescription>
+    <MpvHandlesPreviewText>mpv handles preview text</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll from VLC media player 1.1.0 or newer</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC path (only needed if you're using the portable version of VLC)</VlcBrowseToLabel>

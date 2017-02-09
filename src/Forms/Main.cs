@@ -4043,8 +4043,9 @@ namespace Nikse.SubtitleEdit.Forms
                     UiUtil.InitializeVideoPlayerAndContainer(_videoFileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
                 }
             }
+            mediaPlayer.VideoPlayerContainerResize(null, null);
 
-            if (!string.IsNullOrEmpty(_videoFileName) && 
+            if (!string.IsNullOrEmpty(_videoFileName) &&
                 (oldVideoPlayer != Configuration.Settings.General.VideoPlayer && mediaPlayer.VideoPlayer != null) ||
                 (oldMpvVideoOutput != Configuration.Settings.General.MpvVideoOutput && Configuration.Settings.General.VideoPlayer.Equals("MPV", StringComparison.OrdinalIgnoreCase))
                 )
@@ -4094,10 +4095,10 @@ namespace Nikse.SubtitleEdit.Forms
         private int ShowSubtitle()
         {
             if (_splitDualSami)
-                return UiUtil.ShowSubtitle(_subtitle.Paragraphs, _subtitleAlternate, mediaPlayer);
+                return UiUtil.ShowSubtitle(_subtitle, _subtitleAlternate, mediaPlayer);
             if (SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable)
-                return UiUtil.ShowSubtitle(_subtitleAlternate.Paragraphs, mediaPlayer);
-            return UiUtil.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
+                return UiUtil.ShowSubtitle(_subtitleAlternate, mediaPlayer);
+            return UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
         }
 
         private static void TryLoadIcon(ToolStripButton button, string iconName)
@@ -13695,16 +13696,6 @@ namespace Nikse.SubtitleEdit.Forms
             ShowSubtitleTimer.Start();
         }
 
-        private void videoModeHiddenToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            HideVideoPlayer();
-        }
-
-        private void createadjustLinesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ShowVideoPlayer();
-        }
-
         private void HideVideoPlayer()
         {
             mediaPlayer.Pause();
@@ -14771,7 +14762,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
                 int index = SubtitleListview1.SelectedItems[0].Index;
                 if (!mediaPlayer.IsPaused)
-                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay/TimeCode.BaseUnit;
+                    videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / TimeCode.BaseUnit;
                 var tc = TimeCode.FromSeconds(videoPosition);
                 timeUpDownStartTime.TimeCode = tc;
 
@@ -15917,7 +15908,7 @@ namespace Nikse.SubtitleEdit.Forms
                         startSeconds = Math.Max(startSeconds, _endSeconds - 1.0);
                     }
                     mediaPlayer.CurrentPosition = startSeconds;
-                    UiUtil.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
+                    UiUtil.ShowSubtitle(_subtitle, mediaPlayer);
                     mediaPlayer.Play();
                 }
             }
