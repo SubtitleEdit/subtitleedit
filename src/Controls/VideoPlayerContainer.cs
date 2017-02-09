@@ -217,6 +217,14 @@ namespace Nikse.SubtitleEdit.Controls
             _labelVideoPlayerName.Left = Width - _labelVideoPlayerName.Width - 3;
         }
 
+        public void UpdatePlayerName()
+        {
+            if (_videoPlayer != null)
+            {
+                SetPlayerName(_videoPlayer.PlayerName);
+            }
+        }
+
         public void ResetTimeLabel()
         {
             _labelTimeCode.Text = string.Empty;
