@@ -8844,6 +8844,7 @@ namespace Nikse.SubtitleEdit.Forms
                     currentP.StartTime.TotalMilliseconds = newP.StartTime.TotalMilliseconds;
                     currentP.EndTime.TotalMilliseconds = newP.EndTime.TotalMilliseconds;
                     subtitleListView1.SetStartTimeAndDuration(index, currentP);
+                    index++;
                 }
             }
         }
