@@ -20340,17 +20340,20 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_subtitle != null && _subtitle.Header != null && (_subtitle.Header.Contains("STL2") || _subtitle.Header.Contains("STL3")))
                 {
                     var header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(_subtitle.Header));
-                    properties.Initialize(header, 0, null, _subtitle);
+                    properties.Initialize(header, Ebu.EbuUiHelper.JustificationCode, null, _subtitle);
                 }
                 else
                 {
                     var header = new Ebu.EbuGeneralSubtitleInformation();
                     if (!string.IsNullOrEmpty(_fileName) && new Ebu().IsMine(null, _fileName))
-                        properties.Initialize(header, 0, _fileName, _subtitle);
+                        properties.Initialize(header, Ebu.EbuUiHelper.JustificationCode, _fileName, _subtitle);
                     else
-                        properties.Initialize(header, 0, null, _subtitle);
+                        properties.Initialize(header, Ebu.EbuUiHelper.JustificationCode, null, _subtitle);
                 }
-                properties.ShowDialog(this);
+                if (properties.ShowDialog(this) == DialogResult.OK)
+                {
+                    Ebu.EbuUiHelper.JustificationCode = properties.JustificationCode;
+                }
             }
         }
 
