@@ -6,16 +6,21 @@
    * Added optional list view columns "chars/sec" + "words/min"
    * New setting for waveform: Set video position when moving start/end
    * Added new json subtitle format - thx Zhiyi
+   * Added new binary subtitle format - thx Suzanne
    * Added shortcut "Go to previous line and set video position" - thx Mia
 * IMPROVED:
    * Updated Russian translation - thx Elheym
    * Updated Portuguese translation - thx moob
    * Updated Polish translation - thx admas
    * Updated Basque translation - thx Xabier
+   * Updated Korean translation - thx domddol
+   * Updated Hungarian translation - thx ZityiSoft Team
    * Minor improvements for format "Structured titles" - thx Yamato-ua
    * List view columns arrangable and non-clickable - thx Ingo
    * EBU STL: New settings regarding vertical position
    * EBU STL: New color picker dialog
+   * Now shows version number when using libmpv
+   * Added preview text inside video for libmpv
 * FIXED:
    * Fixed play current/selection not stopping - thx rhazor
    * Fixed fast forward waveform scrolling with mouse wheel
@@ -31,6 +36,8 @@
    * "Batch convert" - don't clear ASS/SSA style after format change - thx Thunderbolt8
    * Fix for multi-line italic in format TTML 1.0 - thx nathaniel1977
    * EBU STL writing now works with multiple colors in samee line - thx George
+   * Fix for "-" vs "–" (switched) for format PAC - thx Bjørn
+   * Fixed "libmpv" re-open video issue
 
 
 3.5.1 (13th December 2016)
