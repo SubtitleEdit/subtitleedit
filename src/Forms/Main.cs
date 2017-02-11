@@ -4020,29 +4020,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _timerAutoSave.Stop();
 
-
-            if (_videoFileName != null && Configuration.Settings.General.VideoPlayer == "MPV" && mediaPlayer.VideoPlayer != null)
-            {
-                var newDllFileName = Path.Combine(Configuration.DataDirectory, "mpv-new.dll");
-                if (File.Exists(newDllFileName)) // mpv-1.dll was in use, so unload + copy new dll + load
-                {
-                    var mpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
-                    if (mpv != null)
-                    {
-                        mpv.Dispose();
-                    }
-                    try
-                    {
-                        File.Copy(newDllFileName, Path.Combine(Configuration.DataDirectory, "mpv-1.dll"), true);
-                        File.Delete(newDllFileName);
-                    }
-                    catch (Exception)
-                    {
-                        // ignore
-                    }
-                    UiUtil.InitializeVideoPlayerAndContainer(_videoFileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
-                }
-            }
+            CheckAndGetNewlyDownloadedMpvDlls();
             mediaPlayer.VideoPlayerContainerResize(null, null);
 
             if (!string.IsNullOrEmpty(_videoFileName) &&
@@ -4077,6 +4055,38 @@ namespace Nikse.SubtitleEdit.Forms
                 RefreshTimeCodeMode();
 
             SubtitleListview1.SyntaxColorAllLines(_subtitle);
+        }
+
+        private void CheckAndGetNewlyDownloadedMpvDlls()
+        {
+            if (_videoFileName == null || Configuration.Settings.General.VideoPlayer != "MPV" || mediaPlayer.VideoPlayer == null)
+                return;
+
+            var newMpvFiles = Directory.GetFiles(Configuration.DataDirectory, "*.dll.new-mpv");
+            if (newMpvFiles.Length <= 0)
+                return;
+
+            var mpv = mediaPlayer.VideoPlayer as LibMpvDynamic;
+            mediaPlayer.VideoPlayer = null;
+            mpv?.HardDispose();
+
+            foreach (string newDllFileName in newMpvFiles)
+            {
+                if (File.Exists(newDllFileName)) // dll was in use, so unload + copy new dll + load
+                {
+                    try
+                    {
+                        string targetFileName = newDllFileName.Replace(".dll.new-mpv", ".dll");
+                        File.Copy(newDllFileName, targetFileName, true);
+                        File.Delete(newDllFileName);
+                    }
+                    catch (Exception)
+                    {
+                        // ignore
+                    }
+                }
+            }
+            UiUtil.InitializeVideoPlayerAndContainer(_videoFileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
         }
 
         private void AddAlternate()

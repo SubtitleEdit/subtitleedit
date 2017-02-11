@@ -19,8 +19,8 @@
    * List view columns arrangable and non-clickable - thx Ingo
    * EBU STL: New settings regarding vertical position
    * EBU STL: New color picker dialog
-   * Now shows version number when using libmpv
-   * Added preview text inside video for libmpv
+   * "libmpv" shows version number
+   * Added preview text inside video for "libmpv"
 * FIXED:
    * Fixed play current/selection not stopping - thx rhazor
    * Fixed fast forward waveform scrolling with mouse wheel

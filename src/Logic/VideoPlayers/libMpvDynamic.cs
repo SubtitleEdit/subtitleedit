@@ -407,10 +407,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 _mpvInitialize.Invoke(_mpvHandle);
 
-                string videoOutput = "opengl";
+                string videoOutput = "direct3d";
                 if (!string.IsNullOrWhiteSpace(Configuration.Settings.General.MpvVideoOutput))
                     videoOutput = Configuration.Settings.General.MpvVideoOutput;
-                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("vo"), GetUtf8Bytes(videoOutput)); // use "opengl" or "direct3d"
+                _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("vo"), GetUtf8Bytes(videoOutput)); // use "direct3d" or "opengl"
 
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("keep-open"), GetUtf8Bytes("always")); // don't auto close video
                 _mpvSetOptionString(_mpvHandle, GetUtf8Bytes("no-sub"), GetUtf8Bytes("")); // don't load subtitles
@@ -503,6 +503,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        public void HardDispose()
+        {
+            DoMpvCommand("stop");
+            Application.DoEvents();
+            DoMpvCommand("quit");
+            Application.DoEvents();
+            Dispose();
+            NativeMethods.FreeLibrary(_libMpvDll);
         }
 
         protected virtual void Dispose(bool disposing)

@@ -55,8 +55,8 @@
             // 
             this.comboBoxVideoOutput.FormattingEnabled = true;
             this.comboBoxVideoOutput.Items.AddRange(new object[] {
+            "direct3d",
             "opengl",
-            "direct3d ",
             "sdl",
             "vaapi",
             "vdpau"});
