@@ -485,6 +485,7 @@
     <Compile Include="TransportStream\SubtitleSegment.cs" />
     <Compile Include="TransportStream\TransportStreamParser.cs" />
     <Compile Include="TransportStream\TransportStreamSubtitle.cs" />
+    <Compile Include="UknownFormatImporterJson.cs" />
     <Compile Include="UknownFormatImporter.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="VideoInfo.cs" />

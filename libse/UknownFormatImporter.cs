@@ -34,7 +34,16 @@ namespace Nikse.SubtitleEdit.Core
             }
 
             if (subtitle.Paragraphs.Count > 1)
+            {
                 CleanUp(subtitle);
+            }
+
+            if (subtitle.Paragraphs.Count < 2)
+            {
+                var jsonSubtitle = new UknownFormatImporterJson().AutoGuessImport(lines);
+                if (jsonSubtitle != null && jsonSubtitle.Paragraphs.Count > 2)
+                    subtitle = jsonSubtitle;
+            }
 
             return subtitle;
         }
