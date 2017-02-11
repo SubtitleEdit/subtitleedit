@@ -518,6 +518,7 @@ namespace Nikse.SubtitleEdit.Core
                 CodePageNumber = "Code page number",
                 DiskFormatCode = "Disk format code",
                 DisplayStandardCode = "Display standard code",
+                ColorRequiresTeletext = "Colors require teletext!",
                 CharacterCodeTable = "Character table",
                 LanguageCode = "Language code",
                 OriginalProgramTitle = "Original program title",

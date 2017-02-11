@@ -939,7 +939,6 @@ namespace Nikse.SubtitleEdit.Controls
             return null;
         }
 
-
         public void SetText(int index, string text)
         {
             if (IsValidIndex(index))
