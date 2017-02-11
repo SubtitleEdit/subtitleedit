@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.IsRunningOnLinux())
             {
                 comboBoxVideoOutput.Items.Clear();
-                comboBoxVideoOutput.Items.AddRange(new object[] { "direct3d ", "sdl", "vaapi", "vdpau" });
+                comboBoxVideoOutput.Items.AddRange(new object[] { "opengl", "sdl", "vaapi", "vdpau" });
                 Controls.Remove(this.buttonDownload);
             }
         }
@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string fileName = Path.GetFileName(entry.FilenameInZip);
                         string path = Path.Combine(dictionaryFolder, fileName);
                         if (File.Exists(path))
-                            path = Path.Combine(dictionaryFolder, "mpv-new.dll");
+                            path = Path.Combine(dictionaryFolder, fileName + ".new-mpv");
                         zip.ExtractFile(entry, path);
                     }
                 }
@@ -88,6 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
                 Cursor = Cursors.WaitCursor;
 
+                //TODO: Include d3dcompiler_43.dll in zip ?
                 string url = "https://github.com/SubtitleEdit/support-files/blob/master/mpv/mpv-dll-" + IntPtr.Size * 8 + ".zip?raw=true";
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;

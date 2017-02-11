@@ -686,7 +686,7 @@ namespace Nikse.SubtitleEdit.Core
             OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;*.ts"; // matroska/mp4/m4v files (can contain subtitles)
             ListViewColumnsRememberSize = true;
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
-            MpvVideoOutput = Configuration.IsRunningOnLinux() ? "vaapi" : "opengl";
+            MpvVideoOutput = Configuration.IsRunningOnLinux() ? "vaapi" : "direct3d";
             MpvHandlesPreviewText = true;
             UseTimeFormatHHMMSSFF = false;
             ClearStatusBarAfterSeconds = 10;
