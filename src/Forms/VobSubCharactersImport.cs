@@ -37,6 +37,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void VobSubCharactersImport_Shown(object sender, EventArgs e)
         {
             openFileDialog1.Filter = "Binary OCR db files|*.db";
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.InitialDirectory = Configuration.OcrDirectory;
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 imageList1.ImageSize = new Size(40, 40);

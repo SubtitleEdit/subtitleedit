@@ -12,19 +12,13 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class VobSubEditCharacters : Form
     {
-        private XmlDocument _compareDoc = new XmlDocument();
-        private string _directoryPath;
+        private readonly XmlDocument _compareDoc = new XmlDocument();
+        private readonly string _directoryPath;
         private List<bool> _italics = new List<bool>();
         internal List<VobSubOcr.ImageCompareAddition> Additions { get; private set; }
         private readonly BinaryOcrDb _binOcrDb;
 
-        public XmlDocument ImageCompareDocument
-        {
-            get
-            {
-                return _compareDoc;
-            }
-        }
+        public XmlDocument ImageCompareDocument => _compareDoc;
 
         internal VobSubEditCharacters(string databaseFolderName, List<VobSubOcr.ImageCompareAddition> additions, BinaryOcrDb binOcrDb)
         {
@@ -69,6 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             UiUtil.FixLargeFonts(this, buttonOK);
+            buttonImport.Visible = binOcrDb != null;
         }
 
         private void Refill(List<VobSubOcr.ImageCompareAddition> additions)
@@ -635,7 +630,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonImport_Click(object sender, EventArgs e)
         {
             using (var form = new VobSubCharactersImport(_binOcrDb))
             {
