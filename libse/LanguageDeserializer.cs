@@ -895,6 +895,9 @@ namespace Nikse.SubtitleEdit.Core
                 case "EbuSaveOptions/DisplayStandardCode":
                     language.EbuSaveOptions.DisplayStandardCode = reader.Value;
                     break;
+                case "EbuSaveOptions/ColorRequiresTeletext":
+                    language.EbuSaveOptions.ColorRequiresTeletext = reader.Value;
+                    break;
                 case "EbuSaveOptions/CharacterCodeTable":
                     language.EbuSaveOptions.CharacterCodeTable = reader.Value;
                     break;
