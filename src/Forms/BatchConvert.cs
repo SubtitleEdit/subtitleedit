@@ -1379,30 +1379,24 @@ namespace Nikse.SubtitleEdit.Forms
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
                 listViewInputFiles.BeginUpdate();
-                buttonConvert.Enabled = false;
-                buttonCancel.Enabled = false;
-                progressBar1.Style = ProgressBarStyle.Marquee;
-                progressBar1.Visible = true;
-                groupBoxOutput.Enabled = false;
-                groupBoxConvertOptions.Enabled = false;
-                buttonInputBrowse.Enabled = false;
-                buttonSearchFolder.Enabled = false;
-                labelStatus.Text = string.Format(Configuration.Settings.Language.BatchConvert.ScanningFolder, folderBrowserDialog1.SelectedPath);
                 _abort = false;
-
+                SetControlsState(false);
                 SearchFolder(folderBrowserDialog1.SelectedPath);
-
-                labelStatus.Text = string.Empty;
-                buttonConvert.Enabled = true;
-                buttonCancel.Enabled = true;
-                progressBar1.Style = ProgressBarStyle.Continuous;
-                progressBar1.Visible = true;
-                groupBoxOutput.Enabled = true;
-                groupBoxConvertOptions.Enabled = true;
-                buttonInputBrowse.Enabled = true;
-                buttonSearchFolder.Enabled = true;
+                SetControlsState(true);
                 listViewInputFiles.EndUpdate();
             }
+        }
+
+        private void SetControlsState(bool state)
+        {
+            labelStatus.Text = state ? string.Empty : string.Format(Configuration.Settings.Language.BatchConvert.ScanningFolder, folderBrowserDialog1.SelectedPath);
+            buttonConvert.Enabled = state;
+            buttonCancel.Enabled = state;
+            progressBar1.Style = state ? ProgressBarStyle.Continuous : ProgressBarStyle.Marquee;
+            groupBoxOutput.Enabled = state;
+            groupBoxConvertOptions.Enabled = state;
+            buttonInputBrowse.Enabled = state;
+            buttonSearchFolder.Enabled = state;
         }
 
         private void SearchFolder(string path)
