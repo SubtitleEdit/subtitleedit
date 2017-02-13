@@ -25,11 +25,7 @@ namespace Nikse.SubtitleEdit.Core
                 foreach (string line in allText.Split('{', '}', '[', ']'))
                 {
                     count++;
-                    string s = line.Trim();
-                    if (s.Length > 6)
-                    {
-                        ReadParagraph(s, subtitle1);
-                    }
+                    ReadParagraph(line, subtitle1);
                     if (count > 20 && subtitle1.Paragraphs.Count == 0)
                         break;
                 }
@@ -46,11 +42,7 @@ namespace Nikse.SubtitleEdit.Core
                 foreach (string line in allText.Split('{', '}'))
                 {
                     count++;
-                    string s = line.Trim();
-                    if (s.Length > 6)
-                    {
-                        ReadParagraph(s, subtitle2);
-                    }
+                    ReadParagraph(line, subtitle2);
                     if (count > 20 && subtitle2.Paragraphs.Count == 0)
                         break;
                 }
@@ -67,11 +59,7 @@ namespace Nikse.SubtitleEdit.Core
                 foreach (var line in Json.ReadObjectArray(allText))
                 {
                     count++;
-                    var s = line.Trim();
-                    if (s.Length > 6)
-                    {
-                        ReadParagraph(s, subtitle3);
-                    }
+                    ReadParagraph(line, subtitle3);
                     if (count > 20 && subtitle3.Paragraphs.Count == 0)
                         break;
                 }
@@ -84,87 +72,134 @@ namespace Nikse.SubtitleEdit.Core
             if (subtitle1.Paragraphs.Count > subtitle2.Paragraphs.Count && subtitle1.Paragraphs.Count > subtitle3.Paragraphs.Count)
             {
                 subtitle1.Renumber();
-                return subtitle1;
+                return FixTimeCodeMsOrSeconds(subtitle1);
             }
             if (subtitle2.Paragraphs.Count > subtitle1.Paragraphs.Count && subtitle2.Paragraphs.Count > subtitle3.Paragraphs.Count)
             {
                 subtitle2.Renumber();
-                return subtitle2;
+                return FixTimeCodeMsOrSeconds(subtitle2);
             }
             subtitle3.Renumber();
-            return subtitle3;
+            return FixTimeCodeMsOrSeconds(subtitle3);
         }
 
-        private void ReadParagraph(string s, Subtitle subtitle)
+        private Subtitle FixTimeCodeMsOrSeconds(Subtitle subtitle)
         {
+            if (subtitle == null || subtitle.Paragraphs.Count < 5)
+                return subtitle;
+
+            double totalDuration = 0;
+            int msFound = 0;
+            foreach (var p in subtitle.Paragraphs)
+            {
+                totalDuration += p.Duration.TotalMilliseconds;
+                if (p.Style.Contains("\"startMs\"") ||
+                    p.Style.Contains("\"start_ms\"") ||
+                    p.Style.Contains("\"startMillis\"") ||
+                    p.Style.Contains("\"start_millis\"") ||
+                    p.Style.Contains("\"startMilliseconds\"") ||
+                    p.Style.Contains("\"start_millisecondsMs\""))
+                {
+                    msFound++;
+                }
+            }
+
+            if (totalDuration / subtitle.Paragraphs.Count > 1000000 || msFound == subtitle.Paragraphs.Count)
+            {
+                // Switch from seconds to milliseconds
+                foreach (var p in subtitle.Paragraphs)
+                {
+                    p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds / TimeCode.BaseUnit;
+                    p.EndTime.TotalMilliseconds = p.EndTime.TotalMilliseconds / TimeCode.BaseUnit;
+                }
+            }
+
+            return new Subtitle(subtitle.Paragraphs);
+        }
+
+        private static void ReadParagraph(string s, Subtitle subtitle)
+        {
+            s = s.Trim();
+            if (s.Length < 7)
+            {
+                return;
+            }
+
             var start = ReadStartTag(s);
             var end = ReadEndTag(s);
             var duration = ReadDurationTag(s);
             var text = ReadTextTag(s);
+            var originalStart = start;
 
-            if (start != null && start.Contains(":"))
+            if (start != null && start.Contains(":") && start.Length >= 11 && start.Length <= 12 && start.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries).Length == 4)
             {
                 start = DecodeFormatToSeconds(start);
             }
 
-            if (end != null && end.Contains(":"))
+            if (end != null && end.Contains(":") && end.Length >= 11 && end.Length <= 12 && end.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries).Length == 4)
             {
                 end = DecodeFormatToSeconds(end);
             }
 
             if (start != null && end != null && text != null)
             {
+                start = start.TrimEnd('s');
+                end = end.TrimEnd('s');
                 double startSeconds;
                 double endSeconds;
                 if (double.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out startSeconds) &&
                     double.TryParse(end, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out endSeconds))
                 {
-                    subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, endSeconds * TimeCode.BaseUnit));
+                    var p = new Paragraph(Json.DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, endSeconds * TimeCode.BaseUnit) { Extra = originalStart, Style = s };
+                    subtitle.Paragraphs.Add(p);
                 }
             }
             else if (start != null && duration != null && text != null)
             {
+                start = start.TrimEnd('s');
+                duration = duration.TrimEnd('s');
                 double startSeconds;
                 double durationSeconds;
                 if (double.TryParse(start, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out startSeconds) &&
                     double.TryParse(duration, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out durationSeconds))
                 {
-                    subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, (startSeconds + durationSeconds) * TimeCode.BaseUnit));
+                    var p = new Paragraph(Json.DecodeJsonText(text), startSeconds * TimeCode.BaseUnit, (startSeconds + durationSeconds) * TimeCode.BaseUnit) { Extra = originalStart, Style = s };
+                    subtitle.Paragraphs.Add(p);
                 }
             }
         }
 
-        private string DecodeFormatToSeconds(string s)
+        private static string DecodeFormatToSeconds(string s)
         {
             var ms = s.Length == 11 && s[8] == ':' ? TimeCode.ParseHHMMSSFFToMilliseconds(s) : TimeCode.ParseToMilliseconds(s);
             return (ms / TimeCode.BaseUnit).ToString(CultureInfo.InvariantCulture);
         }
 
-        private string ReadStartTag(string s)
+        private static string ReadStartTag(string s)
         {
             return ReadFirstMultiTag(s, new[]
             {
                 "start",
                 "startTime", "start_time", "starttime",
-                "startMilis", "start_Milis", "startmilis",
+                "startMillis", "start_Millis", "startmillis",
                 "startMs", "start_ms", "startms",
-                "startMiliseconds", "start_Milisesonds", "startmiliseconds",
+                "startMilliseconds", "start_Millisesonds", "startmilliseconds",
             });
         }
 
-        private string ReadEndTag(string s)
+        private static string ReadEndTag(string s)
         {
             return ReadFirstMultiTag(s, new[]
             {
                 "end",
                 "endTime", "end_time", "endtime",
-                "endMilis", "end_Milis", "endmilis",
+                "endMillis", "end_Millis", "endmillis",
                 "endMs", "end_ms", "startms",
-                "endMiliseconds", "end_Milisesonds", "endmiliseconds",
+                "endMilliseconds", "end_Millisesonds", "endmilliseconds",
             });
         }
 
-        private string ReadDurationTag(string s)
+        private static string ReadDurationTag(string s)
         {
             return ReadFirstMultiTag(s, new[]
             {
@@ -173,7 +208,7 @@ namespace Nikse.SubtitleEdit.Core
             });
         }
 
-        private string ReadTextTag(string s)
+        private static string ReadTextTag(string s)
         {
             var textLines = Json.ReadArray(s, "text");
             if (textLines != null && textLines.Count > 0)
@@ -184,7 +219,7 @@ namespace Nikse.SubtitleEdit.Core
             return ReadFirstMultiTag(s, new[] { "text", "content" });
         }
 
-        private string ReadFirstMultiTag(string s, string[] tags)
+        private static string ReadFirstMultiTag(string s, string[] tags)
         {
             foreach (var tag in tags)
             {
