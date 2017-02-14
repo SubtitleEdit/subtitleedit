@@ -203,19 +203,28 @@ namespace Nikse.SubtitleEdit.Forms
             const float leftMargin = left;
             int newLinePathPoint = -1;
             Color c = _subtitleColor;
-            while (i < text.Length)
+            int textLen = text.Length;
+            while (i < textLen)
             {
-                if (text.Substring(i).StartsWith(Environment.NewLine))
+                char ch = text[i];
+                if (ch == '\n' || ch == '\r')
                 {
                     TextDraw.DrawText(font, sf, path, sb, false, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
                     top += lineHeight;
                     newLine = true;
-                    i += Environment.NewLine.Length - 1;
+                    if (i + 1 < textLen && text[i + 1] == '\n' && text[i] == '\r')
+                    {
+                        i += 2; // CR+LF (Microsoft Windows)
+                    }
+                    else
+                    {
+                        i++; // LF (Unix and Unix-like systems )
+                    }
                 }
                 else
                 {
-                    sb.Append(text[i]);
+                    sb.Append(ch);
                 }
                 i++;
             }
