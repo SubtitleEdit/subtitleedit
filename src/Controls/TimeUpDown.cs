@@ -34,12 +34,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (_forceHHMMSSFF)
-                    return TimeMode.HHMMSSFF;
-
-                if (Configuration.Settings == null)
-                    return TimeMode.HHMMSSMS;
-                if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                if (_forceHHMMSSFF || Configuration.Settings?.General.UseTimeFormatHHMMSSFF == true)
                     return TimeMode.HHMMSSFF;
                 return TimeMode.HHMMSSMS;
             }
