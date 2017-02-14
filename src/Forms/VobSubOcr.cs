@@ -6016,7 +6016,6 @@ namespace Nikse.SubtitleEdit.Forms
             line = line.Replace("]", string.Empty);
             line = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic);
 
-            int count = 0;
             var arr = line.Replace("a.m", string.Empty).Replace("p.m", string.Empty).Replace("o.r", string.Empty)
                           .Replace("e.g", string.Empty).Replace("Ph.D", string.Empty).Replace("d.t.s", string.Empty)
                           .Split(new[] { ' ', '.', '?', '!', '(', ')', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
@@ -6024,11 +6023,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (s.Length == 1 && !@"♪♫-:'”1234567890&aAI""".Contains(s))
                 {
-                    count++;
-                    break;
+                    return true;
                 }
             }
-            return count > 0;
+            return false;
         }
 
         private string OcrViaTesseract(Bitmap bitmap, int index)
