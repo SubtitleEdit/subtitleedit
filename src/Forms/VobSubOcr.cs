@@ -7321,47 +7321,24 @@ namespace Nikse.SubtitleEdit.Forms
             if (subtitleListView1.SelectedItems.Count == 0)
                 e.Cancel = true;
 
-            if (contextMenuStripListview.SourceControl == subtitleListView1)
-            {
-                normalToolStripMenuItem.Visible = true;
-                italicToolStripMenuItem.Visible = true;
-                toolStripSeparator1.Visible = true;
-                toolStripSeparator1.Visible = subtitleListView1.SelectedItems.Count == 1;
-                saveImageAsToolStripMenuItem.Visible = subtitleListView1.SelectedItems.Count == 1;
-            }
-            else
-            {
-                normalToolStripMenuItem.Visible = false;
-                italicToolStripMenuItem.Visible = false;
-                toolStripSeparator1.Visible = false;
-                saveImageAsToolStripMenuItem.Visible = true;
-            }
+            // Enable toolstrips if event was raised by Subtitle listview.
+            bool enableIfRaisedBySubListView = contextMenuStripListview.SourceControl == subtitleListView1;
+            normalToolStripMenuItem.Visible = enableIfRaisedBySubListView;
+            italicToolStripMenuItem.Visible = enableIfRaisedBySubListView;
+            toolStripSeparator1.Visible = enableIfRaisedBySubListView && subtitleListView1.SelectedItems.Count == 1;
+            saveImageAsToolStripMenuItem.Visible = !enableIfRaisedBySubListView || subtitleListView1.SelectedItems.Count == 1;
 
-            if (_ocrMethodIndex == _ocrMethodImageCompare || _ocrMethodIndex == _ocrMethodBinaryImageCompare) // image compare
-            {
-                toolStripSeparatorImageCompare.Visible = true;
-                inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Visible = true;
-                EditLastAdditionsToolStripMenuItem.Visible = _lastAdditions != null && _lastAdditions.Count > 0;
-            }
-            else
-            {
-                toolStripSeparatorImageCompare.Visible = false;
-                inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Visible = false;
-                EditLastAdditionsToolStripMenuItem.Visible = false;
-            }
+            // Image compare.
+            bool enableControl = _ocrMethodIndex == _ocrMethodImageCompare || _ocrMethodIndex == _ocrMethodBinaryImageCompare;
+            toolStripSeparatorImageCompare.Visible = enableControl;
+            inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Visible = enableControl;
+            EditLastAdditionsToolStripMenuItem.Visible = enableControl && _lastAdditions != null && _lastAdditions.Count > 0;
 
-            if (_ocrMethodIndex == _ocrMethodNocr) // nocr compare
-            {
-                toolStripMenuItemInspectNOcrMatches.Visible = true;
-                toolStripSeparatorImageCompare.Visible = true;
-                nOcrTrainingToolStripMenuItem.Visible = true;
-            }
-            else
-            {
-                toolStripMenuItemInspectNOcrMatches.Visible = false;
-                toolStripSeparatorImageCompare.Visible = false;
-                nOcrTrainingToolStripMenuItem.Visible = false;
-            }
+            // Use N-OCR compare. (Only available in Beta mode).
+            bool useNocrCompare = _ocrMethodIndex == _ocrMethodNocr;
+            toolStripMenuItemInspectNOcrMatches.Visible = useNocrCompare;
+            toolStripSeparatorImageCompare.Visible = useNocrCompare;
+            nOcrTrainingToolStripMenuItem.Visible = useNocrCompare;
         }
 
         private void SaveImageAsToolStripMenuItemClick(object sender, EventArgs e)
