@@ -96,9 +96,7 @@ namespace Nikse.SubtitleEdit.Controls
                             SetTotalMilliseconds(0);
                     }
                 }
-
-                if (TimeCodeChanged != null)
-                    TimeCodeChanged.Invoke(this, e);
+                TimeCodeChanged?.Invoke(this, e);
             }
             numericUpDown1.Value = NumericUpDownValue;
         }
@@ -259,8 +257,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else if (e.KeyCode == Keys.Enter)
             {
-                if (TimeCodeChanged != null)
-                    TimeCodeChanged.Invoke(this, e);
+                TimeCodeChanged?.Invoke(this, e);
                 e.SuppressKeyPress = true;
             }
         }
