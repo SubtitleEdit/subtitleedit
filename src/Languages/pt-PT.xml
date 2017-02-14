@@ -354,6 +354,7 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <CodePageNumber>Número de código da página</CodePageNumber>
     <DiskFormatCode>Código do formato do disco</DiskFormatCode>
     <DisplayStandardCode>Exibir o código padrão</DisplayStandardCode>
+    <ColorRequiresTeletext>Cores necessárias para teletexto!</ColorRequiresTeletext>
     <CharacterCodeTable>Tabela de caracteres</CharacterCodeTable>
     <LanguageCode>Código do idioma</LanguageCode>
     <OriginalProgramTitle>Título original do programa</OriginalProgramTitle>
@@ -1742,6 +1743,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MpvPlayer>mpv</MpvPlayer>
     <MpvPlayerDescription>https://mpv.io/ - leitor multimédia gratuito e de Código aberto</MpvPlayerDescription>
+	<MpvHandlesPreviewText>Visualização de texto no mpv</MpvHandlesPreviewText>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll do VLC media player 1.1.0 ou superior</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Directoria do VLC (só é necessário se estiver a usar a versão portátil do VLC)</VlcBrowseToLabel>
