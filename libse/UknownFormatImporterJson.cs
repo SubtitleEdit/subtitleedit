@@ -106,7 +106,8 @@ namespace Nikse.SubtitleEdit.Core
 
             if (totalDuration / subtitle.Paragraphs.Count > 1000000 || msFound == subtitle.Paragraphs.Count)
             {
-                // Switch from seconds to milliseconds
+                // Time codes were read as seconds, but they are actually milliseconds, 
+                // so all time codes are divided by 1000.
                 foreach (var p in subtitle.Paragraphs)
                 {
                     p.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds / TimeCode.BaseUnit;
