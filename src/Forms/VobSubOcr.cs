@@ -7329,16 +7329,16 @@ namespace Nikse.SubtitleEdit.Forms
             saveImageAsToolStripMenuItem.Visible = !enableIfRaisedBySubListView || subtitleListView1.SelectedItems.Count == 1;
 
             // Image compare.
-            bool enableControl = _ocrMethodIndex == _ocrMethodImageCompare || _ocrMethodIndex == _ocrMethodBinaryImageCompare;
-            toolStripSeparatorImageCompare.Visible = enableControl;
-            inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Visible = enableControl;
-            EditLastAdditionsToolStripMenuItem.Visible = enableControl && _lastAdditions != null && _lastAdditions.Count > 0;
+            bool enableIfImageCompare = _ocrMethodIndex == _ocrMethodImageCompare || _ocrMethodIndex == _ocrMethodBinaryImageCompare;
+            inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Visible = enableIfImageCompare;
+            EditLastAdditionsToolStripMenuItem.Visible = enableIfImageCompare && _lastAdditions != null && _lastAdditions.Count > 0;
 
             // Use N-OCR compare. (Only available in Beta mode).
             bool useNocrCompare = _ocrMethodIndex == _ocrMethodNocr;
             toolStripMenuItemInspectNOcrMatches.Visible = useNocrCompare;
-            toolStripSeparatorImageCompare.Visible = useNocrCompare;
             nOcrTrainingToolStripMenuItem.Visible = useNocrCompare;
+
+            toolStripSeparatorImageCompare.Visible = useNocrCompare || enableIfImageCompare;
         }
 
         private void SaveImageAsToolStripMenuItemClick(object sender, EventArgs e)
