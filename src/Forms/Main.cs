@@ -6994,13 +6994,7 @@ namespace Nikse.SubtitleEdit.Forms
             string s = text.Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
 
             // remove unicode control characters
-            s = s.Replace("\u8207", string.Empty).
-                Replace("\u8206", string.Empty).
-                Replace("\u202A", string.Empty).
-                Replace("\u202B", string.Empty).
-                Replace("\u202D", string.Empty).
-                Replace("\u202E", string.Empty).
-                Replace("\u002B", string.Empty);
+            s = s.RemoveControlCharacters();
 
             int numberOfLines = Utilities.GetNumberOfLines(text.Trim());
             int maxLines = int.MaxValue;
