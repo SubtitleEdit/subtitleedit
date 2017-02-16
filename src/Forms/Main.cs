@@ -6991,10 +6991,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonSplitLine.Visible = false;
             text = HtmlUtil.RemoveHtmlTags(text, true);
-            string s = text.Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
 
             // remove unicode control characters
-            s = s.RemoveControlCharacters();
+            var s = text.RemoveControlCharacters(); // incl. new line
 
             int numberOfLines = Utilities.GetNumberOfLines(text.Trim());
             int maxLines = int.MaxValue;
@@ -20156,12 +20155,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void leftToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox("\u8207");
+            PasteIntoActiveTextBox("\u200E"); // LRM, Left-to-Right Mark, acts as a Latin character.
         }
 
         private void righttoleftMarkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox("\u8206");
+            PasteIntoActiveTextBox("\u200F"); // RLM, Right-to-Left Mark, acts as an Arabic character.
         }
 
         private void startOfLefttorightEmbeddingLREToolStripMenuItem_Click(object sender, EventArgs e)
