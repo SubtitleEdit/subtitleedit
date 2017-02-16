@@ -108,9 +108,6 @@
     <Compile Include="Forms\ColorChooser.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\DCinema\DCinemaPropertiesForm.cs">
-      <SubType>form</SubType>
-    </Compile>
     <Compile Include="Forms\DCinema\DCinemaPropertiesInterop.cs">
       <SubType>form</SubType>
     </Compile>
