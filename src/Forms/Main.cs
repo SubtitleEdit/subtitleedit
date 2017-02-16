@@ -6608,11 +6608,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                indices.Reverse();
-                foreach (int i in indices)
+                for (int i = indices.Count - 1; i >= 0; i--)
                 {
-                    _subtitle.Paragraphs.RemoveAt(i);
-                    if (_networkSession != null && _networkSession.LastSubtitle != null && i < _networkSession.LastSubtitle.Paragraphs.Count)
+                    int idx = indices[i];
+                    _subtitle.Paragraphs.RemoveAt(idx);
+                    if (_networkSession?.LastSubtitle?.Paragraphs.Count > idx)
                         _networkSession.LastSubtitle.Paragraphs.RemoveAt(i);
                 }
                 _subtitle.Renumber();
