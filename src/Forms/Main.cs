@@ -19220,7 +19220,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemDCinemaProperties_Click(object sender, EventArgs e)
         {
-            DCinema.DCinemaPropertiesForm properties = null;
+            PositionAndSizeForm properties = null;
             try
             {
                 if (GetCurrentSubtitleFormat().GetType() == typeof(DCSubtitle))
@@ -19235,10 +19235,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             finally
             {
-                if (properties != null)
-                {
-                    properties.Dispose();
-                }
+                properties?.Dispose();
             }
         }
 
