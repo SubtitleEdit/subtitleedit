@@ -28,11 +28,8 @@ namespace Nikse.SubtitleEdit.Core
         public static VideoInfo TryReadVideoInfoViaMatroskaHeader(string fileName)
         {
             var info = new VideoInfo { Success = false };
-
-            MatroskaFile matroska = null;
-            try
+            using (var matroska = new MatroskaFile(fileName))
             {
-                matroska = new MatroskaFile(fileName);
                 if (matroska.IsValid)
                 {
                     double frameRate;
@@ -52,14 +49,6 @@ namespace Nikse.SubtitleEdit.Core
                     info.VideoCodec = videoCodec;
                 }
             }
-            finally
-            {
-                if (matroska != null)
-                {
-                    matroska.Dispose();
-                }
-            }
-
             return info;
         }
 
