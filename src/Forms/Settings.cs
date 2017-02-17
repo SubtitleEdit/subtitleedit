@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
             public CultureInfo CultureInfo { get; set; }
             public override string ToString()
             {
-                return CultureInfo.NativeName;
+                return CultureInfo.NativeName.CapitalizeFirstLetter();
             }
         }
 
