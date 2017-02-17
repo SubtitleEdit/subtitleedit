@@ -593,7 +593,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 // <i>Foo</i>
                 // <i>Bar</i>
-                if (italicBeginTagCount == 2 && italicEndTagCount == 2 && Utilities.GetNumberOfLines(text) == 2)
+                if (italicBeginTagCount == 2 && italicEndTagCount == 2 && noOfLines == 2)
                 {
                     int index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                     if (index > 0 && text.Length > index + (beginTag.Length + endTag.Length))
@@ -651,7 +651,7 @@ namespace Nikse.SubtitleEdit.Core
 
                 //<i>- You think they're they gone?<i>
                 //<i>- That can't be.</i>
-                if ((italicBeginTagCount == 3 && italicEndTagCount == 1) && Utilities.GetNumberOfLines(text) == 2)
+                if (italicBeginTagCount == 3 && italicEndTagCount == 1 && noOfLines == 2)
                 {
                     var newLineIdx = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                     var firstLine = text.Substring(0, newLineIdx).Trim();
@@ -666,6 +666,27 @@ namespace Nikse.SubtitleEdit.Core
                         text = beginTag + text + endTag;
                     }
                 }
+
+                if (noOfLines == 3)
+                {
+                    var lines = text.SplitToLines();
+                    if ((italicBeginTagCount == 3 && italicEndTagCount == 2) || (italicBeginTagCount == 2 && italicEndTagCount == 3))
+                    {
+                        int numberOfItalics = 0;
+                        foreach (var line in lines)
+                        {
+                            if (line.StartsWith(beginTag, StringComparison.Ordinal))
+                                numberOfItalics++;
+                            if (line.EndsWith(endTag, StringComparison.Ordinal))
+                                numberOfItalics++;
+                        }
+                        if (numberOfItalics == 5)
+                        { // fix missing tag
+                            text = "<i>" + text.Replace("<i>", string.Empty).Replace("</i>", string.Empty) + "</i>";
+                        }
+                    }
+                }
+
                 text = text.Replace("<i></i>", string.Empty);
                 text = text.Replace("<i> </i>", string.Empty);
                 text = text.Replace("<i>  </i>", string.Empty);
