@@ -86,10 +86,8 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Enabled = false;
                 buttonDownload.Enabled = false;
                 Refresh();
-                Cursor = Cursors.WaitCursor;
-
-                //TODO: Include d3dcompiler_43.dll in zip ?
-                string url = "https://github.com/SubtitleEdit/support-files/blob/master/mpv/mpv-dll-" + IntPtr.Size * 8 + ".zip?raw=true";
+                Cursor = Cursors.WaitCursor;                
+                string url = "https://github.com/SubtitleEdit/support-files/blob/master/mpv/libmpv" + IntPtr.Size * 8 + ".zip?raw=true";
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                 wc.DownloadProgressChanged += (o, args) =>
