@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.5.2 (xth February 2016) BETA
+3.5.2 (xth February 2017) BETA
 * NEW:
    * Added optional list view columns "chars/sec" + "words/min"
    * New setting for waveform: Set video position when moving start/end

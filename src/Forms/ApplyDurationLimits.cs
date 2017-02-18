@@ -1,11 +1,12 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ApplyDurationLimits : PositionAndSizeForm
+    public sealed partial class ApplyDurationLimits : PositionAndSizeForm
     {
         private int _totalFixes;
         private int _totalErrors;
@@ -13,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _working;
         private bool _onlyListFixes = true;
         private readonly Timer _refreshTimer = new Timer();
+        private readonly Color _warningColor = Color.FromArgb(255, 253, 145);
 
         public ApplyDurationLimits()
         {
@@ -80,11 +82,11 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxUnfixable.Text = string.Format(Configuration.Settings.Language.ApplyDurationLimits.UnableToFix, _totalErrors);
         }
 
-        private void AddFixToListView(Paragraph p, string before, string after)
+        private void AddFixToListView(Paragraph p, string before, string after, Color backgroundColor)
         {
             if (_onlyListFixes)
             {
-                var item = new ListViewItem(string.Empty) { Checked = true, Tag = p };
+                var item = new ListViewItem(string.Empty) { Checked = true, Tag = p, BackColor = backgroundColor };
                 item.SubItems.Add(p.Number.ToString());
                 item.SubItems.Add(before.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
                 item.SubItems.Add(after.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
@@ -108,43 +110,55 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixShortDisplayTimes()
         {
-            Subtitle unfixables = new Subtitle();
-            string fixAction = Configuration.Settings.Language.FixCommonErrors.FixShortDisplayTime;
+            var unfixables = new Subtitle();
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
                 Paragraph p = _working.Paragraphs[i];
-
                 double minDisplayTime = (double)numericUpDownDurationMin.Value;
-                //var minCharSecMs = Utilities.GetOptimalDisplayMilliseconds(p.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
-                //if (minCharSecMs > minDisplayTime)
-                //    minDisplayTime = minCharSecMs;
-
                 double displayTime = p.Duration.TotalMilliseconds;
                 if (displayTime < minDisplayTime)
                 {
                     Paragraph next = _working.GetParagraphOrDefault(i + 1);
-                    if (next == null || (p.StartTime.TotalMilliseconds + minDisplayTime < next.StartTime.TotalMilliseconds) && AllowFix(p))
+                    var wantedEndMs = p.StartTime.TotalMilliseconds + minDisplayTime;
+                    if (next == null || (wantedEndMs < next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines) && AllowFix(p))
                     {
-                        string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
-                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + minDisplayTime;
-
-                        string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
-                        _totalFixes++;
-                        AddFixToListView(p, before, after);
+                        AddFix(p, wantedEndMs, DefaultBackColor);
                     }
                     else
                     {
-                        unfixables.Paragraphs.Add(new Paragraph(p));
+                        var nextBestEndMs = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                        if (nextBestEndMs > p.EndTime.TotalMilliseconds)
+                        {
+                            AddFix(p, nextBestEndMs, _warningColor);
+                            unfixables.Paragraphs.Add(new Paragraph(p) { Extra = "Warning" });
+                        }
+                        else
+                        {
+                            unfixables.Paragraphs.Add(new Paragraph(p));
+                        }
                         _totalErrors++;
                     }
                 }
             }
             subtitleListView1.Fill(unfixables);
+            for (int index = 0; index < unfixables.Paragraphs.Count; index++)
+            {
+                var p = unfixables.Paragraphs[index];
+                subtitleListView1.SetBackgroundColor(index, p.Extra == "Warning" ? _warningColor : Configuration.Settings.Tools.ListViewSyntaxErrorColor);
+            }
+        }
+
+        private void AddFix(Paragraph p, double endMs, Color backgroundColor)
+        {
+            string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
+            p.EndTime.TotalMilliseconds = endMs;
+            string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
+            _totalFixes++;
+            AddFixToListView(p, before, after, backgroundColor);
         }
 
         public void FixLongDisplayTimes()
         {
-            string fixAction = Configuration.Settings.Language.FixCommonErrors.FixLongDisplayTime;
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
                 Paragraph p = _working.Paragraphs[i];
@@ -156,7 +170,7 @@ namespace Nikse.SubtitleEdit.Forms
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDisplayTime;
                     string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
                     _totalFixes++;
-                    AddFixToListView(p, before, after);
+                    AddFixToListView(p, before, after, DefaultBackColor);
                 }
             }
         }
@@ -186,10 +200,7 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
-        public Subtitle FixedSubtitle
-        {
-            get { return _working; }
-        }
+        public Subtitle FixedSubtitle => _working;
 
         private void numericUpDownDurationMin_KeyUp(object sender, KeyEventArgs e)
         {
