@@ -12,13 +12,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public SettingsMpv()
         {
-           
-
             InitializeComponent();
             labelPleaseWait.Text = string.Empty;
-            if (Configuration.IsRunningOnLinux() && (Configuration.Settings.General.MpvVideoOutput == "direct3d_shaders"))
+            if (Configuration.IsRunningOnLinux() && Configuration.Settings.General.MpvVideoOutput == "direct3d")
                 comboBoxVideoOutput.Text = "vaapi";
-            
             else
                 comboBoxVideoOutput.Text = Configuration.Settings.General.MpvVideoOutput;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -30,22 +27,19 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.IsRunningOnLinux())
             {
                 comboBoxVideoOutput.Items.Clear();
-                comboBoxVideoOutput.Items.AddRange(new object[] { "opengl", "sdl", "vaapi", "vdpau" });
-                Controls.Remove(this.buttonDownload);
+                comboBoxVideoOutput.Items.AddRange(new object[] { "vaapi", "opengl", "sdl", "vdpau" });
+                Controls.Remove(buttonDownload);
             }
         }
 
         private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
-            if (e.Error != null )
+            if (e.Error != null)
             {
                 MessageBox.Show(Configuration.Settings.Language.SettingsMpv.DownloadMpvFailed);
                 labelPleaseWait.Text = string.Empty;
                 buttonOK.Enabled = true;
-                if (!Configuration.IsRunningOnLinux())
-                    buttonDownload.Enabled = true;
-                else
-                    buttonDownload.Enabled = false;
+                buttonDownload.Enabled = !Configuration.IsRunningOnLinux();
                 Cursor = Cursors.Default;
                 return;
             }
@@ -86,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Enabled = false;
                 buttonDownload.Enabled = false;
                 Refresh();
-                Cursor = Cursors.WaitCursor;                
+                Cursor = Cursors.WaitCursor;
                 string url = "https://github.com/SubtitleEdit/support-files/blob/master/mpv/libmpv" + IntPtr.Size * 8 + ".zip?raw=true";
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.DownloadDataCompleted += wc_DownloadDataCompleted;
@@ -100,10 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelPleaseWait.Text = string.Empty;
                 buttonOK.Enabled = true;
-                if (!Configuration.IsRunningOnLinux())
-                    buttonDownload.Enabled = true;
-                else
-                    buttonDownload.Enabled = false;
+                buttonDownload.Enabled = !Configuration.IsRunningOnLinux();
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
             }
