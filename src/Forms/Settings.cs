@@ -1476,12 +1476,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string GetCurrentWordListLanguage()
         {
-            var cb = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
+            var idx = comboBoxWordListLanguage.SelectedIndex;
+            if (idx < 0)
+                return null;
+
+            var cb = comboBoxWordListLanguage.Items[idx] as ComboBoxLanguage;
             return cb?.CultureInfo.Name.Replace('-', '_');
         }
 
         private void ButtonAddNamesEtcClick(object sender, EventArgs e)
         {
+            var sidx = comboBoxWordListLanguage.SelectedIndex;
+            if (sidx < 0)
+                return;
+
             string language = GetCurrentWordListLanguage();
             string text = textBoxNameEtc.Text.RemoveControlCharacters().Trim();
             if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNamesEtc.Contains(text))
@@ -1582,6 +1590,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAddUserWordClick(object sender, EventArgs e)
         {
+            var sidx = comboBoxWordListLanguage.SelectedIndex;
+            if (sidx < 0)
+                return;
+
             string language = GetCurrentWordListLanguage();
             string text = textBoxUserWord.Text.RemoveControlCharacters().Trim().ToLower();
             if (!string.IsNullOrEmpty(language) && text.Length > 0 && !_userWordList.Contains(text))
@@ -1734,7 +1746,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonRemoveOcrFixClick(object sender, EventArgs e)
         {
-            var cb = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
+            var sidx = comboBoxWordListLanguage.SelectedIndex;
+            if (sidx < 0)
+                return;
+            var cb = comboBoxWordListLanguage.Items[sidx] as ComboBoxLanguage;
             if (cb == null)
                 return;
 
