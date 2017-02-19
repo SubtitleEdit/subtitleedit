@@ -45,8 +45,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            if (labelNote.Left + labelNote.Width + 5 > Width)
-                Width = labelNote.Left + labelNote.Width + 5;
+            if (labelNote.Right + 5 > Width)
+                Width = labelNote.Right + 5;
             UiUtil.FixLargeFonts(this, buttonOK);
         }
 
@@ -111,10 +111,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void FixShortDisplayTimes()
         {
             var unfixables = new Subtitle();
+            double minDisplayTime = (double)numericUpDownDurationMin.Value;
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
                 Paragraph p = _working.Paragraphs[i];
-                double minDisplayTime = (double)numericUpDownDurationMin.Value;
                 double displayTime = p.Duration.TotalMilliseconds;
                 if (displayTime < minDisplayTime)
                 {
@@ -159,18 +159,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void FixLongDisplayTimes()
         {
+            double maxDisplayTime = (double)numericUpDownDurationMax.Value;
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
                 Paragraph p = _working.Paragraphs[i];
                 double displayTime = p.Duration.TotalMilliseconds;
-                double maxDisplayTime = (double)numericUpDownDurationMax.Value;
                 if (displayTime > maxDisplayTime && AllowFix(p))
                 {
-                    string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
-                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDisplayTime;
-                    string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
-                    _totalFixes++;
-                    AddFixToListView(p, before, after, DefaultBackColor);
+                    AddFix(p, p.StartTime.TotalMilliseconds + maxDisplayTime, DefaultBackColor);
                 }
             }
         }
@@ -226,6 +222,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             listViewFixes.Focus();
         }
-
+        
     }
 }
