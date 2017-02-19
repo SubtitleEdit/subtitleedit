@@ -569,7 +569,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var p = Subtitle.Paragraphs[i];
                     string text = ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
                     lastLine = text;
-                    if (AllowFix(p, fixAction) && p.Text != text)
+                    if (AllowFix(p, fixAction) && p.Text.Trim() != text.Trim())
                     {
                         string oldText = p.Text;
                         p.Text = text;
