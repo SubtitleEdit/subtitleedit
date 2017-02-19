@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static VideoInfo TryReadVideoInfoViaDirectShow(string fileName)
         {
             return QuartsPlayer.GetVideoInfo(fileName);
-        }      
+        }
 
         public static int ShowSubtitle(Subtitle subtitle, VideoPlayerContainer videoPlayerContainer)
         {
@@ -366,7 +366,7 @@ namespace Nikse.SubtitleEdit.Logic
             saveFileDialog.Filter = sb.ToString().TrimEnd('|');
         }
 
-        public static void GetLineLengths(Label label, string text)
+        public static void FixMultiLinedText(Label label, string text)
         {
             label.ForeColor = Color.Black;
             var lines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
