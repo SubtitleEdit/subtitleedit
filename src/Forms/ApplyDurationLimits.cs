@@ -166,11 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
                 double displayTime = p.Duration.TotalMilliseconds;
                 if (displayTime > maxDisplayTime && AllowFix(p))
                 {
-                    string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
-                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDisplayTime;
-                    string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
-                    _totalFixes++;
-                    AddFixToListView(p, before, after, DefaultBackColor);
+                    AddFix(p, p.StartTime.TotalMilliseconds + maxDisplayTime, DefaultBackColor);
                 }
             }
         }
@@ -226,6 +222,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             listViewFixes.Focus();
         }
-
+        
     }
 }
