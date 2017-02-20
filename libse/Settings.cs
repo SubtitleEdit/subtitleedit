@@ -707,16 +707,8 @@ namespace Nikse.SubtitleEdit.Core
     {
         public string CustomSearchText1 { get; set; }
         public string CustomSearchText2 { get; set; }
-        public string CustomSearchText3 { get; set; }
-        public string CustomSearchText4 { get; set; }
-        public string CustomSearchText5 { get; set; }
-        public string CustomSearchText6 { get; set; }
         public string CustomSearchUrl1 { get; set; }
         public string CustomSearchUrl2 { get; set; }
-        public string CustomSearchUrl3 { get; set; }
-        public string CustomSearchUrl4 { get; set; }
-        public string CustomSearchUrl5 { get; set; }
-        public string CustomSearchUrl6 { get; set; }
         public string LastActiveTab { get; set; }
         public bool WaveformDrawGrid { get; set; }
         public bool WaveformDrawCps { get; set; }
@@ -2265,18 +2257,6 @@ namespace Nikse.SubtitleEdit.Core
                 settings.VideoControls.CustomSearchText2 = subNode.InnerText;
             subNode = node.SelectSingleNode("CustomSearchText3");
             if (subNode != null)
-                settings.VideoControls.CustomSearchText3 = subNode.InnerText;
-            subNode = node.SelectSingleNode("CustomSearchText4");
-            if (subNode != null)
-                settings.VideoControls.CustomSearchText4 = subNode.InnerText;
-            subNode = node.SelectSingleNode("CustomSearchText5");
-            if (subNode != null)
-                settings.VideoControls.CustomSearchText5 = subNode.InnerText;
-            subNode = node.SelectSingleNode("CustomSearchText6");
-            if (subNode != null)
-                settings.VideoControls.CustomSearchText6 = subNode.InnerText;
-            subNode = node.SelectSingleNode("CustomSearchUrl1");
-            if (subNode != null)
                 settings.VideoControls.CustomSearchUrl1 = subNode.InnerText;
             subNode = node.SelectSingleNode("CustomSearchUrl1");
             if (subNode != null)
@@ -2285,18 +2265,6 @@ namespace Nikse.SubtitleEdit.Core
             if (subNode != null)
                 settings.VideoControls.CustomSearchUrl2 = subNode.InnerText;
             subNode = node.SelectSingleNode("CustomSearchUrl3");
-            if (subNode != null)
-                settings.VideoControls.CustomSearchUrl3 = subNode.InnerText;
-            subNode = node.SelectSingleNode("CustomSearchUrl4");
-            if (subNode != null)
-                settings.VideoControls.CustomSearchUrl4 = subNode.InnerText;
-            subNode = node.SelectSingleNode("CustomSearchUrl5");
-            if (subNode != null)
-                settings.VideoControls.CustomSearchUrl5 = subNode.InnerText;
-            subNode = node.SelectSingleNode("CustomSearchUrl6");
-            if (subNode != null)
-                settings.VideoControls.CustomSearchUrl6 = subNode.InnerText;
-            subNode = node.SelectSingleNode("LastActiveTab");
             if (subNode != null)
                 settings.VideoControls.LastActiveTab = subNode.InnerText;
             subNode = node.SelectSingleNode("WaveformDrawGrid");
@@ -3395,16 +3363,8 @@ namespace Nikse.SubtitleEdit.Core
                 textWriter.WriteStartElement("VideoControls", string.Empty);
                 textWriter.WriteElementString("CustomSearchText1", settings.VideoControls.CustomSearchText1);
                 textWriter.WriteElementString("CustomSearchText2", settings.VideoControls.CustomSearchText2);
-                textWriter.WriteElementString("CustomSearchText3", settings.VideoControls.CustomSearchText3);
-                textWriter.WriteElementString("CustomSearchText4", settings.VideoControls.CustomSearchText4);
-                textWriter.WriteElementString("CustomSearchText5", settings.VideoControls.CustomSearchText5);
-                textWriter.WriteElementString("CustomSearchText6", settings.VideoControls.CustomSearchText6);
                 textWriter.WriteElementString("CustomSearchUrl1", settings.VideoControls.CustomSearchUrl1);
                 textWriter.WriteElementString("CustomSearchUrl2", settings.VideoControls.CustomSearchUrl2);
-                textWriter.WriteElementString("CustomSearchUrl3", settings.VideoControls.CustomSearchUrl3);
-                textWriter.WriteElementString("CustomSearchUrl4", settings.VideoControls.CustomSearchUrl4);
-                textWriter.WriteElementString("CustomSearchUrl5", settings.VideoControls.CustomSearchUrl5);
-                textWriter.WriteElementString("CustomSearchUrl6", settings.VideoControls.CustomSearchUrl6);
                 textWriter.WriteElementString("LastActiveTab", settings.VideoControls.LastActiveTab);
                 textWriter.WriteElementString("WaveformDrawGrid", settings.VideoControls.WaveformDrawGrid.ToString());
                 textWriter.WriteElementString("WaveformDrawCps", settings.VideoControls.WaveformDrawCps.ToString());

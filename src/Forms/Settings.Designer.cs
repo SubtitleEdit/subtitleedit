@@ -131,18 +131,6 @@
             this.checkBoxToolbarNew = new System.Windows.Forms.CheckBox();
             this.tabPageVideoPlayer = new System.Windows.Forms.TabPage();
             this.groupBoxMainWindowVideoControls = new System.Windows.Forms.GroupBox();
-            this.labelCustomSearch6 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl6 = new System.Windows.Forms.TextBox();
-            this.comboBoxCustomSearch6 = new System.Windows.Forms.ComboBox();
-            this.labelCustomSearch5 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl5 = new System.Windows.Forms.TextBox();
-            this.comboBoxCustomSearch5 = new System.Windows.Forms.ComboBox();
-            this.labelCustomSearch4 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl4 = new System.Windows.Forms.TextBox();
-            this.comboBoxCustomSearch4 = new System.Windows.Forms.ComboBox();
-            this.labelCustomSearch3 = new System.Windows.Forms.Label();
-            this.textBoxCustomSearchUrl3 = new System.Windows.Forms.TextBox();
-            this.comboBoxCustomSearch3 = new System.Windows.Forms.ComboBox();
             this.labelCustomSearch2 = new System.Windows.Forms.Label();
             this.textBoxCustomSearchUrl2 = new System.Windows.Forms.TextBox();
             this.comboBoxCustomSearch2 = new System.Windows.Forms.ComboBox();
@@ -1590,18 +1578,6 @@
             // 
             this.groupBoxMainWindowVideoControls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxMainWindowVideoControls.Controls.Add(this.labelCustomSearch6);
-            this.groupBoxMainWindowVideoControls.Controls.Add(this.textBoxCustomSearchUrl6);
-            this.groupBoxMainWindowVideoControls.Controls.Add(this.comboBoxCustomSearch6);
-            this.groupBoxMainWindowVideoControls.Controls.Add(this.labelCustomSearch5);
-            this.groupBoxMainWindowVideoControls.Controls.Add(this.textBoxCustomSearchUrl5);
-            this.groupBoxMainWindowVideoControls.Controls.Add(this.comboBoxCustomSearch5);
-            this.groupBoxMainWindowVideoControls.Controls.Add(this.labelCustomSearch4);
-            this.groupBoxMainWindowVideoControls.Controls.Add(this.textBoxCustomSearchUrl4);
-            this.groupBoxMainWindowVideoControls.Controls.Add(this.comboBoxCustomSearch4);
-            this.groupBoxMainWindowVideoControls.Controls.Add(this.labelCustomSearch3);
-            this.groupBoxMainWindowVideoControls.Controls.Add(this.textBoxCustomSearchUrl3);
-            this.groupBoxMainWindowVideoControls.Controls.Add(this.comboBoxCustomSearch3);
             this.groupBoxMainWindowVideoControls.Controls.Add(this.labelCustomSearch2);
             this.groupBoxMainWindowVideoControls.Controls.Add(this.textBoxCustomSearchUrl2);
             this.groupBoxMainWindowVideoControls.Controls.Add(this.comboBoxCustomSearch2);
@@ -1616,146 +1592,10 @@
             this.groupBoxMainWindowVideoControls.TabStop = false;
             this.groupBoxMainWindowVideoControls.Text = "Main window video controls";
             // 
-            // labelCustomSearch6
-            // 
-            this.labelCustomSearch6.AutoSize = true;
-            this.labelCustomSearch6.Location = new System.Drawing.Point(12, 175);
-            this.labelCustomSearch6.Name = "labelCustomSearch6";
-            this.labelCustomSearch6.Size = new System.Drawing.Size(13, 13);
-            this.labelCustomSearch6.TabIndex = 18;
-            this.labelCustomSearch6.Text = "6";
-            // 
-            // textBoxCustomSearchUrl6
-            // 
-            this.textBoxCustomSearchUrl6.Location = new System.Drawing.Point(185, 172);
-            this.textBoxCustomSearchUrl6.Name = "textBoxCustomSearchUrl6";
-            this.textBoxCustomSearchUrl6.Size = new System.Drawing.Size(574, 21);
-            this.textBoxCustomSearchUrl6.TabIndex = 17;
-            // 
-            // comboBoxCustomSearch6
-            // 
-            this.comboBoxCustomSearch6.FormattingEnabled = true;
-            this.comboBoxCustomSearch6.Items.AddRange(new object[] {
-            "Dictionary.com",
-            "learnersdictionary.com",
-            "Merriam-Webster",
-            "The Free Dictionary",
-            "Thesaurus.com",
-            "urbandictionary.com",
-            "VISUWORDS",
-            "Wikipedia"});
-            this.comboBoxCustomSearch6.Location = new System.Drawing.Point(31, 172);
-            this.comboBoxCustomSearch6.Name = "comboBoxCustomSearch6";
-            this.comboBoxCustomSearch6.Size = new System.Drawing.Size(148, 21);
-            this.comboBoxCustomSearch6.TabIndex = 16;
-            this.comboBoxCustomSearch6.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
-            // 
-            // labelCustomSearch5
-            // 
-            this.labelCustomSearch5.AutoSize = true;
-            this.labelCustomSearch5.Location = new System.Drawing.Point(12, 149);
-            this.labelCustomSearch5.Name = "labelCustomSearch5";
-            this.labelCustomSearch5.Size = new System.Drawing.Size(13, 13);
-            this.labelCustomSearch5.TabIndex = 15;
-            this.labelCustomSearch5.Text = "5";
-            // 
-            // textBoxCustomSearchUrl5
-            // 
-            this.textBoxCustomSearchUrl5.Location = new System.Drawing.Point(185, 146);
-            this.textBoxCustomSearchUrl5.Name = "textBoxCustomSearchUrl5";
-            this.textBoxCustomSearchUrl5.Size = new System.Drawing.Size(574, 21);
-            this.textBoxCustomSearchUrl5.TabIndex = 14;
-            // 
-            // comboBoxCustomSearch5
-            // 
-            this.comboBoxCustomSearch5.FormattingEnabled = true;
-            this.comboBoxCustomSearch5.Items.AddRange(new object[] {
-            "Dictionary.com",
-            "learnersdictionary.com",
-            "Merriam-Webster",
-            "The Free Dictionary",
-            "Thesaurus.com",
-            "urbandictionary.com",
-            "VISUWORDS",
-            "Wikipedia"});
-            this.comboBoxCustomSearch5.Location = new System.Drawing.Point(31, 146);
-            this.comboBoxCustomSearch5.Name = "comboBoxCustomSearch5";
-            this.comboBoxCustomSearch5.Size = new System.Drawing.Size(148, 21);
-            this.comboBoxCustomSearch5.TabIndex = 13;
-            this.comboBoxCustomSearch5.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
-            // 
-            // labelCustomSearch4
-            // 
-            this.labelCustomSearch4.AutoSize = true;
-            this.labelCustomSearch4.Location = new System.Drawing.Point(12, 122);
-            this.labelCustomSearch4.Name = "labelCustomSearch4";
-            this.labelCustomSearch4.Size = new System.Drawing.Size(13, 13);
-            this.labelCustomSearch4.TabIndex = 12;
-            this.labelCustomSearch4.Text = "4";
-            // 
-            // textBoxCustomSearchUrl4
-            // 
-            this.textBoxCustomSearchUrl4.Location = new System.Drawing.Point(185, 119);
-            this.textBoxCustomSearchUrl4.Name = "textBoxCustomSearchUrl4";
-            this.textBoxCustomSearchUrl4.Size = new System.Drawing.Size(574, 21);
-            this.textBoxCustomSearchUrl4.TabIndex = 11;
-            // 
-            // comboBoxCustomSearch4
-            // 
-            this.comboBoxCustomSearch4.FormattingEnabled = true;
-            this.comboBoxCustomSearch4.Items.AddRange(new object[] {
-            "Dictionary.com",
-            "learnersdictionary.com",
-            "Merriam-Webster",
-            "The Free Dictionary",
-            "Thesaurus.com",
-            "urbandictionary.com",
-            "VISUWORDS",
-            "Wikipedia"});
-            this.comboBoxCustomSearch4.Location = new System.Drawing.Point(31, 119);
-            this.comboBoxCustomSearch4.Name = "comboBoxCustomSearch4";
-            this.comboBoxCustomSearch4.Size = new System.Drawing.Size(148, 21);
-            this.comboBoxCustomSearch4.TabIndex = 10;
-            this.comboBoxCustomSearch4.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
-            // 
-            // labelCustomSearch3
-            // 
-            this.labelCustomSearch3.AutoSize = true;
-            this.labelCustomSearch3.Location = new System.Drawing.Point(12, 95);
-            this.labelCustomSearch3.Name = "labelCustomSearch3";
-            this.labelCustomSearch3.Size = new System.Drawing.Size(13, 13);
-            this.labelCustomSearch3.TabIndex = 9;
-            this.labelCustomSearch3.Text = "3";
-            // 
-            // textBoxCustomSearchUrl3
-            // 
-            this.textBoxCustomSearchUrl3.Location = new System.Drawing.Point(185, 92);
-            this.textBoxCustomSearchUrl3.Name = "textBoxCustomSearchUrl3";
-            this.textBoxCustomSearchUrl3.Size = new System.Drawing.Size(574, 21);
-            this.textBoxCustomSearchUrl3.TabIndex = 8;
-            // 
-            // comboBoxCustomSearch3
-            // 
-            this.comboBoxCustomSearch3.FormattingEnabled = true;
-            this.comboBoxCustomSearch3.Items.AddRange(new object[] {
-            "Dictionary.com",
-            "learnersdictionary.com",
-            "Merriam-Webster",
-            "The Free Dictionary",
-            "Thesaurus.com",
-            "urbandictionary.com",
-            "VISUWORDS",
-            "Wikipedia"});
-            this.comboBoxCustomSearch3.Location = new System.Drawing.Point(31, 92);
-            this.comboBoxCustomSearch3.Name = "comboBoxCustomSearch3";
-            this.comboBoxCustomSearch3.Size = new System.Drawing.Size(148, 21);
-            this.comboBoxCustomSearch3.TabIndex = 7;
-            this.comboBoxCustomSearch3.SelectedIndexChanged += new System.EventHandler(this.comboBoxCustomSearch_SelectedIndexChanged);
-            // 
             // labelCustomSearch2
             // 
             this.labelCustomSearch2.AutoSize = true;
-            this.labelCustomSearch2.Location = new System.Drawing.Point(12, 68);
+            this.labelCustomSearch2.Location = new System.Drawing.Point(12, 76);
             this.labelCustomSearch2.Name = "labelCustomSearch2";
             this.labelCustomSearch2.Size = new System.Drawing.Size(13, 13);
             this.labelCustomSearch2.TabIndex = 6;
@@ -1763,7 +1603,7 @@
             // 
             // textBoxCustomSearchUrl2
             // 
-            this.textBoxCustomSearchUrl2.Location = new System.Drawing.Point(185, 65);
+            this.textBoxCustomSearchUrl2.Location = new System.Drawing.Point(185, 73);
             this.textBoxCustomSearchUrl2.Name = "textBoxCustomSearchUrl2";
             this.textBoxCustomSearchUrl2.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl2.TabIndex = 5;
@@ -1780,7 +1620,7 @@
             "urbandictionary.com",
             "VISUWORDS",
             "Wikipedia"});
-            this.comboBoxCustomSearch2.Location = new System.Drawing.Point(31, 65);
+            this.comboBoxCustomSearch2.Location = new System.Drawing.Point(31, 73);
             this.comboBoxCustomSearch2.Name = "comboBoxCustomSearch2";
             this.comboBoxCustomSearch2.Size = new System.Drawing.Size(148, 21);
             this.comboBoxCustomSearch2.TabIndex = 4;
@@ -1789,7 +1629,7 @@
             // labelCustomSearch1
             // 
             this.labelCustomSearch1.AutoSize = true;
-            this.labelCustomSearch1.Location = new System.Drawing.Point(12, 41);
+            this.labelCustomSearch1.Location = new System.Drawing.Point(12, 49);
             this.labelCustomSearch1.Name = "labelCustomSearch1";
             this.labelCustomSearch1.Size = new System.Drawing.Size(13, 13);
             this.labelCustomSearch1.TabIndex = 3;
@@ -1797,7 +1637,7 @@
             // 
             // textBoxCustomSearchUrl1
             // 
-            this.textBoxCustomSearchUrl1.Location = new System.Drawing.Point(185, 38);
+            this.textBoxCustomSearchUrl1.Location = new System.Drawing.Point(185, 46);
             this.textBoxCustomSearchUrl1.Name = "textBoxCustomSearchUrl1";
             this.textBoxCustomSearchUrl1.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl1.TabIndex = 2;
@@ -1805,7 +1645,7 @@
             // labelCustomSearch
             // 
             this.labelCustomSearch.AutoSize = true;
-            this.labelCustomSearch.Location = new System.Drawing.Point(12, 20);
+            this.labelCustomSearch.Location = new System.Drawing.Point(12, 28);
             this.labelCustomSearch.Name = "labelCustomSearch";
             this.labelCustomSearch.Size = new System.Drawing.Size(144, 13);
             this.labelCustomSearch.TabIndex = 1;
@@ -1823,7 +1663,7 @@
             "urbandictionary.com",
             "VISUWORDS",
             "Wikipedia"});
-            this.comboBoxCustomSearch1.Location = new System.Drawing.Point(31, 38);
+            this.comboBoxCustomSearch1.Location = new System.Drawing.Point(31, 46);
             this.comboBoxCustomSearch1.Name = "comboBoxCustomSearch1";
             this.comboBoxCustomSearch1.Size = new System.Drawing.Size(148, 21);
             this.comboBoxCustomSearch1.TabIndex = 0;
@@ -4246,18 +4086,6 @@
         private System.Windows.Forms.Label labelCustomSearch2;
         private System.Windows.Forms.TextBox textBoxCustomSearchUrl2;
         private System.Windows.Forms.ComboBox comboBoxCustomSearch2;
-        private System.Windows.Forms.Label labelCustomSearch6;
-        private System.Windows.Forms.TextBox textBoxCustomSearchUrl6;
-        private System.Windows.Forms.ComboBox comboBoxCustomSearch6;
-        private System.Windows.Forms.Label labelCustomSearch5;
-        private System.Windows.Forms.TextBox textBoxCustomSearchUrl5;
-        private System.Windows.Forms.ComboBox comboBoxCustomSearch5;
-        private System.Windows.Forms.Label labelCustomSearch4;
-        private System.Windows.Forms.TextBox textBoxCustomSearchUrl4;
-        private System.Windows.Forms.ComboBox comboBoxCustomSearch4;
-        private System.Windows.Forms.Label labelCustomSearch3;
-        private System.Windows.Forms.TextBox textBoxCustomSearchUrl3;
-        private System.Windows.Forms.ComboBox comboBoxCustomSearch3;
         private System.Windows.Forms.CheckBox checkBoxAllowOverlap;
         private System.Windows.Forms.Label labelWaveformBorderHitMs2;
         private System.Windows.Forms.NumericUpDown numericUpDownWaveformBorderHitMs;
