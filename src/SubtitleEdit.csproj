@@ -447,28 +447,28 @@
     <Compile Include="Forms\ModifySelection.Designer.cs">
       <DependentUpon>ModifySelection.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NetworkChat.cs">
+    <Compile Include="Forms\Networking\NetworkChat.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\NetworkChat.Designer.cs">
+    <Compile Include="Forms\Networking\NetworkChat.Designer.cs">
       <DependentUpon>NetworkChat.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NetworkJoin.cs">
+    <Compile Include="Forms\Networking\NetworkJoin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\NetworkJoin.Designer.cs">
+    <Compile Include="Forms\Networking\NetworkJoin.Designer.cs">
       <DependentUpon>NetworkJoin.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NetworkLogAndInfo.cs">
+    <Compile Include="Forms\Networking\NetworkLogAndInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\NetworkLogAndInfo.Designer.cs">
+    <Compile Include="Forms\Networking\NetworkLogAndInfo.Designer.cs">
       <DependentUpon>NetworkLogAndInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NetworkStart.cs">
+    <Compile Include="Forms\Networking\NetworkStart.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\NetworkStart.Designer.cs">
+    <Compile Include="Forms\Networking\NetworkStart.Designer.cs">
       <DependentUpon>NetworkStart.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OpenVideoDvd.cs">
@@ -1098,16 +1098,16 @@
     <EmbeddedResource Include="Forms\ModifySelection.resx">
       <DependentUpon>ModifySelection.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\NetworkChat.resx">
+    <EmbeddedResource Include="Forms\Networking\NetworkChat.resx">
       <DependentUpon>NetworkChat.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\NetworkJoin.resx">
+    <EmbeddedResource Include="Forms\Networking\NetworkJoin.resx">
       <DependentUpon>NetworkJoin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\NetworkLogAndInfo.resx">
+    <EmbeddedResource Include="Forms\Networking\NetworkLogAndInfo.resx">
       <DependentUpon>NetworkLogAndInfo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\NetworkStart.resx">
+    <EmbeddedResource Include="Forms\Networking\NetworkStart.resx">
       <DependentUpon>NetworkStart.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OpenVideoDvd.resx">
