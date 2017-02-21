@@ -212,14 +212,15 @@ namespace Nikse.SubtitleEdit.Core
 
         public string ToShortStringHHMMSSFF()
         {
+            // Expected return format: 00:00:00:00
             string s = ToHHMMSSFF();
             int j = 0;
-            if (s.StartsWith("0:00:", StringComparison.Ordinal))
-                j = 5;
-            if (s.StartsWith("00:", StringComparison.Ordinal))
+            int len = s.Length;
+            // Keep jumping 00: if any in 's'.
+            while (j + 2 < len && s[j] == '0' && s[j + 1] == '0' && s[j + 2] == ':')
+            {
                 j += 3;
-            if (s.StartsWith("00:", StringComparison.Ordinal))
-                j += 3;
+            }
             return j > 0 ? s.Substring(j) : s;
         }
 
