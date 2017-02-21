@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
             catch
             {
-                if (subtitle.Header.Contains("[V4+ Styles]") || subtitle.Header.Contains("[V4 Styles]"))
+                if (subtitle.Header != null && (subtitle.Header.Contains("[V4+ Styles]") || subtitle.Header.Contains("[V4 Styles]")))
                 {
                     subtitle.Header = TimedText10.SubStationAlphaHeaderToTimedText(subtitle); // save new header with TTML styles (converted from ssa/ass)
                 }
