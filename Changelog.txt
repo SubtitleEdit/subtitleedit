@@ -22,6 +22,7 @@
    * EBU STL: New color picker dialog
    * "libmpv" shows version number
    * Added preview text inside video for "libmpv"
+   * Added format "PAC" to "Batch convert" - thx Amed
 * FIXED:
    * Fixed play current/selection not stopping - thx rhazor
    * Fixed fast forward waveform scrolling with mouse wheel
@@ -40,6 +41,7 @@
    * Fix for "-" vs "–" (switched) for format PAC - thx Bjørn
    * Fixed "libmpv" re-open video issue
    * Fixed crash in TTML styles dialog with new TTML file - thx aucforum
+   * Added support for "offset" in format "lrc" - thx Omar
 
 
 3.5.1 (13th December 2016)

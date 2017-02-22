@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Core.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         { //[01:05.99]I've been walking in the same way as I do
             _errorCount = 0;
-            var offsetInMilliseconds = (double)0.0m;
+            var offsetInMilliseconds = 0.0d;
             var header = new StringBuilder();
             char[] splitChars = { ':', '.' };
             foreach (string line in lines)
