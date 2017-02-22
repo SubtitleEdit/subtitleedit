@@ -567,6 +567,8 @@
             this.comboBoxResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxResolution.FormattingEnabled = true;
             this.comboBoxResolution.Items.AddRange(new object[] {
+            "4K (4096x2160)",
+            "UHD (3840x2160)",
             "2K (2048x1080)",
             "DCI 2K Scope (2048x 858)",
             "DCI 2K Flat (1998x1080)",
